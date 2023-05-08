@@ -1,0 +1,2 @@
+System.register('artifacts/css/dx.light.css', [], false, function () {});
+(function(c){if (typeof document == 'undefined') return;var d=document,a='appendChild',i='styleSheet',s=d.createElement('link');s.rel='stylesheet';s.type='text/css';s.href='/artifacts/css/dx.light.css';d.getElementsByTagName('head')[0][a](s);})();

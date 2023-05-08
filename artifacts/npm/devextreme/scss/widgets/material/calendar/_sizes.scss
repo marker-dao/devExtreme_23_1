@@ -1,0 +1,22 @@
+@use "../sizes" as *;
+
+// adduse
+
+$material-calendar-legacy-height: null !default;
+$material-calendar-legacy-width: null !default;
+
+$material-calendar-cell-base-size: null !default;
+
+@if $size == "default" {
+  $material-calendar-legacy-height: 264.4px !default;
+  $material-calendar-legacy-width: 226px !default;
+
+  $material-calendar-cell-base-size: 2em !default;
+}
+
+@else if $size == "compact" {
+  $material-calendar-legacy-height: 260.4px !default;
+  $material-calendar-legacy-width: 250px !default;
+
+  $material-calendar-cell-base-size: 2em !default;
+}
