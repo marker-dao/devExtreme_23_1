@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/gantt/ui.gantt.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -182,6 +182,9 @@ class Gantt extends Widget {
       onSelectionChanged: e => {
         this._ganttTreeList.selectRows(GanttHelper.getArrayFromOneElement(e.id));
       },
+      onViewTypeChanged: e => {
+        this._onViewTypeChanged(e.type);
+      },
       onScroll: e => {
         this._ganttTreeList.scrollBy(e.scrollTop);
       },
@@ -222,6 +225,9 @@ class Gantt extends Widget {
     }
     delete this._treeListParentRecalculatedDataUpdating;
     this._dataProcessingHelper.onTreeListReady();
+  }
+  _onViewTypeChanged(type) {
+    this.option('scaleType', this._actionsManager._getScaleType(type));
   }
   _refreshDataSource(name) {
     var dataOption = this["_".concat(name, "Option")];
@@ -319,6 +325,7 @@ class Gantt extends Widget {
         var keyGetter = compileGetter(this.option("".concat(optionName, ".keyExpr")));
         var insertedId = keyGetter(response);
         callback(insertedId);
+        this._executeFuncSetters(optionName, record, insertedId);
         this._dataProcessingHelper.addCompletionAction(() => {
           this._actionsManager.raiseInsertedAction(optionName, data, insertedId);
         }, true, isTaskInsert);
@@ -341,6 +348,7 @@ class Gantt extends Widget {
         this._customFieldsManager.addCustomFieldsDataFromCache(key, data);
       }
       dataOption.update(key, data, () => {
+        this._executeFuncSetters(optionName, values, key);
         this._ganttTreeList.saveExpandedKeys();
         this._dataProcessingHelper.addCompletionAction(() => {
           this._actionsManager.raiseUpdatedAction(optionName, data, key);
@@ -380,6 +388,17 @@ class Gantt extends Widget {
   }
   _onGanttViewCoreUpdated() {
     this._dataProcessingHelper.onGanttViewReady();
+  }
+  _executeFuncSetters(optionName, coreData, key) {
+    var funcSetters = GanttHelper.compileFuncSettersByOption(this.option(optionName));
+    var keysToUpdate = Object.keys(funcSetters).filter(k => isDefined(coreData[k]));
+    if (keysToUpdate.length > 0) {
+      var dataObject = this._getDataSourceItem(optionName, key);
+      keysToUpdate.forEach(k => {
+        var setter = funcSetters[k];
+        setter(dataObject, coreData[k]);
+      });
+    }
   }
   _sortAndFilter() {
     var _this$_savedSortFilte, _this$_savedSortFilte2, _this$_savedSortFilte3;
@@ -480,13 +499,19 @@ class Gantt extends Widget {
     return this._loadPanel;
   }
   _getTaskKeyGetter() {
-    return compileGetter(this.option("".concat(GANTT_TASKS, ".keyExpr")));
+    return this._getDataSourceItemKeyGetter(GANTT_TASKS);
   }
   _findTaskByKey(key) {
-    var _this$_tasksOption;
-    var tasks = (_this$_tasksOption = this._tasksOption) === null || _this$_tasksOption === void 0 ? void 0 : _this$_tasksOption._getItems();
-    var keyGetter = this._getTaskKeyGetter();
-    return tasks.find(t => keyGetter(t) === key);
+    return this._getDataSourceItem(GANTT_TASKS, key);
+  }
+  _getDataSourceItem(dataOptionName, key) {
+    var dataOption = this["_".concat(dataOptionName, "Option")];
+    var keyGetter = this._getDataSourceItemKeyGetter(dataOptionName);
+    var items = dataOption === null || dataOption === void 0 ? void 0 : dataOption._getItems();
+    return items.find(t => keyGetter(t) === key);
+  }
+  _getDataSourceItemKeyGetter(dataOptionName) {
+    return compileGetter(this.option("".concat(dataOptionName, ".keyExpr")));
   }
   _setGanttViewOption(optionName, value) {
     this._ganttView && this._ganttView.option(optionName, value);

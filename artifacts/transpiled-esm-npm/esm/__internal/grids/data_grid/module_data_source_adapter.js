@@ -1,4 +1,4 @@
-import DataSourceAdapter from '../../../ui/grid_core/ui.grid_core.data_source_adapter';
+import DataSourceAdapter from '../grid_core/data_source_adapter/module';
 var dataSourceAdapterType = DataSourceAdapter;
 export default {
   extend(extender) {

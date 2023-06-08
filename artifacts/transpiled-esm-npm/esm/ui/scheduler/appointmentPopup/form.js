@@ -217,11 +217,11 @@ export class AppointmentForm {
       items: this._createDateBoxItems(dataExprs, allowTimeZoneEditing)
     }, {
       itemType: 'group',
-      colCountByScreen: {
-        lg: 3,
-        xs: 3
-      },
       colSpan: 2,
+      colCountByScreen: {
+        lg: 2,
+        xs: 2
+      },
       items: [{
         dataField: dataExprs.allDayExpr,
         cssClass: 'dx-appointment-form-switch',

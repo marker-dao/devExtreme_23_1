@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/data_controller/module.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ import Class from '../../../../core/class';
 import { format } from '../../../../core/utils/string';
 import { deferUpdate } from '../../../../core/utils/common';
 import { isDefined, isString } from '../../../../core/utils/type';
-import { VirtualScrollController } from '../../../../ui/grid_core/ui.grid_core.virtual_scrolling_core';
+import VirtualScrollControllerModule from '../../../../__internal/grids/grid_core/virtual_scrolling/module_core';
 import { foreachColumnInfo, createColumnsInfo } from '../../../../ui/grid_core/ui.grid_core.virtual_columns_core';
 import stateStoring from '../../../../ui/grid_core/ui.grid_core.state_storing_core';
 import { PivotGridDataSource } from '../data_source/module';
@@ -450,7 +450,7 @@ var DataController = Class.inherit(function () {
     return indexedItems;
   }
   function createScrollController(dataController, component, dataAdapter) {
-    return new VirtualScrollController(component, extend({
+    return new VirtualScrollControllerModule.VirtualScrollController(component, extend({
       hasKnownLastPage() {
         return true;
       },

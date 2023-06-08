@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/box.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ import { extend } from '../core/utils/extend';
 import { hasWindow } from '../core/utils/window';
 import { dasherize } from '../core/utils/inflector';
 import { isDefined } from '../core/utils/type';
-import { normalizeStyleProp, styleProp, stylePropPrefix } from '../core/utils/style';
+import { normalizeStyleProp, styleProp, stylePropPrefix, setStyle } from '../core/utils/style';
 import { each } from '../core/utils/iterator';
 import CollectionWidgetItem from './collection/item';
 import CollectionWidget from './collection/ui.collection_widget.edit';
@@ -61,11 +61,7 @@ var setFlexProp = (element, prop, value) => {
     }
     var cssName = dasherize(prop);
     var styleExpr = cssName + ': ' + value + ';';
-    if (!element.attributes.style) {
-      element.setAttribute('style', styleExpr);
-    } else if (element.attributes.style.value.indexOf(styleExpr) < 0) {
-      element.attributes.style.value += ' ' + styleExpr;
-    }
+    setStyle(element, styleExpr, false);
   }
 };
 class BoxItem extends CollectionWidgetItem {

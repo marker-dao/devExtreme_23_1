@@ -148,19 +148,7 @@ class MenuBase extends HierarchicalCollectionWidget {
     return extend(super._supportedKeys(), {
       space: selectItem,
       pageUp: noop,
-      pageDown: noop,
-      enter: function enter(e) {
-        var $itemElement = $(this.option('focusedElement'));
-        if (!$itemElement.length) {
-          return;
-        }
-        this._enterKeyHandler(e);
-        var itemData = this._getItemData($itemElement);
-        if (itemData.url) {
-          var link = $itemElement.get(0).getElementsByClassName(DX_ITEM_URL_CLASS)[0];
-          link === null || link === void 0 ? void 0 : link.click();
-        }
-      }
+      pageDown: noop
     });
   }
   _isSelectionEnabled() {
@@ -455,9 +443,17 @@ class MenuBase extends HierarchicalCollectionWidget {
     if (e._skipHandling) return;
     var itemClickActionHandler = this._createAction(this._updateSubmenuVisibilityOnClick.bind(this));
     this._itemDXEventHandler(e, 'onItemClick', {}, {
+      beforeExecute: this._itemClick,
       afterExecute: itemClickActionHandler.bind(this)
     });
     e._skipHandling = true;
+  }
+  _itemClick(actionArgs) {
+    var args = actionArgs.args[0];
+    var link = args.event.target.getElementsByClassName(DX_ITEM_URL_CLASS)[0];
+    if (args.itemData.url && link) {
+      link.click();
+    }
   }
   _updateSubmenuVisibilityOnClick(actionArgs) {
     this._updateSelectedItemOnClick(actionArgs);

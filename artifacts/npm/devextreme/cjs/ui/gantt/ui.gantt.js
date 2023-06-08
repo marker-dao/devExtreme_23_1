@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -195,6 +195,9 @@ var Gantt = /*#__PURE__*/function (_Widget) {
       onSelectionChanged: function onSelectionChanged(e) {
         _this2._ganttTreeList.selectRows(_uiGantt6.GanttHelper.getArrayFromOneElement(e.id));
       },
+      onViewTypeChanged: function onViewTypeChanged(e) {
+        _this2._onViewTypeChanged(e.type);
+      },
       onScroll: function onScroll(e) {
         _this2._ganttTreeList.scrollBy(e.scrollTop);
       },
@@ -235,6 +238,9 @@ var Gantt = /*#__PURE__*/function (_Widget) {
     }
     delete this._treeListParentRecalculatedDataUpdating;
     this._dataProcessingHelper.onTreeListReady();
+  };
+  _proto._onViewTypeChanged = function _onViewTypeChanged(type) {
+    this.option('scaleType', this._actionsManager._getScaleType(type));
   };
   _proto._refreshDataSource = function _refreshDataSource(name) {
     var _this3 = this;
@@ -336,6 +342,7 @@ var Gantt = /*#__PURE__*/function (_Widget) {
         var keyGetter = (0, _data.compileGetter)(_this4.option("".concat(optionName, ".keyExpr")));
         var insertedId = keyGetter(response);
         callback(insertedId);
+        _this4._executeFuncSetters(optionName, record, insertedId);
         _this4._dataProcessingHelper.addCompletionAction(function () {
           _this4._actionsManager.raiseInsertedAction(optionName, data, insertedId);
         }, true, isTaskInsert);
@@ -359,6 +366,7 @@ var Gantt = /*#__PURE__*/function (_Widget) {
         this._customFieldsManager.addCustomFieldsDataFromCache(key, data);
       }
       dataOption.update(key, data, function () {
+        _this5._executeFuncSetters(optionName, values, key);
         _this5._ganttTreeList.saveExpandedKeys();
         _this5._dataProcessingHelper.addCompletionAction(function () {
           _this5._actionsManager.raiseUpdatedAction(optionName, data, key);
@@ -400,6 +408,19 @@ var Gantt = /*#__PURE__*/function (_Widget) {
   };
   _proto._onGanttViewCoreUpdated = function _onGanttViewCoreUpdated() {
     this._dataProcessingHelper.onGanttViewReady();
+  };
+  _proto._executeFuncSetters = function _executeFuncSetters(optionName, coreData, key) {
+    var funcSetters = _uiGantt6.GanttHelper.compileFuncSettersByOption(this.option(optionName));
+    var keysToUpdate = Object.keys(funcSetters).filter(function (k) {
+      return (0, _type.isDefined)(coreData[k]);
+    });
+    if (keysToUpdate.length > 0) {
+      var dataObject = this._getDataSourceItem(optionName, key);
+      keysToUpdate.forEach(function (k) {
+        var setter = funcSetters[k];
+        setter(dataObject, coreData[k]);
+      });
+    }
   };
   _proto._sortAndFilter = function _sortAndFilter() {
     var _this$_savedSortFilte, _this$_savedSortFilte2, _this$_savedSortFilte3;
@@ -506,15 +527,21 @@ var Gantt = /*#__PURE__*/function (_Widget) {
     return this._loadPanel;
   };
   _proto._getTaskKeyGetter = function _getTaskKeyGetter() {
-    return (0, _data.compileGetter)(this.option("".concat(GANTT_TASKS, ".keyExpr")));
+    return this._getDataSourceItemKeyGetter(GANTT_TASKS);
   };
   _proto._findTaskByKey = function _findTaskByKey(key) {
-    var _this$_tasksOption;
-    var tasks = (_this$_tasksOption = this._tasksOption) === null || _this$_tasksOption === void 0 ? void 0 : _this$_tasksOption._getItems();
-    var keyGetter = this._getTaskKeyGetter();
-    return tasks.find(function (t) {
+    return this._getDataSourceItem(GANTT_TASKS, key);
+  };
+  _proto._getDataSourceItem = function _getDataSourceItem(dataOptionName, key) {
+    var dataOption = this["_".concat(dataOptionName, "Option")];
+    var keyGetter = this._getDataSourceItemKeyGetter(dataOptionName);
+    var items = dataOption === null || dataOption === void 0 ? void 0 : dataOption._getItems();
+    return items.find(function (t) {
       return keyGetter(t) === key;
     });
+  };
+  _proto._getDataSourceItemKeyGetter = function _getDataSourceItemKeyGetter(dataOptionName) {
+    return (0, _data.compileGetter)(this.option("".concat(dataOptionName, ".keyExpr")));
   };
   _proto._setGanttViewOption = function _setGanttViewOption(optionName, value) {
     this._ganttView && this._ganttView.option(optionName, value);

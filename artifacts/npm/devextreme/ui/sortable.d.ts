@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/sortable.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -150,6 +150,7 @@ export interface DragTemplateData {
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
@@ -199,8 +200,7 @@ export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/sortable:AddEvent}
      * @action
      * @public
      */
@@ -208,9 +208,7 @@ export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxSortable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/sortable:DragChangeEvent}
      * @action
      * @public
      */
@@ -218,9 +216,7 @@ export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxSortable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/sortable:DragEndEvent}
      * @action
      * @public
      */
@@ -228,9 +224,7 @@ export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxSortable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/sortable:DragMoveEvent}
      * @action
      * @public
      */
@@ -238,9 +232,7 @@ export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxSortable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/sortable:DragStartEvent}
      * @action
      * @public
      */
@@ -248,9 +240,7 @@ export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxSortable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/sortable:RemoveEvent}
      * @action
      * @public
      */
@@ -258,10 +248,7 @@ export interface dxSortableOptions extends DraggableBaseOptions<dxSortable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxSortable
-     * @type_function_param1_field event:event
-     * @type_function_param1_field promise:Promise<void>
+     * @type_function_param1 e:{ui/sortable:ReorderEvent}
      * @action
      * @public
      */
@@ -289,72 +276,4 @@ export type Properties = dxSortableOptions;
 /** @deprecated use Properties instead */
 export type Options = dxSortableOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onPlaceholderPrepared'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxSortableOptions.onAdd
- * @type_function_param1 e:{ui/sortable:AddEvent}
- */
-onAdd?: ((e: AddEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onDisposing
- * @type_function_param1 e:{ui/sortable:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onDragChange
- * @type_function_param1 e:{ui/sortable:DragChangeEvent}
- */
-onDragChange?: ((e: DragChangeEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onDragEnd
- * @type_function_param1 e:{ui/sortable:DragEndEvent}
- */
-onDragEnd?: ((e: DragEndEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onDragMove
- * @type_function_param1 e:{ui/sortable:DragMoveEvent}
- */
-onDragMove?: ((e: DragMoveEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onDragStart
- * @type_function_param1 e:{ui/sortable:DragStartEvent}
- */
-onDragStart?: ((e: DragStartEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onInitialized
- * @type_function_param1 e:{ui/sortable:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onOptionChanged
- * @type_function_param1 e:{ui/sortable:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onRemove
- * @type_function_param1 e:{ui/sortable:RemoveEvent}
- */
-onRemove?: ((e: RemoveEvent) => void);
-/**
- * @skip
- * @docid dxSortableOptions.onReorder
- * @type_function_param1 e:{ui/sortable:ReorderEvent}
- */
-onReorder?: ((e: ReorderEvent) => void);
-};

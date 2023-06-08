@@ -222,6 +222,9 @@ var Tabs = CollectionWidget.inherit({
   _renderInkRipple: function _renderInkRipple() {
     this._inkRipple = render();
   },
+  _getPointerEvent() {
+    return pointerEvents.up;
+  },
   _toggleActiveState: function _toggleActiveState($element, value, e) {
     this.callBase.apply(this, arguments);
     if (!this._inkRipple) {

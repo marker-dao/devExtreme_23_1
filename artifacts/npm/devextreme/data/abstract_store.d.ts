@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/abstract_store.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,6 +26,8 @@ export type Options<
 /**
  * @namespace DevExpress.data
  * @deprecated Use Options instead
+ * @docid
+ * @hidden
  */
 export interface StoreOptions<
     TItem = any,
@@ -123,7 +125,10 @@ export interface StoreOptions<
 type EventName = 'loaded' | 'loading' | 'inserted' | 'inserting' | 'updated' | 'updating' | 'push' | 'removed' | 'removing' | 'modified' | 'modifying';
 
 /**
+ * @docid Store
+ * @hidden
  * @namespace DevExpress.data
+ * @options StoreOptions
  */
 export class Store<
     TItem = any,
@@ -229,8 +234,6 @@ export class Store<
 }
 
   /**
-   * @docid Store
-   * @hidden
    * @namespace DevExpress.data
    */
   export default class AbstractStore<

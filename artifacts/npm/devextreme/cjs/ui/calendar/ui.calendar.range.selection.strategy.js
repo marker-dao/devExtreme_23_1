@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.range.selection.strategy.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -54,10 +54,19 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     this._updateCurrentDate(selectedValue);
     this._currentDateChanged = true;
     if (this.calendar.option('_allowChangeSelectionOrder') === true) {
+      this.calendar._valueSelected = true;
       if (this.calendar.option('_currentSelection') === 'startDate') {
-        this.dateValue([selectedValue, endDate], e);
+        if (this.calendar._convertToDate(selectedValue) > this.calendar._convertToDate(endDate)) {
+          this.dateValue([selectedValue, null], e);
+        } else {
+          this.dateValue([selectedValue, endDate], e);
+        }
       } else {
-        this.dateValue([startDate, selectedValue], e);
+        if (this.calendar._convertToDate(selectedValue) >= this.calendar._convertToDate(startDate)) {
+          this.dateValue([startDate, selectedValue], e);
+        } else {
+          this.dateValue([selectedValue, null], e);
+        }
       }
     } else {
       if (!startDate || endDate) {
@@ -79,7 +88,19 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     this._updateViewsOption('range', range);
   };
   _proto.getDefaultCurrentDate = function getDefaultCurrentDate() {
-    var dates = this.dateOption('values').filter(function (value) {
+    var _this$calendar$option = this.calendar.option(),
+      _allowChangeSelectionOrder = _this$calendar$option._allowChangeSelectionOrder,
+      _currentSelection = _this$calendar$option._currentSelection;
+    var values = this.dateOption('values');
+    if (_allowChangeSelectionOrder) {
+      if (_currentSelection === 'startDate' && values[0]) {
+        return values[0];
+      }
+      if (_currentSelection === 'endDate' && values[1]) {
+        return values[1];
+      }
+    }
+    var dates = values.filter(function (value) {
       return value;
     });
     return this._getLowestDateInArray(dates);
@@ -124,12 +145,31 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
       _this$_getValues6 = _slicedToArray(_this$_getValues5, 2),
       startDate = _this$_getValues6[0],
       endDate = _this$_getValues6[1];
-    var _this$calendar$option = this.calendar.option(),
-      _allowChangeSelectionOrder = _this$calendar$option._allowChangeSelectionOrder,
-      _currentSelection = _this$calendar$option._currentSelection;
-    var skipHoveredRange = _allowChangeSelectionOrder && _currentSelection === 'startDate';
-    if (isMaxZoomLevel && startDate && !endDate && !skipHoveredRange) {
-      this._updateViewsOption('range', this._getDaysInRange(startDate, e.value));
+    var _this$calendar$option2 = this.calendar.option(),
+      _allowChangeSelectionOrder = _this$calendar$option2._allowChangeSelectionOrder,
+      _currentSelection = _this$calendar$option2._currentSelection;
+    if (isMaxZoomLevel) {
+      var skipHoveredRange = _allowChangeSelectionOrder && _currentSelection === 'startDate';
+      if (startDate && !endDate && !skipHoveredRange) {
+        if (e.value > startDate) {
+          this._updateViewsOption('hoveredRange', this._getDaysInRange(startDate, e.value));
+          return;
+        }
+      } else if (!startDate && endDate && !(_allowChangeSelectionOrder && _currentSelection === 'endDate')) {
+        if (e.value < endDate) {
+          this._updateViewsOption('hoveredRange', this._getDaysInRange(e.value, endDate));
+          return;
+        }
+      } else if (startDate && endDate) {
+        if (_currentSelection === 'startDate' && e.value < startDate) {
+          this._updateViewsOption('hoveredRange', this._getDaysInRange(e.value, startDate));
+          return;
+        } else if (_currentSelection === 'endDate' && e.value > endDate) {
+          this._updateViewsOption('hoveredRange', this._getDaysInRange(endDate, e.value));
+          return;
+        }
+      }
+      this._updateViewsOption('hoveredRange', []);
     }
   };
   return CalendarRangeSelectionStrategy;

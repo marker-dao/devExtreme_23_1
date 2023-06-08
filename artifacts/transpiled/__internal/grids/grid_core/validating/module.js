@@ -748,6 +748,9 @@ var validatingModule = {
                   data = change.data;
                 } else if (change.type === 'update') {
                   var oldData = that._getOldData(change.key);
+                  if (!(0, _type.isDefined)(oldData)) {
+                    return;
+                  }
                   data = (0, _array_utils.createObjectWithChanges)(oldData, change.data);
                 }
                 if (data) {

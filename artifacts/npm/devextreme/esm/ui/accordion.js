@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/accordion.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -111,6 +111,7 @@ var Accordion = CollectionWidget.inherit({
   },
   _initMarkup: function _initMarkup() {
     this._deferredItems = [];
+    this._deferredTemplateItems = [];
     this.callBase();
     this.setAria({
       'role': 'tablist',
@@ -123,7 +124,9 @@ var Accordion = CollectionWidget.inherit({
   },
   _render: function _render() {
     this.callBase();
-    this._updateItemHeightsWrapper(true);
+    when.apply(this, this._deferredTemplateItems).done(() => {
+      this._updateItemHeights(true);
+    });
   },
   _itemDataKey: function _itemDataKey() {
     return ACCORDION_ITEM_DATA_KEY;
@@ -160,6 +163,7 @@ var Accordion = CollectionWidget.inherit({
     this.callBase.apply(this, arguments);
   },
   _renderItemContent: function _renderItemContent(args) {
+    this._deferredTemplateItems[args.index] = new Deferred();
     var itemTitle = this.callBase(extend({}, args, {
       contentClass: ACCORDION_ITEM_TITLE_CLASS,
       templateProperty: 'titleTemplate',
@@ -179,6 +183,12 @@ var Accordion = CollectionWidget.inherit({
       contentClass: ACCORDION_ITEM_BODY_CLASS,
       container: getPublicElement($('<div>').appendTo($(itemTitle).parent()))
     })));
+  },
+  _onItemTemplateRendered: function _onItemTemplateRendered(_, renderArgs) {
+    return () => {
+      var item = this._deferredTemplateItems[renderArgs.index];
+      item && item.resolve();
+    };
   },
   _attachItemTitleClickAction: function _attachItemTitleClickAction(itemTitle) {
     var eventName = addNamespace(clickEventName, this.NAME);
@@ -210,6 +220,7 @@ var Accordion = CollectionWidget.inherit({
     });
   },
   _updateItemHeightsWrapper: function _updateItemHeightsWrapper(skipAnimation) {
+    // Note: require for proper animation in angularjs (T520346)
     if (this.option('templatesRenderAsynchronously')) {
       this._animationTimer = setTimeout(function () {
         this._updateItemHeights(skipAnimation);
@@ -301,6 +312,10 @@ var Accordion = CollectionWidget.inherit({
     this._updateItemHeights(true);
   },
   _clean: function _clean() {
+    this._deferredTemplateItems.forEach(item => {
+      item.reject();
+    });
+    this._deferredTemplateItems = [];
     clearTimeout(this._animationTimer);
     this.callBase();
   },

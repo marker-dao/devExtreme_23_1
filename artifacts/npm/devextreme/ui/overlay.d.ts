@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/overlay.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -33,7 +33,11 @@ import Widget, {
     WidgetOptions,
 } from './widget/ui.widget';
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @type object
+ */
 export interface dxOverlayOptions<TComponent> extends WidgetOptions<TComponent> {
     /**
      * @docid
@@ -220,6 +224,7 @@ export interface dxOverlayAnimation {
  * @inherits Widget
  * @hidden
  * @namespace DevExpress.ui
+ * @options dxOverlayOptions
  */
 export default class dxOverlay<TProperties> extends Widget<TProperties> {
     /**

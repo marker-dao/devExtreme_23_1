@@ -375,15 +375,19 @@ var DropDownEditor = TextBox.inherit({
       this._detachFocusOutEvents();
       eventsEngine.on(this._inputWrapper(), addNamespace('focusout', this.NAME), event => {
         var newTarget = event.relatedTarget;
-        var popupWrapper = this.content ? $(this.content()).closest('.' + DROP_DOWN_EDITOR_OVERLAY) : this._$popup;
         if (newTarget && this.option('opened')) {
-          var isNewTargetOutside = $(newTarget).closest('.' + DROP_DOWN_EDITOR_OVERLAY, popupWrapper).length === 0;
+          var isNewTargetOutside = this._isTargetOutOfComponent(newTarget);
           if (isNewTargetOutside) {
             this.close();
           }
         }
       });
     }
+  },
+  _isTargetOutOfComponent: function _isTargetOutOfComponent(newTarget) {
+    var popupWrapper = this.content ? $(this.content()).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY)) : this._$popup;
+    var isTargetOutsidePopup = $(newTarget).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY), popupWrapper).length === 0;
+    return isTargetOutsidePopup;
   },
   _detachFocusOutEvents: function _detachFocusOutEvents() {
     isIOs && eventsEngine.off(this._inputWrapper(), addNamespace('focusout', this.NAME));
@@ -526,7 +530,8 @@ var DropDownEditor = TextBox.inherit({
       onPositioned: this._popupPositionedHandler.bind(this),
       fullScreen: false,
       contentTemplate: null,
-      _wrapperClassExternal: DROP_DOWN_EDITOR_OVERLAY
+      _wrapperClassExternal: DROP_DOWN_EDITOR_OVERLAY,
+      _ignorePreventScrollEventsDeprecation: true
     };
   },
   _popupInitializedHandler: function _popupInitializedHandler() {

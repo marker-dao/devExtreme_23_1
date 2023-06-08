@@ -755,10 +755,13 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       e.preventDefault();
     }
     var dropZoneElement = this._getDropZoneElement(isCustomTarget, e);
-    if ((0, _type.isDefined)(dropZoneElement) && this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false)) {
+    if ((0, _type.isDefined)(dropZoneElement) && this._shouldRaiseDragOver(e, dropZoneElement)) {
       this._activeDropZone = dropZoneElement;
       this._tryToggleDropZoneActive(true, isCustomTarget, e);
     }
+  };
+  _proto._shouldRaiseDragOver = function _shouldRaiseDragOver(e, dropZoneElement) {
+    return this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false) && e.originalEvent.dataTransfer.types[0] === 'Files';
   };
   _proto._dragOverHandler = function _dragOverHandler(isCustomTarget, e) {
     if (!this._useInputForDrop()) {
@@ -768,10 +771,10 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (!isCustomTarget) {
       // only default dropzone has pseudoelements
       var dropZoneElement = this._getDropZoneElement(false, e);
-      if (this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false)) {
+      if (this._shouldRaiseDragOver(e, dropZoneElement)) {
         this._dragEnterHandler(false, e);
       }
-      if (this._activeDropZone !== null && this._shouldRaiseDragLeave(e, false)) {
+      if (this._shouldRaiseDragLeave(e, false)) {
         this._dragLeaveHandler(false, e);
       }
     }
@@ -780,16 +783,13 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (!this._useInputForDrop()) {
       e.preventDefault();
     }
-    if (this._activeDropZone === null) {
-      return;
-    }
     if (this._shouldRaiseDragLeave(e, isCustomTarget)) {
       this._tryToggleDropZoneActive(false, isCustomTarget, e);
       this._activeDropZone = null;
     }
   };
   _proto._shouldRaiseDragLeave = function _shouldRaiseDragLeave(e, isCustomTarget) {
-    return !this.isMouseOverElement(e, this._activeDropZone, !isCustomTarget);
+    return this._activeDropZone !== null && !this.isMouseOverElement(e, this._activeDropZone, !isCustomTarget);
   };
   _proto._tryToggleDropZoneActive = function _tryToggleDropZoneActive(active, isCustom, event) {
     var classAction = active ? 'addClass' : 'removeClass';
@@ -813,7 +813,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     e.preventDefault();
     var fileList = e.originalEvent.dataTransfer.files;
     var files = this._getFiles(fileList);
-    if (!this.option('multiple') && files.length > 1) {
+    if (!this.option('multiple') && files.length > 1 || files.length === 0) {
       return;
     }
     this._changeValue(files);

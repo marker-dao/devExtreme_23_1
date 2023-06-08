@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.base.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,6 +30,7 @@ var _load_indicator = _interopRequireDefault(require("../load_indicator"));
 var _uiText_editor2 = require("./ui.text_editor.label");
 var _size = require("../../core/utils/size");
 var _resize_observer = _interopRequireDefault(require("../../core/resize_observer"));
+var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var TEXTEDITOR_CLASS = 'dx-texteditor';
 var TEXTEDITOR_INPUT_CONTAINER_CLASS = 'dx-texteditor-input-container';
@@ -353,8 +354,18 @@ var TextEditorBase = _editor.default.inherit({
     this._label.updateBeforeWidth(this._getLabelBeforeWidth());
     this._label.updateMaxWidth(this._getLabelContainerWidth());
   },
-  _setLabelContainerAria: function _setLabelContainerAria() {
-    this.setAria('labelledby', this._label.getId(), this._getLabelContainer());
+  _getFieldElement: function _getFieldElement() {
+    return this._getLabelContainer();
+  },
+  _setFieldAria: function _setFieldAria() {
+    var _this$_$placeholder;
+    var labelId = this._label.getId();
+    var placeholderId = (_this$_$placeholder = this._$placeholder) === null || _this$_$placeholder === void 0 ? void 0 : _this$_$placeholder.attr('id');
+    var value = [labelId, placeholderId].filter(Boolean).join(' ');
+    var aria = {
+      'labelledby': value || undefined
+    };
+    this.setAria(aria, this._getFieldElement());
   },
   _renderLabel: function _renderLabel() {
     this._unobserveLabelContainerResize();
@@ -373,7 +384,7 @@ var TextEditorBase = _editor.default.inherit({
       beforeWidth: this._getLabelBeforeWidth()
     };
     this._label = new TextEditorLabelCreator(labelConfig);
-    this._setLabelContainerAria();
+    this._setFieldAria();
     if (this._labelContainerElement) {
       // NOTE: element can be not in DOM yet in React and Vue
       _resize_observer.default.observe(this._labelContainerElement, this._updateLabelWidth.bind(this));
@@ -389,8 +400,12 @@ var TextEditorBase = _editor.default.inherit({
       this._$placeholder = null;
     }
     var $input = this._input();
-    var placeholderText = this.option('placeholder');
-    var $placeholder = this._$placeholder = (0, _renderer.default)('<div>').attr('data-dx_placeholder', placeholderText);
+    var placeholder = this.option('placeholder');
+    var placeholderAttributes = {
+      'id': placeholder ? "dx-".concat(new _guid.default()) : undefined,
+      'data-dx_placeholder': placeholder
+    };
+    var $placeholder = this._$placeholder = (0, _renderer.default)('<div>').attr(placeholderAttributes);
     $placeholder.insertAfter($input);
     $placeholder.addClass(TEXTEDITOR_PLACEHOLDER_CLASS);
   },
@@ -602,17 +617,18 @@ var TextEditorBase = _editor.default.inherit({
         break;
       case 'placeholder':
         this._renderPlaceholder();
+        this._setFieldAria();
         break;
       case 'label':
         this._label.updateText(value);
-        this._setLabelContainerAria();
+        this._setFieldAria();
         break;
       case 'labelMark':
         this._label.updateMark(value);
         break;
       case 'labelMode':
         this._label.updateMode(value);
-        this._setLabelContainerAria();
+        this._setFieldAria();
         break;
       case 'width':
         this.callBase(args);

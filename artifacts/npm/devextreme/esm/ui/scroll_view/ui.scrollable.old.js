@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scroll_view/ui.scrollable.old.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -319,8 +319,9 @@ var Scrollable = DOMComponent.inherit({
   container: function container() {
     return getPublicElement(this._$container);
   },
-  scrollOffset: function scrollOffset() {
-    return this._strategy._getScrollOffset();
+  scrollOffset() {
+    var scrollOffset = this._strategy._getScrollOffset();
+    return scrollOffset;
   },
   _isRtlNativeStrategy: function _isRtlNativeStrategy() {
     var {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/core/utils/type.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -55,6 +55,9 @@ var isPlainObject = function isPlainObject(object) {
     return false;
   }
   var proto = Object.getPrototypeOf(object);
+  if (!proto) {
+    return true;
+  }
   var ctor = Object.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
   return typeof ctor === 'function' && Object.toString.call(ctor) === Object.toString.call(Object);
 };

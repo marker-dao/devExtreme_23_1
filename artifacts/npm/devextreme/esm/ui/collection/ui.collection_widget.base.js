@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/collection/ui.collection_widget.base.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -576,26 +576,31 @@ var CollectionWidget = Widget.inherit({
     this._attachHoldEvent();
     this._attachContextMenuEvent();
   },
-  _attachClickEvent: function _attachClickEvent() {
+  _getPointerEvent() {
+    return pointerEvents.down;
+  },
+  _attachClickEvent() {
     var itemSelector = this._itemSelector();
+    var pointerEvent = this._getPointerEvent();
     var clickEventNamespace = addNamespace(clickEventName, this.NAME);
-    var pointerDownEventNamespace = addNamespace(pointerEvents.down, this.NAME);
-    var that = this;
-    var pointerDownAction = new Action(function (args) {
-      var event = args.event;
-      that._itemPointerDownHandler(event);
+    var pointerEventNamespace = addNamespace(pointerEvent, this.NAME);
+    var pointerAction = new Action(args => {
+      var {
+        event
+      } = args;
+      this._itemPointerDownHandler(event);
     });
-    eventsEngine.off(this._itemContainer(), clickEventNamespace, itemSelector);
-    eventsEngine.off(this._itemContainer(), pointerDownEventNamespace, itemSelector);
-    eventsEngine.on(this._itemContainer(), clickEventNamespace, itemSelector, function (e) {
-      this._itemClickHandler(e);
-    }.bind(this));
-    eventsEngine.on(this._itemContainer(), pointerDownEventNamespace, itemSelector, function (e) {
-      pointerDownAction.execute({
+    var clickEventCallback = e => this._itemClickHandler(e);
+    var pointerEventCallback = e => {
+      pointerAction.execute({
         element: $(e.target),
         event: e
       });
-    });
+    };
+    eventsEngine.off(this._itemContainer(), clickEventNamespace, itemSelector);
+    eventsEngine.off(this._itemContainer(), pointerEventNamespace, itemSelector);
+    eventsEngine.on(this._itemContainer(), clickEventNamespace, itemSelector, clickEventCallback);
+    eventsEngine.on(this._itemContainer(), pointerEventNamespace, itemSelector, pointerEventCallback);
   },
   _itemClickHandler: function _itemClickHandler(e, args, config) {
     this._itemDXEventHandler(e, 'onItemClick', args, config);
@@ -846,7 +851,6 @@ var CollectionWidget = Widget.inherit({
       } else {
         this._$noData.html(noDataText);
       }
-      this.setAria('label', noDataText);
     }
     this.$element().toggleClass(EMPTY_COLLECTION, !hideNoData);
   },

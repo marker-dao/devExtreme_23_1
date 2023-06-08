@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/range_slider.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,7 +35,12 @@ export type InitializedEvent = InitializedEventInfo<dxRangeSlider>;
 /** @public */
 export type OptionChangedEvent = EventInfo<dxRangeSlider> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_range_slider_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo, ValueChangedInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxRangeSlider, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent | UIEvent | Event> & ValueChangedInfo & {
     readonly start?: number;
     readonly end?: number;
@@ -45,6 +50,7 @@ export type ValueChangedEvent = NativeEventInfo<dxRangeSlider, KeyboardEvent | M
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxRangeSliderOptions extends dxSliderBaseOptions<dxRangeSlider> {
     /**
@@ -61,10 +67,9 @@ export interface dxRangeSliderOptions extends dxSliderBaseOptions<dxRangeSlider>
     endName?: string;
     /**
      * @docid
-     * @type_function_param1_field component:dxRangeSlider
+     * @type_function_param1 e:{ui/range_slider:ValueChangedEvent}
      * @action
      * @default null
-     * @type_function_param1_field value:array<number>
      * @public
      */
     onValueChanged?: ((e: ValueChangedEvent) => void);
@@ -102,42 +107,4 @@ export type Properties = dxRangeSliderOptions;
 /** @deprecated use Properties instead */
 export type Options = dxRangeSliderOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxRangeSliderOptions.onContentReady
- * @type_function_param1 e:{ui/range_slider:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxRangeSliderOptions.onDisposing
- * @type_function_param1 e:{ui/range_slider:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxRangeSliderOptions.onInitialized
- * @type_function_param1 e:{ui/range_slider:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxRangeSliderOptions.onOptionChanged
- * @type_function_param1 e:{ui/range_slider:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxRangeSliderOptions.onValueChanged
- * @type_function_param1 e:{ui/range_slider:ValueChangedEvent}
- */
-onValueChanged?: ((e: ValueChangedEvent) => void);
-};

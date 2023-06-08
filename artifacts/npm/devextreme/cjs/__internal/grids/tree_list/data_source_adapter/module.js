@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/data_source_adapter/module.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,9 +22,9 @@ var _array_store = _interopRequireDefault(require("../../../../data/array_store"
 var _query = _interopRequireDefault(require("../../../../data/query"));
 var _deferred = require("../../../../core/utils/deferred");
 var _store_helper = _interopRequireDefault(require("../../../../data/store_helper"));
-var _uiGrid_core = _interopRequireDefault(require("../../../../ui/grid_core/ui.grid_core.data_source_adapter"));
-var _uiGrid_core2 = _interopRequireDefault(require("../../../../ui/grid_core/ui.grid_core.utils"));
+var _uiGrid_core = _interopRequireDefault(require("../../../../ui/grid_core/ui.grid_core.utils"));
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
+var _module = _interopRequireDefault(require("../../grid_core/data_source_adapter/module"));
 var _module_core = _interopRequireDefault(require("../module_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var queryByOptions = _store_helper.default.queryByOptions;
@@ -32,7 +32,7 @@ var DEFAULT_KEY_EXPRESSION = 'id';
 var isFullBranchFilterMode = function isFullBranchFilterMode(that) {
   return that.option('filterMode') === 'fullBranch';
 };
-var DataSourceAdapterTreeList = _uiGrid_core.default.inherit(function () {
+var DataSourceAdapterTreeList = _module.default.inherit(function () {
   var getChildKeys = function getChildKeys(that, keys) {
     var childKeys = [];
     keys.forEach(function (key) {
@@ -192,7 +192,7 @@ var DataSourceAdapterTreeList = _uiGrid_core.default.inherit(function () {
       for (var i = 0; i < keys.length; i++) {
         parentIdFilters.push([field, '=', keys[i]]);
       }
-      return _uiGrid_core2.default.combineFilters(parentIdFilters, 'or');
+      return _uiGrid_core.default.combineFilters(parentIdFilters, 'or');
     },
     _customizeRemoteOperations: function _customizeRemoteOperations(options, operationTypes) {
       this.callBase.apply(this, arguments);
@@ -638,12 +638,12 @@ var DataSourceAdapterTreeList = _uiGrid_core.default.inherit(function () {
         }
         return !!isExpandedByKey[key];
       }
-      var indexExpandedNodeKey = _uiGrid_core2.default.getIndexByKey(key, this.option('expandedRowKeys'), null);
+      var indexExpandedNodeKey = _uiGrid_core.default.getIndexByKey(key, this.option('expandedRowKeys'), null);
       return indexExpandedNodeKey >= 0;
     },
     _changeRowExpandCore: function _changeRowExpandCore(key) {
       var expandedRowKeys = this.option('expandedRowKeys').slice();
-      var indexExpandedNodeKey = _uiGrid_core2.default.getIndexByKey(key, expandedRowKeys, null);
+      var indexExpandedNodeKey = _uiGrid_core.default.getIndexByKey(key, expandedRowKeys, null);
       if (indexExpandedNodeKey < 0) {
         expandedRowKeys.push(key);
       } else {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common/grids.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1303,6 +1303,7 @@ export type HeaderFilterTexts = {
  * @inherits Widget, DataHelperMixin
  * @hidden
  * @namespace DevExpress.common.grids
+ * @options GridBaseOptions
  */
 export interface GridBase<TRowData = any, TKey = any> {
   /**
@@ -1735,6 +1736,8 @@ interface GridBaseOptionsBlank<TComponent extends GridBase<TRowData, TKey>, TRow
 
 /**
  * @namespace DevExpress.common.grids
+ * @docid
+ * @type object
  */
 export type GridBaseOptions<TComponent extends GridBase<TRowData, TKey>, TRowData = any, TKey = any> = Omit<GridBaseOptionsBlank<TComponent, TRowData, TKey>, 'focusStateEnabled'> & {
   /**

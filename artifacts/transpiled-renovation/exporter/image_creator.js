@@ -330,8 +330,9 @@ function drawElement(element, context, parentOptions, shared) {
   var tagName = element.tagName;
   var isText = tagName === 'text' || tagName === 'tspan' || tagName === undefined;
   var isImage = tagName === 'image';
+  var isComment = element.nodeType === 8;
   var options = (0, _extend.extend)({}, parentOptions, getElementOptions(element, shared.rootAppended));
-  if (options.visibility === 'hidden' || options[_svg.HIDDEN_FOR_EXPORT]) {
+  if (options.visibility === 'hidden' || options[_svg.HIDDEN_FOR_EXPORT] || isComment) {
     return;
   }
   context.save();

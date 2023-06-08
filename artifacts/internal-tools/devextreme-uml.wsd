@@ -151,7 +151,7 @@ object DataSource {
   Array|String expand
   Filter expression filter
   Group expression group
-  Object langParams
+  LangParams langParams
   function(dataItem) map
   function(e) onChanged
   function(error) onLoadError
@@ -174,15 +174,11 @@ object DateBoxBase {
   String applyButtonText
   dxCalendarOptions calendarOptions
   String cancelButtonText
-  String dateOutOfRangeMessage
   String dateSerializationFormat
-  Array|function(data) disabledDates
   Format displayFormat
   dxPopupOptions dropDownOptions
-  String invalidDateMessage
   Date|Number|String max
   Date|Number|String min
-  String placeholder
   String todayButtonText
   Boolean useMaskBehavior
 }
@@ -251,6 +247,14 @@ object dxActionSheet {
   NO_TYPE keyExpr
   NO_TYPE noDataText
   function(e) onCancelClick
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onItemClick
+  function(e) onItemContextMenu
+  function(e) onItemHold
+  function(e) onItemRendered
+  function(e) onOptionChanged
   NO_TYPE onSelectionChanged
   NO_TYPE selectedIndex
   NO_TYPE selectedItem
@@ -304,12 +308,20 @@ object dxBarGauge {
   String backgroundColor
   Number barSpacing
   Number baseValue
-  template centerTemplate
+  template|function(component, element) centerTemplate
   Number endValue
   Object geometry
   Object label
   Object legend
   Object loadingIndicator
+  function(e) onDisposing
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
+  function(e) onOptionChanged
   function(e) onTooltipHidden
   function(e) onTooltipShown
   Array|Enums.Palette palette
@@ -334,6 +346,14 @@ object dxBox {
   Array items
   NO_TYPE keyExpr
   NO_TYPE noDataText
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onItemClick
+  function(e) onItemContextMenu
+  function(e) onItemHold
+  function(e) onItemRendered
+  function(e) onOptionChanged
   NO_TYPE onSelectionChanged
   NO_TYPE selectedIndex
   NO_TYPE selectedItem
@@ -372,6 +392,10 @@ object dxButton {
   Boolean hoverStateEnabled
   String icon
   function(e) onClick
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onOptionChanged
   Enums.ButtonStyle stylingMode
   template|function(buttonData, contentElement) template
   String text
@@ -387,7 +411,11 @@ object dxButtonGroup {
   Boolean hoverStateEnabled
   Array items
   String|function() keyExpr
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
   function(e) onItemClick
+  function(e) onOptionChanged
   function(e) onSelectionChanged
   Array selectedItemKeys
   Array selectedItems
@@ -411,6 +439,10 @@ object dxCalendar {
   Enums.CalendarZoomLevel minZoomLevel
   String name
   NO_TYPE onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onOptionChanged
+  function(e) onValueChanged
   Boolean showTodayButton
   Boolean showWeekNumbers
   Date|Number|String value
@@ -440,10 +472,24 @@ object dxChart {
   Number minBubbleSize
   Boolean negativesAsZeroes
   function(e) onArgumentAxisClick
+  function(e) onDisposing
+  function(e) onDone
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
   function(e) onLegendClick
+  function(e) onOptionChanged
+  function(e) onPointClick
+  function(e) onPointHoverChanged
+  function(e) onPointSelectionChanged
   function(e) onSeriesClick
   function(e) onSeriesHoverChanged
   function(e) onSeriesSelectionChanged
+  function(e) onTooltipHidden
+  function(e) onTooltipShown
   function(e) onZoomEnd
   function(e) onZoomStart
   Object|Array panes
@@ -480,7 +526,7 @@ object dxCheckBox {
 Editor <|-up- dxCheckBox
 
 object dxCircularGauge {
-  template centerTemplate
+  template|function(component, element) centerTemplate
   Object geometry
   function(e) onDisposing
   function(e) onDrawn
@@ -570,22 +616,47 @@ object dxDataGrid {
   Object groupPanel
   String|Array keyExpr
   Object masterDetail
+  function(e) onAdaptiveDetailRowPreparing
   function(e) onCellClick
   function(e) onCellDblClick
   function(e) onCellHoverChanged
   function(e) onCellPrepared
+  function(e) onContentReady
   function(e) onContextMenuPreparing
+  function(e) onDataErrorOccurred
+  function(e) onDisposing
+  function(e) onEditCanceled
+  function(e) onEditCanceling
   function(e) onEditingStart
-  function(options) onEditorPrepared
+  function(e) onEditorPrepared
   function(e) onEditorPreparing
   function(e) onExporting
   function(e) onFocusedCellChanged
   function(e) onFocusedCellChanging
   function(e) onFocusedRowChanged
   function(e) onFocusedRowChanging
+  function(e) onInitialized
+  function(e) onInitNewRow
+  function(e) onKeyDown
+  function(e) onOptionChanged
   function(e) onRowClick
+  function(e) onRowCollapsed
+  function(e) onRowCollapsing
   function(e) onRowDblClick
+  function(e) onRowExpanded
+  function(e) onRowExpanding
+  function(e) onRowInserted
+  function(e) onRowInserting
   function(e) onRowPrepared
+  function(e) onRowRemoved
+  function(e) onRowRemoving
+  function(e) onRowUpdated
+  function(e) onRowUpdating
+  function(e) onRowValidating
+  function(e) onSaved
+  function(e) onSaving
+  function(e) onSelectionChanged
+  function(e) onToolbarPreparing
   Boolean regenerateColumnsByVisibleItems
   Boolean|Object|Enums.Mode remoteOperations
   template|function(rowElement, rowInfo) rowTemplate
@@ -600,7 +671,14 @@ GridBase <|-up- dxDataGrid
 
 object dxDateBox {
   Boolean adaptivityEnabled
+  String dateOutOfRangeMessage
+  Array|function(data) disabledDates
+  any inputAttr
   Number interval
+  String invalidDateMessage
+  String label
+  String|Number maxLength
+  String name
   function(e) onChange
   function(e) onClosed
   function(e) onContentReady
@@ -619,14 +697,30 @@ object dxDateBox {
   function(e) onPaste
   function(e) onValueChanged
   Enums.DatePickerType pickerType
+  String placeholder
   Boolean showAnalogClock
+  String text
   Enums.DateType type
   Date|Number|String value
 }
 DateBoxBase <|-up- dxDateBox
 
 object dxDateRangeBox {
+  Boolean disableOutOfRangeSelection
   Date|Number|String endDate
+  any endDateInputAttr
+  String endDateLabel
+  String endDateName
+  String endDateOutOfRangeMessage
+  String endDatePlaceholder
+  String endDateText
+  NO_TYPE inputAttr
+  String invalidEndDateMessage
+  String invalidStartDateMessage
+  NO_TYPE label
+  NO_TYPE maxLength
+  Boolean multiView
+  NO_TYPE name
   function(e) onChange
   function(e) onClosed
   function(e) onContentReady
@@ -644,8 +738,16 @@ object dxDateRangeBox {
   function(e) onOptionChanged
   function(e) onPaste
   function(e) onValueChanged
-  Enums.DateRangePickerType pickerType
+  Boolean openOnFieldClick
+  NO_TYPE placeholder
   Date|Number|String startDate
+  any startDateInputAttr
+  String startDateLabel
+  String startDateName
+  String startDateOutOfRangeMessage
+  String startDatePlaceholder
+  String startDateText
+  NO_TYPE text
   Array value
 }
 DateBoxBase <|-up- dxDateRangeBox
@@ -800,7 +902,11 @@ object dxDropDownButton {
   String keyExpr
   String noDataText
   function(e) onButtonClick
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
   function(e) onItemClick
+  function(e) onOptionChanged
   function(e) onSelectionChanged
   Boolean opened
   String|Number|any selectedItem
@@ -843,9 +949,7 @@ dxTextBox <|-up- dxDropDownEditor
 
 object dxDropDownList {
   NO_TYPE applyValueMode
-  NO_TYPE contentRender
   String displayValue
-  NO_TYPE fieldRender
   NO_TYPE fieldTemplate
   Boolean grouped
   template|function(itemData, itemIndex, itemElement) groupTemplate
@@ -879,15 +983,18 @@ object dxFileManager {
   String focusedItemKey
   Object itemView
   Object notifications
+  function(e) onContentReady
   function(e) onContextMenuItemClick
   function(e) onContextMenuShowing
   function(e) onCurrentDirectoryChanged
   function(e) onDirectoryCreated
   function(e) onDirectoryCreating
+  function(e) onDisposing
   function(e) onErrorOccurred
   function(e) onFileUploaded
   function(e) onFileUploading
   function(e) onFocusedItemChanged
+  function(e) onInitialized
   function(e) onItemCopied
   function(e) onItemCopying
   function(e) onItemDeleted
@@ -897,6 +1004,7 @@ object dxFileManager {
   function(e) onItemMoving
   function(e) onItemRenamed
   function(e) onItemRenaming
+  function(e) onOptionChanged
   function(e) onSelectedFileOpened
   function(e) onSelectionChanged
   function(e) onToolbarItemClick
@@ -972,8 +1080,12 @@ object dxFilterBuilder {
   Object groupOperationDescriptions
   Array groupOperations
   Number maxGroupLevel
+  function(e) onContentReady
+  function(e) onDisposing
   function(e) onEditorPrepared
   function(e) onEditorPreparing
+  function(e) onInitialized
+  function(e) onOptionChanged
   function(e) onValueChanged
   Filter expression value
 }
@@ -990,8 +1102,12 @@ object dxForm {
   Enums.LabelLocation labelLocation
   Enums.FormLabelMode labelMode
   Number minColWidth
+  function(e) onContentReady
+  function(e) onDisposing
   function(e) onEditorEnterKey
   function(e) onFieldDataChanged
+  function(e) onInitialized
+  function(e) onOptionChanged
   String optionalMark
   Boolean readOnly
   String requiredMark
@@ -1019,9 +1135,17 @@ object dxFunnel {
   Object legend
   Number neckHeight
   Number neckWidth
+  function(e) onDisposing
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
   function(e) onHoverChanged
+  function(e) onIncidentOccurred
+  function(e) onInitialized
   function(e) onItemClick
   function(e) onLegendClick
+  function(e) onOptionChanged
   function(e) onSelectionChanged
   Array|Enums.Palette palette
   Enums.PaletteExtensionMode paletteExtensionMode
@@ -1141,8 +1265,13 @@ object dxHtmlEditor {
   dxHtmlEditorMediaResizing mediaResizing
   Array mentions
   String name
+  function(e) onContentReady
+  function(e) onDisposing
   function(e) onFocusIn
   function(e) onFocusOut
+  function(e) onInitialized
+  function(e) onOptionChanged
+  function(e) onValueChanged
   String placeholder
   Enums.EditorStyle stylingMode
   dxHtmlEditorTableContextMenu tableContextMenu
@@ -1155,6 +1284,16 @@ Editor <|-up- dxHtmlEditor
 
 object dxLinearGauge {
   Object geometry
+  function(e) onDisposing
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
+  function(e) onOptionChanged
+  function(e) onTooltipHidden
+  function(e) onTooltipShown
   Object rangeContainer
   Object scale
   GaugeIndicator subvalueIndicator
@@ -1180,18 +1319,24 @@ object dxList {
   Array menuItems
   Enums.ListMenuMode menuMode
   String nextButtonText
+  function(e) onContentReady
+  function(e) onDisposing
   function(e) onGroupRendered
+  function(e) onInitialized
   function(e) onItemClick
   function(e) onItemContextMenu
   function(e) onItemDeleted
   function(e) onItemDeleting
   function(e) onItemHold
+  function(e) onItemRendered
   function(e) onItemReordered
   function(e) onItemSwipe
+  function(e) onOptionChanged
   function(e) onPageLoading
   function(e) onPullRefresh
   function(e) onScroll
   function(e) onSelectAllValueChanged
+  function(e) onSelectionChanged
   String pageLoadingText
   Enums.PageLoadMode pageLoadMode
   String pulledDownText
@@ -1279,18 +1424,26 @@ object dxLookup {
   NO_TYPE maxLength
   String nextButtonText
   NO_TYPE onChange
+  function(e) onClosed
+  function(e) onContentReady
   NO_TYPE onCopy
   NO_TYPE onCut
+  function(e) onDisposing
   NO_TYPE onEnterKey
   NO_TYPE onFocusIn
   NO_TYPE onFocusOut
+  function(e) onInitialized
   NO_TYPE onInput
+  function(e) onItemClick
   NO_TYPE onKeyDown
   NO_TYPE onKeyUp
+  function(e) onOpened
+  function(e) onOptionChanged
   function(e) onPageLoading
   NO_TYPE onPaste
   function(e) onPullRefresh
   function(e) onScroll
+  function(e) onSelectionChanged
   function(e) onValueChanged
   NO_TYPE openOnFieldClick
   String pageLoadingText
@@ -1347,8 +1500,16 @@ object dxMenu {
   String|Array|Store|DataSource|DataSourceOptions|null dataSource
   Boolean hideSubmenuOnMouseLeave
   Array items
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onItemClick
+  function(e) onItemContextMenu
+  function(e) onItemRendered
   NO_TYPE onItemReordered
+  function(e) onOptionChanged
   NO_TYPE onSelectionChange
+  function(e) onSelectionChanged
   function(e) onSubmenuHidden
   function(e) onSubmenuHiding
   function(e) onSubmenuShowing
@@ -1471,7 +1632,7 @@ Widget <|-up- dxOverlay
 object dxPieChart {
   Object adaptiveLayout
   Array annotations
-  template centerTemplate
+  template|function(component, element) centerTemplate
   dxPieChartCommonAnnotationConfig commonAnnotationSettings
   any commonSeriesSettings
   function(annotation) customizeAnnotation
@@ -1479,7 +1640,21 @@ object dxPieChart {
   Number innerRadius
   Object legend
   Number minDiameter
+  function(e) onDisposing
+  function(e) onDone
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
   function(e) onLegendClick
+  function(e) onOptionChanged
+  function(e) onPointClick
+  function(e) onPointHoverChanged
+  function(e) onPointSelectionChanged
+  function(e) onTooltipHidden
+  function(e) onTooltipShown
   Array|Enums.Palette palette
   Enums.ShiftLabelOverlap resolveLabelOverlapping
   Enums.PieChartSegmentDirection segmentsDirection
@@ -1511,8 +1686,12 @@ object dxPivotGrid {
   Object loadPanel
   function(e) onCellClick
   function(e) onCellPrepared
+  function(e) onContentReady
   function(e) onContextMenuPreparing
+  function(e) onDisposing
   function(e) onExporting
+  function(e) onInitialized
+  function(e) onOptionChanged
   Enums.PivotGridRowHeaderLayout rowHeaderLayout
   Object scrolling
   Boolean showBorders
@@ -1535,7 +1714,11 @@ object dxPivotGridFieldChooser {
   Object headerFilter
   Number|String|function() height
   Enums.FieldChooserLayout layout
+  function(e) onContentReady
   function(e) onContextMenuPreparing
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onOptionChanged
   Number searchTimeout
   any state
   Object texts
@@ -1557,10 +1740,24 @@ object dxPolarChart {
   Object legend
   Boolean negativesAsZeroes
   function(e) onArgumentAxisClick
+  function(e) onDisposing
+  function(e) onDone
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
   function(e) onLegendClick
+  function(e) onOptionChanged
+  function(e) onPointClick
+  function(e) onPointHoverChanged
+  function(e) onPointSelectionChanged
   function(e) onSeriesClick
   function(e) onSeriesHoverChanged
   function(e) onSeriesSelectionChanged
+  function(e) onTooltipHidden
+  function(e) onTooltipShown
   function(e) onZoomEnd
   function(e) onZoomStart
   Enums.LabelOverlap resolveLabelOverlapping
@@ -1659,6 +1856,11 @@ object dxRadioGroup {
   Boolean hoverStateEnabled
   Enums.Orientation layout
   String name
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onOptionChanged
+  function(e) onValueChanged
   any value
 }
 Editor <|-up- dxRadioGroup
@@ -1672,6 +1874,14 @@ object dxRangeSelector {
   Store|DataSource|DataSourceOptions|String|Array|null dataSource
   String dataSourceField
   Object indent
+  function(e) onDisposing
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
+  function(e) onOptionChanged
   function(e) onValueChanged
   Object scale
   String selectedRangeColor
@@ -1743,6 +1953,14 @@ object dxResponsiveBox {
   Array items
   NO_TYPE keyExpr
   NO_TYPE noDataText
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onItemClick
+  function(e) onItemContextMenu
+  function(e) onItemHold
+  function(e) onItemRendered
+  function(e) onOptionChanged
   NO_TYPE onSelectionChanged
   Array rows
   function() screenByWidth
@@ -1764,10 +1982,18 @@ object dxSankey {
   Object label
   Object link
   Object node
+  function(e) onDisposing
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
   function(e) onLinkClick
   function(e) onLinkHoverChanged
   function(e) onNodeClick
   function(e) onNodeHoverChanged
+  function(e) onOptionChanged
   Array|Enums.Palette palette
   Enums.PaletteExtensionMode paletteExtensionMode
   any sortData
@@ -1829,6 +2055,10 @@ object dxScheduler {
   function(e) onAppointmentUpdating
   function(e) onCellClick
   function(e) onCellContextMenu
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onOptionChanged
   Enums.RecurrenceEditMode recurrenceEditMode
   String recurrenceExceptionExpr
   String recurrenceRuleExpr
@@ -1915,6 +2145,11 @@ object dxSelectBox {
 dxDropDownList <|-up- dxSelectBox
 
 object dxSlider {
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onOptionChanged
+  function(e) onValueChanged
   Number value
 }
 dxSliderBase <|-up- dxSlider
@@ -1942,10 +2177,13 @@ object dxSortable {
   Enums.Orientation itemOrientation
   Boolean moveItemOnDrop
   function(e) onAdd
+  function(e) onDisposing
   function(e) onDragChange
   function(e) onDragEnd
   function(e) onDragMove
   function(e) onDragStart
+  function(e) onInitialized
+  function(e) onOptionChanged
   function(e) onPlaceholderPrepared
   function(e) onRemove
   function(e) onReorder
@@ -1966,6 +2204,16 @@ object dxSparkline {
   Number maxValue
   String minColor
   Number minValue
+  function(e) onDisposing
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
+  function(e) onOptionChanged
+  function(e) onTooltipHidden
+  function(e) onTooltipShown
   String pointColor
   Number pointSize
   Enums.PointSymbol pointSymbol
@@ -2043,6 +2291,15 @@ object dxTabs {
   Boolean focusStateEnabled
   Boolean hoverStateEnabled
   Array items
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onItemClick
+  function(e) onItemContextMenu
+  function(e) onItemHold
+  function(e) onItemRendered
+  function(e) onOptionChanged
+  function(e) onSelectionChanged
   Boolean repaintChangesOnly
   Boolean scrollByContent
   Boolean scrollingEnabled
@@ -2057,7 +2314,6 @@ object dxTagBox {
   NO_TYPE displayValue
   NO_TYPE hiddenAction
   Boolean hideSelectedItems
-  NO_TYPE itemRender
   Number maxDisplayedTags
   Number maxFilterQueryLength
   Boolean multiline
@@ -2202,6 +2458,14 @@ object dxTileView {
   Number itemMargin
   Array items
   NO_TYPE keyExpr
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onItemClick
+  function(e) onItemContextMenu
+  function(e) onItemHold
+  function(e) onItemRendered
+  function(e) onOptionChanged
   NO_TYPE onSelectionChanged
   NO_TYPE selectedIndex
   NO_TYPE selectedItem
@@ -2248,6 +2512,14 @@ object dxToolbar {
   NO_TYPE keyExpr
   template|function(itemData, itemIndex, itemElement) menuItemTemplate
   Boolean multiline
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onItemClick
+  function(e) onItemContextMenu
+  function(e) onItemHold
+  function(e) onItemRendered
+  function(e) onOptionChanged
   NO_TYPE onSelectionChanged
   Number selectedIndex
   NO_TYPE selectedItem
@@ -2271,7 +2543,7 @@ object dxTooltip {
   NO_TYPE showCloseButton
   NO_TYPE showTitle
   NO_TYPE title
-  NO_TYPE titleTemplate
+  template titleTemplate
   NO_TYPE toolbarItems
 }
 dxPopover <|-up- dxTooltip
@@ -2294,22 +2566,47 @@ object dxTreeList {
   String|function() hasItemsExpr
   String|function() itemsExpr
   String|function() keyExpr
+  function(e) onAdaptiveDetailRowPreparing
   function(e) onCellClick
   function(e) onCellDblClick
   function(e) onCellHoverChanged
   function(e) onCellPrepared
+  function(e) onContentReady
   function(e) onContextMenuPreparing
+  function(e) onDataErrorOccurred
+  function(e) onDisposing
+  function(e) onEditCanceled
+  function(e) onEditCanceling
   function(e) onEditingStart
-  function(options) onEditorPrepared
+  function(e) onEditorPrepared
   function(e) onEditorPreparing
   function(e) onFocusedCellChanged
   function(e) onFocusedCellChanging
   function(e) onFocusedRowChanged
   function(e) onFocusedRowChanging
+  function(e) onInitialized
+  function(e) onInitNewRow
+  function(e) onKeyDown
   function(e) onNodesInitialized
+  function(e) onOptionChanged
   function(e) onRowClick
+  function(e) onRowCollapsed
+  function(e) onRowCollapsing
   function(e) onRowDblClick
+  function(e) onRowExpanded
+  function(e) onRowExpanding
+  function(e) onRowInserted
+  function(e) onRowInserting
   function(e) onRowPrepared
+  function(e) onRowRemoved
+  function(e) onRowRemoving
+  function(e) onRowUpdated
+  function(e) onRowUpdating
+  function(e) onRowValidating
+  function(e) onSaved
+  function(e) onSaving
+  function(e) onSelectionChanged
+  function(e) onToolbarPreparing
   Object paging
   String|function() parentIdExpr
   Object|Enums.Mode remoteOperations
@@ -2335,10 +2632,18 @@ object dxTreeMap {
   Object margin
   Number maxDepth
   function(e) onClick
+  function(e) onDisposing
+  function(e) onDrawn
   function(e) onDrill
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
   function(e) onHoverChanged
+  function(e) onIncidentOccurred
+  function(e) onInitialized
   function(e) onNodesInitialized
   function(e) onNodesRendering
+  function(e) onOptionChanged
   function(e) onSelectionChanged
   String parentField
   Enums.SingleMultipleOrNone selectionMode
@@ -2362,6 +2667,9 @@ object dxTreeView {
   Boolean expandNodesRecursive
   String|function() hasItemsExpr
   Array items
+  function(e) onContentReady
+  function(e) onDisposing
+  function(e) onInitialized
   function(e) onItemClick
   function(e) onItemCollapsed
   function(e) onItemContextMenu
@@ -2369,6 +2677,7 @@ object dxTreeView {
   function(e) onItemHold
   function(e) onItemRendered
   function(e) onItemSelectionChanged
+  function(e) onOptionChanged
   function(e) onSelectAllValueChanged
   function(e) onSelectionChanged
   String|function() parentIdExpr
@@ -2390,6 +2699,9 @@ HierarchicalCollectionWidget <|-up- dxTreeView
 SearchBoxMixin <|-up- dxTreeView
 
 object dxValidationGroup {
+  function(e) onDisposing
+  function(e) onInitialized
+  function(e) onOptionChanged
   NO_TYPE rtlEnabled
 }
 DOMComponent <|-up- dxValidationGroup
@@ -2403,7 +2715,6 @@ object dxValidationSummary {
   NO_TYPE height
   NO_TYPE hint
   NO_TYPE itemHoldTimeout
-  NO_TYPE itemRender
   NO_TYPE keyExpr
   NO_TYPE noDataText
   function(e) onContentReady
@@ -2452,6 +2763,14 @@ object dxVectorMap {
   Number maxZoomFactor
   function(e) onCenterChanged
   function(e) onClick
+  function(e) onDisposing
+  function(e) onDrawn
+  function(e) onExported
+  function(e) onExporting
+  function(e) onFileSaving
+  function(e) onIncidentOccurred
+  function(e) onInitialized
+  function(e) onOptionChanged
   function(e) onSelectionChanged
   function(e) onTooltipHidden
   function(e) onTooltipShown

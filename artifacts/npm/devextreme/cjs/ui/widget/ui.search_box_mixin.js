@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/widget/ui.search_box_mixin.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,18 +106,10 @@ var _default = {
   getOperationBySearchMode: function getOperationBySearchMode(searchMode) {
     return searchMode === 'equals' ? '=' : searchMode;
   },
-  _cleanAria: function _cleanAria($target) {
-    this.setAria({
-      'role': null,
-      'activedescendant': null
-    }, $target);
-    $target.attr('tabIndex', null);
-  },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {
       case 'searchEnabled':
       case 'searchEditorOptions':
-        this._cleanAria(this.option('searchEnabled') ? this.$element() : this._itemContainer());
         this._invalidate();
         break;
       case 'searchExpr':
@@ -146,6 +138,18 @@ var _default = {
       return;
     }
     this.callBase();
+  },
+  _cleanAria: function _cleanAria() {
+    var $element = this.$element();
+    this.setAria({
+      'role': null,
+      'activedescendant': null
+    }, $element);
+    $element.attr('tabIndex', null);
+  },
+  _clean: function _clean() {
+    this.callBase();
+    this._cleanAria();
   },
   _refresh: function _refresh() {
     if (this._valueChangeDeferred) {

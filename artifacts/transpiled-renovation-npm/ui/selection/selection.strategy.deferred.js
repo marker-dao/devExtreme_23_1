@@ -7,11 +7,18 @@ var _ui = _interopRequireDefault(require("../widget/ui.errors"));
 var _query = _interopRequireDefault(require("../../data/query"));
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _selection.default.inherit({
-  getSelectedItems: function getSelectedItems() {
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
+  _inheritsLoose(DeferredStrategy, _SelectionStrategy);
+  function DeferredStrategy() {
+    return _SelectionStrategy.apply(this, arguments) || this;
+  }
+  var _proto = DeferredStrategy.prototype;
+  _proto.getSelectedItems = function getSelectedItems() {
     return this._loadFilteredData(this.options.selectionFilter);
-  },
-  getSelectedItemKeys: function getSelectedItemKeys() {
+  };
+  _proto.getSelectedItemKeys = function getSelectedItemKeys() {
     var d = new _deferred.Deferred();
     var that = this;
     var key = this.options.key();
@@ -23,8 +30,8 @@ var _default = _selection.default.inherit({
       d.resolve(keys);
     }).fail(d.reject);
     return d.promise();
-  },
-  selectedItemKeys: function selectedItemKeys(keys, preserve, isDeselect, isSelectAll) {
+  };
+  _proto.selectedItemKeys = function selectedItemKeys(keys, preserve, isDeselect, isSelectAll) {
     if (isSelectAll) {
       var filter = this.options.filter();
       var needResetSelectionFilter = !filter || JSON.stringify(filter) === JSON.stringify(this.options.selectionFilter) && isDeselect;
@@ -47,38 +54,38 @@ var _default = _selection.default.inherit({
     }
     this.onSelectionChanged();
     return new _deferred.Deferred().resolve();
-  },
-  setSelectedItems: function setSelectedItems(keys) {
+  };
+  _proto.setSelectedItems = function setSelectedItems(keys) {
     this._setOption('selectionFilter', null);
     for (var i = 0; i < keys.length; i++) {
       this.addSelectedItem(keys[i]);
     }
-  },
-  isItemDataSelected: function isItemDataSelected(itemData) {
+  };
+  _proto.isItemDataSelected = function isItemDataSelected(itemData) {
     return this.isItemKeySelected(itemData);
-  },
-  isItemKeySelected: function isItemKeySelected(itemData) {
+  };
+  _proto.isItemKeySelected = function isItemKeySelected(itemData) {
     var selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) {
       return true;
     }
     return !!(0, _query.default)([itemData]).filter(selectionFilter).toArray().length;
-  },
-  _getKeyExpr: function _getKeyExpr() {
+  };
+  _proto._getKeyExpr = function _getKeyExpr() {
     var keyField = this.options.key();
     if (Array.isArray(keyField) && keyField.length === 1) {
       return keyField[0];
     }
     return keyField;
-  },
-  _normalizeKey: function _normalizeKey(key) {
+  };
+  _proto._normalizeKey = function _normalizeKey(key) {
     var keyExpr = this.options.key();
     if (Array.isArray(keyExpr) && keyExpr.length === 1) {
       return key[keyExpr[0]];
     }
     return key;
-  },
-  _getFilterByKey: function _getFilterByKey(key) {
+  };
+  _proto._getFilterByKey = function _getFilterByKey(key) {
     var keyField = this._getKeyExpr();
     var filter = [keyField, '=', this._normalizeKey(key)];
     if (Array.isArray(keyField)) {
@@ -91,22 +98,22 @@ var _default = _selection.default.inherit({
       }
     }
     return filter;
-  },
-  addSelectedItem: function addSelectedItem(key, isSelectAll, skipFilter) {
+  };
+  _proto.addSelectedItem = function addSelectedItem(key, isSelectAll, skipFilter) {
     var filter = this._getFilterByKey(key);
     this._addSelectionFilter(false, filter, isSelectAll, skipFilter);
-  },
-  removeSelectedItem: function removeSelectedItem(key) {
+  };
+  _proto.removeSelectedItem = function removeSelectedItem(key) {
     var filter = this._getFilterByKey(key);
     this._addSelectionFilter(true, filter);
-  },
-  validate: function validate() {
+  };
+  _proto.validate = function validate() {
     var key = this.options.key;
     if (key && key() === undefined) {
       throw _ui.default.Error('E1042', 'Deferred selection');
     }
-  },
-  _findSubFilter: function _findSubFilter(selectionFilter, filter) {
+  };
+  _proto._findSubFilter = function _findSubFilter(selectionFilter, filter) {
     if (!selectionFilter) return -1;
     var filterString = JSON.stringify(filter);
     for (var index = 0; index < selectionFilter.length; index++) {
@@ -116,14 +123,14 @@ var _default = _selection.default.inherit({
       }
     }
     return -1;
-  },
-  _isLastSubFilter: function _isLastSubFilter(selectionFilter, filter) {
+  };
+  _proto._isLastSubFilter = function _isLastSubFilter(selectionFilter, filter) {
     if (selectionFilter && filter) {
       return this._findSubFilter(selectionFilter, filter) === selectionFilter.length - 1 || this._findSubFilter([selectionFilter], filter) === 0;
     }
     return false;
-  },
-  _addFilterOperator: function _addFilterOperator(selectionFilter, filterOperator) {
+  };
+  _proto._addFilterOperator = function _addFilterOperator(selectionFilter, filterOperator) {
     if (selectionFilter.length > 1 && (0, _type.isString)(selectionFilter[1]) && selectionFilter[1] !== filterOperator) {
       selectionFilter = [selectionFilter];
     }
@@ -131,14 +138,14 @@ var _default = _selection.default.inherit({
       selectionFilter.push(filterOperator);
     }
     return selectionFilter;
-  },
-  _denormalizeFilter: function _denormalizeFilter(filter) {
+  };
+  _proto._denormalizeFilter = function _denormalizeFilter(filter) {
     if (filter && (0, _type.isString)(filter[0])) {
       filter = [filter];
     }
     return filter;
-  },
-  _isOnlyNegativeFiltersLeft: function _isOnlyNegativeFiltersLeft(filters) {
+  };
+  _proto._isOnlyNegativeFiltersLeft = function _isOnlyNegativeFiltersLeft(filters) {
     return filters.every(function (filterItem, i) {
       if (i % 2 === 0) {
         return Array.isArray(filterItem) && filterItem[0] === '!';
@@ -146,8 +153,8 @@ var _default = _selection.default.inherit({
         return filterItem === 'and';
       }
     });
-  },
-  _addSelectionFilter: function _addSelectionFilter(isDeselect, filter, isSelectAll, skipFilter) {
+  };
+  _proto._addSelectionFilter = function _addSelectionFilter(isDeselect, filter, isSelectAll, skipFilter) {
     var _selectionFilter;
     var that = this;
     var currentFilter = isDeselect ? ['!', filter] : filter;
@@ -171,14 +178,14 @@ var _default = _selection.default.inherit({
     }
     selectionFilter = that._normalizeFilter(selectionFilter);
     that._setOption('selectionFilter', !isDeselect && !selectionFilter.length ? null : selectionFilter);
-  },
-  _normalizeFilter: function _normalizeFilter(filter) {
+  };
+  _proto._normalizeFilter = function _normalizeFilter(filter) {
     if (filter && filter.length === 1) {
       filter = filter[0];
     }
     return filter;
-  },
-  _removeFilterByIndex: function _removeFilterByIndex(filter, filterIndex, isSelectAll) {
+  };
+  _proto._removeFilterByIndex = function _removeFilterByIndex(filter, filterIndex, isSelectAll) {
     var operation = filter[1];
     if (filterIndex > 0) {
       filter.splice(filterIndex - 1, 2);
@@ -188,11 +195,11 @@ var _default = _selection.default.inherit({
     if (isSelectAll && operation === 'and') {
       filter.splice(0, filter.length);
     }
-  },
-  _isSimpleKeyFilter: function _isSimpleKeyFilter(filter, key) {
+  };
+  _proto._isSimpleKeyFilter = function _isSimpleKeyFilter(filter, key) {
     return filter.length === 3 && filter[0] === key && filter[1] === '=';
-  },
-  _isKeyFilter: function _isKeyFilter(filter) {
+  };
+  _proto._isKeyFilter = function _isKeyFilter(filter) {
     if (filter.length === 2 && filter[0] === '!') {
       return this._isKeyFilter(filter[1]);
     }
@@ -212,8 +219,8 @@ var _default = _selection.default.inherit({
       return true;
     }
     return this._isSimpleKeyFilter(filter, keyField);
-  },
-  _hasKeyFiltersOnlyStartingFromIndex: function _hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex) {
+  };
+  _proto._hasKeyFiltersOnlyStartingFromIndex = function _hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex) {
     if (filterIndex >= 0) {
       for (var i = filterIndex; i < selectionFilter.length; i++) {
         if (typeof selectionFilter[i] !== 'string' && !this._isKeyFilter(selectionFilter[i])) {
@@ -223,8 +230,8 @@ var _default = _selection.default.inherit({
       return true;
     }
     return false;
-  },
-  _removeSameFilter: function _removeSameFilter(selectionFilter, filter, inverted, isSelectAll) {
+  };
+  _proto._removeSameFilter = function _removeSameFilter(selectionFilter, filter, inverted, isSelectAll) {
     filter = inverted ? ['!', filter] : filter;
     if (JSON.stringify(filter) === JSON.stringify(selectionFilter)) {
       selectionFilter.splice(0, selectionFilter.length);
@@ -250,8 +257,8 @@ var _default = _selection.default.inherit({
       }
       return -1;
     }
-  },
-  getSelectAllState: function getSelectAllState() {
+  };
+  _proto.getSelectAllState = function getSelectAllState() {
     var filter = this.options.filter();
     var selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) return true;
@@ -265,8 +272,9 @@ var _default = _selection.default.inherit({
       return false;
     }
     return undefined;
-  }
-});
-exports.default = _default;
+  };
+  return DeferredStrategy;
+}(_selection.default);
+exports.default = DeferredStrategy;
 module.exports = exports.default;
 module.exports.default = exports.default;

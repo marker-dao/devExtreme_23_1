@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/lookup.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -96,6 +96,7 @@ export type ValueChangedEvent = NativeEventInfo<dxLookup, KeyboardEvent | MouseE
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxLookupOptions extends dxDropDownListOptions<dxLookup> {
     /**
@@ -174,8 +175,7 @@ export interface dxLookupOptions extends dxDropDownListOptions<dxLookup> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxLookup
+     * @type_function_param1 e:{ui/lookup:PageLoadingEvent}
      * @action
      * @public
      */
@@ -183,8 +183,7 @@ export interface dxLookupOptions extends dxDropDownListOptions<dxLookup> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxLookup
+     * @type_function_param1 e:{ui/lookup:PullRefreshEvent}
      * @action
      * @public
      */
@@ -192,10 +191,7 @@ export interface dxLookupOptions extends dxDropDownListOptions<dxLookup> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field scrollOffset:object
-     * @type_function_param1_field component:dxLookup
+     * @type_function_param1 e:{ui/lookup:ScrollEvent}
      * @action
      * @public
      */
@@ -203,11 +199,7 @@ export interface dxLookupOptions extends dxDropDownListOptions<dxLookup> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field value:object
-     * @type_function_param1_field previousValue:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field component:dxLookup
+     * @type_function_param1 e:{ui/lookup:ValueChangedEvent}
      * @action
      * @public
      */
@@ -340,84 +332,4 @@ export type Properties = dxLookupOptions;
 /** @deprecated use Properties instead */
 export type Options = dxLookupOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onChange' | 'onCopy' | 'onCut' | 'onEnterKey' | 'onFocusIn' | 'onFocusOut' | 'onInput' | 'onKeyDown' | 'onKeyUp' | 'onPaste'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxLookupOptions.onClosed
- * @type_function_param1 e:{ui/lookup:ClosedEvent}
- */
-onClosed?: ((e: ClosedEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onContentReady
- * @type_function_param1 e:{ui/lookup:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onDisposing
- * @type_function_param1 e:{ui/lookup:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onInitialized
- * @type_function_param1 e:{ui/lookup:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onItemClick
- * @type_function_param1 e:{ui/lookup:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onOpened
- * @type_function_param1 e:{ui/lookup:OpenedEvent}
- */
-onOpened?: ((e: OpenedEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onOptionChanged
- * @type_function_param1 e:{ui/lookup:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onPageLoading
- * @type_function_param1 e:{ui/lookup:PageLoadingEvent}
- */
-onPageLoading?: ((e: PageLoadingEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onPullRefresh
- * @type_function_param1 e:{ui/lookup:PullRefreshEvent}
- */
-onPullRefresh?: ((e: PullRefreshEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onScroll
- * @type_function_param1 e:{ui/lookup:ScrollEvent}
- */
-onScroll?: ((e: ScrollEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onSelectionChanged
- * @type_function_param1 e:{ui/lookup:SelectionChangedEvent}
- */
-onSelectionChanged?: ((e: SelectionChangedEvent) => void);
-/**
- * @skip
- * @docid dxLookupOptions.onValueChanged
- * @type_function_param1 e:{ui/lookup:ValueChangedEvent}
- */
-onValueChanged?: ((e: ValueChangedEvent) => void);
-};

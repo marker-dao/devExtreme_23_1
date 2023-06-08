@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/appointmentPopup/form.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -225,11 +225,11 @@ export class AppointmentForm {
       items: this._createDateBoxItems(dataExprs, allowTimeZoneEditing)
     }, {
       itemType: 'group',
-      colCountByScreen: {
-        lg: 3,
-        xs: 3
-      },
       colSpan: 2,
+      colCountByScreen: {
+        lg: 2,
+        xs: 2
+      },
       items: [{
         dataField: dataExprs.allDayExpr,
         cssClass: 'dx-appointment-form-switch',

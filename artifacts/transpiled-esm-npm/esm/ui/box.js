@@ -4,7 +4,7 @@ import { extend } from '../core/utils/extend';
 import { hasWindow } from '../core/utils/window';
 import { dasherize } from '../core/utils/inflector';
 import { isDefined } from '../core/utils/type';
-import { normalizeStyleProp, styleProp, stylePropPrefix } from '../core/utils/style';
+import { normalizeStyleProp, styleProp, stylePropPrefix, setStyle } from '../core/utils/style';
 import { each } from '../core/utils/iterator';
 import CollectionWidgetItem from './collection/item';
 import CollectionWidget from './collection/ui.collection_widget.edit';
@@ -53,11 +53,7 @@ var setFlexProp = (element, prop, value) => {
     }
     var cssName = dasherize(prop);
     var styleExpr = cssName + ': ' + value + ';';
-    if (!element.attributes.style) {
-      element.setAttribute('style', styleExpr);
-    } else if (element.attributes.style.value.indexOf(styleExpr) < 0) {
-      element.attributes.style.value += ' ' + styleExpr;
-    }
+    setStyle(element, styleExpr, false);
   }
 };
 class BoxItem extends CollectionWidgetItem {

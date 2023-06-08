@@ -182,9 +182,7 @@ var Toast = _ui.default.inherit({
     this._posStringToObject();
   },
   _renderContentImpl: function _renderContentImpl() {
-    if (this.option('message')) {
-      this._message = (0, _renderer.default)('<div>').addClass(TOAST_MESSAGE_CLASS).text(this.option('message')).appendTo(this.$content());
-    }
+    this._message = (0, _renderer.default)('<div>').addClass(TOAST_MESSAGE_CLASS).text(this.option('message')).appendTo(this.$content());
     this.setAria('role', 'alert', this._message);
     if (toastTypes.includes(this.option('type').toLowerCase())) {
       this.$content().prepend((0, _renderer.default)('<div>').addClass(TOAST_ICON_CLASS));

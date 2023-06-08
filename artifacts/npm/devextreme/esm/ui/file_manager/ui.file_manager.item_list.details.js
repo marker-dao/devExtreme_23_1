@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_manager/ui.file_manager.item_list.details.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -98,7 +98,8 @@ class FileManagerDetailsItemList extends FileManagerItemListBase {
       onContextMenuPreparing: this._onContextMenuPreparing.bind(this),
       onSelectionChanged: this._onFilesViewSelectionChanged.bind(this),
       onFocusedRowChanged: this._onFilesViewFocusedRowChanged.bind(this),
-      onOptionChanged: this._onFilesViewOptionChanged.bind(this)
+      onOptionChanged: this._onFilesViewOptionChanged.bind(this),
+      onContentReady: this._onContentReady.bind(this)
     });
   }
   _createColumns() {
@@ -430,10 +431,14 @@ class FileManagerDetailsItemList extends FileManagerItemListBase {
       actualOptions.paging = {
         pageIndex: 0
       };
+      this._needResetScrollPosition = true;
     }
     this._filesView.option(actualOptions);
     this._refreshDeferred = new Deferred();
     return this._refreshDeferred.promise();
+  }
+  _getScrollable() {
+    return this._filesView.getScrollable();
   }
   getSelectedItems() {
     if (this._isMultipleSelectionMode()) {

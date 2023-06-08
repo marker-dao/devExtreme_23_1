@@ -37,6 +37,10 @@ var nativeDOMAdapterStrategy = {
     context = context || this._document;
     return context.createTextNode(text);
   },
+  createAttribute(text, context) {
+    context = context || this._document;
+    return context.createAttribute(text);
+  },
   isNode(element) {
     return element && typeof element === 'object' && 'nodeType' in element && 'nodeName' in element;
   },

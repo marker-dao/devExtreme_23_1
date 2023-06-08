@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/editor/editor.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,12 +21,22 @@ import {
     ValidationStatus,
 } from '../../common';
 
+/**
+ * @docid
+ * @hidden
+ */
 export interface ValueChangedInfo {
+    /** @docid */
     readonly previousValue?: any;
+    /** @docid */
     readonly value?: any;
 }
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @hidden
+ */
 export interface EditorOptions<TComponent> extends WidgetOptions<TComponent> {
     /**
      * @docid

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/date_box.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -104,6 +104,7 @@ export type DropDownButtonTemplateData = DropDownButtonTemplateDataModel;
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxDateBoxOptions extends DateBoxBaseOptions<dxDateBox> {
     /**
@@ -114,10 +115,54 @@ export interface dxDateBoxOptions extends DateBoxBaseOptions<dxDateBox> {
     adaptivityEnabled?: boolean;
     /**
      * @docid
+     * @default "Value is out of range"
+     * @public
+     */
+    dateOutOfRangeMessage?: string;
+    /**
+     * @docid
+     * @default null
+     * @type_function_param1 data:object
+     * @type_function_param1_field component:dxDateBox
+     * @public
+     */
+    disabledDates?: Array<Date> | ((data: DisabledDate) => boolean);
+    /**
+     * @docid
+     * @default {}
+     * @public
+     */
+    inputAttr?: any;
+    /**
+     * @docid
      * @default 30
      * @public
      */
     interval?: number;
+    /**
+     * @docid
+     * @default "Value must be a date or time"
+     * @public
+     */
+    invalidDateMessage?: string;
+    /**
+     * @docid
+     * @default ''
+     * @public
+     */
+    label?: string;
+    /**
+     * @docid
+     * @default null
+     * @public
+     */
+    maxLength?: string | number;
+    /**
+     * @docid
+     * @default ""
+     * @public
+     */
+    name?: string;
     /**
      * @docid
      * @default 'calendar'
@@ -128,10 +173,22 @@ export interface dxDateBoxOptions extends DateBoxBaseOptions<dxDateBox> {
     pickerType?: DatePickerType;
     /**
      * @docid
+     * @default ""
+     * @public
+     */
+    placeholder?: string;
+    /**
+     * @docid
      * @default true
      * @public
      */
     showAnalogClock?: boolean;
+    /**
+     * @docid
+     * @readonly
+     * @public
+     */
+    text?: string;
     /**
      * @docid
      * @default "date"
@@ -170,12 +227,6 @@ export interface DateBoxBaseOptions<TComponent> extends dxDropDownEditorOptions<
     cancelButtonText?: string;
     /**
      * @docid
-     * @default "Value is out of range"
-     * @public
-     */
-    dateOutOfRangeMessage?: string;
-    /**
-     * @docid
      * @default undefined
      * @public
      */
@@ -183,23 +234,9 @@ export interface DateBoxBaseOptions<TComponent> extends dxDropDownEditorOptions<
     /**
      * @docid
      * @default null
-     * @type_function_param1 data:object
-     * @type_function_param1_field component:dxDateBox
-     * @public
-     */
-    disabledDates?: Array<Date> | ((data: DisabledDate) => boolean);
-    /**
-     * @docid
-     * @default null
      * @public
      */
     displayFormat?: Format;
-    /**
-     * @docid
-     * @default "Value must be a date or time"
-     * @public
-     */
-    invalidDateMessage?: string;
     /**
      * @docid
      * @default undefined
@@ -212,12 +249,6 @@ export interface DateBoxBaseOptions<TComponent> extends dxDropDownEditorOptions<
      * @public
      */
     min?: Date | number | string;
-    /**
-     * @docid
-     * @default ""
-     * @public
-     */
-    placeholder?: string;
     /**
      * @docid
      * @default "Today"
@@ -243,6 +274,7 @@ export interface DateBoxBaseOptions<TComponent> extends dxDropDownEditorOptions<
  * @inherits dxDropDownEditor
  * @namespace DevExpress.ui
  * @hidden
+ * @options DateBoxBaseOptions
  */
 export class DateBoxBase<TProperties = Properties> extends dxDropDownEditor<TProperties> {
     /**
@@ -276,112 +308,4 @@ export type Properties = dxDateBoxOptions;
 /** @deprecated use Properties instead */
 export type Options = Properties;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type EventsIntegrityCheckingHelper = CheckedEvents<Properties, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxDateBoxOptions.onChange
- * @type_function_param1 e:{ui/date_box:ChangeEvent}
- */
-onChange?: ((e: ChangeEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onClosed
- * @type_function_param1 e:{ui/date_box:ClosedEvent}
- */
-onClosed?: ((e: ClosedEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onContentReady
- * @type_function_param1 e:{ui/date_box:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onCopy
- * @type_function_param1 e:{ui/date_box:CopyEvent}
- */
-onCopy?: ((e: CopyEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onCut
- * @type_function_param1 e:{ui/date_box:CutEvent}
- */
-onCut?: ((e: CutEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onDisposing
- * @type_function_param1 e:{ui/date_box:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onEnterKey
- * @type_function_param1 e:{ui/date_box:EnterKeyEvent}
- */
-onEnterKey?: ((e: EnterKeyEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onFocusIn
- * @type_function_param1 e:{ui/date_box:FocusInEvent}
- */
-onFocusIn?: ((e: FocusInEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onFocusOut
- * @type_function_param1 e:{ui/date_box:FocusOutEvent}
- */
-onFocusOut?: ((e: FocusOutEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onInitialized
- * @type_function_param1 e:{ui/date_box:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onInput
- * @type_function_param1 e:{ui/date_box:InputEvent}
- */
-onInput?: ((e: InputEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onKeyDown
- * @type_function_param1 e:{ui/date_box:KeyDownEvent}
- */
-onKeyDown?: ((e: KeyDownEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onKeyUp
- * @type_function_param1 e:{ui/date_box:KeyUpEvent}
- */
-onKeyUp?: ((e: KeyUpEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onOpened
- * @type_function_param1 e:{ui/date_box:OpenedEvent}
- */
-onOpened?: ((e: OpenedEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onOptionChanged
- * @type_function_param1 e:{ui/date_box:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onPaste
- * @type_function_param1 e:{ui/date_box:PasteEvent}
- */
-onPaste?: ((e: PasteEvent) => void);
-/**
- * @skip
- * @docid dxDateBoxOptions.onValueChanged
- * @type_function_param1 e:{ui/date_box:ValueChangedEvent}
- */
-onValueChanged?: ((e: ValueChangedEvent) => void);
-};

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/menu.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -90,6 +90,7 @@ export type SubmenuShownEvent<TKey = any> = EventInfo<dxMenu<TKey>> & {
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
  * @public
+ * @docid
  */
 export interface dxMenuOptions<
     TKey = any,
@@ -122,8 +123,7 @@ export interface dxMenuOptions<
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxMenu
+     * @type_function_param1 e:{ui/menu:SubmenuHiddenEvent}
      * @action
      * @public
      */
@@ -131,8 +131,7 @@ export interface dxMenuOptions<
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxMenu
+     * @type_function_param1 e:{ui/menu:SubmenuHidingEvent}
      * @action
      * @public
      */
@@ -140,8 +139,7 @@ export interface dxMenuOptions<
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxMenu
+     * @type_function_param1 e:{ui/menu:SubmenuShowingEvent}
      * @action
      * @public
      */
@@ -149,8 +147,7 @@ export interface dxMenuOptions<
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxMenu
+     * @type_function_param1 e:{ui/menu:SubmenuShownEvent}
      * @action
      * @public
      */
@@ -321,84 +318,4 @@ export type Properties<TKey = any> = dxMenuOptions<TKey>;
 /** @deprecated use Properties instead */
 export type Options<TKey = any> = Properties<TKey>;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut' | 'onItemDeleted' | 'onItemDeleting' | 'onItemHold' | 'onItemReordered' | 'onSelectionChange'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxMenuOptions.onContentReady
- * @type_function_param1 e:{ui/menu:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onDisposing
- * @type_function_param1 e:{ui/menu:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onInitialized
- * @type_function_param1 e:{ui/menu:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onItemClick
- * @type_function_param1 e:{ui/menu:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onItemContextMenu
- * @type_function_param1 e:{ui/menu:ItemContextMenuEvent}
- */
-onItemContextMenu?: ((e: ItemContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onItemRendered
- * @type_function_param1 e:{ui/menu:ItemRenderedEvent}
- */
-onItemRendered?: ((e: ItemRenderedEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onOptionChanged
- * @type_function_param1 e:{ui/menu:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onSelectionChanged
- * @type_function_param1 e:{ui/menu:SelectionChangedEvent}
- */
-onSelectionChanged?: ((e: SelectionChangedEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onSubmenuHidden
- * @type_function_param1 e:{ui/menu:SubmenuHiddenEvent}
- */
-onSubmenuHidden?: ((e: SubmenuHiddenEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onSubmenuHiding
- * @type_function_param1 e:{ui/menu:SubmenuHidingEvent}
- */
-onSubmenuHiding?: ((e: SubmenuHidingEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onSubmenuShowing
- * @type_function_param1 e:{ui/menu:SubmenuShowingEvent}
- */
-onSubmenuShowing?: ((e: SubmenuShowingEvent) => void);
-/**
- * @skip
- * @docid dxMenuOptions.onSubmenuShown
- * @type_function_param1 e:{ui/menu:SubmenuShownEvent}
- */
-onSubmenuShown?: ((e: SubmenuShownEvent) => void);
-};

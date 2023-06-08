@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/drawer.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,6 +48,7 @@ export type OptionChangedEvent = EventInfo<dxDrawer> & ChangedOptionInfo;
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxDrawerOptions extends WidgetOptions<dxDrawer> {
     /**
@@ -162,30 +163,4 @@ export type Properties = dxDrawerOptions;
 /** @deprecated use Properties instead */
 export type Options = dxDrawerOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onContentReady' | 'onFocusIn' | 'onFocusOut'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxDrawerOptions.onDisposing
- * @type_function_param1 e:{ui/drawer:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxDrawerOptions.onInitialized
- * @type_function_param1 e:{ui/drawer:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxDrawerOptions.onOptionChanged
- * @type_function_param1 e:{ui/drawer:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-};

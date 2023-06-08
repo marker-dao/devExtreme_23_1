@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.sl.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -70,6 +70,12 @@
             "dxDateBox-simulatedDataPickerTitleDate": "Izberi datum",
             "dxDateBox-simulatedDataPickerTitleDateTime": "Izberi datum in čas",
             "dxDateBox-validation-datetime": "Vrednost mora biti datum ali čas",
+            "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
+            "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
+            "dxDateRangeBox-startDateOutOfRangeMessage": "Start date is out of range",
+            "dxDateRangeBox-endDateOutOfRangeMessage": "End date is out of range",
+            "dxDateRangeBox-startDateLabel": "Datum začetka",
+            "dxDateRangeBox-endDateLabel": "Datum konca",
             "dxFileUploader-selectFile": "Izberi datoteko",
             "dxFileUploader-dropFile": "ali spusti datoteko tukaj",
             "dxFileUploader-bytes": "bajtov",

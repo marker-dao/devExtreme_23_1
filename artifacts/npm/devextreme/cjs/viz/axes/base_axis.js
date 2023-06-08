@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/axes/base_axis.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,6 +21,7 @@ var _translator2d = require("../translators/translator2d");
 var _range = require("../translators/range");
 var _tick = require("./tick");
 var _math2 = require("../../core/utils/math");
+var _errors = _interopRequireDefault(require("../../core/errors"));
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 var _common = require("../../core/utils/common");
 var _xy_axes = _interopRequireDefault(require("./xy_axes"));
@@ -219,6 +220,11 @@ function configureGenerator(options, axisDivisionFactor, viewPort, screenDelta, 
 }
 function getConstantLineSharpDirection(coord, axisCanvas) {
   return Math.max(axisCanvas.start, axisCanvas.end) !== coord ? 1 : -1;
+}
+function checkDeprecatedOptions(isValueAxis, options) {
+  if (isValueAxis && options.visualRangeUpdateMode === 'shift') {
+    _errors.default.log('W0016', 'valueAxis.visualRangeUpdateMode', 'shift', '23.1', 'Specify another value');
+  }
 }
 var Axis = function Axis(renderSettings) {
   var that = this;
@@ -817,6 +823,7 @@ Axis.prototype = {
     var that = this;
     var labelOpt = options.label;
     validateAxisOptions(options);
+    checkDeprecatedOptions(!that.isArgumentAxis, options);
     that._options = options;
     options.tick = options.tick || {};
     options.minorTick = options.minorTick || {};
@@ -1872,10 +1879,9 @@ Axis.prototype = {
     return (0, _utils.convertVisualRangeObject)(range, !_isArray(optionValue));
   },
   _validateOptions: function _validateOptions(options) {
-    var that = this;
-    options.wholeRange = that._validateVisualRange(options.wholeRange);
-    options.visualRange = options._customVisualRange = that._validateVisualRange(options._customVisualRange);
-    that._setVisualRange(options._customVisualRange);
+    options.wholeRange = this._validateVisualRange(options.wholeRange);
+    options.visualRange = options._customVisualRange = this._validateVisualRange(options._customVisualRange);
+    this._setVisualRange(options._customVisualRange);
   },
   validate: function validate() {
     var that = this;

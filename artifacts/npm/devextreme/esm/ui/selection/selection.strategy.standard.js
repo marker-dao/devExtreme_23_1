@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/selection/selection.strategy.standard.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,21 +15,21 @@ import { Deferred, when } from '../../core/utils/deferred';
 import { SelectionFilterCreator } from '../../core/utils/selection_filter';
 import errors from '../widget/ui.errors';
 import SelectionStrategy from './selection.strategy';
-export default SelectionStrategy.inherit({
-  ctor: function ctor(options) {
-    this.callBase(options);
+export default class StandardStrategy extends SelectionStrategy {
+  constructor(options) {
+    super(options);
     this._initSelectedItemKeyHash();
-  },
-  _initSelectedItemKeyHash: function _initSelectedItemKeyHash() {
+  }
+  _initSelectedItemKeyHash() {
     this._setOption('keyHashIndices', this.options.equalByReference ? null : {});
-  },
-  getSelectedItemKeys: function getSelectedItemKeys() {
+  }
+  getSelectedItemKeys() {
     return this.options.selectedItemKeys.slice(0);
-  },
-  getSelectedItems: function getSelectedItems() {
+  }
+  getSelectedItems() {
     return this.options.selectedItems.slice(0);
-  },
-  _preserveSelectionUpdate: function _preserveSelectionUpdate(items, isDeselect) {
+  }
+  _preserveSelectionUpdate(items, isDeselect) {
     var keyOf = this.options.keyOf;
     var keyIndicesToRemoveMap;
     var keyIndex;
@@ -54,8 +54,8 @@ export default SelectionStrategy.inherit({
     if (isBatchDeselect) {
       this._batchRemoveSelectedItems(keyIndicesToRemoveMap);
     }
-  },
-  _batchRemoveSelectedItems: function _batchRemoveSelectedItems(keyIndicesToRemoveMap) {
+  }
+  _batchRemoveSelectedItems(keyIndicesToRemoveMap) {
     var selectedItemKeys = this.options.selectedItemKeys.slice(0);
     var selectedItems = this.options.selectedItems.slice(0);
     this.options.selectedItemKeys.length = 0;
@@ -68,8 +68,8 @@ export default SelectionStrategy.inherit({
     }
     this._initSelectedItemKeyHash();
     this.updateSelectedItemKeyHash(this.options.selectedItemKeys);
-  },
-  _loadSelectedItemsCore: function _loadSelectedItemsCore(keys, isDeselect, isSelectAll, filter) {
+  }
+  _loadSelectedItemsCore(keys, isDeselect, isSelectAll, filter) {
     var deferred = new Deferred();
     var key = this.options.key();
     if (!keys.length && !isSelectAll) {
@@ -96,8 +96,8 @@ export default SelectionStrategy.inherit({
       deferred = this._loadFilteredData(combinedFilter, localFilter, null, isSelectAll);
     }
     return deferred;
-  },
-  _replaceSelectionUpdate: function _replaceSelectionUpdate(items) {
+  }
+  _replaceSelectionUpdate(items) {
     var internalKeys = [];
     var keyOf = this.options.keyOf;
     if (!keyOf) return;
@@ -107,8 +107,8 @@ export default SelectionStrategy.inherit({
       internalKeys.push(key);
     }
     this.setSelectedItems(internalKeys, items);
-  },
-  _warnOnIncorrectKeys: function _warnOnIncorrectKeys(keys) {
+  }
+  _warnOnIncorrectKeys(keys) {
     var allowNullValue = this.options.allowNullValue;
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
@@ -116,16 +116,16 @@ export default SelectionStrategy.inherit({
         errors.log('W1002', key);
       }
     }
-  },
-  _isMultiSelectEnabled: function _isMultiSelectEnabled() {
+  }
+  _isMultiSelectEnabled() {
     var mode = this.options.mode;
     return mode === 'all' || mode === 'multiple';
-  },
-  _requestInProgress: function _requestInProgress() {
+  }
+  _requestInProgress() {
     var _this$_lastLoadDeferr;
     return ((_this$_lastLoadDeferr = this._lastLoadDeferred) === null || _this$_lastLoadDeferr === void 0 ? void 0 : _this$_lastLoadDeferr.state()) === 'pending';
-  },
-  _concatRequestsItems: function _concatRequestsItems(keys, isDeselect, oldRequestItems, updatedKeys) {
+  }
+  _concatRequestsItems(keys, isDeselect, oldRequestItems, updatedKeys) {
     var selectedItems;
     var deselectedItems = isDeselect ? keys : [];
     if (updatedKeys) {
@@ -138,8 +138,8 @@ export default SelectionStrategy.inherit({
       removedItems: oldRequestItems.removed.concat(deselectedItems),
       keys: keys
     };
-  },
-  _collectLastRequestData: function _collectLastRequestData(keys, isDeselect, isSelectAll, updatedKeys) {
+  }
+  _collectLastRequestData(keys, isDeselect, isSelectAll, updatedKeys) {
     var isDeselectAll = isDeselect && isSelectAll;
     var oldRequestItems = {
       added: [],
@@ -163,8 +163,8 @@ export default SelectionStrategy.inherit({
       lastRequestData = this._concatRequestsItems(keys, isDeselect, oldRequestItems, this._shouldMergeWithLastRequest ? undefined : updatedKeys);
     }
     return lastRequestData;
-  },
-  _updateKeysByLastRequestData: function _updateKeysByLastRequestData(keys, isDeselect, isSelectAll) {
+  }
+  _updateKeysByLastRequestData(keys, isDeselect, isSelectAll) {
     var currentKeys = keys;
     if (this._isMultiSelectEnabled() && this._shouldMergeWithLastRequest && !isDeselect && !isSelectAll) {
       var _this$_lastRequestDat, _this$_lastRequestDat2;
@@ -172,8 +172,8 @@ export default SelectionStrategy.inherit({
       currentKeys = getUniqueValues(currentKeys);
     }
     return currentKeys;
-  },
-  _loadSelectedItems: function _loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys) {
+  }
+  _loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys) {
     var that = this;
     var deferred = new Deferred();
     var filter = that.options.filter();
@@ -186,8 +186,8 @@ export default SelectionStrategy.inherit({
     });
     that._lastLoadDeferred = deferred;
     return deferred;
-  },
-  selectedItemKeys: function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
+  }
+  selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
     var that = this;
     var deferred = that._loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys);
     deferred.done(function (items) {
@@ -199,8 +199,8 @@ export default SelectionStrategy.inherit({
       that.onSelectionChanged();
     });
     return deferred;
-  },
-  addSelectedItem: function addSelectedItem(key, itemData) {
+  }
+  addSelectedItem(key, itemData) {
     if (isDefined(itemData) && !this.options.ignoreDisabledItems && itemData.disabled) {
       if (this.options.disabledItemKeys.indexOf(key) === -1) {
         this.options.disabledItemKeys.push(key);
@@ -217,8 +217,8 @@ export default SelectionStrategy.inherit({
       this.options.addedItems.push(itemData);
       this.options.selectedItems.push(itemData);
     }
-  },
-  _getSelectedIndexByKey: function _getSelectedIndexByKey(key, ignoreIndicesMap) {
+  }
+  _getSelectedIndexByKey(key, ignoreIndicesMap) {
     var selectedItemKeys = this.options.selectedItemKeys;
     for (var index = 0; index < selectedItemKeys.length; index++) {
       if ((!ignoreIndicesMap || !ignoreIndicesMap[index]) && this.equalKeys(selectedItemKeys[index], key)) {
@@ -226,8 +226,8 @@ export default SelectionStrategy.inherit({
       }
     }
     return -1;
-  },
-  _getSelectedIndexByHash: function _getSelectedIndexByHash(key, ignoreIndicesMap) {
+  }
+  _getSelectedIndexByHash(key, ignoreIndicesMap) {
     var indices = this.options.keyHashIndices[key];
     if (indices && indices.length > 1 && ignoreIndicesMap) {
       indices = indices.filter(function (index) {
@@ -235,8 +235,8 @@ export default SelectionStrategy.inherit({
       });
     }
     return indices && indices[0] >= 0 ? indices[0] : -1;
-  },
-  _indexOfSelectedItemKey: function _indexOfSelectedItemKey(key, ignoreIndicesMap) {
+  }
+  _indexOfSelectedItemKey(key, ignoreIndicesMap) {
     var selectedIndex;
     if (this.options.equalByReference) {
       selectedIndex = this.options.selectedItemKeys.indexOf(key);
@@ -246,8 +246,8 @@ export default SelectionStrategy.inherit({
       selectedIndex = this._getSelectedIndexByHash(key, ignoreIndicesMap);
     }
     return selectedIndex;
-  },
-  _shiftSelectedKeyIndices: function _shiftSelectedKeyIndices(keyIndex) {
+  }
+  _shiftSelectedKeyIndices(keyIndex) {
     for (var currentKeyIndex = keyIndex; currentKeyIndex < this.options.selectedItemKeys.length; currentKeyIndex++) {
       var currentKey = this.options.selectedItemKeys[currentKeyIndex];
       var currentKeyHash = getKeyHash(currentKey);
@@ -259,8 +259,8 @@ export default SelectionStrategy.inherit({
         }
       }
     }
-  },
-  removeSelectedItem: function removeSelectedItem(key, keyIndicesToRemoveMap, isDisabled) {
+  }
+  removeSelectedItem(key, keyIndicesToRemoveMap, isDisabled) {
     if (!this.options.ignoreDisabledItems && isDisabled) {
       return;
     }
@@ -290,24 +290,24 @@ export default SelectionStrategy.inherit({
     }
     this._shiftSelectedKeyIndices(keyIndex);
     return keyIndex;
-  },
-  _updateAddedItemKeys: function _updateAddedItemKeys(keys, items) {
+  }
+  _updateAddedItemKeys(keys, items) {
     for (var i = 0; i < keys.length; i++) {
       if (!this.isItemKeySelected(keys[i])) {
         this.options.addedItemKeys.push(keys[i]);
         this.options.addedItems.push(items[i]);
       }
     }
-  },
-  _updateRemovedItemKeys: function _updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems) {
+  }
+  _updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems) {
     for (var i = 0; i < oldSelectedKeys.length; i++) {
       if (!this.isItemKeySelected(oldSelectedKeys[i])) {
         this.options.removedItemKeys.push(oldSelectedKeys[i]);
         this.options.removedItems.push(oldSelectedItems[i]);
       }
     }
-  },
-  _isItemSelectionInProgress: function _isItemSelectionInProgress(key, checkPending) {
+  }
+  _isItemSelectionInProgress(key, checkPending) {
     var shouldCheckPending = checkPending && this._lastRequestData && this._requestInProgress();
     if (shouldCheckPending) {
       var _this$_lastRequestDat3;
@@ -316,11 +316,11 @@ export default SelectionStrategy.inherit({
     } else {
       return false;
     }
-  },
-  _getKeyHash: function _getKeyHash(key) {
+  }
+  _getKeyHash(key) {
     return this.options.equalByReference ? key : getKeyHash(key);
-  },
-  setSelectedItems: function setSelectedItems(keys, items) {
+  }
+  setSelectedItems(keys, items) {
     this._updateAddedItemKeys(keys, items);
     var oldSelectedKeys = this.options.selectedItemKeys;
     var oldSelectedItems = this.options.selectedItems;
@@ -331,13 +331,13 @@ export default SelectionStrategy.inherit({
     this._setOption('selectedItemKeys', keys);
     this._setOption('selectedItems', items);
     this._updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems);
-  },
-  isItemDataSelected: function isItemDataSelected(itemData) {
+  }
+  isItemDataSelected(itemData) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var key = this.options.keyOf(itemData);
     return this.isItemKeySelected(key, options);
-  },
-  isItemKeySelected: function isItemKeySelected(key) {
+  }
+  isItemKeySelected(key) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var result = this._isItemSelectionInProgress(key, options.checkPending);
     if (!result) {
@@ -346,12 +346,12 @@ export default SelectionStrategy.inherit({
       result = index !== -1;
     }
     return result;
-  },
-  getSelectAllState: function getSelectAllState(visibleOnly) {
+  }
+  getSelectAllState(visibleOnly) {
     if (visibleOnly) {
       return this._getVisibleSelectAllState();
     } else {
       return this._getFullSelectAllState();
     }
   }
-});
+}

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/selection/selection.strategy.standard.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,21 +19,27 @@ var _selection_filter = require("../../core/utils/selection_filter");
 var _ui = _interopRequireDefault(require("../widget/ui.errors"));
 var _selection = _interopRequireDefault(require("./selection.strategy"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _selection.default.inherit({
-  ctor: function ctor(options) {
-    this.callBase(options);
-    this._initSelectedItemKeyHash();
-  },
-  _initSelectedItemKeyHash: function _initSelectedItemKeyHash() {
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+var StandardStrategy = /*#__PURE__*/function (_SelectionStrategy) {
+  _inheritsLoose(StandardStrategy, _SelectionStrategy);
+  function StandardStrategy(options) {
+    var _this;
+    _this = _SelectionStrategy.call(this, options) || this;
+    _this._initSelectedItemKeyHash();
+    return _this;
+  }
+  var _proto = StandardStrategy.prototype;
+  _proto._initSelectedItemKeyHash = function _initSelectedItemKeyHash() {
     this._setOption('keyHashIndices', this.options.equalByReference ? null : {});
-  },
-  getSelectedItemKeys: function getSelectedItemKeys() {
+  };
+  _proto.getSelectedItemKeys = function getSelectedItemKeys() {
     return this.options.selectedItemKeys.slice(0);
-  },
-  getSelectedItems: function getSelectedItems() {
+  };
+  _proto.getSelectedItems = function getSelectedItems() {
     return this.options.selectedItems.slice(0);
-  },
-  _preserveSelectionUpdate: function _preserveSelectionUpdate(items, isDeselect) {
+  };
+  _proto._preserveSelectionUpdate = function _preserveSelectionUpdate(items, isDeselect) {
     var keyOf = this.options.keyOf;
     var keyIndicesToRemoveMap;
     var keyIndex;
@@ -58,8 +64,8 @@ var _default = _selection.default.inherit({
     if (isBatchDeselect) {
       this._batchRemoveSelectedItems(keyIndicesToRemoveMap);
     }
-  },
-  _batchRemoveSelectedItems: function _batchRemoveSelectedItems(keyIndicesToRemoveMap) {
+  };
+  _proto._batchRemoveSelectedItems = function _batchRemoveSelectedItems(keyIndicesToRemoveMap) {
     var selectedItemKeys = this.options.selectedItemKeys.slice(0);
     var selectedItems = this.options.selectedItems.slice(0);
     this.options.selectedItemKeys.length = 0;
@@ -72,8 +78,8 @@ var _default = _selection.default.inherit({
     }
     this._initSelectedItemKeyHash();
     this.updateSelectedItemKeyHash(this.options.selectedItemKeys);
-  },
-  _loadSelectedItemsCore: function _loadSelectedItemsCore(keys, isDeselect, isSelectAll, filter) {
+  };
+  _proto._loadSelectedItemsCore = function _loadSelectedItemsCore(keys, isDeselect, isSelectAll, filter) {
     var deferred = new _deferred.Deferred();
     var key = this.options.key();
     if (!keys.length && !isSelectAll) {
@@ -100,8 +106,8 @@ var _default = _selection.default.inherit({
       deferred = this._loadFilteredData(combinedFilter, localFilter, null, isSelectAll);
     }
     return deferred;
-  },
-  _replaceSelectionUpdate: function _replaceSelectionUpdate(items) {
+  };
+  _proto._replaceSelectionUpdate = function _replaceSelectionUpdate(items) {
     var internalKeys = [];
     var keyOf = this.options.keyOf;
     if (!keyOf) return;
@@ -111,8 +117,8 @@ var _default = _selection.default.inherit({
       internalKeys.push(key);
     }
     this.setSelectedItems(internalKeys, items);
-  },
-  _warnOnIncorrectKeys: function _warnOnIncorrectKeys(keys) {
+  };
+  _proto._warnOnIncorrectKeys = function _warnOnIncorrectKeys(keys) {
     var allowNullValue = this.options.allowNullValue;
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
@@ -120,16 +126,16 @@ var _default = _selection.default.inherit({
         _ui.default.log('W1002', key);
       }
     }
-  },
-  _isMultiSelectEnabled: function _isMultiSelectEnabled() {
+  };
+  _proto._isMultiSelectEnabled = function _isMultiSelectEnabled() {
     var mode = this.options.mode;
     return mode === 'all' || mode === 'multiple';
-  },
-  _requestInProgress: function _requestInProgress() {
+  };
+  _proto._requestInProgress = function _requestInProgress() {
     var _this$_lastLoadDeferr;
     return ((_this$_lastLoadDeferr = this._lastLoadDeferred) === null || _this$_lastLoadDeferr === void 0 ? void 0 : _this$_lastLoadDeferr.state()) === 'pending';
-  },
-  _concatRequestsItems: function _concatRequestsItems(keys, isDeselect, oldRequestItems, updatedKeys) {
+  };
+  _proto._concatRequestsItems = function _concatRequestsItems(keys, isDeselect, oldRequestItems, updatedKeys) {
     var selectedItems;
     var deselectedItems = isDeselect ? keys : [];
     if (updatedKeys) {
@@ -142,8 +148,8 @@ var _default = _selection.default.inherit({
       removedItems: oldRequestItems.removed.concat(deselectedItems),
       keys: keys
     };
-  },
-  _collectLastRequestData: function _collectLastRequestData(keys, isDeselect, isSelectAll, updatedKeys) {
+  };
+  _proto._collectLastRequestData = function _collectLastRequestData(keys, isDeselect, isSelectAll, updatedKeys) {
     var isDeselectAll = isDeselect && isSelectAll;
     var oldRequestItems = {
       added: [],
@@ -167,8 +173,8 @@ var _default = _selection.default.inherit({
       lastRequestData = this._concatRequestsItems(keys, isDeselect, oldRequestItems, this._shouldMergeWithLastRequest ? undefined : updatedKeys);
     }
     return lastRequestData;
-  },
-  _updateKeysByLastRequestData: function _updateKeysByLastRequestData(keys, isDeselect, isSelectAll) {
+  };
+  _proto._updateKeysByLastRequestData = function _updateKeysByLastRequestData(keys, isDeselect, isSelectAll) {
     var currentKeys = keys;
     if (this._isMultiSelectEnabled() && this._shouldMergeWithLastRequest && !isDeselect && !isSelectAll) {
       var _this$_lastRequestDat, _this$_lastRequestDat2;
@@ -176,8 +182,8 @@ var _default = _selection.default.inherit({
       currentKeys = (0, _array.getUniqueValues)(currentKeys);
     }
     return currentKeys;
-  },
-  _loadSelectedItems: function _loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys) {
+  };
+  _proto._loadSelectedItems = function _loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys) {
     var that = this;
     var deferred = new _deferred.Deferred();
     var filter = that.options.filter();
@@ -190,8 +196,8 @@ var _default = _selection.default.inherit({
     });
     that._lastLoadDeferred = deferred;
     return deferred;
-  },
-  selectedItemKeys: function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
+  };
+  _proto.selectedItemKeys = function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
     var that = this;
     var deferred = that._loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys);
     deferred.done(function (items) {
@@ -203,8 +209,8 @@ var _default = _selection.default.inherit({
       that.onSelectionChanged();
     });
     return deferred;
-  },
-  addSelectedItem: function addSelectedItem(key, itemData) {
+  };
+  _proto.addSelectedItem = function addSelectedItem(key, itemData) {
     if ((0, _type.isDefined)(itemData) && !this.options.ignoreDisabledItems && itemData.disabled) {
       if (this.options.disabledItemKeys.indexOf(key) === -1) {
         this.options.disabledItemKeys.push(key);
@@ -221,8 +227,8 @@ var _default = _selection.default.inherit({
       this.options.addedItems.push(itemData);
       this.options.selectedItems.push(itemData);
     }
-  },
-  _getSelectedIndexByKey: function _getSelectedIndexByKey(key, ignoreIndicesMap) {
+  };
+  _proto._getSelectedIndexByKey = function _getSelectedIndexByKey(key, ignoreIndicesMap) {
     var selectedItemKeys = this.options.selectedItemKeys;
     for (var index = 0; index < selectedItemKeys.length; index++) {
       if ((!ignoreIndicesMap || !ignoreIndicesMap[index]) && this.equalKeys(selectedItemKeys[index], key)) {
@@ -230,8 +236,8 @@ var _default = _selection.default.inherit({
       }
     }
     return -1;
-  },
-  _getSelectedIndexByHash: function _getSelectedIndexByHash(key, ignoreIndicesMap) {
+  };
+  _proto._getSelectedIndexByHash = function _getSelectedIndexByHash(key, ignoreIndicesMap) {
     var indices = this.options.keyHashIndices[key];
     if (indices && indices.length > 1 && ignoreIndicesMap) {
       indices = indices.filter(function (index) {
@@ -239,8 +245,8 @@ var _default = _selection.default.inherit({
       });
     }
     return indices && indices[0] >= 0 ? indices[0] : -1;
-  },
-  _indexOfSelectedItemKey: function _indexOfSelectedItemKey(key, ignoreIndicesMap) {
+  };
+  _proto._indexOfSelectedItemKey = function _indexOfSelectedItemKey(key, ignoreIndicesMap) {
     var selectedIndex;
     if (this.options.equalByReference) {
       selectedIndex = this.options.selectedItemKeys.indexOf(key);
@@ -250,8 +256,8 @@ var _default = _selection.default.inherit({
       selectedIndex = this._getSelectedIndexByHash(key, ignoreIndicesMap);
     }
     return selectedIndex;
-  },
-  _shiftSelectedKeyIndices: function _shiftSelectedKeyIndices(keyIndex) {
+  };
+  _proto._shiftSelectedKeyIndices = function _shiftSelectedKeyIndices(keyIndex) {
     for (var currentKeyIndex = keyIndex; currentKeyIndex < this.options.selectedItemKeys.length; currentKeyIndex++) {
       var currentKey = this.options.selectedItemKeys[currentKeyIndex];
       var currentKeyHash = (0, _common.getKeyHash)(currentKey);
@@ -263,8 +269,8 @@ var _default = _selection.default.inherit({
         }
       }
     }
-  },
-  removeSelectedItem: function removeSelectedItem(key, keyIndicesToRemoveMap, isDisabled) {
+  };
+  _proto.removeSelectedItem = function removeSelectedItem(key, keyIndicesToRemoveMap, isDisabled) {
     if (!this.options.ignoreDisabledItems && isDisabled) {
       return;
     }
@@ -294,24 +300,24 @@ var _default = _selection.default.inherit({
     }
     this._shiftSelectedKeyIndices(keyIndex);
     return keyIndex;
-  },
-  _updateAddedItemKeys: function _updateAddedItemKeys(keys, items) {
+  };
+  _proto._updateAddedItemKeys = function _updateAddedItemKeys(keys, items) {
     for (var i = 0; i < keys.length; i++) {
       if (!this.isItemKeySelected(keys[i])) {
         this.options.addedItemKeys.push(keys[i]);
         this.options.addedItems.push(items[i]);
       }
     }
-  },
-  _updateRemovedItemKeys: function _updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems) {
+  };
+  _proto._updateRemovedItemKeys = function _updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems) {
     for (var i = 0; i < oldSelectedKeys.length; i++) {
       if (!this.isItemKeySelected(oldSelectedKeys[i])) {
         this.options.removedItemKeys.push(oldSelectedKeys[i]);
         this.options.removedItems.push(oldSelectedItems[i]);
       }
     }
-  },
-  _isItemSelectionInProgress: function _isItemSelectionInProgress(key, checkPending) {
+  };
+  _proto._isItemSelectionInProgress = function _isItemSelectionInProgress(key, checkPending) {
     var shouldCheckPending = checkPending && this._lastRequestData && this._requestInProgress();
     if (shouldCheckPending) {
       var _this$_lastRequestDat3;
@@ -320,11 +326,11 @@ var _default = _selection.default.inherit({
     } else {
       return false;
     }
-  },
-  _getKeyHash: function _getKeyHash(key) {
+  };
+  _proto._getKeyHash = function _getKeyHash(key) {
     return this.options.equalByReference ? key : (0, _common.getKeyHash)(key);
-  },
-  setSelectedItems: function setSelectedItems(keys, items) {
+  };
+  _proto.setSelectedItems = function setSelectedItems(keys, items) {
     this._updateAddedItemKeys(keys, items);
     var oldSelectedKeys = this.options.selectedItemKeys;
     var oldSelectedItems = this.options.selectedItems;
@@ -335,13 +341,13 @@ var _default = _selection.default.inherit({
     this._setOption('selectedItemKeys', keys);
     this._setOption('selectedItems', items);
     this._updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems);
-  },
-  isItemDataSelected: function isItemDataSelected(itemData) {
+  };
+  _proto.isItemDataSelected = function isItemDataSelected(itemData) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var key = this.options.keyOf(itemData);
     return this.isItemKeySelected(key, options);
-  },
-  isItemKeySelected: function isItemKeySelected(key) {
+  };
+  _proto.isItemKeySelected = function isItemKeySelected(key) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var result = this._isItemSelectionInProgress(key, options.checkPending);
     if (!result) {
@@ -350,15 +356,16 @@ var _default = _selection.default.inherit({
       result = index !== -1;
     }
     return result;
-  },
-  getSelectAllState: function getSelectAllState(visibleOnly) {
+  };
+  _proto.getSelectAllState = function getSelectAllState(visibleOnly) {
     if (visibleOnly) {
       return this._getVisibleSelectAllState();
     } else {
       return this._getFullSelectAllState();
     }
-  }
-});
-exports.default = _default;
+  };
+  return StandardStrategy;
+}(_selection.default);
+exports.default = StandardStrategy;
 module.exports = exports.default;
 module.exports.default = exports.default;

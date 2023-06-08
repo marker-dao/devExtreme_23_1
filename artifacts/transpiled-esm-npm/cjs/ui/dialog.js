@@ -1,9 +1,8 @@
 "use strict";
 
-exports.custom = exports.confirm = exports.alert = exports.FakeDialogComponent = void 0;
+exports.custom = exports.confirm = exports.alert = void 0;
 var _size = require("../core/utils/size");
 var _renderer = _interopRequireDefault(require("../core/renderer"));
-var _component = require("../core/component");
 var _action = _interopRequireDefault(require("../core/action"));
 var _devices = _interopRequireDefault(require("../core/devices"));
 var _config = _interopRequireDefault(require("../core/config"));
@@ -40,27 +39,10 @@ var DX_DIALOG_MESSAGE_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-message");
 var DX_DIALOG_BUTTONS_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-buttons");
 var DX_DIALOG_BUTTON_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-button");
 var DX_BUTTON_CLASSNAME = 'dx-button';
-var FakeDialogComponent = _component.Component.inherit({
-  ctor: function ctor(element, options) {
-    this.callBase(options);
-  },
-  _defaultOptionsRules: function _defaultOptionsRules() {
-    return this.callBase().concat([{
-      device: {
-        platform: 'ios'
-      },
-      options: {
-        width: 276
-      }
-    }]);
-  }
-});
-exports.FakeDialogComponent = FakeDialogComponent;
 var custom = function custom(options) {
   var _options$title;
   var deferred = new _deferred.Deferred();
-  var defaultOptions = new FakeDialogComponent().option();
-  options = (0, _extend.extend)(defaultOptions, options);
+  options = options || {};
   var $element = (0, _renderer.default)('<div>').addClass(DX_DIALOG_CLASSNAME).appendTo((0, _view_port.value)());
   var isMessageDefined = ('message' in options);
   var isMessageHtmlDefined = ('messageHtml' in options);
@@ -148,9 +130,12 @@ var custom = function custom(options) {
   }
   popupInstance.$wrapper().addClass(DX_DIALOG_ROOT_CLASSNAME);
   function show() {
-    if (_devices.default.real().platform === 'android') {
-      var isPortrait = (0, _size.getHeight)(window) > (0, _size.getWidth)(window);
-      var width = isPortrait ? '80%' : '60%';
+    var isPhone = _devices.default.real().deviceType === 'phone';
+    if (isPhone) {
+      var windowHeight = (0, _size.getHeight)(window);
+      var windowWidth = (0, _size.getWidth)(window);
+      var isPortrait = windowHeight > windowWidth;
+      var width = isPortrait ? '90%' : '60%';
       popupInstance.option({
         width: width
       });

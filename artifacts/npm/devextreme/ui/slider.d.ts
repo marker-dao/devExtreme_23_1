@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/slider.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -59,6 +59,7 @@ export type ValueChangeMode = SliderValueChangeMode;
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxSliderOptions extends dxSliderBaseOptions<dxSlider> {
     /**
@@ -78,8 +79,7 @@ export interface dxSliderOptions extends dxSliderBaseOptions<dxSlider> {
 export default class dxSlider extends dxTrackBar<dxSliderOptions> { }
 
 /**
- * @docid dxSliderBase
- * @inherits dxTrackBar
+ * @docid
  * @hidden
  * @namespace DevExpress.ui
  */
@@ -181,48 +181,20 @@ export interface dxSliderBaseOptions<TComponent> extends dxTrackBarOptions<TComp
      valueChangeMode?: SliderValueChangeMode;
 }
 
+/**
+ * @docid
+ * @inherits dxTrackBar
+ * @hidden
+ * @namespace DevExpress.ui
+ * @options dxSliderBaseOptions
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface dxSliderBase { }
+
 /** @public */
 export type Properties = dxSliderOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxSliderOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxSliderOptions.onContentReady
- * @type_function_param1 e:{ui/slider:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxSliderOptions.onDisposing
- * @type_function_param1 e:{ui/slider:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxSliderOptions.onInitialized
- * @type_function_param1 e:{ui/slider:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxSliderOptions.onOptionChanged
- * @type_function_param1 e:{ui/slider:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxSliderOptions.onValueChanged
- * @type_function_param1 e:{ui/slider:ValueChangedEvent}
- */
-onValueChanged?: ((e: ValueChangedEvent) => void);
-};

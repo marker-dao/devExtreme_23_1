@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/button.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -62,6 +62,7 @@ export type TemplateData = {
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxButtonOptions extends WidgetOptions<dxButton> {
     /**
@@ -91,10 +92,7 @@ export interface dxButtonOptions extends WidgetOptions<dxButton> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field validationGroup:object
-     * @type_function_param1_field component:dxButton
+     * @type_function_param1 e:{ui/button:ClickEvent}
      * @action
      * @public
      */
@@ -153,42 +151,4 @@ export type Properties = dxButtonOptions;
 /** @deprecated use Properties instead */
 export type Options = dxButtonOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxButtonOptions.onClick
- * @type_function_param1 e:{ui/button:ClickEvent}
- */
-onClick?: ((e: ClickEvent) => void);
-/**
- * @skip
- * @docid dxButtonOptions.onContentReady
- * @type_function_param1 e:{ui/button:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxButtonOptions.onDisposing
- * @type_function_param1 e:{ui/button:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxButtonOptions.onInitialized
- * @type_function_param1 e:{ui/button:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxButtonOptions.onOptionChanged
- * @type_function_param1 e:{ui/button:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-};

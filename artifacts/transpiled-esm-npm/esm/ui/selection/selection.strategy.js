@@ -1,25 +1,24 @@
 import dataQuery from '../../data/query';
 import { getKeyHash, noop, equalByValue } from '../../core/utils/common';
 import { isPlainObject, isObject } from '../../core/utils/type';
-import Class from '../../core/class';
 import { Deferred } from '../../core/utils/deferred';
-export default Class.inherit({
-  ctor: function ctor(options) {
+export default class SelectionStrategy {
+  constructor(options) {
     this.options = options;
     this._setOption('disabledItemKeys', []);
     this._clearItemKeys();
-  },
-  _clearItemKeys: function _clearItemKeys() {
+  }
+  _clearItemKeys() {
     this._setOption('addedItemKeys', []);
     this._setOption('removedItemKeys', []);
     this._setOption('removedItems', []);
     this._setOption('addedItems', []);
-  },
-  validate: noop,
-  _setOption: function _setOption(name, value) {
+  }
+  validate() {}
+  _setOption(name, value) {
     this.options[name] = value;
-  },
-  onSelectionChanged: function onSelectionChanged() {
+  }
+  onSelectionChanged() {
     var addedItemKeys = this.options.addedItemKeys;
     var removedItemKeys = this.options.removedItemKeys;
     var addedItems = this.options.addedItems;
@@ -36,27 +35,27 @@ export default Class.inherit({
       addedItems: addedItems,
       removedItems: removedItems
     });
-  },
-  equalKeys: function equalKeys(key1, key2) {
+  }
+  equalKeys(key1, key2) {
     if (this.options.equalByReference) {
       if (isObject(key1) && isObject(key2)) {
         return key1 === key2;
       }
     }
     return equalByValue(key1, key2);
-  },
-  getSelectableItems: function getSelectableItems(items) {
+  }
+  getSelectableItems(items) {
     return items.filter(function (item) {
       return !(item !== null && item !== void 0 && item.disabled);
     });
-  },
-  _clearSelection: function _clearSelection(keys, preserve, isDeselect, isSelectAll) {
+  }
+  _clearSelection(keys, preserve, isDeselect, isSelectAll) {
     keys = keys || [];
     keys = Array.isArray(keys) ? keys : [keys];
     this.validate();
     return this.selectedItemKeys(keys, preserve, isDeselect, isSelectAll);
-  },
-  _removeTemplateProperty: function _removeTemplateProperty(remoteFilter) {
+  }
+  _removeTemplateProperty(remoteFilter) {
     if (Array.isArray(remoteFilter)) {
       return remoteFilter.map(f => this._removeTemplateProperty(f));
     }
@@ -64,8 +63,8 @@ export default Class.inherit({
       delete remoteFilter.template;
     }
     return remoteFilter;
-  },
-  _loadFilteredData: function _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
+  }
+  _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
     var filterLength = encodeURI(JSON.stringify(this._removeTemplateProperty(remoteFilter))).length;
     var needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
     var deferred = new Deferred();
@@ -87,8 +86,8 @@ export default Class.inherit({
       }).fail(deferred.reject.bind(deferred));
     }
     return deferred;
-  },
-  updateSelectedItemKeyHash: function updateSelectedItemKeyHash(keys) {
+  }
+  updateSelectedItemKeyHash(keys) {
     for (var i = 0; i < keys.length; i++) {
       var keyHash = getKeyHash(keys[i]);
       if (!isObject(keyHash)) {
@@ -97,16 +96,16 @@ export default Class.inherit({
         keyIndices.push(i);
       }
     }
-  },
-  _isAnyItemSelected: function _isAnyItemSelected(items) {
+  }
+  _isAnyItemSelected(items) {
     for (var i = 0; i < items.length; i++) {
       if (this.options.isItemSelected(items[i])) {
         return undefined;
       }
     }
     return false;
-  },
-  _getFullSelectAllState: function _getFullSelectAllState() {
+  }
+  _getFullSelectAllState() {
     var items = this.options.plainItems();
     var dataFilter = this.options.filter();
     var selectedItems = this.options.ignoreDisabledItems ? this.options.selectedItems : this.options.selectedItems.filter(item => !(item !== null && item !== void 0 && item.disabled));
@@ -122,8 +121,8 @@ export default Class.inherit({
       return true;
     }
     return undefined;
-  },
-  _getVisibleSelectAllState: function _getVisibleSelectAllState() {
+  }
+  _getVisibleSelectAllState() {
     var items = this.getSelectableItems(this.options.plainItems());
     var hasSelectedItems = false;
     var hasUnselectedItems = false;
@@ -145,4 +144,4 @@ export default Class.inherit({
       return false;
     }
   }
-});
+}

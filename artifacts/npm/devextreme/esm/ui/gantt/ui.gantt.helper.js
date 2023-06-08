@@ -1,12 +1,13 @@
 /**
 * DevExtreme (esm/ui/gantt/ui.gantt.helper.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { compileGetter, compileSetter } from '../../core/utils/data';
+import { isFunction } from '../../core/utils/type';
 import messageLocalization from '../../localization/message';
 export var GanttHelper = {
   prepareMapHandler(getters) {
@@ -41,8 +42,18 @@ export var GanttHelper = {
     var setters = {};
     for (var field in optionValue) {
       var exprMatches = field.match(/(\w*)Expr/);
-      if (exprMatches) {
+      if (exprMatches && !isFunction(optionValue[exprMatches[0]])) {
         setters[exprMatches[1]] = compileSetter(optionValue[exprMatches[0]]);
+      }
+    }
+    return setters;
+  },
+  compileFuncSettersByOption(optionValue) {
+    var setters = {};
+    for (var field in optionValue) {
+      var exprMatches = field.match(/(\w*)Expr/);
+      if (exprMatches && isFunction(optionValue[exprMatches[0]])) {
+        setters[exprMatches[1]] = optionValue[exprMatches[0]];
       }
     }
     return setters;

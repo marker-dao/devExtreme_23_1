@@ -47,6 +47,9 @@ var isPlainObject = function isPlainObject(object) {
     return false;
   }
   var proto = Object.getPrototypeOf(object);
+  if (!proto) {
+    return true;
+  }
   var ctor = Object.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
   return typeof ctor === 'function' && Object.toString.call(ctor) === Object.toString.call(Object);
 };

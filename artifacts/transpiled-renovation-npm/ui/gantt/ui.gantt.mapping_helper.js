@@ -1,6 +1,7 @@
 "use strict";
 
 exports.GanttMappingHelper = void 0;
+var _type = require("../../core/utils/type");
 var _data = require("../../core/utils/data");
 var GANTT_TASKS = 'tasks';
 var GANTT_MAPPED_FIELD_REGEX = /(\w*)Expr/;
@@ -32,7 +33,7 @@ var GanttMappingHelper = /*#__PURE__*/function () {
     var _this = this;
     return Object.keys(coreData).reduce(function (previous, f) {
       var mappedField = _this._getMappedFieldName(optionName, f);
-      if (mappedField) {
+      if (mappedField && !(0, _type.isFunction)(mappedField)) {
         var setter = (0, _data.compileSetter)(mappedField);
         setter(previous, coreData[f]);
       }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/animation/position.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,6 +13,7 @@ import { each } from '../core/utils/iterator';
 import { getWindow } from '../core/utils/window';
 var window = getWindow();
 import domAdapter from '../core/dom_adapter';
+import { getVisualViewportSizes, hasVisualViewport } from '../core/utils/visual_viewport';
 import { isWindow, isDefined } from '../core/utils/type';
 import { extend } from '../core/utils/extend';
 import { getBoundingRect } from '../core/utils/position';
@@ -20,6 +21,7 @@ import browser from '../core/utils/browser';
 import { resetPosition, move } from './translator';
 import { touch } from '../core/utils/support';
 import devices from '../core/devices';
+import { setStyle } from '../core/utils/style';
 var horzRe = /left|right/;
 var vertRe = /top|bottom/;
 var collisionRe = /fit|flip|none/;
@@ -225,11 +227,19 @@ var calculatePosition = function calculatePosition(what, options) {
     if (isWindow(of[0])) {
       h.atLocation = of.scrollLeft();
       v.atLocation = of.scrollTop();
-      if (devices.real().deviceType === 'phone' && of[0].visualViewport) {
-        h.atLocation = Math.max(h.atLocation, of[0].visualViewport.offsetLeft);
-        v.atLocation = Math.max(v.atLocation, of[0].visualViewport.offsetTop);
-        h.atSize = of[0].visualViewport.width;
-        v.atSize = of[0].visualViewport.height;
+      var isPhone = devices.real().deviceType === 'phone';
+      var isVisualViewportAvailable = hasVisualViewport();
+      if (isPhone && isVisualViewportAvailable) {
+        var {
+          offsetLeft,
+          offsetTop,
+          width,
+          height
+        } = getVisualViewportSizes();
+        h.atLocation = Math.max(h.atLocation, offsetLeft);
+        v.atLocation = Math.max(v.atLocation, offsetTop);
+        h.atSize = width;
+        v.atSize = height;
       } else {
         h.atSize = of[0].innerWidth > of[0].outerWidth ? of[0].innerWidth : getWidth(of);
         v.atSize = of[0].innerHeight > of[0].outerHeight || IS_SAFARI ? of[0].innerHeight : getHeight(of);
@@ -315,34 +325,35 @@ var calculatePosition = function calculatePosition(what, options) {
   });
   return result;
 };
-
-// NOTE: Setting the 'element.style.transform.scale' requires the inline style when both of the conditions met:
+// NOTE: Setting the 'element.style' requires creating attributeNode when both of the conditions met:
 //       - a form contains an input with the name property set to "style";
 //       - a form contains a dx-validator (or other popup widget).
 //       T941581
-var setScaleProperty = function setScaleProperty(element, scale, transformProp, styleAttr, isEmpty) {
+var setScaleProperty = function setScaleProperty(element, scale, styleAttr, isEmpty) {
   var stylePropIsValid = isDefined(element.style) && !domAdapter.isNode(element.style);
+  var newStyleValue = isEmpty ? styleAttr.replace(scale, '') : styleAttr;
   if (stylePropIsValid) {
-    element.style.transform = isEmpty ? transformProp.replace(scale, '') : transformProp;
+    setStyle(element, newStyleValue, false);
   } else {
-    element.setAttribute('style', isEmpty ? styleAttr.replace(scale, '') : styleAttr);
+    var styleAttributeNode = domAdapter.createAttribute('style');
+    styleAttributeNode.value = newStyleValue;
+    element.setAttributeNode(styleAttributeNode);
   }
 };
 var getOffsetWithoutScale = function getOffsetWithoutScale($startElement) {
-  var _currentElement$getAt, _currentElement$style, _style$match;
+  var _currentElement$getAt, _style$match;
   var $currentElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : $startElement;
   var currentElement = $currentElement.get(0);
   if (!currentElement) {
     return $startElement.offset();
   }
   var style = ((_currentElement$getAt = currentElement.getAttribute) === null || _currentElement$getAt === void 0 ? void 0 : _currentElement$getAt.call(currentElement, 'style')) || '';
-  var transform = (_currentElement$style = currentElement.style) === null || _currentElement$style === void 0 ? void 0 : _currentElement$style.transform;
   var scale = (_style$match = style.match(scaleRe)) === null || _style$match === void 0 ? void 0 : _style$match[0];
   var offset;
   if (scale) {
-    setScaleProperty(currentElement, scale, transform, style, true);
+    setScaleProperty(currentElement, scale, style, true);
     offset = getOffsetWithoutScale($startElement, $currentElement.parent());
-    setScaleProperty(currentElement, scale, transform, style, false);
+    setScaleProperty(currentElement, scale, style, false);
   } else {
     offset = getOffsetWithoutScale($startElement, $currentElement.parent());
   }

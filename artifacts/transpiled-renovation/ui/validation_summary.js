@@ -31,10 +31,7 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
       * @name dxValidationSummaryOptions.dataSource
       * @hidden
       */
-      /**
-      * @name dxValidationSummaryOptions.itemRender
-      * @hidden
-      */
+
       /**
       * @name dxValidationSummaryOptions.activeStateEnabled
       * @hidden

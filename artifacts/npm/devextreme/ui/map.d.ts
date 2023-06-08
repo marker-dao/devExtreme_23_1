@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/map.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -89,6 +89,7 @@ export interface MapLocation {
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxMapOptions extends WidgetOptions<dxMap> {
     /**
@@ -190,9 +191,7 @@ export interface dxMapOptions extends WidgetOptions<dxMap> {
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field component:dxMap
+     * @type_function_param1 e:{ui/map:ClickEvent}
      * @action
      * @public
      */
@@ -200,10 +199,7 @@ export interface dxMapOptions extends WidgetOptions<dxMap> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field options:object
-     * @type_function_param1_field originalMarker:object
-     * @type_function_param1_field component:dxMap
+     * @type_function_param1 e:{ui/map:MarkerAddedEvent}
      * @action
      * @public
      */
@@ -211,9 +207,7 @@ export interface dxMapOptions extends WidgetOptions<dxMap> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field options:object
-     * @type_function_param1_field component:dxMap
+     * @type_function_param1 e:{ui/map:MarkerRemovedEvent}
      * @action
      * @public
      */
@@ -221,9 +215,7 @@ export interface dxMapOptions extends WidgetOptions<dxMap> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field originalMap:object
-     * @type_function_param1_field component:dxMap
+     * @type_function_param1 e:{ui/map:ReadyEvent}
      * @action
      * @public
      */
@@ -231,10 +223,7 @@ export interface dxMapOptions extends WidgetOptions<dxMap> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field options:object
-     * @type_function_param1_field originalRoute:object
-     * @type_function_param1_field component:dxMap
+     * @type_function_param1 e:{ui/map:RouteAddedEvent}
      * @action
      * @public
      */
@@ -242,9 +231,7 @@ export interface dxMapOptions extends WidgetOptions<dxMap> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field options:object
-     * @type_function_param1_field component:dxMap
+     * @type_function_param1 e:{ui/map:RouteRemovedEvent}
      * @action
      * @public
      */
@@ -356,66 +343,4 @@ export type Properties = dxMapOptions;
 /** @deprecated use Properties instead */
 export type Options = dxMapOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onContentReady' | 'onFocusIn' | 'onFocusOut'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxMapOptions.onClick
- * @type_function_param1 e:{ui/map:ClickEvent}
- */
-onClick?: ((e: ClickEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onDisposing
- * @type_function_param1 e:{ui/map:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onInitialized
- * @type_function_param1 e:{ui/map:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onMarkerAdded
- * @type_function_param1 e:{ui/map:MarkerAddedEvent}
- */
-onMarkerAdded?: ((e: MarkerAddedEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onMarkerRemoved
- * @type_function_param1 e:{ui/map:MarkerRemovedEvent}
- */
-onMarkerRemoved?: ((e: MarkerRemovedEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onOptionChanged
- * @type_function_param1 e:{ui/map:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onReady
- * @type_function_param1 e:{ui/map:ReadyEvent}
- */
-onReady?: ((e: ReadyEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onRouteAdded
- * @type_function_param1 e:{ui/map:RouteAddedEvent}
- */
-onRouteAdded?: ((e: RouteAddedEvent) => void);
-/**
- * @skip
- * @docid dxMapOptions.onRouteRemoved
- * @type_function_param1 e:{ui/map:RouteRemovedEvent}
- */
-onRouteRemoved?: ((e: RouteRemovedEvent) => void);
-};

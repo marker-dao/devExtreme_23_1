@@ -1,7 +1,7 @@
 /**
 * DevExtreme (core/index.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -73,3 +73,5 @@ export type Permutations<T extends string> = UnionLength<T> extends PermutedUnio
 export type AllPermutations<T extends string> = UnionLength<T> extends PermutedUnionLength ? {
   [K in T]: Permutations<T> | AllPermutations<Exclude<T, K>>
 }[T] : string;
+
+

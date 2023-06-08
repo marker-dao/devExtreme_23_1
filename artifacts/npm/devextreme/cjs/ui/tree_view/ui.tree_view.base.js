@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tree_view/ui.tree_view.base.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -219,7 +219,6 @@ var TreeViewBase = _ui.default.inherit({
   },
   _checkBoxModeChange: function _checkBoxModeChange(value, previousValue) {
     if (previousValue === 'none' || value === 'none') {
-      this.repaint();
       return;
     }
     var selectAllExists = this._$selectAllItem && this._$selectAllItem.length;
@@ -259,6 +258,7 @@ var TreeViewBase = _ui.default.inherit({
         break;
       case 'showCheckBoxesMode':
         this._checkBoxModeChange(value, previousValue);
+        this._invalidate();
         break;
       case 'scrollDirection':
         this.getScrollable().option('direction', value);

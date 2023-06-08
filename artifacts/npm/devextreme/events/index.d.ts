@@ -1,7 +1,7 @@
 /**
 * DevExtreme (events/index.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,7 +25,13 @@ export type DxEvent<TNativeEvent = Event> = {} extends EventType ? (EventObject 
  * @public
  */
 export interface InitializedEventInfo<TComponent> {
+    /**
+     * @docid
+     * @type this
+     * @default Widget
+     */
     readonly component?: TComponent;
+    /** @docid */
     readonly element?: DxElement;
 }
 
@@ -34,8 +40,15 @@ export interface InitializedEventInfo<TComponent> {
  * @public
  */
 export interface EventInfo<TComponent> {
+    /**
+     * @docid
+     * @type this
+     * @default Widget
+     */
     readonly component: TComponent;
+    /** @docid */
     readonly element: DxElement;
+    /** @docid */
     readonly model?: any;
 }
 
@@ -44,9 +57,20 @@ export interface EventInfo<TComponent> {
  * @public
  */
 export interface NativeEventInfo<TComponent, TNativeEvent = Event> {
+    /**
+     * @docid
+     * @type this
+     * @default Widget
+     */
     readonly component: TComponent;
+    /** @docid */
     readonly element: DxElement;
+    /** @docid */
     readonly model?: any;
+    /**
+     * @docid
+     * @type event
+     */
     readonly event?: DxEvent<TNativeEvent>;
 }
 
@@ -55,15 +79,29 @@ export interface NativeEventInfo<TComponent, TNativeEvent = Event> {
  * @public
  */
 export interface ChangedOptionInfo {
+    /** @docid */
     readonly name: string;
+    /** @docid */
     readonly fullName: string;
+    /** @docid */
     readonly value?: any;
+    /** @docid */
     readonly previousValue?: any;
 }
 
+/**
+ * @docid
+ * @public
+ */
 export interface ItemInfo<TItemData = any> {
+    /**
+     * @docid
+     * @type object
+     */
     readonly itemData?: TItemData;
+    /** @docid */
     readonly itemElement: DxElement;
+    /** @docid */
     readonly itemIndex: number;
 }
 
@@ -72,6 +110,7 @@ export interface ItemInfo<TItemData = any> {
  * @public
  */
 export interface Cancelable {
+    /** @docid */
     cancel?: boolean;
 }
 

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/color_box/color_box.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,6 +13,7 @@ import ColorView from './color_view';
 import { extend } from '../../core/utils/extend';
 import registerComponent from '../../core/component_registrator';
 import DropDownEditor from '../drop_down_editor/ui.drop_down_editor';
+import Guid from '../../core/guid';
 
 // STYLE colorBox
 
@@ -171,6 +172,7 @@ var ColorBox = DropDownEditor.inherit({
       applyValueMode: that.option('applyValueMode'),
       focusStateEnabled: that.option('focusStateEnabled'),
       stylingMode: this.option('stylingMode'),
+      ariaId: this._ariaId,
       onEnterKeyPressed: function onEnterKeyPressed(_ref) {
         var {
           event
@@ -251,6 +253,8 @@ var ColorBox = DropDownEditor.inherit({
   },
   _renderInput: function _renderInput() {
     this.callBase();
+    this._ariaId = "dx-".concat(new Guid());
+    this.setAria('activedescendant', this._ariaId);
     this._input().addClass(COLOR_BOX_INPUT_CLASS);
     this._renderColorPreview();
   },

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/collection/ui.collection_widget.base.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -578,26 +578,32 @@ var CollectionWidget = _ui.default.inherit({
     this._attachHoldEvent();
     this._attachContextMenuEvent();
   },
+  _getPointerEvent: function _getPointerEvent() {
+    return _pointer.default.down;
+  },
   _attachClickEvent: function _attachClickEvent() {
+    var _this2 = this;
     var itemSelector = this._itemSelector();
+    var pointerEvent = this._getPointerEvent();
     var clickEventNamespace = (0, _index.addNamespace)(_click.name, this.NAME);
-    var pointerDownEventNamespace = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
-    var that = this;
-    var pointerDownAction = new _action.default(function (args) {
+    var pointerEventNamespace = (0, _index.addNamespace)(pointerEvent, this.NAME);
+    var pointerAction = new _action.default(function (args) {
       var event = args.event;
-      that._itemPointerDownHandler(event);
+      _this2._itemPointerDownHandler(event);
     });
-    _events_engine.default.off(this._itemContainer(), clickEventNamespace, itemSelector);
-    _events_engine.default.off(this._itemContainer(), pointerDownEventNamespace, itemSelector);
-    _events_engine.default.on(this._itemContainer(), clickEventNamespace, itemSelector, function (e) {
-      this._itemClickHandler(e);
-    }.bind(this));
-    _events_engine.default.on(this._itemContainer(), pointerDownEventNamespace, itemSelector, function (e) {
-      pointerDownAction.execute({
+    var clickEventCallback = function clickEventCallback(e) {
+      return _this2._itemClickHandler(e);
+    };
+    var pointerEventCallback = function pointerEventCallback(e) {
+      pointerAction.execute({
         element: (0, _renderer.default)(e.target),
         event: e
       });
-    });
+    };
+    _events_engine.default.off(this._itemContainer(), clickEventNamespace, itemSelector);
+    _events_engine.default.off(this._itemContainer(), pointerEventNamespace, itemSelector);
+    _events_engine.default.on(this._itemContainer(), clickEventNamespace, itemSelector, clickEventCallback);
+    _events_engine.default.on(this._itemContainer(), pointerEventNamespace, itemSelector, pointerEventCallback);
   },
   _itemClickHandler: function _itemClickHandler(e, args, config) {
     this._itemDXEventHandler(e, 'onItemClick', args, config);
@@ -848,7 +854,6 @@ var CollectionWidget = _ui.default.inherit({
       } else {
         this._$noData.html(noDataText);
       }
-      this.setAria('label', noDataText);
     }
     this.$element().toggleClass(EMPTY_COLLECTION, !hideNoData);
   },

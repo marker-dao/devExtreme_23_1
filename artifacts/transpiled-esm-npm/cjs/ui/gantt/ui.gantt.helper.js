@@ -2,6 +2,7 @@
 
 exports.GanttHelper = void 0;
 var _data = require("../../core/utils/data");
+var _type = require("../../core/utils/type");
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var GanttHelper = {
@@ -37,8 +38,18 @@ var GanttHelper = {
     var setters = {};
     for (var field in optionValue) {
       var exprMatches = field.match(/(\w*)Expr/);
-      if (exprMatches) {
+      if (exprMatches && !(0, _type.isFunction)(optionValue[exprMatches[0]])) {
         setters[exprMatches[1]] = (0, _data.compileSetter)(optionValue[exprMatches[0]]);
+      }
+    }
+    return setters;
+  },
+  compileFuncSettersByOption: function compileFuncSettersByOption(optionValue) {
+    var setters = {};
+    for (var field in optionValue) {
+      var exprMatches = field.match(/(\w*)Expr/);
+      if (exprMatches && (0, _type.isFunction)(optionValue[exprMatches[0]])) {
+        setters[exprMatches[1]] = optionValue[exprMatches[0]];
       }
     }
     return setters;

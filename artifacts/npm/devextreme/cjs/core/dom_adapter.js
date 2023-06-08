@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/dom_adapter.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -49,6 +49,10 @@ var nativeDOMAdapterStrategy = {
   createTextNode: function createTextNode(text, context) {
     context = context || this._document;
     return context.createTextNode(text);
+  },
+  createAttribute: function createAttribute(text, context) {
+    context = context || this._document;
+    return context.createAttribute(text);
   },
   isNode: function isNode(element) {
     return element && _typeof(element) === 'object' && 'nodeType' in element && 'nodeName' in element;

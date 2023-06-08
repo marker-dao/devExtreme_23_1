@@ -193,8 +193,8 @@ var TagBox = _select_box.default.inherit({
   _getLabelContainer: function _getLabelContainer() {
     return this._$tagsContainer;
   },
-  _setLabelContainerAria: function _setLabelContainerAria() {
-    this.setAria('labelledby', this._label.getId(), this._input());
+  _getFieldElement: function _getFieldElement() {
+    return this._input();
   },
   _scrollContainer: function _scrollContainer(direction) {
     if (this.option('multiline') || !(0, _window.hasWindow)()) {
@@ -263,11 +263,6 @@ var TagBox = _select_box.default.inherit({
 
       /**
       * @name dxTagBoxOptions.hiddenAction
-      * @hidden
-      */
-
-      /**
-      * @name dxTagBoxOptions.itemRender
       * @hidden
       */
 

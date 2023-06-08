@@ -178,9 +178,7 @@ var Toast = Overlay.inherit({
     this._posStringToObject();
   },
   _renderContentImpl: function _renderContentImpl() {
-    if (this.option('message')) {
-      this._message = $('<div>').addClass(TOAST_MESSAGE_CLASS).text(this.option('message')).appendTo(this.$content());
-    }
+    this._message = $('<div>').addClass(TOAST_MESSAGE_CLASS).text(this.option('message')).appendTo(this.$content());
     this.setAria('role', 'alert', this._message);
     if (toastTypes.includes(this.option('type').toLowerCase())) {
       this.$content().prepend($('<div>').addClass(TOAST_ICON_CLASS));

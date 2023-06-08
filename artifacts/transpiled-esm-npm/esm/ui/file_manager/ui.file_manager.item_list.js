@@ -1,5 +1,6 @@
 import { extend } from '../../core/utils/extend';
 import { when } from '../../core/utils/deferred';
+import { hasWindow } from '../../core/utils/window';
 import { name as dblClickName } from '../../events/double_click';
 import { addNamespace } from '../../events/utils/index';
 import eventsEngine from '../../events/core/events_engine';
@@ -17,6 +18,7 @@ class FileManagerItemListBase extends Widget {
     super._init();
   }
   _initMarkup() {
+    this._needResetScrollPosition = false;
     this.$element().addClass(FILE_MANAGER_FILES_VIEW_CLASS);
     var dblClickEventName = addNamespace(dblClickName, FILE_MANAGER_ITEM_LIST_ITEM_OPEN_EVENT_NAMESPACE);
     eventsEngine.on(this.$element(), dblClickEventName, this._getItemSelector(), this._onItemDblClick.bind(this));
@@ -121,6 +123,12 @@ class FileManagerItemListBase extends Widget {
     this._raiseItemListDataLoaded();
     (_this$_refreshDeferre = this._refreshDeferred) === null || _this$_refreshDeferre === void 0 ? void 0 : _this$_refreshDeferre.resolve();
   }
+  _onContentReady() {
+    if (this._needResetScrollPosition) {
+      this._resetScrollTopPosition();
+      this._needResetScrollPosition = false;
+    }
+  }
   _tryRaiseSelectionChanged(_ref) {
     var {
       selectedItemInfos,
@@ -161,6 +169,16 @@ class FileManagerItemListBase extends Widget {
     this._raiseFocusedItemChanged(args);
   }
   _resetFocus() {}
+  _resetScrollTopPosition() {
+    if (!hasWindow()) {
+      return;
+    }
+    setTimeout(() => {
+      var _this$_getScrollable;
+      return (_this$_getScrollable = this._getScrollable()) === null || _this$_getScrollable === void 0 ? void 0 : _this$_getScrollable.scrollTo(0);
+    });
+  }
+  _getScrollable() {}
   _getItemThumbnail(fileInfo) {
     var itemThumbnailGetter = this.option('getItemThumbnail');
     return itemThumbnailGetter ? itemThumbnailGetter(fileInfo) : {

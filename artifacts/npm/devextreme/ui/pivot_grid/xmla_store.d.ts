@@ -1,12 +1,16 @@
 /**
 * DevExtreme (ui/pivot_grid/xmla_store.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-/** @namespace DevExpress.data */
+/**
+ * @namespace DevExpress.data
+ * @docid
+ * @type object
+ */
 export interface XmlaStoreOptions {
     /**
      * @docid
@@ -35,6 +39,7 @@ export interface XmlaStoreOptions {
  * @docid
  * @namespace DevExpress.data
  * @public
+ * @options XmlaStoreOptions
  */
  // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class XmlaStore {

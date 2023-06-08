@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/overlay/ui.overlay.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,6 +11,8 @@ import fx from '../../animation/fx';
 import registerComponent from '../../core/component_registrator';
 import devices from '../../core/devices';
 import domAdapter from '../../core/dom_adapter';
+import { visualViewportEventMap, hasVisualViewport, getVisualViewportSizes, subscribeOnVisualViewportEvent } from '../../core/utils/visual_viewport';
+import { requestAnimationFrame, cancelAnimationFrame } from '../../animation/frame';
 import { getPublicElement } from '../../core/element';
 import $ from '../../core/renderer';
 import { EmptyTemplate } from '../../core/templates/empty_template';
@@ -113,6 +115,7 @@ var Overlay = Widget.inherit({
       copyRootClassesToWrapper: false,
       _ignoreCopyRootClassesToWrapperDeprecation: false,
       _ignoreElementAttrDeprecation: false,
+      _ignorePreventScrollEventsDeprecation: false,
       onShowing: null,
       onShown: null,
       onHiding: null,
@@ -184,7 +187,7 @@ var Overlay = Widget.inherit({
       if (options.elementAttr && !options._ignoreElementAttrDeprecation) {
         this._logDeprecatedOptionWarning('elementAttr', createWrapperAttrDeprecationInfo());
       }
-      if ('preventScrollEvents' in options) {
+      if ('preventScrollEvents' in options && !options._ignorePreventScrollEventsDeprecation) {
         this._logDeprecatedPreventScrollEventsInfo();
       }
     }
@@ -330,8 +333,93 @@ var Overlay = Widget.inherit({
     this.$wrapper().attr(attributes).removeClass(this._customWrapperClass).addClass(classNames);
     this._customWrapperClass = classNames;
   },
-  _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
+  _isVisualContainerWindow() {
+    if (!hasWindow()) {
+      return false;
+    }
+    var $visualContainer = this._positionController.$visualContainer;
+    var isVisualContainerWindow = isWindow($visualContainer.get(0));
+    return isVisualContainerWindow;
+  },
+  _shouldUseVisualViewport() {
+    var isVisualContainerWindow = this._isVisualContainerWindow();
+    var isVisualViewportAvailable = hasVisualViewport();
+    var device = devices.real();
+    var isAppleDevice = device.mac || device.ios;
+    var shouldUseVisualViewport = isAppleDevice && isVisualContainerWindow && isVisualViewportAvailable;
+    return shouldUseVisualViewport;
+  },
+  _isVirtualKeyboardOpen() {
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    if (!shouldUseVisualViewport) {
+      return false;
+    }
+    var windowInnerHeight = window.innerHeight;
+    var {
+      height: visualViewportHeight
+    } = getVisualViewportSizes();
+    var isOpen = windowInnerHeight > visualViewportHeight;
+    return isOpen;
+  },
+  _visualViewportEventHandler() {
+    var pendingUpdate = this._pendingUpdate;
+    if (pendingUpdate) {
+      cancelAnimationFrame(this._resizeAnimationFrameId);
+    }
+    this._pendingUpdate = true;
+    var {
+      visible
+    } = this.option();
+    if (visible) {
+      this._resizeAnimationFrameId = requestAnimationFrame(() => {
+        this._pendingUpdate = false;
+        var isCurrentVisible = this._currentVisible;
+        if (isCurrentVisible) {
+          this._renderGeometry();
+        } else {
+          this._toggleVisibilityAnimate(true);
+        }
+      });
+    }
+  },
+  _subscribeOnVisualViewportEvent(event) {
+    var callback = this._visualViewportEventHandler.bind(this);
+    this._unSubscribeCallbacks[event] = subscribeOnVisualViewportEvent(event, callback);
+  },
+  _toggleVisualViewportSubscription(subscribe, event) {
+    var _this$_unSubscribeCal;
+    if (subscribe) {
+      this._subscribeOnVisualViewportEvent(event);
+      return;
+    }
+    if (!((_this$_unSubscribeCal = this._unSubscribeCallbacks) !== null && _this$_unSubscribeCal !== void 0 && _this$_unSubscribeCal[event])) {
+      return;
+    }
+    this._unSubscribeCallbacks[event]();
+    this._unSubscribeCallbacks[event] = null;
+  },
+  _toggleVisualViewportCallbacks(subscribe) {
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    if (!shouldUseVisualViewport) {
+      return false;
+    }
+    this._pendingUpdate = false;
+    if (subscribe && !this._unSubscribeCallbacks) {
+      this._unSubscribeCallbacks = {};
+    }
+    this._toggleVisualViewportSubscription(subscribe, visualViewportEventMap.resize);
+    this._toggleVisualViewportSubscription(subscribe, visualViewportEventMap.scroll);
+  },
+  _toggleVisibilityAnimate(visible) {
     this._stopAnimation();
+    this._toggleVisualViewportCallbacks(visible);
+    return this._renderVisibilityAnimate(visible);
+  },
+  _renderVisibilityAnimate(visible) {
+    var isVirtualKeyboardOpen = this._isVirtualKeyboardOpen();
+    if (isVirtualKeyboardOpen) {
+      return new Deferred().resolve().promise();
+    }
     return visible ? this._show() : this._hide();
   },
   _getAnimationConfig: function _getAnimationConfig() {
@@ -686,7 +774,7 @@ var Overlay = Widget.inherit({
   _render: function _render() {
     this.callBase();
     this._appendContentToElement();
-    this._renderVisibilityAnimate(this.option('visible'));
+    this._toggleVisibilityAnimate(this.option('visible'));
   },
   _appendContentToElement: function _appendContentToElement() {
     if (!this._$content.parent().is(this.$element())) {
@@ -742,7 +830,7 @@ var Overlay = Widget.inherit({
 
         // NOTE: T1114344
         if (this.option('templatesRenderAsynchronously')) {
-          this._dimensionChanged();
+          this._renderGeometryAsynchronously();
         }
       }
     });
@@ -878,12 +966,15 @@ var Overlay = Widget.inherit({
     this._renderWrapperDimensions();
     this._positionController.positionWrapper();
   },
-  _renderWrapperDimensions: function _renderWrapperDimensions() {
+  _renderWrapperDimensions() {
     var $visualContainer = this._positionController.$visualContainer;
     var documentElement = domAdapter.getDocumentElement();
-    var isVisualContainerWindow = isWindow($visualContainer.get(0));
-    var wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : getOuterWidth($visualContainer);
-    var wrapperHeight = isVisualContainerWindow ? window.innerHeight : getOuterHeight($visualContainer);
+    var isVisualContainerWindow = this._isVisualContainerWindow();
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    var getWindowWidth = () => shouldUseVisualViewport ? getVisualViewportSizes().width : documentElement.clientWidth;
+    var getWindowHeight = () => shouldUseVisualViewport ? getVisualViewportSizes().height : window.innerHeight;
+    var wrapperWidth = isVisualContainerWindow ? getWindowWidth() : getOuterWidth($visualContainer);
+    var wrapperHeight = isVisualContainerWindow ? getWindowHeight() : getOuterHeight($visualContainer);
     this._$wrapper.css({
       width: wrapperWidth,
       height: wrapperHeight
@@ -919,13 +1010,20 @@ var Overlay = Widget.inherit({
   _visibilityChanged: function _visibilityChanged(visible) {
     if (visible) {
       if (this.option('visible')) {
-        this._renderVisibilityAnimate(visible);
+        this._toggleVisibilityAnimate(visible);
       }
     } else {
-      this._renderVisibilityAnimate(visible);
+      this._toggleVisibilityAnimate(visible);
     }
   },
+  _renderGeometryAsynchronously() {
+    this._renderGeometry();
+  },
   _dimensionChanged: function _dimensionChanged() {
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    if (shouldUseVisualViewport) {
+      return;
+    }
     this._renderGeometry();
   },
   _clean: function _clean() {
@@ -936,6 +1034,9 @@ var Overlay = Widget.inherit({
     this._renderVisibility(false);
     this._stopShowTimer();
     this._cleanFocusState();
+    this._pendingUpdate = null;
+    this._resizeAnimationFrameId = null;
+    this._unSubscribeCallbacks = null;
   },
   _stopShowTimer() {
     if (this._asyncShowTimeout) {
@@ -997,7 +1098,7 @@ var Overlay = Widget.inherit({
         this._toggleSafariScrolling();
         break;
       case 'visible':
-        this._renderVisibilityAnimate(value).done(() => {
+        this._toggleVisibilityAnimate(value).done(() => {
           var _this$_animateDeferre;
           return (_this$_animateDeferre = this._animateDeferred) === null || _this$_animateDeferre === void 0 ? void 0 : _this$_animateDeferre.resolveWith(this);
         }).fail(() => {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/widget/ui.widget.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,11 @@ import {
     EventInfo,
 } from '../../events/index';
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @type object
+ */
 export interface WidgetOptions<TComponent> extends DOMComponentOptions<TComponent> {
     /**
      * @docid
@@ -79,6 +83,7 @@ export interface WidgetOptions<TComponent> extends DOMComponentOptions<TComponen
  * @inherits DOMComponent
  * @hidden
  * @namespace DevExpress.ui
+ * @options WidgetOptions
  */
 export default class Widget<TProperties> extends DOMComponent<TProperties> {
     /**

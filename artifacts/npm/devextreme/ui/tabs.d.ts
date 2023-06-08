@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tabs.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -63,6 +63,7 @@ export type SelectionChangedEvent<TItem extends ItemLike = any, TKey = any> = Ev
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
  * @public
+ * @docid
  */
 export interface dxTabsOptions<
     TItem extends ItemLike = any,
@@ -72,6 +73,7 @@ export interface dxTabsOptions<
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid dxTabsOptions
  */
 export interface dxTabsBaseOptions<
     TComponent extends dxTabs<any, TItem, TKey> = dxTabs<any, any, any>,
@@ -204,66 +206,4 @@ export type Options<
     TKey = any,
 > = Properties<TItem, TKey>;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut' | 'onItemDeleted' | 'onItemDeleting' | 'onItemReordered'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxTabsOptions.onContentReady
- * @type_function_param1 e:{ui/tabs:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onDisposing
- * @type_function_param1 e:{ui/tabs:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onInitialized
- * @type_function_param1 e:{ui/tabs:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onItemClick
- * @type_function_param1 e:{ui/tabs:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onItemContextMenu
- * @type_function_param1 e:{ui/tabs:ItemContextMenuEvent}
- */
-onItemContextMenu?: ((e: ItemContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onItemHold
- * @type_function_param1 e:{ui/tabs:ItemHoldEvent}
- */
-onItemHold?: ((e: ItemHoldEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onItemRendered
- * @type_function_param1 e:{ui/tabs:ItemRenderedEvent}
- */
-onItemRendered?: ((e: ItemRenderedEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onOptionChanged
- * @type_function_param1 e:{ui/tabs:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxTabsOptions.onSelectionChanged
- * @type_function_param1 e:{ui/tabs:SelectionChangedEvent}
- */
-onSelectionChanged?: ((e: SelectionChangedEvent) => void);
-};

@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/ui/gantt/ui.gantt.mapping_helper.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import { isFunction } from '../../core/utils/type';
 import { compileGetter, compileSetter } from '../../core/utils/data';
 var GANTT_TASKS = 'tasks';
 var GANTT_MAPPED_FIELD_REGEX = /(\w*)Expr/;
@@ -35,7 +36,7 @@ export class GanttMappingHelper {
   convertCoreToMappedData(optionName, coreData) {
     return Object.keys(coreData).reduce((previous, f) => {
       var mappedField = this._getMappedFieldName(optionName, f);
-      if (mappedField) {
+      if (mappedField && !isFunction(mappedField)) {
         var setter = compileSetter(mappedField);
         setter(previous, coreData[f]);
       }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/validating/module.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -756,6 +756,9 @@ var validatingModule = {
                   data = change.data;
                 } else if (change.type === 'update') {
                   var oldData = that._getOldData(change.key);
+                  if (!(0, _type.isDefined)(oldData)) {
+                    return;
+                  }
                   data = (0, _array_utils.createObjectWithChanges)(oldData, change.data);
                 }
                 if (data) {

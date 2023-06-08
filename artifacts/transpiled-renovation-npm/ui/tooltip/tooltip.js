@@ -42,6 +42,7 @@ var Tooltip = _ui.default.inherit({
       title: null,
       /**
       * @name dxTooltipOptions.titleTemplate
+      * @type template
       * @hidden
       */
       titleTemplate: null,

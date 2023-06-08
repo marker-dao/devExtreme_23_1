@@ -969,6 +969,7 @@ export class DataController extends ControllerWithDataMixin {
       grouping: true,
       summary: true
     };
+    // @ts-expect-error
     if (isObject(remoteOperations) && remoteOperations.groupPaging) {
       remoteOperations = extend({}, enabledRemoteOperations, remoteOperations);
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (core/dom_component.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,7 +30,11 @@ type OptionChangedEventInfo<TComponent> = EventInfo<TComponent> & ChangedOptionI
 
 /* eslint-disable no-underscore-dangle */
 
-/** @namespace DevExpress */
+/**
+ * @namespace DevExpress
+ * @docid
+ * @hidden
+ */
 export interface DOMComponentOptions<TComponent> extends ComponentOptions<
     EventInfo<TComponent>,
     InitializedEventInfo<TComponent>,

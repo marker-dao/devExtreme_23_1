@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/select_box.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -114,6 +114,7 @@ export type DropDownButtonTemplateData = DropDownButtonTemplateDataModel;
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxSelectBoxOptions<TComponent> extends dxDropDownListOptions<TComponent> {
     /**
@@ -134,10 +135,7 @@ export interface dxSelectBoxOptions<TComponent> extends dxDropDownListOptions<TC
      * @section Utils
      * @type function
      * @docid
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:this
-     * @type_function_param1_field customItem:string|object|Promise<any>
-     * @type_function_param1_field model:any
+     * @type_function_param1 e:{ui/select_box:CustomItemCreatingEvent}
      * @action
      * @default function(e) { if(!e.customItem) { e.customItem = e.text; } }
      * @public
@@ -204,130 +202,4 @@ export type Properties = dxSelectBoxOptions<SelectBoxInstance>;
 /** @deprecated use Properties instead */
 export type Options = Properties;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type EventsIntegrityCheckingHelper = CheckedEvents<Properties, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxSelectBoxOptions.onChange
- * @type_function_param1 e:{ui/select_box:ChangeEvent}
- */
-onChange?: ((e: ChangeEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onClosed
- * @type_function_param1 e:{ui/select_box:ClosedEvent}
- */
-onClosed?: ((e: ClosedEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onContentReady
- * @type_function_param1 e:{ui/select_box:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onCopy
- * @type_function_param1 e:{ui/select_box:CopyEvent}
- */
-onCopy?: ((e: CopyEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onCustomItemCreating
- * @type_function_param1 e:{ui/select_box:CustomItemCreatingEvent}
- */
-onCustomItemCreating?: ((e: CustomItemCreatingEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onCut
- * @type_function_param1 e:{ui/select_box:CutEvent}
- */
-onCut?: ((e: CutEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onDisposing
- * @type_function_param1 e:{ui/select_box:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onEnterKey
- * @type_function_param1 e:{ui/select_box:EnterKeyEvent}
- */
-onEnterKey?: ((e: EnterKeyEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onFocusIn
- * @type_function_param1 e:{ui/select_box:FocusInEvent}
- */
-onFocusIn?: ((e: FocusInEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onFocusOut
- * @type_function_param1 e:{ui/select_box:FocusOutEvent}
- */
-onFocusOut?: ((e: FocusOutEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onInitialized
- * @type_function_param1 e:{ui/select_box:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onInput
- * @type_function_param1 e:{ui/select_box:InputEvent}
- */
-onInput?: ((e: InputEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onItemClick
- * @type_function_param1 e:{ui/select_box:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onKeyDown
- * @type_function_param1 e:{ui/select_box:KeyDownEvent}
- */
-onKeyDown?: ((e: KeyDownEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onKeyUp
- * @type_function_param1 e:{ui/select_box:KeyUpEvent}
- */
-onKeyUp?: ((e: KeyUpEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onOpened
- * @type_function_param1 e:{ui/select_box:OpenedEvent}
- */
-onOpened?: ((e: OpenedEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onOptionChanged
- * @type_function_param1 e:{ui/select_box:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onPaste
- * @type_function_param1 e:{ui/select_box:PasteEvent}
- */
-onPaste?: ((e: PasteEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onSelectionChanged
- * @type_function_param1 e:{ui/select_box:SelectionChangedEvent}
- */
-onSelectionChanged?: ((e: SelectionChangedEvent) => void);
-/**
- * @skip
- * @docid dxSelectBoxOptions.onValueChanged
- * @type_function_param1 e:{ui/select_box:ValueChangedEvent}
- */
-onValueChanged?: ((e: ValueChangedEvent) => void);
-};

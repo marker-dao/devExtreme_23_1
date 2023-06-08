@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.actions.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,6 +11,7 @@
 exports.GanttActionsManager = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _element = require("../../core/element");
+var _extend = require("../../core/utils/extend");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* eslint-disable spellcheck/spell-checker */
 var Actions = {
@@ -175,7 +176,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
       };
       action(args);
       coreArgs.cancel = args.cancel;
-      coreArgs.values = this._convertMappedToCoreData(optionName, args.values);
+      (0, _extend.extend)(coreArgs.values, this._convertMappedToCoreData(optionName, args.values));
       if (optionName === GANTT_TASKS) {
         this._saveCustomFieldsDataToCache(GANTT_NEW_TASK_CACHE_KEY, args.values);
       }
@@ -482,7 +483,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
       }
       action(args);
       coreArgs.cancel = args.cancel;
-      coreArgs.newValues = this._convertMappedToCoreData(optionName, args.newValues);
+      (0, _extend.extend)(coreArgs.newValues, this._convertMappedToCoreData(optionName, args.newValues));
       if (isTaskUpdating) {
         if (args.cancel) {
           this._customFieldsManager.resetCustomFieldsDataCache(args.key);
@@ -561,7 +562,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
       };
       action(args);
       coreArgs.cancel = args.cancel;
-      coreArgs.values = this._convertMappedToCoreData(GANTT_TASKS, args.values);
+      (0, _extend.extend)(coreArgs.values, this._convertMappedToCoreData(GANTT_TASKS, args.values));
       coreArgs.readOnlyFields = this._convertMappedToCoreFields(GANTT_TASKS, args.readOnlyFields);
       coreArgs.hiddenFields = this._convertMappedToCoreFields(GANTT_TASKS, args.hiddenFields);
     }

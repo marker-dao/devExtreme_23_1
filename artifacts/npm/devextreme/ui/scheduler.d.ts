@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/scheduler.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -233,6 +233,7 @@ export type DateNavigatorTextInfo = {
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
@@ -519,9 +520,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
+     * @type_function_param1 e:{ui/scheduler:AppointmentAddedEvent}
      * @action
      * @public
      */
@@ -529,10 +528,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field cancel:Boolean|Promise<Boolean>
+     * @type_function_param1 e:{ui/scheduler:AppointmentAddingEvent}
      * @action
      * @public
      */
@@ -541,11 +537,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field targetedAppointmentData:dxSchedulerAppointment
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/scheduler:AppointmentClickEvent}
      * @action
      * @public
      */
@@ -554,11 +546,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field targetedAppointmentData:dxSchedulerAppointment
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/scheduler:AppointmentContextMenuEvent}
      * @action
      * @public
      */
@@ -567,11 +555,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field targetedAppointmentData:dxSchedulerAppointment
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/scheduler:AppointmentDblClickEvent}
      * @action
      * @public
      */
@@ -579,9 +563,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field component:dxScheduler
+     * @type_function_param1 e:{ui/scheduler:AppointmentDeletedEvent}
      * @action
      * @public
      */
@@ -590,10 +572,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field cancel:Boolean|Promise<Boolean>
+     * @type_function_param1 e:{ui/scheduler:AppointmentDeletingEvent}
      * @action
      * @public
      */
@@ -601,9 +580,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointments:Array<object>
+     * @type_function_param1 e:{ui/scheduler:AppointmentTooltipShowingEvent}
      * @action
      * @public
      */
@@ -611,9 +588,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
+     * @type_function_param1 e:{ui/scheduler:AppointmentFormOpeningEvent}
      * @action
      * @public
      */
@@ -621,10 +596,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field targetedAppointmentData:dxSchedulerAppointment|undefined
+     * @type_function_param1 e:{ui/scheduler:AppointmentRenderedEvent}
      * @action
      * @public
      */
@@ -632,9 +604,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field appointmentData:dxSchedulerAppointment
-     * @type_function_param1_field component:dxScheduler
+     * @type_function_param1 e:{ui/scheduler:AppointmentUpdatedEvent}
      * @action
      * @public
      */
@@ -642,11 +612,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field oldData:Object
-     * @type_function_param1_field newData:Object
-     * @type_function_param1_field cancel:Boolean|Promise<Boolean>
+     * @type_function_param1 e:{ui/scheduler:AppointmentUpdatingEvent}
      * @action
      * @public
      */
@@ -655,10 +621,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field event:event
-     * @type_function_param1_field cellData:object
+     * @type_function_param1 e:{ui/scheduler:CellClickEvent}
      * @action
      * @public
      */
@@ -667,10 +630,7 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxScheduler
-     * @type_function_param1_field event:event
-     * @type_function_param1_field cellData:object
+     * @type_function_param1 e:{ui/scheduler:CellContextMenuEvent}
      * @action
      * @public
      */
@@ -1172,120 +1132,4 @@ export interface dxSchedulerScrolling {
   mode?: ScrollMode;
 }
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentAdded
- * @type_function_param1 e:{ui/scheduler:AppointmentAddedEvent}
- */
-onAppointmentAdded?: ((e: AppointmentAddedEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentAdding
- * @type_function_param1 e:{ui/scheduler:AppointmentAddingEvent}
- */
-onAppointmentAdding?: ((e: AppointmentAddingEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentClick
- * @type_function_param1 e:{ui/scheduler:AppointmentClickEvent}
- */
-onAppointmentClick?: ((e: AppointmentClickEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentContextMenu
- * @type_function_param1 e:{ui/scheduler:AppointmentContextMenuEvent}
- */
-onAppointmentContextMenu?: ((e: AppointmentContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentDblClick
- * @type_function_param1 e:{ui/scheduler:AppointmentDblClickEvent}
- */
-onAppointmentDblClick?: ((e: AppointmentDblClickEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentDeleted
- * @type_function_param1 e:{ui/scheduler:AppointmentDeletedEvent}
- */
-onAppointmentDeleted?: ((e: AppointmentDeletedEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentDeleting
- * @type_function_param1 e:{ui/scheduler:AppointmentDeletingEvent}
- */
-onAppointmentDeleting?: ((e: AppointmentDeletingEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentFormOpening
- * @type_function_param1 e:{ui/scheduler:AppointmentFormOpeningEvent}
- */
-onAppointmentFormOpening?: ((e: AppointmentFormOpeningEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentRendered
- * @type_function_param1 e:{ui/scheduler:AppointmentRenderedEvent}
- */
-onAppointmentRendered?: ((e: AppointmentRenderedEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentTooltipShowing
- * @type_function_param1 e:{ui/scheduler:AppointmentTooltipShowingEvent}
- */
-onAppointmentTooltipShowing?: ((e: AppointmentTooltipShowingEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentUpdated
- * @type_function_param1 e:{ui/scheduler:AppointmentUpdatedEvent}
- */
-onAppointmentUpdated?: ((e: AppointmentUpdatedEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onAppointmentUpdating
- * @type_function_param1 e:{ui/scheduler:AppointmentUpdatingEvent}
- */
-onAppointmentUpdating?: ((e: AppointmentUpdatingEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onCellClick
- * @type_function_param1 e:{ui/scheduler:CellClickEvent}
- */
-onCellClick?: ((e: CellClickEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onCellContextMenu
- * @type_function_param1 e:{ui/scheduler:CellContextMenuEvent}
- */
-onCellContextMenu?: ((e: CellContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onContentReady
- * @type_function_param1 e:{ui/scheduler:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onDisposing
- * @type_function_param1 e:{ui/scheduler:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onInitialized
- * @type_function_param1 e:{ui/scheduler:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxSchedulerOptions.onOptionChanged
- * @type_function_param1 e:{ui/scheduler:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-};

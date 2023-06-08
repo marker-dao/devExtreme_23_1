@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 // @ts-check
 import { setOuterWidth, getOuterWidth, setOuterHeight, getOuterHeight } from '../../../../core/utils/size';
 import $ from '../../../../core/renderer';
@@ -22,17 +23,18 @@ var ROW_CLASS = 'dx-row';
 var MODULE_NAMESPACE = 'dxDataGridEditorFactory';
 var UPDATE_FOCUS_EVENTS = addNamespace([pointerEvents.down, 'focusin', clickEventName].join(' '), MODULE_NAMESPACE);
 var DX_HIDDEN = 'dx-hidden';
-var members = {
+var ViewControllerWithMixin = modules.ViewController.inherit(EditorFactoryMixin);
+export class EditorFactory extends ViewControllerWithMixin {
   _getFocusedElement($dataGridElement) {
     var rowSelector = this.option('focusedRowEnabled') ? 'tr[tabindex]:focus' : 'tr[tabindex]:not(.dx-data-row):focus';
     var focusedElementSelector = "td[tabindex]:focus, ".concat(rowSelector, ", input:focus, textarea:focus, .dx-lookup-field:focus, .dx-checkbox:focus, .dx-switch:focus, .dx-dropdownbutton .dx-buttongroup:focus, .dx-adaptive-item-text:focus");
     // T181706
     var $focusedElement = $dataGridElement.find(focusedElementSelector);
     return this.elementIsInsideGrid($focusedElement) && $focusedElement;
-  },
+  }
   _getFocusCellSelector() {
     return '.dx-row > td';
-  },
+  }
   _updateFocusCore() {
     var $dataGridElement = this.component && this.component.$element();
     if ($dataGridElement) {
@@ -54,10 +56,10 @@ var members = {
       }
     }
     this.loseFocus();
-  },
+  }
   _needHideBorder($element) {
     return $element.hasClass(EDITOR_INLINE_BLOCK);
-  },
+  }
   _updateFocus(e) {
     var that = this;
     var isFocusOverlay = e && e.event && $(e.event.target).hasClass(that.addWidgetPrefix(FOCUS_OVERLAY_CLASS));
@@ -70,7 +72,7 @@ var members = {
       }
       that._isFocusOverlay = false;
     });
-  },
+  }
   _updateFocusOverlaySize($element, position) {
     $element.hide();
     // @ts-expect-error
@@ -84,10 +86,10 @@ var members = {
       setOuterHeight($element, getOuterHeight($element) - location.v.oversize);
     }
     $element.show();
-  },
+  }
   callbackNames() {
     return ['focused'];
-  },
+  }
   focus($element, isHideBorder) {
     var that = this;
     if ($element === undefined) {
@@ -108,11 +110,11 @@ var members = {
         that.focused.fire($element);
       });
     }
-  },
+  }
   refocus() {
     var $focus = this.focus();
     this.focus($focus);
-  },
+  }
   renderFocusOverlay($element, isHideBorder) {
     var that = this;
     if (!gridCoreUtils.isElementInCurrentGrid(this, $element)) {
@@ -143,19 +145,19 @@ var members = {
       positionUtils.setup(that._$focusOverlay, focusOverlayPosition);
       that._$focusOverlay.css('visibility', 'visible'); // for ios
     }
-  },
+  }
 
   resize() {
     var $focusedElement = this._$focusedElement;
     if ($focusedElement) {
       this.focus($focusedElement);
     }
-  },
+  }
   loseFocus() {
     this._$focusedElement && this._$focusedElement.removeClass(FOCUSED_ELEMENT_CLASS);
     this._$focusedElement = null;
     this._$focusOverlay && this._$focusOverlay.addClass(DX_HIDDEN);
-  },
+  }
   init() {
     this.createAction('onEditorPreparing', {
       excludeValidators: ['disabled', 'readOnly'],
@@ -166,9 +168,10 @@ var members = {
       category: 'rendering'
     });
     this._updateFocusHandler = this._updateFocusHandler || this.createAction(this._updateFocus.bind(this));
-    eventsEngine.on(this._getContainerRoot(), UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
+    this._subscribedContainerRoot = this._getContainerRoot();
+    eventsEngine.on(this._subscribedContainerRoot, UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
     this._attachContainerEventHandlers();
-  },
+  }
   _getContainerRoot() {
     var _a;
     var $container = (_a = this.component) === null || _a === void 0 ? void 0 : _a.$element();
@@ -182,7 +185,7 @@ var members = {
       return domAdapter.getDocument();
     }
     return root;
-  },
+  }
   _attachContainerEventHandlers() {
     var that = this;
     var $container = that.component && that.component.$element();
@@ -194,14 +197,13 @@ var members = {
         }
       });
     }
-  },
+  }
   dispose() {
     clearTimeout(this._focusTimeoutID);
     clearTimeout(this._updateFocusTimeoutID);
-    eventsEngine.off(this._getContainerRoot(), UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
+    eventsEngine.off(this._subscribedContainerRoot, UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
   }
-};
-var EditorFactory = modules.ViewController.inherit(EditorFactoryMixin).inherit(members);
+}
 export var editorFactoryModule = {
   defaultOptions() {
     return {};

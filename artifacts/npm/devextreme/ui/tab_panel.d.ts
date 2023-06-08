@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tab_panel.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -80,6 +80,7 @@ export type TitleRenderedEvent<TItem extends ItemLike = any, TKey = any> = Event
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
  * @public
+ * @docid
  */
 export interface dxTabPanelOptions<
     TItem extends ItemLike = any,
@@ -124,10 +125,7 @@ export interface dxTabPanelOptions<
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTabPanel
-     * @type_function_param1_field event:event
-     * @type_function_param1_field itemData:object
+     * @type_function_param1 e:{ui/tab_panel:TitleClickEvent}
      * @action
      * @public
      */
@@ -135,10 +133,7 @@ export interface dxTabPanelOptions<
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTabPanel
-     * @type_function_param1_field event:event
-     * @type_function_param1_field itemData:object
+     * @type_function_param1 e:{ui/tab_panel:TitleHoldEvent}
      * @action
      * @public
      */
@@ -146,9 +141,7 @@ export interface dxTabPanelOptions<
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field itemData:object
-     * @type_function_param1_field component:dxTabPanel
+     * @type_function_param1 e:{ui/tab_panel:TitleRenderedEvent}
      * @action
      * @public
      */
@@ -261,84 +254,4 @@ export type Options<
     TKey = any,
 > = Properties<TItem, TKey>;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut' | 'onItemDeleted' | 'onItemDeleting' | 'onItemReordered'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxTabPanelOptions.onContentReady
- * @type_function_param1 e:{ui/tab_panel:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onDisposing
- * @type_function_param1 e:{ui/tab_panel:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onInitialized
- * @type_function_param1 e:{ui/tab_panel:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onItemClick
- * @type_function_param1 e:{ui/tab_panel:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onItemContextMenu
- * @type_function_param1 e:{ui/tab_panel:ItemContextMenuEvent}
- */
-onItemContextMenu?: ((e: ItemContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onItemHold
- * @type_function_param1 e:{ui/tab_panel:ItemHoldEvent}
- */
-onItemHold?: ((e: ItemHoldEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onItemRendered
- * @type_function_param1 e:{ui/tab_panel:ItemRenderedEvent}
- */
-onItemRendered?: ((e: ItemRenderedEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onOptionChanged
- * @type_function_param1 e:{ui/tab_panel:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onSelectionChanged
- * @type_function_param1 e:{ui/tab_panel:SelectionChangedEvent}
- */
-onSelectionChanged?: ((e: SelectionChangedEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onTitleClick
- * @type_function_param1 e:{ui/tab_panel:TitleClickEvent}
- */
-onTitleClick?: ((e: TitleClickEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onTitleHold
- * @type_function_param1 e:{ui/tab_panel:TitleHoldEvent}
- */
-onTitleHold?: ((e: TitleHoldEvent) => void);
-/**
- * @skip
- * @docid dxTabPanelOptions.onTitleRendered
- * @type_function_param1 e:{ui/tab_panel:TitleRenderedEvent}
- */
-onTitleRendered?: ((e: TitleRenderedEvent) => void);
-};

@@ -11,6 +11,7 @@ export class GanttView extends Widget {
   _init() {
     super._init();
     this._onSelectionChanged = this._createActionByOption('onSelectionChanged');
+    this._onViewTypeChanged = this._createActionByOption('onViewTypeChanged');
     this._onScroll = this._createActionByOption('onScroll');
     this._onDialogShowing = this._createActionByOption('onDialogShowing');
     this._onPopupMenuShowing = this._createActionByOption('onPopupMenuShowing');
@@ -384,6 +385,11 @@ export class GanttView extends Widget {
       var direction = (info === null || info === void 0 ? void 0 : info.height) > this._taskAreaContainer.getHeight() ? 'both' : 'horizontal';
       scrollView.option('direction', direction);
     }
+  }
+  updateGanttViewType(type) {
+    this._onViewTypeChanged({
+      type: type
+    });
   }
   // export
   getTreeListTableStyle() {

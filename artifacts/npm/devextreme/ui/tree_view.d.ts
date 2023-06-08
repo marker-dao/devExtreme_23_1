@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tree_view.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -105,6 +105,7 @@ export type SelectionChangedEvent<TKey = any> = EventInfo<dxTreeView<TKey>>;
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
  * @public
+ * @docid
  */
 export interface dxTreeViewOptions<TKey = any>
     extends Omit<HierarchicalCollectionWidgetOptions<dxTreeView<TKey>, dxTreeViewItem, TKey>, 'dataSource'>, SearchBoxMixinOptions {
@@ -174,11 +175,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTreeView
-     * @type_function_param1_field event:event
-     * @type_function_param1_field itemData:object
-     * @type_function_param1_field node:dxTreeViewNode
+     * @type_function_param1 e:{ui/tree_view:ItemClickEvent}
 
      * @action
      * @public
@@ -187,11 +184,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTreeView
-     * @type_function_param1_field event:event
-     * @type_function_param1_field itemData:object
-     * @type_function_param1_field node:dxTreeViewNode
+     * @type_function_param1 e:{ui/tree_view:ItemCollapsedEvent}
      * @action
      * @public
      */
@@ -199,11 +192,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field itemData:object
-     * @type_function_param1_field node:dxTreeViewNode
-     * @type_function_param1_field component:dxTreeView
+     * @type_function_param1 e:{ui/tree_view:ItemContextMenuEvent}
      * @action
      * @public
      */
@@ -211,11 +200,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTreeView
-     * @type_function_param1_field event:event
-     * @type_function_param1_field itemData:object
-     * @type_function_param1_field node:dxTreeViewNode
+     * @type_function_param1 e:{ui/tree_view:ItemExpandedEvent}
      * @action
      * @public
      */
@@ -223,11 +208,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTreeView
-     * @type_function_param1_field event:event
-     * @type_function_param1_field itemData:object
-     * @type_function_param1_field node:dxTreeViewNode
+     * @type_function_param1 e:{ui/tree_view:ItemHoldEvent}
      * @action
      * @public
      */
@@ -235,10 +216,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field itemData:object
-     * @type_function_param1_field node:dxTreeViewNode
-     * @type_function_param1_field component:dxTreeView
+     * @type_function_param1 e:{ui/tree_view:ItemRenderedEvent}
      * @action
      * @public
      */
@@ -246,10 +224,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field node:dxTreeViewNode
-     * @type_function_param1_field component:dxTreeView
-     * @type_function_param1_field itemData:object
+     * @type_function_param1 e:{ui/tree_view:ItemSelectionChangedEvent}
      * @action
      * @public
      */
@@ -257,8 +232,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTreeView
+     * @type_function_param1 e:{ui/tree_view:SelectAllValueChangedEvent}
      * @action
      * @public
      */
@@ -266,8 +240,7 @@ export interface dxTreeViewOptions<TKey = any>
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxTreeView
+     * @type_function_param1 e:{ui/tree_view:SelectionChangedEvent}
      * @action
      * @public
      * @override
@@ -667,90 +640,4 @@ export type Properties<TKey = any> = dxTreeViewOptions<TKey>;
 /** @deprecated use Properties instead */
 export type Options<TKey = any> = Properties<TKey>;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut' | 'onItemDeleted' | 'onItemDeleting' | 'onItemReordered'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxTreeViewOptions.onContentReady
- * @type_function_param1 e:{ui/tree_view:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onDisposing
- * @type_function_param1 e:{ui/tree_view:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onInitialized
- * @type_function_param1 e:{ui/tree_view:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onItemClick
- * @type_function_param1 e:{ui/tree_view:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onItemCollapsed
- * @type_function_param1 e:{ui/tree_view:ItemCollapsedEvent}
- */
-onItemCollapsed?: ((e: ItemCollapsedEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onItemContextMenu
- * @type_function_param1 e:{ui/tree_view:ItemContextMenuEvent}
- */
-onItemContextMenu?: ((e: ItemContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onItemExpanded
- * @type_function_param1 e:{ui/tree_view:ItemExpandedEvent}
- */
-onItemExpanded?: ((e: ItemExpandedEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onItemHold
- * @type_function_param1 e:{ui/tree_view:ItemHoldEvent}
- */
-onItemHold?: ((e: ItemHoldEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onItemRendered
- * @type_function_param1 e:{ui/tree_view:ItemRenderedEvent}
- */
-onItemRendered?: ((e: ItemRenderedEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onItemSelectionChanged
- * @type_function_param1 e:{ui/tree_view:ItemSelectionChangedEvent}
- */
-onItemSelectionChanged?: ((e: ItemSelectionChangedEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onOptionChanged
- * @type_function_param1 e:{ui/tree_view:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onSelectAllValueChanged
- * @type_function_param1 e:{ui/tree_view:SelectAllValueChangedEvent}
- */
-onSelectAllValueChanged?: ((e: SelectAllValueChangedEvent) => void);
-/**
- * @skip
- * @docid dxTreeViewOptions.onSelectionChanged
- * @type_function_param1 e:{ui/tree_view:SelectionChangedEvent}
- */
-onSelectionChanged?: ((e: SelectionChangedEvent) => void);
-};

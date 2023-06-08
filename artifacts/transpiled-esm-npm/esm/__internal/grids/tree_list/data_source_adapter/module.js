@@ -8,9 +8,9 @@ import ArrayStore from '../../../../data/array_store';
 import query from '../../../../data/query';
 import { Deferred, when } from '../../../../core/utils/deferred';
 import storeHelper from '../../../../data/store_helper';
-import DataSourceAdapter from '../../../../ui/grid_core/ui.grid_core.data_source_adapter';
 import gridCoreUtils from '../../../../ui/grid_core/ui.grid_core.utils';
 import errors from '../../../../ui/widget/ui.errors';
+import DataSourceAdapter from '../../grid_core/data_source_adapter/module';
 import treeListCore from '../module_core';
 var {
   queryByOptions

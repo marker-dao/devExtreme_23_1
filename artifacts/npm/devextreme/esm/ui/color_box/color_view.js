@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/color_box/color_view.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,6 +21,7 @@ import TextBox from '../text_box';
 import Draggable from '../draggable';
 import { isCommandKeyPressed } from '../../events/utils/index';
 import { name as clickEventName } from '../../events/click';
+import Guid from '../../core/guid';
 var COLOR_VIEW_CLASS = 'dx-colorview';
 var COLOR_VIEW_CONTAINER_CLASS = 'dx-colorview-container';
 var COLOR_VIEW_ROW_CLASS = 'dx-colorview-container-row';
@@ -52,6 +53,7 @@ var COLOR_VIEW_COLOR_PREVIEW_CONTAINER_CLASS = 'dx-colorview-color-preview-conta
 var COLOR_VIEW_COLOR_PREVIEW_CONTAINER_INNER_CLASS = 'dx-colorview-color-preview-container-inner';
 var COLOR_VIEW_COLOR_PREVIEW_COLOR_CURRENT = 'dx-colorview-color-preview-color-current';
 var COLOR_VIEW_COLOR_PREVIEW_COLOR_NEW = 'dx-colorview-color-preview-color-new';
+var TEXT_EDITOR_INPUT = 'dx-texteditor-input';
 var BLACK_COLOR = '#000000';
 var ColorView = Editor.inherit({
   _supportedKeys: function _supportedKeys() {
@@ -325,6 +327,11 @@ var ColorView = Editor.inherit({
   },
   _renderPaletteHandle: function _renderPaletteHandle() {
     this._$paletteHandle = $('<div>').addClass(COLOR_VIEW_PALETTE_HANDLE_CLASS).appendTo(this._$palette);
+    var handleAria = {
+      id: this.option('ariaId'),
+      role: 'application'
+    };
+    this.setAria(handleAria, this._$paletteHandle);
     this._createComponent(this._$paletteHandle, Draggable, {
       contentTemplate: null,
       boundary: this._$palette,
@@ -511,6 +518,10 @@ var ColorView = Editor.inherit({
   },
   _renderHexInput: function _renderHexInput() {
     this._hexInput = TextBox.getInstance(this._renderEditorWithLabel(this.hexInputOptions()).appendTo(this._$controlsContainer).find('.dx-textbox'));
+    var inputId = "dx-".concat(new Guid());
+    var $hexInput = this._$controlsContainer.find(".".concat(COLOR_VIEW_HEX_LABEL_CLASS)).find(".".concat(TEXT_EDITOR_INPUT));
+    this.setAria('id', inputId, $hexInput);
+    this.setAria('labelledby', inputId, this._$paletteHandle);
   },
   _renderAlphaChannelScale: function _renderAlphaChannelScale() {
     var $alphaChannelScaleCell = this._renderHtmlCellInsideRow(1, this._$colorPickerContainer, COLOR_VIEW_ALPHA_CHANNEL_CELL_CLASS);

@@ -415,7 +415,7 @@ var Popup = Overlay.inherit({
   _getToolbarName: function _getToolbarName() {
     return 'dxToolbarBase';
   },
-  _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
+  _toggleVisibilityAnimate(visible) {
     return this.callBase(visible);
   },
   _hide() {
@@ -782,7 +782,16 @@ var Popup = Overlay.inherit({
       this._renderFullscreenWidthClass();
     }
   },
+  _renderGeometryAsynchronously() {
+    this._renderGeometry({
+      isDimensionChange: true
+    });
+  },
   _dimensionChanged: function _dimensionChanged() {
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    if (shouldUseVisualViewport) {
+      return;
+    }
     this._renderGeometry({
       isDimensionChange: true
     });

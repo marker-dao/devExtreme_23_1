@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/core/utils/style.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -88,7 +88,20 @@ var setWidth = function setWidth(elements, value) {
 var setHeight = function setHeight(elements, value) {
   setDimensionProperty(elements, 'height', value);
 };
-var setStyle = function setStyle(element, value) {
-  element.style.cssText = value;
+var setStyle = function setStyle(element, styleString) {
+  var resetStyle = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  if (resetStyle) {
+    var styleList = [].slice.call(element.style);
+    styleList.forEach(propertyName => {
+      element.style.removeProperty(propertyName);
+    });
+  }
+  styleString.split(';').forEach(style => {
+    var parts = style.split(':').map(stylePart => stylePart.trim());
+    if (parts.length === 2) {
+      var [property, value] = parts;
+      element.style[property] = value;
+    }
+  });
 };
 export { styleProp, setStyle, stylePropPrefix, normalizeStyleProp, parsePixelValue, setWidth, setHeight };

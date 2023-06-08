@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/globalize/date.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -117,8 +117,10 @@ if (_globalize.default && _globalize.default.formatDate) {
     _getFormatStringByPath: function _getFormatStringByPath(path) {
       return _globalize.default.locale().main('dates/calendars/gregorian/' + path);
     },
-    getPeriodNames: function getPeriodNames() {
-      var json = _globalize.default.locale().main('dates/calendars/gregorian/dayPeriods/stand-alone/wide');
+    getPeriodNames: function getPeriodNames(format, type) {
+      format = format || 'wide';
+      type = type === 'format' ? type : 'stand-alone';
+      var json = _globalize.default.locale().main("dates/calendars/gregorian/dayPeriods/".concat(type, "/").concat(format));
       return [json['am'], json['pm']];
     },
     getMonthNames: function getMonthNames(format, type) {

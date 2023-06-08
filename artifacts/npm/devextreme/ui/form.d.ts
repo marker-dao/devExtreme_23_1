@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/form.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -117,6 +117,7 @@ export type SimpleItemLabelTemplateData = SimpleItemTemplateData & { text: strin
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxFormOptions extends WidgetOptions<dxForm> {
     /**
@@ -193,8 +194,7 @@ export interface dxFormOptions extends WidgetOptions<dxForm> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxForm
+     * @type_function_param1 e:{ui/form:EditorEnterKeyEvent}
      * @action
      * @public
      */
@@ -202,9 +202,7 @@ export interface dxFormOptions extends WidgetOptions<dxForm> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field value:object
-     * @type_function_param1_field component:dxForm
+     * @type_function_param1 e:{ui/form:FieldDataChangedEvent}
      * @action
      * @public
      */
@@ -818,48 +816,4 @@ export type Options = dxFormOptions;
 
 // TODO: temporary commented out to fix jquery generation error in R1
 
-// type EventProps<T> = Extract<keyof T, `on${any}`>;
-// type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
-
-// type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut'>;
-
-// type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxFormOptions.onContentReady
- * @type_function_param1 e:{ui/form:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxFormOptions.onDisposing
- * @type_function_param1 e:{ui/form:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxFormOptions.onEditorEnterKey
- * @type_function_param1 e:{ui/form:EditorEnterKeyEvent}
- */
-onEditorEnterKey?: ((e: EditorEnterKeyEvent) => void);
-/**
- * @skip
- * @docid dxFormOptions.onFieldDataChanged
- * @type_function_param1 e:{ui/form:FieldDataChangedEvent}
- */
-onFieldDataChanged?: ((e: FieldDataChangedEvent) => void);
-/**
- * @skip
- * @docid dxFormOptions.onInitialized
- * @type_function_param1 e:{ui/form:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxFormOptions.onOptionChanged
- * @type_function_param1 e:{ui/form:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-};
+// 

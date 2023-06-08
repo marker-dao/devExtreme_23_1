@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/lookup.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -54,6 +54,7 @@ var LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
 var GROUP_LIST_HEADER_CLASS = 'dx-list-group-header';
 var MATERIAL_LOOKUP_LIST_ITEMS_COUNT = 5;
 var MATERIAL_LOOKUP_LIST_PADDING = 8;
+var WINDOW_RATIO = 0.8;
 var Lookup = _ui.default.inherit({
   _supportedKeys: function _supportedKeys() {
     return (0, _extend.extend)(this.callBase(), {
@@ -109,21 +110,21 @@ var Lookup = _ui.default.inherit({
       showDropDownButton: false,
       focusStateEnabled: false,
       dropDownOptions: {
-        showTitle: true,
-        width: function width() {
-          return (0, _size.getWidth)(window) * 0.8;
-        },
-        height: function height() {
-          return (0, _size.getHeight)(window) * 0.8;
-        },
-        shading: true,
-        hideOnOutsideClick: false,
-        position: undefined,
         animation: {},
+        fullScreen: false,
+        hideOnOutsideClick: false,
+        onTitleRendered: null,
+        position: undefined,
+        shading: true,
+        showTitle: true,
         title: '',
         titleTemplate: 'title',
-        onTitleRendered: null,
-        fullScreen: false
+        width: function width() {
+          return (0, _size.getWidth)(window) * WINDOW_RATIO;
+        },
+        height: function height() {
+          return (0, _size.getHeight)(window) * WINDOW_RATIO;
+        }
       },
       /**
       * @name dxLookupOptions.acceptCustomValue

@@ -8,6 +8,7 @@ var _color_view = _interopRequireDefault(require("./color_view"));
 var _extend = require("../../core/utils/extend");
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _ui = _interopRequireDefault(require("../drop_down_editor/ui.drop_down_editor"));
+var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE colorBox
 
@@ -166,6 +167,7 @@ var ColorBox = _ui.default.inherit({
       applyValueMode: that.option('applyValueMode'),
       focusStateEnabled: that.option('focusStateEnabled'),
       stylingMode: this.option('stylingMode'),
+      ariaId: this._ariaId,
       onEnterKeyPressed: function onEnterKeyPressed(_ref) {
         var event = _ref.event;
         that._colorViewEnterKeyPressed = true;
@@ -241,6 +243,8 @@ var ColorBox = _ui.default.inherit({
   },
   _renderInput: function _renderInput() {
     this.callBase();
+    this._ariaId = "dx-".concat(new _guid.default());
+    this.setAria('activedescendant', this._ariaId);
     this._input().addClass(COLOR_BOX_INPUT_CLASS);
     this._renderColorPreview();
   },

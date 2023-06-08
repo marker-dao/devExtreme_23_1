@@ -988,6 +988,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
       grouping: true,
       summary: true
     };
+    // @ts-expect-error
     if ((0, _type.isObject)(remoteOperations) && remoteOperations.groupPaging) {
       remoteOperations = (0, _extend.extend)({}, enabledRemoteOperations, remoteOperations);
     }

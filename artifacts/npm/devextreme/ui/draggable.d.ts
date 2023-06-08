@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/draggable.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,6 +35,8 @@ import {
 
 /**
  * @namespace DevExpress.ui
+ * @docid
+ * @type object
  */
 export interface DraggableBaseOptions<TComponent> extends DOMComponentOptions<TComponent> {
     /**
@@ -113,6 +115,7 @@ export interface DraggableBaseOptions<TComponent> extends DOMComponentOptions<TC
  * @inherits DOMComponent
  * @hidden
  * @namespace DevExpress.ui
+ * @options DraggableBaseOptions
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DraggableBase { }
@@ -162,6 +165,7 @@ export type DragTemplateData = {
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxDraggableOptions extends DraggableBaseOptions<dxDraggable> {
     /**
@@ -181,9 +185,7 @@ export interface dxDraggableOptions extends DraggableBaseOptions<dxDraggable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxDraggable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/draggable:DragEndEvent}
      * @action
      * @public
      */
@@ -191,9 +193,7 @@ export interface dxDraggableOptions extends DraggableBaseOptions<dxDraggable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxDraggable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/draggable:DragMoveEvent}
      * @action
      * @public
      */
@@ -201,9 +201,7 @@ export interface dxDraggableOptions extends DraggableBaseOptions<dxDraggable> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxDraggable
-     * @type_function_param1_field event:event
+     * @type_function_param1 e:{ui/draggable:DragStartEvent}
      * @action
      * @public
      */
@@ -224,48 +222,4 @@ export type Properties = dxDraggableOptions;
 /** @deprecated use Properties instead */
 export type Options = dxDraggableOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onDrop'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxDraggableOptions.onDisposing
- * @type_function_param1 e:{ui/draggable:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxDraggableOptions.onDragEnd
- * @type_function_param1 e:{ui/draggable:DragEndEvent}
- */
-onDragEnd?: ((e: DragEndEvent) => void);
-/**
- * @skip
- * @docid dxDraggableOptions.onDragMove
- * @type_function_param1 e:{ui/draggable:DragMoveEvent}
- */
-onDragMove?: ((e: DragMoveEvent) => void);
-/**
- * @skip
- * @docid dxDraggableOptions.onDragStart
- * @type_function_param1 e:{ui/draggable:DragStartEvent}
- */
-onDragStart?: ((e: DragStartEvent) => void);
-/**
- * @skip
- * @docid dxDraggableOptions.onInitialized
- * @type_function_param1 e:{ui/draggable:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxDraggableOptions.onOptionChanged
- * @type_function_param1 e:{ui/draggable:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-};

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/action_sheet.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -72,6 +72,7 @@ export type OptionChangedEvent<TItem extends ItemLike<TKey> = any, TKey = any> =
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
  * @public
+ * @docid
  */
 export interface dxActionSheetOptions<
     TItem extends ItemLike<TKey> = any,
@@ -101,8 +102,7 @@ export interface dxActionSheetOptions<
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxActionSheet
+     * @type_function_param1 e:{ui/action_sheet:CancelClickEvent}
      * @action
      * @public
      */
@@ -245,66 +245,4 @@ export type Options<
     TKey = any,
 > = Properties<TItem, TKey>;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut' | 'onItemDeleted' | 'onItemDeleting' | 'onItemReordered' | 'onSelectionChanged'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxActionSheetOptions.onCancelClick
- * @type_function_param1 e:{ui/action_sheet:CancelClickEvent}
- */
-onCancelClick?: ((e: CancelClickEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onContentReady
- * @type_function_param1 e:{ui/action_sheet:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onDisposing
- * @type_function_param1 e:{ui/action_sheet:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onInitialized
- * @type_function_param1 e:{ui/action_sheet:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onItemClick
- * @type_function_param1 e:{ui/action_sheet:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onItemContextMenu
- * @type_function_param1 e:{ui/action_sheet:ItemContextMenuEvent}
- */
-onItemContextMenu?: ((e: ItemContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onItemHold
- * @type_function_param1 e:{ui/action_sheet:ItemHoldEvent}
- */
-onItemHold?: ((e: ItemHoldEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onItemRendered
- * @type_function_param1 e:{ui/action_sheet:ItemRenderedEvent}
- */
-onItemRendered?: ((e: ItemRenderedEvent) => void);
-/**
- * @skip
- * @docid dxActionSheetOptions.onOptionChanged
- * @type_function_param1 e:{ui/action_sheet:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-};

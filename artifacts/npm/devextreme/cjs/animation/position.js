@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/animation/position.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,6 +15,7 @@ var _common = require("../core/utils/common");
 var _iterator = require("../core/utils/iterator");
 var _window = require("../core/utils/window");
 var _dom_adapter = _interopRequireDefault(require("../core/dom_adapter"));
+var _visual_viewport = require("../core/utils/visual_viewport");
 var _type = require("../core/utils/type");
 var _extend = require("../core/utils/extend");
 var _position = require("../core/utils/position");
@@ -22,6 +23,7 @@ var _browser = _interopRequireDefault(require("../core/utils/browser"));
 var _translator = require("./translator");
 var _support = require("../core/utils/support");
 var _devices = _interopRequireDefault(require("../core/devices"));
+var _style = require("../core/utils/style");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var window = (0, _window.getWindow)();
 var horzRe = /left|right/;
@@ -229,11 +231,18 @@ var calculatePosition = function calculatePosition(what, options) {
     if ((0, _type.isWindow)(of[0])) {
       h.atLocation = of.scrollLeft();
       v.atLocation = of.scrollTop();
-      if (_devices.default.real().deviceType === 'phone' && of[0].visualViewport) {
-        h.atLocation = Math.max(h.atLocation, of[0].visualViewport.offsetLeft);
-        v.atLocation = Math.max(v.atLocation, of[0].visualViewport.offsetTop);
-        h.atSize = of[0].visualViewport.width;
-        v.atSize = of[0].visualViewport.height;
+      var isPhone = _devices.default.real().deviceType === 'phone';
+      var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
+      if (isPhone && isVisualViewportAvailable) {
+        var _getVisualViewportSiz = (0, _visual_viewport.getVisualViewportSizes)(),
+          offsetLeft = _getVisualViewportSiz.offsetLeft,
+          offsetTop = _getVisualViewportSiz.offsetTop,
+          width = _getVisualViewportSiz.width,
+          height = _getVisualViewportSiz.height;
+        h.atLocation = Math.max(h.atLocation, offsetLeft);
+        v.atLocation = Math.max(v.atLocation, offsetTop);
+        h.atSize = width;
+        v.atSize = height;
       } else {
         h.atSize = of[0].innerWidth > of[0].outerWidth ? of[0].innerWidth : (0, _size.getWidth)(of);
         v.atSize = of[0].innerHeight > of[0].outerHeight || IS_SAFARI ? of[0].innerHeight : (0, _size.getHeight)(of);
@@ -319,34 +328,35 @@ var calculatePosition = function calculatePosition(what, options) {
   });
   return result;
 };
-
-// NOTE: Setting the 'element.style.transform.scale' requires the inline style when both of the conditions met:
+// NOTE: Setting the 'element.style' requires creating attributeNode when both of the conditions met:
 //       - a form contains an input with the name property set to "style";
 //       - a form contains a dx-validator (or other popup widget).
 //       T941581
-var setScaleProperty = function setScaleProperty(element, scale, transformProp, styleAttr, isEmpty) {
+var setScaleProperty = function setScaleProperty(element, scale, styleAttr, isEmpty) {
   var stylePropIsValid = (0, _type.isDefined)(element.style) && !_dom_adapter.default.isNode(element.style);
+  var newStyleValue = isEmpty ? styleAttr.replace(scale, '') : styleAttr;
   if (stylePropIsValid) {
-    element.style.transform = isEmpty ? transformProp.replace(scale, '') : transformProp;
+    (0, _style.setStyle)(element, newStyleValue, false);
   } else {
-    element.setAttribute('style', isEmpty ? styleAttr.replace(scale, '') : styleAttr);
+    var styleAttributeNode = _dom_adapter.default.createAttribute('style');
+    styleAttributeNode.value = newStyleValue;
+    element.setAttributeNode(styleAttributeNode);
   }
 };
 var getOffsetWithoutScale = function getOffsetWithoutScale($startElement) {
-  var _currentElement$getAt, _currentElement$style, _style$match;
+  var _currentElement$getAt, _style$match;
   var $currentElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : $startElement;
   var currentElement = $currentElement.get(0);
   if (!currentElement) {
     return $startElement.offset();
   }
   var style = ((_currentElement$getAt = currentElement.getAttribute) === null || _currentElement$getAt === void 0 ? void 0 : _currentElement$getAt.call(currentElement, 'style')) || '';
-  var transform = (_currentElement$style = currentElement.style) === null || _currentElement$style === void 0 ? void 0 : _currentElement$style.transform;
   var scale = (_style$match = style.match(scaleRe)) === null || _style$match === void 0 ? void 0 : _style$match[0];
   var offset;
   if (scale) {
-    setScaleProperty(currentElement, scale, transform, style, true);
+    setScaleProperty(currentElement, scale, style, true);
     offset = getOffsetWithoutScale($startElement, $currentElement.parent());
-    setScaleProperty(currentElement, scale, transform, style, false);
+    setScaleProperty(currentElement, scale, style, false);
   } else {
     offset = getOffsetWithoutScale($startElement, $currentElement.parent());
   }

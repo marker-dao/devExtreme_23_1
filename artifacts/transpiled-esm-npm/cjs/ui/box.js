@@ -58,11 +58,7 @@ var setFlexProp = function setFlexProp(element, prop, value) {
     }
     var cssName = (0, _inflector.dasherize)(prop);
     var styleExpr = cssName + ': ' + value + ';';
-    if (!element.attributes.style) {
-      element.setAttribute('style', styleExpr);
-    } else if (element.attributes.style.value.indexOf(styleExpr) < 0) {
-      element.attributes.style.value += ' ' + styleExpr;
-    }
+    (0, _style.setStyle)(element, styleExpr, false);
   }
 };
 var BoxItem = /*#__PURE__*/function (_CollectionWidgetItem) {

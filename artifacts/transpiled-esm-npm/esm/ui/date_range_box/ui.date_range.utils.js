@@ -1,6 +1,6 @@
 import dateUtils from '../../core/utils/date';
 import dateSerialization from '../../core/utils/date_serialization';
-var getDeserializedDate = value => {
+export var getDeserializedDate = value => {
   return dateSerialization.deserializeDate(value);
 };
 export var isSameDates = (date1, date2) => {
@@ -21,4 +21,7 @@ export var sortDatesArray = value => {
   } else {
     return value;
   }
+};
+export var monthDifference = (date1, date2) => {
+  return (date2.getFullYear() - date1.getFullYear()) * 12 - date1.getMonth() + date2.getMonth();
 };

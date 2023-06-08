@@ -14,7 +14,8 @@ import { CLASSES } from './const';
 var setFieldProperty = function setFieldProperty(field, property, value, isInitialization) {
   var initProperties = field._initProperties = field._initProperties || {};
   var initValue = isInitialization ? value : field[property];
-  if (!Object.prototype.hasOwnProperty.call(initProperties, property) || isInitialization) {
+  var needInitProperty = !Object.prototype.hasOwnProperty.call(initProperties, property) || isInitialization;
+  if (needInitProperty && property !== '_initProperties') {
     initProperties[property] = initValue;
   }
   field[property] = value;

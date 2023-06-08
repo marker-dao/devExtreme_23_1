@@ -43,6 +43,7 @@ var LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
 var GROUP_LIST_HEADER_CLASS = 'dx-list-group-header';
 var MATERIAL_LOOKUP_LIST_ITEMS_COUNT = 5;
 var MATERIAL_LOOKUP_LIST_PADDING = 8;
+var WINDOW_RATIO = 0.8;
 var Lookup = DropDownList.inherit({
   _supportedKeys: function _supportedKeys() {
     return extend(this.callBase(), {
@@ -98,21 +99,17 @@ var Lookup = DropDownList.inherit({
       showDropDownButton: false,
       focusStateEnabled: false,
       dropDownOptions: {
-        showTitle: true,
-        width: function width() {
-          return getWidth(window) * 0.8;
-        },
-        height: function height() {
-          return getHeight(window) * 0.8;
-        },
-        shading: true,
-        hideOnOutsideClick: false,
-        position: undefined,
         animation: {},
+        fullScreen: false,
+        hideOnOutsideClick: false,
+        onTitleRendered: null,
+        position: undefined,
+        shading: true,
+        showTitle: true,
         title: '',
         titleTemplate: 'title',
-        onTitleRendered: null,
-        fullScreen: false
+        width: () => getWidth(window) * WINDOW_RATIO,
+        height: () => getHeight(window) * WINDOW_RATIO
       },
       /**
       * @name dxLookupOptions.acceptCustomValue

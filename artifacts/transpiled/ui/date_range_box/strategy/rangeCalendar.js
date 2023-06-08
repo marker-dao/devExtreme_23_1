@@ -1,8 +1,8 @@
 "use strict";
 
 exports.default = void 0;
-var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _uiDate_boxStrategy = _interopRequireDefault(require("../../date_box/ui.date_box.strategy.calendar"));
+var _events_engine = _interopRequireDefault(require("../../../events/core/events_engine"));
 var _extend = require("../../../core/utils/extend");
 var _uiDate_range = require("../ui.date_range.utils");
 var _type = require("../../../core/utils/type");
@@ -10,8 +10,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var CALENDAR_RANGE_START_DATE_CLASS = 'dx-calendar-range-start-date';
-var CALENDAR_RANGE_END_DATE_CLASS = 'dx-calendar-range-end-date';
+var APPLY_BUTTON_SELECTOR = '.dx-popup-done.dx-button';
+var CANCEL_BUTTON_SELECTOR = '.dx-popup-cancel.dx-button';
+var TODAY_BUTTON_CLASS = 'dx-button-today';
 var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
   _inheritsLoose(RangeCalendarStrategy, _CalendarStrategy);
   function RangeCalendarStrategy(dateBox) {
@@ -23,47 +24,105 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
   }
   var _proto = RangeCalendarStrategy.prototype;
   _proto.popupConfig = function popupConfig(_popupConfig) {
-    var _this2 = this;
     return (0, _extend.extend)(true, _CalendarStrategy.prototype.popupConfig.call(this, _popupConfig), {
       position: {
         of: this.dateRangeBox.$element()
-      },
-      onShowing: function onShowing() {
-        _this2._widget._restoreViewsMinMaxOptions();
-        _this2._widget.option('_currentSelection', 'startDate');
       }
     });
   };
+  _proto.popupShowingHandler = function popupShowingHandler() {
+    var _this$_widget;
+    (_this$_widget = this._widget) === null || _this$_widget === void 0 ? void 0 : _this$_widget._restoreViewsMinMaxOptions();
+    this._dateSelectedCounter = 0;
+  };
+  _proto._getPopup = function _getPopup() {
+    return _CalendarStrategy.prototype._getPopup.call(this) || this.dateRangeBox.getStartDateBox()._popup;
+  };
+  _proto.getFirstPopupElement = function getFirstPopupElement() {
+    var $popupWrapper = this._getPopup().$wrapper();
+    var $todayButton = $popupWrapper.find(".".concat(TODAY_BUTTON_CLASS));
+    if ($todayButton.length) {
+      return $todayButton;
+    }
+    return $popupWrapper.find(APPLY_BUTTON_SELECTOR);
+  };
+  _proto.getLastPopupElement = function getLastPopupElement() {
+    return this._getPopup().$wrapper().find(CANCEL_BUTTON_SELECTOR);
+  };
   _proto.supportedKeys = function supportedKeys() {
-    var _this3 = this;
-    var supportedKeys = _extends({}, _CalendarStrategy.prototype.supportedKeys.call(this), {
+    var _this2 = this;
+    return _extends({}, _CalendarStrategy.prototype.supportedKeys.call(this), {
       rightArrow: function rightArrow() {
-        if (_this3.dateRangeBox.option('opened')) {
+        if (_this2.dateRangeBox.option('opened')) {
           return true;
         }
       },
       leftArrow: function leftArrow() {
-        if (_this3.dateRangeBox.option('opened')) {
+        if (_this2.dateRangeBox.option('opened')) {
           return true;
         }
+      },
+      enter: function enter(e) {
+        if (_this2.dateRangeBox.option('opened')) {
+          var dateBoxValue = _this2.dateBox.dateOption('value');
+          _this2.dateBox._valueChangeEventHandler(e);
+          var newDateBoxValue = _this2.dateBox.dateOption('value');
+          var dateBoxValueChanged = !(0, _uiDate_range.isSameDates)(dateBoxValue, newDateBoxValue);
+          if (dateBoxValueChanged) {
+            _this2.dateRangeBox.getStartDateBox()._strategy._widget.option('values', _this2.dateRangeBox.option('value'));
+          } else {
+            _this2.dateRangeBox.getStartDateBox()._strategy._widget._enterKeyHandler(e);
+          }
+          return false;
+        }
+      },
+      tab: function tab(e) {
+        if (!_this2.getDateRangeBox().option('opened')) {
+          return;
+        }
+        if (_this2._isInstantlyMode()) {
+          if (!e.shiftKey && _this2.getDateRangeBox()._isEndDateActiveElement() || e.shiftKey && _this2.getDateRangeBox()._isStartDateActiveElement()) {
+            _this2.dateRangeBox.close();
+          }
+          return;
+        }
+        if (!e.shiftKey && _this2.getDateRangeBox()._isStartDateActiveElement() || e.shiftKey && _this2.getDateRangeBox()._isEndDateActiveElement()) {
+          return;
+        }
+        var $focusableElement = e.shiftKey ? _this2.getLastPopupElement() : _this2.getFirstPopupElement();
+        if ($focusableElement) {
+          _events_engine.default.trigger($focusableElement, 'focus');
+          $focusableElement.select();
+        }
+        e.preventDefault();
       }
     });
-    delete supportedKeys.enter;
-    return supportedKeys;
+  };
+  _proto._getTodayButtonConfig = function _getTodayButtonConfig() {
+    var _this3 = this;
+    var todayButtonConfig = _CalendarStrategy.prototype._getTodayButtonConfig.call(this);
+    todayButtonConfig.options.onInitialized = function (e) {
+      _this3.dateBox._popupButtonInitializedHandler(e);
+    };
+    return todayButtonConfig;
   };
   _proto._getWidgetOptions = function _getWidgetOptions() {
     var _this$dateRangeBox$op = this.dateRangeBox.option(),
-      disabledDates = _this$dateRangeBox$op.disabledDates;
-    disabledDates = (0, _type.isFunction)(disabledDates) ? this._injectComponent(disabledDates) : disabledDates;
+      disabledDatesValue = _this$dateRangeBox$op.disabledDates,
+      value = _this$dateRangeBox$op.value,
+      multiView = _this$dateRangeBox$op.multiView;
+    var disabledDates = (0, _type.isFunction)(disabledDatesValue) ? this._injectComponent(disabledDatesValue) : disabledDates;
     return (0, _extend.extend)(_CalendarStrategy.prototype._getWidgetOptions.call(this), {
       disabledDates: disabledDates,
-      values: this.dateRangeBox.option('value'),
+      values: value,
       selectionMode: 'range',
-      viewsCount: 2,
-      width: 260,
+      viewsCount: multiView ? 2 : 1,
       _allowChangeSelectionOrder: true,
-      _currentSelection: 'startDate'
+      _currentSelection: this.getCurrentSelection()
     });
+  };
+  _proto._refreshActiveDescendant = function _refreshActiveDescendant(e) {
+    this.dateRangeBox.setAria('activedescendant', e.actionValue);
   };
   _proto._injectComponent = function _injectComponent(func) {
     var _this4 = this;
@@ -80,54 +139,71 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     return this._widget.option('values');
   };
   _proto._updateValue = function _updateValue() {
+    var _this$dateRangeBox$op2 = this.dateRangeBox.option(),
+      value = _this$dateRangeBox$op2.value;
     if (!this._widget) {
       return;
     }
-    this._widget.option('values', this.dateRangeBox.option('value'));
+    this._shouldPreventFocusChange = true;
+    this._widget.option('values', value);
+  };
+  _proto._isInstantlyMode = function _isInstantlyMode() {
+    return this.dateRangeBox.option('applyValueMode') === 'instantly';
   };
   _proto._valueChangedHandler = function _valueChangedHandler(_ref) {
     var value = _ref.value,
       previousValue = _ref.previousValue,
       event = _ref.event;
-    if (!this.isStartDateBoxActive()) {
-      this.setActiveStartDateBox();
-    }
-    if ((0, _uiDate_range.isSameDateArrays)(value, previousValue)) {
+    if ((0, _uiDate_range.isSameDateArrays)(value, previousValue) && !this._widget._valueSelected) {
+      this._shouldPreventFocusChange = false;
       return;
     }
-    var isInstantlyMode = this.dateRangeBox.option('applyValueMode') === 'instantly';
-    if (!isInstantlyMode && !event) {
-      this.dateRangeBox.updateValue(value);
-      return;
-    }
-    if (this._widget.option('_currentSelection') === 'startDate') {
-      if (isInstantlyMode) {
-        this.dateRangeBox.updateValue(value);
+    this._widget._valueSelected = false;
+    if (this._isInstantlyMode()) {
+      if (!this.dateRangeBox.option('disableOutOfRangeSelection')) {
+        if (this._getCalendarCurrentSelection() === 'startDate') {
+          this._dateSelectedCounter = 0;
+        } else {
+          this._dateSelectedCounter = 1;
+          if (!value[0]) {
+            this._dateSelectedCounter = -1;
+          } else if ((0, _uiDate_range.getDeserializedDate)(value[0]) > (0, _uiDate_range.getDeserializedDate)(value[1])) {
+            this.dateRangeBox.updateValue([value[0], null], event);
+            return;
+          }
+        }
       }
-      this.getDateRangeBox().getEndDateBox().focus();
-      this._widget.option('_currentSelection', 'endDate');
-      this._widget._setViewsMinOption(value[0]);
-      if (value[1]) {
-        this._widget.option('currentDate', value[1]);
+      this.dateRangeBox.updateValue(value, event);
+      this._dateSelectedCounter += 1;
+      if (this._dateSelectedCounter === 2) {
+        this.getDateRangeBox().close();
+        return;
       }
     } else {
-      this.setActiveEndDateBox();
-      if (isInstantlyMode) {
-        this.dateRangeBox.updateValue(value);
-        this.getDateRangeBox().close();
-      } else {
-        this.setActiveStartDateBox();
-        this.getDateRangeBox().getStartDateBox().focus();
+      if (this._getCalendarCurrentSelection() === 'endDate') {
+        if (value[0] && (0, _uiDate_range.getDeserializedDate)(value[0]) > (0, _uiDate_range.getDeserializedDate)(value[1])) {
+          return;
+        }
       }
-      this._widget.option('_currentSelection', 'startDate');
-      this._widget._setViewsMaxOption(value[1]);
     }
+    if (!this._shouldPreventFocusChange) {
+      this._moveFocusToNextInput();
+    }
+    this._shouldPreventFocusChange = false;
   };
-  _proto.isStartDateBoxActive = function isStartDateBoxActive() {
-    return this.dateBox.$element().hasClass('dx-start-datebox');
+  _proto._moveFocusToNextInput = function _moveFocusToNextInput() {
+    var targetDateBox = this._getCalendarCurrentSelection() === 'startDate' ? this.getDateRangeBox().getEndDateBox() : this.getDateRangeBox().getStartDateBox();
+    targetDateBox.focus();
+    _events_engine.default.trigger(targetDateBox.field(), 'dxclick');
+  };
+  _proto.getCurrentSelection = function getCurrentSelection() {
+    return this.dateRangeBox.option('_currentSelection');
+  };
+  _proto._getCalendarCurrentSelection = function _getCalendarCurrentSelection() {
+    return this._widget.option('_currentSelection');
   };
   _proto._closeDropDownByEnter = function _closeDropDownByEnter() {
-    if (this._widget.option('_currentSelection') === 'startDate') {
+    if (this._getCalendarCurrentSelection() === 'startDate') {
       return false;
     } else {
       return true;
@@ -149,20 +225,6 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
   };
   _proto.getDateRangeBox = function getDateRangeBox() {
     return this.dateRangeBox;
-  };
-  _proto.isStartDateSelected = function isStartDateSelected(_ref2) {
-    var currentTarget = _ref2.currentTarget;
-    if ((0, _renderer.default)(currentTarget).hasClass(CALENDAR_RANGE_START_DATE_CLASS)) {
-      return true;
-    }
-    return false;
-  };
-  _proto.isEndDateSelected = function isEndDateSelected(_ref3) {
-    var currentTarget = _ref3.currentTarget;
-    if ((0, _renderer.default)(currentTarget).hasClass(CALENDAR_RANGE_END_DATE_CLASS)) {
-      return true;
-    }
-    return false;
   };
   return RangeCalendarStrategy;
 }(_uiDate_boxStrategy.default);

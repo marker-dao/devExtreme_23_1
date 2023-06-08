@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -70,6 +70,12 @@
             "dxDateBox-simulatedDataPickerTitleDate": "日付を選択してください。",
             "dxDateBox-simulatedDataPickerTitleDateTime": "日付と時刻を選択してください。",
             "dxDateBox-validation-datetime": "日付または時刻を指定してください。",
+            "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
+            "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
+            "dxDateRangeBox-startDateOutOfRangeMessage": "Start date is out of range",
+            "dxDateRangeBox-endDateOutOfRangeMessage": "End date is out of range",
+            "dxDateRangeBox-startDateLabel": "開始時刻",
+            "dxDateRangeBox-endDateLabel": "終了時刻",
             "dxFileUploader-selectFile": "ファイルを選択",
             "dxFileUploader-dropFile": "またはファイルをこちらにドロップしてください。",
             "dxFileUploader-bytes": "バイト",

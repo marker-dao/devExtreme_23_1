@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/drop_down_editor/ui.drop_down_list.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -43,7 +43,11 @@ export interface SelectionChangedInfo<T = any> {
     readonly selectedItem: T;
 }
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @hidden
+ */
 export interface dxDropDownListOptions<TComponent> extends DataExpressionMixinOptions<TComponent>, dxDropDownEditorOptions<TComponent> {
     /**
      * @docid
@@ -183,6 +187,7 @@ export interface dxDropDownListOptions<TComponent> extends DataExpressionMixinOp
  * @inherits DataExpressionMixin, dxDropDownEditor
  * @hidden
  * @namespace DevExpress.ui
+ * @options dxDropDownListOptions
  */
 export default class dxDropDownList<TProperties> extends dxDropDownEditor<TProperties> {
     getDataSource(): DataSource;

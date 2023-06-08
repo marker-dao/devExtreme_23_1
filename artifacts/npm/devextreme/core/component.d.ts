@@ -1,12 +1,16 @@
 /**
 * DevExtreme (core/component.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-/** @namespace DevExpress */
+/**
+ * @namespace DevExpress
+ * @docid
+ * @hidden
+ */
 export interface ComponentOptions<TDisposingEvent, TInitializedEvent, TOptionChangedEvent> {
   /**
    * @docid
@@ -45,6 +49,7 @@ export interface ComponentOptions<TDisposingEvent, TInitializedEvent, TOptionCha
  * @namespace DevExpress
  * @hidden
  * @wrappable
+ * @options ComponentOptions
  */
 export class Component<TProperties> {
   constructor(options?: TProperties);

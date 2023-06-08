@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tag_box.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -201,8 +201,8 @@ var TagBox = _select_box.default.inherit({
   _getLabelContainer: function _getLabelContainer() {
     return this._$tagsContainer;
   },
-  _setLabelContainerAria: function _setLabelContainerAria() {
-    this.setAria('labelledby', this._label.getId(), this._input());
+  _getFieldElement: function _getFieldElement() {
+    return this._input();
   },
   _scrollContainer: function _scrollContainer(direction) {
     if (this.option('multiline') || !(0, _window.hasWindow)()) {
@@ -271,11 +271,6 @@ var TagBox = _select_box.default.inherit({
 
       /**
       * @name dxTagBoxOptions.hiddenAction
-      * @hidden
-      */
-
-      /**
-      * @name dxTagBoxOptions.itemRender
       * @hidden
       */
 

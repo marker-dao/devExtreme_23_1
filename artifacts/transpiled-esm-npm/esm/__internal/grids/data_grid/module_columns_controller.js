@@ -1,5 +1,5 @@
-import { columnsControllerModule } from '../../../ui/grid_core/ui.grid_core.columns_controller';
 import { extend } from '../../../core/utils/extend';
+import { columnsControllerModule } from '../grid_core/columns_controller/module';
 import gridCore from './module_core';
 gridCore.registerModule('columns', {
   defaultOptions() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/multi_view.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -55,15 +55,17 @@ export type SelectionChangedEvent<TItem extends ItemLike = any, TKey = any> = Ev
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
  * @public
+ * @docid
  */
 export interface dxMultiViewOptions<
     TItem extends ItemLike = any,
     TKey = any,
-> extends Properties<TItem, TKey> {}
+> extends dxMultiViewBaseOptions<MultiViewInstance<TItem, TKey>, TItem, TKey> {}
 
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid dxMultiViewOptions
  */
 export interface dxMultiViewBaseOptions<
     TComponent extends dxMultiView<any, TItem, TKey> = dxMultiView<any, any, any>,
@@ -169,7 +171,7 @@ interface MultiViewInstance<TItem, TKey> extends dxMultiView<Properties<TItem, T
 export type Properties<
     TItem extends ItemLike = any,
     TKey = any,
-> = dxMultiViewBaseOptions<MultiViewInstance<TItem, TKey>, TItem, TKey>;
+> = dxMultiViewOptions<TItem, TKey>;
 
 /** @deprecated use Properties instead */
 export type Options<
@@ -177,66 +179,4 @@ export type Options<
     TKey = any,
 > = Properties<TItem, TKey>;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type FilterOutHidden<T> = Omit<T, 'onFocusIn' | 'onFocusOut' | 'onItemDeleted' | 'onItemDeleting' | 'onItemReordered'>;
-
-type EventsIntegrityCheckingHelper = CheckedEvents<FilterOutHidden<Properties>, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxMultiViewOptions.onContentReady
- * @type_function_param1 e:{ui/multi_view:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onDisposing
- * @type_function_param1 e:{ui/multi_view:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onInitialized
- * @type_function_param1 e:{ui/multi_view:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onItemClick
- * @type_function_param1 e:{ui/multi_view:ItemClickEvent}
- */
-onItemClick?: ((e: ItemClickEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onItemContextMenu
- * @type_function_param1 e:{ui/multi_view:ItemContextMenuEvent}
- */
-onItemContextMenu?: ((e: ItemContextMenuEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onItemHold
- * @type_function_param1 e:{ui/multi_view:ItemHoldEvent}
- */
-onItemHold?: ((e: ItemHoldEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onItemRendered
- * @type_function_param1 e:{ui/multi_view:ItemRenderedEvent}
- */
-onItemRendered?: ((e: ItemRenderedEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onOptionChanged
- * @type_function_param1 e:{ui/multi_view:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxMultiViewOptions.onSelectionChanged
- * @type_function_param1 e:{ui/multi_view:SelectionChangedEvent}
- */
-onSelectionChanged?: ((e: SelectionChangedEvent) => void);
-};

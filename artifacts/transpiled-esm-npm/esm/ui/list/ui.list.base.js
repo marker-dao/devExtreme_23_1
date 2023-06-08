@@ -27,6 +27,7 @@ import { BindableTemplate } from '../../core/templates/bindable_template';
 import { Deferred } from '../../core/utils/deferred';
 import DataConverterMixin from '../shared/grouped_data_converter_mixin';
 import { getElementMargin } from '../../renovation/ui/scroll_view/utils/get_element_style';
+import Guid from '../../core/guid';
 var LIST_CLASS = 'dx-list';
 var LIST_ITEM_CLASS = 'dx-list-item';
 var LIST_ITEM_SELECTOR = '.' + LIST_ITEM_CLASS;
@@ -524,15 +525,20 @@ export var ListBase = CollectionWidget.inherit({
       'roledescription': 'list'
     };
     this.setAria(elementAria, this.$element());
-    this.setAria('role', 'listbox');
-    this._setListAriaLabel();
+    this._setListAria();
   },
-  _setListAriaLabel() {
+  _setListAria() {
     var {
       items
     } = this.option();
-    var label = items !== null && items !== void 0 && items.length ? 'Items' : this.option('noDataText');
-    this.setAria('label', label);
+    var listArea = items !== null && items !== void 0 && items.length ? {
+      role: 'listbox',
+      label: 'Items'
+    } : {
+      role: undefined,
+      label: undefined
+    };
+    this.setAria(listArea);
   },
   _focusTarget: function _focusTarget() {
     return this._itemContainer();
@@ -591,7 +597,13 @@ export var ListBase = CollectionWidget.inherit({
   },
   _renderGroup: function _renderGroup(index, group) {
     var $groupElement = $('<div>').addClass(LIST_GROUP_CLASS).appendTo(this._itemContainer());
-    var $groupHeaderElement = $('<div>').addClass(LIST_GROUP_HEADER_CLASS).appendTo($groupElement);
+    var id = "dx-".concat(new Guid().toString());
+    var groupAria = {
+      role: 'group',
+      'labelledby': id
+    };
+    this.setAria(groupAria, $groupElement);
+    var $groupHeaderElement = $('<div>').addClass(LIST_GROUP_HEADER_CLASS).attr('id', id).appendTo($groupElement);
     var groupTemplateName = this.option('groupTemplate');
     var groupTemplate = this._getTemplate(group.template || groupTemplateName, group, index, $groupHeaderElement);
     var renderArgs = {

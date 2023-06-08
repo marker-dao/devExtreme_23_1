@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_manager/ui.file_manager.item_list.thumbnails.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,6 @@
 import $ from '../../core/renderer';
 import { extend } from '../../core/utils/extend';
 import { isDefined } from '../../core/utils/type';
-import { hasWindow } from '../../core/utils/window';
 import { Deferred } from '../../core/utils/deferred';
 import eventsEngine from '../../events/core/events_engine';
 import { addNamespace } from '../../events/utils/index';
@@ -26,7 +25,6 @@ var FILE_MANAGER_THUMBNAILS_EVENT_NAMESPACE = 'dxFileManager_thumbnails';
 class FileManagerThumbnailsItemList extends FileManagerItemListBase {
   _initMarkup() {
     super._initMarkup();
-    this._needResetScrollPosition = false;
     this.$element().addClass(FILE_MANAGER_THUMBNAILS_ITEM_LIST_CLASS);
     var contextMenuEvent = addNamespace(contextMenuEventName, FILE_MANAGER_THUMBNAILS_EVENT_NAMESPACE);
     eventsEngine.on(this.$element(), contextMenuEvent, this._onContextMenu.bind(this));
@@ -49,7 +47,7 @@ class FileManagerThumbnailsItemList extends FileManagerItemListBase {
       getTooltipText: this._getTooltipText.bind(this),
       onSelectionChanged: this._onItemListSelectionChanged.bind(this),
       onFocusedItemChanged: this._onItemListFocusedItemChanged.bind(this),
-      onContentReady: this._onItemListContentReady.bind(this)
+      onContentReady: this._onContentReady.bind(this)
     });
   }
   _onContextMenu(e) {
@@ -146,20 +144,8 @@ class FileManagerThumbnailsItemList extends FileManagerItemListBase {
       itemElement: itemElement || undefined
     });
   }
-  _onItemListContentReady() {
-    if (this._needResetScrollPosition) {
-      this._resetScrollTopPosition();
-      this._needResetScrollPosition = false;
-    }
-  }
-  _resetScrollTopPosition() {
-    if (!hasWindow()) {
-      return;
-    }
-    setTimeout(() => {
-      var _this$_itemList$getSc;
-      return (_this$_itemList$getSc = this._itemList.getScrollable()) === null || _this$_itemList$getSc === void 0 ? void 0 : _this$_itemList$getSc.scrollTo(0);
-    });
+  _getScrollable() {
+    return this._itemList.getScrollable();
   }
   _setSelectedItemKeys(itemKeys) {
     this._itemList.option('selectedItemKeys', itemKeys);

@@ -159,19 +159,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     return (0, _extend.extend)(_HierarchicalCollecti.prototype._supportedKeys.call(this), {
       space: selectItem,
       pageUp: _common.noop,
-      pageDown: _common.noop,
-      enter: function enter(e) {
-        var $itemElement = (0, _renderer.default)(this.option('focusedElement'));
-        if (!$itemElement.length) {
-          return;
-        }
-        this._enterKeyHandler(e);
-        var itemData = this._getItemData($itemElement);
-        if (itemData.url) {
-          var link = $itemElement.get(0).getElementsByClassName(DX_ITEM_URL_CLASS)[0];
-          link === null || link === void 0 ? void 0 : link.click();
-        }
-      }
+      pageDown: _common.noop
     });
   };
   _proto._isSelectionEnabled = function _isSelectionEnabled() {
@@ -461,9 +449,17 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     if (e._skipHandling) return;
     var itemClickActionHandler = this._createAction(this._updateSubmenuVisibilityOnClick.bind(this));
     this._itemDXEventHandler(e, 'onItemClick', {}, {
+      beforeExecute: this._itemClick,
       afterExecute: itemClickActionHandler.bind(this)
     });
     e._skipHandling = true;
+  };
+  _proto._itemClick = function _itemClick(actionArgs) {
+    var args = actionArgs.args[0];
+    var link = args.event.target.getElementsByClassName(DX_ITEM_URL_CLASS)[0];
+    if (args.itemData.url && link) {
+      link.click();
+    }
   };
   _proto._updateSubmenuVisibilityOnClick = function _updateSubmenuVisibilityOnClick(actionArgs) {
     this._updateSelectedItemOnClick(actionArgs);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/index.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,6 +27,7 @@ type BaseGroupDescriptor<T> = {
  * @docid
  * @public
  * @type object
+ * @skip
  */
 export type GroupDescriptor<T> = KeySelector<T> | BaseGroupDescriptor<T> & {
     desc?: boolean;
@@ -36,6 +37,7 @@ export type GroupDescriptor<T> = KeySelector<T> | BaseGroupDescriptor<T> & {
  * @docid
  * @public
  * @type object
+ * @skip
  */
 export type SortDescriptor<T> = GroupDescriptor<T>;
 
@@ -43,6 +45,7 @@ export type SortDescriptor<T> = GroupDescriptor<T>;
  * @docid
  * @public
  * @type object
+ * @skip
  */
 export type SelectDescriptor<T> = string | Array<string> | ((source: T) => any);
 /**
@@ -55,7 +58,16 @@ export type FilterDescriptor = any;
  * @public
  */
 export type LangParams = {
+  /**
+   * @docid
+   * @public
+   */
   locale: string;
+  /**
+   * @docid
+   * @public
+   * @type object
+   */
   collatorOptions?: Intl.CollatorOptions;
 };
  /**
@@ -109,7 +121,7 @@ export interface LoadOptions<T = any> {
     /**
      * @docid
      * @public
-     * @type object
+     * @type SummaryDescriptor | Array<SummaryDescriptor>
      */
     groupSummary?: SummaryDescriptor<T> | Array<SummaryDescriptor<T>>;
     /**
@@ -168,7 +180,7 @@ export interface LoadOptions<T = any> {
     /**
      * @docid
      * @public
-     * @type object
+     * @type SummaryDescriptor | Array<SummaryDescriptor>
      */
     totalSummary?: SummaryDescriptor<T> | Array<SummaryDescriptor<T>>;
     /**
@@ -189,7 +201,6 @@ export type Store<TItem = any, TKey = any> =
     ODataStore<TItem, TKey>;
 
 /**
- * @docid
  * @public
  * @namespace DevExpress.data.utils
  * @type object

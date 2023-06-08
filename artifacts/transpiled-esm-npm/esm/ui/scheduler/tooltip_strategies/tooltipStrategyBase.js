@@ -27,7 +27,10 @@ export class TooltipStrategyBase {
     if (!this._tooltip) {
       this._tooltip = this._createTooltip(target, dataList);
     } else {
-      this._shouldUseTarget() && this._tooltip.option('target', target);
+      var shouldUseTarget = this._shouldUseTarget();
+      if (shouldUseTarget) {
+        this._tooltip.option('target', target);
+      }
       this._list.option('dataSource', dataList);
     }
     this._prepareBeforeVisibleChanged(dataList);

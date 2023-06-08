@@ -27,10 +27,7 @@ var ValidationSummary = CollectionWidget.inherit({
       * @name dxValidationSummaryOptions.dataSource
       * @hidden
       */
-      /**
-      * @name dxValidationSummaryOptions.itemRender
-      * @hidden
-      */
+
       /**
       * @name dxValidationSummaryOptions.activeStateEnabled
       * @hidden

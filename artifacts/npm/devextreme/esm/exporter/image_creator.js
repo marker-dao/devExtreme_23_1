@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/exporter/image_creator.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -328,8 +328,9 @@ function drawElement(element, context, parentOptions, shared) {
   var tagName = element.tagName;
   var isText = tagName === 'text' || tagName === 'tspan' || tagName === undefined;
   var isImage = tagName === 'image';
+  var isComment = element.nodeType === 8;
   var options = extend({}, parentOptions, getElementOptions(element, shared.rootAppended));
-  if (options.visibility === 'hidden' || options[HIDDEN_FOR_EXPORT]) {
+  if (options.visibility === 'hidden' || options[HIDDEN_FOR_EXPORT] || isComment) {
     return;
   }
   context.save();

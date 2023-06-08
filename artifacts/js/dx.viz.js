@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1497,6 +1497,7 @@ var _common = __webpack_require__(20576);
 var _iterator = __webpack_require__(95479);
 var _window = __webpack_require__(58201);
 var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
+var _visual_viewport = __webpack_require__(9433);
 var _type = __webpack_require__(35922);
 var _extend = __webpack_require__(13306);
 var _position = __webpack_require__(37518);
@@ -1504,6 +1505,7 @@ var _browser = _interopRequireDefault(__webpack_require__(47810));
 var _translator = __webpack_require__(31648);
 var _support = __webpack_require__(60137);
 var _devices = _interopRequireDefault(__webpack_require__(20530));
+var _style = __webpack_require__(80968);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var window = (0, _window.getWindow)();
 var horzRe = /left|right/;
@@ -1711,11 +1713,18 @@ var calculatePosition = function calculatePosition(what, options) {
     if ((0, _type.isWindow)(of[0])) {
       h.atLocation = of.scrollLeft();
       v.atLocation = of.scrollTop();
-      if (_devices.default.real().deviceType === 'phone' && of[0].visualViewport) {
-        h.atLocation = Math.max(h.atLocation, of[0].visualViewport.offsetLeft);
-        v.atLocation = Math.max(v.atLocation, of[0].visualViewport.offsetTop);
-        h.atSize = of[0].visualViewport.width;
-        v.atSize = of[0].visualViewport.height;
+      var isPhone = _devices.default.real().deviceType === 'phone';
+      var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
+      if (isPhone && isVisualViewportAvailable) {
+        var _getVisualViewportSiz = (0, _visual_viewport.getVisualViewportSizes)(),
+          offsetLeft = _getVisualViewportSiz.offsetLeft,
+          offsetTop = _getVisualViewportSiz.offsetTop,
+          width = _getVisualViewportSiz.width,
+          height = _getVisualViewportSiz.height;
+        h.atLocation = Math.max(h.atLocation, offsetLeft);
+        v.atLocation = Math.max(v.atLocation, offsetTop);
+        h.atSize = width;
+        v.atSize = height;
       } else {
         h.atSize = of[0].innerWidth > of[0].outerWidth ? of[0].innerWidth : (0, _size.getWidth)(of);
         v.atSize = of[0].innerHeight > of[0].outerHeight || IS_SAFARI ? of[0].innerHeight : (0, _size.getHeight)(of);
@@ -1801,34 +1810,35 @@ var calculatePosition = function calculatePosition(what, options) {
   });
   return result;
 };
-
-// NOTE: Setting the 'element.style.transform.scale' requires the inline style when both of the conditions met:
+// NOTE: Setting the 'element.style' requires creating attributeNode when both of the conditions met:
 //       - a form contains an input with the name property set to "style";
 //       - a form contains a dx-validator (or other popup widget).
 //       T941581
-var setScaleProperty = function setScaleProperty(element, scale, transformProp, styleAttr, isEmpty) {
+var setScaleProperty = function setScaleProperty(element, scale, styleAttr, isEmpty) {
   var stylePropIsValid = (0, _type.isDefined)(element.style) && !_dom_adapter.default.isNode(element.style);
+  var newStyleValue = isEmpty ? styleAttr.replace(scale, '') : styleAttr;
   if (stylePropIsValid) {
-    element.style.transform = isEmpty ? transformProp.replace(scale, '') : transformProp;
+    (0, _style.setStyle)(element, newStyleValue, false);
   } else {
-    element.setAttribute('style', isEmpty ? styleAttr.replace(scale, '') : styleAttr);
+    var styleAttributeNode = _dom_adapter.default.createAttribute('style');
+    styleAttributeNode.value = newStyleValue;
+    element.setAttributeNode(styleAttributeNode);
   }
 };
 var getOffsetWithoutScale = function getOffsetWithoutScale($startElement) {
-  var _currentElement$getAt, _currentElement$style, _style$match;
+  var _currentElement$getAt, _style$match;
   var $currentElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : $startElement;
   var currentElement = $currentElement.get(0);
   if (!currentElement) {
     return $startElement.offset();
   }
   var style = ((_currentElement$getAt = currentElement.getAttribute) === null || _currentElement$getAt === void 0 ? void 0 : _currentElement$getAt.call(currentElement, 'style')) || '';
-  var transform = (_currentElement$style = currentElement.style) === null || _currentElement$style === void 0 ? void 0 : _currentElement$style.transform;
   var scale = (_style$match = style.match(scaleRe)) === null || _style$match === void 0 ? void 0 : _style$match[0];
   var offset;
   if (scale) {
-    setScaleProperty(currentElement, scale, transform, style, true);
+    setScaleProperty(currentElement, scale, style, true);
     offset = getOffsetWithoutScale($startElement, $currentElement.parent());
-    setScaleProperty(currentElement, scale, transform, style, false);
+    setScaleProperty(currentElement, scale, style, false);
   } else {
     offset = getOffsetWithoutScale($startElement, $currentElement.parent());
   }
@@ -4226,6 +4236,16 @@ var _config = _interopRequireDefault(__webpack_require__(80209));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var navigator = (0, _window.getNavigator)();
 var window = (0, _window.getWindow)();
+var DEVICE_TYPE = {
+  desktop: 'desktop',
+  tablet: 'tablet',
+  phone: 'phone'
+};
+var PLATFORM = {
+  generic: 'generic',
+  ios: 'ios',
+  android: 'android'
+};
 var KNOWN_UA_TABLE = {
   'iPhone': 'iPhone',
   'iPhone5': 'iPhone',
@@ -4239,8 +4259,8 @@ var KNOWN_UA_TABLE = {
   'desktop': 'desktop'
 };
 var DEFAULT_DEVICE = {
-  deviceType: 'desktop',
-  platform: 'generic',
+  deviceType: DEVICE_TYPE.desktop,
+  platform: PLATFORM.generic,
   version: [],
   phone: false,
   tablet: false,
@@ -4261,8 +4281,8 @@ var uaParsers = {
       return;
     }
     return {
-      deviceType: isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop',
-      platform: 'generic',
+      deviceType: isPhone ? DEVICE_TYPE.phone : isTablet ? DEVICE_TYPE.tablet : DEVICE_TYPE.desktop,
+      platform: PLATFORM.generic,
       version: [],
       grade: 'A',
       mac: isMac
@@ -4278,8 +4298,8 @@ var uaParsers = {
     var isIPhone4 = window.screen.height === 960 / 2;
     var grade = isIPhone4 ? 'B' : 'A';
     return {
-      deviceType: isPhone ? 'phone' : 'tablet',
-      platform: 'ios',
+      deviceType: isPhone ? DEVICE_TYPE.phone : DEVICE_TYPE.tablet,
+      platform: PLATFORM.ios,
       version: version,
       grade: grade
     };
@@ -4294,8 +4314,8 @@ var uaParsers = {
     var worseThan4_4 = version.length > 1 && (version[0] < 4 || version[0] === 4 && version[1] < 4);
     var grade = worseThan4_4 ? 'B' : 'A';
     return {
-      deviceType: isPhone ? 'phone' : 'tablet',
-      platform: 'android',
+      deviceType: isPhone ? DEVICE_TYPE.phone : DEVICE_TYPE.tablet,
+      platform: PLATFORM.android,
       version: version,
       grade: grade
     };
@@ -4367,7 +4387,7 @@ var Devices = /*#__PURE__*/function () {
     // TODO: use real device here?
     if (device.deviceType) {
       result.push("dx-device-".concat(device.deviceType));
-      if (device.deviceType !== 'desktop') {
+      if (device.deviceType !== DEVICE_TYPE.desktop) {
         result.push('dx-device-mobile');
       }
     }
@@ -4404,8 +4424,8 @@ var Devices = /*#__PURE__*/function () {
   _proto._getDevice = function _getDevice(deviceName) {
     if (deviceName === 'genericPhone') {
       deviceName = {
-        deviceType: 'phone',
-        platform: 'generic',
+        deviceType: DEVICE_TYPE.phone,
+        platform: PLATFORM.generic,
         generic: true
       };
     }
@@ -4446,11 +4466,11 @@ var Devices = /*#__PURE__*/function () {
   _proto._fromConfig = function _fromConfig(config) {
     var result = (0, _extend.extend)({}, DEFAULT_DEVICE, this._currentDevice, config);
     var shortcuts = {
-      phone: result.deviceType === 'phone',
-      tablet: result.deviceType === 'tablet',
-      android: result.platform === 'android',
-      ios: result.platform === 'ios',
-      generic: result.platform === 'generic'
+      phone: result.deviceType === DEVICE_TYPE.phone,
+      tablet: result.deviceType === DEVICE_TYPE.tablet,
+      android: result.platform === PLATFORM.android,
+      ios: result.platform === PLATFORM.ios,
+      generic: result.platform === PLATFORM.generic
     };
     return (0, _extend.extend)(result, shortcuts);
   };
@@ -4556,6 +4576,10 @@ var nativeDOMAdapterStrategy = {
   createTextNode: function createTextNode(text, context) {
     context = context || this._document;
     return context.createTextNode(text);
+  },
+  createAttribute: function createAttribute(text, context) {
+    context = context || this._document;
+    return context.createAttribute(text);
   },
   isNode: function isNode(element) {
     return element && _typeof(element) === 'object' && 'nodeType' in element && 'nodeName' in element;
@@ -10862,9 +10886,10 @@ function getShadowElementsFromPoint(x, y, root) {
 
 
 exports.setWidth = exports.setOuterWidth = exports.setOuterHeight = exports.setInnerWidth = exports.setInnerHeight = exports.setHeight = exports.parseHeight = exports.implementationsMap = exports.getWindowByElement = exports.getWidth = exports.getVisibleHeight = exports.getVerticalOffsets = exports.getSize = exports.getOuterWidth = exports.getOuterHeight = exports.getOffset = exports.getInnerWidth = exports.getInnerHeight = exports.getHeight = exports.getElementBoxParams = exports.addOffsetToMinHeight = exports.addOffsetToMaxHeight = void 0;
-var _window = __webpack_require__(58201);
 var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
+var _visual_viewport = __webpack_require__(9433);
 var _type = __webpack_require__(35922);
+var _window = __webpack_require__(58201);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var window = (0, _window.getWindow)();
 var SPECIAL_HEIGHT_VALUES = ['auto', 'none', 'inherit', 'initial'];
@@ -11169,6 +11194,12 @@ var elementSize = function elementSize(el, sizeProperty, value) {
   }
   if (!el) return;
   if ((0, _type.isWindow)(el)) {
+    var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
+    var shouldUseVisualViewport = isVisualViewportAvailable && ['width', 'height'].includes(sizeProperty);
+    if (shouldUseVisualViewport) {
+      var size = (0, _visual_viewport.getVisualViewportSizes)()[sizeProperty];
+      return size;
+    }
     return isOuter ? el['inner' + partialName] : _dom_adapter.default.getDocumentElement()['client' + partialName];
   }
   if (_dom_adapter.default.isDocument(el)) {
@@ -11347,6 +11378,12 @@ var _call_once = _interopRequireDefault(__webpack_require__(39618));
 var _type = __webpack_require__(35922);
 var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var jsPrefixes = ['', 'Webkit', 'Moz', 'O', 'Ms'];
 var cssPrefixes = {
   '': '',
@@ -11431,8 +11468,25 @@ var setHeight = function setHeight(elements, value) {
   setDimensionProperty(elements, 'height', value);
 };
 exports.setHeight = setHeight;
-var setStyle = function setStyle(element, value) {
-  element.style.cssText = value;
+var setStyle = function setStyle(element, styleString) {
+  var resetStyle = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  if (resetStyle) {
+    var styleList = [].slice.call(element.style);
+    styleList.forEach(function (propertyName) {
+      element.style.removeProperty(propertyName);
+    });
+  }
+  styleString.split(';').forEach(function (style) {
+    var parts = style.split(':').map(function (stylePart) {
+      return stylePart.trim();
+    });
+    if (parts.length === 2) {
+      var _parts = _slicedToArray(parts, 2),
+        property = _parts[0],
+        value = _parts[1];
+      element.style[property] = value;
+    }
+  });
 };
 exports.setStyle = setStyle;
 
@@ -11767,6 +11821,9 @@ var isPlainObject = function isPlainObject(object) {
     return false;
   }
   var proto = Object.getPrototypeOf(object);
+  if (!proto) {
+    return true;
+  }
   var ctor = Object.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
   return typeof ctor === 'function' && Object.toString.call(ctor) === Object.toString.call(Object);
 };
@@ -11907,6 +11964,63 @@ function originalViewPort() {
 
 /***/ }),
 
+/***/ 9433:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+exports.visualViewportEventMap = exports.subscribeOnVisualViewportEvent = exports.hasVisualViewport = exports.getVisualViewportSizes = void 0;
+var _window = __webpack_require__(58201);
+var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var visualViewportEventMap = {
+  resize: 'resize',
+  scroll: 'scroll'
+};
+exports.visualViewportEventMap = visualViewportEventMap;
+var getVisualViewport = function getVisualViewport() {
+  var isWindowAvailable = (0, _window.hasWindow)();
+  if (isWindowAvailable) {
+    var _getWindow = (0, _window.getWindow)(),
+      visualViewport = _getWindow.visualViewport;
+    return visualViewport;
+  }
+  return null;
+};
+var hasVisualViewport = function hasVisualViewport() {
+  var visualViewport = getVisualViewport();
+  return !!visualViewport;
+};
+exports.hasVisualViewport = hasVisualViewport;
+var getVisualViewportSizes = function getVisualViewportSizes() {
+  var visualViewport = getVisualViewport();
+  var width = visualViewport.width,
+    height = visualViewport.height,
+    scale = visualViewport.scale,
+    pageTop = visualViewport.pageTop,
+    pageLeft = visualViewport.pageLeft,
+    offsetTop = visualViewport.offsetTop,
+    offsetLeft = visualViewport.offsetLeft;
+  return {
+    width: width,
+    height: height,
+    scale: scale,
+    pageTop: pageTop,
+    pageLeft: pageLeft,
+    offsetTop: offsetTop,
+    offsetLeft: offsetLeft
+  };
+};
+exports.getVisualViewportSizes = getVisualViewportSizes;
+var subscribeOnVisualViewportEvent = function subscribeOnVisualViewportEvent(event, callback, options) {
+  var visualViewport = getVisualViewport();
+  var unSubscribeOnVisualViewportCallback = _dom_adapter.default.listen(visualViewport, event, callback, options);
+  return unSubscribeOnVisualViewportCallback;
+};
+exports.subscribeOnVisualViewportEvent = subscribeOnVisualViewportEvent;
+
+/***/ }),
+
 /***/ 58201:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -11977,7 +12091,7 @@ exports.getNavigator = getNavigator;
 
 
 exports.version = void 0;
-var version = '23.1.1';
+var version = '23.1.3';
 exports.version = version;
 
 /***/ }),
@@ -21719,8 +21833,9 @@ function drawElement(element, context, parentOptions, shared) {
   var tagName = element.tagName;
   var isText = tagName === 'text' || tagName === 'tspan' || tagName === undefined;
   var isImage = tagName === 'image';
+  var isComment = element.nodeType === 8;
   var options = (0, _extend.extend)({}, parentOptions, getElementOptions(element, shared.rootAppended));
-  if (options.visibility === 'hidden' || options[_svg.HIDDEN_FOR_EXPORT]) {
+  if (options.visibility === 'hidden' || options[_svg.HIDDEN_FOR_EXPORT] || isComment) {
     return;
   }
   context.save();
@@ -23776,6 +23891,7 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+var COORDINATE_EPSILON = 0.001;
 function convertToCellsArray(rows) {
   return [].concat.apply([], rows.map(function (rowInfo) {
     return rowInfo.cells.filter(function (cell) {
@@ -23906,9 +24022,7 @@ function splitRectsByPages(rects, marginValue, coordinate, dimension, isFitToPag
       // Check cells that have 'coordinate' less than 'currentPageMaxRectCoordinate'
       var currentRectLeft = rect[coordinate];
       var currentRectRight = rect[coordinate] + rect[dimension];
-      if (currentRectLeft < currentPageMaxRectCoordinate && currentPageMaxRectCoordinate < currentRectRight) {
-        return true;
-      }
+      return currentPageMaxRectCoordinate - currentRectLeft > COORDINATE_EPSILON && currentRectRight - currentPageMaxRectCoordinate > COORDINATE_EPSILON;
     });
     rectsToSeparate.forEach(function (rect) {
       onSeparateCallback(rect, currentPageMaxRectCoordinate, currentPageRects, rectsToSplit);
@@ -35424,6 +35538,12 @@ var defaultMessages = {
     "dxDateBox-simulatedDataPickerTitleDate": "Select date",
     "dxDateBox-simulatedDataPickerTitleDateTime": "Select date and time",
     "dxDateBox-validation-datetime": "Value must be a date or time",
+    "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
+    "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
+    "dxDateRangeBox-startDateOutOfRangeMessage": "Start date is out of range",
+    "dxDateRangeBox-endDateOutOfRangeMessage": "End date is out of range",
+    "dxDateRangeBox-startDateLabel": "Start Date",
+    "dxDateRangeBox-endDateLabel": "End Date",
     "dxFileUploader-selectFile": "Select a file",
     "dxFileUploader-dropFile": "or Drop a file here",
     "dxFileUploader-bytes": "bytes",
@@ -36226,8 +36346,10 @@ if (_globalize.default && _globalize.default.formatDate) {
     _getFormatStringByPath: function _getFormatStringByPath(path) {
       return _globalize.default.locale().main('dates/calendars/gregorian/' + path);
     },
-    getPeriodNames: function getPeriodNames() {
-      var json = _globalize.default.locale().main('dates/calendars/gregorian/dayPeriods/stand-alone/wide');
+    getPeriodNames: function getPeriodNames(format, type) {
+      format = format || 'wide';
+      type = type === 'format' ? type : 'stand-alone';
+      var json = _globalize.default.locale().main("dates/calendars/gregorian/dayPeriods/".concat(type, "/").concat(format));
       return [json['am'], json['pm']];
     },
     getMonthNames: function getMonthNames(format, type) {
@@ -40672,26 +40794,32 @@ var CollectionWidget = _ui.default.inherit({
     this._attachHoldEvent();
     this._attachContextMenuEvent();
   },
+  _getPointerEvent: function _getPointerEvent() {
+    return _pointer.default.down;
+  },
   _attachClickEvent: function _attachClickEvent() {
+    var _this2 = this;
     var itemSelector = this._itemSelector();
+    var pointerEvent = this._getPointerEvent();
     var clickEventNamespace = (0, _index.addNamespace)(_click.name, this.NAME);
-    var pointerDownEventNamespace = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
-    var that = this;
-    var pointerDownAction = new _action.default(function (args) {
+    var pointerEventNamespace = (0, _index.addNamespace)(pointerEvent, this.NAME);
+    var pointerAction = new _action.default(function (args) {
       var event = args.event;
-      that._itemPointerDownHandler(event);
+      _this2._itemPointerDownHandler(event);
     });
-    _events_engine.default.off(this._itemContainer(), clickEventNamespace, itemSelector);
-    _events_engine.default.off(this._itemContainer(), pointerDownEventNamespace, itemSelector);
-    _events_engine.default.on(this._itemContainer(), clickEventNamespace, itemSelector, function (e) {
-      this._itemClickHandler(e);
-    }.bind(this));
-    _events_engine.default.on(this._itemContainer(), pointerDownEventNamespace, itemSelector, function (e) {
-      pointerDownAction.execute({
+    var clickEventCallback = function clickEventCallback(e) {
+      return _this2._itemClickHandler(e);
+    };
+    var pointerEventCallback = function pointerEventCallback(e) {
+      pointerAction.execute({
         element: (0, _renderer.default)(e.target),
         event: e
       });
-    });
+    };
+    _events_engine.default.off(this._itemContainer(), clickEventNamespace, itemSelector);
+    _events_engine.default.off(this._itemContainer(), pointerEventNamespace, itemSelector);
+    _events_engine.default.on(this._itemContainer(), clickEventNamespace, itemSelector, clickEventCallback);
+    _events_engine.default.on(this._itemContainer(), pointerEventNamespace, itemSelector, pointerEventCallback);
   },
   _itemClickHandler: function _itemClickHandler(e, args, config) {
     this._itemDXEventHandler(e, 'onItemClick', args, config);
@@ -40942,7 +41070,6 @@ var CollectionWidget = _ui.default.inherit({
       } else {
         this._$noData.html(noDataText);
       }
-      this.setAria('label', noDataText);
     }
     this.$element().toggleClass(EMPTY_COLLECTION, !hideNoData);
   },
@@ -42965,7 +43092,8 @@ var Editor = _ui.default.inherit({
         h: 0,
         v: 0
       },
-      validationTooltipOptions: {}
+      validationTooltipOptions: {},
+      _showValidationMessage: true
     });
   },
   _attachKeyboardEvents: function _attachKeyboardEvents() {
@@ -43082,14 +43210,13 @@ var Editor = _ui.default.inherit({
     var validationErrors = this._getValidationErrors();
     var $element = this.$element();
     this._toggleValidationClasses(!isValid);
-    if (!(0, _window.hasWindow)()) {
+    if (!(0, _window.hasWindow)() || this.option('_showValidationMessage') === false) {
       return;
     }
     this._disposeValidationMessage();
     if (!isValid && validationErrors) {
       var _this$option2 = this.option(),
         validationMessageMode = _this$option2.validationMessageMode,
-        validationMessagePosition = _this$option2.validationMessagePosition,
         validationMessageOffset = _this$option2.validationMessageOffset,
         validationBoundary = _this$option2.validationBoundary,
         rtlEnabled = _this$option2.rtlEnabled;
@@ -43102,13 +43229,16 @@ var Editor = _ui.default.inherit({
         target: this._getValidationMessageTarget(),
         visualContainer: $element,
         mode: validationMessageMode,
-        positionSide: validationMessagePosition,
+        positionSide: this._getValidationMessagePosition(),
         offset: validationMessageOffset,
         boundary: validationBoundary,
         contentId: validationMessageContentId
       }, this._options.cache('validationTooltipOptions')));
       this._bindInnerWidgetOptions(this._validationMessage, 'validationTooltipOptions');
     }
+  },
+  _getValidationMessagePosition: function _getValidationMessagePosition() {
+    return this.option('validationMessagePosition');
   },
   _getValidationMessageTarget: function _getValidationMessageTarget() {
     return this.$element();
@@ -43209,6 +43339,8 @@ var Editor = _ui.default.inherit({
         break;
       case 'validationTooltipOptions':
         this._innerWidgetOptionChanged(this._validationMessage, args);
+        break;
+      case '_showValidationMessage':
         break;
       default:
         this.callBase(args);
@@ -43930,6 +44062,8 @@ var _fx = _interopRequireDefault(__webpack_require__(87209));
 var _component_registrator = _interopRequireDefault(__webpack_require__(99393));
 var _devices = _interopRequireDefault(__webpack_require__(20530));
 var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
+var _visual_viewport = __webpack_require__(9433);
+var _frame = __webpack_require__(90057);
 var _element = __webpack_require__(6415);
 var _renderer = _interopRequireDefault(__webpack_require__(68374));
 var _empty_template = __webpack_require__(10688);
@@ -44036,6 +44170,7 @@ var Overlay = _ui2.default.inherit({
       copyRootClassesToWrapper: false,
       _ignoreCopyRootClassesToWrapperDeprecation: false,
       _ignoreElementAttrDeprecation: false,
+      _ignorePreventScrollEventsDeprecation: false,
       onShowing: null,
       onShown: null,
       onHiding: null,
@@ -44107,7 +44242,7 @@ var Overlay = _ui2.default.inherit({
       if (options.elementAttr && !options._ignoreElementAttrDeprecation) {
         this._logDeprecatedOptionWarning('elementAttr', createWrapperAttrDeprecationInfo());
       }
-      if ('preventScrollEvents' in options) {
+      if ('preventScrollEvents' in options && !options._ignorePreventScrollEventsDeprecation) {
         this._logDeprecatedPreventScrollEventsInfo();
       }
     }
@@ -44253,8 +44388,92 @@ var Overlay = _ui2.default.inherit({
     this.$wrapper().attr(attributes).removeClass(this._customWrapperClass).addClass(classNames);
     this._customWrapperClass = classNames;
   },
-  _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
+  _isVisualContainerWindow: function _isVisualContainerWindow() {
+    if (!(0, _window.hasWindow)()) {
+      return false;
+    }
+    var $visualContainer = this._positionController.$visualContainer;
+    var isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
+    return isVisualContainerWindow;
+  },
+  _shouldUseVisualViewport: function _shouldUseVisualViewport() {
+    var isVisualContainerWindow = this._isVisualContainerWindow();
+    var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
+    var device = _devices.default.real();
+    var isAppleDevice = device.mac || device.ios;
+    var shouldUseVisualViewport = isAppleDevice && isVisualContainerWindow && isVisualViewportAvailable;
+    return shouldUseVisualViewport;
+  },
+  _isVirtualKeyboardOpen: function _isVirtualKeyboardOpen() {
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    if (!shouldUseVisualViewport) {
+      return false;
+    }
+    var windowInnerHeight = window.innerHeight;
+    var _getVisualViewportSiz = (0, _visual_viewport.getVisualViewportSizes)(),
+      visualViewportHeight = _getVisualViewportSiz.height;
+    var isOpen = windowInnerHeight > visualViewportHeight;
+    return isOpen;
+  },
+  _visualViewportEventHandler: function _visualViewportEventHandler() {
+    var _this6 = this;
+    var pendingUpdate = this._pendingUpdate;
+    if (pendingUpdate) {
+      (0, _frame.cancelAnimationFrame)(this._resizeAnimationFrameId);
+    }
+    this._pendingUpdate = true;
+    var _this$option3 = this.option(),
+      visible = _this$option3.visible;
+    if (visible) {
+      this._resizeAnimationFrameId = (0, _frame.requestAnimationFrame)(function () {
+        _this6._pendingUpdate = false;
+        var isCurrentVisible = _this6._currentVisible;
+        if (isCurrentVisible) {
+          _this6._renderGeometry();
+        } else {
+          _this6._toggleVisibilityAnimate(true);
+        }
+      });
+    }
+  },
+  _subscribeOnVisualViewportEvent: function _subscribeOnVisualViewportEvent(event) {
+    var callback = this._visualViewportEventHandler.bind(this);
+    this._unSubscribeCallbacks[event] = (0, _visual_viewport.subscribeOnVisualViewportEvent)(event, callback);
+  },
+  _toggleVisualViewportSubscription: function _toggleVisualViewportSubscription(subscribe, event) {
+    var _this$_unSubscribeCal;
+    if (subscribe) {
+      this._subscribeOnVisualViewportEvent(event);
+      return;
+    }
+    if (!((_this$_unSubscribeCal = this._unSubscribeCallbacks) !== null && _this$_unSubscribeCal !== void 0 && _this$_unSubscribeCal[event])) {
+      return;
+    }
+    this._unSubscribeCallbacks[event]();
+    this._unSubscribeCallbacks[event] = null;
+  },
+  _toggleVisualViewportCallbacks: function _toggleVisualViewportCallbacks(subscribe) {
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    if (!shouldUseVisualViewport) {
+      return false;
+    }
+    this._pendingUpdate = false;
+    if (subscribe && !this._unSubscribeCallbacks) {
+      this._unSubscribeCallbacks = {};
+    }
+    this._toggleVisualViewportSubscription(subscribe, _visual_viewport.visualViewportEventMap.resize);
+    this._toggleVisualViewportSubscription(subscribe, _visual_viewport.visualViewportEventMap.scroll);
+  },
+  _toggleVisibilityAnimate: function _toggleVisibilityAnimate(visible) {
     this._stopAnimation();
+    this._toggleVisualViewportCallbacks(visible);
+    return this._renderVisibilityAnimate(visible);
+  },
+  _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
+    var isVirtualKeyboardOpen = this._isVirtualKeyboardOpen();
+    if (isVirtualKeyboardOpen) {
+      return new _deferred.Deferred().resolve().promise();
+    }
     return visible ? this._show() : this._hide();
   },
   _getAnimationConfig: function _getAnimationConfig() {
@@ -44265,36 +44484,36 @@ var Overlay = _ui2.default.inherit({
     var _this$_getAnimationCo,
       _showAnimation$start,
       _showAnimation$comple,
-      _this6 = this;
+      _this7 = this;
     var animation = (_this$_getAnimationCo = this._getAnimationConfig()) !== null && _this$_getAnimationCo !== void 0 ? _this$_getAnimationCo : {};
     var showAnimation = this._normalizeAnimation(animation.show, 'to');
     var startShowAnimation = (_showAnimation$start = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.start) !== null && _showAnimation$start !== void 0 ? _showAnimation$start : _common.noop;
     var completeShowAnimation = (_showAnimation$comple = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.complete) !== null && _showAnimation$comple !== void 0 ? _showAnimation$comple : _common.noop;
     this._animate(showAnimation, function () {
-      if (_this6._isAnimationPaused) {
+      if (_this7._isAnimationPaused) {
         return;
       }
-      if (_this6.option('focusStateEnabled')) {
-        _events_engine.default.trigger(_this6._focusTarget(), 'focus');
+      if (_this7.option('focusStateEnabled')) {
+        _events_engine.default.trigger(_this7._focusTarget(), 'focus');
       }
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
-      completeShowAnimation.call.apply(completeShowAnimation, [_this6].concat(args));
-      _this6._showAnimationProcessing = false;
-      _this6._isHidden = false;
-      _this6._actions.onShown();
-      _this6._toggleSafariScrolling();
-      _this6._showingDeferred.resolve();
+      completeShowAnimation.call.apply(completeShowAnimation, [_this7].concat(args));
+      _this7._showAnimationProcessing = false;
+      _this7._isHidden = false;
+      _this7._actions.onShown();
+      _this7._toggleSafariScrolling();
+      _this7._showingDeferred.resolve();
     }, function () {
-      if (_this6._isAnimationPaused) {
+      if (_this7._isAnimationPaused) {
         return;
       }
       for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         args[_key2] = arguments[_key2];
       }
-      startShowAnimation.call.apply(startShowAnimation, [_this6].concat(args));
-      _this6._showAnimationProcessing = true;
+      startShowAnimation.call.apply(startShowAnimation, [_this7].concat(args));
+      _this7._showAnimationProcessing = true;
     });
   },
   _processShowingHidingCancel: function _processShowingHidingCancel(cancelArg, applyFunction, cancelFunction) {
@@ -44313,11 +44532,11 @@ var Overlay = _ui2.default.inherit({
     }
   },
   _show: function _show() {
-    var _this7 = this;
+    var _this8 = this;
     this._showingDeferred = new _deferred.Deferred();
     this._parentHidden = this._isParentHidden();
     this._showingDeferred.done(function () {
-      delete _this7._parentHidden;
+      delete _this8._parentHidden;
     });
     if (this._parentHidden) {
       this._isHidden = true;
@@ -44332,33 +44551,33 @@ var Overlay = _ui2.default.inherit({
       this._showingDeferred.reject();
     } else {
       var show = function show() {
-        _this7._toggleBodyScroll(_this7.option('enableBodyScroll'));
-        _this7._stopAnimation();
-        _this7._toggleVisibility(true);
-        _this7._$content.css('visibility', 'hidden');
-        _this7._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
-        _this7._updateZIndexStackPosition(true);
-        _this7._positionController.openingHandled();
-        _this7._renderContent();
+        _this8._toggleBodyScroll(_this8.option('enableBodyScroll'));
+        _this8._stopAnimation();
+        _this8._toggleVisibility(true);
+        _this8._$content.css('visibility', 'hidden');
+        _this8._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
+        _this8._updateZIndexStackPosition(true);
+        _this8._positionController.openingHandled();
+        _this8._renderContent();
         var showingArgs = {
           cancel: false
         };
-        _this7._actions.onShowing(showingArgs);
+        _this8._actions.onShowing(showingArgs);
         var cancelShow = function cancelShow() {
-          _this7._toggleVisibility(false);
-          _this7._$content.css('visibility', '');
-          _this7._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
-          _this7._isShowingActionCanceled = true;
-          _this7._moveFromContainer();
-          _this7.option('visible', false);
-          _this7._showingDeferred.resolve();
+          _this8._toggleVisibility(false);
+          _this8._$content.css('visibility', '');
+          _this8._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
+          _this8._isShowingActionCanceled = true;
+          _this8._moveFromContainer();
+          _this8.option('visible', false);
+          _this8._showingDeferred.resolve();
         };
         var applyShow = function applyShow() {
-          _this7._$content.css('visibility', '');
-          _this7._renderVisibility(true);
-          _this7._animateShowing();
+          _this8._$content.css('visibility', '');
+          _this8._renderVisibility(true);
+          _this8._animateShowing();
         };
-        _this7._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
+        _this8._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
       };
       if (this.option('templatesRenderAsynchronously')) {
         this._stopShowTimer();
@@ -44388,33 +44607,33 @@ var Overlay = _ui2.default.inherit({
     var _this$_getAnimationCo2,
       _hideAnimation$start,
       _hideAnimation$comple,
-      _this8 = this;
+      _this9 = this;
     var animation = (_this$_getAnimationCo2 = this._getAnimationConfig()) !== null && _this$_getAnimationCo2 !== void 0 ? _this$_getAnimationCo2 : {};
     var hideAnimation = this._normalizeAnimation(animation.hide, 'from');
     var startHideAnimation = (_hideAnimation$start = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.start) !== null && _hideAnimation$start !== void 0 ? _hideAnimation$start : _common.noop;
     var completeHideAnimation = (_hideAnimation$comple = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.complete) !== null && _hideAnimation$comple !== void 0 ? _hideAnimation$comple : _common.noop;
     this._animate(hideAnimation, function () {
-      var _this8$_actions;
-      _this8._$content.css('pointerEvents', '');
-      _this8._renderVisibility(false);
+      var _this9$_actions;
+      _this9._$content.css('pointerEvents', '');
+      _this9._renderVisibility(false);
       for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
         args[_key3] = arguments[_key3];
       }
-      completeHideAnimation.call.apply(completeHideAnimation, [_this8].concat(args));
-      _this8._hideAnimationProcessing = false;
-      (_this8$_actions = _this8._actions) === null || _this8$_actions === void 0 ? void 0 : _this8$_actions.onHidden();
-      _this8._hidingDeferred.resolve();
+      completeHideAnimation.call.apply(completeHideAnimation, [_this9].concat(args));
+      _this9._hideAnimationProcessing = false;
+      (_this9$_actions = _this9._actions) === null || _this9$_actions === void 0 ? void 0 : _this9$_actions.onHidden();
+      _this9._hidingDeferred.resolve();
     }, function () {
-      _this8._$content.css('pointerEvents', 'none');
+      _this9._$content.css('pointerEvents', 'none');
       for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
         args[_key4] = arguments[_key4];
       }
-      startHideAnimation.call.apply(startHideAnimation, [_this8].concat(args));
-      _this8._hideAnimationProcessing = true;
+      startHideAnimation.call.apply(startHideAnimation, [_this9].concat(args));
+      _this9._hideAnimationProcessing = true;
     });
   },
   _hide: function _hide() {
-    var _this9 = this;
+    var _this10 = this;
     if (!this._currentVisible) {
       return new _deferred.Deferred().resolve().promise();
     }
@@ -44431,16 +44650,16 @@ var Overlay = _ui2.default.inherit({
       this._toggleSafariScrolling();
       this._toggleBodyScroll(true);
       var cancelHide = function cancelHide() {
-        _this9._isHidingActionCanceled = true;
-        _this9.option('visible', true);
-        _this9._hidingDeferred.resolve();
+        _this10._isHidingActionCanceled = true;
+        _this10.option('visible', true);
+        _this10._hidingDeferred.resolve();
       };
       var applyHide = function applyHide() {
-        _this9._forceFocusLost();
-        _this9._toggleShading(false);
-        _this9._toggleSubscriptions(false);
-        _this9._stopShowTimer();
-        _this9._animateHiding();
+        _this10._forceFocusLost();
+        _this10._toggleShading(false);
+        _this10._toggleSubscriptions(false);
+        _this10._stopShowTimer();
+        _this10._animateHiding();
       };
       this._processShowingHidingCancel(hidingArgs.cancel, applyHide, cancelHide);
     }
@@ -44512,9 +44731,9 @@ var Overlay = _ui2.default.inherit({
     this._toggleTabTerminator(visible && this.option('shading'));
   },
   _initTabTerminatorHandler: function _initTabTerminatorHandler() {
-    var _this10 = this;
+    var _this11 = this;
     this._proxiedTabTerminatorHandler = function () {
-      _this10._tabKeyHandler.apply(_this10, arguments);
+      _this11._tabKeyHandler.apply(_this11, arguments);
     };
   },
   _toggleTabTerminator: function _toggleTabTerminator(enabled) {
@@ -44612,7 +44831,7 @@ var Overlay = _ui2.default.inherit({
   _render: function _render() {
     this.callBase();
     this._appendContentToElement();
-    this._renderVisibilityAnimate(this.option('visible'));
+    this._toggleVisibilityAnimate(this.option('visible'));
   },
   _appendContentToElement: function _appendContentToElement() {
     if (!this._$content.parent().is(this.$element())) {
@@ -44655,7 +44874,7 @@ var Overlay = _ui2.default.inherit({
     return isHidden || !_dom_adapter.default.getBody().contains($parent.get(0));
   },
   _renderContentImpl: function _renderContentImpl() {
-    var _this11 = this;
+    var _this12 = this;
     var whenContentRendered = new _deferred.Deferred();
     var contentTemplateOption = this.option('contentTemplate');
     var contentTemplate = this._getTemplate(contentTemplateOption);
@@ -44668,25 +44887,25 @@ var Overlay = _ui2.default.inherit({
         whenContentRendered.resolve();
 
         // NOTE: T1114344
-        if (_this11.option('templatesRenderAsynchronously')) {
-          _this11._dimensionChanged();
+        if (_this12.option('templatesRenderAsynchronously')) {
+          _this12._renderGeometryAsynchronously();
         }
       }
     });
     this._toggleWrapperScrollEventsSubscription(this.option('preventScrollEvents'));
     whenContentRendered.done(function () {
-      if (_this11.option('visible')) {
-        _this11._moveToContainer();
+      if (_this12.option('visible')) {
+        _this12._moveToContainer();
       }
     });
     return whenContentRendered.promise();
   },
   _getPositionControllerConfig: function _getPositionControllerConfig() {
-    var _this$option3 = this.option(),
-      container = _this$option3.container,
-      visualContainer = _this$option3.visualContainer,
-      _fixWrapperPosition = _this$option3._fixWrapperPosition,
-      restorePosition = _this$option3.restorePosition;
+    var _this$option4 = this.option(),
+      container = _this$option4.container,
+      visualContainer = _this$option4.visualContainer,
+      _fixWrapperPosition = _this$option4._fixWrapperPosition,
+      restorePosition = _this$option4.restorePosition;
     // NOTE: position is passed to controller in renderGeometry to prevent window field using in server side mode
 
     return {
@@ -44758,8 +44977,8 @@ var Overlay = _ui2.default.inherit({
     this._$content.appendTo(this._$wrapper);
   },
   _renderGeometry: function _renderGeometry(options) {
-    var _this$option4 = this.option(),
-      visible = _this$option4.visible;
+    var _this$option5 = this.option(),
+      visible = _this$option5.visible;
     if (visible && (0, _window.hasWindow)()) {
       this._stopAnimation();
       this._renderGeometryImpl();
@@ -44805,9 +45024,16 @@ var Overlay = _ui2.default.inherit({
   _renderWrapperDimensions: function _renderWrapperDimensions() {
     var $visualContainer = this._positionController.$visualContainer;
     var documentElement = _dom_adapter.default.getDocumentElement();
-    var isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
-    var wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : (0, _size.getOuterWidth)($visualContainer);
-    var wrapperHeight = isVisualContainerWindow ? window.innerHeight : (0, _size.getOuterHeight)($visualContainer);
+    var isVisualContainerWindow = this._isVisualContainerWindow();
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    var getWindowWidth = function getWindowWidth() {
+      return shouldUseVisualViewport ? (0, _visual_viewport.getVisualViewportSizes)().width : documentElement.clientWidth;
+    };
+    var getWindowHeight = function getWindowHeight() {
+      return shouldUseVisualViewport ? (0, _visual_viewport.getVisualViewportSizes)().height : window.innerHeight;
+    };
+    var wrapperWidth = isVisualContainerWindow ? getWindowWidth() : (0, _size.getOuterWidth)($visualContainer);
+    var wrapperHeight = isVisualContainerWindow ? getWindowHeight() : (0, _size.getOuterHeight)($visualContainer);
     this._$wrapper.css({
       width: wrapperWidth,
       height: wrapperHeight
@@ -44828,9 +45054,9 @@ var Overlay = _ui2.default.inherit({
     return this._$content;
   },
   _attachKeyboardEvents: function _attachKeyboardEvents() {
-    var _this12 = this;
+    var _this13 = this;
     this._keyboardListenerId = _short.keyboard.on(this._$content, null, function (opts) {
-      return _this12._keyboardHandler(opts);
+      return _this13._keyboardHandler(opts);
     });
   },
   _keyboardHandler: function _keyboardHandler(options) {
@@ -44846,13 +45072,20 @@ var Overlay = _ui2.default.inherit({
   _visibilityChanged: function _visibilityChanged(visible) {
     if (visible) {
       if (this.option('visible')) {
-        this._renderVisibilityAnimate(visible);
+        this._toggleVisibilityAnimate(visible);
       }
     } else {
-      this._renderVisibilityAnimate(visible);
+      this._toggleVisibilityAnimate(visible);
     }
   },
+  _renderGeometryAsynchronously: function _renderGeometryAsynchronously() {
+    this._renderGeometry();
+  },
   _dimensionChanged: function _dimensionChanged() {
+    var shouldUseVisualViewport = this._shouldUseVisualViewport();
+    if (shouldUseVisualViewport) {
+      return;
+    }
     this._renderGeometry();
   },
   _clean: function _clean() {
@@ -44863,6 +45096,9 @@ var Overlay = _ui2.default.inherit({
     this._renderVisibility(false);
     this._stopShowTimer();
     this._cleanFocusState();
+    this._pendingUpdate = null;
+    this._resizeAnimationFrameId = null;
+    this._unSubscribeCallbacks = null;
   },
   _stopShowTimer: function _stopShowTimer() {
     if (this._asyncShowTimeout) {
@@ -44889,7 +45125,7 @@ var Overlay = _ui2.default.inherit({
     this._$content.toggleClass(RTL_DIRECTION_CLASS, rtl);
   },
   _optionChanged: function _optionChanged(args) {
-    var _this13 = this;
+    var _this14 = this;
     var value = args.value,
       name = args.name;
     if (this._getActionsList().includes(name)) {
@@ -44923,12 +45159,12 @@ var Overlay = _ui2.default.inherit({
         this._toggleSafariScrolling();
         break;
       case 'visible':
-        this._renderVisibilityAnimate(value).done(function () {
-          var _this13$_animateDefer;
-          return (_this13$_animateDefer = _this13._animateDeferred) === null || _this13$_animateDefer === void 0 ? void 0 : _this13$_animateDefer.resolveWith(_this13);
+        this._toggleVisibilityAnimate(value).done(function () {
+          var _this14$_animateDefer;
+          return (_this14$_animateDefer = _this14._animateDeferred) === null || _this14$_animateDefer === void 0 ? void 0 : _this14$_animateDefer.resolveWith(_this14);
         }).fail(function () {
-          var _this13$_animateDefer2;
-          return (_this13$_animateDefer2 = _this13._animateDeferred) === null || _this13$_animateDefer2 === void 0 ? void 0 : _this13$_animateDefer2.reject();
+          var _this14$_animateDefer2;
+          return (_this14$_animateDefer2 = _this14._animateDeferred) === null || _this14$_animateDefer2 === void 0 ? void 0 : _this14$_animateDefer2.reject();
         });
         break;
       case 'container':
@@ -44984,7 +45220,7 @@ var Overlay = _ui2.default.inherit({
     }
   },
   toggle: function toggle(showing) {
-    var _this14 = this;
+    var _this15 = this;
     showing = showing === undefined ? !this.option('visible') : showing;
     var result = new _deferred.Deferred();
     if (showing === this.option('visible')) {
@@ -44994,10 +45230,10 @@ var Overlay = _ui2.default.inherit({
     this._animateDeferred = animateDeferred;
     this.option('visible', showing);
     animateDeferred.promise().done(function () {
-      delete _this14._animateDeferred;
-      result.resolveWith(_this14, [_this14.option('visible')]);
+      delete _this15._animateDeferred;
+      result.resolveWith(_this15, [_this15.option('visible')]);
     }).fail(function () {
-      delete _this14._animateDeferred;
+      delete _this15._animateDeferred;
       result.reject();
     });
     return result.promise();
@@ -50184,7 +50420,8 @@ var Scrollable = _dom_component.default.inherit({
     return (0, _element.getPublicElement)(this._$container);
   },
   scrollOffset: function scrollOffset() {
-    return this._strategy._getScrollOffset();
+    var scrollOffset = this._strategy._getScrollOffset();
+    return scrollOffset;
   },
   _isRtlNativeStrategy: function _isRtlNativeStrategy() {
     var _this$option = this.option(),
@@ -51492,7 +51729,6 @@ module.exports["default"] = exports.default;
 
 
 exports["default"] = void 0;
-var _class = _interopRequireDefault(__webpack_require__(38377));
 var _selectionStrategy = _interopRequireDefault(__webpack_require__(83014));
 var _selectionStrategy2 = _interopRequireDefault(__webpack_require__(78600));
 var _extend = __webpack_require__(13306);
@@ -51500,8 +51736,8 @@ var _common = __webpack_require__(20576);
 var _type = __webpack_require__(35922);
 var _deferred = __webpack_require__(62754);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _class.default.inherit({
-  ctor: function ctor(options) {
+var Selection = /*#__PURE__*/function () {
+  function Selection(options) {
     this.options = (0, _extend.extend)(this._getDefaultOptions(), options, {
       selectedItemKeys: options.selectedKeys || []
     });
@@ -51510,8 +51746,9 @@ var _default = _class.default.inherit({
     if (!this.options.equalByReference) {
       this._selectionStrategy.updateSelectedItemKeyHash(this.options.selectedItemKeys);
     }
-  },
-  _getDefaultOptions: function _getDefaultOptions() {
+  }
+  var _proto = Selection.prototype;
+  _proto._getDefaultOptions = function _getDefaultOptions() {
     return {
       allowNullValue: false,
       deferred: false,
@@ -51543,57 +51780,57 @@ var _default = _class.default.inherit({
       dataFields: _common.noop,
       filter: _common.noop
     };
-  },
-  validate: function validate() {
+  };
+  _proto.validate = function validate() {
     this._selectionStrategy.validate();
-  },
-  getSelectedItemKeys: function getSelectedItemKeys() {
+  };
+  _proto.getSelectedItemKeys = function getSelectedItemKeys() {
     return this._selectionStrategy.getSelectedItemKeys();
-  },
-  getSelectedItems: function getSelectedItems() {
+  };
+  _proto.getSelectedItems = function getSelectedItems() {
     return this._selectionStrategy.getSelectedItems();
-  },
-  selectionFilter: function selectionFilter(value) {
+  };
+  _proto.selectionFilter = function selectionFilter(value) {
     if (value === undefined) {
       return this.options.selectionFilter;
     }
     var filterIsChanged = this.options.selectionFilter !== value && JSON.stringify(this.options.selectionFilter) !== JSON.stringify(value);
     this.options.selectionFilter = value;
     filterIsChanged && this.onSelectionChanged();
-  },
-  setSelection: function setSelection(keys, updatedKeys) {
+  };
+  _proto.setSelection = function setSelection(keys, updatedKeys) {
     return this.selectedItemKeys(keys, false, false, false, updatedKeys);
-  },
-  select: function select(keys) {
+  };
+  _proto.select = function select(keys) {
     return this.selectedItemKeys(keys, true);
-  },
-  deselect: function deselect(keys) {
+  };
+  _proto.deselect = function deselect(keys) {
     return this.selectedItemKeys(keys, true, true);
-  },
-  selectedItemKeys: function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
+  };
+  _proto.selectedItemKeys = function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
     var _keys;
     var that = this;
     keys = (_keys = keys) !== null && _keys !== void 0 ? _keys : [];
     keys = Array.isArray(keys) ? keys : [keys];
     that.validate();
     return this._selectionStrategy.selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys);
-  },
-  clearSelection: function clearSelection() {
+  };
+  _proto.clearSelection = function clearSelection() {
     return this.selectedItemKeys([]);
-  },
-  _addSelectedItem: function _addSelectedItem(itemData, key) {
+  };
+  _proto._addSelectedItem = function _addSelectedItem(itemData, key) {
     this._selectionStrategy.addSelectedItem(key, itemData);
-  },
-  _removeSelectedItem: function _removeSelectedItem(key) {
+  };
+  _proto._removeSelectedItem = function _removeSelectedItem(key) {
     this._selectionStrategy.removeSelectedItem(key);
-  },
-  _setSelectedItems: function _setSelectedItems(keys, items) {
+  };
+  _proto._setSelectedItems = function _setSelectedItems(keys, items) {
     this._selectionStrategy.setSelectedItems(keys, items);
-  },
-  onSelectionChanged: function onSelectionChanged() {
+  };
+  _proto.onSelectionChanged = function onSelectionChanged() {
     this._selectionStrategy.onSelectionChanged();
-  },
-  changeItemSelection: function changeItemSelection(itemIndex, keys, setFocusOnly) {
+  };
+  _proto.changeItemSelection = function changeItemSelection(itemIndex, keys, setFocusOnly) {
     var _this$options$allowLo,
       _this$options,
       _this = this;
@@ -51610,7 +51847,7 @@ var _default = _class.default.inherit({
         return it.loadIndex === index;
       }).length;
     };
-    if (allowLoadByRange) {
+    if (allowLoadByRange && (0, _type.isDefined)(item)) {
       indexOffset = item.loadIndex - itemIndex;
       itemIndex = item.loadIndex;
       focusedItemNotInLoadedRange = itemIsNotInLoadedRange(this._focusedItemIndex);
@@ -51662,28 +51899,28 @@ var _default = _class.default.inherit({
       });
       return true;
     }
-  },
-  isDataItem: function isDataItem(item) {
+  };
+  _proto.isDataItem = function isDataItem(item) {
     return this.options.isSelectableItem(item);
-  },
-  isSelectable: function isSelectable() {
+  };
+  _proto.isSelectable = function isSelectable() {
     return this.options.mode === 'single' || this.options.mode === 'multiple';
-  },
-  isItemDataSelected: function isItemDataSelected(data) {
+  };
+  _proto.isItemDataSelected = function isItemDataSelected(data) {
     return this._selectionStrategy.isItemDataSelected(data, {
       checkPending: true
     });
-  },
-  isItemSelected: function isItemSelected(arg, options) {
+  };
+  _proto.isItemSelected = function isItemSelected(arg, options) {
     return this._selectionStrategy.isItemKeySelected(arg, options);
-  },
-  _resetItemSelectionWhenShiftKeyPressed: function _resetItemSelectionWhenShiftKeyPressed() {
+  };
+  _proto._resetItemSelectionWhenShiftKeyPressed = function _resetItemSelectionWhenShiftKeyPressed() {
     delete this._shiftFocusedItemIndex;
-  },
-  _resetFocusedItemIndex: function _resetFocusedItemIndex() {
+  };
+  _proto._resetFocusedItemIndex = function _resetFocusedItemIndex() {
     this._focusedItemIndex = -1;
-  },
-  changeItemSelectionWhenShiftKeyInVirtualPaging: function changeItemSelectionWhenShiftKeyInVirtualPaging(loadIndex) {
+  };
+  _proto.changeItemSelectionWhenShiftKeyInVirtualPaging = function changeItemSelectionWhenShiftKeyInVirtualPaging(loadIndex) {
     var _this2 = this;
     var loadOptions = this.options.getLoadOptions(loadIndex, this._focusedItemIndex, this._shiftFocusedItemIndex);
     var deferred = new _deferred.Deferred();
@@ -51693,8 +51930,8 @@ var _default = _class.default.inherit({
       deferred.resolve();
     });
     return deferred.promise();
-  },
-  changeItemSelectionWhenShiftKeyPressed: function changeItemSelectionWhenShiftKeyPressed(itemIndex, items, indexOffset) {
+  };
+  _proto.changeItemSelectionWhenShiftKeyPressed = function changeItemSelectionWhenShiftKeyPressed(itemIndex, items, indexOffset) {
     var isSelectedItemsChanged = false;
     var itemIndexStep;
     var indexOffsetDefined = (0, _type.isDefined)(indexOffset);
@@ -51741,27 +51978,27 @@ var _default = _class.default.inherit({
       isSelectedItemsChanged = true;
     }
     return isSelectedItemsChanged;
-  },
-  clearSelectedItems: function clearSelectedItems() {
+  };
+  _proto.clearSelectedItems = function clearSelectedItems() {
     this._setSelectedItems([], []);
-  },
-  selectAll: function selectAll(isOnePage) {
+  };
+  _proto.selectAll = function selectAll(isOnePage) {
     this._resetFocusedItemIndex();
     if (isOnePage) {
       return this._onePageSelectAll(false);
     } else {
       return this.selectedItemKeys([], true, false, true);
     }
-  },
-  deselectAll: function deselectAll(isOnePage) {
+  };
+  _proto.deselectAll = function deselectAll(isOnePage) {
     this._resetFocusedItemIndex();
     if (isOnePage) {
       return this._onePageSelectAll(true);
     } else {
       return this.selectedItemKeys([], true, true, true);
     }
-  },
-  _onePageSelectAll: function _onePageSelectAll(isDeselect) {
+  };
+  _proto._onePageSelectAll = function _onePageSelectAll(isDeselect) {
     var items = this._selectionStrategy.getSelectableItems(this.options.plainItems());
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
@@ -51779,12 +52016,13 @@ var _default = _class.default.inherit({
     }
     this.onSelectionChanged();
     return new _deferred.Deferred().resolve();
-  },
-  getSelectAllState: function getSelectAllState(visibleOnly) {
+  };
+  _proto.getSelectAllState = function getSelectAllState(visibleOnly) {
     return this._selectionStrategy.getSelectAllState(visibleOnly);
-  }
-});
-exports["default"] = _default;
+  };
+  return Selection;
+}();
+exports["default"] = Selection;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
 
@@ -51802,11 +52040,18 @@ var _ui = _interopRequireDefault(__webpack_require__(96688));
 var _query = _interopRequireDefault(__webpack_require__(96687));
 var _deferred = __webpack_require__(62754);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _selection.default.inherit({
-  getSelectedItems: function getSelectedItems() {
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
+  _inheritsLoose(DeferredStrategy, _SelectionStrategy);
+  function DeferredStrategy() {
+    return _SelectionStrategy.apply(this, arguments) || this;
+  }
+  var _proto = DeferredStrategy.prototype;
+  _proto.getSelectedItems = function getSelectedItems() {
     return this._loadFilteredData(this.options.selectionFilter);
-  },
-  getSelectedItemKeys: function getSelectedItemKeys() {
+  };
+  _proto.getSelectedItemKeys = function getSelectedItemKeys() {
     var d = new _deferred.Deferred();
     var that = this;
     var key = this.options.key();
@@ -51818,8 +52063,8 @@ var _default = _selection.default.inherit({
       d.resolve(keys);
     }).fail(d.reject);
     return d.promise();
-  },
-  selectedItemKeys: function selectedItemKeys(keys, preserve, isDeselect, isSelectAll) {
+  };
+  _proto.selectedItemKeys = function selectedItemKeys(keys, preserve, isDeselect, isSelectAll) {
     if (isSelectAll) {
       var filter = this.options.filter();
       var needResetSelectionFilter = !filter || JSON.stringify(filter) === JSON.stringify(this.options.selectionFilter) && isDeselect;
@@ -51842,38 +52087,38 @@ var _default = _selection.default.inherit({
     }
     this.onSelectionChanged();
     return new _deferred.Deferred().resolve();
-  },
-  setSelectedItems: function setSelectedItems(keys) {
+  };
+  _proto.setSelectedItems = function setSelectedItems(keys) {
     this._setOption('selectionFilter', null);
     for (var i = 0; i < keys.length; i++) {
       this.addSelectedItem(keys[i]);
     }
-  },
-  isItemDataSelected: function isItemDataSelected(itemData) {
+  };
+  _proto.isItemDataSelected = function isItemDataSelected(itemData) {
     return this.isItemKeySelected(itemData);
-  },
-  isItemKeySelected: function isItemKeySelected(itemData) {
+  };
+  _proto.isItemKeySelected = function isItemKeySelected(itemData) {
     var selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) {
       return true;
     }
     return !!(0, _query.default)([itemData]).filter(selectionFilter).toArray().length;
-  },
-  _getKeyExpr: function _getKeyExpr() {
+  };
+  _proto._getKeyExpr = function _getKeyExpr() {
     var keyField = this.options.key();
     if (Array.isArray(keyField) && keyField.length === 1) {
       return keyField[0];
     }
     return keyField;
-  },
-  _normalizeKey: function _normalizeKey(key) {
+  };
+  _proto._normalizeKey = function _normalizeKey(key) {
     var keyExpr = this.options.key();
     if (Array.isArray(keyExpr) && keyExpr.length === 1) {
       return key[keyExpr[0]];
     }
     return key;
-  },
-  _getFilterByKey: function _getFilterByKey(key) {
+  };
+  _proto._getFilterByKey = function _getFilterByKey(key) {
     var keyField = this._getKeyExpr();
     var filter = [keyField, '=', this._normalizeKey(key)];
     if (Array.isArray(keyField)) {
@@ -51886,22 +52131,22 @@ var _default = _selection.default.inherit({
       }
     }
     return filter;
-  },
-  addSelectedItem: function addSelectedItem(key, isSelectAll, skipFilter) {
+  };
+  _proto.addSelectedItem = function addSelectedItem(key, isSelectAll, skipFilter) {
     var filter = this._getFilterByKey(key);
     this._addSelectionFilter(false, filter, isSelectAll, skipFilter);
-  },
-  removeSelectedItem: function removeSelectedItem(key) {
+  };
+  _proto.removeSelectedItem = function removeSelectedItem(key) {
     var filter = this._getFilterByKey(key);
     this._addSelectionFilter(true, filter);
-  },
-  validate: function validate() {
+  };
+  _proto.validate = function validate() {
     var key = this.options.key;
     if (key && key() === undefined) {
       throw _ui.default.Error('E1042', 'Deferred selection');
     }
-  },
-  _findSubFilter: function _findSubFilter(selectionFilter, filter) {
+  };
+  _proto._findSubFilter = function _findSubFilter(selectionFilter, filter) {
     if (!selectionFilter) return -1;
     var filterString = JSON.stringify(filter);
     for (var index = 0; index < selectionFilter.length; index++) {
@@ -51911,14 +52156,14 @@ var _default = _selection.default.inherit({
       }
     }
     return -1;
-  },
-  _isLastSubFilter: function _isLastSubFilter(selectionFilter, filter) {
+  };
+  _proto._isLastSubFilter = function _isLastSubFilter(selectionFilter, filter) {
     if (selectionFilter && filter) {
       return this._findSubFilter(selectionFilter, filter) === selectionFilter.length - 1 || this._findSubFilter([selectionFilter], filter) === 0;
     }
     return false;
-  },
-  _addFilterOperator: function _addFilterOperator(selectionFilter, filterOperator) {
+  };
+  _proto._addFilterOperator = function _addFilterOperator(selectionFilter, filterOperator) {
     if (selectionFilter.length > 1 && (0, _type.isString)(selectionFilter[1]) && selectionFilter[1] !== filterOperator) {
       selectionFilter = [selectionFilter];
     }
@@ -51926,14 +52171,14 @@ var _default = _selection.default.inherit({
       selectionFilter.push(filterOperator);
     }
     return selectionFilter;
-  },
-  _denormalizeFilter: function _denormalizeFilter(filter) {
+  };
+  _proto._denormalizeFilter = function _denormalizeFilter(filter) {
     if (filter && (0, _type.isString)(filter[0])) {
       filter = [filter];
     }
     return filter;
-  },
-  _isOnlyNegativeFiltersLeft: function _isOnlyNegativeFiltersLeft(filters) {
+  };
+  _proto._isOnlyNegativeFiltersLeft = function _isOnlyNegativeFiltersLeft(filters) {
     return filters.every(function (filterItem, i) {
       if (i % 2 === 0) {
         return Array.isArray(filterItem) && filterItem[0] === '!';
@@ -51941,8 +52186,8 @@ var _default = _selection.default.inherit({
         return filterItem === 'and';
       }
     });
-  },
-  _addSelectionFilter: function _addSelectionFilter(isDeselect, filter, isSelectAll, skipFilter) {
+  };
+  _proto._addSelectionFilter = function _addSelectionFilter(isDeselect, filter, isSelectAll, skipFilter) {
     var _selectionFilter;
     var that = this;
     var currentFilter = isDeselect ? ['!', filter] : filter;
@@ -51966,14 +52211,14 @@ var _default = _selection.default.inherit({
     }
     selectionFilter = that._normalizeFilter(selectionFilter);
     that._setOption('selectionFilter', !isDeselect && !selectionFilter.length ? null : selectionFilter);
-  },
-  _normalizeFilter: function _normalizeFilter(filter) {
+  };
+  _proto._normalizeFilter = function _normalizeFilter(filter) {
     if (filter && filter.length === 1) {
       filter = filter[0];
     }
     return filter;
-  },
-  _removeFilterByIndex: function _removeFilterByIndex(filter, filterIndex, isSelectAll) {
+  };
+  _proto._removeFilterByIndex = function _removeFilterByIndex(filter, filterIndex, isSelectAll) {
     var operation = filter[1];
     if (filterIndex > 0) {
       filter.splice(filterIndex - 1, 2);
@@ -51983,11 +52228,11 @@ var _default = _selection.default.inherit({
     if (isSelectAll && operation === 'and') {
       filter.splice(0, filter.length);
     }
-  },
-  _isSimpleKeyFilter: function _isSimpleKeyFilter(filter, key) {
+  };
+  _proto._isSimpleKeyFilter = function _isSimpleKeyFilter(filter, key) {
     return filter.length === 3 && filter[0] === key && filter[1] === '=';
-  },
-  _isKeyFilter: function _isKeyFilter(filter) {
+  };
+  _proto._isKeyFilter = function _isKeyFilter(filter) {
     if (filter.length === 2 && filter[0] === '!') {
       return this._isKeyFilter(filter[1]);
     }
@@ -52007,8 +52252,8 @@ var _default = _selection.default.inherit({
       return true;
     }
     return this._isSimpleKeyFilter(filter, keyField);
-  },
-  _hasKeyFiltersOnlyStartingFromIndex: function _hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex) {
+  };
+  _proto._hasKeyFiltersOnlyStartingFromIndex = function _hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex) {
     if (filterIndex >= 0) {
       for (var i = filterIndex; i < selectionFilter.length; i++) {
         if (typeof selectionFilter[i] !== 'string' && !this._isKeyFilter(selectionFilter[i])) {
@@ -52018,8 +52263,8 @@ var _default = _selection.default.inherit({
       return true;
     }
     return false;
-  },
-  _removeSameFilter: function _removeSameFilter(selectionFilter, filter, inverted, isSelectAll) {
+  };
+  _proto._removeSameFilter = function _removeSameFilter(selectionFilter, filter, inverted, isSelectAll) {
     filter = inverted ? ['!', filter] : filter;
     if (JSON.stringify(filter) === JSON.stringify(selectionFilter)) {
       selectionFilter.splice(0, selectionFilter.length);
@@ -52045,8 +52290,8 @@ var _default = _selection.default.inherit({
       }
       return -1;
     }
-  },
-  getSelectAllState: function getSelectAllState() {
+  };
+  _proto.getSelectAllState = function getSelectAllState() {
     var filter = this.options.filter();
     var selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) return true;
@@ -52060,9 +52305,10 @@ var _default = _selection.default.inherit({
       return false;
     }
     return undefined;
-  }
-});
-exports["default"] = _default;
+  };
+  return DeferredStrategy;
+}(_selection.default);
+exports["default"] = DeferredStrategy;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
 
@@ -52077,26 +52323,26 @@ exports["default"] = void 0;
 var _query = _interopRequireDefault(__webpack_require__(96687));
 var _common = __webpack_require__(20576);
 var _type = __webpack_require__(35922);
-var _class = _interopRequireDefault(__webpack_require__(38377));
 var _deferred = __webpack_require__(62754);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _class.default.inherit({
-  ctor: function ctor(options) {
+var SelectionStrategy = /*#__PURE__*/function () {
+  function SelectionStrategy(options) {
     this.options = options;
     this._setOption('disabledItemKeys', []);
     this._clearItemKeys();
-  },
-  _clearItemKeys: function _clearItemKeys() {
+  }
+  var _proto = SelectionStrategy.prototype;
+  _proto._clearItemKeys = function _clearItemKeys() {
     this._setOption('addedItemKeys', []);
     this._setOption('removedItemKeys', []);
     this._setOption('removedItems', []);
     this._setOption('addedItems', []);
-  },
-  validate: _common.noop,
-  _setOption: function _setOption(name, value) {
+  };
+  _proto.validate = function validate() {};
+  _proto._setOption = function _setOption(name, value) {
     this.options[name] = value;
-  },
-  onSelectionChanged: function onSelectionChanged() {
+  };
+  _proto.onSelectionChanged = function onSelectionChanged() {
     var addedItemKeys = this.options.addedItemKeys;
     var removedItemKeys = this.options.removedItemKeys;
     var addedItems = this.options.addedItems;
@@ -52113,27 +52359,27 @@ var _default = _class.default.inherit({
       addedItems: addedItems,
       removedItems: removedItems
     });
-  },
-  equalKeys: function equalKeys(key1, key2) {
+  };
+  _proto.equalKeys = function equalKeys(key1, key2) {
     if (this.options.equalByReference) {
       if ((0, _type.isObject)(key1) && (0, _type.isObject)(key2)) {
         return key1 === key2;
       }
     }
     return (0, _common.equalByValue)(key1, key2);
-  },
-  getSelectableItems: function getSelectableItems(items) {
+  };
+  _proto.getSelectableItems = function getSelectableItems(items) {
     return items.filter(function (item) {
       return !(item !== null && item !== void 0 && item.disabled);
     });
-  },
-  _clearSelection: function _clearSelection(keys, preserve, isDeselect, isSelectAll) {
+  };
+  _proto._clearSelection = function _clearSelection(keys, preserve, isDeselect, isSelectAll) {
     keys = keys || [];
     keys = Array.isArray(keys) ? keys : [keys];
     this.validate();
     return this.selectedItemKeys(keys, preserve, isDeselect, isSelectAll);
-  },
-  _removeTemplateProperty: function _removeTemplateProperty(remoteFilter) {
+  };
+  _proto._removeTemplateProperty = function _removeTemplateProperty(remoteFilter) {
     var _this = this;
     if (Array.isArray(remoteFilter)) {
       return remoteFilter.map(function (f) {
@@ -52144,8 +52390,8 @@ var _default = _class.default.inherit({
       delete remoteFilter.template;
     }
     return remoteFilter;
-  },
-  _loadFilteredData: function _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
+  };
+  _proto._loadFilteredData = function _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
     var filterLength = encodeURI(JSON.stringify(this._removeTemplateProperty(remoteFilter))).length;
     var needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
     var deferred = new _deferred.Deferred();
@@ -52167,8 +52413,8 @@ var _default = _class.default.inherit({
       }).fail(deferred.reject.bind(deferred));
     }
     return deferred;
-  },
-  updateSelectedItemKeyHash: function updateSelectedItemKeyHash(keys) {
+  };
+  _proto.updateSelectedItemKeyHash = function updateSelectedItemKeyHash(keys) {
     for (var i = 0; i < keys.length; i++) {
       var keyHash = (0, _common.getKeyHash)(keys[i]);
       if (!(0, _type.isObject)(keyHash)) {
@@ -52177,16 +52423,16 @@ var _default = _class.default.inherit({
         keyIndices.push(i);
       }
     }
-  },
-  _isAnyItemSelected: function _isAnyItemSelected(items) {
+  };
+  _proto._isAnyItemSelected = function _isAnyItemSelected(items) {
     for (var i = 0; i < items.length; i++) {
       if (this.options.isItemSelected(items[i])) {
         return undefined;
       }
     }
     return false;
-  },
-  _getFullSelectAllState: function _getFullSelectAllState() {
+  };
+  _proto._getFullSelectAllState = function _getFullSelectAllState() {
     var items = this.options.plainItems();
     var dataFilter = this.options.filter();
     var selectedItems = this.options.ignoreDisabledItems ? this.options.selectedItems : this.options.selectedItems.filter(function (item) {
@@ -52204,8 +52450,8 @@ var _default = _class.default.inherit({
       return true;
     }
     return undefined;
-  },
-  _getVisibleSelectAllState: function _getVisibleSelectAllState() {
+  };
+  _proto._getVisibleSelectAllState = function _getVisibleSelectAllState() {
     var items = this.getSelectableItems(this.options.plainItems());
     var hasSelectedItems = false;
     var hasUnselectedItems = false;
@@ -52226,9 +52472,10 @@ var _default = _class.default.inherit({
     } else {
       return false;
     }
-  }
-});
-exports["default"] = _default;
+  };
+  return SelectionStrategy;
+}();
+exports["default"] = SelectionStrategy;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
 
@@ -52250,21 +52497,27 @@ var _selection_filter = __webpack_require__(49601);
 var _ui = _interopRequireDefault(__webpack_require__(96688));
 var _selection = _interopRequireDefault(__webpack_require__(34344));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _selection.default.inherit({
-  ctor: function ctor(options) {
-    this.callBase(options);
-    this._initSelectedItemKeyHash();
-  },
-  _initSelectedItemKeyHash: function _initSelectedItemKeyHash() {
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+var StandardStrategy = /*#__PURE__*/function (_SelectionStrategy) {
+  _inheritsLoose(StandardStrategy, _SelectionStrategy);
+  function StandardStrategy(options) {
+    var _this;
+    _this = _SelectionStrategy.call(this, options) || this;
+    _this._initSelectedItemKeyHash();
+    return _this;
+  }
+  var _proto = StandardStrategy.prototype;
+  _proto._initSelectedItemKeyHash = function _initSelectedItemKeyHash() {
     this._setOption('keyHashIndices', this.options.equalByReference ? null : {});
-  },
-  getSelectedItemKeys: function getSelectedItemKeys() {
+  };
+  _proto.getSelectedItemKeys = function getSelectedItemKeys() {
     return this.options.selectedItemKeys.slice(0);
-  },
-  getSelectedItems: function getSelectedItems() {
+  };
+  _proto.getSelectedItems = function getSelectedItems() {
     return this.options.selectedItems.slice(0);
-  },
-  _preserveSelectionUpdate: function _preserveSelectionUpdate(items, isDeselect) {
+  };
+  _proto._preserveSelectionUpdate = function _preserveSelectionUpdate(items, isDeselect) {
     var keyOf = this.options.keyOf;
     var keyIndicesToRemoveMap;
     var keyIndex;
@@ -52289,8 +52542,8 @@ var _default = _selection.default.inherit({
     if (isBatchDeselect) {
       this._batchRemoveSelectedItems(keyIndicesToRemoveMap);
     }
-  },
-  _batchRemoveSelectedItems: function _batchRemoveSelectedItems(keyIndicesToRemoveMap) {
+  };
+  _proto._batchRemoveSelectedItems = function _batchRemoveSelectedItems(keyIndicesToRemoveMap) {
     var selectedItemKeys = this.options.selectedItemKeys.slice(0);
     var selectedItems = this.options.selectedItems.slice(0);
     this.options.selectedItemKeys.length = 0;
@@ -52303,8 +52556,8 @@ var _default = _selection.default.inherit({
     }
     this._initSelectedItemKeyHash();
     this.updateSelectedItemKeyHash(this.options.selectedItemKeys);
-  },
-  _loadSelectedItemsCore: function _loadSelectedItemsCore(keys, isDeselect, isSelectAll, filter) {
+  };
+  _proto._loadSelectedItemsCore = function _loadSelectedItemsCore(keys, isDeselect, isSelectAll, filter) {
     var deferred = new _deferred.Deferred();
     var key = this.options.key();
     if (!keys.length && !isSelectAll) {
@@ -52331,8 +52584,8 @@ var _default = _selection.default.inherit({
       deferred = this._loadFilteredData(combinedFilter, localFilter, null, isSelectAll);
     }
     return deferred;
-  },
-  _replaceSelectionUpdate: function _replaceSelectionUpdate(items) {
+  };
+  _proto._replaceSelectionUpdate = function _replaceSelectionUpdate(items) {
     var internalKeys = [];
     var keyOf = this.options.keyOf;
     if (!keyOf) return;
@@ -52342,8 +52595,8 @@ var _default = _selection.default.inherit({
       internalKeys.push(key);
     }
     this.setSelectedItems(internalKeys, items);
-  },
-  _warnOnIncorrectKeys: function _warnOnIncorrectKeys(keys) {
+  };
+  _proto._warnOnIncorrectKeys = function _warnOnIncorrectKeys(keys) {
     var allowNullValue = this.options.allowNullValue;
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
@@ -52351,16 +52604,16 @@ var _default = _selection.default.inherit({
         _ui.default.log('W1002', key);
       }
     }
-  },
-  _isMultiSelectEnabled: function _isMultiSelectEnabled() {
+  };
+  _proto._isMultiSelectEnabled = function _isMultiSelectEnabled() {
     var mode = this.options.mode;
     return mode === 'all' || mode === 'multiple';
-  },
-  _requestInProgress: function _requestInProgress() {
+  };
+  _proto._requestInProgress = function _requestInProgress() {
     var _this$_lastLoadDeferr;
     return ((_this$_lastLoadDeferr = this._lastLoadDeferred) === null || _this$_lastLoadDeferr === void 0 ? void 0 : _this$_lastLoadDeferr.state()) === 'pending';
-  },
-  _concatRequestsItems: function _concatRequestsItems(keys, isDeselect, oldRequestItems, updatedKeys) {
+  };
+  _proto._concatRequestsItems = function _concatRequestsItems(keys, isDeselect, oldRequestItems, updatedKeys) {
     var selectedItems;
     var deselectedItems = isDeselect ? keys : [];
     if (updatedKeys) {
@@ -52373,8 +52626,8 @@ var _default = _selection.default.inherit({
       removedItems: oldRequestItems.removed.concat(deselectedItems),
       keys: keys
     };
-  },
-  _collectLastRequestData: function _collectLastRequestData(keys, isDeselect, isSelectAll, updatedKeys) {
+  };
+  _proto._collectLastRequestData = function _collectLastRequestData(keys, isDeselect, isSelectAll, updatedKeys) {
     var isDeselectAll = isDeselect && isSelectAll;
     var oldRequestItems = {
       added: [],
@@ -52398,8 +52651,8 @@ var _default = _selection.default.inherit({
       lastRequestData = this._concatRequestsItems(keys, isDeselect, oldRequestItems, this._shouldMergeWithLastRequest ? undefined : updatedKeys);
     }
     return lastRequestData;
-  },
-  _updateKeysByLastRequestData: function _updateKeysByLastRequestData(keys, isDeselect, isSelectAll) {
+  };
+  _proto._updateKeysByLastRequestData = function _updateKeysByLastRequestData(keys, isDeselect, isSelectAll) {
     var currentKeys = keys;
     if (this._isMultiSelectEnabled() && this._shouldMergeWithLastRequest && !isDeselect && !isSelectAll) {
       var _this$_lastRequestDat, _this$_lastRequestDat2;
@@ -52407,8 +52660,8 @@ var _default = _selection.default.inherit({
       currentKeys = (0, _array.getUniqueValues)(currentKeys);
     }
     return currentKeys;
-  },
-  _loadSelectedItems: function _loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys) {
+  };
+  _proto._loadSelectedItems = function _loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys) {
     var that = this;
     var deferred = new _deferred.Deferred();
     var filter = that.options.filter();
@@ -52421,8 +52674,8 @@ var _default = _selection.default.inherit({
     });
     that._lastLoadDeferred = deferred;
     return deferred;
-  },
-  selectedItemKeys: function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
+  };
+  _proto.selectedItemKeys = function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
     var that = this;
     var deferred = that._loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys);
     deferred.done(function (items) {
@@ -52434,8 +52687,8 @@ var _default = _selection.default.inherit({
       that.onSelectionChanged();
     });
     return deferred;
-  },
-  addSelectedItem: function addSelectedItem(key, itemData) {
+  };
+  _proto.addSelectedItem = function addSelectedItem(key, itemData) {
     if ((0, _type.isDefined)(itemData) && !this.options.ignoreDisabledItems && itemData.disabled) {
       if (this.options.disabledItemKeys.indexOf(key) === -1) {
         this.options.disabledItemKeys.push(key);
@@ -52452,8 +52705,8 @@ var _default = _selection.default.inherit({
       this.options.addedItems.push(itemData);
       this.options.selectedItems.push(itemData);
     }
-  },
-  _getSelectedIndexByKey: function _getSelectedIndexByKey(key, ignoreIndicesMap) {
+  };
+  _proto._getSelectedIndexByKey = function _getSelectedIndexByKey(key, ignoreIndicesMap) {
     var selectedItemKeys = this.options.selectedItemKeys;
     for (var index = 0; index < selectedItemKeys.length; index++) {
       if ((!ignoreIndicesMap || !ignoreIndicesMap[index]) && this.equalKeys(selectedItemKeys[index], key)) {
@@ -52461,8 +52714,8 @@ var _default = _selection.default.inherit({
       }
     }
     return -1;
-  },
-  _getSelectedIndexByHash: function _getSelectedIndexByHash(key, ignoreIndicesMap) {
+  };
+  _proto._getSelectedIndexByHash = function _getSelectedIndexByHash(key, ignoreIndicesMap) {
     var indices = this.options.keyHashIndices[key];
     if (indices && indices.length > 1 && ignoreIndicesMap) {
       indices = indices.filter(function (index) {
@@ -52470,8 +52723,8 @@ var _default = _selection.default.inherit({
       });
     }
     return indices && indices[0] >= 0 ? indices[0] : -1;
-  },
-  _indexOfSelectedItemKey: function _indexOfSelectedItemKey(key, ignoreIndicesMap) {
+  };
+  _proto._indexOfSelectedItemKey = function _indexOfSelectedItemKey(key, ignoreIndicesMap) {
     var selectedIndex;
     if (this.options.equalByReference) {
       selectedIndex = this.options.selectedItemKeys.indexOf(key);
@@ -52481,8 +52734,8 @@ var _default = _selection.default.inherit({
       selectedIndex = this._getSelectedIndexByHash(key, ignoreIndicesMap);
     }
     return selectedIndex;
-  },
-  _shiftSelectedKeyIndices: function _shiftSelectedKeyIndices(keyIndex) {
+  };
+  _proto._shiftSelectedKeyIndices = function _shiftSelectedKeyIndices(keyIndex) {
     for (var currentKeyIndex = keyIndex; currentKeyIndex < this.options.selectedItemKeys.length; currentKeyIndex++) {
       var currentKey = this.options.selectedItemKeys[currentKeyIndex];
       var currentKeyHash = (0, _common.getKeyHash)(currentKey);
@@ -52494,8 +52747,8 @@ var _default = _selection.default.inherit({
         }
       }
     }
-  },
-  removeSelectedItem: function removeSelectedItem(key, keyIndicesToRemoveMap, isDisabled) {
+  };
+  _proto.removeSelectedItem = function removeSelectedItem(key, keyIndicesToRemoveMap, isDisabled) {
     if (!this.options.ignoreDisabledItems && isDisabled) {
       return;
     }
@@ -52525,24 +52778,24 @@ var _default = _selection.default.inherit({
     }
     this._shiftSelectedKeyIndices(keyIndex);
     return keyIndex;
-  },
-  _updateAddedItemKeys: function _updateAddedItemKeys(keys, items) {
+  };
+  _proto._updateAddedItemKeys = function _updateAddedItemKeys(keys, items) {
     for (var i = 0; i < keys.length; i++) {
       if (!this.isItemKeySelected(keys[i])) {
         this.options.addedItemKeys.push(keys[i]);
         this.options.addedItems.push(items[i]);
       }
     }
-  },
-  _updateRemovedItemKeys: function _updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems) {
+  };
+  _proto._updateRemovedItemKeys = function _updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems) {
     for (var i = 0; i < oldSelectedKeys.length; i++) {
       if (!this.isItemKeySelected(oldSelectedKeys[i])) {
         this.options.removedItemKeys.push(oldSelectedKeys[i]);
         this.options.removedItems.push(oldSelectedItems[i]);
       }
     }
-  },
-  _isItemSelectionInProgress: function _isItemSelectionInProgress(key, checkPending) {
+  };
+  _proto._isItemSelectionInProgress = function _isItemSelectionInProgress(key, checkPending) {
     var shouldCheckPending = checkPending && this._lastRequestData && this._requestInProgress();
     if (shouldCheckPending) {
       var _this$_lastRequestDat3;
@@ -52551,11 +52804,11 @@ var _default = _selection.default.inherit({
     } else {
       return false;
     }
-  },
-  _getKeyHash: function _getKeyHash(key) {
+  };
+  _proto._getKeyHash = function _getKeyHash(key) {
     return this.options.equalByReference ? key : (0, _common.getKeyHash)(key);
-  },
-  setSelectedItems: function setSelectedItems(keys, items) {
+  };
+  _proto.setSelectedItems = function setSelectedItems(keys, items) {
     this._updateAddedItemKeys(keys, items);
     var oldSelectedKeys = this.options.selectedItemKeys;
     var oldSelectedItems = this.options.selectedItems;
@@ -52566,13 +52819,13 @@ var _default = _selection.default.inherit({
     this._setOption('selectedItemKeys', keys);
     this._setOption('selectedItems', items);
     this._updateRemovedItemKeys(keys, oldSelectedKeys, oldSelectedItems);
-  },
-  isItemDataSelected: function isItemDataSelected(itemData) {
+  };
+  _proto.isItemDataSelected = function isItemDataSelected(itemData) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var key = this.options.keyOf(itemData);
     return this.isItemKeySelected(key, options);
-  },
-  isItemKeySelected: function isItemKeySelected(key) {
+  };
+  _proto.isItemKeySelected = function isItemKeySelected(key) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var result = this._isItemSelectionInProgress(key, options.checkPending);
     if (!result) {
@@ -52581,16 +52834,17 @@ var _default = _selection.default.inherit({
       result = index !== -1;
     }
     return result;
-  },
-  getSelectAllState: function getSelectAllState(visibleOnly) {
+  };
+  _proto.getSelectAllState = function getSelectAllState(visibleOnly) {
     if (visibleOnly) {
       return this._getVisibleSelectAllState();
     } else {
       return this._getFullSelectAllState();
     }
-  }
-});
-exports["default"] = _default;
+  };
+  return StandardStrategy;
+}(_selection.default);
+exports["default"] = StandardStrategy;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
 
@@ -55329,6 +55583,7 @@ var _translator2d = __webpack_require__(87276);
 var _range = __webpack_require__(21177);
 var _tick = __webpack_require__(41013);
 var _math2 = __webpack_require__(60810);
+var _errors = _interopRequireDefault(__webpack_require__(17381));
 var _date = _interopRequireDefault(__webpack_require__(91198));
 var _common = __webpack_require__(20576);
 var _xy_axes = _interopRequireDefault(__webpack_require__(99415));
@@ -55527,6 +55782,11 @@ function configureGenerator(options, axisDivisionFactor, viewPort, screenDelta, 
 }
 function getConstantLineSharpDirection(coord, axisCanvas) {
   return Math.max(axisCanvas.start, axisCanvas.end) !== coord ? 1 : -1;
+}
+function checkDeprecatedOptions(isValueAxis, options) {
+  if (isValueAxis && options.visualRangeUpdateMode === 'shift') {
+    _errors.default.log('W0016', 'valueAxis.visualRangeUpdateMode', 'shift', '23.1', 'Specify another value');
+  }
 }
 var Axis = function Axis(renderSettings) {
   var that = this;
@@ -56125,6 +56385,7 @@ Axis.prototype = {
     var that = this;
     var labelOpt = options.label;
     validateAxisOptions(options);
+    checkDeprecatedOptions(!that.isArgumentAxis, options);
     that._options = options;
     options.tick = options.tick || {};
     options.minorTick = options.minorTick || {};
@@ -57180,10 +57441,9 @@ Axis.prototype = {
     return (0, _utils.convertVisualRangeObject)(range, !_isArray(optionValue));
   },
   _validateOptions: function _validateOptions(options) {
-    var that = this;
-    options.wholeRange = that._validateVisualRange(options.wholeRange);
-    options.visualRange = options._customVisualRange = that._validateVisualRange(options._customVisualRange);
-    that._setVisualRange(options._customVisualRange);
+    options.wholeRange = this._validateVisualRange(options.wholeRange);
+    options.visualRange = options._customVisualRange = this._validateVisualRange(options._customVisualRange);
+    this._setVisualRange(options._customVisualRange);
   },
   validate: function validate() {
     var that = this;

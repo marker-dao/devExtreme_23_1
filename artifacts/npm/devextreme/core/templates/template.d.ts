@@ -1,7 +1,7 @@
 /**
 * DevExtreme (core/templates/template.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,10 @@ import {
     UserDefinedElement,
 } from '../element';
 
+/**
+ * @docid
+ * @type object
+ */
 export interface dxTemplateOptions {
     /**
      * @docid
@@ -22,6 +26,7 @@ export interface dxTemplateOptions {
  * @section uiWidgetMarkupComponents
  * @type object
  * @public
+ * @options dxTemplateOptions
  */
 export type dxTemplate = Template;
 

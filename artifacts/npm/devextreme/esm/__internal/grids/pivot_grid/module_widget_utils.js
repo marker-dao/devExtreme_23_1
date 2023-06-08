@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/module_widget_utils.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,7 +22,8 @@ import { CLASSES } from './const';
 var setFieldProperty = function setFieldProperty(field, property, value, isInitialization) {
   var initProperties = field._initProperties = field._initProperties || {};
   var initValue = isInitialization ? value : field[property];
-  if (!Object.prototype.hasOwnProperty.call(initProperties, property) || isInitialization) {
+  var needInitProperty = !Object.prototype.hasOwnProperty.call(initProperties, property) || isInitialization;
+  if (needInitProperty && property !== '_initProperties') {
     initProperties[property] = initValue;
   }
   field[property] = value;

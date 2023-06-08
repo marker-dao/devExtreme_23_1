@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/pivot_grid/data_controller/module.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,9 +20,9 @@ var _class = _interopRequireDefault(require("../../../../core/class"));
 var _string = require("../../../../core/utils/string");
 var _common = require("../../../../core/utils/common");
 var _type = require("../../../../core/utils/type");
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.virtual_scrolling_core");
-var _uiGrid_core2 = require("../../../../ui/grid_core/ui.grid_core.virtual_columns_core");
-var _uiGrid_core3 = _interopRequireDefault(require("../../../../ui/grid_core/ui.grid_core.state_storing_core"));
+var _module_core = _interopRequireDefault(require("../../../../__internal/grids/grid_core/virtual_scrolling/module_core"));
+var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.virtual_columns_core");
+var _uiGrid_core2 = _interopRequireDefault(require("../../../../ui/grid_core/ui.grid_core.state_storing_core"));
 var _module = require("../data_source/module");
 var _module_widget_utils = require("../module_widget_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -409,7 +409,7 @@ var DataController = _class.default.inherit(function () {
     dataSourceCells.length && foreachRowInfo(rowsInfo, function (rowInfo, rowIndex) {
       var row = info[rowIndex] = [];
       var dataRow = dataSourceCells[rowInfo.dataSourceIndex >= 0 ? rowInfo.dataSourceIndex : data.grandTotalRowIndex] || [];
-      rowInfo.isLast && (0, _uiGrid_core2.foreachColumnInfo)(columnsInfo, function (columnInfo, columnIndex) {
+      rowInfo.isLast && (0, _uiGrid_core.foreachColumnInfo)(columnsInfo, function (columnInfo, columnIndex) {
         var dataIndex = (dataFieldAreaInRows ? rowInfo.dataIndex : columnInfo.dataIndex) || 0;
         var dataField = dataFields[dataIndex];
         if (columnInfo.isLast && dataField && dataField.visible !== false) {
@@ -457,7 +457,7 @@ var DataController = _class.default.inherit(function () {
     return indexedItems;
   }
   function createScrollController(dataController, component, dataAdapter) {
-    return new _uiGrid_core.VirtualScrollController(component, (0, _extend2.extend)({
+    return new _module_core.default.VirtualScrollController(component, (0, _extend2.extend)({
       hasKnownLastPage: function hasKnownLastPage() {
         return true;
       },
@@ -577,7 +577,7 @@ var DataController = _class.default.inherit(function () {
           }
         });
       }
-      that._stateStoringController = new _uiGrid_core3.default.StateStoringController(options.component).init();
+      that._stateStoringController = new _uiGrid_core2.default.StateStoringController(options.component).init();
       that._columnsInfo = [];
       that._rowsInfo = [];
       that._cellsInfo = [];
@@ -644,7 +644,7 @@ var DataController = _class.default.inherit(function () {
     _calculatePagingForColumnExpandedPaths: function _calculatePagingForColumnExpandedPaths(options, skips, takes, expandedSkips, expandedTakes) {
       var skipByPath = {};
       var takeByPath = {};
-      (0, _uiGrid_core2.foreachColumnInfo)(this._columnsInfo, function (columnInfo, columnIndex) {
+      (0, _uiGrid_core.foreachColumnInfo)(this._columnsInfo, function (columnInfo, columnIndex) {
         if (columnInfo.type === 'D' && columnInfo.path && columnInfo.dataIndex === undefined) {
           var colspan = columnInfo.colspan || 1;
           var path = columnInfo.path.slice(0, -1).toString();
@@ -982,7 +982,7 @@ var DataController = _class.default.inherit(function () {
       if (scrollController && !getAllData) {
         var startIndex = scrollController.beginPageIndex() * that.columnPageSize();
         var endIndex = scrollController.endPageIndex() * that.columnPageSize() + that.columnPageSize();
-        info = (0, _uiGrid_core2.createColumnsInfo)(info, startIndex, endIndex);
+        info = (0, _uiGrid_core.createColumnsInfo)(info, startIndex, endIndex);
       }
       return info;
     },

@@ -63,10 +63,10 @@ var Navigator = /*#__PURE__*/function (_Widget) {
       rtlEnabled = _this$option.rtlEnabled,
       type = _this$option.type,
       stylingMode = _this$option.stylingMode;
-    var direction = rtlEnabled ? -1 : 1;
+    var direction = 1;
     this._prevButton = this._createComponent((0, _renderer.default)('<div>'), _button.default, {
       focusStateEnabled: false,
-      icon: 'chevronleft',
+      icon: rtlEnabled ? 'chevronright' : 'chevronleft',
       onClick: function onClick(e) {
         _this._clickAction({
           direction: -direction,
@@ -80,7 +80,7 @@ var Navigator = /*#__PURE__*/function (_Widget) {
     var $prevButton = this._prevButton.$element().addClass(CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS);
     this._nextButton = this._createComponent((0, _renderer.default)('<div>'), _button.default, {
       focusStateEnabled: false,
-      icon: 'chevronright',
+      icon: rtlEnabled ? 'chevronleft' : 'chevronright',
       onClick: function onClick(e) {
         _this._clickAction({
           direction: direction,

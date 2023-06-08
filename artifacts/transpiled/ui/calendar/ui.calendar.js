@@ -27,6 +27,8 @@ var _index = require("../../events/utils/index");
 var _uiCalendarSingleSelection = _interopRequireDefault(require("./ui.calendar.single.selection.strategy"));
 var _uiCalendarMultiSelection = _interopRequireDefault(require("./ui.calendar.multi.selection.strategy"));
 var _uiCalendarRangeSelection = _interopRequireDefault(require("./ui.calendar.range.selection.strategy"));
+var _hover = require("../../events/hover");
+var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 // STYLE calendar
@@ -40,12 +42,15 @@ var CALENDAR_HAS_FOOTER_CLASS = 'dx-calendar-with-footer';
 var CALENDAR_VIEWS_WRAPPER_CLASS = 'dx-calendar-views-wrapper';
 var CALENDAR_VIEW_CLASS = 'dx-calendar-view';
 var CALENDAR_MULTIVIEW_CLASS = 'dx-calendar-multiview';
+var CALENDAR_RANGE_CLASS = 'dx-calendar-range';
 var FOCUSED_STATE_CLASS = 'dx-state-focused';
+var GESTURE_COVER_CLASS = 'dx-gesture-cover';
 var ANIMATION_DURATION_SHOW_VIEW = 250;
 var POP_ANIMATION_FROM = 0.6;
 var POP_ANIMATION_TO = 1;
 var CALENDAR_INPUT_STANDARD_PATTERN = 'yyyy-MM-dd';
 var CALENDAR_DATE_VALUE_KEY = 'dxDateValueKey';
+var CALENDAR_DXHOVEREND_EVENT_NAME = (0, _index.addNamespace)(_hover.end, 'dxCalendar');
 var LEVEL_COMPARE_MAP = {
   'month': 3,
   'year': 2,
@@ -191,15 +196,16 @@ var Calendar = _editor.default.inherit({
         this._waitRenderView(1 * this._getRtlCorrection());
       },
       tab: _common.noop,
-      enter: function enter(e) {
-        if (!this._isMaxZoomLevel()) {
-          this._navigateDown();
-        } else if (!this._view.isDateDisabled(this.option('currentDate'))) {
-          var value = this._updateTimeComponent(this.option('currentDate'));
-          this._selectionStrategy.selectValue(value, e);
-        }
-      }
+      enter: this._enterKeyHandler
     });
+  },
+  _enterKeyHandler: function _enterKeyHandler(e) {
+    if (!this._isMaxZoomLevel()) {
+      this._navigateDown();
+    } else if (!this._view.isDateDisabled(this.option('currentDate'))) {
+      var value = this._updateTimeComponent(this.option('currentDate'));
+      this._selectionStrategy.selectValue(value, e);
+    }
   },
   _getSerializationFormat: function _getSerializationFormat(optionName) {
     var value = this.option(optionName || 'value');
@@ -434,6 +440,8 @@ var Calendar = _editor.default.inherit({
       if (this._additionalView) {
         if (offset > 2 || offset < -1) {
           this._refreshViews();
+          this._setViewContoured(normalizedDate);
+          this._updateAriaId(normalizedDate);
           this._renderNavigator();
         } else if (offset === 1 && this._skipNavigate) {
           this._setViewContoured(normalizedDate);
@@ -452,8 +460,10 @@ var Calendar = _editor.default.inherit({
     this._skipNavigate = false;
   },
   _isAdditionalViewDate: function _isAdditionalViewDate(date) {
-    var view = this._additionalView;
-    return view && _date2.default.sameMonthAndYear(date, view.option('date'));
+    if (!this._additionalView) {
+      return false;
+    }
+    return date >= this._additionalView._getFirstAvailableDate();
   },
   _getActiveView: function _getActiveView(date) {
     return this._isAdditionalViewDate(date) ? this._additionalView : this._view;
@@ -468,6 +478,10 @@ var Calendar = _editor.default.inherit({
     }
   },
   _getMinDate: function _getMinDate() {
+    var _rangeMin = this.option('_rangeMin');
+    if (_rangeMin) {
+      return _rangeMin;
+    }
     if (this.min) {
       return this.min;
     }
@@ -475,6 +489,10 @@ var Calendar = _editor.default.inherit({
     return this.min;
   },
   _getMaxDate: function _getMaxDate() {
+    var _rangeMax = this.option('_rangeMax');
+    if (_rangeMax) {
+      return _rangeMax;
+    }
     if (this.max) {
       return this.max;
     }
@@ -539,9 +557,11 @@ var Calendar = _editor.default.inherit({
     this.callBase();
     var $element = this.$element();
     $element.addClass(CALENDAR_CLASS);
+    $element.toggleClass(CALENDAR_RANGE_CLASS, this.option('selectionMode') === 'range');
     this._renderBody();
     $element.append(this.$body);
     this._renderViews();
+    this._renderEvents();
     this._renderNavigator();
     $element.prepend(this._navigator.$element());
     this._renderSwipeable();
@@ -586,13 +606,11 @@ var Calendar = _editor.default.inherit({
   },
   _renderSpecificView: function _renderSpecificView(date) {
     var _this$option3 = this.option(),
-      viewsCount = _this$option3.viewsCount,
       zoomLevel = _this$option3.zoomLevel;
     var specificView = _uiCalendar2.default[zoomLevel];
     var $view = (0, _renderer.default)('<div>').appendTo(this._$viewsWrapper);
     var config = this._viewConfig(date);
     var view = this._createComponent($view, specificView, config);
-    $view.toggleClass(CALENDAR_MULTIVIEW_CLASS, viewsCount > 1);
     return view;
   },
   _viewConfig: function _viewConfig(date) {
@@ -616,6 +634,15 @@ var Calendar = _editor.default.inherit({
       allowValueSelection: this._isMaxZoomLevel(),
       _todayDate: this.option('_todayDate')
     });
+  },
+  _renderEvents: function _renderEvents() {
+    var _this3 = this;
+    _events_engine.default.off(this._$viewsWrapper, CALENDAR_DXHOVEREND_EVENT_NAME);
+    if (this.option('selectionMode') === 'range') {
+      _events_engine.default.on(this._$viewsWrapper, CALENDAR_DXHOVEREND_EVENT_NAME, null, function (e) {
+        _this3._updateViewsOption('hoveredRange', []);
+      });
+    }
   },
   _injectComponent: function _injectComponent(func) {
     var that = this;
@@ -751,8 +778,8 @@ var Calendar = _editor.default.inherit({
     return _date2.default.sameView(zoomLevel, min, max) || this.option('minZoomLevel') === zoomLevel;
   },
   _updateButtonsVisibility: function _updateButtonsVisibility() {
-    this._navigator.toggleButton('next', !(0, _type.isDefined)(this._getRequiredView('next')));
-    this._navigator.toggleButton('prev', !(0, _type.isDefined)(this._getRequiredView('prev')));
+    this._navigator.toggleButton('next', !(0, _type.isDefined)(this._afterView));
+    this._navigator.toggleButton('prev', !(0, _type.isDefined)(this._beforeView));
   },
   _renderSwipeable: function _renderSwipeable() {
     if (!this._swipeable) {
@@ -768,8 +795,12 @@ var Calendar = _editor.default.inherit({
     _fx.default.stop(this._$viewsWrapper, true);
     var _this$option8 = this.option(),
       viewsCount = _this$option8.viewsCount;
+    this._toggleGestureCoverCursor('grabbing');
     e.event.maxLeftOffset = this._getRequiredView('next') ? 1 / viewsCount : 0;
     e.event.maxRightOffset = this._getRequiredView('prev') ? 1 / viewsCount : 0;
+  },
+  _toggleGestureCoverCursor: function _toggleGestureCoverCursor(cursor) {
+    (0, _renderer.default)(".".concat(GESTURE_COVER_CLASS)).css('cursor', cursor);
   },
   _getRequiredView: function _getRequiredView(name) {
     var view;
@@ -790,6 +821,7 @@ var Calendar = _editor.default.inherit({
     this._updateNavigatorCaption(offset);
   },
   _swipeEndHandler: function _swipeEndHandler(e) {
+    this._toggleGestureCoverCursor('auto');
     var _this$option9 = this.option(),
       currentDate = _this$option9.currentDate,
       rtlEnabled = _this$option9.rtlEnabled;
@@ -838,11 +870,10 @@ var Calendar = _editor.default.inherit({
   _getViewsCaption: function _getViewsCaption(view, additionalView) {
     var caption = view.getNavigatorCaption();
     var _this$option10 = this.option(),
-      viewsCount = _this$option10.viewsCount,
-      rtlEnabled = _this$option10.rtlEnabled;
+      viewsCount = _this$option10.viewsCount;
     if (viewsCount > 1 && additionalView) {
       var additionalViewCaption = additionalView.getNavigatorCaption();
-      caption = rtlEnabled ? "".concat(additionalViewCaption, " - ").concat(caption) : "".concat(caption, " - ").concat(additionalViewCaption);
+      caption = "".concat(caption, " - ").concat(additionalViewCaption);
     }
     return caption;
   },
@@ -856,14 +887,14 @@ var Calendar = _editor.default.inherit({
     return normalizedDate === min || normalizedDate === max;
   },
   _renderFooter: function _renderFooter() {
-    var _this3 = this;
+    var _this4 = this;
     var showTodayButton = this.option('showTodayButton');
     if (showTodayButton) {
       var $todayButton = this._createComponent((0, _renderer.default)('<div>'), _button.default, {
         focusStateEnabled: this.option('focusStateEnabled'),
         text: _message.default.format('dxCalendar-todayButtonText'),
         onClick: function onClick(args) {
-          _this3._toTodayView(args);
+          _this4._toTodayView(args);
         },
         type: 'default',
         stylingMode: 'text',
@@ -1040,6 +1071,7 @@ var Calendar = _editor.default.inherit({
     this.callBase();
   },
   _refreshViews: function _refreshViews() {
+    this._resetActiveState();
     this._disposeViews();
     this._renderViews();
   },
@@ -1065,30 +1097,36 @@ var Calendar = _editor.default.inherit({
   },
   _setViewsMinOption: function _setViewsMinOption(min) {
     this._restoreViewsMinMaxOptions();
-    this._updateViewsOption('min', this._convertToDate(min));
+    this.option('_rangeMin', this._convertToDate(min));
+    this._updateViewsOption('min', this._getMinDate());
   },
   _setViewsMaxOption: function _setViewsMaxOption(max) {
     this._restoreViewsMinMaxOptions();
-    this._updateViewsOption('max', this._convertToDate(max));
+    this.option('_rangeMax', this._convertToDate(max));
+    this._updateViewsOption('max', this._getMaxDate());
   },
   _restoreViewsMinMaxOptions: function _restoreViewsMinMaxOptions() {
+    this.option({
+      _rangeMin: null,
+      _rangeMax: null
+    });
     this._updateViewsOption('min', this._getMinDate());
     this._updateViewsOption('max', this._getMaxDate());
   },
   _updateAriaSelected: function _updateAriaSelected(value, previousValue) {
-    var _this4 = this;
+    var _this5 = this;
     previousValue.forEach(function (item) {
-      _this4.setAria('selected', undefined, _this4._view._getCellByDate(item));
+      _this5.setAria('selected', undefined, _this5._view._getCellByDate(item));
     });
     value.forEach(function (item) {
-      _this4.setAria('selected', true, _this4._view._getCellByDate(item));
+      _this5.setAria('selected', true, _this5._view._getCellByDate(item));
     });
     if (this.option('viewsCount') > 1) {
       previousValue.forEach(function (item) {
-        _this4.setAria('selected', undefined, _this4._additionalView._getCellByDate(item));
+        _this5.setAria('selected', undefined, _this5._additionalView._getCellByDate(item));
       });
       value.forEach(function (item) {
-        _this4.setAria('selected', true, _this4._additionalView._getCellByDate(item));
+        _this5.setAria('selected', true, _this5._additionalView._getCellByDate(item));
       });
     }
   },

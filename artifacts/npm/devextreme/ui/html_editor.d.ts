@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/html_editor.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -91,6 +91,7 @@ export interface MentionTemplateData {
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxHtmlEditorOptions extends EditorOptions<dxHtmlEditor> {
     /**
@@ -150,9 +151,7 @@ export interface dxHtmlEditorOptions extends EditorOptions<dxHtmlEditor> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field component:dxHtmlEditor
+     * @type_function_param1 e:{ui/html_editor:FocusInEvent}
      * @action
      * @public
      */
@@ -160,9 +159,7 @@ export interface dxHtmlEditorOptions extends EditorOptions<dxHtmlEditor> {
     /**
      * @docid
      * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field component:dxHtmlEditor
+     * @type_function_param1 e:{ui/html_editor:FocusOutEvent}
      * @action
      * @public
      */
@@ -684,52 +681,4 @@ export type Properties = dxHtmlEditorOptions;
 /** @deprecated use Properties instead */
 export type Options = dxHtmlEditorOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type EventsIntegrityCheckingHelper = CheckedEvents<Properties, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxHtmlEditorOptions.onContentReady
- * @type_function_param1 e:{ui/html_editor:ContentReadyEvent}
- */
-onContentReady?: ((e: ContentReadyEvent) => void);
-/**
- * @skip
- * @docid dxHtmlEditorOptions.onDisposing
- * @type_function_param1 e:{ui/html_editor:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxHtmlEditorOptions.onFocusIn
- * @type_function_param1 e:{ui/html_editor:FocusInEvent}
- */
-onFocusIn?: ((e: FocusInEvent) => void);
-/**
- * @skip
- * @docid dxHtmlEditorOptions.onFocusOut
- * @type_function_param1 e:{ui/html_editor:FocusOutEvent}
- */
-onFocusOut?: ((e: FocusOutEvent) => void);
-/**
- * @skip
- * @docid dxHtmlEditorOptions.onInitialized
- * @type_function_param1 e:{ui/html_editor:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxHtmlEditorOptions.onOptionChanged
- * @type_function_param1 e:{ui/html_editor:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-/**
- * @skip
- * @docid dxHtmlEditorOptions.onValueChanged
- * @type_function_param1 e:{ui/html_editor:ValueChangedEvent}
- */
-onValueChanged?: ((e: ValueChangedEvent) => void);
-};

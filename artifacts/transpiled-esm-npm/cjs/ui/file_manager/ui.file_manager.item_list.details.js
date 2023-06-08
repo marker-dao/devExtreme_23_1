@@ -104,7 +104,8 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
       onContextMenuPreparing: this._onContextMenuPreparing.bind(this),
       onSelectionChanged: this._onFilesViewSelectionChanged.bind(this),
       onFocusedRowChanged: this._onFilesViewFocusedRowChanged.bind(this),
-      onOptionChanged: this._onFilesViewOptionChanged.bind(this)
+      onOptionChanged: this._onFilesViewOptionChanged.bind(this),
+      onContentReady: this._onContentReady.bind(this)
     });
   };
   _proto._createColumns = function _createColumns() {
@@ -433,10 +434,14 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
       actualOptions.paging = {
         pageIndex: 0
       };
+      this._needResetScrollPosition = true;
     }
     this._filesView.option(actualOptions);
     this._refreshDeferred = new _deferred.Deferred();
     return this._refreshDeferred.promise();
+  };
+  _proto._getScrollable = function _getScrollable() {
+    return this._filesView.getScrollable();
   };
   _proto.getSelectedItems = function getSelectedItems() {
     if (this._isMultipleSelectionMode()) {

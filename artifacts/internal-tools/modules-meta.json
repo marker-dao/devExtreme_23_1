@@ -1,5 +1,5 @@
 {
-  "ToolsVersion": "10.0.0-beta.6",
+  "ToolsVersion": "10.0.0-beta.11",
   "Modules": {
     "common": {
       "ApplyValueMode": {},
@@ -204,6 +204,7 @@
       "HeaderFilterSearchConfig": {},
       "HeaderFilterTexts": {},
       "GridBase": {},
+      "GridBaseOptions": {},
       "GridsEditMode": {},
       "GridsEditRefreshMode": {},
       "GroupExpandMode": {},
@@ -228,6 +229,7 @@
       "SummaryType": {}
     },
     "core/component": {
+      "ComponentOptions": {},
       "Component": {}
     },
     "core/component_registrator": {
@@ -242,6 +244,7 @@
       "default": {}
     },
     "core/dom_component": {
+      "DOMComponentOptions": {},
       "default": {}
     },
     "core/element": {
@@ -260,23 +263,27 @@
       "default": {}
     },
     "data/abstract_store": {
-      "default": {}
+      "StoreOptions": {},
+      "Store": {}
     },
     "data/apply_changes": {
       "default": {}
     },
     "data/array_store": {
       "Options": {},
+      "ArrayStoreOptions": {},
       "default": {}
     },
     "data/custom_store": {
       "Options": {},
       "GroupItem": {},
       "ResolvedData": {},
+      "CustomStoreOptions": {},
       "default": {}
     },
     "data/data_source": {
       "Options": {},
+      "DataSourceOptions": {},
       "default": {},
       "DataSourceLike": {}
     },
@@ -301,6 +308,7 @@
     },
     "data/local_store": {
       "Options": {},
+      "LocalStoreOptions": {},
       "default": {}
     },
     "data/query": {
@@ -322,6 +330,7 @@
       "EventInfo": {},
       "NativeEventInfo": {},
       "ChangedOptionInfo": {},
+      "ItemInfo": {},
       "Cancelable": {},
       "EventObject": {},
       "event": {}
@@ -331,6 +340,7 @@
     },
     "file_management/custom_provider": {
       "Options": {},
+      "CustomFileSystemProviderOptions": {},
       "default": {}
     },
     "file_management/error": {
@@ -341,13 +351,16 @@
     },
     "file_management/object_provider": {
       "Options": {},
+      "ObjectFileSystemProviderOptions": {},
       "default": {}
     },
     "file_management/provider_base": {
+      "FileSystemProviderBaseOptions": {},
       "default": {}
     },
     "file_management/remote_provider": {
       "Options": {},
+      "RemoteFileSystemProviderOptions": {},
       "default": {}
     },
     "file_management/upload_info": {
@@ -414,6 +427,7 @@
       "SelectionChangedEvent": {},
       "ValueChangedEvent": {},
       "DropDownButtonTemplateData": {},
+      "dxAutocompleteOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -442,6 +456,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "TemplateData": {},
+      "dxButtonOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -452,6 +467,7 @@
       "ItemClickEvent": {},
       "OptionChangedEvent": {},
       "SelectionChangedEvent": {},
+      "dxButtonGroupOptions": {},
       "default": {},
       "Item": {},
       "Properties": {}
@@ -466,6 +482,7 @@
       "ValueChangedEvent": {},
       "CellTemplateData": {},
       "DisabledDate": {},
+      "dxCalendarOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -475,6 +492,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxCheckBoxOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -497,6 +515,7 @@
       "PasteEvent": {},
       "ValueChangedEvent": {},
       "DropDownButtonTemplateData": {},
+      "dxColorBoxOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -617,12 +636,12 @@
       "Scrolling": {},
       "dxDataGridSelection": {},
       "Selection": {},
+      "default": {},
       "Column": {},
       "ColumnButton": {},
       "Row": {},
       "ExplicitTypes": {},
-      "Properties": {},
-      "default": {}
+      "Properties": {}
     },
     "ui/date_box": {
       "DateType": {},
@@ -647,12 +666,12 @@
       "ValueChangedEvent": {},
       "DisabledDate": {},
       "DropDownButtonTemplateData": {},
+      "dxDateBoxOptions": {},
       "DateBoxBase": {},
       "default": {},
       "Properties": {}
     },
     "ui/date_range_box": {
-      "DateRangePickerType": {},
       "ChangeEvent": {},
       "ClosedEvent": {},
       "ContentReadyEvent": {},
@@ -682,6 +701,7 @@
       "OptionChangedEvent": {},
       "RenderedEvent": {},
       "ShownEvent": {},
+      "dxDeferRenderingOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -698,6 +718,7 @@
       "SelectionChangedEvent": {},
       "CustomShapeTemplateData": {},
       "CustomShapeToolboxTemplateData": {},
+      "dxDiagramOptions": {},
       "default": {},
       "dxDiagramConnector": {},
       "Item": {},
@@ -724,6 +745,7 @@
       "CustomDialogOptions": {}
     },
     "ui/draggable": {
+      "DraggableBaseOptions": {},
       "DraggableBase": {},
       "DisposingEvent": {},
       "DragEndEvent": {},
@@ -732,6 +754,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "DragTemplateData": {},
+      "dxDraggableOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -742,6 +765,7 @@
       "DisposingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
+      "dxDrawerOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -765,6 +789,7 @@
       "ValueChangedEvent": {},
       "ContentTemplateData": {},
       "DropDownButtonTemplateData": {},
+      "dxDropDownBoxOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -776,6 +801,7 @@
       "ItemClickEvent": {},
       "OptionChangedEvent": {},
       "SelectionChangedEvent": {},
+      "dxDropDownButtonOptions": {},
       "default": {},
       "Item": {},
       "Properties": {}
@@ -808,6 +834,7 @@
       "FileUploadingEvent": {},
       "FileUploadedEvent": {},
       "ItemDownloadingEvent": {},
+      "dxFileManagerOptions": {},
       "default": {},
       "dxFileManagerContextMenu": {},
       "ContextMenuItem": {},
@@ -833,6 +860,7 @@
       "UploadErrorEvent": {},
       "UploadStartedEvent": {},
       "ValueChangedEvent": {},
+      "dxFileUploaderOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -847,6 +875,7 @@
       "ValueChangedEvent": {},
       "CustomOperationEditorTemplate": {},
       "FieldEditorTemplate": {},
+      "dxFilterBuilderOptions": {},
       "default": {},
       "CustomOperation": {},
       "Field": {},
@@ -866,6 +895,7 @@
       "GroupItemTemplateData": {},
       "SimpleItemTemplateData": {},
       "SimpleItemLabelTemplateData": {},
+      "dxFormOptions": {},
       "default": {},
       "Item": {},
       "ButtonItem": {},
@@ -928,6 +958,7 @@
       "TaskContentTemplateData": {},
       "ProgressTooltipTemplateData": {},
       "TimeTooltipTemplateData": {},
+      "dxGanttOptions": {},
       "default": {},
       "dxGanttToolbar": {},
       "dxGanttContextMenu": {},
@@ -958,6 +989,7 @@
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
       "MentionTemplateData": {},
+      "dxHtmlEditorOptions": {},
       "default": {},
       "dxHtmlEditorMediaResizing": {},
       "dxHtmlEditorTableResizing": {},
@@ -1003,6 +1035,7 @@
       "DisposingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
+      "dxLoadIndicatorOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1015,6 +1048,7 @@
       "OptionChangedEvent": {},
       "ShowingEvent": {},
       "ShownEvent": {},
+      "dxLoadPanelOptions": {},
       "dxLoadPanelAnimation": {},
       "default": {},
       "Properties": {}
@@ -1033,6 +1067,7 @@
       "SelectionChangedEvent": {},
       "TitleRenderedEvent": {},
       "ValueChangedEvent": {},
+      "dxLookupOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1050,6 +1085,7 @@
       "RouteAddedEvent": {},
       "RouteRemovedEvent": {},
       "MapLocation": {},
+      "dxMapOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1085,6 +1121,7 @@
       "OptionChangedEvent": {},
       "SelectionChangedEvent": {},
       "dxMultiViewOptions": {},
+      "dxMultiViewBaseOptions": {},
       "default": {},
       "Item": {},
       "ExplicitTypes": {},
@@ -1112,11 +1149,13 @@
       "OptionChangedEvent": {},
       "PasteEvent": {},
       "ValueChangedEvent": {},
+      "dxNumberBoxOptions": {},
       "default": {},
       "Properties": {}
     },
     "ui/overlay": {
       "baseZIndex": {},
+      "dxOverlayOptions": {},
       "dxOverlayAnimation": {},
       "default": {}
     },
@@ -1132,6 +1171,7 @@
       "ExportingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
+      "dxPivotGridOptions": {},
       "default": {},
       "Cell": {},
       "Properties": {}
@@ -1142,6 +1182,7 @@
       "DisposingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
+      "dxPivotGridFieldChooserOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1155,6 +1196,7 @@
       "ShowingEvent": {},
       "ShownEvent": {},
       "TitleRenderedEvent": {},
+      "dxPopoverOptions": {},
       "dxPopoverAnimation": {},
       "default": {},
       "Properties": {}
@@ -1173,6 +1215,7 @@
       "OptionChangedEvent": {},
       "ShowingEvent": {},
       "TitleRenderedEvent": {},
+      "dxPopupOptions": {},
       "dxPopupAnimation": {},
       "ToolbarItem": {},
       "default": {},
@@ -1185,6 +1228,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxProgressBarOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1194,6 +1238,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxRadioGroupOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1203,6 +1248,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxRangeSliderOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1212,6 +1258,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxRecurrenceEditorOptions": {},
       "default": {}
     },
     "ui/resizable": {
@@ -1222,6 +1269,7 @@
       "ResizeEvent": {},
       "ResizeStartEvent": {},
       "ResizeEndEvent": {},
+      "dxResizableOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1273,6 +1321,7 @@
       "AppointmentTooltipTemplateData": {},
       "AppointmentCollectorTemplateData": {},
       "DateNavigatorTextInfo": {},
+      "dxSchedulerOptions": {},
       "default": {},
       "Appointment": {},
       "Properties": {},
@@ -1286,6 +1335,7 @@
       "ReachBottomEvent": {},
       "ScrollEvent": {},
       "UpdatedEvent": {},
+      "dxScrollViewOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1312,11 +1362,9 @@
       "SelectionChangedEvent": {},
       "ValueChangedEvent": {},
       "DropDownButtonTemplateData": {},
+      "dxSelectBoxOptions": {},
       "default": {},
       "Properties": {}
-    },
-    "ui/set_template_engine": {
-      "default": {}
     },
     "ui/slider": {
       "ContentReadyEvent": {},
@@ -1324,8 +1372,10 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxSliderOptions": {},
       "default": {},
       "dxSliderBaseOptions": {},
+      "dxSliderBase": {},
       "Properties": {}
     },
     "ui/sortable": {
@@ -1340,6 +1390,7 @@
       "RemoveEvent": {},
       "ReorderEvent": {},
       "DragTemplateData": {},
+      "dxSortableOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1349,6 +1400,7 @@
       "DisposingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
+      "dxSpeedDialActionOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1358,6 +1410,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxSwitchOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1391,6 +1444,7 @@
       "OptionChangedEvent": {},
       "SelectionChangedEvent": {},
       "dxTabsOptions": {},
+      "dxTabsBaseOptions": {},
       "default": {},
       "Item": {},
       "ExplicitTypes": {},
@@ -1418,6 +1472,7 @@
       "SelectionChangedEvent": {},
       "ValueChangedEvent": {},
       "DropDownButtonTemplateData": {},
+      "dxTagBoxOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1438,6 +1493,7 @@
       "OptionChangedEvent": {},
       "PasteEvent": {},
       "ValueChangedEvent": {},
+      "dxTextAreaOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1459,6 +1515,7 @@
       "OptionChangedEvent": {},
       "PasteEvent": {},
       "ValueChangedEvent": {},
+      "dxTextBoxOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1490,6 +1547,7 @@
       "OptionChangedEvent": {},
       "ShowingEvent": {},
       "ShownEvent": {},
+      "dxToastOptions": {},
       "dxToastAnimation": {},
       "default": {},
       "Properties": {}
@@ -1520,10 +1578,12 @@
       "OptionChangedEvent": {},
       "ShowingEvent": {},
       "ShownEvent": {},
+      "dxTooltipOptions": {},
       "default": {},
       "Properties": {}
     },
     "ui/track_bar": {
+      "dxTrackBarOptions": {},
       "default": {}
     },
     "ui/tree_list": {
@@ -1637,6 +1697,7 @@
       "DisposingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
+      "dxValidationGroupOptions": {},
       "default": {},
       "ValidationResult": {},
       "dxValidationGroupResult": {},
@@ -1661,6 +1722,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValidatedEvent": {},
+      "dxValidatorOptions": {},
       "default": {},
       "ValidationResult": {},
       "dxValidatorResult": {},
@@ -1679,6 +1741,7 @@
       "OptionChangedEvent": {},
       "TooltipHiddenEvent": {},
       "TooltipShownEvent": {},
+      "dxBarGaugeOptions": {},
       "dxBarGaugeLegend": {},
       "dxBarGaugeLoadingIndicator": {},
       "dxBarGaugeTooltip": {},
@@ -1696,6 +1759,7 @@
       "OptionChangedEvent": {},
       "TooltipHiddenEvent": {},
       "TooltipShownEvent": {},
+      "dxBulletOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1739,6 +1803,7 @@
       "chartPointAggregationInfoObject": {},
       "chartPointObject": {},
       "chartSeriesObject": {},
+      "dxChartOptions": {},
       "dxChartArgumentAxis": {},
       "dxChartArgumentAxisConstantLineStyle": {},
       "dxChartArgumentAxisConstantLineStyleLabel": {},
@@ -1788,6 +1853,7 @@
       "OptionChangedEvent": {},
       "TooltipHiddenEvent": {},
       "TooltipShownEvent": {},
+      "dxCircularGaugeOptions": {},
       "dxCircularGaugeRangeContainer": {},
       "dxCircularGaugeScale": {},
       "dxCircularGaugeScaleLabel": {},
@@ -1820,6 +1886,7 @@
       "LegendClickEvent": {},
       "OptionChangedEvent": {},
       "SelectionChangedEvent": {},
+      "dxFunnelOptions": {},
       "dxFunnelLegend": {},
       "dxFunnelTooltip": {},
       "default": {},
@@ -1837,6 +1904,7 @@
       "OptionChangedEvent": {},
       "TooltipHiddenEvent": {},
       "TooltipShownEvent": {},
+      "dxLinearGaugeOptions": {},
       "dxLinearGaugeRangeContainer": {},
       "dxLinearGaugeScale": {},
       "dxLinearGaugeScaleLabel": {},
@@ -1873,6 +1941,7 @@
       "TooltipShownEvent": {},
       "LegendItem": {},
       "PieChartSeries": {},
+      "dxPieChartOptions": {},
       "dxPieChartAnnotationConfig": {},
       "dxPieChartCommonAnnotationConfig": {},
       "dxPieChartAdaptiveLayout": {},
@@ -1908,6 +1977,7 @@
       "ZoomEndEvent": {},
       "ZoomStartEvent": {},
       "PolarChartSeries": {},
+      "dxPolarChartOptions": {},
       "dxPolarChartAdaptiveLayout": {},
       "dxPolarChartArgumentAxis": {},
       "dxPolarChartArgumentAxisConstantLines": {},
@@ -1957,6 +2027,7 @@
       "InitializedEvent": {},
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
+      "dxRangeSelectorOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -1974,6 +2045,7 @@
       "NodeClickEvent": {},
       "NodeHoverEvent": {},
       "OptionChangedEvent": {},
+      "dxSankeyOptions": {},
       "dxSankeyTooltip": {},
       "default": {},
       "dxSankeyConnectionInfoObject": {},
@@ -1993,6 +2065,7 @@
       "OptionChangedEvent": {},
       "TooltipHiddenEvent": {},
       "TooltipShownEvent": {},
+      "dxSparklineOptions": {},
       "default": {},
       "Properties": {}
     },
@@ -2020,6 +2093,7 @@
       "NodesRenderingEvent": {},
       "OptionChangedEvent": {},
       "SelectionChangedEvent": {},
+      "dxTreeMapOptions": {},
       "dxTreeMapTooltip": {},
       "default": {},
       "dxTreeMapNode": {},
@@ -2049,6 +2123,7 @@
       "MapLayer": {},
       "MapLayerElement": {},
       "LegendItem": {},
+      "dxVectorMapOptions": {},
       "dxVectorMapAnnotationConfig": {},
       "dxVectorMapCommonAnnotationConfig": {},
       "dxVectorMapLegends": {},
@@ -2057,6 +2132,7 @@
       "Properties": {}
     },
     "core/templates/template": {
+      "dxTemplateOptions": {},
       "dxTemplate": {},
       "template": {}
     },
@@ -2064,10 +2140,12 @@
       "DxPromise": {}
     },
     "data/odata/context": {
+      "ODataContextOptions": {},
       "default": {}
     },
     "data/odata/store": {
       "Options": {},
+      "ODataStoreOptions": {},
       "default": {}
     },
     "data/odata/utils": {
@@ -2075,29 +2153,37 @@
       "keyConverters": {}
     },
     "ui/collection/ui.collection_widget.base": {
+      "CollectionWidgetOptions": {},
       "default": {},
       "CollectionWidgetItem": {}
     },
     "ui/context_menu/ui.menu_base": {
+      "dxMenuBaseOptions": {},
       "default": {}
     },
     "ui/drop_down_editor/ui.drop_down_editor": {
       "DropDownPredefinedButton": {},
+      "dxDropDownEditorOptions": {},
       "default": {}
     },
     "ui/drop_down_editor/ui.drop_down_list": {
+      "dxDropDownListOptions": {},
       "default": {}
     },
     "ui/editor/editor": {
+      "ValueChangedInfo": {},
+      "EditorOptions": {},
       "default": {}
     },
     "ui/editor/ui.data_expression": {
+      "DataExpressionMixinOptions": {},
       "default": {}
     },
     "ui/form/ui.form": {
       "ColCountResponsible": {}
     },
     "ui/hierarchical_collection/ui.hierarchical_collection_widget": {
+      "HierarchicalCollectionWidgetOptions": {},
       "default": {}
     },
     "ui/pivot_grid/data_source": {
@@ -2110,19 +2196,23 @@
       "PivotGridSummaryDisplayMode": {},
       "dxPivotGridSummaryCell": {},
       "Options": {},
+      "PivotGridDataSourceOptions": {},
       "Field": {},
       "default": {}
     },
     "ui/pivot_grid/xmla_store": {
+      "XmlaStoreOptions": {},
       "default": {}
     },
     "ui/scroll_view/ui.scrollable": {
+      "dxScrollableOptions": {},
       "default": {}
     },
     "ui/speed_dial_action/repaint_floating_action_button": {
       "default": {}
     },
     "ui/text_box/ui.text_editor.base": {
+      "dxTextEditorOptions": {},
       "default": {},
       "dxTextEditorButton": {}
     },
@@ -2133,14 +2223,17 @@
       "Template": {}
     },
     "ui/widget/ui.search_box_mixin": {
+      "SearchBoxMixinOptions": {},
       "default": {}
     },
     "ui/widget/ui.widget": {
+      "WidgetOptions": {},
       "default": {},
       "dxItem": {},
       "format": {}
     },
     "viz/chart_components/base_chart": {
+      "BaseChartOptions": {},
       "BaseChartAdaptiveLayout": {},
       "BaseChartLegend": {},
       "BaseChartTooltip": {},
@@ -2149,6 +2242,7 @@
       "BaseChartAnnotationConfig": {}
     },
     "viz/core/base_widget": {
+      "BaseWidgetOptions": {},
       "BaseWidgetExport": {},
       "BaseWidgetLoadingIndicator": {},
       "BaseWidgetMargin": {},
@@ -2160,6 +2254,7 @@
       "BaseWidgetAnnotationConfig": {}
     },
     "viz/gauges/base_gauge": {
+      "BaseGaugeOptions": {},
       "BaseGaugeAnimation": {},
       "BaseGaugeLoadingIndicator": {},
       "BaseGaugeRangeContainer": {},
@@ -2172,6 +2267,7 @@
       "GaugeIndicator": {}
     },
     "viz/sparklines/base_sparkline": {
+      "BaseSparklineOptions": {},
       "BaseSparklineTooltip": {},
       "default": {}
     },

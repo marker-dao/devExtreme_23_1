@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.item_list.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,6 +12,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 exports.default = void 0;
 var _extend = require("../../core/utils/extend");
 var _deferred = require("../../core/utils/deferred");
+var _window = require("../../core/utils/window");
 var _double_click = require("../../events/double_click");
 var _index = require("../../events/utils/index");
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
@@ -47,6 +48,7 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     _Widget.prototype._init.call(this);
   };
   _proto._initMarkup = function _initMarkup() {
+    this._needResetScrollPosition = false;
     this.$element().addClass(FILE_MANAGER_FILES_VIEW_CLASS);
     var dblClickEventName = (0, _index.addNamespace)(_double_click.name, FILE_MANAGER_ITEM_LIST_ITEM_OPEN_EVENT_NAMESPACE);
     _events_engine.default.on(this.$element(), dblClickEventName, this._getItemSelector(), this._onItemDblClick.bind(this));
@@ -152,6 +154,12 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     this._raiseItemListDataLoaded();
     (_this$_refreshDeferre = this._refreshDeferred) === null || _this$_refreshDeferre === void 0 ? void 0 : _this$_refreshDeferre.resolve();
   };
+  _proto._onContentReady = function _onContentReady() {
+    if (this._needResetScrollPosition) {
+      this._resetScrollTopPosition();
+      this._needResetScrollPosition = false;
+    }
+  };
   _proto._tryRaiseSelectionChanged = function _tryRaiseSelectionChanged(_ref) {
     var _this2 = this;
     var selectedItemInfos = _ref.selectedItemInfos,
@@ -193,6 +201,17 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     this._raiseFocusedItemChanged(args);
   };
   _proto._resetFocus = function _resetFocus() {};
+  _proto._resetScrollTopPosition = function _resetScrollTopPosition() {
+    var _this3 = this;
+    if (!(0, _window.hasWindow)()) {
+      return;
+    }
+    setTimeout(function () {
+      var _this3$_getScrollable;
+      return (_this3$_getScrollable = _this3._getScrollable()) === null || _this3$_getScrollable === void 0 ? void 0 : _this3$_getScrollable.scrollTo(0);
+    });
+  };
+  _proto._getScrollable = function _getScrollable() {};
   _proto._getItemThumbnail = function _getItemThumbnail(fileInfo) {
     var itemThumbnailGetter = this.option('getItemThumbnail');
     return itemThumbnailGetter ? itemThumbnailGetter(fileInfo) : {
@@ -243,15 +262,15 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     return keys.length > 1 || keys.length === 1 && keys[0] !== this._parentDirectoryItemKey;
   };
   _proto._filterOutParentDirectory = function _filterOutParentDirectory(array, createNewArray) {
-    var _this3 = this;
+    var _this4 = this;
     return this._filterOutItemByPredicate(array, function (item) {
-      return item.key === _this3._parentDirectoryItemKey;
+      return item.key === _this4._parentDirectoryItemKey;
     }, createNewArray);
   };
   _proto._filterOutParentDirectoryKey = function _filterOutParentDirectoryKey(array, createNewArray) {
-    var _this4 = this;
+    var _this5 = this;
     return this._filterOutItemByPredicate(array, function (key) {
-      return key === _this4._parentDirectoryItemKey;
+      return key === _this5._parentDirectoryItemKey;
     }, createNewArray);
   };
   _proto._filterOutItemByPredicate = function _filterOutItemByPredicate(array, predicate, createNewArray) {

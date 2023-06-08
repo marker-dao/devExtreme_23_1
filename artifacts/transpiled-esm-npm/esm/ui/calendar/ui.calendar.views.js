@@ -56,25 +56,19 @@ var Views = {
         scope: 'col',
         abbr: fullCaption
       }).text(abbrCaption);
-      this._appendCell($headerRow, $cell);
+      $headerRow.append($cell);
     },
     _renderWeekHeaderCell: function _renderWeekHeaderCell($headerRow) {
       var $weekNumberHeaderCell = $('<th>').attr({
         scope: 'col',
         abbr: 'WeekNumber',
         class: 'dx-week-number-header'
-      }).text('#');
-      var rtlEnabled = this.option('rtlEnabled');
-      if (rtlEnabled) {
-        $headerRow.append($weekNumberHeaderCell);
-      } else {
-        $headerRow.prepend($weekNumberHeaderCell);
-      }
+      });
+      $headerRow.prepend($weekNumberHeaderCell);
     },
     _renderWeekNumberCell: function _renderWeekNumberCell(rowData) {
       var {
         showWeekNumbers,
-        rtlEnabled,
         cellTemplate
       } = this.option();
       if (!showWeekNumbers) {
@@ -89,11 +83,7 @@ var Views = {
       } else {
         cell.innerHTML = weekNumber;
       }
-      if (rtlEnabled) {
-        rowData.row.append(cell);
-      } else {
-        rowData.row.prepend(cell);
-      }
+      rowData.row.prepend(cell);
       this.setAria({
         'role': 'gridcell',
         'label': "Week ".concat(weekNumber)
@@ -123,6 +113,12 @@ var Views = {
     },
     _isOtherView: function _isOtherView(cellDate) {
       return cellDate.getMonth() !== this.option('date').getMonth();
+    },
+    _isStartDayOfMonth: function _isStartDayOfMonth(cellDate) {
+      return dateUtils.sameDate(cellDate, dateUtils.getFirstMonthDate(this.option('date')));
+    },
+    _isEndDayOfMonth: function _isEndDayOfMonth(cellDate) {
+      return dateUtils.sameDate(cellDate, dateUtils.getLastMonthDate(this.option('date')));
     },
     _getCellText: function _getCellText(cellDate) {
       return dateLocalization.format(cellDate, 'd');
@@ -184,6 +180,12 @@ var Views = {
     _isOtherView: function _isOtherView() {
       return false;
     },
+    _isStartDayOfMonth: function _isStartDayOfMonth() {
+      return false;
+    },
+    _isEndDayOfMonth: function _isEndDayOfMonth() {
+      return false;
+    },
     _getCellText: function _getCellText(cellDate) {
       return dateLocalization.getMonthNames('abbreviated')[cellDate.getMonth()];
     },
@@ -232,6 +234,12 @@ var Views = {
       var date = new Date(cellDate);
       date.setMonth(1);
       return !dateUtils.sameDecade(date, this.option('date'));
+    },
+    _isStartDayOfMonth: function _isStartDayOfMonth() {
+      return false;
+    },
+    _isEndDayOfMonth: function _isEndDayOfMonth() {
+      return false;
     },
     _getCellText: function _getCellText(cellDate) {
       return dateLocalization.format(cellDate, 'yyyy');
@@ -286,6 +294,12 @@ var Views = {
       var date = new Date(cellDate);
       date.setMonth(1);
       return !dateUtils.sameCentury(date, this.option('date'));
+    },
+    _isStartDayOfMonth: function _isStartDayOfMonth() {
+      return false;
+    },
+    _isEndDayOfMonth: function _isEndDayOfMonth() {
+      return false;
     },
     _getCellText: function _getCellText(cellDate) {
       var startDate = dateLocalization.format(cellDate, 'yyyy');

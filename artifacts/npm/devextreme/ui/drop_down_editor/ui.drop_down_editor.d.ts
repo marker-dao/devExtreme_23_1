@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/drop_down_editor/ui.drop_down_editor.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,7 +50,11 @@ export interface DropDownButtonTemplateDataModel {
     readonly icon?: string;
 }
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @hidden
+ */
 export interface dxDropDownEditorOptions<TComponent> extends Omit<dxTextBoxOptions<TComponent>, 'validationMessagePosition'> {
     /**
      * @docid
@@ -151,6 +155,7 @@ export interface dxDropDownEditorOptions<TComponent> extends Omit<dxTextBoxOptio
  * @inherits dxTextBox
  * @hidden
  * @namespace DevExpress.ui
+ * @options dxDropDownEditorOptions
  */
 export default class dxDropDownEditor<TProperties> extends dxTextBox<TProperties> {
     /**

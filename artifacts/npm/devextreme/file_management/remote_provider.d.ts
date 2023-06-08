@@ -1,7 +1,7 @@
 /**
 * DevExtreme (file_management/remote_provider.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ export type Options = RemoteFileSystemProviderOptions;
 /**
  * @deprecated Use Options instead
  * @namespace DevExpress.fileManagement
+ * @docid
  */
 export interface RemoteFileSystemProviderOptions extends FileSystemProviderBaseOptions<RemoteFileSystemProvider> {
     /**
@@ -54,6 +55,7 @@ export interface RemoteFileSystemProviderOptions extends FileSystemProviderBaseO
  * @inherits FileSystemProviderBase
  * @namespace DevExpress.fileManagement
  * @public
+ * @options RemoteFileSystemProviderOptions
  */
 export default class RemoteFileSystemProvider extends FileSystemProviderBase {
     constructor(options?: Options);

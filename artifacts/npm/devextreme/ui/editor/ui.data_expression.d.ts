@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/editor/ui.data_expression.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,11 @@ import {
     CollectionWidgetItem,
 } from '../collection/ui.collection_widget.base';
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @hidden
+ */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface DataExpressionMixinOptions<T = DataExpressionMixin> {
     /**
@@ -70,6 +74,7 @@ export interface DataExpressionMixinOptions<T = DataExpressionMixin> {
  * @inherits DataHelperMixin
  * @hidden
  * @namespace DevExpress.ui
+ * @options DataExpressionMixinOptions
  */
 export default class DataExpressionMixin {
     constructor(options?: DataExpressionMixinOptions);

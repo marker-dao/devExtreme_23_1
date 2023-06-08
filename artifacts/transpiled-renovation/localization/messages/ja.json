@@ -57,6 +57,13 @@
         "dxDateBox-simulatedDataPickerTitleDateTime": "日付と時刻を選択してください。",
         "dxDateBox-validation-datetime": "日付または時刻を指定してください。",
 
+        "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
+        "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
+        "dxDateRangeBox-startDateOutOfRangeMessage": "Start date is out of range",
+        "dxDateRangeBox-endDateOutOfRangeMessage": "End date is out of range",
+        "dxDateRangeBox-startDateLabel": "開始時刻",
+        "dxDateRangeBox-endDateLabel": "終了時刻",
+
         "dxFileUploader-selectFile": "ファイルを選択",
         "dxFileUploader-dropFile": "またはファイルをこちらにドロップしてください。",
         "dxFileUploader-bytes": "バイト",

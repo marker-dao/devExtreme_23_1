@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/gantt/ui.gantt.view.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,6 +19,7 @@ export class GanttView extends Widget {
   _init() {
     super._init();
     this._onSelectionChanged = this._createActionByOption('onSelectionChanged');
+    this._onViewTypeChanged = this._createActionByOption('onViewTypeChanged');
     this._onScroll = this._createActionByOption('onScroll');
     this._onDialogShowing = this._createActionByOption('onDialogShowing');
     this._onPopupMenuShowing = this._createActionByOption('onPopupMenuShowing');
@@ -392,6 +393,11 @@ export class GanttView extends Widget {
       var direction = (info === null || info === void 0 ? void 0 : info.height) > this._taskAreaContainer.getHeight() ? 'both' : 'horizontal';
       scrollView.option('direction', direction);
     }
+  }
+  updateGanttViewType(type) {
+    this._onViewTypeChanged({
+      type: type
+    });
   }
   // export
   getTreeListTableStyle() {

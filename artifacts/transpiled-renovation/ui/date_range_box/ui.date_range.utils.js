@@ -1,6 +1,6 @@
 "use strict";
 
-exports.sortDatesArray = exports.isSameDates = exports.isSameDateArrays = void 0;
+exports.sortDatesArray = exports.monthDifference = exports.isSameDates = exports.isSameDateArrays = exports.getDeserializedDate = void 0;
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 var _date_serialization = _interopRequireDefault(require("../../core/utils/date_serialization"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -13,6 +13,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var getDeserializedDate = function getDeserializedDate(value) {
   return _date_serialization.default.deserializeDate(value);
 };
+exports.getDeserializedDate = getDeserializedDate;
 var isSameDates = function isSameDates(date1, date2) {
   if (!date1 && !date2) {
     return true;
@@ -41,3 +42,7 @@ var sortDatesArray = function sortDatesArray(value) {
   }
 };
 exports.sortDatesArray = sortDatesArray;
+var monthDifference = function monthDifference(date1, date2) {
+  return (date2.getFullYear() - date1.getFullYear()) * 12 - date1.getMonth() + date2.getMonth();
+};
+exports.monthDifference = monthDifference;

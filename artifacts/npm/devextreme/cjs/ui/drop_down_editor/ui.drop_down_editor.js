@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_editor.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -388,15 +388,19 @@ var DropDownEditor = _text_box.default.inherit({
       this._detachFocusOutEvents();
       _events_engine.default.on(this._inputWrapper(), (0, _index.addNamespace)('focusout', this.NAME), function (event) {
         var newTarget = event.relatedTarget;
-        var popupWrapper = _this2.content ? (0, _renderer.default)(_this2.content()).closest('.' + DROP_DOWN_EDITOR_OVERLAY) : _this2._$popup;
         if (newTarget && _this2.option('opened')) {
-          var isNewTargetOutside = (0, _renderer.default)(newTarget).closest('.' + DROP_DOWN_EDITOR_OVERLAY, popupWrapper).length === 0;
+          var isNewTargetOutside = _this2._isTargetOutOfComponent(newTarget);
           if (isNewTargetOutside) {
             _this2.close();
           }
         }
       });
     }
+  },
+  _isTargetOutOfComponent: function _isTargetOutOfComponent(newTarget) {
+    var popupWrapper = this.content ? (0, _renderer.default)(this.content()).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY)) : this._$popup;
+    var isTargetOutsidePopup = (0, _renderer.default)(newTarget).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY), popupWrapper).length === 0;
+    return isTargetOutsidePopup;
   },
   _detachFocusOutEvents: function _detachFocusOutEvents() {
     isIOs && _events_engine.default.off(this._inputWrapper(), (0, _index.addNamespace)('focusout', this.NAME));
@@ -543,7 +547,8 @@ var DropDownEditor = _text_box.default.inherit({
       onPositioned: this._popupPositionedHandler.bind(this),
       fullScreen: false,
       contentTemplate: null,
-      _wrapperClassExternal: DROP_DOWN_EDITOR_OVERLAY
+      _wrapperClassExternal: DROP_DOWN_EDITOR_OVERLAY,
+      _ignorePreventScrollEventsDeprecation: true
     };
   },
   _popupInitializedHandler: function _popupInitializedHandler() {

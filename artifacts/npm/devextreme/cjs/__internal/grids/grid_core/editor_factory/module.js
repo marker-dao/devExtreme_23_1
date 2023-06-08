@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/editor_factory/module.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.editorFactoryModule = void 0;
+exports.editorFactoryModule = exports.EditorFactory = void 0;
 var _size = require("../../../../core/utils/size");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _dom_adapter = _interopRequireDefault(require("../../../../core/dom_adapter"));
@@ -27,8 +27,8 @@ var _ui = _interopRequireDefault(require("../../../../ui/shared/ui.editor_factor
 var _modules = _interopRequireDefault(require("../modules"));
 var _module_utils = _interopRequireDefault(require("../module_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-// @ts-check
-
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var EDITOR_INLINE_BLOCK = 'dx-editor-inline-block';
 var CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
 var FOCUS_OVERLAY_CLASS = 'focus-overlay';
@@ -38,18 +38,24 @@ var ROW_CLASS = 'dx-row';
 var MODULE_NAMESPACE = 'dxDataGridEditorFactory';
 var UPDATE_FOCUS_EVENTS = (0, _index.addNamespace)([_pointer.default.down, 'focusin', _click.name].join(' '), MODULE_NAMESPACE);
 var DX_HIDDEN = 'dx-hidden';
-var members = {
-  _getFocusedElement: function _getFocusedElement($dataGridElement) {
+var ViewControllerWithMixin = _modules.default.ViewController.inherit(_ui.default);
+var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
+  _inheritsLoose(EditorFactory, _ViewControllerWithMi);
+  function EditorFactory() {
+    return _ViewControllerWithMi.apply(this, arguments) || this;
+  }
+  var _proto = EditorFactory.prototype;
+  _proto._getFocusedElement = function _getFocusedElement($dataGridElement) {
     var rowSelector = this.option('focusedRowEnabled') ? 'tr[tabindex]:focus' : 'tr[tabindex]:not(.dx-data-row):focus';
     var focusedElementSelector = "td[tabindex]:focus, ".concat(rowSelector, ", input:focus, textarea:focus, .dx-lookup-field:focus, .dx-checkbox:focus, .dx-switch:focus, .dx-dropdownbutton .dx-buttongroup:focus, .dx-adaptive-item-text:focus");
     // T181706
     var $focusedElement = $dataGridElement.find(focusedElementSelector);
     return this.elementIsInsideGrid($focusedElement) && $focusedElement;
-  },
-  _getFocusCellSelector: function _getFocusCellSelector() {
+  };
+  _proto._getFocusCellSelector = function _getFocusCellSelector() {
     return '.dx-row > td';
-  },
-  _updateFocusCore: function _updateFocusCore() {
+  };
+  _proto._updateFocusCore = function _updateFocusCore() {
     var $dataGridElement = this.component && this.component.$element();
     if ($dataGridElement) {
       // this selector is specific to IE
@@ -70,11 +76,11 @@ var members = {
       }
     }
     this.loseFocus();
-  },
-  _needHideBorder: function _needHideBorder($element) {
+  };
+  _proto._needHideBorder = function _needHideBorder($element) {
     return $element.hasClass(EDITOR_INLINE_BLOCK);
-  },
-  _updateFocus: function _updateFocus(e) {
+  };
+  _proto._updateFocus = function _updateFocus(e) {
     var that = this;
     var isFocusOverlay = e && e.event && (0, _renderer.default)(e.event.target).hasClass(that.addWidgetPrefix(FOCUS_OVERLAY_CLASS));
     that._isFocusOverlay = that._isFocusOverlay || isFocusOverlay;
@@ -86,8 +92,8 @@ var members = {
       }
       that._isFocusOverlay = false;
     });
-  },
-  _updateFocusOverlaySize: function _updateFocusOverlaySize($element, position) {
+  };
+  _proto._updateFocusOverlaySize = function _updateFocusOverlaySize($element, position) {
     $element.hide();
     // @ts-expect-error
     var location = _position.default.calculate($element, (0, _extend.extend)({
@@ -100,11 +106,11 @@ var members = {
       (0, _size.setOuterHeight)($element, (0, _size.getOuterHeight)($element) - location.v.oversize);
     }
     $element.show();
-  },
-  callbackNames: function callbackNames() {
+  };
+  _proto.callbackNames = function callbackNames() {
     return ['focused'];
-  },
-  focus: function focus($element, isHideBorder) {
+  };
+  _proto.focus = function focus($element, isHideBorder) {
     var that = this;
     if ($element === undefined) {
       return that._$focusedElement;
@@ -124,12 +130,12 @@ var members = {
         that.focused.fire($element);
       });
     }
-  },
-  refocus: function refocus() {
+  };
+  _proto.refocus = function refocus() {
     var $focus = this.focus();
     this.focus($focus);
-  },
-  renderFocusOverlay: function renderFocusOverlay($element, isHideBorder) {
+  };
+  _proto.renderFocusOverlay = function renderFocusOverlay($element, isHideBorder) {
     var that = this;
     if (!_module_utils.default.isElementInCurrentGrid(this, $element)) {
       return;
@@ -159,19 +165,19 @@ var members = {
       _position.default.setup(that._$focusOverlay, focusOverlayPosition);
       that._$focusOverlay.css('visibility', 'visible'); // for ios
     }
-  },
-  resize: function resize() {
+  };
+  _proto.resize = function resize() {
     var $focusedElement = this._$focusedElement;
     if ($focusedElement) {
       this.focus($focusedElement);
     }
-  },
-  loseFocus: function loseFocus() {
+  };
+  _proto.loseFocus = function loseFocus() {
     this._$focusedElement && this._$focusedElement.removeClass(FOCUSED_ELEMENT_CLASS);
     this._$focusedElement = null;
     this._$focusOverlay && this._$focusOverlay.addClass(DX_HIDDEN);
-  },
-  init: function init() {
+  };
+  _proto.init = function init() {
     this.createAction('onEditorPreparing', {
       excludeValidators: ['disabled', 'readOnly'],
       category: 'rendering'
@@ -181,10 +187,11 @@ var members = {
       category: 'rendering'
     });
     this._updateFocusHandler = this._updateFocusHandler || this.createAction(this._updateFocus.bind(this));
-    _events_engine.default.on(this._getContainerRoot(), UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
+    this._subscribedContainerRoot = this._getContainerRoot();
+    _events_engine.default.on(this._subscribedContainerRoot, UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
     this._attachContainerEventHandlers();
-  },
-  _getContainerRoot: function _getContainerRoot() {
+  };
+  _proto._getContainerRoot = function _getContainerRoot() {
     var _a;
     var $container = (_a = this.component) === null || _a === void 0 ? void 0 : _a.$element();
     // @ts-expect-error
@@ -197,8 +204,8 @@ var members = {
       return _dom_adapter.default.getDocument();
     }
     return root;
-  },
-  _attachContainerEventHandlers: function _attachContainerEventHandlers() {
+  };
+  _proto._attachContainerEventHandlers = function _attachContainerEventHandlers() {
     var that = this;
     var $container = that.component && that.component.$element();
     if ($container) {
@@ -209,14 +216,15 @@ var members = {
         }
       });
     }
-  },
-  dispose: function dispose() {
+  };
+  _proto.dispose = function dispose() {
     clearTimeout(this._focusTimeoutID);
     clearTimeout(this._updateFocusTimeoutID);
-    _events_engine.default.off(this._getContainerRoot(), UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
-  }
-};
-var EditorFactory = _modules.default.ViewController.inherit(_ui.default).inherit(members);
+    _events_engine.default.off(this._subscribedContainerRoot, UPDATE_FOCUS_EVENTS, this._updateFocusHandler);
+  };
+  return EditorFactory;
+}(ViewControllerWithMixin);
+exports.EditorFactory = EditorFactory;
 var editorFactoryModule = {
   defaultOptions: function defaultOptions() {
     return {};

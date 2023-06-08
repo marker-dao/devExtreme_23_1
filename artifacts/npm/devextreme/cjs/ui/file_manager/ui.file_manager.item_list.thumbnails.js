@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.item_list.thumbnails.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,6 @@ exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _extend = require("../../core/utils/extend");
 var _type = require("../../core/utils/type");
-var _window = require("../../core/utils/window");
 var _deferred = require("../../core/utils/deferred");
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 var _index = require("../../events/utils/index");
@@ -37,7 +36,6 @@ var FileManagerThumbnailsItemList = /*#__PURE__*/function (_FileManagerItemListB
   var _proto = FileManagerThumbnailsItemList.prototype;
   _proto._initMarkup = function _initMarkup() {
     _FileManagerItemListB.prototype._initMarkup.call(this);
-    this._needResetScrollPosition = false;
     this.$element().addClass(FILE_MANAGER_THUMBNAILS_ITEM_LIST_CLASS);
     var contextMenuEvent = (0, _index.addNamespace)(_contextmenu.name, FILE_MANAGER_THUMBNAILS_EVENT_NAMESPACE);
     _events_engine.default.on(this.$element(), contextMenuEvent, this._onContextMenu.bind(this));
@@ -60,7 +58,7 @@ var FileManagerThumbnailsItemList = /*#__PURE__*/function (_FileManagerItemListB
       getTooltipText: this._getTooltipText.bind(this),
       onSelectionChanged: this._onItemListSelectionChanged.bind(this),
       onFocusedItemChanged: this._onItemListFocusedItemChanged.bind(this),
-      onContentReady: this._onItemListContentReady.bind(this)
+      onContentReady: this._onContentReady.bind(this)
     });
   };
   _proto._onContextMenu = function _onContextMenu(e) {
@@ -159,21 +157,8 @@ var FileManagerThumbnailsItemList = /*#__PURE__*/function (_FileManagerItemListB
       itemElement: itemElement || undefined
     });
   };
-  _proto._onItemListContentReady = function _onItemListContentReady() {
-    if (this._needResetScrollPosition) {
-      this._resetScrollTopPosition();
-      this._needResetScrollPosition = false;
-    }
-  };
-  _proto._resetScrollTopPosition = function _resetScrollTopPosition() {
-    var _this = this;
-    if (!(0, _window.hasWindow)()) {
-      return;
-    }
-    setTimeout(function () {
-      var _this$_itemList$getSc;
-      return (_this$_itemList$getSc = _this._itemList.getScrollable()) === null || _this$_itemList$getSc === void 0 ? void 0 : _this$_itemList$getSc.scrollTo(0);
-    });
+  _proto._getScrollable = function _getScrollable() {
+    return this._itemList.getScrollable();
   };
   _proto._setSelectedItemKeys = function _setSelectedItemKeys(itemKeys) {
     this._itemList.option('selectedItemKeys', itemKeys);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/custom_store.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -53,6 +53,7 @@ type LoadResult<T> = T | DxPromise<T> | PromiseLike<T>;
 /**
  * @namespace DevExpress.data
  * @deprecated Use Options instead
+ * @docid
  */
 export interface CustomStoreOptions<
     TItem = any,
@@ -125,6 +126,7 @@ export interface CustomStoreOptions<
  * @docid
  * @inherits Store
  * @public
+ * @options CustomStoreOptions
  */
 export default class CustomStore<
     TItem = any,

@@ -110,6 +110,7 @@ var Accordion = _uiCollection_widget.default.inherit({
   _initMarkup: function _initMarkup() {
     var _this = this;
     this._deferredItems = [];
+    this._deferredTemplateItems = [];
     this.callBase();
     this.setAria({
       'role': 'tablist',
@@ -121,8 +122,11 @@ var Accordion = _uiCollection_widget.default.inherit({
     });
   },
   _render: function _render() {
+    var _this2 = this;
     this.callBase();
-    this._updateItemHeightsWrapper(true);
+    _deferred.when.apply(this, this._deferredTemplateItems).done(function () {
+      _this2._updateItemHeights(true);
+    });
   },
   _itemDataKey: function _itemDataKey() {
     return ACCORDION_ITEM_DATA_KEY;
@@ -159,6 +163,7 @@ var Accordion = _uiCollection_widget.default.inherit({
     this.callBase.apply(this, arguments);
   },
   _renderItemContent: function _renderItemContent(args) {
+    this._deferredTemplateItems[args.index] = new _deferred.Deferred();
     var itemTitle = this.callBase((0, _extend.extend)({}, args, {
       contentClass: ACCORDION_ITEM_TITLE_CLASS,
       templateProperty: 'titleTemplate',
@@ -179,6 +184,13 @@ var Accordion = _uiCollection_widget.default.inherit({
       container: (0, _element.getPublicElement)((0, _renderer.default)('<div>').appendTo((0, _renderer.default)(itemTitle).parent()))
     })));
   },
+  _onItemTemplateRendered: function _onItemTemplateRendered(_, renderArgs) {
+    var _this3 = this;
+    return function () {
+      var item = _this3._deferredTemplateItems[renderArgs.index];
+      item && item.resolve();
+    };
+  },
   _attachItemTitleClickAction: function _attachItemTitleClickAction(itemTitle) {
     var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
     _events_engine.default.off(itemTitle, eventName);
@@ -197,19 +209,20 @@ var Accordion = _uiCollection_widget.default.inherit({
     this._updateItemHeightsWrapper(false);
   },
   _updateItems: function _updateItems(addedSelection, removedSelection) {
-    var _this2 = this;
+    var _this4 = this;
     var $items = this._itemElements();
     iteratorUtils.each(addedSelection, function (_, index) {
-      _this2._deferredItems[index].resolve();
+      _this4._deferredItems[index].resolve();
       var $item = $items.eq(index).addClass(ACCORDION_ITEM_OPENED_CLASS).removeClass(ACCORDION_ITEM_CLOSED_CLASS);
-      _this2.setAria('hidden', false, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
+      _this4.setAria('hidden', false, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
     });
     iteratorUtils.each(removedSelection, function (_, index) {
       var $item = $items.eq(index).removeClass(ACCORDION_ITEM_OPENED_CLASS);
-      _this2.setAria('hidden', true, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
+      _this4.setAria('hidden', true, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
     });
   },
   _updateItemHeightsWrapper: function _updateItemHeightsWrapper(skipAnimation) {
+    // Note: require for proper animation in angularjs (T520346)
     if (this.option('templatesRenderAsynchronously')) {
       this._animationTimer = setTimeout(function () {
         this._updateItemHeights(skipAnimation);
@@ -301,6 +314,10 @@ var Accordion = _uiCollection_widget.default.inherit({
     this._updateItemHeights(true);
   },
   _clean: function _clean() {
+    this._deferredTemplateItems.forEach(function (item) {
+      item.reject();
+    });
+    this._deferredTemplateItems = [];
     clearTimeout(this._animationTimer);
     this.callBase();
   },

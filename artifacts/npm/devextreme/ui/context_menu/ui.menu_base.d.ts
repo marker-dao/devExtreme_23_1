@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/context_menu/ui.menu_base.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,11 @@ import {
     SubmenuShowMode,
 } from '../../common';
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @hidden
+ */
 export interface dxMenuBaseOptions<
   TComponent extends dxMenuBase<any, TItem, TKey>,
   TItem extends dxMenuBaseItem = dxMenuBaseItem,
@@ -119,6 +123,7 @@ export interface dxMenuBaseOptions<
  * @inherits HierarchicalCollectionWidget
  * @hidden
  * @namespace DevExpress.ui
+ * @options dxMenuBaseOptions
  */
 export default class dxMenuBase<
   TProperties extends dxMenuBaseOptions<any, TItem, TKey>,

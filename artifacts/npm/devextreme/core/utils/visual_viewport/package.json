@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "main": "../../../cjs/core/utils/visual_viewport.js",
+  "module": "../../../esm/core/utils/visual_viewport.js"
+}

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/collection/ui.collection_widget.base.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,7 +34,11 @@ export interface SelectionChangedInfo<TItem extends ItemLike = any> {
     readonly removedItems: Array<TItem>;
 }
 
-/** @namespace DevExpress.ui */
+/**
+ * @namespace DevExpress.ui
+ * @docid
+ * @type object
+ */
 export interface CollectionWidgetOptions<
     TComponent extends CollectionWidget<any, TItem, TKey> | any,
     TItem extends ItemLike = any,
@@ -168,6 +172,7 @@ export interface CollectionWidgetOptions<
  * @inherits Widget, DataHelperMixin
  * @hidden
  * @namespace DevExpress.ui
+ * @options CollectionWidgetOptions
  */
 export default class CollectionWidget<
     TProperties extends CollectionWidgetOptions<any, TItem, TKey>,

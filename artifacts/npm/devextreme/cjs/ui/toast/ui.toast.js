@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toast/ui.toast.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -190,9 +190,7 @@ var Toast = _ui.default.inherit({
     this._posStringToObject();
   },
   _renderContentImpl: function _renderContentImpl() {
-    if (this.option('message')) {
-      this._message = (0, _renderer.default)('<div>').addClass(TOAST_MESSAGE_CLASS).text(this.option('message')).appendTo(this.$content());
-    }
+    this._message = (0, _renderer.default)('<div>').addClass(TOAST_MESSAGE_CLASS).text(this.option('message')).appendTo(this.$content());
     this.setAria('role', 'alert', this._message);
     if (toastTypes.includes(this.option('type').toLowerCase())) {
       this.$content().prepend((0, _renderer.default)('<div>').addClass(TOAST_ICON_CLASS));

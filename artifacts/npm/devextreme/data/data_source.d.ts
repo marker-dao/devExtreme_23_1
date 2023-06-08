@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/data_source.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,6 +30,7 @@ export type Options<
 /**
  * @namespace DevExpress.data
  * @deprecated Use Options instead
+ * @docid
  */
 export interface DataSourceOptions<
     TStoreItem = any,
@@ -58,14 +59,13 @@ export interface DataSourceOptions<
      * @type Group expression
      * @public
      */
-       group?: GroupDescriptor<TItem> | Array<GroupDescriptor<TItem>>;
-     /**
-      * @docid
-      * @type object
-      * @public
-      */
-     // eslint-disable-next-line spellcheck/spell-checker
-     langParams?: LangParams;
+    group?: GroupDescriptor<TItem> | Array<GroupDescriptor<TItem>>;
+    /**
+     * @docid
+     * @public
+     */
+    // eslint-disable-next-line spellcheck/spell-checker
+    langParams?: LangParams;
     /**
      * @docid
      * @type_function_param1 dataItem:object
@@ -168,6 +168,7 @@ export interface DataSourceOptions<
 /**
  * @docid
  * @public
+ * @options DataSourceOptions
  */
 export default class DataSource<
     TItem = any,

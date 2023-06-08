@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/validation_group.d.ts)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -49,6 +49,7 @@ export type OptionChangedEvent = EventInfo<dxValidationGroup> & ChangedOptionInf
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
+ * @docid
  */
 export interface dxValidationGroupOptions extends DOMComponentOptions<dxValidationGroup> {
 }
@@ -119,28 +120,4 @@ export type Properties = dxValidationGroupOptions;
 /** @deprecated use Properties instead */
 export type Options = dxValidationGroupOptions;
 
-type EventProps<T> = Extract<keyof T, `on${any}`>;
-type CheckedEvents<TProps, TEvents extends { [K in EventProps<TProps>]: (e: any) => void } & Record<Exclude<keyof TEvents, keyof TProps>, never>> = TEvents;
 
-type EventsIntegrityCheckingHelper = CheckedEvents<Properties, Required<Events>>;
-
-type Events = {
-/**
- * @skip
- * @docid dxValidationGroupOptions.onDisposing
- * @type_function_param1 e:{ui/validation_group:DisposingEvent}
- */
-onDisposing?: ((e: DisposingEvent) => void);
-/**
- * @skip
- * @docid dxValidationGroupOptions.onInitialized
- * @type_function_param1 e:{ui/validation_group:InitializedEvent}
- */
-onInitialized?: ((e: InitializedEvent) => void);
-/**
- * @skip
- * @docid dxValidationGroupOptions.onOptionChanged
- * @type_function_param1 e:{ui/validation_group:OptionChangedEvent}
- */
-onOptionChanged?: ((e: OptionChangedEvent) => void);
-};

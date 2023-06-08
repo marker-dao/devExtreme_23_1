@@ -4,26 +4,26 @@ exports.default = void 0;
 var _query = _interopRequireDefault(require("../../data/query"));
 var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
-var _class = _interopRequireDefault(require("../../core/class"));
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _class.default.inherit({
-  ctor: function ctor(options) {
+var SelectionStrategy = /*#__PURE__*/function () {
+  function SelectionStrategy(options) {
     this.options = options;
     this._setOption('disabledItemKeys', []);
     this._clearItemKeys();
-  },
-  _clearItemKeys: function _clearItemKeys() {
+  }
+  var _proto = SelectionStrategy.prototype;
+  _proto._clearItemKeys = function _clearItemKeys() {
     this._setOption('addedItemKeys', []);
     this._setOption('removedItemKeys', []);
     this._setOption('removedItems', []);
     this._setOption('addedItems', []);
-  },
-  validate: _common.noop,
-  _setOption: function _setOption(name, value) {
+  };
+  _proto.validate = function validate() {};
+  _proto._setOption = function _setOption(name, value) {
     this.options[name] = value;
-  },
-  onSelectionChanged: function onSelectionChanged() {
+  };
+  _proto.onSelectionChanged = function onSelectionChanged() {
     var addedItemKeys = this.options.addedItemKeys;
     var removedItemKeys = this.options.removedItemKeys;
     var addedItems = this.options.addedItems;
@@ -40,27 +40,27 @@ var _default = _class.default.inherit({
       addedItems: addedItems,
       removedItems: removedItems
     });
-  },
-  equalKeys: function equalKeys(key1, key2) {
+  };
+  _proto.equalKeys = function equalKeys(key1, key2) {
     if (this.options.equalByReference) {
       if ((0, _type.isObject)(key1) && (0, _type.isObject)(key2)) {
         return key1 === key2;
       }
     }
     return (0, _common.equalByValue)(key1, key2);
-  },
-  getSelectableItems: function getSelectableItems(items) {
+  };
+  _proto.getSelectableItems = function getSelectableItems(items) {
     return items.filter(function (item) {
       return !(item !== null && item !== void 0 && item.disabled);
     });
-  },
-  _clearSelection: function _clearSelection(keys, preserve, isDeselect, isSelectAll) {
+  };
+  _proto._clearSelection = function _clearSelection(keys, preserve, isDeselect, isSelectAll) {
     keys = keys || [];
     keys = Array.isArray(keys) ? keys : [keys];
     this.validate();
     return this.selectedItemKeys(keys, preserve, isDeselect, isSelectAll);
-  },
-  _removeTemplateProperty: function _removeTemplateProperty(remoteFilter) {
+  };
+  _proto._removeTemplateProperty = function _removeTemplateProperty(remoteFilter) {
     var _this = this;
     if (Array.isArray(remoteFilter)) {
       return remoteFilter.map(function (f) {
@@ -71,8 +71,8 @@ var _default = _class.default.inherit({
       delete remoteFilter.template;
     }
     return remoteFilter;
-  },
-  _loadFilteredData: function _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
+  };
+  _proto._loadFilteredData = function _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
     var filterLength = encodeURI(JSON.stringify(this._removeTemplateProperty(remoteFilter))).length;
     var needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
     var deferred = new _deferred.Deferred();
@@ -94,8 +94,8 @@ var _default = _class.default.inherit({
       }).fail(deferred.reject.bind(deferred));
     }
     return deferred;
-  },
-  updateSelectedItemKeyHash: function updateSelectedItemKeyHash(keys) {
+  };
+  _proto.updateSelectedItemKeyHash = function updateSelectedItemKeyHash(keys) {
     for (var i = 0; i < keys.length; i++) {
       var keyHash = (0, _common.getKeyHash)(keys[i]);
       if (!(0, _type.isObject)(keyHash)) {
@@ -104,16 +104,16 @@ var _default = _class.default.inherit({
         keyIndices.push(i);
       }
     }
-  },
-  _isAnyItemSelected: function _isAnyItemSelected(items) {
+  };
+  _proto._isAnyItemSelected = function _isAnyItemSelected(items) {
     for (var i = 0; i < items.length; i++) {
       if (this.options.isItemSelected(items[i])) {
         return undefined;
       }
     }
     return false;
-  },
-  _getFullSelectAllState: function _getFullSelectAllState() {
+  };
+  _proto._getFullSelectAllState = function _getFullSelectAllState() {
     var items = this.options.plainItems();
     var dataFilter = this.options.filter();
     var selectedItems = this.options.ignoreDisabledItems ? this.options.selectedItems : this.options.selectedItems.filter(function (item) {
@@ -131,8 +131,8 @@ var _default = _class.default.inherit({
       return true;
     }
     return undefined;
-  },
-  _getVisibleSelectAllState: function _getVisibleSelectAllState() {
+  };
+  _proto._getVisibleSelectAllState = function _getVisibleSelectAllState() {
     var items = this.getSelectableItems(this.options.plainItems());
     var hasSelectedItems = false;
     var hasUnselectedItems = false;
@@ -153,8 +153,9 @@ var _default = _class.default.inherit({
     } else {
       return false;
     }
-  }
-});
-exports.default = _default;
+  };
+  return SelectionStrategy;
+}();
+exports.default = SelectionStrategy;
 module.exports = exports.default;
 module.exports.default = exports.default;

@@ -1,6 +1,5 @@
 import { getHeight, getWidth } from '../core/utils/size';
 import $ from '../core/renderer';
-import { Component } from '../core/component';
 import Action from '../core/action';
 import devices from '../core/devices';
 import config from '../core/config';
@@ -36,26 +35,10 @@ var DX_DIALOG_MESSAGE_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-message");
 var DX_DIALOG_BUTTONS_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-buttons");
 var DX_DIALOG_BUTTON_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-button");
 var DX_BUTTON_CLASSNAME = 'dx-button';
-export var FakeDialogComponent = Component.inherit({
-  ctor: function ctor(element, options) {
-    this.callBase(options);
-  },
-  _defaultOptionsRules: function _defaultOptionsRules() {
-    return this.callBase().concat([{
-      device: {
-        platform: 'ios'
-      },
-      options: {
-        width: 276
-      }
-    }]);
-  }
-});
 export var custom = function custom(options) {
   var _options$title;
   var deferred = new Deferred();
-  var defaultOptions = new FakeDialogComponent().option();
-  options = extend(defaultOptions, options);
+  options = options || {};
   var $element = $('<div>').addClass(DX_DIALOG_CLASSNAME).appendTo(getViewport());
   var isMessageDefined = ('message' in options);
   var isMessageHtmlDefined = ('messageHtml' in options);
@@ -145,9 +128,12 @@ export var custom = function custom(options) {
   }
   popupInstance.$wrapper().addClass(DX_DIALOG_ROOT_CLASSNAME);
   function show() {
-    if (devices.real().platform === 'android') {
-      var isPortrait = getHeight(window) > getWidth(window);
-      var width = isPortrait ? '80%' : '60%';
+    var isPhone = devices.real().deviceType === 'phone';
+    if (isPhone) {
+      var windowHeight = getHeight(window);
+      var windowWidth = getWidth(window);
+      var isPortrait = windowHeight > windowWidth;
+      var width = isPortrait ? '90%' : '60%';
       popupInstance.option({
         width
       });
@@ -160,8 +146,8 @@ export var custom = function custom(options) {
     popupInstance.hide();
   }
   return {
-    show: show,
-    hide: hide
+    show,
+    hide
   };
 };
 export var alert = function alert(messageHtml) {

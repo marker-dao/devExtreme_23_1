@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.zh-tw.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -70,6 +70,12 @@
             "dxDateBox-simulatedDataPickerTitleDate": "選擇日期",
             "dxDateBox-simulatedDataPickerTitleDateTime": "選擇日期和時間",
             "dxDateBox-validation-datetime": "值必須是日期或時間",
+            "dxDateRangeBox-invalidStartDateMessage": "Start value must be a date",
+            "dxDateRangeBox-invalidEndDateMessage": "End value must be a date",
+            "dxDateRangeBox-startDateOutOfRangeMessage": "Start date is out of range",
+            "dxDateRangeBox-endDateOutOfRangeMessage": "End date is out of range",
+            "dxDateRangeBox-startDateLabel": "開始日期",
+            "dxDateRangeBox-endDateLabel": "結束日期",
             "dxFileUploader-selectFile": "選擇文件",
             "dxFileUploader-dropFile": "或者把文件放在此處",
             "dxFileUploader-bytes": "bytes",

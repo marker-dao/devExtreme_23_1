@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/selection/selection.strategy.deferred.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,11 +11,11 @@ import SelectionStrategy from './selection.strategy';
 import errors from '../widget/ui.errors';
 import dataQuery from '../../data/query';
 import { Deferred } from '../../core/utils/deferred';
-export default SelectionStrategy.inherit({
-  getSelectedItems: function getSelectedItems() {
+export default class DeferredStrategy extends SelectionStrategy {
+  getSelectedItems() {
     return this._loadFilteredData(this.options.selectionFilter);
-  },
-  getSelectedItemKeys: function getSelectedItemKeys() {
+  }
+  getSelectedItemKeys() {
     var d = new Deferred();
     var that = this;
     var key = this.options.key();
@@ -27,8 +27,8 @@ export default SelectionStrategy.inherit({
       d.resolve(keys);
     }).fail(d.reject);
     return d.promise();
-  },
-  selectedItemKeys: function selectedItemKeys(keys, preserve, isDeselect, isSelectAll) {
+  }
+  selectedItemKeys(keys, preserve, isDeselect, isSelectAll) {
     if (isSelectAll) {
       var filter = this.options.filter();
       var needResetSelectionFilter = !filter || JSON.stringify(filter) === JSON.stringify(this.options.selectionFilter) && isDeselect;
@@ -51,38 +51,38 @@ export default SelectionStrategy.inherit({
     }
     this.onSelectionChanged();
     return new Deferred().resolve();
-  },
-  setSelectedItems: function setSelectedItems(keys) {
+  }
+  setSelectedItems(keys) {
     this._setOption('selectionFilter', null);
     for (var i = 0; i < keys.length; i++) {
       this.addSelectedItem(keys[i]);
     }
-  },
-  isItemDataSelected: function isItemDataSelected(itemData) {
+  }
+  isItemDataSelected(itemData) {
     return this.isItemKeySelected(itemData);
-  },
-  isItemKeySelected: function isItemKeySelected(itemData) {
+  }
+  isItemKeySelected(itemData) {
     var selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) {
       return true;
     }
     return !!dataQuery([itemData]).filter(selectionFilter).toArray().length;
-  },
-  _getKeyExpr: function _getKeyExpr() {
+  }
+  _getKeyExpr() {
     var keyField = this.options.key();
     if (Array.isArray(keyField) && keyField.length === 1) {
       return keyField[0];
     }
     return keyField;
-  },
-  _normalizeKey: function _normalizeKey(key) {
+  }
+  _normalizeKey(key) {
     var keyExpr = this.options.key();
     if (Array.isArray(keyExpr) && keyExpr.length === 1) {
       return key[keyExpr[0]];
     }
     return key;
-  },
-  _getFilterByKey: function _getFilterByKey(key) {
+  }
+  _getFilterByKey(key) {
     var keyField = this._getKeyExpr();
     var filter = [keyField, '=', this._normalizeKey(key)];
     if (Array.isArray(keyField)) {
@@ -95,22 +95,22 @@ export default SelectionStrategy.inherit({
       }
     }
     return filter;
-  },
-  addSelectedItem: function addSelectedItem(key, isSelectAll, skipFilter) {
+  }
+  addSelectedItem(key, isSelectAll, skipFilter) {
     var filter = this._getFilterByKey(key);
     this._addSelectionFilter(false, filter, isSelectAll, skipFilter);
-  },
-  removeSelectedItem: function removeSelectedItem(key) {
+  }
+  removeSelectedItem(key) {
     var filter = this._getFilterByKey(key);
     this._addSelectionFilter(true, filter);
-  },
-  validate: function validate() {
+  }
+  validate() {
     var key = this.options.key;
     if (key && key() === undefined) {
       throw errors.Error('E1042', 'Deferred selection');
     }
-  },
-  _findSubFilter: function _findSubFilter(selectionFilter, filter) {
+  }
+  _findSubFilter(selectionFilter, filter) {
     if (!selectionFilter) return -1;
     var filterString = JSON.stringify(filter);
     for (var index = 0; index < selectionFilter.length; index++) {
@@ -120,14 +120,14 @@ export default SelectionStrategy.inherit({
       }
     }
     return -1;
-  },
-  _isLastSubFilter: function _isLastSubFilter(selectionFilter, filter) {
+  }
+  _isLastSubFilter(selectionFilter, filter) {
     if (selectionFilter && filter) {
       return this._findSubFilter(selectionFilter, filter) === selectionFilter.length - 1 || this._findSubFilter([selectionFilter], filter) === 0;
     }
     return false;
-  },
-  _addFilterOperator: function _addFilterOperator(selectionFilter, filterOperator) {
+  }
+  _addFilterOperator(selectionFilter, filterOperator) {
     if (selectionFilter.length > 1 && isString(selectionFilter[1]) && selectionFilter[1] !== filterOperator) {
       selectionFilter = [selectionFilter];
     }
@@ -135,14 +135,14 @@ export default SelectionStrategy.inherit({
       selectionFilter.push(filterOperator);
     }
     return selectionFilter;
-  },
-  _denormalizeFilter: function _denormalizeFilter(filter) {
+  }
+  _denormalizeFilter(filter) {
     if (filter && isString(filter[0])) {
       filter = [filter];
     }
     return filter;
-  },
-  _isOnlyNegativeFiltersLeft: function _isOnlyNegativeFiltersLeft(filters) {
+  }
+  _isOnlyNegativeFiltersLeft(filters) {
     return filters.every((filterItem, i) => {
       if (i % 2 === 0) {
         return Array.isArray(filterItem) && filterItem[0] === '!';
@@ -150,8 +150,8 @@ export default SelectionStrategy.inherit({
         return filterItem === 'and';
       }
     });
-  },
-  _addSelectionFilter: function _addSelectionFilter(isDeselect, filter, isSelectAll, skipFilter) {
+  }
+  _addSelectionFilter(isDeselect, filter, isSelectAll, skipFilter) {
     var _selectionFilter;
     var that = this;
     var currentFilter = isDeselect ? ['!', filter] : filter;
@@ -175,14 +175,14 @@ export default SelectionStrategy.inherit({
     }
     selectionFilter = that._normalizeFilter(selectionFilter);
     that._setOption('selectionFilter', !isDeselect && !selectionFilter.length ? null : selectionFilter);
-  },
-  _normalizeFilter: function _normalizeFilter(filter) {
+  }
+  _normalizeFilter(filter) {
     if (filter && filter.length === 1) {
       filter = filter[0];
     }
     return filter;
-  },
-  _removeFilterByIndex: function _removeFilterByIndex(filter, filterIndex, isSelectAll) {
+  }
+  _removeFilterByIndex(filter, filterIndex, isSelectAll) {
     var operation = filter[1];
     if (filterIndex > 0) {
       filter.splice(filterIndex - 1, 2);
@@ -192,11 +192,11 @@ export default SelectionStrategy.inherit({
     if (isSelectAll && operation === 'and') {
       filter.splice(0, filter.length);
     }
-  },
-  _isSimpleKeyFilter: function _isSimpleKeyFilter(filter, key) {
+  }
+  _isSimpleKeyFilter(filter, key) {
     return filter.length === 3 && filter[0] === key && filter[1] === '=';
-  },
-  _isKeyFilter: function _isKeyFilter(filter) {
+  }
+  _isKeyFilter(filter) {
     if (filter.length === 2 && filter[0] === '!') {
       return this._isKeyFilter(filter[1]);
     }
@@ -216,8 +216,8 @@ export default SelectionStrategy.inherit({
       return true;
     }
     return this._isSimpleKeyFilter(filter, keyField);
-  },
-  _hasKeyFiltersOnlyStartingFromIndex: function _hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex) {
+  }
+  _hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex) {
     if (filterIndex >= 0) {
       for (var i = filterIndex; i < selectionFilter.length; i++) {
         if (typeof selectionFilter[i] !== 'string' && !this._isKeyFilter(selectionFilter[i])) {
@@ -227,8 +227,8 @@ export default SelectionStrategy.inherit({
       return true;
     }
     return false;
-  },
-  _removeSameFilter: function _removeSameFilter(selectionFilter, filter, inverted, isSelectAll) {
+  }
+  _removeSameFilter(selectionFilter, filter, inverted, isSelectAll) {
     filter = inverted ? ['!', filter] : filter;
     if (JSON.stringify(filter) === JSON.stringify(selectionFilter)) {
       selectionFilter.splice(0, selectionFilter.length);
@@ -254,8 +254,8 @@ export default SelectionStrategy.inherit({
       }
       return -1;
     }
-  },
-  getSelectAllState: function getSelectAllState() {
+  }
+  getSelectAllState() {
     var filter = this.options.filter();
     var selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) return true;
@@ -270,4 +270,4 @@ export default SelectionStrategy.inherit({
     }
     return undefined;
   }
-});
+}

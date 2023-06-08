@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/box.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -66,11 +66,7 @@ var setFlexProp = function setFlexProp(element, prop, value) {
     }
     var cssName = (0, _inflector.dasherize)(prop);
     var styleExpr = cssName + ': ' + value + ';';
-    if (!element.attributes.style) {
-      element.setAttribute('style', styleExpr);
-    } else if (element.attributes.style.value.indexOf(styleExpr) < 0) {
-      element.attributes.style.value += ' ' + styleExpr;
-    }
+    (0, _style.setStyle)(element, styleExpr, false);
   }
 };
 var BoxItem = /*#__PURE__*/function (_CollectionWidgetItem) {

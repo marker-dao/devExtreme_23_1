@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/drop_down_editor/ui.drop_down_list.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -94,14 +94,7 @@ var DropDownList = DropDownEditor.inherit({
       * @name dxDropDownListOptions.fieldTemplate
       * @hidden
       */
-      /**
-      * @name dxDropDownListOptions.fieldRender
-      * @hidden
-      */
-      /**
-      * @name dxDropDownListOptions.contentRender
-      * @hidden
-      */
+
       /**
       * @name dxDropDownListOptions.applyValueMode
       * @hidden

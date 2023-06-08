@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.navigator.js)
-* Version: 23.1.1
-* Build date: Mon May 08 2023
+* Version: 23.1.3
+* Build date: Thu Jun 08 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -60,10 +60,10 @@ class Navigator extends Widget {
       type,
       stylingMode
     } = this.option();
-    var direction = rtlEnabled ? -1 : 1;
+    var direction = 1;
     this._prevButton = this._createComponent($('<div>'), Button, {
       focusStateEnabled: false,
-      icon: 'chevronleft',
+      icon: rtlEnabled ? 'chevronright' : 'chevronleft',
       onClick: e => {
         this._clickAction({
           direction: -direction,
@@ -77,7 +77,7 @@ class Navigator extends Widget {
     var $prevButton = this._prevButton.$element().addClass(CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS);
     this._nextButton = this._createComponent($('<div>'), Button, {
       focusStateEnabled: false,
-      icon: 'chevronright',
+      icon: rtlEnabled ? 'chevronleft' : 'chevronright',
       onClick: e => {
         this._clickAction({
           direction: direction,
