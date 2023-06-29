@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/scroll_view.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,25 +21,60 @@ import dxScrollable, {
     ScrollEventInfo,
 } from './scroll_view/ui.scrollable';
 
-/** @public */
+/**
+ * @docid _ui_scroll_view_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxScrollView>;
 
-/** @public */
+/**
+ * @docid _ui_scroll_view_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxScrollView>;
 
-/** @public */
+/**
+ * @docid _ui_scroll_view_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxScrollView> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_scroll_view_PullDownEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type PullDownEvent = EventInfo<dxScrollView>;
 
-/** @public */
+/**
+ * @docid _ui_scroll_view_ReachBottomEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ReachBottomEvent = EventInfo<dxScrollView>;
 
-/** @public */
+/**
+ * @docid _ui_scroll_view_ScrollEvent
+ * @public
+ * @type object
+ * @inherits ScrollEventInfo
+ */
 export type ScrollEvent = ScrollEventInfo<dxScrollView>;
 
-/** @public */
+/**
+ * @docid _ui_scroll_view_UpdatedEvent
+ * @public
+ * @type object
+ * @inherits ScrollEventInfo
+ */
 export type UpdatedEvent = ScrollEventInfo<dxScrollView>;
 
 /**

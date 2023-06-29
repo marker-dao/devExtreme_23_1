@@ -1,7 +1,7 @@
 "use strict";
 
 exports.default = void 0;
-var _module_widget = _interopRequireDefault(require("../__internal/grids/data_grid/module_widget"));
+var _m_widget = _interopRequireDefault(require("../__internal/grids/data_grid/m_widget"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /**
  * @name dxDataGridColumn
@@ -37,7 +37,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @hidden
  * @return boolean
  */
-var _default = _module_widget.default;
+var _default = _m_widget.default;
 exports.default = _default;
 module.exports = exports.default;
 module.exports.default = exports.default;

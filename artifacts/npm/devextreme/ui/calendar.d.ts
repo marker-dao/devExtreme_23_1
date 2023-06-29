@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/calendar.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,16 +50,36 @@ export type WeekNumberRule = 'auto' | 'firstDay' | 'fullWeek' | 'firstFourDays';
 /** @public */
 export type ContentReadyEvent = EventInfo<dxCalendar>;
 
-/** @public */
+/**
+ * @docid _ui_calendar_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxCalendar>;
 
-/** @public */
+/**
+ * @docid _ui_calendar_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxCalendar>;
 
-/** @public */
+/**
+ * @docid _ui_calendar_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxCalendar> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_calendar_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ValueChangedInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxCalendar, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent | Event> & ValueChangedInfo;
 
 /** @public */

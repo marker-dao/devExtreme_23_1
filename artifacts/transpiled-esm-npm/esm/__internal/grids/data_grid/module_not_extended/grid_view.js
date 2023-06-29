@@ -1,3 +1,3 @@
-import { gridViewModule } from '../../../../ui/grid_core/ui.grid_core.grid_view';
-import gridCore from '../module_core';
+import { gridViewModule } from '../../../grids/grid_core/views/m_grid_view';
+import gridCore from '../m_core';
 gridCore.registerModule('gridView', gridViewModule);

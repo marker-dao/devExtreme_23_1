@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/validation_group.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -37,13 +37,28 @@ export {
     ValidationStatus,
 };
 
-/** @public */
+/**
+ * @docid _ui_validation_group_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxValidationGroup>;
 
-/** @public */
+/**
+ * @docid _ui_validation_group_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxValidationGroup>;
 
-/** @public */
+/**
+ * @docid _ui_validation_group_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxValidationGroup> & ChangedOptionInfo;
 
 /**

@@ -1,13 +1,13 @@
 "use strict";
 
-var _module = require("../../__internal/grids/grid_core/virtual_columns/module");
-Object.keys(_module).forEach(function (key) {
+var _m_virtual_columns = require("../../__internal/grids/grid_core/virtual_columns/m_virtual_columns");
+Object.keys(_m_virtual_columns).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module[key]) return;
+  if (key in exports && exports[key] === _m_virtual_columns[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module[key];
+      return _m_virtual_columns[key];
     }
   });
 });

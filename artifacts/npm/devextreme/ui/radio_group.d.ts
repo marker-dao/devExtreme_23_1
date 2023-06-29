@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/radio_group.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,19 +32,44 @@ export {
     Orientation,
 };
 
-/** @public */
+/**
+ * @docid _ui_radio_group_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxRadioGroup>;
 
-/** @public */
+/**
+ * @docid _ui_radio_group_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxRadioGroup>;
 
-/** @public */
+/**
+ * @docid _ui_radio_group_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxRadioGroup>;
 
-/** @public */
+/**
+ * @docid _ui_radio_group_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxRadioGroup> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_radio_group_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ValueChangedInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxRadioGroup, KeyboardEvent | MouseEvent | PointerEvent | Event> & ValueChangedInfo;
 
 /**

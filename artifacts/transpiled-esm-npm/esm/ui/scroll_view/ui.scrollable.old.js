@@ -311,9 +311,8 @@ var Scrollable = DOMComponent.inherit({
   container: function container() {
     return getPublicElement(this._$container);
   },
-  scrollOffset() {
-    var scrollOffset = this._strategy._getScrollOffset();
-    return scrollOffset;
+  scrollOffset: function scrollOffset() {
+    return this._strategy._getScrollOffset();
   },
   _isRtlNativeStrategy: function _isRtlNativeStrategy() {
     var {

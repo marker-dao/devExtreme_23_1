@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _module_base = require("../../__internal/grids/pivot_grid/field_chooser/module_base");
+var _m_field_chooser_base = require("../../__internal/grids/pivot_grid/field_chooser/m_field_chooser_base");
 // deprecated
-var _default = _module_base.FieldChooserBase;
+var _default = _m_field_chooser_base.FieldChooserBase;
 exports.default = _default;
 module.exports = exports.default;
 module.exports.default = exports.default;

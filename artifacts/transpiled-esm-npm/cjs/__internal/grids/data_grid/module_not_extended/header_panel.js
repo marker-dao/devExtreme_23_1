@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.HeaderPanel = void 0;
-var _module = require("../../grid_core/header_panel/module");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_header_panel = require("../../../grids/grid_core/header_panel/m_header_panel");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var HeaderPanel = _module.headerPanelModule.views.headerPanel;
+var HeaderPanel = _m_header_panel.headerPanelModule.views.headerPanel;
 exports.HeaderPanel = HeaderPanel;
-_module_core.default.registerModule('headerPanel', _module.headerPanelModule);
+_m_core.default.registerModule('headerPanel', _m_header_panel.headerPanelModule);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/drop_down_button.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,32 +48,84 @@ export {
     ButtonStyle,
 };
 
-/** @public */
+/**
+ * @docid _ui_drop_down_button_ButtonClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ButtonClickEvent = NativeEventInfo<dxDropDownButton, KeyboardEvent | MouseEvent | PointerEvent> & {
+    /**
+     * @docid _ui_drop_down_button_ButtonClickEvent.selectedItem
+     * @type object
+     */
     readonly selectedItem?: any;
 };
 
-/** @public */
+/**
+ * @docid _ui_drop_down_button_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxDropDownButton>;
 
-/** @public */
+/**
+ * @docid _ui_drop_down_button_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxDropDownButton>;
 
-/** @public */
+/**
+ * @docid _ui_drop_down_button_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxDropDownButton>;
 
-/** @public */
+/**
+ * @docid _ui_drop_down_button_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ItemClickEvent = NativeEventInfo<dxDropDownButton, KeyboardEvent | MouseEvent | PointerEvent> & {
+    /**
+     * @docid _ui_drop_down_button_ItemClickEvent.itemData
+     * @type object
+     */
     readonly itemData?: any;
+    /** @docid _ui_drop_down_button_ItemClickEvent.itemElement */
     readonly itemElement: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_drop_down_button_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxDropDownButton> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_drop_down_button_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type SelectionChangedEvent = EventInfo<dxDropDownButton> & {
+    /**
+     * @docid _ui_drop_down_button_SelectionChangedEvent.item
+     * @type object
+     */
     readonly item: any;
+    /**
+     * @docid _ui_drop_down_button_SelectionChangedEvent.previousItem
+     * @type object
+     */
     readonly previousItem: any;
 };
 
@@ -305,10 +357,13 @@ export interface dxDropDownButtonItem extends dxListItem {
      * @docid
      * @default null
      * @type function
-     * @type_function_param1 e:object
+     * @type_function_param1 e:{ui/drop_down_button:ItemClickEvent}
      * @type_function_param1_field component:dxDropDownButton
+     * @type_function_param1_field element:any
      * @type_function_param1_field event:event
      * @type_function_param1_field itemData:object
+     * @type_function_param1_field itemElement:DxElement
+     * @type_function_param1_field model:any
      * @public
      */
      onClick?: ((e: ItemClickEvent) => void) | string;

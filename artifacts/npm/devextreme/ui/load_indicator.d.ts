@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/load_indicator.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,16 +16,36 @@ import Widget, {
     WidgetOptions,
 } from './widget/ui.widget';
 
-/** @public */
+/**
+ * @docid _ui_load_indicator_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxLoadIndicator>;
 
-/** @public */
+/**
+ * @docid _ui_load_indicator_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxLoadIndicator>;
 
-/** @public */
+/**
+ * @docid _ui_load_indicator_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxLoadIndicator>;
 
-/** @public */
+/**
+ * @docid _ui_load_indicator_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxLoadIndicator> & ChangedOptionInfo;
 
 /**

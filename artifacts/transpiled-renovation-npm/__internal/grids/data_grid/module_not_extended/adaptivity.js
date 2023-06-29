@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.adaptivity");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_adaptivity = require("../../../grids/grid_core/adaptivity/m_adaptivity");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('adaptivity', _uiGrid_core.adaptivityModule);
+_m_core.default.registerModule('adaptivity', _m_adaptivity.adaptivityModule);

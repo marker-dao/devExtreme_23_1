@@ -8,7 +8,6 @@ import Overlay from '../overlay/ui.overlay';
 import { render } from '../widget/utils.ink_ripple';
 import { isMaterial } from '../themes';
 import { isPlainObject } from '../../core/utils/type';
-import { getWindow } from '../../core/utils/window';
 var FAB_CLASS = 'dx-fa-button';
 var FAB_ICON_CLASS = 'dx-fa-button-icon';
 var FAB_LABEL_CLASS = 'dx-fa-button-label';
@@ -23,9 +22,7 @@ class SpeedDialItem extends Overlay {
       callOverlayRenderShading: false,
       width: 'auto',
       zIndex: 1500,
-      _observeContentResize: false,
-      container: this.$element(),
-      visualContainer: getWindow()
+      _observeContentResize: false
     });
   }
   _defaultOptionsRules() {
@@ -37,6 +34,10 @@ class SpeedDialItem extends Overlay {
         useInkRipple: true
       }
     }]);
+  }
+  _moveToContainer() {
+    this._$wrapper.appendTo(this.$element());
+    this._$content.appendTo(this._$wrapper);
   }
   _render() {
     this.$element().addClass(FAB_CLASS);

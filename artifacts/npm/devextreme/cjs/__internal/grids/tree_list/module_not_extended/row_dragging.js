@@ -1,14 +1,14 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/module_not_extended/row_dragging.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.row_dragging");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_row_dragging = require("../../../grids/grid_core/row_dragging/m_row_dragging");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('rowDragging', _uiGrid_core.rowDraggingModule);
+_m_core.default.registerModule('rowDragging', _m_row_dragging.rowDraggingModule);

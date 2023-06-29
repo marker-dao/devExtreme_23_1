@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/bullet.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,34 +22,84 @@ import BaseSparkline, {
     BaseSparklineOptions,
 } from './sparklines/base_sparkline';
 
-/** @public */
+/**
+ * @docid _viz_bullet_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxBullet>;
 
-/** @public */
+/**
+ * @docid _viz_bullet_DrawnEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DrawnEvent = EventInfo<dxBullet>;
 
-/** @public */
+/**
+ * @docid _viz_bullet_ExportedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ExportedEvent = EventInfo<dxBullet>;
 
-/** @public */
+/**
+ * @docid _viz_bullet_ExportingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ExportInfo
+ */
 export type ExportingEvent = EventInfo<dxBullet> & ExportInfo;
 
-/** @public */
+/**
+ * @docid _viz_bullet_FileSavingEvent
+ * @public
+ * @type object
+ * @inherits FileSavingEventInfo
+ */
 export type FileSavingEvent = FileSavingEventInfo<dxBullet>;
 
-/** @public */
+/**
+ * @docid _viz_bullet_IncidentOccurredEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,IncidentInfo
+ */
 export type IncidentOccurredEvent = EventInfo<dxBullet> & IncidentInfo;
 
-/** @public */
+/**
+ * @docid _viz_bullet_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxBullet>;
 
-/** @public */
+/**
+ * @docid _viz_bullet_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxBullet> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _viz_bullet_TooltipHiddenEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type TooltipHiddenEvent = EventInfo<dxBullet>;
 
-/** @public */
+/**
+ * @docid _viz_bullet_TooltipShownEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type TooltipShownEvent = EventInfo<dxBullet>;
 
 /**

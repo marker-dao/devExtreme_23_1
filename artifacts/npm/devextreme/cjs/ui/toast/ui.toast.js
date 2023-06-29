@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toast/ui.toast.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,6 @@
 
 exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
-var _window = require("../../core/utils/window");
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 var _ready_callbacks = _interopRequireDefault(require("../../core/utils/ready_callbacks"));
@@ -21,7 +20,6 @@ var _component_registrator = _interopRequireDefault(require("../../core/componen
 var _ui = _interopRequireDefault(require("../overlay/ui.overlay"));
 var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
 var ready = _ready_callbacks.default.add;
 
 // STYLE toast
@@ -72,6 +70,7 @@ var DEFAULT_BOUNDARY_OFFSET = {
   h: 0,
   v: 0
 };
+var DEFAULT_MARGIN = 20;
 ready(function () {
   _events_engine.default.subscribeGlobal(_dom_adapter.default.getDocument(), _pointer.default.down, function (e) {
     for (var i = TOAST_STACK.length - 1; i >= 0; i--) {
@@ -117,66 +116,44 @@ var Toast = _ui.default.inherit({
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
     return this.callBase().concat([{
-      device: {
-        platform: 'android'
-      },
-      options: {
-        hideOnOutsideClick: true,
-        width: 'auto',
-        position: {
-          at: 'bottom left',
-          my: 'bottom left',
-          offset: '20 -20'
-        },
-        animation: {
-          show: {
-            type: 'slide',
-            duration: 200,
-            from: {
-              position: {
-                my: 'top',
-                at: 'bottom',
-                of: window
-              }
-            }
-          },
-          hide: {
-            type: 'slide',
-            duration: 200,
-            to: {
-              position: {
-                my: 'top',
-                at: 'bottom',
-                of: window
-              }
-            }
-          }
-        }
-      }
-    }, {
       device: function device(_device) {
-        var isPhone = _device.deviceType === 'phone';
-        var isAndroid = _device.platform === 'android';
-        return isPhone && isAndroid;
+        return _device.deviceType === 'phone';
       },
       options: {
-        width: '100vw',
-        position: {
-          at: 'bottom center',
-          my: 'bottom center',
-          offset: '0 0'
-        }
+        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        hideOnOutsideClick: true
       }
     }, {
       device: function device(_device2) {
-        return _device2.deviceType === 'phone';
+        return _device2.deviceType === 'tablet';
       },
       options: {
-        width: '100vw'
+        width: 'auto',
+        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        hideOnOutsideClick: true
       }
     }, {
-      device: function device() {
-        return (0, _themes.isMaterial)();
+      device: function device(_device3) {
+        return (0, _themes.isMaterial)() && _device3.deviceType === 'phone';
+      },
+      options: {
+        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        displayTime: 4000,
+        hideOnOutsideClick: true
+      }
+    }, {
+      device: function device(_device4) {
+        return (0, _themes.isMaterial)() && _device4.deviceType === 'tablet';
+      },
+      options: {
+        width: 'auto',
+        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        hideOnOutsideClick: true,
+        displayTime: 4000
+      }
+    }, {
+      device: function device(_device5) {
+        return (0, _themes.isMaterial)() && _device5.deviceType === 'desktop';
       },
       options: {
         minWidth: 344,

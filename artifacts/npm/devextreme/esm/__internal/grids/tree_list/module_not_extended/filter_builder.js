@@ -1,11 +1,11 @@
 /**
 * DevExtreme (esm/__internal/grids/tree_list/module_not_extended/filter_builder.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import { filterBuilderModule } from '../../../../ui/grid_core/ui.grid_core.filter_builder';
-import core from '../module_core';
+import { filterBuilderModule } from '../../../grids/grid_core/filter/m_filter_builder';
+import core from '../m_core';
 core.registerModule('filterBuilder', filterBuilderModule);

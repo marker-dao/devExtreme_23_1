@@ -1,15 +1,14 @@
 /**
 * DevExtreme (esm/core/utils/size.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import domAdapter from '../dom_adapter';
-import { hasVisualViewport, getVisualViewportSizes } from './visual_viewport';
-import { isWindow, isString, isNumeric, isRenderer } from './type';
-import { getWindow } from '../utils/window';
+import { getWindow } from '../../core/utils/window';
+import domAdapter from '../../core/dom_adapter';
+import { isWindow, isString, isNumeric, isRenderer } from '../utils/type';
 var window = getWindow();
 var SPECIAL_HEIGHT_VALUES = ['auto', 'none', 'inherit', 'initial'];
 var getSizeByStyles = function getSizeByStyles(elementStyles, styles) {
@@ -267,12 +266,6 @@ var elementSize = function elementSize(el, sizeProperty, value) {
   }
   if (!el) return;
   if (isWindow(el)) {
-    var isVisualViewportAvailable = hasVisualViewport();
-    var shouldUseVisualViewport = isVisualViewportAvailable && ['width', 'height'].includes(sizeProperty);
-    if (shouldUseVisualViewport) {
-      var size = getVisualViewportSizes()[sizeProperty];
-      return size;
-    }
     return isOuter ? el['inner' + partialName] : domAdapter.getDocumentElement()['client' + partialName];
   }
   if (domAdapter.isDocument(el)) {

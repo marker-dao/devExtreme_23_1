@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/collection/ui.collection_widget.base.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,8 +29,14 @@ import Widget, {
 
 export type ItemLike = string | CollectionWidgetItem | any;
 
+/**
+ * @docid
+ * @hidden
+ */
 export interface SelectionChangedInfo<TItem extends ItemLike = any> {
+    /** @docid */
     readonly addedItems: Array<TItem>;
+    /** @docid */
     readonly removedItems: Array<TItem>;
 }
 

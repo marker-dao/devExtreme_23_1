@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popup/ui.popup.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -432,7 +432,7 @@ var Popup = _ui.default.inherit({
   _getToolbarName: function _getToolbarName() {
     return 'dxToolbarBase';
   },
-  _toggleVisibilityAnimate: function _toggleVisibilityAnimate(visible) {
+  _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
     return this.callBase(visible);
   },
   _hide: function _hide() {
@@ -801,16 +801,7 @@ var Popup = _ui.default.inherit({
       this._renderFullscreenWidthClass();
     }
   },
-  _renderGeometryAsynchronously: function _renderGeometryAsynchronously() {
-    this._renderGeometry({
-      isDimensionChange: true
-    });
-  },
   _dimensionChanged: function _dimensionChanged() {
-    var shouldUseVisualViewport = this._shouldUseVisualViewport();
-    if (shouldUseVisualViewport) {
-      return;
-    }
     this._renderGeometry({
       isDimensionChange: true
     });

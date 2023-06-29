@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.virtual_columns");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_virtual_columns = require("../../../grids/grid_core/virtual_columns/m_virtual_columns");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('virtualColumns', _uiGrid_core.virtualColumnsModule);
+_m_core.default.registerModule('virtualColumns', _m_virtual_columns.virtualColumnsModule);

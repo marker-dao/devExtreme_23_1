@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/file_uploader.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,78 +29,178 @@ export type FileUploadMode = 'instantly' | 'useButtons' | 'useForm';
 /** @public */
 export type UploadHttpMethod = 'POST' | 'PUT';
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_BeforeSendEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type BeforeSendEvent = EventInfo<dxFileUploader> & {
+    /** @docid _ui_file_uploader_BeforeSendEvent.request */
     readonly request: XMLHttpRequest;
+    /** @docid _ui_file_uploader_BeforeSendEvent.file */
     readonly file: File;
+    /** @docid _ui_file_uploader_BeforeSendEvent.uploadInfo */
     readonly uploadInfo?: UploadInfo;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxFileUploader>;
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxFileUploader>;
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_DropZoneEnterEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type DropZoneEnterEvent = NativeEventInfo<dxFileUploader, PointerEvent | MouseEvent> & {
+    /** @docid _ui_file_uploader_DropZoneEnterEvent.dropZoneElement */
     readonly dropZoneElement: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_DropZoneLeaveEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type DropZoneLeaveEvent = NativeEventInfo<dxFileUploader, PointerEvent | MouseEvent> & {
+    /** @docid _ui_file_uploader_DropZoneLeaveEvent.dropZoneElement */
     readonly dropZoneElement: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_FilesUploadedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type FilesUploadedEvent = EventInfo<dxFileUploader>;
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxFileUploader>;
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxFileUploader> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_ProgressEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ProgressEvent = NativeEventInfo<dxFileUploader> & {
+    /** @docid _ui_file_uploader_ProgressEvent.file */
     readonly file: File;
+    /** @docid _ui_file_uploader_ProgressEvent.segmentSize */
     readonly segmentSize: number;
+    /** @docid _ui_file_uploader_ProgressEvent.bytesLoaded */
     readonly bytesLoaded: number;
+    /** @docid _ui_file_uploader_ProgressEvent.bytesTotal */
     readonly bytesTotal: number;
+    /** @docid _ui_file_uploader_ProgressEvent.request */
     readonly request: XMLHttpRequest;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_UploadAbortedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type UploadAbortedEvent = NativeEventInfo<dxFileUploader> & {
+    /** @docid _ui_file_uploader_UploadAbortedEvent.file */
     readonly file: File;
+    /** @docid _ui_file_uploader_UploadAbortedEvent.request */
     readonly request: XMLHttpRequest;
+    /** @docid _ui_file_uploader_UploadAbortedEvent.message */
     message: string;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_UploadedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type UploadedEvent = NativeEventInfo<dxFileUploader> & {
+    /** @docid _ui_file_uploader_UploadedEvent.file */
     readonly file: File;
+    /** @docid _ui_file_uploader_UploadedEvent.request */
     readonly request: XMLHttpRequest;
+    /** @docid _ui_file_uploader_UploadedEvent.message */
     message: string;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_UploadErrorEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type UploadErrorEvent = NativeEventInfo<dxFileUploader> & {
+    /** @docid _ui_file_uploader_UploadErrorEvent.file */
     readonly file: File;
+    /** @docid _ui_file_uploader_UploadErrorEvent.request */
     readonly request: XMLHttpRequest;
+    /** @docid _ui_file_uploader_UploadErrorEvent.error */
     readonly error: any;
+    /** @docid _ui_file_uploader_UploadErrorEvent.message */
     message: string;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_UploadStartedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type UploadStartedEvent = NativeEventInfo<dxFileUploader> & {
+    /** @docid _ui_file_uploader_UploadStartedEvent.file */
     readonly file: File;
+    /** @docid _ui_file_uploader_UploadStartedEvent.request */
     readonly request: XMLHttpRequest;
 };
 
-/** @public */
+/**
+ * @docid _ui_file_uploader_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxFileUploader> & {
+    /**
+     * @docid _ui_file_uploader_ValueChangedEvent.value
+     * @type Array<File>
+     */
     readonly value?: Array<File>;
+    /**
+     * @docid _ui_file_uploader_ValueChangedEvent.previousValue
+     * @type Array<File>
+     */
     readonly previousValue?: Array<File>;
 };
 

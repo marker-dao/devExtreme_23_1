@@ -1,13 +1,13 @@
 "use strict";
 
-var _module = require("../../__internal/grids/pivot_grid/data_area/module");
-Object.keys(_module).forEach(function (key) {
+var _m_data_area = require("../../__internal/grids/pivot_grid/data_area/m_data_area");
+Object.keys(_m_data_area).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module[key]) return;
+  if (key in exports && exports[key] === _m_data_area[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module[key];
+      return _m_data_area[key];
     }
   });
 });

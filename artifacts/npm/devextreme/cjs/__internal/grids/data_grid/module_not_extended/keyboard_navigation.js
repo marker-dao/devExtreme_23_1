@@ -1,14 +1,14 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/module_not_extended/keyboard_navigation.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.keyboard_navigation");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_keyboard_navigation = require("../../../grids/grid_core/keyboard_navigation/m_keyboard_navigation");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('keyboardNavigation', _uiGrid_core.keyboardNavigationModule);
+_m_core.default.registerModule('keyboardNavigation', _m_keyboard_navigation.keyboardNavigationModule);

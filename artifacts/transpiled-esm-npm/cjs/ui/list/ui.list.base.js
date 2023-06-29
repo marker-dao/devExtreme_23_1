@@ -508,7 +508,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       duration: 200,
       complete: function () {
         this.updateDimensions();
-        this._updateLoadingState();
+        this._updateLoadingState(true);
         deferred.resolve();
       }.bind(this)
     });
@@ -742,7 +742,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       case 'scrollingEnabled':
       case 'pullRefreshEnabled':
         this._initScrollView();
-        this._updateLoadingState();
+        this._updateLoadingState(true);
         break;
       case 'nextButtonText':
       case 'onItemSwipe':

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/lookup.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -68,6 +68,15 @@ var Lookup = _ui.default.inherit({
     });
   },
   _getDefaultOptions: function _getDefaultOptions() {
+    var getSize = function getSize(side) {
+      var size;
+      if (_devices.default.real().deviceType === 'phone' && window.visualViewport) {
+        size = window.visualViewport[side];
+      } else {
+        size = side === 'width' ? (0, _size.getWidth)(window) : (0, _size.getHeight)(window);
+      }
+      return size * WINDOW_RATIO;
+    };
     return (0, _extend.extend)(this.callBase(), {
       placeholder: _message.default.format('Select'),
       searchPlaceholder: _message.default.format('Search'),
@@ -110,21 +119,21 @@ var Lookup = _ui.default.inherit({
       showDropDownButton: false,
       focusStateEnabled: false,
       dropDownOptions: {
-        animation: {},
-        fullScreen: false,
-        hideOnOutsideClick: false,
-        onTitleRendered: null,
-        position: undefined,
-        shading: true,
         showTitle: true,
-        title: '',
-        titleTemplate: 'title',
         width: function width() {
-          return (0, _size.getWidth)(window) * WINDOW_RATIO;
+          return getSize('width');
         },
         height: function height() {
-          return (0, _size.getHeight)(window) * WINDOW_RATIO;
-        }
+          return getSize('height');
+        },
+        shading: true,
+        hideOnOutsideClick: false,
+        position: undefined,
+        animation: {},
+        title: '',
+        titleTemplate: 'title',
+        onTitleRendered: null,
+        fullScreen: false
       },
       /**
       * @name dxLookupOptions.acceptCustomValue

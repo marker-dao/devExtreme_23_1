@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/custom_store.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -61,11 +61,12 @@ export interface CustomStoreOptions<
 > extends StoreOptions<TItem, TKey> {
     /**
      * @docid
-     * @type_function_param1 key:object|string|number
-     * @type_function_return Promise<any>
      * @public
+     * @type_function_param1 key:object|string|number
+     * @type_function_param2 extraOptions:LoadOptions
+     * @type_function_return Promise<any>
      */
-    byKey?: ((key: TKey) => PromiseLike<TItem>);
+    byKey?: ((key: TKey, extraOptions?: LoadOptions<TItem>) => PromiseLike<TItem>);
     /**
      * @docid
      * @default true
@@ -133,6 +134,15 @@ export default class CustomStore<
     TKey = any,
 > extends Store<TItem, TKey> {
     constructor(options?: Options<TItem, TKey>);
+    /**
+     * @docid
+     * @publicName byKey(key, extraOptions)
+     * @param1 key:object|string|number
+     * @param2 extraOptions:LoadOptions
+     * @return Promise<any>
+     * @public
+     */
+    byKey(key: TKey, extraOptions?: LoadOptions<TItem>): DxPromise<TItem>;
     /**
      * @docid
      * @publicName clearRawDataCache()

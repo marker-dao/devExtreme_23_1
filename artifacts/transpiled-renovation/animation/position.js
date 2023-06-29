@@ -7,7 +7,6 @@ var _common = require("../core/utils/common");
 var _iterator = require("../core/utils/iterator");
 var _window = require("../core/utils/window");
 var _dom_adapter = _interopRequireDefault(require("../core/dom_adapter"));
-var _visual_viewport = require("../core/utils/visual_viewport");
 var _type = require("../core/utils/type");
 var _extend = require("../core/utils/extend");
 var _position = require("../core/utils/position");
@@ -223,18 +222,11 @@ var calculatePosition = function calculatePosition(what, options) {
     if ((0, _type.isWindow)(of[0])) {
       h.atLocation = of.scrollLeft();
       v.atLocation = of.scrollTop();
-      var isPhone = _devices.default.real().deviceType === 'phone';
-      var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
-      if (isPhone && isVisualViewportAvailable) {
-        var _getVisualViewportSiz = (0, _visual_viewport.getVisualViewportSizes)(),
-          offsetLeft = _getVisualViewportSiz.offsetLeft,
-          offsetTop = _getVisualViewportSiz.offsetTop,
-          width = _getVisualViewportSiz.width,
-          height = _getVisualViewportSiz.height;
-        h.atLocation = Math.max(h.atLocation, offsetLeft);
-        v.atLocation = Math.max(v.atLocation, offsetTop);
-        h.atSize = width;
-        v.atSize = height;
+      if (_devices.default.real().deviceType === 'phone' && of[0].visualViewport) {
+        h.atLocation = Math.max(h.atLocation, of[0].visualViewport.offsetLeft);
+        v.atLocation = Math.max(v.atLocation, of[0].visualViewport.offsetTop);
+        h.atSize = of[0].visualViewport.width;
+        v.atSize = of[0].visualViewport.height;
       } else {
         h.atSize = of[0].innerWidth > of[0].outerWidth ? of[0].innerWidth : (0, _size.getWidth)(of);
         v.atSize = of[0].innerHeight > of[0].outerHeight || IS_SAFARI ? of[0].innerHeight : (0, _size.getHeight)(of);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/odata/store.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -109,7 +109,6 @@ export default class ODataStore<
     TKey = any,
 > extends Store<TItem, TKey> {
     constructor(options?: Options<TItem, TKey>);
-    byKey(key: TKey): DxPromise<TItem>;
     /**
      * @docid
      * @publicName byKey(key, extraOptions)
@@ -117,7 +116,7 @@ export default class ODataStore<
      * @return Promise<any>
      * @public
      */
-    byKey(key: TKey, extraOptions: { expand?: string | Array<string>; select?: string | Array<string> }): DxPromise<TItem>;
+    byKey(key: TKey, extraOptions?: { expand?: string | Array<string>; select?: string | Array<string> }): DxPromise<TItem>;
     /**
      * @docid
      * @publicName createQuery(loadOptions)

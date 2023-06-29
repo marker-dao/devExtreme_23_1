@@ -1,5 +1,5 @@
 {
-  "ToolsVersion": "10.0.0-beta.11",
+  "ToolsVersion": "10.0.0-beta.17",
   "Modules": {
     "common": {
       "ApplyValueMode": {},
@@ -54,6 +54,7 @@
       "StringLengthRule": {},
       "SubmenuShowMode": {},
       "TextBoxPredefinedButton": {},
+      "TextEditorButton": {},
       "TextEditorButtonLocation": {},
       "ToolbarItemComponent": {},
       "ToolbarItemLocation": {},
@@ -96,7 +97,8 @@
       "DataGridCell": {},
       "Cell": {},
       "PdfExportDataGridProps": {},
-      "PdfExportGanttProps": {}
+      "PdfExportGanttProps": {},
+      "PdfExportGanttFont": {}
     },
     "time_zone_utils": {
       "getTimeZones": {},
@@ -171,6 +173,7 @@
       "GradientColor": {}
     },
     "common/grids": {
+      "AdaptiveDetailRowPreparingInfo": {},
       "ApplyFilterMode": {},
       "ApplyChangesMode": {},
       "ColumnBase": {},
@@ -187,7 +190,9 @@
       "ColumnLookup": {},
       "ColumnResizeMode": {},
       "DataChange": {},
+      "DataChangeInfo": {},
       "DataChangeType": {},
+      "DataErrorOccurredInfo": {},
       "DataRenderMode": {},
       "EditingBase": {},
       "EditingTextsBase": {},
@@ -209,7 +214,9 @@
       "GridsEditRefreshMode": {},
       "GroupExpandMode": {},
       "KeyboardNavigation": {},
+      "KeyDownInfo": {},
       "LoadPanel": {},
+      "NewRowInfo": {},
       "NewRowPosition": {},
       "Pager": {},
       "PagerDisplayMode": {},
@@ -217,16 +224,27 @@
       "PagingBase": {},
       "RowDragging": {},
       "RowDraggingTemplateData": {},
+      "RowInsertedInfo": {},
+      "RowInsertingInfo": {},
+      "RowKeyInfo": {},
+      "RowRemovedInfo": {},
+      "RowRemovingInfo": {},
+      "RowUpdatedInfo": {},
+      "RowUpdatingInfo": {},
+      "RowValidatingInfo": {},
+      "SavingInfo": {},
       "ScrollingBase": {},
       "SearchPanel": {},
       "SelectedFilterOperation": {},
       "SelectionBase": {},
+      "SelectionChangedInfo": {},
       "SelectionColumnDisplayMode": {},
       "Sorting": {},
       "StartEditAction": {},
       "StateStoreType": {},
       "StateStoring": {},
-      "SummaryType": {}
+      "SummaryType": {},
+      "ToolbarPreparingInfo": {}
     },
     "core/component": {
       "ComponentOptions": {},
@@ -296,6 +314,7 @@
     },
     "data/index": {
       "SearchOperation": {},
+      "GroupingInterval": {},
       "GroupDescriptor": {},
       "SortDescriptor": {},
       "SelectDescriptor": {},
@@ -667,6 +686,7 @@
       "DisabledDate": {},
       "DropDownButtonTemplateData": {},
       "dxDateBoxOptions": {},
+      "DateBoxBaseOptions": {},
       "DateBoxBase": {},
       "default": {},
       "Properties": {}
@@ -807,6 +827,7 @@
       "Properties": {}
     },
     "ui/file_manager": {
+      "ActionEventInfo": {},
       "FileManagerPredefinedContextMenuItem": {},
       "FileManagerPredefinedToolbarItem": {},
       "ContentReadyEvent": {},
@@ -1004,8 +1025,10 @@
       "Properties": {}
     },
     "ui/list": {
+      "ListItemInfo": {},
       "ItemDeleteMode": {},
       "ListMenuMode": {},
+      "ScrollInfo": {},
       "ContentReadyEvent": {},
       "DisposingEvent": {},
       "GroupRenderedEvent": {},
@@ -1202,6 +1225,7 @@
       "Properties": {}
     },
     "ui/popup": {
+      "TitleRenderedInfo": {},
       "ToolbarLocation": {},
       "ContentReadyEvent": {},
       "DisposingEvent": {},
@@ -1263,6 +1287,7 @@
     },
     "ui/resizable": {
       "ResizeHandle": {},
+      "ResizeInfo": {},
       "DisposingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
@@ -1289,6 +1314,7 @@
       "Properties": {}
     },
     "ui/scheduler": {
+      "TargetedAppointmentInfo": {},
       "AllDayPanelMode": {},
       "CellAppointmentsLimit": {},
       "RecurrenceEditMode": {},
@@ -1340,6 +1366,7 @@
       "Properties": {}
     },
     "ui/select_box": {
+      "CustomItemCreatingInfo": {},
       "ChangeEvent": {},
       "ClosedEvent": {},
       "ContentReadyEvent": {},
@@ -1415,6 +1442,7 @@
       "Properties": {}
     },
     "ui/tab_panel": {
+      "TabPanelItemInfo": {},
       "ContentReadyEvent": {},
       "DisposingEvent": {},
       "InitializedEvent": {},
@@ -1587,6 +1615,7 @@
       "default": {}
     },
     "ui/tree_list": {
+      "CellInfo": {},
       "TreeListPredefinedColumnButton": {},
       "TreeListPredefinedToolbarItem": {},
       "TreeListCommandColumnType": {},
@@ -1666,6 +1695,7 @@
       "Properties": {}
     },
     "ui/tree_view": {
+      "ItemInfo": {},
       "TreeViewCheckBoxMode": {},
       "TreeViewExpandEvent": {},
       "ContentReadyEvent": {},
@@ -1731,6 +1761,7 @@
     "viz/bar_gauge": {
       "BarGaugeBarInfo": {},
       "LegendItem": {},
+      "TooltipInfo": {},
       "DisposingEvent": {},
       "DrawnEvent": {},
       "ExportedEvent": {},
@@ -1764,6 +1795,7 @@
       "Properties": {}
     },
     "viz/chart": {
+      "SeriesInteractionInfo": {},
       "AggregatedPointsPosition": {},
       "ChartBubbleSeriesAggregationMethod": {},
       "ChartFinancialSeriesAggregationMethod": {},
@@ -1874,6 +1906,7 @@
     "viz/funnel": {
       "FunnelAlgorithm": {},
       "LegendItem": {},
+      "FunnelItemInfo": {},
       "DisposingEvent": {},
       "DrawnEvent": {},
       "ExportedEvent": {},
@@ -1953,6 +1986,7 @@
       "Properties": {}
     },
     "viz/polar_chart": {
+      "SeriesInteractionInfo": {},
       "PolarChartSeriesType": {},
       "ValueAxisVisualRangeUpdateMode": {},
       "ArgumentAxisClickEvent": {},
@@ -2079,6 +2113,7 @@
       "TreeMapColorizerType": {},
       "TreeMapLayoutAlgorithm": {},
       "TreeMapLayoutDirection": {},
+      "InteractionInfo": {},
       "ClickEvent": {},
       "DisposingEvent": {},
       "DrawnEvent": {},
@@ -2106,6 +2141,7 @@
       "VectorMapLayerType": {},
       "VectorMapMarkerShape": {},
       "VectorMapMarkerType": {},
+      "TooltipInfo": {},
       "CenterChangedEvent": {},
       "ClickEvent": {},
       "DisposingEvent": {},
@@ -2153,6 +2189,7 @@
       "keyConverters": {}
     },
     "ui/collection/ui.collection_widget.base": {
+      "SelectionChangedInfo": {},
       "CollectionWidgetOptions": {},
       "default": {},
       "CollectionWidgetItem": {}
@@ -2167,6 +2204,7 @@
       "default": {}
     },
     "ui/drop_down_editor/ui.drop_down_list": {
+      "SelectionChangedInfo": {},
       "dxDropDownListOptions": {},
       "default": {}
     },
@@ -2205,6 +2243,7 @@
       "default": {}
     },
     "ui/scroll_view/ui.scrollable": {
+      "ScrollEventInfo": {},
       "dxScrollableOptions": {},
       "default": {}
     },
@@ -2213,8 +2252,7 @@
     },
     "ui/text_box/ui.text_editor.base": {
       "dxTextEditorOptions": {},
-      "default": {},
-      "dxTextEditorButton": {}
+      "default": {}
     },
     "ui/toast/hide_toasts": {
       "default": {}
@@ -2233,6 +2271,8 @@
       "format": {}
     },
     "viz/chart_components/base_chart": {
+      "PointInteractionInfo": {},
+      "TooltipInfo": {},
       "BaseChartOptions": {},
       "BaseChartAdaptiveLayout": {},
       "BaseChartLegend": {},
@@ -2242,6 +2282,9 @@
       "BaseChartAnnotationConfig": {}
     },
     "viz/core/base_widget": {
+      "ExportInfo": {},
+      "IncidentInfo": {},
+      "FileSavingEventInfo": {},
       "BaseWidgetOptions": {},
       "BaseWidgetExport": {},
       "BaseWidgetLoadingIndicator": {},
@@ -2254,6 +2297,7 @@
       "BaseWidgetAnnotationConfig": {}
     },
     "viz/gauges/base_gauge": {
+      "TooltipInfo": {},
       "BaseGaugeOptions": {},
       "BaseGaugeAnimation": {},
       "BaseGaugeLoadingIndicator": {},

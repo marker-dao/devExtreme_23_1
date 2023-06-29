@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.keyboard_navigation");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_keyboard_navigation = require("../../../grids/grid_core/keyboard_navigation/m_keyboard_navigation");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('keyboardNavigation', _uiGrid_core.keyboardNavigationModule);
+_m_core.default.registerModule('keyboardNavigation', _m_keyboard_navigation.keyboardNavigationModule);

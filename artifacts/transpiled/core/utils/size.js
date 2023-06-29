@@ -1,10 +1,9 @@
 "use strict";
 
 exports.setWidth = exports.setOuterWidth = exports.setOuterHeight = exports.setInnerWidth = exports.setInnerHeight = exports.setHeight = exports.parseHeight = exports.implementationsMap = exports.getWindowByElement = exports.getWidth = exports.getVisibleHeight = exports.getVerticalOffsets = exports.getSize = exports.getOuterWidth = exports.getOuterHeight = exports.getOffset = exports.getInnerWidth = exports.getInnerHeight = exports.getHeight = exports.getElementBoxParams = exports.addOffsetToMinHeight = exports.addOffsetToMaxHeight = void 0;
-var _dom_adapter = _interopRequireDefault(require("../dom_adapter"));
-var _visual_viewport = require("./visual_viewport");
-var _type = require("./type");
-var _window = require("../utils/window");
+var _window = require("../../core/utils/window");
+var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
+var _type = require("../utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var window = (0, _window.getWindow)();
 var SPECIAL_HEIGHT_VALUES = ['auto', 'none', 'inherit', 'initial'];
@@ -309,12 +308,6 @@ var elementSize = function elementSize(el, sizeProperty, value) {
   }
   if (!el) return;
   if ((0, _type.isWindow)(el)) {
-    var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
-    var shouldUseVisualViewport = isVisualViewportAvailable && ['width', 'height'].includes(sizeProperty);
-    if (shouldUseVisualViewport) {
-      var size = (0, _visual_viewport.getVisualViewportSizes)()[sizeProperty];
-      return size;
-    }
     return isOuter ? el['inner' + partialName] : _dom_adapter.default.getDocumentElement()['client' + partialName];
   }
   if (_dom_adapter.default.isDocument(el)) {

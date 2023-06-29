@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/progress_bar.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,22 +21,52 @@ import dxTrackBar, {
     dxTrackBarOptions,
 } from './track_bar';
 
-/** @public */
+/**
+ * @docid _ui_progress_bar_CompleteEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type CompleteEvent = NativeEventInfo<dxProgressBar>;
 
-/** @public */
+/**
+ * @docid _ui_progress_bar_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxProgressBar>;
 
-/** @public */
+/**
+ * @docid _ui_progress_bar_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxProgressBar>;
 
-/** @public */
+/**
+ * @docid _ui_progress_bar_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxProgressBar>;
 
-/** @public */
+/**
+ * @docid _ui_progress_bar_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxProgressBar> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_progress_bar_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ValueChangedInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxProgressBar> & ValueChangedInfo;
 
 /**

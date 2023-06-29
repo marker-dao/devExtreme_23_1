@@ -1,12 +1,12 @@
 /**
 * DevExtreme (esm/__internal/grids/data_grid/module_not_extended/column_headers.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import { columnHeadersModule } from '../../../../ui/grid_core/ui.grid_core.column_headers';
-import gridCore from '../module_core';
+import { columnHeadersModule } from '../../../grids/grid_core/column_headers/m_column_headers';
+import gridCore from '../m_core';
 export var ColumnHeadersView = columnHeadersModule.views.columnHeadersView;
 gridCore.registerModule('columnHeaders', columnHeadersModule);

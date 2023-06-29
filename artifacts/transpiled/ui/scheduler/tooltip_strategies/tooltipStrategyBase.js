@@ -36,10 +36,7 @@ var TooltipStrategyBase = /*#__PURE__*/function () {
     if (!this._tooltip) {
       this._tooltip = this._createTooltip(target, dataList);
     } else {
-      var shouldUseTarget = this._shouldUseTarget();
-      if (shouldUseTarget) {
-        this._tooltip.option('target', target);
-      }
+      this._shouldUseTarget() && this._tooltip.option('target', target);
       this._list.option('dataSource', dataList);
     }
     this._prepareBeforeVisibleChanged(dataList);

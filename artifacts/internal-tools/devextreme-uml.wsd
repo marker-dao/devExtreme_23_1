@@ -124,7 +124,7 @@ object CustomFileSystemProvider {
 FileSystemProviderBase <|-up- CustomFileSystemProvider
 
 object CustomStore {
-  function(key) byKey
+  function(key, extraOptions) byKey
   Boolean cacheRawData
   function(values) insert
   function(options) load

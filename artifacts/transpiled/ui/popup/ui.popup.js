@@ -424,7 +424,7 @@ var Popup = _ui.default.inherit({
   _getToolbarName: function _getToolbarName() {
     return 'dxToolbarBase';
   },
-  _toggleVisibilityAnimate: function _toggleVisibilityAnimate(visible) {
+  _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
     return this.callBase(visible);
   },
   _hide: function _hide() {
@@ -793,16 +793,7 @@ var Popup = _ui.default.inherit({
       this._renderFullscreenWidthClass();
     }
   },
-  _renderGeometryAsynchronously: function _renderGeometryAsynchronously() {
-    this._renderGeometry({
-      isDimensionChange: true
-    });
-  },
   _dimensionChanged: function _dimensionChanged() {
-    var shouldUseVisualViewport = this._shouldUseVisualViewport();
-    if (shouldUseVisualViewport) {
-      return;
-    }
     this._renderGeometry({
       isDimensionChange: true
     });

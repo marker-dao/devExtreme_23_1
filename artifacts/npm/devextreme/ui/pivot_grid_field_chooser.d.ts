@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/pivot_grid_field_chooser.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,24 +35,62 @@ export {
     FieldChooserLayout,
 };
 
-/** @public */
+/**
+ * @docid _ui_pivot_grid_field_chooser_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxPivotGridFieldChooser>;
 
-/** @public */
+/**
+ * @docid _ui_pivot_grid_field_chooser_ContextMenuPreparingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContextMenuPreparingEvent = EventInfo<dxPivotGridFieldChooser> & {
+    /** @docid _ui_pivot_grid_field_chooser_ContextMenuPreparingEvent.area */
     readonly area?: string;
+    /**
+     * @docid _ui_pivot_grid_field_chooser_ContextMenuPreparingEvent.field
+     * @type object
+     */
     readonly field?: Field;
+    /**
+     * @docid _ui_pivot_grid_field_chooser_ContextMenuPreparingEvent.event
+     * @type event
+     */
     readonly event?: DxEvent;
+    /**
+     * @docid _ui_pivot_grid_field_chooser_ContextMenuPreparingEvent.items
+     * @type Array<Object>
+     */
     items?: Array<any>;
 };
 
-/** @public */
+/**
+ * @docid _ui_pivot_grid_field_chooser_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxPivotGridFieldChooser>;
 
-/** @public */
+/**
+ * @docid _ui_pivot_grid_field_chooser_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxPivotGridFieldChooser>;
 
-/** @public */
+/**
+ * @docid _ui_pivot_grid_field_chooser_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxPivotGridFieldChooser> & ChangedOptionInfo;
 
 /**

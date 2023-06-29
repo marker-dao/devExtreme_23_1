@@ -1,21 +1,21 @@
 /**
 * DevExtreme (cjs/ui/data_grid/ui.data_grid.grouping.expanded.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-var _module_expanded = require("../../__internal/grids/data_grid/grouping/module_expanded");
-Object.keys(_module_expanded).forEach(function (key) {
+var _m_grouping_expanded = require("../../__internal/grids/data_grid/grouping/m_grouping_expanded");
+Object.keys(_m_grouping_expanded).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module_expanded[key]) return;
+  if (key in exports && exports[key] === _m_grouping_expanded[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module_expanded[key];
+      return _m_grouping_expanded[key];
     }
   });
 });

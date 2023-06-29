@@ -1,21 +1,21 @@
 /**
 * DevExtreme (cjs/ui/pivot_grid/ui.pivot_grid.headers_area.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-var _module = require("../../__internal/grids/pivot_grid/headers_area/module");
-Object.keys(_module).forEach(function (key) {
+var _m_headers_area = require("../../__internal/grids/pivot_grid/headers_area/m_headers_area");
+Object.keys(_m_headers_area).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module[key]) return;
+  if (key in exports && exports[key] === _m_headers_area[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module[key];
+      return _m_headers_area[key];
     }
   });
 });

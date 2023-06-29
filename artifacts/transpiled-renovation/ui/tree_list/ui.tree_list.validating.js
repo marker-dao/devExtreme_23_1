@@ -1,3 +1,3 @@
 "use strict";
 
-require("../../__internal/grids/tree_list/module_validating");
+require("../../__internal/grids/tree_list/m_validating");

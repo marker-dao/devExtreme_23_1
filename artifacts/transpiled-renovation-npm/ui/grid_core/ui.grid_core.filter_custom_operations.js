@@ -1,13 +1,13 @@
 "use strict";
 
-var _module = require("../../__internal/grids/grid_core/filter_custom_operations/module");
-Object.keys(_module).forEach(function (key) {
+var _m_filter_custom_operations = require("../../__internal/grids/grid_core/filter/m_filter_custom_operations");
+Object.keys(_m_filter_custom_operations).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module[key]) return;
+  if (key in exports && exports[key] === _m_filter_custom_operations[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module[key];
+      return _m_filter_custom_operations[key];
     }
   });
 });

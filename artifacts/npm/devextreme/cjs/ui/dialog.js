@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/dialog.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -138,11 +138,8 @@ var custom = function custom(options) {
   }
   popupInstance.$wrapper().addClass(DX_DIALOG_ROOT_CLASSNAME);
   function show() {
-    var isPhone = _devices.default.real().deviceType === 'phone';
-    if (isPhone) {
-      var windowHeight = (0, _size.getHeight)(window);
-      var windowWidth = (0, _size.getWidth)(window);
-      var isPortrait = windowHeight > windowWidth;
+    if (_devices.default.real().deviceType === 'phone') {
+      var isPortrait = (0, _size.getHeight)(window) > (0, _size.getWidth)(window);
       var width = isPortrait ? '90%' : '60%';
       popupInstance.option({
         width: width

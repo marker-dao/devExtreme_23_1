@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/validation_summary.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,35 +19,45 @@ import CollectionWidget, {
     ItemLike,
 } from './collection/ui.collection_widget.base';
 
-/** @public */
-export type ContentReadyEvent<
-    TItem extends ItemLike = any,
-    TKey = any,
-> = EventInfo<dxValidationSummary<TItem, TKey>>;
+/**
+ * @docid _ui_validation_summary_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
+export type ContentReadyEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxValidationSummary<TItem, TKey>>;
 
-/** @public */
-export type DisposingEvent<
-    TItem extends ItemLike = any,
-    TKey = any,
-> = EventInfo<dxValidationSummary<TItem, TKey>>;
+/**
+ * @docid _ui_validation_summary_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
+export type DisposingEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxValidationSummary<TItem, TKey>>;
 
-/** @public */
-export type InitializedEvent<
-    TItem extends ItemLike = any,
-    TKey = any,
-> = InitializedEventInfo<dxValidationSummary<TItem, TKey>>;
+/**
+ * @docid _ui_validation_summary_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
+export type InitializedEvent<TItem extends ItemLike = any, TKey = any> = InitializedEventInfo<dxValidationSummary<TItem, TKey>>;
 
-/** @public */
-export type ItemClickEvent<
-    TItem extends ItemLike = any,
-    TKey = any,
-> = NativeEventInfo<dxValidationSummary<TItem, TKey>, MouseEvent | PointerEvent> & ItemInfo<TItem>;
+/**
+ * @docid _ui_validation_summary_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
+export type ItemClickEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxValidationSummary<TItem, TKey>, MouseEvent | PointerEvent> & ItemInfo<TItem>;
 
-/** @public */
-export type OptionChangedEvent<
-    TItem extends ItemLike = any,
-    TKey = any,
-> = EventInfo<dxValidationSummary<TItem, TKey>> & ChangedOptionInfo;
+/**
+ * @docid _ui_validation_summary_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
+export type OptionChangedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxValidationSummary<TItem, TKey>> & ChangedOptionInfo;
 
 /**
  * @deprecated use Properties instead

@@ -1,3 +1,3 @@
-import { masterDetailModule } from '../../../../ui/grid_core/ui.grid_core.master_detail';
-import gridCore from '../module_core';
+import { masterDetailModule } from '../../../grids/grid_core/master_detail/m_master_detail';
+import gridCore from '../m_core';
 gridCore.registerModule('masterDetail', masterDetailModule);

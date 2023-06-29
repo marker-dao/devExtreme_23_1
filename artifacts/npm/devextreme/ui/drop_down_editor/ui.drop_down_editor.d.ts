@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/drop_down_editor/ui.drop_down_editor.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,12 +17,7 @@ import {
 
 import dxTextBox, {
     dxTextBoxOptions,
-
 } from '../text_box';
-
-import {
-    dxTextEditorButton,
-} from '../text_box/ui.text_editor.base';
 
 import {
     Properties as PopoverProperties,
@@ -40,6 +35,7 @@ import {
     ApplyValueMode,
     Mode,
     Position,
+    TextEditorButton,
 } from '../../common';
 
 /** @public */
@@ -86,7 +82,7 @@ export interface dxDropDownEditorOptions<TComponent> extends Omit<dxTextBoxOptio
      * @default undefined
      * @public
      */
-    buttons?: Array<DropDownPredefinedButton | dxTextEditorButton>;
+    buttons?: Array<DropDownPredefinedButton | TextEditorButton>;
     /**
      * @docid
      * @default true

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/text_box/ui.text_editor.base.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,9 +10,7 @@ import {
     NativeEventInfo,
 } from '../../events/index';
 
-import dxButton, {
-    dxButtonOptions,
-} from '../button';
+import dxButton from '../button';
 
 import Editor, {
     EditorOptions,
@@ -23,7 +21,7 @@ import {
     EditorStyle,
     MaskMode,
     TextBoxPredefinedButton,
-    TextEditorButtonLocation,
+    TextEditorButton,
 } from '../../common';
 
 /**
@@ -37,7 +35,7 @@ export interface dxTextEditorOptions<TComponent> extends EditorOptions<TComponen
      * @default undefined
      * @public
      */
-    buttons?: Array<string | TextBoxPredefinedButton | dxTextEditorButton>;
+    buttons?: Array<string | TextBoxPredefinedButton | TextEditorButton>;
     /**
      * @docid
      * @default true
@@ -263,30 +261,10 @@ export default class dxTextEditor<TProperties = Properties> extends Editor<TProp
 }
 
 /**
- * @docid
- * @type object
  * @namespace DevExpress.ui
+ * @deprecated Use TextEditorButton from 'devextreme/common' instead
  */
-export interface dxTextEditorButton {
-    /**
-     * @docid
-     * @default "after"
-     * @public
-     */
-    location?: TextEditorButtonLocation;
-    /**
-     * @docid
-     * @default undefined
-     * @public
-     */
-    name?: string;
-    /**
-     * @docid
-     * @default undefined
-     * @public
-     */
-    options?: dxButtonOptions;
-}
+export type dxTextEditorButton = TextEditorButton;
 
 interface TextEditorInstance extends dxTextEditor<Properties> {}
 

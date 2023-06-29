@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/multi_view.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,31 +24,76 @@ import CollectionWidget, {
 
 export type ItemLike = string | Item | any;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>>;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>>;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent<TItem extends ItemLike = any, TKey = any> = InitializedEventInfo<MultiViewInstance<TItem, TKey>>;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
 export type ItemClickEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<MultiViewInstance<TItem, TKey>, KeyboardEvent | MouseEvent | PointerEvent> & ItemInfo<TItem>;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_ItemContextMenuEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
 export type ItemContextMenuEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<MultiViewInstance<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_ItemHoldEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
 export type ItemHoldEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<MultiViewInstance<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_ItemRenderedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ItemInfo
+ */
 export type ItemRenderedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>> & ItemInfo<TItem>;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_multi_view_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,SelectionChangedInfo
+ */
 export type SelectionChangedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>> & SelectionChangedInfo<TItem>;
 
 /**

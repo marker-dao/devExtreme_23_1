@@ -1,3 +1,3 @@
-import { headerFilterModule } from '../../../../ui/grid_core/ui.grid_core.header_filter';
-import core from '../module_core';
+import { headerFilterModule } from '../../../grids/grid_core/header_filter/m_header_filter';
+import core from '../m_core';
 core.registerModule('headerFilter', headerFilterModule);

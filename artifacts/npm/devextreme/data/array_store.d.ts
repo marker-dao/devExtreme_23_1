@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/array_store.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,7 @@ import Store, {
     Options as StoreOptions,
 } from './abstract_store';
 import { Query } from './query';
+import { DxPromise } from '../core/utils/deferred';
 
 /** @public */
 export type Options<
@@ -43,6 +44,14 @@ export default class ArrayStore<
     TKey = any,
 > extends Store<TItem, TKey> {
     constructor(options?: Options<TItem, TKey>);
+    /**
+     * @docid
+     * @publicName byKey(key)
+     * @param1 key:object|string|number
+     * @return Promise<any>
+     * @public
+     */
+    byKey(key: TKey): DxPromise<TItem>;
     /**
      * @docid
      * @publicName clear()

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/workspaces/ui.scheduler.work_space.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -55,6 +55,9 @@ import { getCellWidth, getCellHeight, getAllDayHeight, getMaxAllowedPosition, Po
 import { utils } from '../utils';
 import { compileGetter } from '../../../core/utils/data';
 import { getMemoizeScrollTo } from '../../../renovation/ui/common/utils/scroll/getMemoizeScrollTo';
+
+// TODO: The constant is needed so that the dragging is not sharp. To prevent small twitches
+var DRAGGING_MOUSE_FAULT = 10;
 var abstract = WidgetObserver.abstract;
 var toMs = dateUtils.dateToMilliseconds;
 var COMPONENT_CLASS = 'dx-scheduler-work-space';
@@ -2417,19 +2420,27 @@ var createDragBehaviorConfig = (container, rootElement, isDefaultDraggingMode, d
       }
     }
   };
+  var getElementsFromPoint = () => {
+    var appointmentWidth = getWidth(state.dragElement);
+    var cellWidth = getCellWidth();
+    var isWideAppointment = appointmentWidth > cellWidth;
+    var isNarrowAppointment = appointmentWidth <= DRAGGING_MOUSE_FAULT;
+    var dragElementContainer = $(state.dragElement).parent();
+    var boundingRect = getBoundingRect(dragElementContainer.get(0));
+    var newX = boundingRect.left;
+    var newY = boundingRect.top;
+    if (isWideAppointment) {
+      return domAdapter.elementsFromPoint(newX + DRAGGING_MOUSE_FAULT, newY + DRAGGING_MOUSE_FAULT);
+    } else if (isNarrowAppointment) {
+      return domAdapter.elementsFromPoint(newX, newY);
+    }
+    return domAdapter.elementsFromPoint(newX + appointmentWidth / 2, newY + DRAGGING_MOUSE_FAULT);
+  };
   var onDragMove = () => {
     if (isDefaultDraggingMode) {
       return;
     }
-    var MOUSE_IDENT = 10;
-    var appointmentWidth = getWidth(state.dragElement);
-    var cellWidth = getCellWidth();
-    var isWideAppointment = appointmentWidth > cellWidth;
-    var dragElementContainer = $(state.dragElement).parent();
-    var boundingRect = getBoundingRect(dragElementContainer.get(0));
-    var newX = boundingRect.left + MOUSE_IDENT;
-    var newY = boundingRect.top + MOUSE_IDENT;
-    var elements = isWideAppointment ? domAdapter.elementsFromPoint(newX, newY) : domAdapter.elementsFromPoint(newX + appointmentWidth / 2, newY);
+    var elements = getElementsFromPoint();
     var isMoveUnderControl = !!elements.find(el => el === rootElement.get(0));
     var dateTables = getDateTables();
     var droppableCell = elements.find(el => {

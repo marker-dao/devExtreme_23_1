@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/header/header.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -137,6 +137,10 @@ var SchedulerHeader = /*#__PURE__*/function (_Widget) {
     onCurrentViewChange(view.name);
     this._callEvent('currentView', view);
   };
+  _proto._updateCalendarValueAndCurrentDate = function _updateCalendarValueAndCurrentDate(date) {
+    this._updateCurrentDate(date);
+    this._calendar.option('value', date);
+  };
   _proto._updateCurrentDate = function _updateCurrentDate(date) {
     var onCurrentDateChange = this.option('onCurrentDateChange');
     onCurrentDateChange(date);
@@ -145,15 +149,14 @@ var SchedulerHeader = /*#__PURE__*/function (_Widget) {
   _proto._renderCalendar = function _renderCalendar() {
     var _this3 = this;
     this._calendar = this._createComponent('<div>', _calendar.default, {
-      date: this.option('currentDate'),
+      value: this.option('currentDate'),
       min: this.option('min'),
       max: this.option('max'),
       firstDayOfWeek: this.option('firstDayOfWeek'),
       focusStateEnabled: this.option('focusStateEnabled'),
       tabIndex: this.option('tabIndex'),
       onValueChanged: function onValueChanged(e) {
-        var date = e.value;
-        _this3._updateCurrentDate(date);
+        _this3._updateCurrentDate(e.value);
         _this3._calendar.hide();
       }
     });
@@ -201,7 +204,7 @@ var SchedulerHeader = /*#__PURE__*/function (_Widget) {
   };
   _proto._updateDateByDirection = function _updateDateByDirection(direction) {
     var date = this._getNextDate(direction);
-    this._updateCurrentDate(date);
+    this._updateCalendarValueAndCurrentDate(date);
   };
   _proto._showCalendar = function _showCalendar(e) {
     this._calendar.show(e.element);

@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.validating");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_validating = require("../../../grids/grid_core/validating/m_validating");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('validating', _uiGrid_core.validatingModule);
+_m_core.default.registerModule('validating', _m_validating.validatingModule);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/speed_dial_action/speed_dial_item.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,6 @@ var _ui = _interopRequireDefault(require("../overlay/ui.overlay"));
 var _utils = require("../widget/utils.ink_ripple");
 var _themes = require("../themes");
 var _type = require("../../core/utils/type");
-var _window = require("../../core/utils/window");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -42,9 +41,7 @@ var SpeedDialItem = /*#__PURE__*/function (_Overlay) {
       callOverlayRenderShading: false,
       width: 'auto',
       zIndex: 1500,
-      _observeContentResize: false,
-      container: this.$element(),
-      visualContainer: (0, _window.getWindow)()
+      _observeContentResize: false
     });
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
@@ -56,6 +53,10 @@ var SpeedDialItem = /*#__PURE__*/function (_Overlay) {
         useInkRipple: true
       }
     }]);
+  };
+  _proto._moveToContainer = function _moveToContainer() {
+    this._$wrapper.appendTo(this.$element());
+    this._$content.appendTo(this._$wrapper);
   };
   _proto._render = function _render() {
     this.$element().addClass(FAB_CLASS);

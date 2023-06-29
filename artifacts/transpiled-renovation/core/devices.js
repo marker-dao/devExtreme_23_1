@@ -18,16 +18,6 @@ var _config = _interopRequireDefault(require("./config"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var navigator = (0, _window.getNavigator)();
 var window = (0, _window.getWindow)();
-var DEVICE_TYPE = {
-  desktop: 'desktop',
-  tablet: 'tablet',
-  phone: 'phone'
-};
-var PLATFORM = {
-  generic: 'generic',
-  ios: 'ios',
-  android: 'android'
-};
 var KNOWN_UA_TABLE = {
   'iPhone': 'iPhone',
   'iPhone5': 'iPhone',
@@ -41,8 +31,8 @@ var KNOWN_UA_TABLE = {
   'desktop': 'desktop'
 };
 var DEFAULT_DEVICE = {
-  deviceType: DEVICE_TYPE.desktop,
-  platform: PLATFORM.generic,
+  deviceType: 'desktop',
+  platform: 'generic',
   version: [],
   phone: false,
   tablet: false,
@@ -63,8 +53,8 @@ var uaParsers = {
       return;
     }
     return {
-      deviceType: isPhone ? DEVICE_TYPE.phone : isTablet ? DEVICE_TYPE.tablet : DEVICE_TYPE.desktop,
-      platform: PLATFORM.generic,
+      deviceType: isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop',
+      platform: 'generic',
       version: [],
       grade: 'A',
       mac: isMac
@@ -80,8 +70,8 @@ var uaParsers = {
     var isIPhone4 = window.screen.height === 960 / 2;
     var grade = isIPhone4 ? 'B' : 'A';
     return {
-      deviceType: isPhone ? DEVICE_TYPE.phone : DEVICE_TYPE.tablet,
-      platform: PLATFORM.ios,
+      deviceType: isPhone ? 'phone' : 'tablet',
+      platform: 'ios',
       version: version,
       grade: grade
     };
@@ -96,8 +86,8 @@ var uaParsers = {
     var worseThan4_4 = version.length > 1 && (version[0] < 4 || version[0] === 4 && version[1] < 4);
     var grade = worseThan4_4 ? 'B' : 'A';
     return {
-      deviceType: isPhone ? DEVICE_TYPE.phone : DEVICE_TYPE.tablet,
-      platform: PLATFORM.android,
+      deviceType: isPhone ? 'phone' : 'tablet',
+      platform: 'android',
       version: version,
       grade: grade
     };
@@ -175,7 +165,7 @@ var Devices = /*#__PURE__*/function () {
     // TODO: use real device here?
     if (device.deviceType) {
       result.push("dx-device-".concat(device.deviceType));
-      if (device.deviceType !== DEVICE_TYPE.desktop) {
+      if (device.deviceType !== 'desktop') {
         result.push('dx-device-mobile');
       }
     }
@@ -212,8 +202,8 @@ var Devices = /*#__PURE__*/function () {
   _proto._getDevice = function _getDevice(deviceName) {
     if (deviceName === 'genericPhone') {
       deviceName = {
-        deviceType: DEVICE_TYPE.phone,
-        platform: PLATFORM.generic,
+        deviceType: 'phone',
+        platform: 'generic',
         generic: true
       };
     }
@@ -254,11 +244,11 @@ var Devices = /*#__PURE__*/function () {
   _proto._fromConfig = function _fromConfig(config) {
     var result = (0, _extend.extend)({}, DEFAULT_DEVICE, this._currentDevice, config);
     var shortcuts = {
-      phone: result.deviceType === DEVICE_TYPE.phone,
-      tablet: result.deviceType === DEVICE_TYPE.tablet,
-      android: result.platform === PLATFORM.android,
-      ios: result.platform === PLATFORM.ios,
-      generic: result.platform === PLATFORM.generic
+      phone: result.deviceType === 'phone',
+      tablet: result.deviceType === 'tablet',
+      android: result.platform === 'android',
+      ios: result.platform === 'ios',
+      generic: result.platform === 'generic'
     };
     return (0, _extend.extend)(result, shortcuts);
   };

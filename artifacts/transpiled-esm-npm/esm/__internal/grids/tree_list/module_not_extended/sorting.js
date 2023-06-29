@@ -1,3 +1,3 @@
-import { sortingModule } from '../../../../ui/grid_core/ui.grid_core.sorting';
-import treeListCore from '../module_core';
+import { sortingModule } from '../../../grids/grid_core/sorting/m_sorting';
+import treeListCore from '../m_core';
 treeListCore.registerModule('sorting', sortingModule);

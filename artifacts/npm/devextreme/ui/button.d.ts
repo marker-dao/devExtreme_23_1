@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/button.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -36,21 +36,50 @@ export {
     ButtonStyle,
 };
 
-/** @public */
+/**
+ * @docid _ui_button_ClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ClickEvent = NativeEventInfo<dxButton, KeyboardEvent | MouseEvent | PointerEvent> & {
+    /**
+     * @docid _ui_button_ClickEvent.validationGroup
+     * @type object
+     */
     validationGroup?: any;
 };
 
-/** @public */
+/**
+ * @docid _ui_button_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxButton>;
 
-/** @public */
+/**
+ * @docid _ui_button_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxButton>;
 
-/** @public */
+/**
+ * @docid _ui_button_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxButton>;
 
-/** @public */
+/**
+ * @docid _ui_button_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxButton> & ChangedOptionInfo;
 
 /** @public */

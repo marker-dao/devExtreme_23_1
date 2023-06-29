@@ -57,6 +57,15 @@ var Lookup = DropDownList.inherit({
     });
   },
   _getDefaultOptions: function _getDefaultOptions() {
+    var getSize = side => {
+      var size;
+      if (devices.real().deviceType === 'phone' && window.visualViewport) {
+        size = window.visualViewport[side];
+      } else {
+        size = side === 'width' ? getWidth(window) : getHeight(window);
+      }
+      return size * WINDOW_RATIO;
+    };
     return extend(this.callBase(), {
       placeholder: messageLocalization.format('Select'),
       searchPlaceholder: messageLocalization.format('Search'),
@@ -99,17 +108,21 @@ var Lookup = DropDownList.inherit({
       showDropDownButton: false,
       focusStateEnabled: false,
       dropDownOptions: {
-        animation: {},
-        fullScreen: false,
-        hideOnOutsideClick: false,
-        onTitleRendered: null,
-        position: undefined,
-        shading: true,
         showTitle: true,
+        width: function width() {
+          return getSize('width');
+        },
+        height: function height() {
+          return getSize('height');
+        },
+        shading: true,
+        hideOnOutsideClick: false,
+        position: undefined,
+        animation: {},
         title: '',
         titleTemplate: 'title',
-        width: () => getWidth(window) * WINDOW_RATIO,
-        height: () => getHeight(window) * WINDOW_RATIO
+        onTitleRendered: null,
+        fullScreen: false
       },
       /**
       * @name dxLookupOptions.acceptCustomValue

@@ -484,7 +484,10 @@ var SelectBox = DropDownList.inherit({
     return !!$(target).closest(".".concat(SELECTBOX_POPUP_WRAPPER_CLASS)).length;
   },
   _clearTextValue: function _clearTextValue() {
-    if (this.option('selectedItem')) {
+    var selectedItem = this.option('selectedItem');
+    var selectedItemText = this._displayGetter(selectedItem);
+    var shouldRestoreValue = selectedItem && selectedItemText !== '';
+    if (shouldRestoreValue) {
       if (this._savedTextRemoveEvent) {
         this._saveValueChangeEvent(this._savedTextRemoveEvent);
       }

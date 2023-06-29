@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 9707:
+/***/ 60082:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -21,23 +21,23 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
-var _size = __webpack_require__(58664);
 var _renderer = _interopRequireDefault(__webpack_require__(68374));
-var _type = __webpack_require__(35922);
-var _deferred = __webpack_require__(62754);
-var _string = __webpack_require__(68752);
-var _iterator = __webpack_require__(95479);
-var _extend = __webpack_require__(13306);
-var _position = __webpack_require__(37518);
-var _data = __webpack_require__(47617);
 var _common = __webpack_require__(20576);
-var _utils = __webpack_require__(16454);
-var _format_helper = _interopRequireDefault(__webpack_require__(30343));
-var _window = __webpack_require__(58201);
-var _events_engine = _interopRequireDefault(__webpack_require__(55994));
-var _data_source = __webpack_require__(85273);
-var _utils2 = __webpack_require__(9234);
+var _data = __webpack_require__(47617);
+var _deferred = __webpack_require__(62754);
+var _extend = __webpack_require__(13306);
+var _iterator = __webpack_require__(95479);
+var _position = __webpack_require__(37518);
+var _size = __webpack_require__(58664);
+var _string = __webpack_require__(68752);
+var _type = __webpack_require__(35922);
 var _variable_wrapper = _interopRequireDefault(__webpack_require__(26974));
+var _window = __webpack_require__(58201);
+var _data_source = __webpack_require__(85273);
+var _utils = __webpack_require__(9234);
+var _utils2 = __webpack_require__(16454);
+var _events_engine = _interopRequireDefault(__webpack_require__(55994));
+var _format_helper = _interopRequireDefault(__webpack_require__(30343));
 var _load_panel = _interopRequireDefault(__webpack_require__(97218));
 var _filtering = _interopRequireDefault(__webpack_require__(18740));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -106,7 +106,7 @@ var setEmptyText = function setEmptyText($container) {
 };
 var normalizeSortingInfo = function normalizeSortingInfo(sort) {
   sort = sort || [];
-  var result = (0, _utils.normalizeSortingInfo)(sort);
+  var result = (0, _utils2.normalizeSortingInfo)(sort);
   for (var i = 0; i < sort.length; i++) {
     if (sort && sort[i] && sort[i].isExpanded !== undefined) {
       result[i].isExpanded = sort[i].isExpanded;
@@ -526,7 +526,7 @@ var _default = {
         lookupDataSourceOptions = lookupDataSourceOptions({});
       }
     }
-    return (0, _utils2.normalizeDataSourceOptions)(lookupDataSourceOptions);
+    return (0, _utils.normalizeDataSourceOptions)(lookupDataSourceOptions);
   },
   getWrappedLookupDataSource: function getWrappedLookupDataSource(column, dataSource, filter) {
     var _this = this;
@@ -652,6 +652,919 @@ var _default = {
     logSpecificDeprecatedWarningIfNeed(columns);
   }
 };
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 86988:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _position = _interopRequireDefault(__webpack_require__(49387));
+var _translator = __webpack_require__(31648);
+var _component_registrator = _interopRequireDefault(__webpack_require__(99393));
+var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
+var _dom_component = _interopRequireDefault(__webpack_require__(13046));
+var _element = __webpack_require__(6415);
+var _renderer = _interopRequireDefault(__webpack_require__(68374));
+var _empty_template = __webpack_require__(10688);
+var _common = __webpack_require__(20576);
+var _deferred = __webpack_require__(62754);
+var _extend = __webpack_require__(13306);
+var _inflector = __webpack_require__(78008);
+var _position2 = __webpack_require__(37518);
+var _size = __webpack_require__(58664);
+var _string = __webpack_require__(68752);
+var _type = __webpack_require__(35922);
+var _view_port = __webpack_require__(77695);
+var _window = __webpack_require__(58201);
+var _events_engine = _interopRequireDefault(__webpack_require__(55994));
+var _drag = __webpack_require__(23174);
+var _pointer = _interopRequireDefault(__webpack_require__(93786));
+var _index = __webpack_require__(39611);
+var _animator = _interopRequireDefault(__webpack_require__(6866));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+var window = (0, _window.getWindow)();
+var KEYDOWN_EVENT = 'keydown';
+var DRAGGABLE = 'dxDraggable';
+var DRAGSTART_EVENT_NAME = (0, _index.addNamespace)(_drag.start, DRAGGABLE);
+var DRAG_EVENT_NAME = (0, _index.addNamespace)(_drag.move, DRAGGABLE);
+var DRAGEND_EVENT_NAME = (0, _index.addNamespace)(_drag.end, DRAGGABLE);
+var DRAG_ENTER_EVENT_NAME = (0, _index.addNamespace)(_drag.enter, DRAGGABLE);
+var DRAGEND_LEAVE_EVENT_NAME = (0, _index.addNamespace)(_drag.leave, DRAGGABLE);
+var POINTERDOWN_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.down, DRAGGABLE);
+var KEYDOWN_EVENT_NAME = (0, _index.addNamespace)(KEYDOWN_EVENT, DRAGGABLE);
+var CLONE_CLASS = 'clone';
+var targetDraggable;
+var sourceDraggable;
+var ANONYMOUS_TEMPLATE_NAME = 'content';
+var getMousePosition = function getMousePosition(event) {
+  return {
+    // @ts-expect-error
+    x: event.pageX - (0, _renderer.default)(window).scrollLeft(),
+    // @ts-expect-error
+    y: event.pageY - (0, _renderer.default)(window).scrollTop()
+  };
+};
+var GESTURE_COVER_CLASS = 'dx-gesture-cover';
+var OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
+var OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
+var ScrollHelper = /*#__PURE__*/function () {
+  function ScrollHelper(orientation, component) {
+    this._$scrollableAtPointer = null;
+    this._preventScroll = true;
+    this._component = component;
+    if (orientation === 'vertical') {
+      this._scrollValue = 'scrollTop';
+      this._overFlowAttr = 'overflowY';
+      this._sizeAttr = 'height';
+      this._scrollSizeProp = 'scrollHeight';
+      this._clientSizeProp = 'clientHeight';
+      this._limitProps = {
+        start: 'top',
+        end: 'bottom'
+      };
+    } else {
+      this._scrollValue = 'scrollLeft';
+      this._overFlowAttr = 'overflowX';
+      this._sizeAttr = 'width';
+      this._scrollSizeProp = 'scrollWidth';
+      this._clientSizeProp = 'clientWidth';
+      this._limitProps = {
+        start: 'left',
+        end: 'right'
+      };
+    }
+  }
+  var _proto = ScrollHelper.prototype;
+  _proto.updateScrollable = function updateScrollable(elements, mousePosition) {
+    var _this = this;
+    var isScrollableFound = false;
+    elements.some(function (element) {
+      var $element = (0, _renderer.default)(element);
+      var isTargetOverOverlayWrapper = $element.hasClass(OVERLAY_WRAPPER_CLASS);
+      var isTargetOverOverlayContent = $element.hasClass(OVERLAY_CONTENT_CLASS);
+      if (isTargetOverOverlayWrapper || isTargetOverOverlayContent) {
+        return true;
+      }
+      isScrollableFound = _this._trySetScrollable(element, mousePosition);
+      return isScrollableFound;
+    });
+    if (!isScrollableFound) {
+      this._$scrollableAtPointer = null;
+      this._scrollSpeed = 0;
+    }
+  };
+  _proto.isScrolling = function isScrolling() {
+    return !!this._scrollSpeed;
+  };
+  _proto.isScrollable = function isScrollable($element) {
+    return ($element.css(this._overFlowAttr) === 'auto' || $element.hasClass('dx-scrollable-container')) && $element.prop(this._scrollSizeProp) > Math.ceil(this._sizeAttr === 'width' ? (0, _size.getWidth)($element) : (0, _size.getHeight)($element));
+  };
+  _proto._trySetScrollable = function _trySetScrollable(element, mousePosition) {
+    var that = this;
+    var $element = (0, _renderer.default)(element);
+    var distanceToBorders;
+    var sensitivity = that._component.option('scrollSensitivity');
+    var isScrollable = that.isScrollable($element);
+    if (isScrollable) {
+      distanceToBorders = that._calculateDistanceToBorders($element, mousePosition);
+      if (sensitivity > distanceToBorders[that._limitProps.start]) {
+        if (!that._preventScroll) {
+          that._scrollSpeed = -that._calculateScrollSpeed(distanceToBorders[that._limitProps.start]);
+          that._$scrollableAtPointer = $element;
+        }
+      } else if (sensitivity > distanceToBorders[that._limitProps.end]) {
+        if (!that._preventScroll) {
+          that._scrollSpeed = that._calculateScrollSpeed(distanceToBorders[that._limitProps.end]);
+          that._$scrollableAtPointer = $element;
+        }
+      } else {
+        isScrollable = false;
+        that._preventScroll = false;
+      }
+    }
+    return isScrollable;
+  };
+  _proto._calculateDistanceToBorders = function _calculateDistanceToBorders($area, mousePosition) {
+    var area = $area.get(0);
+    var areaBoundingRect;
+    if (area) {
+      areaBoundingRect = (0, _position2.getBoundingRect)(area);
+      return {
+        left: mousePosition.x - areaBoundingRect.left,
+        top: mousePosition.y - areaBoundingRect.top,
+        right: areaBoundingRect.right - mousePosition.x,
+        bottom: areaBoundingRect.bottom - mousePosition.y
+      };
+    }
+    return {};
+  };
+  _proto._calculateScrollSpeed = function _calculateScrollSpeed(distance) {
+    var component = this._component;
+    var sensitivity = component.option('scrollSensitivity');
+    var maxSpeed = component.option('scrollSpeed');
+    return Math.ceil(Math.pow((sensitivity - distance) / sensitivity, 2) * maxSpeed);
+  };
+  _proto.scrollByStep = function scrollByStep() {
+    var that = this;
+    if (that._$scrollableAtPointer && that._scrollSpeed) {
+      if (that._$scrollableAtPointer.hasClass('dx-scrollable-container')) {
+        var $scrollable = that._$scrollableAtPointer.closest('.dx-scrollable');
+        var scrollableInstance = $scrollable.data('dxScrollable') || $scrollable.data('dxScrollView');
+        if (scrollableInstance) {
+          var nextScrollPosition = scrollableInstance.scrollOffset()[that._limitProps.start] + that._scrollSpeed;
+          scrollableInstance.scrollTo(_defineProperty({}, that._limitProps.start, nextScrollPosition));
+        }
+      } else {
+        var _nextScrollPosition = that._$scrollableAtPointer[that._scrollValue]() + that._scrollSpeed;
+        that._$scrollableAtPointer[that._scrollValue](_nextScrollPosition);
+      }
+      var dragMoveArgs = that._component._dragMoveArgs;
+      if (dragMoveArgs) {
+        that._component._dragMoveHandler(dragMoveArgs);
+      }
+    }
+  };
+  _proto.reset = function reset() {
+    this._$scrollableAtPointer = null;
+    this._scrollSpeed = 0;
+    this._preventScroll = true;
+  };
+  _proto.isOutsideScrollable = function isOutsideScrollable($scrollable, event) {
+    if (!$scrollable) {
+      return false;
+    }
+    var scrollableSize = (0, _position2.getBoundingRect)($scrollable.get(0));
+    var start = scrollableSize[this._limitProps.start];
+    var size = scrollableSize[this._sizeAttr];
+    var mousePosition = getMousePosition(event);
+    var location = this._sizeAttr === 'width' ? mousePosition.x : mousePosition.y;
+    return location < start || location > start + size;
+  };
+  return ScrollHelper;
+}();
+var ScrollAnimator = _animator.default.inherit({
+  ctor: function ctor(strategy) {
+    this.callBase();
+    this._strategy = strategy;
+  },
+  _step: function _step() {
+    var horizontalScrollHelper = this._strategy._horizontalScrollHelper;
+    var verticalScrollHelper = this._strategy._verticalScrollHelper;
+    horizontalScrollHelper && horizontalScrollHelper.scrollByStep();
+    verticalScrollHelper && verticalScrollHelper.scrollByStep();
+  }
+});
+var Draggable = _dom_component.default.inherit({
+  reset: _common.noop,
+  dragMove: _common.noop,
+  dragEnter: _common.noop,
+  dragLeave: _common.noop,
+  dragEnd: function dragEnd(sourceEvent) {
+    var sourceDraggable = this._getSourceDraggable();
+    sourceDraggable._fireRemoveEvent(sourceEvent);
+    return (0, _deferred.Deferred)().resolve();
+  },
+  _fireRemoveEvent: _common.noop,
+  _getDefaultOptions: function _getDefaultOptions() {
+    return (0, _extend.extend)(this.callBase(), {
+      onDragStart: null,
+      onDragMove: null,
+      onDragEnd: null,
+      onDragEnter: null,
+      onDragLeave: null,
+      onDragCancel: null,
+      onCancelByEsc: false,
+      onDrop: null,
+      immediate: true,
+      dragDirection: 'both',
+      boundary: undefined,
+      boundOffset: 0,
+      allowMoveByClick: false,
+      itemData: null,
+      container: undefined,
+      dragTemplate: undefined,
+      contentTemplate: 'content',
+      handle: '',
+      filter: '',
+      clone: false,
+      autoScroll: true,
+      scrollSpeed: 30,
+      scrollSensitivity: 60,
+      group: undefined,
+      data: undefined
+    });
+  },
+  _setOptionsByReference: function _setOptionsByReference() {
+    this.callBase.apply(this, arguments);
+    (0, _extend.extend)(this._optionsByReference, {
+      component: true,
+      group: true,
+      itemData: true,
+      data: true
+    });
+  },
+  _init: function _init() {
+    this.callBase();
+    this._attachEventHandlers();
+    this._scrollAnimator = new ScrollAnimator(this);
+    this._horizontalScrollHelper = new ScrollHelper('horizontal', this);
+    this._verticalScrollHelper = new ScrollHelper('vertical', this);
+    this._initScrollTop = 0;
+    this._initScrollLeft = 0;
+  },
+  _normalizeCursorOffset: function _normalizeCursorOffset(offset) {
+    if ((0, _type.isObject)(offset)) {
+      offset = {
+        h: offset.x,
+        v: offset.y
+      };
+    }
+    offset = (0, _common.splitPair)(offset).map(function (value) {
+      return parseFloat(value);
+    });
+    return {
+      left: offset[0],
+      top: offset.length === 1 ? offset[0] : offset[1]
+    };
+  },
+  _getNormalizedCursorOffset: function _getNormalizedCursorOffset(offset, options) {
+    if ((0, _type.isFunction)(offset)) {
+      offset = offset.call(this, options);
+    }
+    return this._normalizeCursorOffset(offset);
+  },
+  _calculateElementOffset: function _calculateElementOffset(options) {
+    var elementOffset;
+    var dragElementOffset;
+    var event = options.event;
+    var $element = (0, _renderer.default)(options.itemElement);
+    var $dragElement = (0, _renderer.default)(options.dragElement);
+    var isCloned = this._dragElementIsCloned();
+    var cursorOffset = this.option('cursorOffset');
+    var normalizedCursorOffset = {
+      left: 0,
+      top: 0
+    };
+    var currentLocate = this._initialLocate = (0, _translator.locate)($dragElement);
+    if (isCloned || options.initialOffset || cursorOffset) {
+      elementOffset = options.initialOffset || $element.offset();
+      if (cursorOffset) {
+        normalizedCursorOffset = this._getNormalizedCursorOffset(cursorOffset, options);
+        if (isFinite(normalizedCursorOffset.left)) {
+          elementOffset.left = event.pageX;
+        }
+        if (isFinite(normalizedCursorOffset.top)) {
+          elementOffset.top = event.pageY;
+        }
+      }
+      dragElementOffset = $dragElement.offset();
+      elementOffset.top -= dragElementOffset.top + (normalizedCursorOffset.top || 0) - currentLocate.top;
+      elementOffset.left -= dragElementOffset.left + (normalizedCursorOffset.left || 0) - currentLocate.left;
+    }
+    return elementOffset;
+  },
+  _initPosition: function _initPosition(options) {
+    var $dragElement = (0, _renderer.default)(options.dragElement);
+    var elementOffset = this._calculateElementOffset(options);
+    if (elementOffset) {
+      this._move(elementOffset, $dragElement);
+    }
+    this._startPosition = (0, _translator.locate)($dragElement);
+  },
+  _startAnimator: function _startAnimator() {
+    if (!this._scrollAnimator.inProgress()) {
+      this._scrollAnimator.start();
+    }
+  },
+  _stopAnimator: function _stopAnimator() {
+    this._scrollAnimator.stop();
+  },
+  _addWidgetPrefix: function _addWidgetPrefix(className) {
+    var componentName = this.NAME;
+    return (0, _inflector.dasherize)(componentName) + (className ? "-".concat(className) : '');
+  },
+  _getItemsSelector: function _getItemsSelector() {
+    return this.option('filter') || '';
+  },
+  _$content: function _$content() {
+    var $element = this.$element();
+    var $wrapper = $element.children('.dx-template-wrapper');
+    return $wrapper.length ? $wrapper : $element;
+  },
+  _attachEventHandlers: function _attachEventHandlers() {
+    var _this2 = this;
+    if (this.option('disabled')) {
+      return;
+    }
+    var $element = this._$content();
+    var itemsSelector = this._getItemsSelector();
+    var allowMoveByClick = this.option('allowMoveByClick');
+    var data = {
+      direction: this.option('dragDirection'),
+      immediate: this.option('immediate'),
+      checkDropTarget: function checkDropTarget($target, event) {
+        var targetGroup = _this2.option('group');
+        var sourceGroup = _this2._getSourceDraggable().option('group');
+        var $scrollable = _this2._getScrollable($target);
+        if (_this2._verticalScrollHelper.isOutsideScrollable($scrollable, event) || _this2._horizontalScrollHelper.isOutsideScrollable($scrollable, event)) {
+          return false;
+        }
+        return sourceGroup && sourceGroup === targetGroup;
+      }
+    };
+    if (allowMoveByClick) {
+      $element = this._getArea();
+      _events_engine.default.on($element, POINTERDOWN_EVENT_NAME, data, this._pointerDownHandler.bind(this));
+    }
+    if (itemsSelector[0] === '>') {
+      itemsSelector = itemsSelector.slice(1);
+    }
+    // @ts-expect-error
+    _events_engine.default.on($element, DRAGSTART_EVENT_NAME, itemsSelector, data, this._dragStartHandler.bind(this));
+    _events_engine.default.on($element, DRAG_EVENT_NAME, data, this._dragMoveHandler.bind(this));
+    _events_engine.default.on($element, DRAGEND_EVENT_NAME, data, this._dragEndHandler.bind(this));
+    _events_engine.default.on($element, DRAG_ENTER_EVENT_NAME, data, this._dragEnterHandler.bind(this));
+    _events_engine.default.on($element, DRAGEND_LEAVE_EVENT_NAME, data, this._dragLeaveHandler.bind(this));
+    if (this.option('onCancelByEsc')) {
+      _events_engine.default.on($element, KEYDOWN_EVENT_NAME, this._keydownHandler.bind(this));
+    }
+  },
+  _dragElementIsCloned: function _dragElementIsCloned() {
+    return this._$dragElement && this._$dragElement.hasClass(this._addWidgetPrefix(CLONE_CLASS));
+  },
+  _getDragTemplateArgs: function _getDragTemplateArgs($element, $container) {
+    return {
+      container: (0, _element.getPublicElement)($container),
+      model: {
+        itemData: this.option('itemData'),
+        itemElement: (0, _element.getPublicElement)($element)
+      }
+    };
+  },
+  _createDragElement: function _createDragElement($element) {
+    var result = $element;
+    var clone = this.option('clone');
+    var $container = this._getContainer();
+    var template = this.option('dragTemplate');
+    if (template) {
+      template = this._getTemplate(template);
+      result = (0, _renderer.default)('<div>').appendTo($container);
+      template.render(this._getDragTemplateArgs($element, result));
+    } else if (clone) {
+      result = (0, _renderer.default)('<div>').appendTo($container);
+      $element.clone().css({
+        width: $element.css('width'),
+        height: $element.css('height')
+      }).appendTo(result);
+    }
+    return result.toggleClass(this._addWidgetPrefix(CLONE_CLASS), result.get(0) !== $element.get(0)).toggleClass('dx-rtl', this.option('rtlEnabled'));
+  },
+  _resetDragElement: function _resetDragElement() {
+    if (this._dragElementIsCloned()) {
+      this._$dragElement.remove();
+    } else {
+      this._toggleDraggingClass(false);
+    }
+    this._$dragElement = null;
+  },
+  _resetSourceElement: function _resetSourceElement() {
+    this._toggleDragSourceClass(false);
+    this._$sourceElement = null;
+  },
+  _detachEventHandlers: function _detachEventHandlers() {
+    // @ts-expect-error
+    _events_engine.default.off(this._$content(), ".".concat(DRAGGABLE));
+    // @ts-expect-error
+    _events_engine.default.off(this._getArea(), ".".concat(DRAGGABLE));
+  },
+  _move: function _move(position, $element) {
+    (0, _translator.move)($element || this._$dragElement, position);
+  },
+  _getDraggableElement: function _getDraggableElement(e) {
+    var $sourceElement = this._getSourceElement();
+    if ($sourceElement) {
+      return $sourceElement;
+    }
+    var allowMoveByClick = this.option('allowMoveByClick');
+    if (allowMoveByClick) {
+      return this.$element();
+    }
+    var $target = (0, _renderer.default)(e && e.target);
+    var itemsSelector = this._getItemsSelector();
+    if (itemsSelector[0] === '>') {
+      var $items = this._$content().find(itemsSelector);
+      if (!$items.is($target)) {
+        $target = $target.closest($items);
+      }
+    }
+    return $target;
+  },
+  _getSourceElement: function _getSourceElement() {
+    var draggable = this._getSourceDraggable();
+    return draggable._$sourceElement;
+  },
+  _pointerDownHandler: function _pointerDownHandler(e) {
+    if ((0, _index.needSkipEvent)(e)) {
+      return;
+    }
+    var position = {};
+    var $element = this.$element();
+    var dragDirection = this.option('dragDirection');
+    if (dragDirection === 'horizontal' || dragDirection === 'both') {
+      position.left = e.pageX - $element.offset().left + (0, _translator.locate)($element).left - (0, _size.getWidth)($element) / 2;
+    }
+    if (dragDirection === 'vertical' || dragDirection === 'both') {
+      position.top = e.pageY - $element.offset().top + (0, _translator.locate)($element).top - (0, _size.getHeight)($element) / 2;
+    }
+    this._move(position, $element);
+    this._getAction('onDragMove')(this._getEventArgs(e));
+  },
+  _isValidElement: function _isValidElement(event, $element) {
+    var handle = this.option('handle');
+    var $target = (0, _renderer.default)(event.originalEvent && event.originalEvent.target);
+    if (handle && !$target.closest(handle).length) {
+      return false;
+    }
+    if (!$element.length) {
+      return false;
+    }
+    return !$element.is('.dx-state-disabled, .dx-state-disabled *');
+  },
+  _dragStartHandler: function _dragStartHandler(e) {
+    var $element = this._getDraggableElement(e);
+    this.dragInProgress = true;
+    if (!this._isValidElement(e, $element)) {
+      e.cancel = true;
+      return;
+    }
+    if (this._$sourceElement) {
+      return;
+    }
+    var dragStartArgs = this._getDragStartArgs(e, $element);
+    this._getAction('onDragStart')(dragStartArgs);
+    if (dragStartArgs.cancel) {
+      e.cancel = true;
+      return;
+    }
+    this.option('itemData', dragStartArgs.itemData);
+    this._setSourceDraggable();
+    this._$sourceElement = $element;
+    var initialOffset = $element.offset();
+    if (!this._hasClonedDraggable() && this.option('autoScroll')) {
+      this._initScrollTop = this._getScrollableScrollTop();
+      this._initScrollLeft = this._getScrollableScrollLeft();
+      initialOffset = this._getDraggableElementOffset(initialOffset.left, initialOffset.top);
+    }
+    var $dragElement = this._$dragElement = this._createDragElement($element);
+    this._toggleDraggingClass(true);
+    this._toggleDragSourceClass(true);
+    this._setGestureCoverCursor($dragElement.children());
+    var isFixedPosition = $dragElement.css('position') === 'fixed';
+    this._initPosition((0, _extend.extend)({}, dragStartArgs, {
+      dragElement: $dragElement.get(0),
+      initialOffset: isFixedPosition && initialOffset
+    }));
+    this._getAction('onDraggableElementShown')(_extends(_extends({}, dragStartArgs), {
+      dragElement: $dragElement
+    }));
+    var $area = this._getArea();
+    var areaOffset = this._getAreaOffset($area);
+    var boundOffset = this._getBoundOffset();
+    var areaWidth = (0, _size.getOuterWidth)($area);
+    var areaHeight = (0, _size.getOuterHeight)($area);
+    var elementWidth = (0, _size.getWidth)($dragElement);
+    var elementHeight = (0, _size.getHeight)($dragElement);
+    var startOffset = {
+      left: $dragElement.offset().left - areaOffset.left,
+      top: $dragElement.offset().top - areaOffset.top
+    };
+    if ($area.length) {
+      e.maxLeftOffset = startOffset.left - boundOffset.left;
+      e.maxRightOffset = areaWidth - startOffset.left - elementWidth - boundOffset.right;
+      e.maxTopOffset = startOffset.top - boundOffset.top;
+      e.maxBottomOffset = areaHeight - startOffset.top - elementHeight - boundOffset.bottom;
+    }
+    if (this.option('autoScroll')) {
+      this._startAnimator();
+    }
+  },
+  _getAreaOffset: function _getAreaOffset($area) {
+    var offset = $area && _position.default.offset($area);
+    return offset || {
+      left: 0,
+      top: 0
+    };
+  },
+  _toggleDraggingClass: function _toggleDraggingClass(value) {
+    this._$dragElement && this._$dragElement.toggleClass(this._addWidgetPrefix('dragging'), value);
+  },
+  _toggleDragSourceClass: function _toggleDragSourceClass(value, $element) {
+    var $sourceElement = $element || this._$sourceElement;
+    $sourceElement && $sourceElement.toggleClass(this._addWidgetPrefix('source'), value);
+  },
+  _setGestureCoverCursor: function _setGestureCoverCursor($element) {
+    (0, _renderer.default)(".".concat(GESTURE_COVER_CLASS)).css('cursor', $element.css('cursor'));
+  },
+  _getBoundOffset: function _getBoundOffset() {
+    var boundOffset = this.option('boundOffset');
+    if ((0, _type.isFunction)(boundOffset)) {
+      boundOffset = boundOffset.call(this);
+    }
+    return (0, _string.quadToObject)(boundOffset);
+  },
+  _getArea: function _getArea() {
+    var area = this.option('boundary');
+    if ((0, _type.isFunction)(area)) {
+      area = area.call(this);
+    }
+    return (0, _renderer.default)(area);
+  },
+  _getContainer: function _getContainer() {
+    var container = this.option('container');
+    if (container === undefined) {
+      container = (0, _view_port.value)();
+    }
+    return (0, _renderer.default)(container);
+  },
+  _getDraggableElementOffset: function _getDraggableElementOffset(initialOffsetX, initialOffsetY) {
+    var _a, _b, _c, _d;
+    var initScrollTop = this._initScrollTop;
+    var initScrollLeft = this._initScrollLeft;
+    var scrollTop = this._getScrollableScrollTop();
+    var scrollLeft = this._getScrollableScrollLeft();
+    var elementPosition = (0, _renderer.default)(this.element()).css('position');
+    var isFixedPosition = elementPosition === 'fixed';
+    var result = {
+      left: ((_b = (_a = this._startPosition) === null || _a === void 0 ? void 0 : _a.left) !== null && _b !== void 0 ? _b : 0) + initialOffsetX,
+      top: ((_d = (_c = this._startPosition) === null || _c === void 0 ? void 0 : _c.top) !== null && _d !== void 0 ? _d : 0) + initialOffsetY
+    };
+    if (isFixedPosition || this._hasClonedDraggable()) {
+      return result;
+    }
+    return {
+      left: (0, _type.isNumeric)(scrollLeft) ? result.left + scrollLeft - initScrollLeft : result.left,
+      top: (0, _type.isNumeric)(scrollTop) ? result.top + scrollTop - initScrollTop : result.top
+    };
+  },
+  _hasClonedDraggable: function _hasClonedDraggable() {
+    return this.option('clone') || this.option('dragTemplate');
+  },
+  _dragMoveHandler: function _dragMoveHandler(e) {
+    this._dragMoveArgs = e;
+    if (!this._$dragElement) {
+      e.cancel = true;
+      return;
+    }
+    var offset = this._getDraggableElementOffset(e.offset.x, e.offset.y);
+    this._move(offset);
+    this._updateScrollable(e);
+    var eventArgs = this._getEventArgs(e);
+    this._getAction('onDragMove')(eventArgs);
+    if (eventArgs.cancel === true) {
+      return;
+    }
+    var targetDraggable = this._getTargetDraggable();
+    targetDraggable.dragMove(e, scrollBy);
+  },
+  _updateScrollable: function _updateScrollable(e) {
+    var that = this;
+    if (that.option('autoScroll')) {
+      var mousePosition = getMousePosition(e);
+      var allObjects = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.$element().get(0));
+      that._verticalScrollHelper.updateScrollable(allObjects, mousePosition);
+      that._horizontalScrollHelper.updateScrollable(allObjects, mousePosition);
+    }
+  },
+  _getScrollable: function _getScrollable($element) {
+    var _this3 = this;
+    var $scrollable;
+    $element.parents().toArray().some(function (parent) {
+      var $parent = (0, _renderer.default)(parent);
+      if (_this3._horizontalScrollHelper.isScrollable($parent) || _this3._verticalScrollHelper.isScrollable($parent)) {
+        $scrollable = $parent;
+        return true;
+      }
+      return false;
+    });
+    return $scrollable;
+  },
+  _getScrollableScrollTop: function _getScrollableScrollTop() {
+    var _a, _b;
+    return (_b = (_a = this._getScrollable((0, _renderer.default)(this.element()))) === null || _a === void 0 ? void 0 : _a.scrollTop()) !== null && _b !== void 0 ? _b : 0;
+  },
+  _getScrollableScrollLeft: function _getScrollableScrollLeft() {
+    var _a, _b;
+    return (_b = (_a = this._getScrollable((0, _renderer.default)(this.element()))) === null || _a === void 0 ? void 0 : _a.scrollLeft()) !== null && _b !== void 0 ? _b : 0;
+  },
+  _defaultActionArgs: function _defaultActionArgs() {
+    var args = this.callBase.apply(this, arguments);
+    var component = this.option('component');
+    if (component) {
+      args.component = component;
+      args.element = component.element();
+    }
+    return args;
+  },
+  _getEventArgs: function _getEventArgs(e) {
+    var sourceDraggable = this._getSourceDraggable();
+    var targetDraggable = this._getTargetDraggable();
+    return {
+      event: e,
+      itemData: sourceDraggable.option('itemData'),
+      itemElement: (0, _element.getPublicElement)(sourceDraggable._$sourceElement),
+      fromComponent: sourceDraggable.option('component') || sourceDraggable,
+      toComponent: targetDraggable.option('component') || targetDraggable,
+      fromData: sourceDraggable.option('data'),
+      toData: targetDraggable.option('data')
+    };
+  },
+  _getDragStartArgs: function _getDragStartArgs(e, $itemElement) {
+    var args = this._getEventArgs(e);
+    return {
+      event: args.event,
+      itemData: args.itemData,
+      itemElement: $itemElement,
+      fromData: args.fromData
+    };
+  },
+  _revertItemToInitialPosition: function _revertItemToInitialPosition() {
+    !this._dragElementIsCloned() && this._move(this._initialLocate, this._$sourceElement);
+  },
+  _dragEndHandler: function _dragEndHandler(e) {
+    var _this4 = this;
+    var d = (0, _deferred.Deferred)();
+    var dragEndEventArgs = this._getEventArgs(e);
+    var dropEventArgs = this._getEventArgs(e);
+    var targetDraggable = this._getTargetDraggable();
+    var needRevertPosition = true;
+    this.dragInProgress = false;
+    try {
+      this._getAction('onDragEnd')(dragEndEventArgs);
+    } finally {
+      (0, _deferred.when)((0, _deferred.fromPromise)(dragEndEventArgs.cancel)).done(function (cancel) {
+        if (!cancel) {
+          if (targetDraggable !== _this4) {
+            targetDraggable._getAction('onDrop')(dropEventArgs);
+          }
+          if (!dropEventArgs.cancel) {
+            needRevertPosition = false;
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            (0, _deferred.when)((0, _deferred.fromPromise)(targetDraggable.dragEnd(dragEndEventArgs))).always(d.resolve);
+            return;
+          }
+        }
+        d.resolve();
+      })
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      .fail(d.resolve);
+      d.done(function () {
+        if (needRevertPosition) {
+          _this4._revertItemToInitialPosition();
+        }
+        _this4._resetDragOptions(targetDraggable);
+      });
+    }
+  },
+  _isTargetOverAnotherDraggable: function _isTargetOverAnotherDraggable(e) {
+    var _this5 = this;
+    var sourceDraggable = this._getSourceDraggable();
+    if (this === sourceDraggable) {
+      return false;
+    }
+    var $dragElement = sourceDraggable._$dragElement;
+    var $sourceDraggableElement = sourceDraggable.$element();
+    var $targetDraggableElement = this.$element();
+    var mousePosition = getMousePosition(e);
+    var elements = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.element());
+    var firstWidgetElement = elements.filter(function (element) {
+      var $element = (0, _renderer.default)(element);
+      if ($element.hasClass(_this5._addWidgetPrefix())) {
+        return !$element.closest($dragElement).length;
+      }
+      return false;
+    })[0];
+    var $sourceElement = this._getSourceElement();
+    var isTargetOverItself = firstWidgetElement === $sourceDraggableElement.get(0);
+    var isTargetOverNestedDraggable = (0, _renderer.default)(firstWidgetElement).closest($sourceElement).length;
+    return !firstWidgetElement || firstWidgetElement === $targetDraggableElement.get(0) && !isTargetOverItself && !isTargetOverNestedDraggable;
+  },
+  _dragEnterHandler: function _dragEnterHandler(e) {
+    this._fireDragEnterEvent(e);
+    if (this._isTargetOverAnotherDraggable(e)) {
+      this._setTargetDraggable();
+    }
+    var sourceDraggable = this._getSourceDraggable();
+    sourceDraggable.dragEnter(e);
+  },
+  _dragLeaveHandler: function _dragLeaveHandler(e) {
+    this._fireDragLeaveEvent(e);
+    this._resetTargetDraggable();
+    if (this !== this._getSourceDraggable()) {
+      this.reset();
+    }
+    var sourceDraggable = this._getSourceDraggable();
+    sourceDraggable.dragLeave(e);
+  },
+  _keydownHandler: function _keydownHandler(e) {
+    if (this.dragInProgress && e.key === 'Escape') {
+      this._keydownEscapeHandler(e);
+    }
+  },
+  _keydownEscapeHandler: function _keydownEscapeHandler(e) {
+    var $sourceElement = this._getSourceElement();
+    if (!$sourceElement) {
+      return;
+    }
+    var dragCancelEventArgs = this._getEventArgs(e);
+    this._getAction('onDragCancel')(dragCancelEventArgs);
+    if (dragCancelEventArgs.cancel) {
+      return;
+    }
+    this.dragInProgress = false;
+    sourceDraggable === null || sourceDraggable === void 0 ? void 0 : sourceDraggable._toggleDraggingClass(false);
+    this._detachEventHandlers();
+    this._revertItemToInitialPosition();
+    var targetDraggable = this._getTargetDraggable();
+    this._resetDragOptions(targetDraggable);
+    this._attachEventHandlers();
+  },
+  _getAction: function _getAction(name) {
+    return this["_".concat(name, "Action")] || this._createActionByOption(name);
+  },
+  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+    return ANONYMOUS_TEMPLATE_NAME;
+  },
+  _initTemplates: function _initTemplates() {
+    if (!this.option('contentTemplate')) return;
+    this._templateManager.addDefaultTemplates({
+      content: new _empty_template.EmptyTemplate()
+    });
+    this.callBase.apply(this, arguments);
+  },
+  _render: function _render() {
+    this.callBase();
+    this.$element().addClass(this._addWidgetPrefix());
+    var transclude = this._templateManager.anonymousTemplateName === this.option('contentTemplate');
+    var template = this._getTemplateByOption('contentTemplate');
+    if (template) {
+      (0, _renderer.default)(template.render({
+        container: this.element(),
+        transclude: transclude
+      }));
+    }
+  },
+  _optionChanged: function _optionChanged(args) {
+    var name = args.name;
+    switch (name) {
+      case 'onDragStart':
+      case 'onDragMove':
+      case 'onDragEnd':
+      case 'onDrop':
+      case 'onDragEnter':
+      case 'onDragLeave':
+      case 'onDragCancel':
+      case 'onDraggableElementShown':
+        this["_".concat(name, "Action")] = this._createActionByOption(name);
+        break;
+      case 'dragTemplate':
+      case 'contentTemplate':
+      case 'container':
+      case 'clone':
+        break;
+      case 'allowMoveByClick':
+      case 'dragDirection':
+      case 'disabled':
+      case 'boundary':
+      case 'filter':
+      case 'immediate':
+        this._resetDragElement();
+        this._detachEventHandlers();
+        this._attachEventHandlers();
+        break;
+      case 'onCancelByEsc':
+        this._keydownHandler();
+        break;
+      case 'autoScroll':
+        this._verticalScrollHelper.reset();
+        this._horizontalScrollHelper.reset();
+        break;
+      case 'scrollSensitivity':
+      case 'scrollSpeed':
+      case 'boundOffset':
+      case 'handle':
+      case 'group':
+      case 'data':
+      case 'itemData':
+        break;
+      default:
+        this.callBase(args);
+    }
+  },
+  _getTargetDraggable: function _getTargetDraggable() {
+    return targetDraggable || this;
+  },
+  _getSourceDraggable: function _getSourceDraggable() {
+    return sourceDraggable || this;
+  },
+  _setTargetDraggable: function _setTargetDraggable() {
+    var currentGroup = this.option('group');
+    var sourceDraggable = this._getSourceDraggable();
+    if (currentGroup && currentGroup === sourceDraggable.option('group')) {
+      targetDraggable = this;
+    }
+  },
+  _setSourceDraggable: function _setSourceDraggable() {
+    sourceDraggable = this;
+  },
+  _resetSourceDraggable: function _resetSourceDraggable() {
+    sourceDraggable = null;
+  },
+  _resetTargetDraggable: function _resetTargetDraggable() {
+    targetDraggable = null;
+  },
+  _resetDragOptions: function _resetDragOptions(targetDraggable) {
+    this.reset();
+    targetDraggable.reset();
+    this._stopAnimator();
+    this._horizontalScrollHelper.reset();
+    this._verticalScrollHelper.reset();
+    this._resetDragElement();
+    this._resetSourceElement();
+    this._resetTargetDraggable();
+    this._resetSourceDraggable();
+  },
+  _dispose: function _dispose() {
+    this.callBase();
+    this._detachEventHandlers();
+    this._resetDragElement();
+    this._resetTargetDraggable();
+    this._resetSourceDraggable();
+    this._$sourceElement = null;
+    this._stopAnimator();
+  },
+  _fireDragEnterEvent: function _fireDragEnterEvent(sourceEvent) {
+    var args = this._getEventArgs(sourceEvent);
+    this._getAction('onDragEnter')(args);
+  },
+  _fireDragLeaveEvent: function _fireDragLeaveEvent(sourceEvent) {
+    var args = this._getEventArgs(sourceEvent);
+    this._getAction('onDragLeave')(args);
+  }
+});
+(0, _component_registrator.default)(DRAGGABLE, Draggable);
+var _default = Draggable;
 exports["default"] = _default;
 
 /***/ }),
@@ -1497,7 +2410,6 @@ var _common = __webpack_require__(20576);
 var _iterator = __webpack_require__(95479);
 var _window = __webpack_require__(58201);
 var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
-var _visual_viewport = __webpack_require__(9433);
 var _type = __webpack_require__(35922);
 var _extend = __webpack_require__(13306);
 var _position = __webpack_require__(37518);
@@ -1713,18 +2625,11 @@ var calculatePosition = function calculatePosition(what, options) {
     if ((0, _type.isWindow)(of[0])) {
       h.atLocation = of.scrollLeft();
       v.atLocation = of.scrollTop();
-      var isPhone = _devices.default.real().deviceType === 'phone';
-      var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
-      if (isPhone && isVisualViewportAvailable) {
-        var _getVisualViewportSiz = (0, _visual_viewport.getVisualViewportSizes)(),
-          offsetLeft = _getVisualViewportSiz.offsetLeft,
-          offsetTop = _getVisualViewportSiz.offsetTop,
-          width = _getVisualViewportSiz.width,
-          height = _getVisualViewportSiz.height;
-        h.atLocation = Math.max(h.atLocation, offsetLeft);
-        v.atLocation = Math.max(v.atLocation, offsetTop);
-        h.atSize = width;
-        v.atSize = height;
+      if (_devices.default.real().deviceType === 'phone' && of[0].visualViewport) {
+        h.atLocation = Math.max(h.atLocation, of[0].visualViewport.offsetLeft);
+        v.atLocation = Math.max(v.atLocation, of[0].visualViewport.offsetTop);
+        h.atSize = of[0].visualViewport.width;
+        v.atSize = of[0].visualViewport.height;
       } else {
         h.atSize = of[0].innerWidth > of[0].outerWidth ? of[0].innerWidth : (0, _size.getWidth)(of);
         v.atSize = of[0].innerHeight > of[0].outerHeight || IS_SAFARI ? of[0].innerHeight : (0, _size.getHeight)(of);
@@ -4236,16 +5141,6 @@ var _config = _interopRequireDefault(__webpack_require__(80209));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var navigator = (0, _window.getNavigator)();
 var window = (0, _window.getWindow)();
-var DEVICE_TYPE = {
-  desktop: 'desktop',
-  tablet: 'tablet',
-  phone: 'phone'
-};
-var PLATFORM = {
-  generic: 'generic',
-  ios: 'ios',
-  android: 'android'
-};
 var KNOWN_UA_TABLE = {
   'iPhone': 'iPhone',
   'iPhone5': 'iPhone',
@@ -4259,8 +5154,8 @@ var KNOWN_UA_TABLE = {
   'desktop': 'desktop'
 };
 var DEFAULT_DEVICE = {
-  deviceType: DEVICE_TYPE.desktop,
-  platform: PLATFORM.generic,
+  deviceType: 'desktop',
+  platform: 'generic',
   version: [],
   phone: false,
   tablet: false,
@@ -4281,8 +5176,8 @@ var uaParsers = {
       return;
     }
     return {
-      deviceType: isPhone ? DEVICE_TYPE.phone : isTablet ? DEVICE_TYPE.tablet : DEVICE_TYPE.desktop,
-      platform: PLATFORM.generic,
+      deviceType: isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop',
+      platform: 'generic',
       version: [],
       grade: 'A',
       mac: isMac
@@ -4298,8 +5193,8 @@ var uaParsers = {
     var isIPhone4 = window.screen.height === 960 / 2;
     var grade = isIPhone4 ? 'B' : 'A';
     return {
-      deviceType: isPhone ? DEVICE_TYPE.phone : DEVICE_TYPE.tablet,
-      platform: PLATFORM.ios,
+      deviceType: isPhone ? 'phone' : 'tablet',
+      platform: 'ios',
       version: version,
       grade: grade
     };
@@ -4314,8 +5209,8 @@ var uaParsers = {
     var worseThan4_4 = version.length > 1 && (version[0] < 4 || version[0] === 4 && version[1] < 4);
     var grade = worseThan4_4 ? 'B' : 'A';
     return {
-      deviceType: isPhone ? DEVICE_TYPE.phone : DEVICE_TYPE.tablet,
-      platform: PLATFORM.android,
+      deviceType: isPhone ? 'phone' : 'tablet',
+      platform: 'android',
       version: version,
       grade: grade
     };
@@ -4387,7 +5282,7 @@ var Devices = /*#__PURE__*/function () {
     // TODO: use real device here?
     if (device.deviceType) {
       result.push("dx-device-".concat(device.deviceType));
-      if (device.deviceType !== DEVICE_TYPE.desktop) {
+      if (device.deviceType !== 'desktop') {
         result.push('dx-device-mobile');
       }
     }
@@ -4424,8 +5319,8 @@ var Devices = /*#__PURE__*/function () {
   _proto._getDevice = function _getDevice(deviceName) {
     if (deviceName === 'genericPhone') {
       deviceName = {
-        deviceType: DEVICE_TYPE.phone,
-        platform: PLATFORM.generic,
+        deviceType: 'phone',
+        platform: 'generic',
         generic: true
       };
     }
@@ -4466,11 +5361,11 @@ var Devices = /*#__PURE__*/function () {
   _proto._fromConfig = function _fromConfig(config) {
     var result = (0, _extend.extend)({}, DEFAULT_DEVICE, this._currentDevice, config);
     var shortcuts = {
-      phone: result.deviceType === DEVICE_TYPE.phone,
-      tablet: result.deviceType === DEVICE_TYPE.tablet,
-      android: result.platform === PLATFORM.android,
-      ios: result.platform === PLATFORM.ios,
-      generic: result.platform === PLATFORM.generic
+      phone: result.deviceType === 'phone',
+      tablet: result.deviceType === 'tablet',
+      android: result.platform === 'android',
+      ios: result.platform === 'ios',
+      generic: result.platform === 'generic'
     };
     return (0, _extend.extend)(result, shortcuts);
   };
@@ -8357,6 +9252,7 @@ var getConsoleMethod = function getConsoleMethod(method) {
   return console[method].bind(console);
 };
 var logger = {
+  log: getConsoleMethod('log'),
   info: getConsoleMethod('info'),
   warn: getConsoleMethod('warn'),
   error: getConsoleMethod('error')
@@ -10886,10 +11782,9 @@ function getShadowElementsFromPoint(x, y, root) {
 
 
 exports.setWidth = exports.setOuterWidth = exports.setOuterHeight = exports.setInnerWidth = exports.setInnerHeight = exports.setHeight = exports.parseHeight = exports.implementationsMap = exports.getWindowByElement = exports.getWidth = exports.getVisibleHeight = exports.getVerticalOffsets = exports.getSize = exports.getOuterWidth = exports.getOuterHeight = exports.getOffset = exports.getInnerWidth = exports.getInnerHeight = exports.getHeight = exports.getElementBoxParams = exports.addOffsetToMinHeight = exports.addOffsetToMaxHeight = void 0;
-var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
-var _visual_viewport = __webpack_require__(9433);
-var _type = __webpack_require__(35922);
 var _window = __webpack_require__(58201);
+var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
+var _type = __webpack_require__(35922);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var window = (0, _window.getWindow)();
 var SPECIAL_HEIGHT_VALUES = ['auto', 'none', 'inherit', 'initial'];
@@ -11194,12 +12089,6 @@ var elementSize = function elementSize(el, sizeProperty, value) {
   }
   if (!el) return;
   if ((0, _type.isWindow)(el)) {
-    var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
-    var shouldUseVisualViewport = isVisualViewportAvailable && ['width', 'height'].includes(sizeProperty);
-    if (shouldUseVisualViewport) {
-      var size = (0, _visual_viewport.getVisualViewportSizes)()[sizeProperty];
-      return size;
-    }
     return isOuter ? el['inner' + partialName] : _dom_adapter.default.getDocumentElement()['client' + partialName];
   }
   if (_dom_adapter.default.isDocument(el)) {
@@ -11964,63 +12853,6 @@ function originalViewPort() {
 
 /***/ }),
 
-/***/ 9433:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-
-exports.visualViewportEventMap = exports.subscribeOnVisualViewportEvent = exports.hasVisualViewport = exports.getVisualViewportSizes = void 0;
-var _window = __webpack_require__(58201);
-var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var visualViewportEventMap = {
-  resize: 'resize',
-  scroll: 'scroll'
-};
-exports.visualViewportEventMap = visualViewportEventMap;
-var getVisualViewport = function getVisualViewport() {
-  var isWindowAvailable = (0, _window.hasWindow)();
-  if (isWindowAvailable) {
-    var _getWindow = (0, _window.getWindow)(),
-      visualViewport = _getWindow.visualViewport;
-    return visualViewport;
-  }
-  return null;
-};
-var hasVisualViewport = function hasVisualViewport() {
-  var visualViewport = getVisualViewport();
-  return !!visualViewport;
-};
-exports.hasVisualViewport = hasVisualViewport;
-var getVisualViewportSizes = function getVisualViewportSizes() {
-  var visualViewport = getVisualViewport();
-  var width = visualViewport.width,
-    height = visualViewport.height,
-    scale = visualViewport.scale,
-    pageTop = visualViewport.pageTop,
-    pageLeft = visualViewport.pageLeft,
-    offsetTop = visualViewport.offsetTop,
-    offsetLeft = visualViewport.offsetLeft;
-  return {
-    width: width,
-    height: height,
-    scale: scale,
-    pageTop: pageTop,
-    pageLeft: pageLeft,
-    offsetTop: offsetTop,
-    offsetLeft: offsetLeft
-  };
-};
-exports.getVisualViewportSizes = getVisualViewportSizes;
-var subscribeOnVisualViewportEvent = function subscribeOnVisualViewportEvent(event, callback, options) {
-  var visualViewport = getVisualViewport();
-  var unSubscribeOnVisualViewportCallback = _dom_adapter.default.listen(visualViewport, event, callback, options);
-  return unSubscribeOnVisualViewportCallback;
-};
-exports.subscribeOnVisualViewportEvent = subscribeOnVisualViewportEvent;
-
-/***/ }),
-
 /***/ 58201:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -12091,7 +12923,7 @@ exports.getNavigator = getNavigator;
 
 
 exports.version = void 0;
-var version = '23.1.3';
+var version = '23.2.0';
 exports.version = version;
 
 /***/ }),
@@ -35644,7 +36476,7 @@ var defaultMessages = {
     "dxDataGrid-ariaFilterCell": "Filter cell",
     "dxDataGrid-ariaCollapse": "Collapse",
     "dxDataGrid-ariaExpand": "Expand",
-    "dxDataGrid-ariaDataGrid": "Data grid",
+    "dxDataGrid-ariaDataGrid": "Data grid with {0} rows and {1} columns",
     "dxDataGrid-ariaSearchInGrid": "Search in the data grid",
     "dxDataGrid-ariaSelectAll": "Select all",
     "dxDataGrid-ariaSelectRow": "Select row",
@@ -42114,897 +42946,41 @@ module.exports["default"] = exports.default;
 
 
 exports["default"] = void 0;
-var _size = __webpack_require__(58664);
-var _renderer = _interopRequireDefault(__webpack_require__(68374));
-var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
-var _window = __webpack_require__(58201);
-var _position = __webpack_require__(37518);
-var _events_engine = _interopRequireDefault(__webpack_require__(55994));
-var _string = __webpack_require__(68752);
-var _component_registrator = _interopRequireDefault(__webpack_require__(99393));
-var _translator = __webpack_require__(31648);
-var _animator = _interopRequireDefault(__webpack_require__(6866));
-var _inflector = __webpack_require__(78008);
-var _extend = __webpack_require__(13306);
-var _dom_component = _interopRequireDefault(__webpack_require__(13046));
-var _element = __webpack_require__(6415);
-var _index = __webpack_require__(39611);
-var _pointer = _interopRequireDefault(__webpack_require__(93786));
-var _drag = __webpack_require__(23174);
-var _position2 = _interopRequireDefault(__webpack_require__(49387));
-var _type = __webpack_require__(35922);
-var _common = __webpack_require__(20576);
-var _view_port = __webpack_require__(77695);
-var _empty_template = __webpack_require__(10688);
-var _deferred = __webpack_require__(62754);
+var _m_draggable = _interopRequireDefault(__webpack_require__(86988));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var window = (0, _window.getWindow)();
-var KEYDOWN_EVENT = 'keydown';
-var DRAGGABLE = 'dxDraggable';
-var DRAGSTART_EVENT_NAME = (0, _index.addNamespace)(_drag.start, DRAGGABLE);
-var DRAG_EVENT_NAME = (0, _index.addNamespace)(_drag.move, DRAGGABLE);
-var DRAGEND_EVENT_NAME = (0, _index.addNamespace)(_drag.end, DRAGGABLE);
-var DRAG_ENTER_EVENT_NAME = (0, _index.addNamespace)(_drag.enter, DRAGGABLE);
-var DRAGEND_LEAVE_EVENT_NAME = (0, _index.addNamespace)(_drag.leave, DRAGGABLE);
-var POINTERDOWN_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.down, DRAGGABLE);
-var KEYDOWN_EVENT_NAME = (0, _index.addNamespace)(KEYDOWN_EVENT, DRAGGABLE);
-var CLONE_CLASS = 'clone';
-var targetDraggable;
-var sourceDraggable;
-var ANONYMOUS_TEMPLATE_NAME = 'content';
-var getMousePosition = function getMousePosition(event) {
-  return {
-    x: event.pageX - (0, _renderer.default)(window).scrollLeft(),
-    y: event.pageY - (0, _renderer.default)(window).scrollTop()
-  };
-};
-var GESTURE_COVER_CLASS = 'dx-gesture-cover';
-var OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
-var OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
-var ScrollHelper = /*#__PURE__*/function () {
-  function ScrollHelper(orientation, component) {
-    this._preventScroll = true;
-    this._component = component;
-    if (orientation === 'vertical') {
-      this._scrollValue = 'scrollTop';
-      this._overFlowAttr = 'overflowY';
-      this._sizeAttr = 'height';
-      this._scrollSizeProp = 'scrollHeight';
-      this._clientSizeProp = 'clientHeight';
-      this._limitProps = {
-        start: 'top',
-        end: 'bottom'
-      };
-    } else {
-      this._scrollValue = 'scrollLeft';
-      this._overFlowAttr = 'overflowX';
-      this._sizeAttr = 'width';
-      this._scrollSizeProp = 'scrollWidth';
-      this._clientSizeProp = 'clientWidth';
-      this._limitProps = {
-        start: 'left',
-        end: 'right'
-      };
-    }
-  }
-  var _proto = ScrollHelper.prototype;
-  _proto.updateScrollable = function updateScrollable(elements, mousePosition) {
-    var _this = this;
-    var isScrollableFound = false;
-    elements.some(function (element) {
-      var $element = (0, _renderer.default)(element);
-      var isTargetOverOverlayWrapper = $element.hasClass(OVERLAY_WRAPPER_CLASS);
-      var isTargetOverOverlayContent = $element.hasClass(OVERLAY_CONTENT_CLASS);
-      if (isTargetOverOverlayWrapper || isTargetOverOverlayContent) {
-        return true;
-      }
-      isScrollableFound = _this._trySetScrollable(element, mousePosition);
-      return isScrollableFound;
-    });
-    if (!isScrollableFound) {
-      this._$scrollableAtPointer = null;
-      this._scrollSpeed = 0;
-    }
-  };
-  _proto.isScrolling = function isScrolling() {
-    return !!this._scrollSpeed;
-  };
-  _proto.isScrollable = function isScrollable($element) {
-    return ($element.css(this._overFlowAttr) === 'auto' || $element.hasClass('dx-scrollable-container')) && $element.prop(this._scrollSizeProp) > Math.ceil(this._sizeAttr === 'width' ? (0, _size.getWidth)($element) : (0, _size.getHeight)($element));
-  };
-  _proto._trySetScrollable = function _trySetScrollable(element, mousePosition) {
-    var that = this;
-    var $element = (0, _renderer.default)(element);
-    var distanceToBorders;
-    var sensitivity = that._component.option('scrollSensitivity');
-    var isScrollable = that.isScrollable($element);
-    if (isScrollable) {
-      distanceToBorders = that._calculateDistanceToBorders($element, mousePosition);
-      if (sensitivity > distanceToBorders[that._limitProps.start]) {
-        if (!that._preventScroll) {
-          that._scrollSpeed = -that._calculateScrollSpeed(distanceToBorders[that._limitProps.start]);
-          that._$scrollableAtPointer = $element;
-        }
-      } else if (sensitivity > distanceToBorders[that._limitProps.end]) {
-        if (!that._preventScroll) {
-          that._scrollSpeed = that._calculateScrollSpeed(distanceToBorders[that._limitProps.end]);
-          that._$scrollableAtPointer = $element;
-        }
-      } else {
-        isScrollable = false;
-        that._preventScroll = false;
-      }
-    }
-    return isScrollable;
-  };
-  _proto._calculateDistanceToBorders = function _calculateDistanceToBorders($area, mousePosition) {
-    var area = $area.get(0);
-    var areaBoundingRect;
-    if (area) {
-      areaBoundingRect = (0, _position.getBoundingRect)(area);
-      return {
-        left: mousePosition.x - areaBoundingRect.left,
-        top: mousePosition.y - areaBoundingRect.top,
-        right: areaBoundingRect.right - mousePosition.x,
-        bottom: areaBoundingRect.bottom - mousePosition.y
-      };
-    } else {
-      return {};
-    }
-  };
-  _proto._calculateScrollSpeed = function _calculateScrollSpeed(distance) {
-    var component = this._component;
-    var sensitivity = component.option('scrollSensitivity');
-    var maxSpeed = component.option('scrollSpeed');
-    return Math.ceil(Math.pow((sensitivity - distance) / sensitivity, 2) * maxSpeed);
-  };
-  _proto.scrollByStep = function scrollByStep() {
-    var that = this;
-    if (that._$scrollableAtPointer && that._scrollSpeed) {
-      if (that._$scrollableAtPointer.hasClass('dx-scrollable-container')) {
-        var $scrollable = that._$scrollableAtPointer.closest('.dx-scrollable');
-        var scrollableInstance = $scrollable.data('dxScrollable') || $scrollable.data('dxScrollView');
-        if (scrollableInstance) {
-          var nextScrollPosition = scrollableInstance.scrollOffset()[that._limitProps.start] + that._scrollSpeed;
-          scrollableInstance.scrollTo(_defineProperty({}, that._limitProps.start, nextScrollPosition));
-        }
-      } else {
-        var _nextScrollPosition = that._$scrollableAtPointer[that._scrollValue]() + that._scrollSpeed;
-        that._$scrollableAtPointer[that._scrollValue](_nextScrollPosition);
-      }
-      var dragMoveArgs = that._component._dragMoveArgs;
-      if (dragMoveArgs) {
-        that._component._dragMoveHandler(dragMoveArgs);
-      }
-    }
-  };
-  _proto.reset = function reset() {
-    this._$scrollableAtPointer = null;
-    this._scrollSpeed = 0;
-    this._preventScroll = true;
-  };
-  _proto.isOutsideScrollable = function isOutsideScrollable($scrollable, event) {
-    if (!$scrollable) {
-      return false;
-    }
-    var scrollableSize = (0, _position.getBoundingRect)($scrollable.get(0));
-    var start = scrollableSize[this._limitProps.start];
-    var size = scrollableSize[this._sizeAttr];
-    var mousePosition = getMousePosition(event);
-    var location = this._sizeAttr === 'width' ? mousePosition.x : mousePosition.y;
-    return location < start || location > start + size;
-  };
-  return ScrollHelper;
-}();
-var ScrollAnimator = _animator.default.inherit({
-  ctor: function ctor(strategy) {
-    this.callBase();
-    this._strategy = strategy;
-  },
-  _step: function _step() {
-    var horizontalScrollHelper = this._strategy._horizontalScrollHelper;
-    var verticalScrollHelper = this._strategy._verticalScrollHelper;
-    horizontalScrollHelper && horizontalScrollHelper.scrollByStep();
-    verticalScrollHelper && verticalScrollHelper.scrollByStep();
-  }
-});
-var Draggable = _dom_component.default.inherit({
-  reset: _common.noop,
-  dragMove: _common.noop,
-  dragEnter: _common.noop,
-  dragLeave: _common.noop,
-  dragEnd: function dragEnd(sourceEvent) {
-    var sourceDraggable = this._getSourceDraggable();
-    sourceDraggable._fireRemoveEvent(sourceEvent);
-    return new _deferred.Deferred().resolve();
-  },
-  _fireRemoveEvent: _common.noop,
-  _getDefaultOptions: function _getDefaultOptions() {
-    return (0, _extend.extend)(this.callBase(), {
-      onDragStart: null,
-      onDragMove: null,
-      onDragEnd: null,
-      onDragEnter: null,
-      onDragLeave: null,
-      onDragCancel: null,
-      onCancelByEsc: false,
-      /**
-       * @section Utils
-       * @default null
-       * @name dxDraggableOptions.onDrop
-       * @type function(e)
-       * @type_function_param1 e:object
-       * @type_function_param1_field1 component:this
-       * @type_function_param1_field2 element:DxElement
-       * @type_function_param1_field3 model:object
-       * @type_function_param1_field4 event:event
-       * @type_function_param1_field5 itemData:any
-       * @type_function_param1_field6 itemElement:DxElement
-       * @type_function_param1_field7 fromComponent:dxSortable|dxDraggable
-       * @type_function_param1_field8 toComponent:dxSortable|dxDraggable
-       * @type_function_param1_field9 fromData:any
-       * @type_function_param1_field10 toData:any
-       * @action
-       * @hidden
-       */
-      onDrop: null,
-      immediate: true,
-      dragDirection: 'both',
-      boundary: undefined,
-      boundOffset: 0,
-      allowMoveByClick: false,
-      itemData: null,
-      container: undefined,
-      dragTemplate: undefined,
-      /**
-       * @name DraggableBaseOptions.contentTemplate
-       * @type template|function
-       * @type_function_return string|Element|jQuery
-       * @hidden
-       * @default "content"
-       */
-      contentTemplate: 'content',
-      handle: '',
-      /**
-       * @name dxDraggableOptions.filter
-       * @type string
-       * @default ""
-       * @hidden
-       */
-      filter: '',
-      clone: false,
-      autoScroll: true,
-      scrollSpeed: 30,
-      scrollSensitivity: 60,
-      group: undefined,
-      data: undefined
-    });
-  },
-  _setOptionsByReference: function _setOptionsByReference() {
-    this.callBase.apply(this, arguments);
-    (0, _extend.extend)(this._optionsByReference, {
-      component: true,
-      group: true,
-      itemData: true,
-      data: true
-    });
-  },
-  _init: function _init() {
-    this.callBase();
-    this._attachEventHandlers();
-    this._scrollAnimator = new ScrollAnimator(this);
-    this._horizontalScrollHelper = new ScrollHelper('horizontal', this);
-    this._verticalScrollHelper = new ScrollHelper('vertical', this);
-  },
-  _normalizeCursorOffset: function _normalizeCursorOffset(offset) {
-    if ((0, _type.isObject)(offset)) {
-      offset = {
-        h: offset.x,
-        v: offset.y
-      };
-    }
-    offset = (0, _common.splitPair)(offset).map(function (value) {
-      return parseFloat(value);
-    });
-    return {
-      left: offset[0],
-      top: offset.length === 1 ? offset[0] : offset[1]
-    };
-  },
-  _getNormalizedCursorOffset: function _getNormalizedCursorOffset(offset, options) {
-    if ((0, _type.isFunction)(offset)) {
-      offset = offset.call(this, options);
-    }
-    return this._normalizeCursorOffset(offset);
-  },
-  _calculateElementOffset: function _calculateElementOffset(options) {
-    var elementOffset;
-    var dragElementOffset;
-    var event = options.event;
-    var $element = (0, _renderer.default)(options.itemElement);
-    var $dragElement = (0, _renderer.default)(options.dragElement);
-    var isCloned = this._dragElementIsCloned();
-    var cursorOffset = this.option('cursorOffset');
-    var normalizedCursorOffset = {
-      left: 0,
-      top: 0
-    };
-    var currentLocate = this._initialLocate = (0, _translator.locate)($dragElement);
-    if (isCloned || options.initialOffset || cursorOffset) {
-      elementOffset = options.initialOffset || $element.offset();
-      if (cursorOffset) {
-        normalizedCursorOffset = this._getNormalizedCursorOffset(cursorOffset, options);
-        if (isFinite(normalizedCursorOffset.left)) {
-          elementOffset.left = event.pageX;
-        }
-        if (isFinite(normalizedCursorOffset.top)) {
-          elementOffset.top = event.pageY;
-        }
-      }
-      dragElementOffset = $dragElement.offset();
-      elementOffset.top -= dragElementOffset.top + (normalizedCursorOffset.top || 0) - currentLocate.top;
-      elementOffset.left -= dragElementOffset.left + (normalizedCursorOffset.left || 0) - currentLocate.left;
-    }
-    return elementOffset;
-  },
-  _initPosition: function _initPosition(options) {
-    var $dragElement = (0, _renderer.default)(options.dragElement);
-    var elementOffset = this._calculateElementOffset(options);
-    if (elementOffset) {
-      this._move(elementOffset, $dragElement);
-    }
-    this._startPosition = (0, _translator.locate)($dragElement);
-  },
-  _startAnimator: function _startAnimator() {
-    if (!this._scrollAnimator.inProgress()) {
-      this._scrollAnimator.start();
-    }
-  },
-  _stopAnimator: function _stopAnimator() {
-    this._scrollAnimator.stop();
-  },
-  _addWidgetPrefix: function _addWidgetPrefix(className) {
-    var componentName = this.NAME;
-    return (0, _inflector.dasherize)(componentName) + (className ? '-' + className : '');
-  },
-  _getItemsSelector: function _getItemsSelector() {
-    return this.option('filter') || '';
-  },
-  _$content: function _$content() {
-    var $element = this.$element();
-    var $wrapper = $element.children('.dx-template-wrapper');
-    return $wrapper.length ? $wrapper : $element;
-  },
-  _attachEventHandlers: function _attachEventHandlers() {
-    var _this2 = this;
-    if (this.option('disabled')) {
-      return;
-    }
-    var $element = this._$content();
-    var itemsSelector = this._getItemsSelector();
-    var allowMoveByClick = this.option('allowMoveByClick');
-    var data = {
-      direction: this.option('dragDirection'),
-      immediate: this.option('immediate'),
-      checkDropTarget: function checkDropTarget($target, event) {
-        var targetGroup = _this2.option('group');
-        var sourceGroup = _this2._getSourceDraggable().option('group');
-        var $scrollable = _this2._getScrollable($target);
-        if (_this2._verticalScrollHelper.isOutsideScrollable($scrollable, event) || _this2._horizontalScrollHelper.isOutsideScrollable($scrollable, event)) {
-          return false;
-        }
-        return sourceGroup && sourceGroup === targetGroup;
-      }
-    };
-    if (allowMoveByClick) {
-      $element = this._getArea();
-      _events_engine.default.on($element, POINTERDOWN_EVENT_NAME, data, this._pointerDownHandler.bind(this));
-    }
-    if (itemsSelector[0] === '>') {
-      itemsSelector = itemsSelector.slice(1);
-    }
-    _events_engine.default.on($element, DRAGSTART_EVENT_NAME, itemsSelector, data, this._dragStartHandler.bind(this));
-    _events_engine.default.on($element, DRAG_EVENT_NAME, data, this._dragMoveHandler.bind(this));
-    _events_engine.default.on($element, DRAGEND_EVENT_NAME, data, this._dragEndHandler.bind(this));
-    _events_engine.default.on($element, DRAG_ENTER_EVENT_NAME, data, this._dragEnterHandler.bind(this));
-    _events_engine.default.on($element, DRAGEND_LEAVE_EVENT_NAME, data, this._dragLeaveHandler.bind(this));
-    if (this.option('onCancelByEsc')) {
-      _events_engine.default.on($element, KEYDOWN_EVENT_NAME, this._keydownHandler.bind(this));
-    }
-  },
-  _dragElementIsCloned: function _dragElementIsCloned() {
-    return this._$dragElement && this._$dragElement.hasClass(this._addWidgetPrefix(CLONE_CLASS));
-  },
-  _getDragTemplateArgs: function _getDragTemplateArgs($element, $container) {
-    return {
-      container: (0, _element.getPublicElement)($container),
-      model: {
-        itemData: this.option('itemData'),
-        itemElement: (0, _element.getPublicElement)($element)
-      }
-    };
-  },
-  _createDragElement: function _createDragElement($element) {
-    var result = $element;
-    var clone = this.option('clone');
-    var $container = this._getContainer();
-    var template = this.option('dragTemplate');
-    if (template) {
-      template = this._getTemplate(template);
-      result = (0, _renderer.default)('<div>').appendTo($container);
-      template.render(this._getDragTemplateArgs($element, result));
-    } else if (clone) {
-      result = (0, _renderer.default)('<div>').appendTo($container);
-      $element.clone().css({
-        width: $element.css('width'),
-        height: $element.css('height')
-      }).appendTo(result);
-    }
-    return result.toggleClass(this._addWidgetPrefix(CLONE_CLASS), result.get(0) !== $element.get(0)).toggleClass('dx-rtl', this.option('rtlEnabled'));
-  },
-  _resetDragElement: function _resetDragElement() {
-    if (this._dragElementIsCloned()) {
-      this._$dragElement.remove();
-    } else {
-      this._toggleDraggingClass(false);
-    }
-    this._$dragElement = null;
-  },
-  _resetSourceElement: function _resetSourceElement() {
-    this._toggleDragSourceClass(false);
-    this._$sourceElement = null;
-  },
-  _detachEventHandlers: function _detachEventHandlers() {
-    _events_engine.default.off(this._$content(), '.' + DRAGGABLE);
-    _events_engine.default.off(this._getArea(), '.' + DRAGGABLE);
-  },
-  _move: function _move(position, $element) {
-    (0, _translator.move)($element || this._$dragElement, position);
-  },
-  _getDraggableElement: function _getDraggableElement(e) {
-    var $sourceElement = this._getSourceElement();
-    if ($sourceElement) {
-      return $sourceElement;
-    }
-    var allowMoveByClick = this.option('allowMoveByClick');
-    if (allowMoveByClick) {
-      return this.$element();
-    }
-    var $target = (0, _renderer.default)(e && e.target);
-    var itemsSelector = this._getItemsSelector();
-    if (itemsSelector[0] === '>') {
-      var $items = this._$content().find(itemsSelector);
-      if (!$items.is($target)) {
-        $target = $target.closest($items);
-      }
-    }
-    return $target;
-  },
-  _getSourceElement: function _getSourceElement() {
-    var draggable = this._getSourceDraggable();
-    return draggable._$sourceElement;
-  },
-  _pointerDownHandler: function _pointerDownHandler(e) {
-    if ((0, _index.needSkipEvent)(e)) {
-      return;
-    }
-    var position = {};
-    var $element = this.$element();
-    var dragDirection = this.option('dragDirection');
-    if (dragDirection === 'horizontal' || dragDirection === 'both') {
-      position.left = e.pageX - $element.offset().left + (0, _translator.locate)($element).left - (0, _size.getWidth)($element) / 2;
-    }
-    if (dragDirection === 'vertical' || dragDirection === 'both') {
-      position.top = e.pageY - $element.offset().top + (0, _translator.locate)($element).top - (0, _size.getHeight)($element) / 2;
-    }
-    this._move(position, $element);
-    this._getAction('onDragMove')(this._getEventArgs(e));
-  },
-  _isValidElement: function _isValidElement(event, $element) {
-    var handle = this.option('handle');
-    var $target = (0, _renderer.default)(event.originalEvent && event.originalEvent.target);
-    if (handle && !$target.closest(handle).length) {
-      return false;
-    }
-    if (!$element.length) {
-      return false;
-    }
-    return !$element.is('.dx-state-disabled, .dx-state-disabled *');
-  },
-  _dragStartHandler: function _dragStartHandler(e) {
-    var $element = this._getDraggableElement(e);
-    this.dragInProgress = true;
-    if (!this._isValidElement(e, $element)) {
-      e.cancel = true;
-      return;
-    }
-    if (this._$sourceElement) {
-      return;
-    }
-    var dragStartArgs = this._getDragStartArgs(e, $element);
-    this._getAction('onDragStart')(dragStartArgs);
-    if (dragStartArgs.cancel) {
-      e.cancel = true;
-      return;
-    }
-    this.option('itemData', dragStartArgs.itemData);
-    this._setSourceDraggable();
-    this._$sourceElement = $element;
-    var initialOffset = $element.offset();
-    var $dragElement = this._$dragElement = this._createDragElement($element);
-    this._toggleDraggingClass(true);
-    this._toggleDragSourceClass(true);
-    this._setGestureCoverCursor($dragElement.children());
-    var isFixedPosition = $dragElement.css('position') === 'fixed';
-    this._initPosition((0, _extend.extend)({}, dragStartArgs, {
-      dragElement: $dragElement.get(0),
-      initialOffset: isFixedPosition && initialOffset
-    }));
-    this._getAction('onDraggableElementShown')(_extends({}, dragStartArgs, {
-      dragElement: $dragElement
-    }));
-    var $area = this._getArea();
-    var areaOffset = this._getAreaOffset($area);
-    var boundOffset = this._getBoundOffset();
-    var areaWidth = (0, _size.getOuterWidth)($area);
-    var areaHeight = (0, _size.getOuterHeight)($area);
-    var elementWidth = (0, _size.getWidth)($dragElement);
-    var elementHeight = (0, _size.getHeight)($dragElement);
-    var startOffset = {
-      left: $dragElement.offset().left - areaOffset.left,
-      top: $dragElement.offset().top - areaOffset.top
-    };
-    if ($area.length) {
-      e.maxLeftOffset = startOffset.left - boundOffset.left;
-      e.maxRightOffset = areaWidth - startOffset.left - elementWidth - boundOffset.right;
-      e.maxTopOffset = startOffset.top - boundOffset.top;
-      e.maxBottomOffset = areaHeight - startOffset.top - elementHeight - boundOffset.bottom;
-    }
-    if (this.option('autoScroll')) {
-      this._startAnimator();
-    }
-  },
-  _getAreaOffset: function _getAreaOffset($area) {
-    var offset = $area && _position2.default.offset($area);
-    return offset ? offset : {
-      left: 0,
-      top: 0
-    };
-  },
-  _toggleDraggingClass: function _toggleDraggingClass(value) {
-    this._$dragElement && this._$dragElement.toggleClass(this._addWidgetPrefix('dragging'), value);
-  },
-  _toggleDragSourceClass: function _toggleDragSourceClass(value, $element) {
-    var $sourceElement = $element || this._$sourceElement;
-    $sourceElement && $sourceElement.toggleClass(this._addWidgetPrefix('source'), value);
-  },
-  _setGestureCoverCursor: function _setGestureCoverCursor($element) {
-    (0, _renderer.default)(".".concat(GESTURE_COVER_CLASS)).css('cursor', $element.css('cursor'));
-  },
-  _getBoundOffset: function _getBoundOffset() {
-    var boundOffset = this.option('boundOffset');
-    if ((0, _type.isFunction)(boundOffset)) {
-      boundOffset = boundOffset.call(this);
-    }
-    return (0, _string.quadToObject)(boundOffset);
-  },
-  _getArea: function _getArea() {
-    var area = this.option('boundary');
-    if ((0, _type.isFunction)(area)) {
-      area = area.call(this);
-    }
-    return (0, _renderer.default)(area);
-  },
-  _getContainer: function _getContainer() {
-    var container = this.option('container');
-    if (container === undefined) {
-      container = (0, _view_port.value)();
-    }
-    return (0, _renderer.default)(container);
-  },
-  _dragMoveHandler: function _dragMoveHandler(e, scrollBy) {
-    this._dragMoveArgs = e;
-    if (!this._$dragElement) {
-      e.cancel = true;
-      return;
-    }
-    var offset = e.offset;
-    var startPosition = this._startPosition;
-    this._move({
-      left: startPosition.left + offset.x,
-      top: startPosition.top + offset.y
-    });
-    if (!scrollBy) {
-      this._updateScrollable(e);
-    }
-    var eventArgs = this._getEventArgs(e);
-    this._getAction('onDragMove')(eventArgs);
-    if (eventArgs.cancel === true) {
-      return;
-    }
-    var targetDraggable = this._getTargetDraggable();
-    targetDraggable.dragMove(e, scrollBy);
-  },
-  _updateScrollable: function _updateScrollable(e) {
-    var that = this;
-    if (that.option('autoScroll')) {
-      var mousePosition = getMousePosition(e);
-      var allObjects = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.$element().get(0));
-      that._verticalScrollHelper.updateScrollable(allObjects, mousePosition);
-      that._horizontalScrollHelper.updateScrollable(allObjects, mousePosition);
-    }
-  },
-  _getScrollable: function _getScrollable($element) {
-    var _this3 = this;
-    var $scrollable;
-    $element.parents().toArray().some(function (parent) {
-      var $parent = (0, _renderer.default)(parent);
-      if (_this3._horizontalScrollHelper.isScrollable($parent) || _this3._verticalScrollHelper.isScrollable($parent)) {
-        $scrollable = $parent;
-        return true;
-      }
-    });
-    return $scrollable;
-  },
-  _defaultActionArgs: function _defaultActionArgs() {
-    var args = this.callBase.apply(this, arguments);
-    var component = this.option('component');
-    if (component) {
-      args.component = component;
-      args.element = component.element();
-    }
-    return args;
-  },
-  _getEventArgs: function _getEventArgs(e) {
-    var sourceDraggable = this._getSourceDraggable();
-    var targetDraggable = this._getTargetDraggable();
-    return {
-      event: e,
-      itemData: sourceDraggable.option('itemData'),
-      itemElement: (0, _element.getPublicElement)(sourceDraggable._$sourceElement),
-      fromComponent: sourceDraggable.option('component') || sourceDraggable,
-      toComponent: targetDraggable.option('component') || targetDraggable,
-      fromData: sourceDraggable.option('data'),
-      toData: targetDraggable.option('data')
-    };
-  },
-  _getDragStartArgs: function _getDragStartArgs(e, $itemElement) {
-    var args = this._getEventArgs(e);
-    return {
-      event: args.event,
-      itemData: args.itemData,
-      itemElement: $itemElement,
-      fromData: args.fromData
-    };
-  },
-  _revertItemToInitialPosition: function _revertItemToInitialPosition() {
-    !this._dragElementIsCloned() && this._move(this._initialLocate, this._$sourceElement);
-  },
-  _dragEndHandler: function _dragEndHandler(e) {
-    var _this4 = this;
-    var d = new _deferred.Deferred();
-    var dragEndEventArgs = this._getEventArgs(e);
-    var dropEventArgs = this._getEventArgs(e);
-    var targetDraggable = this._getTargetDraggable();
-    var needRevertPosition = true;
-    this.dragInProgress = false;
-    try {
-      this._getAction('onDragEnd')(dragEndEventArgs);
-    } finally {
-      (0, _deferred.when)((0, _deferred.fromPromise)(dragEndEventArgs.cancel)).done(function (cancel) {
-        if (!cancel) {
-          if (targetDraggable !== _this4) {
-            targetDraggable._getAction('onDrop')(dropEventArgs);
-          }
-          if (!dropEventArgs.cancel) {
-            needRevertPosition = false;
-            (0, _deferred.when)((0, _deferred.fromPromise)(targetDraggable.dragEnd(dragEndEventArgs))).always(d.resolve);
-            return;
-          }
-        }
-        d.resolve();
-      }).fail(d.resolve);
-      d.done(function () {
-        if (needRevertPosition) {
-          _this4._revertItemToInitialPosition();
-        }
-        _this4._resetDragOptions(targetDraggable);
-      });
-    }
-  },
-  _isTargetOverAnotherDraggable: function _isTargetOverAnotherDraggable(e) {
-    var _this5 = this;
-    var sourceDraggable = this._getSourceDraggable();
-    if (this === sourceDraggable) {
-      return false;
-    }
-    var $dragElement = sourceDraggable._$dragElement;
-    var $sourceDraggableElement = sourceDraggable.$element();
-    var $targetDraggableElement = this.$element();
-    var mousePosition = getMousePosition(e);
-    var elements = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.element());
-    var firstWidgetElement = elements.filter(function (element) {
-      var $element = (0, _renderer.default)(element);
-      if ($element.hasClass(_this5._addWidgetPrefix())) {
-        return !$element.closest($dragElement).length;
-      }
-    })[0];
-    var $sourceElement = this._getSourceElement();
-    var isTargetOverItself = firstWidgetElement === $sourceDraggableElement.get(0);
-    var isTargetOverNestedDraggable = (0, _renderer.default)(firstWidgetElement).closest($sourceElement).length;
-    return !firstWidgetElement || firstWidgetElement === $targetDraggableElement.get(0) && !isTargetOverItself && !isTargetOverNestedDraggable;
-  },
-  _dragEnterHandler: function _dragEnterHandler(e) {
-    this._fireDragEnterEvent(e);
-    if (this._isTargetOverAnotherDraggable(e)) {
-      this._setTargetDraggable();
-    }
-    var sourceDraggable = this._getSourceDraggable();
-    sourceDraggable.dragEnter(e);
-  },
-  _dragLeaveHandler: function _dragLeaveHandler(e) {
-    this._fireDragLeaveEvent(e);
-    this._resetTargetDraggable();
-    if (this !== this._getSourceDraggable()) {
-      this.reset();
-    }
-    var sourceDraggable = this._getSourceDraggable();
-    sourceDraggable.dragLeave(e);
-  },
-  _keydownHandler: function _keydownHandler(e) {
-    if (this.dragInProgress && e.key === 'Escape') {
-      this._keydownEscapeHandler(e);
-    }
-  },
-  _keydownEscapeHandler: function _keydownEscapeHandler(e) {
-    var _sourceDraggable;
-    var $sourceElement = this._getSourceElement();
-    if (!$sourceElement) {
-      return;
-    }
-    var dragCancelEventArgs = this._getEventArgs(e);
-    this._getAction('onDragCancel')(dragCancelEventArgs);
-    if (dragCancelEventArgs.cancel) {
-      return;
-    }
-    this.dragInProgress = false;
-    (_sourceDraggable = sourceDraggable) === null || _sourceDraggable === void 0 ? void 0 : _sourceDraggable._toggleDraggingClass(false);
-    this._detachEventHandlers();
-    this._revertItemToInitialPosition();
-    var targetDraggable = this._getTargetDraggable();
-    this._resetDragOptions(targetDraggable);
-    this._attachEventHandlers();
-  },
-  _getAction: function _getAction(name) {
-    return this['_' + name + 'Action'] || this._createActionByOption(name);
-  },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
-    return ANONYMOUS_TEMPLATE_NAME;
-  },
-  _initTemplates: function _initTemplates() {
-    if (!this.option('contentTemplate')) return;
-    this._templateManager.addDefaultTemplates({
-      content: new _empty_template.EmptyTemplate()
-    });
-    this.callBase.apply(this, arguments);
-  },
-  _render: function _render() {
-    this.callBase();
-    this.$element().addClass(this._addWidgetPrefix());
-    var transclude = this._templateManager.anonymousTemplateName === this.option('contentTemplate');
-    var template = this._getTemplateByOption('contentTemplate');
-    if (template) {
-      (0, _renderer.default)(template.render({
-        container: this.element(),
-        transclude: transclude
-      }));
-    }
-  },
-  _optionChanged: function _optionChanged(args) {
-    var name = args.name;
-    switch (name) {
-      case 'onDragStart':
-      case 'onDragMove':
-      case 'onDragEnd':
-      case 'onDrop':
-      case 'onDragEnter':
-      case 'onDragLeave':
-      case 'onDragCancel':
-      case 'onDraggableElementShown':
-        this['_' + name + 'Action'] = this._createActionByOption(name);
-        break;
-      case 'dragTemplate':
-      case 'contentTemplate':
-      case 'container':
-      case 'clone':
-        break;
-      case 'allowMoveByClick':
-      case 'dragDirection':
-      case 'disabled':
-      case 'boundary':
-      case 'filter':
-      case 'immediate':
-        this._resetDragElement();
-        this._detachEventHandlers();
-        this._attachEventHandlers();
-        break;
-      case 'onCancelByEsc':
-        this._keydownHandler();
-        break;
-      case 'autoScroll':
-        this._verticalScrollHelper.reset();
-        this._horizontalScrollHelper.reset();
-        break;
-      case 'scrollSensitivity':
-      case 'scrollSpeed':
-      case 'boundOffset':
-      case 'handle':
-      case 'group':
-      case 'data':
-      case 'itemData':
-        break;
-      default:
-        this.callBase(args);
-    }
-  },
-  _getTargetDraggable: function _getTargetDraggable() {
-    return targetDraggable || this;
-  },
-  _getSourceDraggable: function _getSourceDraggable() {
-    return sourceDraggable || this;
-  },
-  _setTargetDraggable: function _setTargetDraggable() {
-    var currentGroup = this.option('group');
-    var sourceDraggable = this._getSourceDraggable();
-    if (currentGroup && currentGroup === sourceDraggable.option('group')) {
-      targetDraggable = this;
-    }
-  },
-  _setSourceDraggable: function _setSourceDraggable() {
-    sourceDraggable = this;
-  },
-  _resetSourceDraggable: function _resetSourceDraggable() {
-    sourceDraggable = null;
-  },
-  _resetTargetDraggable: function _resetTargetDraggable() {
-    targetDraggable = null;
-  },
-  _resetDragOptions: function _resetDragOptions(targetDraggable) {
-    this.reset();
-    targetDraggable.reset();
-    this._stopAnimator();
-    this._horizontalScrollHelper.reset();
-    this._verticalScrollHelper.reset();
-    this._resetDragElement();
-    this._resetSourceElement();
-    this._resetTargetDraggable();
-    this._resetSourceDraggable();
-  },
-  _dispose: function _dispose() {
-    this.callBase();
-    this._detachEventHandlers();
-    this._resetDragElement();
-    this._resetTargetDraggable();
-    this._resetSourceDraggable();
-    this._$sourceElement = null;
-    this._stopAnimator();
-  },
-  _fireDragEnterEvent: function _fireDragEnterEvent(sourceEvent) {
-    var args = this._getEventArgs(sourceEvent);
-    this._getAction('onDragEnter')(args);
-  },
-  _fireDragLeaveEvent: function _fireDragLeaveEvent(sourceEvent) {
-    var args = this._getEventArgs(sourceEvent);
-    this._getAction('onDragLeave')(args);
-  }
-});
-(0, _component_registrator.default)(DRAGGABLE, Draggable);
-var _default = Draggable;
+var _default = _m_draggable.default;
+/**
+ * @section Utils
+ * @default null
+ * @name dxDraggableOptions.onDrop
+ * @type function(e)
+ * @type_function_param1 e:object
+ * @type_function_param1_field1 component:this
+ * @type_function_param1_field2 element:DxElement
+ * @type_function_param1_field3 model:object
+ * @type_function_param1_field4 event:event
+ * @type_function_param1_field5 itemData:any
+ * @type_function_param1_field6 itemElement:DxElement
+ * @type_function_param1_field7 fromComponent:dxSortable|dxDraggable
+ * @type_function_param1_field8 toComponent:dxSortable|dxDraggable
+ * @type_function_param1_field9 fromData:any
+ * @type_function_param1_field10 toData:any
+ * @action
+ * @hidden
+ */
+/**
+ * @name DraggableBaseOptions.contentTemplate
+ * @type template|function
+ * @type_function_return string|Element|jQuery
+ * @hidden
+ * @default "content"
+ */
+/**
+ * @name dxDraggableOptions.filter
+ * @type string
+ * @default ""
+ * @hidden
+ */
 exports["default"] = _default;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
@@ -43372,10 +43348,10 @@ module.exports["default"] = exports.default;
 
 
 exports["default"] = void 0;
-var _module_utils = _interopRequireDefault(__webpack_require__(9707));
+var _m_utils = _interopRequireDefault(__webpack_require__(60082));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // deprecated
-var _default = _module_utils.default;
+var _default = _m_utils.default;
 exports["default"] = _default;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
@@ -44062,8 +44038,6 @@ var _fx = _interopRequireDefault(__webpack_require__(87209));
 var _component_registrator = _interopRequireDefault(__webpack_require__(99393));
 var _devices = _interopRequireDefault(__webpack_require__(20530));
 var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
-var _visual_viewport = __webpack_require__(9433);
-var _frame = __webpack_require__(90057);
 var _element = __webpack_require__(6415);
 var _renderer = _interopRequireDefault(__webpack_require__(68374));
 var _empty_template = __webpack_require__(10688);
@@ -44388,92 +44362,8 @@ var Overlay = _ui2.default.inherit({
     this.$wrapper().attr(attributes).removeClass(this._customWrapperClass).addClass(classNames);
     this._customWrapperClass = classNames;
   },
-  _isVisualContainerWindow: function _isVisualContainerWindow() {
-    if (!(0, _window.hasWindow)()) {
-      return false;
-    }
-    var $visualContainer = this._positionController.$visualContainer;
-    var isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
-    return isVisualContainerWindow;
-  },
-  _shouldUseVisualViewport: function _shouldUseVisualViewport() {
-    var isVisualContainerWindow = this._isVisualContainerWindow();
-    var isVisualViewportAvailable = (0, _visual_viewport.hasVisualViewport)();
-    var device = _devices.default.real();
-    var isAppleDevice = device.mac || device.ios;
-    var shouldUseVisualViewport = isAppleDevice && isVisualContainerWindow && isVisualViewportAvailable;
-    return shouldUseVisualViewport;
-  },
-  _isVirtualKeyboardOpen: function _isVirtualKeyboardOpen() {
-    var shouldUseVisualViewport = this._shouldUseVisualViewport();
-    if (!shouldUseVisualViewport) {
-      return false;
-    }
-    var windowInnerHeight = window.innerHeight;
-    var _getVisualViewportSiz = (0, _visual_viewport.getVisualViewportSizes)(),
-      visualViewportHeight = _getVisualViewportSiz.height;
-    var isOpen = windowInnerHeight > visualViewportHeight;
-    return isOpen;
-  },
-  _visualViewportEventHandler: function _visualViewportEventHandler() {
-    var _this6 = this;
-    var pendingUpdate = this._pendingUpdate;
-    if (pendingUpdate) {
-      (0, _frame.cancelAnimationFrame)(this._resizeAnimationFrameId);
-    }
-    this._pendingUpdate = true;
-    var _this$option3 = this.option(),
-      visible = _this$option3.visible;
-    if (visible) {
-      this._resizeAnimationFrameId = (0, _frame.requestAnimationFrame)(function () {
-        _this6._pendingUpdate = false;
-        var isCurrentVisible = _this6._currentVisible;
-        if (isCurrentVisible) {
-          _this6._renderGeometry();
-        } else {
-          _this6._toggleVisibilityAnimate(true);
-        }
-      });
-    }
-  },
-  _subscribeOnVisualViewportEvent: function _subscribeOnVisualViewportEvent(event) {
-    var callback = this._visualViewportEventHandler.bind(this);
-    this._unSubscribeCallbacks[event] = (0, _visual_viewport.subscribeOnVisualViewportEvent)(event, callback);
-  },
-  _toggleVisualViewportSubscription: function _toggleVisualViewportSubscription(subscribe, event) {
-    var _this$_unSubscribeCal;
-    if (subscribe) {
-      this._subscribeOnVisualViewportEvent(event);
-      return;
-    }
-    if (!((_this$_unSubscribeCal = this._unSubscribeCallbacks) !== null && _this$_unSubscribeCal !== void 0 && _this$_unSubscribeCal[event])) {
-      return;
-    }
-    this._unSubscribeCallbacks[event]();
-    this._unSubscribeCallbacks[event] = null;
-  },
-  _toggleVisualViewportCallbacks: function _toggleVisualViewportCallbacks(subscribe) {
-    var shouldUseVisualViewport = this._shouldUseVisualViewport();
-    if (!shouldUseVisualViewport) {
-      return false;
-    }
-    this._pendingUpdate = false;
-    if (subscribe && !this._unSubscribeCallbacks) {
-      this._unSubscribeCallbacks = {};
-    }
-    this._toggleVisualViewportSubscription(subscribe, _visual_viewport.visualViewportEventMap.resize);
-    this._toggleVisualViewportSubscription(subscribe, _visual_viewport.visualViewportEventMap.scroll);
-  },
-  _toggleVisibilityAnimate: function _toggleVisibilityAnimate(visible) {
-    this._stopAnimation();
-    this._toggleVisualViewportCallbacks(visible);
-    return this._renderVisibilityAnimate(visible);
-  },
   _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
-    var isVirtualKeyboardOpen = this._isVirtualKeyboardOpen();
-    if (isVirtualKeyboardOpen) {
-      return new _deferred.Deferred().resolve().promise();
-    }
+    this._stopAnimation();
     return visible ? this._show() : this._hide();
   },
   _getAnimationConfig: function _getAnimationConfig() {
@@ -44484,36 +44374,36 @@ var Overlay = _ui2.default.inherit({
     var _this$_getAnimationCo,
       _showAnimation$start,
       _showAnimation$comple,
-      _this7 = this;
+      _this6 = this;
     var animation = (_this$_getAnimationCo = this._getAnimationConfig()) !== null && _this$_getAnimationCo !== void 0 ? _this$_getAnimationCo : {};
     var showAnimation = this._normalizeAnimation(animation.show, 'to');
     var startShowAnimation = (_showAnimation$start = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.start) !== null && _showAnimation$start !== void 0 ? _showAnimation$start : _common.noop;
     var completeShowAnimation = (_showAnimation$comple = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.complete) !== null && _showAnimation$comple !== void 0 ? _showAnimation$comple : _common.noop;
     this._animate(showAnimation, function () {
-      if (_this7._isAnimationPaused) {
+      if (_this6._isAnimationPaused) {
         return;
       }
-      if (_this7.option('focusStateEnabled')) {
-        _events_engine.default.trigger(_this7._focusTarget(), 'focus');
+      if (_this6.option('focusStateEnabled')) {
+        _events_engine.default.trigger(_this6._focusTarget(), 'focus');
       }
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
-      completeShowAnimation.call.apply(completeShowAnimation, [_this7].concat(args));
-      _this7._showAnimationProcessing = false;
-      _this7._isHidden = false;
-      _this7._actions.onShown();
-      _this7._toggleSafariScrolling();
-      _this7._showingDeferred.resolve();
+      completeShowAnimation.call.apply(completeShowAnimation, [_this6].concat(args));
+      _this6._showAnimationProcessing = false;
+      _this6._isHidden = false;
+      _this6._actions.onShown();
+      _this6._toggleSafariScrolling();
+      _this6._showingDeferred.resolve();
     }, function () {
-      if (_this7._isAnimationPaused) {
+      if (_this6._isAnimationPaused) {
         return;
       }
       for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         args[_key2] = arguments[_key2];
       }
-      startShowAnimation.call.apply(startShowAnimation, [_this7].concat(args));
-      _this7._showAnimationProcessing = true;
+      startShowAnimation.call.apply(startShowAnimation, [_this6].concat(args));
+      _this6._showAnimationProcessing = true;
     });
   },
   _processShowingHidingCancel: function _processShowingHidingCancel(cancelArg, applyFunction, cancelFunction) {
@@ -44532,11 +44422,11 @@ var Overlay = _ui2.default.inherit({
     }
   },
   _show: function _show() {
-    var _this8 = this;
+    var _this7 = this;
     this._showingDeferred = new _deferred.Deferred();
     this._parentHidden = this._isParentHidden();
     this._showingDeferred.done(function () {
-      delete _this8._parentHidden;
+      delete _this7._parentHidden;
     });
     if (this._parentHidden) {
       this._isHidden = true;
@@ -44551,33 +44441,33 @@ var Overlay = _ui2.default.inherit({
       this._showingDeferred.reject();
     } else {
       var show = function show() {
-        _this8._toggleBodyScroll(_this8.option('enableBodyScroll'));
-        _this8._stopAnimation();
-        _this8._toggleVisibility(true);
-        _this8._$content.css('visibility', 'hidden');
-        _this8._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
-        _this8._updateZIndexStackPosition(true);
-        _this8._positionController.openingHandled();
-        _this8._renderContent();
+        _this7._toggleBodyScroll(_this7.option('enableBodyScroll'));
+        _this7._stopAnimation();
+        _this7._toggleVisibility(true);
+        _this7._$content.css('visibility', 'hidden');
+        _this7._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
+        _this7._updateZIndexStackPosition(true);
+        _this7._positionController.openingHandled();
+        _this7._renderContent();
         var showingArgs = {
           cancel: false
         };
-        _this8._actions.onShowing(showingArgs);
+        _this7._actions.onShowing(showingArgs);
         var cancelShow = function cancelShow() {
-          _this8._toggleVisibility(false);
-          _this8._$content.css('visibility', '');
-          _this8._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
-          _this8._isShowingActionCanceled = true;
-          _this8._moveFromContainer();
-          _this8.option('visible', false);
-          _this8._showingDeferred.resolve();
+          _this7._toggleVisibility(false);
+          _this7._$content.css('visibility', '');
+          _this7._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
+          _this7._isShowingActionCanceled = true;
+          _this7._moveFromContainer();
+          _this7.option('visible', false);
+          _this7._showingDeferred.resolve();
         };
         var applyShow = function applyShow() {
-          _this8._$content.css('visibility', '');
-          _this8._renderVisibility(true);
-          _this8._animateShowing();
+          _this7._$content.css('visibility', '');
+          _this7._renderVisibility(true);
+          _this7._animateShowing();
         };
-        _this8._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
+        _this7._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
       };
       if (this.option('templatesRenderAsynchronously')) {
         this._stopShowTimer();
@@ -44607,33 +44497,33 @@ var Overlay = _ui2.default.inherit({
     var _this$_getAnimationCo2,
       _hideAnimation$start,
       _hideAnimation$comple,
-      _this9 = this;
+      _this8 = this;
     var animation = (_this$_getAnimationCo2 = this._getAnimationConfig()) !== null && _this$_getAnimationCo2 !== void 0 ? _this$_getAnimationCo2 : {};
     var hideAnimation = this._normalizeAnimation(animation.hide, 'from');
     var startHideAnimation = (_hideAnimation$start = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.start) !== null && _hideAnimation$start !== void 0 ? _hideAnimation$start : _common.noop;
     var completeHideAnimation = (_hideAnimation$comple = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.complete) !== null && _hideAnimation$comple !== void 0 ? _hideAnimation$comple : _common.noop;
     this._animate(hideAnimation, function () {
-      var _this9$_actions;
-      _this9._$content.css('pointerEvents', '');
-      _this9._renderVisibility(false);
+      var _this8$_actions;
+      _this8._$content.css('pointerEvents', '');
+      _this8._renderVisibility(false);
       for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
         args[_key3] = arguments[_key3];
       }
-      completeHideAnimation.call.apply(completeHideAnimation, [_this9].concat(args));
-      _this9._hideAnimationProcessing = false;
-      (_this9$_actions = _this9._actions) === null || _this9$_actions === void 0 ? void 0 : _this9$_actions.onHidden();
-      _this9._hidingDeferred.resolve();
+      completeHideAnimation.call.apply(completeHideAnimation, [_this8].concat(args));
+      _this8._hideAnimationProcessing = false;
+      (_this8$_actions = _this8._actions) === null || _this8$_actions === void 0 ? void 0 : _this8$_actions.onHidden();
+      _this8._hidingDeferred.resolve();
     }, function () {
-      _this9._$content.css('pointerEvents', 'none');
+      _this8._$content.css('pointerEvents', 'none');
       for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
         args[_key4] = arguments[_key4];
       }
-      startHideAnimation.call.apply(startHideAnimation, [_this9].concat(args));
-      _this9._hideAnimationProcessing = true;
+      startHideAnimation.call.apply(startHideAnimation, [_this8].concat(args));
+      _this8._hideAnimationProcessing = true;
     });
   },
   _hide: function _hide() {
-    var _this10 = this;
+    var _this9 = this;
     if (!this._currentVisible) {
       return new _deferred.Deferred().resolve().promise();
     }
@@ -44650,16 +44540,16 @@ var Overlay = _ui2.default.inherit({
       this._toggleSafariScrolling();
       this._toggleBodyScroll(true);
       var cancelHide = function cancelHide() {
-        _this10._isHidingActionCanceled = true;
-        _this10.option('visible', true);
-        _this10._hidingDeferred.resolve();
+        _this9._isHidingActionCanceled = true;
+        _this9.option('visible', true);
+        _this9._hidingDeferred.resolve();
       };
       var applyHide = function applyHide() {
-        _this10._forceFocusLost();
-        _this10._toggleShading(false);
-        _this10._toggleSubscriptions(false);
-        _this10._stopShowTimer();
-        _this10._animateHiding();
+        _this9._forceFocusLost();
+        _this9._toggleShading(false);
+        _this9._toggleSubscriptions(false);
+        _this9._stopShowTimer();
+        _this9._animateHiding();
       };
       this._processShowingHidingCancel(hidingArgs.cancel, applyHide, cancelHide);
     }
@@ -44731,9 +44621,9 @@ var Overlay = _ui2.default.inherit({
     this._toggleTabTerminator(visible && this.option('shading'));
   },
   _initTabTerminatorHandler: function _initTabTerminatorHandler() {
-    var _this11 = this;
+    var _this10 = this;
     this._proxiedTabTerminatorHandler = function () {
-      _this11._tabKeyHandler.apply(_this11, arguments);
+      _this10._tabKeyHandler.apply(_this10, arguments);
     };
   },
   _toggleTabTerminator: function _toggleTabTerminator(enabled) {
@@ -44831,7 +44721,7 @@ var Overlay = _ui2.default.inherit({
   _render: function _render() {
     this.callBase();
     this._appendContentToElement();
-    this._toggleVisibilityAnimate(this.option('visible'));
+    this._renderVisibilityAnimate(this.option('visible'));
   },
   _appendContentToElement: function _appendContentToElement() {
     if (!this._$content.parent().is(this.$element())) {
@@ -44874,7 +44764,7 @@ var Overlay = _ui2.default.inherit({
     return isHidden || !_dom_adapter.default.getBody().contains($parent.get(0));
   },
   _renderContentImpl: function _renderContentImpl() {
-    var _this12 = this;
+    var _this11 = this;
     var whenContentRendered = new _deferred.Deferred();
     var contentTemplateOption = this.option('contentTemplate');
     var contentTemplate = this._getTemplate(contentTemplateOption);
@@ -44887,25 +44777,25 @@ var Overlay = _ui2.default.inherit({
         whenContentRendered.resolve();
 
         // NOTE: T1114344
-        if (_this12.option('templatesRenderAsynchronously')) {
-          _this12._renderGeometryAsynchronously();
+        if (_this11.option('templatesRenderAsynchronously')) {
+          _this11._dimensionChanged();
         }
       }
     });
     this._toggleWrapperScrollEventsSubscription(this.option('preventScrollEvents'));
     whenContentRendered.done(function () {
-      if (_this12.option('visible')) {
-        _this12._moveToContainer();
+      if (_this11.option('visible')) {
+        _this11._moveToContainer();
       }
     });
     return whenContentRendered.promise();
   },
   _getPositionControllerConfig: function _getPositionControllerConfig() {
-    var _this$option4 = this.option(),
-      container = _this$option4.container,
-      visualContainer = _this$option4.visualContainer,
-      _fixWrapperPosition = _this$option4._fixWrapperPosition,
-      restorePosition = _this$option4.restorePosition;
+    var _this$option3 = this.option(),
+      container = _this$option3.container,
+      visualContainer = _this$option3.visualContainer,
+      _fixWrapperPosition = _this$option3._fixWrapperPosition,
+      restorePosition = _this$option3.restorePosition;
     // NOTE: position is passed to controller in renderGeometry to prevent window field using in server side mode
 
     return {
@@ -44977,8 +44867,8 @@ var Overlay = _ui2.default.inherit({
     this._$content.appendTo(this._$wrapper);
   },
   _renderGeometry: function _renderGeometry(options) {
-    var _this$option5 = this.option(),
-      visible = _this$option5.visible;
+    var _this$option4 = this.option(),
+      visible = _this$option4.visible;
     if (visible && (0, _window.hasWindow)()) {
       this._stopAnimation();
       this._renderGeometryImpl();
@@ -45024,16 +44914,9 @@ var Overlay = _ui2.default.inherit({
   _renderWrapperDimensions: function _renderWrapperDimensions() {
     var $visualContainer = this._positionController.$visualContainer;
     var documentElement = _dom_adapter.default.getDocumentElement();
-    var isVisualContainerWindow = this._isVisualContainerWindow();
-    var shouldUseVisualViewport = this._shouldUseVisualViewport();
-    var getWindowWidth = function getWindowWidth() {
-      return shouldUseVisualViewport ? (0, _visual_viewport.getVisualViewportSizes)().width : documentElement.clientWidth;
-    };
-    var getWindowHeight = function getWindowHeight() {
-      return shouldUseVisualViewport ? (0, _visual_viewport.getVisualViewportSizes)().height : window.innerHeight;
-    };
-    var wrapperWidth = isVisualContainerWindow ? getWindowWidth() : (0, _size.getOuterWidth)($visualContainer);
-    var wrapperHeight = isVisualContainerWindow ? getWindowHeight() : (0, _size.getOuterHeight)($visualContainer);
+    var isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
+    var wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : (0, _size.getOuterWidth)($visualContainer);
+    var wrapperHeight = isVisualContainerWindow ? window.innerHeight : (0, _size.getOuterHeight)($visualContainer);
     this._$wrapper.css({
       width: wrapperWidth,
       height: wrapperHeight
@@ -45054,9 +44937,9 @@ var Overlay = _ui2.default.inherit({
     return this._$content;
   },
   _attachKeyboardEvents: function _attachKeyboardEvents() {
-    var _this13 = this;
+    var _this12 = this;
     this._keyboardListenerId = _short.keyboard.on(this._$content, null, function (opts) {
-      return _this13._keyboardHandler(opts);
+      return _this12._keyboardHandler(opts);
     });
   },
   _keyboardHandler: function _keyboardHandler(options) {
@@ -45072,20 +44955,13 @@ var Overlay = _ui2.default.inherit({
   _visibilityChanged: function _visibilityChanged(visible) {
     if (visible) {
       if (this.option('visible')) {
-        this._toggleVisibilityAnimate(visible);
+        this._renderVisibilityAnimate(visible);
       }
     } else {
-      this._toggleVisibilityAnimate(visible);
+      this._renderVisibilityAnimate(visible);
     }
-  },
-  _renderGeometryAsynchronously: function _renderGeometryAsynchronously() {
-    this._renderGeometry();
   },
   _dimensionChanged: function _dimensionChanged() {
-    var shouldUseVisualViewport = this._shouldUseVisualViewport();
-    if (shouldUseVisualViewport) {
-      return;
-    }
     this._renderGeometry();
   },
   _clean: function _clean() {
@@ -45096,9 +44972,6 @@ var Overlay = _ui2.default.inherit({
     this._renderVisibility(false);
     this._stopShowTimer();
     this._cleanFocusState();
-    this._pendingUpdate = null;
-    this._resizeAnimationFrameId = null;
-    this._unSubscribeCallbacks = null;
   },
   _stopShowTimer: function _stopShowTimer() {
     if (this._asyncShowTimeout) {
@@ -45125,7 +44998,7 @@ var Overlay = _ui2.default.inherit({
     this._$content.toggleClass(RTL_DIRECTION_CLASS, rtl);
   },
   _optionChanged: function _optionChanged(args) {
-    var _this14 = this;
+    var _this13 = this;
     var value = args.value,
       name = args.name;
     if (this._getActionsList().includes(name)) {
@@ -45159,12 +45032,12 @@ var Overlay = _ui2.default.inherit({
         this._toggleSafariScrolling();
         break;
       case 'visible':
-        this._toggleVisibilityAnimate(value).done(function () {
-          var _this14$_animateDefer;
-          return (_this14$_animateDefer = _this14._animateDeferred) === null || _this14$_animateDefer === void 0 ? void 0 : _this14$_animateDefer.resolveWith(_this14);
+        this._renderVisibilityAnimate(value).done(function () {
+          var _this13$_animateDefer;
+          return (_this13$_animateDefer = _this13._animateDeferred) === null || _this13$_animateDefer === void 0 ? void 0 : _this13$_animateDefer.resolveWith(_this13);
         }).fail(function () {
-          var _this14$_animateDefer2;
-          return (_this14$_animateDefer2 = _this14._animateDeferred) === null || _this14$_animateDefer2 === void 0 ? void 0 : _this14$_animateDefer2.reject();
+          var _this13$_animateDefer2;
+          return (_this13$_animateDefer2 = _this13._animateDeferred) === null || _this13$_animateDefer2 === void 0 ? void 0 : _this13$_animateDefer2.reject();
         });
         break;
       case 'container':
@@ -45220,7 +45093,7 @@ var Overlay = _ui2.default.inherit({
     }
   },
   toggle: function toggle(showing) {
-    var _this15 = this;
+    var _this14 = this;
     showing = showing === undefined ? !this.option('visible') : showing;
     var result = new _deferred.Deferred();
     if (showing === this.option('visible')) {
@@ -45230,10 +45103,10 @@ var Overlay = _ui2.default.inherit({
     this._animateDeferred = animateDeferred;
     this.option('visible', showing);
     animateDeferred.promise().done(function () {
-      delete _this15._animateDeferred;
-      result.resolveWith(_this15, [_this15.option('visible')]);
+      delete _this14._animateDeferred;
+      result.resolveWith(_this14, [_this14.option('visible')]);
     }).fail(function () {
-      delete _this15._animateDeferred;
+      delete _this14._animateDeferred;
       result.reject();
     });
     return result.promise();
@@ -50420,8 +50293,7 @@ var Scrollable = _dom_component.default.inherit({
     return (0, _element.getPublicElement)(this._$container);
   },
   scrollOffset: function scrollOffset() {
-    var scrollOffset = this._strategy._getScrollOffset();
-    return scrollOffset;
+    return this._strategy._getScrollOffset();
   },
   _isRtlNativeStrategy: function _isRtlNativeStrategy() {
     var _this$option = this.option(),
@@ -54871,7 +54743,11 @@ var _default = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
   /**
   * @name ErrorsUIWidgets.W1021
   */
-  W1021: 'The \'{0}\' is not rendered because none of the DOM elements match the value of the "container" property.'
+  W1021: 'The \'{0}\' is not rendered because none of the DOM elements match the value of the "container" property.',
+  /**
+   * @name ErrorsUIWidgets.W1022
+   */
+  W1022: '{0} JSON parsing error: \'{1}\''
 });
 exports["default"] = _default;
 module.exports = exports.default;
@@ -70483,7 +70359,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var _floor = Math.floor;
 var _log = _errors_warnings.default.log;
-var SIZE_CHANGING_THRESHOLD = 0.3;
+var SIZE_CHANGING_THRESHOLD = 1;
 var OPTION_RTL_ENABLED = 'rtlEnabled';
 var SIZED_ELEMENT_CLASS = 'dx-sized-element';
 var _option = _dom_component.default.prototype.option;

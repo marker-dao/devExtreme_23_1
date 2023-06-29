@@ -66,7 +66,7 @@ class BootstrapExtractor {
             }
             const path = require.resolve(`bootstrap${this.version}/dist/css/bootstrap.css`);
             const content = yield fs_1.promises.readFile(path, 'utf8');
-            const rootVariables = new RegExp(':root {.+?}', 's').exec(content)[0];
+            const rootVariables = new RegExp(':root(,.+?])? {.+?}', 's').exec(content)[0];
             const ruleRegex = /(--.+): (.+);/gm;
             let match = ruleRegex.exec(rootVariables);
             while (match !== null) {

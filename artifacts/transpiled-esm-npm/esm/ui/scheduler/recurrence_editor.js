@@ -13,6 +13,7 @@ import Editor from '../editor/editor';
 import NumberBox from '../number_box';
 import { getRecurrenceProcessor } from './recurrence';
 import '../radio_group';
+import { PathTimeZoneConversion } from '../../renovation/ui/scheduler/timeZoneCalculator/types';
 var RECURRENCE_EDITOR = 'dx-recurrence-editor';
 var LABEL_POSTFIX = '-label';
 var WRAPPER_POSTFIX = '-wrapper';
@@ -285,7 +286,8 @@ class RecurrenceEditor extends Editor {
           selectedItemKeys: byDay,
           keyExpr: 'key',
           onSelectionChanged: e => {
-            var selectedKeys = e.component.option('selectedItemKeys');
+            var selectedItemKeys = e.component.option('selectedItemKeys');
+            var selectedKeys = selectedItemKeys !== null && selectedItemKeys !== void 0 && selectedItemKeys.length ? selectedItemKeys : this._getDefaultByDayValue();
             this._recurrenceRule.makeRule('byday', selectedKeys);
             this._changeEditorValue();
           }
@@ -416,9 +418,14 @@ class RecurrenceEditor extends Editor {
   _daysOfWeekByRules() {
     var daysByRule = this._recurrenceRule.getDaysFromByDayRule();
     if (!daysByRule.length) {
-      daysByRule = [days[this.option('startDate').getDay()]];
+      daysByRule = this._getDefaultByDayValue();
     }
     return daysByRule;
+  }
+  _getDefaultByDayValue() {
+    var startDate = this.option('startDate');
+    var startDay = startDate.getDay();
+    return [days[startDay]];
   }
   _dayOfMonthByRules() {
     var dayByRule = this._recurrenceRule.getRules()['bymonthday'];
@@ -501,7 +508,7 @@ class RecurrenceEditor extends Editor {
     return dateUtils.setToDayEnd(date);
   }
   _renderRepeatUntilEditor() {
-    var repeatUntil = this._recurrenceRule.getRules().until || this._formatUntilDate(new Date());
+    var repeatUntil = this._getUntilValue();
     var $editorWrapper = $('<div>').addClass(REPEAT_END_EDITOR + WRAPPER_POSTFIX);
     $('<div>').text(messageLocalization.format('dxScheduler-recurrenceOn')).addClass(REPEAT_END_EDITOR + LABEL_POSTFIX).appendTo($editorWrapper);
     this._$repeatDateEditor = $('<div>').addClass(REPEAT_UNTIL_DATE_EDITOR).appendTo($editorWrapper);
@@ -519,9 +526,15 @@ class RecurrenceEditor extends Editor {
   }
   _repeatUntilValueChangeHandler(args) {
     if (this._recurrenceRule.getRepeatEndRule() === 'until') {
-      var untilDate = this._formatUntilDate(new Date(args.value));
-      this._repeatUntilDate.option('value', untilDate);
-      this._recurrenceRule.makeRule('until', untilDate);
+      var dateInTimeZone = this._formatUntilDate(new Date(args.value));
+      var getStartDateTimeZone = this.option('getStartDateTimeZone');
+      var appointmentTimeZone = getStartDateTimeZone();
+      var path = appointmentTimeZone ? PathTimeZoneConversion.fromAppointmentToSource : PathTimeZoneConversion.fromGridToSource;
+      var dateInLocaleTimeZone = this.option('timeZoneCalculator').createDate(dateInTimeZone, {
+        path,
+        appointmentTimeZone
+      });
+      this._recurrenceRule.makeRule('until', dateInLocaleTimeZone);
       this._changeEditorValue();
     }
   }
@@ -675,7 +688,17 @@ class RecurrenceEditor extends Editor {
     this._repeatUntilDate.option('value', this._getUntilValue());
   }
   _getUntilValue() {
-    return this._recurrenceRule.getRules().until || this._formatUntilDate(new Date());
+    var untilDate = this._recurrenceRule.getRules().until;
+    if (!untilDate) {
+      return this._formatUntilDate(new Date());
+    }
+    var getStartDateTimeZone = this.option('getStartDateTimeZone');
+    var appointmentTimeZone = getStartDateTimeZone();
+    var path = appointmentTimeZone ? PathTimeZoneConversion.fromSourceToAppointment : PathTimeZoneConversion.fromSourceToGrid;
+    return this.option('timeZoneCalculator').createDate(untilDate, {
+      path,
+      appointmentTimeZone
+    });
   }
   toggle() {
     this._freqEditor.focus();

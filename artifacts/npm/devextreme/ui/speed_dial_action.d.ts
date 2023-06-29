@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/speed_dial_action.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,23 +21,50 @@ import Widget, {
     WidgetOptions,
 } from './widget/ui.widget';
 
-/** @public */
+/**
+ * @docid _ui_speed_dial_action_ClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ClickEvent = NativeEventInfo<dxSpeedDialAction, MouseEvent | PointerEvent> & {
+    /** @docid _ui_speed_dial_action_ClickEvent.actionElement */
     actionElement?: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_speed_dial_action_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxSpeedDialAction> & {
+    /** @docid _ui_speed_dial_action_ContentReadyEvent.actionElement */
     actionElement?: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_speed_dial_action_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxSpeedDialAction>;
 
-/** @public */
+/**
+ * @docid _ui_speed_dial_action_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxSpeedDialAction>;
 
-/** @public */
+/**
+ * @docid _ui_speed_dial_action_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxSpeedDialAction> & ChangedOptionInfo;
 
 /**

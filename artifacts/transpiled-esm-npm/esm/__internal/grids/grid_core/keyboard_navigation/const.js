@@ -25,6 +25,7 @@ export var DATEBOX_WIDGET_NAME = 'dxDateBox';
 export var FOCUS_STATE_CLASS = 'dx-state-focused';
 export var WIDGET_CLASS = 'dx-widget';
 export var REVERT_BUTTON_CLASS = 'dx-revert-button';
+export var FOCUSED_CLASS = 'dx-focused';
 export var FAST_EDITING_DELETE_KEY = 'delete';
 export var INTERACTIVE_ELEMENTS_SELECTOR = 'input:not([type=\'hidden\']), textarea, a, select, button, [tabindex], .dx-checkbox';
 export var NON_FOCUSABLE_ELEMENTS_SELECTOR = "".concat(INTERACTIVE_ELEMENTS_SELECTOR, ", .dx-dropdowneditor-icon");

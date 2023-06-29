@@ -174,4 +174,4 @@ viz.dxFunnel = require('../viz/funnel');
 viz.dxSankey = require('../viz/sankey');
 
 /* Utilities for integration with ASP.NET */
-/* DevExpress.aspnet = require('../aspnet"); */
+/* DevExpress.aspnet = require('../aspnet'); */

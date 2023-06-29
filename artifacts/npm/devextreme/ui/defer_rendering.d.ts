@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/defer_rendering.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,22 +24,52 @@ import Widget, {
     WidgetOptions,
 } from './widget/ui.widget';
 
-/** @public */
+/**
+ * @docid _ui_defer_rendering_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxDeferRendering>;
 
-/** @public */
+/**
+ * @docid _ui_defer_rendering_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxDeferRendering>;
 
-/** @public */
+/**
+ * @docid _ui_defer_rendering_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxDeferRendering>;
 
-/** @public */
+/**
+ * @docid _ui_defer_rendering_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxDeferRendering> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_defer_rendering_RenderedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type RenderedEvent = EventInfo<dxDeferRendering>;
 
-/** @public */
+/**
+ * @docid _ui_defer_rendering_ShownEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ShownEvent = EventInfo<dxDeferRendering>;
 
 /**

@@ -10,6 +10,7 @@ var getConsoleMethod = function getConsoleMethod(method) {
   return console[method].bind(console);
 };
 export var logger = {
+  log: getConsoleMethod('log'),
   info: getConsoleMethod('info'),
   warn: getConsoleMethod('warn'),
   error: getConsoleMethod('error')

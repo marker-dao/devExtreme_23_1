@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/tree_map.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -59,58 +59,137 @@ export type TreeMapLayoutAlgorithm = 'sliceanddice' | 'squarified' | 'strip';
 /** @public */
 export type TreeMapLayoutDirection = 'leftBottomRightTop' | 'leftTopRightBottom' | 'rightBottomLeftTop' | 'rightTopLeftBottom';
 
+/**
+ * @docid
+ * @hidden
+ */
 export interface InteractionInfo {
+  /** @docid */
   readonly node: dxTreeMapNode;
 }
 
-/** @public */
+/**
+ * @docid _viz_tree_map_ClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ClickEvent = NativeEventInfo<dxTreeMap, MouseEvent | PointerEvent> & {
+  /** @docid _viz_tree_map_ClickEvent.node */
   readonly node: dxTreeMapNode;
 };
 
-/** @public */
+/**
+ * @docid _viz_tree_map_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxTreeMap>;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_DrawnEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DrawnEvent = EventInfo<dxTreeMap>;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_DrillEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DrillEvent = EventInfo<dxTreeMap> & {
+  /** @docid _viz_tree_map_DrillEvent.node */
   readonly node: dxTreeMapNode;
 };
 
-/** @public */
+/**
+ * @docid _viz_tree_map_ExportedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ExportedEvent = EventInfo<dxTreeMap>;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_ExportingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ExportInfo
+ */
 export type ExportingEvent = EventInfo<dxTreeMap> & ExportInfo;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_FileSavingEvent
+ * @public
+ * @type object
+ * @inherits FileSavingEventInfo
+ */
 export type FileSavingEvent = FileSavingEventInfo<dxTreeMap>;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_HoverChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,InteractionInfo
+ */
 export type HoverChangedEvent = EventInfo<dxTreeMap> & InteractionInfo;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_IncidentOccurredEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,IncidentInfo
+ */
 export type IncidentOccurredEvent = EventInfo<dxTreeMap> & IncidentInfo;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxTreeMap>;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_NodesInitializedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type NodesInitializedEvent = EventInfo<dxTreeMap> & {
+    /** @docid _viz_tree_map_NodesInitializedEvent.root */
     readonly root: dxTreeMapNode;
 };
 
-/** @public */
+/**
+ * @docid _viz_tree_map_NodesRenderingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type NodesRenderingEvent = EventInfo<dxTreeMap> & {
+    /** @docid _viz_tree_map_NodesRenderingEvent.node */
     readonly node: dxTreeMapNode;
 };
 
-/** @public */
+/**
+ * @docid _viz_tree_map_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxTreeMap> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _viz_tree_map_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,InteractionInfo
+ */
 export type SelectionChangedEvent = EventInfo<dxTreeMap> & InteractionInfo;
 
 /**

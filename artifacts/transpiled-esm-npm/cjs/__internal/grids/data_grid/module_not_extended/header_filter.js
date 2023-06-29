@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.header_filter");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_header_filter = require("../../../grids/grid_core/header_filter/m_header_filter");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('headerFilter', _uiGrid_core.headerFilterModule);
+_m_core.default.registerModule('headerFilter', _m_header_filter.headerFilterModule);

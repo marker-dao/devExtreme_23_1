@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/menu.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -42,47 +42,111 @@ export {
 /** @public */
 export type SubmenuDirection = 'auto' | 'leftOrTop' | 'rightOrBottom';
 
-/** @public */
+/**
+ * @docid _ui_menu_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent<TKey = any> = EventInfo<dxMenu<TKey>>;
 
-/** @public */
+/**
+ * @docid _ui_menu_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent<TKey = any> = EventInfo<dxMenu<TKey>>;
 
-/** @public */
+/**
+ * @docid _ui_menu_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent<TKey = any> = InitializedEventInfo<dxMenu<TKey>>;
 
-/** @public */
+/**
+ * @docid _ui_menu_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
 export type ItemClickEvent<TKey = any> = NativeEventInfo<dxMenu<TKey>, KeyboardEvent | MouseEvent | PointerEvent> & ItemInfo<Item>;
 
-/** @public */
+/**
+ * @docid _ui_menu_ItemContextMenuEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
 export type ItemContextMenuEvent<TKey = any> = NativeEventInfo<dxMenu<TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<Item>;
 
-/** @public */
+/**
+ * @docid _ui_menu_ItemRenderedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ItemInfo
+ */
 export type ItemRenderedEvent<TKey = any> = EventInfo<dxMenu<TKey>> & ItemInfo<Item>;
 
-/** @public */
+/**
+ * @docid _ui_menu_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent<TKey = any> = EventInfo<dxMenu<TKey>> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_menu_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,SelectionChangedInfo
+ */
 export type SelectionChangedEvent<TKey = any> = EventInfo<dxMenu<TKey>> & SelectionChangedInfo<Item>;
 
-/** @public */
+/**
+ * @docid _ui_menu_SubmenuHiddenEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type SubmenuHiddenEvent<TKey = any> = EventInfo<dxMenu<TKey>> & {
+    /** @docid _ui_menu_SubmenuHiddenEvent.rootItem */
     readonly rootItem?: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_menu_SubmenuHidingEvent
+ * @public
+ * @type object
+ * @inherits Cancelable,EventInfo
+ */
 export type SubmenuHidingEvent<TKey = any> = Cancelable & EventInfo<dxMenu<TKey>> & {
+    /** @docid _ui_menu_SubmenuHidingEvent.rootItem */
     readonly rootItem?: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_menu_SubmenuShowingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type SubmenuShowingEvent<TKey = any> = EventInfo<dxMenu<TKey>> & {
+    /** @docid _ui_menu_SubmenuShowingEvent.rootItem */
     readonly rootItem?: DxElement;
 };
 
-/** @public */
+/**
+ * @docid _ui_menu_SubmenuShownEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type SubmenuShownEvent<TKey = any> = EventInfo<dxMenu<TKey>> & {
+    /** @docid _ui_menu_SubmenuShownEvent.rootItem */
     readonly rootItem?: DxElement;
 };
 

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -176,7 +176,7 @@
             "dxDataGrid-ariaFilterCell": "フィルター セル",
             "dxDataGrid-ariaCollapse": "折りたたむ",
             "dxDataGrid-ariaExpand": "展開",
-            "dxDataGrid-ariaDataGrid": "データ グリッド",
+            "dxDataGrid-ariaDataGrid": "{0} 行と {1} 列のデータ グリッド",
             "dxDataGrid-ariaSearchInGrid": "データ グリッド内で検索",
             "dxDataGrid-ariaSelectAll": "すべてを選択",
             "dxDataGrid-ariaSelectRow": "行の選択",

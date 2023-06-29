@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/animation/position.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,6 @@ import { each } from '../core/utils/iterator';
 import { getWindow } from '../core/utils/window';
 var window = getWindow();
 import domAdapter from '../core/dom_adapter';
-import { getVisualViewportSizes, hasVisualViewport } from '../core/utils/visual_viewport';
 import { isWindow, isDefined } from '../core/utils/type';
 import { extend } from '../core/utils/extend';
 import { getBoundingRect } from '../core/utils/position';
@@ -227,19 +226,11 @@ var calculatePosition = function calculatePosition(what, options) {
     if (isWindow(of[0])) {
       h.atLocation = of.scrollLeft();
       v.atLocation = of.scrollTop();
-      var isPhone = devices.real().deviceType === 'phone';
-      var isVisualViewportAvailable = hasVisualViewport();
-      if (isPhone && isVisualViewportAvailable) {
-        var {
-          offsetLeft,
-          offsetTop,
-          width,
-          height
-        } = getVisualViewportSizes();
-        h.atLocation = Math.max(h.atLocation, offsetLeft);
-        v.atLocation = Math.max(v.atLocation, offsetTop);
-        h.atSize = width;
-        v.atSize = height;
+      if (devices.real().deviceType === 'phone' && of[0].visualViewport) {
+        h.atLocation = Math.max(h.atLocation, of[0].visualViewport.offsetLeft);
+        v.atLocation = Math.max(v.atLocation, of[0].visualViewport.offsetTop);
+        h.atSize = of[0].visualViewport.width;
+        v.atSize = of[0].visualViewport.height;
       } else {
         h.atSize = of[0].innerWidth > of[0].outerWidth ? of[0].innerWidth : getWidth(of);
         v.atSize = of[0].innerHeight > of[0].outerHeight || IS_SAFARI ? of[0].innerHeight : getHeight(of);

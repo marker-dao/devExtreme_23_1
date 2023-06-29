@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/linear_gauge.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,34 +40,84 @@ export {
     VerticalAlignment,
 };
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxLinearGauge>;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_DrawnEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DrawnEvent = EventInfo<dxLinearGauge>;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_ExportedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ExportedEvent = EventInfo<dxLinearGauge>;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_ExportingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ExportInfo
+ */
 export type ExportingEvent = EventInfo<dxLinearGauge> & ExportInfo;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_FileSavingEvent
+ * @public
+ * @type object
+ * @inherits FileSavingEventInfo
+ */
 export type FileSavingEvent = FileSavingEventInfo<dxLinearGauge>;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_IncidentOccurredEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,IncidentInfo
+ */
 export type IncidentOccurredEvent = EventInfo<dxLinearGauge> & IncidentInfo;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxLinearGauge>;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxLinearGauge> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_TooltipHiddenEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,_viz_base_gauge_TooltipInfo
+ */
 export type TooltipHiddenEvent = EventInfo<dxLinearGauge> & TooltipInfo;
 
-/** @public */
+/**
+ * @docid _viz_linear_gauge_TooltipShownEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,_viz_base_gauge_TooltipInfo
+ */
 export type TooltipShownEvent = EventInfo<dxLinearGauge> & TooltipInfo;
 
 /**

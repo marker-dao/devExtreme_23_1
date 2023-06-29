@@ -1,3 +1,3 @@
-import { editingRowBasedModule } from '../../../../ui/grid_core/ui.grid_core.editing_row_based';
-import gridCore from '../module_core';
+import { editingRowBasedModule } from '../../../grids/grid_core/editing/m_editing_row_based';
+import gridCore from '../m_core';
 gridCore.registerModule('editingRowBased', editingRowBasedModule);

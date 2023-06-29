@@ -1,2 +1,2 @@
 // deprecated
-export * from '../../__internal/grids/pivot_grid/module_widget_utils';
+export * from '../../__internal/grids/pivot_grid/m_widget_utils';

@@ -21,7 +21,7 @@ import { getGraphicObjects } from '../../common/charts';
 import { createEventTrigger, createResizeHandler, createIncidentOccurred } from './base_widget.utils';
 var _floor = Math.floor;
 var _log = warnings.log;
-var SIZE_CHANGING_THRESHOLD = 0.3;
+var SIZE_CHANGING_THRESHOLD = 1;
 var OPTION_RTL_ENABLED = 'rtlEnabled';
 var SIZED_ELEMENT_CLASS = 'dx-sized-element';
 var _option = DOMComponent.prototype.option;

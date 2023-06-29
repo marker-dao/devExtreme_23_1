@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.context_menu");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_context_menu = require("../../../grids/grid_core/context_menu/m_context_menu");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('contextMenu', _uiGrid_core.contextMenuModule);
+_m_core.default.registerModule('contextMenu', _m_context_menu.contextMenuModule);

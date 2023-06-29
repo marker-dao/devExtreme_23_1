@@ -1057,6 +1057,9 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
       },
       getCalculatedEndDate: function getCalculatedEndDate(startDateWithStartHour) {
         return _this7._workSpace.calculateEndDate(startDateWithStartHour);
+      },
+      getTimeZoneCalculator: function getTimeZoneCalculator() {
+        return _this7.timeZoneCalculator;
       }
     };
     return new _form.AppointmentForm(scheduler);

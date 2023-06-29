@@ -1,3 +1,3 @@
-import { selectionModule } from '../../../../ui/grid_core/ui.grid_core.selection';
-import gridCore from '../module_core';
+import { selectionModule } from '../../../grids/grid_core/selection/m_selection';
+import gridCore from '../m_core';
 gridCore.registerModule('selection', selectionModule);

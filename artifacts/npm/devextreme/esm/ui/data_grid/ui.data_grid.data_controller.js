@@ -1,10 +1,10 @@
 /**
 * DevExtreme (esm/ui/data_grid/ui.data_grid.data_controller.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 // deprecated
-export * from '../../__internal/grids/data_grid/module_data_controller';
+export * from '../../__internal/grids/data_grid/m_data_controller';

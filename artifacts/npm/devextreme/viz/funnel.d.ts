@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/funnel.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -99,44 +99,112 @@ export interface FunnelLegendItem extends BaseLegendItem {
     item?: Item;
 }
 
-interface FunnelItemInfo {
+/**
+ * @docid
+ * @hidden
+ */
+export interface FunnelItemInfo {
+  /**
+   * @docid
+   * @type dxFunnelItem
+   */
   readonly item: Item;
 }
 
-/** @public */
+/**
+ * @docid _viz_funnel_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxFunnel>;
 
-/** @public */
+/**
+ * @docid _viz_funnel_DrawnEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DrawnEvent = EventInfo<dxFunnel>;
 
-/** @public */
+/**
+ * @docid _viz_funnel_ExportedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ExportedEvent = EventInfo<dxFunnel>;
 
-/** @public */
+/**
+ * @docid _viz_funnel_ExportingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ExportInfo
+ */
 export type ExportingEvent = EventInfo<dxFunnel> & ExportInfo;
 
-/** @public */
+/**
+ * @docid _viz_funnel_FileSavingEvent
+ * @public
+ * @type object
+ * @inherits FileSavingEventInfo
+ */
 export type FileSavingEvent = FileSavingEventInfo<dxFunnel>;
 
-/** @public */
+/**
+ * @docid _viz_funnel_HoverChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,FunnelItemInfo
+ */
 export type HoverChangedEvent = EventInfo<dxFunnel> & FunnelItemInfo;
 
-/** @public */
+/**
+ * @docid _viz_funnel_IncidentOccurredEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,IncidentInfo
+ */
 export type IncidentOccurredEvent = EventInfo<dxFunnel> & IncidentInfo;
 
-/** @public */
+/**
+ * @docid _viz_funnel_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxFunnel>;
 
-/** @public */
+/**
+ * @docid _viz_funnel_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,FunnelItemInfo
+ */
 export type ItemClickEvent = NativeEventInfo<dxFunnel, MouseEvent | PointerEvent> & FunnelItemInfo;
 
-/** @public */
+/**
+ * @docid _viz_funnel_LegendClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,FunnelItemInfo
+ */
 export type LegendClickEvent = NativeEventInfo<dxFunnel, MouseEvent | PointerEvent> & FunnelItemInfo;
 
-/** @public */
+/**
+ * @docid _viz_funnel_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxFunnel> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _viz_funnel_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,FunnelItemInfo
+ */
 export type SelectionChangedEvent = EventInfo<dxFunnel> & FunnelItemInfo;
 
 /**

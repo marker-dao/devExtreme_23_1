@@ -1036,7 +1036,8 @@ class Scheduler extends Widget {
       getEditingConfig: () => this._editing,
       getFirstDayOfWeek: () => this.option('firstDayOfWeek'),
       getStartDayHour: () => this.option('startDayHour'),
-      getCalculatedEndDate: startDateWithStartHour => this._workSpace.calculateEndDate(startDateWithStartHour)
+      getCalculatedEndDate: startDateWithStartHour => this._workSpace.calculateEndDate(startDateWithStartHour),
+      getTimeZoneCalculator: () => this.timeZoneCalculator
     };
     return new AppointmentForm(scheduler);
   }

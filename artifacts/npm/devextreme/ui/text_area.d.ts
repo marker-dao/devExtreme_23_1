@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/text_area.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,52 +21,127 @@ import dxTextBox, {
     dxTextBoxOptions,
 } from './text_box';
 
-/** @public */
+/**
+ * @docid _ui_text_area_ChangeEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ChangeEvent = NativeEventInfo<dxTextArea, Event>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxTextArea>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_CopyEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type CopyEvent = NativeEventInfo<dxTextArea, ClipboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_CutEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type CutEvent = NativeEventInfo<dxTextArea, ClipboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxTextArea>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_EnterKeyEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type EnterKeyEvent = NativeEventInfo<dxTextArea, KeyboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_FocusInEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type FocusInEvent = NativeEventInfo<dxTextArea, FocusEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_FocusOutEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type FocusOutEvent = NativeEventInfo<dxTextArea, FocusEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxTextArea>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_InputEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type InputEvent = NativeEventInfo<dxTextArea, UIEvent & { target: HTMLInputElement }>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_KeyDownEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type KeyDownEvent = NativeEventInfo<dxTextArea, KeyboardEvent>;
 
 /** @public */
 export type KeyPressEvent = NativeEventInfo<dxTextArea, KeyboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_KeyUpEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type KeyUpEvent = NativeEventInfo<dxTextArea, KeyboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxTextArea> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_text_area_PasteEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type PasteEvent = NativeEventInfo<dxTextArea, ClipboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_text_area_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ValueChangedInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxTextArea, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent | Event> & ValueChangedInfo;
 
 /**

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/header/header.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -131,6 +131,10 @@ export class SchedulerHeader extends Widget {
     onCurrentViewChange(view.name);
     this._callEvent('currentView', view);
   }
+  _updateCalendarValueAndCurrentDate(date) {
+    this._updateCurrentDate(date);
+    this._calendar.option('value', date);
+  }
   _updateCurrentDate(date) {
     var onCurrentDateChange = this.option('onCurrentDateChange');
     onCurrentDateChange(date);
@@ -138,15 +142,14 @@ export class SchedulerHeader extends Widget {
   }
   _renderCalendar() {
     this._calendar = this._createComponent('<div>', SchedulerCalendar, {
-      date: this.option('currentDate'),
+      value: this.option('currentDate'),
       min: this.option('min'),
       max: this.option('max'),
       firstDayOfWeek: this.option('firstDayOfWeek'),
       focusStateEnabled: this.option('focusStateEnabled'),
       tabIndex: this.option('tabIndex'),
       onValueChanged: e => {
-        var date = e.value;
-        this._updateCurrentDate(date);
+        this._updateCurrentDate(e.value);
         this._calendar.hide();
       }
     });
@@ -193,7 +196,7 @@ export class SchedulerHeader extends Widget {
   }
   _updateDateByDirection(direction) {
     var date = this._getNextDate(direction);
-    this._updateCurrentDate(date);
+    this._updateCalendarValueAndCurrentDate(date);
   }
   _showCalendar(e) {
     this._calendar.show(e.element);

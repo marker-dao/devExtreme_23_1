@@ -1,13 +1,13 @@
 "use strict";
 
-var _module_utils = require("../../__internal/grids/pivot_grid/remote_store/module_utils");
-Object.keys(_module_utils).forEach(function (key) {
+var _m_remote_store_utils = require("../../__internal/grids/pivot_grid/remote_store/m_remote_store_utils");
+Object.keys(_m_remote_store_utils).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module_utils[key]) return;
+  if (key in exports && exports[key] === _m_remote_store_utils[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module_utils[key];
+      return _m_remote_store_utils[key];
     }
   });
 });

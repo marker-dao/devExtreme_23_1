@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/resizable.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,27 +21,63 @@ import {
 /** @public */
 export type ResizeHandle = 'bottom' | 'left' | 'right' | 'top' | 'all';
 
+/**
+ * @docid
+ * @hidden
+ */
 export interface ResizeInfo {
+    /** @docid */
     readonly width: number;
+    /** @docid */
     readonly height: number;
 }
 
-/** @public */
+/**
+ * @docid _ui_resizable_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxResizable>;
 
-/** @public */
+/**
+ * @docid _ui_resizable_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxResizable>;
 
-/** @public */
+/**
+ * @docid _ui_resizable_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxResizable> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_resizable_ResizeEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ResizeInfo
+ */
 export type ResizeEvent = NativeEventInfo<dxResizable, MouseEvent | TouchEvent> & ResizeInfo;
 
-/** @public */
+/**
+ * @docid _ui_resizable_ResizeStartEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ResizeInfo
+ */
 export type ResizeStartEvent = NativeEventInfo<dxResizable, MouseEvent | TouchEvent> & ResizeInfo;
 
-/** @public */
+/**
+ * @docid _ui_resizable_ResizeEndEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ResizeInfo
+ */
 export type ResizeEndEvent = NativeEventInfo<dxResizable, MouseEvent | TouchEvent> & ResizeInfo;
 
 /**

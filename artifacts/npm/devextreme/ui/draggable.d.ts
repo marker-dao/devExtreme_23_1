@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/draggable.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -120,40 +120,101 @@ export interface DraggableBaseOptions<TComponent> extends DOMComponentOptions<TC
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DraggableBase { }
 
-/** @public */
+/**
+ * @docid _ui_draggable_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxDraggable>;
 
-/** @public */
+/**
+ * @docid _ui_draggable_DragEndEvent
+ * @public
+ * @type object
+ * @inherits Cancelable,NativeEventInfo
+ */
 export type DragEndEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEvent | MouseEvent | TouchEvent> & {
+    /** @docid _ui_draggable_DragEndEvent.itemData */
     readonly itemData?: any;
+    /** @docid _ui_draggable_DragEndEvent.itemElement */
     readonly itemElement?: DxElement;
+    /**
+     * @docid _ui_draggable_DragEndEvent.fromComponent
+     * @type this
+     * @default Widget
+     */
     readonly fromComponent: dxSortable | dxDraggable;
+    /**
+     * @docid _ui_draggable_DragEndEvent.toComponent
+     * @type this
+     * @default Widget
+     */
     readonly toComponent: dxSortable | dxDraggable;
+    /** @docid _ui_draggable_DragEndEvent.fromData */
     readonly fromData?: any;
+    /** @docid _ui_draggable_DragEndEvent.toData */
     readonly toData?: any;
 };
 
-/** @public */
+/**
+ * @docid _ui_draggable_DragMoveEvent
+ * @public
+ * @type object
+ * @inherits Cancelable,NativeEventInfo
+ */
 export type DragMoveEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEvent | MouseEvent | TouchEvent> & {
+    /** @docid _ui_draggable_DragMoveEvent.itemData */
     readonly itemData?: any;
+    /** @docid _ui_draggable_DragMoveEvent.itemElement */
     readonly itemElement?: DxElement;
+    /**
+     * @docid _ui_draggable_DragMoveEvent.fromComponent
+     * @type this
+     * @default Widget
+     */
     readonly fromComponent: dxSortable | dxDraggable;
+    /**
+     * @docid _ui_draggable_DragMoveEvent.toComponent
+     * @type this
+     * @default Widget
+     */
     readonly toComponent: dxSortable | dxDraggable;
+    /** @docid _ui_draggable_DragMoveEvent.fromData */
     readonly fromData?: any;
+    /** @docid _ui_draggable_DragMoveEvent.toData */
     readonly toData?: any;
 };
 
-/** @public */
+/**
+ * @docid _ui_draggable_DragStartEvent
+ * @public
+ * @type object
+ * @inherits Cancelable,NativeEventInfo
+ */
 export type DragStartEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEvent | MouseEvent | TouchEvent> & {
+    /** @docid _ui_draggable_DragStartEvent.itemData */
     itemData?: any;
+    /** @docid _ui_draggable_DragStartEvent.itemElement */
     readonly itemElement?: DxElement;
+    /** @docid _ui_draggable_DragStartEvent.fromData */
     readonly fromData?: any;
 };
 
-/** @public */
+/**
+ * @docid _ui_draggable_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxDraggable>;
 
-/** @public */
+/**
+ * @docid _ui_draggable_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxDraggable> & ChangedOptionInfo;
 
 /** @public */

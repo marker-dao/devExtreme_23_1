@@ -130,11 +130,8 @@ var custom = function custom(options) {
   }
   popupInstance.$wrapper().addClass(DX_DIALOG_ROOT_CLASSNAME);
   function show() {
-    var isPhone = _devices.default.real().deviceType === 'phone';
-    if (isPhone) {
-      var windowHeight = (0, _size.getHeight)(window);
-      var windowWidth = (0, _size.getWidth)(window);
-      var isPortrait = windowHeight > windowWidth;
+    if (_devices.default.real().deviceType === 'phone') {
+      var isPortrait = (0, _size.getHeight)(window) > (0, _size.getWidth)(window);
       var width = isPortrait ? '90%' : '60%';
       popupInstance.option({
         width: width

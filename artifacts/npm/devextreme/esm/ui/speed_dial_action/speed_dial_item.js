@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/speed_dial_action/speed_dial_item.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,6 @@ import Overlay from '../overlay/ui.overlay';
 import { render } from '../widget/utils.ink_ripple';
 import { isMaterial } from '../themes';
 import { isPlainObject } from '../../core/utils/type';
-import { getWindow } from '../../core/utils/window';
 var FAB_CLASS = 'dx-fa-button';
 var FAB_ICON_CLASS = 'dx-fa-button-icon';
 var FAB_LABEL_CLASS = 'dx-fa-button-label';
@@ -31,9 +30,7 @@ class SpeedDialItem extends Overlay {
       callOverlayRenderShading: false,
       width: 'auto',
       zIndex: 1500,
-      _observeContentResize: false,
-      container: this.$element(),
-      visualContainer: getWindow()
+      _observeContentResize: false
     });
   }
   _defaultOptionsRules() {
@@ -45,6 +42,10 @@ class SpeedDialItem extends Overlay {
         useInkRipple: true
       }
     }]);
+  }
+  _moveToContainer() {
+    this._$wrapper.appendTo(this.$element());
+    this._$content.appendTo(this._$wrapper);
   }
   _render() {
     this.$element().addClass(FAB_CLASS);

@@ -83,17 +83,28 @@ var SchedulerCalendar = /*#__PURE__*/function (_Widget) {
     result.$content().append(content);
     return result;
   };
+  _proto._optionChanged = function _optionChanged(_ref) {
+    var _this$_calendar2;
+    var name = _ref.name,
+      value = _ref.value;
+    switch (name) {
+      case 'value':
+        (_this$_calendar2 = this._calendar) === null || _this$_calendar2 === void 0 ? void 0 : _this$_calendar2.option('value', value);
+        break;
+      default:
+        break;
+    }
+  };
   _proto._getCalendarOptions = function _getCalendarOptions() {
     return {
-      value: this.option('date'),
+      value: this.option('value'),
       min: this.option('min'),
       max: this.option('max'),
       firstDayOfWeek: this.option('firstDayOfWeek'),
       focusStateEnabled: this.option('focusStateEnabled'),
       onValueChanged: this.option('onValueChanged'),
       skipFocusCheck: true,
-      tabIndex: this.option('tabIndex'),
-      width: '100%'
+      tabIndex: this.option('tabIndex')
     };
   };
   _proto._isMobileLayout = function _isMobileLayout() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/index.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,34 +12,43 @@ import LocalStore, { Options as LocalStoreOptions } from './local_store';
 import ODataStore, { Options as ODataStoreOptions } from './odata/store';
 
 /**
- * @docid
  * @public
  */
 export type SearchOperation = '=' | '<>' | '>' | '>=' | '<' | '<=' | 'startswith' | 'endswith' | 'contains' | 'notcontains';
 
 type KeySelector<T> = string | ((source: T) => string | number | Date | Object);
 
-type BaseGroupDescriptor<T> = {
+type SelectionDescriptor<T> = {
     selector: KeySelector<T>;
 };
 
-/**
- * @docid
- * @public
- * @type object
- * @skip
- */
-export type GroupDescriptor<T> = KeySelector<T> | BaseGroupDescriptor<T> & {
+type OrderingDescriptor<T> = SelectionDescriptor<T> & {
     desc?: boolean;
 };
 
 /**
+ * @public
+ */
+export type GroupingInterval = 'year' | 'quarter' | 'month' | 'day' | 'dayOfWeek' | 'hour' | 'minute' | 'second';
+
+/**
  * @docid
  * @public
  * @type object
  * @skip
  */
-export type SortDescriptor<T> = GroupDescriptor<T>;
+export type GroupDescriptor<T> = KeySelector<T> | (OrderingDescriptor<T> & {
+    groupInterval?: number | GroupingInterval;
+    isExpanded?: boolean;
+});
+
+/**
+ * @docid
+ * @public
+ * @type object
+ * @skip
+ */
+export type SortDescriptor<T> = KeySelector<T> | OrderingDescriptor<T>;
 
 /**
  * @docid
@@ -75,7 +84,7 @@ export type LangParams = {
  * @public
  * @type object
  */
-export type SummaryDescriptor<T> = KeySelector<T> | BaseGroupDescriptor<T> & {
+export type SummaryDescriptor<T> = KeySelector<T> | SelectionDescriptor<T> & {
     summaryType?: 'sum' | 'avg' | 'min' | 'max' | 'count';
 };
 

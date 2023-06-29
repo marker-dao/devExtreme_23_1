@@ -1,5 +1,5 @@
-import { columnChooserModule } from '../../../../ui/grid_core/ui.grid_core.column_chooser';
-import gridCore from '../module_core';
+import { columnChooserModule } from '../../../grids/grid_core/column_chooser/m_column_chooser';
+import gridCore from '../m_core';
 export var ColumnChooserController = columnChooserModule.controllers.columnChooser;
 export var ColumnChooserView = columnChooserModule.views.columnChooserView;
 gridCore.registerModule('columnChooser', columnChooserModule);

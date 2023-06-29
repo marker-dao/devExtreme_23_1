@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/popover.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,31 +40,76 @@ import {
     Position,
 } from '../common';
 
-/** @public */
+/**
+ * @docid _ui_popover_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxPopover>;
 
-/** @public */
+/**
+ * @docid _ui_popover_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxPopover>;
 
-/** @public */
+/**
+ * @docid _ui_popover_HidingEvent
+ * @public
+ * @type object
+ * @inherits Cancelable,EventInfo
+ */
 export type HidingEvent = Cancelable & EventInfo<dxPopover>;
 
-/** @public */
+/**
+ * @docid _ui_popover_HiddenEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type HiddenEvent = EventInfo<dxPopover>;
 
-/** @public */
+/**
+ * @docid _ui_popover_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxPopover>;
 
-/** @public */
+/**
+ * @docid _ui_popover_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxPopover> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_popover_ShowingEvent
+ * @public
+ * @type object
+ * @inherits Cancelable,EventInfo
+ */
 export type ShowingEvent = Cancelable & EventInfo<dxPopover>;
 
-/** @public */
+/**
+ * @docid _ui_popover_ShownEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ShownEvent = EventInfo<dxPopover>;
 
-/** @public */
+/**
+ * @docid _ui_popover_TitleRenderedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,TitleRenderedInfo
+ */
 export type TitleRenderedEvent = EventInfo<dxPopover> & TitleRenderedInfo;
 
 /**

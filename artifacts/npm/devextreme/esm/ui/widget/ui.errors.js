@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/widget/ui.errors.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -286,5 +286,9 @@ export default errorUtils(errors.ERROR_MESSAGES, {
   /**
   * @name ErrorsUIWidgets.W1021
   */
-  W1021: 'The \'{0}\' is not rendered because none of the DOM elements match the value of the "container" property.'
+  W1021: 'The \'{0}\' is not rendered because none of the DOM elements match the value of the "container" property.',
+  /**
+   * @name ErrorsUIWidgets.W1022
+   */
+  W1022: '{0} JSON parsing error: \'{1}\''
 });

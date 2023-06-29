@@ -1,3 +1,3 @@
-import { rowDraggingModule } from '../../../../ui/grid_core/ui.grid_core.row_dragging';
-import gridCore from '../module_core';
+import { rowDraggingModule } from '../../../grids/grid_core/row_dragging/m_row_dragging';
+import gridCore from '../m_core';
 gridCore.registerModule('rowDragging', rowDraggingModule);

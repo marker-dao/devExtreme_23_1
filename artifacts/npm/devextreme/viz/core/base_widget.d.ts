@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/core/base_widget.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -42,20 +42,45 @@ import {
     WordWrap,
 } from '../../common/charts';
 
+/**
+ * @docid
+ * @hidden
+ */
 export interface ExportInfo {
+  /** @docid */
   readonly fileName: string;
+  /** @docid */
   readonly format: string;
 }
 
+/**
+ * @docid
+ * @hidden
+ */
 export interface IncidentInfo {
+  /** @docid */
   readonly target: any;
 }
 
+/**
+ * @docid
+ * @hidden
+ * @inherits Cancelable
+ */
 export type FileSavingEventInfo<T> = Cancelable & {
+  /**
+   * @docid
+   * @type this
+   * @default Widget
+   */
   readonly component: T;
+  /** @docid */
   readonly element: DxElement;
+  /** @docid */
   readonly fileName: string;
+  /** @docid */
   readonly format: string;
+  /** @docid */
   readonly data: Blob;
 };
 
@@ -123,8 +148,7 @@ export interface BaseWidgetOptions<TComponent> extends DOMComponentOptions<TComp
     onExporting?: ((e: EventInfo<TComponent> & ExportInfo) => void);
     /**
      * @docid
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:this
+     * @type_function_param1 e:{viz/core/base_widget:FileSavingEventInfo}
      * @default null
      * @action
      * @public

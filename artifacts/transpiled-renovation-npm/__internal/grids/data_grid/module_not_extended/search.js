@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.search");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_search = require("../../../grids/grid_core/search/m_search");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('search', _uiGrid_core.searchModule);
+_m_core.default.registerModule('search', _m_search.searchModule);

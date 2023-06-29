@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.base.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -516,7 +516,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       duration: 200,
       complete: function () {
         this.updateDimensions();
-        this._updateLoadingState();
+        this._updateLoadingState(true);
         deferred.resolve();
       }.bind(this)
     });
@@ -750,7 +750,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       case 'scrollingEnabled':
       case 'pullRefreshEnabled':
         this._initScrollView();
-        this._updateLoadingState();
+        this._updateLoadingState(true);
         break;
       case 'nextButtonText':
       case 'onItemSwipe':

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.scroll_view.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ var _size = require("../../core/utils/size");
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _ui = _interopRequireDefault(require("../widget/ui.widget"));
 var _scroll_view = _interopRequireDefault(require("../scroll_view"));
-var _module_widget_utils = require("../../__internal/grids/pivot_grid/module_widget_utils");
+var _m_widget_utils = require("../../__internal/grids/pivot_grid/m_widget_utils");
 var _diagram = require("./diagram.importer");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
@@ -78,7 +78,7 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
     return this._scrollView.$element()[0];
   };
   _proto.getScrollBarWidth = function getScrollBarWidth() {
-    return this.option('useNativeScrolling') ? (0, _module_widget_utils.calculateScrollbarWidth)() : 0;
+    return this.option('useNativeScrolling') ? (0, _m_widget_utils.calculateScrollbarWidth)() : 0;
   };
   _proto.detachEvents = function detachEvents() {};
   _proto._raiseOnScroll = function _raiseOnScroll(left, top) {

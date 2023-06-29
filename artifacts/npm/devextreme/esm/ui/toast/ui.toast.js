@@ -1,14 +1,12 @@
 /**
 * DevExtreme (esm/ui/toast/ui.toast.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import $ from '../../core/renderer';
-import { getWindow } from '../../core/utils/window';
-var window = getWindow();
 import domAdapter from '../../core/dom_adapter';
 import eventsEngine from '../../events/core/events_engine';
 import readyCallbacks from '../../core/utils/ready_callbacks';
@@ -68,6 +66,7 @@ var DEFAULT_BOUNDARY_OFFSET = {
   h: 0,
   v: 0
 };
+var DEFAULT_MARGIN = 20;
 ready(function () {
   eventsEngine.subscribeGlobal(domAdapter.getDocument(), pointerEvents.down, function (e) {
     for (var i = TOAST_STACK.length - 1; i >= 0; i--) {
@@ -113,66 +112,44 @@ var Toast = Overlay.inherit({
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
     return this.callBase().concat([{
-      device: {
-        platform: 'android'
+      device(device) {
+        return device.deviceType === 'phone';
       },
       options: {
-        hideOnOutsideClick: true,
+        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        hideOnOutsideClick: true
+      }
+    }, {
+      device(device) {
+        return device.deviceType === 'tablet';
+      },
+      options: {
         width: 'auto',
-        position: {
-          at: 'bottom left',
-          my: 'bottom left',
-          offset: '20 -20'
-        },
-        animation: {
-          show: {
-            type: 'slide',
-            duration: 200,
-            from: {
-              position: {
-                my: 'top',
-                at: 'bottom',
-                of: window
-              }
-            }
-          },
-          hide: {
-            type: 'slide',
-            duration: 200,
-            to: {
-              position: {
-                my: 'top',
-                at: 'bottom',
-                of: window
-              }
-            }
-          }
-        }
+        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        hideOnOutsideClick: true
       }
     }, {
-      device: function device(_device) {
-        var isPhone = _device.deviceType === 'phone';
-        var isAndroid = _device.platform === 'android';
-        return isPhone && isAndroid;
+      device(device) {
+        return isMaterial() && device.deviceType === 'phone';
       },
       options: {
-        width: '100vw',
-        position: {
-          at: 'bottom center',
-          my: 'bottom center',
-          offset: '0 0'
-        }
+        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        displayTime: 4000,
+        hideOnOutsideClick: true
       }
     }, {
-      device: function device(_device2) {
-        return _device2.deviceType === 'phone';
+      device(device) {
+        return isMaterial() && device.deviceType === 'tablet';
       },
       options: {
-        width: '100vw'
+        width: 'auto',
+        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
+        hideOnOutsideClick: true,
+        displayTime: 4000
       }
     }, {
-      device: function device() {
-        return isMaterial();
+      device(device) {
+        return isMaterial() && device.deviceType === 'desktop';
       },
       options: {
         minWidth: 344,

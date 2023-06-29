@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.work_space.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -70,6 +70,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var tableCreator = _table_creator.default.tableCreator;
+// TODO: The constant is needed so that the dragging is not sharp. To prevent small twitches
+var DRAGGING_MOUSE_FAULT = 10;
 var abstract = _widgetObserver.default.abstract;
 var toMs = _date.default.dateToMilliseconds;
 var COMPONENT_CLASS = 'dx-scheduler-work-space';
@@ -2518,19 +2520,27 @@ var createDragBehaviorConfig = function createDragBehaviorConfig(container, root
       }
     }
   };
+  var getElementsFromPoint = function getElementsFromPoint() {
+    var appointmentWidth = (0, _size.getWidth)(state.dragElement);
+    var cellWidth = getCellWidth();
+    var isWideAppointment = appointmentWidth > cellWidth;
+    var isNarrowAppointment = appointmentWidth <= DRAGGING_MOUSE_FAULT;
+    var dragElementContainer = (0, _renderer.default)(state.dragElement).parent();
+    var boundingRect = (0, _position.getBoundingRect)(dragElementContainer.get(0));
+    var newX = boundingRect.left;
+    var newY = boundingRect.top;
+    if (isWideAppointment) {
+      return _dom_adapter.default.elementsFromPoint(newX + DRAGGING_MOUSE_FAULT, newY + DRAGGING_MOUSE_FAULT);
+    } else if (isNarrowAppointment) {
+      return _dom_adapter.default.elementsFromPoint(newX, newY);
+    }
+    return _dom_adapter.default.elementsFromPoint(newX + appointmentWidth / 2, newY + DRAGGING_MOUSE_FAULT);
+  };
   var onDragMove = function onDragMove() {
     if (isDefaultDraggingMode) {
       return;
     }
-    var MOUSE_IDENT = 10;
-    var appointmentWidth = (0, _size.getWidth)(state.dragElement);
-    var cellWidth = getCellWidth();
-    var isWideAppointment = appointmentWidth > cellWidth;
-    var dragElementContainer = (0, _renderer.default)(state.dragElement).parent();
-    var boundingRect = (0, _position.getBoundingRect)(dragElementContainer.get(0));
-    var newX = boundingRect.left + MOUSE_IDENT;
-    var newY = boundingRect.top + MOUSE_IDENT;
-    var elements = isWideAppointment ? _dom_adapter.default.elementsFromPoint(newX, newY) : _dom_adapter.default.elementsFromPoint(newX + appointmentWidth / 2, newY);
+    var elements = getElementsFromPoint();
     var isMoveUnderControl = !!elements.find(function (el) {
       return el === rootElement.get(0);
     });

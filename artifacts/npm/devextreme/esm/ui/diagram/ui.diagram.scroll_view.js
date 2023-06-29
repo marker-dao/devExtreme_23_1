@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/diagram/ui.diagram.scroll_view.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,8 @@ import { getWidth, getHeight } from '../../core/utils/size';
 import $ from '../../core/renderer';
 import Widget from '../widget/ui.widget';
 import ScrollView from '../scroll_view';
-import { calculateScrollbarWidth } from '../../__internal/grids/pivot_grid/module_widget_utils';
+// TODO: Can we get rid of this dependency of the PivotGrid here?
+import { calculateScrollbarWidth } from '../../__internal/grids/pivot_grid/m_widget_utils';
 import { getDiagram } from './diagram.importer';
 class DiagramScrollView extends Widget {
   _init() {

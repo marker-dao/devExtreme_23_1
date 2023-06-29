@@ -1,13 +1,13 @@
 "use strict";
 
-var _module = require("../../__internal/grids/grid_core/header_filter/module");
-Object.keys(_module).forEach(function (key) {
+var _m_header_filter = require("../../__internal/grids/grid_core/header_filter/m_header_filter");
+Object.keys(_m_header_filter).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module[key]) return;
+  if (key in exports && exports[key] === _m_header_filter[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module[key];
+      return _m_header_filter[key];
     }
   });
 });

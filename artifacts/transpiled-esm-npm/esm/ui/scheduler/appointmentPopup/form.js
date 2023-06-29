@@ -14,6 +14,7 @@ import '../../text_area';
 import '../../tag_box';
 import '../../switch';
 import '../../select_box';
+import { createAppointmentAdapter } from '../appointmentAdapter';
 var SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
 export var APPOINTMENT_FORM_GROUP_NAMES = {
   Main: 'mainGroup',
@@ -143,6 +144,9 @@ export class AppointmentForm {
       paginate: true,
       pageSize: 10
     });
+  }
+  _createAppointmentAdapter(rawAppointment) {
+    return createAppointmentAdapter(rawAppointment, this.scheduler.getDataAccessors());
   }
   _dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
     validateAppointmentFormDate(args.component, args.value, args.previousValue);
@@ -295,7 +299,9 @@ export class AppointmentForm {
       dataField: dataExprs.recurrenceRuleExpr,
       editorType: 'dxRecurrenceEditor',
       editorOptions: {
-        firstDayOfWeek: this.scheduler.getFirstDayOfWeek()
+        firstDayOfWeek: this.scheduler.getFirstDayOfWeek(),
+        timeZoneCalculator: this.scheduler.getTimeZoneCalculator(),
+        getStartDateTimeZone: () => this._createAppointmentAdapter(this.formData).startDateTimeZone
       },
       label: {
         text: ' ',

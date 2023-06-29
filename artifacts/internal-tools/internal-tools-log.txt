@@ -1,292 +1,294 @@
-2023-06-08 14:50:03.7702 | Info | JS Declarations Discovering
+2023-06-29 16:30:33.9854 | Info | JS Declarations Discovering
 
 ================================================================
 JS Declarations Discovering Started
 Path to log file: /Users/mark/Desktop/DevExtreme/artifacts/internal-tools/internal-tools-log.txt
 ================================================================
 
-2023-06-08 14:50:04.2828 | Debug | JS Declarations Discovering
-Descriptors loaded from TS: 6802
-2023-06-08 14:50:04.2828 | Debug | JS Declarations Discovering
-Types loaded from TS: 2271
-2023-06-08 14:50:04.2963 | Info | JS Declarations Discovering
+2023-06-29 16:30:34.5523 | Debug | JS Declarations Discovering
+Descriptors loaded from TS: 8433
+2023-06-29 16:30:34.5523 | Debug | JS Declarations Discovering
+Types loaded from TS: 2276
+2023-06-29 16:30:34.5660 | Info | JS Declarations Discovering
 Searching for members in '/Users/mark/Desktop/DevExtreme/js'
-2023-06-08 14:50:04.3115 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5815 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/excel_exporter.js
-2023-06-08 14:50:04.3133 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5833 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/localization.js
-2023-06-08 14:50:04.3135 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5833 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/pdf_exporter.js
-2023-06-08 14:50:04.3135 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5842 | Debug | JS Declarations Discovering
 6 members found in /Users/mark/Desktop/DevExtreme/js/ui/load_panel.js
-2023-06-08 14:50:04.3156 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5857 | Debug | JS Declarations Discovering
 19 members found in /Users/mark/Desktop/DevExtreme/js/ui/lookup.js
-2023-06-08 14:50:04.3168 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5857 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/sortable.js
-2023-06-08 14:50:04.3168 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5864 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/gantt.js
-2023-06-08 14:50:04.3186 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5864 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/draggable.js
-2023-06-08 14:50:04.3186 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5864 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/context_menu.js
-2023-06-08 14:50:04.3202 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5882 | Debug | JS Declarations Discovering
 26 members found in /Users/mark/Desktop/DevExtreme/js/ui/validation_summary.js
-2023-06-08 14:50:04.3205 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5882 | Debug | JS Declarations Discovering
 7 members found in /Users/mark/Desktop/DevExtreme/js/ui/date_range_box.js
-2023-06-08 14:50:04.3205 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5882 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/tree_view.js
-2023-06-08 14:50:04.3205 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5891 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/html_editor.js
-2023-06-08 14:50:04.3218 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5891 | Debug | JS Declarations Discovering
 15 members found in /Users/mark/Desktop/DevExtreme/js/ui/box.js
-2023-06-08 14:50:04.3218 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5902 | Debug | JS Declarations Discovering
 6 members found in /Users/mark/Desktop/DevExtreme/js/ui/data_grid.js
-2023-06-08 14:50:04.3231 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5912 | Debug | JS Declarations Discovering
 4 members found in /Users/mark/Desktop/DevExtreme/js/ui/validator.js
-2023-06-08 14:50:04.3237 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5912 | Debug | JS Declarations Discovering
 7 members found in /Users/mark/Desktop/DevExtreme/js/ui/tile_view.js
-2023-06-08 14:50:04.3253 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5937 | Debug | JS Declarations Discovering
 11 members found in /Users/mark/Desktop/DevExtreme/js/ui/tag_box.js
-2023-06-08 14:50:04.3257 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5940 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/dialog.js
-2023-06-08 14:50:04.3257 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5940 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/tabs.js
-2023-06-08 14:50:04.3274 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5994 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/list.js
-2023-06-08 14:50:04.3278 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.5994 | Debug | JS Declarations Discovering
 5 members found in /Users/mark/Desktop/DevExtreme/js/ui/drop_down_box.js
-2023-06-08 14:50:04.3286 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6007 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/resizable.js
-2023-06-08 14:50:04.3297 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6019 | Debug | JS Declarations Discovering
 6 members found in /Users/mark/Desktop/DevExtreme/js/ui/gallery.js
-2023-06-08 14:50:04.3346 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6027 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/drop_down_button.js
-2023-06-08 14:50:04.3346 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6032 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/tab_panel.js
-2023-06-08 14:50:04.3357 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6032 | Debug | JS Declarations Discovering
 7 members found in /Users/mark/Desktop/DevExtreme/js/ui/autocomplete.js
-2023-06-08 14:50:04.3357 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6041 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/button_group.js
-2023-06-08 14:50:04.3365 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6041 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/range_slider.js
-2023-06-08 14:50:04.3365 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6041 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/tree_list.js
-2023-06-08 14:50:04.3365 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6041 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/filter_builder.js
-2023-06-08 14:50:04.3377 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6055 | Debug | JS Declarations Discovering
 10 members found in /Users/mark/Desktop/DevExtreme/js/ui/text_area.js
-2023-06-08 14:50:04.3377 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6055 | Debug | JS Declarations Discovering
 6 members found in /Users/mark/Desktop/DevExtreme/js/ui/progress_bar.js
-2023-06-08 14:50:04.3387 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6062 | Debug | JS Declarations Discovering
 10 members found in /Users/mark/Desktop/DevExtreme/js/ui/pivot_grid.js
-2023-06-08 14:50:04.3396 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6070 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/set_template_engine.js
-2023-06-08 14:50:04.3396 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6070 | Debug | JS Declarations Discovering
 8 members found in /Users/mark/Desktop/DevExtreme/js/ui/load_indicator.js
-2023-06-08 14:50:04.3396 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6070 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/file_manager.js
-2023-06-08 14:50:04.3436 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6084 | Debug | JS Declarations Discovering
 5 members found in /Users/mark/Desktop/DevExtreme/js/ui/multi_view.js
-2023-06-08 14:50:04.3448 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6093 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/select_box.js
-2023-06-08 14:50:04.3448 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6093 | Debug | JS Declarations Discovering
 5 members found in /Users/mark/Desktop/DevExtreme/js/ui/form.js
-2023-06-08 14:50:04.3448 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6093 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/menu.js
-2023-06-08 14:50:04.3464 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6110 | Debug | JS Declarations Discovering
 16 members found in /Users/mark/Desktop/DevExtreme/js/ui/action_sheet.js
-2023-06-08 14:50:04.3473 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6121 | Debug | JS Declarations Discovering
 9 members found in /Users/mark/Desktop/DevExtreme/js/ui/map.js
-2023-06-08 14:50:04.3477 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6121 | Debug | JS Declarations Discovering
 4 members found in /Users/mark/Desktop/DevExtreme/js/ui/validation_group.js
-2023-06-08 14:50:04.3490 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6141 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/accordion.js
-2023-06-08 14:50:04.3499 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6141 | Debug | JS Declarations Discovering
 15 members found in /Users/mark/Desktop/DevExtreme/js/ui/responsive_box.js
-2023-06-08 14:50:04.3515 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6168 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/file_uploader.js
-2023-06-08 14:50:04.3515 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6173 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/core/guid.js
-2023-06-08 14:50:04.3539 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6193 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/core/dom_component.js
-2023-06-08 14:50:04.3539 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6193 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/core/config.js
-2023-06-08 14:50:04.3546 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6200 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/core/component.js
-2023-06-08 14:50:04.3562 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6216 | Debug | JS Declarations Discovering
 50 members found in /Users/mark/Desktop/DevExtreme/js/core/errors.js
-2023-06-08 14:50:04.3566 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6220 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/core/devices.js
-2023-06-08 14:50:04.3642 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6300 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/viz/funnel.js
-2023-06-08 14:50:04.3673 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6335 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/events/remove.js
-2023-06-08 14:50:04.3677 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6335 | Debug | JS Declarations Discovering
 6 members found in /Users/mark/Desktop/DevExtreme/js/events/drag.js
-2023-06-08 14:50:04.3677 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6341 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/events/core.js
-2023-06-08 14:50:04.3677 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6341 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/events/dblclick.js
-2023-06-08 14:50:04.3677 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6341 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/events/hold.js
-2023-06-08 14:50:04.3688 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6341 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/events/swipe.js
-2023-06-08 14:50:04.3688 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6352 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/events/click.js
-2023-06-08 14:50:04.3688 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6352 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/events/index.js
-2023-06-08 14:50:04.3688 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6352 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/events/hover.js
-2023-06-08 14:50:04.3696 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6352 | Debug | JS Declarations Discovering
 8 members found in /Users/mark/Desktop/DevExtreme/js/events/pointer.js
-2023-06-08 14:50:04.3696 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6352 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/events/contextmenu.js
-2023-06-08 14:50:04.3696 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6363 | Debug | JS Declarations Discovering
 12 members found in /Users/mark/Desktop/DevExtreme/js/events/transform.js
-2023-06-08 14:50:04.3708 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6370 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/data/endpoint_selector.js
-2023-06-08 14:50:04.3726 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6388 | Debug | JS Declarations Discovering
 29 members found in /Users/mark/Desktop/DevExtreme/js/data/errors.js
-2023-06-08 14:50:04.3726 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6393 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/data/utils.js
-2023-06-08 14:50:04.3798 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6496 | Debug | JS Declarations Discovering
 4 members found in /Users/mark/Desktop/DevExtreme/js/ui/color_box/color_box.js
-2023-06-08 14:50:04.3841 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6518 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/speed_dial_action/speed_dial_action.js
-2023-06-08 14:50:04.3851 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6529 | Debug | JS Declarations Discovering
 8 members found in /Users/mark/Desktop/DevExtreme/js/ui/drawer/ui.drawer.js
-2023-06-08 14:50:04.3916 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6596 | Debug | JS Declarations Discovering
 7 members found in /Users/mark/Desktop/DevExtreme/js/ui/tooltip/tooltip.js
-2023-06-08 14:50:04.3930 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6643 | Debug | JS Declarations Discovering
 10 members found in /Users/mark/Desktop/DevExtreme/js/ui/collection/ui.collection_widget.edit.js
-2023-06-08 14:50:04.3945 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6657 | Debug | JS Declarations Discovering
 6 members found in /Users/mark/Desktop/DevExtreme/js/ui/collection/ui.collection_widget.base.js
-2023-06-08 14:50:04.4016 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6695 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/calendar/ui.calendar.js
-2023-06-08 14:50:04.4016 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6701 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/widget/ui.widget.js
-2023-06-08 14:50:04.4042 | Debug | JS Declarations Discovering
-68 members found in /Users/mark/Desktop/DevExtreme/js/ui/widget/ui.errors.js
-2023-06-08 14:50:04.4132 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6721 | Debug | JS Declarations Discovering
+69 members found in /Users/mark/Desktop/DevExtreme/js/ui/widget/ui.errors.js
+2023-06-29 16:30:34.6814 | Debug | JS Declarations Discovering
 7 members found in /Users/mark/Desktop/DevExtreme/js/ui/diagram/ui.diagram.js
-2023-06-08 14:50:04.4172 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6853 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/toast/ui.toast.js
-2023-06-08 14:50:04.4232 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6901 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/grid_core/ui.grid_core.columns_controller.js
-2023-06-08 14:50:04.4261 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6925 | Debug | JS Declarations Discovering
 14 members found in /Users/mark/Desktop/DevExtreme/js/ui/toolbar/ui.toolbar.js
-2023-06-08 14:50:04.4285 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6947 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/scheduler/recurrence_editor.js
-2023-06-08 14:50:04.4311 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.6975 | Debug | JS Declarations Discovering
 5 members found in /Users/mark/Desktop/DevExtreme/js/ui/scheduler/ui.scheduler.js
-2023-06-08 14:50:04.4359 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7024 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/scroll_view/ui.scroll_view.js
-2023-06-08 14:50:04.4414 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7075 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/gantt/ui.gantt.helper.js
-2023-06-08 14:50:04.4448 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7109 | Debug | JS Declarations Discovering
 14 members found in /Users/mark/Desktop/DevExtreme/js/ui/popover/ui.popover.js
-2023-06-08 14:50:04.4466 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7127 | Debug | JS Declarations Discovering
 7 members found in /Users/mark/Desktop/DevExtreme/js/ui/number_box/number_box.base.js
-2023-06-08 14:50:04.4498 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7167 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/radio_group/radio_button.js
-2023-06-08 14:50:04.4637 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7315 | Debug | JS Declarations Discovering
 4 members found in /Users/mark/Desktop/DevExtreme/js/ui/tree_view/ui.tree_view.base.js
-2023-06-08 14:50:04.4651 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7329 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/list/ui.list.edit.js
-2023-06-08 14:50:04.4675 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7352 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/list/ui.list.base.js
-2023-06-08 14:50:04.4692 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7370 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/menu/ui.menu.js
-2023-06-08 14:50:04.4704 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7382 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/filter_builder/filter_builder.js
-2023-06-08 14:50:04.4759 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7451 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/drop_down_editor/ui.drop_down_list.js
-2023-06-08 14:50:04.4769 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7462 | Debug | JS Declarations Discovering
 7 members found in /Users/mark/Desktop/DevExtreme/js/ui/drop_down_editor/ui.drop_down_editor.js
-2023-06-08 14:50:04.4782 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7474 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/ui/overlay/ui.overlay.js
-2023-06-08 14:50:04.4798 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7488 | Debug | JS Declarations Discovering
 9 members found in /Users/mark/Desktop/DevExtreme/js/ui/context_menu/ui.menu_base.js
-2023-06-08 14:50:04.4808 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7499 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/ui/context_menu/ui.context_menu.js
-2023-06-08 14:50:04.4816 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7506 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/ui/editor/editor.js
-2023-06-08 14:50:04.5041 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7735 | Debug | JS Declarations Discovering
 27 members found in /Users/mark/Desktop/DevExtreme/js/viz/core/errors_warnings.js
-2023-06-08 14:50:04.5242 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7942 | Debug | JS Declarations Discovering
 12 members found in /Users/mark/Desktop/DevExtreme/js/viz/docs/docGaugeIndicators.js
-2023-06-08 14:50:04.5242 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7942 | Debug | JS Declarations Discovering
 2 members found in /Users/mark/Desktop/DevExtreme/js/viz/docs/docObjectsDxPolarChart.js
-2023-06-08 14:50:04.5246 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7942 | Debug | JS Declarations Discovering
 4 members found in /Users/mark/Desktop/DevExtreme/js/viz/docs/docgauges.js
-2023-06-08 14:50:04.5246 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7942 | Debug | JS Declarations Discovering
 3 members found in /Users/mark/Desktop/DevExtreme/js/viz/docs/docStatic.js
-2023-06-08 14:50:04.5246 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.7942 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/viz/docs/docpolarchartseries.js
-2023-06-08 14:50:04.5451 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.8149 | Debug | JS Declarations Discovering
 5 members found in /Users/mark/Desktop/DevExtreme/js/data/data_source/data_source.js
-2023-06-08 14:50:04.5464 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.8161 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/data/odata/utils.js
-2023-06-08 14:50:04.5556 | Debug | JS Declarations Discovering
+2023-06-29 16:30:34.8257 | Debug | JS Declarations Discovering
 1 members found in /Users/mark/Desktop/DevExtreme/js/bundles/modules/core.js
-2023-06-08 14:50:04.6239 | Info | JS Declarations Discovering
+2023-06-29 16:30:34.8956 | Info | JS Declarations Discovering
 Post-parsing validations...
 
-2023-06-08 14:50:04.6376 | Info | JS Declarations Discovering
+2023-06-29 16:30:34.9150 | Info | JS Declarations Discovering
 Building members
-2023-06-08 14:50:04.8445 | Info | JS Declarations Discovering
+2023-06-29 16:30:35.5466 | Info | JS Declarations Discovering
 Applying post-building modifications (namespaces and categories)...
-2023-06-08 14:50:04.8462 | Warn | JS Declarations Discovering
+2023-06-29 16:30:35.5483 | Warn | JS Declarations Discovering
 Namespace overriding has no effect and can be removed: DevExpress - ComponentOptions
-2023-06-08 14:50:04.8462 | Warn | JS Declarations Discovering
+2023-06-29 16:30:35.5483 | Warn | JS Declarations Discovering
 Namespace overriding has no effect and can be removed: DevExpress - DOMComponentOptions
-2023-06-08 14:50:04.8473 | Warn | JS Declarations Discovering
+2023-06-29 16:30:35.5497 | Warn | JS Declarations Discovering
 Namespace overriding has no effect and can be removed: DevExpress.data - PivotGridDataSourceOptions
-2023-06-08 14:50:04.8473 | Warn | JS Declarations Discovering
+2023-06-29 16:30:35.5497 | Warn | JS Declarations Discovering
 Namespace overriding has no effect and can be removed: DevExpress.data - XmlaStoreOptions
-2023-06-08 14:50:04.8475 | Info | JS Declarations Discovering
-Total members built: 7630 (615 root members)
-2023-06-08 14:50:04.8630 | Debug | JS Declarations Discovering
+2023-06-29 16:30:35.5501 | Info | JS Declarations Discovering
+Total members built: 9260 (1520 root members)
+2023-06-29 16:30:35.5710 | Debug | JS Declarations Discovering
 Saving /Users/mark/Desktop/DevExtreme/artifacts/internal-tools/Declarations.json
-2023-06-08 14:50:05.2977 | Debug | JS Declarations Discovering
-Members discovered in JS: 7630
-2023-06-08 14:50:05.2977 | Info | JS Declarations Discovering
+2023-06-29 16:30:36.0123 | Debug | JS Declarations Discovering
+Members discovered in JS: 9260
+2023-06-29 16:30:36.0123 | Info | JS Declarations Discovering
 Result saved to /Users/mark/Desktop/DevExtreme/artifacts/internal-tools/Declarations.json
-2023-06-08 14:50:05.2977 | Info | JS Declarations Discovering
+2023-06-29 16:30:36.0123 | Info | JS Declarations Discovering
 Generating UML-file..
-2023-06-08 14:50:05.3029 | Info | JS Declarations Discovering
+2023-06-29 16:30:36.0178 | Info | JS Declarations Discovering
+
+================================================================
+
+Files searched: 1072
+Members discovered: 637
 
 ================================================================
 
 JS Declarations Discovering SUCCEEDED
 
-Files searched: 1073
-Members discovered: 636
-
 Warnings: 4
 Errors: 0
-Ellapsed time: 1,535 sec
+Ellapsed time: 2,035 sec
 
-2023-06-08 14:50:01.0140 | Debug | CLI
+2023-06-29 16:30:31.2402 | Debug | CLI
 Process args: /Users/mark/.nvs/node/16.15.0/arm64/bin/node /Users/mark/Desktop/DevExtreme/node_modules/.bin/dx-tools discover --js-scripts ./js --exclude js/(renovation|__internal|.eslintrc.js) --compiler-options { "typeRoots": [] }
-2023-06-08 14:50:01.0140 | Info | CLI
-Tools version: 10.0.0-beta.11
+2023-06-29 16:30:31.2412 | Info | CLI
+Tools version: 10.0.0-beta.17
 TS version: 4.2.4
-2023-06-08 14:50:01.0140 | Trace | TS Declarations Discovering
+2023-06-29 16:30:31.2412 | Trace | TS Declarations Discovering
 
 ================================================================
 TS Declarations Discovering Started
 ================================================================
 
-2023-06-08 14:50:01.0641 | Info | TS Declarations Discovering
+2023-06-29 16:30:31.2723 | Info | TS Declarations Discovering
 265 files discovered
-2023-06-08 14:50:01.0681 | Info | TS Declarations Discovering
+2023-06-29 16:30:31.2733 | Info | TS Declarations Discovering
 Discovering modules
-2023-06-08 14:50:01.6086 | Info | TS Declarations Discovering
+2023-06-29 16:30:31.7858 | Info | TS Declarations Discovering
 162 modules discovered
-2023-06-08 14:50:01.6096 | Info | TS Declarations Discovering
+2023-06-29 16:30:31.7878 | Info | TS Declarations Discovering
 Discovering members
-2023-06-08 14:50:01.8719 | Warn | TS Declarations Discovering
+2023-06-29 16:30:32.0591 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -332,8 +334,8 @@ export type AsyncRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:14:56
-2023-06-08 14:50:01.8799 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:15:56
+2023-06-29 16:30:32.0651 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -372,8 +374,8 @@ export type CompareRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:72:78
-2023-06-08 14:50:01.8849 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:73:78
+2023-06-29 16:30:32.0691 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -418,8 +420,8 @@ export type CustomRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:117:87
-2023-06-08 14:50:01.9019 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:118:87
+2023-06-29 16:30:32.0851 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -446,8 +448,8 @@ export type EmailRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:204:63
-2023-06-08 14:50:01.9069 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:205:63
+2023-06-29 16:30:32.0891 | Warn | TS Declarations Discovering
 "@type boolean" tag can be deleted.
 Generated value: boolean
 
@@ -455,8 +457,8 @@ Generated value: boolean
 defaultUseCurrencyAccountingStyle?: boolean;
 
 SyntaxKind: 162
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:277:27
-2023-06-08 14:50:01.9089 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:278:27
+2023-06-29 16:30:32.0911 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -575,8 +577,8 @@ export type GlobalConfig = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:255:407
-2023-06-08 14:50:01.9139 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:256:407
+2023-06-29 16:30:32.1051 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -603,8 +605,8 @@ export type NumericRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:405:26
-2023-06-08 14:50:01.9179 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:406:26
+2023-06-29 16:30:32.1111 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -636,8 +638,8 @@ export type PatternRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:450:55
-2023-06-08 14:50:01.9219 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:451:55
+2023-06-29 16:30:32.1151 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -680,8 +682,8 @@ export type RangeRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:494:139
-2023-06-08 14:50:01.9219 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:495:139
+2023-06-29 16:30:32.1161 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -708,8 +710,8 @@ export type RequiredRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:537:2
-2023-06-08 14:50:01.9439 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:538:2
+2023-06-29 16:30:32.1371 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -752,8 +754,37 @@ export type StringLengthRule = {
 };
 
 SyntaxKind: 254
-/Users/mark/Desktop/DevExtreme/js/common.d.ts:654:52
-2023-06-08 14:50:01.98410 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:655:52
+2023-06-29 16:30:32.1411 | Warn | TS Declarations Discovering
+"@type object" tag can be deleted.
+Generated value: object
+
+
+export type TextEditorButton = {
+  /**
+   * @public
+   * @docid
+   * @default "after"
+   */
+  location?: TextEditorButtonLocation;
+  /**
+   * @public
+   * @docid
+   * @default undefined
+   */
+  name?: string;
+  /**
+   * @public
+   * @docid
+   * @type dxButtonOptions
+   * @default undefined
+   */
+  options?: ButtonProperties;
+};
+
+SyntaxKind: 254
+/Users/mark/Desktop/DevExtreme/js/common.d.ts:710:46
+2023-06-29 16:30:32.1812 | Warn | TS Declarations Discovering
 "@type boolean" tag can be deleted.
 Generated value: boolean
 
@@ -762,7 +793,7 @@ useCurrencyAccountingStyle?: boolean;
 
 SyntaxKind: 162
 /Users/mark/Desktop/DevExtreme/js/localization.d.ts:82:21
-2023-06-08 14:50:02.0280 | Warn | TS Declarations Discovering
+2023-06-29 16:30:32.2162 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -784,7 +815,7 @@ export type ScaleBreak = {
 
 SyntaxKind: 254
 /Users/mark/Desktop/DevExtreme/js/common/charts.d.ts:124:52
-2023-06-08 14:50:02.0380 | Warn | TS Declarations Discovering
+2023-06-29 16:30:32.2252 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -816,7 +847,7 @@ export type VisualRange = {
 
 SyntaxKind: 254
 /Users/mark/Desktop/DevExtreme/js/common/charts.d.ts:228:95
-2023-06-08 14:50:02.0410 | Warn | TS Declarations Discovering
+2023-06-29 16:30:32.2272 | Warn | TS Declarations Discovering
 "@type object" tag can be deleted.
 Generated value: object
 
@@ -838,7 +869,34 @@ export type ChartsColor = {
 
 SyntaxKind: 254
 /Users/mark/Desktop/DevExtreme/js/common/charts.d.ts:278:43
-2023-06-08 14:50:02.3053 | Warn | TS Declarations Discovering
+2023-06-29 16:30:32.3273 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly currentSelectedRowKeys: Array<TKey>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/common/grids.d.ts:2999:67
+2023-06-29 16:30:32.3273 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly currentDeselectedRowKeys: Array<TKey>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/common/grids.d.ts:3004:47
+2023-06-29 16:30:32.3273 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly selectedRowKeys: Array<TKey>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/common/grids.d.ts:3009:49
+2023-06-29 16:30:32.4655 | Warn | TS Declarations Discovering
 "@type_function_param1 data:DisabledDate" tag can be deleted.
 Generated value: data:DisabledDate
 
@@ -846,8 +904,116 @@ Generated value: data:DisabledDate
 disabledDates?: Array<Date> | ((data: DisabledDate) => boolean);
 
 SyntaxKind: 162
-/Users/mark/Desktop/DevExtreme/js/ui/calendar.d.ts:95:37
-2023-06-08 14:50:02.4835 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/ui/calendar.d.ts:115:37
+2023-06-29 16:30:32.5045 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:280:26
+2023-06-29 16:30:32.5095 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:323:26
+2023-06-29 16:30:32.5115 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:368:26
+2023-06-29 16:30:32.5145 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:411:26
+2023-06-29 16:30:32.5185 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:536:26
+2023-06-29 16:30:32.5215 | Warn | TS Declarations Discovering
+"@type Enums.DataGridExportFormat|string" tag can be deleted.
+Generated value: Enums.DataGridExportFormat|string
+
+
+format: DataGridExportFormat | string;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:636:28
+2023-06-29 16:30:32.5245 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:781:26
+2023-06-29 16:30:32.5255 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly values: Array<any>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:786:21
+2023-06-29 16:30:32.5265 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:842:26
+2023-06-29 16:30:32.5265 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly values: Array<any>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:847:21
+2023-06-29 16:30:32.5295 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:917:26
+2023-06-29 16:30:32.5295 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly values: Array<any>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/data_grid.d.ts:922:21
+2023-06-29 16:30:32.6326 | Warn | TS Declarations Discovering
 "@param1 format:Enums.DiagramExportFormat" tag can be deleted.
 Generated value: format:Enums.DiagramExportFormat
 
@@ -855,8 +1021,174 @@ Generated value: format:Enums.DiagramExportFormat
 exportTo(format: DiagramExportFormat, callback: Function): void;
 
 SyntaxKind: 165
-/Users/mark/Desktop/DevExtreme/js/ui/diagram.d.ts:1067:21
-2023-06-08 14:50:02.6206 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/ui/diagram.d.ts:1150:21
+2023-06-29 16:30:32.6336 | Warn | TS Declarations Discovering
+"@type object" tag can be deleted.
+Generated value: object
+
+
+export type CustomCommandEvent = {
+    /**
+     * @docid _ui_diagram_CustomCommandEvent.component
+     * @type this
+     * @default Widget
+     */
+    readonly component: dxDiagram;
+    /** @docid _ui_diagram_CustomCommandEvent.element */
+    readonly element: DxElement;
+    /** @docid _ui_diagram_CustomCommandEvent.name */
+    readonly name: string;
+};
+
+SyntaxKind: 254
+/Users/mark/Desktop/DevExtreme/js/ui/diagram.d.ts:48:53
+2023-06-29 16:30:32.6376 | Warn | TS Declarations Discovering
+"@type Enums.DiagramRequestEditOperationReason" tag can be deleted.
+Generated value: Enums.DiagramRequestEditOperationReason
+
+
+readonly reason: DiagramRequestEditOperationReason;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/diagram.d.ts:133:399
+2023-06-29 16:30:32.6386 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly changes: any[];
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/diagram.d.ts:149:63
+2023-06-29 16:30:32.6837 | Warn | TS Declarations Discovering
+"@type Enums.FileManagerViewArea" tag can be deleted.
+Generated value: Enums.FileManagerViewArea
+
+
+readonly viewArea: FileManagerViewArea;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_manager.d.ts:99:45
+2023-06-29 16:30:32.6847 | Warn | TS Declarations Discovering
+"@type Enums.FileManagerViewArea" tag can be deleted.
+Generated value: Enums.FileManagerViewArea
+
+
+readonly viewArea: FileManagerViewArea;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_manager.d.ts:117:39
+2023-06-29 16:30:32.6857 | Warn | TS Declarations Discovering
+"@type Array<string>" tag can be deleted.
+Generated value: Array<string>
+
+
+readonly currentSelectedItemKeys: Array<string>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_manager.d.ts:205:64
+2023-06-29 16:30:32.6857 | Warn | TS Declarations Discovering
+"@type Array<string>" tag can be deleted.
+Generated value: Array<string>
+
+
+readonly currentDeselectedItemKeys: Array<string>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_manager.d.ts:210:52
+2023-06-29 16:30:32.6867 | Warn | TS Declarations Discovering
+"@type Array<FileSystemItem>" tag can be deleted.
+Generated value: Array<FileSystemItem>
+
+
+readonly selectedItems: Array<FileSystemItem>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_manager.d.ts:215:54
+2023-06-29 16:30:32.6867 | Warn | TS Declarations Discovering
+"@type Array<string>" tag can be deleted.
+Generated value: Array<string>
+
+
+readonly selectedItemKeys: Array<string>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_manager.d.ts:220:50
+2023-06-29 16:30:32.7047 | Warn | TS Declarations Discovering
+"@type Array<File>" tag can be deleted.
+Generated value: Array<File>
+
+
+readonly value?: Array<File>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_uploader.d.ts:185:67
+2023-06-29 16:30:32.7057 | Warn | TS Declarations Discovering
+"@type Array<File>" tag can be deleted.
+Generated value: Array<File>
+
+
+readonly previousValue?: Array<File>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/file_uploader.d.ts:190:33
+2023-06-29 16:30:32.7477 | Warn | TS Declarations Discovering
+"@type object" tag can be deleted.
+Generated value: object
+
+
+export type CustomCommandEvent = {
+    /**
+     * @docid _ui_gantt_CustomCommandEvent.component
+     * @type this
+     * @default Widget
+     */
+    readonly component?: dxGantt;
+    /** @docid _ui_gantt_CustomCommandEvent.element */
+    readonly element?: DxElement;
+    /** @docid _ui_gantt_CustomCommandEvent.name */
+    readonly name: string;
+};
+
+SyntaxKind: 254
+/Users/mark/Desktop/DevExtreme/js/ui/gantt.d.ts:98:2
+2023-06-29 16:30:32.7528 | Warn | TS Declarations Discovering
+"@type Array<string>" tag can be deleted.
+Generated value: Array<string>
+
+
+readonly readOnlyFields?: Array<string>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/gantt.d.ts:365:22
+2023-06-29 16:30:32.7528 | Warn | TS Declarations Discovering
+"@type Array<string>" tag can be deleted.
+Generated value: Array<string>
+
+
+readonly hiddenFields?: Array<string>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/gantt.d.ts:370:44
+2023-06-29 16:30:32.7538 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly values: Array<any>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/gantt.d.ts:384:83
+2023-06-29 16:30:32.7548 | Warn | TS Declarations Discovering
+"@type Enums.GanttRenderScaleType" tag can be deleted.
+Generated value: Enums.GanttRenderScaleType
+
+
+readonly scaleType: GanttRenderScaleType;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/gantt.d.ts:466:32
+2023-06-29 16:30:32.7608 | Warn | TS Declarations Discovering
 "@type Enums.GanttPredefinedContextMenuItem|string" tag can be deleted.
 Generated value: Enums.GanttPredefinedContextMenuItem|string
 
@@ -864,8 +1196,8 @@ Generated value: Enums.GanttPredefinedContextMenuItem|string
 name?: GanttPredefinedContextMenuItem | string;
 
 SyntaxKind: 162
-/Users/mark/Desktop/DevExtreme/js/ui/gantt.d.ts:1174:67
-2023-06-08 14:50:02.6486 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/ui/gantt.d.ts:1416:67
+2023-06-29 16:30:32.7918 | Warn | TS Declarations Discovering
 "@param1 formatName:Enums.HtmlEditorFormat|string" tag can be deleted.
 Generated value: formatName:Enums.HtmlEditorFormat|string
 
@@ -873,8 +1205,8 @@ Generated value: formatName:Enums.HtmlEditorFormat|string
 format(formatName: HtmlEditorFormat | string, formatValue: any): void;
 
 SyntaxKind: 165
-/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:215:48
-2023-06-08 14:50:02.6486 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:250:48
+2023-06-29 16:30:32.7918 | Warn | TS Declarations Discovering
 "@param3 formatName:Enums.HtmlEditorFormat|string" tag can be deleted.
 Generated value: formatName:Enums.HtmlEditorFormat|string
 
@@ -882,8 +1214,8 @@ Generated value: formatName:Enums.HtmlEditorFormat|string
 formatLine(index: number, length: number, formatName: HtmlEditorFormat | string, formatValue: any): void;
 
 SyntaxKind: 165
-/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:222:74
-2023-06-08 14:50:02.6486 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:257:74
+2023-06-29 16:30:32.7918 | Warn | TS Declarations Discovering
 "@param3 formatName:Enums.HtmlEditorFormat|string" tag can be deleted.
 Generated value: formatName:Enums.HtmlEditorFormat|string
 
@@ -891,8 +1223,8 @@ Generated value: formatName:Enums.HtmlEditorFormat|string
 formatText(index: number, length: number, formatName: HtmlEditorFormat | string, formatValue: any): void;
 
 SyntaxKind: 165
-/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:236:66
-2023-06-08 14:50:02.6496 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:271:66
+2023-06-29 16:30:32.7918 | Warn | TS Declarations Discovering
 "@param3 formatName:Enums.HtmlEditorFormat|string" tag can be deleted.
 Generated value: formatName:Enums.HtmlEditorFormat|string
 
@@ -900,8 +1232,116 @@ Generated value: formatName:Enums.HtmlEditorFormat|string
 insertText(index: number, text: string, formatName: HtmlEditorFormat | string, formatValue: any): void;
 
 SyntaxKind: 165
-/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:317:64
-2023-06-08 14:50:03.0711 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/ui/html_editor.d.ts:352:64
+2023-06-29 16:30:33.0561 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:315:28
+2023-06-29 16:30:33.0591 | Warn | TS Declarations Discovering
+"@type DxElement" tag can be deleted.
+Generated value: DxElement
+
+
+readonly rowElement: DxElement;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:483:182
+2023-06-29 16:30:33.0591 | Warn | TS Declarations Discovering
+"@type number" tag can be deleted.
+Generated value: number
+
+
+readonly prevRowIndex: number;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:488:35
+2023-06-29 16:30:33.0591 | Warn | TS Declarations Discovering
+"@type number" tag can be deleted.
+Generated value: number
+
+
+newRowIndex: number;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:493:34
+2023-06-29 16:30:33.0611 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:563:28
+2023-06-29 16:30:33.0621 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly values: Array<any>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:568:23
+2023-06-29 16:30:33.0631 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:629:28
+2023-06-29 16:30:33.0631 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly values: Array<any>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:634:23
+2023-06-29 16:30:33.0651 | Warn | TS Declarations Discovering
+"@type any" tag can be deleted.
+Generated value: any
+
+
+readonly key: TKey;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:702:28
+2023-06-29 16:30:33.0651 | Warn | TS Declarations Discovering
+"@type Array<any>" tag can be deleted.
+Generated value: Array<any>
+
+
+readonly values: Array<any>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/ui/tree_list.d.ts:707:23
+2023-06-29 16:30:33.1702 | Warn | TS Declarations Discovering
+"@type Enums.ZoomPanAction" tag can be deleted.
+Generated value: Enums.ZoomPanAction
+
+
+readonly actionType: ZoomPanAction;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/viz/chart.d.ts:315:40
+2023-06-29 16:30:33.1712 | Warn | TS Declarations Discovering
+"@type Enums.ZoomPanAction" tag can be deleted.
+Generated value: Enums.ZoomPanAction
+
+
+readonly actionType?: ZoomPanAction;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/viz/chart.d.ts:337:32
+2023-06-29 16:30:33.1792 | Warn | TS Declarations Discovering
 "@type Enums.SeriesType" tag can be deleted.
 Generated value: Enums.SeriesType
 
@@ -909,8 +1349,8 @@ Generated value: Enums.SeriesType
 type?: SeriesType;
 
 SyntaxKind: 162
-/Users/mark/Desktop/DevExtreme/js/viz/chart.d.ts:2232:16
-2023-06-08 14:50:03.1602 | Warn | TS Declarations Discovering
+/Users/mark/Desktop/DevExtreme/js/viz/chart.d.ts:2362:16
+2023-06-29 16:30:33.2663 | Warn | TS Declarations Discovering
 "@type Enums.SeriesType" tag can be deleted.
 Generated value: Enums.SeriesType
 
@@ -919,7 +1359,7 @@ type?: CommonSeriesType;
 
 SyntaxKind: 162
 /Users/mark/Desktop/DevExtreme/js/viz/common.d.ts:338:14
-2023-06-08 14:50:03.1632 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2693 | Warn | TS Declarations Discovering
 "@param2_field format:Enums.ExportFormat" tag can be deleted.
 Generated value: format:Enums.ExportFormat:optional
 
@@ -928,7 +1368,7 @@ export function exportWidgets(widgetInstances: VizWidget | Array<VizWidget> | Ar
 
 SyntaxKind: 251
 /Users/mark/Desktop/DevExtreme/js/viz/export.d.ts:28:276
-2023-06-08 14:50:03.1632 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2693 | Warn | TS Declarations Discovering
 "@param2_field verticalAlignment:Enums.VerticalAlignment" tag can be deleted.
 Generated value: verticalAlignment:Enums.VerticalAlignment:optional
 
@@ -937,7 +1377,7 @@ export function exportWidgets(widgetInstances: VizWidget | Array<VizWidget> | Ar
 
 SyntaxKind: 251
 /Users/mark/Desktop/DevExtreme/js/viz/export.d.ts:28:276
-2023-06-08 14:50:03.1632 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2693 | Warn | TS Declarations Discovering
 "@param2_field horizontalAlignment:Enums.HorizontalAlignment" tag can be deleted.
 Generated value: horizontalAlignment:Enums.HorizontalAlignment:optional
 
@@ -946,7 +1386,7 @@ export function exportWidgets(widgetInstances: VizWidget | Array<VizWidget> | Ar
 
 SyntaxKind: 251
 /Users/mark/Desktop/DevExtreme/js/viz/export.d.ts:28:276
-2023-06-08 14:50:03.1862 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2893 | Warn | TS Declarations Discovering
 "@param1 palette:Enums.Palette|Array<string>" tag can be deleted.
 Generated value: palette:Enums.Palette|Array<string>
 
@@ -955,7 +1395,7 @@ export function generateColors(palette: Palette | Array<string>, count: number, 
 
 SyntaxKind: 251
 /Users/mark/Desktop/DevExtreme/js/viz/palette.d.ts:26:58
-2023-06-08 14:50:03.1862 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2893 | Warn | TS Declarations Discovering
 "@param3_field paletteExtensionMode:Enums.PaletteExtensionMode" tag can be deleted.
 Generated value: paletteExtensionMode:Enums.PaletteExtensionMode:optional
 
@@ -964,7 +1404,7 @@ export function generateColors(palette: Palette | Array<string>, count: number, 
 
 SyntaxKind: 251
 /Users/mark/Desktop/DevExtreme/js/viz/palette.d.ts:26:58
-2023-06-08 14:50:03.1862 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2893 | Warn | TS Declarations Discovering
 "@param1 palette:Enums.Palette|Array<string>" tag can be deleted.
 Generated value: palette:Enums.Palette|Array<string>
 
@@ -973,7 +1413,7 @@ export function generateColors(palette: Palette | Array<string>, count: number, 
 
 SyntaxKind: 251
 /Users/mark/Desktop/DevExtreme/js/viz/palette.d.ts:26:58
-2023-06-08 14:50:03.1862 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2893 | Warn | TS Declarations Discovering
 "@param3_field paletteExtensionMode:Enums.PaletteExtensionMode" tag can be deleted.
 Generated value: paletteExtensionMode:Enums.PaletteExtensionMode:optional
 
@@ -982,7 +1422,43 @@ export function generateColors(palette: Palette | Array<string>, count: number, 
 
 SyntaxKind: 251
 /Users/mark/Desktop/DevExtreme/js/viz/palette.d.ts:26:58
-2023-06-08 14:50:03.3363 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.2963 | Warn | TS Declarations Discovering
+"@type Array<piePointObject>" tag can be deleted.
+Generated value: Array<piePointObject>
+
+
+readonly points: Array<piePointObject>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/viz/pie_chart.d.ts:158:35
+2023-06-29 16:30:33.3203 | Warn | TS Declarations Discovering
+"@type Enums.ZoomPanAction" tag can be deleted.
+Generated value: Enums.ZoomPanAction
+
+
+readonly actionType: ZoomPanAction;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/viz/polar_chart.d.ts:278:40
+2023-06-29 16:30:33.3223 | Warn | TS Declarations Discovering
+"@type Enums.ZoomPanAction" tag can be deleted.
+Generated value: Enums.ZoomPanAction
+
+
+readonly actionType: ZoomPanAction;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/viz/polar_chart.d.ts:299:32
+2023-06-29 16:30:33.3994 | Warn | TS Declarations Discovering
+"@type Array<number>" tag can be deleted.
+Generated value: Array<number>
+
+
+readonly center: Array<number>;
+
+SyntaxKind: 162
+/Users/mark/Desktop/DevExtreme/js/viz/vector_map.d.ts:82:59
+2023-06-29 16:30:33.4575 | Warn | TS Declarations Discovering
 "@param1_field columnPath:Array<string, number, Date>" tag can be deleted.
 Generated value: columnPath:Array<string|number|Date>:optional
 
@@ -991,7 +1467,7 @@ createDrillDownDataSource(options: { columnPath?: Array<string | number | Date>;
 
 SyntaxKind: 165
 /Users/mark/Desktop/DevExtreme/js/ui/pivot_grid/data_source.d.ts:523:80
-2023-06-08 14:50:03.3363 | Warn | TS Declarations Discovering
+2023-06-29 16:30:33.4575 | Warn | TS Declarations Discovering
 "@param1_field rowPath:Array<string, number, Date>" tag can be deleted.
 Generated value: rowPath:Array<string|number|Date>:optional
 
@@ -1000,18 +1476,18 @@ createDrillDownDataSource(options: { columnPath?: Array<string | number | Date>;
 
 SyntaxKind: 165
 /Users/mark/Desktop/DevExtreme/js/ui/pivot_grid/data_source.d.ts:523:80
-2023-06-08 14:50:03.3964 | Info | TS Declarations Discovering
-6802 members descriptors discovered
-2023-06-08 14:50:03.4705 | Info | TS Declarations Discovering
+2023-06-29 16:30:33.5265 | Info | TS Declarations Discovering
+8433 members descriptors discovered
+2023-06-29 16:30:33.6026 | Info | TS Declarations Discovering
 
 ================================================================
 
 TS Declarations Discovering SUCCEEDED
 
-Warnings: 33
+Warnings: 81
 Errors: 0
-Elapsed time: 2.537 sec
+Elapsed time: 2.427 sec
 
 
-2023-06-08 14:50:05.3163 | Info | TS Declarations Discovering
+2023-06-29 16:30:36.0320 | Info | TS Declarations Discovering
 Declarations.Discoverer OK

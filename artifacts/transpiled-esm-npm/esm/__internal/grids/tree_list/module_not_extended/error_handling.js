@@ -1,3 +1,3 @@
-import { errorHandlingModule } from '../../../../ui/grid_core/ui.grid_core.error_handling';
-import treeListCore from '../module_core';
+import { errorHandlingModule } from '../../../grids/grid_core/error_handling/m_error_handling';
+import treeListCore from '../m_core';
 treeListCore.registerModule('errorHandling', errorHandlingModule);

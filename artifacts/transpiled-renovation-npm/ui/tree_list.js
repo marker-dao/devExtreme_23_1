@@ -1,7 +1,7 @@
 "use strict";
 
 exports.default = void 0;
-var _module_widget = _interopRequireDefault(require("../__internal/grids/tree_list/module_widget"));
+var _m_widget = _interopRequireDefault(require("../__internal/grids/tree_list/m_widget"));
 require("./tree_list/ui.tree_list.base");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // NOTE: Import for the theme-builder dependency check
@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @prevFileNamespace DevExpress.ui
  * @type object
  */
-var _default = _module_widget.default;
+var _default = _m_widget.default;
 exports.default = _default;
 module.exports = exports.default;
 module.exports.default = exports.default;

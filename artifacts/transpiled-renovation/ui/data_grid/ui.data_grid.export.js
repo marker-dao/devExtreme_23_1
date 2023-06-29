@@ -1,13 +1,13 @@
 "use strict";
 
-var _module = require("../../__internal/grids/data_grid/export/module");
-Object.keys(_module).forEach(function (key) {
+var _m_export = require("../../__internal/grids/data_grid/export/m_export");
+Object.keys(_m_export).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module[key]) return;
+  if (key in exports && exports[key] === _m_export[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module[key];
+      return _m_export[key];
     }
   });
 });

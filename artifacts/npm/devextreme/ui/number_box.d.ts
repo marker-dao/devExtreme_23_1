@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/number_box.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,8 +13,11 @@ import {
     ChangedOptionInfo,
 } from '../events/index';
 
+import {
+    TextEditorButton,
+} from '../common';
+
 import dxTextEditor, {
-    dxTextEditorButton,
     dxTextEditorOptions,
 } from './text_box/ui.text_editor.base';
 
@@ -31,52 +34,127 @@ export type NumberBoxPredefinedButton = 'clear' | 'spins';
 /** @public */
 export type NumberBoxType = 'number' | 'text' | 'tel';
 
-/** @public */
+/**
+ * @docid _ui_number_box_ChangeEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ChangeEvent = NativeEventInfo<dxNumberBox, Event>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxNumberBox>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_CopyEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type CopyEvent = NativeEventInfo<dxNumberBox, ClipboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_CutEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type CutEvent = NativeEventInfo<dxNumberBox, ClipboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxNumberBox>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_EnterKeyEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type EnterKeyEvent = NativeEventInfo<dxNumberBox, KeyboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_FocusInEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type FocusInEvent = NativeEventInfo<dxNumberBox, FocusEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_FocusOutEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type FocusOutEvent = NativeEventInfo<dxNumberBox, FocusEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxNumberBox>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_InputEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type InputEvent = NativeEventInfo<dxNumberBox, UIEvent & { target: HTMLInputElement }>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_KeyDownEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type KeyDownEvent = NativeEventInfo<dxNumberBox, KeyboardEvent>;
 
 /** @public */
 export type KeyPressEvent = NativeEventInfo<dxNumberBox, KeyboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_KeyUpEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type KeyUpEvent = NativeEventInfo<dxNumberBox, KeyboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxNumberBox> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_number_box_PasteEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type PasteEvent = NativeEventInfo<dxNumberBox, ClipboardEvent>;
 
-/** @public */
+/**
+ * @docid _ui_number_box_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ValueChangedInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxNumberBox, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent | Event> & ValueChangedInfo;
 
 /**
@@ -90,7 +168,7 @@ export interface dxNumberBoxOptions extends dxTextEditorOptions<dxNumberBox> {
      * @default undefined
      * @public
      */
-    buttons?: Array<NumberBoxPredefinedButton | dxTextEditorButton>;
+    buttons?: Array<NumberBoxPredefinedButton | TextEditorButton>;
     /**
      * @docid
      * @default ""

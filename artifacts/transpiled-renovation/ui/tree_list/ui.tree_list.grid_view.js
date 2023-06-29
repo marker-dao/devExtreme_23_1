@@ -1,3 +1,3 @@
 "use strict";
 
-require("../../__internal/grids/tree_list/module_grid_view");
+require("../../__internal/grids/tree_list/m_grid_view");

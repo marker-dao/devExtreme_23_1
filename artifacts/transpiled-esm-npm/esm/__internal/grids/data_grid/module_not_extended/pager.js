@@ -1,3 +1,3 @@
-import { pagerModule } from '../../../../ui/grid_core/ui.grid_core.pager';
-import gridCore from '../module_core';
+import { pagerModule } from '../../../grids/grid_core/pager/m_pager';
+import gridCore from '../m_core';
 gridCore.registerModule('pager', pagerModule);

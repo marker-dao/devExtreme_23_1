@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.row_dragging");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_row_dragging = require("../../../grids/grid_core/row_dragging/m_row_dragging");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('rowDragging', _uiGrid_core.rowDraggingModule);
+_m_core.default.registerModule('rowDragging', _m_row_dragging.rowDraggingModule);

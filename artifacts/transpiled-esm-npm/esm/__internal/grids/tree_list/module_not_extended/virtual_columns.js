@@ -1,3 +1,3 @@
-import { virtualColumnsModule } from '../../../../ui/grid_core/ui.grid_core.virtual_columns';
-import treeListCore from '../module_core';
+import { virtualColumnsModule } from '../../../grids/grid_core/virtual_columns/m_virtual_columns';
+import treeListCore from '../m_core';
 treeListCore.registerModule('virtualColumns', virtualColumnsModule);

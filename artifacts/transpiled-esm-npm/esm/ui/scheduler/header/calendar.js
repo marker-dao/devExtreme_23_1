@@ -65,17 +65,30 @@ export default class SchedulerCalendar extends Widget {
     result.$content().append(content);
     return result;
   }
+  _optionChanged(_ref) {
+    var _this$_calendar2;
+    var {
+      name,
+      value
+    } = _ref;
+    switch (name) {
+      case 'value':
+        (_this$_calendar2 = this._calendar) === null || _this$_calendar2 === void 0 ? void 0 : _this$_calendar2.option('value', value);
+        break;
+      default:
+        break;
+    }
+  }
   _getCalendarOptions() {
     return {
-      value: this.option('date'),
+      value: this.option('value'),
       min: this.option('min'),
       max: this.option('max'),
       firstDayOfWeek: this.option('firstDayOfWeek'),
       focusStateEnabled: this.option('focusStateEnabled'),
       onValueChanged: this.option('onValueChanged'),
       skipFocusCheck: true,
-      tabIndex: this.option('tabIndex'),
-      width: '100%'
+      tabIndex: this.option('tabIndex')
     };
   }
   _isMobileLayout() {

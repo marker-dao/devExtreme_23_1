@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/row_dragging/dom.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,8 +10,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import $ from '../../../../core/renderer';
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import gridCoreUtils from '../module_utils';
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports,
+// eslint-disable-next-line forbidden-imports/no-restricted-imports
+import gridCoreUtils from '../m_utils';
 import { ATTRIBUTES, CLASSES } from './const';
 var createHandleTemplateFunc = addWidgetPrefix => (container, options) => {
   var $container = $(container);

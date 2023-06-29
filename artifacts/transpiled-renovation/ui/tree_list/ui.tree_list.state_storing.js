@@ -1,3 +1,3 @@
 "use strict";
 
-require("../../__internal/grids/tree_list/module_state_storing");
+require("../../__internal/grids/tree_list/m_state_storing");

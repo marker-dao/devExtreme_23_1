@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/diagram.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,51 +48,134 @@ export type DiagramShapeType = 'text' | 'rectangle' | 'ellipse' | 'cross' | 'tri
 export type DiagramToolboxDisplayMode = 'icons' | 'texts';
 export type DiagramUnits = 'in' | 'cm' | 'px';
 
-/** @public */
+/**
+ * @docid _ui_diagram_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxDiagram>;
 
-/** @public */
+/**
+ * @docid _ui_diagram_CustomCommandEvent
+ * @public
+ * @type object
+ */
 export type CustomCommandEvent = {
+    /**
+     * @docid _ui_diagram_CustomCommandEvent.component
+     * @type this
+     * @default Widget
+     */
     readonly component: dxDiagram;
+    /** @docid _ui_diagram_CustomCommandEvent.element */
     readonly element: DxElement;
+    /** @docid _ui_diagram_CustomCommandEvent.name */
     readonly name: string;
 };
 
-/** @public */
+/**
+ * @docid _ui_diagram_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxDiagram>;
 
-/** @public */
+/**
+ * @docid _ui_diagram_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxDiagram>;
 
-/** @public */
+/**
+ * @docid _ui_diagram_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ItemClickEvent = EventInfo<dxDiagram> & {
+    /**
+     * @docid _ui_diagram_ItemClickEvent.item
+     * @type dxDiagramItem
+     */
     readonly item: Item;
 };
 
-/** @public */
+/**
+ * @docid _ui_diagram_ItemDblClickEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ItemDblClickEvent = EventInfo<dxDiagram> & {
+    /**
+     * @docid _ui_diagram_ItemDblClickEvent.item
+     * @type dxDiagramItem
+     */
     readonly item: Item;
 };
 
-/** @public */
+/**
+ * @docid _ui_diagram_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxDiagram> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_diagram_RequestEditOperationEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type RequestEditOperationEvent = EventInfo<dxDiagram> & {
+    /**
+     * @docid _ui_diagram_RequestEditOperationEvent.operation
+     * @type Enums.DiagramModelOperation
+     */
     readonly operation: 'addShape' | 'addShapeFromToolbox' | 'deleteShape' | 'deleteConnector' | 'changeConnection' | 'changeConnectorPoints';
+    /** @docid _ui_diagram_RequestEditOperationEvent.args */
     readonly args: dxDiagramAddShapeArgs | dxDiagramAddShapeFromToolboxArgs | dxDiagramDeleteShapeArgs | dxDiagramDeleteConnectorArgs | dxDiagramChangeConnectionArgs | dxDiagramChangeConnectorPointsArgs | dxDiagramBeforeChangeShapeTextArgs | dxDiagramChangeShapeTextArgs | dxDiagramBeforeChangeConnectorTextArgs | dxDiagramChangeConnectorTextArgs | dxDiagramResizeShapeArgs | dxDiagramMoveShapeArgs;
+    /**
+     * @docid _ui_diagram_RequestEditOperationEvent.reason
+     * @type Enums.DiagramRequestEditOperationReason
+     */
     readonly reason: DiagramRequestEditOperationReason;
+    /** @docid _ui_diagram_RequestEditOperationEvent.allowed */
     allowed?: boolean;
 };
 
-/** @public */
+/**
+ * @docid _ui_diagram_RequestLayoutUpdateEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type RequestLayoutUpdateEvent = EventInfo<dxDiagram> & {
+    /**
+     * @docid _ui_diagram_RequestLayoutUpdateEvent.changes
+     * @type Array<any>
+     */
     readonly changes: any[];
+    /** @docid _ui_diagram_RequestLayoutUpdateEvent.allowed */
     allowed?: boolean;
 };
 
-/** @public */
+/**
+ * @docid _ui_diagram_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type SelectionChangedEvent = EventInfo<dxDiagram> & {
+    /**
+     * @docid _ui_diagram_SelectionChangedEvent.items
+     * @type Array<dxDiagramItem>
+     */
     readonly items: Array<Item>;
 };
 

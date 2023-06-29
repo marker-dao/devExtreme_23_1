@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/lookup.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -54,43 +54,103 @@ export {
     PageLoadMode,
 };
 
-/** @public */
+/**
+ * @docid _ui_lookup_ClosedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ClosedEvent = EventInfo<dxLookup>;
 
-/** @public */
+/**
+ * @docid _ui_lookup_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxLookup>;
 
-/** @public */
+/**
+ * @docid _ui_lookup_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxLookup>;
 
-/** @public */
+/**
+ * @docid _ui_lookup_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxLookup>;
 
-/** @public */
+/**
+ * @docid _ui_lookup_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
 export type ItemClickEvent = NativeEventInfo<dxLookup, KeyboardEvent | MouseEvent | PointerEvent> & ItemInfo;
 
-/** @public */
+/**
+ * @docid _ui_lookup_OpenedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type OpenedEvent = EventInfo<dxLookup>;
 
-/** @public */
+/**
+ * @docid _ui_lookup_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxLookup> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_lookup_PageLoadingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type PageLoadingEvent = EventInfo<dxLookup>;
 
-/** @public */
+/**
+ * @docid _ui_lookup_PullRefreshEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type PullRefreshEvent = EventInfo<dxLookup>;
 
-/** @public */
+/**
+ * @docid _ui_lookup_ScrollEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ScrollInfo
+ */
 export type ScrollEvent = NativeEventInfo<dxLookup, MouseEvent | Event> & ScrollInfo;
 
-/** @public */
+/**
+ * @docid _ui_lookup_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,SelectionChangedInfo
+ */
 export type SelectionChangedEvent = EventInfo<dxLookup> & SelectionChangedInfo;
 
 /** @public */
 export type TitleRenderedEvent = EventInfo<dxLookup> & TitleRenderedInfo;
 
-/** @public */
+/**
+ * @docid _ui_lookup_ValueChangedEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ValueChangedInfo
+ */
 export type ValueChangedEvent = NativeEventInfo<dxLookup, KeyboardEvent | MouseEvent | PointerEvent | Event> & ValueChangedInfo;
 
 /**

@@ -1,4 +1,4 @@
-import { rowsModule } from '../../../../ui/grid_core/ui.grid_core.rows';
-import gridCore from '../module_core';
+import { rowsModule } from '../../../grids/grid_core/views/m_rows_view';
+import gridCore from '../m_core';
 export var RowsView = rowsModule.views.rowsView;
 gridCore.registerModule('rows', rowsModule);

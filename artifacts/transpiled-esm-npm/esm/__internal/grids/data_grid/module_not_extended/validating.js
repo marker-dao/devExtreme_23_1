@@ -1,3 +1,3 @@
-import { validatingModule } from '../../../../ui/grid_core/ui.grid_core.validating';
-import gridCore from '../module_core';
+import { validatingModule } from '../../../grids/grid_core/validating/m_validating';
+import gridCore from '../m_core';
 gridCore.registerModule('validating', validatingModule);

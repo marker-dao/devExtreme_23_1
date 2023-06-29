@@ -1,3 +1,3 @@
-import { filterRowModule } from '../../../../ui/grid_core/ui.grid_core.filter_row';
-import core from '../module_core';
+import { filterRowModule } from '../../../grids/grid_core/filter/m_filter_row';
+import core from '../m_core';
 core.registerModule('filterRow', filterRowModule);

@@ -1,21 +1,21 @@
 /**
 * DevExtreme (cjs/ui/pivot_grid/data_source.utils.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-var _module_utils = require("../../__internal/grids/pivot_grid/data_source/module_utils");
-Object.keys(_module_utils).forEach(function (key) {
+var _m_data_source_utils = require("../../__internal/grids/pivot_grid/data_source/m_data_source_utils");
+Object.keys(_m_data_source_utils).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module_utils[key]) return;
+  if (key in exports && exports[key] === _m_data_source_utils[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module_utils[key];
+      return _m_data_source_utils[key];
     }
   });
 });

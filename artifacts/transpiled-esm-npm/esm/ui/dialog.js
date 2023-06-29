@@ -128,11 +128,8 @@ export var custom = function custom(options) {
   }
   popupInstance.$wrapper().addClass(DX_DIALOG_ROOT_CLASSNAME);
   function show() {
-    var isPhone = devices.real().deviceType === 'phone';
-    if (isPhone) {
-      var windowHeight = getHeight(window);
-      var windowWidth = getWidth(window);
-      var isPortrait = windowHeight > windowWidth;
+    if (devices.real().deviceType === 'phone') {
+      var isPortrait = getHeight(window) > getWidth(window);
       var width = isPortrait ? '90%' : '60%';
       popupInstance.option({
         width
@@ -146,8 +143,8 @@ export var custom = function custom(options) {
     popupInstance.hide();
   }
   return {
-    show,
-    hide
+    show: show,
+    hide: hide
   };
 };
 export var alert = function alert(messageHtml) {

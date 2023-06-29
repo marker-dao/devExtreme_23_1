@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/dialog.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -136,11 +136,8 @@ export var custom = function custom(options) {
   }
   popupInstance.$wrapper().addClass(DX_DIALOG_ROOT_CLASSNAME);
   function show() {
-    var isPhone = devices.real().deviceType === 'phone';
-    if (isPhone) {
-      var windowHeight = getHeight(window);
-      var windowWidth = getWidth(window);
-      var isPortrait = windowHeight > windowWidth;
+    if (devices.real().deviceType === 'phone') {
+      var isPortrait = getHeight(window) > getWidth(window);
       var width = isPortrait ? '90%' : '60%';
       popupInstance.option({
         width
@@ -154,8 +151,8 @@ export var custom = function custom(options) {
     popupInstance.hide();
   }
   return {
-    show,
-    hide
+    show: show,
+    hide: hide
   };
 };
 export var alert = function alert(messageHtml) {

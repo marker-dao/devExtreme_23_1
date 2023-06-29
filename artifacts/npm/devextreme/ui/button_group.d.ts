@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/button_group.d.ts)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -44,22 +44,52 @@ export {
     SingleMultipleOrNone,
 };
 
-/** @public */
+/**
+ * @docid _ui_button_group_ContentReadyEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type ContentReadyEvent = EventInfo<dxButtonGroup>;
 
-/** @public */
+/**
+ * @docid _ui_button_group_DisposingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
 export type DisposingEvent = EventInfo<dxButtonGroup>;
 
-/** @public */
+/**
+ * @docid _ui_button_group_InitializedEvent
+ * @public
+ * @type object
+ * @inherits InitializedEventInfo
+ */
 export type InitializedEvent = InitializedEventInfo<dxButtonGroup>;
 
-/** @public */
+/**
+ * @docid _ui_button_group_ItemClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo,ItemInfo
+ */
 export type ItemClickEvent = NativeEventInfo<dxButtonGroup, KeyboardEvent | MouseEvent | PointerEvent> & ItemInfo;
 
-/** @public */
+/**
+ * @docid _ui_button_group_OptionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,ChangedOptionInfo
+ */
 export type OptionChangedEvent = EventInfo<dxButtonGroup> & ChangedOptionInfo;
 
-/** @public */
+/**
+ * @docid _ui_button_group_SelectionChangedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,SelectionChangedInfo
+ */
 export type SelectionChangedEvent = EventInfo<dxButtonGroup> & SelectionChangedInfo;
 
 /**

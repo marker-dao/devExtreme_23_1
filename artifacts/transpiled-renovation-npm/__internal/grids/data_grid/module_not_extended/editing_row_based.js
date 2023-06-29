@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.editing_row_based");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_editing_row_based = require("../../../grids/grid_core/editing/m_editing_row_based");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('editingRowBased', _uiGrid_core.editingRowBasedModule);
+_m_core.default.registerModule('editingRowBased', _m_editing_row_based.editingRowBasedModule);

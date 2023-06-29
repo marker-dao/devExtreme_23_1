@@ -1,6 +1,6 @@
 "use strict";
 
-var _uiGrid_core = require("../../../../ui/grid_core/ui.grid_core.filter_row");
-var _module_core = _interopRequireDefault(require("../module_core"));
+var _m_filter_row = require("../../../grids/grid_core/filter/m_filter_row");
+var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-_module_core.default.registerModule('filterRow', _uiGrid_core.filterRowModule);
+_m_core.default.registerModule('filterRow', _m_filter_row.filterRowModule);

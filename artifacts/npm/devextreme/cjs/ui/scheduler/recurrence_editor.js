@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/recurrence_editor.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,6 +24,7 @@ var _editor = _interopRequireDefault(require("../editor/editor"));
 var _number_box = _interopRequireDefault(require("../number_box"));
 var _recurrence = require("./recurrence");
 require("../radio_group");
+var _types = require("../../renovation/ui/scheduler/timeZoneCalculator/types");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -323,7 +324,8 @@ var RecurrenceEditor = /*#__PURE__*/function (_Editor) {
           selectedItemKeys: byDay,
           keyExpr: 'key',
           onSelectionChanged: function onSelectionChanged(e) {
-            var selectedKeys = e.component.option('selectedItemKeys');
+            var selectedItemKeys = e.component.option('selectedItemKeys');
+            var selectedKeys = selectedItemKeys !== null && selectedItemKeys !== void 0 && selectedItemKeys.length ? selectedItemKeys : _this3._getDefaultByDayValue();
             _this3._recurrenceRule.makeRule('byday', selectedKeys);
             _this3._changeEditorValue();
           }
@@ -465,9 +467,14 @@ var RecurrenceEditor = /*#__PURE__*/function (_Editor) {
   _proto2._daysOfWeekByRules = function _daysOfWeekByRules() {
     var daysByRule = this._recurrenceRule.getDaysFromByDayRule();
     if (!daysByRule.length) {
-      daysByRule = [days[this.option('startDate').getDay()]];
+      daysByRule = this._getDefaultByDayValue();
     }
     return daysByRule;
+  };
+  _proto2._getDefaultByDayValue = function _getDefaultByDayValue() {
+    var startDate = this.option('startDate');
+    var startDay = startDate.getDay();
+    return [days[startDay]];
   };
   _proto2._dayOfMonthByRules = function _dayOfMonthByRules() {
     var dayByRule = this._recurrenceRule.getRules()['bymonthday'];
@@ -550,7 +557,7 @@ var RecurrenceEditor = /*#__PURE__*/function (_Editor) {
     return _date.default.setToDayEnd(date);
   };
   _proto2._renderRepeatUntilEditor = function _renderRepeatUntilEditor() {
-    var repeatUntil = this._recurrenceRule.getRules().until || this._formatUntilDate(new Date());
+    var repeatUntil = this._getUntilValue();
     var $editorWrapper = (0, _renderer.default)('<div>').addClass(REPEAT_END_EDITOR + WRAPPER_POSTFIX);
     (0, _renderer.default)('<div>').text(_message.default.format('dxScheduler-recurrenceOn')).addClass(REPEAT_END_EDITOR + LABEL_POSTFIX).appendTo($editorWrapper);
     this._$repeatDateEditor = (0, _renderer.default)('<div>').addClass(REPEAT_UNTIL_DATE_EDITOR).appendTo($editorWrapper);
@@ -568,9 +575,15 @@ var RecurrenceEditor = /*#__PURE__*/function (_Editor) {
   };
   _proto2._repeatUntilValueChangeHandler = function _repeatUntilValueChangeHandler(args) {
     if (this._recurrenceRule.getRepeatEndRule() === 'until') {
-      var untilDate = this._formatUntilDate(new Date(args.value));
-      this._repeatUntilDate.option('value', untilDate);
-      this._recurrenceRule.makeRule('until', untilDate);
+      var dateInTimeZone = this._formatUntilDate(new Date(args.value));
+      var getStartDateTimeZone = this.option('getStartDateTimeZone');
+      var appointmentTimeZone = getStartDateTimeZone();
+      var path = appointmentTimeZone ? _types.PathTimeZoneConversion.fromAppointmentToSource : _types.PathTimeZoneConversion.fromGridToSource;
+      var dateInLocaleTimeZone = this.option('timeZoneCalculator').createDate(dateInTimeZone, {
+        path: path,
+        appointmentTimeZone: appointmentTimeZone
+      });
+      this._recurrenceRule.makeRule('until', dateInLocaleTimeZone);
       this._changeEditorValue();
     }
   };
@@ -722,7 +735,17 @@ var RecurrenceEditor = /*#__PURE__*/function (_Editor) {
     this._repeatUntilDate.option('value', this._getUntilValue());
   };
   _proto2._getUntilValue = function _getUntilValue() {
-    return this._recurrenceRule.getRules().until || this._formatUntilDate(new Date());
+    var untilDate = this._recurrenceRule.getRules().until;
+    if (!untilDate) {
+      return this._formatUntilDate(new Date());
+    }
+    var getStartDateTimeZone = this.option('getStartDateTimeZone');
+    var appointmentTimeZone = getStartDateTimeZone();
+    var path = appointmentTimeZone ? _types.PathTimeZoneConversion.fromSourceToAppointment : _types.PathTimeZoneConversion.fromSourceToGrid;
+    return this.option('timeZoneCalculator').createDate(untilDate, {
+      path: path,
+      appointmentTimeZone: appointmentTimeZone
+    });
   };
   _proto2.toggle = function toggle() {
     this._freqEditor.focus();

@@ -16,6 +16,7 @@ require("../../text_area");
 require("../../tag_box");
 require("../../switch");
 require("../../select_box");
+var _appointmentAdapter = require("../appointmentAdapter");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -147,6 +148,9 @@ var AppointmentForm = /*#__PURE__*/function () {
       paginate: true,
       pageSize: 10
     });
+  };
+  _proto._createAppointmentAdapter = function _createAppointmentAdapter(rawAppointment) {
+    return (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, this.scheduler.getDataAccessors());
   };
   _proto._dateBoxValueChanged = function _dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
     validateAppointmentFormDate(args.component, args.value, args.previousValue);
@@ -302,11 +306,16 @@ var AppointmentForm = /*#__PURE__*/function () {
     }];
   };
   _proto._createRecurrenceEditor = function _createRecurrenceEditor(dataExprs) {
+    var _this5 = this;
     return [{
       dataField: dataExprs.recurrenceRuleExpr,
       editorType: 'dxRecurrenceEditor',
       editorOptions: {
-        firstDayOfWeek: this.scheduler.getFirstDayOfWeek()
+        firstDayOfWeek: this.scheduler.getFirstDayOfWeek(),
+        timeZoneCalculator: this.scheduler.getTimeZoneCalculator(),
+        getStartDateTimeZone: function getStartDateTimeZone() {
+          return _this5._createAppointmentAdapter(_this5.formData).startDateTimeZone;
+        }
       },
       label: {
         text: ' ',

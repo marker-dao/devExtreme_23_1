@@ -1,13 +1,13 @@
 "use strict";
 
-var _module = require("../../__internal/grids/grid_core/error_handling/module");
-Object.keys(_module).forEach(function (key) {
+var _m_error_handling = require("../../__internal/grids/grid_core/error_handling/m_error_handling");
+Object.keys(_m_error_handling).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _module[key]) return;
+  if (key in exports && exports[key] === _m_error_handling[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _module[key];
+      return _m_error_handling[key];
     }
   });
 });

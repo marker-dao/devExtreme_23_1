@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/lookup.js)
-* Version: 23.1.3
-* Build date: Thu Jun 08 2023
+* Version: 23.2.0
+* Build date: Thu Jun 29 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -65,6 +65,15 @@ var Lookup = DropDownList.inherit({
     });
   },
   _getDefaultOptions: function _getDefaultOptions() {
+    var getSize = side => {
+      var size;
+      if (devices.real().deviceType === 'phone' && window.visualViewport) {
+        size = window.visualViewport[side];
+      } else {
+        size = side === 'width' ? getWidth(window) : getHeight(window);
+      }
+      return size * WINDOW_RATIO;
+    };
     return extend(this.callBase(), {
       placeholder: messageLocalization.format('Select'),
       searchPlaceholder: messageLocalization.format('Search'),
@@ -107,17 +116,21 @@ var Lookup = DropDownList.inherit({
       showDropDownButton: false,
       focusStateEnabled: false,
       dropDownOptions: {
-        animation: {},
-        fullScreen: false,
-        hideOnOutsideClick: false,
-        onTitleRendered: null,
-        position: undefined,
-        shading: true,
         showTitle: true,
+        width: function width() {
+          return getSize('width');
+        },
+        height: function height() {
+          return getSize('height');
+        },
+        shading: true,
+        hideOnOutsideClick: false,
+        position: undefined,
+        animation: {},
         title: '',
         titleTemplate: 'title',
-        width: () => getWidth(window) * WINDOW_RATIO,
-        height: () => getHeight(window) * WINDOW_RATIO
+        onTitleRendered: null,
+        fullScreen: false
       },
       /**
       * @name dxLookupOptions.acceptCustomValue

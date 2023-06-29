@@ -1,3 +1,3 @@
-import { stateStoringModule } from '../../../../ui/grid_core/ui.grid_core.state_storing';
-import gridCore from '../module_core';
+import { stateStoringModule } from '../../../grids/grid_core/state_storing/m_state_storing';
+import gridCore from '../m_core';
 gridCore.registerModule('stateStoring', stateStoringModule);

@@ -1,3 +1,3 @@
-import { errorHandlingModule } from '../../../../ui/grid_core/ui.grid_core.error_handling';
-import gridCore from '../module_core';
+import { errorHandlingModule } from '../../../grids/grid_core/error_handling/m_error_handling';
+import gridCore from '../m_core';
 gridCore.registerModule('errorHandling', errorHandlingModule);
