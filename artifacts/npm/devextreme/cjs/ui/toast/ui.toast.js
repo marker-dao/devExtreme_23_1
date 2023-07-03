@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toast/ui.toast.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Mon Jul 03 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,6 +20,7 @@ var _component_registrator = _interopRequireDefault(require("../../core/componen
 var _ui = _interopRequireDefault(require("../overlay/ui.overlay"));
 var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var ready = _ready_callbacks.default.add;
 
 // STYLE toast
@@ -115,45 +116,43 @@ var Toast = _ui.default.inherit({
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
+    var tabletAndMobileAnimation = {
+      show: {
+        type: 'fade',
+        duration: 200,
+        from: 0,
+        to: 1
+      },
+      hide: {
+        type: 'fade',
+        duration: 200,
+        from: 1,
+        to: 0
+      }
+    };
+    var tabletAndMobileCommonOptions = {
+      displayTime: (0, _themes.isMaterial)() ? 4000 : 2000,
+      hideOnOutsideClick: true,
+      animation: tabletAndMobileAnimation
+    };
     return this.callBase().concat([{
       device: function device(_device) {
         return _device.deviceType === 'phone';
       },
-      options: {
-        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        hideOnOutsideClick: true
-      }
+      options: _extends({
+        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)")
+      }, tabletAndMobileCommonOptions)
     }, {
       device: function device(_device2) {
         return _device2.deviceType === 'tablet';
       },
-      options: {
+      options: _extends({
         width: 'auto',
-        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        hideOnOutsideClick: true
-      }
+        maxWidth: '80vw'
+      }, tabletAndMobileCommonOptions)
     }, {
       device: function device(_device3) {
-        return (0, _themes.isMaterial)() && _device3.deviceType === 'phone';
-      },
-      options: {
-        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        displayTime: 4000,
-        hideOnOutsideClick: true
-      }
-    }, {
-      device: function device(_device4) {
-        return (0, _themes.isMaterial)() && _device4.deviceType === 'tablet';
-      },
-      options: {
-        width: 'auto',
-        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        hideOnOutsideClick: true,
-        displayTime: 4000
-      }
-    }, {
-      device: function device(_device5) {
-        return (0, _themes.isMaterial)() && _device5.deviceType === 'desktop';
+        return (0, _themes.isMaterial)() && _device3.deviceType === 'desktop';
       },
       options: {
         minWidth: 344,

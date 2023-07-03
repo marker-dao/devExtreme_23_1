@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/ui/toast/ui.toast.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Mon Jul 03 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../core/renderer';
 import domAdapter from '../../core/dom_adapter';
 import eventsEngine from '../../events/core/events_engine';
@@ -111,42 +112,40 @@ var Toast = Overlay.inherit({
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
+    var tabletAndMobileAnimation = {
+      show: {
+        type: 'fade',
+        duration: 200,
+        from: 0,
+        to: 1
+      },
+      hide: {
+        type: 'fade',
+        duration: 200,
+        from: 1,
+        to: 0
+      }
+    };
+    var tabletAndMobileCommonOptions = {
+      displayTime: isMaterial() ? 4000 : 2000,
+      hideOnOutsideClick: true,
+      animation: tabletAndMobileAnimation
+    };
     return this.callBase().concat([{
       device(device) {
         return device.deviceType === 'phone';
       },
-      options: {
-        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        hideOnOutsideClick: true
-      }
+      options: _extends({
+        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)")
+      }, tabletAndMobileCommonOptions)
     }, {
       device(device) {
         return device.deviceType === 'tablet';
       },
-      options: {
+      options: _extends({
         width: 'auto',
-        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        hideOnOutsideClick: true
-      }
-    }, {
-      device(device) {
-        return isMaterial() && device.deviceType === 'phone';
-      },
-      options: {
-        width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        displayTime: 4000,
-        hideOnOutsideClick: true
-      }
-    }, {
-      device(device) {
-        return isMaterial() && device.deviceType === 'tablet';
-      },
-      options: {
-        width: 'auto',
-        maxWidth: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)"),
-        hideOnOutsideClick: true,
-        displayTime: 4000
-      }
+        maxWidth: '80vw'
+      }, tabletAndMobileCommonOptions)
     }, {
       device(device) {
         return isMaterial() && device.deviceType === 'desktop';
