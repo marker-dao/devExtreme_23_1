@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/range_selector/range_selector.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,7 @@ import { RangeView } from './range_view';
 import { SeriesDataSource } from './series_data_source';
 import { tickGenerator } from '../axes/tick_generator';
 import constants from '../axes/axes_constants';
-import baseWidgetModule from '../core/base_widget';
+import baseWidgetModule from '../../__internal/viz/core/m_base_widget';
 var _max = Math.max;
 var _ceil = Math.ceil;
 var _floor = Math.floor;

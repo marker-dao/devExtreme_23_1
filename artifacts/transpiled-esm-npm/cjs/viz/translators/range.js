@@ -107,7 +107,7 @@ _Range.prototype = {
     setZeroLevel(minVisibleSelector, maxVisibleSelector);
     return that;
   },
-  sortCategories: function sortCategories(sort) {
+  sortCategories(sort) {
     if (sort === false || !this.categories) {
       return;
     }

@@ -9,7 +9,10 @@ var _globalize = _interopRequireDefault(require("globalize"));
 var _config = _interopRequireDefault(require("../../core/config"));
 var _number2 = _interopRequireDefault(require("../number"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+// eslint-disable-next-line no-restricted-imports, import/no-unresolved
+
+// eslint-disable-next-line no-restricted-imports
+
 var CURRENCY_STYLES = ['symbol', 'accounting'];
 if (_globalize.default && _globalize.default.formatCurrency) {
   if (_globalize.default.locale().locale === 'en') {
@@ -19,7 +22,7 @@ if (_globalize.default && _globalize.default.formatCurrency) {
   var getFormatter = function getFormatter(currency, format) {
     var formatter;
     var formatCacheKey;
-    if (_typeof(format) === 'object') {
+    if (typeof format === 'object') {
       formatCacheKey = _globalize.default.locale().locale + ':' + currency + ':' + JSON.stringify(format);
     } else {
       formatCacheKey = _globalize.default.locale().locale + ':' + currency + ':' + format;

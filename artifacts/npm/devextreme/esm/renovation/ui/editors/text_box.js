@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/renovation/ui/editors/text_box.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
-var _excluded = ["accessKey", "activeStateEnabled", "buttons", "className", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isValid", "label", "labelMode", "mask", "maskChar", "maskInvalidMessage", "maskRules", "maxLength", "mode", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "showClearButton", "showMaskMode", "spellCheck", "stylingMode", "tabIndex", "useMaskedValue", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "valueChangeEvent", "visible", "width"];
+var _excluded = ["accessKey", "activeStateEnabled", "buttons", "className", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isDirty", "isValid", "label", "labelMode", "mask", "maskChar", "maskInvalidMessage", "maskRules", "maxLength", "mode", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "showClearButton", "showMaskMode", "spellCheck", "stylingMode", "tabIndex", "useMaskedValue", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "valueChangeEvent", "visible", "width"];
 import { createComponentVNode, normalizeProps } from "inferno";
 import { BaseInfernoComponent } from '@devextreme/runtime/inferno';
 import LegacyTextBox from '../../../ui/text_box';
@@ -87,6 +87,9 @@ export var TextBoxPropsType = {
   },
   get isValid() {
     return TextBoxProps.isValid;
+  },
+  get isDirty() {
+    return TextBoxProps.isDirty;
   },
   get defaultValue() {
     return TextEditorProps.defaultValue;

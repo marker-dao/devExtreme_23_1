@@ -4,7 +4,8 @@ exports.default = void 0;
 var _extend = require("../../core/utils/extend");
 var _core = _interopRequireDefault(require("../core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+/* globals Intl */
+
 var SYMBOLS_TO_REMOVE_REGEX = /[\u200E\u200F]/g;
 var NARROW_NO_BREAK_SPACE_REGEX = /[\u202F]/g;
 var getIntlFormatter = function getIntlFormatter(format) {
@@ -75,7 +76,7 @@ var dateStringEquals = function dateStringEquals(actual, expected) {
   return removeLeadingZeroes(actual) === removeLeadingZeroes(expected);
 };
 var normalizeMonth = function normalizeMonth(text) {
-  return text.replace("d\u2019", 'de '); // NOTE: For "ca" locale
+  return text.replace('d\u2019', 'de '); // NOTE: For "ca" locale
 };
 
 var intlFormats = {
@@ -233,7 +234,7 @@ var _default = {
     if (intlFormat) {
       return getIntlFormatter(intlFormat)(date);
     }
-    var formatType = _typeof(_format);
+    var formatType = typeof _format;
     if (_format.formatter || formatType === 'function' || formatType === 'string') {
       return this.callBase.apply(this, arguments);
     }
@@ -294,13 +295,13 @@ var _default = {
     return dateArgs;
   },
   formatUsesMonthName: function formatUsesMonthName(format) {
-    if (_typeof(format) === 'object' && !(format.type || format.format)) {
+    if (typeof format === 'object' && !(format.type || format.format)) {
       return format.month === 'long';
     }
     return this.callBase.apply(this, arguments);
   },
   formatUsesDayName: function formatUsesDayName(format) {
-    if (_typeof(format) === 'object' && !(format.type || format.format)) {
+    if (typeof format === 'object' && !(format.type || format.format)) {
       return format.weekday === 'long';
     }
     return this.callBase.apply(this, arguments);

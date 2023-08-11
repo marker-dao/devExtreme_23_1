@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tree_view/ui.tree_view.base.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -738,7 +738,7 @@ var TreeViewBase = _ui.default.inherit({
     this._dataAdapter.toggleExpansion(node.internalFields.key, state);
     return this._updateExpandedItemsUI(node, state, e);
   },
-  _nodeHasRenderedChildren: function _nodeHasRenderedChildren($node) {
+  _nodeHasRenderedChildren($node) {
     var $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
     return $nodeContainer.not(':empty').length;
   },
@@ -1204,8 +1204,8 @@ var TreeViewBase = _ui.default.inherit({
     var isSelectAllItem = (0, _renderer.default)(e.target).hasClass(SELECT_ALL_ITEM_CLASS);
     if (isSelectAllItem || this.option('focusedElement')) {
       clearTimeout(this._setFocusedItemTimeout);
-      var element = isSelectAllItem ? (0, _element.getPublicElement)(this._$selectAllItem) : (0, _renderer.default)(this.option('focusedElement'));
       this._setFocusedItemTimeout = setTimeout(function () {
+        var element = isSelectAllItem ? (0, _element.getPublicElement)(_this12._$selectAllItem) : (0, _renderer.default)(_this12.option('focusedElement'));
         _this12._setFocusedItem(element);
       });
       return;

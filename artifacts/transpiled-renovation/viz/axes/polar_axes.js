@@ -33,7 +33,7 @@ function getPolarQuarter(angle) {
   return quarter;
 }
 var circularAxes = {
-  _calculateValueMargins: function _calculateValueMargins(ticks) {
+  _calculateValueMargins(ticks) {
     var _this$_getViewportRan = this._getViewportRange(),
       minVisible = _this$_getViewportRan.minVisible,
       maxVisible = _this$_getViewportRan.maxVisible;
@@ -46,7 +46,7 @@ var circularAxes = {
       maxValue: maxVisible
     };
   },
-  applyMargins: function applyMargins() {
+  applyMargins() {
     var margins = this._calculateValueMargins(this._majorTicks);
     var br = this._translator.getBusinessRange();
     br.addRange({
@@ -74,7 +74,7 @@ var circularAxes = {
     var options = this._options;
     return [options.startAngle, options.endAngle];
   },
-  _updateRadius: function _updateRadius(canvas) {
+  _updateRadius(canvas) {
     var rad = _min(canvas.width - canvas.left - canvas.right, canvas.height - canvas.top - canvas.bottom) / 2;
     this._radius = rad < 0 ? 0 : rad;
   },
@@ -111,7 +111,7 @@ var circularAxes = {
     // TODO rename spider
     return this._options.firstPointOnStartAngle;
   },
-  _validateOptions: function _validateOptions(options) {
+  _validateOptions(options) {
     var that = this;
     var originValue = options.originValue;
     var wholeRange = options.wholeRange = {};
@@ -128,7 +128,7 @@ var circularAxes = {
       wholeRange.startValue = originValue;
     }
   },
-  getMargins: function getMargins() {
+  getMargins() {
     var tickOptions = this._options.tick;
     var tickOuterLength = _max(tickOptions.visible ? tickOptions.length / 2 + tickOptions.shift : 0, 0);
     var radius = this.getRadius();
@@ -152,7 +152,7 @@ var circularAxes = {
     });
     return margins;
   },
-  _updateLabelsPosition: function _updateLabelsPosition() {
+  _updateLabelsPosition() {
     var that = this;
     (0, _axes_utils.measureLabels)(that._majorTicks);
     that._adjustLabelsCoord(0, 0, true);
@@ -215,7 +215,7 @@ var circularAxes = {
   _createConstantLine: function _createConstantLine(value, attr) {
     return this._createPathElement(this._getConstantLineGraphicAttributes(value).points, attr);
   },
-  _rotateConstantLine: function _rotateConstantLine(line, value) {
+  _rotateConstantLine(line, value) {
     var _this$getCenter = this.getCenter(),
       x = _this$getCenter.x,
       y = _this$getCenter.y;
@@ -398,7 +398,7 @@ var circularAxes = {
       translateY: margins.bottom
     });
   },
-  getTranslatedAngle: function getTranslatedAngle(angle) {
+  getTranslatedAngle(angle) {
     var startAngle = this.getAngles()[0];
     return angle + startAngle - HALF_PI_ANGLE;
   }
@@ -479,7 +479,7 @@ var circularSpider = (0, _extend.extend)({}, circularAxes, {
 });
 exports.circularSpider = circularSpider;
 var linear = {
-  _resetMargins: function _resetMargins() {
+  _resetMargins() {
     this._reinitTranslator(this._getViewportRange());
   },
   _getStick: xyAxesLinear._getStick,
@@ -495,7 +495,7 @@ var linear = {
   getAngles: circularAxes.getAngles,
   _updateRadius: circularAxes._updateRadius,
   _updateCenter: circularAxes._updateCenter,
-  _processCanvas: function _processCanvas(canvas) {
+  _processCanvas(canvas) {
     this._updateRadius(canvas);
     this._updateCenter(canvas);
     return {
@@ -568,7 +568,7 @@ var linear = {
   _getTranslatedCoord: function _getTranslatedCoord(value, offset) {
     return this._translator.translate(value, offset);
   },
-  _getCanvasStartEnd: function _getCanvasStartEnd() {
+  _getCanvasStartEnd() {
     var invert = this.getTranslator().getBusinessRange().invert;
     var coords = [0, this.getRadius()];
     invert && coords.reverse();

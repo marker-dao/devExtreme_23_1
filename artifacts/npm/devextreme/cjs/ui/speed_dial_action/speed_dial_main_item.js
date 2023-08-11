@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/speed_dial_action/speed_dial_main_item.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -52,25 +52,25 @@ var modifyActionOptions = function modifyActionOptions(action) {
     visible = _action$option.visible,
     zIndex = _action$option.zIndex;
   return (0, _extend.extend)({}, {
-    animation: animation,
-    actionComponent: actionComponent,
-    actionVisible: actionVisible,
-    actions: actions,
-    activeStateEnabled: activeStateEnabled,
-    direction: direction,
-    elementAttr: elementAttr,
-    hint: hint,
-    hoverStateEnabled: hoverStateEnabled,
-    icon: icon,
-    id: id,
-    index: index,
-    label: label,
-    onClick: onClick,
-    onContentReady: onContentReady,
-    parentPosition: parentPosition,
-    position: position,
-    visible: visible,
-    zIndex: zIndex,
+    animation,
+    actionComponent,
+    actionVisible,
+    actions,
+    activeStateEnabled,
+    direction,
+    elementAttr,
+    hint,
+    hoverStateEnabled,
+    icon,
+    id,
+    index,
+    label,
+    onClick,
+    onContentReady,
+    parentPosition,
+    position,
+    visible,
+    zIndex,
     _ignoreElementAttrDeprecation: true
   }, {
     onInitialized: null,
@@ -114,7 +114,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _SpeedDialItem.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
+      device() {
         return (0, _themes.isMaterial)() && !(0, _themes.isCompact)();
       },
       options: {
@@ -123,7 +123,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
         childOffset: 8
       }
     }, {
-      device: function device() {
+      device() {
         return (0, _themes.isMaterial)() && (0, _themes.isCompact)();
       },
       options: {
@@ -389,10 +389,10 @@ function repaint() {
   var label = visibleActions.length === 1 ? visibleActions[0].option('label') : speedDialMainItem._getDefaultOptions().label;
   speedDialMainItem.option({
     actions: speedDialMainItem.option('actions'),
-    icon: icon,
+    icon,
     closeIcon: speedDialMainItem._getDefaultOptions().closeIcon,
     position: speedDialMainItem._getPosition(),
-    label: label,
+    label,
     maxSpeedDialActionCount: speedDialMainItem._getDefaultOptions().maxSpeedDialActionCount,
     direction: speedDialMainItem._getDefaultOptions().direction
   });

@@ -54,7 +54,7 @@ function setTooltipCustomOptions(sankey) {
         }
         return {};
       },
-      contentTemplate: function contentTemplate(arg, div) {
+      contentTemplate(arg, div) {
         var templateArgs = {
           model: arg.info,
           container: div

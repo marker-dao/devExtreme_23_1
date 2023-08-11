@@ -9,13 +9,13 @@ _m_core.default.registerModule('stateStoring', (0, _extend.extend)(true, {}, _m_
   extenders: {
     controllers: {
       stateStoring: {
-        applyState: function applyState(state) {
+        applyState(state) {
           origApplyState.apply(this, arguments);
           this.option('expandedRowKeys', state.expandedRowKeys ? state.expandedRowKeys.slice() : []);
         }
       },
       data: {
-        getUserState: function getUserState() {
+        getUserState() {
           var state = this.callBase.apply(this, arguments);
           if (!this.option('autoExpandAll')) {
             state.expandedRowKeys = this.option('expandedRowKeys');

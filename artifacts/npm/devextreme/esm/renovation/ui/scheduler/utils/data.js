@@ -1,12 +1,12 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/utils/data.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import { replaceWrongEndDate } from '../../../../ui/scheduler/appointments/dataProvider/utils';
+import { replaceWrongEndDate } from '../../../../__internal/scheduler/appointments/data_provider/m_utils';
 import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
 import { isDefined } from '../../../../core/utils/type';
 var RECURRENCE_FREQ = 'freq';

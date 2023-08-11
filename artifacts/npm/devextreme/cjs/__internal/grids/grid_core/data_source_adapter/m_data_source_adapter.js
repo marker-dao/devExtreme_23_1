@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/data_source_adapter/m_data_source_adapter.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,7 +23,7 @@ var _array_utils = require("../../../../data/array_utils");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } /* eslint-disable @typescript-eslint/no-dynamic-delete */ // @ts-expect-error
 var _default = _m_modules.default.Controller.inherit(function () {
   function cloneItems(items, groupCount) {
     if (items) {
@@ -204,7 +204,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
     return loadedItem;
   }
   var members = {
-    init: function init(dataSource, remoteOperations) {
+    init(dataSource, remoteOperations) {
       var that = this;
       that._dataSource = dataSource;
       that._remoteOperations = remoteOperations || {};
@@ -244,10 +244,10 @@ var _default = _m_modules.default.Controller.inherit(function () {
         }
       });
     },
-    remoteOperations: function remoteOperations() {
+    remoteOperations() {
       return this._remoteOperations;
     },
-    dispose: function dispose(isSharedDataSource) {
+    dispose(isSharedDataSource) {
       var that = this;
       var dataSource = that._dataSource;
       var store = dataSource.store();
@@ -262,7 +262,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
         dataSource.dispose();
       }
     },
-    refresh: function refresh(options, operationTypes) {
+    refresh(options, operationTypes) {
       var that = this;
       var dataSource = that._dataSource;
       if (operationTypes.reload) {
@@ -271,18 +271,18 @@ var _default = _m_modules.default.Controller.inherit(function () {
         that._hasLastPage = that._isLastPage;
       }
     },
-    resetCurrentTotalCount: function resetCurrentTotalCount() {
+    resetCurrentTotalCount() {
       this._currentTotalCount = 0;
       this._totalCountCorrection = 0;
     },
-    resetCache: function resetCache() {
+    resetCache() {
       this._cachedStoreData = undefined;
       this._cachedPagingData = undefined;
     },
-    resetPagesCache: function resetPagesCache() {
+    resetPagesCache() {
       this._cachedData = createEmptyCachedData();
     },
-    _needClearStoreDataCache: function _needClearStoreDataCache() {
+    _needClearStoreDataCache() {
       var remoteOperations = this.remoteOperations();
       var operationTypes = calculateOperationTypes(this._lastLoadOptions || {}, {});
       var isLocalOperations = Object.keys(remoteOperations).every(function (operationName) {
@@ -290,7 +290,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
       });
       return !isLocalOperations;
     },
-    push: function push(changes, fromStore) {
+    push(changes, fromStore) {
       var store = this.store();
       if (this._needClearStoreDataCache()) {
         this._cachedStoreData = undefined;
@@ -302,7 +302,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
         (0, _array_utils.applyBatch)({
           keyInfo: store,
           data: this._cachedStoreData,
-          changes: changes
+          changes
         });
       }
       if (!fromStore) {
@@ -310,7 +310,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
       this.pushed.fire(changes);
     },
-    getDataIndexGetter: function getDataIndexGetter() {
+    getDataIndexGetter() {
       var _this = this;
       if (!this._dataIndexGetter) {
         var indexByKey;
@@ -330,13 +330,13 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
       return this._dataIndexGetter;
     },
-    _getKeyInfo: function _getKeyInfo() {
+    _getKeyInfo() {
       return this.store();
     },
-    _needToCopyDataObject: function _needToCopyDataObject() {
+    _needToCopyDataObject() {
       return true;
     },
-    _applyBatch: function _applyBatch(changes, fromStore) {
+    _applyBatch(changes, fromStore) {
       var _this2 = this;
       var keyInfo = this._getKeyInfo();
       var dataSource = this._dataSource;
@@ -352,19 +352,19 @@ var _default = _m_modules.default.Controller.inherit(function () {
       var oldItemCount = getItemCount();
       // @ts-expect-error
       (0, _array_utils.applyBatch)({
-        keyInfo: keyInfo,
+        keyInfo,
         data: this._items,
-        changes: changes,
-        groupCount: groupCount,
+        changes,
+        groupCount,
         useInsertIndex: true,
         skipCopying: !this._needToCopyDataObject()
       });
       // @ts-expect-error
       (0, _array_utils.applyBatch)({
-        keyInfo: keyInfo,
+        keyInfo,
         data: dataSource.items(),
-        changes: changes,
-        groupCount: groupCount,
+        changes,
+        groupCount,
         useInsertIndex: true,
         skipCopying: !this._needToCopyDataObject()
       });
@@ -374,15 +374,15 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
       changes.splice(0, changes.length);
     },
-    _handlePush: function _handlePush(_ref) {
+    _handlePush(_ref) {
       var changes = _ref.changes;
       this.push(changes, true);
     },
-    _handleChanging: function _handleChanging(e) {
+    _handleChanging(e) {
       this.changing.fire(e);
       this._applyBatch(e.changes, true);
     },
-    _needCleanCacheByOperation: function _needCleanCacheByOperation(operationType, remoteOperations) {
+    _needCleanCacheByOperation(operationType, remoteOperations) {
       var operationTypesByOrder = ['filtering', 'sorting', 'paging'];
       var operationTypeIndex = operationTypesByOrder.indexOf(operationType);
       var currentOperationTypes = operationTypeIndex >= 0 ? operationTypesByOrder.slice(operationTypeIndex) : [operationType];
@@ -390,7 +390,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
         return remoteOperations[operationType];
       });
     },
-    _customizeRemoteOperations: function _customizeRemoteOperations(options, operationTypes) {
+    _customizeRemoteOperations(options, operationTypes) {
       var _this3 = this;
       var cachedStoreData = this._cachedStoreData;
       var cachedPagingData = this._cachedPagingData;
@@ -431,7 +431,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
         this._cachedData = cachedData;
       }
     },
-    _handleCustomizeStoreLoadOptions: function _handleCustomizeStoreLoadOptions(options) {
+    _handleCustomizeStoreLoadOptions(options) {
       var _a;
       this._handleDataLoading(options);
       if (!(((_a = options.data) === null || _a === void 0 ? void 0 : _a.length) === 0)) {
@@ -439,7 +439,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
         options.data = getPageDataFromCache(options, true) || options.cachedStoreData;
       }
     },
-    _handleDataLoading: function _handleDataLoading(options) {
+    _handleDataLoading(options) {
       var _this4 = this;
       var dataSource = this._dataSource;
       var lastLoadOptions = this._lastLoadOptions;
@@ -484,7 +484,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
       this._handleDataLoadingCore(options);
     },
-    _handleDataLoadingCore: function _handleDataLoadingCore(options) {
+    _handleDataLoadingCore(options) {
       var remoteOperations = options.remoteOperations;
       options.loadOptions = {};
       var cachedExtra = options.cachedData.extra;
@@ -508,7 +508,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
         options.extra = cachedExtra;
       }
     },
-    _handleDataLoaded: function _handleDataLoaded(options) {
+    _handleDataLoaded(options) {
       var _this5 = this;
       var _a, _b;
       var loadOptions = options.loadOptions;
@@ -589,7 +589,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
       });
       options.storeLoadOptions = options.originalStoreLoadOptions;
     },
-    _handleDataLoadedCore: function _handleDataLoadedCore(options) {
+    _handleDataLoadedCore(options) {
       if (options.remoteOperations && !options.remoteOperations.paging && Array.isArray(options.data)) {
         if (options.skip !== undefined) {
           options.data = options.data.slice(options.skip);
@@ -599,20 +599,20 @@ var _default = _m_modules.default.Controller.inherit(function () {
         }
       }
     },
-    _handleLoadingChanged: function _handleLoadingChanged(isLoading) {
+    _handleLoadingChanged(isLoading) {
       this.loadingChanged.fire(isLoading);
     },
-    _handleLoadError: function _handleLoadError(error) {
+    _handleLoadError(error) {
       this.loadError.fire(error);
       this.changed.fire({
         changeType: 'loadError',
-        error: error
+        error
       });
     },
-    _loadPageSize: function _loadPageSize() {
+    _loadPageSize() {
       return this.pageSize();
     },
-    _handleDataChanged: function _handleDataChanged(args) {
+    _handleDataChanged(args) {
       var currentTotalCount;
       var dataSource = this._dataSource;
       var isLoading = false;
@@ -656,49 +656,49 @@ var _default = _m_modules.default.Controller.inherit(function () {
         this.component._optionCache = undefined;
       }
     },
-    _scheduleCustomLoadCallbacks: function _scheduleCustomLoadCallbacks(deferred) {
+    _scheduleCustomLoadCallbacks(deferred) {
       var that = this;
       that._isCustomLoading = true;
       deferred.always(function () {
         that._isCustomLoading = false;
       });
     },
-    loadingOperationTypes: function loadingOperationTypes() {
+    loadingOperationTypes() {
       return this._loadingOperationTypes;
     },
-    operationTypes: function operationTypes() {
+    operationTypes() {
       return this._operationTypes;
     },
-    lastLoadOptions: function lastLoadOptions() {
+    lastLoadOptions() {
       return this._lastLoadOptions || {};
     },
-    isLastPage: function isLastPage() {
+    isLastPage() {
       return this._isLastPage;
     },
-    _dataSourceTotalCount: function _dataSourceTotalCount() {
+    _dataSourceTotalCount() {
       return this._dataSource.totalCount();
     },
-    totalCount: function totalCount() {
+    totalCount() {
       // eslint-disable-next-line radix
       return parseInt((this._currentTotalCount || this._dataSourceTotalCount()) + this._totalCountCorrection);
     },
-    totalCountCorrection: function totalCountCorrection() {
+    totalCountCorrection() {
       return this._totalCountCorrection;
     },
-    itemsCount: function itemsCount() {
+    itemsCount() {
       return this._dataSource.items().length;
     },
-    totalItemsCount: function totalItemsCount() {
+    totalItemsCount() {
       return this.totalCount();
     },
-    pageSize: function pageSize() {
+    pageSize() {
       var dataSource = this._dataSource;
       if (!arguments.length && !dataSource.paginate()) {
         return 0;
       }
       return dataSource.pageSize.apply(dataSource, arguments);
     },
-    pageCount: function pageCount() {
+    pageCount() {
       var that = this;
       var count = that.totalItemsCount() - that._totalCountCorrection;
       var pageSize = that.pageSize();
@@ -707,10 +707,10 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
       return 1;
     },
-    hasKnownLastPage: function hasKnownLastPage() {
+    hasKnownLastPage() {
       return this._hasLastPage || this._dataSource.totalCount() >= 0;
     },
-    loadFromStore: function loadFromStore(loadOptions, store) {
+    loadFromStore(loadOptions, store) {
       var dataSource = this._dataSource;
       // @ts-expect-error
       var d = new _deferred.Deferred();
@@ -725,10 +725,10 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }).fail(d.reject);
       return d;
     },
-    isCustomLoading: function isCustomLoading() {
+    isCustomLoading() {
       return !!this._isCustomLoading;
     },
-    load: function load(options) {
+    load(options) {
       var _this6 = this;
       var that = this;
       var dataSource = that._dataSource;
@@ -778,10 +778,10 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
       return dataSource.load();
     },
-    reload: function reload(full) {
+    reload(full) {
       return full ? this._dataSource.reload() : this._dataSource.load();
     },
-    getCachedStoreData: function getCachedStoreData() {
+    getCachedStoreData() {
       return this._cachedStoreData;
     }
   };

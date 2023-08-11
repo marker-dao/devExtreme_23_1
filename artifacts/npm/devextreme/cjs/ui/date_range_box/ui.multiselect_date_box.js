@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/ui.multiselect_date_box.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -162,7 +162,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
   };
   _proto._updateInternalValidationState = function _updateInternalValidationState(isValid, validationMessage) {
     this.option({
-      isValid: isValid,
+      isValid,
       validationError: isValid ? null : {
         message: validationMessage
       }
@@ -187,7 +187,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
           }
           this._skipIsValidOptionChange = true;
           this.option({
-            isValid: isValid
+            isValid
           });
           this._skipIsValidOptionChange = false;
           break;

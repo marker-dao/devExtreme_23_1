@@ -220,10 +220,10 @@ var triangleMarker = SimpleIndicator.inherit({
   _isEnabled: function _isEnabled() {
     return this._options.length > 0 && this._options.width > 0;
   },
-  _isVisible: function _isVisible(layout) {
+  _isVisible(layout) {
     return true;
   },
-  resize: function resize(layout) {
+  resize(layout) {
     return this.callBase(correctRadius(layout, 0));
   },
   _render: function _render() {
@@ -283,10 +283,10 @@ var textCloud = _base_indicators.BaseTextCloudMarker.inherit({
   _isEnabled: function _isEnabled() {
     return true;
   },
-  _isVisible: function _isVisible(layout) {
+  _isVisible(layout) {
     return true;
   },
-  resize: function resize(layout) {
+  resize(layout) {
     return this.callBase(correctRadius(layout, 0));
   },
   _getTextCloudOptions: function _getTextCloudOptions() {
@@ -322,10 +322,10 @@ var rangeBar = _base_indicators.BaseRangeBar.inherit({
   _isEnabled: function _isEnabled() {
     return this._options.size > 0;
   },
-  _isVisible: function _isVisible(layout) {
+  _isVisible(layout) {
     return true;
   },
-  resize: function resize(layout) {
+  resize(layout) {
     return this.callBase(correctRadius(layout, _Number(this._options.size)));
   },
   _createBarItem: function _createBarItem() {

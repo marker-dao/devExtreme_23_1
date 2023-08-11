@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/toolbar/strategy/toolbar.singleline.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -170,7 +170,7 @@ export class SingleLineStrategy {
     }
   }
   _getItemsWidth() {
-    return this._toolbar._getSummaryItemsWidth([this._toolbar._$beforeSection, this._toolbar._$centerSection, this._toolbar._$afterSection]);
+    return this._toolbar._getSummaryItemsSize('width', [this._toolbar._$beforeSection, this._toolbar._$centerSection, this._toolbar._$afterSection]);
   }
   _itemOptionChanged(item, property, value) {
     if (this._toolbar._isMenuItem(item)) {

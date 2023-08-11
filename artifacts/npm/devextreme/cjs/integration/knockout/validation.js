@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/knockout/validation.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,7 +23,7 @@ if (_knockout.default) {
   var VALIDATION_STATUS_VALID = 'valid';
   var VALIDATION_STATUS_PENDING = 'pending';
   var koDxValidator = _class.default.inherit({
-    ctor: function ctor(target, _ref) {
+    ctor(target, _ref) {
       var _this = this;
       var name = _ref.name,
         validationRules = _ref.validationRules;
@@ -45,11 +45,11 @@ if (_knockout.default) {
         deferred: null
       };
     },
-    _updateValidationResult: function _updateValidationResult(result) {
+    _updateValidationResult(result) {
       if (!this._validationInfo.result || this._validationInfo.result.id !== result.id) {
         var complete = this._validationInfo.deferred && this._validationInfo.result.complete;
         this._validationInfo.result = (0, _extend.extend)({}, result, {
-          complete: complete
+          complete
         });
       } else {
         for (var prop in result) {
@@ -59,7 +59,7 @@ if (_knockout.default) {
         }
       }
     },
-    validate: function validate() {
+    validate() {
       var _this2 = this;
       var currentResult = this._validationInfo && this._validationInfo.result;
       var value = this.target();
@@ -76,7 +76,7 @@ if (_knockout.default) {
       });
       return (0, _extend.extend)({}, this._validationInfo.result);
     },
-    reset: function reset() {
+    reset() {
       this.target(null);
       var result = {
         id: null,
@@ -89,7 +89,7 @@ if (_knockout.default) {
       this._applyValidationResult(result);
       return result;
     },
-    _applyValidationResult: function _applyValidationResult(result) {
+    _applyValidationResult(result) {
       result.validator = this;
       this._updateValidationResult(result);
       this.target.dxValidator.isValid(this._validationInfo.result.isValid);
@@ -112,11 +112,11 @@ if (_knockout.default) {
         }
       }
     },
-    on: function on(eventName, eventHandler) {
+    on(eventName, eventHandler) {
       this._eventsStrategy.on(eventName, eventHandler);
       return this;
     },
-    off: function off(eventName, eventHandler) {
+    off(eventName, eventHandler) {
       this._eventsStrategy.off(eventName, eventHandler);
       return this;
     }

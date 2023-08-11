@@ -1,7 +1,7 @@
 "use strict";
 
 exports.resolveDataItems = exports.getPreparedDataItems = void 0;
-var _utils = require("../../../../ui/scheduler/appointments/dataProvider/utils");
+var _m_utils = require("../../../../__internal/scheduler/appointments/data_provider/m_utils");
 var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
 var _type = require("../../../../core/utils/type");
 var RECURRENCE_FREQ = 'freq';
@@ -11,7 +11,7 @@ var getPreparedDataItems = function getPreparedDataItems(dataItems, dataAccessor
     var _recurrenceRule$match;
     var startDate = new Date(dataAccessors.getter.startDate(rawAppointment));
     var endDate = new Date(dataAccessors.getter.endDate(rawAppointment));
-    (0, _utils.replaceWrongEndDate)(rawAppointment, startDate, endDate, cellDurationInMinutes, dataAccessors);
+    (0, _m_utils.replaceWrongEndDate)(rawAppointment, startDate, endDate, cellDurationInMinutes, dataAccessors);
     var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, dataAccessors, timeZoneCalculator);
     var comparableStartDate = adapter.startDate && adapter.calculateStartDate('toGrid');
     var comparableEndDate = adapter.endDate && adapter.calculateEndDate('toGrid');
@@ -28,9 +28,9 @@ var getPreparedDataItems = function getPreparedDataItems(dataItems, dataAccessor
         endDateTimeZone: rawAppointment.endDateTimeZone,
         recurrenceRule: adapter.recurrenceRule,
         recurrenceException: adapter.recurrenceException,
-        hasRecurrenceRule: hasRecurrenceRule,
-        visible: visible,
-        rawAppointment: rawAppointment
+        hasRecurrenceRule,
+        visible,
+        rawAppointment
       });
     }
   });

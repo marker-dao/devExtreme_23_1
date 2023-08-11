@@ -8,10 +8,6 @@ var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _iterator = require("../../core/utils/iterator");
 var _support = require("../../core/utils/support");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var MIN_MANUAL_SELECTING_WIDTH = 10;
 var window = (0, _window.getWindow)();
 function isLeftButtonPressed(event) {
@@ -64,39 +60,41 @@ function getEventPageX(event) {
   return result;
 }
 function initializeAreaEvents(controller, area, state, getRootOffsetLeft) {
-  var _docEvents;
   var isTouchEvent;
   var isActive = false;
   var initialPosition;
   var movingHandler = null;
-  var docEvents = (_docEvents = {}, _defineProperty(_docEvents, _pointer.default.move, function (e) {
-    var position;
-    var offset;
-    if (isTouchEvent !== isTouchEventArgs(e)) return;
-    if (!isLeftButtonPressed(e)) {
-      cancel(e);
-    }
-    if (isActive) {
-      position = getEventPageX(e);
-      offset = getRootOffsetLeft();
-      if (movingHandler) {
-        movingHandler(position - offset, e);
-      } else {
-        if (state.manualRangeSelectionEnabled && Math.abs(initialPosition - position) >= MIN_MANUAL_SELECTING_WIDTH) {
-          movingHandler = controller.placeSliderAndBeginMoving(initialPosition - offset, position - offset, e);
+  var docEvents = {
+    [_pointer.default.move](e) {
+      var position;
+      var offset;
+      if (isTouchEvent !== isTouchEventArgs(e)) return;
+      if (!isLeftButtonPressed(e)) {
+        cancel(e);
+      }
+      if (isActive) {
+        position = getEventPageX(e);
+        offset = getRootOffsetLeft();
+        if (movingHandler) {
+          movingHandler(position - offset, e);
+        } else {
+          if (state.manualRangeSelectionEnabled && Math.abs(initialPosition - position) >= MIN_MANUAL_SELECTING_WIDTH) {
+            movingHandler = controller.placeSliderAndBeginMoving(initialPosition - offset, position - offset, e);
+          }
         }
       }
-    }
-  }), _defineProperty(_docEvents, _pointer.default.up, function (e) {
-    var position;
-    if (isActive) {
-      position = getEventPageX(e);
-      if (!movingHandler && state.moveSelectedRangeByClick && Math.abs(initialPosition - position) < MIN_MANUAL_SELECTING_WIDTH) {
-        controller.moveSelectedArea(position - getRootOffsetLeft(), e);
+    },
+    [_pointer.default.up](e) {
+      var position;
+      if (isActive) {
+        position = getEventPageX(e);
+        if (!movingHandler && state.moveSelectedRangeByClick && Math.abs(initialPosition - position) < MIN_MANUAL_SELECTING_WIDTH) {
+          controller.moveSelectedArea(position - getRootOffsetLeft(), e);
+        }
+        cancel(e);
       }
-      cancel(e);
     }
-  }), _docEvents);
+  };
   function cancel(e) {
     if (isActive) {
       isActive = false;
@@ -115,20 +113,22 @@ function initializeAreaEvents(controller, area, state, getRootOffsetLeft) {
   return docEvents;
 }
 function initializeSelectedAreaEvents(controller, area, state, getRootOffsetLeft) {
-  var _docEvents2;
   var isTouchEvent;
   var isActive = false;
   var movingHandler = null;
-  var docEvents = (_docEvents2 = {}, _defineProperty(_docEvents2, _pointer.default.move, function (e) {
-    if (isTouchEvent !== isTouchEventArgs(e)) return;
-    if (!isLeftButtonPressed(e)) {
-      cancel(e);
-    }
-    if (isActive) {
-      preventDefault(e);
-      movingHandler(getEventPageX(e) - getRootOffsetLeft(), e);
-    }
-  }), _defineProperty(_docEvents2, _pointer.default.up, cancel), _docEvents2);
+  var docEvents = {
+    [_pointer.default.move](e) {
+      if (isTouchEvent !== isTouchEventArgs(e)) return;
+      if (!isLeftButtonPressed(e)) {
+        cancel(e);
+      }
+      if (isActive) {
+        preventDefault(e);
+        movingHandler(getEventPageX(e) - getRootOffsetLeft(), e);
+      }
+    },
+    [_pointer.default.up]: cancel
+  };
   function cancel(e) {
     if (isActive) {
       isActive = false;
@@ -146,33 +146,37 @@ function initializeSelectedAreaEvents(controller, area, state, getRootOffsetLeft
   return docEvents;
 }
 function initializeSliderEvents(controller, sliders, state, getRootOffsetLeft) {
-  var _docEvents3;
   var isTouchEvent;
   var isActive = false;
   var movingHandler = null;
-  var docEvents = (_docEvents3 = {}, _defineProperty(_docEvents3, _pointer.default.move, function (e) {
-    if (isTouchEvent !== isTouchEventArgs(e)) return;
-    if (!isLeftButtonPressed(e)) {
-      cancel(e);
-    }
-    if (isActive) {
-      preventDefault(e);
-      movingHandler(getEventPageX(e) - getRootOffsetLeft(), e);
-    }
-  }), _defineProperty(_docEvents3, _pointer.default.up, cancel), _docEvents3);
-  (0, _iterator.each)(sliders, function (i, slider) {
-    var _slider$on;
-    slider.on((_slider$on = {}, _defineProperty(_slider$on, _pointer.default.down, function (e) {
-      if (!state.enabled || !isLeftButtonPressed(e) || isActive) return;
-      isActive = true;
-      isTouchEvent = isTouchEventArgs(e);
-      movingHandler = controller.beginSliderMoving(i, getEventPageX(e) - getRootOffsetLeft());
-      stopPropagationAndPreventDefault(e);
-    }), _defineProperty(_slider$on, _pointer.default.move, function () {
-      if (!movingHandler) {
-        controller.foregroundSlider(i);
+  var docEvents = {
+    [_pointer.default.move](e) {
+      if (isTouchEvent !== isTouchEventArgs(e)) return;
+      if (!isLeftButtonPressed(e)) {
+        cancel(e);
       }
-    }), _slider$on));
+      if (isActive) {
+        preventDefault(e);
+        movingHandler(getEventPageX(e) - getRootOffsetLeft(), e);
+      }
+    },
+    [_pointer.default.up]: cancel
+  };
+  (0, _iterator.each)(sliders, function (i, slider) {
+    slider.on({
+      [_pointer.default.down](e) {
+        if (!state.enabled || !isLeftButtonPressed(e) || isActive) return;
+        isActive = true;
+        isTouchEvent = isTouchEventArgs(e);
+        movingHandler = controller.beginSliderMoving(i, getEventPageX(e) - getRootOffsetLeft());
+        stopPropagationAndPreventDefault(e);
+      },
+      [_pointer.default.move]() {
+        if (!movingHandler) {
+          controller.foregroundSlider(i);
+        }
+      }
+    });
   });
   function cancel(e) {
     if (isActive) {

@@ -6,7 +6,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /// BUNDLER_PARTS
 /* fileManagement (dx.module-core.js) */
-
 var fileManagement = require('../../../bundles/modules/file_management');
 _core.default.fileManagement = fileManagement;
 

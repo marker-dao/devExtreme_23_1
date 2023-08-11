@@ -56,11 +56,11 @@ function createQueue() {
   var shiftIndex = 0;
   var items = [];
   return Object.defineProperties({
-    push: function push(item) {
+    push(item) {
       items.push(item);
       return this;
     },
-    shift: function shift() {
+    shift() {
       shiftIndex++;
       return items[shiftIndex - 1];
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toolbar/strategy/toolbar.multiline.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,7 +26,7 @@ var MultiLineStrategy = /*#__PURE__*/function () {
     return (_this$_toolbar$option = this._toolbar.option('items')) !== null && _this$_toolbar$option !== void 0 ? _this$_toolbar$option : [];
   };
   _proto._getItemsWidth = function _getItemsWidth() {
-    return this._toolbar._getSummaryItemsWidth(this._toolbar.itemElements(), true);
+    return this._toolbar._getSummaryItemsSize('width', this._toolbar.itemElements(), true);
   };
   _proto._arrangeItems = function _arrangeItems() {
     var $label = this._toolbar._$toolbarItemsContainer.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0);

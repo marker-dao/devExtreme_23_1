@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/column_headers/m_column_headers.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,7 +48,7 @@ var HEADER_FILTER_INDICATOR_CLASS = 'dx-header-filter-indicator';
 var MULTI_ROW_HEADER_CLASS = 'dx-header-multi-row';
 var LINK = 'dx-link';
 var columnHeadersModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       showColumnHeaders: true,
       cellHintEnabled: true
@@ -77,7 +77,7 @@ var columnHeadersModule = {
         $cellContent.toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + columnAlignment, indicatorCount > 0).toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + (columnAlignment === 'left' ? 'right' : 'left'), indicatorCount > 0 && column.alignment === 'center').toggleClass(SORT_INDICATOR_CLASS, !!$sortIndicator.length).toggleClass(SORT_INDEX_INDICATOR_CLASS, !!$sortIndexIndicator.length).toggleClass(HEADER_FILTER_INDICATOR_CLASS, !!$visibleIndicatorElements.filter(".".concat(that._getIndicatorClassName('headerFilter'))).length);
       }
       var members = {
-        _createTable: function _createTable() {
+        _createTable() {
           var $table = this.callBase.apply(this, arguments);
           _events_engine.default.on($table, 'mousedown selectstart', this.createAction(function (e) {
             var event = e.event;
@@ -87,10 +87,10 @@ var columnHeadersModule = {
           }));
           return $table;
         },
-        _isLegacyKeyboardNavigation: function _isLegacyKeyboardNavigation() {
+        _isLegacyKeyboardNavigation() {
           return this.option('useLegacyKeyboardNavigation');
         },
-        _getDefaultTemplate: function _getDefaultTemplate(column) {
+        _getDefaultTemplate(column) {
           var that = this;
           return function ($container, options) {
             var caption = column.caption;
@@ -105,7 +105,7 @@ var columnHeadersModule = {
             }
           };
         },
-        _renderEmptyMessage: function _renderEmptyMessage($container, options) {
+        _renderEmptyMessage($container, options) {
           var textEmpty = this._getEmptyHeaderText();
           if (!textEmpty) {
             $container.html('&nbsp;');
@@ -133,7 +133,7 @@ var columnHeadersModule = {
             $cellContent.text(textEmpty);
           }
         },
-        _getEmptyHeaderText: function _getEmptyHeaderText() {
+        _getEmptyHeaderText() {
           var hasHiddenColumns = !!this.component.getView('columnChooserView').hasHiddenColumns();
           var hasGroupedColumns = !!this.component.getView('headerPanel').hasGroupedColumns();
           switch (true) {
@@ -147,20 +147,20 @@ var columnHeadersModule = {
               return '';
           }
         },
-        _getHeaderTemplate: function _getHeaderTemplate(column) {
+        _getHeaderTemplate(column) {
           return column.headerCellTemplate || {
             allowRenderToDetachedContainer: true,
             render: this._getDefaultTemplate(column)
           };
         },
-        _processTemplate: function _processTemplate(template, options) {
+        _processTemplate(template, options) {
           var that = this;
           var resultTemplate;
           var column = options.column;
           var renderingTemplate = that.callBase(template);
           if (options.rowType === 'header' && renderingTemplate && column.headerCellTemplate && !column.command) {
             resultTemplate = {
-              render: function render(options) {
+              render(options) {
                 var $content = createCellContent(that, options.container, options.model);
                 renderingTemplate.render((0, _extend.extend)({}, options, {
                   container: $content
@@ -172,14 +172,14 @@ var columnHeadersModule = {
           }
           return resultTemplate;
         },
-        _handleDataChanged: function _handleDataChanged(e) {
+        _handleDataChanged(e) {
           if (e.changeType !== 'refresh') return;
           if (this._isGroupingChanged || this._requireReady) {
             this._isGroupingChanged = false;
             this.render();
           }
         },
-        _renderCell: function _renderCell($row, options) {
+        _renderCell($row, options) {
           var $cell = this.callBase($row, options);
           if (options.row.rowType === 'header') {
             $cell.addClass(CELL_FOCUS_DISABLED_CLASS);
@@ -191,17 +191,19 @@ var columnHeadersModule = {
           }
           return $cell;
         },
-        _setCellAriaAttributes: function _setCellAriaAttributes($cell, cellOptions) {
+        _setCellAriaAttributes($cell, cellOptions) {
           this.callBase($cell, cellOptions);
           if (cellOptions.rowType === 'header') {
-            this.setAria('role', 'columnheader', $cell);
+            if (!cellOptions.column.type) {
+              this.setAria('role', 'columnheader', $cell);
+            }
             if (cellOptions.column && !cellOptions.column.command && !cellOptions.column.isBand) {
               $cell.attr('id', cellOptions.column.headerId);
               this.setAria('label', "".concat(_message.default.format('dxDataGrid-ariaColumn'), " ").concat(cellOptions.column.caption), $cell);
             }
           }
         },
-        _createRow: function _createRow(row) {
+        _createRow(row) {
           var $row = this.callBase.apply(this, arguments);
           $row.toggleClass(COLUMN_LINES_CLASS, this.option('showColumnLines'));
           if (row.rowType === 'header') {
@@ -212,7 +214,7 @@ var columnHeadersModule = {
           }
           return $row;
         },
-        _handleActionKeyDown: function _handleActionKeyDown(args) {
+        _handleActionKeyDown(args) {
           var event = args.event;
           var $target = (0, _renderer.default)(event.target);
           this._lastActionElement = event.target;
@@ -229,7 +231,7 @@ var columnHeadersModule = {
           }
           event.preventDefault();
         },
-        _renderCore: function _renderCore() {
+        _renderCore() {
           var that = this;
           var $container = that.element();
           var change = {};
@@ -239,7 +241,7 @@ var columnHeadersModule = {
           $container.addClass(that.addWidgetPrefix(HEADERS_CLASS)).toggleClass(that.addWidgetPrefix(NOWRAP_CLASS), !that.option('wordWrapEnabled')).empty();
           that.setAria('role', 'presentation', $container);
           var deferred = that._updateContent(that._renderTable({
-            change: change
+            change
           }), change);
           if (that.getRowCount() > 1) {
             $container.addClass(MULTI_ROW_HEADER_CLASS);
@@ -247,25 +249,25 @@ var columnHeadersModule = {
           that.callBase.apply(that, arguments);
           return deferred;
         },
-        _renderRows: function _renderRows() {
+        _renderRows() {
           var that = this;
           if (that._dataController.isLoaded() || that._hasRowElements) {
             that.callBase.apply(that, arguments);
             that._hasRowElements = true;
           }
         },
-        _renderRow: function _renderRow($table, options) {
+        _renderRow($table, options) {
           var rowIndex = this.getRowCount() === 1 ? null : options.row.rowIndex;
           options.columns = this.getColumns(rowIndex);
           this.callBase($table, options);
         },
-        _createCell: function _createCell(options) {
+        _createCell(options) {
           var column = options.column;
           var $cellElement = this.callBase.apply(this, arguments);
           column.rowspan > 1 && options.rowType === 'header' && $cellElement.attr('rowSpan', column.rowspan);
           return $cellElement;
         },
-        _getRows: function _getRows() {
+        _getRows() {
           var result = [];
           var rowCount = this.getRowCount();
           if (this.option('showColumnHeaders')) {
@@ -278,12 +280,12 @@ var columnHeadersModule = {
           }
           return result;
         },
-        _getCellTemplate: function _getCellTemplate(options) {
+        _getCellTemplate(options) {
           if (options.rowType === 'header') {
             return this._getHeaderTemplate(options.column);
           }
         },
-        _columnOptionChanged: function _columnOptionChanged(e) {
+        _columnOptionChanged(e) {
           var changeTypes = e.changeTypes;
           var optionNames = e.optionNames;
           if (changeTypes.grouping || changeTypes.groupExpanding) {
@@ -297,10 +299,10 @@ var columnHeadersModule = {
             this.resizeCompleted.fire();
           }
         },
-        _isElementVisible: function _isElementVisible(elementOptions) {
+        _isElementVisible(elementOptions) {
           return elementOptions && elementOptions.visible;
         },
-        _alignCaptionByCenter: function _alignCaptionByCenter($cell) {
+        _alignCaptionByCenter($cell) {
           var $indicatorsContainer = this._getIndicatorContainer($cell, true);
           if ($indicatorsContainer && $indicatorsContainer.length) {
             $indicatorsContainer.filter(".".concat(VISIBILITY_HIDDEN_CLASS)).remove();
@@ -308,14 +310,14 @@ var columnHeadersModule = {
             $indicatorsContainer.clone().addClass(VISIBILITY_HIDDEN_CLASS).css('float', '').insertBefore($cell.children(".".concat(this.addWidgetPrefix(CELL_CONTENT_CLASS))));
           }
         },
-        _updateCell: function _updateCell($cell, options) {
+        _updateCell($cell, options) {
           if (options.rowType === 'header' && options.column.alignment === 'center') {
             this._alignCaptionByCenter($cell);
           }
           this.callBase.apply(this, arguments);
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _updateIndicator: function _updateIndicator($cell, column, indicatorName) {
+        _updateIndicator($cell, column, indicatorName) {
           var $indicatorElement = this.callBase.apply(this, arguments);
           if (column.alignment === 'center') {
             this._alignCaptionByCenter($cell);
@@ -323,25 +325,25 @@ var columnHeadersModule = {
           addCssClassesToCellContent(this, $cell, column);
           return $indicatorElement;
         },
-        _getIndicatorContainer: function _getIndicatorContainer($cell, returnAll) {
+        _getIndicatorContainer($cell, returnAll) {
           var $indicatorsContainer = this.callBase($cell);
           return returnAll ? $indicatorsContainer : $indicatorsContainer.filter(":not(.".concat(VISIBILITY_HIDDEN_CLASS, ")"));
         },
-        _isSortableElement: function _isSortableElement() {
+        _isSortableElement() {
           return true;
         },
-        getHeadersRowHeight: function getHeadersRowHeight() {
+        getHeadersRowHeight() {
           var $tableElement = this.getTableElement();
           var $headerRows = $tableElement && $tableElement.find(".".concat(HEADER_ROW_CLASS));
           return $headerRows && $headerRows.toArray().reduce(function (sum, headerRow) {
             return sum + (0, _size.getHeight)(headerRow);
           }, 0) || 0;
         },
-        getHeaderElement: function getHeaderElement(index) {
+        getHeaderElement(index) {
           var columnElements = this.getColumnElements();
           return columnElements && columnElements.eq(index);
         },
-        getColumnElements: function getColumnElements(index, bandColumnIndex) {
+        getColumnElements(index, bandColumnIndex) {
           var that = this;
           var $cellElement;
           var columnsController = that._columnsController;
@@ -363,31 +365,31 @@ var columnHeadersModule = {
             }
           }
         },
-        getColumnIndexByElement: function getColumnIndexByElement($cell) {
+        getColumnIndexByElement($cell) {
           var cellIndex = this.getCellIndex($cell);
           var $row = $cell.closest('.dx-row');
           var rowIndex = $row[0].rowIndex;
           var column = this.getColumns(rowIndex)[cellIndex];
           return column ? column.index : -1;
         },
-        getVisibleColumnIndex: function getVisibleColumnIndex(columnIndex, rowIndex) {
+        getVisibleColumnIndex(columnIndex, rowIndex) {
           var column = this.getColumns()[columnIndex];
           return column ? this._columnsController.getVisibleIndex(column.index, rowIndex) : -1;
         },
-        getColumnWidths: function getColumnWidths() {
+        getColumnWidths() {
           var $columnElements = this.getColumnElements();
           if ($columnElements && $columnElements.length) {
             return this._getWidths($columnElements);
           }
           return this.callBase.apply(this, arguments);
         },
-        allowDragging: function allowDragging(column) {
+        allowDragging(column) {
           var rowIndex = column && this._columnsController.getRowIndex(column.index);
           var columns = this.getColumns(rowIndex);
           var isReorderingEnabled = this.option('allowColumnReordering') || this._columnsController.isColumnOptionUsed('allowReordering');
           return isReorderingEnabled && column.allowReordering && columns.length > 1;
         },
-        getBoundingRect: function getBoundingRect() {
+        getBoundingRect() {
           var that = this;
           var $columnElements = that.getColumnElements();
           if ($columnElements && $columnElements.length) {
@@ -398,17 +400,17 @@ var columnHeadersModule = {
           }
           return null;
         },
-        getName: function getName() {
+        getName() {
           return 'headers';
         },
-        getColumnCount: function getColumnCount() {
+        getColumnCount() {
           var $columnElements = this.getColumnElements();
           return $columnElements ? $columnElements.length : 0;
         },
-        isVisible: function isVisible() {
+        isVisible() {
           return this.option('showColumnHeaders');
         },
-        optionChanged: function optionChanged(args) {
+        optionChanged(args) {
           var that = this;
           switch (args.name) {
             case 'showColumnHeaders':
@@ -421,10 +423,10 @@ var columnHeadersModule = {
               that.callBase(args);
           }
         },
-        getHeight: function getHeight() {
+        getHeight() {
           return this.getElementHeight();
         },
-        getContextMenuItems: function getContextMenuItems(options) {
+        getContextMenuItems(options) {
           var that = this;
           var column = options.column;
           if (options.row && (options.row.rowType === 'header' || options.row.rowType === 'detailAdaptive')) {
@@ -440,28 +442,28 @@ var columnHeadersModule = {
                 value: 'asc',
                 disabled: column.sortOrder === 'asc',
                 icon: CONTEXT_MENU_SORT_ASC_ICON,
-                onItemClick: onItemClick
+                onItemClick
               }, {
                 text: sortingOptions.descendingText,
                 value: 'desc',
                 disabled: column.sortOrder === 'desc',
                 icon: CONTEXT_MENU_SORT_DESC_ICON,
-                onItemClick: onItemClick
+                onItemClick
               }, {
                 text: sortingOptions.clearText,
                 value: 'none',
                 disabled: !column.sortOrder,
                 icon: CONTEXT_MENU_SORT_NONE_ICON,
-                onItemClick: onItemClick
+                onItemClick
               }];
             }
           }
           return undefined;
         },
-        getRowCount: function getRowCount() {
+        getRowCount() {
           return this._columnsController && this._columnsController.getRowCount();
         },
-        setRowsOpacity: function setRowsOpacity(columnIndex, value, rowIndex) {
+        setRowsOpacity(columnIndex, value, rowIndex) {
           var _this = this;
           var i;
           var columnElements;

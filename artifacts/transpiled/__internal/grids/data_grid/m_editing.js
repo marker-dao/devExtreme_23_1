@@ -9,7 +9,7 @@ _m_core.default.registerModule('editing', (0, _extend.extend)(true, {}, _m_editi
   extenders: {
     controllers: {
       data: {
-        _changeRowExpandCore: function _changeRowExpandCore(key) {
+        _changeRowExpandCore(key) {
           var editingController = this._editingController;
           if (Array.isArray(key)) {
             editingController && editingController.refresh();

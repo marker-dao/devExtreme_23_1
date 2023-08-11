@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/views/m_rows_view.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -150,9 +150,8 @@ class RowsView extends ColumnsView {
       }
       if (isGroup) {
         $row.addClass(GROUP_ROW_CLASS);
-        var isRowExpanded = row.isExpanded;
         this.setAria('role', 'row', $row);
-        this.setAria('expanded', isDefined(isRowExpanded) && isRowExpanded.toString(), $row);
+        this.setAriaExpandedAttribute($row, row);
       }
     }
     return $row;
@@ -182,6 +181,10 @@ class RowsView extends ColumnsView {
       rowIndex += this._dataController.getRowIndexOffset();
     }
     this.setAria('rowindex', rowIndex, $row);
+  }
+  setAriaExpandedAttribute($row, row) {
+    var description = row.isExpanded ? this.localize('dxDataGrid-ariaExpandedRow') : this.localize('dxDataGrid-ariaCollapsedRow');
+    this.setAria('roledescription', description, $row);
   }
   _afterRowPrepared(e) {
     var arg = e.args[0];

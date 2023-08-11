@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment_edit_form/edit_form/layout_items/formLayout.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,13 +41,13 @@ var getMainLayout = function getMainLayout(colSpan, dateExpr, recurrenceEditorVi
       lg: 2,
       xs: 1
     },
-    colSpan: colSpan,
+    colSpan,
     items: createMainItems(dateExpr, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate, allDayEditorTemplate, repeatEditorTemplate, descriptionEditorTemplate)
   }, {
     itemType: 'group',
     name: LayoutGroupNames.Recurrence,
     visible: recurrenceEditorVisibility,
-    colSpan: colSpan,
+    colSpan,
     items: []
   }];
 };

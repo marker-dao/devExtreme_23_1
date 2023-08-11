@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/selection_filter.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,9 +40,10 @@ var SelectionFilterCreator = function SelectionFilterCreator(selectedItemKeys, i
     return filterExpr;
   };
   this.getCombinedFilter = function (keyExpr, dataSourceFilter) {
+    var forceCombinedFilter = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var filterExpr = this.getExpr(keyExpr);
     var combinedFilter = filterExpr;
-    if (isSelectAll && dataSourceFilter) {
+    if ((forceCombinedFilter || isSelectAll) && dataSourceFilter) {
       if (filterExpr) {
         combinedFilter = [];
         combinedFilter.push(filterExpr);

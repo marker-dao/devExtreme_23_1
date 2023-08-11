@@ -96,7 +96,7 @@ var baseTrackerPrototype = {
   update: function update(options) {
     this._chart = options.chart;
   },
-  updateSeries: function updateSeries(series, resetDecorations) {
+  updateSeries(series, resetDecorations) {
     var that = this;
     var noHoveredSeries = !(series !== null && series !== void 0 && series.some(function (s) {
       return s === that.hoveredSeries;
@@ -151,14 +151,14 @@ var baseTrackerPrototype = {
     series.hover(mode);
     this.hoveredSeries = series;
   },
-  _releaseHoveredSeries: function _releaseHoveredSeries() {
+  _releaseHoveredSeries() {
     // hoveredPoint only for T273289
     if (this.hoveredSeries) {
       this.hoveredSeries.clearHover();
       this.hoveredSeries = null;
     }
   },
-  clearSelection: function clearSelection() {
+  clearSelection() {
     this._storedSeries.forEach(function (series) {
       if (series) {
         series.clearSelection();
@@ -625,7 +625,7 @@ exports.PieTracker = PieTracker;
     });
     that._eventTrigger(LEGEND_CLICK, {
       target: item.argument,
-      points: points,
+      points,
       event: e
     });
   },

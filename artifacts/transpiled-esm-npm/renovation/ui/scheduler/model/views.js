@@ -56,7 +56,7 @@ var getCurrentViewConfig = function getCurrentViewConfig(currentViewProps, sched
   }, restSchedulerProps, currentViewProps, {
     schedulerHeight: schedulerProps.height,
     schedulerWidth: schedulerProps.width,
-    crossScrollingEnabled: crossScrollingEnabled,
+    crossScrollingEnabled,
     appointmentTemplate: currentViewProps.appointmentTemplate || restSchedulerProps.appointmentTemplate,
     dataCellTemplate: currentViewProps.dataCellTemplate || restSchedulerProps.dataCellTemplate,
     dateCellTemplate: currentViewProps.dateCellTemplate || restSchedulerProps.dateCellTemplate,
@@ -70,7 +70,7 @@ var getCurrentViewConfig = function getCurrentViewConfig(currentViewProps, sched
     hoursInterval: result.cellDuration / 60,
     allDayPanelExpanded: true,
     allowMultipleCellSelection: true,
-    currentDate: currentDate
+    currentDate
   });
 };
 exports.getCurrentViewConfig = getCurrentViewConfig;

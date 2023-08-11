@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/view_model/time_panel_data_generator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,20 +32,20 @@ var TimePanelDataGenerator = /*#__PURE__*/function () {
       hoursInterval = options.hoursInterval,
       endDayHour = options.endDayHour;
     var rowCountInGroup = this._viewDataGenerator.getRowCount({
-      intervalCount: intervalCount,
-      currentDate: currentDate,
-      viewType: viewType,
-      hoursInterval: hoursInterval,
-      startDayHour: startDayHour,
-      endDayHour: endDayHour
+      intervalCount,
+      currentDate,
+      viewType,
+      hoursInterval,
+      startDayHour,
+      endDayHour
     });
     var cellCountInGroupRow = this._viewDataGenerator.getCellCount({
-      intervalCount: intervalCount,
-      currentDate: currentDate,
-      viewType: viewType,
-      hoursInterval: hoursInterval,
-      startDayHour: startDayHour,
-      endDayHour: endDayHour
+      intervalCount,
+      currentDate,
+      viewType,
+      hoursInterval,
+      startDayHour,
+      endDayHour
     });
     var allDayRowsCount = 0;
     return completeViewDataMap.map(function (row, index) {
@@ -64,8 +64,8 @@ var TimePanelDataGenerator = /*#__PURE__*/function () {
       }
       var timeIndex = (index - allDayRowsCount) % rowCountInGroup;
       return _extends({}, restCellProps, {
-        startDate: startDate,
-        allDay: allDay,
+        startDate,
+        allDay,
         text: (0, _week.getTimePanelCellText)(timeIndex, startDate, startViewDate, cellDuration, startDayHour),
         groups: isVerticalGrouping ? groups : undefined,
         groupIndex: isVerticalGrouping ? groupIndex : undefined,
@@ -88,9 +88,9 @@ var TimePanelDataGenerator = /*#__PURE__*/function () {
     var displayedRowCount = (0, _base.getDisplayedRowCount)(rowCount, completeTimePanelMap);
     var timePanelMap = completeTimePanelMap.slice(correctedStartRowIndex, correctedStartRowIndex + displayedRowCount);
     var timePanelData = {
-      topVirtualRowHeight: topVirtualRowHeight,
-      bottomVirtualRowHeight: bottomVirtualRowHeight,
-      isGroupedAllDayPanel: isGroupedAllDayPanel
+      topVirtualRowHeight,
+      bottomVirtualRowHeight,
+      isGroupedAllDayPanel
     };
     var _this$_generateTimePa = this._generateTimePanelDataFromMap(timePanelMap, isVerticalGrouping),
       groupedData = _this$_generateTimePa.previousGroupedData;
@@ -117,7 +117,7 @@ var TimePanelDataGenerator = /*#__PURE__*/function () {
       }
       return {
         previousGroupIndex: currentGroupIndex,
-        previousGroupedData: previousGroupedData
+        previousGroupedData
       };
     }, {
       previousGroupIndex: -1,

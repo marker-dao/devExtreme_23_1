@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/tree_map/tree_map.base.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ import { getAlgorithm as _getTilingAlgorithm, setDefaultAlgorithm } from './tili
 import { getColorizer as _getColorizer, setDefaultColorizer } from './colorizing';
 import { patchFontOptions as _patchFontOptions } from '../core/utils';
 import { noop as _noop } from '../../core/utils/common';
-import baseWidget from '../core/base_widget';
+import baseWidget from '../../__internal/viz/core/m_base_widget';
 var _max = Math.max;
 var directions = {
   'lefttoprightbottom': [+1, +1],

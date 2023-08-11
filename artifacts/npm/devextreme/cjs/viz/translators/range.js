@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/translators/range.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -115,7 +115,7 @@ _Range.prototype = {
     setZeroLevel(minVisibleSelector, maxVisibleSelector);
     return that;
   },
-  sortCategories: function sortCategories(sort) {
+  sortCategories(sort) {
     if (sort === false || !this.categories) {
       return;
     }

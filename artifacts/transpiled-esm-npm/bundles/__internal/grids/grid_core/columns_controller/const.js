@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.USER_STATE_FIELD_NAMES_15_1 = exports.USER_STATE_FIELD_NAMES = exports.MAX_SAFE_INTEGER = exports.IGNORE_COLUMN_OPTION_NAMES = exports.GROUP_LOCATION = exports.GROUP_COMMAND_COLUMN_NAME = exports.DEFAULT_COLUMN_OPTIONS = exports.DATATYPE_OPERATIONS = exports.COMMAND_EXPAND_CLASS = exports.COLUMN_OPTION_REGEXP = exports.COLUMN_INDEX_OPTIONS = exports.COLUMN_CHOOSER_LOCATION = void 0;
+exports.USER_STATE_FIELD_NAMES_15_1 = exports.USER_STATE_FIELD_NAMES = exports.MAX_SAFE_INTEGER = exports.IGNORE_COLUMN_OPTION_NAMES = exports.GROUP_LOCATION = exports.GROUP_COMMAND_COLUMN_NAME = exports.DETAIL_COMMAND_COLUMN_NAME = exports.DEFAULT_COLUMN_OPTIONS = exports.DATATYPE_OPERATIONS = exports.COMMAND_EXPAND_CLASS = exports.COLUMN_OPTION_REGEXP = exports.COLUMN_INDEX_OPTIONS = exports.COLUMN_CHOOSER_LOCATION = void 0;
 var USER_STATE_FIELD_NAMES_15_1 = ['filterValues', 'filterType', 'fixed', 'fixedPosition'];
 exports.USER_STATE_FIELD_NAMES_15_1 = USER_STATE_FIELD_NAMES_15_1;
 var USER_STATE_FIELD_NAMES = ['visibleIndex', 'dataField', 'name', 'dataType', 'width', 'visible', 'sortOrder', 'lastSortOrder', 'sortIndex', 'groupIndex', 'filterValue', 'bufferedFilterValue', 'selectedFilterOperation', 'bufferedSelectedFilterOperation', 'added'].concat(USER_STATE_FIELD_NAMES_15_1);
@@ -21,6 +21,8 @@ var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991 /* IE11 */;
 exports.MAX_SAFE_INTEGER = MAX_SAFE_INTEGER;
 var GROUP_COMMAND_COLUMN_NAME = 'groupExpand';
 exports.GROUP_COMMAND_COLUMN_NAME = GROUP_COMMAND_COLUMN_NAME;
+var DETAIL_COMMAND_COLUMN_NAME = 'detailExpand';
+exports.DETAIL_COMMAND_COLUMN_NAME = DETAIL_COMMAND_COLUMN_NAME;
 var COLUMN_OPTION_REGEXP = /columns\[(\d+)\]\.?/gi;
 exports.COLUMN_OPTION_REGEXP = COLUMN_OPTION_REGEXP;
 var DEFAULT_COLUMN_OPTIONS = {

@@ -28,7 +28,7 @@ var DefaultAdapter = Class.inherit({
     });
   },
   reset() {
-    this.editor.reset();
+    this.editor.clear();
   },
   focus() {
     this.editor.focus();

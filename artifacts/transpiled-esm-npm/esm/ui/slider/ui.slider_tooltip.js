@@ -32,6 +32,7 @@ var SliderTooltip = Tooltip.inherit({
     this.callBase();
     this._renderContentText();
   },
+  _toggleAriaAttributes() {},
   _renderContentText() {
     var {
       value,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/data_source/utils.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -66,8 +66,8 @@ var normalizeLoadResult = function normalizeLoadResult(data, extra) {
     data = [data];
   }
   return {
-    data: data,
-    extra: extra
+    data,
+    extra
   };
 };
 exports.normalizeLoadResult = normalizeLoadResult;
@@ -88,7 +88,7 @@ var createCustomStoreFromUrl = function createCustomStoreFromUrl(url, normalizat
   return new _custom_store.default({
     load: function load() {
       return _ajax.default.sendRequest({
-        url: url,
+        url,
         dataType: 'json'
       });
     },

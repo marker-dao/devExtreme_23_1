@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/pivot_grid/area_item/m_area_item.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,9 +21,9 @@ var _position = require("../../../../core/utils/position");
 var _size = require("../../../../core/utils/size");
 var _style = require("../../../../core/utils/style");
 var _type = require("../../../../core/utils/type");
-var _getMemoizeScrollTo2 = require("../../../../renovation/ui/common/utils/scroll/getMemoizeScrollTo");
+var _getMemoizeScrollTo = require("../../../../renovation/ui/common/utils/scroll/getMemoizeScrollTo");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } // TODO: Move this function to the __internal scope
 var PIVOTGRID_EXPAND_CLASS = 'dx-expand';
 var getRealElementWidth = function getRealElementWidth(element) {
   var width = 0;
@@ -61,34 +61,34 @@ function getFakeTableOffset(scrollPos, elementOffset, tableSize, viewPortSize) {
   return offset;
 }
 var AreaItem = _class.default.inherit({
-  ctor: function ctor(component) {
+  ctor(component) {
     this.component = component;
   },
-  option: function option() {
+  option() {
     return this.component.option.apply(this.component, arguments);
   },
-  _getRowElement: function _getRowElement(index) {
+  _getRowElement(index) {
     var that = this;
     if (that._tableElement && that._tableElement.length > 0) {
       return that._tableElement[0].rows[index];
     }
     return null;
   },
-  _createGroupElement: function _createGroupElement() {
+  _createGroupElement() {
     return (0, _renderer.default)('<div>');
   },
-  _createTableElement: function _createTableElement() {
+  _createTableElement() {
     return (0, _renderer.default)('<table>');
   },
-  _getCellText: function _getCellText(cell, encodeHtml) {
+  _getCellText(cell, encodeHtml) {
     var cellText = cell.isWhiteSpace ? '&nbsp' : cell.text || '&nbsp';
     if (encodeHtml && (cellText.indexOf('<') !== -1 || cellText.indexOf('>') !== -1)) {
       cellText = (0, _renderer.default)('<div>').text(cellText).html();
     }
     return cellText;
   },
-  _getRowClassNames: function _getRowClassNames() {},
-  _applyCustomStyles: function _applyCustomStyles(options) {
+  _getRowClassNames() {},
+  _applyCustomStyles(options) {
     if (options.cell.width) {
       options.cssArray.push("min-width:".concat(options.cell.width, "px"));
     }
@@ -96,13 +96,13 @@ var AreaItem = _class.default.inherit({
       options.classArray.push('dx-pivotgrid-sorted');
     }
   },
-  _getMainElementMarkup: function _getMainElementMarkup() {
+  _getMainElementMarkup() {
     return _dom_adapter.default.createElement('tbody');
   },
-  _getCloseMainElementMarkup: function _getCloseMainElementMarkup() {
+  _getCloseMainElementMarkup() {
     return '</tbody>';
   },
-  _renderTableContent: function _renderTableContent(tableElement, data) {
+  _renderTableContent(tableElement, data) {
     var that = this;
     var rowsCount = data.length;
     var row;
@@ -131,14 +131,14 @@ var AreaItem = _class.default.inherit({
           cell.rowspan && td.setAttribute('rowspan', cell.rowspan || 1);
           cell.colspan && td.setAttribute('colspan', cell.colspan || 1);
           var styleOptions = {
-            cellElement: cellElement,
-            cell: cell,
+            cellElement,
+            cell,
             cellsCount: row.length,
             cellIndex: j,
-            rowElement: rowElement,
+            rowElement,
             rowIndex: i,
-            rowsCount: rowsCount,
-            rtlEnabled: rtlEnabled,
+            rowsCount,
+            rtlEnabled,
             classArray: [],
             cssArray: []
           };
@@ -182,7 +182,7 @@ var AreaItem = _class.default.inherit({
     tableElement.append(tbody);
     this._triggerOnCellPrepared(tableElement, data);
   },
-  _triggerOnCellPrepared: function _triggerOnCellPrepared(tableElement, data) {
+  _triggerOnCellPrepared(tableElement, data) {
     var that = this;
     var rowElements = tableElement.find('tr');
     var areaName = that._getAreaName();
@@ -205,10 +205,10 @@ var AreaItem = _class.default.inherit({
           $cellElement = rowElement.children().eq(columnIndex);
           onCellPreparedArgs = {
             area: areaName,
-            rowIndex: rowIndex,
-            columnIndex: columnIndex,
+            rowIndex,
+            columnIndex,
             cellElement: (0, _element.getPublicElement)($cellElement),
-            cell: cell
+            cell
           };
           if (hasEvent) {
             that.component._trigger('onCellPrepared', onCellPreparedArgs);
@@ -219,7 +219,7 @@ var AreaItem = _class.default.inherit({
       }
     }
   },
-  _getRowHeight: function _getRowHeight(index) {
+  _getRowHeight(index) {
     var row = this._getRowElement(index);
     var height = 0;
     var offsetHeight = row.offsetHeight;
@@ -235,20 +235,20 @@ var AreaItem = _class.default.inherit({
     }
     return 0;
   },
-  _setRowHeight: function _setRowHeight(index, value) {
+  _setRowHeight(index, value) {
     var row = this._getRowElement(index);
     if (row) {
       row.style.height = "".concat(value, "px");
     }
   },
-  getRowsLength: function getRowsLength() {
+  getRowsLength() {
     var that = this;
     if (that._tableElement && that._tableElement.length > 0) {
       return that._tableElement[0].rows.length;
     }
     return 0;
   },
-  getRowsHeight: function getRowsHeight() {
+  getRowsHeight() {
     var that = this;
     var result = [];
     var rowsLength = that.getRowsLength();
@@ -257,7 +257,7 @@ var AreaItem = _class.default.inherit({
     }
     return result;
   },
-  setRowsHeight: function setRowsHeight(values) {
+  setRowsHeight(values) {
     var that = this;
     var totalHeight = 0;
     var valuesLength = values.length;
@@ -268,7 +268,7 @@ var AreaItem = _class.default.inherit({
     this._tableHeight = totalHeight;
     this._tableElement[0].style.height = "".concat(totalHeight, "px");
   },
-  getColumnsWidth: function getColumnsWidth() {
+  getColumnsWidth() {
     var rowsLength = this.getRowsLength();
     var rowIndex;
     var row;
@@ -301,7 +301,7 @@ var AreaItem = _class.default.inherit({
     }
     return result;
   },
-  setColumnsWidth: function setColumnsWidth(values) {
+  setColumnsWidth(values) {
     var i;
     var tableElement = this._tableElement[0];
     this._colgroupElement.html('');
@@ -324,52 +324,52 @@ var AreaItem = _class.default.inherit({
     tableElement.style.width = "".concat(this._tableWidth, "px");
     tableElement.style.tableLayout = 'fixed';
   },
-  resetColumnsWidth: function resetColumnsWidth() {
+  resetColumnsWidth() {
     (0, _size.setWidth)(this._colgroupElement.find('col'), 'auto');
     this._tableElement.css({
       width: '',
       tableLayout: ''
     });
   },
-  setGroupWidth: function setGroupWidth(value) {
+  setGroupWidth(value) {
     this._getScrollable().option('width', value);
   },
-  setGroupHeight: function setGroupHeight(value) {
+  setGroupHeight(value) {
     this._getScrollable().option('height', value);
   },
-  getGroupHeight: function getGroupHeight() {
+  getGroupHeight() {
     return this._getGroupElementSize('height');
   },
-  getGroupWidth: function getGroupWidth() {
+  getGroupWidth() {
     return this._getGroupElementSize('width');
   },
-  _getGroupElementSize: function _getGroupElementSize(dimension) {
+  _getGroupElementSize(dimension) {
     var size = this.groupElement()[0].style[dimension];
     if (size.indexOf('px') > 0) {
       return parseFloat(size);
     }
     return null;
   },
-  groupElement: function groupElement() {
+  groupElement() {
     return this._groupElement;
   },
-  tableElement: function tableElement() {
+  tableElement() {
     return this._tableElement;
   },
-  element: function element() {
+  element() {
     return this._rootElement;
   },
-  headElement: function headElement() {
+  headElement() {
     return this._tableElement.find('thead');
   },
-  _setTableCss: function _setTableCss(styles) {
+  _setTableCss(styles) {
     if (this.option('rtlEnabled')) {
       styles.right = styles.left;
       delete styles.left;
     }
     this.tableElement().css(styles);
   },
-  setVirtualContentParams: function setVirtualContentParams(params) {
+  setVirtualContentParams(params) {
     this._virtualContent.css({
       width: params.width,
       height: params.height
@@ -381,7 +381,7 @@ var AreaItem = _class.default.inherit({
       this.groupElement().addClass('dx-virtual-mode');
     }
   },
-  disableVirtualMode: function disableVirtualMode() {
+  disableVirtualMode() {
     var scrollable = this._getScrollable();
     if (scrollable === null || scrollable === void 0 ? void 0 : scrollable.isRenovated()) {
       this._getScrollable().option('classes', '');
@@ -389,13 +389,13 @@ var AreaItem = _class.default.inherit({
       this.groupElement().removeClass('dx-virtual-mode');
     }
   },
-  _renderVirtualContent: function _renderVirtualContent() {
+  _renderVirtualContent() {
     var that = this;
     if (!that._virtualContent && that.option('scrolling.mode') === 'virtual') {
       that._virtualContent = (0, _renderer.default)('<div>').addClass('dx-virtual-content').insertBefore(that._tableElement);
     }
   },
-  reset: function reset() {
+  reset() {
     var that = this;
     var tableElement = that._tableElement[0];
     that._fakeTable && that._fakeTable.detach();
@@ -412,7 +412,7 @@ var AreaItem = _class.default.inherit({
       tableElement.style.width = '100%';
     }
   },
-  _updateFakeTableVisibility: function _updateFakeTableVisibility() {
+  _updateFakeTableVisibility() {
     var that = this;
     var tableElement = that.tableElement()[0];
     var horizontalOffsetName = that.option('rtlEnabled') ? 'right' : 'left';
@@ -423,7 +423,7 @@ var AreaItem = _class.default.inherit({
       that._fakeTable.removeClass('dx-hidden');
     }
   },
-  _moveFakeTableHorizontally: function _moveFakeTableHorizontally(scrollPos) {
+  _moveFakeTableHorizontally(scrollPos) {
     var that = this;
     var rtlEnabled = that.option('rtlEnabled');
     var offsetStyleName = rtlEnabled ? 'right' : 'left';
@@ -433,7 +433,7 @@ var AreaItem = _class.default.inherit({
       that._fakeTable[0].style[offsetStyleName] = "".concat(offset, "px");
     }
   },
-  _moveFakeTableTop: function _moveFakeTableTop(scrollPos) {
+  _moveFakeTableTop(scrollPos) {
     var that = this;
     var tableElementOffsetTop = parseFloat(that.tableElement()[0].style.top);
     var offsetTop = getFakeTableOffset(scrollPos, tableElementOffsetTop, that._tableHeight, that.getGroupHeight());
@@ -441,16 +441,16 @@ var AreaItem = _class.default.inherit({
       that._fakeTable[0].style.top = "".concat(offsetTop, "px");
     }
   },
-  _moveFakeTable: function _moveFakeTable() {
+  _moveFakeTable() {
     this._updateFakeTableVisibility();
   },
-  _createFakeTable: function _createFakeTable() {
+  _createFakeTable() {
     var that = this;
     if (!that._fakeTable) {
       that._fakeTable = that.tableElement().clone().addClass('dx-pivot-grid-fake-table').appendTo(that._virtualContent);
     }
   },
-  render: function render(rootElement, data) {
+  render(rootElement, data) {
     var that = this;
     if (that._tableElement) {
       try {
@@ -458,7 +458,7 @@ var AreaItem = _class.default.inherit({
       } catch (e) {
         that._tableElement.empty();
       }
-      that._tableElement.attr('style', '');
+      that._tableElement.removeAttr('style');
     } else {
       that._groupElement = that._createGroupElement();
       that._tableElement = that._createTableElement();
@@ -470,22 +470,22 @@ var AreaItem = _class.default.inherit({
     that._renderTableContent(that._tableElement, data);
     that._renderVirtualContent();
   },
-  _getScrollable: function _getScrollable() {
+  _getScrollable() {
     return this.groupElement().data('dxScrollable');
   },
-  _getMemoizeScrollTo: function _getMemoizeScrollTo() {
+  _getMemoizeScrollTo() {
     var _this = this;
     var _a;
-    this._memoizeScrollTo = (_a = this._memoizeScrollTo) !== null && _a !== void 0 ? _a : (0, _getMemoizeScrollTo2.getMemoizeScrollTo)(function () {
+    this._memoizeScrollTo = (_a = this._memoizeScrollTo) !== null && _a !== void 0 ? _a : (0, _getMemoizeScrollTo.getMemoizeScrollTo)(function () {
       return _this._getScrollable();
     });
     return this._memoizeScrollTo;
   },
-  _getMaxLeftOffset: function _getMaxLeftOffset(scrollable) {
+  _getMaxLeftOffset(scrollable) {
     var containerElement = (0, _renderer.default)(scrollable.container()).get(0);
     return containerElement.scrollWidth - containerElement.clientWidth;
   },
-  on: function on(eventName, handler) {
+  on(eventName, handler) {
     var that = this;
     var scrollable = that._getScrollable();
     if (scrollable) {
@@ -498,14 +498,14 @@ var AreaItem = _class.default.inherit({
     }
     return this;
   },
-  off: function off(eventName) {
+  off(eventName) {
     var scrollable = this._getScrollable();
     if (scrollable) {
       scrollable.off(eventName);
     }
     return this;
   },
-  scrollTo: function scrollTo(pos) {
+  scrollTo(pos) {
     var force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var scrollable = this._getScrollable();
     if (!scrollable) {
@@ -523,14 +523,14 @@ var AreaItem = _class.default.inherit({
       this._moveFakeTable(pos);
     }
   },
-  updateScrollable: function updateScrollable() {
+  updateScrollable() {
     var scrollable = this._getScrollable();
     if (scrollable) {
       return scrollable.update();
     }
     return undefined;
   },
-  getColumnsCount: function getColumnsCount() {
+  getColumnsCount() {
     var columnCount = 0;
     var row = this._getRowElement(0);
     var cells;
@@ -543,14 +543,14 @@ var AreaItem = _class.default.inherit({
     }
     return columnCount;
   },
-  getData: function getData() {
+  getData() {
     var tableElement = this._tableElement;
     return tableElement ? tableElement.data('data') : [];
   }
 });
 exports.AreaItem = AreaItem;
 var _default = {
-  AreaItem: AreaItem,
-  getRealElementWidth: getRealElementWidth
+  AreaItem,
+  getRealElementWidth
 };
 exports.default = _default;

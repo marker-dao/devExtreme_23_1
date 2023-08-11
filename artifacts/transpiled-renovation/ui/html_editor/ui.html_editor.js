@@ -26,7 +26,6 @@ var _wordLists = _interopRequireDefault(require("./matchers/wordLists"));
 var _formDialog = _interopRequireDefault(require("./ui/formDialog"));
 var _config = _interopRequireDefault(require("../../core/config"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -34,9 +33,6 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 // STYLE htmlEditor
 
 var HTML_EDITOR_CLASS = 'dx-htmleditor';
@@ -77,7 +73,9 @@ var HtmlEditor = _editor.default.inherit({
     return ANONYMOUS_TEMPLATE_NAME;
   },
   _initTemplates: function _initTemplates() {
-    this._templateManager.addDefaultTemplates(_defineProperty({}, ANONYMOUS_TEMPLATE_NAME, new _empty_template.EmptyTemplate()));
+    this._templateManager.addDefaultTemplates({
+      [ANONYMOUS_TEMPLATE_NAME]: new _empty_template.EmptyTemplate()
+    });
     this.callBase();
   },
   _focusTarget: function _focusTarget() {
@@ -114,7 +112,7 @@ var HtmlEditor = _editor.default.inherit({
     this._$templateResult = template && template.render({
       container: (0, _element.getPublicElement)(this._$htmlContainer),
       noModel: true,
-      transclude: transclude
+      transclude
     });
     this._renderSubmitElement();
     this.callBase();
@@ -278,7 +276,7 @@ var HtmlEditor = _editor.default.inherit({
     if (!(0, _type.isDefined)(valueOption)) {
       var html = this._deltaConverter.toHtml();
       var newDelta = this._quillInstance.clipboard.convert({
-        html: html
+        html
       });
       if (newDelta.ops.length) {
         this._quillInstance.setContents(newDelta);
@@ -409,13 +407,15 @@ var HtmlEditor = _editor.default.inherit({
   _getQuillContainer: function _getQuillContainer() {
     return this._$htmlContainer;
   },
-  _prepareModuleOptions: function _prepareModuleOptions(args) {
+  _prepareModuleOptions(args) {
     var _args$fullName;
     var optionData = (_args$fullName = args.fullName) === null || _args$fullName === void 0 ? void 0 : _args$fullName.split('.');
     var value = args.value;
     var optionName = optionData.length >= 2 ? optionData[1] : args.name;
     if (optionData.length === 3) {
-      value = _defineProperty({}, optionData[2], value);
+      value = {
+        [optionData[2]]: value
+      };
     }
     return [optionName, value];
   },
@@ -450,7 +450,7 @@ var HtmlEditor = _editor.default.inherit({
           if (value !== args.previousValue) {
             this._setSubmitValue(value);
             this.callBase(_extends({}, args, {
-              value: value
+              value
             }));
           }
           break;
@@ -514,7 +514,7 @@ var HtmlEditor = _editor.default.inherit({
   },
   _updateHtmlContent: function _updateHtmlContent(html) {
     var newDelta = this._quillInstance.clipboard.convert({
-      html: html
+      html
     });
     this._quillInstance.setContents(newDelta);
   },
@@ -535,24 +535,24 @@ var HtmlEditor = _editor.default.inherit({
       this._updateContentTask = undefined;
     }
   },
-  _applyQuillMethod: function _applyQuillMethod(methodName, args) {
+  _applyQuillMethod(methodName, args) {
     if (this._quillInstance) {
       return this._quillInstance[methodName].apply(this._quillInstance, args);
     }
   },
-  _applyQuillHistoryMethod: function _applyQuillHistoryMethod(methodName) {
+  _applyQuillHistoryMethod(methodName) {
     if (this._quillInstance && this._quillInstance.history) {
       this._quillInstance.history[methodName]();
     }
   },
-  _applyToolbarMethod: function _applyToolbarMethod(methodName) {
+  _applyToolbarMethod(methodName) {
     var _this$getModule;
     (_this$getModule = this.getModule('toolbar')) === null || _this$getModule === void 0 ? void 0 : _this$getModule[methodName]();
   },
-  addCleanCallback: function addCleanCallback(callback) {
+  addCleanCallback(callback) {
     this._cleanCallback.add(callback);
   },
-  addContentInitializedCallback: function addContentInitializedCallback(callback) {
+  addContentInitializedCallback(callback) {
     this._contentInitializedCallback.add(callback);
   },
   register: function register(components) {
@@ -632,7 +632,7 @@ var HtmlEditor = _editor.default.inherit({
   blur: function blur() {
     this._applyQuillMethod('blur');
   },
-  getMentionKeyInTemplateStorage: function getMentionKeyInTemplateStorage() {
+  getMentionKeyInTemplateStorage() {
     return this._mentionKeyInTemplateStorage;
   }
 });

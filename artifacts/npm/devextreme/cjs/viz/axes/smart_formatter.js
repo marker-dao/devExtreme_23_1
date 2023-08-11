@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/axes/smart_formatter.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -116,8 +116,8 @@ function createFormat(type) {
     type = null;
   }
   return {
-    type: type,
-    formatter: formatter
+    type,
+    formatter
   };
 }
 function formatLogarithmicNumber(tick) {
@@ -133,7 +133,7 @@ function formatLogarithmicNumber(tick) {
     }
   }
   return _format(tick, {
-    type: type,
+    type,
     precision: 0
   });
 }
@@ -190,7 +190,7 @@ function getFormatWithModifier(tick, tickInterval) {
     }
   }
   return {
-    precision: precision,
+    precision,
     type: typeFormat
   };
 }
@@ -320,10 +320,10 @@ function formatRange(_ref2) {
   }
   var formatOptions = {
     ticks: [],
-    type: type,
-    dataType: dataType,
-    tickInterval: tickInterval,
-    logarithmBase: logarithmBase,
+    type,
+    dataType,
+    tickInterval,
+    logarithmBase,
     labelOptions: {
       format: argumentFormat
     }

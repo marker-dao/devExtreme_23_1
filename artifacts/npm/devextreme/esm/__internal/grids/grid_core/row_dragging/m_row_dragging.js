@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/row_dragging/m_row_dragging.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ import { deferUpdate } from '../../../../core/utils/common';
 import { getWidth, setWidth } from '../../../../core/utils/size';
 import Sortable from '../../../../ui/sortable';
 import gridCoreUtils from '../m_utils';
-import { CLASSES } from './const';
+import { ATTRIBUTES, CLASSES } from './const';
 import { GridCoreRowDraggingDom } from './dom';
 var RowDraggingExtender = {
   init() {
@@ -28,17 +28,21 @@ var RowDraggingExtender = {
     var allowReordering = this._allowReordering();
     var columnsController = this._columnsController;
     var isHandleColumnVisible = allowReordering && rowDragging.showDragIcons;
-    columnsController && columnsController.addCommandColumn({
+    columnsController === null || columnsController === void 0 ? void 0 : columnsController.addCommandColumn({
       type: 'drag',
       command: 'drag',
       visibleIndex: -2,
       alignment: 'center',
+      elementAttr: [{
+        name: ATTRIBUTES.dragCell,
+        value: ''
+      }],
       cssClass: CLASSES.commandDrag,
       width: 'auto',
       cellTemplate: this._getHandleTemplate(),
       visible: isHandleColumnVisible
     });
-    columnsController.columnOption('type:drag', 'visible', isHandleColumnVisible);
+    columnsController === null || columnsController === void 0 ? void 0 : columnsController.columnOption('type:drag', 'visible', isHandleColumnVisible);
   },
   _renderContent() {
     var rowDragging = this.option('rowDragging');

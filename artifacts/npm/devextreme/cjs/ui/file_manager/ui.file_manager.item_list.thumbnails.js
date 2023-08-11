@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.item_list.thumbnails.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -46,7 +46,7 @@ var FileManagerThumbnailsItemList = /*#__PURE__*/function (_FileManagerItemListB
     var $itemListContainer = (0, _renderer.default)('<div>').appendTo(this.$element());
     this._itemList = this._createComponent($itemListContainer, _uiFile_managerItems_listThumbnails.default, {
       dataSource: this._createDataSource(),
-      selectionMode: selectionMode,
+      selectionMode,
       selectedItemKeys: this.option('selectedItemKeys'),
       focusedItemKey: this.option('focusedItemKey'),
       activeStateEnabled: true,
@@ -137,9 +137,9 @@ var FileManagerThumbnailsItemList = /*#__PURE__*/function (_FileManagerItemListB
       return item.key;
     });
     this._tryRaiseSelectionChanged({
-      selectedItemInfos: selectedItemInfos,
-      selectedItems: selectedItems,
-      selectedItemKeys: selectedItemKeys,
+      selectedItemInfos,
+      selectedItems,
+      selectedItemKeys,
       currentSelectedItemKeys: addedItemKeys,
       currentDeselectedItemKeys: removedItemKeys
     });

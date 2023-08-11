@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/notify.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -73,8 +73,8 @@ var setContainerStyles = function setContainerStyles(container, direction, posit
     toastWidth = _container$children$f.offsetWidth,
     toastHeight = _container$children$f.offsetHeight;
   var dimensions = {
-    toastWidth: toastWidth,
-    toastHeight: toastHeight,
+    toastWidth,
+    toastHeight,
     windowHeight: window.innerHeight,
     windowWidth: window.innerWidth
   };

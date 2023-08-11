@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/collection/ui.collection_widget.async.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,11 +14,11 @@ var _deferred = require("../../core/utils/deferred");
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var AsyncCollectionWidget = _uiCollection_widget.default.inherit({
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this._deferredItems = [];
     this.callBase();
   },
-  _renderItemContent: function _renderItemContent(args) {
+  _renderItemContent(args) {
     var renderContentDeferred = new _deferred.Deferred();
     var itemDeferred = new _deferred.Deferred();
     var that = this;
@@ -36,7 +36,7 @@ var AsyncCollectionWidget = _uiCollection_widget.default.inherit({
     };
   },
   _postProcessRenderItems: _common.noop,
-  _renderItemsAsync: function _renderItemsAsync() {
+  _renderItemsAsync() {
     var _this2 = this;
     var d = new _deferred.Deferred();
     _deferred.when.apply(this, this._deferredItems).done(function () {
@@ -45,7 +45,7 @@ var AsyncCollectionWidget = _uiCollection_widget.default.inherit({
     });
     return d.promise();
   },
-  _clean: function _clean() {
+  _clean() {
     this.callBase();
     this._deferredItems = [];
   }

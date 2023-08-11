@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/context_menu/ui.menu_base.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -201,9 +201,12 @@ class MenuBase extends HierarchicalCollectionWidget {
     var {
       text
     } = itemData;
+    if (!text) {
+      return;
+    }
     var $itemContainer = $('<span>').addClass(DX_MENU_ITEM_CAPTION_CLASS);
     var itemText = isPlainObject(itemData) ? text : String(itemData);
-    return text && $itemContainer.text(itemText);
+    return $itemContainer.text(itemText);
   }
   _getItemExtraPropNames() {
     return ['url', 'linkAttr'];

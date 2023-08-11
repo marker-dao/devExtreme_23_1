@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/tooltip_strategies/tooltipStrategyBase.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,10 +14,6 @@ var _function_template = require("../../../core/templates/function_template");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _uiList = _interopRequireDefault(require("../../list/ui.list.edit"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var TOOLTIP_APPOINTMENT_ITEM = 'dx-tooltip-appointment-item';
 var TOOLTIP_APPOINTMENT_ITEM_CONTENT = TOOLTIP_APPOINTMENT_ITEM + '-content';
 var TOOLTIP_APPOINTMENT_ITEM_CONTENT_SUBJECT = TOOLTIP_APPOINTMENT_ITEM + '-content-subject';
@@ -107,11 +103,13 @@ var TooltipStrategyBase = /*#__PURE__*/function () {
   };
   _proto._renderTemplate = function _renderTemplate(appointment, targetedAppointment, index, color) {
     var itemListContent = this._createItemListContent(appointment, targetedAppointment, color);
-    this._options.addDefaultTemplates(_defineProperty({}, this._getItemListTemplateName(), new _function_template.FunctionTemplate(function (options) {
-      var $container = (0, _renderer.default)(options.container);
-      $container.append(itemListContent);
-      return $container;
-    })));
+    this._options.addDefaultTemplates({
+      [this._getItemListTemplateName()]: new _function_template.FunctionTemplate(function (options) {
+        var $container = (0, _renderer.default)(options.container);
+        $container.append(itemListContent);
+        return $container;
+      })
+    });
     var template = this._options.getAppointmentTemplate(this._getItemListTemplateName() + 'Template');
     return this._createFunctionTemplate(template, appointment, targetedAppointment, index);
   };
@@ -121,9 +119,9 @@ var TooltipStrategyBase = /*#__PURE__*/function () {
     return new _function_template.FunctionTemplate(function (options) {
       return template.render({
         model: isEmptyDropDownAppointmentTemplate ? {
-          appointmentData: appointmentData,
-          targetedAppointmentData: targetedAppointmentData,
-          isButtonClicked: isButtonClicked
+          appointmentData,
+          targetedAppointmentData,
+          isButtonClicked
         } : appointmentData,
         container: options.container,
         index: index

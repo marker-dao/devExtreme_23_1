@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.dialogs.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -366,7 +366,7 @@ var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
               _this3._parameters.resources.add(newItem);
               _this3.list.option('items', _this3._parameters.resources.items);
               _this3.list.scrollToItem(newItem);
-              _this3.textBox.reset();
+              _this3.textBox.clear();
               e.component.option('disabled', true);
             }
           }

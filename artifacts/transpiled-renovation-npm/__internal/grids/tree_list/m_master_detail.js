@@ -8,13 +8,13 @@ _m_core.default.registerModule('masterDetail', (0, _extend.extend)(true, {}, _m_
   extenders: {
     controllers: {
       data: {
-        isRowExpanded: function isRowExpanded() {
+        isRowExpanded() {
           return this.callBase.apply(this, arguments);
         },
-        _processItems: function _processItems() {
+        _processItems() {
           return this.callBase.apply(this, arguments);
         },
-        _processDataItem: function _processDataItem() {
+        _processDataItem() {
           return this.callBase.apply(this, arguments);
         }
       }

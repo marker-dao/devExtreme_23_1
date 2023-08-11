@@ -6,7 +6,6 @@ var _renderer = _interopRequireDefault(require("../core/renderer"));
 var _window = require("./utils/window");
 var _extend = require("./utils/extend");
 var _type = require("./utils/type");
-var _iterator = require("./utils/iterator");
 var _errors = _interopRequireDefault(require("./errors"));
 var _callbacks = _interopRequireDefault(require("./utils/callbacks"));
 var _ready_callbacks = _interopRequireDefault(require("./utils/ready_callbacks"));
@@ -16,7 +15,6 @@ var _storage = require("./utils/storage");
 var _view_port = require("./utils/view_port");
 var _config = _interopRequireDefault(require("./config"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var navigator = (0, _window.getNavigator)();
 var window = (0, _window.getWindow)();
 var KNOWN_UA_TABLE = {
   'iPhone': 'iPhone',
@@ -43,14 +41,14 @@ var DEFAULT_DEVICE = {
   // TODO: For internal use (draft, do not document these options!)
   mac: false
 };
-var uaParsers = {
-  generic: function generic(userAgent) {
+var UA_PARSERS = {
+  generic(userAgent) {
     var isPhone = /windows phone/i.test(userAgent) || userAgent.match(/WPDesktop/);
     var isTablet = !isPhone && /Windows(.*)arm(.*)Tablet PC/i.test(userAgent);
     var isDesktop = !isPhone && !isTablet && /msapphost/i.test(userAgent);
     var isMac = /((intel|ppc) mac os x)/.test(userAgent.toLowerCase());
     if (!(isPhone || isTablet || isDesktop || isMac)) {
-      return;
+      return null;
     }
     return {
       deviceType: isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop',
@@ -60,25 +58,32 @@ var uaParsers = {
       mac: isMac
     };
   },
-  ios: function ios(userAgent) {
-    if (!/ip(hone|od|ad)/i.test(userAgent)) {
-      return;
+  appleTouchDevice(userAgent) {
+    var navigator = (0, _window.getNavigator)();
+    var isIpadOs = /Macintosh/i.test(userAgent) && (navigator === null || navigator === void 0 ? void 0 : navigator.maxTouchPoints) > 2;
+    var isAppleDevice = /ip(hone|od|ad)/i.test(userAgent);
+    if (!isAppleDevice && !isIpadOs) {
+      return null;
     }
     var isPhone = /ip(hone|od)/i.test(userAgent);
-    var matches = userAgent.match(/os (\d+)_(\d+)_?(\d+)?/i);
+    var matches = userAgent.match(/os\s{0,}X? (\d+)_(\d+)_?(\d+)?/i);
     var version = matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10), parseInt(matches[3] || 0, 10)] : [];
     var isIPhone4 = window.screen.height === 960 / 2;
     var grade = isIPhone4 ? 'B' : 'A';
     return {
       deviceType: isPhone ? 'phone' : 'tablet',
       platform: 'ios',
-      version: version,
-      grade: grade
+      version,
+      grade
     };
   },
-  android: function android(userAgent) {
-    if (!/android|htc_|silk/i.test(userAgent)) {
-      return;
+  android(userAgent) {
+    // TODO: Check this RegExp.
+    //  It looks like there may be missing android user agents.
+    var isAndroid = /android|htc_|silk/i.test(userAgent);
+    var isWinPhone = /windows phone/i.test(userAgent);
+    if (!isAndroid || isWinPhone) {
+      return null;
     }
     var isPhone = /mobile/i.test(userAgent);
     var matches = userAgent.match(/android (\d+)\.?(\d+)?\.?(\d+)?/i);
@@ -88,11 +93,12 @@ var uaParsers = {
     return {
       deviceType: isPhone ? 'phone' : 'tablet',
       platform: 'android',
-      version: version,
-      grade: grade
+      version,
+      grade
     };
   }
 };
+var UA_PARSERS_ARRAY = [UA_PARSERS.appleTouchDevice, UA_PARSERS.android, UA_PARSERS.generic];
 var Devices = /*#__PURE__*/function () {
   /**
   * @name DevicesObject.ctor
@@ -217,6 +223,7 @@ var Devices = /*#__PURE__*/function () {
           throw _errors.default.Error('E0005');
         }
       } else {
+        var navigator = (0, _window.getNavigator)();
         ua = navigator.userAgent;
       }
       return this._fromUA(ua);
@@ -253,13 +260,12 @@ var Devices = /*#__PURE__*/function () {
     return (0, _extend.extend)(result, shortcuts);
   };
   _proto._fromUA = function _fromUA(ua) {
-    var config;
-    (0, _iterator.each)(uaParsers, function (platform, parser) {
-      config = parser(ua);
-      return !config;
-    });
-    if (config) {
-      return this._fromConfig(config);
+    for (var idx = 0; idx < UA_PARSERS_ARRAY.length; idx += 1) {
+      var parser = UA_PARSERS_ARRAY[idx];
+      var config = parser(ua);
+      if (config) {
+        return this._fromConfig(config);
+      }
     }
     return DEFAULT_DEVICE;
   };

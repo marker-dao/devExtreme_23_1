@@ -12,10 +12,6 @@ var _array_compare = require("../../core/utils/array_compare");
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var PRIVATE_KEY_FIELD = '__dx_key__';
 var _default = _uiCollection_widget.default.inherit({
   _getDefaultOptions: function _getDefaultOptions() {
@@ -127,8 +123,10 @@ var _default = _uiCollection_widget.default.inherit({
         this._itemsCache = (0, _extend.extend)(true, [], items);
         if (!this.key()) {
           this._itemsCache = this._itemsCache.map(function (itemCache, index) {
-            var _ref;
-            return _ref = {}, _defineProperty(_ref, PRIVATE_KEY_FIELD, items[index]), _defineProperty(_ref, "data", itemCache), _ref;
+            return {
+              [PRIVATE_KEY_FIELD]: items[index],
+              data: itemCache
+            };
           });
         }
       } catch (e) {
@@ -158,14 +156,10 @@ var _default = _uiCollection_widget.default.inherit({
     (0, _deferred.when)(isPartialRefresh || (0, _array_utils.insert)(keyInfo, items, change.data, change.index)).done(function () {
       var _change$index;
       _this5._beforeItemElementInserted(change);
-      var $itemContainer = _this5._getItemContainer(change.data);
-      _this5._renderItem((_change$index = change.index) !== null && _change$index !== void 0 ? _change$index : items.length, change.data, $itemContainer);
+      _this5._renderItem((_change$index = change.index) !== null && _change$index !== void 0 ? _change$index : items.length, change.data);
       _this5._afterItemElementInserted();
       _this5._correctionIndex++;
     });
-  },
-  _getItemContainer: function _getItemContainer(changeData) {
-    return this._itemContainer();
   },
   _updateSelectionAfterRemoveByChange: function _updateSelectionAfterRemoveByChange(removeIndex) {
     var selectedIndex = this.option('selectedIndex');

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/angular/component_registrator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,7 +27,8 @@ var _extend = require("../../core/utils/extend");
 var _comparator = require("../../core/utils/comparator");
 var _inflector = require("../../core/utils/inflector");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+// eslint-disable-next-line no-restricted-imports
+
 var ITEM_ALIAS_ATTRIBUTE_NAME = 'dxItemAlias';
 var SKIP_APPLY_ACTION_CATEGORY = 'rendering';
 var NG_MODEL_OPTION = 'value';
@@ -65,7 +66,7 @@ if (_angular.default) {
     }
   };
   var ComponentBuilder = _class.default.inherit({
-    ctor: function ctor(options) {
+    ctor(options) {
       this._componentDisposing = (0, _callbacks.default)();
       this._optionChangedCallbacks = (0, _callbacks.default)();
       this._ngLocker = new _locker.default();
@@ -85,7 +86,7 @@ if (_angular.default) {
         this._addOptionsStringWatcher(options.ngOptionsString);
       }
     },
-    _addOptionsStringWatcher: function _addOptionsStringWatcher(optionsString) {
+    _addOptionsStringWatcher(optionsString) {
       var _this = this;
       var clearOptionsStringWatcher = this._scope.$watch(optionsString, function (newOptions) {
         if (!newOptions) {
@@ -98,7 +99,7 @@ if (_angular.default) {
       });
       this._componentDisposing.add(clearOptionsStringWatcher);
     },
-    _normalizeOptions: function _normalizeOptions(options) {
+    _normalizeOptions(options) {
       var _this2 = this;
       this._ngOptions = (0, _extend.extendFromObject)({}, options);
       if (!options) {
@@ -117,12 +118,12 @@ if (_angular.default) {
         });
       }
     },
-    _initComponent: function _initComponent(scope) {
+    _initComponent(scope) {
       this._component = new this._componentClass(this._$element, this._evalOptions(scope));
       this._component._isHidden = true;
       this._handleDigestPhase();
     },
-    _handleDigestPhase: function _handleDigestPhase() {
+    _handleDigestPhase() {
       var _this3 = this;
       var beginUpdate = function beginUpdate() {
         _this3._component.beginUpdate();
@@ -137,7 +138,7 @@ if (_angular.default) {
         _this3._digestCallbacks.end.remove(endUpdate);
       });
     },
-    _initComponentBindings: function _initComponentBindings() {
+    _initComponentBindings() {
       var _this4 = this;
       var optionDependencies = {};
       if (!this._ngOptions.bindingOptions) {
@@ -229,15 +230,15 @@ if (_angular.default) {
         }
       });
     },
-    _optionsAreNested: function _optionsAreNested(optionPath1, optionPath2) {
+    _optionsAreNested(optionPath1, optionPath2) {
       var parentSeparator = optionPath1[optionPath2.length];
       return optionPath1.indexOf(optionPath2) === 0 && (parentSeparator === '.' || parentSeparator === '[');
     },
-    _optionsAreLinked: function _optionsAreLinked(optionPath1, optionPath2) {
+    _optionsAreLinked(optionPath1, optionPath2) {
       if (optionPath1 === optionPath2) return true;
       return optionPath1.length > optionPath2.length ? this._optionsAreNested(optionPath1, optionPath2) : this._optionsAreNested(optionPath2, optionPath1);
     },
-    _compilerByTemplate: function _compilerByTemplate(template) {
+    _compilerByTemplate(template) {
       var _this5 = this;
       var scopeItemsPath = this._getScopeItemsPath();
       return function (options) {
@@ -266,7 +267,7 @@ if (_angular.default) {
         return $resultMarkup;
       };
     },
-    _applyAsync: function _applyAsync(func, scope) {
+    _applyAsync(func, scope) {
       var _this6 = this;
       func(scope);
       if (!scope.$root.$$phase) {
@@ -283,12 +284,12 @@ if (_angular.default) {
         }
       }
     },
-    _getScopeItemsPath: function _getScopeItemsPath() {
+    _getScopeItemsPath() {
       if (this._componentClass.subclassOf(_uiCollection_widget.default) && this._ngOptions.bindingOptions && this._ngOptions.bindingOptions.items) {
         return this._ngOptions.bindingOptions.items.dataPath;
       }
     },
-    _createScopeWithData: function _createScopeWithData(options) {
+    _createScopeWithData(options) {
       var newScope = this._scope.$new();
       if (this._itemAlias) {
         newScope[this._itemAlias] = options.model;
@@ -298,18 +299,18 @@ if (_angular.default) {
       }
       return newScope;
     },
-    _synchronizeScopes: function _synchronizeScopes(itemScope, parentPrefix, itemIndex) {
-      if (this._itemAlias && _typeof(itemScope[this._itemAlias]) !== 'object') {
+    _synchronizeScopes(itemScope, parentPrefix, itemIndex) {
+      if (this._itemAlias && typeof itemScope[this._itemAlias] !== 'object') {
         this._synchronizeScopeField({
           parentScope: this._scope,
           childScope: itemScope,
           fieldPath: this._itemAlias,
-          parentPrefix: parentPrefix,
-          itemIndex: itemIndex
+          parentPrefix,
+          itemIndex
         });
       }
     },
-    _synchronizeScopeField: function _synchronizeScopeField(args) {
+    _synchronizeScopeField(args) {
       var parentScope = args.parentScope;
       var childScope = args.childScope;
       var fieldPath = args.fieldPath;
@@ -340,7 +341,8 @@ if (_angular.default) {
       });
       this._componentDisposing.add([clearParentWatcher, clearItemWatcher]); // TODO: test
     },
-    _evalOptions: function _evalOptions(scope) {
+
+    _evalOptions(scope) {
       var _this8 = this;
       var result = (0, _extend.extendFromObject)({}, this._ngOptions);
       delete result.bindingOptions;
@@ -437,20 +439,20 @@ if (_angular.default) {
     }
   });
   ComponentBuilder = ComponentBuilder.inherit({
-    ctor: function ctor(options) {
+    ctor(options) {
       this._componentName = options.componentName;
       this._ngModel = options.ngModel;
       this._ngModelController = options.ngModelController;
       this.callBase.apply(this, arguments);
     },
-    _isNgModelRequired: function _isNgModelRequired() {
+    _isNgModelRequired() {
       return _editor.default.isEditor(this._componentClass.prototype) && this._ngModel;
     },
-    _initComponentBindings: function _initComponentBindings() {
+    _initComponentBindings() {
       this.callBase.apply(this, arguments);
       this._initNgModelBinding();
     },
-    _initNgModelBinding: function _initNgModelBinding() {
+    _initNgModelBinding() {
       var _this9 = this;
       if (!this._isNgModelRequired()) {
         return;
@@ -479,7 +481,7 @@ if (_angular.default) {
       });
       this._componentDisposing.add(clearNgModelWatcher);
     },
-    _evalOptions: function _evalOptions() {
+    _evalOptions() {
       if (!this._isNgModelRequired()) {
         return this.callBase.apply(this, arguments);
       }
@@ -495,8 +497,8 @@ if (_angular.default) {
       return {
         restrict: 'A',
         require: '^?ngModel',
-        priority: priority,
-        compile: function compile($element) {
+        priority,
+        compile($element) {
           var componentClass = registeredComponents[name];
           var useTemplates = componentClass.prototype._useTemplates ? componentClass.prototype._useTemplates() : getClassMethod(componentClass, '_useTemplates')();
           var $content = useTemplates ? $element.contents().detach() : null;
@@ -504,19 +506,19 @@ if (_angular.default) {
             $element.append($content);
             safeApply(function () {
               new ComponentBuilder({
-                componentClass: componentClass,
+                componentClass,
                 componentName: name,
                 compile: $compile,
                 parse: $parse,
-                $element: $element,
-                scope: scope,
+                $element,
+                scope,
                 ngOptionsString: attrs[name],
                 ngOptions: attrs[name] ? scope.$eval(attrs[name]) : {},
                 ngModel: attrs.ngModel,
-                ngModelController: ngModelController,
-                transcludeFn: transcludeFn,
+                ngModelController,
+                transcludeFn,
                 itemAlias: attrs[ITEM_ALIAS_ATTRIBUTE_NAME],
-                dxDigestCallbacks: dxDigestCallbacks
+                dxDigestCallbacks
               });
             }, scope);
           };

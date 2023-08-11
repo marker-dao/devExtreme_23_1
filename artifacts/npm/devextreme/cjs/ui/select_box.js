@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/select_box.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,7 +40,7 @@ var SelectBox = _ui.default.inherit({
       if (!isEditable) {
         if (this.option('showClearButton')) {
           e.preventDefault();
-          this.reset();
+          this.clear();
         }
       } else if (this._valueSubstituted()) {
         this._preventFiltering = true;
@@ -183,7 +183,7 @@ var SelectBox = _ui.default.inherit({
   _popupWrapperClass: function _popupWrapperClass() {
     return this.callBase() + ' ' + SELECTBOX_POPUP_WRAPPER_CLASS;
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this.callBase();
     (0, _extend.extend)(this._deprecatedOptions, {
       'valueChangeEvent': {

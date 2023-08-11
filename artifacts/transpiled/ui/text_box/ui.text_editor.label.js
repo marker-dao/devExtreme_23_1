@@ -21,13 +21,13 @@ var TextEditorLabel = /*#__PURE__*/function () {
       containerWidth = _ref.containerWidth,
       beforeWidth = _ref.beforeWidth;
     this._props = {
-      $editor: $editor,
-      text: text,
-      mode: mode,
-      mark: mark,
-      containsButtonsBefore: containsButtonsBefore,
-      containerWidth: containerWidth,
-      beforeWidth: beforeWidth
+      $editor,
+      text,
+      mode,
+      mark,
+      containsButtonsBefore,
+      containerWidth,
+      beforeWidth
     };
     this._id = "".concat(TEXTEDITOR_LABEL_CLASS, "-").concat(new _guid.default());
     this._render();

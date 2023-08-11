@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ru.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Сортировать по возрастанию",
             "dxDataGrid-sortingDescendingText": "Сортировать по убыванию",
             "dxDataGrid-sortingClearText": "Сбросить сортировку",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Сохранить изменения",
             "dxDataGrid-editingCancelAllChanges": "Отменить изменения",
             "dxDataGrid-editingAddRow": "Добавить строку",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Фильтр",
             "dxDataGrid-ariaCollapse": "Свернуть",
             "dxDataGrid-ariaExpand": "Развернуть",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Таблица данных с {0} строками и {1} колонками",
             "dxDataGrid-ariaSearchInGrid": "Искать в таблице данных",
             "dxDataGrid-ariaSelectAll": "Выбрать всё",
             "dxDataGrid-ariaSelectRow": "Выбрать строку",
             "dxDataGrid-ariaToolbar": "Панель инструментов таблицы данных",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Конструктор фильтра",
             "dxDataGrid-filterPanelCreateFilter": "Создать фильтр",
             "dxDataGrid-filterPanelClearFilter": "Очистить",

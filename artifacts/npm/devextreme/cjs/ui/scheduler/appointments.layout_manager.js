@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments.layout_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,21 +10,20 @@
 
 exports.default = void 0;
 var _common = require("../../core/utils/common");
-var _viewModelGenerator = require("./appointments/viewModelGenerator");
+var _m_view_model_generator = require("../../__internal/scheduler/appointments/m_view_model_generator");
 var _utils = require("./resources/utils");
 var _positionHelper = require("./workspaces/helpers/positionHelper");
 var _base = require("../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _appointments = require("../../renovation/ui/scheduler/model/appointments");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var AppointmentLayoutManager = /*#__PURE__*/function () {
   function AppointmentLayoutManager(instance) {
     this.instance = instance;
-    this.appointmentViewModel = new _viewModelGenerator.AppointmentViewModelGenerator();
+    this.appointmentViewModel = new _m_view_model_generator.AppointmentViewModelGenerator();
   }
   var _proto = AppointmentLayoutManager.prototype;
   _proto.getCellDimensions = function getCellDimensions(options) {
@@ -71,8 +70,8 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       showAllDayPanel: workspace.option('showAllDayPanel'),
       isGroupedAllDayPanel: workspace.isGroupedAllDayPanel(),
       groups: this.instance._getCurrentViewOption('groups'),
-      groupCount: groupCount,
-      rowCount: rowCount,
+      groupCount,
+      rowCount,
       appointmentCountPerCell: this.instance.option('_appointmentCountPerCell'),
       appointmentOffset: this.instance.option('_appointmentOffset'),
       allowResizing: this.instance._allowResizing(),
@@ -83,7 +82,7 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       cellHeight: (0, _positionHelper.getCellHeight)(DOMMetaData),
       allDayHeight: allDayHeight,
       resizableStep: positionHelper.getResizableStep(),
-      visibleDayDuration: visibleDayDuration,
+      visibleDayDuration,
       allDayPanelMode: this.instance._getCurrentViewOption('allDayPanelMode'),
       // appointment settings
       timeZoneCalculator: this.instance.timeZoneCalculator,
@@ -93,9 +92,9 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       viewEndDayHour: this.instance._getCurrentViewOption('endDayHour'),
       viewType: workspace.type,
       endViewDate: workspace.getEndViewDate(),
-      positionHelper: positionHelper,
+      positionHelper,
       isGroupedByDate: workspace.isGroupedByDate(),
-      cellDuration: cellDuration,
+      cellDuration,
       cellDurationInMinutes: workspace.option('cellDuration'),
       viewDataProvider: workspace.viewDataProvider,
       supportAllDayRow: workspace.supportAllDayRow(),
@@ -103,7 +102,7 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       intervalDuration: workspace.getIntervalDuration(),
       allDayIntervalDuration: workspace.getIntervalDuration(true),
       isVerticalGroupOrientation: workspace.isVerticalOrientation(),
-      DOMMetaData: DOMMetaData,
+      DOMMetaData,
       // agenda only
       instance: this.instance,
       agendaDuration: workspace.option('agendaDuration')
@@ -141,15 +140,15 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       var hMax = currentSetting.reduced ? currentSetting.hMax : undefined;
       var vMax = currentSetting.reduced ? currentSetting.vMax : undefined;
       return _extends({}, currentSetting, {
-        columnIndex: columnIndex,
-        rowIndex: rowIndex,
+        columnIndex,
+        rowIndex,
         positionByMap: undefined,
         topVirtualCellCount: undefined,
         leftVirtualCellCount: undefined,
         leftVirtualWidth: undefined,
         topVirtualHeight: undefined,
-        hMax: hMax,
-        vMax: vMax,
+        hMax,
+        vMax,
         info: {}
       });
     };

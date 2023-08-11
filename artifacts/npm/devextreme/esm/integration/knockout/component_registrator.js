@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/integration/knockout/component_registrator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ import Callbacks from '../../core/utils/callbacks';
 import { isPlainObject } from '../../core/utils/type';
 import registerComponentCallbacks from '../../core/component_registrator_callbacks';
 import Widget from '../../ui/widget/ui.widget';
-import VizWidget from '../../viz/core/base_widget';
+import VizWidget from '../../__internal/viz/core/m_base_widget';
 import ComponentWrapper from '../../renovation/component_wrapper/common/component';
 import Draggable from '../../ui/draggable';
 import ScrollView from '../../ui/scroll_view';

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/form.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -65,7 +65,7 @@ export {
 };
 
 /** @public */
-export type FormItemComponent = 'dxAutocomplete' | 'dxCalendar' | 'dxCheckBox' | 'dxColorBox' | 'dxDateBox' | 'dxDropDownBox' | 'dxHtmlEditor' | 'dxLookup' | 'dxNumberBox' | 'dxRadioGroup' | 'dxRangeSlider' | 'dxSelectBox' | 'dxSlider' | 'dxSwitch' | 'dxTagBox' | 'dxTextArea' | 'dxTextBox';
+export type FormItemComponent = 'dxAutocomplete' | 'dxCalendar' | 'dxCheckBox' | 'dxColorBox' | 'dxDateBox' | 'dxDateRangeBox' | 'dxDropDownBox' | 'dxHtmlEditor' | 'dxLookup' | 'dxNumberBox' | 'dxRadioGroup' | 'dxRangeSlider' | 'dxSelectBox' | 'dxSlider' | 'dxSwitch' | 'dxTagBox' | 'dxTextArea' | 'dxTextBox';
 /** @public */
 export type FormItemType = 'empty' | 'group' | 'simple' | 'tabbed' | 'button';
 /** @public */
@@ -310,6 +310,12 @@ export interface dxFormOptions extends WidgetOptions<dxForm> {
      * @public
      */
     validationGroup?: string;
+    /**
+     * @docid
+     * @default false
+     * @public
+     */
+    isDirty?: boolean;
 }
 /**
  * @docid

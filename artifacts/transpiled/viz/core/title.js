@@ -14,7 +14,7 @@ function hasText(text) {
 }
 function processTitleLength(elem, text, width, options, placeholderSize) {
   if (elem.attr({
-    text: text
+    text
   }).setMaxSize(width, placeholderSize, options).textChanged) {
     elem.setTitle(text);
   }
@@ -90,11 +90,11 @@ exports.Title = Title;
       });
     }
     that._titleElement.attr({
-      align: align,
+      align,
       'class': options.cssClass
     });
     that._subtitleElement.attr({
-      align: align,
+      align,
       'class': options.subtitle.cssClass
     });
     group.linkAppend();
@@ -129,7 +129,7 @@ exports.Title = Title;
       }).css((0, _utils.patchFontOptions)(subtitleOptions.font));
     }
   },
-  _shiftSubtitle: function _shiftSubtitle() {
+  _shiftSubtitle() {
     var that = this;
     var titleBox = that._titleElement.getBBox();
     var element = that._subtitleElement;
@@ -201,10 +201,10 @@ exports.Title = Title;
       y = _this$getCorrectedLay.y,
       height = _this$getCorrectedLay.height;
     this._clipRect.attr({
-      x: x,
-      y: y,
-      width: width,
-      height: height
+      x,
+      y,
+      width,
+      height
     });
   },
   getLayoutOptions: function getLayoutOptions() {
@@ -242,7 +242,7 @@ exports.Title = Title;
     boundingRect.x = box.x;
     boundingRect.y = box.y;
   },
-  getCorrectedLayoutOptions: function getCorrectedLayoutOptions() {
+  getCorrectedLayoutOptions() {
     var srcBox = this.getLayoutOptions();
     var correction = this._baseLineCorrection;
     return (0, _extend.extend)({}, srcBox, {

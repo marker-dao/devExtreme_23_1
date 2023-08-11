@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/funnel/label.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -276,7 +276,7 @@ export var plugin = {
         }, 0);
       } else if (resolveLabelOverlapping === 'shift') {
         var maxHeight = this._labelRect[3];
-        labels.reduce((_ref, label, index, labels) => {
+        labels.filter(label => label.isVisible()).reduce((_ref, label, index, labels) => {
           var [height, emptySpace] = _ref;
           var bBox = label.getBoundingRect();
           var y = bBox.y;

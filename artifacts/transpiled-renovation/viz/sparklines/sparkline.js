@@ -62,8 +62,8 @@ function findMinMax(data, valField) {
     minIndexes = maxIndexes = [];
   }
   return {
-    minIndexes: minIndexes,
-    maxIndexes: maxIndexes
+    minIndexes,
+    maxIndexes
   };
 }
 function parseNumericDataSource(data, argField, valField, ignoreEmptyPoints) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/list/ui.list.edit.decorator.reorder.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,7 +23,7 @@ registerDecorator('reorder', 'default', EditDecorator.inherit({
     var list = this._list;
     this._groupedEnabled = this._list.option('grouped');
     this._lockedDrag = false;
-    var filter = this._groupedEnabled ? '> .dx-list-group > .dx-list-group-body > .dx-list-item' : '> .dx-list-item';
+    var filter = this._groupedEnabled ? '> .dx-list-items > .dx-list-group > .dx-list-group-body > .dx-list-item' : '> .dx-list-items > .dx-list-item';
     this._sortable = list._createComponent(list._scrollView.content(), Sortable, extend({
       component: list,
       contentTemplate: null,

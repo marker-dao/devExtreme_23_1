@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/editor/editor.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -52,6 +52,7 @@ var Editor = Widget.inherit({
     this.option(ValidationEngine.initValidationOptions(options));
   },
   _init: function _init() {
+    this._initialValue = this.option('value');
     this.callBase();
     this._options.cache('validationTooltipOptions', this.option('validationTooltipOptions'));
     var $element = this.$element();
@@ -81,7 +82,8 @@ var Editor = Widget.inherit({
         v: 0
       },
       validationTooltipOptions: {},
-      _showValidationMessage: true
+      _showValidationMessage: true,
+      isDirty: false
     });
   },
   _attachKeyboardEvents: function _attachKeyboardEvents() {
@@ -289,6 +291,7 @@ var Editor = Widget.inherit({
       case 'value':
         if (args.value != args.previousValue) {
           // eslint-disable-line eqeqeq
+          this.option('isDirty', this._initialValue !== args.value);
           this.validationRequest.fire({
             value: args.value,
             editor: this
@@ -327,6 +330,7 @@ var Editor = Widget.inherit({
         this._innerWidgetOptionChanged(this._validationMessage, args);
         break;
       case '_showValidationMessage':
+      case 'isDirty':
         break;
       default:
         this.callBase(args);
@@ -337,7 +341,7 @@ var Editor = Widget.inherit({
       resetActiveElement();
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     var defaultOptions = this._getDefaultOptions();
     this.option('value', defaultOptions.value);
   }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/range_slider.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -243,11 +243,14 @@ var RangeSlider = Slider.inherit({
     var end = this.option('end');
     this.option('value', [start, end]);
   },
+  _rangesAreEqual(firstRange, secondRange) {
+    return firstRange[0] === secondRange[0] && firstRange[1] === secondRange[1];
+  },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {
       case 'value':
         {
-          if (args.value[0] === args.previousValue[0] && args.value[1] === args.previousValue[1]) {
+          if (this._rangesAreEqual(args.value, args.previousValue)) {
             break;
           }
           this._setOptionWithoutOptionChange('start', args.value[0]);
@@ -255,6 +258,8 @@ var RangeSlider = Slider.inherit({
           this._renderValue();
           var start = this.option('start');
           var end = this.option('end');
+          var isDirty = !this._rangesAreEqual(this._initialValue, args.value);
+          this.option('isDirty', isDirty);
           this._createActionByOption('onValueChanged', {
             excludeValidators: ['disabled', 'readOnly']
           })({

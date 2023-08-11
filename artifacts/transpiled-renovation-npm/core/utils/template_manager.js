@@ -21,7 +21,7 @@ var findTemplates = function findTemplates(element, name) {
   return [].slice.call(templates).map(function (element) {
     var optionsString = (0, _renderer.default)(element).attr(optionsAttributeName) || '';
     return {
-      element: element,
+      element,
       options: (0, _config.default)().optionsParser(optionsString)[name]
     };
   }).filter(function (template) {
@@ -50,10 +50,10 @@ var suitableTemplatesByName = function suitableTemplatesByName(rawTemplates) {
 };
 exports.suitableTemplatesByName = suitableTemplatesByName;
 var addOneRenderedCall = function addOneRenderedCall(template) {
-  var _render = template.render.bind(template);
+  var render = template.render.bind(template);
   return (0, _extend.extend)({}, template, {
-    render: function render(options) {
-      var templateResult = _render(options);
+    render(options) {
+      var templateResult = render(options);
       options && options.onRendered && options.onRendered();
       return templateResult;
     }

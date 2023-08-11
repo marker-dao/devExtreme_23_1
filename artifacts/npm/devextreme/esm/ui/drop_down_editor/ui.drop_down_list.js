@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/drop_down_editor/ui.drop_down_list.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -284,7 +284,7 @@ var DropDownList = DropDownEditor.inherit({
     }
     return plainItems;
   },
-  _updateActiveDescendant() {
+  _updateActiveDescendant($target) {
     var _this$_list;
     var opened = this.option('opened');
     var listFocusedItemId = (_this$_list = this._list) === null || _this$_list === void 0 ? void 0 : _this$_list.getFocusedItemId();
@@ -292,7 +292,7 @@ var DropDownList = DropDownEditor.inherit({
     var activedescendant = opened && isElementOnDom && listFocusedItemId;
     this.setAria({
       'activedescendant': activedescendant || null
-    });
+    }, $target);
   },
   _setSelectedItem: function _setSelectedItem(item) {
     var displayValue = this._displayValue(item);
@@ -352,7 +352,7 @@ var DropDownList = DropDownEditor.inherit({
   _isCustomValueAllowed: function _isCustomValueAllowed() {
     return this.option('displayCustomValue');
   },
-  reset: function reset() {
+  clear: function clear() {
     this.callBase();
     this._clearFilter();
     this._clearSelectedItem();

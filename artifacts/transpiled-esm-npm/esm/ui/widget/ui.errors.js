@@ -282,5 +282,13 @@ export default errorUtils(errors.ERROR_MESSAGES, {
   /**
    * @name ErrorsUIWidgets.W1022
    */
-  W1022: '{0} JSON parsing error: \'{1}\''
+  W1022: '{0} JSON parsing error: \'{1}\'',
+  /**
+   * @name ErrorsUIWidgets.W1023
+   */
+  W1023: 'Appointments require unique keys. Otherwise, the agenda view may not work correctly.',
+  /**
+   * @name ErrorsUIWidgets.W1024
+   */
+  W1024: 'The client-side export is enabled. Implement the \'onExporting\' function.'
 });

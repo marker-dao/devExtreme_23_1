@@ -164,17 +164,17 @@ var DateViewRoller = /*#__PURE__*/function (_Scrollable) {
           to: {
             top: Math.floor(delta.y)
           },
-          complete: function complete() {
+          complete() {
             (0, _translator.resetPosition)((0, _renderer.default)(that.content()));
             that.handleMove({
-              delta: delta
+              delta
             });
           }
         });
         delete this._animation;
       } else {
         this.handleMove({
-          delta: delta
+          delta
         });
       }
     }

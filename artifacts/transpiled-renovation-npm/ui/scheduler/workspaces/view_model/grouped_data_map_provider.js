@@ -40,8 +40,8 @@ var GroupedDataMapProvider = /*#__PURE__*/function () {
       if (_date.default.intervalsOverlap({
         firstMin: startDate,
         firstMax: endDate,
-        secondMin: secondMin,
-        secondMax: secondMax
+        secondMin,
+        secondMax
       })) {
         return secondMin;
       }
@@ -125,8 +125,8 @@ var GroupedDataMapProvider = /*#__PURE__*/function () {
         allDay = _firstCell$cellData.allDay,
         groupIndex = _firstCell$cellData.groupIndex;
       return {
-        allDay: allDay,
-        groupIndex: groupIndex,
+        allDay,
+        groupIndex,
         startDate: _this2.getGroupStartDate(groupIndex),
         endDate: _this2.getGroupEndDate(groupIndex)
       };

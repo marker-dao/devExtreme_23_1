@@ -4,7 +4,7 @@ import { each } from '../../core/utils/iterator';
 import { captionize } from '../../core/utils/inflector';
 import Guid from '../../core/guid';
 import { SIMPLE_ITEM_TYPE } from './constants';
-var EDITORS_WITH_ARRAY_VALUE = ['dxTagBox', 'dxRangeSlider'];
+var EDITORS_WITH_ARRAY_VALUE = ['dxTagBox', 'dxRangeSlider', 'dxDateRangeBox'];
 export var EDITORS_WITHOUT_LABELS = ['dxCalendar', 'dxCheckBox', 'dxHtmlEditor', 'dxRadioGroup', 'dxRangeSlider', 'dxSlider', 'dxSwitch'];
 export function convertToRenderFieldItemOptions(_ref) {
   var {
@@ -199,7 +199,7 @@ function _convertToLabelOptions(_ref5) {
     labelTemplate,
     onLabelTemplateRendered
   });
-  var editorsRequiringIdForLabel = ['dxRadioGroup', 'dxCheckBox', 'dxLookup', 'dxSlider', 'dxRangeSlider', 'dxSwitch', 'dxHtmlEditor']; // TODO: support "dxCalendar"
+  var editorsRequiringIdForLabel = ['dxRadioGroup', 'dxCheckBox', 'dxLookup', 'dxSlider', 'dxRangeSlider', 'dxSwitch', 'dxHtmlEditor', 'dxDateRangeBox']; // TODO: support "dxCalendar"
   if (editorsRequiringIdForLabel.includes(item.editorType)) {
     labelOptions.labelID = "dx-label-".concat(new Guid());
   }

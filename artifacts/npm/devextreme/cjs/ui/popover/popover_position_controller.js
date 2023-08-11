@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popover/popover_position_controller.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -68,8 +68,8 @@ var PopoverPositionController = /*#__PURE__*/function (_OverlayPositionContr) {
       args = _objectWithoutProperties(_ref, _excluded);
     _this = _OverlayPositionContr.call(this, args) || this;
     _this._props = _extends({}, _this._props, {
-      shading: shading,
-      target: target
+      shading,
+      target
     });
     _this._$arrow = $arrow;
     _this._positionSide = undefined;

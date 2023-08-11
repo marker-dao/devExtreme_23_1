@@ -13,7 +13,7 @@ var VALIDATION_SUMMARY_CLASS = 'dx-validationsummary';
 var ITEM_CLASS = VALIDATION_SUMMARY_CLASS + '-item';
 var ITEM_DATA_KEY = VALIDATION_SUMMARY_CLASS + '-item-data';
 var ValidationSummary = _uiCollection_widget.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       /**
       * @name dxValidationSummaryOptions.focusStateEnabled
@@ -129,17 +129,18 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
       */
     });
   },
-  _setOptionsByReference: function _setOptionsByReference() {
+
+  _setOptionsByReference() {
     this.callBase();
     (0, _extend.extend)(this._optionsByReference, {
       validationGroup: true
     });
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._initGroupRegistration();
   },
-  _initGroupRegistration: function _initGroupRegistration() {
+  _initGroupRegistration() {
     var $element = this.$element();
     var group = this.option('validationGroup') || _validation_engine.default.findGroup($element, this._modelByElement($element));
     var groupConfig = _validation_engine.default.addGroup(group);
@@ -149,11 +150,11 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
     this.groupSubscription = this._groupValidationHandler.bind(this);
     groupConfig.on('validated', this.groupSubscription);
   },
-  _unsubscribeGroup: function _unsubscribeGroup() {
+  _unsubscribeGroup() {
     var groupConfig = _validation_engine.default.getGroupConfig(this._validationGroup);
     groupConfig && groupConfig.off('validated', this.groupSubscription);
   },
-  _getOrderedItems: function _getOrderedItems(validators, items) {
+  _getOrderedItems(validators, items) {
     var orderedItems = [];
     (0, _iterator.each)(validators, function (_, validator) {
       var foundItems = (0, _common.grep)(items, function (item) {
@@ -167,7 +168,7 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
     });
     return orderedItems;
   },
-  _groupValidationHandler: function _groupValidationHandler(params) {
+  _groupValidationHandler(params) {
     var _this = this;
     var items = this._getOrderedItems(params.validators, (0, _iterator.map)(params.brokenRules, function (rule) {
       return {
@@ -192,7 +193,7 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
     });
     this.option('items', items);
   },
-  _itemValidationHandler: function _itemValidationHandler(_ref) {
+  _itemValidationHandler(_ref) {
     var isValid = _ref.isValid,
       validator = _ref.validator,
       brokenRules = _ref.brokenRules;
@@ -239,11 +240,11 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
       this.option('items', items);
     }
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.$element().addClass(VALIDATION_SUMMARY_CLASS);
     this.callBase();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     switch (args.name) {
       case 'validationGroup':
         this._initGroupRegistration();
@@ -252,40 +253,44 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  _itemClass: function _itemClass() {
+  _itemClass() {
     return ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey() {
     return ITEM_DATA_KEY;
   },
-  _postprocessRenderItem: function _postprocessRenderItem(params) {
+  _postprocessRenderItem(params) {
     _events_engine.default.on(params.itemElement, 'click', function () {
       params.itemData.validator && params.itemData.validator.focus && params.itemData.validator.focus();
     });
   },
-  _dispose: function _dispose() {
+  _dispose() {
     this.callBase();
     this._unsubscribeGroup();
   },
-  refreshValidationGroup: function refreshValidationGroup() {
+  refreshValidationGroup() {
     this._initGroupRegistration();
   }
+
   /**
   * @name dxValidationSummary.registerKeyHandler
   * @publicName registerKeyHandler(key, handler)
   * @hidden
   */
+
   /**
   * @name dxValidationSummary.getDataSource
   * @publicName getDataSource()
   * @hidden
   */
+
   /**
   * @name dxValidationSummary.focus
   * @publicName focus()
   * @hidden
   */
 });
+
 (0, _component_registrator.default)('dxValidationSummary', ValidationSummary);
 var _default = ValidationSummary;
 exports.default = _default;

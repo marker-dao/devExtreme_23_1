@@ -1,7 +1,7 @@
 /*!
  * DevExpress Diagram (dx-diagram)
- * Version: 2.1.75
- * Build date: Tue May 02 2023
+ * Version: 2.1.77
+ * Build date: Tue Aug 08 2023
  * 
  * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
@@ -505,6 +505,9 @@ exports.Utils = Utils;
 var GeometryUtils = (function () {
     function GeometryUtils() {
     }
+    GeometryUtils.arePointsOfOrthogonalLine = function (point1, point2, isHorizontal) {
+        return isHorizontal ? (point1.y === point2.y) : (point1.x === point2.x);
+    };
     GeometryUtils.getCommonRectangle = function (rects) {
         if (!rects.length)
             return new rectangle_1.Rectangle(0, 0, 0, 0);
@@ -779,9 +782,9 @@ var GeometryUtils = (function () {
         while ((point = points[index]) && points.length > 2) {
             var nextPoint = this.getNextPoint(points, index, 1, checkCallback);
             var prevPoint = this.getNextPoint(points, index, -1, checkCallback);
-            if (!prevPoint || !nextPoint ||
-                GeometryUtils.isCorner(prevPoint, point, nextPoint, accuracy) ||
-                !removeCallback(point, index))
+            if (!prevPoint || !nextPoint || GeometryUtils.isCorner(prevPoint, point, nextPoint, accuracy))
+                index++;
+            else if (!removeCallback(point, index))
                 index++;
         }
     };
@@ -1269,27 +1272,13 @@ var ModelUtils = (function () {
             history.addAndRedo(new AddConnectionHistoryItem_1.SetConnectionPointIndexHistoryItem(connector, endConnectionPointIndex, Connector_1.ConnectorPosition.End));
         }
     };
-    ModelUtils.skipUnnecessaryRenderPoints = function (points) {
-        var clonedPoints = points.map(function (p) { return p.clone(); });
-        ModelUtils.removeUnnecessaryRenderPoints(clonedPoints);
-        points.forEach(function (p) { return p.skipped = clonedPoints.some(function (cp) { return cp.skipped && cp.equals(p); }); });
+    ModelUtils.skipUnnecessaryRenderPoints = function (points, removeExcessPoints) {
+        Utils_1.GeometryUtils.removeUnnecessaryPoints(points, function (pt, index) { return ModelUtils.removeUnnecessaryPoint(points, pt, index, removeExcessPoints); }, function (pt) { return pt !== undefined && !pt.skipped; });
         points[0].skipped = false;
         points[points.length - 1].skipped = false;
     };
-    ModelUtils.skipUnnecessaryRightAngleRenderPoints = function (points) {
-        var clonedPoints = points.map(function (p) { return p.clone(); });
-        ModelUtils.removeUnnecessaryRightAngleRenderPoints(clonedPoints);
-        points.forEach(function (p) { return p.skipped = clonedPoints.some(function (cp) { return cp.skipped && cp.equals(p); }); });
-        points[0].skipped = false;
-        points[points.length - 1].skipped = false;
-    };
-    ModelUtils.removeUnnecessaryRenderPoints = function (points) {
-        Utils_1.GeometryUtils.removeUnnecessaryPoints(points, function (pt, index) { return ModelUtils.removeUnnecessaryPoint(points, pt, index); }, function (pt) { return pt !== undefined && !pt.skipped; });
-        points[0].skipped = false;
-        points[points.length - 1].skipped = false;
-    };
-    ModelUtils.removeUnnecessaryRightAngleRenderPoints = function (points) {
-        Utils_1.GeometryUtils.removeUnnecessaryRightAnglePoints(points, function (p, index) { return ModelUtils.removeUnnecessaryPoint(points, p, index); }, function (p) { return p !== undefined && !p.skipped; });
+    ModelUtils.skipUnnecessaryRightAngleRenderPoints = function (points, removeExcessPoints) {
+        Utils_1.GeometryUtils.removeUnnecessaryRightAnglePoints(points, function (p, index) { return ModelUtils.removeUnnecessaryPoint(points, p, index, removeExcessPoints); }, function (p) { return p !== undefined && !p.skipped; });
         points[0].skipped = false;
         points[points.length - 1].skipped = false;
     };
@@ -1349,8 +1338,8 @@ var ModelUtils = (function () {
         }
         return true;
     };
-    ModelUtils.removeUnnecessaryPoint = function (points, point, removedIndex) {
-        if (point.pointIndex === -1) {
+    ModelUtils.removeUnnecessaryPoint = function (points, point, removedIndex, removeExcessPoints) {
+        if (removeExcessPoints && point.pointIndex === -1) {
             points.splice(removedIndex, 1);
             return true;
         }
@@ -1372,10 +1361,10 @@ var ModelUtils = (function () {
                 return i;
         return -1;
     };
-    ModelUtils.moveConnectorRightAnglePoints = function (history, connector, firstPoint, firstPointIndex, lastPoint, lastPointIndex) {
-        if (!Utils_1.GeometryUtils.areDuplicatedPoints(connector.points[firstPointIndex], firstPoint) ||
-            !Utils_1.GeometryUtils.areDuplicatedPoints(connector.points[lastPointIndex], lastPoint))
-            history.addAndRedo(new MoveConnectorPointHistoryItem_1.MoveConnectorRightAnglePointsHistoryItem(connector.key, firstPointIndex, firstPoint, lastPointIndex, lastPoint));
+    ModelUtils.moveConnectorRightAnglePoints = function (history, connector, firstPointIndex, lastPointIndex, newX, newY) {
+        if (!connector.points.slice(firstPointIndex, lastPointIndex + 1).some(function (p) { return !Utils_1.GeometryUtils.areDuplicatedPoints(p, new point_1.Point(newX === undefined ? p.x : newX, newY === undefined ? p.y : newY)); }))
+            return;
+        history.addAndRedo(new MoveConnectorPointHistoryItem_1.MoveConnectorRightAnglePointsHistoryItem(connector.key, firstPointIndex, lastPointIndex, newX, newY));
     };
     ModelUtils.moveConnectorPoint = function (history, connector, pointIndex, newPosition) {
         if (!connector.points[pointIndex].equals(newPosition)) {
@@ -2428,22 +2417,19 @@ var Connector = (function (_super) {
         if (keepSkipped === void 0) { keepSkipped = false; }
         if (this.shouldInvalidateRenderPoints === undefined || this.shouldInvalidateRenderPoints) {
             this.shouldInvalidateRenderPoints = false;
-            if (!this.routingStrategy)
+            if (!this.routingStrategy || !this.lockCreateRenderPoints)
                 this.changeRenderPoints(this.getCalculator().getPoints());
-            else if (!this.lockCreateRenderPoints) {
-                this.changeRenderPoints(new ConnectorPointsOrthogonalCalculator_1.ConnectorPointsOrthogonalCalculator(this).getPoints());
-                if (this.actualRoutingMode !== Settings_1.ConnectorRoutingMode.None && this.points && this.renderPoints) {
-                    var beginPoint = this.points[0];
-                    var endPoint = this.points[this.points.length - 1];
-                    if (!beginPoint.equals(endPoint)) {
-                        var newRenderPoints = this.routingStrategy.createRenderPoints(this.points, this.renderPoints, this.beginItem, this.endItem, this.beginConnectionPointIndex, this.endConnectionPointIndex, ModelUtils_1.ModelUtils.getConnectorContainer(this));
-                        if (newRenderPoints) {
-                            this.changeRenderPoints(newRenderPoints);
-                            this.actualRoutingMode = Settings_1.ConnectorRoutingMode.AllShapesOnly;
-                        }
-                        else
-                            this.actualRoutingMode = Settings_1.ConnectorRoutingMode.None;
+            if (this.routingStrategy && !this.lockCreateRenderPoints && this.actualRoutingMode !== Settings_1.ConnectorRoutingMode.None && this.points && this.renderPoints) {
+                var beginPoint = this.points[0];
+                var endPoint = this.points[this.points.length - 1];
+                if (!beginPoint.equals(endPoint)) {
+                    var newRenderPoints = this.routingStrategy.createRenderPoints(this.points, this.renderPoints, this.beginItem, this.endItem, this.beginConnectionPointIndex, this.endConnectionPointIndex, ModelUtils_1.ModelUtils.getConnectorContainer(this));
+                    if (newRenderPoints) {
+                        this.changeRenderPoints(newRenderPoints);
+                        this.actualRoutingMode = Settings_1.ConnectorRoutingMode.AllShapesOnly;
                     }
+                    else
+                        this.actualRoutingMode = Settings_1.ConnectorRoutingMode.None;
                 }
             }
         }
@@ -2492,11 +2478,11 @@ var Connector = (function (_super) {
         else
             this.invalidateRenderPoints();
     };
-    Connector.prototype.onMovePoints = function (beginPointIndex, beginPoint, lastPointIndex, lastPoint) {
+    Connector.prototype.onMovePoints = function (beginPointIndex, lastPointIndex, points) {
         if (this.shouldChangeRenderPoints) {
             if (beginPointIndex === 0 || lastPointIndex === this.points.length - 1)
                 this.lockCreateRenderPoints = false;
-            this.replaceRenderPointsCore(this.routingStrategy.onMovePoints(this.points, beginPointIndex, beginPoint, lastPointIndex, lastPoint, this.renderPoints), this.lockCreateRenderPoints, Settings_1.ConnectorRoutingMode.AllShapesOnly);
+            this.replaceRenderPointsCore(this.routingStrategy.onMovePoints(this.points, beginPointIndex, lastPointIndex, points, this.renderPoints), this.lockCreateRenderPoints, Settings_1.ConnectorRoutingMode.AllShapesOnly);
         }
         else
             this.invalidateRenderPoints();
@@ -18957,10 +18943,11 @@ var CanvasSelectionManager = (function (_super) {
     };
     CanvasSelectionManager.prototype.getOrCreateConnectorSelection = function (connector, usedItems) {
         var element = this.selectionMap[connector.key];
-        var points = connector.getRenderPoints();
+        var points = connector.getRenderPoints(true);
+        var pointsNonSkipped = connector.getRenderPoints(false);
         if (!element) {
             element = new ConnectorSelectionElement(this.itemSelectionContainer, this.selectionMarksContainer, this.actualZoom, this.readOnly, this.dom, connector.key, connector.isLocked, connector.rectangle, points, connector.style, connector.styleText, connector.enableText, connector.texts.map(function (t) {
-                var textInfo = Utils_2.GeometryUtils.getPathPointByPosition(points, t.position);
+                var textInfo = Utils_2.GeometryUtils.getPathPointByPosition(pointsNonSkipped, t.position);
                 return {
                     text: connector.getText(t.position),
                     point: textInfo[0],
@@ -18993,10 +18980,11 @@ var CanvasSelectionManager = (function (_super) {
     };
     CanvasSelectionManager.prototype.updateConnectorSelection = function (connector, multipleSelection) {
         if (connector.key in this.selectionMap) {
-            var renderPoints_1 = connector.getRenderPoints();
+            var renderPoints = connector.getRenderPoints(true);
+            var renderPointsNonSkipped_1 = connector.getRenderPoints(false);
             this.getOrCreateConnectorSelection(connector)
-                .onModelChanged(connector.isLocked, connector.rectangle, renderPoints_1, connector.style, connector.styleText, connector.enableText, connector.texts.map(function (t) {
-                var textPos = Utils_2.GeometryUtils.getPathPointByPosition(renderPoints_1, t.position);
+                .onModelChanged(connector.isLocked, connector.rectangle, renderPoints, connector.style, connector.styleText, connector.enableText, connector.texts.map(function (t) {
+                var textPos = Utils_2.GeometryUtils.getPathPointByPosition(renderPointsNonSkipped_1, t.position);
                 return {
                     text: connector.getText(t.position),
                     pointIndex: textPos[1],
@@ -19529,11 +19517,10 @@ var ConnectorSelectionElement = (function (_super) {
     };
     ConnectorSelectionElement.prototype.createNotSkippedRenderPoints = function () {
         var clonedRenderPoints = this.renderPoints.map(function (p) { return p.clone(); });
-        if (this.lineType === ConnectorProperties_1.ConnectorLineOption.Straight) {
-            ModelUtils_1.ModelUtils.removeUnnecessaryRenderPoints(clonedRenderPoints);
-            return clonedRenderPoints.filter(function (p) { return !p.skipped; });
-        }
-        ModelUtils_1.ModelUtils.removeUnnecessaryRightAngleRenderPoints(clonedRenderPoints);
+        if (this.lineType === ConnectorProperties_1.ConnectorLineOption.Straight)
+            ModelUtils_1.ModelUtils.skipUnnecessaryRenderPoints(clonedRenderPoints);
+        else
+            ModelUtils_1.ModelUtils.skipUnnecessaryRightAngleRenderPoints(clonedRenderPoints);
         return clonedRenderPoints.filter(function (p) { return !p.skipped; });
     };
     ConnectorSelectionElement.prototype.getSelectionOffset = function (strokeWidthPx) {
@@ -21221,7 +21208,7 @@ var ConnectorPointsOrthogonalCalculator = (function (_super) {
     });
     ConnectorPointsOrthogonalCalculator.prototype.getPoints = function () {
         var points = this.connector.points.map(function (pt, index) { return new ConnectorRenderPoint_1.ConnectorRenderPoint(pt.x, pt.y, index); });
-        ModelUtils_1.ModelUtils.removeUnnecessaryRenderPoints(points);
+        ModelUtils_1.ModelUtils.skipUnnecessaryRenderPoints(points, true);
         var beginIndex = 0;
         var endIndex = points.length - 1;
         var beginSide = this.getPointSide(points, 0);
@@ -21255,7 +21242,7 @@ var ConnectorPointsOrthogonalCalculator = (function (_super) {
             });
             this.addMiddlePoints(points, beginIndex, endIndex);
         }
-        ModelUtils_1.ModelUtils.removeUnnecessaryRenderPoints(points);
+        ModelUtils_1.ModelUtils.skipUnnecessaryRenderPoints(points, true);
         return points;
     };
     ConnectorPointsOrthogonalCalculator.prototype.getSideCalculator = function (side) {
@@ -22561,6 +22548,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MoveConnectorRightAnglePointsHistoryItem = exports.MoveConnectorPointHistoryItem = void 0;
+var point_1 = __webpack_require__(0);
 var HistoryItem_1 = __webpack_require__(8);
 var MoveConnectorPointHistoryItem = (function (_super) {
     __extends(MoveConnectorPointHistoryItem, _super);
@@ -22594,33 +22582,37 @@ var MoveConnectorPointHistoryItem = (function (_super) {
 exports.MoveConnectorPointHistoryItem = MoveConnectorPointHistoryItem;
 var MoveConnectorRightAnglePointsHistoryItem = (function (_super) {
     __extends(MoveConnectorRightAnglePointsHistoryItem, _super);
-    function MoveConnectorRightAnglePointsHistoryItem(connectorKey, beginPointIndex, newBeginPoint, lastPointIndex, newLastPoint) {
+    function MoveConnectorRightAnglePointsHistoryItem(connectorKey, beginPointIndex, lastPointIndex, newX, newY) {
         var _this = _super.call(this) || this;
         _this.connectorKey = connectorKey;
         _this.beginPointIndex = beginPointIndex;
-        _this.newBeginPoint = newBeginPoint;
         _this.lastPointIndex = lastPointIndex;
-        _this.newLastPoint = newLastPoint;
+        _this.newX = newX;
+        _this.newY = newY;
+        _this.oldPoints = [];
         return _this;
     }
     MoveConnectorRightAnglePointsHistoryItem.prototype.redo = function (manipulator) {
         var _this = this;
         var connector = manipulator.model.findConnector(this.connectorKey);
-        this.oldBeginPoint = connector.points[this.beginPointIndex].clone();
-        this.oldLastPoint = connector.points[this.lastPointIndex].clone();
         this.renderContext = connector.tryCreateRenderPointsContext();
+        this.oldPoints = connector.points.slice(this.beginPointIndex, this.lastPointIndex + 1).map(function (p) { return p.clone(); });
+        var points = [];
         manipulator.changeConnectorPoints(connector, function (connector) {
-            connector.movePoint(_this.beginPointIndex, _this.newBeginPoint);
-            connector.movePoint(_this.lastPointIndex, _this.newLastPoint);
-            connector.onMovePoints(_this.beginPointIndex, _this.newBeginPoint, _this.lastPointIndex, _this.newLastPoint);
+            for (var i = _this.beginPointIndex; i <= _this.lastPointIndex; i++) {
+                var newPoint = new point_1.Point(_this.newX === undefined ? connector.points[i].x : _this.newX, _this.newY === undefined ? connector.points[i].y : _this.newY);
+                points.push(newPoint);
+                connector.movePoint(i, newPoint);
+            }
+            connector.onMovePoints(_this.beginPointIndex, _this.lastPointIndex, points);
         });
     };
     MoveConnectorRightAnglePointsHistoryItem.prototype.undo = function (manipulator) {
         var _this = this;
         var connector = manipulator.model.findConnector(this.connectorKey);
         manipulator.changeConnectorPoints(connector, function (connector) {
-            connector.movePoint(_this.beginPointIndex, _this.oldBeginPoint);
-            connector.movePoint(_this.lastPointIndex, _this.oldLastPoint);
+            for (var i = _this.beginPointIndex; i <= _this.lastPointIndex; i++)
+                connector.movePoint(i, _this.oldPoints[i - _this.beginPointIndex]);
             connector.replaceRenderPoints(_this.renderContext);
         });
     };
@@ -32048,115 +32040,106 @@ var Connector_1 = __webpack_require__(6);
 var DiagramItem_1 = __webpack_require__(9);
 var ModelUtils_1 = __webpack_require__(4);
 var MouseHandlerDraggingState_1 = __webpack_require__(34);
+var Utils_1 = __webpack_require__(3);
 var MouseHandlerMoveConnectorOrthogonalSideState = (function (_super) {
     __extends(MouseHandlerMoveConnectorOrthogonalSideState, _super);
     function MouseHandlerMoveConnectorOrthogonalSideState(handler, history, model) {
         var _this = _super.call(this, handler, history) || this;
         _this.model = model;
+        _this.canCreatePoints = true;
         return _this;
     }
+    MouseHandlerMoveConnectorOrthogonalSideState.prototype.saveSidePoints = function (markLeftRenderPointIndex, markRightRenderPointIndex) {
+        var _this = this;
+        var renderPoints = this.connector.getRenderPoints(true);
+        this.isHorizontal = renderPoints[markLeftRenderPointIndex].y === renderPoints[markRightRenderPointIndex].y;
+        this.iterateRenderPoints(renderPoints, markLeftRenderPointIndex, false, function (pt, i) {
+            if (pt.pointIndex !== -1)
+                _this.leftPointIndex = pt.pointIndex;
+            _this.leftRenderPointIndex = i;
+        }, function (pt) { return !Utils_1.GeometryUtils.arePointsOfOrthogonalLine(renderPoints[markLeftRenderPointIndex], pt, _this.isHorizontal); });
+        this.iterateRenderPoints(renderPoints, this.leftRenderPointIndex, true, function (pt, i) {
+            if (pt.pointIndex !== -1)
+                _this.rightPointIndex = pt.pointIndex;
+            _this.rightRenderPointIndex = i;
+        }, function (pt) { return !Utils_1.GeometryUtils.arePointsOfOrthogonalLine(renderPoints[markLeftRenderPointIndex], pt, _this.isHorizontal); });
+    };
+    MouseHandlerMoveConnectorOrthogonalSideState.prototype.iterateRenderPoints = function (renderPoints, startIndex, direction, callback, stopPredicate) {
+        for (var i = startIndex; direction ? i < renderPoints.length : i >= 0; direction ? i++ : i--) {
+            var point = renderPoints[i];
+            if (stopPredicate && stopPredicate(point, i))
+                break;
+            callback(point, i);
+        }
+    };
     MouseHandlerMoveConnectorOrthogonalSideState.prototype.onMouseDown = function (evt) {
         this.startPoint = evt.modelPoint;
         this.connector = this.model.findConnector(evt.source.key);
         this.handler.addInteractingItem(this.connector);
         var renderPointIndexes = evt.source.value.split("_");
-        var renderPointIndex1 = parseInt(renderPointIndexes[0]);
-        var renderPointIndex2 = parseInt(renderPointIndexes[1]);
-        var points = this.connector.getRenderPoints(true);
-        this.renderPoint1 = points[renderPointIndex1].clone();
-        this.renderPoint2 = points[renderPointIndex2].clone();
-        this.isVerticalOrientation = this.renderPoint1.x === this.renderPoint2.x;
-        if (this.renderPoint1.pointIndex !== -1) {
-            this.pointIndex1 = this.renderPoint1.pointIndex;
-            if (this.pointIndex1 === 0) {
-                this.pointIndex1++;
-                this.correctEdgePoint(this.renderPoint1, this.renderPoint2, this.connector.beginItem, this.connector.beginConnectionPointIndex);
-            }
-            else
-                this.point1 = this.connector.points[this.pointIndex1].clone();
-        }
-        else
-            this.pointIndex1 = this.findPointIndex(points, renderPointIndex1, false) + 1;
-        if (this.renderPoint2.pointIndex !== -1) {
-            this.pointIndex2 = this.renderPoint2.pointIndex;
-            if (this.pointIndex2 === this.connector.points.length - 1)
-                this.correctEdgePoint(this.renderPoint2, this.renderPoint1, this.connector.endItem, this.connector.endConnectionPointIndex);
-            else
-                this.point2 = this.connector.points[this.pointIndex2].clone();
-        }
-        else
-            this.pointIndex2 = this.findPointIndex(points, renderPointIndex2, true);
+        this.saveSidePoints(parseInt(renderPointIndexes[0]), parseInt(renderPointIndexes[1]));
         _super.prototype.onMouseDown.call(this, evt);
+    };
+    MouseHandlerMoveConnectorOrthogonalSideState.prototype.shouldCreatePoint = function (isLeft) {
+        if (!this.canCreatePoints)
+            return false;
+        if (isLeft && (this.leftPointIndex === undefined || this.leftPointIndex === 0))
+            return true;
+        if (!isLeft && (this.rightPointIndex === undefined || this.rightPointIndex === this.connector.points.length - 1))
+            return true;
+        var renderPoints = this.connector.getRenderPoints(true);
+        if (isLeft && !this.connector.points[this.leftPointIndex].equals(renderPoints[this.leftRenderPointIndex]))
+            return true;
+        if (!isLeft && !this.connector.points[this.rightPointIndex].equals(renderPoints[this.rightRenderPointIndex]))
+            return true;
+        return false;
     };
     MouseHandlerMoveConnectorOrthogonalSideState.prototype.onApplyChanges = function (evt) {
         var _this = this;
-        if (!this.pointCreated) {
-            var createdPoint1 = void 0;
-            var createdPoint2 = void 0;
-            if (this.point1 === undefined) {
-                this.point1 = new point_1.Point(this.renderPoint1.x, this.renderPoint1.y);
-                ModelUtils_1.ModelUtils.addConnectorPoint(this.history, this.connector.key, this.pointIndex1, this.point1.clone());
-                createdPoint1 = this.point1.clone();
-                this.pointIndex2++;
+        if (this.shouldCreatePoint(true) || this.shouldCreatePoint(false)) {
+            var renderPoints = this.connector.getRenderPoints(true);
+            var leftRenderPoint = renderPoints[this.leftRenderPointIndex];
+            var rightRenderPoint = renderPoints[this.rightRenderPointIndex];
+            if (this.shouldCreatePoint(true)) {
+                var leftPoint = new point_1.Point(leftRenderPoint.x, leftRenderPoint.y);
+                if (this.leftPointIndex === 0) {
+                    this.leftPointIndex = 1;
+                    this.correctEdgePoint(leftPoint, rightRenderPoint, this.connector.beginItem, this.connector.beginConnectionPointIndex);
+                }
+                else if (this.leftPointIndex === undefined)
+                    this.iterateRenderPoints(renderPoints, this.leftRenderPointIndex, true, function (pt) {
+                        if (pt.pointIndex !== -1)
+                            _this.leftPointIndex = pt.pointIndex;
+                    }, function () { return _this.leftPointIndex !== undefined; });
+                ModelUtils_1.ModelUtils.addConnectorPoint(this.history, this.connector.key, this.leftPointIndex, leftPoint);
+                if (this.rightPointIndex !== undefined)
+                    this.rightPointIndex++;
             }
-            if (this.point2 === undefined) {
-                this.point2 = new point_1.Point(this.renderPoint2.x, this.renderPoint2.y);
-                ModelUtils_1.ModelUtils.addConnectorPoint(this.history, this.connector.key, this.pointIndex2, this.point2.clone());
-                createdPoint2 = this.point2.clone();
+            if (this.shouldCreatePoint(false)) {
+                renderPoints = this.connector.getRenderPoints(true);
+                var rightPoint = new point_1.Point(rightRenderPoint.x, rightRenderPoint.y);
+                if (this.rightPointIndex === this.connector.points.length - 1) {
+                    this.correctEdgePoint(rightPoint, leftRenderPoint, this.connector.endItem, this.connector.endConnectionPointIndex);
+                    this.rightPointIndex--;
+                }
+                else if (this.rightPointIndex === undefined)
+                    this.iterateRenderPoints(renderPoints, this.rightRenderPointIndex, false, function (pt) {
+                        if (pt.pointIndex !== -1)
+                            _this.rightPointIndex = pt.pointIndex;
+                    }, function () { return _this.rightPointIndex === _this.leftPointIndex; });
+                this.rightPointIndex++;
+                ModelUtils_1.ModelUtils.addConnectorPoint(this.history, this.connector.key, this.rightPointIndex, rightPoint);
             }
-            var excludePoints = [];
-            if (createdPoint1)
-                excludePoints.push(createdPoint1);
-            if (createdPoint2)
-                excludePoints.push(createdPoint2);
-            var unnecessaryPoints = this.createUnnecessaryPoints(this.connector, excludePoints);
-            Object.keys(unnecessaryPoints).forEach(function (key) {
-                var pointIndex = parseInt(key);
-                if (pointIndex < _this.pointIndex1)
-                    _this.pointIndex1--;
-                if (pointIndex < _this.pointIndex2)
-                    _this.pointIndex2--;
-            });
-            this.pointCreated = true;
         }
+        this.canCreatePoints = false;
         var point = this.getSnappedPoint(evt, evt.modelPoint);
-        if (this.isVerticalOrientation) {
-            this.point1.x = point.x;
-            this.point2.x = point.x;
-        }
-        else {
-            this.point1.y = point.y;
-            this.point2.y = point.y;
-        }
-        ModelUtils_1.ModelUtils.moveConnectorRightAnglePoints(this.history, this.connector, this.point1.clone(), this.pointIndex1, this.point2.clone(), this.pointIndex2);
+        ModelUtils_1.ModelUtils.moveConnectorRightAnglePoints(this.history, this.connector, this.leftPointIndex, this.rightPointIndex, this.isHorizontal ? undefined : point.x, this.isHorizontal ? point.y : undefined);
         this.handler.tryUpdateModelSize();
-    };
-    MouseHandlerMoveConnectorOrthogonalSideState.prototype.createUnnecessaryPoints = function (connector, excludePoints) {
-        var oldRenderPoints = connector.getRenderPoints(true).map(function (p) { return p.clone(); });
-        var unnecessaryRenderPoints = ModelUtils_1.ModelUtils.createUnnecessaryRenderPoints(oldRenderPoints.filter(function (p) { return !p.skipped; }).map(function (p) { return p.clone(); }), connector.skippedRenderPoints, function (removedPoint) { return ModelUtils_1.ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return p.equals(removedPoint); }); }, function (p) { return !excludePoints.some(function (ep) { return ep.equals(p); }); });
-        var result = {};
-        if (Object.keys(unnecessaryRenderPoints).length) {
-            var points = connector.points.map(function (p) { return p.clone(); });
-            var lastPointIndex_1 = points.length - 1;
-            points.forEach(function (p, index) {
-                if (index !== 0 && index !== lastPointIndex_1 && !ModelUtils_1.ModelUtils.isNecessaryPoint(p, index, unnecessaryRenderPoints))
-                    result[index] = p;
-            });
-        }
-        return result;
     };
     MouseHandlerMoveConnectorOrthogonalSideState.prototype.onFinishWithChanges = function () {
         ModelUtils_1.ModelUtils.deleteConnectorUnnecessaryPoints(this.history, this.connector);
         ModelUtils_1.ModelUtils.fixConnectorBeginEndConnectionIndex(this.history, this.connector);
         this.handler.tryUpdateModelSize();
-    };
-    MouseHandlerMoveConnectorOrthogonalSideState.prototype.findPointIndex = function (points, index, direction) {
-        var point;
-        while (point = points[index]) {
-            if (point.pointIndex !== -1)
-                return point.pointIndex;
-            index += direction ? 1 : -1;
-        }
     };
     MouseHandlerMoveConnectorOrthogonalSideState.prototype.correctEdgePoint = function (point, directionPoint, item, connectionPointIndex) {
         var offset = 0;
@@ -32179,15 +32162,15 @@ var MouseHandlerMoveConnectorOrthogonalSideState = (function (_super) {
                     break;
             }
         }
-        if (this.isVerticalOrientation)
-            if (point.y > directionPoint.y)
-                point.y -= Math.min(offset, point.y - directionPoint.y);
+        if (this.isHorizontal)
+            if (point.x > directionPoint.x)
+                point.x -= Math.min(offset, point.x - directionPoint.x);
             else
-                point.y += Math.min(offset, directionPoint.y - point.y);
-        else if (point.x > directionPoint.x)
-            point.x -= Math.min(offset, point.x - directionPoint.x);
+                point.x += Math.min(offset, directionPoint.x - point.x);
+        else if (point.y > directionPoint.y)
+            point.y -= Math.min(offset, point.y - directionPoint.y);
         else
-            point.x += Math.min(offset, directionPoint.x - point.x);
+            point.y += Math.min(offset, directionPoint.y - point.y);
     };
     MouseHandlerMoveConnectorOrthogonalSideState.prototype.getDraggingElementKeys = function () {
         return [this.connector.key];
@@ -37297,7 +37280,7 @@ var DataSource = (function () {
         history.beginTransaction();
         ModelUtils_1.ModelUtils.deleteAllItems(history, model, selection);
         model.initializeKeyCounter();
-        var DEFAULT_STEP = 2000;
+        var DEFAULT_STEP = snapToGrid ? Math.max(1, Math.floor(2000 / gridSize)) * gridSize : 2000;
         var rowIndex = 0;
         var colIndex = 0;
         var externalToInnerMap = {};
@@ -39719,12 +39702,12 @@ var RightAngleConnectorRoutingStrategy = (function () {
         ModelUtils_1.ModelUtils.skipUnnecessaryRightAngleRenderPoints(renderPoints);
         return renderPoints;
     };
-    RightAngleConnectorRoutingStrategy.prototype.onMovePoints = function (points, beginPointIndex, beginPoint, lastPointIndex, lastPoint, oldRenderPoints) {
+    RightAngleConnectorRoutingStrategy.prototype.onMovePoints = function (points, beginPointIndex, lastPointIndex, newPoints, oldRenderPoints) {
         if (beginPointIndex === 0 || lastPointIndex === points.length - 1)
             return oldRenderPoints;
         var renderPoints = oldRenderPoints.map(function (p) { return new ConnectorRenderPoint_1.ConnectorRenderPoint(p.x, p.y, p.pointIndex); });
-        this.onMovePointCore(renderPoints, beginPointIndex, beginPoint);
-        this.onMovePointCore(renderPoints, lastPointIndex, lastPoint);
+        for (var i = beginPointIndex; i <= lastPointIndex; i++)
+            this.onMovePointCore(renderPoints, i, newPoints[i - beginPointIndex]);
         ModelUtils_1.ModelUtils.skipUnnecessaryRightAngleRenderPoints(renderPoints);
         return renderPoints;
     };

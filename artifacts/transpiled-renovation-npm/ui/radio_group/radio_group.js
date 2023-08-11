@@ -251,18 +251,18 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
         _this2._fireContentReadyAction(true);
       },
       onItemClick: this._itemClickHandler.bind(this),
-      displayExpr: displayExpr,
-      accessKey: accessKey,
+      displayExpr,
+      accessKey,
       dataSource: this._dataSource,
-      focusStateEnabled: focusStateEnabled,
-      itemTemplate: itemTemplate,
+      focusStateEnabled,
+      itemTemplate,
       keyExpr: this._getCollectionKeyExpr(),
       noDataText: '',
       scrollingEnabled: false,
       selectByClick: false,
       selectionMode: 'single',
       selectedItemKeys: this._getSelectedItemKeys(),
-      tabIndex: tabIndex
+      tabIndex
     });
     this._areRadiosCreated.resolve();
   };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_uploader.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -461,7 +461,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       isValidFileExtension: true,
       isValidMaxSize: true,
       isValidMinSize: true,
-      isValid: function isValid() {
+      isValid() {
         return this.isValidFileExtension && this.isValidMaxSize && this.isValidMinSize;
       },
       isInitialized: false
@@ -803,7 +803,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     var classAction = active ? 'addClass' : 'removeClass';
     var mouseAction = active ? '_dropZoneEnterAction' : '_dropZoneLeaveAction';
     this[mouseAction]({
-      event: event,
+      event,
       dropZoneElement: this._activeDropZone
     });
     if (!isCustom) {
@@ -1106,7 +1106,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       case 'multiple':
         this._initFileInput();
         if (!args.value) {
-          this.reset();
+          this.clear();
         }
         break;
       case 'readOnly':
@@ -1173,7 +1173,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
         break;
       case 'allowCanceling':
       case 'uploadMode':
-        this.reset();
+        this.clear();
         this._invalidate();
         break;
       case 'onBeforeSend':
@@ -1227,7 +1227,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._$fileInput.val('');
     this._doPreventInputChange = false;
   };
-  _proto.reset = function reset() {
+  _proto.clear = function clear() {
     this.option('value', []);
   };
   return FileUploader;
@@ -1380,7 +1380,7 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
       file: file.value,
       event: undefined,
       request: file.request,
-      error: error,
+      error,
       message: this.fileUploader.option('uploadFailedMessage')
     };
     this.fileUploader._uploadErrorAction(args);

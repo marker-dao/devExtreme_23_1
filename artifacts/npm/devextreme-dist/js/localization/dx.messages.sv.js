@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.sv.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Sortera stigande",
             "dxDataGrid-sortingDescendingText": "Sortera fallande",
             "dxDataGrid-sortingClearText": "Rensa sortering",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Spara ändringar",
             "dxDataGrid-editingCancelAllChanges": "Ångra ändringar",
             "dxDataGrid-editingAddRow": "Lägg till rad",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filtrera cell",
             "dxDataGrid-ariaCollapse": "Kollapsa",
             "dxDataGrid-ariaExpand": "Expandera",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Datarutnät",
             "dxDataGrid-ariaSearchInGrid": "Sök i datarutnätet",
             "dxDataGrid-ariaSelectAll": "Välj allt",
             "dxDataGrid-ariaSelectRow": "Välj rad",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Filterverktyg",
             "dxDataGrid-filterPanelCreateFilter": "Skapa filter",
             "dxDataGrid-filterPanelClearFilter": "Rensa",

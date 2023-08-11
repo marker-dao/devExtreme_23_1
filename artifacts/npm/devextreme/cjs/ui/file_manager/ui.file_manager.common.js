@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.common.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,10 +13,6 @@ var _deferred = require("../../core/utils/deferred");
 var _extend = require("../../core/utils/extend");
 var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var whenSome = function whenSome(arg, onSuccess, onError) {
   onSuccess = onSuccess || _common.noop;
   onError = onError || _common.noop;
@@ -26,9 +22,9 @@ var whenSome = function whenSome(arg, onSuccess, onError) {
   var deferreds = arg.map(function (item, index) {
     return (0, _deferred.when)(item).then(function (result) {
       (0, _type.isFunction)(onSuccess) && onSuccess({
-        item: item,
-        index: index,
-        result: result
+        item,
+        index,
+        result
       });
       return result;
     }, function (error) {
@@ -57,7 +53,9 @@ var getDisplayFileSize = function getDisplayFileSize(byteSize) {
 exports.getDisplayFileSize = getDisplayFileSize;
 var extendAttributes = function extendAttributes(targetObject, sourceObject, objectKeysArray) {
   objectKeysArray.forEach(function (objectKey) {
-    (0, _extend.extend)(true, targetObject, (0, _type.isDefined)(sourceObject[objectKey]) ? _defineProperty({}, objectKey, sourceObject[objectKey]) : {});
+    (0, _extend.extend)(true, targetObject, (0, _type.isDefined)(sourceObject[objectKey]) ? {
+      [objectKey]: sourceObject[objectKey]
+    } : {});
   });
   return targetObject;
 };
@@ -90,8 +88,8 @@ var getMapFromObject = function getMapFromObject(object) {
     return values.push(object[key]);
   });
   return {
-    keys: keys,
-    values: values
+    keys,
+    values
   };
 };
 exports.getMapFromObject = getMapFromObject;

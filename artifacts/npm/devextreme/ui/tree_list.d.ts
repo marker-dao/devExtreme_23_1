@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tree_list.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -83,7 +83,10 @@ import Widget from './widget/ui.widget';
  * @hidden
  */
 export interface CellInfo<TRowData = any, TKey = any> {
-    /** @docid */
+    /**
+     * @docid
+     * @type object
+     */
     readonly data: TRowData;
     /** @docid */
     readonly key: TKey;
@@ -490,20 +493,11 @@ export type FocusedRowChangedEvent<TRowData = any, TKey = any> = EventInfo<dxTre
  * @inherits Cancelable,NativeEventInfo
  */
 export type FocusedRowChangingEvent<TRowData = any, TKey = any> = Cancelable & NativeEventInfo<dxTreeList<TRowData, TKey>, KeyboardEvent | PointerEvent | MouseEvent | TouchEvent> & {
-    /**
-     * @docid _ui_tree_list_FocusedRowChangingEvent.rowElement
-     * @type DxElement
-     */
+    /** @docid _ui_tree_list_FocusedRowChangingEvent.rowElement */
     readonly rowElement: DxElement;
-    /**
-     * @docid _ui_tree_list_FocusedRowChangingEvent.prevRowIndex
-     * @type number
-     */
+    /** @docid _ui_tree_list_FocusedRowChangingEvent.prevRowIndex */
     readonly prevRowIndex: number;
-    /**
-     * @docid _ui_tree_list_FocusedRowChangingEvent.newRowIndex
-     * @type number
-     */
+    /** @docid _ui_tree_list_FocusedRowChangingEvent.newRowIndex */
     newRowIndex: number;
     /**
      * @docid _ui_tree_list_FocusedRowChangingEvent.rows
@@ -1161,14 +1155,15 @@ export type dxTreeListOptions<TRowData = any, TKey = any> = Omit<GridBaseOptions
 };
 
 /**
- * @public
  * @namespace DevExpress.ui
  * @deprecated Use Editing instead
  */
 export type dxTreeListEditing<TRowData = any, TKey = any> = Editing<TRowData, TKey>;
 
 /**
+ * @docid dxTreeListEditing
  * @public
+ * @type object
  */
 export interface Editing<TRowData = any, TKey = any> extends EditingBase<TRowData, TKey> {
     /**
@@ -1207,52 +1202,53 @@ export interface Editing<TRowData = any, TKey = any> extends EditingBase<TRowDat
 }
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use EditingTexts instead
  */
 export type dxTreeListEditingTexts = EditingTexts;
 
 /**
- * @docid
+ * @public
+ * @docid dxTreeListEditingTexts
  */
-export interface EditingTexts extends EditingTextsBase {
+export type EditingTexts = EditingTextsBase & {
     /**
      * @docid dxTreeListOptions.editing.texts.addRowToNode
      * @default "Add"
      * @public
      */
     addRowToNode?: string;
-}
+};
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use Paging instead
  */
 export type dxTreeListPaging = Paging;
 
 /**
- * @docid
+ * @public
+ * @docid dxTreeListPaging
  */
-export interface Paging extends PagingBase {
+export type Paging = PagingBase & {
     /**
      * @docid dxTreeListOptions.paging.enabled
      * @default false
      * @public
      */
     enabled?: boolean;
-}
+};
 
 /**
- * @public
  * @namespace DevExpress.ui
  * @deprecated Use Scrolling instead
  */
 export type dxTreeListScrolling = Scrolling;
 
 /**
+ * @docid dxTreeListScrolling
  * @public
+ * @type object
  */
 export interface Scrolling extends ScrollingBase {
     /**
@@ -1264,7 +1260,6 @@ export interface Scrolling extends ScrollingBase {
 }
 
 /**
- * @public
  * @namespace DevExpress.ui
  * @deprecated Use Selection instead
  */

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/core/base_widget.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -71,7 +71,6 @@ export type FileSavingEventInfo<T> = Cancelable & {
   /**
    * @docid
    * @type this
-   * @default Widget
    */
   readonly component: T;
   /** @docid */
@@ -216,6 +215,7 @@ export interface BaseWidgetOptions<TComponent> extends DOMComponentOptions<TComp
     width?: number | string | (() => number | string);
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -265,6 +265,7 @@ export interface BaseWidgetExport {
     svgToCanvas?: ((svg: SVGElement, canvas: HTMLCanvasElement) => PromiseLike<void>);
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -302,6 +303,7 @@ export interface BaseWidgetLoadingIndicator {
     text?: string;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -332,6 +334,7 @@ export interface BaseWidgetMargin {
     top?: number;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -350,6 +353,7 @@ export interface BaseWidgetSize {
     width?: number;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -462,6 +466,7 @@ export interface BaseWidgetTitle {
     wordWrap?: WordWrap;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */

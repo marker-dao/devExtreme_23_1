@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/editing/const.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ export var EDITING_EDITROWKEY_OPTION_NAME = 'editing.editRowKey';
 export var EDITING_EDITCOLUMNNAME_OPTION_NAME = 'editing.editColumnName';
 export var TARGET_COMPONENT_NAME = 'targetComponent';
 export var EDITORS_INPUT_SELECTOR = 'input:not([type=\'hidden\'])';
-export var FOCUSABLE_ELEMENT_SELECTOR = "[tabindex], ".concat(EDITORS_INPUT_SELECTOR);
+export var FOCUSABLE_ELEMENT_SELECTOR = "[tabindex]:not([disabled]), ".concat(EDITORS_INPUT_SELECTOR, ":not([disabled])");
 export var EDIT_MODE_BATCH = 'batch';
 export var EDIT_MODE_ROW = 'row';
 export var EDIT_MODE_CELL = 'cell';
@@ -35,9 +35,11 @@ export var VIEWPORT_TOP_NEW_ROW_POSITION = 'viewportTop';
 // eslint-disable-next-line max-len
 export var EDIT_MODES = [EDIT_MODE_BATCH, EDIT_MODE_ROW, EDIT_MODE_CELL, EDIT_MODE_FORM, EDIT_MODE_POPUP];
 export var ROW_BASED_MODES = [EDIT_MODE_ROW, EDIT_MODE_FORM, EDIT_MODE_POPUP];
+export var REQUIRED_EDITOR_LABELLEDBY_MODES = [EDIT_MODE_BATCH, EDIT_MODE_ROW, EDIT_MODE_CELL];
 export var MODES_WITH_DELAYED_FOCUS = [EDIT_MODE_ROW, EDIT_MODE_FORM];
 export var READONLY_CLASS = 'readonly';
 export var LINK_CLASS = 'dx-link';
+export var LINK_ICON_CLASS = 'dx-link-icon';
 export var ROW_SELECTED = 'dx-selection';
 export var EDIT_BUTTON_CLASS = 'dx-edit-button';
 export var COMMAND_EDIT_CLASS = 'dx-command-edit';

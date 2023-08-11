@@ -28,7 +28,7 @@ var ClearButton = /*#__PURE__*/function (_TextEditorButton) {
     this.update(true);
     return {
       instance: $element,
-      $element: $element
+      $element
     };
   };
   _proto._isVisible = function _isVisible() {

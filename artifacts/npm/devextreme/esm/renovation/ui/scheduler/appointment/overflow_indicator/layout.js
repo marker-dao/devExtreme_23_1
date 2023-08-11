@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/appointment/overflow_indicator/layout.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,18 +41,18 @@ export var viewFunction = _ref => {
 export var OverflowIndicatorProps = {};
 var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => normalizeProps(createComponentVNode(2, TemplateProp, _extends({}, props))) : TemplateProp);
 export class OverflowIndicator extends InfernoComponent {
+  get appointmentsContextValue() {
+    if (this.context[AppointmentsContext.id]) {
+      return this.context[AppointmentsContext.id];
+    }
+    return AppointmentsContext.defaultValue;
+  }
   constructor(props) {
     super(props);
     this.state = {
       color: undefined
     };
     this.updateStylesEffect = this.updateStylesEffect.bind(this);
-  }
-  get appointmentsContextValue() {
-    if (this.context[AppointmentsContext.id]) {
-      return this.context[AppointmentsContext.id];
-    }
-    return AppointmentsContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.updateStylesEffect, [this.props.groups, this.props.viewModel, this.appointmentsContextValue])];

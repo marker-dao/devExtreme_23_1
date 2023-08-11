@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/odata/query_adapter.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -203,9 +203,9 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
   };
   return {
     optimize: tryLiftSelect,
-    exec: function exec(url) {
+    exec(url) {
       return (0, _utils.sendRequest)(_oDataVersion, {
-        url: url,
+        url,
         params: (0, _extend.extend)(requestData(), queryOptions === null || queryOptions === void 0 ? void 0 : queryOptions.params)
       }, {
         beforeSend: queryOptions.beforeSend,
@@ -217,7 +217,7 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
         isPaged: isFinite(_take)
       });
     },
-    multiSort: function multiSort(args) {
+    multiSort(args) {
       var rules;
       if (hasSlice()) {
         return false;
@@ -238,14 +238,14 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
       }
       _sorting = rules;
     },
-    slice: function slice(skipCount, takeCount) {
+    slice(skipCount, takeCount) {
       if (hasSlice()) {
         return false;
       }
       _skip = skipCount;
       _take = takeCount;
     },
-    filter: function filter(criterion) {
+    filter(criterion) {
       if (hasSlice()) {
         return false;
       }
@@ -260,7 +260,7 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
       }
       _criteria.push(criterion);
     },
-    select: function select(expr) {
+    select(expr) {
       if (_select || (0, _type.isFunction)(expr)) {
         return false;
       }

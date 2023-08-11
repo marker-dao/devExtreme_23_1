@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/columns_controller/const.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,6 +17,7 @@ export var IGNORE_COLUMN_OPTION_NAMES = {
 export var COMMAND_EXPAND_CLASS = 'dx-command-expand';
 export var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991 /* IE11 */;
 export var GROUP_COMMAND_COLUMN_NAME = 'groupExpand';
+export var DETAIL_COMMAND_COLUMN_NAME = 'detailExpand';
 export var COLUMN_OPTION_REGEXP = /columns\[(\d+)\]\.?/gi;
 export var DEFAULT_COLUMN_OPTIONS = {
   visible: true,

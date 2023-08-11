@@ -191,7 +191,7 @@ var CustomStore = _abstract_store.default.inherit({
     this._updateFunc = options[UPDATE];
     this._removeFunc = options[REMOVE];
   },
-  _clearCache: function _clearCache() {
+  _clearCache() {
     delete this.__rawData;
   },
   createQuery: function createQuery() {
@@ -217,7 +217,7 @@ var CustomStore = _abstract_store.default.inherit({
       (0, _array_utils.applyBatch)({
         keyInfo: this,
         data: this.__rawData,
-        changes: changes
+        changes
       });
     }
   },

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_view_roller.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -172,17 +172,17 @@ var DateViewRoller = /*#__PURE__*/function (_Scrollable) {
           to: {
             top: Math.floor(delta.y)
           },
-          complete: function complete() {
+          complete() {
             (0, _translator.resetPosition)((0, _renderer.default)(that.content()));
             that.handleMove({
-              delta: delta
+              delta
             });
           }
         });
         delete this._animation;
       } else {
         this.handleMove({
-          delta: delta
+          delta
         });
       }
     }

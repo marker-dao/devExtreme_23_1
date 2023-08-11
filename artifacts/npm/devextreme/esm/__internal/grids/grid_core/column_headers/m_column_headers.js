@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/column_headers/m_column_headers.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -182,7 +182,9 @@ export var columnHeadersModule = {
         _setCellAriaAttributes($cell, cellOptions) {
           this.callBase($cell, cellOptions);
           if (cellOptions.rowType === 'header') {
-            this.setAria('role', 'columnheader', $cell);
+            if (!cellOptions.column.type) {
+              this.setAria('role', 'columnheader', $cell);
+            }
             if (cellOptions.column && !cellOptions.column.command && !cellOptions.column.isBand) {
               $cell.attr('id', cellOptions.column.headerId);
               this.setAria('label', "".concat(messageLocalization.format('dxDataGrid-ariaColumn'), " ").concat(cellOptions.column.caption), $cell);

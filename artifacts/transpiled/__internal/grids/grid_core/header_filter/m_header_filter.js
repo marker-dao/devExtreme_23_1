@@ -26,10 +26,10 @@ var _m_header_filter_core = require("./m_header_filter_core");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var DATE_INTERVAL_FORMATS = {
-  month: function month(value) {
+  month(value) {
     return _date.default.getMonthNames()[value - 1];
   },
-  quarter: function quarter(value) {
+  quarter(value) {
     return _date.default.format(new Date(2000, value * 3 - 1), 'quarter');
   }
 };
@@ -62,7 +62,7 @@ function convertDataFromUTCToLocal(data, column) {
     }
   }));
   return _store_helper.default.queryByOptions(query, {
-    group: group
+    group
   }).toArray();
 }
 function isUTCFormat(format) {
@@ -92,12 +92,12 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
     return result;
   };
   return {
-    init: function init() {
+    init() {
       this._columnsController = this.getController('columns');
       this._dataController = this.getController('data');
       this._headerFilterView = this.getView('headerFilterView');
     },
-    _updateSelectedState: function _updateSelectedState(items, column) {
+    _updateSelectedState(items, column) {
       var i = items.length;
       var isExclude = column.filterType === 'exclude';
       while (i--) {
@@ -108,7 +108,7 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         (0, _m_header_filter_core.updateHeaderFilterItemSelectionState)(item, _m_utils.default.getIndexByKey(items[i].value, column.filterValues, null) > -1, isExclude);
       }
     },
-    _normalizeGroupItem: function _normalizeGroupItem(item, currentLevel, options) {
+    _normalizeGroupItem(item, currentLevel, options) {
       var value;
       var displayValue;
       var path = options.path;
@@ -138,14 +138,14 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       item.text = this.getHeaderItemText(displayValue, column, currentLevel, options.headerFilterOptions);
       return item;
     },
-    getHeaderItemText: function getHeaderItemText(displayValue, column, currentLevel, headerFilterOptions) {
+    getHeaderItemText(displayValue, column, currentLevel, headerFilterOptions) {
       var text = _m_utils.default.formatValue(displayValue, getFormatOptions(displayValue, column, currentLevel));
       if (!text) {
         text = headerFilterOptions.texts.emptyValue;
       }
       return text;
     },
-    _processGroupItems: function _processGroupItems(groupItems, currentLevel, path, options) {
+    _processGroupItems(groupItems, currentLevel, path, options) {
       var that = this;
       var displaySelector;
       var valueSelector;
@@ -162,9 +162,9 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         groupItems[i] = that._normalizeGroupItem(groupItems[i], currentLevel, {
           column: options.column,
           headerFilterOptions: options.headerFilterOptions,
-          displaySelector: displaySelector,
-          valueSelector: valueSelector,
-          path: path
+          displaySelector,
+          valueSelector,
+          path
         });
         if ('items' in groupItems[i]) {
           if (currentLevel === level || !(0, _type.isDefined)(groupItems[i].value)) {
@@ -176,7 +176,7 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         path.pop();
       }
     },
-    getDataSource: function getDataSource(column) {
+    getDataSource(column) {
       var _a;
       var dataSource = this._dataController.dataSource();
       var remoteGrouping = dataSource === null || dataSource === void 0 ? void 0 : dataSource.remoteOperations().grouping;
@@ -207,7 +207,7 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         this._currentColumn = null;
         options.dataSource = {
           filter: _filter,
-          group: group,
+          group,
           useDefaultSearch: true,
           load: function load(options) {
             // @ts-expect-error Deferred ctor.
@@ -221,8 +221,8 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
               }
               that._processGroupItems(data, null, null, {
                 level: cutoffLevel,
-                column: column,
-                headerFilterOptions: headerFilterOptions
+                column,
+                headerFilterOptions
               });
               d.resolve(data);
             }).fail(d.reject);
@@ -247,8 +247,8 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
           }
           that._processGroupItems(items, null, null, {
             level: 0,
-            column: column,
-            headerFilterOptions: headerFilterOptions
+            column,
+            headerFilterOptions
           });
         }
         items = origPostProcess && origPostProcess.call(this, items) || items;
@@ -257,10 +257,10 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       };
       return options.dataSource;
     },
-    getCurrentColumn: function getCurrentColumn() {
+    getCurrentColumn() {
       return this._currentColumn;
     },
-    showHeaderFilterMenu: function showHeaderFilterMenu(columnIndex, isGroupPanel) {
+    showHeaderFilterMenu(columnIndex, isGroupPanel) {
       var columnsController = this._columnsController;
       var column = (0, _extend.extend)(true, {}, this._columnsController.getColumns()[columnIndex]);
       if (column) {
@@ -270,9 +270,9 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         var $columnElement = $columnElement || view.getColumnElements().eq(isGroupPanel ? column.groupIndex : visibleIndex);
         this.showHeaderFilterMenuBase({
           columnElement: $columnElement,
-          column: column,
+          column,
           applyFilter: true,
-          apply: function apply() {
+          apply() {
             columnsController.columnOption(columnIndex, {
               filterValues: this.filterValues,
               filterType: this.filterType
@@ -281,7 +281,7 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         });
       }
     },
-    showHeaderFilterMenuBase: function showHeaderFilterMenuBase(options) {
+    showHeaderFilterMenuBase(options) {
       var _this = this;
       var that = this;
       var column = options.column;
@@ -291,8 +291,8 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         var remoteFiltering = dataSource && dataSource.remoteOperations().filtering;
         (0, _extend.extend)(options, column, {
           type: groupInterval && groupInterval.length > 1 ? 'tree' : 'list',
-          remoteFiltering: remoteFiltering,
-          onShowing: function onShowing(e) {
+          remoteFiltering,
+          onShowing(e) {
             var dxResizableInstance = e.component.$overlayContent().dxResizable('instance');
             dxResizableInstance && dxResizableInstance.option('onResizeEnd', function (e) {
               var columnsController = that.getController('columns');
@@ -315,13 +315,13 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         that._headerFilterView.showHeaderFilterMenu(options.columnElement, options);
       }
     },
-    hideHeaderFilterMenu: function hideHeaderFilterMenu() {
+    hideHeaderFilterMenu() {
       this._headerFilterView.hideHeaderFilterMenu();
     }
   };
 }());
 var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_core.headerFilterMixin, {
-  _renderCellContent: function _renderCellContent($cell, options) {
+  _renderCellContent($cell, options) {
     var that = this;
     var $headerFilterIndicator;
     var column = options.column;
@@ -329,14 +329,14 @@ var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_fi
       $headerFilterIndicator = that._applyColumnState({
         name: 'headerFilter',
         rootElement: $cell,
-        column: column,
+        column,
         showColumnLines: that.option('showColumnLines')
       });
       $headerFilterIndicator && that._subscribeToIndicatorEvent($headerFilterIndicator, column, 'headerFilter');
     }
     this.callBase.apply(this, arguments);
   },
-  _subscribeToIndicatorEvent: function _subscribeToIndicatorEvent($indicator, column, indicatorName) {
+  _subscribeToIndicatorEvent($indicator, column, indicatorName) {
     var _this2 = this;
     if (indicatorName === 'headerFilter') {
       _events_engine.default.on($indicator, _click.name, this.createAction(function (e) {
@@ -346,19 +346,19 @@ var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_fi
       }));
     }
   },
-  _updateIndicator: function _updateIndicator($cell, column, indicatorName) {
+  _updateIndicator($cell, column, indicatorName) {
     var $indicator = this.callBase($cell, column, indicatorName);
     $indicator && this._subscribeToIndicatorEvent($indicator, column, indicatorName);
   },
-  _updateHeaderFilterIndicators: function _updateHeaderFilterIndicators() {
+  _updateHeaderFilterIndicators() {
     if (this.option('headerFilter.visible')) {
       this._updateIndicators('headerFilter');
     }
   },
-  _needUpdateFilterIndicators: function _needUpdateFilterIndicators() {
+  _needUpdateFilterIndicators() {
     return true;
   },
-  _columnOptionChanged: function _columnOptionChanged(e) {
+  _columnOptionChanged(e) {
     var optionNames = e.optionNames;
     if (_m_utils.default.checkChanges(optionNames, ['filterValues', 'filterType'])) {
       if (this._needUpdateFilterIndicators()) {
@@ -370,7 +370,7 @@ var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_fi
   }
 });
 var HeaderPanelHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_core.headerFilterMixin, {
-  _createGroupPanelItem: function _createGroupPanelItem($rootElement, groupColumn) {
+  _createGroupPanelItem($rootElement, groupColumn) {
     var that = this;
     var $item = that.callBase.apply(that, arguments);
     var $headerFilterIndicator;
@@ -398,10 +398,10 @@ function invertFilterExpression(filter) {
   return ['!', filter];
 }
 var DataControllerFilterRowExtender = {
-  skipCalculateColumnFilters: function skipCalculateColumnFilters() {
+  skipCalculateColumnFilters() {
     return false;
   },
-  _calculateAdditionalFilter: function _calculateAdditionalFilter() {
+  _calculateAdditionalFilter() {
     if (this.skipCalculateColumnFilters()) {
       return this.callBase();
     }
@@ -439,7 +439,7 @@ var DataControllerFilterRowExtender = {
   }
 };
 var headerFilterModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       syncLookupFilterValues: true,
       headerFilter: {

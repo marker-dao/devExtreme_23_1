@@ -186,7 +186,7 @@ ScrollBar.prototype = {
     that._scale = translator.getScale(min, max);
     that._applyPosition(_min(minPoint, maxPoint), _max(minPoint, maxPoint));
   },
-  customPositionIsAvailable: function customPositionIsAvailable() {
+  customPositionIsAvailable() {
     return false;
   },
   dispose: function dispose() {

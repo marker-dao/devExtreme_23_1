@@ -273,6 +273,12 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     }
     return undefined;
   };
+  _proto.loadSelectedItemsWithFilter = function loadSelectedItemsWithFilter() {
+    var componentFilter = this.options.filter();
+    var selectionFilter = this.options.selectionFilter;
+    var filter = componentFilter ? [componentFilter, 'and', selectionFilter] : selectionFilter;
+    return this._loadFilteredData(filter);
+  };
   return DeferredStrategy;
 }(_selection.default);
 exports.default = DeferredStrategy;

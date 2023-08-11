@@ -16,7 +16,7 @@ import { RangeView } from './range_view';
 import { SeriesDataSource } from './series_data_source';
 import { tickGenerator } from '../axes/tick_generator';
 import constants from '../axes/axes_constants';
-import baseWidgetModule from '../core/base_widget';
+import baseWidgetModule from '../../__internal/viz/core/m_base_widget';
 var _max = Math.max;
 var _ceil = Math.ceil;
 var _floor = Math.floor;

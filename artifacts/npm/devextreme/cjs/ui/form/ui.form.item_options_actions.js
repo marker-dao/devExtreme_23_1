@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/form/ui.form.item_options_actions.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -164,7 +164,7 @@ var tryCreateItemOptionAction = function tryCreateItemOptionAction(optionName, i
     case 'title':
       // TabbedItem/tabs/#title
       return new TabOptionItemOptionAction((0, _extend.extend)(itemActionOptions, {
-        optionName: optionName
+        optionName
       }));
     case 'tabs':
       // TabbedItem/tabs
@@ -180,7 +180,7 @@ var tryCreateItemOptionAction = function tryCreateItemOptionAction(optionName, i
           return new GroupItemTemplateChangedAction(itemActionOptions);
         }
         return new TabOptionItemOptionAction((0, _extend.extend)(itemActionOptions, {
-          optionName: optionName
+          optionName
         }));
       }
     default:

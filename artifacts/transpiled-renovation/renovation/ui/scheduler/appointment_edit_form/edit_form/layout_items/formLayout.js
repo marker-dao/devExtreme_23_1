@@ -33,13 +33,13 @@ var getMainLayout = function getMainLayout(colSpan, dateExpr, recurrenceEditorVi
       lg: 2,
       xs: 1
     },
-    colSpan: colSpan,
+    colSpan,
     items: createMainItems(dateExpr, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate, allDayEditorTemplate, repeatEditorTemplate, descriptionEditorTemplate)
   }, {
     itemType: 'group',
     name: LayoutGroupNames.Recurrence,
     visible: recurrenceEditorVisibility,
-    colSpan: colSpan,
+    colSpan,
     items: []
   }];
 };

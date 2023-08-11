@@ -38,6 +38,7 @@ var ITEM_OPTIONS_FOR_VALIDATION_UPDATING = ['items', 'isRequired', 'validationRu
 var Form = Widget.inherit({
   _init: function _init() {
     this.callBase();
+    this._dirtyFields = new Set();
     this._cachedColCountOptions = [];
     this._itemsRunTimeInfo = new FormItemsRunTimeInfo();
     this._groupsColCount = [];
@@ -70,7 +71,8 @@ var Form = Widget.inherit({
       scrollingEnabled: false,
       validationGroup: undefined,
       stylingMode: config().editorStylingMode,
-      labelMode: 'outside'
+      labelMode: 'outside',
+      isDirty: false
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
@@ -623,6 +625,7 @@ var Form = Widget.inherit({
         break;
       case 'alignRootItemLabels':
       case 'readOnly':
+      case 'isDirty':
         break;
       case 'width':
         this.callBase(args);
@@ -791,6 +794,7 @@ var Form = Widget.inherit({
     return itemPath;
   },
   _triggerOnFieldDataChanged: function _triggerOnFieldDataChanged(args) {
+    this._updateIsDirty(args.dataField);
     this._createActionByOption('onFieldDataChanged')(args);
   },
   _triggerOnFieldDataChangedByDataSet: function _triggerOnFieldDataChangedByDataSet(data) {
@@ -963,10 +967,20 @@ var Form = Widget.inherit({
     eventsEngine.trigger(this.$element().find(editorSelector), 'change');
     this.callBase();
   },
+  _updateIsDirty: function _updateIsDirty(dataField) {
+    var editor = this.getEditor(dataField);
+    if (!editor) return;
+    if (editor.option('isDirty')) {
+      this._dirtyFields.add(dataField);
+    } else {
+      this._dirtyFields.delete(dataField);
+    }
+    this.option('isDirty', !!this._dirtyFields.size);
+  },
   _resetValues: function _resetValues() {
     this._itemsRunTimeInfo.each(function (_, itemRunTimeInfo) {
       if (isDefined(itemRunTimeInfo.widgetInstance) && Editor.isEditor(itemRunTimeInfo.widgetInstance)) {
-        itemRunTimeInfo.widgetInstance.reset();
+        itemRunTimeInfo.widgetInstance.clear();
         itemRunTimeInfo.widgetInstance.option('isValid', true);
       }
     });

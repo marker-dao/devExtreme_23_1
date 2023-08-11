@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/points/bar_point.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,7 +32,7 @@ function getLabelOrientation(point) {
   return notAxisInverted ? TOP : BOTTOM;
 }
 var _default = _extend({}, _symbol_point.default, {
-  correctCoordinates: function correctCoordinates(correctOptions) {
+  correctCoordinates(correctOptions) {
     var that = this;
     var correction = _floor(correctOptions.offset - correctOptions.width / 2);
     if (that._options.rotated) {
@@ -51,7 +51,16 @@ var _default = _extend({}, _symbol_point.default, {
       maxX = _this$_getVisibleArea.maxX,
       minY = _this$_getVisibleArea.minY,
       maxY = _this$_getVisibleArea.maxY;
-    this.inVisibleArea = minX < x + width && maxX > x && minY < y + height && maxY > y;
+    this.inVisibleArea = minX <= x + width && maxX >= x && minY <= y + height && maxY >= y;
+  },
+  _cacheVisibility: function _cacheVisibility(x, y, minY, rotated) {
+    y = Math.min(y, minY);
+    var size = Math.abs(y - minY);
+    if (rotated) {
+      this._calculateVisibility(y, x, size, this.height);
+    } else {
+      this._calculateVisibility(x, y, this.width, size);
+    }
   },
   _getGraphicBBox: function _getGraphicBBox(location) {
     var bBox = {
@@ -116,7 +125,7 @@ var _default = _extend({}, _symbol_point.default, {
   _showForZeroValues: function _showForZeroValues() {
     return this._options.label.showForZeroValues || this.initialValue;
   },
-  _drawMarker: function _drawMarker(renderer, group, animationEnabled) {
+  _drawMarker(renderer, group, animationEnabled) {
     var that = this;
     var style = that._getStyle();
     var r = that._options.cornerRadius;
@@ -175,7 +184,7 @@ var _default = _extend({}, _symbol_point.default, {
       width: graphic.attr('width')
     };
   },
-  _getEdgeTooltipParams: function _getEdgeTooltipParams() {
+  _getEdgeTooltipParams() {
     var isPositive = this.value >= 0;
     var xCoord;
     var yCoord;
@@ -213,7 +222,7 @@ var _default = _extend({}, _symbol_point.default, {
     center.offset = 0;
     return center;
   },
-  getCenterCoord: function getCenterCoord() {
+  getCenterCoord() {
     var width = this.width,
       height = this.height,
       x = this.x,
@@ -235,7 +244,7 @@ var _default = _extend({}, _symbol_point.default, {
     }
     return coord;
   },
-  _getErrorBarBaseEdgeLength: function _getErrorBarBaseEdgeLength() {
+  _getErrorBarBaseEdgeLength() {
     return this._options.rotated ? this.height : this.width;
   },
   _translateErrorBars: function _translateErrorBars(argVisibleArea) {
@@ -262,11 +271,11 @@ var _default = _extend({}, _symbol_point.default, {
     that[argAxis] = arg = arg === null ? arg : arg + (that[argAxis + 'Correction'] || 0);
     that['v' + valAxis] = val;
     that['v' + argAxis] = arg + that[argIntervalName] / 2;
+    this._cacheVisibility(arg, val, minVal, rotated);
     val = that._truncateCoord(val, valVisibleArea);
     minVal = that._truncateCoord(minVal, valVisibleArea);
     that[valIntervalName] = _abs(val - minVal);
     val = val < minVal ? val : minVal;
-    that._calculateVisibility(rotated ? val : arg, rotated ? arg : val, that.width, that.height);
     that[valAxis] = val === null ? val : val + (that[valAxis + 'Correction'] || 0);
     that['min' + valAxis.toUpperCase()] = minVal === null ? minVal : minVal + (that[valAxis + 'Correction'] || 0);
     that['default' + valAxis.toUpperCase()] = valTranslator.translate(CANVAS_POSITION_DEFAULT);
@@ -309,10 +318,10 @@ var _default = _extend({}, _symbol_point.default, {
       }
     }
     return {
-      x: x,
-      y: y,
-      width: width,
-      height: height
+      x,
+      y,
+      width,
+      height
     };
   },
   coordsIn: function coordsIn(x, y) {

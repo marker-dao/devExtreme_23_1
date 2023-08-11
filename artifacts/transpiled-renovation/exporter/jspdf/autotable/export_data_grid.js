@@ -21,6 +21,6 @@ function exportDataGrid(options) {
 
 //#DEBUG
 exportDataGrid.__internals = {
-  _getFullOptions: _getFullOptions
+  _getFullOptions
 };
 //#ENDDEBUG

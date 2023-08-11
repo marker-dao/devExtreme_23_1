@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/points/label.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -362,7 +362,7 @@ Label.prototype = {
     bBox = (0, _utils.rotateBBox)(bBox, [bBox.x + bBox.width / 2, bBox.y + bBox.height / 2], -rotationAngle);
     that._bBox = bBox;
   },
-  getFigureCenter: function getFigureCenter() {
+  getFigureCenter() {
     var figure = this._figure;
     var strategy = this._strategy || selectStrategy(figure);
     return strategy.getFigureCenter(figure);
@@ -421,7 +421,7 @@ Label.prototype = {
   hideInsideLabel: function hideInsideLabel(coords) {
     return this._point.hideInsideLabel(this, coords);
   },
-  getPoint: function getPoint() {
+  getPoint() {
     return this._point;
   },
   // TODO: Should not be called when not invisible (check for "_textContent" is to be removed)

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/collection/ui.collection_widget.live_update.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -155,14 +155,10 @@ export default CollectionWidget.inherit({
     when(isPartialRefresh || insert(keyInfo, items, change.data, change.index)).done(() => {
       var _change$index;
       this._beforeItemElementInserted(change);
-      var $itemContainer = this._getItemContainer(change.data);
-      this._renderItem((_change$index = change.index) !== null && _change$index !== void 0 ? _change$index : items.length, change.data, $itemContainer);
+      this._renderItem((_change$index = change.index) !== null && _change$index !== void 0 ? _change$index : items.length, change.data);
       this._afterItemElementInserted();
       this._correctionIndex++;
     });
-  },
-  _getItemContainer: function _getItemContainer(changeData) {
-    return this._itemContainer();
   },
   _updateSelectionAfterRemoveByChange: function _updateSelectionAfterRemoveByChange(removeIndex) {
     var selectedIndex = this.option('selectedIndex');

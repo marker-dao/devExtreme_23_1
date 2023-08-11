@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/view_model/group_panel/utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -43,11 +43,11 @@ var getGroupPanelData = function getGroupPanelData(groups, columnCountPerGroup, 
           id = _ref.id,
           text = _ref.text;
         return {
-          id: id,
-          text: text,
-          color: color,
+          id,
+          text,
+          color,
           key: "".concat(iterator, "_").concat(resourceName, "_").concat(id),
-          resourceName: resourceName,
+          resourceName,
           data: data === null || data === void 0 ? void 0 : data[index]
         };
       })));
@@ -62,8 +62,8 @@ var getGroupPanelData = function getGroupPanelData(groups, columnCountPerGroup, 
     groupPanelItems = extendGroupItemsForGroupingByDate(groupPanelItems, columnCountPerGroup);
   }
   return {
-    groupPanelItems: groupPanelItems,
-    baseColSpan: baseColSpan
+    groupPanelItems,
+    baseColSpan
   };
 };
 exports.getGroupPanelData = getGroupPanelData;

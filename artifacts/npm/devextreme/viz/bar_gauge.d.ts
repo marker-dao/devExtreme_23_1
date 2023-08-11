@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/bar_gauge.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -102,9 +102,11 @@ export interface BarGaugeLegendItem extends BaseLegendItem {
  * @docid _viz_bar_gauge_TooltipInfo
  * @hidden
  */
-
 export interface TooltipInfo {
-    /** @docid _viz_bar_gauge_TooltipInfo.target */
+    /**
+     * @docid _viz_bar_gauge_TooltipInfo.target
+     * @type object
+     */
     target?: any;
 }
 
@@ -296,13 +298,13 @@ export interface dxBarGaugeOptions extends BaseWidgetOptions<dxBarGauge> {
      * @type object
      * @public
      */
-    legend?: dxBarGaugeLegend;
+    legend?: Legend;
     /**
      * @docid
      * @type object
      * @public
      */
-    loadingIndicator?: dxBarGaugeLoadingIndicator;
+    loadingIndicator?: LoadingIndicator;
     /**
      * @docid
      * @default null
@@ -357,7 +359,7 @@ export interface dxBarGaugeOptions extends BaseWidgetOptions<dxBarGauge> {
      * @type object
      * @public
      */
-    tooltip?: dxBarGaugeTooltip;
+    tooltip?: Tooltip;
     /**
      * @docid
      * @default []
@@ -367,11 +369,12 @@ export interface dxBarGaugeOptions extends BaseWidgetOptions<dxBarGauge> {
      */
     values?: Array<number>;
 }
+
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxBarGaugeLegend
  */
-export interface dxBarGaugeLegend extends BaseLegend {
+export type Legend = BaseLegend & {
     /**
      * @docid dxBarGaugeOptions.legend.customizeHint
      * @public
@@ -410,23 +413,24 @@ export interface dxBarGaugeLegend extends BaseLegend {
      * @public
      */
     visible?: boolean;
-}
+};
+
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxBarGaugeLoadingIndicator
  */
-export interface dxBarGaugeLoadingIndicator extends BaseWidgetLoadingIndicator {
+export type LoadingIndicator = BaseWidgetLoadingIndicator & {
     /**
      * @docid dxBarGaugeOptions.loadingIndicator.enabled
      * @hidden
      */
     enabled?: boolean;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxBarGaugeTooltip
  */
-export interface dxBarGaugeTooltip extends BaseWidgetTooltip {
+export type Tooltip = BaseWidgetTooltip & {
     /**
      * @docid dxBarGaugeOptions.tooltip.contentTemplate
      * @type_function_return string|Element|jQuery
@@ -447,7 +451,7 @@ export interface dxBarGaugeTooltip extends BaseWidgetTooltip {
      * @public
      */
     interactive?: boolean;
-}
+};
 /**
  * @docid
  * @inherits BaseWidget
@@ -474,5 +478,18 @@ export type Properties = dxBarGaugeOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxBarGaugeOptions;
+
+// #region deprecated in v23.1
+
+/** @deprecated Use Legend instead */
+export type dxBarGaugeLegend = Legend;
+
+/** @deprecated Use LoadingIndicator instead */
+export type dxBarGaugeLoadingIndicator = LoadingIndicator;
+
+/** @deprecated Use Tooltip instead */
+export type dxBarGaugeTooltip = Tooltip;
+
+// #endregion
 
 

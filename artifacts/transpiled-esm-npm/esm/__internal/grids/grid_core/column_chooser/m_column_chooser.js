@@ -384,9 +384,6 @@ var columnChooserMembers = {
     return null;
   },
   showColumnChooser() {
-    /// #DEBUG
-    this._isPopupContainerShown = true;
-    /// #ENDDEBUG
     if (!this._popupContainer) {
       this._initializePopupContainer();
       this.render();
@@ -399,12 +396,8 @@ var columnChooserMembers = {
   hideColumnChooser() {
     if (this._popupContainer) {
       this._popupContainer.hide();
-      /// #DEBUG
-      this._isPopupContainerShown = false;
-      /// #ENDDEBUG
     }
   },
-
   isColumnChooserVisible() {
     var popupContainer = this._popupContainer;
     return popupContainer && popupContainer.option('visible');

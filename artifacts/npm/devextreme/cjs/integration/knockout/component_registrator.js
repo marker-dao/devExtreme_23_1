@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/knockout/component_registrator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ var _callbacks = _interopRequireDefault(require("../../core/utils/callbacks"));
 var _type = require("../../core/utils/type");
 var _component_registrator_callbacks = _interopRequireDefault(require("../../core/component_registrator_callbacks"));
 var _ui = _interopRequireDefault(require("../../ui/widget/ui.widget"));
-var _base_widget = _interopRequireDefault(require("../../viz/core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _component = _interopRequireDefault(require("../../renovation/component_wrapper/common/component"));
 var _draggable = _interopRequireDefault(require("../../ui/draggable"));
 var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view"));
@@ -191,7 +191,7 @@ if (_knockout.default) {
         }
         createComponent();
         return {
-          controlsDescendantBindings: componentClass.subclassOf(_ui.default) || componentClass.subclassOf(_base_widget.default) || componentClass.subclassOf(_component.default) && !(component instanceof _scroll_view.default) || component instanceof _draggable.default
+          controlsDescendantBindings: componentClass.subclassOf(_ui.default) || componentClass.subclassOf(_m_base_widget.default) || componentClass.subclassOf(_component.default) && !(component instanceof _scroll_view.default) || component instanceof _draggable.default
         };
       }
     };

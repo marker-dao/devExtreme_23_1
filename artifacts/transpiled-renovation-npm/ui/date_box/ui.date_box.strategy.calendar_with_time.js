@@ -138,9 +138,6 @@ var CalendarWithTimeStrategy = _uiDate_boxStrategy.default.inherit({
       width: 'auto'
     });
   },
-  getFirstPopupElement: function getFirstPopupElement() {
-    return this._timeView._hourBox.$element().find('input');
-  },
   _attachTabHandler: function _attachTabHandler() {
     var dateBox = this.dateBox;
     var handler = function handler(e) {

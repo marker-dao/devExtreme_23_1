@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tile_view.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -154,12 +154,12 @@ var TileView = _uiCollection_widget.default.inherit({
       direction = _this$option.direction,
       showScrollbar = _this$option.showScrollbar;
     this._scrollView = this._createComponent(this.$element(), _scroll_view.default, {
-      direction: direction,
-      width: width,
-      height: height,
+      direction,
+      width,
+      height,
       scrollByContent: true,
       useKeyboard: false,
-      showScrollbar: showScrollbar
+      showScrollbar
     });
     this._$container = (0, _renderer.default)(this._scrollView.content());
     this._$container.addClass(TILEVIEW_CONTAINER_CLASS);

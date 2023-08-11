@@ -19,24 +19,24 @@ var TOOLBAR_BUTTON_CLASS = 'toolbar-button';
 var TOOLBAR_ARIA_LABEL = '-ariaToolbar';
 var DEFAULT_TOOLBAR_ITEM_NAMES = ['addRowButton', 'applyFilterButton', 'columnChooserButton', 'exportButton', 'groupPanel', 'revertButton', 'saveButton', 'searchPanel'];
 var members = {
-  _getToolbarItems: function _getToolbarItems() {
+  _getToolbarItems() {
     return [];
   },
-  _getButtonContainer: function _getButtonContainer() {
+  _getButtonContainer() {
     return (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS));
   },
-  _getToolbarButtonClass: function _getToolbarButtonClass(specificClass) {
+  _getToolbarButtonClass(specificClass) {
     var secondClass = specificClass ? " ".concat(specificClass) : '';
     return this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS) + secondClass;
   },
-  _getToolbarOptions: function _getToolbarOptions() {
+  _getToolbarOptions() {
     var userToolbarOptions = this.option('toolbar');
     var options = {
       toolbarOptions: {
         items: this._getToolbarItems(),
         visible: userToolbarOptions === null || userToolbarOptions === void 0 ? void 0 : userToolbarOptions.visible,
         disabled: userToolbarOptions === null || userToolbarOptions === void 0 ? void 0 : userToolbarOptions.disabled,
-        onItemRendered: function onItemRendered(e) {
+        onItemRendered(e) {
           var itemRenderedCallback = e.itemData.onItemRendered;
           if (itemRenderedCallback) {
             itemRenderedCallback(e);
@@ -53,7 +53,7 @@ var members = {
     }
     return options.toolbarOptions;
   },
-  _normalizeToolbarItems: function _normalizeToolbarItems(defaultItems, userItems) {
+  _normalizeToolbarItems(defaultItems, userItems) {
     defaultItems.forEach(function (button) {
       if (!DEFAULT_TOOLBAR_ITEM_NAMES.includes(button.name)) {
         throw new Error("Default toolbar item '".concat(button.name, "' is not added to DEFAULT_TOOLBAR_ITEM_NAMES"));
@@ -92,7 +92,7 @@ var members = {
     });
     return isArray ? normalizedItems : normalizedItems[0];
   },
-  _renderCore: function _renderCore() {
+  _renderCore() {
     if (!this._toolbar) {
       var $headerPanel = this.element();
       $headerPanel.addClass(this.addWidgetPrefix(HEADER_PANEL_CLASS));
@@ -104,49 +104,50 @@ var members = {
     }
   },
   _columnOptionChanged: _common.noop,
-  _handleDataChanged: function _handleDataChanged() {
+  _handleDataChanged() {
     if (this._requireReady) {
       this.render();
     }
   },
-  init: function init() {
+  init() {
     this.callBase();
     this.createAction('onToolbarPreparing', {
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  render: function render() {
+  render() {
     this._toolbarOptions = this._getToolbarOptions();
     this.callBase.apply(this, arguments);
   },
-  setToolbarItemDisabled: function setToolbarItemDisabled(name, optionValue) {
-    var toolbarInstance = this._toolbar;
-    if (toolbarInstance) {
-      var items = toolbarInstance.option('items') || [];
-      var itemIndex = items.indexOf(items.filter(function (item) {
-        return item.name === name;
-      })[0]);
-      if (itemIndex >= 0) {
-        var itemOptionPrefix = "items[".concat(itemIndex, "]");
-        if (toolbarInstance.option("".concat(itemOptionPrefix, ".options"))) {
-          toolbarInstance.option("".concat(itemOptionPrefix, ".options.disabled"), optionValue);
-        } else {
-          toolbarInstance.option("".concat(itemOptionPrefix, ".disabled"), optionValue);
-        }
-      }
+  setToolbarItemDisabled(name, disabled) {
+    var toolbar = this._toolbar;
+    if (!toolbar) {
+      return;
+    }
+    var items = toolbar.option('items') || [];
+    var itemIndex = items.findIndex(function (item) {
+      return item.name === name;
+    });
+    if (itemIndex < 0) {
+      return;
+    }
+    var item = toolbar.option("items[".concat(itemIndex, "]"));
+    toolbar.option("items[".concat(itemIndex, "].disabled"), disabled);
+    if (item.options) {
+      toolbar.option("items[".concat(itemIndex, "].options.disabled"), disabled);
     }
   },
-  updateToolbarDimensions: function updateToolbarDimensions() {
+  updateToolbarDimensions() {
     var _a;
     (_a = this._toolbar) === null || _a === void 0 ? void 0 : _a.updateDimensions();
   },
-  getHeaderPanel: function getHeaderPanel() {
+  getHeaderPanel() {
     return this.element();
   },
-  getHeight: function getHeight() {
+  getHeight() {
     return this.getElementHeight();
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     if (args.name === 'onToolbarPreparing') {
       this._invalidate();
       args.handled = true;
@@ -181,7 +182,7 @@ var members = {
     }
     this.callBase(args);
   },
-  isVisible: function isVisible() {
+  isVisible() {
     return !!(this._toolbarOptions && this._toolbarOptions.visible);
   },
   allowDragging: _common.noop,
@@ -189,7 +190,7 @@ var members = {
 };
 var HeaderPanel = _m_columns_view.ColumnsView.inherit(members);
 var headerPanelModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {};
   },
   views: {
@@ -198,7 +199,7 @@ var headerPanelModule = {
   extenders: {
     controllers: {
       resizing: {
-        _updateDimensionsCore: function _updateDimensionsCore() {
+        _updateDimensionsCore() {
           this.callBase.apply(this, arguments);
           this.getView('headerPanel').updateToolbarDimensions();
         }

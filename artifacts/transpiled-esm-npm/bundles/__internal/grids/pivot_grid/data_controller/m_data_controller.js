@@ -8,7 +8,7 @@ var _class = _interopRequireDefault(require("../../../../core/class"));
 var _callbacks = _interopRequireDefault(require("../../../../core/utils/callbacks"));
 var _common = require("../../../../core/utils/common");
 var _deferred = require("../../../../core/utils/deferred");
-var _extend2 = require("../../../../core/utils/extend");
+var _extend = require("../../../../core/utils/extend");
 var _iterator = require("../../../../core/utils/iterator");
 var _string = require("../../../../core/utils/string");
 var _type = require("../../../../core/utils/type");
@@ -18,10 +18,6 @@ var _m_virtual_scrolling_core = _interopRequireDefault(require("../../../grids/g
 var _m_data_source = require("../data_source/m_data_source");
 var _m_widget_utils = require("../m_widget_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var math = Math;
 var GRAND_TOTAL_TYPE = 'GT';
 var TOTAL_TYPE = 'T';
@@ -291,7 +287,7 @@ var DataController = _class.default.inherit(function () {
         var parentChildren = (items[1] ? items[1].children : headerItems) || [];
         var dataField = headerDescriptions[items.length - 1];
         if (item.type === DATA_TYPE && item.expanded && (dataField.showTotals !== false || isTree)) {
-          index !== -1 && parentChildren.splice(showTotalsPrior ? index : index + 1, 0, (0, _extend2.extend)({}, item, {
+          index !== -1 && parentChildren.splice(showTotalsPrior ? index : index + 1, 0, (0, _extend.extend)({}, item, {
             children: null,
             type: TOTAL_TYPE,
             expanded: showTotalsPrior ? true : null,
@@ -341,12 +337,12 @@ var DataController = _class.default.inherit(function () {
         }
         index = indexesByDepth[depth] || 0;
         lastIndex = addInfoItem(info, {
-          headerItem: headerItem,
-          index: index,
-          lastIndex: lastIndex,
-          depth: depth,
-          isHorizontal: isHorizontal,
-          isTree: isTree
+          headerItem,
+          index,
+          lastIndex,
+          depth,
+          isHorizontal,
+          isTree
         });
         indexesByDepth.length = depth;
         indexesByDepth.push(lastIndex);
@@ -419,7 +415,7 @@ var DataController = _class.default.inherit(function () {
             rowType: rowInfo.type,
             rowPath: rowInfo.path || [],
             columnPath: columnInfo.path || [],
-            dataIndex: dataIndex
+            dataIndex
           };
           if (dataField.width) {
             row[columnIndex].width = dataField.width;
@@ -436,9 +432,9 @@ var DataController = _class.default.inherit(function () {
       var headerItem = items[0];
       var path = (0, _m_widget_utils.createPath)(items);
       if (headerItem.children && options.showTotals === false) return;
-      var indexedItem = (0, _extend2.extend)(true, {}, headerItem, {
+      var indexedItem = (0, _extend.extend)(true, {}, headerItem, {
         visibleIndex: visibleIndex += 1,
-        path: path
+        path
       });
       if ((0, _type.isDefined)(indexedItem.index)) {
         indexedItems[indexedItem.index] = indexedItem;
@@ -449,31 +445,31 @@ var DataController = _class.default.inherit(function () {
     return indexedItems;
   }
   function createScrollController(dataController, component, dataAdapter) {
-    return new _m_virtual_scrolling_core.default.VirtualScrollController(component, (0, _extend2.extend)({
-      hasKnownLastPage: function hasKnownLastPage() {
+    return new _m_virtual_scrolling_core.default.VirtualScrollController(component, (0, _extend.extend)({
+      hasKnownLastPage() {
         return true;
       },
-      pageCount: function pageCount() {
+      pageCount() {
         return math.ceil(this.totalItemsCount() / this.pageSize());
       },
-      updateLoading: function updateLoading() {},
-      itemsCount: function itemsCount() {
+      updateLoading() {},
+      itemsCount() {
         if (this.pageIndex() < this.pageCount() - 1) {
           return this.pageSize();
         }
         return this.totalItemsCount() % this.pageSize();
       },
-      items: function items() {
+      items() {
         return [];
       },
-      viewportItems: function viewportItems() {
+      viewportItems() {
         return [];
       },
-      onChanged: function onChanged() {},
-      isLoading: function isLoading() {
+      onChanged() {},
+      isLoading() {
         return dataController.isLoading();
       },
-      changingDuration: function changingDuration() {
+      changingDuration() {
         var dataSource = dataController._dataSource;
         if (dataSource.paginate()) {
           return CHANGING_DURATION_IF_PAGINATE;
@@ -513,7 +509,7 @@ var DataController = _class.default.inherit(function () {
     return result;
   }
   var members = {
-    ctor: function ctor(options) {
+    ctor(options) {
       var that = this;
       var virtualScrollControllerChanged = that._fireChanged.bind(that);
       options = that._options = options || {};
@@ -521,16 +517,16 @@ var DataController = _class.default.inherit(function () {
       that._dataSource = that._createDataSource(options);
       if (options.component && options.component.option('scrolling.mode') === 'virtual') {
         that._rowsScrollController = createScrollController(that, options.component, {
-          totalItemsCount: function totalItemsCount() {
+          totalItemsCount() {
             return that.totalRowCount();
           },
-          pageIndex: function pageIndex(index) {
+          pageIndex(index) {
             return that.rowPageIndex(index);
           },
-          pageSize: function pageSize() {
+          pageSize() {
             return that.rowPageSize();
           },
-          load: function load() {
+          load() {
             if (that._rowsScrollController.pageIndex() >= this.pageCount()) {
               that._rowsScrollController.pageIndex(this.pageCount() - 1);
             }
@@ -545,16 +541,16 @@ var DataController = _class.default.inherit(function () {
           }
         });
         that._columnsScrollController = createScrollController(that, options.component, {
-          totalItemsCount: function totalItemsCount() {
+          totalItemsCount() {
             return that.totalColumnCount();
           },
-          pageIndex: function pageIndex(index) {
+          pageIndex(index) {
             return that.columnPageIndex(index);
           },
-          pageSize: function pageSize() {
+          pageSize() {
             return that.columnPageSize();
           },
-          load: function load() {
+          load() {
             if (that._columnsScrollController.pageIndex() >= this.pageCount()) {
               that._columnsScrollController.pageIndex(this.pageCount() - 1);
             }
@@ -581,13 +577,13 @@ var DataController = _class.default.inherit(function () {
       that._update();
       that.changed = (0, _callbacks.default)();
     },
-    _fireChanged: function _fireChanged() {
+    _fireChanged() {
       var that = this;
       var startChanging = new Date();
       that.changed && !that._lockChanged && that.changed.fire();
       that._changingDuration = new Date() - startChanging;
     },
-    _correctSkipsTakes: function _correctSkipsTakes(rowIndex, rowSkip, rowSpan, levels, skips, takes) {
+    _correctSkipsTakes(rowIndex, rowSkip, rowSpan, levels, skips, takes) {
       var endIndex = rowSpan ? rowIndex + rowSpan - 1 : rowIndex;
       skips[levels.length] = skips[levels.length] || 0;
       takes[levels.length] = takes[levels.length] || 0;
@@ -597,7 +593,7 @@ var DataController = _class.default.inherit(function () {
         takes[levels.length] += 1;
       }
     },
-    _calculatePagingForRowExpandedPaths: function _calculatePagingForRowExpandedPaths(options, skips, takes, rowExpandedSkips, rowExpandedTakes) {
+    _calculatePagingForRowExpandedPaths(options, skips, takes, rowExpandedSkips, rowExpandedTakes) {
       var rows = this._rowsInfo;
       var rowCount = Math.min(options.rowSkip + options.rowTake, rows.length);
       var rowExpandedPaths = options.rowExpandedPaths;
@@ -633,7 +629,7 @@ var DataController = _class.default.inherit(function () {
         });
       }
     },
-    _calculatePagingForColumnExpandedPaths: function _calculatePagingForColumnExpandedPaths(options, skips, takes, expandedSkips, expandedTakes) {
+    _calculatePagingForColumnExpandedPaths(options, skips, takes, expandedSkips, expandedTakes) {
       var skipByPath = {};
       var takeByPath = {};
       (0, _m_virtual_columns_core.foreachColumnInfo)(this._columnsInfo, function (columnInfo, columnIndex) {
@@ -662,7 +658,7 @@ var DataController = _class.default.inherit(function () {
         }
       });
     },
-    _processPagingForExpandedPaths: function _processPagingForExpandedPaths(options, area, storeLoadOptions, reload) {
+    _processPagingForExpandedPaths(options, area, storeLoadOptions, reload) {
       var expandedPaths = options["".concat(area, "ExpandedPaths")];
       var expandedSkips = expandedPaths.map(function () {
         return 0;
@@ -681,23 +677,26 @@ var DataController = _class.default.inherit(function () {
       }
       this._savePagingForExpandedPaths(options, area, storeLoadOptions, skips[0], takes[0], expandedSkips, expandedTakes);
     },
-    _savePagingForExpandedPaths: function _savePagingForExpandedPaths(options, area, storeLoadOptions, skip, take, expandedSkips, expandedTakes) {
+    _savePagingForExpandedPaths(options, area, storeLoadOptions, skip, take, expandedSkips, expandedTakes) {
       var expandedPaths = options["".concat(area, "ExpandedPaths")];
       options["".concat(area, "ExpandedPaths")] = [];
       options["".concat(area, "Skip")] = skip !== undefined ? skip : options["".concat(area, "Skip")];
       options["".concat(area, "Take")] = take !== undefined ? take : options["".concat(area, "Take")];
       for (var i = 0; i < expandedPaths.length; i += 1) {
         if (expandedTakes[i]) {
-          var _extend;
           var isOppositeArea = options.area && options.area !== area;
-          storeLoadOptions.push((0, _extend2.extend)({
-            area: area,
+          storeLoadOptions.push((0, _extend.extend)({
+            area,
             headerName: "".concat(area, "s")
-          }, options, (_extend = {}, _defineProperty(_extend, "".concat(area, "Skip"), expandedSkips[i]), _defineProperty(_extend, "".concat(area, "Take"), expandedTakes[i]), _defineProperty(_extend, isOppositeArea ? 'oppositePath' : 'path', expandedPaths[i]), _extend)));
+          }, options, {
+            ["".concat(area, "Skip")]: expandedSkips[i],
+            ["".concat(area, "Take")]: expandedTakes[i],
+            [isOppositeArea ? 'oppositePath' : 'path']: expandedPaths[i]
+          }));
         }
       }
     },
-    _handleCustomizeStoreLoadOptions: function _handleCustomizeStoreLoadOptions(storeLoadOptions, reload) {
+    _handleCustomizeStoreLoadOptions(storeLoadOptions, reload) {
       var _this = this;
       var options = storeLoadOptions[0];
       var rowsScrollController = this._rowsScrollController;
@@ -729,7 +728,7 @@ var DataController = _class.default.inherit(function () {
         });
       }
     },
-    load: function load() {
+    load() {
       var that = this;
       var stateStoringController = this._stateStoringController;
       if (stateStoringController.isEnabled() && !stateStoringController.isLoaded()) {
@@ -744,7 +743,7 @@ var DataController = _class.default.inherit(function () {
         that._dataSource.load();
       }
     },
-    calculateVirtualContentParams: function calculateVirtualContentParams(contentParams) {
+    calculateVirtualContentParams(contentParams) {
       var that = this;
       var rowsScrollController = that._rowsScrollController;
       var columnsScrollController = that._columnsScrollController;
@@ -772,35 +771,35 @@ var DataController = _class.default.inherit(function () {
       }
       return undefined;
     },
-    setViewportPosition: function setViewportPosition(left, top) {
+    setViewportPosition(left, top) {
       this._rowsScrollController.setViewportPosition(top || 0);
       this._columnsScrollController.setViewportPosition(left || 0);
     },
-    subscribeToWindowScrollEvents: function subscribeToWindowScrollEvents($element) {
+    subscribeToWindowScrollEvents($element) {
       var _a;
       (_a = this._rowsScrollController) === null || _a === void 0 ? void 0 : _a.subscribeToWindowScrollEvents($element);
     },
-    updateWindowScrollPosition: function updateWindowScrollPosition(position) {
+    updateWindowScrollPosition(position) {
       var _a;
       (_a = this._rowsScrollController) === null || _a === void 0 ? void 0 : _a.scrollTo(position);
     },
-    updateViewOptions: function updateViewOptions(options) {
-      (0, _extend2.extend)(this._options, options);
+    updateViewOptions(options) {
+      (0, _extend.extend)(this._options, options);
       this._update();
     },
-    _handleExpandValueChanging: function _handleExpandValueChanging(e) {
+    _handleExpandValueChanging(e) {
       this.expandValueChanging.fire(e);
     },
-    _handleLoadingChanged: function _handleLoadingChanged(isLoading) {
+    _handleLoadingChanged(isLoading) {
       this.loadingChanged.fire(isLoading);
     },
-    _handleProgressChanged: function _handleProgressChanged(progress) {
+    _handleProgressChanged(progress) {
       this.progressChanged.fire(progress);
     },
-    _handleFieldsPrepared: function _handleFieldsPrepared(e) {
+    _handleFieldsPrepared(e) {
       this._options.onFieldsPrepared && this._options.onFieldsPrepared(e);
     },
-    _createDataSource: function _createDataSource(options) {
+    _createDataSource(options) {
       var that = this;
       var dataSourceOptions = options.dataSource;
       var dataSource;
@@ -829,19 +828,19 @@ var DataController = _class.default.inherit(function () {
       dataSource.on('customizeStoreLoadOptions', that._customizeStoreLoadOptionsHandler);
       return dataSource;
     },
-    getDataSource: function getDataSource() {
+    getDataSource() {
       return this._dataSource;
     },
-    isLoading: function isLoading() {
+    isLoading() {
       return this._dataSource.isLoading();
     },
-    beginLoading: function beginLoading() {
+    beginLoading() {
       this._dataSource.beginLoading();
     },
-    endLoading: function endLoading() {
+    endLoading() {
       this._dataSource.endLoading();
     },
-    _update: function _update() {
+    _update() {
       var that = this;
       var dataSource = that._dataSource;
       var options = that._options;
@@ -858,8 +857,8 @@ var DataController = _class.default.inherit(function () {
       var rowOptions = {
         isEmptyGrandTotal: data.isEmptyGrandTotalRow,
         texts: options.texts || {},
-        hiddenTotals: hiddenTotals,
-        hiddenValues: hiddenValues,
+        hiddenTotals,
+        hiddenValues,
         hiddenGrandTotals: [],
         showTotals: options.showRowTotals,
         showGrandTotals: options.showRowGrandTotals !== false && grandTotalsAreHiddenForNotAllDataFields,
@@ -868,22 +867,22 @@ var DataController = _class.default.inherit(function () {
         showEmpty: !options.hideEmptySummaryCells,
         layout: options.rowHeaderLayout,
         fields: rowFields,
-        dataFields: dataFields,
+        dataFields,
         progress: 0
       };
       var columnOptions = {
         isEmptyGrandTotal: data.isEmptyGrandTotalColumn,
         texts: options.texts || {},
-        hiddenTotals: hiddenTotals,
-        hiddenValues: hiddenValues,
-        hiddenGrandTotals: hiddenGrandTotals,
+        hiddenTotals,
+        hiddenValues,
+        hiddenGrandTotals,
         showTotals: options.showColumnTotals,
         showTotalsPrior: options.showTotalsPrior === 'columns' || options.showTotalsPrior === 'both',
         showGrandTotals: options.showColumnGrandTotals !== false && grandTotalsAreHiddenForNotAllDataFields,
         sortBySummaryPaths: createSortPaths(rowFields, dataFields),
         showEmpty: !options.hideEmptySummaryCells,
         fields: columnFields,
-        dataFields: dataFields,
+        dataFields,
         progress: 0
       };
       var notifyProgress = function notifyProgress(progress) {
@@ -921,7 +920,7 @@ var DataController = _class.default.inherit(function () {
         }
       });
     },
-    getRowsInfo: function getRowsInfo(getAllData) {
+    getRowsInfo(getAllData) {
       var that = this;
       var rowsInfo = that._rowsInfo;
       var scrollController = that._rowsScrollController;
@@ -942,8 +941,8 @@ var DataController = _class.default.inherit(function () {
               rowspan = endIndex - (index + startIndex) || 1;
             }
             if (rowspan !== rowInfo.rowspan) {
-              cell = (0, _extend2.extend)({}, cell, {
-                rowspan: rowspan
+              cell = (0, _extend.extend)({}, cell, {
+                rowspan
               });
             }
             newRowsInfo[index].push(cell);
@@ -958,7 +957,7 @@ var DataController = _class.default.inherit(function () {
         function (rowInfo, visibleIndex, rowIndex, columnIndex, realColumnIndex) {
           var colspan = rowInfo.colspan || 1;
           if (realColumnIndex + colspan > maxDepth) {
-            newRowsInfo[rowIndex][columnIndex] = (0, _extend2.extend)({}, rowInfo, {
+            newRowsInfo[rowIndex][columnIndex] = (0, _extend.extend)({}, rowInfo, {
               colspan: maxDepth - realColumnIndex || 1
             });
           }
@@ -967,7 +966,7 @@ var DataController = _class.default.inherit(function () {
       }
       return rowsInfo;
     },
-    getColumnsInfo: function getColumnsInfo(getAllData) {
+    getColumnsInfo(getAllData) {
       var that = this;
       var info = that._columnsInfo;
       var scrollController = that._columnsScrollController;
@@ -978,16 +977,16 @@ var DataController = _class.default.inherit(function () {
       }
       return info;
     },
-    totalRowCount: function totalRowCount() {
+    totalRowCount() {
       return this._rowsInfo.length;
     },
-    rowPageIndex: function rowPageIndex(index) {
+    rowPageIndex(index) {
       if (index !== undefined) {
         this._rowPageIndex = index;
       }
       return this._rowPageIndex || 0;
     },
-    totalColumnCount: function totalColumnCount() {
+    totalColumnCount() {
       var count = 0;
       if (this._columnsInfo && this._columnsInfo.length) {
         for (var i = 0; i < this._columnsInfo[0].length; i += 1) {
@@ -996,32 +995,32 @@ var DataController = _class.default.inherit(function () {
       }
       return count;
     },
-    rowPageSize: function rowPageSize(size) {
+    rowPageSize(size) {
       if (size !== undefined) {
         this._rowPageSize = size;
       }
       return this._rowPageSize || 20;
     },
-    columnPageSize: function columnPageSize(size) {
+    columnPageSize(size) {
       if (size !== undefined) {
         this._columnPageSize = size;
       }
       return this._columnPageSize || 20;
     },
-    columnPageIndex: function columnPageIndex(index) {
+    columnPageIndex(index) {
       if (index !== undefined) {
         this._columnPageIndex = index;
       }
       return this._columnPageIndex || 0;
     },
-    getCellsInfo: function getCellsInfo(getAllData) {
+    getCellsInfo(getAllData) {
       var rowsInfo = this.getRowsInfo(getAllData);
       var columnsInfo = this.getColumnsInfo(getAllData);
       var data = this._dataSource.getData();
       var texts = this._options.texts || {};
       return createCellsInfo(rowsInfo, columnsInfo, data, this._dataSource.getAreaFields('data'), this._options.dataFieldArea, texts.dataNotAvailable);
     },
-    dispose: function dispose() {
+    dispose() {
       var that = this;
       if (that._isSharedDataSource) {
         that._dataSource.off('changed', that._changedHandler);
@@ -1058,7 +1057,7 @@ var DataController__internals = {
 };
 exports.DataController__internals = DataController__internals;
 var _default = {
-  DataController: DataController,
-  DataController__internals: DataController__internals
+  DataController,
+  DataController__internals
 };
 exports.default = _default;

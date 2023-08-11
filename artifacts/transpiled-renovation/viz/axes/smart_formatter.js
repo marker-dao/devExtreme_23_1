@@ -108,8 +108,8 @@ function createFormat(type) {
     type = null;
   }
   return {
-    type: type,
-    formatter: formatter
+    type,
+    formatter
   };
 }
 function formatLogarithmicNumber(tick) {
@@ -125,7 +125,7 @@ function formatLogarithmicNumber(tick) {
     }
   }
   return _format(tick, {
-    type: type,
+    type,
     precision: 0
   });
 }
@@ -182,7 +182,7 @@ function getFormatWithModifier(tick, tickInterval) {
     }
   }
   return {
-    precision: precision,
+    precision,
     type: typeFormat
   };
 }
@@ -312,10 +312,10 @@ function formatRange(_ref2) {
   }
   var formatOptions = {
     ticks: [],
-    type: type,
-    dataType: dataType,
-    tickInterval: tickInterval,
-    logarithmBase: logarithmBase,
+    type,
+    dataType,
+    tickInterval,
+    logarithmBase,
     labelOptions: {
       format: argumentFormat
     }

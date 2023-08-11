@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tooltip/tooltip.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -72,11 +72,7 @@ var Tooltip = _ui.default.inherit({
   },
   _renderContent: function _renderContent() {
     this.callBase();
-    this._contentId = 'dx-' + new _guid.default();
-    this.$overlayContent().attr({
-      'id': this._contentId
-    });
-    this._toggleAriaDescription(true);
+    this._toggleAriaAttributes();
   },
   _toggleAriaDescription: function _toggleAriaDescription(showing) {
     var $target = (0, _renderer.default)(this.option('target'));
@@ -84,6 +80,13 @@ var Tooltip = _ui.default.inherit({
     if (!(0, _type.isWindow)($target.get(0))) {
       this.setAria('describedby', label, $target);
     }
+  },
+  _toggleAriaAttributes: function _toggleAriaAttributes() {
+    this._contentId = "dx-".concat(new _guid.default());
+    this.$overlayContent().attr({
+      'id': this._contentId
+    });
+    this._toggleAriaDescription(true);
   }
 });
 (0, _component_registrator.default)('dxTooltip', Tooltip);

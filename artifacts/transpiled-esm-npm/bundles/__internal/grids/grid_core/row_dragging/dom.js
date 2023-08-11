@@ -14,11 +14,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports,
 // eslint-disable-next-line forbidden-imports/no-restricted-imports
-
 var createHandleTemplateFunc = function createHandleTemplateFunc(addWidgetPrefix) {
   return function (container, options) {
     var $container = (0, _renderer.default)(container);
-    $container.attr(_const.ATTRIBUTES.dragCell, '');
     if (options.rowType === 'data') {
       $container.addClass(_const.CLASSES.cellFocusDisabled);
       return (0, _renderer.default)('<span>').addClass(addWidgetPrefix(_const.CLASSES.handleIcon));
@@ -28,6 +26,6 @@ var createHandleTemplateFunc = function createHandleTemplateFunc(addWidgetPrefix
   };
 };
 var GridCoreRowDraggingDom = {
-  createHandleTemplateFunc: createHandleTemplateFunc
+  createHandleTemplateFunc
 };
 exports.GridCoreRowDraggingDom = GridCoreRowDraggingDom;

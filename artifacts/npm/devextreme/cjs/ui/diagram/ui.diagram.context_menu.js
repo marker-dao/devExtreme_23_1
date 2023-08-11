@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.context_menu.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -92,8 +92,8 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
       this._$contextMenuTargetElement.show();
       if (!selection) {
         selection = {
-          x: x,
-          y: y,
+          x,
+          y,
           width: 0,
           height: 0
         };
@@ -137,12 +137,12 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
       this.bar.raiseBarCommandExecuted(command, value);
     } else if (typeof command === 'string') {
       this._onInternalCommandAction({
-        command: command
+        command
       });
     }
     if (name !== undefined) {
       this._onCustomCommandAction({
-        name: name
+        name
       });
     }
   };
@@ -267,8 +267,8 @@ var DiagramContextMenuBar = /*#__PURE__*/function (_DiagramBar) {
   return DiagramContextMenuBar;
 }(_diagram2.default);
 var _default = {
-  DiagramContextMenuWrapper: DiagramContextMenuWrapper,
-  DiagramContextMenu: DiagramContextMenu
+  DiagramContextMenuWrapper,
+  DiagramContextMenu
 };
 exports.default = _default;
 module.exports = exports.default;

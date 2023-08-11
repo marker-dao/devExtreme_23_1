@@ -6,7 +6,10 @@ var _number = _interopRequireDefault(require("../number"));
 var _errors = _interopRequireDefault(require("../../core/errors"));
 require("globalize/number");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+// eslint-disable-next-line no-restricted-imports
+
+// eslint-disable-next-line no-restricted-imports, import/no-unresolved
+
 var MAX_FRACTION_DIGITS = 20;
 if (_globalize.default && _globalize.default.formatNumber) {
   if (_globalize.default.locale().locale === 'en') {
@@ -16,7 +19,7 @@ if (_globalize.default && _globalize.default.formatNumber) {
   var getFormatter = function getFormatter(format) {
     var formatter;
     var formatCacheKey;
-    if (_typeof(format) === 'object') {
+    if (typeof format === 'object') {
       formatCacheKey = _globalize.default.locale().locale + ':' + JSON.stringify(format);
     } else {
       formatCacheKey = _globalize.default.locale().locale + ':' + format;

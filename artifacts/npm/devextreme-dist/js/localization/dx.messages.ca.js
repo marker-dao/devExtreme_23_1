@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ca.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Ordena Ascending",
             "dxDataGrid-sortingDescendingText": "Ordena descendent",
             "dxDataGrid-sortingClearText": "Ordenació clara",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Guardar canvis",
             "dxDataGrid-editingCancelAllChanges": "Descartar els canvis",
             "dxDataGrid-editingAddRow": "Afegiu una fila",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filtrar la cel·la",
             "dxDataGrid-ariaCollapse": "Col·lapsar",
             "dxDataGrid-ariaExpand": "Expandir",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Dades Grim",
             "dxDataGrid-ariaSearchInGrid": "Cerqueu a la graella de dades",
             "dxDataGrid-ariaSelectAll": "Seleccionar tot",
             "dxDataGrid-ariaSelectRow": "Seleccioneu la fila",
             "dxDataGrid-ariaToolbar": "Barra d’eines de quadrícula de dades",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Creador de filtres",
             "dxDataGrid-filterPanelCreateFilter": "Crea un filtre",
             "dxDataGrid-filterPanelClearFilter": "Clar",

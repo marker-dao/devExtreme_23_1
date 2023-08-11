@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/menu/ui.menu.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -200,7 +200,7 @@ class Menu extends MenuBase {
   }
   _updateItemsWidthCache() {
     var $menuItems = this.$element().find('ul').first().children('li').children(".".concat(DX_MENU_ITEM_CLASS));
-    this._menuItemsWidth = this._getSummaryItemsWidth($menuItems, true);
+    this._menuItemsWidth = this._getSummaryItemsSize('width', $menuItems, true);
   }
   _dimensionChanged() {
     if (!this._isAdaptivityEnabled()) {
@@ -561,7 +561,8 @@ class Menu extends MenuBase {
     var rtlEnabled = this.option('rtlEnabled');
     var submenuPosition = {
       collision: 'flip',
-      of: $rootItem
+      of: $rootItem,
+      precise: true
     };
     switch (submenuDirection) {
       case 'leftortop':

@@ -20,7 +20,7 @@ var _export = require("../core/export");
 var _title = require("../core/title");
 var _loading_indicator = require("../core/loading_indicator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _tree_map.default;
+var _default = _tree_map.default; // PLUGINS_SECTION
 exports.default = _default;
 _tree_map.default.addPlugin(_export.plugin);
 _tree_map.default.addPlugin(_title.plugin);

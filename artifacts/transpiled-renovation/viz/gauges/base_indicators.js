@@ -207,14 +207,14 @@ var BaseTextCloudMarker = BaseIndicator.inherit({
     var cloudWidth = (bBox.width || text.length * that._textUnitWidth) + 2 * options.horizontalOffset;
     var cloudHeight = (bBox.height || that._textHeight) + 2 * options.verticalOffset;
     var info = getTextCloudInfo({
-      x: x,
-      y: y,
-      cloudWidth: cloudWidth,
-      cloudHeight: cloudHeight,
+      x,
+      y,
+      cloudWidth,
+      cloudHeight,
       tailLength: options.arrowLength,
       type: that._correctCloudType(textCloudOptions.type, {
-        x: x,
-        y: y
+        x,
+        y
       }, {
         width: cloudWidth,
         height: cloudHeight
@@ -275,7 +275,7 @@ var BaseTextCloudMarker = BaseIndicator.inherit({
       color: this._options.color
     };
   },
-  _correctCloudType: function _correctCloudType(type) {
+  _correctCloudType(type) {
     return type;
   }
 });

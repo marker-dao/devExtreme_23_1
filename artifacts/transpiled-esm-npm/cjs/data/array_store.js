@@ -42,7 +42,7 @@ var ArrayStore = _abstract_store.default.inherit({
     (0, _array_utils.applyBatch)({
       keyInfo: this,
       data: this._array,
-      changes: changes
+      changes
     });
   },
   _updateImpl: function _updateImpl(key, values) {

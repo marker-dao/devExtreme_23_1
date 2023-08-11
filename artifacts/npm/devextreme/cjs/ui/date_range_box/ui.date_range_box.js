@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/ui.date_range_box.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -185,9 +185,9 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
       endDate = _value2[1];
     }
     this.option({
-      startDate: startDate,
-      endDate: endDate,
-      value: value
+      startDate,
+      endDate,
+      value
     });
   };
   _proto._createOpenAction = function _createOpenAction() {
@@ -223,7 +223,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
       this._createEventAction(eventName);
     }
     this["_".concat((0, _inflector.camelize)(eventName), "Action")]({
-      event: event
+      event
     });
   };
   _proto._initTemplates = function _initTemplates() {
@@ -355,7 +355,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   _proto._clearValueHandler = function _clearValueHandler(e) {
     e.stopPropagation();
     this._saveValueChangeEvent(e);
-    this.reset();
+    this.clear();
     !this._isStartDateActiveElement() && this.focus();
     _events_engine.default.trigger((0, _renderer.default)(this.startDateField()), 'input');
   };
@@ -559,12 +559,18 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     }
     return validationMessagePosition;
   };
+  _proto._getSerializedDates = function _getSerializedDates(_ref5) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+      startDate = _ref6[0],
+      endDate = _ref6[1];
+    return [this.getStartDateBox()._serializeDate((0, _uiDate_range.getDeserializedDate)(startDate)), this.getStartDateBox()._serializeDate((0, _uiDate_range.getDeserializedDate)(endDate))];
+  };
   _proto.updateValue = function updateValue(newValue, event) {
     if (!(0, _uiDate_range.isSameDateArrays)(newValue, this.option('value'))) {
       if (event) {
         this._saveValueChangeEvent(event);
       }
-      this.option('value', newValue);
+      this.option('value', this._getSerializedDates(newValue));
     }
   };
   _proto._updateDateBoxesValue = function _updateDateBoxesValue(newValue) {
@@ -640,7 +646,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   _proto._applyCustomValidation = function _applyCustomValidation(value) {
     this.validationRequest.fire({
       editor: this,
-      value: value
+      value
     });
   };
   _proto._clean = function _clean() {
@@ -858,6 +864,8 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
         {
           var _newValue2 = (0, _uiDate_range.sortDatesArray)(value);
           if (!(0, _uiDate_range.isSameDateArrays)(_newValue2, previousValue)) {
+            var isDirty = !(0, _uiDate_range.isSameDateArrays)(_newValue2, this._initialValue);
+            this.option('isDirty', isDirty);
             this._setOptionWithoutOptionChange('value', _newValue2);
             this._setOptionWithoutOptionChange('startDate', _newValue2[0]);
             this._setOptionWithoutOptionChange('endDate', _newValue2[1]);
@@ -907,10 +915,10 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   _proto.focus = function focus() {
     this.getStartDateBox().focus();
   };
-  _proto.reset = function reset() {
-    _Editor.prototype.reset.call(this);
-    this.getEndDateBox().reset();
-    this.getStartDateBox().reset();
+  _proto.clear = function clear() {
+    _Editor.prototype.clear.call(this);
+    this.getEndDateBox().clear();
+    this.getStartDateBox().clear();
   };
   return DateRangeBox;
 }(_editor.default);

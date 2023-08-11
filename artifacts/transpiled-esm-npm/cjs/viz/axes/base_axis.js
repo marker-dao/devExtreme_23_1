@@ -23,12 +23,8 @@ var _strip = _interopRequireDefault(require("./strip"));
 var _deferred = require("../../core/utils/deferred");
 var _axes_utils = require("./axes_utils");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var convertTicksToValues = _axes_constants.default.convertTicksToValues;
 var _math = Math;
 var _abs = _math.abs;
@@ -63,8 +59,8 @@ function getTickGenerator(options, incidentOccurred, skipTickGeneration, rangeIs
     axisType: options.type,
     dataType: options.dataType,
     logBase: options.logarithmBase,
-    allowNegatives: allowNegatives,
-    linearThreshold: linearThreshold,
+    allowNegatives,
+    linearThreshold,
     axisDivisionFactor: adjustDivisionFactor(options.axisDivisionFactor || DEFAULT_AXIS_DIVISION_FACTOR),
     minorAxisDivisionFactor: adjustDivisionFactor(options.minorAxisDivisionFactor || DEFAULT_MINOR_AXIS_DIVISION_FACTOR),
     numberMultipliers: options.numberMultipliers,
@@ -77,7 +73,7 @@ function getTickGenerator(options, incidentOccurred, skipTickGeneration, rangeIs
     skipCalculationLimits: options.skipCalculationLimits,
     generateExtraTick: options.generateExtraTick,
     minTickInterval: options.minTickInterval,
-    rangeIsEmpty: rangeIsEmpty
+    rangeIsEmpty
   });
 }
 function createMajorTick(axis, renderer, skippedCategory) {
@@ -149,15 +145,23 @@ function validateAxisOptions(options) {
   if (!labelPosition || labelPosition === 'outside') {
     labelPosition = position;
   } else if (labelPosition === 'inside') {
-    var _TOP$BOTTOM$LEFT$RIGH;
-    labelPosition = (_TOP$BOTTOM$LEFT$RIGH = {}, _defineProperty(_TOP$BOTTOM$LEFT$RIGH, TOP, BOTTOM), _defineProperty(_TOP$BOTTOM$LEFT$RIGH, BOTTOM, TOP), _defineProperty(_TOP$BOTTOM$LEFT$RIGH, LEFT, RIGHT), _defineProperty(_TOP$BOTTOM$LEFT$RIGH, RIGHT, LEFT), _TOP$BOTTOM$LEFT$RIGH)[position];
+    labelPosition = {
+      [TOP]: BOTTOM,
+      [BOTTOM]: TOP,
+      [LEFT]: RIGHT,
+      [RIGHT]: LEFT
+    }[position];
   }
   if (labelPosition !== defaultPosition && labelPosition !== secondaryPosition) {
     labelPosition = position;
   }
   if (labelOptions.alignment !== CENTER && !labelOptions.userAlignment) {
-    var _TOP$BOTTOM$LEFT$RIGH2;
-    labelOptions.alignment = (_TOP$BOTTOM$LEFT$RIGH2 = {}, _defineProperty(_TOP$BOTTOM$LEFT$RIGH2, TOP, CENTER), _defineProperty(_TOP$BOTTOM$LEFT$RIGH2, BOTTOM, CENTER), _defineProperty(_TOP$BOTTOM$LEFT$RIGH2, LEFT, RIGHT), _defineProperty(_TOP$BOTTOM$LEFT$RIGH2, RIGHT, LEFT), _TOP$BOTTOM$LEFT$RIGH2)[labelPosition];
+    labelOptions.alignment = {
+      [TOP]: CENTER,
+      [BOTTOM]: CENTER,
+      [LEFT]: RIGHT,
+      [RIGHT]: LEFT
+    }[labelPosition];
   }
   options.position = position;
   labelOptions.position = labelPosition;
@@ -194,10 +198,10 @@ function getZoomBoundValue(optionValue, dataValue) {
 function configureGenerator(options, axisDivisionFactor, viewPort, screenDelta, minTickInterval) {
   var tickGeneratorOptions = (0, _extend.extend)({}, options, {
     endOnTick: true,
-    axisDivisionFactor: axisDivisionFactor,
+    axisDivisionFactor,
     skipCalculationLimits: true,
     generateExtraTick: true,
-    minTickInterval: minTickInterval
+    minTickInterval
   });
   return function (tickInterval, skipTickGeneration, min, max, breaks) {
     return getTickGenerator(tickGeneratorOptions, _common.noop, skipTickGeneration, viewPort.isEmpty(), function (v) {
@@ -244,7 +248,7 @@ var Axis = function Axis(renderSettings) {
 exports.Axis = Axis;
 Axis.prototype = {
   constructor: Axis,
-  _drawAxis: function _drawAxis() {
+  _drawAxis() {
     var options = this._options;
     if (!options.visible) {
       return;
@@ -257,34 +261,34 @@ Axis.prototype = {
       'stroke-opacity': options.opacity
     }).sharp(this._getSharpParam(true), this.getAxisSharpDirection()).append(this._axisLineGroup);
   },
-  _createPathElement: function _createPathElement(points, attr, sharpDirection) {
+  _createPathElement(points, attr, sharpDirection) {
     return this.sharp(this._renderer.path(points, 'line').attr(attr), sharpDirection);
   },
-  sharp: function sharp(svgElement) {
+  sharp(svgElement) {
     var sharpDirection = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
     return svgElement.sharp(this._getSharpParam(), sharpDirection);
   },
-  customPositionIsAvailable: function customPositionIsAvailable() {
+  customPositionIsAvailable() {
     return false;
   },
   getOrthogonalAxis: _common.noop,
   getCustomPosition: _common.noop,
   getCustomBoundaryPosition: _common.noop,
   resolveOverlappingForCustomPositioning: _common.noop,
-  hasNonBoundaryPosition: function hasNonBoundaryPosition() {
+  hasNonBoundaryPosition() {
     return false;
   },
-  customPositionIsBoundaryOrthogonalAxis: function customPositionIsBoundaryOrthogonalAxis() {
+  customPositionIsBoundaryOrthogonalAxis() {
     return false;
   },
-  getResolvedBoundaryPosition: function getResolvedBoundaryPosition() {
+  getResolvedBoundaryPosition() {
     return this.getOptions().position;
   },
-  getAxisSharpDirection: function getAxisSharpDirection() {
+  getAxisSharpDirection() {
     var position = this.getResolvedBoundaryPosition();
     return this.hasNonBoundaryPosition() || position !== BOTTOM && position !== RIGHT ? 1 : -1;
   },
-  getSharpDirectionByCoords: function getSharpDirectionByCoords(coords) {
+  getSharpDirectionByCoords(coords) {
     var canvas = this._getCanvasStartEnd();
     var maxCoord = Math.max(canvas.start, canvas.end);
     return this.getRadius ? 0 : maxCoord !== coords[this._isHorizontal ? 'x' : 'y'] ? 1 : -1;
@@ -459,7 +463,7 @@ Axis.prototype = {
       }
     });
   },
-  _adjustLabelsCoord: function _adjustLabelsCoord(offset, maxWidth, checkCanvas) {
+  _adjustLabelsCoord(offset, maxWidth, checkCanvas) {
     var _this = this;
     var that = this;
     var getContainerAttrs = function getContainerAttrs(tick) {
@@ -665,12 +669,12 @@ Axis.prototype = {
     var formatObject = this._getLabelFormatObject(value, labelOptions, range);
     return (0, _type.isFunction)(labelOptions.customizeHint) ? labelOptions.customizeHint.call(formatObject, formatObject) : undefined;
   },
-  formatRange: function formatRange(startValue, endValue, interval, argumentFormat) {
+  formatRange(startValue, endValue, interval, argumentFormat) {
     return (0, _smart_formatter.formatRange)({
-      startValue: startValue,
-      endValue: endValue,
+      startValue,
+      endValue,
       tickInterval: interval,
-      argumentFormat: argumentFormat,
+      argumentFormat,
       axisOptions: this.getOptions()
     });
   },
@@ -680,7 +684,7 @@ Axis.prototype = {
     this._tickOffset = +(discreteAxisDivisionMode !== 'crossLabels' || !discreteAxisDivisionMode);
   },
   // T1068023,T948359
-  aggregatedPointBetweenTicks: function aggregatedPointBetweenTicks() {
+  aggregatedPointBetweenTicks() {
     return this._options.aggregatedPointsPosition === 'crossTicks';
   },
   resetApplyingAnimation: function resetApplyingAnimation(isFirstDrawing) {
@@ -689,7 +693,7 @@ Axis.prototype = {
       this._firstDrawing = true;
     }
   },
-  isFirstDrawing: function isFirstDrawing() {
+  isFirstDrawing() {
     return this._firstDrawing;
   },
   getMargins: function getMargins() {
@@ -864,7 +868,7 @@ Axis.prototype = {
       linearThreshold = _Range.linearThreshold;
     return _abs((0, _utils.getLogExt)(value, options.logarithmBase, allowNegatives, linearThreshold) - (0, _utils.getLogExt)(prevValue, options.logarithmBase, allowNegatives, linearThreshold));
   },
-  getCanvasRange: function getCanvasRange() {
+  getCanvasRange() {
     var translator = this._translator;
     return {
       startValue: translator.from(translator.translate('canvas_position_start')),
@@ -891,7 +895,7 @@ Axis.prototype = {
   getCanvas: function getCanvas() {
     return this._canvas;
   },
-  getAxisShift: function getAxisShift() {
+  getAxisShift() {
     return this._axisShift || 0;
   },
   hideTitle: function hideTitle() {
@@ -913,7 +917,7 @@ Axis.prototype = {
       callAction(that._outsideConstantLines, 'removeLabel');
     }
   },
-  _resolveLogarithmicOptionsForRange: function _resolveLogarithmicOptionsForRange(range) {
+  _resolveLogarithmicOptionsForRange(range) {
     var options = this._options;
     if (options.type === _axes_constants.default.logarithmic) {
       range.addRange({
@@ -924,7 +928,7 @@ Axis.prototype = {
       }
     }
   },
-  adjustViewport: function adjustViewport(businessRange) {
+  adjustViewport(businessRange) {
     var that = this;
     var options = that._options;
     var isDiscrete = options.type === _axes_constants.default.discrete;
@@ -959,11 +963,11 @@ Axis.prototype = {
       endValue: maxDefined ? visualRange.endValue : undefined,
       length: visualRange.length
     }, {
-      categories: categories,
+      categories,
       min: wholeRange.startValue,
       max: wholeRange.endValue
     }, {
-      categories: categories,
+      categories,
       min: minVisible,
       max: maxVisible
     });
@@ -975,7 +979,7 @@ Axis.prototype = {
     that._resolveLogarithmicOptionsForRange(result);
     return result;
   },
-  adjustRange: function adjustRange(range) {
+  adjustRange(range) {
     range = range || {};
     var isDiscrete = this._options.type === _axes_constants.default.discrete;
     var isLogarithmic = this._options.type === _axes_constants.default.logarithmic;
@@ -991,7 +995,7 @@ Axis.prototype = {
     }
     return range;
   },
-  _getVisualRangeUpdateMode: function _getVisualRangeUpdateMode(viewport, newRange, oppositeValue) {
+  _getVisualRangeUpdateMode(viewport, newRange, oppositeValue) {
     var value = this._options.visualRangeUpdateMode;
     var translator = this._translator;
     var range = this._seriesData;
@@ -1048,7 +1052,7 @@ Axis.prototype = {
     }
     return value;
   },
-  _handleBusinessRangeChanged: function _handleBusinessRangeChanged(oppositeVisualRangeUpdateMode, axisReinitialized, newRange) {
+  _handleBusinessRangeChanged(oppositeVisualRangeUpdateMode, axisReinitialized, newRange) {
     var that = this;
     var visualRange = this.visualRange();
     if (axisReinitialized || that._translator.getBusinessRange().isEmpty()) {
@@ -1065,7 +1069,7 @@ Axis.prototype = {
       });
     }
   },
-  getVisualRangeLength: function getVisualRangeLength(range) {
+  getVisualRangeLength(range) {
     var currentBusinessRange = range || this._translator.getBusinessRange();
     var type = this._options.type;
     var length;
@@ -1079,7 +1083,7 @@ Axis.prototype = {
     }
     return length;
   },
-  getVisualRangeCenter: function getVisualRangeCenter(range, useMerge) {
+  getVisualRangeCenter(range, useMerge) {
     var translator = this.getTranslator();
     var businessRange = translator.getBusinessRange();
     var currentBusinessRange = useMerge ? (0, _extend.extend)(true, {}, businessRange, range || {}) : range || businessRange;
@@ -1105,7 +1109,7 @@ Axis.prototype = {
     }
     return center;
   },
-  setBusinessRange: function setBusinessRange(range, axisReinitialized, oppositeVisualRangeUpdateMode, argCategories) {
+  setBusinessRange(range, axisReinitialized, oppositeVisualRangeUpdateMode, argCategories) {
     var _that$_seriesData$min, _that$_seriesData$max;
     var that = this;
     var options = that._options;
@@ -1152,7 +1156,7 @@ Axis.prototype = {
     that._seriesData.userBreaks = that._seriesData.isEmpty() ? [] : that._getScaleBreaks(options, that._seriesData, that._series, that.isArgumentAxis);
     that._translator.updateBusinessRange(that._getViewportRange());
   },
-  _addConstantLinesToRange: function _addConstantLinesToRange(dataRange) {
+  _addConstantLinesToRange(dataRange) {
     this._outsideConstantLines.concat(this._insideConstantLines || []).forEach(function (cl) {
       if (cl.options.extendAxis) {
         var value = cl.getParsedValue();
@@ -1269,7 +1273,7 @@ Axis.prototype = {
     }
     return ticks;
   },
-  getAggregationInfo: function getAggregationInfo(useAllAggregatedPoints, range) {
+  getAggregationInfo(useAllAggregatedPoints, range) {
     var _visualRange$startVal, _visualRange$endValue, _that$_seriesData;
     var that = this;
     var options = that._options;
@@ -1332,10 +1336,10 @@ Axis.prototype = {
       ticks: ticks
     };
   },
-  getTickInterval: function getTickInterval() {
+  getTickInterval() {
     return this._tickInterval;
   },
-  getAggregationInterval: function getAggregationInterval() {
+  getAggregationInterval() {
     return this._aggregationInterval;
   },
   createTicks: function createTicks(canvas) {
@@ -1421,13 +1425,13 @@ Axis.prototype = {
     }
     translator.updateBusinessRange(range);
   },
-  _getViewportRange: function _getViewportRange() {
+  _getViewportRange() {
     return this.adjustViewport(this._seriesData);
   },
   setMarginOptions: function setMarginOptions(options) {
     this._marginOptions = options;
   },
-  getMarginOptions: function getMarginOptions() {
+  getMarginOptions() {
     var _this$_marginOptions;
     return (_this$_marginOptions = this._marginOptions) !== null && _this$_marginOptions !== void 0 ? _this$_marginOptions : {};
   },
@@ -1443,7 +1447,7 @@ Axis.prototype = {
     addToArgs(this._aggregationInterval);
     return this._calculateWorkWeekInterval(_min.apply(this, minArgs));
   },
-  _calculateWorkWeekInterval: function _calculateWorkWeekInterval(businessInterval) {
+  _calculateWorkWeekInterval(businessInterval) {
     var options = this._options;
     if (options.dataType === 'datetime' && options.workdaysOnly && businessInterval) {
       var workWeek = options.workWeek.length * dateIntervals.day;
@@ -1457,11 +1461,11 @@ Axis.prototype = {
     }
     return businessInterval;
   },
-  _getConvertIntervalCoefficient: function _getConvertIntervalCoefficient(intervalInPx, screenDelta) {
+  _getConvertIntervalCoefficient(intervalInPx, screenDelta) {
     var ratioOfCanvasRange = this._translator.ratioOfCanvasRange();
     return ratioOfCanvasRange / (ratioOfCanvasRange * screenDelta / (intervalInPx + screenDelta));
   },
-  _calculateValueMargins: function _calculateValueMargins(ticks) {
+  _calculateValueMargins(ticks) {
     this._resetMargins();
     var that = this;
     var margins = that.getMarginOptions();
@@ -1586,7 +1590,7 @@ Axis.prototype = {
       isSpacedMargin: minPadding === maxPadding && minPadding !== 0
     };
   },
-  getCorrectedValuesToZero: function getCorrectedValuesToZero(minValue, maxValue) {
+  getCorrectedValuesToZero(minValue, maxValue) {
     var that = this;
     var translator = that._translator;
     var canvasStartEnd = that._getCanvasStartEnd();
@@ -1617,11 +1621,11 @@ Axis.prototype = {
     return {
       start: isFinite(start) ? start : null,
       end: isFinite(end) ? end : null,
-      correctedMin: correctedMin,
-      correctedMax: correctedMax
+      correctedMin,
+      correctedMax
     };
   },
-  applyMargins: function applyMargins() {
+  applyMargins() {
     if (this._isSynchronized) {
       return;
     }
@@ -1645,7 +1649,7 @@ Axis.prototype = {
       this._translator.updateCanvas(this._processCanvas(this._canvas));
     }
   },
-  _createConstantLines: function _createConstantLines() {
+  _createConstantLines() {
     var _this2 = this;
     var constantLines = (this._options.constantLines || []).map(function (o) {
       return (0, _constant_line.default)(_this2, o);
@@ -1724,16 +1728,16 @@ Axis.prototype = {
     offset = that._adjustDateMarkers(offset);
     that._adjustTitle(offset);
   },
-  getTemplatesDef: function getTemplatesDef() {
+  getTemplatesDef() {
     return this._templatesRendered;
   },
-  setRenderedState: function setRenderedState(state) {
+  setRenderedState(state) {
     this._drawn = state;
   },
-  isRendered: function isRendered() {
+  isRendered() {
     return this._drawn;
   },
-  _applyWordWrap: function _applyWordWrap() {
+  _applyWordWrap() {
     var that = this;
     var convertedTickInterval;
     var textWidth;
@@ -1781,10 +1785,10 @@ Axis.prototype = {
     }
   },
   _measureTitle: _common.noop,
-  animate: function animate() {
+  animate() {
     callAction(this._majorTicks, 'animateLabels');
   },
-  updateSize: function updateSize(canvas, animate) {
+  updateSize(canvas, animate) {
     var updateTitle = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
     var that = this;
     that.updateCanvas(canvas);
@@ -1831,7 +1835,7 @@ Axis.prototype = {
     that._updateLabelsPosition();
   },
   _updateLabelsPosition: _common.noop,
-  prepareAnimation: function prepareAnimation() {
+  prepareAnimation() {
     var that = this;
     var action = 'saveCoords';
     callAction(that._majorTicks, action);
@@ -1840,7 +1844,7 @@ Axis.prototype = {
     callAction(that._outsideConstantLines, action);
     callAction(that._strips, action);
   },
-  _resetStartCoordinates: function _resetStartCoordinates() {
+  _resetStartCoordinates() {
     var that = this;
     var action = 'resetCoordinates';
     callAction(that._majorTicks, action);
@@ -1860,7 +1864,7 @@ Axis.prototype = {
       'clip-path': canvasClipID
     });
   },
-  _validateVisualRange: function _validateVisualRange(optionValue) {
+  _validateVisualRange(optionValue) {
     var range = (0, _utils.getVizRangeObject)(optionValue);
     if (range.startValue !== undefined) {
       range.startValue = this.validateUnit(range.startValue);
@@ -1870,12 +1874,12 @@ Axis.prototype = {
     }
     return (0, _utils.convertVisualRangeObject)(range, !_isArray(optionValue));
   },
-  _validateOptions: function _validateOptions(options) {
+  _validateOptions(options) {
     options.wholeRange = this._validateVisualRange(options.wholeRange);
     options.visualRange = options._customVisualRange = this._validateVisualRange(options._customVisualRange);
     this._setVisualRange(options._customVisualRange);
   },
-  validate: function validate() {
+  validate() {
     var that = this;
     var options = that._options;
     var dataType = that.isArgumentAxis ? options.argumentType : options.valueType;
@@ -1886,7 +1890,7 @@ Axis.prototype = {
     options.dataType = dataType;
     that._validateOptions(options);
   },
-  resetVisualRange: function resetVisualRange(isSilent) {
+  resetVisualRange(isSilent) {
     this._seriesData.minVisible = this._seriesData.min;
     this._seriesData.maxVisible = this._seriesData.max;
     this.handleZooming([null, null], {
@@ -1894,7 +1898,7 @@ Axis.prototype = {
       end: !!isSilent
     });
   },
-  _setVisualRange: function _setVisualRange(visualRange, allowPartialUpdate) {
+  _setVisualRange(visualRange, allowPartialUpdate) {
     var range = this.adjustRange((0, _utils.getVizRangeObject)(visualRange));
     if (allowPartialUpdate) {
       (0, _type.isDefined)(range.startValue) && (this._viewport.startValue = range.startValue);
@@ -1903,7 +1907,7 @@ Axis.prototype = {
       this._viewport = range;
     }
   },
-  _applyZooming: function _applyZooming(visualRange, allowPartialUpdate) {
+  _applyZooming(visualRange, allowPartialUpdate) {
     var that = this;
     that._resetVisualRangeOption();
     that._setVisualRange(visualRange, allowPartialUpdate);
@@ -1914,32 +1918,32 @@ Axis.prototype = {
     }, that._series, that.isArgumentAxis);
     that._translator.updateBusinessRange(that._getViewportRange());
   },
-  getZoomStartEventArg: function getZoomStartEventArg(event, actionType) {
+  getZoomStartEventArg(event, actionType) {
     return {
       axis: this,
       range: this.visualRange(),
       cancel: false,
-      event: event,
-      actionType: actionType
+      event,
+      actionType
     };
   },
-  _getZoomEndEventArg: function _getZoomEndEventArg(previousRange, event, actionType, zoomFactor, shift) {
+  _getZoomEndEventArg(previousRange, event, actionType, zoomFactor, shift) {
     var newRange = this.visualRange();
     return {
       axis: this,
-      previousRange: previousRange,
+      previousRange,
       range: newRange,
       cancel: false,
-      event: event,
-      actionType: actionType,
-      zoomFactor: zoomFactor,
-      shift: shift,
+      event,
+      actionType,
+      zoomFactor,
+      shift,
       // backwards
       rangeStart: newRange.startValue,
       rangeEnd: newRange.endValue
     };
   },
-  getZoomBounds: function getZoomBounds() {
+  getZoomBounds() {
     var wholeRange = (0, _utils.getVizRangeObject)(this._options.wholeRange);
     var range = this.getTranslator().getBusinessRange();
     var secondPriorityRange = {
@@ -1951,16 +1955,16 @@ Axis.prototype = {
       endValue: getZoomBoundValue(wholeRange.endValue, secondPriorityRange.endValue)
     };
   },
-  setInitRange: function setInitRange() {
+  setInitRange() {
     this._initRange = {};
     if (Object.keys(this._options.wholeRange || {}).length === 0) {
       this._initRange = this.getZoomBounds();
     }
   },
-  _resetVisualRangeOption: function _resetVisualRangeOption() {
+  _resetVisualRangeOption() {
     this._options._customVisualRange = {};
   },
-  getTemplatesGroups: function getTemplatesGroups() {
+  getTemplatesGroups() {
     var ticks = this._majorTicks;
     if (ticks) {
       return this._majorTicks.map(function (tick) {
@@ -1972,11 +1976,11 @@ Axis.prototype = {
       return [];
     }
   },
-  setCustomVisualRange: function setCustomVisualRange(range) {
+  setCustomVisualRange(range) {
     this._options._customVisualRange = range;
   },
   // API
-  visualRange: function visualRange() {
+  visualRange() {
     var that = this;
     var args = arguments;
     var visualRange;
@@ -1989,14 +1993,14 @@ Axis.prototype = {
         startValue = (_startValue = startValue) !== null && _startValue !== void 0 ? _startValue : adjustedRange.categories[0];
         endValue = (_endValue = endValue) !== null && _endValue !== void 0 ? _endValue : adjustedRange.categories[adjustedRange.categories.length - 1];
         return {
-          startValue: startValue,
-          endValue: endValue,
+          startValue,
+          endValue,
           categories: (0, _utils.getCategoriesInfo)(adjustedRange.categories, startValue, endValue).categories
         };
       }
       return {
-        startValue: startValue,
-        endValue: endValue
+        startValue,
+        endValue
       };
     } else if (_isArray(args[0])) {
       visualRange = args[0];
@@ -2010,7 +2014,7 @@ Axis.prototype = {
       that._visualRange(that, zoomResults);
     }
   },
-  handleZooming: function handleZooming(visualRange, preventEvents, domEvent, action) {
+  handleZooming(visualRange, preventEvents, domEvent, action) {
     var that = this;
     preventEvents = preventEvents || {};
     if ((0, _type.isDefined)(visualRange)) {
@@ -2039,7 +2043,7 @@ Axis.prototype = {
     }
     return zoomResults;
   },
-  handleZoomEnd: function handleZoomEnd() {
+  handleZoomEnd() {
     var that = this;
     if ((0, _type.isDefined)(that._storedZoomEndParams) && !that._storedZoomEndParams.prevent) {
       var previousRange = that._storedZoomEndParams.startRange;
@@ -2062,13 +2066,13 @@ Axis.prototype = {
       that._storedZoomEndParams = null;
     }
   },
-  _restorePreviousVisualRange: function _restorePreviousVisualRange(previousRange) {
+  _restorePreviousVisualRange(previousRange) {
     var that = this;
     that._storedZoomEndParams = null;
     that._applyZooming(previousRange);
     that._visualRange(that, previousRange);
   },
-  checkZoomingLowerLimitOvercome: function checkZoomingLowerLimitOvercome(actionType, zoomFactor, range) {
+  checkZoomingLowerLimitOvercome(actionType, zoomFactor, range) {
     var that = this;
     var options = that._options;
     var translator = that._translator;
@@ -2109,7 +2113,7 @@ Axis.prototype = {
       correctedRange: correctedRange
     };
   },
-  isExtremePosition: function isExtremePosition(isMax) {
+  isExtremePosition(isMax) {
     var extremeDataValue;
     var seriesData;
     if (this._options.type === 'discrete') {
@@ -2125,7 +2129,7 @@ Axis.prototype = {
     var visualRangePoint = isMax ? translator.translate(visualRange.endValue) : translator.translate(visualRange.startValue);
     return _abs(visualRangePoint - extremePoint) < SCROLL_THRESHOLD;
   },
-  getViewport: function getViewport() {
+  getViewport() {
     return this._viewport;
   },
   getFullTicks: function getFullTicks() {
@@ -2316,7 +2320,7 @@ Axis.prototype = {
       breaksSize: (_options$breakStyle$w = (_options$breakStyle = options.breakStyle) === null || _options$breakStyle === void 0 ? void 0 : _options$breakStyle.width) !== null && _options$breakStyle$w !== void 0 ? _options$breakStyle$w : 0
     };
   },
-  getVisibleArea: function getVisibleArea() {
+  getVisibleArea() {
     var canvas = this._getCanvasStartEnd();
     return [canvas.start, canvas.end].sort(function (a, b) {
       return a - b;
@@ -2356,11 +2360,11 @@ Axis.prototype = {
   drawScaleBreaks: _common.noop,
   _visualRange: _common.noop,
   _rotateConstantLine: _common.noop,
-  applyVisualRangeSetter: function applyVisualRangeSetter(visualRangeSetter) {
+  applyVisualRangeSetter(visualRangeSetter) {
     this._visualRange = visualRangeSetter;
   },
   // T642779, T714928, T810801
-  getCategoriesSorter: function getCategoriesSorter(argCategories) {
+  getCategoriesSorter(argCategories) {
     var sort;
     if (this.isArgumentAxis) {
       sort = argCategories;
@@ -2370,7 +2374,7 @@ Axis.prototype = {
     }
     return sort;
   },
-  _getAdjustedBusinessRange: function _getAdjustedBusinessRange() {
+  _getAdjustedBusinessRange() {
     return this.adjustViewport(this._translator.getBusinessRange());
   }
 };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/validation_message.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,7 @@ var INVALID_MESSAGE_ALWAYS = 'dx-invalid-message-always';
 var INVALID_MESSAGE_CONTENT = 'dx-invalid-message-content';
 var VALIDATION_MESSAGE_MIN_WIDTH = 100;
 var ValidationMessage = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       integrationOptions: {},
       templatesRenderAsynchronously: false,
@@ -53,12 +53,12 @@ var ValidationMessage = _ui.default.inherit({
       contentId: undefined
     });
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this.updateMaxWidth();
     this._updatePosition();
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.callBase();
     this._ensureMessageNotEmpty();
     this._updatePositionByTarget();
@@ -84,18 +84,18 @@ var ValidationMessage = _ui.default.inherit({
       this.$wrapper().removeClass(INVALID_MESSAGE);
     }
   },
-  _updateContentId: function _updateContentId() {
+  _updateContentId() {
     var _this$option2 = this.option(),
       container = _this$option2.container,
       contentId = _this$option2.contentId;
     var id = contentId !== null && contentId !== void 0 ? contentId : (0, _renderer.default)(container).attr('aria-describedby');
     this.$content().addClass(INVALID_MESSAGE_CONTENT).attr('id', id);
   },
-  _renderInnerHtml: function _renderInnerHtml(element) {
+  _renderInnerHtml(element) {
     var $element = element && (0, _renderer.default)(element);
     $element === null || $element === void 0 ? void 0 : $element.html(this._textMarkup);
   },
-  _getTextMarkup: function _getTextMarkup() {
+  _getTextMarkup() {
     var _this$option3;
     var validationErrors = (_this$option3 = this.option('validationErrors')) !== null && _this$option3 !== void 0 ? _this$option3 : [];
     var validationErrorMessage = '';
@@ -106,11 +106,11 @@ var ValidationMessage = _ui.default.inherit({
     });
     return validationErrorMessage;
   },
-  _toggleModeClass: function _toggleModeClass() {
+  _toggleModeClass() {
     var mode = this.option('mode');
     this.$wrapper().toggleClass(INVALID_MESSAGE_AUTO, mode === 'auto').toggleClass(INVALID_MESSAGE_ALWAYS, mode === 'always');
   },
-  updateMaxWidth: function updateMaxWidth() {
+  updateMaxWidth() {
     var target = this.option('target');
     var targetWidth = (0, _size.getOuterWidth)(target);
     var maxWidth = '100%';
@@ -118,7 +118,7 @@ var ValidationMessage = _ui.default.inherit({
       maxWidth = Math.max(targetWidth, VALIDATION_MESSAGE_MIN_WIDTH);
     }
     this.option({
-      maxWidth: maxWidth
+      maxWidth
     });
   },
   _getPositionsArray: function _getPositionsArray(positionSide, rtlSide) {
@@ -147,14 +147,14 @@ var ValidationMessage = _ui.default.inherit({
     if (positionSide === 'top') offset.v = -offset.v;
     if (positionSide === 'left') offset.h = -offset.h;
     this.option('position', {
-      offset: offset,
-      boundary: boundary,
+      offset,
+      boundary,
       my: positions[0],
       at: positions[1],
       collision: 'none flip'
     });
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var name = args.name,
       value = args.value,
       previousValue = args.previousValue;

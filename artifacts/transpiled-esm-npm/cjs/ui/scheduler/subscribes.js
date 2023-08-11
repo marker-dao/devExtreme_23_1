@@ -9,7 +9,7 @@ var _extend = require("../../core/utils/extend");
 var _classes = require("./classes");
 var _utils = require("./utils");
 var _appointmentAdapter = require("./appointmentAdapter");
-var _textUtils = require("./appointments/textUtils");
+var _m_text_utils = require("../../__internal/scheduler/appointments/m_text_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var toMs = _date.default.dateToMilliseconds;
 var subscribes = {
@@ -97,7 +97,7 @@ var subscribes = {
     this.checkAndDeleteAppointment(options.data, targetedData);
     this.hideAppointmentTooltip();
   },
-  getTextAndFormatDate: function getTextAndFormatDate(appointmentRaw, targetedAppointmentRaw, format) {
+  getTextAndFormatDate(appointmentRaw, targetedAppointmentRaw, format) {
     // TODO: rename to createFormattedDateText
     var appointmentAdapter = (0, _appointmentAdapter.createAppointmentAdapter)(appointmentRaw, this._dataAccessors, this.timeZoneCalculator);
     var targetedAdapter = (0, _appointmentAdapter.createAppointmentAdapter)(targetedAppointmentRaw || appointmentRaw, this._dataAccessors, this.timeZoneCalculator);
@@ -109,13 +109,13 @@ var subscribes = {
     var endDate = this.timeZoneCalculator.createDate(targetedAdapter.endDate, {
       path: 'toGrid'
     });
-    var formatType = format || (0, _textUtils.getFormatType)(startDate, endDate, targetedAdapter.allDay, this.currentViewType !== 'month');
+    var formatType = format || (0, _m_text_utils.getFormatType)(startDate, endDate, targetedAdapter.allDay, this.currentViewType !== 'month');
     return {
       text: targetedAdapter.text || appointmentAdapter.text,
-      formatDate: (0, _textUtils.formatDates)(startDate, endDate, formatType)
+      formatDate: (0, _m_text_utils.formatDates)(startDate, endDate, formatType)
     };
   },
-  _createAppointmentTitle: function _createAppointmentTitle(data) {
+  _createAppointmentTitle(data) {
     if ((0, _type.isPlainObject)(data)) {
       return data.text;
     }

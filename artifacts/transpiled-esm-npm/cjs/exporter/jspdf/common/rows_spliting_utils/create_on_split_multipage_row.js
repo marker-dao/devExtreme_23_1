@@ -6,7 +6,7 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 function createMultiCellRect(rect, text, marginTop) {
   return _extends({}, rect, {
     sourceCellInfo: _extends({}, rect.sourceCellInfo, {
-      text: text
+      text
     }),
     y: marginTop
   });

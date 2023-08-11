@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/animation/position.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -44,8 +44,8 @@ var normalizeAlign = function normalizeAlign(raw) {
   }
   return result;
 };
-var normalizeOffset = function normalizeOffset(raw) {
-  return pairToObject(raw);
+var normalizeOffset = function normalizeOffset(raw, preventRound) {
+  return pairToObject(raw, preventRound);
 };
 var normalizeCollision = function normalizeCollision(raw) {
   var pair = splitPair(raw);
@@ -196,10 +196,10 @@ var calculatePosition = function calculatePosition(what, options) {
   var my = normalizeAlign(options.my);
   var at = normalizeAlign(options.at);
   var of = $(options.of).length && options.of || window;
-  var offset = normalizeOffset(options.offset);
+  var offset = normalizeOffset(options.offset, options.precise);
   var collision = normalizeCollision(options.collision);
   var boundary = options.boundary;
-  var boundaryOffset = normalizeOffset(options.boundaryOffset);
+  var boundaryOffset = normalizeOffset(options.boundaryOffset, options.precise);
   var h = {
     mySize: getOuterWidth($what),
     myAlign: my.h,

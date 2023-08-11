@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/virtual_columns/m_virtual_columns_core.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -68,7 +68,7 @@ function createColumnsInfo(info, startIndex, endIndex) {
       }
       if (colspan !== cellColspan) {
         cell = (0, _extend.extend)({}, cell, {
-          colspan: colspan
+          colspan
         });
       }
       newInfo[rowIndex].push(cell);

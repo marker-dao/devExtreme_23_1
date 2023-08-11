@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.tr.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Artan Sıralama",
             "dxDataGrid-sortingDescendingText": "Azalan Sıralama",
             "dxDataGrid-sortingClearText": "Sıralamayı Temizle",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Değişiklikleri Kaydet",
             "dxDataGrid-editingCancelAllChanges": "Değişiklikleri iptal et",
             "dxDataGrid-editingAddRow": "Satır ekle",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filtre hücresi",
             "dxDataGrid-ariaCollapse": "Daralt",
             "dxDataGrid-ariaExpand": "Genişlet",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Tablo",
             "dxDataGrid-ariaSearchInGrid": "Tabloda ara",
             "dxDataGrid-ariaSelectAll": "Hepsini seç",
             "dxDataGrid-ariaSelectRow": "Satırı seç",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Filtre Oluşturucu",
             "dxDataGrid-filterPanelCreateFilter": "Filtre Oluştur",
             "dxDataGrid-filterPanelClearFilter": "Temizle",

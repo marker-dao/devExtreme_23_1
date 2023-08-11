@@ -19,18 +19,16 @@ var _pointer = _interopRequireDefault(require("../../../events/pointer"));
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _excluded = ["canvas", "canvasChange", "children", "className", "classes", "color", "defaultCanvas", "disabled", "endScaleValue", "margin", "onTooltipHidden", "onTooltipShown", "pointerEvents", "rtlEnabled", "showTarget", "showZeroLevel", "size", "startScaleValue", "target", "targetColor", "targetWidth", "tooltip", "value"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var TARGET_MIN_Y = 0.02;
 var TARGET_MAX_Y = 0.98;
 var BAR_VALUE_MIN_Y = 0.1;
@@ -53,23 +51,25 @@ var inCanvas = function inCanvas(canvas, x, y) {
     top: 0,
     right: width,
     bottom: height,
-    width: width,
-    height: height
+    width,
+    height
   }, x, y);
 };
 var getCssClasses = function getCssClasses(_ref) {
   var classes = _ref.classes;
-  var rootClassesMap = _defineProperty({
+  var rootClassesMap = {
     dxb: true,
-    'dxb-bullet': true
-  }, String(classes), !!classes);
+    'dxb-bullet': true,
+    [String(classes)]: !!classes
+  };
   return (0, _combine_classes.combineClasses)(rootClassesMap);
 };
 var getContainerCssClasses = function getContainerCssClasses(_ref2) {
   var className = _ref2.className;
-  var rootClassesMap = _defineProperty({
-    'dx-bullet': true
-  }, String(className), !!className);
+  var rootClassesMap = {
+    'dx-bullet': true,
+    [String(className)]: !!className
+  };
   return (0, _combine_classes.combineClasses)(rootClassesMap);
 };
 var viewFunction = function viewFunction(viewModel) {
@@ -230,8 +230,8 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
       value = _this$props.value;
     var tmpProps = {
       inverted: false,
-      value: value,
-      target: target,
+      value,
+      target,
       startScaleValue: startScaleValue === undefined ? Math.min(target, value, 0) : startScaleValue,
       endScaleValue: endScaleValue === undefined ? Math.max(target, value) : endScaleValue
     };
@@ -355,7 +355,7 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     get: function get() {
       var classes = this.props.classes;
       return getCssClasses({
-        classes: classes
+        classes
       });
     }
   }, {
@@ -363,7 +363,7 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     get: function get() {
       var className = this.props.className;
       return getContainerCssClasses({
-        className: className
+        className
       });
     }
   }, {
@@ -432,8 +432,8 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
         eventData: {
           component: this.widgetRef
         },
-        onTooltipHidden: onTooltipHidden,
-        onTooltipShown: onTooltipShown,
+        onTooltipHidden,
+        onTooltipShown,
         customizeTooltip: (0, _utils.generateCustomizeTooltipCallback)(tooltip.customizeTooltip, tooltip.font, this.rtlEnabled),
         data: this.tooltipData
       }, this.tooltipCoords);

@@ -4,7 +4,7 @@ exports.default = void 0;
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var DiagramToolboxManager = {
-  getDefaultGroups: function getDefaultGroups() {
+  getDefaultGroups() {
     return this._groups || (this._groups = {
       general: {
         category: 'general',

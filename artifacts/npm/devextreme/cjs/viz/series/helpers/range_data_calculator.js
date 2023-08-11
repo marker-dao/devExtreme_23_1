@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/helpers/range_data_calculator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -166,7 +166,7 @@ function getViewPortFilter(viewport) {
   };
 }
 var _default = {
-  getViewPortFilter: getViewPortFilter,
+  getViewPortFilter,
   getArgumentRange: function getArgumentRange(series) {
     var data = series._data || [];
     var range = {};
@@ -187,7 +187,7 @@ var _default = {
         range = {
           min: data[0].argument,
           max: data[data.length - 1].argument,
-          interval: interval
+          interval
         };
       }
     }

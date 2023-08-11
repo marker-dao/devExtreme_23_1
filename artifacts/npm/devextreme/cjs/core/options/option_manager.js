@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/options/option_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -63,7 +63,7 @@ var OptionManager = /*#__PURE__*/function () {
     cachedGetters[name] = cachedGetters[name] || (0, _data.compileGetter)(name);
     return cachedGetters[name](options, {
       functionsAsIs: true,
-      unwrapObservables: unwrapObservables
+      unwrapObservables
     });
   };
   _proto.set = function set(options, value, merge, silent) {

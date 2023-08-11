@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _size = require("../../core/utils/size");
 var _fx = _interopRequireDefault(require("../../animation/fx"));
@@ -34,7 +33,7 @@ var _browser = _interopRequireDefault(require("../../core/utils/browser"));
 var zIndexPool = _interopRequireWildcard(require("./z_index"));
 var _overlay_position_controller = require("./overlay_position_controller");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var ready = _ready_callbacks.default.add;
 var window = (0, _window.getWindow)();
@@ -161,7 +160,7 @@ var Overlay = _ui2.default.inherit({
   _eventBindingTarget: function _eventBindingTarget() {
     return this._$content;
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this.callBase();
     (0, _extend.extend)(this._deprecatedOptions, {
       'closeOnOutsideClick': {
@@ -190,7 +189,7 @@ var Overlay = _ui2.default.inherit({
       }
     }
   },
-  _logDeprecatedPreventScrollEventsInfo: function _logDeprecatedPreventScrollEventsInfo() {
+  _logDeprecatedPreventScrollEventsInfo() {
     this._logDeprecatedOptionWarning('preventScrollEvents', {
       since: '23.1',
       message: 'If you enable this option, end-users may experience scrolling issues.'
@@ -221,7 +220,7 @@ var Overlay = _ui2.default.inherit({
     };
     this.warnPositionAsFunction();
   },
-  warnPositionAsFunction: function warnPositionAsFunction() {
+  warnPositionAsFunction() {
     if ((0, _type.isFunction)(this.option('position'))) {
       // position as function deprecated in 21.2
       _errors.default.log('W0018');
@@ -252,7 +251,7 @@ var Overlay = _ui2.default.inherit({
       return _this4._documentDownHandler.apply(_this4, arguments);
     };
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.callBase();
     this._renderWrapperAttributes();
     this._initPositionController();
@@ -277,7 +276,7 @@ var Overlay = _ui2.default.inherit({
     }
     return hideOnOutsideClick;
   },
-  _outsideClickHandler: function _outsideClickHandler(e) {
+  _outsideClickHandler(e) {
     if (this.option('shading')) {
       e.preventDefault();
     }
@@ -322,7 +321,7 @@ var Overlay = _ui2.default.inherit({
     this._positionController.updateContainer(this.option('container'));
     this._refresh();
   },
-  _renderWrapperAttributes: function _renderWrapperAttributes() {
+  _renderWrapperAttributes() {
     var _this$option2 = this.option(),
       wrapperAttr = _this$option2.wrapperAttr;
     var attributes = (0, _extend.extend)({}, wrapperAttr);
@@ -741,7 +740,7 @@ var Overlay = _ui2.default.inherit({
     contentTemplate && contentTemplate.render({
       container: (0, _element.getPublicElement)(this.$content()),
       noModel: true,
-      transclude: transclude,
+      transclude,
       onRendered: function onRendered() {
         whenContentRendered.resolve();
 
@@ -759,7 +758,7 @@ var Overlay = _ui2.default.inherit({
     });
     return whenContentRendered.promise();
   },
-  _getPositionControllerConfig: function _getPositionControllerConfig() {
+  _getPositionControllerConfig() {
     var _this$option3 = this.option(),
       container = _this$option3.container,
       visualContainer = _this$option3.visualContainer,
@@ -768,18 +767,18 @@ var Overlay = _ui2.default.inherit({
     // NOTE: position is passed to controller in renderGeometry to prevent window field using in server side mode
 
     return {
-      container: container,
-      visualContainer: visualContainer,
+      container,
+      visualContainer,
       $root: this.$element(),
       $content: this._$content,
       $wrapper: this._$wrapper,
       onPositioned: this._actions.onPositioned,
       onVisualPositionChanged: this._actions.onVisualPositionChanged,
-      restorePosition: restorePosition,
-      _fixWrapperPosition: _fixWrapperPosition
+      restorePosition,
+      _fixWrapperPosition
     };
   },
-  _initPositionController: function _initPositionController() {
+  _initPositionController() {
     this._positionController = new _overlay_position_controller.OverlayPositionController(this._getPositionControllerConfig());
   },
   _toggleWrapperScrollEventsSubscription: function _toggleWrapperScrollEventsSubscription(enabled) {
@@ -818,7 +817,7 @@ var Overlay = _ui2.default.inherit({
     this._$content.appendTo(this.$element());
     this._$wrapper.detach();
   },
-  _checkContainerExists: function _checkContainerExists() {
+  _checkContainerExists() {
     var $wrapperContainer = this._positionController.$container;
 
     // NOTE: The container is undefined when DOM is not ready yet. See T1143527
@@ -850,7 +849,7 @@ var Overlay = _ui2.default.inherit({
     this._renderDimensions();
     this._renderPosition();
   },
-  _renderPosition: function _renderPosition() {
+  _renderPosition() {
     this._positionController.positionContent();
   },
   _isAllWindowCovered: function _isAllWindowCovered() {
@@ -942,7 +941,7 @@ var Overlay = _ui2.default.inherit({
     this._stopShowTimer();
     this._cleanFocusState();
   },
-  _stopShowTimer: function _stopShowTimer() {
+  _stopShowTimer() {
     if (this._asyncShowTimeout) {
       clearTimeout(this._asyncShowTimeout);
     }

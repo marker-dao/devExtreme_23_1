@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "昇順に並べ替え",
             "dxDataGrid-sortingDescendingText": "降順に並べ替え",
             "dxDataGrid-sortingClearText": "並べ替えをクリア",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "変更を保存",
             "dxDataGrid-editingCancelAllChanges": "変更を破棄",
             "dxDataGrid-editingAddRow": "行を追加",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "フィルター セル",
             "dxDataGrid-ariaCollapse": "折りたたむ",
             "dxDataGrid-ariaExpand": "展開",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "{0} 行と {1} 列のデータ グリッド",
             "dxDataGrid-ariaSearchInGrid": "データ グリッド内で検索",
             "dxDataGrid-ariaSelectAll": "すべてを選択",
             "dxDataGrid-ariaSelectRow": "行の選択",
             "dxDataGrid-ariaToolbar": "データ グリッドのツール バー",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "フィルター ビルダー",
             "dxDataGrid-filterPanelCreateFilter": "フィルターの作成",
             "dxDataGrid-filterPanelClearFilter": "クリア",

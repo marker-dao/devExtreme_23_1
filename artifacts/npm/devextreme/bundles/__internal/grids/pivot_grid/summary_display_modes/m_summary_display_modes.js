@@ -1,14 +1,13 @@
 /**
 * DevExtreme (bundles/__internal/grids/pivot_grid/summary_display_modes/m_summary_display_modes.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -23,7 +22,7 @@ var _extend = require("../../../../core/utils/extend");
 var _type = require("../../../../core/utils/type");
 var _m_widget_utils = _interopRequireWildcard(require("../m_widget_utils"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 var COLUMN = 'column';
 var ROW = 'row';
 var NULL = null;
@@ -34,7 +33,7 @@ var calculatePercentValue = function calculatePercentValue(value, totalValue) {
   }
   return result;
 };
-var _percentOfGrandTotal = function percentOfGrandTotal(e, dimension) {
+var percentOfGrandTotal = function percentOfGrandTotal(e, dimension) {
   return calculatePercentValue(e.value(), e.grandTotal(dimension).value());
 };
 var percentOfParent = function percentOfParent(e, dimension) {
@@ -62,20 +61,20 @@ var createPercentVariationExp = function createPercentVariationExp(allowCrossGro
   };
 };
 var summaryDictionary = {
-  percentOfColumnTotal: function percentOfColumnTotal(e) {
+  percentOfColumnTotal(e) {
     return percentOfParent(e, ROW);
   },
-  percentOfRowTotal: function percentOfRowTotal(e) {
+  percentOfRowTotal(e) {
     return percentOfParent(e, COLUMN);
   },
-  percentOfColumnGrandTotal: function percentOfColumnGrandTotal(e) {
-    return _percentOfGrandTotal(e, ROW);
+  percentOfColumnGrandTotal(e) {
+    return percentOfGrandTotal(e, ROW);
   },
-  percentOfRowGrandTotal: function percentOfRowGrandTotal(e) {
-    return _percentOfGrandTotal(e, COLUMN);
+  percentOfRowGrandTotal(e) {
+    return percentOfGrandTotal(e, COLUMN);
   },
-  percentOfGrandTotal: function percentOfGrandTotal(e) {
-    return _percentOfGrandTotal(e);
+  percentOfGrandTotal(e) {
+    return percentOfGrandTotal(e);
   }
 };
 exports.summaryDictionary = summaryDictionary;
@@ -128,7 +127,7 @@ function getFieldPos(descriptions, field, cache) {
   if (field) {
     var area = field.area || 'data';
     fieldParams = cache.positions[field.index] = cache.positions[field.index] || {
-      area: area,
+      area,
       index: descriptions[area === 'data' ? 'values' : "".concat(area, "s")].indexOf(field)
     };
   }
@@ -160,18 +159,18 @@ var SummaryCell = function SummaryCell(columnPath, rowPath, data, descriptions, 
 };
 exports.Cell = SummaryCell;
 SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
-  _getPath: function _getPath(dimension) {
+  _getPath(dimension) {
     return this[getPathFieldName(dimension)];
   },
-  _getDimension: function _getDimension(dimension) {
+  _getDimension(dimension) {
     dimension = dimension === ROW ? 'rows' : 'columns';
     return this._descriptions[dimension];
   },
-  _createCell: function _createCell(config) {
+  _createCell(config) {
     var that = this;
     return new SummaryCell(config._columnPath || that._columnPath, config._rowPath || that._rowPath, that._data, that._descriptions, that._fieldIndex);
   },
-  parent: function parent(direction) {
+  parent(direction) {
     var path = this._getPath(direction).slice();
     var config = {};
     path.shift();
@@ -181,7 +180,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return NULL;
   },
-  children: function children(direction) {
+  children(direction) {
     var path = this._getPath(direction).slice();
     var item = path[0];
     var result = [];
@@ -195,7 +194,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return result;
   },
-  grandTotal: function grandTotal(direction) {
+  grandTotal(direction) {
     var config = {};
     var rowPath = this._rowPath;
     var columnPath = this._columnPath;
@@ -209,7 +208,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return this._createCell(config);
   },
-  next: function next(direction, allowCrossGroup) {
+  next(direction, allowCrossGroup) {
     var currentPath = this._getPath(direction);
     var item = currentPath[0];
     var parent = this.parent(direction);
@@ -230,7 +229,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return NULL;
   },
-  prev: function prev(direction, allowCrossGroup) {
+  prev(direction, allowCrossGroup) {
     var currentPath = this._getPath(direction);
     var item = currentPath[0];
     var parent = this.parent(direction);
@@ -251,10 +250,10 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return NULL;
   },
-  cell: function cell() {
+  cell() {
     return this._cell;
   },
-  field: function field(area) {
+  field(area) {
     if (area === 'data') {
       return this._descriptions.values[this._fieldIndex];
     }
@@ -263,7 +262,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     var field = descriptions[path.length - 2];
     return field || NULL;
   },
-  child: function child(direction, fieldValue) {
+  child(direction, fieldValue) {
     var childLevelField;
     var children = this.children(direction);
     for (var i = 0; i < children.length; i += 1) {
@@ -274,7 +273,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return NULL;
   },
-  slice: function slice(field, value) {
+  slice(field, value) {
     var that = this;
     var config = {};
     var fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
@@ -309,7 +308,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return sliceCell;
   },
-  value: function value(arg1, arg2) {
+  value(arg1, arg2) {
     var cell = this._cell;
     var fieldIndex = this._fieldIndex;
     var fistArgIsBoolean = arg1 === true || arg1 === false;
@@ -329,7 +328,7 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     }
     return NULL;
   },
-  isPostProcessed: function isPostProcessed(field) {
+  isPostProcessed(field) {
     var fieldIndex = this._fieldIndex;
     if ((0, _type.isDefined)(field)) {
       var fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
@@ -477,10 +476,10 @@ function createMockSummaryCell(descriptions, fields, indices) {
 }
 var _default = {
   Cell: SummaryCell,
-  summaryDictionary: summaryDictionary,
-  getExpression: getExpression,
-  applyRunningTotal: applyRunningTotal,
-  createMockSummaryCell: createMockSummaryCell,
-  applyDisplaySummaryMode: applyDisplaySummaryMode
+  summaryDictionary,
+  getExpression,
+  applyRunningTotal,
+  createMockSummaryCell,
+  applyDisplaySummaryMode
 };
 exports.default = _default;

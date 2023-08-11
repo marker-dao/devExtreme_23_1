@@ -106,7 +106,7 @@ var FileManagerBreadcrumbs = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseCurrentDirectoryChanged = function _raiseCurrentDirectoryChanged(currentDirectory) {
     this._actions.onCurrentDirectoryChanging({
-      currentDirectory: currentDirectory
+      currentDirectory
     });
   };
   _proto._getDefaultOptions = function _getDefaultOptions() {

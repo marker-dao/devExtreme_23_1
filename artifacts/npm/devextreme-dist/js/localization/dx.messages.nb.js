@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.nb.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Sortér stigende",
             "dxDataGrid-sortingDescendingText": "Sortér fallende",
             "dxDataGrid-sortingClearText": "Nullstill sortering",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Lagre endringer",
             "dxDataGrid-editingCancelAllChanges": "Forkast endringer",
             "dxDataGrid-editingAddRow": "Legg til rad",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filtrér celle",
             "dxDataGrid-ariaCollapse": "Skjul",
             "dxDataGrid-ariaExpand": "Utvid",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Data rutenett",
             "dxDataGrid-ariaSearchInGrid": "Søk i data rutenett",
             "dxDataGrid-ariaSelectAll": "Velg alle",
             "dxDataGrid-ariaSelectRow": "Velg rad",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Filterbygger",
             "dxDataGrid-filterPanelCreateFilter": "Velg filter",
             "dxDataGrid-filterPanelClearFilter": "Slett",

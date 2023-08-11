@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/editing/m_editing_form_based.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -175,11 +175,11 @@ var editingControllerExtender = function editingControllerExtender(Base) {
       // @ts-expect-error
       var row = this.component.getVisibleRows()[rowIndex];
       var templateOptions = {
-        row: row,
+        row,
         values: row.values,
         rowType: row.rowType,
         key: row.key,
-        rowIndex: rowIndex
+        rowIndex
       };
       this._rowsView._addWatchMethod(templateOptions, row);
       return function (container) {
@@ -191,6 +191,7 @@ var editingControllerExtender = function editingControllerExtender(Base) {
           isPopupForm: true
         });
         _this2._rowsView.renderDelayedTemplates();
+        (0, _renderer.default)(container).parent().attr('aria-label', _this2.localize('dxDataGrid-ariaEditForm'));
       };
     };
     _proto._repaintEditPopup = function _repaintEditPopup() {
@@ -263,14 +264,14 @@ var editingControllerExtender = function editingControllerExtender(Base) {
         data: rowData,
         cellElement: null,
         isOnForm: true,
-        item: item,
+        item,
         id: form.getItemID(item.name || item.dataField),
         column: (0, _extend.extend)({}, column, {
-          editorType: editorType,
+          editorType,
           editorOptions: (0, _extend.extend)({
-            label: label,
-            labelMark: labelMark,
-            labelMode: labelMode
+            label,
+            labelMark,
+            labelMode
           }, column.editorOptions, item.editorOptions)
         }),
         columnIndex: column.index,
@@ -326,7 +327,7 @@ var editingControllerExtender = function editingControllerExtender(Base) {
         (0, _iterator.each)(columns, function (_, column) {
           if (!column.isBand && !column.type) {
             items.push({
-              column: column,
+              column,
               name: column.name,
               dataField: column.dataField
             });
@@ -341,7 +342,7 @@ var editingControllerExtender = function editingControllerExtender(Base) {
         });
       }
       return (0, _extend.extend)({}, editFormOptions, {
-        items: items,
+        items,
         formID: "dx-".concat(new _guid.default()),
         customizeItem: function customizeItem(item) {
           var column;
@@ -440,12 +441,12 @@ var editingFormBasedModule = {
     controllers: {
       editing: editingControllerExtender,
       data: {
-        _updateEditItem: function _updateEditItem(item) {
+        _updateEditItem(item) {
           if (this._editingController.isFormEditMode()) {
             item.rowType = 'detail';
           }
         },
-        _getChangedColumnIndices: function _getChangedColumnIndices(oldItem, newItem, visibleRowIndex, isLiveUpdate) {
+        _getChangedColumnIndices(oldItem, newItem, visibleRowIndex, isLiveUpdate) {
           if (isLiveUpdate === false && newItem.isEditing && this._editingController.isFormEditMode()) {
             return;
           }
@@ -455,13 +456,13 @@ var editingFormBasedModule = {
     },
     views: {
       rowsView: {
-        _renderCellContent: function _renderCellContent($cell, options) {
+        _renderCellContent($cell, options) {
           if (options.rowType === 'data' && this._editingController.isPopupEditMode() && options.row.visible === false) {
             return;
           }
           this.callBase.apply(this, arguments);
         },
-        getCellElements: function getCellElements(rowIndex) {
+        getCellElements(rowIndex) {
           var $cellElements = this.callBase(rowIndex);
           var editingController = this._editingController;
           var editForm = editingController.getEditForm();
@@ -471,7 +472,7 @@ var editingFormBasedModule = {
           }
           return $cellElements;
         },
-        _getVisibleColumnIndex: function _getVisibleColumnIndex($cells, rowIndex, columnIdentifier) {
+        _getVisibleColumnIndex($cells, rowIndex, columnIdentifier) {
           var editFormRowIndex = this._editingController.getEditFormRowIndex();
           if (editFormRowIndex === rowIndex && (0, _type.isString)(columnIdentifier)) {
             var column = this._columnsController.columnOption(columnIdentifier);
@@ -479,7 +480,7 @@ var editingFormBasedModule = {
           }
           return this.callBase.apply(this, arguments);
         },
-        _getEditFormEditorVisibleIndex: function _getEditFormEditorVisibleIndex($cells, column) {
+        _getEditFormEditorVisibleIndex($cells, column) {
           var visibleIndex = -1;
           // @ts-expect-error
           (0, _iterator.each)($cells, function (index, cellElement) {
@@ -491,12 +492,12 @@ var editingFormBasedModule = {
           });
           return visibleIndex;
         },
-        _isFormItem: function _isFormItem(parameters) {
+        _isFormItem(parameters) {
           var isDetailRow = parameters.rowType === 'detail' || parameters.rowType === 'detailAdaptive';
           var isPopupEditing = parameters.rowType === 'data' && this._editingController.isPopupEditMode();
           return (isDetailRow || isPopupEditing) && parameters.item;
         },
-        _updateCell: function _updateCell($cell, parameters) {
+        _updateCell($cell, parameters) {
           if (this._isFormItem(parameters)) {
             this._formItemPrepared(parameters, $cell);
           } else {

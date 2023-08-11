@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.adaptivity.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -120,7 +120,7 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseAdaptiveStateChanged = function _raiseAdaptiveStateChanged(enabled) {
     this._actions.onAdaptiveStateChanged({
-      enabled: enabled
+      enabled
     });
   };
   _proto._getDefaultOptions = function _getDefaultOptions() {

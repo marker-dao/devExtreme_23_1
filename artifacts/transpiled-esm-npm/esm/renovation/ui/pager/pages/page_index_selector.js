@@ -93,6 +93,12 @@ var PageIndexSelectorPropsType = {
   }
 };
 export class PageIndexSelector extends BaseInfernoComponent {
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
+  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -103,12 +109,6 @@ export class PageIndexSelector extends BaseInfernoComponent {
     this.getNextPageIndex = this.getNextPageIndex.bind(this);
     this.canNavigateTo = this.canNavigateTo.bind(this);
     this.navigateToPage = this.navigateToPage.bind(this);
-  }
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
   }
   pageIndexChange(pageIndex) {
     if (this.canNavigateToPage(pageIndex)) {

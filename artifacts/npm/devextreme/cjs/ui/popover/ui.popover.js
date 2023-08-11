@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popover/ui.popover.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,7 +27,6 @@ var _ui2 = _interopRequireDefault(require("../popup/ui.popup"));
 var _position2 = require("../../core/utils/position");
 var _popover_position_controller = require("./popover_position_controller");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 // STYLE popover
 
 var POPOVER_CLASS = 'dx-popover';
@@ -283,7 +282,7 @@ var Popover = _ui2.default.inherit({
     return !(0, _renderer.default)(e.target).closest(this.option('target')).length;
   },
   _animate: function _animate(animation) {
-    if (animation && animation.to && _typeof(animation.to) === 'object') {
+    if (animation && animation.to && typeof animation.to === 'object') {
       (0, _extend.extend)(animation.to, {
         position: this._getContainerPosition()
       });
@@ -403,17 +402,17 @@ var Popover = _ui2.default.inherit({
       this.callBase();
     }
   },
-  _getPositionControllerConfig: function _getPositionControllerConfig() {
+  _getPositionControllerConfig() {
     var _this$option2 = this.option(),
       shading = _this$option2.shading,
       target = _this$option2.target;
     return (0, _extend.extend)({}, this.callBase(), {
-      target: target,
-      shading: shading,
+      target,
+      shading,
       $arrow: this._$arrow
     });
   },
-  _initPositionController: function _initPositionController() {
+  _initPositionController() {
     this._positionController = new _popover_position_controller.PopoverPositionController(this._getPositionControllerConfig());
   },
   _renderWrapperDimensions: function _renderWrapperDimensions() {

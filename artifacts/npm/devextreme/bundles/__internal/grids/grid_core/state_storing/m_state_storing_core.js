@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/state_storing/m_state_storing_core.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,7 +50,7 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
     return (0, _type.isDefined)(options.storageKey) ? options.storageKey : 'storage';
   };
   return {
-    _loadState: function _loadState() {
+    _loadState() {
       var options = this.option('stateStoring');
       if (options.type === 'custom') {
         return options.customLoad && options.customLoad();
@@ -62,7 +62,7 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
         _ui.default.log('W1022', 'State storing', e.message);
       }
     },
-    _saveState: function _saveState(state) {
+    _saveState(state) {
       var options = this.option('stateStoring');
       if (options.type === 'custom') {
         options.customSave && options.customSave(state);
@@ -74,13 +74,13 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
         _ui.default.log(e.message);
       }
     },
-    publicMethods: function publicMethods() {
+    publicMethods() {
       return ['state'];
     },
-    isEnabled: function isEnabled() {
+    isEnabled() {
       return this.option('stateStoring.enabled');
     },
-    init: function init() {
+    init() {
       var that = this;
       that._state = {};
       that._isLoaded = false;
@@ -93,13 +93,13 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
       _events_engine.default.on((0, _window.getWindow)(), 'unload', that._windowUnloadHandler);
       return that;
     },
-    isLoaded: function isLoaded() {
+    isLoaded() {
       return this._isLoaded;
     },
-    isLoading: function isLoading() {
+    isLoading() {
       return this._isLoading;
     },
-    load: function load() {
+    load() {
       var _this = this;
       this._isLoading = true;
       var loadResult = (0, _deferred.fromPromise)(this._loadState());
@@ -113,15 +113,15 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
       });
       return loadResult;
     },
-    state: function state(_state) {
+    state(state) {
       var that = this;
       if (!arguments.length) {
         return (0, _extend.extend)(true, {}, that._state);
       }
-      that._state = (0, _extend.extend)({}, _state);
+      that._state = (0, _extend.extend)({}, state);
       parseDates(that._state);
     },
-    save: function save() {
+    save() {
       var that = this;
       clearTimeout(that._savingTimeoutID);
       that._savingTimeoutID = setTimeout(function () {
@@ -129,7 +129,7 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
         that._savingTimeoutID = undefined;
       }, that.option('stateStoring.savingTimeout'));
     },
-    optionChanged: function optionChanged(args) {
+    optionChanged(args) {
       var that = this;
       switch (args.name) {
         case 'stateStoring':
@@ -142,13 +142,13 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
           that.callBase(args);
       }
     },
-    dispose: function dispose() {
+    dispose() {
       clearTimeout(this._savingTimeoutID);
       _events_engine.default.off((0, _window.getWindow)(), 'unload', this._windowUnloadHandler);
     }
   };
 }());
 var _default = {
-  StateStoringController: StateStoringController
+  StateStoringController
 };
 exports.default = _default;

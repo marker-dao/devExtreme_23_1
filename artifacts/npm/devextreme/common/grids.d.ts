@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common/grids.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -85,7 +85,10 @@ import { PositionConfig } from '../animation/position';
  * @namespace DevExpress.common.grids
  */
 export type AdaptiveDetailRowPreparingInfo = {
-  /** @docid */
+  /**
+   * @docid
+   * @type object
+   */
   readonly formOptions: any;
 };
 
@@ -102,6 +105,7 @@ export type ApplyFilterMode = 'auto' | 'onClick';
 export type ApplyChangesMode = 'instantly' | 'onDemand';
 
 /**
+ * @hidden
  * @docid GridBaseColumn
  * @namespace DevExpress.common.grids
  * @type object
@@ -442,6 +446,7 @@ export interface ColumnBase<TRowData = any> {
 }
 
 /**
+ * @hidden
  * @docid GridBaseColumnButton
  * @namespace DevExpress.common.grids
  * @type object
@@ -481,6 +486,12 @@ export type ColumnChooser = {
    * @deprecated
    */
   allowSearch?: boolean;
+  /**
+     * @docid GridBaseOptions.columnChooser.container
+     * @default undefined
+     * @public
+     */
+  container?: string | UserDefinedElement;
   /**
    * @docid GridBaseOptions.columnChooser.emptyPanelText
    * @default "Drag a column here to hide it"
@@ -844,6 +855,7 @@ export interface DragStartEventInfo<TRowData = any> {
 }
 
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.common.grids
  */
@@ -928,6 +940,7 @@ export interface EditingBase<TRowData = any, TKey = any> {
 }
 
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.common.grids
  */
@@ -2416,7 +2429,10 @@ export type LoadPanel = {
  * @namespace DevExpress.common.grids
  */
 export interface NewRowInfo<TRowData = any> {
-  /** @docid */
+  /**
+   * @docid
+   * @type object
+   */
   data: TRowData;
   /**
    * @docid
@@ -2492,6 +2508,7 @@ export type PagerDisplayMode = 'adaptive' | 'compact' | 'full';
 export type PagerPageSize = 'all' | 'auto';
 
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.common.grids
  */
@@ -2719,7 +2736,10 @@ export type RowDraggingTemplateData<TRowData = any> = {
  * @namespace DevExpress.common.grids
  */
 export type RowInsertedInfo<TRowData = any, TKey = any> = {
-  /** @docid */
+  /**
+   * @docid
+   * @type object
+   */
   readonly data: TRowData;
   /** @docid */
   readonly key: TKey;
@@ -2733,7 +2753,10 @@ export type RowInsertedInfo<TRowData = any, TKey = any> = {
  * @namespace DevExpress.common.grids
  */
 export type RowInsertingInfo<TRowData = any> = {
-  /** @docid */
+  /**
+   * @docid
+   * @type object
+   */
   data: TRowData;
   /**
    * @docid
@@ -2758,7 +2781,10 @@ export type RowKeyInfo<TKey = any> = {
  * @namespace DevExpress.common.grids
  */
 export interface RowRemovedInfo<TRowData = any, TKey = any> {
-  /** @docid */
+  /**
+   * @docid
+   * @type object
+   */
   readonly data: TRowData;
   /** @docid */
   readonly key: TKey;
@@ -2772,7 +2798,10 @@ export interface RowRemovedInfo<TRowData = any, TKey = any> {
  * @namespace DevExpress.common.grids
  */
 export interface RowRemovingInfo<TRowData = any, TKey = any> {
-  /** @docid */
+  /**
+   * @docid
+   * @type object
+   */
   readonly data: TRowData;
   /** @docid */
   readonly key: TKey;
@@ -2789,7 +2818,10 @@ export interface RowRemovingInfo<TRowData = any, TKey = any> {
  * @namespace DevExpress.common.grids
  */
 export interface RowUpdatedInfo<TRowData = any, TKey = any> {
-  /** @docid */
+  /**
+   * @docid
+   * @type object
+   */
   readonly data: TRowData;
   /** @docid */
   readonly key: TKey;
@@ -2875,6 +2907,7 @@ export interface SavingInfo<TRowData = any, TKey = any> {
 }
 
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.common.grids
  */
@@ -2982,6 +3015,7 @@ export type SearchPanel = {
 export type SelectedFilterOperation = '<' | '<=' | '<>' | '=' | '>' | '>=' | 'between' | 'contains' | 'endswith' | 'notcontains' | 'startswith';
 
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.common.grids
  */

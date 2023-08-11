@@ -584,6 +584,3 @@ export var GroupingHelper = GroupingHelperCore.inherit(function () {
     }
   };
 }());
-/// #DEBUG
-export { getContinuationGroupCount };
-/// #ENDDEBUG

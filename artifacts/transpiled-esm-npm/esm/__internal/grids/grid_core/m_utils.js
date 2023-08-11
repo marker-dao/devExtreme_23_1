@@ -166,7 +166,10 @@ export default {
     var isVisible = this._dataController.isEmpty();
     var isLoading = this._dataController.isLoading();
     if (!noDataElement.length) {
-      noDataElement = $('<span>').addClass(noDataClass).appendTo($element);
+      noDataElement = $('<span>').addClass(noDataClass);
+    }
+    if (!noDataElement.parent().is($element)) {
+      noDataElement.appendTo($element);
     }
     if (isVisible && !isLoading) {
       noDataElement.removeClass('dx-hidden').text(that._getNoDataText());
@@ -482,11 +485,6 @@ export default {
   getPixelRatio(window) {
     return window.devicePixelRatio || 1;
   },
-  /// #DEBUG
-  _setPixelRatioFn(value) {
-    this.getPixelRatio = value;
-  },
-  /// #ENDDEBUG
   getContentHeightLimit(browser) {
     if (browser.mozilla) {
       return 8000000;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/viz/common/tooltip_utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -49,8 +49,8 @@ function rotateSize(_ref, angle) {
     };
   }
   return {
-    width: width,
-    height: height
+    width,
+    height
   };
 }
 function rotateX(_ref2, angle) {
@@ -175,8 +175,8 @@ function getCanvas(container) {
   var left = (_ref4 = Number((_getWindow = (0, _window.getWindow)()) === null || _getWindow === void 0 ? void 0 : _getWindow.pageXOffset) || html.scrollLeft) !== null && _ref4 !== void 0 ? _ref4 : 0;
   var top = (_ref5 = Number((_getWindow2 = (0, _window.getWindow)()) === null || _getWindow2 === void 0 ? void 0 : _getWindow2.pageYOffset) || html.scrollTop) !== null && _ref5 !== void 0 ? _ref5 : 0;
   var box = {
-    left: left,
-    top: top,
+    left,
+    top,
     width: max(body.clientWidth, html.clientWidth) + left,
     height: max(body.scrollHeight, html.scrollHeight, body.offsetHeight, html.offsetHeight, body.clientHeight, html.clientHeight),
     right: 0,
@@ -235,9 +235,9 @@ function recalculateCoordinates(_ref6) {
     correctedAnchorY -= offset;
   }
   return {
-    x: x,
-    y: y,
-    anchorX: anchorX,
+    x,
+    y,
+    anchorX,
     anchorY: correctedAnchorY
   };
 }

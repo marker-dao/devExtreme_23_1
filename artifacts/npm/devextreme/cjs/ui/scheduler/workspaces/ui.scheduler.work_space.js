@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.work_space.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _size = require("../../../core/utils/size");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -65,8 +64,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var tableCreator = _table_creator.default.tableCreator;
@@ -169,18 +168,18 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
         }));
         var edgeIndices = isHorizontalGrouping && isMultiSelection && !isGroupedByDate ? _this2.viewDataProvider.getGroupEdgeIndices(focusedCellData.groupIndex, isAllDayPanelCell) : _this2.viewDataProvider.getViewEdgeIndices(isAllDayPanelCell);
         var nextCellData = _this2.cellsSelectionController.handleArrowClick({
-          focusedCellPosition: focusedCellPosition,
-          edgeIndices: edgeIndices,
-          isRTL: isRTL,
-          isGroupedByDate: isGroupedByDate,
-          groupCount: groupCount,
-          isMultiSelection: isMultiSelection,
-          isMultiSelectionAllowed: isMultiSelectionAllowed,
+          focusedCellPosition,
+          edgeIndices,
+          isRTL,
+          isGroupedByDate,
+          groupCount,
+          isMultiSelection,
+          isMultiSelectionAllowed,
           viewType: _this2.type,
-          key: key,
+          key,
           getCellDataByPosition: _this2.viewDataProvider.getCellData.bind(_this2.viewDataProvider),
-          isAllDayPanelCell: isAllDayPanelCell,
-          focusedCellData: focusedCellData
+          isAllDayPanelCell,
+          focusedCellData
         });
         _this2._processNextSelectedCell(nextCellData, focusedCellData, isMultiSelection && isMultiSelectionAllowed);
       }
@@ -213,10 +212,10 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     var currentCellData = this._getFullCellData($cell);
     var focusedCellData = this.cellsSelectionState.focusedCell.cellData;
     var nextFocusedCellData = this.cellsSelectionController.moveToCell({
-      isMultiSelection: isMultiSelection,
-      isMultiSelectionAllowed: isMultiSelectionAllowed,
-      currentCellData: currentCellData,
-      focusedCellData: focusedCellData,
+      isMultiSelection,
+      isMultiSelectionAllowed,
+      currentCellData,
+      focusedCellData,
       isVirtualCell: $cell.hasClass(_classes.VIRTUAL_CELL_CLASS)
     });
     this._processNextSelectedCell(nextFocusedCellData, focusedCellData, isMultiSelectionAllowed && isMultiSelection);
@@ -465,10 +464,10 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
       groupByDate: this.option('groupByDate'),
       startRowIndex: 0,
       startCellIndex: 0,
-      groupOrientation: groupOrientation,
+      groupOrientation,
       today: (_this$_getToday = this._getToday) === null || _this$_getToday === void 0 ? void 0 : _this$_getToday.call(this),
       groups: this.option('groups'),
-      isProvideVirtualCellsWidth: isProvideVirtualCellsWidth,
+      isProvideVirtualCellsWidth,
       isAllDayPanelVisible: this.isAllDayPanelVisible,
       selectedCells: this.cellsSelectionState.getSelectedCells(),
       focusedCell: this.cellsSelectionState.focusedCell,
@@ -799,8 +798,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     var columnIndex = Math.floor(index / this._getRowCount());
     var rowIndex = index - this._getRowCount() * columnIndex;
     return {
-      columnIndex: columnIndex,
-      rowIndex: rowIndex
+      columnIndex,
+      rowIndex
     };
   }
 
@@ -1026,9 +1025,9 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     var startDate = cellData.startDate;
     var endDate = cellData.endDate;
     return {
-      startDate: startDate,
-      endDate: endDate,
-      allDay: allDay,
+      startDate,
+      endDate,
+      allDay,
       groups: cellData.groups
     };
   };
@@ -1265,14 +1264,14 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     if (this.option('templatesRenderAsynchronously')) {
       setTimeout(function () {
         scrollable.scrollBy({
-          left: left,
-          top: top
+          left,
+          top
         });
       });
     } else {
       scrollable.scrollBy({
-        left: left,
-        top: top
+        left,
+        top
       });
     }
   };
@@ -1302,8 +1301,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
       rowIndex -= this.virtualScrollingDispatcher.topVirtualRowsCount;
     }
     return {
-      rowIndex: rowIndex,
-      columnIndex: columnIndex
+      rowIndex,
+      columnIndex
     };
   };
   _proto._isShowAllDayPanel = function _isShowAllDayPanel() {
@@ -1329,11 +1328,11 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
         groupIndex = _ref3.groupIndex,
         groups = _ref3.groups;
       return {
-        startDate: startDate,
-        endDate: endDate,
-        allDay: allDay,
-        groupIndex: groupIndex,
-        groups: groups
+        startDate,
+        endDate,
+        allDay,
+        groupIndex,
+        groups
       };
     });
     this.option('selectedCellData', correctedSelectedCellData);
@@ -1347,10 +1346,10 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
       allDay = cellData.allDay,
       index = cellData.index;
     var position = this.viewDataProvider.findCellPositionInMap({
-      startDate: startDate,
-      groupIndex: groupIndex,
+      startDate,
+      groupIndex,
       isAllDay: allDay,
-      index: index
+      index
     });
     if (!position) {
       return undefined;
@@ -1521,7 +1520,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
       groupByDate: this.isGroupedByDate(),
       groupOrientation: this.option('groupOrientation'),
       resourceCellTemplate: this.option('resourceCellTemplate'),
-      isRenderDateHeader: isRenderDateHeader
+      isRenderDateHeader
     });
   }
 
@@ -1545,8 +1544,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
       return $itemElement.data(_constants.APPOINTMENT_SETTINGS_KEY);
     };
     var options = {
-      getItemData: getItemData,
-      getItemSettings: getItemSettings
+      getItemData,
+      getItemSettings
     };
     this._createDragBehaviorBase($targetElement, $rootElement, options);
   };
@@ -2236,8 +2235,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     if (cellTemplate !== null && cellTemplate !== void 0 && cellTemplate.render) {
       templateCallbacks.push(cellTemplate.render.bind(cellTemplate, {
         model: _extends({
-          text: text,
-          date: date
+          text,
+          date
         }, this._getGroupsForDateHeaderTemplate(templateIndex)),
         index: templateIndex,
         container: (0, _element.getPublicElement)($cell)
@@ -2258,8 +2257,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
       groups = (0, _utils.getGroupsObjectFromGroupsArray)(groupsArray);
     }
     return {
-      groups: groups,
-      groupIndex: groupIndex
+      groups,
+      groupIndex
     };
   };
   _proto._getHeaderPanelCellClass = function _getHeaderPanelCellClass(i) {
@@ -2308,8 +2307,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
       var groupsArray = (0, _utils.getCellGroups)(groupIndex, _this23.option('groups'));
       var groups = (0, _utils.getGroupsObjectFromGroupsArray)(groupsArray);
       return {
-        groupIndex: groupIndex,
-        groups: groups
+        groupIndex,
+        groups
       };
     };
     var getData = function getData(rowIndex, field) {
@@ -2421,7 +2420,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
             }
             var groupIndex = _this25._getGroupIndexByResourceId(groups);
             return _extends({}, selectedCell, {
-              groupIndex: groupIndex
+              groupIndex
             });
           });
           this._cellsSelectionState.setSelectedCellsByData(validSelectedCells);
@@ -2488,7 +2487,7 @@ var createDragBehaviorConfig = function createDragBehaviorConfig(container, root
     settings.isCompact = false;
     settings.virtual = false;
     var items = appointments._renderItem(appointmentIndex, {
-      itemData: itemData,
+      itemData,
       settings: [settings]
     });
     return items[0];
@@ -2578,14 +2577,14 @@ var createDragBehaviorConfig = function createDragBehaviorConfig(container, root
     };
   } : undefined;
   return {
-    container: container,
+    container,
     dragTemplate: function dragTemplate() {
       return state.dragElement;
     },
-    onDragStart: onDragStart,
-    onDragMove: onDragMove,
-    onDragEnd: onDragEnd,
-    cursorOffset: cursorOffset,
+    onDragStart,
+    onDragMove,
+    onDragEnd,
+    cursorOffset,
     filter: options.filter
   };
 };

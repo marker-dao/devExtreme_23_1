@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.item_list.details.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -326,7 +326,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     });
     this._tryRaiseSelectionChanged({
       selectedItemInfos: selectedRowsData,
-      selectedItems: selectedItems,
+      selectedItems,
       selectedItemKeys: selectedRowKeys,
       currentSelectedItemKeys: currentSelectedRowKeys,
       currentDeselectedItemKeys: currentDeselectedRowKeys
@@ -397,7 +397,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
         selectedKeys.push(fileItemInfo.fileItem.key);
       }
       this._raiseSelectionChanged({
-        selectedItems: selectedItems,
+        selectedItems,
         selectedItemKeys: selectedKeys,
         currentSelectedItemKeys: [].concat(selectedKeys),
         currentDeselectedItemKeys: deselectedKeys

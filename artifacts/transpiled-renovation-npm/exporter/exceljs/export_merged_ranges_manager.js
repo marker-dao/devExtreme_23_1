@@ -23,7 +23,7 @@ var MergedRangesManager = /*#__PURE__*/function () {
           this.mergedRanges.push({
             masterCell: excelCell,
             rowspan: rowspan - (shouldReduceInfoRange && rowspan > 0),
-            colspan: colspan
+            colspan
           });
         }
       }
@@ -51,9 +51,9 @@ var MergedRangesManager = /*#__PURE__*/function () {
   };
   _proto.addMergedRange = function addMergedRange(masterCell, rowspan, colspan) {
     this.mergedRanges.push({
-      masterCell: masterCell,
-      rowspan: rowspan,
-      colspan: colspan
+      masterCell,
+      rowspan,
+      colspan
     });
   };
   _proto.applyMergedRages = function applyMergedRages() {

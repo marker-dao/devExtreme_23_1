@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drawer/ui.drawer.animation.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ var _fx = _interopRequireDefault(require("../../animation/fx"));
 var _inflector = require("../../core/utils/inflector");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var animation = {
-  moveTo: function moveTo(config) {
+  moveTo(config) {
     var $element = config.$element;
     var position = config.position;
     var direction = config.direction || 'left';
@@ -40,7 +40,7 @@ var animation = {
       complete: config.complete
     });
   },
-  margin: function margin(config) {
+  margin(config) {
     var $element = config.$element;
     var margin = config.margin;
     var direction = config.direction || 'left';
@@ -52,16 +52,16 @@ var animation = {
       complete: config.complete
     });
   },
-  fade: function fade($element, config, duration, completeAction) {
+  fade($element, config, duration, completeAction) {
     _fx.default.animate($element, {
       type: 'fade',
       to: config.to,
       from: config.from,
-      duration: duration,
+      duration,
       complete: completeAction
     });
   },
-  size: function size(config) {
+  size(config) {
     var $element = config.$element;
     var size = config.size;
     var direction = config.direction || 'left';
@@ -78,11 +78,11 @@ var animation = {
     }
     _fx.default.animate($element, {
       to: toConfig,
-      duration: duration,
+      duration,
       complete: config.complete
     });
   },
-  complete: function complete($element) {
+  complete($element) {
     _fx.default.stop($element, true);
   }
 };

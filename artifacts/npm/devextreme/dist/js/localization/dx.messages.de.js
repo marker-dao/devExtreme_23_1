@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.de.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Aufsteigend sortieren",
             "dxDataGrid-sortingDescendingText": "Absteigend sortieren",
             "dxDataGrid-sortingClearText": "Sortierung aufheben",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Änderungen speichern",
             "dxDataGrid-editingCancelAllChanges": "Änderungen verwerfen",
             "dxDataGrid-editingAddRow": "Neue Zeile",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filterzelle",
             "dxDataGrid-ariaCollapse": "Zusammenklappen",
             "dxDataGrid-ariaExpand": "Aufklappen",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Datentabelle mit {0} Zeilen und {1} Spalten",
             "dxDataGrid-ariaSearchInGrid": "Suchen in der Datentabelle",
             "dxDataGrid-ariaSelectAll": "Alle auswählen",
             "dxDataGrid-ariaSelectRow": "Zeile auswählen",
             "dxDataGrid-ariaToolbar": "Symbolleiste der Datentabelle",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Filter-Generator",
             "dxDataGrid-filterPanelCreateFilter": "Filter erzeugen",
             "dxDataGrid-filterPanelClearFilter": "Zurücksetzen",

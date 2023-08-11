@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.Series = Series;
 exports.mixins = void 0;
 var _type = require("../../core/utils/type");
@@ -21,7 +20,7 @@ var pieSeries = _interopRequireWildcard(require("./pie_series"));
 var financialSeries = _interopRequireWildcard(require("./financial_series"));
 var stackedSeries = _interopRequireWildcard(require("./stacked_series"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var seriesNS = {};
 var states = _consts.default.states;
@@ -194,7 +193,7 @@ Series.prototype = {
       }
     };
   },
-  setClippingParams: function setClippingParams(baseId, wideId, forceClipping) {
+  setClippingParams(baseId, wideId, forceClipping) {
     var clipLabels = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
     this._paneClipRectID = baseId;
     this._widePaneClipRectID = wideId;
@@ -265,7 +264,7 @@ Series.prototype = {
       this[groupName] = null;
     }
   },
-  updateOptions: function updateOptions(newOptions, settings) {
+  updateOptions(newOptions, settings) {
     var that = this;
     var widgetType = newOptions.widgetType;
     var oldType = that.type;
@@ -308,7 +307,7 @@ Series.prototype = {
       return x;
     };
   },
-  _defineDrawingState: function _defineDrawingState() {
+  _defineDrawingState() {
     this._firstDrawing = true;
   },
   _disposePoints: function _disposePoints(points) {
@@ -371,7 +370,7 @@ Series.prototype = {
     }
     that._endUpdateData();
   },
-  _getData: function _getData() {
+  _getData() {
     var data = this._data || [];
     if (this.useAggregation()) {
       var argumentRange = this.argumentAxisType !== DISCRETE ? this.getArgumentRange() : {};
@@ -386,7 +385,7 @@ Series.prototype = {
   },
   autoHidePointMarkersEnabled: _common.noop,
   usePointsToDefineAutoHiding: _common.noop,
-  createPoints: function createPoints(useAllAggregatedPoints) {
+  createPoints(useAllAggregatedPoints) {
     this._normalizeUsingAllAggregatedPoints(useAllAggregatedPoints);
     this._createPoints();
   },
@@ -431,7 +430,7 @@ Series.prototype = {
       });
     }
   },
-  _prepareSegmentsPosition: function _prepareSegmentsPosition() {
+  _prepareSegmentsPosition() {
     var points = this._points || [];
     var isCloseSegment = points[0] && points[0].hasValue() && this._options.closed;
     var segments = points.reduce(function (segments, p) {
@@ -448,7 +447,7 @@ Series.prototype = {
     }, [[]]);
     this._drawSegments(segments, isCloseSegment, false);
   },
-  _drawElements: function _drawElements(animationEnabled, firstDrawing) {
+  _drawElements(animationEnabled, firstDrawing) {
     var that = this;
     var points = that._points || [];
     var isCloseSegment = points[0] && points[0].hasValue() && that._options.closed;
@@ -466,7 +465,7 @@ Series.prototype = {
           point: p,
           groups: groupForPoint,
           hasAnimation: animationEnabled,
-          firstDrawing: firstDrawing
+          firstDrawing
         });
         segment.push(p);
       } else if (!p.hasValue()) {
@@ -481,7 +480,7 @@ Series.prototype = {
     that._removeOldSegments();
     animationEnabled && that._animate(firstDrawing);
   },
-  _drawSegments: function _drawSegments(segments, closeSegment, animationEnabled) {
+  _drawSegments(segments, closeSegment, animationEnabled) {
     var _this = this;
     segments.forEach(function (segment, index) {
       if (segment.length) {
@@ -490,7 +489,7 @@ Series.prototype = {
       }
     });
   },
-  draw: function draw(animationEnabled, hideLayoutLabels, legendCallback) {
+  draw(animationEnabled, hideLayoutLabels, legendCallback) {
     var that = this;
     var firstDrawing = that._firstDrawing;
     that._legendCallback = legendCallback || that._legendCallback;
@@ -516,14 +515,14 @@ Series.prototype = {
     that._isAllPointsTranslated = false;
     that._resetApplyingAnimation = false;
   },
-  _translatePoints: function _translatePoints() {
+  _translatePoints() {
     var _this$_points;
     var points = (_this$_points = this._points) !== null && _this$_points !== void 0 ? _this$_points : [];
     points.forEach(function (p) {
       p.translate();
     });
   },
-  prepareCoordinatesForPoints: function prepareCoordinatesForPoints() {
+  prepareCoordinatesForPoints() {
     this._applyVisibleArea();
     this._translatePoints();
     this._isAllPointsTranslated = true;
@@ -717,7 +716,7 @@ Series.prototype = {
       point._label.draw(false);
     });
   },
-  _turnOffHatching: function _turnOffHatching(hoverStyle, selectionStyle) {
+  _turnOffHatching(hoverStyle, selectionStyle) {
     if (hoverStyle.hatching) {
       hoverStyle.hatching.direction = 'none';
     }
@@ -767,7 +766,7 @@ Series.prototype = {
     }
     return customAggregator || aggregator;
   },
-  _resample: function _resample(_ref2, data) {
+  _resample(_ref2, data) {
     var interval = _ref2.interval,
       ticks = _ref2.ticks,
       aggregateByCategory = _ref2.aggregateByCategory;
@@ -850,8 +849,8 @@ Series.prototype = {
           dataIndex++;
         }
         var _aggregationInfo = {
-          intervalStart: intervalStart,
-          intervalEnd: intervalEnd,
+          intervalStart,
+          intervalEnd,
           aggregationInterval: interval,
           data: dataInInterval.map(getData)
         };
@@ -1141,13 +1140,13 @@ Series.prototype = {
   getArgumentAxis: function getArgumentAxis() {
     return this._argumentAxis;
   },
-  getMarkersGroup: function getMarkersGroup() {
+  getMarkersGroup() {
     return this._markersGroup;
   },
-  getRenderer: function getRenderer() {
+  getRenderer() {
     return this._renderer;
   },
-  removePointElements: function removePointElements() {
+  removePointElements() {
     if (this._markersGroup) {
       (0, _iterator.each)(this._points, function (_, p) {
         return p.deleteMarker();
@@ -1156,7 +1155,7 @@ Series.prototype = {
       this._markersGroup = null;
     }
   },
-  removeGraphicElements: function removeGraphicElements() {
+  removeGraphicElements() {
     var that = this;
     if (that._elementsGroup) {
       that._elementsGroup.dispose();
@@ -1167,7 +1166,7 @@ Series.prototype = {
     });
     that._graphics = null;
   },
-  removeBordersGroup: function removeBordersGroup() {
+  removeBordersGroup() {
     if (this._bordersGroup) {
       this._bordersGroup.dispose();
       this._bordersGroup = null;

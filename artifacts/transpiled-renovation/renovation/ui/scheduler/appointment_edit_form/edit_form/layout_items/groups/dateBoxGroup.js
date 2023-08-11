@@ -21,12 +21,12 @@ var getDateBoxGroupConfig = function getDateBoxGroupConfig(dataExpr, allowTimeZo
       xs: 1
     },
     items: createDateBoxItems({
-      dataExpr: dataExpr,
-      allowTimeZoneEditing: allowTimeZoneEditing,
-      startDateEditorTemplate: startDateEditorTemplate,
-      endDateEditorTemplate: endDateEditorTemplate,
-      startDatetimeZoneEditorTemplate: startDatetimeZoneEditorTemplate,
-      endDateTimeZoneEditorTemplate: endDateTimeZoneEditorTemplate
+      dataExpr,
+      allowTimeZoneEditing,
+      startDateEditorTemplate,
+      endDateEditorTemplate,
+      startDatetimeZoneEditorTemplate,
+      endDateTimeZoneEditorTemplate
     })
   };
 };

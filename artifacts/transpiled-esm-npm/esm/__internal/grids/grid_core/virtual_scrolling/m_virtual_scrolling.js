@@ -11,9 +11,7 @@ import LoadIndicator from '../../../../ui/load_indicator';
 import gridCoreUtils from '../m_utils';
 import { subscribeToExternalScrollers, VirtualScrollController } from './m_virtual_scrolling_core';
 var BOTTOM_LOAD_PANEL_CLASS = 'bottom-load-panel';
-var TABLE_CONTENT_CLASS = 'table-content';
 var GROUP_SPACE_CLASS = 'group-space';
-var CONTENT_CLASS = 'content';
 var FREESPACE_CLASS = 'dx-freespace-row';
 var COLUMN_LINES_CLASS = 'dx-column-lines';
 var VIRTUAL_ROW_CLASS = 'dx-virtual-row';
@@ -648,15 +646,6 @@ var VirtualScrollingRowsViewExtender = function () {
       var _a;
       var dataController = this._dataController;
       (_a = dataController === null || dataController === void 0 ? void 0 : dataController.loadIfNeed) === null || _a === void 0 ? void 0 : _a.call(dataController);
-    },
-    setColumnWidths(widths) {
-      var scrollable = this.getScrollable();
-      var $content;
-      this.callBase.apply(this, arguments);
-      if (this.option('scrolling.mode') === 'virtual') {
-        $content = scrollable ? $(scrollable.content()) : this.element();
-        this.callBase(widths, $content.children(".".concat(this.addWidgetPrefix(CONTENT_CLASS))).children(":not(.".concat(this.addWidgetPrefix(TABLE_CONTENT_CLASS), ")")));
-      }
     },
     _restoreErrorRow() {
       if (this.option(LEGACY_SCROLLING_MODE) === false) {

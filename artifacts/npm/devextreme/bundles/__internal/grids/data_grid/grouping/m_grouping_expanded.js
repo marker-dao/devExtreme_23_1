@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/grouping/m_grouping_expanded.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadTotalCount = exports.GroupingHelper = void 0;
+exports.GroupingHelper = void 0;
 var _data = require("../../../../core/utils/data");
 var _deferred = require("../../../../core/utils/deferred");
 var _extend = require("../../../../core/utils/extend");
@@ -40,9 +40,6 @@ var loadTotalCount = function loadTotalCount(dataSource, options) {
   }).fail(d.reject.bind(d));
   return d;
 };
-/// #DEBUG
-exports.loadTotalCount = loadTotalCount;
-/// #ENDDEBUG
 var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
   var foreachCollapsedGroups = function foreachCollapsedGroups(that, callback, updateOffsets) {
     return that.foreachGroups(function (groupInfo) {
@@ -124,8 +121,8 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       items.splice(-removeLastItemsCount, removeLastItemsCount);
     }
     return {
-      offset: offset,
-      take: take
+      offset,
+      take
     };
   };
   var pathEquals = function pathEquals(path1, path2) {
@@ -194,7 +191,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     return count;
   };
   return {
-    handleDataLoading: function handleDataLoading(options) {
+    handleDataLoading(options) {
       var that = this;
       var storeLoadOptions = options.storeLoadOptions;
       var collapsedGroups = [];
@@ -240,7 +237,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       options.skipFirstItem = skipFirstItem;
       options.take = take;
     },
-    handleDataLoaded: function handleDataLoaded(options, callBase) {
+    handleDataLoaded(options, callBase) {
       var that = this;
       var collapsedGroups = options.collapsedGroups;
       var groups = _m_core.default.normalizeSortingInfo(options.group);
@@ -291,10 +288,10 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
         options.data = data;
       }
     },
-    isGroupItemCountable: function isGroupItemCountable(item) {
+    isGroupItemCountable(item) {
       return item.items === null;
     },
-    updateTotalItemsCount: function updateTotalItemsCount() {
+    updateTotalItemsCount() {
       var itemsCountCorrection = 0;
       foreachCollapsedGroups(this, function (groupInfo) {
         if (groupInfo.count) {
@@ -303,7 +300,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       });
       this.callBase(itemsCountCorrection);
     },
-    changeRowExpand: function changeRowExpand(path) {
+    changeRowExpand(path) {
       var that = this;
       var dataSource = that._dataSource;
       var beginPageIndex = dataSource.beginPageIndex ? dataSource.beginPageIndex() : dataSource.pageIndex();
@@ -332,8 +329,8 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
         } else {
           groupInfo = {
             offset: -1,
-            count: count,
-            path: path,
+            count,
+            path,
             isExpanded: false
           };
           updateGroupOffsets(that, dataSourceItems, [], offset, groupInfo);
@@ -346,10 +343,10 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
         dataSource._eventsStrategy.fireEvent('loadError', arguments);
       });
     },
-    allowCollapseAll: function allowCollapseAll() {
+    allowCollapseAll() {
       return false;
     },
-    refresh: function refresh(options, operationTypes) {
+    refresh(options, operationTypes) {
       var that = this;
       var storeLoadOptions = options.storeLoadOptions;
       var dataSource = that._dataSource;

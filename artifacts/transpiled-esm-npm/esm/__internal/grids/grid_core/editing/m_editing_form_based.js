@@ -159,6 +159,7 @@ var editingControllerExtender = Base => class FormBasedEditingControllerExtender
         isPopupForm: true
       });
       this._rowsView.renderDelayedTemplates();
+      $(container).parent().attr('aria-label', this.localize('dxDataGrid-ariaEditForm'));
     };
   }
   _repaintEditPopup() {

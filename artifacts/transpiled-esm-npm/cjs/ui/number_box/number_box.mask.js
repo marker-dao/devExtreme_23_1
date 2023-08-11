@@ -87,7 +87,7 @@ var NumberBoxMask = _number_box2.default.inherit({
       this._focusOutOccurs = false;
     }
   },
-  _hasValueBeenChanged: function _hasValueBeenChanged(inputValue) {
+  _hasValueBeenChanged(inputValue) {
     var format = this._getFormatPattern();
     var value = this.option('value');
     var formatted = this._format(value, format) || '';
@@ -195,6 +195,10 @@ var NumberBoxMask = _number_box2.default.inherit({
       if (this._parsedValue < 0 || 1 / this._parsedValue === -Infinity) {
         this._revertSign(e);
         this._setTextByParsedValue();
+        var shouldTriggerInputEvent = this.option('valueChangeEvent').split(' ').includes('input');
+        if (shouldTriggerInputEvent) {
+          _events_engine.default.trigger(this._input(), 'input');
+        }
       }
       e.preventDefault();
       return;

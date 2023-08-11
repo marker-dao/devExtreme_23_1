@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/header/utils.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -51,7 +51,7 @@ exports.nextWeek = nextWeek;
 var nextMonth = function nextMonth(date) {
   var days = getLastMonthDay(date);
   return addDateInterval(date, {
-    days: days
+    days
   }, 1);
 };
 var isWeekend = function isWeekend(date) {
@@ -84,8 +84,8 @@ var getInterval = function getInterval(options) {
   var startDate = getIntervalStartDate(options);
   var endDate = getIntervalEndDate(startDate, options);
   return {
-    startDate: startDate,
-    endDate: endDate
+    startDate,
+    endDate
   };
 };
 var getIntervalStartDate = function getIntervalStartDate(options) {
@@ -259,15 +259,15 @@ var getCaption = function getCaption(options, isShort, customizationFunction) {
   var text = getCaptionText(startDate, endDate, isShort, options.step);
   if ((0, _type.isFunction)(customizationFunction)) {
     text = customizationFunction({
-      startDate: startDate,
-      endDate: endDate,
-      text: text
+      startDate,
+      endDate,
+      text
     });
   }
   return {
-    startDate: startDate,
-    endDate: endDate,
-    text: text
+    startDate,
+    endDate,
+    text
   };
 };
 exports.getCaption = getCaption;
@@ -325,12 +325,12 @@ var formatViews = function formatViews(views) {
     var type = getViewType(view);
     var name = getViewName(view);
     return {
-      text: text,
-      name: name,
+      text,
+      name,
       view: {
-        text: text,
-        type: type,
-        name: name
+        text,
+        type,
+        name
       }
     };
   });

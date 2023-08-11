@@ -1,6 +1,6 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
-var _excluded = ["accessKey", "activeStateEnabled", "aria", "children", "className", "classes", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "tabIndex", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
+var _excluded = ["accessKey", "activeStateEnabled", "aria", "children", "className", "classes", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isDirty", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "tabIndex", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
 import { createFragment, createComponentVNode, normalizeProps } from "inferno";
 import { Fragment } from 'inferno';
 import { InfernoEffect, InfernoWrapperComponent } from '@devextreme/runtime/inferno';
@@ -95,6 +95,7 @@ export var EditorProps = Object.create(Object.prototype, _extends(Object.getOwnP
   validationMessagePosition: 'bottom',
   validationStatus: 'valid',
   isValid: true,
+  isDirty: false,
   inputAttr: Object.freeze({}),
   defaultValue: null,
   valueChange: () => {}
@@ -123,6 +124,9 @@ export var EditorPropsType = {
   },
   get isValid() {
     return EditorProps.isValid;
+  },
+  get isDirty() {
+    return EditorProps.isDirty;
   },
   get inputAttr() {
     return EditorProps.inputAttr;

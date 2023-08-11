@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/m_utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -174,7 +174,10 @@ export default {
     var isVisible = this._dataController.isEmpty();
     var isLoading = this._dataController.isLoading();
     if (!noDataElement.length) {
-      noDataElement = $('<span>').addClass(noDataClass).appendTo($element);
+      noDataElement = $('<span>').addClass(noDataClass);
+    }
+    if (!noDataElement.parent().is($element)) {
+      noDataElement.appendTo($element);
     }
     if (isVisible && !isLoading) {
       noDataElement.removeClass('dx-hidden').text(that._getNoDataText());
@@ -490,11 +493,6 @@ export default {
   getPixelRatio(window) {
     return window.devicePixelRatio || 1;
   },
-  /// #DEBUG
-  _setPixelRatioFn(value) {
-    this.getPixelRatio = value;
-  },
-  /// #ENDDEBUG
   getContentHeightLimit(browser) {
     if (browser.mozilla) {
       return 8000000;

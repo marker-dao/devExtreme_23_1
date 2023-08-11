@@ -43,7 +43,7 @@ exports.nextWeek = nextWeek;
 var nextMonth = function nextMonth(date) {
   var days = getLastMonthDay(date);
   return addDateInterval(date, {
-    days: days
+    days
   }, 1);
 };
 var isWeekend = function isWeekend(date) {
@@ -76,8 +76,8 @@ var getInterval = function getInterval(options) {
   var startDate = getIntervalStartDate(options);
   var endDate = getIntervalEndDate(startDate, options);
   return {
-    startDate: startDate,
-    endDate: endDate
+    startDate,
+    endDate
   };
 };
 var getIntervalStartDate = function getIntervalStartDate(options) {
@@ -251,15 +251,15 @@ var getCaption = function getCaption(options, isShort, customizationFunction) {
   var text = getCaptionText(startDate, endDate, isShort, options.step);
   if ((0, _type.isFunction)(customizationFunction)) {
     text = customizationFunction({
-      startDate: startDate,
-      endDate: endDate,
-      text: text
+      startDate,
+      endDate,
+      text
     });
   }
   return {
-    startDate: startDate,
-    endDate: endDate,
-    text: text
+    startDate,
+    endDate,
+    text
   };
 };
 exports.getCaption = getCaption;
@@ -317,12 +317,12 @@ var formatViews = function formatViews(views) {
     var type = getViewType(view);
     var name = getViewName(view);
     return {
-      text: text,
-      name: name,
+      text,
+      name,
       view: {
-        text: text,
-        type: type,
-        name: name
+        text,
+        type,
+        name
       }
     };
   });

@@ -422,9 +422,7 @@ var Sortable = DOMComponent.inherit({
     return false;
   }
 });
-/// #DEBUG
-Sortable.prototype.__SCROLL_STEP = SCROLL_STEP;
-/// #ENDDEBUG
+
 // TODO remove dxSortableOld component
 registerComponent('dxSortableOld', Sortable);
 export default {

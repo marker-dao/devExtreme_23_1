@@ -4,7 +4,6 @@ exports.default = void 0;
 var _diagram = _interopRequireDefault(require("./diagram.bar"));
 var _diagram2 = require("./diagram.importer");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
@@ -17,7 +16,7 @@ var DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
     _this.commandOptions = {};
     _this.commandOptions[DiagramCommand.Fullscreen] = 'fullScreen';
     _this.commandOptions[DiagramCommand.ZoomLevel] = function (value) {
-      if (_typeof(this._getOption('zoomLevel')) === 'object') {
+      if (typeof this._getOption('zoomLevel') === 'object') {
         this._setOption('zoomLevel.value', value);
       } else {
         this._setOption('zoomLevel', value);
@@ -42,7 +41,7 @@ var DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
     _this.commandOptions[DiagramCommand.ShowGrid] = 'showGrid';
     _this.commandOptions[DiagramCommand.SnapToGrid] = 'snapToGrid';
     _this.commandOptions[DiagramCommand.GridSize] = function (value) {
-      if (_typeof(this._getOption('gridSize')) === 'object') {
+      if (typeof this._getOption('gridSize') === 'object') {
         this._setOption('gridSize.value', value);
       } else {
         this._setOption('gridSize', value);

@@ -19,7 +19,7 @@ var MASTER_DETAIL_ROW_CLASS = 'dx-master-detail-row';
 var CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
 var ROW_LINES_CLASS = 'dx-row-lines';
 var masterDetailModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       masterDetail: {
         enabled: false,
@@ -31,7 +31,7 @@ var masterDetailModule = {
   extenders: {
     controllers: {
       columns: {
-        _getExpandColumnsCore: function _getExpandColumnsCore() {
+        _getExpandColumnsCore() {
           var expandColumns = this.callBase();
           if (this.option('masterDetail.enabled')) {
             expandColumns.push({
@@ -48,12 +48,12 @@ var masterDetailModule = {
           that._isExpandAll = that.option('masterDetail.autoExpandAll');
         };
         return {
-          init: function init() {
+          init() {
             var that = this;
             initMasterDetail(that);
             that.callBase();
           },
-          expandAll: function expandAll(groupIndex) {
+          expandAll(groupIndex) {
             var that = this;
             if (groupIndex < 0) {
               that._isExpandAll = true;
@@ -63,7 +63,7 @@ var masterDetailModule = {
               that.callBase.apply(that, arguments);
             }
           },
-          collapseAll: function collapseAll(groupIndex) {
+          collapseAll(groupIndex) {
             var that = this;
             if (groupIndex < 0) {
               that._isExpandAll = false;
@@ -73,7 +73,7 @@ var masterDetailModule = {
               that.callBase.apply(that, arguments);
             }
           },
-          isRowExpanded: function isRowExpanded(key) {
+          isRowExpanded(key) {
             var that = this;
             var expandIndex = _m_utils.default.getIndexByKey(key, that._expandedItems);
             if (Array.isArray(key)) {
@@ -81,11 +81,11 @@ var masterDetailModule = {
             }
             return !!(that._isExpandAll ^ (expandIndex >= 0 && that._expandedItems[expandIndex].visible));
           },
-          _getRowIndicesForExpand: function _getRowIndicesForExpand(key) {
+          _getRowIndicesForExpand(key) {
             var rowIndex = this.getRowIndexByKey(key);
             return [rowIndex, rowIndex + 1];
           },
-          _changeRowExpandCore: function _changeRowExpandCore(key) {
+          _changeRowExpandCore(key) {
             var that = this;
             var result;
             if (Array.isArray(key)) {
@@ -97,7 +97,7 @@ var masterDetailModule = {
                 that._expandedItems[expandIndex].visible = !visible;
               } else {
                 that._expandedItems.push({
-                  key: key,
+                  key,
                   visible: true
                 });
               }
@@ -110,7 +110,7 @@ var masterDetailModule = {
             }
             return result;
           },
-          _processDataItem: function _processDataItem(data, options) {
+          _processDataItem(data, options) {
             var that = this;
             var dataItem = that.callBase.apply(that, arguments);
             dataItem.isExpanded = that.isRowExpanded(dataItem.key);
@@ -129,7 +129,7 @@ var masterDetailModule = {
             }
             return dataItem;
           },
-          _processItems: function _processItems(items, change) {
+          _processItems(items, change) {
             var that = this;
             var changeType = change.changeType;
             var result = [];
@@ -157,7 +157,7 @@ var masterDetailModule = {
             });
             return result;
           },
-          optionChanged: function optionChanged(args) {
+          optionChanged(args) {
             var that = this;
             var isEnabledChanged;
             var isAutoExpandAllChanged;
@@ -194,11 +194,11 @@ var masterDetailModule = {
         };
       }(),
       resizing: {
-        fireContentReadyAction: function fireContentReadyAction() {
+        fireContentReadyAction() {
           this.callBase.apply(this, arguments);
           this._updateParentDataGrids(this.component.$element());
         },
-        _updateParentDataGrids: function _updateParentDataGrids($element) {
+        _updateParentDataGrids($element) {
           var _this = this;
           var $masterDetailRow = $element.closest(".".concat(MASTER_DETAIL_ROW_CLASS));
           if ($masterDetailRow.length) {
@@ -208,14 +208,14 @@ var masterDetailModule = {
           }
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _updateMasterDataGrid: function _updateMasterDataGrid($masterDetailRow, $detailElement) {
+        _updateMasterDataGrid($masterDetailRow, $detailElement) {
           var masterRowOptions = (0, _renderer.default)($masterDetailRow).data('options');
           var masterDataGrid = (0, _renderer.default)($masterDetailRow).closest(".".concat(this.getWidgetContainerClass())).parent().data('dxDataGrid');
           if (masterRowOptions && masterDataGrid) {
             return this._updateMasterDataGridCore(masterDataGrid, masterRowOptions);
           }
         },
-        _updateMasterDataGridCore: function _updateMasterDataGridCore(masterDataGrid, masterRowOptions) {
+        _updateMasterDataGridCore(masterDataGrid, masterRowOptions) {
           var d = (0, _deferred.Deferred)();
           if (masterDataGrid.getView('rowsView').isFixedColumns()) {
             this._updateFixedMasterDetailGrids(masterDataGrid, masterRowOptions.rowIndex, (0, _renderer.default)(masterRowOptions.rowElement)).done(d.resolve);
@@ -238,7 +238,7 @@ var masterDetailModule = {
           }
           return d.promise();
         },
-        _updateFixedMasterDetailGrids: function _updateFixedMasterDetailGrids(masterDataGrid, masterRowIndex, $detailElement) {
+        _updateFixedMasterDetailGrids(masterDataGrid, masterRowIndex, $detailElement) {
           var _this2 = this;
           var d = (0, _deferred.Deferred)();
           var $rows = (0, _renderer.default)(masterDataGrid.getRowElement(masterRowIndex));
@@ -262,7 +262,7 @@ var masterDetailModule = {
           }
           return (0, _deferred.Deferred)().resolve();
         },
-        _toggleBestFitMode: function _toggleBestFitMode(isBestFit) {
+        _toggleBestFitMode(isBestFit) {
           this.callBase.apply(this, arguments);
           if (this.option('masterDetail.template')) {
             var $rowsTable = this._rowsView.getTableElement();
@@ -276,7 +276,7 @@ var masterDetailModule = {
     views: {
       rowsView: function () {
         return {
-          _getCellTemplate: function _getCellTemplate(options) {
+          _getCellTemplate(options) {
             var that = this;
             var column = options.column;
             var editingController = that.getController('editing');
@@ -292,10 +292,10 @@ var masterDetailModule = {
             }
             return template;
           },
-          _isDetailRow: function _isDetailRow(row) {
+          _isDetailRow(row) {
             return row && row.rowType && row.rowType.indexOf('detail') === 0;
           },
-          _createRow: function _createRow(row) {
+          _createRow(row) {
             var $row = this.callBase.apply(this, arguments);
             if (row && this._isDetailRow(row)) {
               this.option('showRowLines') && $row.addClass(ROW_LINES_CLASS);
@@ -306,7 +306,7 @@ var masterDetailModule = {
             }
             return $row;
           },
-          _renderCells: function _renderCells($row, options) {
+          _renderCells($row, options) {
             var row = options.row;
             var $detailCell;
             var visibleColumns = this._columnsController.getVisibleColumns();
@@ -314,7 +314,7 @@ var masterDetailModule = {
               if (this._needRenderCell(0, options.columnIndices)) {
                 $detailCell = this._renderCell($row, {
                   value: null,
-                  row: row,
+                  row,
                   rowIndex: row.rowIndex,
                   column: {
                     command: 'detail'

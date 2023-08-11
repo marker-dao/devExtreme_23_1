@@ -789,8 +789,8 @@ function setMaxSize(maxWidth, maxHeight) {
   restoreTitleElement();
   return {
     rowCount: lines.length,
-    textChanged: textChanged,
-    textIsEmpty: textIsEmpty
+    textChanged,
+    textIsEmpty
   };
 }
 function getIndexForEllipsis(text, maxWidth, startBox, endBox) {
@@ -934,7 +934,7 @@ function wordWrap(text, maxWidth, ellipsisMaxWidth, options, lastStepBreakIndex)
   }
   return [{
     commonLength: wholeText.length,
-    parts: parts
+    parts
   }].concat(restLines);
 }
 function calculateLineHeight(line, lineHeight) {
@@ -1419,13 +1419,13 @@ SvgElement.prototype = {
   animate: function animate(params, options, complete) {
     return baseAnimate(this, params, options, complete);
   },
-  sharp: function sharp(pos, sharpDirection) {
+  sharp(pos, sharpDirection) {
     return this.attr({
       sharp: pos || true,
-      sharpDirection: sharpDirection
+      sharpDirection
     });
   },
-  _applyTransformation: function _applyTransformation() {
+  _applyTransformation() {
     var tr = this._settings;
     var rotateX;
     var rotateY;
@@ -1522,7 +1522,7 @@ SvgElement.prototype = {
     titleElem.textContent = text || '';
     this.element.appendChild(titleElem);
   },
-  removeTitle: function removeTitle() {
+  removeTitle() {
     detachTitleElements(this.element);
   },
   data: function data(obj, val) {
@@ -1609,10 +1609,10 @@ extend(TextSvgElement.prototype, {
   constructor: TextSvgElement,
   attr: textAttr,
   css: textCss,
-  applyEllipsis: applyEllipsis,
-  setMaxSize: setMaxSize,
-  restoreText: restoreText,
-  _getLineHeight: function _getLineHeight() {
+  applyEllipsis,
+  setMaxSize,
+  restoreText,
+  _getLineHeight() {
     return !isNaN(parseFloat(this._styles[KEY_FONT_SIZE])) ? this._styles[KEY_FONT_SIZE] : DEFAULT_FONT_SIZE;
   }
 });
@@ -1837,7 +1837,7 @@ Renderer.prototype = {
     var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _utils.getNextDefsSvgId)();
     var rotationAngle = arguments.length > 2 ? arguments[2] : undefined;
     var gradient = this._createElement('linearGradient', {
-      id: id,
+      id,
       gradientTransform: "rotate(".concat(rotationAngle || 0, ")")
     }).append(this._defs);
     gradient.id = id;
@@ -1846,7 +1846,7 @@ Renderer.prototype = {
   },
   radialGradient: function radialGradient(stops, id) {
     var gradient = this._createElement('radialGradient', {
-      id: id
+      id
     }).append(this._defs);
     this._createGradientStops(stops, gradient);
     return gradient;
@@ -1897,9 +1897,9 @@ Renderer.prototype = {
   },
   customPattern: function customPattern(id, template, width, height) {
     var option = {
-      id: id,
-      width: width,
-      height: height,
+      id,
+      width,
+      height,
       patternContentUnits: 'userSpaceOnUse',
       patternUnits: this._getPatternUnits(width, height)
     };
@@ -1947,11 +1947,11 @@ Renderer.prototype = {
     return shape;
   },
   // appended automatically
-  clipRect: function clipRect(x, y, width, height) {
+  clipRect(x, y, width, height) {
     return this.clipShape(this.rect, arguments);
   },
   // appended automatically
-  clipCircle: function clipCircle(x, y, radius) {
+  clipCircle(x, y, radius) {
     return this.clipShape(this.circle, arguments);
   },
   // appended automatically
@@ -2058,7 +2058,7 @@ Renderer.prototype = {
   lightenFilter: function lightenFilter(id) {
     var coef = 1.3;
     var filter = this._createElement('filter', {
-      id: id
+      id
     }).append(this._defs);
     this._createElement('feColorMatrix', {
       type: 'matrix',

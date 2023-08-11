@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/jspdf/common/rows_spliting_utils/create_on_split_multipage_row.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 function createMultiCellRect(rect, text, marginTop) {
   return _extends({}, rect, {
     sourceCellInfo: _extends({}, rect.sourceCellInfo, {
-      text: text
+      text
     }),
     y: marginTop
   });

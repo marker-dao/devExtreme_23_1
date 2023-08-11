@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.base.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -275,7 +275,7 @@ var DateBox = _ui2.default.inherit({
       rightPadding: rightPadding
     };
   },
-  _getKeyboardListeners: function _getKeyboardListeners() {
+  _getKeyboardListeners() {
     return this.callBase().concat([this._strategy && this._strategy.getKeyboardListener()]);
   },
   _renderPopup: function _renderPopup() {
@@ -283,7 +283,7 @@ var DateBox = _ui2.default.inherit({
     this._popup.$wrapper().addClass(DATEBOX_WRAPPER_CLASS);
     this._renderPopupWrapper();
   },
-  _getPopupToolbarItems: function _getPopupToolbarItems() {
+  _getPopupToolbarItems() {
     var _this$_strategy$_getP, _this$_strategy$_getP2, _this$_strategy2;
     var defaultItems = this.callBase();
     return (_this$_strategy$_getP = (_this$_strategy$_getP2 = (_this$_strategy2 = this._strategy)._getPopupToolbarItems) === null || _this$_strategy$_getP2 === void 0 ? void 0 : _this$_strategy$_getP2.call(_this$_strategy2, defaultItems)) !== null && _this$_strategy$_getP !== void 0 ? _this$_strategy$_getP : defaultItems;
@@ -407,7 +407,7 @@ var DateBox = _ui2.default.inherit({
       }
     }
   },
-  _recallInternalValidation: function _recallInternalValidation(value, validationError) {
+  _recallInternalValidation(value, validationError) {
     if (!validationError || validationError.editorSpecific) {
       this._applyInternalValidation(value);
       this._applyCustomValidation(value);
@@ -421,7 +421,7 @@ var DateBox = _ui2.default.inherit({
     var parsedText = this._strategy.getParsedText(text, displayFormat);
     return parsedText !== null && parsedText !== void 0 ? parsedText : undefined;
   },
-  _applyInternalValidation: function _applyInternalValidation(value) {
+  _applyInternalValidation(value) {
     var text = this.option('text');
     var hasText = !!text && value !== null;
     var isDate = !!value && (0, _type.isDate)(value) && !isNaN(value.getTime());
@@ -435,11 +435,11 @@ var DateBox = _ui2.default.inherit({
     }
     this._updateInternalValidationState(isValid, validationMessage);
     return {
-      isValid: isValid,
-      isDate: isDate
+      isValid,
+      isDate
     };
   },
-  _updateInternalValidationState: function _updateInternalValidationState(isValid, validationMessage) {
+  _updateInternalValidationState(isValid, validationMessage) {
     this.option({
       isValid: isValid,
       validationError: isValid ? null : {
@@ -641,7 +641,7 @@ var DateBox = _ui2.default.inherit({
       this._applyCustomValidation(null);
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     var value = this.option('value');
     this.callBase();
     if (value === null) {

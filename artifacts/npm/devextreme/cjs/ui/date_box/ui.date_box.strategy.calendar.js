@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.strategy.calendar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -85,13 +85,14 @@ var CalendarStrategy = _uiDate_box.default.inherit({
   _getContouredValue: function _getContouredValue() {
     return this._widget._view.option('contouredDate');
   },
-  getKeyboardListener: function getKeyboardListener() {
+  getKeyboardListener() {
     return this._widget;
   },
   _getWidgetOptions: function _getWidgetOptions() {
     var disabledDates = this.dateBox.option('disabledDates');
     return (0, _extend.extend)(this.dateBox.option('calendarOptions'), {
       value: this.dateBoxValue() || null,
+      selectionMode: 'single',
       dateSerializationFormat: null,
       min: this.dateBox.dateOption('min'),
       max: this.dateBox.dateOption('max'),
@@ -116,7 +117,7 @@ var CalendarStrategy = _uiDate_box.default.inherit({
     this._lastActionElement = 'calendar';
     this.dateBox.setAria('activedescendant', e.actionValue);
   },
-  _getTodayButtonConfig: function _getTodayButtonConfig() {
+  _getTodayButtonConfig() {
     var _this = this;
     var buttonsLocation = this.dateBox.option('buttonsLocation');
     var isButtonsLocationDefault = buttonsLocation === 'default';
@@ -142,7 +143,7 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       calendarOptions = _this$dateBox$option.calendarOptions;
     return (0, _type.isEmptyObject)(calendarOptions) || calendarOptions.visible !== false;
   },
-  _getPopupToolbarItems: function _getPopupToolbarItems(toolbarItems) {
+  _getPopupToolbarItems(toolbarItems) {
     var useButtons = this.dateBox.option('applyValueMode') === 'useButtons';
     var shouldRenderTodayButton = useButtons && this._isCalendarVisible();
     if (shouldRenderTodayButton) {

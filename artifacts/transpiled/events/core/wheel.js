@@ -30,15 +30,15 @@ var wheel = {
       type: EVENT_NAME,
       originalEvent: e,
       delta: this._normalizeDelta(deltaY, deltaMode),
-      deltaX: deltaX,
-      deltaY: deltaY,
-      deltaZ: deltaZ,
-      deltaMode: deltaMode,
+      deltaX,
+      deltaY,
+      deltaZ,
+      deltaMode,
       pointerType: 'mouse'
     });
     e.stopPropagation();
   },
-  _normalizeDelta: function _normalizeDelta(delta) {
+  _normalizeDelta(delta) {
     var deltaMode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : PIXEL_MODE;
     if (deltaMode === PIXEL_MODE) {
       return -delta;

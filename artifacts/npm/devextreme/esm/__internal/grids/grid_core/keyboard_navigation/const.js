@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/keyboard_navigation/const.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,7 +35,7 @@ export var WIDGET_CLASS = 'dx-widget';
 export var REVERT_BUTTON_CLASS = 'dx-revert-button';
 export var FOCUSED_CLASS = 'dx-focused';
 export var FAST_EDITING_DELETE_KEY = 'delete';
-export var INTERACTIVE_ELEMENTS_SELECTOR = 'input:not([type=\'hidden\']), textarea, a, select, button, [tabindex], .dx-checkbox';
+export var INTERACTIVE_ELEMENTS_SELECTOR = "\n  input:not([type=\"hidden\"]):not([disabled]),\n  textarea:not([disabled]),\n  a:not([disabled]),\n  select:not([disabled]),\n  button:not([disabled]),\n  [tabindex]:not([disabled]),\n  .dx-checkbox:not([disabled])\n";
 export var NON_FOCUSABLE_ELEMENTS_SELECTOR = "".concat(INTERACTIVE_ELEMENTS_SELECTOR, ", .dx-dropdowneditor-icon");
 export var EDIT_MODE_FORM = 'form';
 export var FOCUS_TYPE_ROW = 'row';

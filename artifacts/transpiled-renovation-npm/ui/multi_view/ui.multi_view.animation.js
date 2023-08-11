@@ -5,7 +5,7 @@ var _fx = _interopRequireDefault(require("../../animation/fx"));
 var _translator2 = require("../../animation/translator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var _translator = {
-  move: function move($element, position) {
+  move($element, position) {
     (0, _translator2.move)($element, {
       left: position
     });
@@ -13,7 +13,7 @@ var _translator = {
 };
 exports._translator = _translator;
 var animation = {
-  moveTo: function moveTo($element, position, duration, completeAction) {
+  moveTo($element, position, duration, completeAction) {
     _fx.default.animate($element, {
       type: 'slide',
       to: {
@@ -23,7 +23,7 @@ var animation = {
       complete: completeAction
     });
   },
-  complete: function complete($element) {
+  complete($element) {
     _fx.default.stop($element, true);
   }
 };

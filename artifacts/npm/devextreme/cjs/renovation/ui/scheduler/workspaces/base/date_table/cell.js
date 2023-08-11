@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/workspaces/base/date_table/cell.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.viewFunction = exports.DateTableCellBaseProps = exports.DateTableCellBase = void 0;
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
@@ -18,11 +17,10 @@ var _const = require("../../const");
 var _excluded = ["allDay", "ariaLabel", "children", "className", "contentTemplateProps", "dataCellTemplate", "endDate", "firstDayOfMonth", "groupIndex", "groups", "index", "isFirstGroupCell", "isFocused", "isLastGroupCell", "isSelected", "otherMonth", "startDate", "text", "today"];
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -91,16 +89,19 @@ var DateTableCellBase = /*#__PURE__*/function (_BaseInfernoComponent) {
   _createClass(DateTableCellBase, [{
     key: "classes",
     get: function get() {
-      var _combineClasses;
       var _this$props = this.props,
         allDay = _this$props.allDay,
         className = _this$props.className,
         isFocused = _this$props.isFocused,
         isSelected = _this$props.isSelected;
-      return (0, _combine_classes.combineClasses)((_combineClasses = {
+      return (0, _combine_classes.combineClasses)({
         'dx-scheduler-cell-sizes-horizontal': true,
-        'dx-scheduler-cell-sizes-vertical': !allDay
-      }, _defineProperty(_combineClasses, _const.DATE_TABLE_CELL_CLASS, !allDay), _defineProperty(_combineClasses, 'dx-state-focused', isSelected), _defineProperty(_combineClasses, 'dx-scheduler-focused-cell', isFocused), _defineProperty(_combineClasses, className, true), _combineClasses));
+        'dx-scheduler-cell-sizes-vertical': !allDay,
+        [_const.DATE_TABLE_CELL_CLASS]: !allDay,
+        'dx-state-focused': isSelected,
+        'dx-scheduler-focused-cell': isFocused,
+        [className]: true
+      });
     }
   }, {
     key: "dataCellTemplateProps",
@@ -120,14 +121,14 @@ var DateTableCellBase = /*#__PURE__*/function (_BaseInfernoComponent) {
           startDate = _this2$props.startDate;
         return {
           data: _extends({
-            startDate: startDate,
-            endDate: endDate,
-            groups: groups,
+            startDate,
+            endDate,
+            groups,
             groupIndex: groups ? groupIndex : undefined,
             text: '',
             allDay: !!allDay || undefined
           }, contentTemplateProps.data),
-          index: index
+          index
         };
       }();
     }

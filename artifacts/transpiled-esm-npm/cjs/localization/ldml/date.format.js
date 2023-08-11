@@ -3,7 +3,7 @@
 exports.getFormat = void 0;
 var _number = _interopRequireDefault(require("../number"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ARABIC_COMMA = "\u060C";
+var ARABIC_COMMA = '\u060C';
 var FORMAT_SEPARATORS = ' .,:;/\\<>()-[]' + ARABIC_COMMA;
 var AM_PM_PATTERN = '. m.';
 var checkDigit = function checkDigit(char) {

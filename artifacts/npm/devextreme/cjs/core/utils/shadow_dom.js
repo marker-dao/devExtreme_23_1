@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/shadow_dom.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -64,11 +64,11 @@ function createQueue() {
   var shiftIndex = 0;
   var items = [];
   return Object.defineProperties({
-    push: function push(item) {
+    push(item) {
       items.push(item);
       return this;
     },
-    shift: function shift() {
+    shift() {
       shiftIndex++;
       return items[shiftIndex - 1];
     }

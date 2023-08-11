@@ -21,7 +21,7 @@ Translator1D.prototype = {
     that._codomainDelta = that._codomain2 - that._codomain1;
     return that;
   },
-  setInverted: function setInverted(state) {
+  setInverted(state) {
     this.inverted = state;
   },
   getDomain: function getDomain() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/sankey.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -576,7 +576,7 @@ export interface dxSankeyOptions extends BaseWidgetOptions<dxSankey> {
      * @type object
      * @public
      */
-    tooltip?: dxSankeyTooltip;
+    tooltip?: Tooltip;
     /**
      * @docid
      * @default 'weight'
@@ -585,10 +585,10 @@ export interface dxSankeyOptions extends BaseWidgetOptions<dxSankey> {
     weightField?: string;
 }
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxSankeyTooltip
  */
-export interface dxSankeyTooltip extends BaseWidgetTooltip {
+export type Tooltip = BaseWidgetTooltip & {
     /**
      * @docid  dxSankeyOptions.tooltip.customizeLinkTooltip
      * @default undefined
@@ -624,7 +624,7 @@ export interface dxSankeyTooltip extends BaseWidgetTooltip {
      * @public
      */
     nodeTooltipTemplate?: template | ((info: { label?: string; weightIn?: number; weightOut?: number }, element: DxElement) => string | UserDefinedElement);
-}
+};
 /**
  * @docid
  * @inherits BaseWidget, DataHelperMixin
@@ -772,5 +772,12 @@ export type Properties = dxSankeyOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxSankeyOptions;
+
+// #region deprecated in v23.1
+
+/** @deprecated Use Tooltip instead */
+export type dxSankeyTooltip = Tooltip;
+
+// #endregion
 
 

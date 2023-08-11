@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/selection/selection.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -287,5 +287,8 @@ export default class Selection {
   }
   getSelectAllState(visibleOnly) {
     return this._selectionStrategy.getSelectAllState(visibleOnly);
+  }
+  loadSelectedItemsWithFilter() {
+    return this._selectionStrategy.loadSelectedItemsWithFilter();
   }
 }

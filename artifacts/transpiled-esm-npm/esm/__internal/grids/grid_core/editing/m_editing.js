@@ -22,7 +22,7 @@ import messageLocalization from '../../../../localization/message';
 import { confirm } from '../../../../ui/dialog';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
-import { ACTION_OPTION_NAMES, BUTTON_NAMES, CELL_FOCUS_DISABLED_CLASS, CELL_MODIFIED, COMMAND_EDIT_CLASS, COMMAND_EDIT_WITH_ICONS_CLASS, DATA_EDIT_DATA_INSERT_TYPE, DATA_EDIT_DATA_REMOVE_TYPE, DATA_EDIT_DATA_UPDATE_TYPE, DEFAULT_START_EDIT_ACTION, EDIT_BUTTON_CLASS, EDIT_FORM_CLASS, EDIT_ICON_CLASS, EDIT_LINK_CLASS, EDIT_MODE_ROW, EDIT_MODES, EDITING_CHANGES_OPTION_NAME, EDITING_EDITCOLUMNNAME_OPTION_NAME, EDITING_EDITROWKEY_OPTION_NAME, EDITING_NAMESPACE, EDITING_POPUP_OPTION_NAME, EDITOR_CELL_CLASS, EDITORS_INPUT_SELECTOR, FIRST_NEW_ROW_POSITION, FOCUSABLE_ELEMENT_SELECTOR, INSERT_INDEX, LAST_NEW_ROW_POSITION, LINK_CLASS, METHOD_NAMES, PAGE_BOTTOM_NEW_ROW_POSITION, PAGE_TOP_NEW_ROW_POSITION, READONLY_CLASS, ROW_BASED_MODES, ROW_CLASS, ROW_INSERTED, ROW_MODIFIED, ROW_SELECTED, TARGET_COMPONENT_NAME, VIEWPORT_BOTTOM_NEW_ROW_POSITION, VIEWPORT_TOP_NEW_ROW_POSITION } from './const';
+import { ACTION_OPTION_NAMES, BUTTON_NAMES, CELL_FOCUS_DISABLED_CLASS, CELL_MODIFIED, COMMAND_EDIT_CLASS, COMMAND_EDIT_WITH_ICONS_CLASS, DATA_EDIT_DATA_INSERT_TYPE, DATA_EDIT_DATA_REMOVE_TYPE, DATA_EDIT_DATA_UPDATE_TYPE, DEFAULT_START_EDIT_ACTION, EDIT_BUTTON_CLASS, EDIT_FORM_CLASS, EDIT_ICON_CLASS, EDIT_LINK_CLASS, EDIT_MODE_ROW, EDIT_MODES, EDITING_CHANGES_OPTION_NAME, EDITING_EDITCOLUMNNAME_OPTION_NAME, EDITING_EDITROWKEY_OPTION_NAME, EDITING_NAMESPACE, EDITING_POPUP_OPTION_NAME, EDITOR_CELL_CLASS, EDITORS_INPUT_SELECTOR, FIRST_NEW_ROW_POSITION, FOCUSABLE_ELEMENT_SELECTOR, INSERT_INDEX, LAST_NEW_ROW_POSITION, LINK_CLASS, LINK_ICON_CLASS, METHOD_NAMES, PAGE_BOTTOM_NEW_ROW_POSITION, PAGE_TOP_NEW_ROW_POSITION, READONLY_CLASS, REQUIRED_EDITOR_LABELLEDBY_MODES, ROW_BASED_MODES, ROW_CLASS, ROW_INSERTED, ROW_MODIFIED, ROW_SELECTED, TARGET_COMPONENT_NAME, VIEWPORT_BOTTOM_NEW_ROW_POSITION, VIEWPORT_TOP_NEW_ROW_POSITION } from './const';
 import { createFailureHandler, getButtonIndex, getButtonName, getEditingTexts, isEditingCell, isEditingOrShowEditorAlwaysDataCell } from './m_editing_utils';
 class EditingControllerImpl extends modules.ViewController {
   init() {
@@ -96,7 +96,7 @@ class EditingControllerImpl extends modules.ViewController {
   _getDefaultEditorTemplate() {
     return (container, options) => {
       var $editor = $('<div>').appendTo(container);
-      this.getController('editorFactory').createEditor($editor, extend({}, options.column, {
+      var editorOptions = extend({}, options.column, {
         value: options.value,
         setValue: options.setValue,
         row: options.row,
@@ -105,7 +105,12 @@ class EditingControllerImpl extends modules.ViewController {
         readOnly: !options.setValue,
         isOnForm: options.isOnForm,
         id: options.id
-      }));
+      });
+      var needLabel = REQUIRED_EDITOR_LABELLEDBY_MODES.includes(this.getEditMode());
+      if (needLabel) {
+        editorOptions['aria-labelledby'] = options.column.headerId;
+      }
+      this.getController('editorFactory').createEditor($editor, editorOptions);
     };
   }
   _getNewRowPosition() {
@@ -1794,7 +1799,7 @@ class EditingControllerImpl extends modules.ViewController {
         } else {
           $button.addClass("dx-icon".concat(iconType === 'dxIcon' ? '-' : ' ').concat(icon)).attr('title', button.text);
         }
-        $button.addClass('dx-link-icon');
+        $button.addClass(LINK_ICON_CLASS);
         $container.addClass(COMMAND_EDIT_WITH_ICONS_CLASS);
         var localizationName = this.getButtonLocalizationNames()[button.name];
         localizationName && $button.attr('aria-label', messageLocalization.format(localizationName));

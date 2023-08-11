@@ -13,10 +13,10 @@ var _a, _b;
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 var DataController = (_b = (_a = _m_data_controller.dataControllerModule.controllers) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.inherit(function () {
   return {
-    _getDataSourceAdapter: function _getDataSourceAdapter() {
+    _getDataSourceAdapter() {
       return _m_data_source_adapter.default;
     },
-    _getSpecificDataSourceOption: function _getSpecificDataSourceOption() {
+    _getSpecificDataSourceOption() {
       var dataSource = this.option('dataSource');
       if (dataSource && !Array.isArray(dataSource) && this.option('keyExpr')) {
         _ui.default.log('W1011');

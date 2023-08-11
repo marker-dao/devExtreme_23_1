@@ -115,7 +115,7 @@ function formatValue(value, options) {
   // because isNaN function works incorrectly with strings and undefined (T889965)
   var valueText = value === value && _format_helper.default.format(value, options.format);
   var formatObject = {
-    value: value,
+    value,
     valueText: valueText || ''
   };
   return options.customizeText ? options.customizeText.call(options, formatObject) : formatObject.valueText;
@@ -215,7 +215,7 @@ function parseFields(dataSource, fieldsList, path, fieldsDataType) {
     }
     items = [{
       dataField: currentPath,
-      dataType: dataType,
+      dataType,
       groupName: dataType === 'date' ? field : undefined,
       groupInterval: undefined,
       displayFolder: path
@@ -241,13 +241,13 @@ function getFieldsDataType(fields) {
   return result;
 }
 var DATE_INTERVAL_FORMATS = {
-  month: function month(value) {
+  month(value) {
     return _date.default.getMonthNames()[value - 1];
   },
-  quarter: function quarter(value) {
+  quarter(value) {
     return _date.default.format(new Date(2000, value * 3 - 1), 'quarter');
   },
-  dayOfWeek: function dayOfWeek(value) {
+  dayOfWeek(value) {
     return _date.default.getDayNames()[value];
   }
 };
@@ -281,7 +281,7 @@ function getFiltersByPath(fields, path) {
   return result;
 }
 var storeDrillDownMixin = {
-  createDrillDownDataSource: function createDrillDownDataSource(descriptions, params) {
+  createDrillDownDataSource(descriptions, params) {
     var items = this.getDrillDownItems(descriptions, params);
     var arrayStore;
     function createCustomStoreMethod(methodName) {
@@ -328,24 +328,24 @@ var calculateScrollbarWidth = (0, _call_once.default)(function () {
 });
 exports.calculateScrollbarWidth = calculateScrollbarWidth;
 var _default = {
-  setFieldProperty: setFieldProperty,
-  sendRequest: sendRequest,
-  foreachTree: foreachTree,
-  foreachTreeAsync: foreachTreeAsync,
-  findField: findField,
-  formatValue: formatValue,
-  getCompareFunction: getCompareFunction,
-  createPath: createPath,
-  foreachDataLevel: foreachDataLevel,
-  mergeArraysByMaxValue: mergeArraysByMaxValue,
-  getExpandedLevel: getExpandedLevel,
-  discoverObjectFields: discoverObjectFields,
-  getFieldsDataType: getFieldsDataType,
-  setDefaultFieldValueFormatting: setDefaultFieldValueFormatting,
-  getFiltersByPath: getFiltersByPath,
-  storeDrillDownMixin: storeDrillDownMixin,
-  capitalizeFirstLetter: capitalizeFirstLetter,
-  getScrollbarWidth: getScrollbarWidth,
-  calculateScrollbarWidth: calculateScrollbarWidth
+  setFieldProperty,
+  sendRequest,
+  foreachTree,
+  foreachTreeAsync,
+  findField,
+  formatValue,
+  getCompareFunction,
+  createPath,
+  foreachDataLevel,
+  mergeArraysByMaxValue,
+  getExpandedLevel,
+  discoverObjectFields,
+  getFieldsDataType,
+  setDefaultFieldValueFormatting,
+  getFiltersByPath,
+  storeDrillDownMixin,
+  capitalizeFirstLetter,
+  getScrollbarWidth,
+  calculateScrollbarWidth
 };
 exports.default = _default;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/column_fixing/m_column_fixing.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,12 +13,14 @@ import { extend } from '../../../../core/utils/extend';
 import { each } from '../../../../core/utils/iterator';
 import { getBoundingRect } from '../../../../core/utils/position';
 import { getOuterWidth } from '../../../../core/utils/size';
+import { setWidth } from '../../../../core/utils/style';
 import { isDefined } from '../../../../core/utils/type';
 import eventsEngine from '../../../../events/core/events_engine';
 import { name as wheelEventName } from '../../../../events/core/wheel';
 import messageLocalization from '../../../../localization/message';
 import Scrollable from '../../../../ui/scroll_view/ui.scrollable';
 import gridCoreUtils from '../m_utils';
+import { normalizeWidth } from '../views/m_columns_view';
 var CONTENT_CLASS = 'content';
 var CONTENT_FIXED_CLASS = 'content-fixed';
 var MASTER_DETAIL_CELL_CLASS = 'dx-master-detail-cell';
@@ -130,14 +132,17 @@ var baseFixedColumns = {
     }
   },
   _renderTable(options) {
+    var _a;
     var $fixedTable;
     var fixedColumns = this.getFixedColumns();
     this._isFixedColumns = !!fixedColumns.length;
     var $table = this.callBase(options);
     if (this._isFixedColumns) {
       var change = options === null || options === void 0 ? void 0 : options.change;
+      var $fixedDataRows = this._getRowElements(this._fixedTableElement);
+      var needPartialUpdate = (change === null || change === void 0 ? void 0 : change.virtualColumnsScrolling) && $fixedDataRows.length === ((_a = change === null || change === void 0 ? void 0 : change.items) === null || _a === void 0 ? void 0 : _a.length);
       this._isFixedTableRendering = true;
-      if ((change === null || change === void 0 ? void 0 : change.virtualColumnsScrolling) && this.option('scrolling.legacyMode') !== true) {
+      if (needPartialUpdate && this.option('scrolling.legacyMode') !== true) {
         this._partialUpdateFixedTable(fixedColumns);
         this._isFixedTableRendering = false;
       } else {
@@ -314,9 +319,9 @@ var baseFixedColumns = {
       this.callBase(tableElement);
     }
   },
-  getColumns(rowIndex, $tableElement) {
-    $tableElement = $tableElement || this.getTableElement();
-    if (this._isFixedTableRendering || $tableElement && $tableElement.closest('table').parent(".".concat(this.addWidgetPrefix(CONTENT_FIXED_CLASS))).length) {
+  getColumns(rowIndex) {
+    var $tableElement = this.getTableElement();
+    if (this._isFixedTableRendering) {
       return this.getFixedColumns(rowIndex);
     }
     return this.callBase(rowIndex, $tableElement);
@@ -368,43 +373,45 @@ var baseFixedColumns = {
     this.synchronizeRows();
   },
   setColumnWidths(options) {
-    var columns;
-    var visibleColumns = this._columnsController.getVisibleColumns();
+    var _a;
     var {
       widths
     } = options;
-    var isWidthsSynchronized = widths && widths.length && isDefined(visibleColumns[0].visibleWidth);
-    var {
-      optionNames
-    } = options;
-    var isColumnWidthChanged = optionNames && optionNames.width;
-    var useVisibleColumns = false;
-    this.callBase.apply(this, arguments);
+    var visibleColumns = this._columnsController.getVisibleColumns();
+    var isColumnWidthsSynced = (widths === null || widths === void 0 ? void 0 : widths.length) && visibleColumns.some(column => isDefined(column.visibleWidth));
+    var isColumnWidthChanged = (_a = options.optionNames) === null || _a === void 0 ? void 0 : _a.width;
+    this.callBase(options);
     if (this._fixedTableElement) {
-      var hasAutoWidth = widths && widths.some(width => width === 'auto');
-      useVisibleColumns = hasAutoWidth && (!isWidthsSynchronized || !this.isScrollbarVisible(true));
-      if (useVisibleColumns) {
-        columns = visibleColumns;
-      }
-      this.callBase(extend({}, options, {
-        $tableElement: this._fixedTableElement,
-        columns,
-        fixed: true
-      }));
+      var hasAutoWidth = widths === null || widths === void 0 ? void 0 : widths.some(width => width === 'auto' || !isDefined(width));
+      // if order of calling isScrollbarVisible changed, performance tests will fail
+      var needVisibleColumns = hasAutoWidth && (!isColumnWidthsSynced || !this.isScrollbarVisible(true));
+      var columns = needVisibleColumns ? visibleColumns : this.getFixedColumns();
+      this.setFixedTableColumnWidths(columns, widths);
     }
-    if (isWidthsSynchronized || isColumnWidthChanged && this.option('wordWrapEnabled')) {
+    var wordWrapEnabled = this.option('wordWrapEnabled');
+    var needSynchronizeRows = isColumnWidthsSynced || isColumnWidthChanged && wordWrapEnabled;
+    if (needSynchronizeRows) {
       this.synchronizeRows();
     }
   },
-  _createColGroup(columns) {
-    if (this._isFixedTableRendering && !this.option('columnAutoWidth')) {
-      var visibleColumns = this._columnsController.getVisibleColumns();
-      var useVisibleColumns = visibleColumns.filter(column => !column.width).length;
-      if (useVisibleColumns) {
-        columns = visibleColumns;
-      }
+  setFixedTableColumnWidths(columns, widths) {
+    if (!this._fixedTableElement || !widths) {
+      return;
     }
-    return this.callBase(columns);
+    var $cols = this._fixedTableElement.children('colgroup').children('col');
+    $cols.toArray().forEach(col => col.removeAttribute('style'));
+    var columnIndex = 0;
+    columns.forEach(column => {
+      if (column.colspan) {
+        columnIndex += column.colspan;
+        return;
+      }
+      var colWidth = normalizeWidth(widths[columnIndex]);
+      if (isDefined(colWidth)) {
+        setWidth($cols.eq(columnIndex), colWidth);
+      }
+      columnIndex += 1;
+    });
   },
   _getClientHeight(element) {
     var boundingClientRectElement = element.getBoundingClientRect && getBoundingRect(element);
@@ -546,27 +553,24 @@ var ColumnHeadersViewFixedColumnsExtender = extend({}, baseFixedColumns, {
 });
 var RowsViewFixedColumnsExtender = extend({}, baseFixedColumns, {
   _detachHoverEvents() {
-    this._fixedTableElement && eventsEngine.off(this._fixedTableElement, 'mouseover mouseout', '.dx-data-row');
-    this._tableElement && eventsEngine.off(this._tableElement, 'mouseover mouseout', '.dx-data-row');
+    var element = this.element();
+    if (this._fixedTableElement && this._tableElement) {
+      eventsEngine.off(element, 'mouseover mouseout', '.dx-data-row');
+    }
   },
   _attachHoverEvents() {
-    var that = this;
-    var attachHoverEvent = function attachHoverEvent($table) {
-      eventsEngine.on($table, 'mouseover mouseout', '.dx-data-row', that.createAction(args => {
+    if (this._fixedTableElement && this._tableElement) {
+      eventsEngine.on(this.element(), 'mouseover mouseout', '.dx-data-row', this.createAction(args => {
         var {
           event
         } = args;
-        var rowIndex = that.getRowIndex($(event.target).closest('.dx-row'));
+        var rowIndex = this.getRowIndex($(event.target).closest('.dx-row'));
         var isHover = event.type === 'mouseover';
         if (rowIndex >= 0) {
-          that._tableElement && that._getRowElements(that._tableElement).eq(rowIndex).toggleClass(HOVER_STATE_CLASS, isHover);
-          that._fixedTableElement && that._getRowElements(that._fixedTableElement).eq(rowIndex).toggleClass(HOVER_STATE_CLASS, isHover);
+          this._tableElement && this._getRowElements(this._tableElement).eq(rowIndex).toggleClass(HOVER_STATE_CLASS, isHover);
+          this._fixedTableElement && this._getRowElements(this._fixedTableElement).eq(rowIndex).toggleClass(HOVER_STATE_CLASS, isHover);
         }
       }));
-    };
-    if (that._fixedTableElement && that._tableElement) {
-      attachHoverEvent(that._fixedTableElement);
-      attachHoverEvent(that._tableElement);
     }
   },
   _getScrollDelay() {
@@ -715,9 +719,7 @@ var RowsViewFixedColumnsExtender = extend({}, baseFixedColumns, {
     var isFixedColumns = this._isFixedColumns;
     this.element().toggleClass(FIXED_COLUMNS_CLASS, isFixedColumns);
     if (this.option('hoverStateEnabled') && isFixedColumns) {
-      deferred.done(() => {
-        this._attachHoverEvents();
-      });
+      this._attachHoverEvents();
     }
     return deferred;
   },

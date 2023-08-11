@@ -280,7 +280,7 @@ var _default = {
     _getTranslatedCoord: function _getTranslatedCoord(value, offset) {
       return this._translator.translate(value, offset);
     },
-    _initAxisPositions: function _initAxisPositions() {
+    _initAxisPositions() {
       var that = this;
       if (that.customPositionIsAvailable()) {
         that._customBoundaryPosition = that.getCustomBoundaryPosition();
@@ -291,7 +291,7 @@ var _default = {
         that._axisPosition = that.getCustomPosition();
       }
     },
-    _getTickMarkPoints: function _getTickMarkPoints(coords, length, tickOptions) {
+    _getTickMarkPoints(coords, length, tickOptions) {
       var isHorizontal = this._isHorizontal;
       var tickOrientation = this._options.tickOrientation;
       var labelPosition = this._options.label.position;
@@ -307,7 +307,7 @@ var _default = {
       }
       return [coords.x + (isHorizontal ? 0 : tickStartCoord), coords.y + (isHorizontal ? tickStartCoord : 0), coords.x + (isHorizontal ? 0 : tickStartCoord + length), coords.y + (isHorizontal ? tickStartCoord + length : 0)];
     },
-    getTickStartPositionShift: function getTickStartPositionShift(length) {
+    getTickStartPositionShift(length) {
       var width = this._options.width;
       var position = this.getResolvedBoundaryPosition();
       return length % 2 === 1 ? width % 2 === 0 && (position === LEFT || position === TOP) || width % 2 === 1 && (position === RIGHT || position === BOTTOM) && !this.hasNonBoundaryPosition() ? Math.floor(-length / 2) : -Math.floor(length / 2) : -length / 2 + (width % 2 === 0 ? 0 : position === BOTTOM || position === RIGHT ? -1 : 1);
@@ -394,7 +394,7 @@ var _default = {
         cropped: options.withoutStick,
         label: that._renderer.text(text, options.x, options.y).css((0, _utils.patchFontOptions)(markerOptions.label.font)).append(that._axisElementsGroup),
         line: pathElement,
-        getContentContainer: function getContentContainer() {
+        getContentContainer() {
           return this.label;
         },
         getEnd: function getEnd() {
@@ -859,7 +859,7 @@ var _default = {
       min: true,
       max: true
     },
-    adjust: function adjust() {
+    adjust() {
       var that = this;
       var seriesData = that._seriesData;
       var viewport = that._series.filter(function (s) {
@@ -884,10 +884,10 @@ var _default = {
       }, that._series, that.isArgumentAxis);
       that._translator.updateBusinessRange(that._getViewportRange());
     },
-    hasWrap: function hasWrap() {
+    hasWrap() {
       return this._wrapped;
     },
-    getAxisPosition: function getAxisPosition() {
+    getAxisPosition() {
       return this._axisPosition;
     },
     _getStick: function _getStick() {
@@ -1129,7 +1129,7 @@ var _default = {
         shiftGroup(side, constantLinesGroups.under);
       });
     },
-    getCustomPosition: function getCustomPosition(position) {
+    getCustomPosition(position) {
       var that = this;
       var orthogonalAxis = that.getOrthogonalAxis();
       var resolvedPosition = position !== null && position !== void 0 ? position : that.getResolvedPositionOption();
@@ -1153,7 +1153,7 @@ var _default = {
       }
       return currentPosition;
     },
-    getCustomBoundaryPosition: function getCustomBoundaryPosition(position) {
+    getCustomBoundaryPosition(position) {
       var that = this;
       var _that$getOptions = that.getOptions(),
         customPosition = _that$getOptions.customPosition,
@@ -1183,35 +1183,35 @@ var _default = {
       }
       return currentPosition;
     },
-    getResolvedPositionOption: function getResolvedPositionOption() {
+    getResolvedPositionOption() {
       var _options$customPositi;
       var options = this.getOptions();
       return (_options$customPositi = options.customPosition) !== null && _options$customPositi !== void 0 ? _options$customPositi : options.position;
     },
-    customPositionIsAvailable: function customPositionIsAvailable() {
+    customPositionIsAvailable() {
       var options = this.getOptions();
       return (0, _type.isDefined)(this.getOrthogonalAxis()) && ((0, _type.isDefined)(options.customPosition) || isFinite(options.offset));
     },
-    hasNonBoundaryPosition: function hasNonBoundaryPosition() {
+    hasNonBoundaryPosition() {
       return this.customPositionIsAvailable() && !this.customPositionIsBoundary();
     },
-    getResolvedBoundaryPosition: function getResolvedBoundaryPosition() {
+    getResolvedBoundaryPosition() {
       return this.customPositionIsBoundary() ? this._customBoundaryPosition : this.getOptions().position;
     },
-    customPositionEqualsToPredefined: function customPositionEqualsToPredefined() {
+    customPositionEqualsToPredefined() {
       return this.customPositionIsBoundary() && this._customBoundaryPosition === this.getOptions().position;
     },
-    customPositionIsBoundary: function customPositionIsBoundary() {
+    customPositionIsBoundary() {
       return this.positionIsBoundary(this._customBoundaryPosition);
     },
-    positionIsBoundary: function positionIsBoundary(position) {
+    positionIsBoundary(position) {
       return [TOP, LEFT, BOTTOM, RIGHT].indexOf(position) >= 0;
     },
-    getPredefinedPosition: function getPredefinedPosition(position) {
+    getPredefinedPosition(position) {
       var _this$_orthogonalPosi;
       return (_this$_orthogonalPosi = this._orthogonalPositions) === null || _this$_orthogonalPosi === void 0 ? void 0 : _this$_orthogonalPosi[position === TOP || position === LEFT ? 'start' : 'end'];
     },
-    resolveOverlappingForCustomPositioning: function resolveOverlappingForCustomPositioning(oppositeAxes) {
+    resolveOverlappingForCustomPositioning(oppositeAxes) {
       var that = this;
       if (!that.hasNonBoundaryPosition() && !that.customPositionIsBoundary() && !oppositeAxes.some(function (a) {
         return a.hasNonBoundaryPosition();
@@ -1258,7 +1258,7 @@ var _default = {
         }
       });
     },
-    _shiftThroughOrthogonalAxisOverlappedTick: function _shiftThroughOrthogonalAxisOverlappedTick(label, orthogonalAxis) {
+    _shiftThroughOrthogonalAxisOverlappedTick(label, orthogonalAxis) {
       var that = this;
       var labelBBox = label.getBBox();
       var orthogonalAxisPosition = orthogonalAxis.getAxisPosition();
@@ -1285,7 +1285,7 @@ var _default = {
         label.attr(attr);
       }
     },
-    _shiftThroughAxisOverlappedTick: function _shiftThroughAxisOverlappedTick(tick) {
+    _shiftThroughAxisOverlappedTick(tick) {
       var _tick$mark;
       var that = this;
       var label = tick.label;
@@ -1313,7 +1313,7 @@ var _default = {
         tick.mark.attr(attr);
       }
     },
-    _detectElementsOverlapping: function _detectElementsOverlapping(element1, element2) {
+    _detectElementsOverlapping(element1, element2) {
       if (!element1 || !element2) {
         return false;
       }

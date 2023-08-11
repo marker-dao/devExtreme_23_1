@@ -158,7 +158,7 @@ function getViewPortFilter(viewport) {
   };
 }
 var _default = {
-  getViewPortFilter: getViewPortFilter,
+  getViewPortFilter,
   getArgumentRange: function getArgumentRange(series) {
     var data = series._data || [];
     var range = {};
@@ -179,7 +179,7 @@ var _default = {
         range = {
           min: data[0].argument,
           max: data[data.length - 1].argument,
-          interval: interval
+          interval
         };
       }
     }

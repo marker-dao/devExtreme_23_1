@@ -9,7 +9,7 @@ var _m_widget_utils = require("../../__internal/grids/pivot_grid/m_widget_utils"
 var _diagram = require("./diagram.importer");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // TODO: Can we get rid of this dependency of the PivotGrid here?
 var DiagramScrollView = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(DiagramScrollView, _Widget);
   function DiagramScrollView() {
@@ -48,15 +48,15 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
   };
   _proto.setScroll = function setScroll(left, top) {
     this._scrollView.scrollTo({
-      left: left,
-      top: top
+      left,
+      top
     });
     this._raiseOnScrollWithoutPoint();
   };
   _proto.offsetScroll = function offsetScroll(left, top) {
     this._scrollView.scrollBy({
-      left: left,
-      top: top
+      left,
+      top
     });
     this._raiseOnScrollWithoutPoint();
   };

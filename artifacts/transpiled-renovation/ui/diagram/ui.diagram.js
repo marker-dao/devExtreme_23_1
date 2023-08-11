@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _size = require("../../core/utils/size");
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
@@ -38,7 +37,7 @@ var _diagram4 = _interopRequireDefault(require("./diagram.commands_manager"));
 var _diagram5 = _interopRequireDefault(require("./diagram.nodes_option"));
 var _diagram6 = _interopRequireDefault(require("./diagram.edges_option"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -460,8 +459,8 @@ var Diagram = /*#__PURE__*/function (_Widget) {
       isVisible: this._isPropertiesPanelVisible(),
       container: this.$element(),
       offsetParent: $parent,
-      offsetX: offsetX,
-      offsetY: offsetY,
+      offsetX,
+      offsetY,
       propertyTabs: this.option('propertiesPanel.tabs'),
       onCreateToolbar: function onCreateToolbar(e) {
         e.toolbar = _this8._createComponent(e.$parent, _uiDiagram.default, (0, _extend.extend)(_this8._getToolbarBaseOptions(), {
@@ -768,8 +767,8 @@ var Diagram = /*#__PURE__*/function (_Widget) {
     var _getDiagram3 = (0, _diagram.getDiagram)(),
       DiagramCommand = _getDiagram3.DiagramCommand;
     this._executeDiagramCommand(DiagramCommand.Import, {
-      data: data,
-      keepExistingItems: keepExistingItems
+      data,
+      keepExistingItems
     });
   };
   _proto.isReadOnlyMode = function isReadOnlyMode() {
@@ -800,7 +799,7 @@ var Diagram = /*#__PURE__*/function (_Widget) {
       this._createRequestLayoutUpdateAction();
     }
     var eventArgs = {
-      changes: changes,
+      changes,
       allowed: false
     };
     this._requestLayoutUpdateAction(eventArgs);
@@ -970,8 +969,8 @@ var Diagram = /*#__PURE__*/function (_Widget) {
         edgeDataSource = _this12._edgesOption.getItems();
       }
       return {
-        nodeDataSource: nodeDataSource,
-        edgeDataSource: edgeDataSource
+        nodeDataSource,
+        edgeDataSource
       };
     };
     this._diagramInstance.reloadContent(itemKeys, getData, applyLayout && this._getDataBindingLayoutParameters(), isExternalChanges);

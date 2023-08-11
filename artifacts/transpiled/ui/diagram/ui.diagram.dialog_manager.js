@@ -38,7 +38,7 @@ var DiagramDialogManager = {
     });
     return $uploader;
   },
-  getDialogParameters: function getDialogParameters(command) {
+  getDialogParameters(command) {
     var commandIndex = this.getConfigurations().map(function (c) {
       return c.command;
     }).indexOf(command);

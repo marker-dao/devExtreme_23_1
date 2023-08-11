@@ -64,8 +64,8 @@ var SpinButtons = /*#__PURE__*/function (_TextEditorButton) {
     var visible = this._isVisible();
     var disabled = editor.option('disabled');
     return {
-      visible: visible,
-      disabled: disabled
+      visible,
+      disabled
     };
   };
   _proto._isVisible = function _isVisible() {

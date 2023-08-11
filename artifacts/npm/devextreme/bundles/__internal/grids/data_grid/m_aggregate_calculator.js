@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/m_aggregate_calculator.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -63,20 +63,20 @@ function normalizeAggregate(aggregate) {
     }
   }
   return {
-    selector: selector,
-    aggregator: aggregator,
-    skipEmptyValues: skipEmptyValues
+    selector,
+    aggregator,
+    skipEmptyValues
   };
 }
 var _default = _class.default.inherit({
-  ctor: function ctor(options) {
+  ctor(options) {
     this._data = options.data;
     this._groupLevel = options.groupLevel || 0;
     this._totalAggregates = map(options.totalAggregates || [], normalizeAggregate);
     this._groupAggregates = map(options.groupAggregates || [], normalizeAggregate);
     this._totals = [];
   },
-  calculate: function calculate() {
+  calculate() {
     if (this._totalAggregates.length) {
       this._calculateTotals(0, {
         items: this._data
@@ -88,10 +88,10 @@ var _default = _class.default.inherit({
       });
     }
   },
-  totalAggregates: function totalAggregates() {
+  totalAggregates() {
     return this._totals;
   },
-  _aggregate: function _aggregate(aggregates, data, container) {
+  _aggregate(aggregates, data, container) {
     var length = data.items ? data.items.length : 0;
     for (var i = 0; i < aggregates.length; i++) {
       if (isCount(aggregates[i].aggregator)) {
@@ -103,7 +103,7 @@ var _default = _class.default.inherit({
       }
     }
   },
-  _calculateTotals: function _calculateTotals(level, data) {
+  _calculateTotals(level, data) {
     if (level === 0) {
       this._totals = this._seed(this._totalAggregates);
     }
@@ -118,7 +118,7 @@ var _default = _class.default.inherit({
       this._totals = this._finalize(this._totalAggregates, this._totals);
     }
   },
-  _calculateGroups: function _calculateGroups(root) {
+  _calculateGroups(root) {
     var maxLevel = this._groupLevel;
     var currentLevel = maxLevel + 1;
     var seedFn = this._seed.bind(this, this._groupAggregates);
@@ -139,14 +139,14 @@ var _default = _class.default.inherit({
       depthFirstSearch(0, currentLevel, root, aggregator);
     }
   },
-  _seed: function _seed(aggregates, groupIndex) {
+  _seed(aggregates, groupIndex) {
     return map(aggregates, function (aggregate) {
       var aggregator = aggregate.aggregator;
       var seed = 'seed' in aggregator ? (0, _type.isFunction)(aggregator.seed) ? aggregator.seed(groupIndex) : aggregator.seed : NaN;
       return seed;
     });
   },
-  _accumulate: function _accumulate(aggregateIndex, aggregate, results, item) {
+  _accumulate(aggregateIndex, aggregate, results, item) {
     var value = aggregate.selector(item);
     var aggregator = aggregate.aggregator;
     var skipEmptyValues = aggregate.skipEmptyValues;
@@ -159,7 +159,7 @@ var _default = _class.default.inherit({
       results[aggregateIndex] = aggregator.step(results[aggregateIndex], value);
     }
   },
-  _finalize: function _finalize(aggregates, results) {
+  _finalize(aggregates, results) {
     return map(aggregates, function (aggregate, index) {
       var fin = aggregate.aggregator.finalize;
       return fin ? fin(results[index]) : results[index];

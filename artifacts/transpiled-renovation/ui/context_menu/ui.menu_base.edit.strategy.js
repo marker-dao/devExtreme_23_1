@@ -5,7 +5,6 @@ var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _iterator = require("../../core/utils/iterator");
 var _uiCollection_widgetEditStrategy = _interopRequireDefault(require("../collection/ui.collection_widget.edit.strategy.plain"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var MenuBaseEditStrategy = /*#__PURE__*/function (_PlainEditStrategy) {
@@ -30,7 +29,7 @@ var MenuBaseEditStrategy = /*#__PURE__*/function (_PlainEditStrategy) {
   };
   _proto._getTemplateString = function _getTemplateString(template) {
     var result;
-    if (_typeof(template) === 'object') {
+    if (typeof template === 'object') {
       result = (0, _renderer.default)(template).text();
     } else {
       result = template.toString();

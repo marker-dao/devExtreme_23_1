@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_uploader.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1047,7 +1047,7 @@ class FileUploader extends Editor {
       case 'multiple':
         this._initFileInput();
         if (!args.value) {
-          this.reset();
+          this.clear();
         }
         break;
       case 'readOnly':
@@ -1114,7 +1114,7 @@ class FileUploader extends Editor {
         break;
       case 'allowCanceling':
       case 'uploadMode':
-        this.reset();
+        this.clear();
         this._invalidate();
         break;
       case 'onBeforeSend':
@@ -1168,7 +1168,7 @@ class FileUploader extends Editor {
     this._$fileInput.val('');
     this._doPreventInputChange = false;
   }
-  reset() {
+  clear() {
     this.option('value', []);
   }
 }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/list.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -62,7 +62,10 @@ type ItemLike = string | Item | any;
  * @hidden
  */
 export interface ListItemInfo<TItem extends ItemLike> {
-    /** @docid */
+    /**
+     * @docid
+     * @type object
+     */
     readonly itemData?: TItem;
     /** @docid */
     readonly itemElement: DxElement;
@@ -80,7 +83,10 @@ export type ListMenuMode = 'context' | 'slide';
  * @hidden
  */
 export interface ScrollInfo {
-    /** @docid */
+    /**
+     * @docid
+     * @type object
+     */
     readonly scrollOffset?: any;
     /** @docid */
     readonly reachedLeft: boolean;

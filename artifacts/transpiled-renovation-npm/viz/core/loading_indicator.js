@@ -168,15 +168,15 @@ var plugin = {
     }
   },
   extenders: {
-    _dataSourceLoadingChangedHandler: function _dataSourceLoadingChangedHandler(isLoading) {
+    _dataSourceLoadingChangedHandler(isLoading) {
       if (isLoading && (this._options.silent('loadingIndicator') || {}).enabled) {
         this._loadingIndicator.show();
       }
     },
-    _setContentSize: function _setContentSize() {
+    _setContentSize() {
       this._loadingIndicator.setSize(this._canvas);
     },
-    endUpdate: function endUpdate() {
+    endUpdate() {
       if (this._initialized && this._dataIsReady()) {
         this._fulfillLoadingIndicatorHiding();
       }

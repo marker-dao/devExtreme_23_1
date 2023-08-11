@@ -34,6 +34,9 @@ var CalendarSingleSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionS
   _proto.getDefaultCurrentDate = function getDefaultCurrentDate() {
     return this.dateOption('value');
   };
+  _proto.restoreValue = function restoreValue() {
+    this.calendar.option('value', null);
+  };
   _proto._updateViewsValue = function _updateViewsValue(value) {
     this._updateViewsOption('value', value[0]);
   };

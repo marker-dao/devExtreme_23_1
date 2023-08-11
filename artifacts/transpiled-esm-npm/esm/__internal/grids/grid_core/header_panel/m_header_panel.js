@@ -112,19 +112,20 @@ var members = {
     this._toolbarOptions = this._getToolbarOptions();
     this.callBase.apply(this, arguments);
   },
-  setToolbarItemDisabled(name, optionValue) {
-    var toolbarInstance = this._toolbar;
-    if (toolbarInstance) {
-      var items = toolbarInstance.option('items') || [];
-      var itemIndex = items.indexOf(items.filter(item => item.name === name)[0]);
-      if (itemIndex >= 0) {
-        var itemOptionPrefix = "items[".concat(itemIndex, "]");
-        if (toolbarInstance.option("".concat(itemOptionPrefix, ".options"))) {
-          toolbarInstance.option("".concat(itemOptionPrefix, ".options.disabled"), optionValue);
-        } else {
-          toolbarInstance.option("".concat(itemOptionPrefix, ".disabled"), optionValue);
-        }
-      }
+  setToolbarItemDisabled(name, disabled) {
+    var toolbar = this._toolbar;
+    if (!toolbar) {
+      return;
+    }
+    var items = toolbar.option('items') || [];
+    var itemIndex = items.findIndex(item => item.name === name);
+    if (itemIndex < 0) {
+      return;
+    }
+    var item = toolbar.option("items[".concat(itemIndex, "]"));
+    toolbar.option("items[".concat(itemIndex, "].disabled"), disabled);
+    if (item.options) {
+      toolbar.option("items[".concat(itemIndex, "].options.disabled"), disabled);
     }
   },
   updateToolbarDimensions() {

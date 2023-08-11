@@ -14,8 +14,8 @@ var getViewsAndSelectedView = function getViewsAndSelectedView(header) {
   });
   selectedView = isSelectedViewInViews ? selectedView : undefined;
   return {
-    selectedView: selectedView,
-    views: views
+    selectedView,
+    views
   };
 };
 var getViewSwitcher = function getViewSwitcher(header, item) {

@@ -41,14 +41,14 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
   return function (value) {
     var tick = {
       value: value,
-      updateValue: function updateValue(newValue) {
+      updateValue(newValue) {
         this.value = value = newValue;
       },
       initCoords: function initCoords() {
         this.coords = axis._getTranslatedValue(value, tickOffset);
         this.labelCoords = axis._getTranslatedValue(value);
       },
-      saveCoords: function saveCoords() {
+      saveCoords() {
         this._lastStoredCoordinates = {
           coords: this._storedCoords,
           labelCoords: this._storedLabelsCoords
@@ -56,13 +56,13 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
         this._storedCoords = this.coords;
         this._storedLabelsCoords = this.templateContainer ? this._getTemplateCoords() : this.labelCoords;
       },
-      resetCoordinates: function resetCoordinates() {
+      resetCoordinates() {
         if (this._lastStoredCoordinates) {
           this._storedCoords = this._lastStoredCoordinates.coords;
           this._storedLabelsCoords = this._lastStoredCoordinates.labelCoords;
         }
       },
-      drawMark: function drawMark(options) {
+      drawMark(options) {
         if (!tickOptions.visible || skippedCategory === value) {
           return;
         }
@@ -78,10 +78,10 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
           this.updateTickPosition(options);
         }
       },
-      setSkippedCategory: function setSkippedCategory(category) {
+      setSkippedCategory(category) {
         skippedCategory = category;
       },
-      _updateLine: function _updateLine(lineElement, settings, storedSettings, animate, isGridLine) {
+      _updateLine(lineElement, settings, storedSettings, animate, isGridLine) {
         if (!lineElement) {
           return;
         }
@@ -129,7 +129,7 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
         var text = axis.formatLabel(value, labelOptions, range);
         if (this.label) {
           this.label.attr({
-            text: text,
+            text,
             rotate: 0
           }).append(elementsGroup);
           createLabelHint(this, range);
@@ -145,7 +145,7 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
               valueText: text,
               value: this.value,
               labelFontStyle: getLabelFontStyle(this),
-              labelStyle: labelStyle
+              labelStyle
             },
             container: this.templateContainer.element,
             onRendered: function onRendered() {
@@ -164,13 +164,13 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
         containerForData && containerForData.data('chart-data-argument', this.value);
         this.templateContainer && createLabelHint(this, range);
       },
-      getTemplateDeferred: function getTemplateDeferred() {
+      getTemplateDeferred() {
         return this._templateDef;
       },
-      getContentContainer: function getContentContainer() {
+      getContentContainer() {
         return this.templateContainer || this.label;
       },
-      fadeOutElements: function fadeOutElements() {
+      fadeOutElements() {
         var startSettings = {
           opacity: 1
         };
@@ -190,7 +190,7 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
           this.mark.append(axis._axisLineGroup).attr(startSettings).animate(endSettings, animationSettings);
         }
       },
-      _fadeInLabel: function _fadeInLabel() {
+      _fadeInLabel() {
         var group = axis._renderer.g().attr({
           opacity: 0
         }).append(axis._axisElementsGroup).animate({
@@ -201,7 +201,7 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
         });
         this.getContentContainer().append(group);
       },
-      _fadeOutLabel: function _fadeOutLabel() {
+      _fadeOutLabel() {
         var group = axis._renderer.g().attr({
           opacity: 1
         }).animate({
@@ -211,7 +211,7 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
         }).append(axis._axisElementsGroup).toBackground();
         this.getContentContainer().append(group);
       },
-      _getTemplateCoords: function _getTemplateCoords() {
+      _getTemplateCoords() {
         return axis._getLabelAdjustedCoord(this, (axis._constantLabelOffset || 0) + (tick.labelOffset || 0));
       },
       updateLabelPosition: function updateLabelPosition(animate) {
@@ -249,7 +249,7 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
           }
         }
       },
-      updateMultilineTextAlignment: function updateMultilineTextAlignment() {
+      updateMultilineTextAlignment() {
         if (labelOptions.template || !this.label) {
           return;
         }
@@ -272,7 +272,7 @@ function createTick(axis, renderer, tickOptions, gridOptions, skippedCategory, s
       updateGridPosition: function updateGridPosition(animate) {
         this._updateLine(this.grid, axis._getGridPoints(tick.coords), this._storedCoords && axis._getGridPoints(this._storedCoords), animate, true);
       },
-      removeLabel: function removeLabel() {
+      removeLabel() {
         var contentContainer = this.getContentContainer();
         contentContainer && contentContainer.remove();
         this._templateDef && this._templateDef.reject();

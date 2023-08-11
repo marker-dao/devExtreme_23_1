@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/header_filter/m_header_filter_core.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -66,13 +66,13 @@ function updateHeaderFilterItemSelectionState(item, filterValuesMatch, isExclude
   }
 }
 var HeaderFilterView = _m_modules.default.View.inherit({
-  getPopupContainer: function getPopupContainer() {
+  getPopupContainer() {
     return this._popupContainer;
   },
-  getListComponent: function getListComponent() {
+  getListComponent() {
     return this._listComponent;
   },
-  applyHeaderFilter: function applyHeaderFilter(options) {
+  applyHeaderFilter(options) {
     var that = this;
     var list = that.getListComponent();
     var searchValue = list.option('searchValue');
@@ -120,7 +120,7 @@ var HeaderFilterView = _m_modules.default.View.inherit({
     options.apply();
     that.hideHeaderFilterMenu();
   },
-  showHeaderFilterMenu: function showHeaderFilterMenu($columnElement, options) {
+  showHeaderFilterMenu($columnElement, options) {
     var that = this;
     if (options) {
       that._initializePopupContainer(options);
@@ -130,11 +130,11 @@ var HeaderFilterView = _m_modules.default.View.inherit({
       popupContainer.show();
     }
   },
-  hideHeaderFilterMenu: function hideHeaderFilterMenu() {
+  hideHeaderFilterMenu() {
     var headerFilterMenu = this.getPopupContainer();
     headerFilterMenu && headerFilterMenu.hide();
   },
-  updatePopup: function updatePopup($element, options) {
+  updatePopup($element, options) {
     var that = this;
     var showColumnLines = this.option('showColumnLines');
     var alignment = options.alignment === 'right' ^ !showColumnLines ? 'left' : 'right';
@@ -152,7 +152,8 @@ var HeaderFilterView = _m_modules.default.View.inherit({
       });
     }
   },
-  _getSearchExpr: function _getSearchExpr(options, headerFilterOptions) {
+
+  _getSearchExpr(options, headerFilterOptions) {
     var lookup = options.lookup;
     var useDefaultSearchExpr = options.useDefaultSearchExpr;
     var headerFilterDataSource = headerFilterOptions.dataSource;
@@ -177,18 +178,18 @@ var HeaderFilterView = _m_modules.default.View.inherit({
     }
     return options.dataField || options.selector;
   },
-  _cleanPopupContent: function _cleanPopupContent() {
+  _cleanPopupContent() {
     this._popupContainer && this._popupContainer.$content().empty();
   },
-  _initializePopupContainer: function _initializePopupContainer(options) {
+  _initializePopupContainer(options) {
     var that = this;
     var $element = that.element();
     var headerFilterOptions = this._normalizeHeaderFilterOptions(options);
     var height = headerFilterOptions.height,
       width = headerFilterOptions.width;
     var dxPopupOptions = {
-      width: width,
-      height: height,
+      width,
+      height,
       visible: false,
       shading: false,
       showTitle: false,
@@ -206,7 +207,7 @@ var HeaderFilterView = _m_modules.default.View.inherit({
         widget: 'dxButton',
         options: {
           text: headerFilterOptions.texts.ok,
-          onClick: function onClick() {
+          onClick() {
             that.applyHeaderFilter(options);
           }
         }
@@ -216,22 +217,22 @@ var HeaderFilterView = _m_modules.default.View.inherit({
         widget: 'dxButton',
         options: {
           text: headerFilterOptions.texts.cancel,
-          onClick: function onClick() {
+          onClick() {
             that.hideHeaderFilterMenu();
           }
         }
       }],
       resizeEnabled: true,
-      onShowing: function onShowing(e) {
+      onShowing(e) {
         e.component.$content().parent().addClass('dx-dropdowneditor-overlay');
         that._initializeListContainer(options, headerFilterOptions);
         options.onShowing && options.onShowing(e);
       },
-      onShown: function onShown() {
+      onShown() {
         that.getListComponent().focus();
       },
       onHidden: options.onHidden,
-      onInitialized: function onInitialized(e) {
+      onInitialized(e) {
         var component = e.component;
         // T321243
         component.option('animation', component._getDefaultOptions().animation);
@@ -243,7 +244,7 @@ var HeaderFilterView = _m_modules.default.View.inherit({
       that._popupContainer.option(dxPopupOptions);
     }
   },
-  _initializeListContainer: function _initializeListContainer(options, headerFilterOptions) {
+  _initializeListContainer(options, headerFilterOptions) {
     var that = this;
     var $content = that._popupContainer.$content();
     var needShowSelectAllCheckbox = !options.isFilterBuilder && headerFilterOptions.allowSelectAll;
@@ -253,10 +254,10 @@ var HeaderFilterView = _m_modules.default.View.inherit({
       searchEditorOptions: headerFilterOptions.search.editorOptions,
       searchMode: headerFilterOptions.search.mode || '',
       dataSource: options.dataSource,
-      onContentReady: function onContentReady() {
+      onContentReady() {
         that.renderCompleted.fire();
       },
-      itemTemplate: function itemTemplate(data, _, element) {
+      itemTemplate(data, _, element) {
         var $element = (0, _renderer.default)(element);
         if (options.encodeHtml) {
           return $element.text(data.text);
@@ -277,7 +278,7 @@ var HeaderFilterView = _m_modules.default.View.inherit({
     if (options.type === 'tree') {
       that._listComponent = that._createComponent((0, _renderer.default)('<div>').appendTo($content), _tree_view.default, (0, _extend.extend)(widgetOptions, {
         showCheckBoxesMode: needShowSelectAllCheckbox ? 'selectAll' : 'normal',
-        onOptionChanged: onOptionChanged,
+        onOptionChanged,
         keyExpr: 'id'
       }));
     } else {
@@ -286,8 +287,8 @@ var HeaderFilterView = _m_modules.default.View.inherit({
         pageLoadMode: 'scrollBottom',
         showSelectionControls: true,
         selectionMode: needShowSelectAllCheckbox ? 'all' : 'multiple',
-        onOptionChanged: onOptionChanged,
-        onSelectionChanged: function onSelectionChanged(e) {
+        onOptionChanged,
+        onSelectionChanged(e) {
           var items = e.component.option('items');
           var selectedItems = e.component.option('selectedItems');
           if (!e.component._selectedItemsUpdating && !e.component.option('searchValue') && !options.isFilterBuilder) {
@@ -319,7 +320,7 @@ var HeaderFilterView = _m_modules.default.View.inherit({
           });
           updateListSelectAllState(e, options.filterValues);
         },
-        onContentReady: function onContentReady(e) {
+        onContentReady(e) {
           var component = e.component;
           var items = component.option('items');
           var selectedItems = [];
@@ -336,7 +337,7 @@ var HeaderFilterView = _m_modules.default.View.inherit({
       }));
     }
   },
-  _normalizeHeaderFilterOptions: function _normalizeHeaderFilterOptions(options) {
+  _normalizeHeaderFilterOptions(options) {
     var generalHeaderFilter = this.option('headerFilter') || {};
     var specificHeaderFilter = options.headerFilter || {};
     var generalDeprecated = {
@@ -354,7 +355,7 @@ var HeaderFilterView = _m_modules.default.View.inherit({
     };
     return (0, _extend.extend)(true, {}, generalHeaderFilter, generalDeprecated, specificHeaderFilter, specificDeprecated);
   },
-  _renderCore: function _renderCore() {
+  _renderCore() {
     this.element().addClass(HEADER_FILTER_MENU_CLASS);
   }
 });
@@ -364,7 +365,7 @@ var allowHeaderFiltering = function allowHeaderFiltering(column) {
 };
 exports.allowHeaderFiltering = allowHeaderFiltering;
 var headerFilterMixin = {
-  _applyColumnState: function _applyColumnState(options) {
+  _applyColumnState(options) {
     var $headerFilterIndicator;
     var rootElement = options.rootElement;
     var column = options.column;
@@ -384,16 +385,16 @@ var headerFilterMixin = {
     }
     return this.callBase(options);
   },
-  _isHeaderFilterEmpty: function _isHeaderFilterEmpty(column) {
+  _isHeaderFilterEmpty(column) {
     return !column.filterValues || !column.filterValues.length;
   },
-  _getIndicatorClassName: function _getIndicatorClassName(name) {
+  _getIndicatorClassName(name) {
     if (name === 'headerFilter') {
       return HEADER_FILTER_CLASS;
     }
     return this.callBase(name);
   },
-  _renderIndicator: function _renderIndicator(options) {
+  _renderIndicator(options) {
     var $container = options.container;
     var $indicator = options.indicator;
     if (options.name === 'headerFilter') {
@@ -405,7 +406,7 @@ var headerFilterMixin = {
     }
     this.callBase(options);
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     if (args.name === 'headerFilter') {
       var requireReady = this.name === 'columnHeadersView';
       this._invalidate(requireReady, requireReady);

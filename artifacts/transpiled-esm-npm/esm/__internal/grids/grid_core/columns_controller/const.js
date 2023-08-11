@@ -9,6 +9,7 @@ export var IGNORE_COLUMN_OPTION_NAMES = {
 export var COMMAND_EXPAND_CLASS = 'dx-command-expand';
 export var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991 /* IE11 */;
 export var GROUP_COMMAND_COLUMN_NAME = 'groupExpand';
+export var DETAIL_COMMAND_COLUMN_NAME = 'detailExpand';
 export var COLUMN_OPTION_REGEXP = /columns\[(\d+)\]\.?/gi;
 export var DEFAULT_COLUMN_OPTIONS = {
   visible: true,

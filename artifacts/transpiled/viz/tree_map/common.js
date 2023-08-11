@@ -17,7 +17,7 @@ function buildRectAppearance(option) {
 function buildTextAppearance(options, filter) {
   return {
     attr: {
-      filter: filter
+      filter
     },
     css: (0, _utils.patchFontOptions)(options.font)
   };

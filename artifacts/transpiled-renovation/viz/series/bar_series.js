@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.polar = exports.chart = void 0;
 var _extend2 = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
@@ -9,7 +8,7 @@ var _area_series = require("./area_series");
 var _utils = require("../core/utils");
 var _type = require("../../core/utils/type");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 var areaSeries = _area_series.chart.area;
 var chartSeries = scatterSeries.chart;
 var polarSeries = scatterSeries.polar;
@@ -111,8 +110,8 @@ var baseBarSeriesMethods = {
     return options;
   },
   _defaultAggregator: 'sum',
-  _defineDrawingState: function _defineDrawingState() {},
-  usePointsToDefineAutoHiding: function usePointsToDefineAutoHiding() {
+  _defineDrawingState() {},
+  usePointsToDefineAutoHiding() {
     return false;
   }
 };
@@ -139,7 +138,7 @@ chart.bar = _extend({}, chartSeries, baseBarSeriesMethods, {
       animateFunc(that._drawnPoints, complete);
     }
   },
-  checkSeriesViewportCoord: function checkSeriesViewportCoord(axis, coord) {
+  checkSeriesViewportCoord(axis, coord) {
     if (!chartSeries.checkSeriesViewportCoord.call(this)) {
       return false;
     }
@@ -154,7 +153,7 @@ chart.bar = _extend({}, chartSeries, baseBarSeriesMethods, {
     var inverted = axis.getOptions().inverted;
     return rotated && !inverted || !rotated && inverted ? coord >= min && coord <= max : coord >= max && coord <= min;
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var oppositeCoord = null;
     var rotated = this._options.rotated;
     var isOpposite = !isArgument && !rotated || isArgument && rotated;
@@ -200,7 +199,7 @@ polar.bar = _extend({}, polarSeries, baseBarSeriesMethods, {
     delete groupSettings.opacity; // T110796
     that._markersGroup.attr(groupSettings);
   },
-  getSeriesPairCoord: function getSeriesPairCoord(params, isArgument) {
+  getSeriesPairCoord(params, isArgument) {
     var coords = null;
     var paramName = isArgument ? 'argument' : 'radius';
     var points = this.getVisiblePoints();

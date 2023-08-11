@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/summary/m_summary.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -58,7 +58,7 @@ var getSummaryCellOptions = function getSummaryCellOptions(that, options) {
   return {
     totalItem: options.row,
     summaryItems: options.row.summaryCells[options.columnIndex],
-    summaryTexts: summaryTexts
+    summaryTexts
   };
 };
 var getGroupAggregates = function getGroupAggregates(data) {
@@ -69,17 +69,17 @@ var recalculateWhileEditing = function recalculateWhileEditing(that) {
 };
 var FooterView = _m_columns_view.ColumnsView.inherit(function () {
   return {
-    _getRows: function _getRows() {
+    _getRows() {
       return this._dataController.footerItems();
     },
-    _getCellOptions: function _getCellOptions(options) {
+    _getCellOptions(options) {
       return (0, _extend.extend)(this.callBase(options), getSummaryCellOptions(this, options));
     },
-    _renderCellContent: function _renderCellContent($cell, options) {
+    _renderCellContent($cell, options) {
       renderSummaryCell($cell, options);
       this.callBase.apply(this, arguments);
     },
-    _renderCore: function _renderCore(change) {
+    _renderCore(change) {
       var needUpdateScrollLeft = false;
       var totalItem = this._dataController.footerItems()[0];
       if (!change || !change.columnIndices) {
@@ -88,12 +88,12 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
       }
       if (totalItem && totalItem.summaryCells && totalItem.summaryCells.length) {
         this._updateContent(this._renderTable({
-          change: change
+          change
         }), change);
         needUpdateScrollLeft && this._updateScrollLeftPosition();
       }
     },
-    _updateContent: function _updateContent($newTable, change) {
+    _updateContent($newTable, change) {
       var _this = this;
       if (change && change.changeType === 'update' && change.columnIndices) {
         return this.waitAsyncTemplates().done(function () {
@@ -104,18 +104,18 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
       }
       return this.callBase.apply(this, arguments);
     },
-    _rowClick: function _rowClick(e) {
+    _rowClick(e) {
       var item = this._dataController.footerItems()[e.rowIndex] || {};
       this.executeAction('onRowClick', (0, _extend.extend)({}, e, item));
     },
-    _columnOptionChanged: function _columnOptionChanged(e) {
+    _columnOptionChanged(e) {
       var optionNames = e.optionNames;
       if (e.changeTypes.grouping) return;
       if (optionNames.width || optionNames.visibleWidth) {
         this.callBase(e);
       }
     },
-    _handleDataChanged: function _handleDataChanged(e) {
+    _handleDataChanged(e) {
       var changeType = e.changeType;
       if (e.changeType === 'update' && e.repaintChangesOnly) {
         if (!e.totalColumnIndices) {
@@ -130,17 +130,17 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
         this.render();
       }
     },
-    _createRow: function _createRow(row) {
+    _createRow(row) {
       var $row = this.callBase.apply(this, arguments);
       if (row.rowType === DATAGRID_TOTAL_FOOTER_ROW_TYPE) {
         $row.addClass(DATAGRID_FOOTER_ROW_CLASS);
       }
       return $row;
     },
-    getHeight: function getHeight() {
+    getHeight() {
       return this.getElementHeight();
     },
-    isVisible: function isVisible() {
+    isVisible() {
       return !!this._dataController.footerItems().length;
     }
   };
@@ -160,36 +160,36 @@ var SummaryDataSourceAdapterExtender = function () {
     }
   }
   return {
-    init: function init() {
+    init() {
       this.callBase.apply(this, arguments);
       this._totalAggregates = [];
       this._summaryGetter = _common.noop;
     },
-    summaryGetter: function summaryGetter(_summaryGetter) {
+    summaryGetter(summaryGetter) {
       if (!arguments.length) {
         return this._summaryGetter;
       }
-      if ((0, _type.isFunction)(_summaryGetter)) {
-        this._summaryGetter = _summaryGetter;
+      if ((0, _type.isFunction)(summaryGetter)) {
+        this._summaryGetter = summaryGetter;
       }
     },
-    summary: function summary(_summary) {
+    summary(summary) {
       if (!arguments.length) {
         return this._summaryGetter();
       }
       this._summaryGetter = function () {
-        return _summary;
+        return summary;
       };
     },
-    totalAggregates: function totalAggregates() {
+    totalAggregates() {
       return this._totalAggregates;
     },
-    isLastLevelGroupItemsPagingLocal: function isLastLevelGroupItemsPagingLocal() {
+    isLastLevelGroupItemsPagingLocal() {
       var summary = this.summary();
       var sortByGroupsInfo = summary && summary.sortByGroups();
       return sortByGroupsInfo && sortByGroupsInfo.length;
     },
-    sortLastLevelGroupItems: function sortLastLevelGroupItems(items, groups, paths) {
+    sortLastLevelGroupItems(items, groups, paths) {
       var groupedItems = _store_helper.default.multiLevelGroup((0, _query.default)(items), groups).toArray();
       var result = [];
       paths.forEach(function (path) {
@@ -255,8 +255,8 @@ var SummaryDataSourceAdapterClientExtender = function () {
       calculator = new _m_aggregate_calculator.default({
         totalAggregates: summary.totalAggregates,
         groupAggregates: summary.groupAggregates,
-        data: data,
-        groupLevel: groupLevel
+        data,
+        groupLevel
       });
       calculator.calculate();
     }
@@ -297,7 +297,7 @@ var SummaryDataSourceAdapterClientExtender = function () {
     return data;
   };
   return {
-    _customizeRemoteOperations: function _customizeRemoteOperations(options) {
+    _customizeRemoteOperations(options) {
       var summary = this.summary();
       if (summary) {
         if (options.remoteOperations.summary) {
@@ -321,7 +321,7 @@ var SummaryDataSourceAdapterClientExtender = function () {
         options.storeLoadOptions.totalSummary = undefined;
       }
     },
-    _handleDataLoadedCore: function _handleDataLoadedCore(options) {
+    _handleDataLoadedCore(options) {
       var _a, _b;
       var that = this;
       var groups = (0, _utils.normalizeSortingInfo)(options.storeLoadOptions.group || options.loadOptions.group || []);
@@ -363,7 +363,7 @@ var SummaryDataSourceAdapterClientExtender = function () {
 _m_data_source_adapter.default.extend(SummaryDataSourceAdapterExtender);
 _m_data_source_adapter.default.extend(SummaryDataSourceAdapterClientExtender);
 _m_core.default.registerModule('summary', {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       summary: {
         groupItems: undefined,
@@ -393,10 +393,10 @@ _m_core.default.registerModule('summary', {
     controllers: {
       data: function () {
         return {
-          _isDataColumn: function _isDataColumn(column) {
+          _isDataColumn(column) {
             return column && (!(0, _type.isDefined)(column.groupIndex) || column.showWhenGrouped);
           },
-          _isGroupFooterVisible: function _isGroupFooterVisible() {
+          _isGroupFooterVisible() {
             var groupItems = this.option('summary.groupItems') || [];
             for (var i = 0; i < groupItems.length; i++) {
               var groupItem = groupItems[i];
@@ -407,7 +407,7 @@ _m_core.default.registerModule('summary', {
             }
             return false;
           },
-          _processGroupItems: function _processGroupItems(items, groupCount, options) {
+          _processGroupItems(items, groupCount, options) {
             var data = options && options.data;
             var result = this.callBase.apply(this, arguments);
             if (options) {
@@ -418,7 +418,7 @@ _m_core.default.registerModule('summary', {
                 result.push({
                   rowType: DATAGRID_GROUP_FOOTER_ROW_TYPE,
                   key: options.path.slice(),
-                  data: data,
+                  data,
                   groupIndex: options.path.length - 1,
                   values: []
                 });
@@ -426,7 +426,7 @@ _m_core.default.registerModule('summary', {
             }
             return result;
           },
-          _processGroupItem: function _processGroupItem(groupItem, options) {
+          _processGroupItem(groupItem, options) {
             var that = this;
             if (!options.summaryGroupItems) {
               options.summaryGroupItems = that.option('summary.groupItems') || [];
@@ -460,7 +460,7 @@ _m_core.default.registerModule('summary', {
             }
             return groupItem;
           },
-          _calculateSummaryCells: function _calculateSummaryCells(summaryItems, aggregates, visibleColumns, calculateTargetColumnIndex, isGroupRow) {
+          _calculateSummaryCells(summaryItems, aggregates, visibleColumns, calculateTargetColumnIndex, isGroupRow) {
             var that = this;
             var summaryCells = [];
             var summaryCellsByColumns = {};
@@ -482,7 +482,7 @@ _m_core.default.registerModule('summary', {
                   }
                   summaryCellsByColumns[columnIndex].push((0, _extend.extend)({}, summaryItem, {
                     value: (0, _type.isString)(aggregate) && column && column.deserializeValue ? column.deserializeValue(aggregate) : aggregate,
-                    valueFormat: valueFormat,
+                    valueFormat,
                     columnCaption: column && column.index !== columnIndex ? column.caption : undefined
                   }));
                 }
@@ -497,14 +497,14 @@ _m_core.default.registerModule('summary', {
             }
             return summaryCells;
           },
-          _getSummaryCells: function _getSummaryCells(summaryTotalItems, totalAggregates) {
+          _getSummaryCells(summaryTotalItems, totalAggregates) {
             var that = this;
             var columnsController = that._columnsController;
             return that._calculateSummaryCells(summaryTotalItems, totalAggregates, columnsController.getVisibleColumns(), function (summaryItem, column) {
               return that._isDataColumn(column) ? column.index : -1;
             });
           },
-          _updateItemsCore: function _updateItemsCore(change) {
+          _updateItemsCore(change) {
             var that = this;
             var summaryCells;
             var dataSource = that._dataSource;
@@ -528,13 +528,13 @@ _m_core.default.registerModule('summary', {
               if (summaryCells.length) {
                 that._footerItems.push({
                   rowType: DATAGRID_TOTAL_FOOTER_ROW_TYPE,
-                  summaryCells: summaryCells
+                  summaryCells
                 });
               }
             }
             that.callBase(change);
           },
-          _prepareUnsavedDataSelector: function _prepareUnsavedDataSelector(selector) {
+          _prepareUnsavedDataSelector(selector) {
             var that = this;
             if (recalculateWhileEditing(that)) {
               var editingController = that.getController('editing');
@@ -547,7 +547,7 @@ _m_core.default.registerModule('summary', {
             }
             return selector;
           },
-          _prepareAggregateSelector: function _prepareAggregateSelector(selector, aggregator) {
+          _prepareAggregateSelector(selector, aggregator) {
             selector = this._prepareUnsavedDataSelector(selector);
             if (aggregator === 'avg' || aggregator === 'sum') {
               return function (data) {
@@ -557,7 +557,7 @@ _m_core.default.registerModule('summary', {
             }
             return selector;
           },
-          _getAggregates: function _getAggregates(summaryItems, remoteOperations) {
+          _getAggregates(summaryItems, remoteOperations) {
             var that = this;
             var columnsController = that.getController('columns');
             var calculateCustomSummary = that.option('summary.calculateCustomSummary');
@@ -586,7 +586,7 @@ _m_core.default.registerModule('summary', {
                 calculateCustomSummary(options);
                 options.summaryProcess = 'calculate';
                 aggregator = {
-                  seed: function seed(groupIndex) {
+                  seed(groupIndex) {
                     options.summaryProcess = 'start';
                     options.totalValue = undefined;
                     options.groupIndex = groupIndex;
@@ -594,14 +594,14 @@ _m_core.default.registerModule('summary', {
                     calculateCustomSummary(options);
                     return options.totalValue;
                   },
-                  step: function step(totalValue, value) {
+                  step(totalValue, value) {
                     options.summaryProcess = 'calculate';
                     options.totalValue = totalValue;
                     options.value = value;
                     calculateCustomSummary(options);
                     return options.totalValue;
                   },
-                  finalize: function finalize(totalValue) {
+                  finalize(totalValue) {
                     options.summaryProcess = 'finalize';
                     options.totalValue = totalValue;
                     delete options.value;
@@ -611,26 +611,26 @@ _m_core.default.registerModule('summary', {
                 };
               }
               return {
-                selector: selector,
-                aggregator: aggregator,
-                skipEmptyValues: skipEmptyValues
+                selector,
+                aggregator,
+                skipEmptyValues
               };
             });
           },
-          _addSortInfo: function _addSortInfo(sortByGroups, groupColumn, selector, sortOrder) {
+          _addSortInfo(sortByGroups, groupColumn, selector, sortOrder) {
             if (groupColumn) {
               var groupIndex = groupColumn.groupIndex;
               sortOrder = sortOrder || groupColumn.sortOrder;
               if ((0, _type.isDefined)(groupIndex)) {
                 sortByGroups[groupIndex] = sortByGroups[groupIndex] || [];
                 sortByGroups[groupIndex].push({
-                  selector: selector,
+                  selector,
                   desc: sortOrder === 'desc'
                 });
               }
             }
           },
-          _findSummaryItem: function _findSummaryItem(summaryItems, name) {
+          _findSummaryItem(summaryItems, name) {
             var summaryItemIndex = -1;
             var getFullName = function getFullName(summaryItem) {
               var summaryType = summaryItem.summaryType;
@@ -648,7 +648,7 @@ _m_core.default.registerModule('summary', {
             }
             return summaryItemIndex;
           },
-          _getSummarySortByGroups: function _getSummarySortByGroups(sortByGroupSummaryInfo, groupSummaryItems) {
+          _getSummarySortByGroups(sortByGroupSummaryInfo, groupSummaryItems) {
             var that = this;
             var columnsController = that._columnsController;
             var groupColumns = columnsController.getGroupColumns();
@@ -673,7 +673,7 @@ _m_core.default.registerModule('summary', {
             });
             return sortByGroups;
           },
-          _createDataSourceAdapterCore: function _createDataSourceAdapterCore(dataSource, remoteOperations) {
+          _createDataSourceAdapterCore(dataSource, remoteOperations) {
             var that = this;
             var dataSourceAdapter = this.callBase(dataSource, remoteOperations);
             dataSourceAdapter.summaryGetter(function (currentRemoteOperations) {
@@ -681,7 +681,7 @@ _m_core.default.registerModule('summary', {
             });
             return dataSourceAdapter;
           },
-          _getSummaryOptions: function _getSummaryOptions(remoteOperations) {
+          _getSummaryOptions(remoteOperations) {
             var that = this;
             var groupSummaryItems = that.option('summary.groupItems');
             var totalSummaryItems = that.option('summary.totalItems');
@@ -693,43 +693,43 @@ _m_core.default.registerModule('summary', {
             };
             if (groupAggregates.length || totalAggregates.length) {
               return {
-                groupAggregates: groupAggregates,
-                totalAggregates: totalAggregates,
-                sortByGroups: sortByGroups
+                groupAggregates,
+                totalAggregates,
+                sortByGroups
               };
             }
             return undefined;
           },
-          publicMethods: function publicMethods() {
+          publicMethods() {
             var methods = this.callBase();
             methods.push('getTotalSummaryValue');
             return methods;
           },
-          getTotalSummaryValue: function getTotalSummaryValue(summaryItemName) {
+          getTotalSummaryValue(summaryItemName) {
             var summaryItemIndex = this._findSummaryItem(this.option('summary.totalItems'), summaryItemName);
             var aggregates = this._dataSource.totalAggregates();
             if (aggregates.length && summaryItemIndex > -1) {
               return aggregates[summaryItemIndex];
             }
           },
-          optionChanged: function optionChanged(args) {
+          optionChanged(args) {
             if (args.name === 'summary' || args.name === 'sortByGroupSummaryInfo') {
               args.name = 'dataSource';
             }
             this.callBase(args);
           },
-          init: function init() {
+          init() {
             this._footerItems = [];
             this.callBase();
           },
-          footerItems: function footerItems() {
+          footerItems() {
             return this._footerItems;
           }
         };
       }(),
       editing: function () {
         return {
-          _refreshSummary: function _refreshSummary() {
+          _refreshSummary() {
             if (recalculateWhileEditing(this) && !this.isSaving()) {
               this._dataController.refresh({
                 load: true,
@@ -737,19 +737,19 @@ _m_core.default.registerModule('summary', {
               });
             }
           },
-          _addChange: function _addChange(params) {
+          _addChange(params) {
             var result = this.callBase.apply(this, arguments);
             if (params.type) {
               this._refreshSummary();
             }
             return result;
           },
-          _removeChange: function _removeChange() {
+          _removeChange() {
             var result = this.callBase.apply(this, arguments);
             this._refreshSummary();
             return result;
           },
-          cancelEditData: function cancelEditData() {
+          cancelEditData() {
             var result = this.callBase.apply(this, arguments);
             this._refreshSummary();
             return result;
@@ -760,21 +760,21 @@ _m_core.default.registerModule('summary', {
     views: {
       rowsView: function () {
         return {
-          _createRow: function _createRow(row) {
+          _createRow(row) {
             var $row = this.callBase.apply(this, arguments);
             row && $row.addClass(row.rowType === DATAGRID_GROUP_FOOTER_ROW_TYPE ? DATAGRID_GROUP_FOOTER_CLASS : '');
             return $row;
           },
-          _renderCells: function _renderCells($row, options) {
+          _renderCells($row, options) {
             this.callBase.apply(this, arguments);
             if (options.row.rowType === 'group' && options.row.summaryCells && options.row.summaryCells.length) {
               this._renderGroupSummaryCells($row, options);
             }
           },
-          _hasAlignByColumnSummaryItems: function _hasAlignByColumnSummaryItems(columnIndex, options) {
+          _hasAlignByColumnSummaryItems(columnIndex, options) {
             return !(0, _type.isDefined)(options.columns[columnIndex].groupIndex) && options.row.summaryCells[columnIndex].length;
           },
-          _getAlignByColumnCellCount: function _getAlignByColumnCellCount(groupCellColSpan, options) {
+          _getAlignByColumnCellCount(groupCellColSpan, options) {
             var alignByColumnCellCount = 0;
             for (var i = 1; i < groupCellColSpan; i++) {
               var columnIndex = options.row.summaryCells.length - i;
@@ -782,13 +782,13 @@ _m_core.default.registerModule('summary', {
             }
             return alignByColumnCellCount;
           },
-          _renderGroupSummaryCells: function _renderGroupSummaryCells($row, options) {
+          _renderGroupSummaryCells($row, options) {
             var $groupCell = $row.children().last();
             var groupCellColSpan = Number($groupCell.attr('colSpan')) || 1;
             var alignByColumnCellCount = this._getAlignByColumnCellCount(groupCellColSpan, options);
             this._renderGroupSummaryCellsCore($groupCell, options, groupCellColSpan, alignByColumnCellCount);
           },
-          _renderGroupSummaryCellsCore: function _renderGroupSummaryCellsCore($groupCell, options, groupCellColSpan, alignByColumnCellCount) {
+          _renderGroupSummaryCellsCore($groupCell, options, groupCellColSpan, alignByColumnCellCount) {
             if (alignByColumnCellCount > 0) {
               $groupCell.attr('colSpan', groupCellColSpan - alignByColumnCellCount);
               for (var i = 0; i < alignByColumnCellCount; i++) {
@@ -800,16 +800,16 @@ _m_core.default.registerModule('summary', {
               }
             }
           },
-          _getSummaryCellIndex: function _getSummaryCellIndex(columnIndex) {
+          _getSummaryCellIndex(columnIndex) {
             return columnIndex;
           },
-          _getCellTemplate: function _getCellTemplate(options) {
+          _getCellTemplate(options) {
             if (!options.column.command && !(0, _type.isDefined)(options.column.groupIndex) && options.summaryItems && options.summaryItems.length) {
               return renderSummaryCell;
             }
             return this.callBase(options);
           },
-          _getCellOptions: function _getCellOptions(options) {
+          _getCellOptions(options) {
             var that = this;
             var parameters = that.callBase(options);
             if (options.row.summaryCells) {

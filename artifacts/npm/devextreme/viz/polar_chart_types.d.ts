@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/polar_chart_types.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -46,5 +46,32 @@ export {
   TooltipShownEvent,
   ZoomEndEvent,
   ZoomStartEvent,
+  AdaptiveLayout,
+  ArgumentAxis,
+  ArgumentAxisConstantLines,
+  ArgumentAxisConstantLinesLabel,
+  ArgumentAxisLabel,
+  ArgumentAxisMinorTick,
+  ArgumentAxisStrips,
+  ArgumentAxisStripsLabel,
+  ArgumentAxisTick,
+  CommonAxisSettings,
+  CommonAxisSettingsConstantLineStyle,
+  CommonAxisSettingsConstantLineStyleLabel,
+  CommonAxisSettingsLabel,
+  CommonAxisSettingsMinorTick,
+  CommonAxisSettingsStripStyle,
+  CommonAxisSettingsStripStyleLabel,
+  CommonAxisSettingsTick,
+  CommonSeriesSettings,
+  Legend,
+  Tooltip,
+  ValueAxis,
+  ValueAxisConstantLines,
+  ValueAxisConstantLinesLabel,
+  ValueAxisLabel,
+  ValueAxisStrips,
+  ValueAxisStripsLabel,
+  ValueAxisTick,
   Properties,
 } from './polar_chart';

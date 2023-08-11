@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/keyboard_navigation/m_keyboard_navigation.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,15 +22,16 @@ import { addNamespace, createEvent, isCommandKeyPressed } from '../../../../even
 import * as accessibility from '../../../../ui/shared/accessibility';
 import { focused } from '../../../../ui/widget/selectors';
 import { memoize } from '../../../utils/memoize';
-import { EDIT_FORM_CLASS, EDIT_MODE_BATCH, EDIT_MODE_CELL, EDIT_MODE_FORM, EDIT_MODE_ROW, EDITOR_CELL_CLASS, ROW_CLASS } from '../editing/const';
+import { EDIT_FORM_CLASS, EDIT_MODE_BATCH, EDIT_MODE_CELL, EDIT_MODE_FORM, EDIT_MODE_ROW, EDITOR_CELL_CLASS, FOCUSABLE_ELEMENT_SELECTOR, ROW_CLASS } from '../editing/const';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
-import { CELL_FOCUS_DISABLED_CLASS, COLUMN_HEADERS_VIEW, COMMAND_CELL_SELECTOR, COMMAND_EDIT_CLASS, COMMAND_EXPAND_CLASS, COMMAND_SELECT_CLASS, DATA_ROW_CLASS, DATEBOX_WIDGET_NAME, DROPDOWN_EDITOR_OVERLAY_CLASS, EDIT_FORM_ITEM_CLASS, FAST_EDITING_DELETE_KEY, FOCUS_STATE_CLASS, FOCUS_TYPE_CELL, FOCUS_TYPE_ROW, FOCUSED_CLASS, FREESPACE_ROW_CLASS, FUNCTIONAL_KEYS, GROUP_FOOTER_CLASS, INTERACTIVE_ELEMENTS_SELECTOR, MASTER_DETAIL_CELL_CLASS, NON_FOCUSABLE_ELEMENTS_SELECTOR, REVERT_BUTTON_CLASS, ROWS_VIEW_CLASS, WIDGET_CLASS } from './const';
+import { CELL_FOCUS_DISABLED_CLASS, COLUMN_HEADERS_VIEW, COMMAND_CELL_SELECTOR, COMMAND_EDIT_CLASS, COMMAND_EXPAND_CLASS, COMMAND_SELECT_CLASS, DATA_ROW_CLASS, DATEBOX_WIDGET_NAME, DROPDOWN_EDITOR_OVERLAY_CLASS, EDIT_FORM_ITEM_CLASS, FAST_EDITING_DELETE_KEY, FOCUS_STATE_CLASS, FOCUS_TYPE_CELL, FOCUS_TYPE_ROW, FOCUSED_CLASS, FREESPACE_ROW_CLASS, FUNCTIONAL_KEYS, INTERACTIVE_ELEMENTS_SELECTOR, MASTER_DETAIL_CELL_CLASS, NON_FOCUSABLE_ELEMENTS_SELECTOR, REVERT_BUTTON_CLASS, ROWS_VIEW_CLASS, WIDGET_CLASS } from './const';
 import { GridCoreKeyboardNavigationDom } from './dom';
-import { isCellInHeaderRow, isDataRow, isDetailRow, isEditorCell, isElementDefined, isFixedColumnIndexOffsetRequired, isGroupRow, isMobile, isNotFocusedRow, shouldPreventScroll } from './m_keyboard_navigation_utils';
+import { isCellInHeaderRow, isDataRow, isDetailRow, isEditorCell, isElementDefined, isFixedColumnIndexOffsetRequired, isGroupFooterRow, isGroupRow, isMobile, isNotFocusedRow, shouldPreventScroll } from './m_keyboard_navigation_utils';
 export class KeyboardNavigationController extends modules.ViewController {
   // #region Initialization
   init() {
+    var _a, _b;
     this._dataController = this.getController('data');
     this._selectionController = this.getController('selection');
     this._editingController = this.getController('editing');
@@ -45,80 +46,111 @@ export class KeyboardNavigationController extends modules.ViewController {
     this._memoFireFocusedRowChanged = memoize(this._memoFireFocusedRowChanged.bind(this), {
       compareType: 'value'
     });
+    this.focusedHandlerWithContext = this.focusedHandlerWithContext || this.focusedHandler.bind(this);
+    this.renderCompletedWithContext = this.renderCompletedWithContext || this.renderCompleted.bind(this);
+    this.rowsViewFocusHandlerContext = this.rowsViewFocusHandlerContext || this.rowsViewFocusHandler.bind(this);
+    this._updateFocusTimeout = null;
+    this._fastEditingStarted = false;
+    this._focusedCellPosition = {};
+    this._canceledCellPosition = null;
     if (this.isKeyboardEnabled()) {
       accessibility.subscribeVisibilityChange();
-      this._updateFocusTimeout = null;
-      this._fastEditingStarted = false;
-      this._focusedCellPosition = {};
-      this._canceledCellPosition = null;
-      var elementFocused = $element => {
-        this.setupFocusedView();
-        if (this._isNeedScroll) {
-          if ($element.is(':visible') && this._focusedView && this._focusedView.getScrollable) {
-            this._focusedView._scrollToElement($element);
-            this._isNeedScroll = false;
-          }
-        }
-      };
-      this._editorFactory.focused.add(elementFocused);
-      this._initViewHandlers();
-      this._initDocumentHandlers();
+      (_a = this._editorFactory) === null || _a === void 0 ? void 0 : _a.focused.add(this.focusedHandlerWithContext);
       this.createAction('onKeyDown');
+    } else {
+      accessibility.unsubscribeVisibilityChange();
+      (_b = this._editorFactory) === null || _b === void 0 ? void 0 : _b.focused.remove(this.focusedHandlerWithContext);
+    }
+    this.initViewHandlers();
+    this.initDocumentHandlers();
+  }
+  focusedHandler($element) {
+    this.setupFocusedView();
+    if (this._isNeedScroll) {
+      if ($element.is(':visible') && this._focusedView && this._focusedView.getScrollable) {
+        this._focusedView._scrollToElement($element);
+        this._isNeedScroll = false;
+      }
     }
   }
-  _initViewHandlers() {
-    var rowsViewFocusHandler = event => {
-      var $element = $(event.target);
-      var isRelatedTargetInRowsView = $(event.relatedTarget).closest(this._rowsView.element()).length;
-      var isLink = $element.is('a');
-      if (event.relatedTarget && isLink && !isRelatedTargetInRowsView && this._isEventInCurrentGrid(event)) {
-        var $focusedCell = this._getFocusedCell();
-        $focusedCell = !isElementDefined($focusedCell) ? this._rowsView.getCellElements(0).filter('[tabindex]').eq(0) : $focusedCell;
-        if (!$element.closest($focusedCell).length) {
-          event.preventDefault();
-          // @ts-expect-error
-          eventsEngine.trigger($focusedCell, 'focus');
-        }
+  rowsViewFocusHandler(event) {
+    var _a;
+    var $element = $(event.target);
+    var isRelatedTargetInRowsView = $(event.relatedTarget).closest(this._rowsView.element()).length;
+    var isLink = $element.is('a');
+    if (event.relatedTarget && isLink && !isRelatedTargetInRowsView && this._isEventInCurrentGrid(event)) {
+      var $focusedCell = this._getFocusedCell();
+      $focusedCell = !isElementDefined($focusedCell) ? this._rowsView.getCellElements(0).filter('[tabindex]').eq(0) : $focusedCell;
+      if (!$element.closest($focusedCell).length) {
+        event.preventDefault();
+        // @ts-expect-error
+        eventsEngine.trigger($focusedCell, 'focus');
       }
-    };
-    this._rowsView.renderCompleted.add(e => {
-      var $rowsView = this._rowsView.element();
-      var isFullUpdate = !e || e.changeType === 'refresh';
-      var isFocusedViewCorrect = this._focusedView && this._focusedView.name === this._rowsView.name;
-      var needUpdateFocus = false;
-      var isAppend = e && (e.changeType === 'append' || e.changeType === 'prepend');
-      // @ts-expect-error
-      var root = $(domAdapter.getRootNode($rowsView.get && $rowsView.get(0)));
-      var $focusedElement = root.find(':focus');
-      var isFocusedElementCorrect = !$focusedElement.length || $focusedElement.closest($rowsView).length;
-      eventsEngine.off($rowsView, 'focusin', rowsViewFocusHandler);
-      eventsEngine.on($rowsView, 'focusin', rowsViewFocusHandler);
-      this._initPointerEventHandler();
-      this._initKeyDownHandler();
-      this._setRowsViewAttributes();
-      if (isFocusedViewCorrect && isFocusedElementCorrect) {
-        needUpdateFocus = this._isNeedFocus ? !isAppend : this._isHiddenFocus && isFullUpdate && !(e === null || e === void 0 ? void 0 : e.virtualColumnsScrolling);
-        needUpdateFocus && this._updateFocus(true);
-      }
-    });
+    }
+    var isCell = $element.is('td');
+    var needSetFocusPosition = ((_a = this.option('focusedRowIndex')) !== null && _a !== void 0 ? _a : -1) < 0;
+    if (isCell && needSetFocusPosition) {
+      this._updateFocusedCellPosition($element);
+    }
   }
-  _initDocumentHandlers() {
+  subscribeToRowsViewFocusEvent() {
+    var _a;
+    var $rowsView = (_a = this._rowsView) === null || _a === void 0 ? void 0 : _a.element();
+    eventsEngine.on($rowsView, 'focusin', this.rowsViewFocusHandlerContext);
+  }
+  unsubscribeFromRowsViewFocusEvent() {
+    var _a;
+    var $rowsView = (_a = this._rowsView) === null || _a === void 0 ? void 0 : _a.element();
+    eventsEngine.off($rowsView, 'focusin', this.rowsViewFocusHandlerContext);
+  }
+  renderCompleted(e) {
+    var $rowsView = this._rowsView.element();
+    var isFullUpdate = !e || e.changeType === 'refresh';
+    var isFocusedViewCorrect = this._focusedView && this._focusedView.name === this._rowsView.name;
+    var needUpdateFocus = false;
+    var isAppend = e && (e.changeType === 'append' || e.changeType === 'prepend');
+    // @ts-expect-error
+    var root = $(domAdapter.getRootNode($rowsView.get && $rowsView.get(0)));
+    var $focusedElement = root.find(':focus');
+    var isFocusedElementCorrect = !$focusedElement.length || $focusedElement.closest($rowsView).length;
+    this.unsubscribeFromRowsViewFocusEvent();
+    this.subscribeToRowsViewFocusEvent();
+    this.initPointerEventHandler();
+    this.initKeyDownHandler();
+    this._setRowsViewAttributes();
+    if (isFocusedViewCorrect && isFocusedElementCorrect) {
+      needUpdateFocus = this._isNeedFocus ? !isAppend : this._isHiddenFocus && isFullUpdate && !(e === null || e === void 0 ? void 0 : e.virtualColumnsScrolling);
+      needUpdateFocus && this._updateFocus(true);
+    }
+  }
+  initViewHandlers() {
+    var _a, _b;
+    this.unsubscribeFromRowsViewFocusEvent();
+    this.unsubscribeFromPointerEvent();
+    this.unsubscribeFromKeyDownEvent();
+    (_b = (_a = this._rowsView) === null || _a === void 0 ? void 0 : _a.renderCompleted) === null || _b === void 0 ? void 0 : _b.remove(this.renderCompletedWithContext);
+    if (this.isKeyboardEnabled()) {
+      this._rowsView.renderCompleted.add(this.renderCompletedWithContext);
+    }
+  }
+  initDocumentHandlers() {
     var document = domAdapter.getDocument();
-    this._documentClickHandler = this.createAction(e => {
+    this._documentClickHandler = this._documentClickHandler || this.createAction(e => {
       var $target = $(e.event.target);
       var isCurrentRowsViewClick = this._isEventInCurrentGrid(e.event) && $target.closest(".".concat(this.addWidgetPrefix(ROWS_VIEW_CLASS))).length;
       var isEditorOverlay = $target.closest(".".concat(DROPDOWN_EDITOR_OVERLAY_CLASS)).length;
       var columnsResizerController = this.getController('columnsResizer');
       var isColumnResizing = !!columnsResizerController && columnsResizerController.isResizing();
       if (!isCurrentRowsViewClick && !isEditorOverlay && !isColumnResizing) {
-        var targetInsideFocusedView = this._focusedView
-        // @ts-expect-error $target not fully typed
-        ? $target.parents().filter(this._focusedView.element()).length > 0 : false;
+        var targetInsideFocusedView = this._focusedView ? $target.parents().filter(this._focusedView.element()).length > 0 : false;
         !targetInsideFocusedView && this._resetFocusedCell(true);
         this._resetFocusedView();
       }
     });
-    eventsEngine.on(document, addNamespace(pointerEvents.down, 'dxDataGridKeyboardNavigation'), this._documentClickHandler);
+    eventsEngine.off(document, addNamespace(pointerEvents.down, 'dxDataGridKeyboardNavigation'), this._documentClickHandler);
+    if (this.isKeyboardEnabled()) {
+      eventsEngine.on(document, addNamespace(pointerEvents.down, 'dxDataGridKeyboardNavigation'), this._documentClickHandler);
+    }
   }
   _setRowsViewAttributes() {
     var $rowsView = this._getRowsViewElement();
@@ -127,20 +159,32 @@ export class KeyboardNavigationController extends modules.ViewController {
       this._applyTabIndexToElement($rowsView);
     }
   }
-  _initPointerEventHandler() {
+  unsubscribeFromPointerEvent() {
     var pointerEventName = !isMobile() ? pointerEvents.down : clickEventName;
-    var clickSelector = ".".concat(ROW_CLASS, " > td, .").concat(ROW_CLASS);
     var $rowsView = this._getRowsViewElement();
-    if (!isDefined(this._pointerEventAction)) {
-      this._pointerEventAction = this.createAction(this._pointerEventHandler);
-    }
-    eventsEngine.off($rowsView, addNamespace(pointerEventName, 'dxDataGridKeyboardNavigation'), this._pointerEventAction);
+    this._pointerEventAction && eventsEngine.off($rowsView, addNamespace(pointerEventName, 'dxDataGridKeyboardNavigation'), this._pointerEventAction);
+  }
+  subscribeToPointerEvent() {
+    var pointerEventName = !isMobile() ? pointerEvents.down : clickEventName;
+    var $rowsView = this._getRowsViewElement();
+    var clickSelector = ".".concat(ROW_CLASS, " > td, .").concat(ROW_CLASS);
     eventsEngine.on($rowsView, addNamespace(pointerEventName, 'dxDataGridKeyboardNavigation'), clickSelector, this._pointerEventAction);
   }
-  _initKeyDownHandler() {
-    var $rowsView = this._getRowsViewElement();
+  initPointerEventHandler() {
+    this._pointerEventAction = this._pointerEventAction || this.createAction(this._pointerEventHandler);
+    this.unsubscribeFromPointerEvent();
+    this.subscribeToPointerEvent();
+  }
+  unsubscribeFromKeyDownEvent() {
     keyboard.off(this._keyDownListener);
+  }
+  subscribeToKeyDownEvent() {
+    var $rowsView = this._getRowsViewElement();
     this._keyDownListener = keyboard.on($rowsView, null, e => this._keyDownHandler(e));
+  }
+  initKeyDownHandler() {
+    this._keyDownListener && this.unsubscribeFromKeyDownEvent();
+    this.subscribeToKeyDownEvent();
   }
   dispose() {
     super.dispose();
@@ -156,6 +200,7 @@ export class KeyboardNavigationController extends modules.ViewController {
     switch (args.name) {
       case 'keyboardNavigation':
       case 'useLegacyKeyboardNavigation':
+        this.init();
         args.handled = true;
         break;
       default:
@@ -869,9 +914,6 @@ export class KeyboardNavigationController extends modules.ViewController {
   _focusInteractiveElement($cell, isLast) {
     if (!$cell) return;
     var $focusedElement = this._getInteractiveElement($cell, isLast);
-    /// #DEBUG
-    this._testInteractiveElement = $focusedElement;
-    /// #ENDDEBUG
     gridCoreUtils.focusAndSelectElement(this, $focusedElement);
   }
   _focus($cell, disableFocus, skipFocusEvent) {
@@ -883,7 +925,7 @@ export class KeyboardNavigationController extends modules.ViewController {
     var $focusViewElement = focusedView && focusedView.element();
     var $focusElement;
     this._isHiddenFocus = disableFocus;
-    var isRowFocus = isGroupRow($row) || this.isRowFocusType();
+    var isRowFocus = isGroupRow($row) || isGroupFooterRow($row) || this.isRowFocusType();
     if (isRowFocus) {
       $focusElement = $row;
       if (focusedView) {
@@ -920,16 +962,13 @@ export class KeyboardNavigationController extends modules.ViewController {
   }
   _updateFocus(isRenderView) {
     this._updateFocusTimeout = setTimeout(() => {
-      var editingController = this._editingController;
-      var isCellEditMode = editingController.getEditMode() === EDIT_MODE_CELL;
-      var isBatchEditMode = editingController.getEditMode() === EDIT_MODE_BATCH;
-      if (isCellEditMode && editingController.hasChanges() || isBatchEditMode && editingController.isNewRowInEditMode()) {
-        editingController._focusEditingCell();
+      if (this._needFocusEditingCell()) {
+        this._editingController._focusEditingCell();
         return;
       }
       var $cell = this._getFocusedCell();
-      var isEditing = editingController.isEditing();
-      if ($cell && !(this._isMasterDetailCell($cell) && !this._isRowEditMode())) {
+      var isEditing = this._editingController.isEditing();
+      if (!this._isMasterDetailCell($cell) || this._isRowEditMode()) {
         if (this._hasSkipRow($cell.parent())) {
           var direction = this._focusedCellPosition && this._focusedCellPosition.rowIndex > 0 ? 'upArrow' : 'downArrow';
           $cell = this._getNextCell(direction);
@@ -958,6 +997,14 @@ export class KeyboardNavigationController extends modules.ViewController {
         }
       }
     });
+  }
+  _needFocusEditingCell() {
+    var isCellEditMode = this._editingController.getEditMode() === EDIT_MODE_CELL;
+    var isBatchEditMode = this._editingController.getEditMode() === EDIT_MODE_BATCH;
+    var cellEditModeHasChanges = isCellEditMode && this._editingController.hasChanges();
+    var isNewRowBatchEditMode = isBatchEditMode && this._editingController.isNewRowInEditMode();
+    var $cell = this._getFocusedCell();
+    return ($cell.children().length === 0 || $cell.find(FOCUSABLE_ELEMENT_SELECTOR).length > 0) && (cellEditModeHasChanges || isNewRowBatchEditMode);
   }
   _getFocusedCell() {
     return $(this._getCell(this._focusedCellPosition));
@@ -1605,7 +1652,7 @@ export class KeyboardNavigationController extends modules.ViewController {
   }
   _hasSkipRow($row) {
     var row = $row && $row.get(0);
-    return row && (row.style.display === 'none' || $row.hasClass(this.addWidgetPrefix(GROUP_FOOTER_CLASS)) || isDetailRow($row) && !$row.hasClass(this.addWidgetPrefix(EDIT_FORM_CLASS)));
+    return row && (row.style.display === 'none' || isDetailRow($row) && !$row.hasClass(this.addWidgetPrefix(EDIT_FORM_CLASS)));
   }
   _allowEditingOnEnterKey() {
     return this.option('keyboardNavigation.enterKeyAction') === 'startEdit';

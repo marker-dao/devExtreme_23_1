@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.viewFunction = exports.WidgetProps = exports.Widget = void 0;
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
@@ -25,19 +24,20 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var DEFAULT_FEEDBACK_HIDE_TIMEOUT = 400;
 var DEFAULT_FEEDBACK_SHOW_TIMEOUT = 30;
 var getAria = function getAria(args) {
   return Object.keys(args).reduce(function (r, key) {
     if (args[key]) {
-      return _extends({}, r, _defineProperty({}, key === 'role' || key === 'id' ? key : "aria-".concat(key), String(args[key])));
+      return _extends({}, r, {
+        [key === 'role' || key === 'id' ? key : "aria-".concat(key)]: String(args[key])
+      });
     }
     return r;
   }, {});
@@ -145,7 +145,7 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
           onActive === null || onActive === void 0 ? void 0 : onActive(event);
         }, {
           timeout: _feedbackShowTimeout,
-          selector: selector
+          selector
         }, namespace);
       }
     }
@@ -172,7 +172,7 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
         }
       }, {
         timeout: _feedbackHideTimeout,
-        selector: selector
+        selector
       }, namespace);
     }
     return undefined;
@@ -186,11 +186,11 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
     var namespace = name;
     if (onClick && !disabled) {
       _short.dxClick.on(this.widgetElementRef.current, onClick, {
-        namespace: namespace
+        namespace
       });
       return function () {
         return _short.dxClick.off(_this4.widgetElementRef.current, {
-          namespace: namespace
+          namespace
         });
       };
     }
@@ -260,7 +260,7 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
           });
           onHoverStart === null || onHoverStart === void 0 ? void 0 : onHoverStart(event);
         }, {
-          selector: selector
+          selector
         }, namespace);
       }
     }
@@ -285,7 +285,7 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
           onHoverEnd === null || onHoverEnd === void 0 ? void 0 : onHoverEnd(event);
         }
       }, {
-        selector: selector
+        selector
       }, namespace);
     }
     return undefined;
@@ -310,11 +310,11 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
     var onDimensionChanged = this.props.onDimensionChanged;
     if (onDimensionChanged) {
       _short.resize.on(this.widgetElementRef.current, onDimensionChanged, {
-        namespace: namespace
+        namespace
       });
       return function () {
         return _short.resize.off(_this9.widgetElementRef.current, {
-          namespace: namespace
+          namespace
         });
       };
     }
@@ -342,11 +342,11 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
       }, function () {
         return onVisibilityChange(false);
       }, {
-        namespace: namespace
+        namespace
       });
       return function () {
         return _short.visibility.off(_this10.widgetElementRef.current, {
-          namespace: namespace
+          namespace
         });
       };
     }
@@ -440,9 +440,9 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
         visible = _this$props12.visible;
       var accessKey = focusStateEnabled && !disabled && this.props.accessKey;
       return _extends({}, (0, _extend.extend)({}, accessKey && {
-        accessKey: accessKey
+        accessKey
       }), getAria(_extends({}, aria, {
-        disabled: disabled,
+        disabled,
         hidden: !visible
       })), (0, _extend.extend)({}, this.restAttributes));
     }
@@ -463,7 +463,6 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
   }, {
     key: "cssClasses",
     get: function get() {
-      var _classesMap;
       var _this$props14 = this.props,
         activeStateEnabled = _this$props14.activeStateEnabled,
         addWidgetClass = _this$props14.addWidgetClass,
@@ -477,9 +476,18 @@ var Widget = /*#__PURE__*/function (_InfernoWrapperCompon) {
       var isFocusable = !!focusStateEnabled && !disabled;
       var isHoverable = !!hoverStateEnabled && !disabled;
       var canBeActive = !!activeStateEnabled && !disabled;
-      var classesMap = (_classesMap = {
-        'dx-widget': !!addWidgetClass
-      }, _defineProperty(_classesMap, String(classes), !!classes), _defineProperty(_classesMap, String(className), !!className), _defineProperty(_classesMap, 'dx-state-disabled', !!disabled), _defineProperty(_classesMap, 'dx-state-invisible', !visible), _defineProperty(_classesMap, 'dx-state-focused', !!this.state.focused && isFocusable), _defineProperty(_classesMap, 'dx-state-active', !!this.state.active && canBeActive), _defineProperty(_classesMap, 'dx-state-hover', !!this.state.hovered && isHoverable && !this.state.active), _defineProperty(_classesMap, 'dx-rtl', !!this.rtlEnabled), _defineProperty(_classesMap, 'dx-visibility-change-handler', !!onVisibilityChange), _classesMap);
+      var classesMap = {
+        'dx-widget': !!addWidgetClass,
+        [String(classes)]: !!classes,
+        [String(className)]: !!className,
+        'dx-state-disabled': !!disabled,
+        'dx-state-invisible': !visible,
+        'dx-state-focused': !!this.state.focused && isFocusable,
+        'dx-state-active': !!this.state.active && canBeActive,
+        'dx-state-hover': !!this.state.hovered && isHoverable && !this.state.active,
+        'dx-rtl': !!this.rtlEnabled,
+        'dx-visibility-change-handler': !!onVisibilityChange
+      };
       return (0, _combine_classes.combineClasses)(classesMap);
     }
   }, {

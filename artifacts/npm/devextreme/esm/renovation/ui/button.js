@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/button.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,6 @@ import { combineClasses } from '../utils/combine_classes';
 import { getImageSourceType } from '../../core/utils/icon';
 import { camelize } from '../../core/utils/inflector';
 import { Icon } from './common/icon';
-import errors from '../../core/errors';
 import { InkRipple } from './common/ink_ripple';
 import { Widget } from './common/widget';
 import { BaseWidgetProps } from './common/base_props';
@@ -128,19 +127,17 @@ export class Button extends InfernoWrapperComponent {
     this.activate = this.activate.bind(this);
     this.deactivate = this.deactivate.bind(this);
     this.submitEffect = this.submitEffect.bind(this);
-    this.checkDeprecation = this.checkDeprecation.bind(this);
     this.onActive = this.onActive.bind(this);
     this.onInactive = this.onInactive.bind(this);
     this.onWidgetClick = this.onWidgetClick.bind(this);
     this.keyDown = this.keyDown.bind(this);
   }
   createEffects() {
-    return [new InfernoEffect(this.submitEffect, [this.props.onSubmit, this.props.useSubmitBehavior]), new InfernoEffect(this.checkDeprecation, [this.props.type]), createReRenderEffect()];
+    return [new InfernoEffect(this.submitEffect, [this.props.onSubmit, this.props.useSubmitBehavior]), createReRenderEffect()];
   }
   updateEffects() {
-    var _this$_effects$, _this$_effects$2;
+    var _this$_effects$;
     (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.onSubmit, this.props.useSubmitBehavior]);
-    (_this$_effects$2 = this._effects[1]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([this.props.type]);
   }
   submitEffect() {
     var namespace = 'UIFeedback';
@@ -160,14 +157,6 @@ export class Button extends InfernoWrapperComponent {
       });
     }
     return undefined;
-  }
-  checkDeprecation() {
-    var {
-      type
-    } = this.props;
-    if (type === 'back') {
-      errors.log('W0016', 'type', 'back', '22.2', "Use the 'back' icon instead");
-    }
   }
   onActive(event) {
     var {
@@ -261,13 +250,9 @@ export class Button extends InfernoWrapperComponent {
   }
   get iconSource() {
     var {
-      icon,
-      type
+      icon
     } = this.props;
-    if (icon || type === 'back') {
-      return (icon !== null && icon !== void 0 ? icon : '') || 'back';
-    }
-    return '';
+    return icon !== null && icon !== void 0 ? icon : '';
   }
   get inkRippleConfig() {
     if (this.__getterCache['inkRippleConfig'] !== undefined) {
@@ -276,10 +261,9 @@ export class Button extends InfernoWrapperComponent {
     return this.__getterCache['inkRippleConfig'] = (() => {
       var {
         icon,
-        text,
-        type
+        text
       } = this.props;
-      return !text && icon || type === 'back' ? {
+      return !text && icon ? {
         isCentered: true,
         useHoldAnimation: false,
         waveSizeCoefficient: 1
@@ -313,7 +297,7 @@ export class Button extends InfernoWrapperComponent {
   }
   componentWillUpdate(nextProps, nextState, context) {
     super.componentWillUpdate();
-    if (this.props['icon'] !== nextProps['icon'] || this.props['text'] !== nextProps['text'] || this.props['type'] !== nextProps['type']) {
+    if (this.props['icon'] !== nextProps['icon'] || this.props['text'] !== nextProps['text']) {
       this.__getterCache['inkRippleConfig'] = undefined;
     }
   }

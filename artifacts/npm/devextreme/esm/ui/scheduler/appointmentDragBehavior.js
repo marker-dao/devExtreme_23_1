@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/appointmentDragBehavior.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -98,7 +98,9 @@ export default class AppointmentDragBehavior {
   }
   createDragEndHandler(options, appointmentDragging) {
     return e => {
+      var updatedData = this.appointments.invoke('getUpdatedData', e.itemData);
       this.appointmentInfo = null;
+      e.toItemData = extend({}, e.itemData, updatedData);
       appointmentDragging.onDragEnd && appointmentDragging.onDragEnd(e);
       if (!e.cancel) {
         options.onDragEnd(e);

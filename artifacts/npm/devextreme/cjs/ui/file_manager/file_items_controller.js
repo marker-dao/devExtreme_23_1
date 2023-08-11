@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/file_items_controller.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,6 @@ var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
 var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -33,8 +32,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var DEFAULT_ROOT_FILE_SYSTEM_ITEM_NAME = 'Files';
 var OPERATIONS = {
   NAVIGATION: 'navigation',
@@ -222,8 +221,8 @@ var FileItemsController = /*#__PURE__*/function () {
       return info.fileItem.isDirectory ? folders.push(info) : files.push(info);
     });
     return {
-      folders: folders,
-      files: files
+      folders,
+      files
     };
   };
   _proto.getDirectoryContents = function getDirectoryContents(parentDirectoryInfo, skipNavigationOnError) {
@@ -295,7 +294,7 @@ var FileItemsController = /*#__PURE__*/function () {
     }, function () {
       var args = {
         parentDirectory: parentDirItem,
-        name: name
+        name
       };
       _this7._editingEvents.onDirectoryCreated(args);
     }, function () {
@@ -319,7 +318,7 @@ var FileItemsController = /*#__PURE__*/function () {
       return _this8._fileProvider.renameItem(item, name);
     }, function () {
       var args = {
-        sourceItem: sourceItem,
+        sourceItem,
         itemName: name
       };
       _this8._editingEvents.onItemRenamed(args);
@@ -408,7 +407,7 @@ var FileItemsController = /*#__PURE__*/function () {
     var _this12 = this;
     var itemInfos = this._getItemInfosForUploaderFiles(sessionInfo.files, uploadDirectoryInfo);
     var actionInfo = this._createEditActionInfo('upload', itemInfos, uploadDirectoryInfo, {
-      sessionInfo: sessionInfo
+      sessionInfo
     });
     return this._processEditAction(actionInfo, function () {}, function (_, index) {
       return sessionInfo.deferreds[index];
@@ -436,7 +435,7 @@ var FileItemsController = /*#__PURE__*/function () {
     if (chunksInfo.chunkIndex === chunksInfo.chunkCount - 1) {
       result = result.done(function () {
         var args = {
-          fileData: fileData,
+          fileData,
           parentDirectory: destinationDirectory
         };
         _this13._editingEvents.onFileUploaded(args);
@@ -507,7 +506,7 @@ var FileItemsController = /*#__PURE__*/function () {
         errorCode: errorInfo.errorCode,
         errorText: errorInfo.errorText,
         fileItem: targetFileInfos[index].fileItem,
-        index: index
+        index
       });
     }
     this._raiseEditActionError(actionInfo, {
@@ -561,11 +560,11 @@ var FileItemsController = /*#__PURE__*/function () {
       return itemInfo.fileItem;
     });
     return {
-      name: name,
+      name,
       itemInfos: targetItemInfos,
-      items: items,
-      directory: directory,
-      customData: customData,
+      items,
+      directory,
+      customData,
       singleRequest: true
     };
   };
@@ -766,13 +765,13 @@ var FileItemsController = /*#__PURE__*/function () {
   };
   _proto._createFileInfo = function _createFileInfo(fileItem, parentDirectoryInfo) {
     return {
-      fileItem: fileItem,
+      fileItem,
       parentDirectory: parentDirectoryInfo,
       icon: this._getFileItemDefaultIcon(fileItem),
-      getInternalKey: function getInternalKey() {
+      getInternalKey() {
         return "FIK_".concat(this.fileItem.key);
       },
-      getDisplayName: function getDisplayName() {
+      getDisplayName() {
         return this.displayName || this.fileItem.name;
       }
     };
@@ -825,7 +824,7 @@ var FileItemsController = /*#__PURE__*/function () {
   };
   _proto._raiseDataLoading = function _raiseDataLoading(operation) {
     this._tryCallAction('onDataLoading', {
-      operation: operation
+      operation
     });
   };
   _proto._raiseSelectedDirectoryChanged = function _raiseSelectedDirectoryChanged(directoryInfo) {

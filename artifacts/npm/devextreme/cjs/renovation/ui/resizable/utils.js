@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/resizable/utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -66,8 +66,8 @@ var getAreaFromObject = function getAreaFromObject(_ref, mainEl) {
     width: right - left,
     height: bottom - top,
     offset: {
-      left: left,
-      top: top
+      left,
+      top
     }
   }, mainEl);
 };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/calendar.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -43,6 +43,9 @@ export interface ComponentDisabledDate<T> {
 
 /** @public */
 export type CalendarZoomLevel = 'century' | 'decade' | 'month' | 'year';
+
+/** @public */
+export type CalendarSelectionMode = 'single' | 'multiple' | 'range';
 
 /** @public */
 export type WeekNumberRule = 'auto' | 'firstDay' | 'fullWeek' | 'firstFourDays';
@@ -179,6 +182,18 @@ export interface dxCalendarOptions extends EditorOptions<dxCalendar> {
     name?: string;
     /**
      * @docid
+     * @default 'single'
+     * @public
+     */
+    selectionMode?: CalendarSelectionMode;
+    /**
+     * @docid
+     * @default true
+     * @public
+     */
+    selectWeekOnClick?: boolean;
+    /**
+     * @docid
      * @default false
      * @public
      */
@@ -201,6 +216,12 @@ export interface dxCalendarOptions extends EditorOptions<dxCalendar> {
      * @public
      */
     value?: Date | number | string;
+    /**
+     * @docid
+     * @default []
+     * @public
+     */
+    values?: Array<Date | number | string>;
     /**
      * @docid
      * @default 'month'

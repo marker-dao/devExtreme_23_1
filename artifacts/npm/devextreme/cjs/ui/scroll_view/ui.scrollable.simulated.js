@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scroll_view/ui.scrollable.simulated.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -370,10 +370,10 @@ var Scroller = _class.default.inherit({
     var baseContentSize = this._getBaseDimension(this._$content.get(0), this._dimension);
     (0, _common.deferRender)(function () {
       _this3._scrollbar.option({
-        containerSize: containerSize,
-        contentSize: contentSize,
-        baseContainerSize: baseContainerSize,
-        baseContentSize: baseContentSize,
+        containerSize,
+        contentSize,
+        baseContainerSize,
+        baseContentSize,
         scaleRatio: _this3._getScaleRatio()
       });
     });
@@ -742,7 +742,7 @@ var SimulatedStrategy = _class.default.inherit({
       reachedBottom: scrollerY && scrollerY._reachedMin()
     };
   },
-  _getScrollOffset: function _getScrollOffset() {
+  _getScrollOffset() {
     return {
       top: -this.location().top,
       left: -this.location().left

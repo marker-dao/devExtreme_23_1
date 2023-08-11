@@ -133,7 +133,7 @@ var _default = {
   },
   toValue: getValue,
   isValueProlonged: true,
-  getRangeByMinZoomValue: function getRangeByMinZoomValue(minZoom, visualRange) {
+  getRangeByMinZoomValue(minZoom, visualRange) {
     var categories = this._categories;
     var minVisibleIndex = categories.indexOf(visualRange.minVisible);
     var maxVisibleIndex = categories.indexOf(visualRange.maxVisible);

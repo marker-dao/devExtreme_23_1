@@ -7,8 +7,8 @@ var getRenderEditorTemplate = function getRenderEditorTemplate(editorTemplate) {
     (0, _inferno.renderTemplate)(function () {
       return editorTemplate;
     }, {
-      item: item,
-      container: container
+      item,
+      container
     }, null);
   };
 };

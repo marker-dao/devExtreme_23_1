@@ -53,11 +53,11 @@ var AppointmentDragBehavior = /*#__PURE__*/function () {
     var newCellIndex = this.workspace.getDroppableCellIndex();
     var oldCellIndex = this.workspace.getCellIndexByCoordinates(this.initialPosition);
     this.appointments.notifyObserver('updateAppointmentAfterDrag', {
-      event: event,
-      element: element,
-      rawAppointment: rawAppointment,
-      newCellIndex: newCellIndex,
-      oldCellIndex: oldCellIndex
+      event,
+      element,
+      rawAppointment,
+      newCellIndex,
+      oldCellIndex
     });
   };
   _proto.onDragCancel = function onDragCancel() {
@@ -95,7 +95,9 @@ var AppointmentDragBehavior = /*#__PURE__*/function () {
   _proto.createDragEndHandler = function createDragEndHandler(options, appointmentDragging) {
     var _this2 = this;
     return function (e) {
+      var updatedData = _this2.appointments.invoke('getUpdatedData', e.itemData);
       _this2.appointmentInfo = null;
+      e.toItemData = (0, _extend.extend)({}, e.itemData, updatedData);
       appointmentDragging.onDragEnd && appointmentDragging.onDragEnd(e);
       if (!e.cancel) {
         options.onDragEnd(e);

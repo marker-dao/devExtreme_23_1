@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/gauges/linear_indicators.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -325,7 +325,7 @@ var textCloud = _base_indicators.BaseTextCloudMarker.inherit({
       indent: 0
     };
   },
-  _correctCloudType: function _correctCloudType(type, _ref, _ref2) {
+  _correctCloudType(type, _ref, _ref2) {
     var x = _ref.x,
       y = _ref.y;
     var width = _ref2.width,

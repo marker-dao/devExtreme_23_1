@@ -28,7 +28,6 @@ var _bindable_template = require("../core/templates/bindable_template");
 var _utils3 = require("./text_box/utils.scroll");
 var _ui = _interopRequireDefault(require("./widget/ui.errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 // STYLE tagBox
 
 var TAGBOX_TAG_DATA_KEY = 'dxTagData';
@@ -151,7 +150,7 @@ var TagBox = _select_box.default.inherit({
     var position = (0, _utils.default)(this._input());
     return position.start === 0 && position.end === 0;
   },
-  _updateInputAriaActiveDescendant: function _updateInputAriaActiveDescendant(id) {
+  _updateInputAriaActiveDescendant(id) {
     this.setAria('activedescendant', id, this._input());
   },
   _moveTagFocus: function _moveTagFocus(direction, clearOnBoundary) {
@@ -193,7 +192,7 @@ var TagBox = _select_box.default.inherit({
   _getLabelContainer: function _getLabelContainer() {
     return this._$tagsContainer;
   },
-  _getFieldElement: function _getFieldElement() {
+  _getFieldElement() {
     return this._input();
   },
   _scrollContainer: function _scrollContainer(direction) {
@@ -394,7 +393,7 @@ var TagBox = _select_box.default.inherit({
     this._initTagTemplate();
     this.callBase();
   },
-  _getNewLabelId: function _getNewLabelId(actualId, newId, shouldRemove) {
+  _getNewLabelId(actualId, newId, shouldRemove) {
     if (!actualId) {
       return newId;
     }
@@ -408,7 +407,7 @@ var TagBox = _select_box.default.inherit({
     }
     return "".concat(actualId, " ").concat(newId);
   },
-  _updateElementAria: function _updateElementAria(id, shouldRemove) {
+  _updateElementAria(id, shouldRemove) {
     var shouldClearLabel = !id;
     if (shouldClearLabel) {
       this.setAria('labelledby', undefined, this.$element());
@@ -438,7 +437,7 @@ var TagBox = _select_box.default.inherit({
     _events_engine.default.off(this._$tagsContainer, eventName);
     _events_engine.default.on(this._$tagsContainer, eventName, ".".concat(TAGBOX_TAG_REMOVE_BUTTON_CLASS), function (event) {
       tagRemoveAction({
-        event: event
+        event
       });
     });
   },
@@ -557,7 +556,7 @@ var TagBox = _select_box.default.inherit({
       onSelectAllValueChanged: function onSelectAllValueChanged(_ref) {
         var value = _ref.value;
         _this5._selectAllValueChangeAction({
-          value: value
+          value
         });
       },
       selectAllMode: this.option('selectAllMode'),
@@ -673,10 +672,10 @@ var TagBox = _select_box.default.inherit({
         select = _dataController$loadO.select;
       var filter = this._getFilter(creator);
       dataController.loadFromStore({
-        filter: filter,
-        customQueryParams: customQueryParams,
-        expand: expand,
-        select: select
+        filter,
+        customQueryParams,
+        expand,
+        select
       }).done(function (data, extra) {
         _this7._isDataSourceChanged = false;
         if (_this7._disposed) {
@@ -869,7 +868,7 @@ var TagBox = _select_box.default.inherit({
       _this13._renderTagsElements(items);
     });
   },
-  _renderTagsElements: function _renderTagsElements(items) {
+  _renderTagsElements(items) {
     var _this14 = this;
     var $multiTag = this._multiTagRequired() && this._renderMultiTag(this._input());
     var showMultiTagOnly = this.option('showMultiTagOnly');
@@ -991,7 +990,7 @@ var TagBox = _select_box.default.inherit({
       if (!this.option('showMultiTagOnly')) {
         this.option('value', this._getValue().slice(0, this.option('maxDisplayedTags')));
       } else {
-        this.reset();
+        this.clear();
       }
       return;
     }
@@ -1077,7 +1076,7 @@ var TagBox = _select_box.default.inherit({
   _valueIndex: function _valueIndex(value, values, cache) {
     var _this16 = this;
     var result = -1;
-    if (cache && _typeof(value) !== 'object') {
+    if (cache && typeof value !== 'object') {
       if (!cache.indexByValues) {
         cache.indexByValues = {};
         values = values || this._getValue();
@@ -1212,7 +1211,7 @@ var TagBox = _select_box.default.inherit({
       this._refreshSelected();
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     this._restoreInputText();
     var defaultValue = this._getDefaultOptions().value;
     var currentValue = this.option('value');
@@ -1227,7 +1226,7 @@ var TagBox = _select_box.default.inherit({
     delete this._valuesToUpdate;
     delete this._tagTemplate;
   },
-  _getSelectedItemsDifference: function _getSelectedItemsDifference(newItems, previousItems) {
+  _getSelectedItemsDifference(newItems, previousItems) {
     var _this20 = this;
     if (!newItems.length) {
       return {
@@ -1255,7 +1254,7 @@ var TagBox = _select_box.default.inherit({
       delete previousItemsValuesMap[value];
     });
     return {
-      addedItems: addedItems,
+      addedItems,
       removedItems: Object.values(previousItemsValuesMap)
     };
   },

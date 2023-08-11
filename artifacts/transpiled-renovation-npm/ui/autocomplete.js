@@ -189,7 +189,7 @@ var Autocomplete = _ui.default.inherit({
         this.callBase(args);
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     this.callBase();
     this.close();
   }

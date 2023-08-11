@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.toolbar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _size = require("../../core/utils/size");
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
@@ -23,8 +22,8 @@ require("../drop_down_button");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var FILE_MANAGER_TOOLBAR_CLASS = 'dx-filemanager-toolbar';
@@ -364,9 +363,9 @@ var FileManagerToolbar = /*#__PURE__*/function (_Widget) {
         text = _this6$_commandManage.text,
         icon = _this6$_commandManage.icon;
       return {
-        name: name,
-        text: text,
-        icon: icon
+        name,
+        text,
+        icon
       };
     });
     var selectedIndex = this.option('itemViewMode') === 'thumbnails' ? 1 : 0;
@@ -569,8 +568,8 @@ var FileManagerToolbar = /*#__PURE__*/function (_Widget) {
     var showText = 'inMenu';
     this._isRefreshVisibleInFileToolbar = false;
     this._refreshItemState = {
-      message: message,
-      status: status
+      message,
+      status
     };
     if (status === 'default') {
       generalToolbarOptions = {
@@ -597,9 +596,9 @@ var FileManagerToolbar = /*#__PURE__*/function (_Widget) {
   _proto._updateRefreshItemText = function _updateRefreshItemText(isDeferredUpdate, text, showText) {
     var _this10 = this;
     var options = {
-      showText: showText,
+      showText,
       options: {
-        text: text
+        text
       }
     };
     if (isDeferredUpdate) {

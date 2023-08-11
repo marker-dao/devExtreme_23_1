@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/export/m_export.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -33,7 +33,7 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 var DEFAULT_DATA_TYPE = 'string';
 var DEFAUL_COLUMN_WIDTH = 100;
 var ExportController = {
-  exportTo: function exportTo() {
+  exportTo() {
     var onExporting = this._createActionByOption('onExporting');
     var eventArgs = {
       rtlEnabled: this.option('rtlEnabled'),
@@ -42,7 +42,7 @@ var ExportController = {
     };
     (0, _type.isFunction)(onExporting) && onExporting(eventArgs);
   },
-  _getLength: function _getLength(items) {
+  _getLength(items) {
     var i;
     var itemCount = items[0].length;
     var cellCount = 0;
@@ -51,7 +51,7 @@ var ExportController = {
     }
     return cellCount;
   },
-  _correctCellsInfoItemLengths: function _correctCellsInfoItemLengths(cellsInfo, expectedLength) {
+  _correctCellsInfoItemLengths(cellsInfo, expectedLength) {
     for (var i = 0; i < cellsInfo.length; i += 1) {
       while (cellsInfo[i].length < expectedLength) {
         cellsInfo[i].push({});
@@ -59,14 +59,14 @@ var ExportController = {
     }
     return cellsInfo;
   },
-  _calculateCellInfoItemLength: function _calculateCellInfoItemLength(columnsRow) {
+  _calculateCellInfoItemLength(columnsRow) {
     var result = 0;
     for (var columnIndex = 0; columnIndex < columnsRow.length; columnIndex += 1) {
       result += (0, _type.isDefined)(columnsRow[columnIndex].colspan) ? columnsRow[columnIndex].colspan : 1;
     }
     return result;
   },
-  _getEmptyCell: function _getEmptyCell() {
+  _getEmptyCell() {
     return {
       text: '',
       value: undefined,
@@ -74,7 +74,7 @@ var ExportController = {
       rowspan: 1
     };
   },
-  _getAllItems: function _getAllItems(columnsInfo, rowsInfoItems, cellsInfo) {
+  _getAllItems(columnsInfo, rowsInfoItems, cellsInfo) {
     var cellIndex;
     var rowIndex;
     var correctedCellsInfo = cellsInfo;
@@ -120,16 +120,16 @@ var ExportController = {
     }));
     return (0, _m_export.prepareItems)(sourceItems, this._getEmptyCell());
   },
-  getDataProvider: function getDataProvider() {
+  getDataProvider() {
     return new DataProvider(this);
   }
 };
 exports.ExportController = ExportController;
 var DataProvider = _class.default.inherit({
-  ctor: function ctor(exportController) {
+  ctor(exportController) {
     this._exportController = exportController;
   },
-  ready: function ready() {
+  ready() {
     this._initOptions();
     var options = this._options;
     return (0, _deferred.when)(options.items).done(function (items) {
@@ -142,7 +142,7 @@ var DataProvider = _class.default.inherit({
       options.items = items;
     });
   },
-  _initOptions: function _initOptions() {
+  _initOptions() {
     var exportController = this._exportController;
     var dataController = exportController._dataController;
     // @ts-expect-error
@@ -156,17 +156,17 @@ var DataProvider = _class.default.inherit({
       dataController.endLoading();
     });
     this._options = {
-      items: items,
+      items,
       rtlEnabled: exportController.option('rtlEnabled'),
       dataFields: exportController.getDataSource().getAreaFields('data'),
       rowsArea: exportController._rowsArea,
       columnsArea: exportController._columnsArea
     };
   },
-  getColumns: function getColumns() {
+  getColumns() {
     return this._options.columns;
   },
-  getColumnsWidths: function getColumnsWidths() {
+  getColumnsWidths() {
     var colsArea = this._options.columnsArea;
     var rowsArea = this._options.rowsArea;
     var columns = this._options.columns;
@@ -175,13 +175,13 @@ var DataProvider = _class.default.inherit({
       return DEFAUL_COLUMN_WIDTH;
     }) : rowsArea.getColumnsWidth().concat(colsArea.getColumnsWidth());
   },
-  getRowsCount: function getRowsCount() {
+  getRowsCount() {
     return this._options.items.length;
   },
-  getGroupLevel: function getGroupLevel() {
+  getGroupLevel() {
     return 0;
   },
-  getCellMerging: function getCellMerging(rowIndex, cellIndex) {
+  getCellMerging(rowIndex, cellIndex) {
     var items = this._options.items;
     var item = items[rowIndex] && items[rowIndex][cellIndex];
     return item ? {
@@ -192,17 +192,17 @@ var DataProvider = _class.default.inherit({
       rowspan: 0
     };
   },
-  getFrozenArea: function getFrozenArea() {
+  getFrozenArea() {
     return {
       x: this.getRowAreaColCount(),
       y: this.getColumnAreaRowCount()
     };
   },
-  getCellType: function getCellType(rowIndex, cellIndex) {
+  getCellType(rowIndex, cellIndex) {
     var style = this.getStyles()[this.getStyleId(rowIndex, cellIndex)];
     return style && style.dataType || 'string';
   },
-  getCellData: function getCellData(rowIndex, cellIndex, isExcelJS) {
+  getCellData(rowIndex, cellIndex, isExcelJS) {
     var result = {};
     var items = this._options.items;
     var item = items[rowIndex] && items[rowIndex][cellIndex] || {};
@@ -225,7 +225,7 @@ var DataProvider = _class.default.inherit({
     }
     return result;
   },
-  _tryGetAreaName: function _tryGetAreaName(item, rowIndex, cellIndex) {
+  _tryGetAreaName(item, rowIndex, cellIndex) {
     if (this.isColumnAreaCell(rowIndex, cellIndex)) {
       return 'column';
     }
@@ -237,19 +237,19 @@ var DataProvider = _class.default.inherit({
     }
     return undefined;
   },
-  isRowAreaCell: function isRowAreaCell(rowIndex, cellIndex) {
+  isRowAreaCell(rowIndex, cellIndex) {
     return rowIndex >= this.getColumnAreaRowCount() && cellIndex < this.getRowAreaColCount();
   },
-  isColumnAreaCell: function isColumnAreaCell(rowIndex, cellIndex) {
+  isColumnAreaCell(rowIndex, cellIndex) {
     return cellIndex >= this.getRowAreaColCount() && rowIndex < this.getColumnAreaRowCount();
   },
-  getColumnAreaRowCount: function getColumnAreaRowCount() {
+  getColumnAreaRowCount() {
     return this._options.items[0][0].rowspan;
   },
-  getRowAreaColCount: function getRowAreaColCount() {
+  getRowAreaColCount() {
     return this._options.items[0][0].colspan;
   },
-  getHeaderStyles: function getHeaderStyles() {
+  getHeaderStyles() {
     return [{
       alignment: 'center',
       dataType: 'string'
@@ -258,7 +258,7 @@ var DataProvider = _class.default.inherit({
       dataType: 'string'
     }];
   },
-  getDataFieldStyles: function getDataFieldStyles() {
+  getDataFieldStyles() {
     var _this = this;
     var dataFields = this._options.dataFields;
     var dataItemStyle = {
@@ -276,14 +276,14 @@ var DataProvider = _class.default.inherit({
     }
     return [dataItemStyle];
   },
-  getStyles: function getStyles() {
+  getStyles() {
     if (this._styles) {
       return this._styles;
     }
     this._styles = [].concat(_toConsumableArray(this.getHeaderStyles()), _toConsumableArray(this.getDataFieldStyles()));
     return this._styles;
   },
-  getCellDataType: function getCellDataType(field) {
+  getCellDataType(field) {
     if (field && field.customizeText) {
       return 'string';
     }
@@ -300,7 +300,7 @@ var DataProvider = _class.default.inherit({
     }
     return DEFAULT_DATA_TYPE;
   },
-  getStyleId: function getStyleId(rowIndex, cellIndex) {
+  getStyleId(rowIndex, cellIndex) {
     var items = this._options.items;
     var item = items[rowIndex] && items[rowIndex][cellIndex] || {};
     if (cellIndex === 0 && rowIndex === 0 || this.isColumnAreaCell(rowIndex, cellIndex)) {
@@ -314,12 +314,12 @@ var DataProvider = _class.default.inherit({
 });
 exports.DataProvider = DataProvider;
 var PivotGridExport = {
-  DEFAUL_COLUMN_WIDTH: DEFAUL_COLUMN_WIDTH
+  DEFAUL_COLUMN_WIDTH
 };
 exports.PivotGridExport = PivotGridExport;
 var _default = {
-  ExportController: ExportController,
-  PivotGridExport: PivotGridExport,
-  DataProvider: DataProvider
+  ExportController,
+  PivotGridExport,
+  DataProvider
 };
 exports.default = _default;

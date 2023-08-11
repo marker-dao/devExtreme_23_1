@@ -58,8 +58,8 @@ var normalizeLoadResult = function normalizeLoadResult(data, extra) {
     data = [data];
   }
   return {
-    data: data,
-    extra: extra
+    data,
+    extra
   };
 };
 exports.normalizeLoadResult = normalizeLoadResult;
@@ -80,7 +80,7 @@ var createCustomStoreFromUrl = function createCustomStoreFromUrl(url, normalizat
   return new _custom_store.default({
     load: function load() {
       return _ajax.default.sendRequest({
-        url: url,
+        url,
         dataType: 'json'
       });
     },

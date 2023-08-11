@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.base.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -160,7 +160,7 @@ var TextEditorBase = _editor.default.inherit({
     this._$textEditorInputContainer.append(this._createInput());
     this._renderButtonContainers();
   },
-  _getInputContainer: function _getInputContainer() {
+  _getInputContainer() {
     return this._$textEditorInputContainer;
   },
   _renderPendingIndicator: function _renderPendingIndicator() {
@@ -207,7 +207,7 @@ var TextEditorBase = _editor.default.inherit({
     (_this$_$afterButtonsC = this._$afterButtonsContainer) === null || _this$_$afterButtonsC === void 0 ? void 0 : _this$_$afterButtonsC.remove();
     this._buttonCollection.clean();
   },
-  _clean: function _clean() {
+  _clean() {
     this._buttonCollection.clean();
     this._disposePendingIndicator();
     this._unobserveLabelContainerResize();
@@ -354,18 +354,20 @@ var TextEditorBase = _editor.default.inherit({
     this._label.updateBeforeWidth(this._getLabelBeforeWidth());
     this._label.updateMaxWidth(this._getLabelContainerWidth());
   },
-  _getFieldElement: function _getFieldElement() {
+  _getFieldElement() {
     return this._getLabelContainer();
   },
-  _setFieldAria: function _setFieldAria() {
+  _setFieldAria(force) {
     var _this$_$placeholder;
     var labelId = this._label.getId();
     var placeholderId = (_this$_$placeholder = this._$placeholder) === null || _this$_$placeholder === void 0 ? void 0 : _this$_$placeholder.attr('id');
     var value = [labelId, placeholderId].filter(Boolean).join(' ');
-    var aria = {
-      'labelledby': value || undefined
-    };
-    this.setAria(aria, this._getFieldElement());
+    if (value || force) {
+      var aria = {
+        'labelledby': value || undefined
+      };
+      this.setAria(aria, this._getFieldElement());
+    }
   },
   _renderLabel: function _renderLabel() {
     this._unobserveLabelContainerResize();
@@ -429,7 +431,7 @@ var TextEditorBase = _editor.default.inherit({
     _events_engine.default.trigger($input, 'input');
   },
   _clearValue: function _clearValue() {
-    this.reset();
+    this.clear();
   },
   _renderEvents: function _renderEvents() {
     var _this3 = this;
@@ -617,11 +619,11 @@ var TextEditorBase = _editor.default.inherit({
         break;
       case 'placeholder':
         this._renderPlaceholder();
-        this._setFieldAria();
+        this._setFieldAria(true);
         break;
       case 'label':
         this._label.updateText(value);
-        this._setFieldAria();
+        this._setFieldAria(true);
         break;
       case 'labelMark':
         this._label.updateMark(value);
@@ -697,13 +699,13 @@ var TextEditorBase = _editor.default.inherit({
       input.prop('type', 'text');
     }
   },
-  getButton: function getButton(name) {
+  getButton(name) {
     return this._buttonCollection.getButton(name);
   },
   focus: function focus() {
     _events_engine.default.trigger(this._input(), 'focus');
   },
-  reset: function reset() {
+  clear: function clear() {
     if (this._showValidMark) {
       this._showValidMark = false;
       this._renderValidationState();

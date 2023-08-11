@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/gauges/bar_gauge.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ exports.dxBarGauge = void 0;
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _object = require("../../core/utils/object");
 var _common = require("../../core/utils/common");
-var _base_chart = require("../chart_components/base_chart");
+var _m_base_chart = require("../../__internal/viz/chart_components/m_base_chart");
 var _extend2 = require("../../core/utils/extend");
 var _utils = require("../core/utils");
 var _base_gauge = require("./base_gauge");
@@ -270,15 +270,15 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
     }
     if (overlapStrategy === 'shift') {
       var newBars = that._dividePoints();
-      _base_chart.overlapping.resolveLabelOverlappingInOneDirection(newBars.left, that._canvas, false, false, shiftFunction);
-      _base_chart.overlapping.resolveLabelOverlappingInOneDirection(newBars.right, that._canvas, false, false, shiftFunction);
+      _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(newBars.left, that._canvas, false, false, shiftFunction);
+      _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(newBars.right, that._canvas, false, false, shiftFunction);
       that._clearLabelsCrossTitle();
       that._drawConnector();
     } else {
       that._clearOverlappingLabels();
     }
   },
-  _drawConnector: function _drawConnector() {
+  _drawConnector() {
     var that = this;
     var bars = that._bars;
     var _that$_getOption = that._getOption('label'),
@@ -327,13 +327,13 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
         return (0, _math.roundFloatPart)(coordinate, 4);
       });
       bar._line.attr({
-        points: points
+        points
       });
       bar._line.rotate(0);
       bar._isLabelShifted = false;
     });
   },
-  _dividePoints: function _dividePoints() {
+  _dividePoints() {
     var that = this;
     var bars = that._bars;
     return bars.reduce(function (stackBars, bar) {
@@ -368,8 +368,8 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
               return {
                 x: x + lastCoords.x,
                 y: y + lastCoords.y,
-                width: width,
-                height: height
+                width,
+                height
               };
             },
             shift: function shift(x, y) {
@@ -404,7 +404,7 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
       right: []
     });
   },
-  _clearOverlappingLabels: function _clearOverlappingLabels() {
+  _clearOverlappingLabels() {
     var that = this;
     var bars = that._bars;
     var currentIndex = 0;
@@ -424,7 +424,7 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
       }
     }
   },
-  _clearLabelsCrossTitle: function _clearLabelsCrossTitle() {
+  _clearLabelsCrossTitle() {
     var that = this;
     var bars = that._bars;
     var titleCoords = that._title.getLayoutOptions() || {
@@ -455,7 +455,7 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
       }, that._animationSettings);
     }
   },
-  _buildNodes: function _buildNodes() {
+  _buildNodes() {
     var that = this;
     var options = that._options.silent();
     that._palette = that._themeManager.createPalette(options.palette, {
@@ -527,7 +527,7 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
   _factory: (0, _object.clone)(_base_gauge.BaseGauge.prototype._factory),
   _optionChangesOrder: ['VALUES', 'NODES'],
   _initialChanges: ['VALUES'],
-  _change_NODES: function _change_NODES() {
+  _change_NODES() {
     this._buildNodes();
   },
   _change_MOSTLY_TOTAL: function _change_MOSTLY_TOTAL() {
@@ -535,7 +535,7 @@ var dxBarGauge = _base_gauge.BaseGauge.inherit({
     this.callBase();
   },
   _proxyData: [],
-  _getLegendData: function _getLegendData() {
+  _getLegendData() {
     var that = this;
     var formatOptions = {};
     var options = that._options.silent();
@@ -733,25 +733,25 @@ _extend(BarWrapper.prototype, {
   _processValue: function _processValue(value) {
     return this._context.translator.translate(this._context.translator.adjust(value));
   },
-  applyValue: function applyValue() {
+  applyValue() {
     if (!this._visible) {
       return this;
     }
     return this.setAngle(this._processValue(this.getValue()));
   },
-  update: function update(_ref) {
+  update(_ref) {
     var color = _ref.color,
       value = _ref.value;
     this._color = color;
     this._value = value;
   },
-  hide: function hide() {
+  hide() {
     this._visible = false;
   },
-  getColor: function getColor() {
+  getColor() {
     return this._color;
   },
-  getValue: function getValue() {
+  getValue() {
     return this._value;
   },
   beginAnimation: function beginAnimation() {

@@ -69,7 +69,7 @@ var frequenciesMessages = [
 }];
 var frequencies = frequenciesMessages.map(function (item) {
   return {
-    text: function text() {
+    text() {
       return _message.default.format(item.recurrence);
     },
     value: item.value
@@ -572,8 +572,8 @@ var RecurrenceEditor = /*#__PURE__*/function (_Editor) {
       var appointmentTimeZone = getStartDateTimeZone();
       var path = appointmentTimeZone ? _types.PathTimeZoneConversion.fromAppointmentToSource : _types.PathTimeZoneConversion.fromGridToSource;
       var dateInLocaleTimeZone = this.option('timeZoneCalculator').createDate(dateInTimeZone, {
-        path: path,
-        appointmentTimeZone: appointmentTimeZone
+        path,
+        appointmentTimeZone
       });
       this._recurrenceRule.makeRule('until', dateInLocaleTimeZone);
       this._changeEditorValue();
@@ -735,8 +735,8 @@ var RecurrenceEditor = /*#__PURE__*/function (_Editor) {
     var appointmentTimeZone = getStartDateTimeZone();
     var path = appointmentTimeZone ? _types.PathTimeZoneConversion.fromSourceToAppointment : _types.PathTimeZoneConversion.fromSourceToGrid;
     return this.option('timeZoneCalculator').createDate(untilDate, {
-      path: path,
-      appointmentTimeZone: appointmentTimeZone
+      path,
+      appointmentTimeZone
     });
   };
   _proto2.toggle = function toggle() {

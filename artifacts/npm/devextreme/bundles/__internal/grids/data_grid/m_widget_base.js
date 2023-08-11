@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/m_widget_base.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -39,7 +39,7 @@ var DATAGRID_DEPRECATED_TEMPLATE_WARNING = 'Specifying grid templates with the j
 _m_core.default.registerModulesOrder(['stateStoring', 'columns', 'selection', 'editorFactory', 'columnChooser', 'grouping', 'editing', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'gridView']);
 var DataGrid = _ui.default.inherit({
   _activeStateUnit: DATAGRID_ROW_SELECTOR,
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     var that = this;
     var result = that.callBase();
     (0, _iterator.each)(_m_core.default.modules, function () {
@@ -49,7 +49,7 @@ var DataGrid = _ui.default.inherit({
     });
     return result;
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this.callBase();
     (0, _extend.extend)(this._deprecatedOptions, {
       useKeyboard: {
@@ -70,7 +70,7 @@ var DataGrid = _ui.default.inherit({
       }
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules() {
     return this.callBase().concat([{
       device: {
         platform: 'ios'
@@ -79,7 +79,7 @@ var DataGrid = _ui.default.inherit({
         showRowLines: true
       }
     }, {
-      device: function device() {
+      device() {
         // @ts-expect-error
         return (0, _themes.isMaterial)();
       },
@@ -97,7 +97,7 @@ var DataGrid = _ui.default.inherit({
         }
       }
     }, {
-      device: function device() {
+      device() {
         return _browser.default.webkit;
       },
       options: {
@@ -118,8 +118,8 @@ var DataGrid = _ui.default.inherit({
         }
       }
     }, {
-      device: function device(_device) {
-        return _device.deviceType !== 'desktop';
+      device(device) {
+        return device.deviceType !== 'desktop';
       },
       options: {
         grouping: {
@@ -128,7 +128,7 @@ var DataGrid = _ui.default.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init() {
     var that = this;
     that.callBase();
     _m_utils.default.logHeaderFilterDeprecatedWarningIfNeed(that);
@@ -137,35 +137,35 @@ var DataGrid = _ui.default.inherit({
     _m_core.default.callModuleItemsMethod(that, 'init');
   },
   _clean: _common.noop,
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var that = this;
     _m_core.default.callModuleItemsMethod(that, 'optionChanged', [args]);
     if (!args.handled) {
       that.callBase(args);
     }
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged() {
     this.updateDimensions(true);
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged(visible) {
     if (visible) {
       this.updateDimensions();
     }
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.callBase.apply(this, arguments);
     this.getView('gridView').render(this.$element());
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl() {
     this.getView('gridView').update();
   },
-  _renderContent: function _renderContent() {
+  _renderContent() {
     var that = this;
     (0, _common.deferRender)(function () {
       that._renderContentImpl();
     });
   },
-  _getTemplate: function _getTemplate(templateName) {
+  _getTemplate(templateName) {
     var template = templateName;
     if ((0, _type.isString)(template) && template.startsWith('#')) {
       template = (0, _renderer.default)(templateName);
@@ -173,31 +173,31 @@ var DataGrid = _ui.default.inherit({
     }
     return this.callBase(template);
   },
-  _dispose: function _dispose() {
+  _dispose() {
     var that = this;
     that.callBase();
     _m_core.default.callModuleItemsMethod(that, 'dispose');
   },
-  isReady: function isReady() {
+  isReady() {
     return this.getController('data').isReady();
   },
-  beginUpdate: function beginUpdate() {
+  beginUpdate() {
     var that = this;
     that.callBase();
     _m_core.default.callModuleItemsMethod(that, 'beginUpdate');
   },
-  endUpdate: function endUpdate() {
+  endUpdate() {
     var that = this;
     _m_core.default.callModuleItemsMethod(that, 'endUpdate');
     that.callBase();
   },
-  getController: function getController(name) {
+  getController(name) {
     return this._controllers[name];
   },
-  getView: function getView(name) {
+  getView(name) {
     return this._views[name];
   },
-  focus: function focus(element) {
+  focus(element) {
     this.getController('keyboardNavigation').focus(element);
   }
 });

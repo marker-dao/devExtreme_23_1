@@ -192,7 +192,7 @@ var _default = (0, _extend2.extend)({}, _bar_point.default, {
       return centerCoord;
     }
   },
-  getCenterCoord: function getCenterCoord() {
+  getCenterCoord() {
     if (this.graphic) {
       var that = this;
       var x;

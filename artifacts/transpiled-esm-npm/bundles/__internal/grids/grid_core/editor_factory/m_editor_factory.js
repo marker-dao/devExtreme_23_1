@@ -218,7 +218,7 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
 }(ViewControllerWithMixin);
 exports.EditorFactory = EditorFactory;
 var editorFactoryModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {};
   },
   controllers: {

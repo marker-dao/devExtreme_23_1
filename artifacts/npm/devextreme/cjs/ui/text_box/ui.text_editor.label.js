@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.label.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,13 +29,13 @@ var TextEditorLabel = /*#__PURE__*/function () {
       containerWidth = _ref.containerWidth,
       beforeWidth = _ref.beforeWidth;
     this._props = {
-      $editor: $editor,
-      text: text,
-      mode: mode,
-      mark: mark,
-      containsButtonsBefore: containsButtonsBefore,
-      containerWidth: containerWidth,
-      beforeWidth: beforeWidth
+      $editor,
+      text,
+      mode,
+      mark,
+      containsButtonsBefore,
+      containerWidth,
+      beforeWidth
     };
     this._id = "".concat(TEXTEDITOR_LABEL_CLASS, "-").concat(new _guid.default());
     this._render();

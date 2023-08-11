@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/pie_chart.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -288,7 +288,7 @@ export interface dxPieChartOptions extends BaseChartOptions<dxPieChart> {
      * @type object
      * @public
      */
-    adaptiveLayout?: dxPieChartAdaptiveLayout;
+    adaptiveLayout?: AdaptiveLayout;
     /**
      * @docid
      * @default undefined
@@ -322,7 +322,7 @@ export interface dxPieChartOptions extends BaseChartOptions<dxPieChart> {
      * @type object
      * @public
      */
-    legend?: dxPieChartLegend;
+    legend?: Legend;
     /**
      * @docid
      * @default 0.5
@@ -485,22 +485,22 @@ export interface dxPieChartCommonAnnotationConfig extends BaseWidgetAnnotationCo
     tooltipTemplate?: template | ((annotation: dxPieChartAnnotationConfig | any, element: DxElement) => string | UserDefinedElement);
 }
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxPieChartAdaptiveLayout
  */
-export interface dxPieChartAdaptiveLayout extends BaseChartAdaptiveLayout {
+export type AdaptiveLayout = BaseChartAdaptiveLayout & {
     /**
      * @docid dxPieChartOptions.adaptiveLayout.keepLabels
      * @default false
      * @public
      */
     keepLabels?: boolean;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxPieChartLegend
  * */
-export interface dxPieChartLegend extends BaseChartLegend {
+export type Legend = BaseChartLegend & {
     /**
      * @docid dxPieChartOptions.legend.customizeHint
      * @public
@@ -533,7 +533,7 @@ export interface dxPieChartLegend extends BaseChartLegend {
      * @public
      */
     markerTemplate?: template | ((legendItem: LegendItem, element: SVGGElement) => string | UserDefinedElement<SVGElement>);
-}
+};
 /**
  * @docid
  * @inherits BaseChart
@@ -996,5 +996,15 @@ export type Properties = dxPieChartOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxPieChartOptions;
+
+// #region deprecated in v23.1
+
+/** @deprecated Use AdaptiveLayout instead */
+export type dxPieChartAdaptiveLayout = AdaptiveLayout;
+
+/** @deprecated Use Legend instead */
+export type dxPieChartLegend = Legend;
+
+// #endregion
 
 

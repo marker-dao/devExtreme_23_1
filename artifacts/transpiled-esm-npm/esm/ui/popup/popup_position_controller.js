@@ -26,10 +26,7 @@ class PopupPositionController extends OverlayPositionController {
       outsideDragFactor
     });
     this._$dragResizeContainer = undefined;
-    this._outsideDragFactor = undefined;
-    this._lastPositionBeforeFullScreen = undefined;
     this._updateDragResizeContainer();
-    this._updateOutsideDragFactor();
   }
   set fullScreen(fullScreen) {
     this._props.fullScreen = fullScreen;
@@ -43,7 +40,10 @@ class PopupPositionController extends OverlayPositionController {
     return this._$dragResizeContainer;
   }
   get outsideDragFactor() {
-    return this._outsideDragFactor;
+    if (this._props.dragOutsideBoundary) {
+      return 1;
+    }
+    return this._props.outsideDragFactor;
   }
   set dragAndResizeArea(dragAndResizeArea) {
     this._props.dragAndResizeArea = dragAndResizeArea;
@@ -52,11 +52,9 @@ class PopupPositionController extends OverlayPositionController {
   set dragOutsideBoundary(dragOutsideBoundary) {
     this._props.dragOutsideBoundary = dragOutsideBoundary;
     this._updateDragResizeContainer();
-    this._updateOutsideDragFactor();
   }
   set outsideDragFactor(outsideDragFactor) {
     this._props.outsideDragFactor = outsideDragFactor;
-    this._updateOutsideDragFactor();
   }
   updateContainer(containerProp) {
     super.updateContainer(containerProp);
@@ -78,23 +76,8 @@ class PopupPositionController extends OverlayPositionController {
     } else {
       var _this$_props$forceApp, _this$_props;
       (_this$_props$forceApp = (_this$_props = this._props).forceApplyBindings) === null || _this$_props$forceApp === void 0 ? void 0 : _this$_props$forceApp.call(_this$_props);
-      if (!this._shouldRenderContentInitialPosition && this._lastPositionBeforeFullScreen) {
-        move(this._$content, this._lastPositionBeforeFullScreen);
-        this._lastPositionBeforeFullScreen = undefined;
-        this.detectVisualPositionChange();
-      } else {
-        super.positionContent();
-      }
+      super.positionContent();
     }
-  }
-  _updateOutsideDragFactor() {
-    this._outsideDragFactor = this._getOutsideDragFactor();
-  }
-  _getOutsideDragFactor() {
-    if (this._props.dragOutsideBoundary) {
-      return 1;
-    }
-    return this._props.outsideDragFactor;
   }
   _updateDragResizeContainer() {
     this._$dragResizeContainer = this._getDragResizeContainer();
@@ -117,10 +100,9 @@ class PopupPositionController extends OverlayPositionController {
   }
   _fullScreenEnabled() {
     this.restorePositionOnNextRender(false);
-    this._lastPositionBeforeFullScreen = this._visualPosition;
   }
   _fullScreenDisabled() {
-    this.restorePositionOnNextRender(false);
+    this.restorePositionOnNextRender(true);
   }
 }
 export { PopupPositionController };

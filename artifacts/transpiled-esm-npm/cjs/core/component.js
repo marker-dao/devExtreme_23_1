@@ -23,13 +23,13 @@ var isInnerOption = function isInnerOption(optionName) {
   return optionName.indexOf('_', 0) === 0;
 };
 var Component = _class.default.inherit({
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this._deprecatedOptions = {};
   },
-  _getDeprecatedOptions: function _getDeprecatedOptions() {
+  _getDeprecatedOptions() {
     return this._deprecatedOptions;
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return {
       onInitialized: null,
       onOptionChanged: null,
@@ -37,22 +37,22 @@ var Component = _class.default.inherit({
       defaultOptionsRules: null
     };
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules() {
     return [];
   },
-  _setOptionsByDevice: function _setOptionsByDevice(rules) {
+  _setOptionsByDevice(rules) {
     this._options.applyRules(rules);
   },
-  _convertRulesToOptions: function _convertRulesToOptions(rules) {
+  _convertRulesToOptions(rules) {
     return (0, _utils.convertRulesToOptions)(rules);
   },
-  _isInitialOptionValue: function _isInitialOptionValue(name) {
+  _isInitialOptionValue(name) {
     return this._options.isInitial(name);
   },
-  _setOptionsByReference: function _setOptionsByReference() {
+  _setOptionsByReference() {
     this._optionsByReference = {};
   },
-  _getOptionsByReference: function _getOptionsByReference() {
+  _getOptionsByReference() {
     return this._optionsByReference;
   },
   /**
@@ -61,7 +61,7 @@ var Component = _class.default.inherit({
   * @param1 options:ComponentOptions|undefined
   * @hidden
   */
-  ctor: function ctor() {
+  ctor() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var _optionChangedCallbacks = options._optionChangedCallbacks,
       _disposingCallbacks = options._disposingCallbacks;
@@ -73,7 +73,7 @@ var Component = _class.default.inherit({
     this.postponedOperations = new _postponed_operations.PostponedOperations();
     this._createOptions(options);
   },
-  _createOptions: function _createOptions(options) {
+  _createOptions(options) {
     var _this = this;
     this.beginUpdate();
     try {
@@ -105,34 +105,34 @@ var Component = _class.default.inherit({
       this.endUpdate();
     }
   },
-  _initOptions: function _initOptions(options) {
+  _initOptions(options) {
     this.option(options);
   },
-  _init: function _init() {
+  _init() {
     var _this2 = this;
     this._createOptionChangedAction();
     this.on('disposing', function (args) {
       _this2._disposingCallbacks.fireWith(_this2, [args]);
     });
   },
-  _logDeprecatedOptionWarning: function _logDeprecatedOptionWarning(option, info) {
+  _logDeprecatedOptionWarning(option, info) {
     var message = info.message || "Use the '".concat(info.alias, "' option instead");
     _errors.default.log('W0001', this.NAME, option, info.since, message);
   },
-  _logDeprecatedComponentWarning: function _logDeprecatedComponentWarning(since, alias) {
+  _logDeprecatedComponentWarning(since, alias) {
     _errors.default.log('W0000', this.NAME, since, "Use the '".concat(alias, "' widget instead"));
   },
-  _createOptionChangedAction: function _createOptionChangedAction() {
+  _createOptionChangedAction() {
     this._optionChangedAction = this._createActionByOption('onOptionChanged', {
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _createDisposingAction: function _createDisposingAction() {
+  _createDisposingAction() {
     this._disposingAction = this._createActionByOption('onDisposing', {
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     switch (args.name) {
       case 'onDisposing':
       case 'onInitialized':
@@ -144,7 +144,7 @@ var Component = _class.default.inherit({
         break;
     }
   },
-  _dispose: function _dispose() {
+  _dispose() {
     this._optionChangedCallbacks.empty();
     this._createDisposingAction();
     this._disposingAction();
@@ -152,28 +152,28 @@ var Component = _class.default.inherit({
     this._options.dispose();
     this._disposed = true;
   },
-  _lockUpdate: function _lockUpdate() {
+  _lockUpdate() {
     this._updateLockCount++;
   },
-  _unlockUpdate: function _unlockUpdate() {
+  _unlockUpdate() {
     this._updateLockCount = Math.max(this._updateLockCount - 1, 0);
   },
   // TODO: remake as getter after ES6 refactor
-  _isUpdateAllowed: function _isUpdateAllowed() {
+  _isUpdateAllowed() {
     return this._updateLockCount === 0;
   },
   // TODO: remake as getter after ES6 refactor
-  _isInitializingRequired: function _isInitializingRequired() {
+  _isInitializingRequired() {
     return !this._initializing && !this._initialized;
   },
-  isInitialized: function isInitialized() {
+  isInitialized() {
     return this._initialized;
   },
-  _commitUpdate: function _commitUpdate() {
+  _commitUpdate() {
     this.postponedOperations.callPostponedOperations();
     this._isInitializingRequired() && this._initializeComponent();
   },
-  _initializeComponent: function _initializeComponent() {
+  _initializeComponent() {
     this._initializing = true;
     try {
       this._init();
@@ -187,7 +187,7 @@ var Component = _class.default.inherit({
       this._initialized = true;
     }
   },
-  instance: function instance() {
+  instance() {
     return this;
   },
   beginUpdate: function beginUpdate() {
@@ -198,7 +198,7 @@ var Component = _class.default.inherit({
     this._isUpdateAllowed() && this._commitUpdate();
   },
   _optionChanging: _common.noop,
-  _notifyOptionChanged: function _notifyOptionChanged(option, value, previousValue) {
+  _notifyOptionChanged(option, value, previousValue) {
     if (this._initialized) {
       var optionNames = [option].concat(this._options.getAliasesByName(option));
       for (var i = 0; i < optionNames.length; i++) {
@@ -219,21 +219,21 @@ var Component = _class.default.inherit({
       }
     }
   },
-  initialOption: function initialOption(name) {
+  initialOption(name) {
     return this._options.initial(name);
   },
-  _defaultActionConfig: function _defaultActionConfig() {
+  _defaultActionConfig() {
     return {
       context: this,
       component: this
     };
   },
-  _defaultActionArgs: function _defaultActionArgs() {
+  _defaultActionArgs() {
     return {
       component: this
     };
   },
-  _createAction: function _createAction(actionSource, config) {
+  _createAction(actionSource, config) {
     var _this3 = this;
     var action;
     return function (e) {
@@ -249,7 +249,7 @@ var Component = _class.default.inherit({
       return action.execute.call(action, (0, _extend.extend)(e, _this3._defaultActionArgs()));
     };
   },
-  _createActionByOption: function _createActionByOption(optionName, config) {
+  _createActionByOption(optionName, config) {
     var _this4 = this;
     var action;
     var eventName;
@@ -295,37 +295,37 @@ var Component = _class.default.inherit({
     var onActionCreated = this.option('onActionCreated') || _common.noop;
     return onActionCreated(this, result, config) || result;
   },
-  on: function on(eventName, eventHandler) {
+  on(eventName, eventHandler) {
     this._eventsStrategy.on(eventName, eventHandler);
     return this;
   },
-  off: function off(eventName, eventHandler) {
+  off(eventName, eventHandler) {
     this._eventsStrategy.off(eventName, eventHandler);
     return this;
   },
   hasActionSubscription: function hasActionSubscription(actionName) {
     return !!this._options.silent(actionName) || this._eventsStrategy.hasEvent(getEventName(actionName));
   },
-  isOptionDeprecated: function isOptionDeprecated(name) {
+  isOptionDeprecated(name) {
     return this._options.isDeprecated(name);
   },
-  _setOptionWithoutOptionChange: function _setOptionWithoutOptionChange(name, value) {
+  _setOptionWithoutOptionChange(name, value) {
     this._cancelOptionChange = name;
     this.option(name, value);
     this._cancelOptionChange = false;
   },
-  _getOptionValue: function _getOptionValue(name, context) {
+  _getOptionValue(name, context) {
     var value = this.option(name);
     if ((0, _type.isFunction)(value)) {
       return value.bind(context)();
     }
     return value;
   },
-  option: function option() {
+  option() {
     var _this$_options;
     return (_this$_options = this._options).option.apply(_this$_options, arguments);
   },
-  resetOption: function resetOption(name) {
+  resetOption(name) {
     this.beginUpdate();
     this._options.reset(name);
     this.endUpdate();

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/draggable.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -139,17 +139,9 @@ export type DragEndEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEven
     readonly itemData?: any;
     /** @docid _ui_draggable_DragEndEvent.itemElement */
     readonly itemElement?: DxElement;
-    /**
-     * @docid _ui_draggable_DragEndEvent.fromComponent
-     * @type this
-     * @default Widget
-     */
+    /** @docid _ui_draggable_DragEndEvent.fromComponent */
     readonly fromComponent: dxSortable | dxDraggable;
-    /**
-     * @docid _ui_draggable_DragEndEvent.toComponent
-     * @type this
-     * @default Widget
-     */
+    /** @docid _ui_draggable_DragEndEvent.toComponent */
     readonly toComponent: dxSortable | dxDraggable;
     /** @docid _ui_draggable_DragEndEvent.fromData */
     readonly fromData?: any;
@@ -168,17 +160,9 @@ export type DragMoveEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEve
     readonly itemData?: any;
     /** @docid _ui_draggable_DragMoveEvent.itemElement */
     readonly itemElement?: DxElement;
-    /**
-     * @docid _ui_draggable_DragMoveEvent.fromComponent
-     * @type this
-     * @default Widget
-     */
+    /** @docid _ui_draggable_DragMoveEvent.fromComponent */
     readonly fromComponent: dxSortable | dxDraggable;
-    /**
-     * @docid _ui_draggable_DragMoveEvent.toComponent
-     * @type this
-     * @default Widget
-     */
+    /** @docid _ui_draggable_DragMoveEvent.toComponent */
     readonly toComponent: dxSortable | dxDraggable;
     /** @docid _ui_draggable_DragMoveEvent.fromData */
     readonly fromData?: any;

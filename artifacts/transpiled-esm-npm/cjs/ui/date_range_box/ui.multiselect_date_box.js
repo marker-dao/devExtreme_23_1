@@ -154,7 +154,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
   };
   _proto._updateInternalValidationState = function _updateInternalValidationState(isValid, validationMessage) {
     this.option({
-      isValid: isValid,
+      isValid,
       validationError: isValid ? null : {
         message: validationMessage
       }
@@ -179,7 +179,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
           }
           this._skipIsValidOptionChange = true;
           this.option({
-            isValid: isValid
+            isValid
           });
           this._skipIsValidOptionChange = false;
           break;

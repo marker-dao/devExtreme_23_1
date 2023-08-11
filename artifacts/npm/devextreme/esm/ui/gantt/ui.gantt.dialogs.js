@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/gantt/ui.gantt.dialogs.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -341,7 +341,7 @@ class ResourcesEditDialogInfo extends DialogInfoBase {
               this._parameters.resources.add(newItem);
               this.list.option('items', this._parameters.resources.items);
               this.list.scrollToItem(newItem);
-              this.textBox.reset();
+              this.textBox.clear();
               e.component.option('disabled', true);
             }
           }

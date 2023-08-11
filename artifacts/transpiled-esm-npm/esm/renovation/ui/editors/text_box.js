@@ -1,6 +1,6 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
-var _excluded = ["accessKey", "activeStateEnabled", "buttons", "className", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isValid", "label", "labelMode", "mask", "maskChar", "maskInvalidMessage", "maskRules", "maxLength", "mode", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "showClearButton", "showMaskMode", "spellCheck", "stylingMode", "tabIndex", "useMaskedValue", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "valueChangeEvent", "visible", "width"];
+var _excluded = ["accessKey", "activeStateEnabled", "buttons", "className", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isDirty", "isValid", "label", "labelMode", "mask", "maskChar", "maskInvalidMessage", "maskRules", "maxLength", "mode", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "showClearButton", "showMaskMode", "spellCheck", "stylingMode", "tabIndex", "useMaskedValue", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "valueChangeEvent", "visible", "width"];
 import { createComponentVNode, normalizeProps } from "inferno";
 import { BaseInfernoComponent } from '@devextreme/runtime/inferno';
 import LegacyTextBox from '../../../ui/text_box';
@@ -79,6 +79,9 @@ export var TextBoxPropsType = {
   },
   get isValid() {
     return TextBoxProps.isValid;
+  },
+  get isDirty() {
+    return TextBoxProps.isDirty;
   },
   get defaultValue() {
     return TextEditorProps.defaultValue;

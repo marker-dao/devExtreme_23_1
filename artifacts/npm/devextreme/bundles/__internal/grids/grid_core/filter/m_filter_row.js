@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/filter/m_filter_row.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -160,12 +160,12 @@ var ColumnHeadersViewFilterRowExtender = function () {
     that._columnsController.columnOption(column.index, columnOptionName, normalizedValue, notFireEvent);
   };
   return {
-    _updateEditorValue: function _updateEditorValue(column, $editorContainer) {
+    _updateEditorValue(column, $editorContainer) {
       var that = this;
       var editor = getEditorInstance($editorContainer);
       editor && editor.option('value', getFilterValue(that, column.index, $editorContainer));
     },
-    _columnOptionChanged: function _columnOptionChanged(e) {
+    _columnOptionChanged(e) {
       var that = this;
       var optionNames = e.optionNames;
       var $cell;
@@ -208,25 +208,25 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
       that.callBase(e);
     },
-    _renderCore: function _renderCore() {
+    _renderCore() {
       this._filterRangeOverlayInstance = null;
       return this.callBase.apply(this, arguments);
     },
-    _resizeCore: function _resizeCore() {
+    _resizeCore() {
       this.callBase.apply(this, arguments);
       this._filterRangeOverlayInstance && this._filterRangeOverlayInstance.repaint();
     },
-    isFilterRowVisible: function isFilterRowVisible() {
+    isFilterRowVisible() {
       return this._isElementVisible(this.option('filterRow'));
     },
-    isVisible: function isVisible() {
+    isVisible() {
       return this.callBase() || this.isFilterRowVisible();
     },
-    init: function init() {
+    init() {
       this.callBase();
       this._applyFilterViewController = this.getController('applyFilter');
     },
-    _initFilterRangeOverlay: function _initFilterRangeOverlay($cell, column) {
+    _initFilterRangeOverlay($cell, column) {
       var that = this;
       var sharedData = {};
       var $editorContainer = $cell.find('.dx-editor-container');
@@ -248,7 +248,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
           of: $editorContainer.length && $editorContainer || $cell,
           offset: '0 -1'
         },
-        contentTemplate: function contentTemplate(contentElement) {
+        contentTemplate(contentElement) {
           var editorOptions;
           var $editor = (0, _renderer.default)('<div>').addClass("".concat(EDITOR_CONTAINER_CLASS, " ").concat(that.addWidgetPrefix(FILTER_RANGE_START_CLASS))).appendTo(contentElement);
           column = that._columnsController.columnOption(column.index);
@@ -281,12 +281,12 @@ var ColumnHeadersViewFilterRowExtender = function () {
           });
           return (0, _renderer.default)(contentElement).addClass(that.getWidgetContainerClass());
         },
-        onShown: function onShown(e) {
+        onShown(e) {
           var $editor = e.component.$content().find(".".concat(EDITOR_CONTAINER_CLASS)).first();
           // @ts-expect-error
           _events_engine.default.trigger($editor.find(EDITORS_INPUT_SELECTOR), 'focus');
         },
-        onHidden: function onHidden() {
+        onHidden() {
           column = that._columnsController.columnOption(column.index);
           $cell.find(".".concat(MENU_CLASS)).parent().addClass(EDITOR_WITH_MENU_CLASS);
           if (getColumnSelectedFilterOperation(that, column) === 'between') {
@@ -296,11 +296,11 @@ var ColumnHeadersViewFilterRowExtender = function () {
         }
       });
     },
-    _updateFilterRangeOverlay: function _updateFilterRangeOverlay(options) {
+    _updateFilterRangeOverlay(options) {
       var overlayInstance = this._filterRangeOverlayInstance;
       overlayInstance && overlayInstance.option(options);
     },
-    _showFilterRange: function _showFilterRange($cell, column) {
+    _showFilterRange($cell, column) {
       var that = this;
       var $overlay = $cell.children(".".concat(that.addWidgetPrefix(FILTER_RANGE_OVERLAY_CLASS)));
       var overlayInstance = $overlay.length && $overlay.data('dxOverlay');
@@ -316,14 +316,14 @@ var ColumnHeadersViewFilterRowExtender = function () {
         that._filterRangeOverlayInstance && that._filterRangeOverlayInstance.show();
       }
     },
-    _hideFilterRange: function _hideFilterRange() {
+    _hideFilterRange() {
       var overlayInstance = this._filterRangeOverlayInstance;
       overlayInstance && overlayInstance.hide();
     },
-    getFilterRangeOverlayInstance: function getFilterRangeOverlayInstance() {
+    getFilterRangeOverlayInstance() {
       return this._filterRangeOverlayInstance;
     },
-    _createRow: function _createRow(row) {
+    _createRow(row) {
       var _this = this;
       var $row = this.callBase(row);
       if (row.rowType === 'filter') {
@@ -336,7 +336,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
       return $row;
     },
-    _getRows: function _getRows() {
+    _getRows() {
       var result = this.callBase();
       if (this.isFilterRowVisible()) {
         result.push({
@@ -345,7 +345,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
       return result;
     },
-    _renderFilterCell: function _renderFilterCell(cell, options) {
+    _renderFilterCell(cell, options) {
       var that = this;
       var column = options.column;
       var $cell = (0, _renderer.default)(cell);
@@ -370,7 +370,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
         that._renderFilterOperationChooser($container, column, $editorContainer);
       }
     },
-    _renderCellContent: function _renderCellContent($cell, options) {
+    _renderCellContent($cell, options) {
       var that = this;
       var column = options.column;
       if (options.rowType === 'filter') {
@@ -385,7 +385,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
       this.callBase.apply(this, arguments);
     },
-    _getEditorOptions: function _getEditorOptions($editorContainer, column) {
+    _getEditorOptions($editorContainer, column) {
       var that = this;
       var accessibilityOptions = {
         editorOptions: {
@@ -398,12 +398,12 @@ var ColumnHeadersViewFilterRowExtender = function () {
         showAllText: that.option('filterRow.showAllText'),
         updateValueTimeout: that.option('filterRow.applyFilter') === 'onClick' ? 0 : FILTERING_TIMEOUT,
         width: null,
-        setValue: function setValue(value, notFireEvent) {
+        setValue(value, notFireEvent) {
           updateFilterValue(that, {
-            column: column,
-            value: value,
+            column,
+            value,
             container: $editorContainer,
-            notFireEvent: notFireEvent
+            notFireEvent
           });
         }
       });
@@ -416,7 +416,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
       return result;
     },
-    _getFilterInputAccessibilityAttributes: function _getFilterInputAccessibilityAttributes(column) {
+    _getFilterInputAccessibilityAttributes(column) {
       var columnAriaLabel = _message.default.format('dxDataGrid-ariaFilterCell');
       if (this.component.option('showColumnHeaders')) {
         return {
@@ -428,7 +428,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
         'aria-label': columnAriaLabel
       };
     },
-    _renderEditor: function _renderEditor($editorContainer, options) {
+    _renderEditor($editorContainer, options) {
       $editorContainer.empty();
       var $element = (0, _renderer.default)('<div>').appendTo($editorContainer);
       var editorController = this.getController('editorFactory');
@@ -448,7 +448,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
       return editorController.createEditor($element, options);
     },
-    _renderFilterRangeContent: function _renderFilterRangeContent($cell, column) {
+    _renderFilterRangeContent($cell, column) {
       var that = this;
       var $editorContainer = $cell.find(".".concat(EDITOR_CONTAINER_CLASS)).first();
       $editorContainer.empty();
@@ -459,7 +459,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       $filterRangeContent.appendTo($editorContainer);
       that._updateFilterRangeContent($cell, getRangeTextByFilterValue(that, column));
     },
-    _updateFilterRangeContent: function _updateFilterRangeContent($cell, value) {
+    _updateFilterRangeContent($cell, value) {
       var $filterRangeContent = $cell.find(".".concat(FILTER_RANGE_CONTENT_CLASS));
       if ($filterRangeContent.length) {
         if (value === '') {
@@ -469,7 +469,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
         }
       }
     },
-    _updateFilterOperationChooser: function _updateFilterOperationChooser($menu, column, $editorContainer) {
+    _updateFilterOperationChooser($menu, column, $editorContainer) {
       var that = this;
       var isCellWasFocused;
       var restoreFocus = function restoreFocus() {
@@ -493,7 +493,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
           selectable: false,
           items: that._getFilterOperationMenuItems(column)
         }],
-        onItemClick: function onItemClick(properties) {
+        onItemClick(properties) {
           var selectedFilterOperation = properties.itemData.name;
           var columnSelectedFilterOperation = getColumnSelectedFilterOperation(that, column);
           var notFocusEditor = false;
@@ -518,7 +518,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
             var editor = getEditorInstance($editorContainer);
             // @ts-expect-error
             if (editor && editor.NAME === 'dxDateBox' && !editor.option('isValid')) {
-              editor.reset();
+              editor.clear();
               editor.option('isValid', true);
             }
           }
@@ -528,16 +528,16 @@ var ColumnHeadersViewFilterRowExtender = function () {
             that._showFilterRange($editorContainer.closest(".".concat(EDITOR_CELL_CLASS)), column);
           }
         },
-        onSubmenuShowing: function onSubmenuShowing() {
+        onSubmenuShowing() {
           isCellWasFocused = that._isEditorFocused($editorContainer);
           that.getController('editorFactory').loseFocus();
         },
-        onSubmenuHiding: function onSubmenuHiding() {
+        onSubmenuHiding() {
           // @ts-expect-error
           _events_engine.default.trigger($menu, 'blur');
           restoreFocus();
         },
-        onContentReady: function onContentReady(e) {
+        onContentReady(e) {
           _events_engine.default.on($menu, 'blur', function () {
             var menu = e.component;
             menu._hideSubmenuAfterTimeout();
@@ -547,15 +547,15 @@ var ColumnHeadersViewFilterRowExtender = function () {
         rtlEnabled: that.option('rtlEnabled')
       });
     },
-    _isEditorFocused: function _isEditorFocused($container) {
+    _isEditorFocused($container) {
       return $container.hasClass(FOCUSED_CLASS) || $container.parents(".".concat(FOCUSED_CLASS)).length;
     },
-    _focusEditor: function _focusEditor($container) {
+    _focusEditor($container) {
       this.getController('editorFactory').focus($container);
       // @ts-expect-error
       _events_engine.default.trigger($container.find(EDITORS_INPUT_SELECTOR), 'focus');
     },
-    _renderFilterOperationChooser: function _renderFilterOperationChooser($container, column, $editorContainer) {
+    _renderFilterOperationChooser($container, column, $editorContainer) {
       var that = this;
       var $menu;
       if (that.option('filterRow.showOperationChooser')) {
@@ -564,7 +564,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
         that._updateFilterOperationChooser($menu, column, $editorContainer);
       }
     },
-    _getFilterOperationMenuItems: function _getFilterOperationMenuItems(column) {
+    _getFilterOperationMenuItems(column) {
       var that = this;
       var result = [{}];
       var filterRowOptions = that.option('filterRow');
@@ -590,14 +590,14 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
       return result;
     },
-    _handleDataChanged: function _handleDataChanged(e) {
+    _handleDataChanged(e) {
       var _a, _b, _c;
       this.callBase.apply(this, arguments);
       if (((_a = e.operationTypes) === null || _a === void 0 ? void 0 : _a.filtering) || ((_b = e.operationTypes) === null || _b === void 0 ? void 0 : _b.fullReload)) {
         this.updateLookupDataSource((_c = e.operationTypes) === null || _c === void 0 ? void 0 : _c.filtering);
       }
     },
-    updateLookupDataSource: function updateLookupDataSource(filterChanged) {
+    updateLookupDataSource(filterChanged) {
       var _this2 = this;
       if (!this.option('syncLookupFilterValues')) {
         return;
@@ -631,7 +631,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
         }
       });
     },
-    optionChanged: function optionChanged(args) {
+    optionChanged(args) {
       var that = this;
       switch (args.name) {
         case 'filterRow':
@@ -655,10 +655,10 @@ var ColumnHeadersViewFilterRowExtender = function () {
   };
 }();
 var DataControllerFilterRowExtender = {
-  skipCalculateColumnFilters: function skipCalculateColumnFilters() {
+  skipCalculateColumnFilters() {
     return false;
   },
-  _calculateAdditionalFilter: function _calculateAdditionalFilter() {
+  _calculateAdditionalFilter() {
     if (this.skipCalculateColumnFilters()) {
       return this.callBase();
     }
@@ -677,19 +677,19 @@ var DataControllerFilterRowExtender = {
   }
 };
 var ApplyFilterViewController = _m_modules.default.ViewController.inherit({
-  _getHeaderPanel: function _getHeaderPanel() {
+  _getHeaderPanel() {
     if (!this._headerPanel) {
       this._headerPanel = this.getView('headerPanel');
     }
     return this._headerPanel;
   },
-  setHighLight: function setHighLight($element, value) {
+  setHighLight($element, value) {
     if (isOnClickApplyFilterMode(this)) {
       $element && $element.toggleClass(HIGHLIGHT_OUTLINE_CLASS, value) && $element.closest(".".concat(EDITOR_CELL_CLASS)).toggleClass(FILTER_MODIFIED_CLASS, value);
       this._getHeaderPanel().enableApplyButton(value);
     }
   },
-  applyFilter: function applyFilter() {
+  applyFilter() {
     var columnsController = this.getController('columns');
     var columns = columnsController.getColumns();
     columnsController.beginUpdate();
@@ -707,7 +707,7 @@ var ApplyFilterViewController = _m_modules.default.ViewController.inherit({
     columnsController.endUpdate();
     this.removeHighLights();
   },
-  removeHighLights: function removeHighLights() {
+  removeHighLights() {
     if (isOnClickApplyFilterMode(this)) {
       var columnHeadersViewElement = this.getView('columnHeadersView').element();
       columnHeadersViewElement.find(".".concat(this.addWidgetPrefix(FILTER_ROW_CLASS), " .").concat(HIGHLIGHT_OUTLINE_CLASS)).removeClass(HIGHLIGHT_OUTLINE_CLASS);
@@ -715,15 +715,15 @@ var ApplyFilterViewController = _m_modules.default.ViewController.inherit({
       this._getHeaderPanel().enableApplyButton(false);
     }
   },
-  setCurrentColumnForFiltering: function setCurrentColumnForFiltering(column) {
+  setCurrentColumnForFiltering(column) {
     this._currentColumn = column;
   },
-  getCurrentColumnForFiltering: function getCurrentColumnForFiltering() {
+  getCurrentColumnForFiltering() {
     return this._currentColumn;
   }
 });
 var filterRowModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       syncLookupFilterValues: true,
       filterRow: {
@@ -760,7 +760,7 @@ var filterRowModule = {
     controllers: {
       data: DataControllerFilterRowExtender,
       columnsResizer: {
-        _startResizing: function _startResizing() {
+        _startResizing() {
           var that = this;
           that.callBase.apply(that, arguments);
           if (that.isResizing()) {
@@ -773,7 +773,7 @@ var filterRowModule = {
             }
           }
         },
-        _endResizing: function _endResizing() {
+        _endResizing() {
           var that = this;
           var $cell;
           if (that.isResizing()) {
@@ -790,13 +790,13 @@ var filterRowModule = {
         }
       },
       editing: {
-        updateFieldValue: function updateFieldValue(options) {
+        updateFieldValue(options) {
           if (options.column.lookup) {
             this._needUpdateLookupDataSource = true;
           }
           return this.callBase.apply(this, arguments);
         },
-        _afterSaveEditData: function _afterSaveEditData(cancel) {
+        _afterSaveEditData(cancel) {
           var _a;
           if (this._needUpdateLookupDataSource && !cancel) {
             (_a = this.getView('columnHeadersView')) === null || _a === void 0 ? void 0 : _a.updateLookupDataSource();
@@ -804,7 +804,7 @@ var filterRowModule = {
           this._needUpdateLookupDataSource = false;
           return this.callBase.apply(this, arguments);
         },
-        _afterCancelEditData: function _afterCancelEditData() {
+        _afterCancelEditData() {
           this._needUpdateLookupDataSource = false;
           return this.callBase.apply(this, arguments);
         }
@@ -813,12 +813,12 @@ var filterRowModule = {
     views: {
       columnHeadersView: ColumnHeadersViewFilterRowExtender,
       headerPanel: {
-        _getToolbarItems: function _getToolbarItems() {
+        _getToolbarItems() {
           var items = this.callBase();
           var filterItem = this._prepareFilterItem(items);
           return filterItem.concat(items);
         },
-        _prepareFilterItem: function _prepareFilterItem() {
+        _prepareFilterItem() {
           var that = this;
           var filterItem = [];
           if (that._isShowApplyFilterButton()) {
@@ -837,11 +837,11 @@ var filterRowModule = {
               widget: 'dxButton',
               options: {
                 icon: 'apply-filter',
-                disabled: disabled,
+                disabled,
                 onClick: onClickHandler,
                 hint: hintText,
                 text: hintText,
-                onInitialized: onInitialized
+                onInitialized
               },
               showText: 'inMenu',
               name: 'applyFilterButton',
@@ -853,22 +853,22 @@ var filterRowModule = {
           }
           return filterItem;
         },
-        _isShowApplyFilterButton: function _isShowApplyFilterButton() {
+        _isShowApplyFilterButton() {
           var filterRowOptions = this.option('filterRow');
           return filterRowOptions && filterRowOptions.visible && filterRowOptions.applyFilter === 'onClick';
         },
-        init: function init() {
+        init() {
           this.callBase();
           this._dataController = this.getController('data');
           this._applyFilterViewController = this.getController('applyFilter');
         },
-        enableApplyButton: function enableApplyButton(value) {
+        enableApplyButton(value) {
           this.setToolbarItemDisabled('applyFilterButton', !value);
         },
-        isVisible: function isVisible() {
+        isVisible() {
           return this.callBase() || this._isShowApplyFilterButton();
         },
-        optionChanged: function optionChanged(args) {
+        optionChanged(args) {
           if (args.name === 'filterRow') {
             this._invalidate();
             args.handled = true;

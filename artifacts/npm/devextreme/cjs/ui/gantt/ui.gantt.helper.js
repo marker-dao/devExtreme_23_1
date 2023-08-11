@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.helper.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ var _type = require("../../core/utils/type");
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var GanttHelper = {
-  prepareMapHandler: function prepareMapHandler(getters) {
+  prepareMapHandler(getters) {
     return function (data) {
       return Object.keys(getters).reduce(function (previous, key) {
         var resultKey = key === 'key' ? 'id' : key;
@@ -23,7 +23,7 @@ var GanttHelper = {
       }, {});
     };
   },
-  prepareSetterMapHandler: function prepareSetterMapHandler(setters) {
+  prepareSetterMapHandler(setters) {
     return function (data) {
       return Object.keys(setters).reduce(function (previous, key) {
         var resultKey = key === 'key' ? 'id' : key;
@@ -32,7 +32,7 @@ var GanttHelper = {
       }, {});
     };
   },
-  compileGettersByOption: function compileGettersByOption(optionValue) {
+  compileGettersByOption(optionValue) {
     var getters = {};
     for (var field in optionValue) {
       var exprMatches = field.match(/(\w*)Expr/);
@@ -42,7 +42,7 @@ var GanttHelper = {
     }
     return getters;
   },
-  compileSettersByOption: function compileSettersByOption(optionValue) {
+  compileSettersByOption(optionValue) {
     var setters = {};
     for (var field in optionValue) {
       var exprMatches = field.match(/(\w*)Expr/);
@@ -52,7 +52,7 @@ var GanttHelper = {
     }
     return setters;
   },
-  compileFuncSettersByOption: function compileFuncSettersByOption(optionValue) {
+  compileFuncSettersByOption(optionValue) {
     var setters = {};
     for (var field in optionValue) {
       var exprMatches = field.match(/(\w*)Expr/);
@@ -62,7 +62,7 @@ var GanttHelper = {
     }
     return setters;
   },
-  getStoreObject: function getStoreObject(option, modelObject) {
+  getStoreObject(option, modelObject) {
     var setters = GanttHelper.compileSettersByOption(option);
     return Object.keys(setters).reduce(function (previous, key) {
       if (key !== 'key') {
@@ -71,7 +71,7 @@ var GanttHelper = {
       return previous;
     }, {});
   },
-  getInvertedData: function getInvertedData(data, keyGetter) {
+  getInvertedData(data, keyGetter) {
     var inverted = {};
     if (data) {
       for (var i = 0; i < data.length; i++) {
@@ -82,13 +82,13 @@ var GanttHelper = {
     }
     return inverted;
   },
-  getArrayFromOneElement: function getArrayFromOneElement(element) {
+  getArrayFromOneElement(element) {
     return element === undefined || element === null ? [] : [element];
   },
-  getSelectionMode: function getSelectionMode(allowSelection) {
+  getSelectionMode(allowSelection) {
     return allowSelection ? 'single' : 'none';
   },
-  convertTreeToList: function convertTreeToList(node, array) {
+  convertTreeToList(node, array) {
     if (node !== null && node !== void 0 && node.data && node !== null && node !== void 0 && node.visible) {
       array.push(node.data);
     }
@@ -98,7 +98,7 @@ var GanttHelper = {
       GanttHelper.convertTreeToList(child, array);
     }
   },
-  getAllParentNodesKeys: function getAllParentNodesKeys(node, array) {
+  getAllParentNodesKeys(node, array) {
     var _node$parent;
     if (node !== null && node !== void 0 && node.data) {
       array.push(node.key);
@@ -107,7 +107,7 @@ var GanttHelper = {
       GanttHelper.getAllParentNodesKeys(node.parent, array);
     }
   },
-  getDefaultOptions: function getDefaultOptions() {
+  getDefaultOptions() {
     return {
       /**
       * @name dxGanttOptions.rtlEnabled

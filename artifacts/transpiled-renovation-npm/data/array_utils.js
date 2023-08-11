@@ -16,7 +16,6 @@ var _object = require("../core/utils/object");
 var _data = require("../core/utils/data");
 var _utils = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -158,10 +157,10 @@ function applyChanges(data, changes) {
     }
   };
   return applyBatch({
-    keyInfo: keyInfo,
-    data: data,
-    changes: changes,
-    immutable: immutable,
+    keyInfo,
+    data,
+    changes,
+    immutable,
     disableCache: true,
     logError: true
   });
@@ -205,7 +204,7 @@ function insert(keyInfo, array, data, index, isBatch, logError, skipCopying) {
   var obj = (0, _type.isPlainObject)(data) && !skipCopying ? (0, _extend.extend)({}, data) : data;
   if (keyExpr) {
     keyValue = keyInfo.keyOf(obj);
-    if (keyValue === undefined || _typeof(keyValue) === 'object' && (0, _type.isEmptyObject)(keyValue)) {
+    if (keyValue === undefined || typeof keyValue === 'object' && (0, _type.isEmptyObject)(keyValue)) {
       if (Array.isArray(keyExpr)) {
         throw _errors.errors.Error('E4007');
       }

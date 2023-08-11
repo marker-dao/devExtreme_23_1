@@ -88,8 +88,8 @@ var VerticalGroupedStrategy = /*#__PURE__*/function () {
       var _$lastCell$getBoundin = $lastCell.getBoundingClientRect(),
         right = _$lastCell$getBoundin.right;
       return _this._groupBoundsOffset = {
-        left: left,
-        right: right,
+        left,
+        right,
         top: topOffset,
         bottom: bottomOffset
       };

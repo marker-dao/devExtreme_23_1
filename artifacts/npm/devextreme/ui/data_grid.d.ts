@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/data_grid.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -53,15 +53,15 @@ import {
 
 import {
     AdaptiveDetailRowPreparingInfo,
-    ColumnBase,
-    ColumnButtonBase,
+    ColumnBase as ComponentColumnBase,
+    ColumnButtonBase as ComponentColumnButtonBase,
+    EditingBase as ComponentEditingBase,
+    EditingTextsBase as ComponentEditingTextsBase,
     DataChangeInfo,
     DataErrorOccurredInfo,
     DragDropInfo,
     DragReorderInfo,
     DragStartEventInfo,
-    EditingBase,
-    EditingTextsBase,
     FilterPanel as ComponentFilterPanel,
     FilterPanelCustomizeTextArg as ComponentFilterPanelCustomizeTextArg,
     GridBase,
@@ -70,7 +70,7 @@ import {
     KeyDownInfo,
     NewRowInfo,
     NewRowPosition,
-    PagingBase,
+    PagingBase as ComponentPaging,
     ReducedNativeEventInfo,
     RowDragging as ComponentRowDragging,
     RowDraggingEventInfo,
@@ -84,8 +84,8 @@ import {
     RowUpdatingInfo,
     RowValidatingInfo,
     SavingInfo,
-    ScrollingBase,
-    SelectionBase,
+    ScrollingBase as ComponentScrollingBase,
+    SelectionBase as ComponentSelectionBase,
     SelectionChangedInfo,
     SelectionColumnDisplayMode,
     SummaryType,
@@ -158,18 +158,13 @@ export {
 
 export {
     AdaptiveDetailRowPreparingInfo,
-    ColumnBase,
-    ColumnButtonBase,
     DataChangeInfo,
     DataErrorOccurredInfo,
     DragDropInfo,
     DragReorderInfo,
     DragStartEventInfo,
-    EditingBase,
-    EditingTextsBase,
     KeyDownInfo,
     NewRowInfo,
-    PagingBase,
     RowDraggingEventInfo,
     RowInsertedInfo,
     RowInsertingInfo,
@@ -180,11 +175,24 @@ export {
     RowUpdatingInfo,
     RowValidatingInfo,
     SavingInfo,
-    ScrollingBase,
-    SelectionBase,
     SelectionChangedInfo,
     ToolbarPreparingInfo,
 } from '../common/grids';
+
+/** @deprecated Use Column instead */
+export type ColumnBase<TRowData = any> = ComponentColumnBase<TRowData>;
+/** @deprecated Use ColumnButton instead */
+export type ColumnButtonBase = ComponentColumnButtonBase;
+/** @deprecated Use Editing instead */
+export type EditingBase<TRowData = any, TKey = any> = ComponentEditingBase<TRowData, TKey>;
+/** @deprecated Use EditingTexts instead */
+export type EditingTextsBase = ComponentEditingTextsBase;
+/** @deprecated Use Paging instead */
+export type PagingBase = ComponentPaging;
+/** @deprecated Use Scrolling instead */
+export type ScrollingBase = ComponentScrollingBase;
+/** @deprecated Use Selection instead */
+export type SelectionBase = ComponentSelectionBase;
 
 /** @public */
 export type DataGridCommandColumnType = 'adaptive' | 'buttons' | 'detailExpand' | 'groupExpand' | 'selection' | 'drag';
@@ -219,51 +227,44 @@ export type GroupData<TRowData> = {
 };
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use Editing instead
  */
 export type GridBaseEditing<TRowData = any, TKey = any> = EditingBase<TRowData, TKey>;
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use EditingTexts instead
  */
 export type GridBaseEditingTexts = EditingTextsBase;
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use Paging instead
  */
-export type GridBasePaging = PagingBase;
+export type GridBasePaging = ComponentPaging;
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use Scrolling instead
  */
 export type GridBaseScrolling = ScrollingBase;
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use Selection instead
  */
 export type GridBaseSelection = SelectionBase;
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use Column instead
  */
 export type GridBaseColumn<TRowData = any> = ColumnBase<TRowData>;
 
 /**
- * @public
  * @namespace DevExpress.ui
- * @deprecated
+ * @deprecated Use ColumnButton instead
  */
 export type GridBaseColumnButton = ColumnButtonBase;
 
@@ -375,10 +376,7 @@ export type CellHoverChangedEvent<TRowData = any, TKey = any> = EventInfo<dxData
    * @type object
    */
   readonly data: TRowData;
-  /**
-   * @docid _ui_data_grid_CellHoverChangedEvent.key
-   * @type any
-   */
+  /** @docid _ui_data_grid_CellHoverChangedEvent.key */
   readonly key: TKey;
   /** @docid _ui_data_grid_CellHoverChangedEvent.value */
   readonly value?: any;
@@ -418,10 +416,7 @@ export type CellPreparedEvent<TRowData = any, TKey = any> = EventInfo<dxDataGrid
    * @type object
    */
   readonly data: TRowData;
-  /**
-   * @docid _ui_data_grid_CellPreparedEvent.key
-   * @type any
-   */
+  /** @docid _ui_data_grid_CellPreparedEvent.key */
   readonly key: TKey;
   /** @docid _ui_data_grid_CellPreparedEvent.value */
   readonly value?: any;
@@ -1425,7 +1420,7 @@ export type dxDataGridOptions<TRowData = any, TKey = any> = Omit<GridBaseOptions
      * @default undefined
      * @public
      */
-    sortByGroupSummaryInfo?: Array<dxDataGridSortByGroupSummaryInfoItem>;
+    sortByGroupSummaryInfo?: Array<SortByGroupSummaryInfoItem>;
     /**
      * @docid
      * @type object
@@ -1610,9 +1605,10 @@ export type MasterDetail<TRowData = any, TKey = any> = {
 };
 
 /**
- * @docid
+ * @public
+ * @docid dxDataGridSortByGroupSummaryInfoItem
  */
-export interface dxDataGridSortByGroupSummaryInfoItem {
+export type SortByGroupSummaryInfoItem = {
     /**
      * @docid dxDataGridOptions.sortByGroupSummaryInfo.groupColumn
      * @default undefined
@@ -1629,7 +1625,7 @@ export interface dxDataGridSortByGroupSummaryInfoItem {
      * @default undefined
      */
     summaryItem?: string | number;
-}
+};
 
 /** @public */
 export type CustomSummaryInfo<TRowData = any, TKey = any> = {
@@ -1640,6 +1636,11 @@ export type CustomSummaryInfo<TRowData = any, TKey = any> = {
   totalValue?: any;
   readonly groupIndex?: number;
 };
+
+/**
+ * @public
+ */
+export type Paging = ComponentPaging;
 
 /** @public */
 export type RowDragging<TRowData = any, TKey = any> = ComponentRowDragging<dxDataGrid, TRowData, TKey>;
@@ -1903,14 +1904,15 @@ export type Toolbar = {
 };
 
 /**
- * @public
  * @namespace DevExpress.ui
  * @deprecated Use Editing instead
  */
 export type dxDataGridEditing<TRowData, TKey = any> = Editing<TRowData, TKey>;
 
 /**
+ * @docid dxDataGridEditing
  * @public
+ * @type object
  */
 export type Editing<TRowData = any, TKey = any> = EditingBase<TRowData, TKey> & {
     /**
@@ -1952,13 +1954,19 @@ export type Editing<TRowData = any, TKey = any> = EditingBase<TRowData, TKey> & 
 
 /**
  * @public
+ */
+export type EditingTexts = ComponentEditingTextsBase;
+
+/**
  * @namespace DevExpress.ui
  * @deprecated Use Scrolling instead
  */
 export type dxDataGridScrolling = Scrolling;
 
 /**
+ * @docid dxDataGridScrolling
  * @public
+ * @type object
  */
 export type Scrolling = ScrollingBase & {
     /**
@@ -1970,7 +1978,6 @@ export type Scrolling = ScrollingBase & {
 };
 
 /**
- * @public
  * @namespace DevExpress.ui
  * @deprecated Use Selection instead
  */

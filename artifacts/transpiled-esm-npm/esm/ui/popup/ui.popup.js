@@ -940,6 +940,11 @@ var Popup = Overlay.inherit({
   },
   $overlayContent: function $overlayContent() {
     return this._$content;
+  },
+  getFocusableElements: function getFocusableElements() {
+    return this.$wrapper().find('[tabindex]').filter((index, item) => {
+      return item.getAttribute('tabindex') >= 0;
+    });
   }
 });
 registerComponent('dxPopup', Popup);

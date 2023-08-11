@@ -14,17 +14,17 @@ var _accessibility = require("../../../../ui/shared/accessibility");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var FilterBuilderView = _m_modules.default.View.inherit({
-  _renderCore: function _renderCore() {
+  _renderCore() {
     this._updatePopupOptions();
   },
-  _updatePopupOptions: function _updatePopupOptions() {
+  _updatePopupOptions() {
     if (this.option('filterBuilderPopup.visible')) {
       this._initPopup();
     } else if (this._filterBuilderPopup) {
       this._filterBuilderPopup.hide();
     }
   },
-  _disposePopup: function _disposePopup() {
+  _disposePopup() {
     if (this._filterBuilderPopup) {
       this._filterBuilderPopup.dispose();
       this._filterBuilderPopup = undefined;
@@ -34,28 +34,28 @@ var FilterBuilderView = _m_modules.default.View.inherit({
       this._filterBuilder = undefined;
     }
   },
-  _initPopup: function _initPopup() {
+  _initPopup() {
     var that = this;
     that._disposePopup();
     that._filterBuilderPopup = that._createComponent(that.element(), _ui.default, (0, _extend.extend)({
       title: _message.default.format('dxDataGrid-filterBuilderPopupTitle'),
-      contentTemplate: function contentTemplate($contentElement) {
+      contentTemplate($contentElement) {
         return that._getPopupContentTemplate($contentElement);
       },
-      onOptionChanged: function onOptionChanged(args) {
+      onOptionChanged(args) {
         if (args.name === 'visible') {
           that.option('filterBuilderPopup.visible', args.value);
         }
       },
       toolbarItems: that._getPopupToolbarItems()
     }, that.option('filterBuilderPopup'), {
-      onHidden: function onHidden() {
+      onHidden() {
         (0, _accessibility.restoreFocus)(that);
         that._disposePopup();
       }
     }));
   },
-  _getPopupContentTemplate: function _getPopupContentTemplate(contentElement) {
+  _getPopupContentTemplate(contentElement) {
     var $contentElement = (0, _renderer.default)(contentElement);
     var $filterBuilderContainer = (0, _renderer.default)('<div>').appendTo((0, _renderer.default)(contentElement));
     this._filterBuilder = this._createComponent($filterBuilderContainer, _filter_builder.default, (0, _extend.extend)({
@@ -68,7 +68,7 @@ var FilterBuilderView = _m_modules.default.View.inherit({
       direction: 'both'
     });
   },
-  _getPopupToolbarItems: function _getPopupToolbarItems() {
+  _getPopupToolbarItems() {
     var that = this;
     return [{
       toolbar: 'bottom',
@@ -76,7 +76,7 @@ var FilterBuilderView = _m_modules.default.View.inherit({
       widget: 'dxButton',
       options: {
         text: _message.default.format('OK'),
-        onClick: function onClick() {
+        onClick() {
           var filter = that._filterBuilder.option('value');
           that.option('filterValue', filter);
           that._filterBuilderPopup.hide();
@@ -88,13 +88,13 @@ var FilterBuilderView = _m_modules.default.View.inherit({
       widget: 'dxButton',
       options: {
         text: _message.default.format('Cancel'),
-        onClick: function onClick() {
+        onClick() {
           that._filterBuilderPopup.hide();
         }
       }
     }];
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     switch (args.name) {
       case 'filterBuilder':
       case 'filterBuilderPopup':
@@ -107,7 +107,7 @@ var FilterBuilderView = _m_modules.default.View.inherit({
   }
 });
 var filterBuilderModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       filterBuilder: {
         groupOperationDescriptions: {

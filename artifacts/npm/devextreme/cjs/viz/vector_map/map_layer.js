@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/vector_map/map_layer.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -352,7 +352,7 @@ strategiesByType[TYPE_MARKER] = {
 };
 strategiesByGeometry[TYPE_AREA] = function (sample) {
   return {
-    project: function project(projection, coordinates) {
+    project(projection, coordinates) {
       return coordinates[0] && coordinates[0][0] && coordinates[0][0][0] && typeof coordinates[0][0][0][0] === 'number' ? projectMultiPolygon(projection, coordinates) : projectPolygon(projection, coordinates);
     }
   };
@@ -874,7 +874,7 @@ function createLayerProxy(layer, name, index) {
     getDataSource: function getDataSource() {
       return layer.getDataSource();
     },
-    getBounds: function getBounds() {
+    getBounds() {
       return layer.getBounds();
     }
   };
@@ -912,7 +912,7 @@ var MapLayer = function MapLayer(params, container, name, index) {
 };
 MapLayer.prototype = _extend({
   constructor: MapLayer,
-  getDataReadyCallback: function getDataReadyCallback() {
+  getDataReadyCallback() {
     return this._dataSourceLoaded;
   },
   _onProjection: function _onProjection() {
@@ -932,7 +932,7 @@ MapLayer.prototype = _extend({
       }
     });
   },
-  getData: function getData() {
+  getData() {
     return this._data;
   },
   _dataSourceLoadErrorHandler: function _dataSourceLoadErrorHandler() {
@@ -1048,7 +1048,7 @@ MapLayer.prototype = _extend({
       that._params.dataReady();
     }
   },
-  getBounds: function getBounds() {
+  getBounds() {
     return getMaxBound(this._handles.map(function (_ref) {
       var proxy = _ref.proxy;
       return proxy.coordinates().map(function (coords) {
@@ -1065,7 +1065,7 @@ MapLayer.prototype = _extend({
       });
     }).map(getMaxBound));
   },
-  _destroyHandles: function _destroyHandles() {
+  _destroyHandles() {
     this._handles.forEach(function (h) {
       return h.dispose();
     });
@@ -1141,7 +1141,7 @@ MapLayer.prototype = _extend({
       handles[i].transform();
     }
   },
-  getProxies: function getProxies() {
+  getProxies() {
     return this._handles.map(function (p) {
       return p.proxy;
     });
@@ -1547,7 +1547,7 @@ MapLayerCollection.prototype = {
       }
     });
   },
-  setOptions: function setOptions(options) {
+  setOptions(options) {
     var that = this;
     var optionList = options ? _isArray(options) ? options : [options] : [];
     var layers = that._layers;

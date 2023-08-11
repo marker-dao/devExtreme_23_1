@@ -1,18 +1,17 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/views/m_columns_view.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ColumnsView = void 0;
+exports.normalizeWidth = exports.ColumnsView = void 0;
 var _dom_adapter = _interopRequireDefault(require("../../../../core/dom_adapter"));
 var _element = require("../../../../core/element");
 var _element_data = require("../../../../core/element_data");
@@ -37,10 +36,10 @@ var _m_column_state_mixin = _interopRequireDefault(require("../../../grids/grid_
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable @typescript-eslint/no-unused-vars */
 var SCROLL_CONTAINER_CLASS = 'scroll-container';
 var SCROLLABLE_SIMULATED_CLASS = 'scrollable-simulated';
 var GROUP_SPACE_CLASS = 'group-space';
@@ -59,7 +58,7 @@ var HIDDEN_COLUMNS_WIDTH = '0.0001px';
 var CELL_HINT_VISIBLE = 'dxCellHintVisible';
 var FORM_FIELD_ITEM_CONTENT_CLASS = 'dx-field-item-content';
 var appendElementTemplate = {
-  render: function render(options) {
+  render(options) {
     options.container.append(options.content);
   }
 };
@@ -129,6 +128,16 @@ var copyAttributes = function copyAttributes(element, newElement) {
 var removeHandler = function removeHandler(templateDeferred) {
   templateDeferred.resolve();
 };
+var normalizeWidth = function normalizeWidth(width) {
+  if (typeof width === 'number') {
+    return "".concat(width.toFixed(3), "px");
+  }
+  if (width === 'adaptiveHidden') {
+    return HIDDEN_COLUMNS_WIDTH;
+  }
+  return width;
+};
+exports.normalizeWidth = normalizeWidth;
 var viewWithColumnStateMixin = _m_modules.default.View.inherit(_m_column_state_mixin.default);
 var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
   _inheritsLoose(ColumnsView, _viewWithColumnStateM);
@@ -176,6 +185,13 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     }
     if (column.cssClass) {
       $cell.addClass(column.cssClass);
+    }
+    if (Array.isArray(column.elementAttr)) {
+      column.elementAttr.forEach(function (_ref) {
+        var name = _ref.name,
+          value = _ref.value;
+        $cell.attr(name, value);
+      });
     }
     if (column.command === 'expand') {
       $cell.addClass(column.cssClass);
@@ -271,7 +287,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
       if (!$cell.closest('table').is(event.delegateTarget)) return;
       var resultOptions = (0, _extend.extend)({}, options, {
         cellElement: (0, _element.getPublicElement)($cell),
-        event: event,
+        event,
         eventType: event.type
       });
       resultOptions.rowIndex = that.getRowIndex($row);
@@ -378,14 +394,14 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     if (template && template.render && !(0, _type.isRenderer)(template)) {
       renderingTemplate = {
         allowRenderToDetachedContainer: template.allowRenderToDetachedContainer,
-        render: function render(options) {
+        render(options) {
           template.render(options.container, options.model, options.change);
           options.deferred && options.deferred.resolve();
         }
       };
     } else if ((0, _type.isFunction)(template)) {
       renderingTemplate = {
-        render: function render(options) {
+        render(options) {
           var renderedTemplate = template((0, _element.getPublicElement)(options.container), options.model, options.change);
           if (renderedTemplate && (renderedTemplate.nodeType || (0, _type.isRenderer)(renderedTemplate))) {
             options.container.append(renderedTemplate);
@@ -415,7 +431,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     // @ts-expect-error
     var templateDeferred = new _deferred.Deferred();
     var templateOptions = {
-      container: container,
+      container,
       model: options,
       deferred: templateDeferred,
       onRendered: function onRendered() {
@@ -436,7 +452,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
         this._delayedTemplates.push({
           template: renderingTemplate,
           options: templateOptions,
-          async: async
+          async
         });
       }
       this._templateDeferreds.add(templateDeferred);
@@ -537,7 +553,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
       if (this._needRenderCell(i, options.columnIndices)) {
         that._renderCell($row, (0, _extend.extend)({
           column: columns[i],
-          columnIndex: columnIndex,
+          columnIndex,
           value: row.values && row.values[columnIndex],
           oldValue: row.oldValues && row.oldValues[columnIndex]
         }, options));
@@ -670,13 +686,12 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     var optionNames = e.optionNames;
     if (_m_utils.default.checkChanges(optionNames, ['width', 'visibleWidth'])) {
       var visibleColumns = this._columnsController.getVisibleColumns();
-      var widths = iteratorUtils.map(visibleColumns, function (column) {
-        var width = column.visibleWidth || column.width;
-        return (0, _type.isDefined)(width) ? width : 'auto';
+      var widths = visibleColumns.map(function (column) {
+        return column.visibleWidth || column.width;
       });
       this.setColumnWidths({
-        widths: widths,
-        optionNames: optionNames
+        widths,
+        optionNames
       });
       return;
     }
@@ -706,6 +721,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
       case 'onCellPrepared':
       case 'onRowPrepared':
       case 'onCellHoverChanged':
+      case 'keyboardNavigation':
         this._invalidate(true, true);
         args.handled = true;
         break;
@@ -829,102 +845,90 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
   };
   _proto._findContentElement = function _findContentElement() {};
   _proto._getWidths = function _getWidths($cellElements) {
-    var result = [];
-    var width;
-    if ($cellElements) {
-      iteratorUtils.each($cellElements, function (index, item) {
-        width = item.offsetWidth;
-        if (item.getBoundingClientRect) {
-          var clientRect = (0, _position.getBoundingRect)(item);
-          if (clientRect.width > width - 1) {
-            width = clientRect.width;
-          }
-        }
-        result.push(width);
-      });
+    if (!$cellElements) {
+      return [];
     }
+    var result = [];
+    var cellElements = $cellElements.toArray();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    cellElements.forEach(function (cell) {
+      var width = cell.offsetWidth;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      if (cell.getBoundingClientRect) {
+        var rect = (0, _position.getBoundingRect)(cell);
+        if (rect.width > cell.offsetWidth - 1) {
+          width = rect.width;
+        }
+      }
+      result.push(width);
+    });
     return result;
   };
   _proto.getColumnWidths = function getColumnWidths($tableElement) {
-    var that = this;
-    var result = [];
-    var $rows;
-    var $cells;
     (this.option('forceApplyBindings') || _common.noop)();
-    $tableElement = $tableElement || that.getTableElement();
+    $tableElement = $tableElement !== null && $tableElement !== void 0 ? $tableElement : this.getTableElement();
     if ($tableElement) {
-      $rows = $tableElement.children('tbody:not(.dx-header)').children();
+      var $rows = $tableElement.children('tbody:not(.dx-header)').children();
       for (var i = 0; i < $rows.length; i++) {
         var $row = $rows.eq(i);
+        var isGroupRow = $row.hasClass(GROUP_ROW_CLASS);
+        var isDetailRow = $row.hasClass(DETAIL_ROW_CLASS);
+        var isErrorRow = $row.hasClass(ERROR_ROW_CLASS);
         var isRowVisible = $row.get(0).style.display !== 'none' && !$row.hasClass('dx-state-invisible');
-        if (!$row.is(".".concat(GROUP_ROW_CLASS)) && !$row.is(".".concat(DETAIL_ROW_CLASS)) && !$row.is(".".concat(ERROR_ROW_CLASS)) && isRowVisible) {
-          $cells = $row.children('td');
-          break;
+        var isRelevantRow = !isGroupRow && !isDetailRow && !isErrorRow;
+        if (isRowVisible && isRelevantRow) {
+          var $cells = $row.children('td');
+          var result = this._getWidths($cells);
+          return result;
         }
       }
-      result = that._getWidths($cells);
     }
-    return result;
+    return [];
   };
   _proto.getVisibleColumnIndex = function getVisibleColumnIndex(columnIndex, rowIndex) {
     return columnIndex;
   };
-  _proto.setColumnWidths = function setColumnWidths(_ref) {
-    var widths = _ref.widths,
-      $tableElement = _ref.$tableElement,
-      columns = _ref.columns,
-      fixed = _ref.fixed;
-    var $cols;
-    var width;
-    var minWidth;
-    var columnIndex;
+  _proto.setColumnWidths = function setColumnWidths(_ref2) {
+    var _this8 = this;
+    var widths = _ref2.widths,
+      optionNames = _ref2.optionNames;
+    var $tableElement = this.getTableElement();
+    if (!($tableElement === null || $tableElement === void 0 ? void 0 : $tableElement.length) || !widths) {
+      return;
+    }
+    var columns = this.getColumns();
     var columnAutoWidth = this.option('columnAutoWidth');
-    $tableElement = $tableElement || this.getTableElement();
-    if ($tableElement && $tableElement.length && widths) {
-      columnIndex = 0;
-      $cols = $tableElement.children('colgroup').children('col');
-      (0, _style.setWidth)($cols, 'auto');
-      columns = columns || this.getColumns(null, $tableElement);
-      for (var i = 0; i < columns.length; i++) {
-        if (columnAutoWidth && !fixed) {
-          width = columns[i].width;
-          if (width && !columns[i].command) {
-            width = columns[i].visibleWidth || width;
-            width = getWidthStyle(width);
-            minWidth = getWidthStyle(columns[i].minWidth || width);
-            // @ts-expect-error
-            var $rows = $rows || $tableElement.children().children('.dx-row').not(".".concat(DETAIL_ROW_CLASS));
-            for (var rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
-              var row = $rows[rowIndex];
-              var cell = void 0;
-              var visibleIndex = this.getVisibleColumnIndex(i, rowIndex);
-              if (row.classList.contains(GROUP_ROW_CLASS)) {
-                cell = row.querySelector("td[aria-colindex='".concat(visibleIndex + 1, "']:not(.").concat(GROUP_CELL_CLASS, ")"));
-              } else {
-                cell = row.cells[visibleIndex];
-              }
-              if (cell) {
-                setCellWidth(cell, columns[i], width);
-                cell.style.minWidth = minWidth;
-              }
-            }
+    var $cols = $tableElement.children('colgroup').children('col');
+    $cols.toArray().forEach(function (col) {
+      return col.removeAttribute('style');
+    });
+    columns.forEach(function (column, columnIndex) {
+      /*
+      Probably we do not need this if statement. It seems like there is no point to set
+      min-width, width and max-width for each cell, beacuse below width for cols in colgroup is set.
+      Style for cols applies to all td elements.
+             Also check _createCell method because min-width, width and max-width are also set there.
+      */
+      if (columnAutoWidth && column.width && !column.command) {
+        var width = getWidthStyle(column.visibleWidth || column.width);
+        var minWidth = getWidthStyle(column.minWidth || width);
+        var $rows = $tableElement.children().children('.dx-row').not(".".concat(DETAIL_ROW_CLASS));
+        for (var rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
+          var $row = $rows.eq(rowIndex);
+          var visibleIndex = _this8.getVisibleColumnIndex(columnIndex, rowIndex);
+          var $cell = $row.hasClass(GROUP_ROW_CLASS) ? $row.find("td[aria-colindex='".concat(visibleIndex + 1, "']:not(.").concat(GROUP_CELL_CLASS, ")")) : $row.find('td').eq(visibleIndex);
+          var cell = $cell.get(0);
+          if (cell) {
+            setCellWidth(cell, column, width);
+            cell.style.minWidth = minWidth;
           }
         }
-        if (columns[i].colspan) {
-          columnIndex += columns[i].colspan;
-          continue;
-        }
-        width = widths[columnIndex];
-        if (width === 'adaptiveHidden') {
-          width = HIDDEN_COLUMNS_WIDTH;
-        }
-        if (typeof width === 'number') {
-          width = "".concat(width.toFixed(3), "px");
-        }
-        (0, _style.setWidth)($cols.eq(columnIndex), (0, _type.isDefined)(width) ? width : 'auto');
-        columnIndex++;
       }
-    }
+      var colWidth = normalizeWidth(widths[columnIndex]);
+      if ((0, _type.isDefined)(colWidth)) {
+        (0, _style.setWidth)($cols.eq(columnIndex), colWidth);
+      }
+    });
   };
   _proto.getCellElements = function getCellElements(rowIndex) {
     return this._getCellElementsCore(rowIndex);
@@ -986,7 +990,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return columnIdentifier;
   };
   _proto.getColumnElements = function getColumnElements() {};
-  _proto.getColumns = function getColumns(rowIndex, $tableElement) {
+  _proto.getColumns = function getColumns(rowIndex) {
     return this._columnsController.getVisibleColumns(rowIndex);
   };
   _proto.getCell = function getCell(cellPosition, rows, cells) {

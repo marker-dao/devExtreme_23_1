@@ -358,7 +358,7 @@ var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
               _this3._parameters.resources.add(newItem);
               _this3.list.option('items', _this3._parameters.resources.items);
               _this3.list.scrollToItem(newItem);
-              _this3.textBox.reset();
+              _this3.textBox.clear();
               e.component.option('disabled', true);
             }
           }

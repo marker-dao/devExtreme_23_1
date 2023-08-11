@@ -332,7 +332,7 @@ var rulesValidators = {
   'email': new EmailRuleValidator()
 };
 var GroupConfig = _class.default.inherit({
-  ctor: function ctor(group) {
+  ctor(group) {
     this.group = group;
     this.validators = [];
     this._pendingValidators = [];
@@ -340,7 +340,7 @@ var GroupConfig = _class.default.inherit({
     this._resetValidationInfo();
     this._eventsStrategy = new _events_strategy.EventsStrategy(this);
   },
-  validate: function validate() {
+  validate() {
     var _this11 = this;
     var result = {
       isValid: true,
@@ -374,21 +374,21 @@ var GroupConfig = _class.default.inherit({
     this._updateValidationInfo(result);
     return (0, _extend.extend)({}, this._validationInfo.result);
   },
-  _subscribeToChangeEvents: function _subscribeToChangeEvents(validator) {
+  _subscribeToChangeEvents(validator) {
     validator.on('validating', this._onValidatorStatusChanged);
     validator.on('validated', this._onValidatorStatusChanged);
   },
-  _unsubscribeFromChangeEvents: function _unsubscribeFromChangeEvents(validator) {
+  _unsubscribeFromChangeEvents(validator) {
     validator.off('validating', this._onValidatorStatusChanged);
     validator.off('validated', this._onValidatorStatusChanged);
   },
-  _unsubscribeFromAllChangeEvents: function _unsubscribeFromAllChangeEvents() {
+  _unsubscribeFromAllChangeEvents() {
     var _this12 = this;
     (0, _iterator.each)(this.validators, function (_, validator) {
       _this12._unsubscribeFromChangeEvents(validator);
     });
   },
-  _updateValidationInfo: function _updateValidationInfo(result) {
+  _updateValidationInfo(result) {
     this._validationInfo.result = result;
     if (result.status !== STATUS.pending) {
       return;
@@ -398,7 +398,7 @@ var GroupConfig = _class.default.inherit({
       this._validationInfo.result.complete = this._validationInfo.deferred.promise();
     }
   },
-  _addPendingValidator: function _addPendingValidator(validator) {
+  _addPendingValidator(validator) {
     var foundValidator = (0, _common.grep)(this._pendingValidators, function (val) {
       return val === validator;
     })[0];
@@ -406,13 +406,13 @@ var GroupConfig = _class.default.inherit({
       this._pendingValidators.push(validator);
     }
   },
-  _removePendingValidator: function _removePendingValidator(validator) {
+  _removePendingValidator(validator) {
     var index = this._pendingValidators.indexOf(validator);
     if (index >= 0) {
       this._pendingValidators.splice(index, 1);
     }
   },
-  _orderBrokenRules: function _orderBrokenRules(brokenRules) {
+  _orderBrokenRules(brokenRules) {
     var orderedRules = [];
     (0, _iterator.each)(this.validators, function (_, validator) {
       var foundRules = (0, _common.grep)(brokenRules, function (rule) {
@@ -424,7 +424,7 @@ var GroupConfig = _class.default.inherit({
     });
     return orderedRules;
   },
-  _updateBrokenRules: function _updateBrokenRules(result) {
+  _updateBrokenRules(result) {
     if (!this._validationInfo.result) {
       return;
     }
@@ -437,14 +437,14 @@ var GroupConfig = _class.default.inherit({
     }
     this._validationInfo.result.brokenRules = this._orderBrokenRules(brokenRules);
   },
-  _onValidatorStatusChanged: function _onValidatorStatusChanged(result) {
+  _onValidatorStatusChanged(result) {
     if (result.status === STATUS.pending) {
       this._addPendingValidator(result.validator);
       return;
     }
     this._resolveIfComplete(result);
   },
-  _resolveIfComplete: function _resolveIfComplete(result) {
+  _resolveIfComplete(result) {
     this._removePendingValidator(result.validator);
     this._updateBrokenRules(result);
     if (!this._pendingValidators.length) {
@@ -465,55 +465,55 @@ var GroupConfig = _class.default.inherit({
       });
     }
   },
-  _raiseValidatedEvent: function _raiseValidatedEvent(result) {
+  _raiseValidatedEvent(result) {
     this._eventsStrategy.fireEvent('validated', [result]);
   },
-  _resetValidationInfo: function _resetValidationInfo() {
+  _resetValidationInfo() {
     this._validationInfo = {
       result: null,
       deferred: null
     };
   },
-  _synchronizeValidationInfo: function _synchronizeValidationInfo() {
+  _synchronizeValidationInfo() {
     if (this._validationInfo.result) {
       this._validationInfo.result.validators = this.validators;
     }
   },
-  removeRegisteredValidator: function removeRegisteredValidator(validator) {
+  removeRegisteredValidator(validator) {
     var index = this.validators.indexOf(validator);
     if (index > -1) {
       this.validators.splice(index, 1);
       this._synchronizeValidationInfo();
       this._resolveIfComplete({
-        validator: validator
+        validator
       });
     }
   },
-  registerValidator: function registerValidator(validator) {
+  registerValidator(validator) {
     if (!this.validators.includes(validator)) {
       this.validators.push(validator);
       this._synchronizeValidationInfo();
     }
   },
-  reset: function reset() {
+  reset() {
     (0, _iterator.each)(this.validators, function (_, validator) {
       validator.reset();
     });
     this._pendingValidators = [];
     this._resetValidationInfo();
   },
-  on: function on(eventName, eventHandler) {
+  on(eventName, eventHandler) {
     this._eventsStrategy.on(eventName, eventHandler);
     return this;
   },
-  off: function off(eventName, eventHandler) {
+  off(eventName, eventHandler) {
     this._eventsStrategy.off(eventName, eventHandler);
     return this;
   }
 });
 var ValidationEngine = {
   groups: [],
-  getGroupConfig: function getGroupConfig(group) {
+  getGroupConfig(group) {
     var result = (0, _common.grep)(this.groups, function (config) {
       return config.group === group;
     });
@@ -521,7 +521,7 @@ var ValidationEngine = {
       return result[0];
     }
   },
-  findGroup: function findGroup($element, model) {
+  findGroup($element, model) {
     var _$element$data, _$element$data$dxComp;
     var hasValidationGroup = (_$element$data = $element.data()) === null || _$element$data === void 0 ? void 0 : (_$element$data$dxComp = _$element$data.dxComponents) === null || _$element$data$dxComp === void 0 ? void 0 : _$element$data$dxComp.includes('dxValidationGroup');
     var validationGroup = hasValidationGroup && $element.dxValidationGroup('instance');
@@ -537,11 +537,11 @@ var ValidationEngine = {
     // Trick to be able to securely get ViewModel instance ($data) in Knockout
     return model;
   },
-  initGroups: function initGroups() {
+  initGroups() {
     this.groups = [];
     this.addGroup();
   },
-  addGroup: function addGroup(group) {
+  addGroup(group) {
     var config = this.getGroupConfig(group);
     if (!config) {
       config = new GroupConfig(group);
@@ -549,7 +549,7 @@ var ValidationEngine = {
     }
     return config;
   },
-  removeGroup: function removeGroup(group) {
+  removeGroup(group) {
     var config = this.getGroupConfig(group);
     var index = this.groups.indexOf(config);
     if (index > -1) {
@@ -557,7 +557,7 @@ var ValidationEngine = {
     }
     return config;
   },
-  _setDefaultMessage: function _setDefaultMessage(info) {
+  _setDefaultMessage(info) {
     var rule = info.rule,
       validator = info.validator,
       name = info.name;
@@ -569,7 +569,7 @@ var ValidationEngine = {
       }
     }
   },
-  _addBrokenRule: function _addBrokenRule(info) {
+  _addBrokenRule(info) {
     var result = info.result,
       rule = info.rule;
     if (!result.brokenRule) {
@@ -580,7 +580,7 @@ var ValidationEngine = {
     }
     result.brokenRules.push(rule);
   },
-  validate: function validate(value, rules, name) {
+  validate(value, rules, name) {
     var _rules$,
       _this13 = this;
     var result = {
@@ -604,8 +604,8 @@ var ValidationEngine = {
           if (!rule.isValid) {
             result.isValid = false;
             _this13._addBrokenRule({
-              result: result,
-              rule: rule
+              result,
+              rule
             });
             return false;
           }
@@ -624,13 +624,13 @@ var ValidationEngine = {
         if (!ruleValidationResult) {
           result.isValid = false;
           _this13._setDefaultMessage({
-            rule: rule,
+            rule,
             validator: ruleValidator,
-            name: name
+            name
           });
           _this13._addBrokenRule({
-            result: result,
-            rule: rule
+            result,
+            rule
           });
         }
         if (!rule.isValid) {
@@ -642,28 +642,28 @@ var ValidationEngine = {
     });
     if (result.isValid && !result.brokenRules && asyncRuleItems.length) {
       result = this._validateAsyncRules({
-        value: value,
+        value,
         items: asyncRuleItems,
-        result: result,
-        name: name
+        result,
+        name
       });
     }
     this._synchronizeGroupValidationInfo(validator, result);
     result.status = result.pendingRules ? STATUS.pending : result.isValid ? STATUS.valid : STATUS.invalid;
     return result;
   },
-  _synchronizeGroupValidationInfo: function _synchronizeGroupValidationInfo(validator, result) {
+  _synchronizeGroupValidationInfo(validator, result) {
     var _result$brokenRules;
     if (!validator) {
       return;
     }
     var groupConfig = ValidationEngine.getGroupConfig(validator._validationGroup);
     groupConfig._updateBrokenRules.call(groupConfig, {
-      validator: validator,
+      validator,
       brokenRules: (_result$brokenRules = result.brokenRules) !== null && _result$brokenRules !== void 0 ? _result$brokenRules : []
     });
   },
-  _validateAsyncRules: function _validateAsyncRules(_ref) {
+  _validateAsyncRules(_ref) {
     var _this14 = this;
     var result = _ref.result,
       value = _ref.value,
@@ -677,7 +677,7 @@ var ValidationEngine = {
           rule: item.rule,
           ruleResult: _this14._getPatchedRuleResult(validateResult),
           validator: item.ruleValidator,
-          name: name
+          name
         });
       } else {
         if (!result.pendingRules) {
@@ -688,9 +688,9 @@ var ValidationEngine = {
           var ruleResult = _this14._getPatchedRuleResult(res);
           _this14._updateRuleConfig({
             rule: item.rule,
-            ruleResult: ruleResult,
+            ruleResult,
             validator: item.ruleValidator,
-            name: name
+            name
           });
           return ruleResult;
         });
@@ -700,14 +700,14 @@ var ValidationEngine = {
     if (asyncResults.length) {
       result.complete = Promise.all(asyncResults).then(function (values) {
         return _this14._getAsyncRulesResult({
-          result: result,
-          values: values
+          result,
+          values
         });
       });
     }
     return result;
   },
-  _updateRuleConfig: function _updateRuleConfig(_ref2) {
+  _updateRuleConfig(_ref2) {
     var rule = _ref2.rule,
       ruleResult = _ref2.ruleResult,
       validator = _ref2.validator,
@@ -718,14 +718,14 @@ var ValidationEngine = {
         rule.message = ruleResult.message;
       } else {
         this._setDefaultMessage({
-          rule: rule,
+          rule,
           validator: validator,
-          name: name
+          name
         });
       }
     }
   },
-  _getPatchedRuleResult: function _getPatchedRuleResult(ruleResult) {
+  _getPatchedRuleResult(ruleResult) {
     var result;
     var isValid = true;
     if ((0, _type.isObject)(ruleResult)) {
@@ -740,7 +740,7 @@ var ValidationEngine = {
     }
     return result;
   },
-  _getAsyncRulesResult: function _getAsyncRulesResult(_ref3) {
+  _getAsyncRulesResult(_ref3) {
     var _this15 = this;
     var values = _ref3.values,
       result = _ref3.result;
@@ -749,8 +749,8 @@ var ValidationEngine = {
         result.isValid = val.isValid;
         var rule = result.pendingRules[index];
         _this15._addBrokenRule({
-          result: result,
-          rule: rule
+          result,
+          rule
         });
       }
     });
@@ -759,16 +759,16 @@ var ValidationEngine = {
     result.status = result.isValid ? STATUS.valid : STATUS.invalid;
     return result;
   },
-  registerValidatorInGroup: function registerValidatorInGroup(group, validator) {
+  registerValidatorInGroup(group, validator) {
     var groupConfig = ValidationEngine.addGroup(group);
     groupConfig.registerValidator.call(groupConfig, validator);
   },
-  _shouldRemoveGroup: function _shouldRemoveGroup(group, validatorsInGroup) {
+  _shouldRemoveGroup(group, validatorsInGroup) {
     var isDefaultGroup = group === undefined;
     var isValidationGroupInstance = group && group.NAME === 'dxValidationGroup';
     return !isDefaultGroup && !isValidationGroupInstance && !validatorsInGroup.length;
   },
-  removeRegisteredValidator: function removeRegisteredValidator(group, validator) {
+  removeRegisteredValidator(group, validator) {
     var config = ValidationEngine.getGroupConfig(group);
     if (config) {
       config.removeRegisteredValidator.call(config, validator);
@@ -778,7 +778,7 @@ var ValidationEngine = {
       }
     }
   },
-  initValidationOptions: function initValidationOptions(options) {
+  initValidationOptions(options) {
     var _this16 = this;
     var initedOptions = {};
     if (options) {
@@ -794,7 +794,7 @@ var ValidationEngine = {
     }
     return initedOptions;
   },
-  synchronizeValidationOptions: function synchronizeValidationOptions(_ref4, options) {
+  synchronizeValidationOptions(_ref4, options) {
     var name = _ref4.name,
       value = _ref4.value;
     switch (name) {
@@ -802,7 +802,7 @@ var ValidationEngine = {
         {
           var isValid = value === STATUS.valid || value === STATUS.pending;
           return options.isValid !== isValid ? {
-            isValid: isValid
+            isValid
           } : {};
         }
       case 'isValid':
@@ -822,7 +822,7 @@ var ValidationEngine = {
         {
           var validationError = !value || !value.length ? null : value[0];
           return options.validationError !== validationError ? {
-            validationError: validationError
+            validationError
           } : {};
         }
       case 'validationError':
@@ -846,14 +846,14 @@ var ValidationEngine = {
     }
     return {};
   },
-  validateGroup: function validateGroup(group) {
+  validateGroup(group) {
     var groupConfig = ValidationEngine.getGroupConfig(group);
     if (!groupConfig) {
       throw _errors.default.Error('E0110');
     }
     return groupConfig.validate();
   },
-  resetGroup: function resetGroup(group) {
+  resetGroup(group) {
     var groupConfig = ValidationEngine.getGroupConfig(group);
     if (!groupConfig) {
       throw _errors.default.Error('E0110');

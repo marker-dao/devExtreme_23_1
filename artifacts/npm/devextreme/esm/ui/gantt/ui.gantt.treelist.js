@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/gantt/ui.gantt.treelist.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -261,10 +261,13 @@ export class GanttTreeList {
     return this._nodeState;
   }
   getAllNodes() {
-    var treeList = this._treeList;
-    var store = treeList === null || treeList === void 0 ? void 0 : treeList.getDataSource().store();
-    var keyGetter = compileGetter(store === null || store === void 0 ? void 0 : store.key());
-    return store ? store._array.map(item => treeList.getNodeByKey(keyGetter(item))) : [];
+    var _this$_treeList, _this$_treeList$getDa, _this$_treeList2;
+    var store = (_this$_treeList = this._treeList) === null || _this$_treeList === void 0 ? void 0 : (_this$_treeList$getDa = _this$_treeList.getDataSource()) === null || _this$_treeList$getDa === void 0 ? void 0 : _this$_treeList$getDa.store();
+    if (!store || !((_this$_treeList2 = this._treeList) !== null && _this$_treeList2 !== void 0 && _this$_treeList2.getNodeByKey)) {
+      return [];
+    }
+    var keyGetter = compileGetter(store.key());
+    return store._array.map(item => this._treeList.getNodeByKey(keyGetter(item))).filter(item => !!item);
   }
   isExpandedStateChanged(keys1, keys2) {
     if (keys1 === null && keys2 === null) {
@@ -319,8 +322,8 @@ export class GanttTreeList {
     this._treeList && this._treeList.option(optionName, value);
   }
   getOption(optionName) {
-    var _this$_treeList;
-    return (_this$_treeList = this._treeList) === null || _this$_treeList === void 0 ? void 0 : _this$_treeList.option(optionName);
+    var _this$_treeList3;
+    return (_this$_treeList3 = this._treeList) === null || _this$_treeList3 === void 0 ? void 0 : _this$_treeList3.option(optionName);
   }
   onTaskInserted(insertedId, parentId) {
     if (isDefined(parentId)) {
@@ -334,7 +337,7 @@ export class GanttTreeList {
     this.setOption('focusedRowKey', insertedId);
   }
   getDataSource() {
-    var _this$_treeList2;
-    return (_this$_treeList2 = this._treeList) === null || _this$_treeList2 === void 0 ? void 0 : _this$_treeList2.getDataSource();
+    var _this$_treeList4;
+    return (_this$_treeList4 = this._treeList) === null || _this$_treeList4 === void 0 ? void 0 : _this$_treeList4.getDataSource();
   }
 }

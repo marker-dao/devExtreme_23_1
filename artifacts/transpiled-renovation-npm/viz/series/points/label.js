@@ -354,7 +354,7 @@ Label.prototype = {
     bBox = (0, _utils.rotateBBox)(bBox, [bBox.x + bBox.width / 2, bBox.y + bBox.height / 2], -rotationAngle);
     that._bBox = bBox;
   },
-  getFigureCenter: function getFigureCenter() {
+  getFigureCenter() {
     var figure = this._figure;
     var strategy = this._strategy || selectStrategy(figure);
     return strategy.getFigureCenter(figure);
@@ -413,7 +413,7 @@ Label.prototype = {
   hideInsideLabel: function hideInsideLabel(coords) {
     return this._point.hideInsideLabel(this, coords);
   },
-  getPoint: function getPoint() {
+  getPoint() {
     return this._point;
   },
   // TODO: Should not be called when not invisible (check for "_textContent" is to be removed)

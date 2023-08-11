@@ -253,11 +253,14 @@ var RangeSlider = _slider.default.inherit({
     var end = this.option('end');
     this.option('value', [start, end]);
   },
+  _rangesAreEqual(firstRange, secondRange) {
+    return firstRange[0] === secondRange[0] && firstRange[1] === secondRange[1];
+  },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {
       case 'value':
         {
-          if (args.value[0] === args.previousValue[0] && args.value[1] === args.previousValue[1]) {
+          if (this._rangesAreEqual(args.value, args.previousValue)) {
             break;
           }
           this._setOptionWithoutOptionChange('start', args.value[0]);
@@ -265,6 +268,8 @@ var RangeSlider = _slider.default.inherit({
           this._renderValue();
           var start = this.option('start');
           var end = this.option('end');
+          var isDirty = !this._rangesAreEqual(this._initialValue, args.value);
+          this.option('isDirty', isDirty);
           this._createActionByOption('onValueChanged', {
             excludeValidators: ['disabled', 'readOnly']
           })({

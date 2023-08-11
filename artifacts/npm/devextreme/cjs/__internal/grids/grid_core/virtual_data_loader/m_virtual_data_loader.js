@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/virtual_data_loader/m_virtual_data_loader.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -125,8 +125,8 @@ var processChanged = function processChanged(that, changed, changeType, isDelayC
   var viewportItems = dataOptions.viewportItems();
   if (changeType && (0, _type.isString)(changeType) && !that._isDelayChanged) {
     change = {
-      changeType: changeType,
-      items: items
+      changeType,
+      items
     };
     if (removeCacheItem) {
       change.removeCount = removeCacheItem.itemsCount;

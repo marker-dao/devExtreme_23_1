@@ -1,12 +1,13 @@
 /**
 * DevExtreme (esm/__internal/grids/tree_list/rows/m_rows.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import $ from '../../../../core/renderer';
+import { isDefined } from '../../../../core/utils/type';
 import { rowsModule } from '../../../grids/grid_core/views/m_rows_view';
 import treeListCore from '../m_core';
 var TREELIST_TEXT_CONTENT = 'dx-treelist-text-content';
@@ -100,6 +101,10 @@ export var RowsView = rowsModule.views.rowsView.inherit(function () {
     },
     isExpandIcon($targetElement) {
       return !!$targetElement.closest(".".concat(TREELIST_EXPANDED_CLASS, ", .").concat(TREELIST_COLLAPSED_CLASS)).length;
+    },
+    setAriaExpandedAttribute($row, row) {
+      var isRowExpanded = row.isExpanded;
+      this.setAria('expanded', isDefined(isRowExpanded) && isRowExpanded.toString(), $row);
     }
   };
 }());

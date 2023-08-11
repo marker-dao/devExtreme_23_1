@@ -232,8 +232,8 @@ var DropDownBox = _ui.default.inherit({
       my = _this$callBase.my,
       at = _this$callBase.at;
     return {
-      my: my,
-      at: at,
+      my,
+      at,
       offset: {
         v: -1
       },
@@ -247,7 +247,7 @@ var DropDownBox = _ui.default.inherit({
     return (0, _extend.extend)(this.callBase(), {
       tabIndex: -1,
       dragEnabled: false,
-      focusStateEnabled: focusStateEnabled,
+      focusStateEnabled,
       contentTemplate: ANONYMOUS_TEMPLATE_NAME,
       hideOnParentScroll: this._shouldHideOnParentScroll.bind(this),
       position: (0, _extend.extend)(this.option('popupPosition'), {

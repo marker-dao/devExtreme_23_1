@@ -16,11 +16,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _abs = Math.abs;
 var CANVAS_PROP = ['width', 'height', 'left', 'top', 'bottom', 'right'];
 var dummyTranslator = {
-  to: function to(value) {
+  to(value) {
     var coord = this._canvasOptions.startPoint + (this._options.conversionValue ? value : Math.round(value));
     return coord > this._canvasOptions.endPoint ? this._canvasOptions.endPoint : coord;
   },
-  from: function from(value) {
+  from(value) {
     return value - this._canvasOptions.startPoint;
   }
 };
@@ -254,7 +254,7 @@ _Translator2d.prototype = {
     var correctedCategoriesCount = categoriesLength - (this._options.stick ? 1 : 0);
     return correctedCategoriesCount > 0 ? canvasOptions.canvasLength / correctedCategoriesCount : canvasOptions.canvasLength;
   },
-  _prepareCanvasOptions: function _prepareCanvasOptions() {
+  _prepareCanvasOptions() {
     var that = this;
     var businessRange = that._businessRange;
     var canvasOptions = that._canvasOptions = getCanvasBounds(businessRange);
@@ -346,7 +346,7 @@ _Translator2d.prototype = {
       'canvas_position_end': canvasOptions.invert ? startPoint : endPoint
     };
   },
-  translateSpecialCase: function translateSpecialCase(value) {
+  translateSpecialCase(value) {
     return this.sc[value];
   },
   _calculateProjection: function _calculateProjection(distance) {
@@ -366,7 +366,7 @@ _Translator2d.prototype = {
   checkMinBarSize: function checkMinBarSize(value, minShownValue) {
     return _abs(value) < minShownValue ? value >= 0 ? minShownValue : -minShownValue : value;
   },
-  translate: function translate(bp, direction) {
+  translate(bp, direction) {
     var specialValue = this.translateSpecialCase(bp);
     if ((0, _type.isDefined)(specialValue)) {
       return Math.round(specialValue);
@@ -385,7 +385,7 @@ _Translator2d.prototype = {
     }
     return Math.round(canvasOptions.endPoint - canvasOptions.startPoint);
   },
-  zoom: function zoom(translate, scale, wholeRange) {
+  zoom(translate, scale, wholeRange) {
     var canvasOptions = this._canvasOptions;
     if (canvasOptions.rangeMinVisible.valueOf() === canvasOptions.rangeMaxVisible.valueOf() && translate !== 0) {
       return this.zoomZeroLengthRange(translate, scale);
@@ -430,13 +430,13 @@ _Translator2d.prototype = {
       max = max > wholeRange.endValue ? wholeRange.endValue : max;
     }
     return {
-      min: min,
-      max: max,
+      min,
+      max,
       translate: (0, _math.adjust)(translate),
       scale: (0, _math.adjust)(scale)
     };
   },
-  _correctValueAboutBreaks: function _correctValueAboutBreaks(value, direction) {
+  _correctValueAboutBreaks(value, direction) {
     var br = this._userBreaks.filter(function (br) {
       return value >= br.from && value <= br.to;
     });
@@ -446,7 +446,7 @@ _Translator2d.prototype = {
       return value;
     }
   },
-  zoomZeroLengthRange: function zoomZeroLengthRange(translate, scale) {
+  zoomZeroLengthRange(translate, scale) {
     var canvasOptions = this._canvasOptions;
     var min = canvasOptions.rangeMin;
     var max = canvasOptions.rangeMax;
@@ -473,7 +473,7 @@ _Translator2d.prototype = {
     }
     return zoom ? 1.1 : 0.9;
   },
-  getDateTimeMinScale: function getDateTimeMinScale(zoom) {
+  getDateTimeMinScale(zoom) {
     var canvasOptions = this._canvasOptions;
     var length = canvasOptions.canvasLength / canvasOptions.ratioOfCanvasRange;
     length += (parseInt(length * 0.1) || 1) * (zoom ? -2 : 2);
@@ -584,13 +584,13 @@ _Translator2d.prototype = {
   toValue: function toValue(value) {
     return value !== null ? Number(value) : null;
   },
-  ratioOfCanvasRange: function ratioOfCanvasRange() {
+  ratioOfCanvasRange() {
     return this._canvasOptions.ratioOfCanvasRange;
   },
-  convert: function convert(value) {
+  convert(value) {
     return value;
   },
-  getRangeByMinZoomValue: function getRangeByMinZoomValue(minZoom, visualRange) {
+  getRangeByMinZoomValue(minZoom, visualRange) {
     if (visualRange.minVisible + minZoom <= this._businessRange.max) {
       return [visualRange.minVisible, visualRange.minVisible + minZoom];
     } else {

@@ -112,7 +112,7 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseAdaptiveStateChanged = function _raiseAdaptiveStateChanged(enabled) {
     this._actions.onAdaptiveStateChanged({
-      enabled: enabled
+      enabled
     });
   };
   _proto._getDefaultOptions = function _getDefaultOptions() {

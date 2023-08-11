@@ -25,6 +25,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // STYLE gallery
 
 var GALLERY_CLASS = 'dx-gallery';
+var GALLERY_INDICATOR_VISIBLE_CLASS = 'dx-gallery-indicator-visible';
 var GALLERY_WRAPPER_CLASS = GALLERY_CLASS + '-wrapper';
 var GALLERY_LOOP_CLASS = 'dx-gallery-loop';
 var GALLERY_ITEM_CONTAINER_CLASS = GALLERY_CLASS + '-container';
@@ -272,7 +273,7 @@ var Gallery = _uiCollection_widget.default.inherit({
     this.callBase(items);
     this._loadNextPageIfNeeded();
   },
-  _onItemTemplateRendered: function _onItemTemplateRendered() {
+  _onItemTemplateRendered() {
     var _this = this;
     return function () {
       if (!_this._wasAnyItemTemplateRendered) {
@@ -466,8 +467,11 @@ var Gallery = _uiCollection_widget.default.inherit({
     this._dimensionChanged();
   },
   _renderIndicator: function _renderIndicator() {
+    var _this$option = this.option(),
+      showIndicator = _this$option.showIndicator;
     this._cleanIndicators();
-    if (!this.option('showIndicator')) {
+    this.$element().toggleClass(GALLERY_INDICATOR_VISIBLE_CLASS, showIndicator);
+    if (!showIndicator) {
       return;
     }
     var indicator = this._$indicator = (0, _renderer.default)('<div>').addClass(GALLERY_INDICATOR_CLASS).appendTo(this._$wrapper);

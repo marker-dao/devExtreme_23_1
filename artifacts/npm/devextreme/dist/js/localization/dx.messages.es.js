@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.es.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Orden Ascendente",
             "dxDataGrid-sortingDescendingText": "Orden Descendente",
             "dxDataGrid-sortingClearText": "Limpiar Ordenamiento",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Guardar cambios",
             "dxDataGrid-editingCancelAllChanges": "Descartar cambios",
             "dxDataGrid-editingAddRow": "Agregar una fila",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Celda de filtro",
             "dxDataGrid-ariaCollapse": "Colapsar",
             "dxDataGrid-ariaExpand": "Expandir",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Tabla de datos",
             "dxDataGrid-ariaSearchInGrid": "Buscar en la tabla de datos",
             "dxDataGrid-ariaSelectAll": "Seleccionar todo",
             "dxDataGrid-ariaSelectRow": "Seleccionar fila",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Constructor de filtro",
             "dxDataGrid-filterPanelCreateFilter": "Crear filtro",
             "dxDataGrid-filterPanelClearFilter": "Limpiar filtro",

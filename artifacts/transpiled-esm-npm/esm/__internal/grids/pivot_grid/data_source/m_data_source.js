@@ -860,7 +860,7 @@ var PivotGridDataSource = Class.inherit(function () {
       }
     },
     sortLocal() {
-      this._sort(this._descriptions, this._data, areExpressionsUsed(this._descriptions.values));
+      this._sort(this._descriptions, this._data);
       this._eventsStrategy.fireEvent('changed');
     },
     paginate() {

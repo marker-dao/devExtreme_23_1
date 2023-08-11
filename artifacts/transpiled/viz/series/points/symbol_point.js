@@ -381,7 +381,7 @@ var _default = {
       visibility: 'visible'
     };
   },
-  _getErrorBarBaseEdgeLength: function _getErrorBarBaseEdgeLength() {
+  _getErrorBarBaseEdgeLength() {
     return this.getPointRadius() * 2;
   },
   _drawErrorBar: function _drawErrorBar(renderer, group) {

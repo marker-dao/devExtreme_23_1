@@ -34,6 +34,7 @@ var _get_element_style = require("../../renovation/ui/scroll_view/utils/get_elem
 var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var LIST_CLASS = 'dx-list';
+var LIST_ITEMS_CLASS = 'dx-list-items';
 var LIST_ITEM_CLASS = 'dx-list-item';
 var LIST_ITEM_SELECTOR = '.' + LIST_ITEM_CLASS;
 var LIST_ITEM_ICON_CONTAINER_CLASS = 'dx-list-item-icon-container';
@@ -211,6 +212,15 @@ var ListBase = _uiCollection_widget.default.inherit({
   _itemContainer: function _itemContainer() {
     return this._$container;
   },
+  _getItemsContainer: function _getItemsContainer() {
+    return this._$listContainer;
+  },
+  _cleanItemContainer: function _cleanItemContainer() {
+    this.callBase();
+    var listContainer = this._getItemsContainer();
+    (0, _renderer.default)(listContainer).empty();
+    listContainer.appendTo(this._$container);
+  },
   _saveSelectionChangeEvent: function _saveSelectionChangeEvent(e) {
     this._selectionChangeEventInstance = e;
   },
@@ -219,9 +229,9 @@ var ListBase = _uiCollection_widget.default.inherit({
   },
   _refreshItemElements: function _refreshItemElements() {
     if (!this.option('grouped')) {
-      this._itemElementsCache = this._itemContainer().children(this._itemSelector());
+      this._itemElementsCache = this._getItemsContainer().children(this._itemSelector());
     } else {
-      this._itemElementsCache = this._itemContainer().children('.' + LIST_GROUP_CLASS).children('.' + LIST_GROUP_BODY_CLASS).children(this._itemSelector());
+      this._itemElementsCache = this._getItemsContainer().children('.' + LIST_GROUP_CLASS).children('.' + LIST_GROUP_BODY_CLASS).children(this._itemSelector());
     }
   },
   _modifyByChanges: function _modifyByChanges() {
@@ -257,6 +267,7 @@ var ListBase = _uiCollection_widget.default.inherit({
     this.callBase();
     this._dataController.resetDataSourcePageIndex();
     this._$container = this.$element();
+    this._$listContainer = (0, _renderer.default)('<div>').addClass(LIST_ITEMS_CLASS);
     this._initScrollView();
     this._feedbackShowTimeout = LIST_FEEDBACK_SHOW_TIMEOUT;
     this._createGroupRenderAction();
@@ -278,7 +289,7 @@ var ListBase = _uiCollection_widget.default.inherit({
     return this.option('grouped');
   },
   _getGroupContainerByIndex: function _getGroupContainerByIndex(groupIndex) {
-    return this._itemContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex).find(".".concat(LIST_GROUP_BODY_CLASS));
+    return this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex).find(".".concat(LIST_GROUP_BODY_CLASS));
   },
   _dataSourceFromUrlLoadMode: function _dataSourceFromUrlLoadMode() {
     return 'raw';
@@ -306,10 +317,12 @@ var ListBase = _uiCollection_widget.default.inherit({
       useKeyboard: false
     });
     this._$container = (0, _renderer.default)(this._scrollView.content());
-    if (this.option('wrapItemText')) {
-      this._$container.addClass(WRAP_ITEM_TEXT_CLASS);
-    }
+    this._$listContainer.appendTo(this._$container);
+    this._toggleWrapItemText(this.option('wrapItemText'));
     this._createScrollViewActions();
+  },
+  _toggleWrapItemText: function _toggleWrapItemText(value) {
+    this._$listContainer.toggleClass(WRAP_ITEM_TEXT_CLASS, value);
   },
   _createScrollViewActions: function _createScrollViewActions() {
     this._scrollAction = this._createActionByOption('onScroll');
@@ -531,9 +544,12 @@ var ListBase = _uiCollection_widget.default.inherit({
       'roledescription': 'list'
     };
     this.setAria(elementAria, this.$element());
+    this.setAria({
+      role: 'group'
+    }, this._focusTarget());
     this._setListAria();
   },
-  _setListAria: function _setListAria() {
+  _setListAria() {
     var _this$option = this.option(),
       items = _this$option.items;
     var listArea = items !== null && items !== void 0 && items.length ? {
@@ -543,7 +559,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       role: undefined,
       label: undefined
     };
-    this.setAria(listArea);
+    this.setAria(listArea, this._$listContainer);
   },
   _focusTarget: function _focusTarget() {
     return this._itemContainer();
@@ -601,7 +617,7 @@ var ListBase = _uiCollection_widget.default.inherit({
     }
   },
   _renderGroup: function _renderGroup(index, group) {
-    var $groupElement = (0, _renderer.default)('<div>').addClass(LIST_GROUP_CLASS).appendTo(this._itemContainer());
+    var $groupElement = (0, _renderer.default)('<div>').addClass(LIST_GROUP_CLASS).appendTo(this._getItemsContainer());
     var id = "dx-".concat(new _guid.default().toString());
     var groupAria = {
       role: 'group',
@@ -760,7 +776,7 @@ var ListBase = _uiCollection_widget.default.inherit({
         this._invalidate();
         break;
       case 'wrapItemText':
-        this._$container.toggleClass(WRAP_ITEM_TEXT_CLASS, args.value);
+        this._toggleWrapItemText(args.value);
         break;
       case 'onGroupRendered':
         this._createGroupRenderAction();
@@ -809,7 +825,7 @@ var ListBase = _uiCollection_widget.default.inherit({
   },
   expandGroup: function expandGroup(groupIndex) {
     var deferred = new _deferred.Deferred();
-    var $group = this._itemContainer().find('.' + LIST_GROUP_CLASS).eq(groupIndex);
+    var $group = this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex);
     this._collapseGroupHandler($group, false).done(function () {
       deferred.resolveWith(this);
     }.bind(this));
@@ -817,7 +833,7 @@ var ListBase = _uiCollection_widget.default.inherit({
   },
   collapseGroup: function collapseGroup(groupIndex) {
     var deferred = new _deferred.Deferred();
-    var $group = this._itemContainer().find('.' + LIST_GROUP_CLASS).eq(groupIndex);
+    var $group = this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex);
     this._collapseGroupHandler($group, true).done(function () {
       deferred.resolveWith(this);
     }.bind(this));

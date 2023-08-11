@@ -34,7 +34,7 @@ var _default = {
       dataSource = {
         store: {
           type: 'array',
-          data: data
+          data
         },
         group: {
           selector: 'key',

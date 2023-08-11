@@ -15,6 +15,7 @@ var _array = require("../core/utils/array");
 var _type = require("../core/utils/type");
 var _index = require("../events/utils/index");
 var _pointer = _interopRequireDefault(require("../events/pointer"));
+var _common = require("../core/utils/common");
 var _provider = _interopRequireDefault(require("./map/provider.google_static"));
 var _providerDynamic = _interopRequireDefault(require("./map/provider.dynamic.google"));
 var _providerDynamic2 = _interopRequireDefault(require("./map/provider.dynamic.bing"));
@@ -129,6 +130,7 @@ var Map = _ui2.default.inherit({
       }
     }]);
   },
+  _renderFocusTarget: _common.noop,
   _init: function _init() {
     this.callBase();
     this.$element().addClass(MAP_CLASS);

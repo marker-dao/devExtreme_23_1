@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.sl.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Razvrsti naraščajoče",
             "dxDataGrid-sortingDescendingText": "Razvrsti padajoče",
             "dxDataGrid-sortingClearText": "Brez razvrščanja",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Shrani spremembe",
             "dxDataGrid-editingCancelAllChanges": "Zavrzi spremembe",
             "dxDataGrid-editingAddRow": "Dodaj vrstico",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filtriraj po celici",
             "dxDataGrid-ariaCollapse": "Skrči",
             "dxDataGrid-ariaExpand": "Razširi",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Tabela",
             "dxDataGrid-ariaSearchInGrid": "Išči v tabeli",
             "dxDataGrid-ariaSelectAll": "Izberi vse",
             "dxDataGrid-ariaSelectRow": "Izberi vrstico",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Graditelj filtra",
             "dxDataGrid-filterPanelCreateFilter": "Ustvari filter",
             "dxDataGrid-filterPanelClearFilter": "Pobriši",

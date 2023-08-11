@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/gauges/base_gauge.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,7 +48,10 @@ import {
  * @hidden
  */
 export interface TooltipInfo {
-    /** @docid _viz_base_gauge_TooltipInfo.target */
+    /**
+     * @docid _viz_base_gauge_TooltipInfo.target
+     * @type object
+     */
     target: any;
 }
 
@@ -134,6 +137,7 @@ export interface BaseGaugeOptions<TComponent> extends BaseWidgetOptions<TCompone
     value?: number;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -158,6 +162,7 @@ export interface BaseGaugeAnimation {
     enabled?: boolean;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -169,6 +174,7 @@ export interface BaseGaugeLoadingIndicator extends BaseWidgetLoadingIndicator {
     enabled?: boolean;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -219,6 +225,7 @@ export interface BaseGaugeRangeContainer {
     }>;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -345,6 +352,7 @@ export interface BaseGaugeScale {
     tickInterval?: number;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */
@@ -387,6 +395,7 @@ export interface BaseGaugeScaleLabel {
     visible?: boolean;
 }
 /**
+ * @hidden
  * @docid
  * @namespace DevExpress.viz
  */

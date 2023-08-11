@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tag_box.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -978,7 +978,7 @@ var TagBox = SelectBox.inherit({
       if (!this.option('showMultiTagOnly')) {
         this.option('value', this._getValue().slice(0, this.option('maxDisplayedTags')));
       } else {
-        this.reset();
+        this.clear();
       }
       return;
     }
@@ -1190,7 +1190,7 @@ var TagBox = SelectBox.inherit({
       this._refreshSelected();
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     this._restoreInputText();
     var defaultValue = this._getDefaultOptions().value;
     var currentValue = this.option('value');

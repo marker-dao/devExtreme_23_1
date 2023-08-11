@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/axes/constant_line.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,12 +19,12 @@ function createConstantLine(axis, options) {
   axis._checkAlignmentConstantLineLabels(labelOptions);
   var storedCoord;
   return {
-    options: options,
-    labelOptions: labelOptions,
-    labelPosition: labelPosition,
+    options,
+    labelOptions,
+    labelPosition,
     label: null,
     line: null,
-    getParsedValue: function getParsedValue() {
+    getParsedValue() {
       if (!valueIsParsed) {
         parsedValue = axis.validateUnit(options.value, 'E2105', 'constantLine');
         valueIsParsed = true;
@@ -32,7 +32,7 @@ function createConstantLine(axis, options) {
       }
       return parsedValue;
     },
-    draw: function draw() {
+    draw() {
       if (!(0, _type.isDefined)(options.value) || axis._translator.getBusinessRange().isEmpty()) {
         return this;
       }
@@ -58,13 +58,13 @@ function createConstantLine(axis, options) {
       this.updatePosition();
       return this;
     },
-    getContentContainer: function getContentContainer() {
+    getContentContainer() {
       return this.label;
     },
-    removeLabel: function removeLabel() {
+    removeLabel() {
       this.label && this.label.remove();
     },
-    updatePosition: function updatePosition(animate) {
+    updatePosition(animate) {
       var canvas = axis._getCanvasStartEnd();
       var coord = axis._getConstantLinePos(this.getParsedValue(), canvas.start, canvas.end);
       if (!(0, _type.isDefined)(coord)) {
@@ -82,11 +82,11 @@ function createConstantLine(axis, options) {
         axis._rotateConstantLine(this.line, this.coord);
       }
     },
-    saveCoords: function saveCoords() {
+    saveCoords() {
       lastStoredCoordinates = storedCoord;
       storedCoord = this.coord;
     },
-    resetCoordinates: function resetCoordinates() {
+    resetCoordinates() {
       storedCoord = lastStoredCoordinates;
     }
   };

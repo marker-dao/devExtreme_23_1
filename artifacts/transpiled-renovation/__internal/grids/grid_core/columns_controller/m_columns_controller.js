@@ -29,7 +29,7 @@ var _m_columns_controller_utils = require("./m_columns_controller_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable prefer-destructuring */
 var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
   _inheritsLoose(ColumnsController, _modules$Controller);
   function ColumnsController() {
@@ -110,7 +110,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         column = columnIndexes.reduce(function (column, index) {
           return column && column.columns && column.columns[index];
         }, {
-          columns: columns
+          columns
         });
       } else {
         column = (0, _m_columns_controller_utils.getColumnByIndexes)(that, columnIndexes);
@@ -476,9 +476,9 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         columnChildrenByIndex[parentIndex].push(column);
       });
       this._bandColumnsCache = {
-        isPlain: isPlain,
-        columnChildrenByIndex: columnChildrenByIndex,
-        columnParentByIndex: columnParentByIndex
+        isPlain,
+        columnChildrenByIndex,
+        columnParentByIndex
       };
     }
     return this._bandColumnsCache;
@@ -486,91 +486,122 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
   _proto._isColumnVisible = function _isColumnVisible(column) {
     return column.visible && this.isParentColumnVisible(column.index);
   };
+  _proto._isColumnInGroupPanel = function _isColumnInGroupPanel(column) {
+    return (0, _type.isDefined)(column.groupIndex) && !column.showWhenGrouped;
+  };
+  _proto.hasVisibleDataColumns = function hasVisibleDataColumns() {
+    var _this = this;
+    var columns = this._columns;
+    return columns.some(function (column) {
+      var isVisible = _this._isColumnVisible(column);
+      var isInGroupPanel = _this._isColumnInGroupPanel(column);
+      var isCommand = !!column.command;
+      return isVisible && !isInGroupPanel && !isCommand;
+    });
+  };
   _proto._compileVisibleColumnsCore = function _compileVisibleColumnsCore() {
-    var that = this;
-    var i;
-    var result = [];
-    var rowspanGroupColumns = 0;
-    var rowspanExpandColumns = 0;
-    var rowCount = that.getRowCount();
+    var bandColumnsCache = this.getBandColumnsCache();
+    var columns = (0, _m_columns_controller_utils.mergeColumns)(this, this._columns, this._commandColumns, true);
+    (0, _m_columns_controller_utils.processBandColumns)(this, columns, bandColumnsCache);
+    var indexedColumns = this._getIndexedColumns(columns);
+    var visibleColumns = this._getVisibleColumnsFromIndexed(indexedColumns);
+    var isDataColumnsInvisible = !this.hasVisibleDataColumns();
+    if (isDataColumnsInvisible && this._columns.length) {
+      visibleColumns[visibleColumns.length - 1].push({
+        command: 'empty'
+      });
+    }
+    return visibleColumns;
+  };
+  _proto._getIndexedColumns = function _getIndexedColumns(columns) {
+    var _this2 = this;
+    var rtlEnabled = this.option('rtlEnabled');
+    var rowCount = this.getRowCount();
+    var columnDigitsCount = (0, _m_columns_controller_utils.digitsCount)(columns.length);
+    var bandColumnsCache = this.getBandColumnsCache();
     var positiveIndexedColumns = [];
     var negativeIndexedColumns = [];
-    var notGroupedColumnsCount = 0;
-    var isFixedToEnd;
-    var rtlEnabled = that.option('rtlEnabled');
-    var bandColumnsCache = that.getBandColumnsCache();
-    var expandColumns = (0, _m_columns_controller_utils.mergeColumns)(that, that.getExpandColumns(), that._columns);
-    var columns = (0, _m_columns_controller_utils.mergeColumns)(that, that._columns, that._commandColumns, true);
-    var columnDigitsCount = (0, _m_columns_controller_utils.digitsCount)(columns.length);
-    (0, _m_columns_controller_utils.processBandColumns)(that, columns, bandColumnsCache);
-    for (i = 0; i < rowCount; i++) {
-      result[i] = [];
+    for (var i = 0; i < rowCount; i += 1) {
       negativeIndexedColumns[i] = [{}];
+      // 0 - fixed columns on the left side
+      // 1 - not fixed columns
+      // 2 - fixed columns on the right side
       positiveIndexedColumns[i] = [{}, {}, {}];
     }
-    (0, _iterator.each)(columns, function () {
-      var column = this;
+    columns.forEach(function (column) {
+      var _a, _b, _c, _d;
       var visibleIndex = column.visibleIndex;
       var indexedColumns;
       var parentBandColumns = (0, _m_columns_controller_utils.getParentBandColumns)(column.index, bandColumnsCache.columnParentByIndex);
-      var visible = that._isColumnVisible(column);
-      if (visible && (!(0, _type.isDefined)(column.groupIndex) || column.showWhenGrouped)) {
+      var isVisible = _this2._isColumnVisible(column);
+      var isInGroupPanel = _this2._isColumnInGroupPanel(column);
+      if (isVisible && !isInGroupPanel) {
         var rowIndex = parentBandColumns.length;
         if (visibleIndex < 0) {
           visibleIndex = -visibleIndex;
           indexedColumns = negativeIndexedColumns[rowIndex];
         } else {
-          column.fixed = parentBandColumns.length ? parentBandColumns[0].fixed : column.fixed;
-          column.fixedPosition = parentBandColumns.length ? parentBandColumns[0].fixedPosition : column.fixedPosition;
+          column.fixed = (_b = (_a = parentBandColumns[0]) === null || _a === void 0 ? void 0 : _a.fixed) !== null && _b !== void 0 ? _b : column.fixed;
+          column.fixedPosition = (_d = (_c = parentBandColumns[0]) === null || _c === void 0 ? void 0 : _c.fixedPosition) !== null && _d !== void 0 ? _d : column.fixedPosition;
           if (column.fixed) {
-            isFixedToEnd = column.fixedPosition === 'right';
-            if (rtlEnabled && (!column.command || (0, _m_columns_controller_utils.isCustomCommandColumn)(that, column))) {
+            var isDefaultCommandColumn = !!column.command && !(0, _m_columns_controller_utils.isCustomCommandColumn)(_this2, column);
+            var isFixedToEnd = column.fixedPosition === 'right';
+            if (rtlEnabled && !isDefaultCommandColumn) {
               isFixedToEnd = !isFixedToEnd;
             }
-            if (isFixedToEnd) {
-              indexedColumns = positiveIndexedColumns[rowIndex][2];
-            } else {
-              indexedColumns = positiveIndexedColumns[rowIndex][0];
-            }
+            indexedColumns = isFixedToEnd ? positiveIndexedColumns[rowIndex][2] : positiveIndexedColumns[rowIndex][0];
           } else {
             indexedColumns = positiveIndexedColumns[rowIndex][1];
           }
         }
         if (parentBandColumns.length) {
           visibleIndex = (0, _m_columns_controller_utils.numberToString)(visibleIndex, columnDigitsCount);
-          for (i = parentBandColumns.length - 1; i >= 0; i--) {
-            visibleIndex = (0, _m_columns_controller_utils.numberToString)(parentBandColumns[i].visibleIndex, columnDigitsCount) + visibleIndex;
+          for (var _i = parentBandColumns.length - 1; _i >= 0; _i -= 1) {
+            visibleIndex = (0, _m_columns_controller_utils.numberToString)(parentBandColumns[_i].visibleIndex, columnDigitsCount) + visibleIndex;
           }
         }
         indexedColumns[visibleIndex] = indexedColumns[visibleIndex] || [];
         indexedColumns[visibleIndex].push(column);
-        notGroupedColumnsCount++;
       }
     });
-    (0, _iterator.each)(result, function (rowIndex) {
+    return {
+      positiveIndexedColumns,
+      negativeIndexedColumns
+    };
+  };
+  _proto._getVisibleColumnsFromIndexed = function _getVisibleColumnsFromIndexed(_ref) {
+    var _this3 = this;
+    var positiveIndexedColumns = _ref.positiveIndexedColumns,
+      negativeIndexedColumns = _ref.negativeIndexedColumns;
+    var result = [];
+    var rowCount = this.getRowCount();
+    var expandColumns = (0, _m_columns_controller_utils.mergeColumns)(this, this.getExpandColumns(), this._columns);
+    var rowspanGroupColumns = 0;
+    var rowspanExpandColumns = 0;
+    var _loop = function _loop(rowIndex) {
+      result.push([]);
       (0, _object.orderEach)(negativeIndexedColumns[rowIndex], function (_, columns) {
         result[rowIndex].unshift.apply(result[rowIndex], columns);
       });
       var firstPositiveIndexColumn = result[rowIndex].length;
-      (0, _iterator.each)(positiveIndexedColumns[rowIndex], function (index, columnsByFixing) {
+      var positiveIndexedRowColumns = positiveIndexedColumns[rowIndex];
+      positiveIndexedRowColumns.forEach(function (columnsByFixing) {
         (0, _object.orderEach)(columnsByFixing, function (_, columnsByVisibleIndex) {
           result[rowIndex].push.apply(result[rowIndex], columnsByVisibleIndex);
         });
       });
       // The order of processing is important
-      if (rowspanExpandColumns < rowIndex + 1) {
-        rowspanExpandColumns += _m_columns_controller_utils.processExpandColumns.call(that, result[rowIndex], expandColumns, 'detailExpand', firstPositiveIndexColumn);
+      if (rowspanExpandColumns <= rowIndex) {
+        rowspanExpandColumns += _m_columns_controller_utils.processExpandColumns.call(_this3, result[rowIndex], expandColumns, _const.DETAIL_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
-      if (rowspanGroupColumns < rowIndex + 1) {
-        rowspanGroupColumns += _m_columns_controller_utils.processExpandColumns.call(that, result[rowIndex], expandColumns, _const.GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
+      if (rowspanGroupColumns <= rowIndex) {
+        rowspanGroupColumns += _m_columns_controller_utils.processExpandColumns.call(_this3, result[rowIndex], expandColumns, _const.GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
-    });
-    result.push((0, _m_columns_controller_utils.getDataColumns)(result));
-    if (!notGroupedColumnsCount && that._columns.length) {
-      result[rowCount].push({
-        command: 'empty'
-      });
+    };
+    for (var rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
+      _loop(rowIndex);
     }
+    result.push((0, _m_columns_controller_utils.getDataColumns)(result));
     return result;
   };
   _proto.getInvisibleColumns = function getInvisibleColumns(columns, bandColumnIndex) {
@@ -755,7 +786,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       var selector = this.calculateGroupValue || this.displayField || this.calculateDisplayValue || useLocalSelector && this.selector || this.dataField || this.calculateCellValue;
       if (selector) {
         var groupItem = {
-          selector: selector,
+          selector,
           desc: this.sortOrder === 'desc',
           isExpanded: !!this.autoExpandGroup
         };
@@ -798,7 +829,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       if ((0, _type.isFunction)(calculateCallback)) {
         if (!calculateCallback.originalCallback) {
           var context = {
-            column: column
+            column
           };
           column[calculateCallbackName] = function (data) {
             return calculateCallback.call(context.column, data);
@@ -914,7 +945,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto.updateColumns = function updateColumns(dataSource, forceApplying, isApplyingUserState) {
-    var _this = this;
+    var _this4 = this;
     if (!forceApplying) {
       this.updateSortingGrouping(dataSource);
     }
@@ -928,13 +959,13 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       (0, _m_columns_controller_utils.updateIndexes)(this);
       var columns = this._columns;
       return (0, _deferred.when)(this.refresh(true)).always(function () {
-        if (_this._columns !== columns) return;
-        _this._updateChanges(dataSource, {
+        if (_this4._columns !== columns) return;
+        _this4._updateChanges(dataSource, {
           sorting: sortParameters,
           grouping: groupParameters,
           filtering: filterParameters
         });
-        (0, _m_columns_controller_utils.fireColumnsChanged)(_this);
+        (0, _m_columns_controller_utils.fireColumnsChanged)(_this4);
       });
     }
   };
@@ -1240,13 +1271,13 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         var getter = (0, _data.compileGetter)(dataField);
         calculatedColumnOptions = {
           caption: (0, _inflector.captionize)(dataField),
-          calculateCellValue: function calculateCellValue(data, skipDeserialization) {
+          calculateCellValue(data, skipDeserialization) {
             // @ts-expect-error
             var value = getter(data);
             return this.deserializeValue && !skipDeserialization ? this.deserializeValue(value) : value;
           },
           setCellValue: _m_columns_controller_utils.defaultSetCellValue,
-          parseValue: function parseValue(text) {
+          parseValue(text) {
             var column = this;
             var result;
             var parsedValue;
@@ -1303,7 +1334,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       (0, _extend.extend)(true, calculatedColumnOptions, {
         allowSorting: false,
         allowGrouping: false,
-        calculateCellValue: function calculateCellValue() {
+        calculateCellValue() {
           return null;
         }
       });
@@ -1319,13 +1350,13 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
     if (columnOptions.lookup) {
       calculatedColumnOptions.lookup = {
-        calculateCellValue: function calculateCellValue(value, skipDeserialization) {
+        calculateCellValue(value, skipDeserialization) {
           if (this.valueExpr) {
             value = this.valueMap && this.valueMap[value];
           }
           return this.deserializeValue && !skipDeserialization ? this.deserializeValue(value) : value;
         },
-        updateValueMap: function updateValueMap() {
+        updateValueMap() {
           this.valueMap = {};
           if (this.items) {
             var calculateValue = (0, _data.compileGetter)(this.valueExpr);
@@ -1338,7 +1369,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
             }
           }
         },
-        update: function update() {
+        update() {
           var that = this;
           var dataSource = that.dataSource;
           if (dataSource) {
@@ -1447,7 +1478,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
 }(_m_modules.default.Controller);
 exports.ColumnsController = ColumnsController;
 var columnsControllerModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       commonColumnSettings: {
         allowFiltering: true,

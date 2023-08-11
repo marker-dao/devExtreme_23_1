@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/local_store.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -94,7 +94,7 @@ var LocalStore = _array_store.default.inherit({
     this._backend = new localStoreBackends[options.backend || 'dom'](this, options);
     this._backend.load();
   },
-  _clearCache: function _clearCache() {
+  _clearCache() {
     this._backend.load();
   },
   clear: function clear() {

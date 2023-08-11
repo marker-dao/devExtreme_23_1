@@ -21,7 +21,7 @@ var active = {
       timeout: showTimeout
     }, function (event) {
       return executeAction(active, {
-        event: event,
+        event,
         element: event.currentTarget
       });
     });
@@ -29,7 +29,7 @@ var active = {
       timeout: hideTimeout
     }, function (event) {
       return executeAction(inactive, {
-        event: event,
+        event,
         element: event.currentTarget
       });
     });
@@ -65,7 +65,7 @@ var hover = {
     _events_engine.default.on($el, addNamespace('dxhoverstart', namespace), selector, function (event) {
       return executeAction(start, {
         element: event.target,
-        event: event
+        event
       });
     });
   },
@@ -141,9 +141,9 @@ var keyboard = {
   on: function on(element, focusTarget, handler) {
     var listenerId = generateListenerId();
     keyboardProcessors[listenerId] = new _keyboard_processor.default({
-      element: element,
-      focusTarget: focusTarget,
-      handler: handler
+      element,
+      focusTarget,
+      handler
     });
     return listenerId;
   },

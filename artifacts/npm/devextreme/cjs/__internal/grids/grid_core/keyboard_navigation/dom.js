@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/keyboard_navigation/dom.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,7 +25,7 @@ var getCellToFocus = function getCellToFocus($cellElements, columnIndex) {
   return $cellElements.filter("[".concat(_const.ATTRIBUTES.ariaColIndex, "=\"").concat(columnIndex + 1, "\"]:not([").concat(_const.ATTRIBUTES.dragCell, "])")).first();
 };
 var GridCoreKeyboardNavigationDom = {
-  isDragCell: isDragCell,
-  getCellToFocus: getCellToFocus
+  isDragCell,
+  getCellToFocus
 };
 exports.GridCoreKeyboardNavigationDom = GridCoreKeyboardNavigationDom;

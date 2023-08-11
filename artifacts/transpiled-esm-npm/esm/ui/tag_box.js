@@ -970,7 +970,7 @@ var TagBox = SelectBox.inherit({
       if (!this.option('showMultiTagOnly')) {
         this.option('value', this._getValue().slice(0, this.option('maxDisplayedTags')));
       } else {
-        this.reset();
+        this.clear();
       }
       return;
     }
@@ -1182,7 +1182,7 @@ var TagBox = SelectBox.inherit({
       this._refreshSelected();
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     this._restoreInputText();
     var defaultValue = this._getDefaultOptions().value;
     var currentValue = this.option('value');

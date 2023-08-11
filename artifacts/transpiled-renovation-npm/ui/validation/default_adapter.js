@@ -4,7 +4,7 @@ exports.default = void 0;
 var _class = _interopRequireDefault(require("../../core/class"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var DefaultAdapter = _class.default.inherit({
-  ctor: function ctor(editor, validator) {
+  ctor(editor, validator) {
     var _this = this;
     this.editor = editor;
     this.validator = validator;
@@ -19,25 +19,25 @@ var DefaultAdapter = _class.default.inherit({
       editor.validationRequest.remove(handler);
     });
   },
-  getValue: function getValue() {
+  getValue() {
     return this.editor.option('value');
   },
-  getCurrentValidationError: function getCurrentValidationError() {
+  getCurrentValidationError() {
     return this.editor.option('validationError');
   },
-  bypass: function bypass() {
+  bypass() {
     return this.editor.option('disabled');
   },
-  applyValidationResults: function applyValidationResults(params) {
+  applyValidationResults(params) {
     this.editor.option({
       validationErrors: params.brokenRules,
       validationStatus: params.status
     });
   },
-  reset: function reset() {
-    this.editor.reset();
+  reset() {
+    this.editor.clear();
   },
-  focus: function focus() {
+  focus() {
     this.editor.focus();
   }
 });

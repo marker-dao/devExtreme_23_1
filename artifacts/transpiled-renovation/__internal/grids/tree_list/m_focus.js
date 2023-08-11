@@ -18,7 +18,7 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
   extenders: {
     controllers: {
       data: {
-        changeRowExpand: function changeRowExpand(key) {
+        changeRowExpand(key) {
           if (this.option('focusedRowEnabled') && this.isRowExpanded(key)) {
             if (this._isFocusedRowInside(key)) {
               this.option('focusedRowKey', key);
@@ -26,7 +26,7 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           }
           return this.callBase.apply(this, arguments);
         },
-        _isFocusedRowInside: function _isFocusedRowInside(parentKey) {
+        _isFocusedRowInside(parentKey) {
           var focusedRowKey = this.option('focusedRowKey');
           var rowIndex = this.getRowIndexByKey(focusedRowKey);
           var focusedRow = rowIndex >= 0 && this.getVisibleRows()[rowIndex];
@@ -39,7 +39,7 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           }
           return false;
         },
-        getParentKey: function getParentKey(key) {
+        getParentKey(key) {
           var that = this;
           var dataSource = that._dataSource;
           var node = that.getNodeByKey(key);
@@ -55,13 +55,13 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
               if (parentData) {
                 d.resolve(dataSource.parentKeyOf(parentData));
               } else {
-                d.reject();
+                d.resolve();
               }
             }).fail(d.reject);
           }
           return d.promise();
         },
-        expandAscendants: function expandAscendants(key) {
+        expandAscendants(key) {
           var that = this;
           var dataSource = that._dataSource;
           // @ts-expect-error
@@ -78,7 +78,7 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           }).fail(d.reject);
           return d.promise();
         },
-        getPageIndexByKey: function getPageIndexByKey(key) {
+        getPageIndexByKey(key) {
           var that = this;
           var dataSource = that._dataSource;
           // @ts-expect-error

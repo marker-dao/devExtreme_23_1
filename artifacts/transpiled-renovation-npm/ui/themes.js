@@ -367,20 +367,20 @@ function setDefaultTimeout(timeout) {
  * https://js.devexpress.com/Documentation/ApiReference/Common/Utils/ui/themes/
  * */
 var _default = {
-  setDefaultTimeout: setDefaultTimeout,
-  initialized: initialized,
-  resetTheme: resetTheme,
+  setDefaultTimeout,
+  initialized,
+  resetTheme,
   ready: themeReady,
-  waitWebFont: waitWebFont,
-  isWebFontLoaded: isWebFontLoaded,
-  isCompact: isCompact,
-  isDark: isDark,
-  isGeneric: isGeneric,
-  isMaterial: isMaterial,
-  detachCssClasses: detachCssClasses,
-  attachCssClasses: attachCssClasses,
-  current: current,
-  waitForThemeLoad: waitForThemeLoad,
-  isPendingThemeLoaded: isPendingThemeLoaded
+  waitWebFont,
+  isWebFontLoaded,
+  isCompact,
+  isDark,
+  isGeneric,
+  isMaterial,
+  detachCssClasses,
+  attachCssClasses,
+  current,
+  waitForThemeLoad,
+  isPendingThemeLoaded
 };
 exports.default = _default;

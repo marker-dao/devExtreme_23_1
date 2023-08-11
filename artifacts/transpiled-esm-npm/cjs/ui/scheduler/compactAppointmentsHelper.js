@@ -103,9 +103,9 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
       var options = {
         filter: ".".concat(_constants.LIST_ITEM_CLASS),
         isSetCursorOffset: true,
-        initialPosition: initialPosition,
-        getItemData: getItemData,
-        getItemSettings: getItemSettings
+        initialPosition,
+        getItemData,
+        getItemSettings
       };
       workSpace._createDragBehaviorBase($element, $schedulerElement, options);
     };

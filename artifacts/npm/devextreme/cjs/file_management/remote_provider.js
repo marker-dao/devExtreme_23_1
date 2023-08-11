@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/file_management/remote_provider.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../core/renderer"));
 var _ajax = _interopRequireDefault(require("../core/utils/ajax"));
@@ -19,12 +18,9 @@ var _iterator = require("../core/utils/iterator");
 var _deferred = require("../core/utils/deferred");
 var _events_engine = _interopRequireDefault(require("../events/core/events_engine"));
 var _provider_base = _interopRequireDefault(require("./provider_base"));
-var _data2 = require("../core/utils/data");
+var _data = require("../core/utils/data");
 var _type = require("../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var window = (0, _window.getWindow)();
@@ -54,7 +50,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     _this._beforeAjaxSend = options.beforeAjaxSend;
     _this._beforeSubmit = options.beforeSubmit;
     _this._requestHeaders = options.requestHeaders;
-    _this._hasSubDirsGetter = (0, _data2.compileGetter)(options.hasSubDirectoriesExpr || 'hasSubDirectories');
+    _this._hasSubDirsGetter = (0, _data.compileGetter)(options.hasSubDirectoriesExpr || 'hasSubDirectories');
     return _this;
   }
   var _proto = RemoteFileSystemProvider.prototype;
@@ -62,7 +58,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     var _this2 = this;
     var pathInfo = parentDir.getFullPathInfo();
     return this._executeRequest(FILE_SYSTEM_COMMNAD.GET_DIR_CONTENTS, {
-      pathInfo: pathInfo
+      pathInfo
     }).then(function (result) {
       return _this2._convertDataObjectsToFileItems(result.result, pathInfo);
     });
@@ -71,13 +67,13 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     return this._executeRequest(FILE_SYSTEM_COMMNAD.RENAME, {
       pathInfo: item.getFullPathInfo(),
       isDirectory: item.isDirectory,
-      name: name
+      name
     });
   };
   _proto.createDirectory = function createDirectory(parentDir, name) {
     return this._executeRequest(FILE_SYSTEM_COMMNAD.CREATE_DIR, {
       pathInfo: parentDir.getFullPathInfo(),
-      name: name
+      name
     });
   };
   _proto.deleteItems = function deleteItems(items) {
@@ -110,7 +106,6 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     });
   };
   _proto.uploadFileChunk = function uploadFileChunk(fileData, chunksInfo, destinationDirectory) {
-    var _data;
     if (chunksInfo.chunkIndex === 0) {
       chunksInfo.customData.uploadId = new _guid.default();
     }
@@ -129,7 +124,11 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
       headers: this._requestHeaders || {},
       method: REQUEST_METHOD.POST,
       dataType: 'json',
-      data: (_data = {}, _defineProperty(_data, FILE_CHUNK_BLOB_NAME, chunksInfo.chunkBlob), _defineProperty(_data, "arguments", JSON.stringify(args)), _defineProperty(_data, "command", FILE_SYSTEM_COMMNAD.UPLOAD_CHUNK), _data),
+      data: {
+        [FILE_CHUNK_BLOB_NAME]: chunksInfo.chunkBlob,
+        arguments: JSON.stringify(args),
+        command: FILE_SYSTEM_COMMNAD.UPLOAD_CHUNK
+      },
       upload: {
         onprogress: _common.noop,
         onloadstart: _common.noop,
@@ -197,7 +196,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
       return item.getFullPathInfo();
     });
     var args = {
-      pathInfoList: pathInfoList
+      pathInfoList
     };
     var argsStr = JSON.stringify(args);
     return {
@@ -217,7 +216,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     var ajaxSettings = {
       url: this._getEndpointUrl(command, args),
       headers: this._requestHeaders || {},
-      method: method,
+      method,
       dataType: 'json',
       data: {},
       xhrFields: {},
@@ -282,7 +281,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   };
   _proto._getEndpointUrl = function _getEndpointUrl(command, args) {
     var queryString = this._getQueryString({
-      command: command,
+      command,
       arguments: JSON.stringify(args)
     });
     var separator = this._endpointUrl && this._endpointUrl.indexOf('?') > 0 ? '&' : '?';

@@ -10,11 +10,11 @@ var _window = require("../../../../core/utils/window");
 var _m_virtual_columns_core = require("./m_virtual_columns_core");
 var DEFAULT_COLUMN_WIDTH = 50;
 var VirtualScrollingRowsViewExtender = {
-  _resizeCore: function _resizeCore() {
+  _resizeCore() {
     this.callBase.apply(this, arguments);
     this._columnsController.resize();
   },
-  _handleScroll: function _handleScroll(e) {
+  _handleScroll(e) {
     var that = this;
     var scrollable = this.getScrollable();
     var left = e.scrollOffset.left;
@@ -23,10 +23,30 @@ var VirtualScrollingRowsViewExtender = {
       left = (0, _size.getWidth)(scrollable.$content()) - (0, _size.getWidth)(scrollable.$element()) - left;
     }
     that._columnsController.setScrollPosition(left);
+  },
+  _restoreScrollTop() {
+    var scrollable = this.getScrollable();
+    var scrollTop = scrollable === null || scrollable === void 0 ? void 0 : scrollable.scrollTop();
+    if (this._scrollTop > 0 && scrollTop !== this._scrollTop) {
+      scrollable.scrollTo({
+        y: this._scrollTop
+      });
+    }
+  },
+  _renderCore(e) {
+    var _this = this;
+    if (e === null || e === void 0 ? void 0 : e.virtualColumnsScrolling) {
+      var resizeCompletedHandler = function resizeCompletedHandler() {
+        _this.resizeCompleted.remove(resizeCompletedHandler);
+        _this._restoreScrollTop();
+      };
+      this.resizeCompleted.add(resizeCompletedHandler);
+    }
+    return this.callBase.apply(this, arguments);
   }
 };
 var HeaderViewExtender = {
-  _renderCore: function _renderCore() {
+  _renderCore() {
     var deferred = this.callBase.apply(this, arguments);
     if (this._columnsController.isVirtualMode()) {
       this._updateScrollLeftPosition();
@@ -41,7 +61,7 @@ var ColumnsControllerExtender = function () {
     });
   };
   var members = {
-    init: function init() {
+    init() {
       var that = this;
       that.callBase.apply(this, arguments);
       that._beginPageIndex = null;
@@ -49,11 +69,11 @@ var ColumnsControllerExtender = function () {
       that._position = 0;
       that._virtualVisibleColumns = {};
     },
-    resetColumnsCache: function resetColumnsCache() {
+    resetColumnsCache() {
       this.callBase();
       this._virtualVisibleColumns = {};
     },
-    getBeginPageIndex: function getBeginPageIndex(position) {
+    getBeginPageIndex(position) {
       var visibleColumns = this.getVisibleColumns(undefined, true);
       var widths = getWidths(visibleColumns);
       var currentPosition = 0;
@@ -65,14 +85,14 @@ var ColumnsControllerExtender = function () {
       }
       return 0;
     },
-    getTotalWidth: function getTotalWidth() {
+    getTotalWidth() {
       var width = this.option('width');
       if (typeof width === 'number') {
         return width;
       }
       return this.getController('resizing')._lastWidth || (0, _size.getOuterWidth)(this.component.$element());
     },
-    getEndPageIndex: function getEndPageIndex(position) {
+    getEndPageIndex(position) {
       var visibleColumns = this.getVisibleColumns(undefined, true);
       var widths = getWidths(visibleColumns);
       var currentPosition = 0;
@@ -85,10 +105,10 @@ var ColumnsControllerExtender = function () {
       }
       return Math.ceil(widths.length / this.getColumnPageSize());
     },
-    getColumnPageSize: function getColumnPageSize() {
+    getColumnPageSize() {
       return this.option('scrolling.columnPageSize');
     },
-    _fireColumnsChanged: function _fireColumnsChanged() {
+    _fireColumnsChanged() {
       var date = new Date();
       this.columnsChanged.fire({
         optionNames: {
@@ -103,7 +123,7 @@ var ColumnsControllerExtender = function () {
       });
       this._renderTime = new Date() - date;
     },
-    getScrollingTimeout: function getScrollingTimeout() {
+    getScrollingTimeout() {
       var renderingThreshold = this.option('scrolling.columnRenderingThreshold');
       var renderAsync = this.option('scrolling.renderAsync');
       var scrollingTimeout = 0;
@@ -112,25 +132,25 @@ var ColumnsControllerExtender = function () {
       }
       return scrollingTimeout;
     },
-    setScrollPosition: function setScrollPosition(position) {
-      var _this = this;
+    setScrollPosition(position) {
+      var _this2 = this;
       var scrollingTimeout = this.getScrollingTimeout();
       if (scrollingTimeout > 0) {
         clearTimeout(this._changedTimeout);
         this._changedTimeout = setTimeout(function () {
-          _this._setScrollPositionCore(position);
+          _this2._setScrollPositionCore(position);
         }, scrollingTimeout);
       } else {
         this._setScrollPositionCore(position);
       }
     },
-    isVirtualMode: function isVirtualMode() {
+    isVirtualMode() {
       return (0, _window.hasWindow)() && this.option('scrolling.columnRenderingMode') === 'virtual';
     },
-    resize: function resize() {
+    resize() {
       this._setScrollPositionCore(this._position);
     },
-    _setScrollPositionCore: function _setScrollPositionCore(position) {
+    _setScrollPositionCore(position) {
       var that = this;
       if (that.isVirtualMode()) {
         var beginPageIndex = that.getBeginPageIndex(position);
@@ -144,7 +164,7 @@ var ColumnsControllerExtender = function () {
         }
       }
     },
-    getFixedColumns: function getFixedColumns(rowIndex, isBase) {
+    getFixedColumns(rowIndex, isBase) {
       var fixedColumns = this.callBase(rowIndex);
       if (this.isVirtualMode() && !isBase && fixedColumns.length) {
         var transparentColumnIndex = fixedColumns.map(function (c) {
@@ -155,7 +175,7 @@ var ColumnsControllerExtender = function () {
       }
       return fixedColumns;
     },
-    _compileVisibleColumns: function _compileVisibleColumns(rowIndex, isBase) {
+    _compileVisibleColumns(rowIndex, isBase) {
       var _a;
       if (isBase || !this.isVirtualMode() || !this._shouldReturnVisibleColumns()) {
         return this.callBase(rowIndex);
@@ -225,7 +245,7 @@ var ColumnsControllerExtender = function () {
       this._virtualVisibleColumns[visibleColumnsHash] = visibleColumns;
       return visibleColumns;
     },
-    getColumnIndexOffset: function getColumnIndexOffset() {
+    getColumnIndexOffset() {
       var offset = 0;
       if (this._beginPageIndex > 0) {
         var fixedColumns = this.getFixedColumns();
@@ -237,7 +257,7 @@ var ColumnsControllerExtender = function () {
       }
       return offset > 0 ? offset : 0;
     },
-    dispose: function dispose() {
+    dispose() {
       clearTimeout(this._changedTimeout);
       this.callBase.apply(this, arguments);
     }
@@ -245,7 +265,7 @@ var ColumnsControllerExtender = function () {
   return members;
 }();
 var virtualColumnsModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       scrolling: {
         columnRenderingMode: 'standard',

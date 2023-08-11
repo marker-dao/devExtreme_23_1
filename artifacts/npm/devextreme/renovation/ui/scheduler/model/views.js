@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/model/views.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -64,7 +64,7 @@ var getCurrentViewConfig = function getCurrentViewConfig(currentViewProps, sched
   }, restSchedulerProps, currentViewProps, {
     schedulerHeight: schedulerProps.height,
     schedulerWidth: schedulerProps.width,
-    crossScrollingEnabled: crossScrollingEnabled,
+    crossScrollingEnabled,
     appointmentTemplate: currentViewProps.appointmentTemplate || restSchedulerProps.appointmentTemplate,
     dataCellTemplate: currentViewProps.dataCellTemplate || restSchedulerProps.dataCellTemplate,
     dateCellTemplate: currentViewProps.dateCellTemplate || restSchedulerProps.dateCellTemplate,
@@ -78,7 +78,7 @@ var getCurrentViewConfig = function getCurrentViewConfig(currentViewProps, sched
     hoursInterval: result.cellDuration / 60,
     allDayPanelExpanded: true,
     allowMultipleCellSelection: true,
-    currentDate: currentDate
+    currentDate
   });
 };
 exports.getCurrentViewConfig = getCurrentViewConfig;

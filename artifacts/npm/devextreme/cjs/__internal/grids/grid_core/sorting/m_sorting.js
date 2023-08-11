@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/sorting/m_sorting.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,7 +23,7 @@ var _m_sorting_mixin = _interopRequireDefault(require("./m_sorting_mixin"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var COLUMN_HEADERS_VIEW_NAMESPACE = 'dxDataGridColumnHeadersView';
 var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.default, {
-  _createRow: function _createRow(row) {
+  _createRow(row) {
     var _this = this;
     var $row = this.callBase(row);
     if (row.rowType === 'header') {
@@ -33,7 +33,7 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
     }
     return $row;
   },
-  _processHeaderAction: function _processHeaderAction(event, $row) {
+  _processHeaderAction(event, $row) {
     if ((0, _renderer.default)(event.currentTarget).parent().get(0) !== $row.get(0)) {
       return;
     }
@@ -69,20 +69,20 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
       });
     }
   },
-  _renderCellContent: function _renderCellContent($cell, options) {
+  _renderCellContent($cell, options) {
     var that = this;
     var column = options.column;
     if (!column.command && options.rowType === 'header') {
       that._applyColumnState({
         name: 'sort',
         rootElement: $cell,
-        column: column,
+        column,
         showColumnLines: that.option('showColumnLines')
       });
     }
     this.callBase.apply(this, arguments);
   },
-  _columnOptionChanged: function _columnOptionChanged(e) {
+  _columnOptionChanged(e) {
     var changeTypes = e.changeTypes;
     if (changeTypes.length === 1 && changeTypes.sorting) {
       this._updateIndicators('sort');
@@ -90,7 +90,7 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
     }
     this.callBase(e);
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     var that = this;
     switch (args.name) {
       case 'sorting':
@@ -103,7 +103,7 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
   }
 });
 var HeaderPanelSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.default, {
-  _createGroupPanelItem: function _createGroupPanelItem($rootElement, groupColumn) {
+  _createGroupPanelItem($rootElement, groupColumn) {
     var that = this;
     var $item = that.callBase.apply(that, arguments);
     _events_engine.default.on($item, (0, _index.addNamespace)(_click.name, 'dxDataGridHeaderPanel'), that.createAction(function () {
@@ -115,19 +115,20 @@ var HeaderPanelSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.defaul
       column: {
         alignment: that.option('rtlEnabled') ? 'right' : 'left',
         allowSorting: groupColumn.allowSorting,
-        sortOrder: groupColumn.sortOrder === 'desc' ? 'desc' : 'asc'
+        sortOrder: groupColumn.sortOrder === 'desc' ? 'desc' : 'asc',
+        isGrouped: true
       },
       showColumnLines: true
     });
     return $item;
   },
-  _processGroupItemAction: function _processGroupItemAction(groupColumnIndex) {
+  _processGroupItemAction(groupColumnIndex) {
     var _this2 = this;
     setTimeout(function () {
       return _this2.getController('columns').changeSortOrder(groupColumnIndex);
     });
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     var that = this;
     switch (args.name) {
       case 'sorting':
@@ -140,7 +141,7 @@ var HeaderPanelSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.defaul
   }
 });
 var sortingModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       sorting: {
         mode: 'single',

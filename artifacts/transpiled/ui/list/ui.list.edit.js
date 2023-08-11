@@ -12,7 +12,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
 var LIST_ITEM_RESPONSE_WAIT_CLASS = 'dx-list-item-response-wait';
 var ListEdit = _uiList.ListBase.inherit({
-  _supportedKeys: function _supportedKeys() {
+  _supportedKeys() {
     var _this = this;
     var that = this;
     var parent = this.callBase();
@@ -62,18 +62,18 @@ var ListEdit = _uiList.ListBase.inherit({
       downArrow: function downArrow(e) {
         return moveFocusedItem(e);
       },
-      enter: enter,
-      space: space
+      enter,
+      space
     });
   },
-  _updateSelection: function _updateSelection() {
+  _updateSelection() {
     this._editProvider.afterItemsRendered();
     this.callBase();
   },
-  _getLastItemIndex: function _getLastItemIndex() {
+  _getLastItemIndex() {
     return this._itemElements().length - 1;
   },
-  _refreshItemElements: function _refreshItemElements() {
+  _refreshItemElements() {
     this.callBase();
     var excludedSelectors = this._editProvider.getExcludedItemSelectors();
     if (excludedSelectors.length) {
@@ -87,7 +87,7 @@ var ListEdit = _uiList.ListBase.inherit({
     }
     return this.callBase(item1, item2);
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       showSelectionControls: false,
       selectionMode: 'none',
@@ -101,7 +101,7 @@ var ListEdit = _uiList.ListBase.inherit({
       itemDragging: {}
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules() {
     return this.callBase().concat([{
       device: function device(_device) {
         return _device.platform === 'ios';
@@ -119,53 +119,53 @@ var ListEdit = _uiList.ListBase.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._initEditProvider();
   },
-  _initDataSource: function _initDataSource() {
+  _initDataSource() {
     this.callBase();
     if (!this._isPageSelectAll()) {
       this._dataSource && this._dataSource.requireTotalCount(true);
     }
   },
-  _isPageSelectAll: function _isPageSelectAll() {
+  _isPageSelectAll() {
     return this.option('selectAllMode') === 'page';
   },
-  _initEditProvider: function _initEditProvider() {
+  _initEditProvider() {
     this._editProvider = new _uiListEdit.default(this);
   },
-  _disposeEditProvider: function _disposeEditProvider() {
+  _disposeEditProvider() {
     if (this._editProvider) {
       this._editProvider.dispose();
     }
   },
-  _refreshEditProvider: function _refreshEditProvider() {
+  _refreshEditProvider() {
     this._disposeEditProvider();
     this._initEditProvider();
   },
-  _initEditStrategy: function _initEditStrategy() {
+  _initEditStrategy() {
     if (this.option('grouped')) {
       this._editStrategy = new _uiListEditStrategy.default(this);
     } else {
       this.callBase();
     }
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this._refreshEditProvider();
     this.callBase();
   },
-  _renderItems: function _renderItems() {
+  _renderItems() {
     this.callBase.apply(this, arguments);
     this._editProvider.afterItemsRendered();
   },
-  _selectedItemClass: function _selectedItemClass() {
+  _selectedItemClass() {
     return LIST_ITEM_SELECTED_CLASS;
   },
-  _itemResponseWaitClass: function _itemResponseWaitClass() {
+  _itemResponseWaitClass() {
     return LIST_ITEM_RESPONSE_WAIT_CLASS;
   },
-  _itemClickHandler: function _itemClickHandler(e) {
+  _itemClickHandler(e) {
     var $itemElement = (0, _renderer.default)(e.currentTarget);
     if ($itemElement.is('.dx-state-disabled, .dx-state-disabled *')) {
       return;
@@ -177,10 +177,10 @@ var ListEdit = _uiList.ListBase.inherit({
     this._saveSelectionChangeEvent(e);
     this.callBase.apply(this, arguments);
   },
-  _shouldFireContextMenuEvent: function _shouldFireContextMenuEvent() {
+  _shouldFireContextMenuEvent() {
     return this.callBase.apply(this, arguments) || this._editProvider.contextMenuHandlerExists();
   },
-  _itemHoldHandler: function _itemHoldHandler(e) {
+  _itemHoldHandler(e) {
     var $itemElement = (0, _renderer.default)(e.currentTarget);
     if ($itemElement.is('.dx-state-disabled, .dx-state-disabled *')) {
       return;
@@ -201,7 +201,7 @@ var ListEdit = _uiList.ListBase.inherit({
       return this.callBase(changeData);
     }
   },
-  _itemContextMenuHandler: function _itemContextMenuHandler(e) {
+  _itemContextMenuHandler(e) {
     var $itemElement = (0, _renderer.default)(e.currentTarget);
     if ($itemElement.is('.dx-state-disabled, .dx-state-disabled *')) {
       return;
@@ -213,21 +213,21 @@ var ListEdit = _uiList.ListBase.inherit({
     }
     this.callBase.apply(this, arguments);
   },
-  _postprocessRenderItem: function _postprocessRenderItem(args) {
+  _postprocessRenderItem(args) {
     this.callBase.apply(this, arguments);
     this._editProvider.modifyItemElement(args);
   },
-  _clean: function _clean() {
+  _clean() {
     this._disposeEditProvider();
     this.callBase();
   },
-  focusListItem: function focusListItem(index) {
+  focusListItem(index) {
     var $item = this._editStrategy.getItemElement(index);
     this.option('focusedElement', $item);
     this.focus();
     this.scrollToItem(this.option('focusedElement'));
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     switch (args.name) {
       case 'selectAllMode':
         this._initDataSource();
@@ -255,13 +255,13 @@ var ListEdit = _uiList.ListBase.inherit({
         this.callBase(args);
     }
   },
-  selectAll: function selectAll() {
+  selectAll() {
     return this._selection.selectAll(this._isPageSelectAll());
   },
-  unselectAll: function unselectAll() {
+  unselectAll() {
     return this._selection.deselectAll(this._isPageSelectAll());
   },
-  isSelectAll: function isSelectAll() {
+  isSelectAll() {
     return this._selection.getSelectAllState(this._isPageSelectAll());
   },
   /**
@@ -271,7 +271,7 @@ var ListEdit = _uiList.ListBase.inherit({
   * @return object
   * @hidden
   */
-  getFlatIndexByItemElement: function getFlatIndexByItemElement(itemElement) {
+  getFlatIndexByItemElement(itemElement) {
     return this._itemElements().index(itemElement);
   },
   /**
@@ -281,7 +281,7 @@ var ListEdit = _uiList.ListBase.inherit({
   * @return Element
   * @hidden
   */
-  getItemElementByFlatIndex: function getItemElementByFlatIndex(flatIndex) {
+  getItemElementByFlatIndex(flatIndex) {
     var $itemElements = this._itemElements();
     if (flatIndex < 0 || flatIndex >= $itemElements.length) {
       return (0, _renderer.default)();
@@ -295,7 +295,7 @@ var ListEdit = _uiList.ListBase.inherit({
   * @return object
   * @hidden
   */
-  getItemByIndex: function getItemByIndex(index) {
+  getItemByIndex(index) {
     return this._editStrategy.getItemDataByIndex(index);
   }
 });

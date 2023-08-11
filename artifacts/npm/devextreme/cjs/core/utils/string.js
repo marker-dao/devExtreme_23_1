@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/string.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,6 @@ exports.encodeHtml = void 0;
 exports.format = format;
 exports.replaceAll = exports.quadToObject = exports.isEmpty = void 0;
 var _type = require("./type");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var encodeHtml = function () {
   var encodeRegExp = [new RegExp('&', 'g'), new RegExp('"', 'g'), new RegExp('\'', 'g'), new RegExp('<', 'g'), new RegExp('>', 'g')];
   return function (str) {
@@ -21,7 +20,7 @@ var encodeHtml = function () {
 }();
 exports.encodeHtml = encodeHtml;
 var splitQuad = function splitQuad(raw) {
-  switch (_typeof(raw)) {
+  switch (typeof raw) {
     case 'string':
       return raw.split(/\s+/, 4);
     case 'object':

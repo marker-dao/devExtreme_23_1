@@ -200,7 +200,7 @@ var Slider = _track_bar.default.inherit({
       return;
     }
     var config = {
-      element: element,
+      element,
       event: dxEvent,
       wave: waveIndex
     };
@@ -247,8 +247,8 @@ var Slider = _track_bar.default.inherit({
     var tooltip = this.option('tooltip');
     this.$element().toggleClass(SLIDER_TOOLTIP_POSITION_CLASS_PREFIX + 'bottom', tooltip.enabled && tooltip.position === 'bottom').toggleClass(SLIDER_TOOLTIP_POSITION_CLASS_PREFIX + 'top', tooltip.enabled && tooltip.position === 'top');
     this._createComponent($handle, _ui.default, {
-      value: value,
-      tooltip: tooltip
+      value,
+      tooltip
     });
     return $handle;
   },

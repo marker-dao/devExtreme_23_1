@@ -12,8 +12,8 @@ var WidgetCollector = /*#__PURE__*/function () {
   };
   _proto.add = function add(name, instance) {
     this._collection.push({
-      name: name,
-      instance: instance
+      name,
+      instance
     });
   };
   _proto.remove = function remove(name) {

@@ -32,7 +32,8 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; } // @ts-expect-error
+// @ts-expect-error
 var INVALIDATE_CLASS = 'invalid';
 var REVERT_TOOLTIP_CLASS = 'revert-tooltip';
 var INVALID_MESSAGE_CLASS = 'dx-invalid-message';
@@ -69,22 +70,22 @@ var cellValueShouldBeValidated = function cellValueShouldBeValidated(value, rowO
 };
 var ValidatingController = _m_modules.default.Controller.inherit(function () {
   return {
-    init: function init() {
+    init() {
       this._editingController = this.getController('editing');
       this.createAction('onRowValidating');
       if (!this._validationState) {
         this.initValidationState();
       }
     },
-    initValidationState: function initValidationState() {
+    initValidationState() {
       this._validationState = [];
       this._validationStateCache = {};
     },
-    _rowIsValidated: function _rowIsValidated(change) {
+    _rowIsValidated(change) {
       var validationData = this._getValidationData(change === null || change === void 0 ? void 0 : change.key);
       return !!validationData && !!validationData.validated;
     },
-    _getValidationData: function _getValidationData(key, create) {
+    _getValidationData(key, create) {
       var keyHash = (0, _common.getKeyHash)(key);
       var isObjectKeyHash = (0, _type.isObject)(keyHash);
       var validationData;
@@ -98,7 +99,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       }
       if (!validationData && create) {
         validationData = {
-          key: key,
+          key,
           isValid: true
         };
         this._validationState.push(validationData);
@@ -108,7 +109,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       }
       return validationData;
     },
-    _getBrokenRules: function _getBrokenRules(validationData, validationResults) {
+    _getBrokenRules(validationData, validationResults) {
       var brokenRules;
       if (validationResults) {
         brokenRules = validationResults.brokenRules || validationResults.brokenRule && [validationResults.brokenRule];
@@ -117,15 +118,15 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       }
       return brokenRules;
     },
-    _rowValidating: function _rowValidating(validationData, validationResults) {
+    _rowValidating(validationData, validationResults) {
       // @ts-expect-error
       var deferred = new _deferred.Deferred();
       var change = this._editingController.getChangeByKey(validationData === null || validationData === void 0 ? void 0 : validationData.key);
       var brokenRules = this._getBrokenRules(validationData, validationResults);
       var isValid = validationResults ? validationResults.isValid : validationData.isValid;
       var parameters = {
-        brokenRules: brokenRules,
-        isValid: isValid,
+        brokenRules,
+        isValid,
         key: change.key,
         newData: change.data,
         oldData: this._editingController._getOldData(change.key),
@@ -140,7 +141,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       });
       return deferred.promise();
     },
-    getHiddenValidatorsErrorText: function getHiddenValidatorsErrorText(brokenRules) {
+    getHiddenValidatorsErrorText(brokenRules) {
       var brokenRulesMessages = [];
       (0, _iterator.each)(brokenRules, function (_, brokenRule) {
         var column = brokenRule.column;
@@ -152,7 +153,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       });
       return brokenRulesMessages.join(', ');
     },
-    validate: function validate(isFull) {
+    validate(isFull) {
       var _this = this;
       var isValid = true;
       var editingController = this._editingController;
@@ -194,7 +195,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       });
       return deferred.promise();
     },
-    validateGroup: function validateGroup(validationData) {
+    validateGroup(validationData) {
       var _this2 = this;
       // @ts-expect-error
       var result = new _deferred.Deferred();
@@ -209,10 +210,10 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       });
       return result.promise();
     },
-    isRowDataModified: function isRowDataModified(change) {
+    isRowDataModified(change) {
       return !(0, _type.isEmptyObject)(change.data);
     },
-    updateValidationState: function updateValidationState(change) {
+    updateValidationState(change) {
       var editMode = this._editingController.getEditMode();
       var key = change.key;
       var validationData = this._getValidationData(key, true);
@@ -240,10 +241,10 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         validationData.isValid = true;
       }
     },
-    setValidator: function setValidator(validator) {
+    setValidator(validator) {
       this._currentCellValidator = validator;
     },
-    renderCellPendingIndicator: function renderCellPendingIndicator($container) {
+    renderCellPendingIndicator($container) {
       var $indicator = $container.find(".".concat(PENDING_INDICATOR_CLASS));
       if (!$indicator.length) {
         var $indicatorContainer = $container;
@@ -252,7 +253,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         $container.addClass(VALIDATION_PENDING_CLASS);
       }
     },
-    disposeCellPendingIndicator: function disposeCellPendingIndicator($container) {
+    disposeCellPendingIndicator($container) {
       var $indicator = $container.find(".".concat(PENDING_INDICATOR_CLASS));
       if ($indicator.length) {
         var indicator = _load_indicator.default.getInstance($indicator);
@@ -263,7 +264,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         $container.removeClass(VALIDATION_PENDING_CLASS);
       }
     },
-    validationStatusChanged: function validationStatusChanged(result) {
+    validationStatusChanged(result) {
       var validator = result.validator;
       var validationGroup = validator.option('validationGroup');
       var _validator$option = validator.option('dataGetter')(),
@@ -274,11 +275,11 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         validationResult: result
       });
     },
-    validatorInitialized: function validatorInitialized(arg) {
+    validatorInitialized(arg) {
       arg.component.on('validating', this.validationStatusChanged.bind(this));
       arg.component.on('validated', this.validationStatusChanged.bind(this));
     },
-    validatorDisposing: function validatorDisposing(arg) {
+    validatorDisposing(arg) {
       var validator = arg.component;
       var validationGroup = validator.option('validationGroup');
       var _validator$option2 = validator.option('dataGetter')(),
@@ -294,7 +295,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         });
       }
     },
-    applyValidationResult: function applyValidationResult($container, result) {
+    applyValidationResult($container, result) {
       var validator = result.validator;
       var validationGroup = validator.option('validationGroup');
       var _validator$option3 = validator.option('dataGetter')(),
@@ -336,7 +337,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         $container.toggleClass(this.addWidgetPrefix(INVALIDATE_CLASS), result.status === VALIDATION_STATUS.invalid);
       }
     },
-    _syncInternalEditingData: function _syncInternalEditingData(parameters) {
+    _syncInternalEditingData(parameters) {
       var _a;
       var editingController = this._editingController;
       var change = editingController.getChangeByKey(parameters.key);
@@ -345,11 +346,11 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       if (change && oldData && !oldDataFromState) {
         editingController._addInternalData({
           key: parameters.key,
-          oldData: oldData
+          oldData
         });
       }
     },
-    createValidator: function createValidator(parameters, $container) {
+    createValidator(parameters, $container) {
       var _this3 = this;
       var _a, _b;
       var editingController = this._editingController;
@@ -398,18 +399,18 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
           validationGroup: validationData,
           // @ts-expect-error
           adapter: useDefaultValidator ? null : {
-            getValue: getValue,
+            getValue,
             applyValidationResults: function applyValidationResults(result) {
               _this3.applyValidationResult($container, result);
             }
           },
-          dataGetter: function dataGetter() {
+          dataGetter() {
             var key = validationData === null || validationData === void 0 ? void 0 : validationData.key;
             var change = editingController.getChangeByKey(key);
             var oldData = editingController._getOldData(key);
             return {
               data: (0, _array_utils.createObjectWithChanges)(oldData, change === null || change === void 0 ? void 0 : change.data),
-              column: column
+              column
             };
           },
           onInitialized: this.validatorInitialized.bind(this),
@@ -434,18 +435,18 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       }
       return undefined;
     },
-    setDisableApplyValidationResults: function setDisableApplyValidationResults(flag) {
+    setDisableApplyValidationResults(flag) {
       this._disableApplyValidationResults = flag;
     },
-    getDisableApplyValidationResults: function getDisableApplyValidationResults() {
+    getDisableApplyValidationResults() {
       return this._disableApplyValidationResults;
     },
-    isCurrentValidatorProcessing: function isCurrentValidatorProcessing(_ref2) {
+    isCurrentValidatorProcessing(_ref2) {
       var rowKey = _ref2.rowKey,
         columnIndex = _ref2.columnIndex;
       return this._currentCellValidator && (0, _common.equalByValue)(this._currentCellValidator.option('validationGroup').key, rowKey) && this._currentCellValidator.option('dataGetter')().column.index === columnIndex;
     },
-    validateCell: function validateCell(validator) {
+    validateCell(validator) {
       var cellParams = {
         rowKey: validator.option('validationGroup').key,
         columnIndex: validator.option('dataGetter')().column.index
@@ -473,7 +474,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
       });
       return deferred.promise();
     },
-    updateCellValidationResult: function updateCellValidationResult(_ref3) {
+    updateCellValidationResult(_ref3) {
       var rowKey = _ref3.rowKey,
         columnIndex = _ref3.columnIndex,
         validationResult = _ref3.validationResult;
@@ -509,27 +510,27 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         delete result.disabledPendingId;
       }
     },
-    getCellValidationResult: function getCellValidationResult(_ref4) {
+    getCellValidationResult(_ref4) {
       var rowKey = _ref4.rowKey,
         columnIndex = _ref4.columnIndex;
       var _a;
       var validationData = this._getValidationData(rowKey, true);
       return (_a = validationData === null || validationData === void 0 ? void 0 : validationData.validationResults) === null || _a === void 0 ? void 0 : _a[columnIndex];
     },
-    removeCellValidationResult: function removeCellValidationResult(_ref5) {
+    removeCellValidationResult(_ref5) {
       var change = _ref5.change,
         columnIndex = _ref5.columnIndex;
       var validationData = this._getValidationData(change === null || change === void 0 ? void 0 : change.key);
       if (validationData && validationData.validationResults) {
         this.cancelCellValidationResult({
-          change: change,
-          columnIndex: columnIndex
+          change,
+          columnIndex
         });
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete validationData.validationResults[columnIndex];
       }
     },
-    cancelCellValidationResult: function cancelCellValidationResult(_ref6) {
+    cancelCellValidationResult(_ref6) {
       var change = _ref6.change,
         columnIndex = _ref6.columnIndex;
       var validationData = this._getValidationData(change.key);
@@ -541,22 +542,22 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         }
       }
     },
-    resetRowValidationResults: function resetRowValidationResults(validationData) {
+    resetRowValidationResults(validationData) {
       if (validationData) {
         validationData.validationResults && delete validationData.validationResults;
         delete validationData.validated;
       }
     },
-    isInvalidCell: function isInvalidCell(_ref7) {
+    isInvalidCell(_ref7) {
       var rowKey = _ref7.rowKey,
         columnIndex = _ref7.columnIndex;
       var result = this.getCellValidationResult({
-        rowKey: rowKey,
-        columnIndex: columnIndex
+        rowKey,
+        columnIndex
       });
       return validationResultIsValid(result) && result.status === VALIDATION_STATUS.invalid;
     },
-    getCellValidator: function getCellValidator(_ref8) {
+    getCellValidator(_ref8) {
       var rowKey = _ref8.rowKey,
         columnIndex = _ref8.columnIndex;
       var validationData = this._getValidationData(rowKey);
@@ -568,7 +569,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
         return column ? column.index === columnIndex : false;
       })[0];
     },
-    setCellValidationStatus: function setCellValidationStatus(cellOptions) {
+    setCellValidationStatus(cellOptions) {
       var validationResult = this.getCellValidationResult({
         rowKey: cellOptions.key,
         columnIndex: cellOptions.column.index
@@ -582,7 +583,7 @@ var ValidatingController = _m_modules.default.Controller.inherit(function () {
   };
 }());
 var validatingModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       editing: {
         texts: {
@@ -597,7 +598,7 @@ var validatingModule = {
   extenders: {
     controllers: {
       editing: {
-        _addChange: function _addChange(changeParams) {
+        _addChange(changeParams) {
           var change = this.callBase.apply(this, arguments);
           var validatingController = this.getController('validating');
           if (change && changeParams.type !== EDIT_DATA_REMOVE_TYPE) {
@@ -605,7 +606,7 @@ var validatingModule = {
           }
           return change;
         },
-        _handleChangesChange: function _handleChangesChange(args) {
+        _handleChangesChange(args) {
           this.callBase.apply(this, arguments);
           var validatingController = this.getController('validating');
           args.value.forEach(function (change) {
@@ -614,7 +615,7 @@ var validatingModule = {
             }
           });
         },
-        _updateRowAndPageIndices: function _updateRowAndPageIndices() {
+        _updateRowAndPageIndices() {
           var _this4 = this;
           var that = this;
           var startInsertIndex = that.getView('rowsView').getTopVisibleItemIndex();
@@ -634,21 +635,21 @@ var validatingModule = {
             }
           });
         },
-        _getValidationGroupsInForm: function _getValidationGroupsInForm(detailOptions) {
+        _getValidationGroupsInForm(detailOptions) {
           var validatingController = this.getController('validating');
           var validationData = validatingController._getValidationData(detailOptions.key, true);
           return {
             validationGroup: validationData
           };
         },
-        _validateEditFormAfterUpdate: function _validateEditFormAfterUpdate(row, isCustomSetCellValue) {
+        _validateEditFormAfterUpdate(row, isCustomSetCellValue) {
           // T816256, T844143
           if (isCustomSetCellValue && this._editForm) {
             this._editForm.validate();
           }
           this.callBase.apply(this, arguments);
         },
-        _prepareEditCell: function _prepareEditCell(params) {
+        _prepareEditCell(params) {
           var isNotCanceled = this.callBase.apply(this, arguments);
           var validatingController = this.getController('validating');
           if (isNotCanceled && params.column.showEditorAlways) {
@@ -658,7 +659,7 @@ var validatingModule = {
           }
           return isNotCanceled;
         },
-        processItems: function processItems(items, changeType) {
+        processItems(items, changeType) {
           var _this5 = this;
           var changes = this.getChanges();
           var dataController = this.getController('data');
@@ -702,7 +703,7 @@ var validatingModule = {
           }
           return items;
         },
-        processDataItem: function processDataItem(item) {
+        processDataItem(item) {
           var isInserted = item.data[INSERT_INDEX];
           var key = isInserted ? item.data.key : item.key;
           var editMode = this.getEditMode();
@@ -720,7 +721,7 @@ var validatingModule = {
           }
           this.callBase.apply(this, arguments);
         },
-        _createInvisibleColumnValidators: function _createInvisibleColumnValidators(changes) {
+        _createInvisibleColumnValidators(changes) {
           var _this6 = this;
           var that = this;
           var validatingController = this.getController('validating');
@@ -755,7 +756,7 @@ var validatingModule = {
                 }
                 if (data) {
                   var validator = validatingController.createValidator({
-                    column: column,
+                    column,
                     key: change.key,
                     value: column.calculateCellValue(data)
                   });
@@ -773,7 +774,7 @@ var validatingModule = {
           };
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _beforeSaveEditData: function _beforeSaveEditData(change, editIndex) {
+        _beforeSaveEditData(change, editIndex) {
           var _this7 = this;
           var result = this.callBase.apply(this, arguments);
           var validatingController = this.getController('validating');
@@ -810,7 +811,7 @@ var validatingModule = {
           }
           return result.promise ? result.promise() : result;
         },
-        _beforeEditCell: function _beforeEditCell(rowIndex, columnIndex, item) {
+        _beforeEditCell(rowIndex, columnIndex, item) {
           var result = this.callBase(rowIndex, columnIndex, item);
           if (this.getEditMode() === EDIT_MODE_CELL) {
             var $cell = this._rowsView._getCellElement(rowIndex, columnIndex);
@@ -831,7 +832,7 @@ var validatingModule = {
             }
           }
         },
-        _afterSaveEditData: function _afterSaveEditData(cancel) {
+        _afterSaveEditData(cancel) {
           var _this8 = this;
           var $firstErrorRow;
           var isCellEditMode = this.getEditMode() === EDIT_MODE_CELL;
@@ -868,7 +869,7 @@ var validatingModule = {
             }
           }
         },
-        _handleDataChanged: function _handleDataChanged(args) {
+        _handleDataChanged(args) {
           var validationState = this.getController('validating')._validationState;
           if (this.option('scrolling.mode') === 'standard') {
             this.resetRowAndPageIndices();
@@ -880,7 +881,7 @@ var validatingModule = {
           }
           this.callBase(args);
         },
-        resetRowAndPageIndices: function resetRowAndPageIndices() {
+        resetRowAndPageIndices() {
           var _this9 = this;
           var validationState = this.getController('validating')._validationState;
           (0, _iterator.each)(validationState, function (_, validationData) {
@@ -890,11 +891,11 @@ var validatingModule = {
             }
           });
         },
-        _beforeCancelEditData: function _beforeCancelEditData() {
+        _beforeCancelEditData() {
           this.getController('validating').initValidationState();
           this.callBase();
         },
-        _showErrorRow: function _showErrorRow(change) {
+        _showErrorRow(change) {
           var $popupContent;
           var errorHandling = this.getController('errorHandling');
           var items = this.getController('data').items();
@@ -905,7 +906,7 @@ var validatingModule = {
             return errorHandling && errorHandling.renderErrorRow(validationData === null || validationData === void 0 ? void 0 : validationData.errorText, rowIndex, $popupContent);
           }
         },
-        updateFieldValue: function updateFieldValue(e) {
+        updateFieldValue(e) {
           var _this10 = this;
           var validatingController = this.getController('validating');
           // @ts-expect-error
@@ -926,7 +927,7 @@ var validatingModule = {
           });
           return deferred.promise();
         },
-        highlightDataCell: function highlightDataCell($cell, parameters) {
+        highlightDataCell($cell, parameters) {
           this.callBase.apply(this, arguments);
           var validatingController = this.getController('validating');
           validatingController.setCellValidationStatus(parameters);
@@ -943,11 +944,11 @@ var validatingModule = {
             }
           }
         },
-        getChangeByKey: function getChangeByKey(key) {
+        getChangeByKey(key) {
           var changes = this.getChanges();
           return changes[_m_utils.default.getIndexByKey(key, changes)];
         },
-        isCellModified: function isCellModified(parameters) {
+        isCellModified(parameters) {
           var cellModified = this.callBase(parameters);
           var change = this.getChangeByKey(parameters.key);
           var isCellInvalid = !!parameters.row && this.getController('validating').isInvalidCell({
@@ -983,7 +984,7 @@ var validatingModule = {
           };
         };
         return {
-          _showRevertButton: function _showRevertButton($container) {
+          _showRevertButton($container) {
             var _this11 = this;
             var _a;
             var $tooltipElement = (_a = this._revertTooltip) === null || _a === void 0 ? void 0 : _a.$element();
@@ -1037,7 +1038,7 @@ var validatingModule = {
             };
             this._revertTooltip = new _ui.default($tooltipElement, tooltipOptions);
           },
-          _hideFixedGroupCell: function _hideFixedGroupCell($cell, overlayOptions) {
+          _hideFixedGroupCell($cell, overlayOptions) {
             var $nextFixedRowElement;
             var $groupCellElement;
             var isFixedColumns = this._rowsView.isFixedColumns();
@@ -1056,7 +1057,7 @@ var validatingModule = {
               }
             }
           },
-          _positionedHandler: function _positionedHandler(e, isOverlayVisible) {
+          _positionedHandler(e, isOverlayVisible) {
             if (!e.component.__skipPositionProcessing) {
               var isRevertButton = (0, _renderer.default)(e.element).hasClass(this.addWidgetPrefix(REVERT_TOOLTIP_CLASS));
               var needRepaint = !isRevertButton && this._rowsView.updateFreeSpaceRowHeight();
@@ -1069,7 +1070,7 @@ var validatingModule = {
               }
             }
           },
-          _showValidationMessage: function _showValidationMessage($cell, messages, alignment) {
+          _showValidationMessage($cell, messages, alignment) {
             var _this12 = this;
             var _a;
             var editorPopup = $cell.find('.dx-dropdowneditor-overlay').data('dxPopup');
@@ -1121,12 +1122,12 @@ var validatingModule = {
             // eslint-disable-next-line no-new
             new _ui.default($overlayElement, overlayOptions);
           },
-          _hideValidationMessage: function _hideValidationMessage() {
+          _hideValidationMessage() {
             var _a;
             var validationMessages = (_a = this._rowsView.element()) === null || _a === void 0 ? void 0 : _a.find(this._getValidationMessagesSelector());
             validationMessages === null || validationMessages === void 0 ? void 0 : validationMessages.remove();
           },
-          _normalizeValidationMessagePositionAndMaxWidth: function _normalizeValidationMessagePositionAndMaxWidth(options, isRevertButton, isOverlayVisible) {
+          _normalizeValidationMessagePositionAndMaxWidth(options, isRevertButton, isOverlayVisible) {
             var fixedColumns = this._columnsController.getFixedColumns();
             if (!fixedColumns || !fixedColumns.length) {
               return;
@@ -1155,11 +1156,11 @@ var validatingModule = {
               }
             }
             return position && {
-              position: position,
+              position,
               maxWidth: needMaxWidth ? visibleTableWidth - 2 : undefined
             };
           },
-          _shiftValidationMessageIfNeed: function _shiftValidationMessageIfNeed($content, $cell) {
+          _shiftValidationMessageIfNeed($content, $cell) {
             var $revertContent = this._revertTooltip && this._revertTooltip.$content();
             if (!$revertContent) return;
             var contentOffset = $content.offset();
@@ -1169,27 +1170,27 @@ var validatingModule = {
               $content.css('left', revertContentOffset.left < $cell.offset().left ? -left : left);
             }
           },
-          _getRevertTooltipsSelector: function _getRevertTooltipsSelector() {
+          _getRevertTooltipsSelector() {
             var revertTooltipClass = this.addWidgetPrefix(REVERT_TOOLTIP_CLASS);
             return ".dx-editor-cell .".concat(revertTooltipClass);
           },
-          _getValidationMessagesSelector: function _getValidationMessagesSelector() {
+          _getValidationMessagesSelector() {
             var invalidMessageClass = this.addWidgetPrefix(WIDGET_INVALID_MESSAGE_CLASS);
             return ".dx-editor-cell .".concat(invalidMessageClass, ", .dx-cell-modified .").concat(invalidMessageClass);
           },
-          init: function init() {
+          init() {
             this.callBase();
             this._editingController = this.getController('editing');
             this._columnsController = this.getController('columns');
             this._rowsView = this.getView('rowsView');
           },
-          loseFocus: function loseFocus(skipValidator) {
+          loseFocus(skipValidator) {
             if (!skipValidator) {
               this.getController('validating').setValidator(null);
             }
             this.callBase();
           },
-          updateCellState: function updateCellState($element, validationResult, isHideBorder) {
+          updateCellState($element, validationResult, isHideBorder) {
             var _a;
             var $focus = $element === null || $element === void 0 ? void 0 : $element.closest(this._getFocusCellSelector());
             var $cell = ($focus === null || $focus === void 0 ? void 0 : $focus.is('td')) ? $focus : null;
@@ -1218,7 +1219,7 @@ var validatingModule = {
             }
             !isHideBorder && this._rowsView.element() && this._rowsView.updateFreeSpaceRowHeight();
           },
-          focus: function focus($element, isHideBorder) {
+          focus($element, isHideBorder) {
             var _this13 = this;
             if (!arguments.length) return this.callBase();
             this._hideValidationMessage();
@@ -1261,19 +1262,19 @@ var validatingModule = {
             this.updateCellState($element, validationResult, isHideBorder);
             return this.callBase($element, isHideBorder);
           },
-          getEditorInstance: function getEditorInstance($container) {
+          getEditorInstance($container) {
             var $editor = $container.find('.dx-texteditor').eq(0);
             return _m_utils.default.getWidgetInstance($editor);
           }
         };
       }(),
       data: {
-        _getValidationStatus: function _getValidationStatus(validationResult) {
+        _getValidationStatus(validationResult) {
           var validationStatus = validationResultIsValid(validationResult) ? validationResult.status : validationResult;
           return validationStatus || VALIDATION_STATUS.valid;
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _isCellChanged: function _isCellChanged(oldRow, newRow, visibleRowIndex, columnIndex, isLiveUpdate) {
+        _isCellChanged(oldRow, newRow, visibleRowIndex, columnIndex, isLiveUpdate) {
           var _a, _b;
           var cell = (_a = oldRow.cells) === null || _a === void 0 ? void 0 : _a[columnIndex];
           var oldValidationStatus = this._getValidationStatus({
@@ -1282,7 +1283,7 @@ var validatingModule = {
           var validatingController = this.getController('validating');
           var validationResult = validatingController.getCellValidationResult({
             rowKey: oldRow.key,
-            columnIndex: columnIndex
+            columnIndex
           });
           var validationData = validatingController._getValidationData(oldRow.key);
           var newValidationStatus = this._getValidationStatus(validationResult);
@@ -1301,7 +1302,7 @@ var validatingModule = {
     },
     views: {
       rowsView: {
-        updateFreeSpaceRowHeight: function updateFreeSpaceRowHeight($table) {
+        updateFreeSpaceRowHeight($table) {
           var that = this;
           var $rowElements;
           var $freeSpaceRowElement;
@@ -1321,7 +1322,7 @@ var validatingModule = {
           }
           return undefined;
         },
-        _formItemPrepared: function _formItemPrepared(cellOptions, $container) {
+        _formItemPrepared(cellOptions, $container) {
           var _this14 = this;
           this.callBase.apply(this, arguments);
           (0, _common.deferUpdate)(function () {
@@ -1333,13 +1334,13 @@ var validatingModule = {
             }
           });
         },
-        _cellPrepared: function _cellPrepared($cell, parameters) {
+        _cellPrepared($cell, parameters) {
           if (!this.getController('editing').isFormOrPopupEditMode()) {
             this.getController('validating').createValidator(parameters, $cell);
           }
           this.callBase.apply(this, arguments);
         },
-        _restoreErrorRow: function _restoreErrorRow(contentTable) {
+        _restoreErrorRow(contentTable) {
           var editingController = this.getController('editing');
           editingController && editingController.hasChanges() && this._getRowElements(contentTable).each(function (_, item) {
             var rowOptions = (0, _renderer.default)(item).data('options');

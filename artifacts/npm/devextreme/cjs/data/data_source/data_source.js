@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/data_source/data_source.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -56,7 +56,7 @@ var DataSource = _class.default.inherit({
   * @param1 options:CustomStoreOptions|DataSourceOptions
   * @hidden
   */
-  ctor: function ctor(options) {
+  ctor(options) {
     var _this = this,
       _options$reshapeOnPus;
     options = (0, _utils2.normalizeDataSourceOptions)(options);
@@ -122,7 +122,7 @@ var DataSource = _class.default.inherit({
     this._operationManager = new _operation_manager.default();
     this._init();
   },
-  _init: function _init() {
+  _init() {
     this._items = [];
     this._userData = {};
     this._totalCount = -1;
@@ -132,7 +132,7 @@ var DataSource = _class.default.inherit({
     }
     this._isLastPage = !this._paginate;
   },
-  dispose: function dispose() {
+  dispose() {
     var _this$_delayedLoadTas;
     this._store.off('beforePush', this._onPushHandler);
     this._store.off('push', this._onPushHandler);
@@ -145,7 +145,7 @@ var DataSource = _class.default.inherit({
     delete this._delayedLoadTask;
     this._disposed = true;
   },
-  _extractLoadOptions: function _extractLoadOptions(options) {
+  _extractLoadOptions(options) {
     var result = {};
     var names = ['sort', 'filter', 'langParams', 'select', 'group', 'requireTotalCount'];
     var customNames = this._store._customLoadOptions();
@@ -157,20 +157,20 @@ var DataSource = _class.default.inherit({
     });
     return result;
   },
-  loadOptions: function loadOptions() {
+  loadOptions() {
     return this._storeLoadOptions;
   },
-  items: function items() {
+  items() {
     return this._items;
   },
-  pageIndex: function pageIndex(newIndex) {
+  pageIndex(newIndex) {
     if (!(0, _type.isNumeric)(newIndex)) {
       return this._pageIndex;
     }
     this._pageIndex = newIndex;
     this._isLastPage = !this._paginate;
   },
-  paginate: function paginate(value) {
+  paginate(value) {
     if (!(0, _type.isBoolean)(value)) {
       return this._paginate;
     }
@@ -179,16 +179,16 @@ var DataSource = _class.default.inherit({
       this.pageIndex(0);
     }
   },
-  pageSize: function pageSize(value) {
+  pageSize(value) {
     if (!(0, _type.isNumeric)(value)) {
       return this._pageSize;
     }
     this._pageSize = value;
   },
-  isLastPage: function isLastPage() {
+  isLastPage() {
     return this._isLastPage;
   },
-  generateStoreLoadOptionAccessor: function generateStoreLoadOptionAccessor(optionName) {
+  generateStoreLoadOptionAccessor(optionName) {
     var _this2 = this;
     return function (args) {
       var normalizedArgs = (0, _utils2.normalizeStoreLoadOptionAccessorArguments)(args);
@@ -198,13 +198,13 @@ var DataSource = _class.default.inherit({
       _this2._storeLoadOptions[optionName] = normalizedArgs;
     };
   },
-  sort: function sort() {
+  sort() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
     return this.generateStoreLoadOptionAccessor('sort')(args);
   },
-  filter: function filter() {
+  filter() {
     var newFilter = (0, _utils2.normalizeStoreLoadOptionAccessorArguments)(arguments);
     if (newFilter === undefined) {
       return this._storeLoadOptions.filter;
@@ -212,39 +212,39 @@ var DataSource = _class.default.inherit({
     this._storeLoadOptions.filter = newFilter;
     this.pageIndex(0);
   },
-  group: function group() {
+  group() {
     for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       args[_key2] = arguments[_key2];
     }
     return this.generateStoreLoadOptionAccessor('group')(args);
   },
-  select: function select() {
+  select() {
     for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
       args[_key3] = arguments[_key3];
     }
     return this.generateStoreLoadOptionAccessor('select')(args);
   },
-  requireTotalCount: function requireTotalCount(value) {
+  requireTotalCount(value) {
     if (!(0, _type.isBoolean)(value)) {
       return this._storeLoadOptions.requireTotalCount;
     }
     this._storeLoadOptions.requireTotalCount = value;
   },
-  searchValue: function searchValue(value) {
+  searchValue(value) {
     if (arguments.length < 1) {
       return this._searchValue;
     }
     this._searchValue = value;
     this.pageIndex(0);
   },
-  searchOperation: function searchOperation(op) {
+  searchOperation(op) {
     if (!(0, _type.isString)(op)) {
       return this._searchOperation;
     }
     this._searchOperation = op;
     this.pageIndex(0);
   },
-  searchExpr: function searchExpr(expr) {
+  searchExpr(expr) {
     var argc = arguments.length;
     if (argc === 0) {
       return this._searchExpr;
@@ -255,32 +255,32 @@ var DataSource = _class.default.inherit({
     this._searchExpr = expr;
     this.pageIndex(0);
   },
-  store: function store() {
+  store() {
     return this._store;
   },
-  key: function key() {
+  key() {
     var _this$_store;
     return (_this$_store = this._store) === null || _this$_store === void 0 ? void 0 : _this$_store.key();
   },
-  totalCount: function totalCount() {
+  totalCount() {
     return this._totalCount;
   },
-  isLoaded: function isLoaded() {
+  isLoaded() {
     return this._isLoaded;
   },
-  isLoading: function isLoading() {
+  isLoading() {
     return this._loadingCount > 0;
   },
-  beginLoading: function beginLoading() {
+  beginLoading() {
     this._changeLoadingCount(1);
   },
-  endLoading: function endLoading() {
+  endLoading() {
     this._changeLoadingCount(-1);
   },
-  _createLoadQueue: function _createLoadQueue() {
+  _createLoadQueue() {
     return (0, _queue.create)();
   },
-  _changeLoadingCount: function _changeLoadingCount(increment) {
+  _changeLoadingCount(increment) {
     var oldLoading = this.isLoading();
     this._loadingCount += increment;
     var newLoading = this.isLoading();
@@ -288,14 +288,14 @@ var DataSource = _class.default.inherit({
       this._eventsStrategy.fireEvent('loadingChanged', [newLoading]);
     }
   },
-  _scheduleLoadCallbacks: function _scheduleLoadCallbacks(deferred) {
+  _scheduleLoadCallbacks(deferred) {
     var _this3 = this;
     this.beginLoading();
     deferred.always(function () {
       _this3.endLoading();
     });
   },
-  _scheduleFailCallbacks: function _scheduleFailCallbacks(deferred) {
+  _scheduleFailCallbacks(deferred) {
     var _this4 = this;
     deferred.fail(function () {
       for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
@@ -307,18 +307,18 @@ var DataSource = _class.default.inherit({
       _this4._eventsStrategy.fireEvent('loadError', args);
     });
   },
-  _fireChanged: function _fireChanged(args) {
+  _fireChanged(args) {
     var date = new Date();
     this._eventsStrategy.fireEvent('changed', args);
     this._changedTime = new Date() - date;
   },
-  _scheduleChangedCallbacks: function _scheduleChangedCallbacks(deferred) {
+  _scheduleChangedCallbacks(deferred) {
     var _this5 = this;
     deferred.done(function () {
       return _this5._fireChanged();
     });
   },
-  loadSingle: function loadSingle(propName, propValue) {
+  loadSingle(propName, propValue) {
     var _this6 = this;
     var d = new _deferred.Deferred();
     var key = this.key();
@@ -359,7 +359,7 @@ var DataSource = _class.default.inherit({
     })().fail(d.reject).done(handleDone);
     return d.promise();
   },
-  load: function load() {
+  load() {
     var _this7 = this;
     var d = new _deferred.Deferred();
     var loadTask = function loadTask() {
@@ -388,13 +388,13 @@ var DataSource = _class.default.inherit({
       operationId: loadOperation.operationId
     });
   },
-  _onPush: function _onPush(changes) {
+  _onPush(changes) {
     var _this8 = this;
     if (this._reshapeOnPush) {
       this.load();
     } else {
       var changingArgs = {
-        changes: changes
+        changes
       };
       this._eventsStrategy.fireEvent('changing', [changingArgs]);
       var group = this.group();
@@ -428,7 +428,7 @@ var DataSource = _class.default.inherit({
       }]);
     }
   },
-  _createLoadOperation: function _createLoadOperation(deferred) {
+  _createLoadOperation(deferred) {
     var _this9 = this;
     var operationId = this._operationManager.add(deferred);
     var storeLoadOptions = this._createStoreLoadOptions();
@@ -439,23 +439,23 @@ var DataSource = _class.default.inherit({
       return _this9._operationManager.remove(operationId);
     });
     return {
-      operationId: operationId,
-      storeLoadOptions: storeLoadOptions
+      operationId,
+      storeLoadOptions
     };
   },
-  reload: function reload() {
+  reload() {
     var store = this.store();
     store._clearCache();
     this._init();
     return this.load();
   },
-  cancel: function cancel(operationId) {
+  cancel(operationId) {
     return this._operationManager.cancel(operationId);
   },
-  cancelAll: function cancelAll() {
+  cancelAll() {
     return this._operationManager.cancelAll();
   },
-  _addSearchOptions: function _addSearchOptions(storeLoadOptions) {
+  _addSearchOptions(storeLoadOptions) {
     if (this._disposed) {
       return;
     }
@@ -467,7 +467,7 @@ var DataSource = _class.default.inherit({
       storeLoadOptions.searchExpr = this._searchExpr;
     }
   },
-  _createStoreLoadOptions: function _createStoreLoadOptions() {
+  _createStoreLoadOptions() {
     var result = (0, _extend.extend)({}, this._storeLoadOptions);
     this._addSearchOptions(result);
     if (this._paginate) {
@@ -479,7 +479,7 @@ var DataSource = _class.default.inherit({
     result.userData = this._userData;
     return result;
   },
-  _addSearchFilter: function _addSearchFilter(storeLoadOptions) {
+  _addSearchFilter(storeLoadOptions) {
     var value = this._searchValue;
     var op = this._searchOperation;
     var selector = this._searchExpr;
@@ -508,7 +508,7 @@ var DataSource = _class.default.inherit({
       storeLoadOptions.filter = searchFilter;
     }
   },
-  _loadFromStore: function _loadFromStore(loadOptions, pendingDeferred) {
+  _loadFromStore(loadOptions, pendingDeferred) {
     var _this10 = this;
     var handleSuccess = function handleSuccess(data, extra) {
       if (_this10._disposed) {
@@ -531,7 +531,7 @@ var DataSource = _class.default.inherit({
     }
     return this.store().load(loadOptions.storeLoadOptions).done(handleSuccess).fail(pendingDeferred.reject);
   },
-  _processStoreLoadResult: function _processStoreLoadResult(loadResult, pendingDeferred) {
+  _processStoreLoadResult(loadResult, pendingDeferred) {
     var _this11 = this;
     var data = loadResult.data;
     var extra = loadResult.extra;
@@ -567,23 +567,23 @@ var DataSource = _class.default.inherit({
       resolvePendingDeferred();
     }
   },
-  _applyMapFunction: function _applyMapFunction(data) {
+  _applyMapFunction(data) {
     if (this._mapFunc) {
       return (0, _utils2.mapDataRespectingGrouping)(data, this._mapFunc, this.group());
     }
     return data;
   },
-  _applyPostProcessFunction: function _applyPostProcessFunction(data) {
+  _applyPostProcessFunction(data) {
     if (this._postProcessFunc) {
       return this._postProcessFunc(data);
     }
     return data;
   },
-  on: function on(eventName, eventHandler) {
+  on(eventName, eventHandler) {
     this._eventsStrategy.on(eventName, eventHandler);
     return this;
   },
-  off: function off(eventName, eventHandler) {
+  off(eventName, eventHandler) {
     this._eventsStrategy.off(eventName, eventHandler);
     return this;
   }

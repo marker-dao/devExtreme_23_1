@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/slider/ui.slider.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -208,7 +208,7 @@ var Slider = _track_bar.default.inherit({
       return;
     }
     var config = {
-      element: element,
+      element,
       event: dxEvent,
       wave: waveIndex
     };
@@ -255,8 +255,8 @@ var Slider = _track_bar.default.inherit({
     var tooltip = this.option('tooltip');
     this.$element().toggleClass(SLIDER_TOOLTIP_POSITION_CLASS_PREFIX + 'bottom', tooltip.enabled && tooltip.position === 'bottom').toggleClass(SLIDER_TOOLTIP_POSITION_CLASS_PREFIX + 'top', tooltip.enabled && tooltip.position === 'top');
     this._createComponent($handle, _ui.default, {
-      value: value,
-      tooltip: tooltip
+      value,
+      tooltip
     });
     return $handle;
   },

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/m_utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,7 +32,9 @@ var _format_helper = _interopRequireDefault(require("../../../format_helper"));
 var _load_panel = _interopRequireDefault(require("../../../ui/load_panel"));
 var _filtering = _interopRequireDefault(require("../../../ui/shared/filtering"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } // @ts-check
+// @ts-expect-error
+// @ts-expect-error
 var DATAGRID_SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
 var DATAGRID_GROUP_OPENED_CLASS = 'dx-datagrid-group-opened';
 var DATAGRID_GROUP_CLOSED_CLASS = 'dx-datagrid-group-closed';
@@ -44,25 +46,25 @@ var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 var SCROLLING_MODE_OPTION = 'scrolling.mode';
 var ROW_RENDERING_MODE_OPTION = 'scrolling.rowRenderingMode';
 var DATE_INTERVAL_SELECTORS = {
-  year: function year(value) {
+  year(value) {
     return value && value.getFullYear();
   },
-  month: function month(value) {
+  month(value) {
     return value && value.getMonth() + 1;
   },
-  day: function day(value) {
+  day(value) {
     return value && value.getDate();
   },
-  quarter: function quarter(value) {
+  quarter(value) {
     return value && Math.floor(value.getMonth() / 3) + 1;
   },
-  hour: function hour(value) {
+  hour(value) {
     return value && value.getHours();
   },
-  minute: function minute(value) {
+  minute(value) {
     return value && value.getMinutes();
   },
-  second: function second(value) {
+  second(value) {
     return value && value.getSeconds();
   }
 };
@@ -93,7 +95,7 @@ function isDateType(dataType) {
   return dataType === 'date' || dataType === 'datetime';
 }
 var setEmptyText = function setEmptyText($container) {
-  $container.get(0).textContent = "\xA0";
+  $container.get(0).textContent = '\u00A0';
 };
 var normalizeSortingInfo = function normalizeSortingInfo(sort) {
   sort = sort || [];
@@ -111,7 +113,7 @@ var normalizeSortingInfo = function normalizeSortingInfo(sort) {
 var formatValue = function formatValue(value, options) {
   var valueText = _format_helper.default.format(value, options.format) || value && value.toString() || '';
   var formatObject = {
-    value: value,
+    value,
     valueText: options.getDisplayFormat ? options.getDisplayFormat(valueText) : valueText,
     target: options.target || 'row',
     groupInterval: options.groupInterval
@@ -122,7 +124,7 @@ var getSummaryText = function getSummaryText(summaryItem, summaryTexts) {
   var displayFormat = summaryItem.displayFormat || summaryItem.columnCaption && summaryTexts["".concat(summaryItem.summaryType, "OtherColumn")] || summaryTexts[summaryItem.summaryType];
   return formatValue(summaryItem.value, {
     format: summaryItem.valueFormat,
-    getDisplayFormat: function getDisplayFormat(valueText) {
+    getDisplayFormat(valueText) {
       return displayFormat ? (0, _string.format)(displayFormat, valueText, summaryItem.columnCaption) : valueText;
     },
     customizeText: summaryItem.customizeText
@@ -167,7 +169,7 @@ function normalizeGroupingLoadOptions(group) {
   });
 }
 var _default = {
-  renderNoDataText: function renderNoDataText($element) {
+  renderNoDataText($element) {
     var that = this;
     $element = $element || this.element();
     if (!$element) {
@@ -178,7 +180,10 @@ var _default = {
     var isVisible = this._dataController.isEmpty();
     var isLoading = this._dataController.isLoading();
     if (!noDataElement.length) {
-      noDataElement = (0, _renderer.default)('<span>').addClass(noDataClass).appendTo($element);
+      noDataElement = (0, _renderer.default)('<span>').addClass(noDataClass);
+    }
+    if (!noDataElement.parent().is($element)) {
+      noDataElement.appendTo($element);
     }
     if (isVisible && !isLoading) {
       noDataElement.removeClass('dx-hidden').text(that._getNoDataText());
@@ -186,7 +191,7 @@ var _default = {
       noDataElement.addClass('dx-hidden');
     }
   },
-  renderLoadPanel: function renderLoadPanel($element, $container, isLocalStore) {
+  renderLoadPanel($element, $container, isLocalStore) {
     var that = this;
     var loadPanelOptions;
     that._loadPanel && that._loadPanel.$element().remove();
@@ -202,7 +207,7 @@ var _default = {
       that._loadPanel = null;
     }
   },
-  calculateLoadPanelPosition: function calculateLoadPanelPosition($element) {
+  calculateLoadPanelPosition($element) {
     // @ts-expect-error
     var $window = (0, _renderer.default)((0, _window.getWindow)());
     if ((0, _size.getHeight)($element) > (0, _size.getHeight)($window)) {
@@ -216,7 +221,7 @@ var _default = {
       of: $element
     };
   },
-  getIndexByKey: function getIndexByKey(key, items, keyName) {
+  getIndexByKey(key, items, keyName) {
     var index = -1;
     if (key !== undefined && Array.isArray(items)) {
       keyName = arguments.length <= 2 ? 'key' : keyName;
@@ -230,7 +235,7 @@ var _default = {
     }
     return index;
   },
-  combineFilters: function combineFilters(filters, operation) {
+  combineFilters(filters, operation) {
     var _a;
     var resultFilter = [];
     operation = operation || 'and';
@@ -260,7 +265,7 @@ var _default = {
     }
     return undefined;
   },
-  checkChanges: function checkChanges(changes, changeNames) {
+  checkChanges(changes, changeNames) {
     var changesWithChangeNamesCount = 0;
     for (var i = 0; i < changeNames.length; i++) {
       if (changes[changeNames[i]]) {
@@ -269,8 +274,8 @@ var _default = {
     }
     return changes.length && changes.length === changesWithChangeNamesCount;
   },
-  equalFilterParameters: equalFilterParameters,
-  proxyMethod: function proxyMethod(instance, methodName, defaultResult) {
+  equalFilterParameters,
+  proxyMethod(instance, methodName, defaultResult) {
     if (!instance[methodName]) {
       instance[methodName] = function () {
         var dataSource = this._dataSource;
@@ -278,18 +283,18 @@ var _default = {
       };
     }
   },
-  formatValue: formatValue,
-  getFormatOptionsByColumn: function getFormatOptionsByColumn(column, target) {
+  formatValue,
+  getFormatOptionsByColumn(column, target) {
     return {
       format: column.format,
       getDisplayFormat: column.getDisplayFormat,
       customizeText: column.customizeText,
-      target: target,
+      target,
       trueText: column.trueText,
       falseText: column.falseText
     };
   },
-  getDisplayValue: function getDisplayValue(column, value, data, rowType) {
+  getDisplayValue(column, value, data, rowType) {
     if (column.displayValueMap && column.displayValueMap[value] !== undefined) {
       return column.displayValueMap[value];
     }
@@ -301,7 +306,7 @@ var _default = {
     }
     return value;
   },
-  getGroupRowSummaryText: function getGroupRowSummaryText(summaryItems, summaryTexts) {
+  getGroupRowSummaryText(summaryItems, summaryTexts) {
     var result = '(';
     for (var i = 0; i < summaryItems.length; i++) {
       var summaryItem = summaryItems[i];
@@ -310,9 +315,9 @@ var _default = {
     // eslint-disable-next-line no-return-assign
     return result += ')';
   },
-  getSummaryText: getSummaryText,
-  normalizeSortingInfo: normalizeSortingInfo,
-  getFormatByDataType: function getFormatByDataType(dataType) {
+  getSummaryText,
+  normalizeSortingInfo,
+  getFormatByDataType(dataType) {
     // eslint-disable-next-line default-case
     switch (dataType) {
       case 'date':
@@ -323,7 +328,7 @@ var _default = {
         return undefined;
     }
   },
-  getHeaderFilterGroupParameters: function getHeaderFilterGroupParameters(column, remoteGrouping) {
+  getHeaderFilterGroupParameters(column, remoteGrouping) {
     var result = [];
     var dataField = column.dataField || column.name;
     var groupInterval = _filtering.default.getGroupInterval(column);
@@ -359,7 +364,7 @@ var _default = {
     }
     return result;
   },
-  equalSortParameters: function equalSortParameters(sortParameters1, sortParameters2, ignoreIsExpanded) {
+  equalSortParameters(sortParameters1, sortParameters2, ignoreIsExpanded) {
     sortParameters1 = normalizeSortingInfo(sortParameters1);
     sortParameters2 = normalizeSortingInfo(sortParameters2);
     if (Array.isArray(sortParameters1) && Array.isArray(sortParameters2)) {
@@ -375,7 +380,7 @@ var _default = {
     }
     return (!sortParameters1 || !sortParameters1.length) === (!sortParameters2 || !sortParameters2.length);
   },
-  getPointsByColumns: function getPointsByColumns(items, pointCreated, isVertical, startColumnIndex) {
+  getPointsByColumns(items, pointCreated, isVertical, startColumnIndex) {
     var cellsLength = items.length;
     var notCreatePoint = false;
     var item;
@@ -394,7 +399,7 @@ var _default = {
         // @ts-expect-error
         x: offset ? offset.left + (!isVertical && rtlEnabled ^ i === cellsLength ? (0, _position.getBoundingRect)(item[0]).width : 0) : 0,
         y: offset ? offset.top + (isVertical && i === cellsLength ? (0, _position.getBoundingRect)(item[0]).height : 0) : 0,
-        columnIndex: columnIndex
+        columnIndex
       };
       if (!isVertical && i > 0) {
         var prevItemOffset = items.eq(i - 1).offset();
@@ -412,10 +417,10 @@ var _default = {
     }
     return result;
   },
-  getExpandCellTemplate: function getExpandCellTemplate() {
+  getExpandCellTemplate() {
     return {
       allowRenderToDetachedContainer: true,
-      render: function render(container, options) {
+      render(container, options) {
         var $container = (0, _renderer.default)(container);
         if ((0, _type.isDefined)(options.value) && !(options.data && options.data.isContinuation) && !options.row.isNewRow) {
           var rowsView = options.component.getView('rowsView');
@@ -428,9 +433,9 @@ var _default = {
       }
     };
   },
-  setEmptyText: setEmptyText,
-  isDateType: isDateType,
-  getSelectionRange: function getSelectionRange(focusedElement) {
+  setEmptyText,
+  isDateType,
+  getSelectionRange(focusedElement) {
     try {
       if (focusedElement) {
         return {
@@ -441,14 +446,14 @@ var _default = {
     } catch (e) {/* empty */}
     return {};
   },
-  setSelectionRange: function setSelectionRange(focusedElement, selectionRange) {
+  setSelectionRange(focusedElement, selectionRange) {
     try {
       if (focusedElement && focusedElement.setSelectionRange) {
         focusedElement.setSelectionRange(selectionRange.selectionStart, selectionRange.selectionEnd);
       }
     } catch (e) {/* empty */}
   },
-  focusAndSelectElement: function focusAndSelectElement(component, $element) {
+  focusAndSelectElement(component, $element) {
     var isFocused = $element.is(':focus');
     // @ts-expect-error
     _events_engine.default.trigger($element, 'focus');
@@ -461,8 +466,8 @@ var _default = {
       });
     }
   },
-  getWidgetInstance: getWidgetInstance,
-  getLastResizableColumnIndex: function getLastResizableColumnIndex(columns, resultWidths) {
+  getWidgetInstance,
+  getLastResizableColumnIndex(columns, resultWidths) {
     var hasResizableColumns = columns.some(function (column) {
       return column && !column.command && !column.fixed && column.allowResizing !== false;
     });
@@ -477,14 +482,14 @@ var _default = {
     }
     return lastColumnIndex;
   },
-  isElementInCurrentGrid: function isElementInCurrentGrid(controller, $element) {
+  isElementInCurrentGrid(controller, $element) {
     if ($element && $element.length) {
       var $grid = $element.closest(".".concat(controller.getWidgetContainerClass())).parent();
       return $grid.is(controller.component.$element());
     }
     return false;
   },
-  isVirtualRowRendering: function isVirtualRowRendering(that) {
+  isVirtualRowRendering(that) {
     var rowRenderingMode = that.option(ROW_RENDERING_MODE_OPTION);
     var isVirtualMode = that.option(SCROLLING_MODE_OPTION) === SCROLLING_MODE_VIRTUAL;
     var isAppendMode = that.option(SCROLLING_MODE_OPTION) === SCROLLING_MODE_INFINITE;
@@ -493,21 +498,16 @@ var _default = {
     }
     return rowRenderingMode === SCROLLING_MODE_VIRTUAL;
   },
-  getPixelRatio: function getPixelRatio(window) {
+  getPixelRatio(window) {
     return window.devicePixelRatio || 1;
   },
-  /// #DEBUG
-  _setPixelRatioFn: function _setPixelRatioFn(value) {
-    this.getPixelRatio = value;
-  },
-  /// #ENDDEBUG
-  getContentHeightLimit: function getContentHeightLimit(browser) {
+  getContentHeightLimit(browser) {
     if (browser.mozilla) {
       return 8000000;
     }
     return 15000000 / this.getPixelRatio((0, _window.getWindow)());
   },
-  normalizeLookupDataSource: function normalizeLookupDataSource(lookup) {
+  normalizeLookupDataSource(lookup) {
     var lookupDataSourceOptions;
     if (lookup.items) {
       lookupDataSourceOptions = lookup.items;
@@ -519,7 +519,7 @@ var _default = {
     }
     return (0, _utils.normalizeDataSourceOptions)(lookupDataSourceOptions);
   },
-  getWrappedLookupDataSource: function getWrappedLookupDataSource(column, dataSource, filter) {
+  getWrappedLookupDataSource(column, dataSource, filter) {
     var _this = this;
     if (!dataSource) {
       return [];
@@ -550,8 +550,8 @@ var _default = {
         previousSkip = loadOptions.skip;
         previousTake = loadOptions.take;
         dataSource.load({
-          filter: filter,
-          group: group,
+          filter,
+          group,
           take: hasGroupPaging ? loadOptions.take : undefined,
           skip: hasGroupPaging ? loadOptions.skip : undefined
         }).done(function (items) {
@@ -587,7 +587,7 @@ var _default = {
         return d;
       },
       key: column.lookup.valueExpr,
-      byKey: function byKey(key) {
+      byKey(key) {
         var d = (0, _deferred.Deferred)();
         this.load({
           filter: [column.lookup.valueExpr, '=', key]
@@ -599,18 +599,18 @@ var _default = {
     });
     return lookupDataSource;
   },
-  logHeaderFilterDeprecatedWarningIfNeed: function logHeaderFilterDeprecatedWarningIfNeed(component) {
+  logHeaderFilterDeprecatedWarningIfNeed(component) {
     var since = '23.1';
     var logWarning = component._logDeprecatedOptionWarning.bind(component);
     if ((0, _type.isDefined)(component.option('headerFilter.allowSearch'))) {
       logWarning('headerFilter.allowSearch', {
-        since: since,
+        since,
         alias: 'headerFilter.search.enabled'
       });
     }
     if ((0, _type.isDefined)(component.option('headerFilter.searchTimeout'))) {
       logWarning('headerFilter.searchTimeout', {
-        since: since,
+        since,
         alias: 'headerFilter.search.timeout'
       });
     }
@@ -625,13 +625,13 @@ var _default = {
         var headerFilter = column.headerFilter || {};
         if ((0, _type.isDefined)(headerFilter.allowSearch)) {
           logWarning("".concat(specificName, "[].headerFilter.allowSearch"), {
-            since: since,
+            since,
             alias: "".concat(specificName, "[].headerFilter.search.enabled")
           });
         }
         if ((0, _type.isDefined)(headerFilter.searchMode)) {
           logWarning("".concat(specificName, "[].headerFilter.searchMode"), {
-            since: since,
+            since,
             alias: "".concat(specificName, "[].headerFilter.search.mode")
           });
         }

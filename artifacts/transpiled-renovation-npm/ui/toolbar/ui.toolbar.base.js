@@ -147,7 +147,7 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
       var sectionClass = "dx-toolbar-".concat(section);
       var $section = $container.find(".".concat(sectionClass));
       if (!$section.length) {
-        _this["_$".concat(section, "Section")] = (0, _renderer.default)('<div>').addClass(sectionClass).appendTo($container);
+        _this["_$".concat(section, "Section")] = (0, _renderer.default)('<div>').addClass(sectionClass).attr('role', 'presentation').appendTo($container);
       }
     });
   };
@@ -235,7 +235,7 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
   _proto._applyCompactMode = function _applyCompactMode() {
     var $element = this.$element();
     $element.removeClass(TOOLBAR_COMPACT_CLASS);
-    if (this.option('compactMode') && this._getSummaryItemsWidth(this.itemElements(), true) > (0, _size.getWidth)($element)) {
+    if (this.option('compactMode') && this._getSummaryItemsSize('width', this.itemElements(), true) > (0, _size.getWidth)($element)) {
       $element.addClass(TOOLBAR_COMPACT_CLASS);
     }
   };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/model/appointments.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -81,15 +81,15 @@ var getAppointmentsConfig = function getAppointmentsConfig(schedulerConfig, view
     maxAppointmentsPerCell: viewConfig.maxAppointmentsPerCell,
     isVerticalGroupOrientation: viewDataProvider.getViewOptions().isVerticalGrouping,
     groupByDate: viewDataProvider.getViewOptions().isGroupedByDate,
-    startViewDate: startViewDate,
-    loadedResources: loadedResources,
+    startViewDate,
+    loadedResources,
     appointmentCountPerCell: 2,
     appointmentOffset: 26,
     allowResizing: false,
     allowAllDayResizing: false,
     dateTableOffset: 0,
-    groupCount: groupCount,
-    dateRange: dateRange
+    groupCount,
+    dateRange
   };
 };
 exports.getAppointmentsConfig = getAppointmentsConfig;
@@ -98,10 +98,10 @@ var getAppointmentsModel = function getAppointmentsModel(appointmentsConfig, vie
   var groupCount = appointmentsConfig.groupCount,
     isVerticalGroupOrientation = appointmentsConfig.isVerticalGroupOrientation;
   var positionHelper = new _positionHelper.PositionHelper({
-    viewDataProvider: viewDataProvider,
-    groupedByDate: groupedByDate,
+    viewDataProvider,
+    groupedByDate,
     rtlEnabled: appointmentsConfig.rtlEnabled,
-    groupCount: groupCount,
+    groupCount,
     isVerticalGrouping: groupCount && isVerticalGroupOrientation,
     getDOMMetaDataCallback: function getDOMMetaDataCallback() {
       return cellsMetaData;
@@ -125,25 +125,25 @@ var getAppointmentsModel = function getAppointmentsModel(appointmentsConfig, vie
   var cellDuration = (0, _base.getCellDuration)(appointmentsConfig.viewType, appointmentsConfig.startDayHour, appointmentsConfig.endDayHour, appointmentsConfig.hoursInterval);
   var appointmentRenderingStrategyName = getAppointmentRenderingStrategyName(appointmentsConfig.viewType);
   return _extends({}, appointmentsConfig, {
-    appointmentRenderingStrategyName: appointmentRenderingStrategyName,
+    appointmentRenderingStrategyName,
     loadedResources: appointmentsConfig.loadedResources,
-    dataAccessors: dataAccessors,
-    timeZoneCalculator: timeZoneCalculator,
-    viewDataProvider: viewDataProvider,
-    positionHelper: positionHelper,
-    isGroupedAllDayPanel: isGroupedAllDayPanel,
-    rowCount: rowCount,
+    dataAccessors,
+    timeZoneCalculator,
+    viewDataProvider,
+    positionHelper,
+    isGroupedAllDayPanel,
+    rowCount,
     cellWidth: (0, _positionHelper.getCellWidth)(cellsMetaData),
     cellHeight: (0, _positionHelper.getCellHeight)(cellsMetaData),
-    allDayHeight: allDayHeight,
+    allDayHeight,
     isGroupedByDate: groupedByDate,
-    endViewDate: endViewDate,
-    visibleDayDuration: visibleDayDuration,
+    endViewDate,
+    visibleDayDuration,
     intervalDuration: cellDuration,
     allDayIntervalDuration: toMs('day'),
-    leftVirtualCellCount: leftVirtualCellCount,
+    leftVirtualCellCount,
     topVirtualCellCount: topVirtualRowCount,
-    cellDuration: cellDuration,
+    cellDuration,
     resizableStep: positionHelper.getResizableStep(),
     DOMMetaData: cellsMetaData
   });

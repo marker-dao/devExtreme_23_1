@@ -121,7 +121,7 @@ function createAreaPoints(points) {
   }));
 }
 var areaSeries = chart['area'] = _extend({}, chartLineSeries, baseAreaMethods, {
-  _prepareSegment: function _prepareSegment(points, rotated) {
+  _prepareSegment(points, rotated) {
     var that = this;
     var processedPoints = that._processSinglePointsAreaSegment(points, rotated);
     var areaPoints = createAreaPoints(processedPoints);

@@ -24,13 +24,13 @@ import { custom as customDialog } from '../dialog';
 import { isMaterial } from '../themes';
 import errors from '../widget/ui.errors';
 import Widget from '../widget/ui.widget';
-import { AppointmentPopup, ACTION_TO_APPOINTMENT } from './appointmentPopup/popup';
-import { AppointmentForm } from './appointmentPopup/form';
+import { AppointmentPopup, ACTION_TO_APPOINTMENT } from '../../__internal/scheduler/appointment_popup/m_popup';
+import { AppointmentForm } from '../../__internal/scheduler/appointment_popup/m_form';
 import { CompactAppointmentsHelper } from './compactAppointmentsHelper';
 import { DesktopTooltipStrategy } from './tooltip_strategies/desktopTooltipStrategy';
 import { MobileTooltipStrategy } from './tooltip_strategies/mobileTooltipStrategy';
 import { hide as hideLoading, show as showLoading } from './loading';
-import AppointmentCollection from './appointments/appointmentCollection';
+import AppointmentCollection from '../../__internal/scheduler/appointments/m_appointment_collection';
 import AppointmentLayoutManager from './appointments.layout_manager';
 import { SchedulerHeader } from './header/header';
 import subscribes from './subscribes';
@@ -51,9 +51,9 @@ import { utils } from './utils';
 import { createExpressions, createResourceEditorModel as _createResourceEditorModel, getAppointmentColor, getCellGroups, loadResources, setResourceToAppointment } from './resources/utils';
 import { ExpressionUtils } from './expressionUtils';
 import { validateDayHours, isDateAndTimeView as _isDateAndTimeView, isTimelineView } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
-import { renderAppointments } from './appointments/render';
+import { renderAppointments } from '../../__internal/scheduler/appointments/m_render';
 import { AgendaResourceProcessor } from './resources/agendaResourceProcessor';
-import { AppointmentDataProvider } from './appointments/dataProvider/appointmentDataProvider';
+import { AppointmentDataProvider } from '../../__internal/scheduler/appointments/data_provider/m_appointment_data_provider';
 import { getAppointmentTakesAllDay } from '../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay';
 import { getPreparedDataItems } from '../../renovation/ui/scheduler/utils/data';
 import { getCurrentView } from '../../renovation/ui/scheduler/model/views';
@@ -1111,6 +1111,7 @@ class Scheduler extends Widget {
     });
     this.createAppointmentDataProvider();
     this._filterAppointmentsByDate();
+    this._validateKeyFieldIfAgendaExist();
   }
   _isDataSourceLoaded() {
     // TODO
@@ -1216,14 +1217,6 @@ class Scheduler extends Widget {
   }
   getAppointmentDurationInMinutes() {
     return this._getCurrentViewOption('cellDuration');
-  }
-  _validateCellDuration() {
-    var endDayHour = this._getCurrentViewOption('endDayHour');
-    var startDayHour = this._getCurrentViewOption('startDayHour');
-    var cellDuration = this._getCurrentViewOption('cellDuration');
-    if ((endDayHour - startDayHour) * MINUTES_IN_HOUR % cellDuration !== 0) {
-      errors.log('W1015');
-    }
   }
   _getCurrentViewType() {
     // TODO get rid of mapping
@@ -1928,6 +1921,24 @@ class Scheduler extends Widget {
   }
   getFirstDayOfWeek() {
     return isDefined(this.option('firstDayOfWeek')) ? this.option('firstDayOfWeek') : dateLocalization.firstDayOfWeekIndex();
+  }
+  _validateKeyFieldIfAgendaExist() {
+    if (!this.appointmentDataProvider.isDataSourceInit) {
+      return;
+    }
+    var hasAgendaView = !!this._getViewByName('agenda');
+    var isKeyExist = !!this.appointmentDataProvider.keyName;
+    if (hasAgendaView && !isKeyExist) {
+      errors.log('W1023');
+    }
+  }
+  _validateCellDuration() {
+    var endDayHour = this._getCurrentViewOption('endDayHour');
+    var startDayHour = this._getCurrentViewOption('startDayHour');
+    var cellDuration = this._getCurrentViewOption('cellDuration');
+    if ((endDayHour - startDayHour) * MINUTES_IN_HOUR % cellDuration !== 0) {
+      errors.log('W1015');
+    }
   }
   _validateDayHours() {
     var startDayHour = this._getCurrentViewOption('startDayHour');

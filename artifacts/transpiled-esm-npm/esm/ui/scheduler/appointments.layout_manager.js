@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { equalByValue } from '../../core/utils/common';
-import { AppointmentViewModelGenerator } from './appointments/viewModelGenerator';
+import { AppointmentViewModelGenerator } from '../../__internal/scheduler/appointments/m_view_model_generator';
 import { getGroupCount } from './resources/utils';
 import { getCellWidth, getCellHeight, getAllDayHeight } from './workspaces/helpers/positionHelper';
 import { getCellDuration } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';

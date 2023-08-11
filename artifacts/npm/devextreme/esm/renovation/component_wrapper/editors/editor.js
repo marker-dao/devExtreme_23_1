@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/component_wrapper/editors/editor.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,6 +48,10 @@ export default class Editor extends Component {
   _render() {
     var _this$option;
     (_this$option = this.option('_onMarkupRendered')) === null || _this$option === void 0 ? void 0 : _this$option();
+  }
+  _init() {
+    super._init();
+    this._initialValue = this.option('value');
   }
   _initializeComponent() {
     super._initializeComponent();
@@ -105,6 +109,7 @@ export default class Editor extends Component {
     switch (name) {
       case 'value':
         this._raiseValidation(value, previousValue);
+        this.option('isDirty', this._initialValue !== value);
         this._raiseValueChangeAction(value, previousValue);
         break;
       case 'onValueChanged':
@@ -123,7 +128,7 @@ export default class Editor extends Component {
     }
     super._optionChanged(option);
   }
-  reset() {
+  clear() {
     var {
       value
     } = this._getDefaultOptions();

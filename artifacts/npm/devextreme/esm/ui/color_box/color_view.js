@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/color_box/color_view.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -327,11 +327,13 @@ var ColorView = Editor.inherit({
   },
   _renderPaletteHandle: function _renderPaletteHandle() {
     this._$paletteHandle = $('<div>').addClass(COLOR_VIEW_PALETTE_HANDLE_CLASS).appendTo(this._$palette);
+    var ariaId = "dx-".concat(new Guid());
     var handleAria = {
-      id: this.option('ariaId'),
+      id: ariaId,
       role: 'application'
     };
     this.setAria(handleAria, this._$paletteHandle);
+    this.setAria('activedescendant', ariaId, this.option('target'));
     this._createComponent(this._$paletteHandle, Draggable, {
       contentTemplate: null,
       boundary: this._$palette,

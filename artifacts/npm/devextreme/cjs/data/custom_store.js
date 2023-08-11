@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/custom_store.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -199,7 +199,7 @@ var CustomStore = _abstract_store.default.inherit({
     this._updateFunc = options[UPDATE];
     this._removeFunc = options[REMOVE];
   },
-  _clearCache: function _clearCache() {
+  _clearCache() {
     delete this.__rawData;
   },
   createQuery: function createQuery() {
@@ -225,7 +225,7 @@ var CustomStore = _abstract_store.default.inherit({
       (0, _array_utils.applyBatch)({
         keyInfo: this,
         data: this.__rawData,
-        changes: changes
+        changes
       });
     }
   },

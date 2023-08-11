@@ -16,8 +16,8 @@ var propsToIgnore = {
 function getDiffItem(key, value, previousValue) {
   return {
     path: key,
-    value: value,
-    previousValue: previousValue
+    value,
+    previousValue
   };
 }
 function compare(resultPaths, item1, item2, key, fullPropName, notDeepCopyArrays) {

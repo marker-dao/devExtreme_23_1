@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.notification.progress_panel.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -119,9 +119,9 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     info.$info = $info;
     var $common = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_COMMON_CLASS).appendTo($info);
     info.common = this._createProgressBox($common, {
-      commonText: commonText,
+      commonText,
       showCloseButton: true,
-      showCloseButtonAlways: showCloseButtonAlways,
+      showCloseButtonAlways,
       onCloseButtonClick: function onCloseButtonClick() {
         return _this2._closeOperation(info);
       }
@@ -146,8 +146,8 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     return this._createProgressBox($detailsItem, {
       commonText: item.commonText,
       imageUrl: item.imageUrl,
-      skipProgressBox: skipProgressBox,
-      showCloseButton: showCloseButton,
+      skipProgressBox,
+      showCloseButton,
       showCloseButtonAlways: showCloseButton,
       onCloseButtonClick: function onCloseButtonClick() {
         return _this4._cancelOperationItem(item, itemIndex);
@@ -251,11 +251,11 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
       });
     }
     return {
-      $commonText: $commonText,
-      progressBar: progressBar,
+      $commonText,
+      progressBar,
       $element: $container,
-      $wrapper: $wrapper,
-      closeButton: closeButton
+      $wrapper,
+      closeButton
     };
   };
   _proto._setCloseButtonVisible = function _setCloseButtonVisible(progressBox, visible) {
@@ -301,18 +301,18 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseOperationClosed = function _raiseOperationClosed(info) {
     this._actions.onOperationClosed({
-      info: info
+      info
     });
   };
   _proto._raiseOperationCanceled = function _raiseOperationCanceled(info) {
     this._actions.onOperationCanceled({
-      info: info
+      info
     });
   };
   _proto._raiseOperationItemCanceled = function _raiseOperationItemCanceled(item, itemIndex) {
     this._actions.onOperationItemCanceled({
-      item: item,
-      itemIndex: itemIndex
+      item,
+      itemIndex
     });
   };
   _proto._raisePanelClosed = function _raisePanelClosed() {

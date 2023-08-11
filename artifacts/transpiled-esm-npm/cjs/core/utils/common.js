@@ -190,8 +190,8 @@ var pairToObject = function pairToObject(raw, preventRound) {
     v = h;
   }
   return {
-    h: h,
-    v: v
+    h,
+    v
   };
 };
 exports.pairToObject = pairToObject;

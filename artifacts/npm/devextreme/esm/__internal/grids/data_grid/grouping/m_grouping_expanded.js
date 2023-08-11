@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/data_grid/grouping/m_grouping_expanded.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,9 +31,6 @@ var loadTotalCount = function loadTotalCount(dataSource, options) {
   }).fail(d.reject.bind(d));
   return d;
 };
-/// #DEBUG
-export { loadTotalCount };
-/// #ENDDEBUG
 export var GroupingHelper = GroupingHelperCore.inherit(function () {
   var foreachCollapsedGroups = function foreachCollapsedGroups(that, callback, updateOffsets) {
     return that.foreachGroups(groupInfo => {

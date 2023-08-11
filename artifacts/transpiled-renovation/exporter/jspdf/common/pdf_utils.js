@@ -69,8 +69,8 @@ function calculateTextHeight(doc, text, font, _ref2) {
     targetRectWidth = _ref2.targetRectWidth;
   var heightOfOneLine = getTextDimensions(doc, text, font).h;
   var linesCount = getTextLines(doc, text, font, {
-    wordWrapEnabled: wordWrapEnabled,
-    targetRectWidth: targetRectWidth
+    wordWrapEnabled,
+    targetRectWidth
   }).length;
   return heightOfOneLine * linesCount * doc.getLineHeightFactor();
 }
@@ -92,8 +92,8 @@ function calculateRowHeight(doc, cells, columnWidths) {
     var targetRectWidth = calculateTargetRectWidth(columnWidth, cellPadding);
     if ((0, _type.isDefined)(cellText)) {
       var textHeight = cellText !== '' ? calculateTextHeight(doc, cellText, font, {
-        wordWrapEnabled: wordWrapEnabled,
-        targetRectWidth: targetRectWidth
+        wordWrapEnabled,
+        targetRectWidth
       }) : 0;
       var cellHeight = textHeight + cellPadding.top + cellPadding.bottom;
       if (rowHeight < cellHeight) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/themes.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -375,20 +375,20 @@ function setDefaultTimeout(timeout) {
  * https://js.devexpress.com/Documentation/ApiReference/Common/Utils/ui/themes/
  * */
 var _default = {
-  setDefaultTimeout: setDefaultTimeout,
-  initialized: initialized,
-  resetTheme: resetTheme,
+  setDefaultTimeout,
+  initialized,
+  resetTheme,
   ready: themeReady,
-  waitWebFont: waitWebFont,
-  isWebFontLoaded: isWebFontLoaded,
-  isCompact: isCompact,
-  isDark: isDark,
-  isGeneric: isGeneric,
-  isMaterial: isMaterial,
-  detachCssClasses: detachCssClasses,
-  attachCssClasses: attachCssClasses,
-  current: current,
-  waitForThemeLoad: waitForThemeLoad,
-  isPendingThemeLoaded: isPendingThemeLoaded
+  waitWebFont,
+  isWebFontLoaded,
+  isCompact,
+  isDark,
+  isGeneric,
+  isMaterial,
+  detachCssClasses,
+  attachCssClasses,
+  current,
+  waitForThemeLoad,
+  isPendingThemeLoaded
 };
 exports.default = _default;

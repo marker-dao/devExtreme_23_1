@@ -44,7 +44,7 @@ function renderLabel(_ref) {
     labelTemplate.render({
       container: (0, _element.getPublicElement)($labelContent),
       model: labelTemplateData,
-      onRendered: function onRendered() {
+      onRendered() {
         onLabelTemplateRendered === null || onLabelTemplateRendered === void 0 ? void 0 : onLabelTemplateRendered();
       }
     });

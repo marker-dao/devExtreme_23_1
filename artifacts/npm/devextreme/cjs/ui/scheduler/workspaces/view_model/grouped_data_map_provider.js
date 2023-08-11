@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/view_model/grouped_data_map_provider.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,8 +48,8 @@ var GroupedDataMapProvider = /*#__PURE__*/function () {
       if (_date.default.intervalsOverlap({
         firstMin: startDate,
         firstMax: endDate,
-        secondMin: secondMin,
-        secondMax: secondMax
+        secondMin,
+        secondMax
       })) {
         return secondMin;
       }
@@ -133,8 +133,8 @@ var GroupedDataMapProvider = /*#__PURE__*/function () {
         allDay = _firstCell$cellData.allDay,
         groupIndex = _firstCell$cellData.groupIndex;
       return {
-        allDay: allDay,
-        groupIndex: groupIndex,
+        allDay,
+        groupIndex,
         startDate: _this2.getGroupStartDate(groupIndex),
         endDate: _this2.getGroupEndDate(groupIndex)
       };

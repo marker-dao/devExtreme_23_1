@@ -13,10 +13,10 @@ var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var DataController = _m_data_controller.dataControllerModule.controllers.data.inherit(function () {
   return {
-    _getDataSourceAdapter: function _getDataSourceAdapter() {
+    _getDataSourceAdapter() {
       return _m_data_source_adapter.default;
     },
-    _getNodeLevel: function _getNodeLevel(node) {
+    _getNodeLevel(node) {
       var level = -1;
       while (node.parent) {
         if (node.visible) {
@@ -26,20 +26,20 @@ var DataController = _m_data_controller.dataControllerModule.controllers.data.in
       }
       return level;
     },
-    _generateDataItem: function _generateDataItem(node, options) {
+    _generateDataItem(node, options) {
       return {
         rowType: 'data',
-        node: node,
+        node,
         key: node.key,
         data: node.data,
         isExpanded: this.isRowExpanded(node.key, options),
         level: this._getNodeLevel(node)
       };
     },
-    _loadOnOptionChange: function _loadOnOptionChange() {
+    _loadOnOptionChange() {
       this._dataSource.load();
     },
-    _isItemEquals: function _isItemEquals(item1, item2) {
+    _isItemEquals(item1, item2) {
       if (!this.callBase.apply(this, arguments)) {
         return false;
       }
@@ -51,33 +51,33 @@ var DataController = _m_data_controller.dataControllerModule.controllers.data.in
       }
       return true;
     },
-    init: function init() {
+    init() {
       this.createAction('onRowExpanding');
       this.createAction('onRowExpanded');
       this.createAction('onRowCollapsing');
       this.createAction('onRowCollapsed');
       this.callBase.apply(this, arguments);
     },
-    keyOf: function keyOf(data) {
+    keyOf(data) {
       var dataSource = this._dataSource;
       if (dataSource) {
         return dataSource.keyOf(data);
       }
     },
-    key: function key() {
+    key() {
       var dataSource = this._dataSource;
       if (dataSource) {
         return dataSource.getKeyExpr();
       }
     },
-    publicMethods: function publicMethods() {
+    publicMethods() {
       return this.callBase().concat(['expandRow', 'collapseRow', 'isRowExpanded', 'getRootNode', 'getNodeByKey', 'loadDescendants', 'forEachNode']);
     },
-    changeRowExpand: function changeRowExpand(key) {
+    changeRowExpand(key) {
       var _this = this;
       if (this._dataSource) {
         var args = {
-          key: key
+          key
         };
         var isExpanded = this.isRowExpanded(key);
         this.executeAction(isExpanded ? 'onRowCollapsing' : 'onRowExpanding', args);
@@ -90,27 +90,27 @@ var DataController = _m_data_controller.dataControllerModule.controllers.data.in
       // @ts-expect-error
       return new _deferred.Deferred().resolve();
     },
-    isRowExpanded: function isRowExpanded(key, cache) {
+    isRowExpanded(key, cache) {
       return this._dataSource && this._dataSource.isRowExpanded(key, cache);
     },
-    expandRow: function expandRow(key) {
+    expandRow(key) {
       if (!this.isRowExpanded(key)) {
         return this.changeRowExpand(key);
       }
       // @ts-expect-error
       return new _deferred.Deferred().resolve();
     },
-    collapseRow: function collapseRow(key) {
+    collapseRow(key) {
       if (this.isRowExpanded(key)) {
         return this.changeRowExpand(key);
       }
       // @ts-expect-error
       return new _deferred.Deferred().resolve();
     },
-    getRootNode: function getRootNode() {
+    getRootNode() {
       return this._dataSource && this._dataSource.getRootNode();
     },
-    optionChanged: function optionChanged(args) {
+    optionChanged(args) {
       switch (args.name) {
         case 'rootValue':
         case 'parentIdExpr':
@@ -139,32 +139,32 @@ var DataController = _m_data_controller.dataControllerModule.controllers.data.in
           this.callBase(args);
       }
     },
-    getNodeByKey: function getNodeByKey(key) {
+    getNodeByKey(key) {
       if (!this._dataSource) {
         return;
       }
       return this._dataSource.getNodeByKey(key);
     },
-    getChildNodeKeys: function getChildNodeKeys(parentKey) {
+    getChildNodeKeys(parentKey) {
       if (!this._dataSource) {
         return;
       }
       return this._dataSource.getChildNodeKeys(parentKey);
     },
-    loadDescendants: function loadDescendants(keys, childrenOnly) {
+    loadDescendants(keys, childrenOnly) {
       if (!this._dataSource) {
         return;
       }
       return this._dataSource.loadDescendants(keys, childrenOnly);
     },
-    forEachNode: function forEachNode() {
+    forEachNode() {
       this._dataSource.forEachNode.apply(this, arguments);
     }
   };
 }());
 exports.DataController = DataController;
 _m_core.default.registerModule('data', {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return (0, _extend.extend)({}, _m_data_controller.dataControllerModule.defaultOptions(), {
       itemsExpr: 'items',
       parentIdExpr: 'parentId',

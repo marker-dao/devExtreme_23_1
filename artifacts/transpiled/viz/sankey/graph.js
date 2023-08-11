@@ -91,7 +91,7 @@ var struct = {
     });
     vertices[vertex].color = BLACK;
   },
-  computeLongestPaths: function computeLongestPaths(links) {
+  computeLongestPaths(links) {
     // calculates longets paths for all vertices
     // method expects sorted vertices array to be in this._sortedList
     var sortedVertices = this._sortedList;

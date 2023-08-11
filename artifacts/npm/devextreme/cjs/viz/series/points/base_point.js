@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/points/base_point.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -344,7 +344,7 @@ Point.prototype = {
       y: that.y
     };
   },
-  setDefaultCoords: function setDefaultCoords() {
+  setDefaultCoords() {
     var coords = this.getDefaultCoords();
     this.x = coords.x;
     this.y = coords.y;
@@ -358,10 +358,10 @@ Point.prototype = {
   _getValTranslator: function _getValTranslator() {
     return this.series.getValueAxis().getTranslator();
   },
-  isArgumentCorrect: function isArgumentCorrect() {
+  isArgumentCorrect() {
     return this.series._argumentChecker(this.argument);
   },
-  isValueCorrect: function isValueCorrect() {
+  isValueCorrect() {
     var valueChecker = this.series._valueChecker;
     return valueChecker(this.getMinValue()) && valueChecker(this.getMaxValue());
   },
@@ -459,7 +459,7 @@ Point.prototype = {
   getLabels: function getLabels() {
     return [this._label];
   },
-  getCenterCoord: function getCenterCoord() {
+  getCenterCoord() {
     return {
       x: this.x,
       y: this.y

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/comparator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,6 @@ var _dom_adapter = _interopRequireDefault(require("../dom_adapter"));
 var _data = require("./data");
 var _type = require("./type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var hasNegation = function hasNegation(oldValue, newValue) {
   return 1 / oldValue === 1 / newValue;
 };
@@ -31,7 +30,7 @@ var equals = function equals(oldValue, newValue) {
   if (oldValue === 0 && newValue === 0) {
     return hasNegation(oldValue, newValue);
   }
-  if (oldValue === null || _typeof(oldValue) !== 'object' || _dom_adapter.default.isElementNode(oldValue)) {
+  if (oldValue === null || typeof oldValue !== 'object' || _dom_adapter.default.isElementNode(oldValue)) {
     return oldValue === newValue;
   }
   return false;

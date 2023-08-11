@@ -20,8 +20,9 @@ var SliderHandle = Widget.inherit({
     this.callBase();
     this.$element().addClass(SLIDER_HANDLE_CLASS);
     this.setAria({
-      'role': 'slider',
-      'valuenow': this.option('value')
+      role: 'slider',
+      'valuenow': this.option('value'),
+      label: 'Slider'
     });
   },
   _render: function _render() {

@@ -110,8 +110,8 @@ function resetFormDialogOptions(editorInstance, _ref6) {
     minWidth = _ref6.minWidth,
     maxWidth = _ref6.maxWidth;
   editorInstance.formDialogOption({
-    contentTemplate: contentTemplate,
-    title: title,
+    contentTemplate,
+    title,
     minHeight: minHeight !== null && minHeight !== void 0 ? minHeight : 0,
     minWidth: minWidth !== null && minWidth !== void 0 ? minWidth : 0,
     maxWidth: maxWidth !== null && maxWidth !== void 0 ? maxWidth : 'none'
@@ -129,10 +129,10 @@ function prepareShowFormProperties(module, type) {
       rowBlot = _ref8[1];
     var formats = module.quill.getFormat(module.editorInstance.getSelection(true));
     var tablePropertiesFormConfig = getFormConfigConstructor(type)(module, {
-      $element: $element,
-      formats: formats,
-      tableBlot: tableBlot,
-      rowBlot: rowBlot
+      $element,
+      formats,
+      tableBlot,
+      rowBlot
     });
     var _module$editorInstanc = module.editorInstance._formDialog._popup.option(),
       contentTemplate = _module$editorInstanc.contentTemplate,
@@ -141,11 +141,11 @@ function prepareShowFormProperties(module, type) {
       minWidth = _module$editorInstanc.minWidth,
       maxWidth = _module$editorInstanc.maxWidth;
     var savedOptions = {
-      contentTemplate: contentTemplate,
-      title: title,
-      minHeight: minHeight,
-      minWidth: minWidth,
-      maxWidth: maxWidth
+      contentTemplate,
+      title,
+      minHeight,
+      minWidth,
+      maxWidth
     };
     var formInstance;
     module.editorInstance.formDialogOption({
@@ -232,7 +232,7 @@ function prepareLinkHandler(module) {
     }
     var selectionHasEmbedContent = (0, _table_helper.hasEmbedContent)(module, selection);
     var formData = {
-      href: href,
+      href,
       text: selection && !selectionHasEmbedContent ? module.quill.getText(selection) : '',
       target: Object.prototype.hasOwnProperty.call(formats, 'target') ? !!formats.target : true
     };
@@ -379,7 +379,7 @@ function prepareInsertTableHandler(module) {
     }
     module.editorInstance.formDialogOption('title', _message.default.format(DIALOG_TABLE_CAPTION));
     var promise = module.editorInstance.showFormDialog({
-      formData: formData,
+      formData,
       items: insertTableFormItems()
     });
     promise.done(function (formData, event) {
@@ -554,10 +554,10 @@ function getTablePropertiesFormConfig(module, _ref11) {
     var newWidth = formData.width === startTableWidth ? undefined : formData.width;
     var newHeight = formData.height;
     applyTableDimensionChanges(module, {
-      $table: $table,
-      newHeight: newHeight,
-      newWidth: newWidth,
-      tableBlot: tableBlot
+      $table,
+      newHeight,
+      newWidth,
+      tableBlot
     });
     module.editorInstance.format('tableBorderStyle', formData.borderStyle);
     module.editorInstance.format('tableBorderWidth', formData.borderWidth + 'px');
@@ -566,8 +566,8 @@ function getTablePropertiesFormConfig(module, _ref11) {
     module.editorInstance.format('tableTextAlign', alignmentEditorInstance.option('selectedItemKeys')[0]);
   };
   return {
-    formOptions: formOptions,
-    applyHandler: applyHandler
+    formOptions,
+    applyHandler
   };
 }
 function getCellPropertiesFormConfig(module, _ref12) {
@@ -775,11 +775,11 @@ function getCellPropertiesFormConfig(module, _ref12) {
     var newWidth = formData.width === parseInt(startCellWidth) ? undefined : formData.width;
     var newHeight = formData.height;
     applyCellDimensionChanges(module, {
-      $cell: $cell,
-      newHeight: newHeight,
-      newWidth: newWidth,
-      tableBlot: tableBlot,
-      rowBlot: rowBlot
+      $cell,
+      newHeight,
+      newWidth,
+      tableBlot,
+      rowBlot
     });
     module.editorInstance.format('cellBorderWidth', formData.borderWidth + 'px');
     module.editorInstance.format('cellBorderColor', borderColorEditorInstance.option('value'));
@@ -793,8 +793,8 @@ function getCellPropertiesFormConfig(module, _ref12) {
     module.editorInstance.format('cellPaddingBottom', formData.verticalPadding + 'px');
   };
   return {
-    formOptions: formOptions,
-    applyHandler: applyHandler
+    formOptions,
+    applyHandler
   };
 }
 function getFormConfigConstructor(type) {
@@ -813,7 +813,7 @@ function applyTableDimensionChanges(module, _ref13) {
       var $columns = (0, _table_helper.getColumnElements)($table);
       var oldTableWidth = (0, _size.getOuterWidth)($table);
       (0, _table_helper.unfixTableWidth)($table, {
-        tableBlot: tableBlot
+        tableBlot
       });
       (0, _iterator.each)($columns, function (i, element) {
         var $element = (0, _renderer.default)(element);
@@ -859,7 +859,7 @@ function applyCellDimensionChanges(module, _ref14) {
     var tableWidth = (0, _size.getOuterWidth)($table);
     if (newWidth > tableWidth) {
       (0, _table_helper.unfixTableWidth)($table, {
-        tableBlot: tableBlot
+        tableBlot
       });
     }
     (0, _table_helper.setLineElementsFormat)(module, {
@@ -871,7 +871,7 @@ function applyCellDimensionChanges(module, _ref14) {
     var shouldUpdateNearestColumnWidth = (0, _table_helper.getAutoSizedElements)($table).length === 0;
     if (shouldUpdateNearestColumnWidth) {
       (0, _table_helper.unfixTableWidth)($table, {
-        tableBlot: tableBlot
+        tableBlot
       });
       if ($nextColumnCell.length === 1) {
         $verticalCells = (0, _table_helper.getLineElements)($table, index + 1);

@@ -62,6 +62,7 @@ export default class StandardStrategy extends SelectionStrategy {
     this.updateSelectedItemKeyHash(this.options.selectedItemKeys);
   }
   _loadSelectedItemsCore(keys, isDeselect, isSelectAll, filter) {
+    var forceCombinedFilter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
     var deferred = new Deferred();
     var key = this.options.key();
     if (!keys.length && !isSelectAll) {
@@ -73,7 +74,7 @@ export default class StandardStrategy extends SelectionStrategy {
       return deferred;
     }
     var selectionFilterCreator = new SelectionFilterCreator(keys, isSelectAll);
-    var combinedFilter = selectionFilterCreator.getCombinedFilter(key, filter);
+    var combinedFilter = selectionFilterCreator.getCombinedFilter(key, filter, forceCombinedFilter);
     var deselectedItems = [];
     if (isDeselect) {
       var selectedItems = this.options.selectedItems;
@@ -166,6 +167,7 @@ export default class StandardStrategy extends SelectionStrategy {
     return currentKeys;
   }
   _loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys) {
+    var forceCombinedFilter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
     var that = this;
     var deferred = new Deferred();
     var filter = that.options.filter();
@@ -174,14 +176,15 @@ export default class StandardStrategy extends SelectionStrategy {
     when(that._lastLoadDeferred).always(function () {
       var currentKeys = that._updateKeysByLastRequestData(keys, isDeselect, isSelectAll);
       that._shouldMergeWithLastRequest = false;
-      that._loadSelectedItemsCore(currentKeys, isDeselect, isSelectAll, filter).done(deferred.resolve).fail(deferred.reject);
+      that._loadSelectedItemsCore(currentKeys, isDeselect, isSelectAll, filter, forceCombinedFilter).done(deferred.resolve).fail(deferred.reject);
     });
     that._lastLoadDeferred = deferred;
     return deferred;
   }
   selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
+    var forceCombinedFilter = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
     var that = this;
-    var deferred = that._loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys);
+    var deferred = that._loadSelectedItems(keys, isDeselect, isSelectAll, updatedKeys, forceCombinedFilter);
     deferred.done(function (items) {
       if (preserve) {
         that._preserveSelectionUpdate(items, isDeselect);
@@ -345,5 +348,16 @@ export default class StandardStrategy extends SelectionStrategy {
     } else {
       return this._getFullSelectAllState();
     }
+  }
+  loadSelectedItemsWithFilter() {
+    var keyExpr = this.options.key();
+    var keys = this.getSelectedItemKeys();
+    var filter = this.options.filter();
+    if (!keys.length) {
+      return Deferred().resolve([]);
+    }
+    var selectionFilterCreator = new SelectionFilterCreator(keys);
+    var combinedFilter = selectionFilterCreator.getCombinedFilter(keyExpr, filter, true);
+    return this._loadFilteredData(combinedFilter);
   }
 }

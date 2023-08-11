@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.context_toolbox.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -132,9 +132,9 @@ var DiagramContextToolbox = /*#__PURE__*/function (_Widget) {
         var _this = this;
         var $element = this.$element().find('.' + DIAGRAM_CONTEXT_TOOLBOX_CONTENT_CLASS);
         this._onShownAction({
-          category: category,
-          callback: callback,
-          $element: $element,
+          category,
+          callback,
+          $element,
           hide: function hide() {
             return _this._popoverInstance.hide();
           }

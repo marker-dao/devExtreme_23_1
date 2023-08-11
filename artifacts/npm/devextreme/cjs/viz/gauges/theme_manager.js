@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/gauges/theme_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ var _extend2 = require("../../core/utils/extend");
 var _base_theme_manager = require("../core/base_theme_manager");
 var _extend = _extend2.extend;
 var ThemeManager = _base_theme_manager.BaseThemeManager.inherit({
-  ctor: function ctor(options) {
+  ctor(options) {
     this.callBase.apply(this, arguments);
     this._subTheme = options.subTheme;
   },
@@ -28,7 +28,7 @@ var ThemeManager = _base_theme_manager.BaseThemeManager.inherit({
   }
 });
 var _default = {
-  ThemeManager: ThemeManager
+  ThemeManager
 };
 exports.default = _default;
 module.exports = exports.default;

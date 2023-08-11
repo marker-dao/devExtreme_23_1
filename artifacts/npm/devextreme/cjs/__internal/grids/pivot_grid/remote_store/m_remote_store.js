@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/remote_store/m_remote_store.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -24,7 +23,7 @@ var _utils = require("../../../../data/data_source/utils");
 var _m_widget_utils = _interopRequireWildcard(require("../m_widget_utils"));
 var _m_remote_store_utils = require("./m_remote_store_utils");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -304,7 +303,7 @@ function getExpandedPathSliceFilter(options, dimensionName, level, firstCollapse
     if (filterValues.length) {
       result.push((0, _extend.extend)({}, field, {
         filterType: 'include',
-        filterValues: filterValues
+        filterValues
       }));
     }
   });
@@ -368,7 +367,7 @@ function getRequestsData(options) {
       for (var j = columnExpandedIndex; j < columnExpandedLevel + 1; j += 1) {
         var preparedOptions = (0, _extend.extend)({}, options, {
           columns: options.columns.slice(columnExpandedIndex, j + 1),
-          rows: rows,
+          rows,
           filters: filters.concat(getExpandedPathSliceFilter(options, 'columns', j, firstCollapsedColumnIndex)).concat(rowFilterByExpandedPaths)
         });
         data.push(preparedOptions);
@@ -390,11 +389,11 @@ function prepareFields(fields) {
 }
 var RemoteStore = _class.default.inherit(function () {
   return {
-    ctor: function ctor(options) {
+    ctor(options) {
       this._dataSource = new _data_source.DataSource(options);
       this._store = this._dataSource.store();
     },
-    getFields: function getFields(fields) {
+    getFields(fields) {
       // @ts-expect-error
       var d = new _deferred.Deferred();
       this._store.load({
@@ -406,10 +405,10 @@ var RemoteStore = _class.default.inherit(function () {
       }).fail(d.reject);
       return d;
     },
-    key: function key() {
+    key() {
       return this._store.key();
     },
-    load: function load(options) {
+    load(options) {
       var that = this;
       // @ts-expect-error
       var d = new _deferred.Deferred();
@@ -448,20 +447,20 @@ var RemoteStore = _class.default.inherit(function () {
       }).fail(d.reject);
       return d;
     },
-    filter: function filter() {
+    filter() {
       return this._dataSource.filter.apply(this._dataSource, arguments);
     },
-    supportPaging: function supportPaging() {
+    supportPaging() {
       return false;
     },
-    createDrillDownDataSource: function createDrillDownDataSource(loadOptions, params) {
+    createDrillDownDataSource(loadOptions, params) {
       loadOptions = loadOptions || {};
       params = params || {};
       var store = this._store;
       var filters = (0, _m_widget_utils.getFiltersByPath)(loadOptions.rows, params.rowPath).concat((0, _m_widget_utils.getFiltersByPath)(loadOptions.columns, params.columnPath)).concat(getFiltersForDimension(loadOptions.rows)).concat(loadOptions.filters || []).concat(getFiltersForDimension(loadOptions.columns));
       var filterExp = createFilterExpressions(filters);
       return new _data_source.DataSource({
-        load: function load(loadOptions) {
+        load(loadOptions) {
           return store.load((0, _extend.extend)({}, loadOptions, {
             filter: mergeFilters(filterExp, loadOptions.filter),
             select: params.customColumns
@@ -473,6 +472,6 @@ var RemoteStore = _class.default.inherit(function () {
 }());
 exports.RemoteStore = RemoteStore;
 var _default = {
-  RemoteStore: RemoteStore
+  RemoteStore
 };
 exports.default = _default;

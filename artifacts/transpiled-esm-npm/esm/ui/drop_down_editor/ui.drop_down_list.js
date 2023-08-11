@@ -276,7 +276,7 @@ var DropDownList = DropDownEditor.inherit({
     }
     return plainItems;
   },
-  _updateActiveDescendant() {
+  _updateActiveDescendant($target) {
     var _this$_list;
     var opened = this.option('opened');
     var listFocusedItemId = (_this$_list = this._list) === null || _this$_list === void 0 ? void 0 : _this$_list.getFocusedItemId();
@@ -284,7 +284,7 @@ var DropDownList = DropDownEditor.inherit({
     var activedescendant = opened && isElementOnDom && listFocusedItemId;
     this.setAria({
       'activedescendant': activedescendant || null
-    });
+    }, $target);
   },
   _setSelectedItem: function _setSelectedItem(item) {
     var displayValue = this._displayValue(item);
@@ -344,7 +344,7 @@ var DropDownList = DropDownEditor.inherit({
   _isCustomValueAllowed: function _isCustomValueAllowed() {
     return this.option('displayCustomValue');
   },
-  reset: function reset() {
+  clear: function clear() {
     this.callBase();
     this._clearFilter();
     this._clearSelectedItem();

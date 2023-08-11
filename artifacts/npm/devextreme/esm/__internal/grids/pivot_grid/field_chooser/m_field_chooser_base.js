@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/field_chooser/m_field_chooser_base.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,10 +23,13 @@ import { headerFilterMixin, HeaderFilterView as HeaderFilterViewBase, updateHead
 import gridCoreUtils from '../../../grids/grid_core/m_utils';
 import sortingMixin from '../../../grids/grid_core/sorting/m_sorting_mixin';
 import { createPath, foreachTree } from '../m_widget_utils';
-import { Sortable } from '../sortable/m_sortable';
+import SortableModule from '../sortable/m_sortable';
 import { ATTRIBUTES, CLASSES } from './const';
 import { dragAndDropItemRender } from './dom';
 import { reverseSortOrder } from './utils';
+var {
+  Sortable
+} = SortableModule;
 var DIV = '<div>';
 var HeaderFilterView = HeaderFilterViewBase.inherit({
   _getSearchExpr(options, headerFilterOptions) {

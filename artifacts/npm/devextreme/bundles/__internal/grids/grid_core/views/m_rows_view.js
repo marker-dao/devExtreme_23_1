@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/views/m_rows_view.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -33,7 +33,7 @@ var _m_columns_view = require("./m_columns_view");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */ /* eslint-disable @typescript-eslint/no-unused-vars */
 var ROWS_VIEW_CLASS = 'rowsview';
 var CONTENT_CLASS = 'content';
 var NOWRAP_CLASS = 'nowrap';
@@ -154,9 +154,8 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
       }
       if (isGroup) {
         $row.addClass(GROUP_ROW_CLASS);
-        var isRowExpanded = row.isExpanded;
         this.setAria('role', 'row', $row);
-        this.setAria('expanded', (0, _type.isDefined)(isRowExpanded) && isRowExpanded.toString(), $row);
+        this.setAriaExpandedAttribute($row, row);
       }
     }
     return $row;
@@ -191,6 +190,10 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
       rowIndex += this._dataController.getRowIndexOffset();
     }
     this.setAria('rowindex', rowIndex, $row);
+  };
+  _proto.setAriaExpandedAttribute = function setAriaExpandedAttribute($row, row) {
+    var description = row.isExpanded ? this.localize('dxDataGrid-ariaExpandedRow') : this.localize('dxDataGrid-ariaCollapsedRow');
+    this.setAria('roledescription', description, $row);
   };
   _proto._afterRowPrepared = function _afterRowPrepared(e) {
     var _this2 = this;
@@ -273,9 +276,9 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
   _proto._updateContent = function _updateContent(newTableElement, change, isFixedTableRendering) {
     var _this3 = this;
     this._contentChanges.push({
-      newTableElement: newTableElement,
-      change: change,
-      isFixedTableRendering: isFixedTableRendering
+      newTableElement,
+      change,
+      isFixedTableRendering
     });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.waitAsyncTemplates().done(function () {
@@ -364,7 +367,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
         column: columns[i],
         rowType: 'freeSpace',
         columnIndex: i,
-        columns: columns
+        columns
       });
       (0, _type.isNumeric)(height) && $cell.css('height', height);
       $row.append($cell);
@@ -449,7 +452,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
   _proto._rowClick = function _rowClick(e) {
     var item = this._dataController.items()[e.rowIndex] || {};
     this.executeAction('onRowClick', (0, _extend.extend)({
-      evaluate: function evaluate(expr) {
+      evaluate(expr) {
         var getter = (0, _data.compileGetter)(expr);
         // @ts-expect-error
         return getter(item.data);
@@ -472,7 +475,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
     var columnsCountBeforeGroups = this._getColumnsCountBeforeGroups(options.columns);
     var columnIndex = (options.row.groupIndex || 0) + columnsCountBeforeGroups;
     return {
-      columnIndex: columnIndex,
+      columnIndex,
       colspan: options.columns.length - columnIndex - 1
     };
   };
@@ -507,8 +510,8 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
       if (this._needRenderCell(i, options.columnIndices)) {
         this._renderCell($row, {
           value: isExpanded,
-          row: row,
-          rowIndex: rowIndex,
+          row,
+          rowIndex,
           column: expandColumn,
           columnIndex: i,
           columnIndices: options.columnIndices,
@@ -531,8 +534,8 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
     if (this._needRenderCell(groupCellOptions.columnIndex + 1, options.columnIndices)) {
       this._renderCell($row, {
         value: row.values[row.groupIndex],
-        row: row,
-        rowIndex: rowIndex,
+        row,
+        rowIndex,
         column: groupColumn,
         columnIndex: groupCellOptions.columnIndex + 1,
         columnIndices: options.columnIndices,
@@ -544,7 +547,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
     var that = this;
     var scrollingMode = that.option('scrolling.mode');
     _ColumnsView.prototype._renderRows.call(this, $table, (0, _extend.extend)({
-      scrollingMode: scrollingMode
+      scrollingMode
     }, options));
     that._checkRowKeys(options.change);
     that._renderFreeSpaceRow($table, options.change);
@@ -609,7 +612,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
     $element.toggleClass(EMPTY_CLASS, this._dataController.isEmpty());
     this.setAria('role', 'presentation', $element);
     var $table = this._renderTable({
-      change: change
+      change
     });
     var deferred = this._updateContent($table, change);
     _ColumnsView.prototype._renderCore.call(this, change);
@@ -691,7 +694,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
           value: column.calculateCellValue(rowOptions.data),
           rowIndex: rowOptions.rowIndex,
           row: rowOptions,
-          column: column
+          column
         });
       }
     }
@@ -945,7 +948,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
     if (loadPanel) {
       var visibilityOptions = {
         message: messageText || loadPanelOptions.text,
-        animation: animation,
+        animation,
         visible: isLoading
       };
       if (isLoading) {
@@ -1079,7 +1082,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
   return RowsView;
 }(_m_columns_view.ColumnsView);
 var rowsModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       hoverStateEnabled: false,
       scrolling: {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/header/dateNavigator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,8 +27,8 @@ var getDateNavigator = function getDateNavigator(header, item) {
     widget: 'dxButtonGroup',
     cssClass: DATE_NAVIGATOR_CLASS,
     options: {
-      items: items,
-      stylingMode: stylingMode,
+      items,
+      stylingMode,
       selectionMode: 'none',
       onItemClick: function onItemClick(e) {
         e.itemData.clickHandler(e);

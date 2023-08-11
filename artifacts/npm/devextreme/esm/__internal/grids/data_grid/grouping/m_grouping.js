@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/data_grid/grouping/m_grouping.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -115,11 +115,6 @@ var GroupingDataSourceAdapterExtender = function () {
     _changeRowExpandCore(path) {
       return this._grouping.changeRowExpand(path);
     },
-    /// #DEBUG
-    getGroupsInfo() {
-      return this._grouping._groupsInfo;
-    },
-    /// #ENDDEBUG
     // @ts-expect-error
     _hasGroupLevelsExpandState(group, isExpanded) {
       if (group && Array.isArray(group)) {

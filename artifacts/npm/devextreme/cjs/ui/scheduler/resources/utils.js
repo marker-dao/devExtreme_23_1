@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/ui/scheduler/resources/utils.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.setResourceToAppointment = exports.reduceResourcesTree = exports.loadResources = exports.isResourceMultiple = exports.groupAppointmentsByResourcesCore = exports.groupAppointmentsByResources = exports.getWrappedDataSource = exports.getValueExpr = exports.getResourcesDataByGroups = exports.getResourceTreeLeaves = exports.getResourceColor = exports.getResourceByField = exports.getPathToLeaf = exports.getPaintedResources = exports.getOrLoadResourceItem = exports.getNormalizedResources = exports.getGroupsObjectFromGroupsArray = exports.getGroupCount = exports.getFieldExpr = exports.getDisplayExpr = exports.getDataAccessors = exports.getCellGroups = exports.getAppointmentColor = exports.getAllGroups = exports.filterResources = exports.createResourcesTree = exports.createResourceEditorModel = exports.createReducedResourcesTree = exports.createExpressions = void 0;
 var _utils = require("../../../data/data_source/utils");
 var _data_source = require("../../../data/data_source/data_source");
@@ -27,9 +26,6 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var getValueExpr = function getValueExpr(resource) {
   return resource.valueExpr || 'id';
@@ -147,7 +143,9 @@ var getGroupsObjectFromGroupsArray = function getGroupsObjectFromGroupsArray(gro
   return groupsArray.reduce(function (currentGroups, _ref) {
     var name = _ref.name,
       id = _ref.id;
-    return _extends({}, currentGroups, _defineProperty({}, name, id));
+    return _extends({}, currentGroups, {
+      [name]: id
+    });
   }, {});
 };
 exports.getGroupsObjectFromGroupsArray = getGroupsObjectFromGroupsArray;
@@ -179,7 +177,7 @@ var createResourceEditorModel = function createResourceEditorModel(resources, lo
         displayExpr: getDisplayExpr(resource),
         valueExpr: getValueExpr(resource)
       },
-      dataField: dataField,
+      dataField,
       editorType: resource.allowMultiple ? 'dxTagBox' : 'dxSelectBox',
       label: {
         text: resource.label || dataField
@@ -500,9 +498,9 @@ var loadResources = function loadResources(groups, resources, resourceLoaderMap)
     dataSourcePromise.done(function (data) {
       var items = getTransformedResourceData(resource, data);
       deferred.resolve({
-        name: name,
-        items: items,
-        data: data
+        name,
+        items,
+        data
       });
     }).fail(function () {
       return deferred.reject();

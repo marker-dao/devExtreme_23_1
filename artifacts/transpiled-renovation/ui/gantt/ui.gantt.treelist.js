@@ -259,12 +259,20 @@ var GanttTreeList = /*#__PURE__*/function () {
     return this._nodeState;
   };
   _proto.getAllNodes = function getAllNodes() {
-    var treeList = this._treeList;
-    var store = treeList === null || treeList === void 0 ? void 0 : treeList.getDataSource().store();
-    var keyGetter = (0, _data2.compileGetter)(store === null || store === void 0 ? void 0 : store.key());
-    return store ? store._array.map(function (item) {
-      return treeList.getNodeByKey(keyGetter(item));
-    }) : [];
+    var _this$_treeList,
+      _this$_treeList$getDa,
+      _this$_treeList2,
+      _this3 = this;
+    var store = (_this$_treeList = this._treeList) === null || _this$_treeList === void 0 ? void 0 : (_this$_treeList$getDa = _this$_treeList.getDataSource()) === null || _this$_treeList$getDa === void 0 ? void 0 : _this$_treeList$getDa.store();
+    if (!store || !((_this$_treeList2 = this._treeList) !== null && _this$_treeList2 !== void 0 && _this$_treeList2.getNodeByKey)) {
+      return [];
+    }
+    var keyGetter = (0, _data2.compileGetter)(store.key());
+    return store._array.map(function (item) {
+      return _this3._treeList.getNodeByKey(keyGetter(item));
+    }).filter(function (item) {
+      return !!item;
+    });
   };
   _proto.isExpandedStateChanged = function isExpandedStateChanged(keys1, keys2) {
     if (keys1 === null && keys2 === null) {
@@ -321,8 +329,8 @@ var GanttTreeList = /*#__PURE__*/function () {
     this._treeList && this._treeList.option(optionName, value);
   };
   _proto.getOption = function getOption(optionName) {
-    var _this$_treeList;
-    return (_this$_treeList = this._treeList) === null || _this$_treeList === void 0 ? void 0 : _this$_treeList.option(optionName);
+    var _this$_treeList3;
+    return (_this$_treeList3 = this._treeList) === null || _this$_treeList3 === void 0 ? void 0 : _this$_treeList3.option(optionName);
   };
   _proto.onTaskInserted = function onTaskInserted(insertedId, parentId) {
     if ((0, _type.isDefined)(parentId)) {
@@ -336,8 +344,8 @@ var GanttTreeList = /*#__PURE__*/function () {
     this.setOption('focusedRowKey', insertedId);
   };
   _proto.getDataSource = function getDataSource() {
-    var _this$_treeList2;
-    return (_this$_treeList2 = this._treeList) === null || _this$_treeList2 === void 0 ? void 0 : _this$_treeList2.getDataSource();
+    var _this$_treeList4;
+    return (_this$_treeList4 = this._treeList) === null || _this$_treeList4 === void 0 ? void 0 : _this$_treeList4.getDataSource();
   };
   return GanttTreeList;
 }();

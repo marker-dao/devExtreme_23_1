@@ -19,7 +19,6 @@ var _index = require("../events/utils/index");
 var _deferred = require("../core/utils/deferred");
 var _common = require("../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var window = (0, _window.getWindow)();
 var removeEventName = (0, _index.addNamespace)(_remove.removeEvent, 'dxFX');
 var RELATIVE_VALUE_REGEX = /^([+-])=(.*)/i;
@@ -284,7 +283,7 @@ var FrameAnimationStrategy = {
         if (typeof endPropValue === 'string' && parseFloat(endPropValue) === false) {
           return true;
         }
-        result[propName] = _typeof(endPropValue) === 'object' ? calcValueRecursively(from[propName], endPropValue) : calcEasedValue(propName);
+        result[propName] = typeof endPropValue === 'object' ? calcValueRecursively(from[propName], endPropValue) : calcEasedValue(propName);
       });
       return result;
     };

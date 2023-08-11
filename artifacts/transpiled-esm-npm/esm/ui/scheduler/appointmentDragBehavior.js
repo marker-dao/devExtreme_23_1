@@ -90,7 +90,9 @@ export default class AppointmentDragBehavior {
   }
   createDragEndHandler(options, appointmentDragging) {
     return e => {
+      var updatedData = this.appointments.invoke('getUpdatedData', e.itemData);
       this.appointmentInfo = null;
+      e.toItemData = extend({}, e.itemData, updatedData);
       appointmentDragging.onDragEnd && appointmentDragging.onDragEnd(e);
       if (!e.cancel) {
         options.onDragEnd(e);

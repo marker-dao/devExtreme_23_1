@@ -73,8 +73,8 @@ var getWaveStyleConfig = function getWaveStyleConfig(args, config) {
     top = y - waveSize / 2;
   }
   return {
-    left: left,
-    top: top,
+    left,
+    top,
     height: waveSize,
     width: waveSize
   };

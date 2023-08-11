@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/sorting/m_sorting.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -111,7 +111,8 @@ var HeaderPanelSortingExtender = extend({}, sortingMixin, {
       column: {
         alignment: that.option('rtlEnabled') ? 'right' : 'left',
         allowSorting: groupColumn.allowSorting,
-        sortOrder: groupColumn.sortOrder === 'desc' ? 'desc' : 'asc'
+        sortOrder: groupColumn.sortOrder === 'desc' ? 'desc' : 'asc',
+        isGrouped: true
       },
       showColumnLines: true
     });

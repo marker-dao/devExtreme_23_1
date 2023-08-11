@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/core/devices.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,6 @@ import $ from '../core/renderer';
 import { getWindow, getNavigator, hasWindow } from './utils/window';
 import { extend } from './utils/extend';
 import { isPlainObject } from './utils/type';
-import { each } from './utils/iterator';
 import errors from './errors';
 import Callbacks from './utils/callbacks';
 import readyCallbacks from './utils/ready_callbacks';
@@ -20,7 +19,6 @@ import { EventsStrategy } from './events_strategy';
 import { sessionStorage as SessionStorage } from './utils/storage';
 import { changeCallback, value as viewPort } from './utils/view_port';
 import Config from './config';
-var navigator = getNavigator();
 var window = getWindow();
 var KNOWN_UA_TABLE = {
   'iPhone': 'iPhone',
@@ -47,14 +45,14 @@ var DEFAULT_DEVICE = {
   // TODO: For internal use (draft, do not document these options!)
   mac: false
 };
-var uaParsers = {
+var UA_PARSERS = {
   generic(userAgent) {
     var isPhone = /windows phone/i.test(userAgent) || userAgent.match(/WPDesktop/);
     var isTablet = !isPhone && /Windows(.*)arm(.*)Tablet PC/i.test(userAgent);
     var isDesktop = !isPhone && !isTablet && /msapphost/i.test(userAgent);
     var isMac = /((intel|ppc) mac os x)/.test(userAgent.toLowerCase());
     if (!(isPhone || isTablet || isDesktop || isMac)) {
-      return;
+      return null;
     }
     return {
       deviceType: isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop',
@@ -64,12 +62,15 @@ var uaParsers = {
       mac: isMac
     };
   },
-  ios(userAgent) {
-    if (!/ip(hone|od|ad)/i.test(userAgent)) {
-      return;
+  appleTouchDevice(userAgent) {
+    var navigator = getNavigator();
+    var isIpadOs = /Macintosh/i.test(userAgent) && (navigator === null || navigator === void 0 ? void 0 : navigator.maxTouchPoints) > 2;
+    var isAppleDevice = /ip(hone|od|ad)/i.test(userAgent);
+    if (!isAppleDevice && !isIpadOs) {
+      return null;
     }
     var isPhone = /ip(hone|od)/i.test(userAgent);
-    var matches = userAgent.match(/os (\d+)_(\d+)_?(\d+)?/i);
+    var matches = userAgent.match(/os\s{0,}X? (\d+)_(\d+)_?(\d+)?/i);
     var version = matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10), parseInt(matches[3] || 0, 10)] : [];
     var isIPhone4 = window.screen.height === 960 / 2;
     var grade = isIPhone4 ? 'B' : 'A';
@@ -81,8 +82,12 @@ var uaParsers = {
     };
   },
   android(userAgent) {
-    if (!/android|htc_|silk/i.test(userAgent)) {
-      return;
+    // TODO: Check this RegExp.
+    //  It looks like there may be missing android user agents.
+    var isAndroid = /android|htc_|silk/i.test(userAgent);
+    var isWinPhone = /windows phone/i.test(userAgent);
+    if (!isAndroid || isWinPhone) {
+      return null;
     }
     var isPhone = /mobile/i.test(userAgent);
     var matches = userAgent.match(/android (\d+)\.?(\d+)?\.?(\d+)?/i);
@@ -97,6 +102,7 @@ var uaParsers = {
     };
   }
 };
+var UA_PARSERS_ARRAY = [UA_PARSERS.appleTouchDevice, UA_PARSERS.android, UA_PARSERS.generic];
 class Devices {
   /**
   * @name DevicesObject.ctor
@@ -214,6 +220,7 @@ class Devices {
           throw errors.Error('E0005');
         }
       } else {
+        var navigator = getNavigator();
         ua = navigator.userAgent;
       }
       return this._fromUA(ua);
@@ -250,13 +257,12 @@ class Devices {
     return extend(result, shortcuts);
   }
   _fromUA(ua) {
-    var config;
-    each(uaParsers, (platform, parser) => {
-      config = parser(ua);
-      return !config;
-    });
-    if (config) {
-      return this._fromConfig(config);
+    for (var idx = 0; idx < UA_PARSERS_ARRAY.length; idx += 1) {
+      var parser = UA_PARSERS_ARRAY[idx];
+      var config = parser(ua);
+      if (config) {
+        return this._fromConfig(config);
+      }
     }
     return DEFAULT_DEVICE;
   }

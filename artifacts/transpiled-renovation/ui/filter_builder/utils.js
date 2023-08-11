@@ -488,8 +488,8 @@ function getCurrentLookupValueText(field, value, handler) {
       }
       if (field.customizeText) {
         valueText = field.customizeText({
-          value: value,
-          valueText: valueText
+          value,
+          valueText
         });
       }
       handler(valueText);
@@ -573,7 +573,8 @@ function pushItemAndCheckParent(originalItems, plainItems, item) {
         dataType: 'object',
         dataField: item.parentId,
         caption: generateCaptionByDataField(item.parentId, true),
-        filterOperations: ['isblank', 'isnotblank']
+        filterOperations: ['isblank', 'isnotblank'],
+        defaultCalculateFilterExpression: _filtering.default.defaultCalculateFilterExpression
       });
     }
   }

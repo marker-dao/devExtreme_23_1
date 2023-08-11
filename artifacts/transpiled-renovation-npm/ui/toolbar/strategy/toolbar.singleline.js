@@ -179,7 +179,7 @@ var SingleLineStrategy = /*#__PURE__*/function () {
     }
   };
   _proto._getItemsWidth = function _getItemsWidth() {
-    return this._toolbar._getSummaryItemsWidth([this._toolbar._$beforeSection, this._toolbar._$centerSection, this._toolbar._$afterSection]);
+    return this._toolbar._getSummaryItemsSize('width', [this._toolbar._$beforeSection, this._toolbar._$centerSection, this._toolbar._$afterSection]);
   };
   _proto._itemOptionChanged = function _itemOptionChanged(item, property, value) {
     if (this._toolbar._isMenuItem(item)) {

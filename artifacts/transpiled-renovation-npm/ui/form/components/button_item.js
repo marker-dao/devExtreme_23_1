@@ -18,9 +18,9 @@ function renderButtonItem(_ref) {
   $parent.css('justifyContent', convertAlignmentToJustifyContent(item.verticalAlignment));
   var $button = (0, _renderer.default)('<div>').appendTo($rootElement);
   return {
-    $rootElement: $rootElement,
+    $rootElement,
     buttonInstance: createComponentCallback($button, 'dxButton', (0, _extend.extend)({
-      validationGroup: validationGroup
+      validationGroup
     }, item.buttonOptions))
   };
 }

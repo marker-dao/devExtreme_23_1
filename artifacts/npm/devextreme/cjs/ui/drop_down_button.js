@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_button.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -44,7 +44,7 @@ var DX_BUTTON_CLASS = 'dx-button';
 var DX_BUTTON_TEXT_CLASS = 'dx-button-text';
 var DX_ICON_RIGHT_CLASS = 'dx-icon-right';
 var DropDownButton = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       /**
        * @name dxDropDownButtonItem.key
@@ -85,13 +85,13 @@ var DropDownButton = _ui.default.inherit({
       buttonGroupOptions: {}
     });
   },
-  _setOptionsByReference: function _setOptionsByReference() {
+  _setOptionsByReference() {
     this.callBase();
     (0, _extend.extend)(this._optionsByReference, {
       selectedItem: true
     });
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._createItemClickAction();
     this._createActionClickAction();
@@ -103,7 +103,7 @@ var DropDownButton = _ui.default.inherit({
     this._options.cache('buttonGroupOptions', this.option('buttonGroupOptions'));
     this._options.cache('dropDownOptions', this.option('dropDownOptions'));
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates() {
     var _this = this;
     this._templateManager.addDefaultTemplates({
       content: new _function_template.FunctionTemplate(function (options) {
@@ -135,13 +135,13 @@ var DropDownButton = _ui.default.inherit({
     var storeKey = (_this$_dataSource = this._dataSource) === null || _this$_dataSource === void 0 ? void 0 : _this$_dataSource.key();
     return (0, _type.isDefined)(storeKey) && (!(0, _type.isDefined)(keyExpr) || keyExpr === 'this') ? storeKey : keyExpr;
   },
-  _compileKeyGetter: function _compileKeyGetter() {
+  _compileKeyGetter() {
     this._keyGetter = (0, _data.compileGetter)(this._getKey());
   },
-  _compileDisplayGetter: function _compileDisplayGetter() {
+  _compileDisplayGetter() {
     this._displayGetter = (0, _data.compileGetter)(this.option('displayExpr'));
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.callBase();
     this.$element().addClass(DROP_DOWN_BUTTON_CLASS);
     this._renderButtonGroup();
@@ -152,19 +152,19 @@ var DropDownButton = _ui.default.inherit({
   },
   // T977758
   _renderFocusTarget: _common.noop,
-  _render: function _render() {
+  _render() {
     if (!this.option('deferRendering') || this.option('opened')) {
       this._renderPopup();
     }
     this.callBase();
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl() {
     if (this._popup) {
       this._renderPopupContent();
     }
     return this.callBase();
   },
-  _loadSelectedItem: function _loadSelectedItem() {
+  _loadSelectedItem() {
     var _this$_loadSingleDefe;
     (_this$_loadSingleDefe = this._loadSingleDeferred) === null || _this$_loadSingleDefe === void 0 ? void 0 : _this$_loadSingleDefe.reject();
     var d = new _deferred.Deferred();
@@ -180,16 +180,16 @@ var DropDownButton = _ui.default.inherit({
     this._loadSingleDeferred = d;
     return d.promise();
   },
-  _createActionClickAction: function _createActionClickAction() {
+  _createActionClickAction() {
     this._actionClickAction = this._createActionByOption('onButtonClick');
   },
-  _createSelectionChangedAction: function _createSelectionChangedAction() {
+  _createSelectionChangedAction() {
     this._selectionChangedAction = this._createActionByOption('onSelectionChanged');
   },
-  _createItemClickAction: function _createItemClickAction() {
+  _createItemClickAction() {
     this._itemClickAction = this._createActionByOption('onItemClick');
   },
-  _fireSelectionChangedAction: function _fireSelectionChangedAction(_ref) {
+  _fireSelectionChangedAction(_ref) {
     var previousValue = _ref.previousValue,
       value = _ref.value;
     this._selectionChangedAction({
@@ -197,17 +197,17 @@ var DropDownButton = _ui.default.inherit({
       previousItem: previousValue
     });
   },
-  _fireItemClickAction: function _fireItemClickAction(_ref2) {
+  _fireItemClickAction(_ref2) {
     var event = _ref2.event,
       itemElement = _ref2.itemElement,
       itemData = _ref2.itemData;
     return this._itemClickAction({
-      event: event,
-      itemElement: itemElement,
+      event,
+      itemElement,
       itemData: this._actionItem || itemData
     });
   },
-  _actionButtonConfig: function _actionButtonConfig() {
+  _actionButtonConfig() {
     return {
       text: this.option('text'),
       icon: this.option('icon'),
@@ -216,7 +216,7 @@ var DropDownButton = _ui.default.inherit({
       }
     };
   },
-  _getButtonGroupItems: function _getButtonGroupItems() {
+  _getButtonGroupItems() {
     var items = [];
     items.push(this._actionButtonConfig());
     if (this.option('splitButton')) {
@@ -229,7 +229,7 @@ var DropDownButton = _ui.default.inherit({
     }
     return items;
   },
-  _buttonGroupItemClick: function _buttonGroupItemClick(_ref3) {
+  _buttonGroupItemClick(_ref3) {
     var event = _ref3.event,
       itemData = _ref3.itemData;
     var isActionButton = itemData.elementAttr.class === DROP_DOWN_BUTTON_ACTION_CLASS;
@@ -238,7 +238,7 @@ var DropDownButton = _ui.default.inherit({
       this.toggle();
     } else if (isActionButton) {
       this._actionClickAction({
-        event: event,
+        event,
         selectedItem: this.option('selectedItem')
       });
       if (!this.option('splitButton')) {
@@ -246,7 +246,7 @@ var DropDownButton = _ui.default.inherit({
       }
     }
   },
-  _buttonGroupOptions: function _buttonGroupOptions() {
+  _buttonGroupOptions() {
     var _this2 = this;
     var _this$option = this.option(),
       splitButton = _this$option.splitButton,
@@ -273,15 +273,15 @@ var DropDownButton = _ui.default.inherit({
       onKeyboardHandled: function onKeyboardHandled(e) {
         return _this2._keyboardHandler(e);
       },
-      buttonTemplate: buttonTemplate,
-      focusStateEnabled: focusStateEnabled,
-      hoverStateEnabled: hoverStateEnabled,
-      stylingMode: stylingMode,
-      accessKey: accessKey,
-      tabIndex: tabIndex
+      buttonTemplate,
+      focusStateEnabled,
+      hoverStateEnabled,
+      stylingMode,
+      accessKey,
+      tabIndex
     }, this._options.cache('buttonGroupOptions'));
   },
-  _renderPopupContent: function _renderPopupContent() {
+  _renderPopupContent() {
     var $content = this._popup.$content();
     var template = this._getTemplateByOption('dropDownContentTemplate');
     $content.empty();
@@ -292,7 +292,7 @@ var DropDownButton = _ui.default.inherit({
       model: this.option('items') || this._dataSource
     });
   },
-  _popupOptions: function _popupOptions() {
+  _popupOptions() {
     var _this3 = this;
     var horizontalAlignment = this.option('rtlEnabled') ? 'right' : 'left';
     return (0, _extend.extend)({
@@ -336,7 +336,7 @@ var DropDownButton = _ui.default.inherit({
       visible: this.option('opened')
     });
   },
-  _listOptions: function _listOptions() {
+  _listOptions() {
     var _this4 = this;
     var selectedItemKey = this.option('selectedItemKey');
     var useSelectMode = this.option('useSelectMode');
@@ -371,7 +371,7 @@ var DropDownButton = _ui.default.inherit({
       }
     };
   },
-  _upDownKeyHandler: function _upDownKeyHandler() {
+  _upDownKeyHandler() {
     if (this._popup && this._popup.option('visible') && this._list) {
       this._list.focus();
     } else {
@@ -379,16 +379,16 @@ var DropDownButton = _ui.default.inherit({
     }
     return true;
   },
-  _escHandler: function _escHandler() {
+  _escHandler() {
     this.close();
     this._buttonGroup.focus();
     return true;
   },
-  _tabHandler: function _tabHandler() {
+  _tabHandler() {
     this.close();
     return true;
   },
-  _renderPopup: function _renderPopup() {
+  _renderPopup() {
     var $popup = (0, _renderer.default)('<div>');
     this.$element().append($popup);
     this._popup = this._createComponent($popup, _ui2.default, this._popupOptions());
@@ -398,7 +398,7 @@ var DropDownButton = _ui.default.inherit({
     this._popup.on('showing', this._popupShowingHandler.bind(this));
     this._bindInnerWidgetOptions(this._popup, 'dropDownOptions');
   },
-  _popupHidingHandler: function _popupHidingHandler() {
+  _popupHidingHandler() {
     this.option('opened', false);
     this._updateAriaAttributes(false);
   },
@@ -422,17 +422,17 @@ var DropDownButton = _ui.default.inherit({
   _setPopupOption: function _setPopupOption(optionName, value) {
     this._setWidgetOption('_popup', arguments);
   },
-  _popupShowingHandler: function _popupShowingHandler() {
+  _popupShowingHandler() {
     this.option('opened', true);
     this._updateAriaAttributes(true);
   },
-  _setElementAria: function _setElementAria(value) {
+  _setElementAria(value) {
     var elementAria = {
       owns: value ? this._popupContentId : undefined
     };
     this.setAria(elementAria, this.$element());
   },
-  _setButtonsAria: function _setButtonsAria(value) {
+  _setButtonsAria(value) {
     var _this6 = this;
     var commonButtonAria = {
       expanded: value,
@@ -450,14 +450,14 @@ var DropDownButton = _ui.default.inherit({
       }
     });
   },
-  _updateAriaAttributes: function _updateAriaAttributes(value) {
+  _updateAriaAttributes(value) {
     this._setElementAria(value);
     this._setButtonsAria(value);
   },
-  _getButtons: function _getButtons() {
+  _getButtons() {
     return this._buttonGroup.$element().find(".".concat(DX_BUTTON_CLASS));
   },
-  _renderButtonGroup: function _renderButtonGroup() {
+  _renderButtonGroup() {
     var $buttonGroup = this._buttonGroup && this._buttonGroup.$element() || (0, _renderer.default)('<div>');
     if (!this._buttonGroup) {
       this.$element().append($buttonGroup);
@@ -470,32 +470,32 @@ var DropDownButton = _ui.default.inherit({
     this._bindInnerWidgetOptions(this._buttonGroup, 'buttonGroupOptions');
     this._updateAriaAttributes(this.option('opened'));
   },
-  _updateArrowClass: function _updateArrowClass() {
+  _updateArrowClass() {
     var hasArrow = this.option('splitButton') || this.option('showArrowIcon');
     this.$element().toggleClass(DROP_DOWN_BUTTON_HAS_ARROW_CLASS, hasArrow);
   },
-  toggle: function toggle(visible) {
+  toggle(visible) {
     if (!this._popup) {
       this._renderPopup();
       this._renderContent();
     }
     return this._popup.toggle(visible);
   },
-  open: function open() {
+  open() {
     return this.toggle(true);
   },
-  close: function close() {
+  close() {
     return this.toggle(false);
   },
-  _setListOption: function _setListOption(name, value) {
+  _setListOption(name, value) {
     this._list && this._list.option(name, value);
   },
-  _getDisplayValue: function _getDisplayValue(item) {
+  _getDisplayValue(item) {
     var isPrimitiveItem = !(0, _type.isPlainObject)(item);
     var displayValue = isPrimitiveItem ? item : this._displayGetter(item);
     return !(0, _type.isPlainObject)(displayValue) ? String((0, _common.ensureDefined)(displayValue, '')) : '';
   },
-  _updateActionButton: function _updateActionButton(selectedItem) {
+  _updateActionButton(selectedItem) {
     if (this.option('useSelectMode')) {
       this.option({
         text: this._getDisplayValue(selectedItem),
@@ -505,11 +505,11 @@ var DropDownButton = _ui.default.inherit({
     this._setOptionWithoutOptionChange('selectedItem', selectedItem);
     this._setOptionWithoutOptionChange('selectedItemKey', this._keyGetter(selectedItem));
   },
-  _clean: function _clean() {
+  _clean() {
     this._list && this._list.$element().remove();
     this._popup && this._popup.$element().remove();
   },
-  _selectedItemKeyChanged: function _selectedItemKeyChanged(value) {
+  _selectedItemKeyChanged(value) {
     var _this7 = this;
     this._setListOption('selectedItemKeys', this.option('useSelectMode') && (0, _type.isDefined)(value) ? [value] : []);
     var previousItem = this.option('selectedItem');
@@ -523,11 +523,11 @@ var DropDownButton = _ui.default.inherit({
       }
     });
   },
-  _updateButtonGroup: function _updateButtonGroup(name, value) {
+  _updateButtonGroup(name, value) {
     this._buttonGroup.option(name, value);
     this._updateAriaAttributes(this.option('opened'));
   },
-  _actionButtonOptionChanged: function _actionButtonOptionChanged(_ref5) {
+  _actionButtonOptionChanged(_ref5) {
     var name = _ref5.name,
       value = _ref5.value;
     var newConfig = {};
@@ -535,7 +535,7 @@ var DropDownButton = _ui.default.inherit({
     this._updateButtonGroup('items[0]', (0, _extend.extend)({}, this._actionButtonConfig(), newConfig));
     this._popup && this._popup.repaint();
   },
-  _selectModeChanged: function _selectModeChanged(value) {
+  _selectModeChanged(value) {
     if (value) {
       this._setListOption('selectionMode', 'single');
       var selectedItemKey = this.option('selectedItemKey');
@@ -552,7 +552,7 @@ var DropDownButton = _ui.default.inherit({
       });
     }
   },
-  _updateItemCollection: function _updateItemCollection(optionName) {
+  _updateItemCollection(optionName) {
     var _this8 = this;
     var selectedItemKey = this.option('selectedItemKey');
     this._setListOption('selectedItem', null);
@@ -579,7 +579,7 @@ var DropDownButton = _ui.default.inherit({
   focus: function focus() {
     this._buttonGroup.focus();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var _this$_popup;
     var name = args.name,
       value = args.value;

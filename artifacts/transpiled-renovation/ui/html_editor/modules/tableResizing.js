@@ -323,9 +323,9 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
       var attachSeparatorData = {
         lineSeparator: lineSeparators[i],
         index: i,
-        $determinantElements: $determinantElements,
-        frame: frame,
-        direction: direction
+        $determinantElements,
+        frame,
+        direction
       };
       this._attachColumnSeparatorEvents(attachSeparatorData);
     }
@@ -460,21 +460,21 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     var currentLineNewSize = this._startLineSize + eventOffset;
     if (direction === 'horizontal') {
       this._horizontalDragHandler({
-        currentLineNewSize: currentLineNewSize,
-        directionInfo: directionInfo,
-        eventOffset: eventOffset,
-        $determinantElements: $determinantElements,
-        index: index,
-        frame: frame
+        currentLineNewSize,
+        directionInfo,
+        eventOffset,
+        $determinantElements,
+        index,
+        frame
       });
     } else {
       this._verticalDragHandler({
-        currentLineNewSize: currentLineNewSize,
-        directionInfo: directionInfo,
-        eventOffset: eventOffset,
-        $determinantElements: $determinantElements,
-        index: index,
-        frame: frame
+        currentLineNewSize,
+        directionInfo,
+        eventOffset,
+        $determinantElements,
+        index,
+        frame
       });
     }
     this._updateFramePosition(frame.$table, frame.$frame);
@@ -569,8 +569,8 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
       columnsSum += columnsWidths[index];
     });
     return {
-      columnsWidths: columnsWidths,
-      columnsSum: columnsSum
+      columnsWidths,
+      columnsSum
     };
   };
   _proto._setColumnsRatioWidth = function _setColumnsRatioWidth(columnElements, ratio, columnsWidths, $table) {

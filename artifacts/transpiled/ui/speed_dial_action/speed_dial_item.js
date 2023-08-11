@@ -38,7 +38,7 @@ var SpeedDialItem = /*#__PURE__*/function (_Overlay) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _Overlay.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
+      device() {
         return (0, _themes.isMaterial)();
       },
       options: {

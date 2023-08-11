@@ -11,7 +11,6 @@ var _data_source = require("../../data/data_source/data_source");
 var _array_store = _interopRequireDefault(require("../../data/array_store"));
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
   _dataExpressionDefaultOptions: function _dataExpressionDefaultOptions() {
     return {
@@ -92,7 +91,7 @@ var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
       }
       return result;
     }
-    if (key && _typeof(value) === 'object') {
+    if (key && typeof value === 'object') {
       value = value[key];
     }
     return value;

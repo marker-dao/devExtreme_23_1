@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_box/ui.date_box.mask.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -588,7 +588,7 @@ var DateBoxMask = DateBoxBase.inherit({
     delete this._activePartIndex;
     delete this._maskValue;
   },
-  reset() {
+  clear() {
     this._clearMaskState();
     this._activePartIndex = 0;
     this.callBase();

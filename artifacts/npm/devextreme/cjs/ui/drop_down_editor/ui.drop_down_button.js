@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_button.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -58,8 +58,8 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
     }));
     this._legacyRender(editor.$element(), $element, options.visible);
     return {
-      $element: $element,
-      instance: instance
+      $element,
+      instance
     };
   };
   _proto._getOptions = function _getOptions() {
@@ -72,7 +72,7 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
       activeStateEnabled: false,
       useInkRipple: false,
       disabled: isReadOnly,
-      visible: visible
+      visible
     };
     this._addTemplate(options);
     return options;

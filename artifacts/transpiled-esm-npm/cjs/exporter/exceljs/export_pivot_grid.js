@@ -114,8 +114,8 @@ var PivotGridHelpers = /*#__PURE__*/function () {
   _proto._customizeCell = function _customizeCell(excelCell, pivotCell, shouldPreventCall) {
     if ((0, _type.isFunction)(this.customizeCell) && !shouldPreventCall) {
       this.customizeCell({
-        excelCell: excelCell,
-        pivotCell: pivotCell
+        excelCell,
+        pivotCell
       });
     }
   };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/dom_component.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,7 +28,7 @@ var _short = require("../events/short");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var abstract = _component.Component.abstract;
 var DOMComponent = _component.Component.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       width: undefined,
       height: undefined,
@@ -45,16 +45,16 @@ var DOMComponent = _component.Component.inherit({
   * @param2 options:DOMComponentOptions|undefined
   * @hidden
   */
-  ctor: function ctor(element, options) {
+  ctor(element, options) {
     this._customClass = null;
     this._createElement(element);
     (0, _public_component.attachInstanceToElement)(this._$element, this, this._dispose);
     this.callBase(options);
   },
-  _createElement: function _createElement(element) {
+  _createElement(element) {
     this._$element = (0, _renderer.default)(element);
   },
-  _getSynchronizableOptionsForCreateComponent: function _getSynchronizableOptionsForCreateComponent() {
+  _getSynchronizableOptionsForCreateComponent() {
     return ['rtlEnabled', 'disabled', 'templatesRenderAsynchronously'];
   },
   _checkFunctionValueDeprecation: function _checkFunctionValueDeprecation(optionNames) {
@@ -69,33 +69,33 @@ var DOMComponent = _component.Component.inherit({
   },
   _visibilityChanged: abstract,
   _dimensionChanged: abstract,
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._checkFunctionValueDeprecation(['width', 'height', 'maxHeight', 'maxWidth', 'minHeight', 'minWidth', 'popupHeight', 'popupWidth']);
     this._attachWindowResizeCallback();
     this._initTemplateManager();
   },
-  _setOptionsByDevice: function _setOptionsByDevice(instanceCustomRules) {
+  _setOptionsByDevice(instanceCustomRules) {
     this.callBase([].concat(this.constructor._classCustomRules || [], instanceCustomRules || []));
   },
-  _isInitialOptionValue: function _isInitialOptionValue(name) {
+  _isInitialOptionValue(name) {
     var isCustomOption = this.constructor._classCustomRules && Object.prototype.hasOwnProperty.call(this._convertRulesToOptions(this.constructor._classCustomRules), name);
     return !isCustomOption && this.callBase(name);
   },
-  _attachWindowResizeCallback: function _attachWindowResizeCallback() {
+  _attachWindowResizeCallback() {
     if (this._isDimensionChangeSupported()) {
       var windowResizeCallBack = this._windowResizeCallBack = this._dimensionChanged.bind(this);
       _resize_callbacks.default.add(windowResizeCallBack);
     }
   },
-  _isDimensionChangeSupported: function _isDimensionChangeSupported() {
+  _isDimensionChangeSupported() {
     return this._dimensionChanged !== abstract;
   },
-  _renderComponent: function _renderComponent() {
+  _renderComponent() {
     this._initMarkup();
     (0, _window.hasWindow)() && this._render();
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     var _ref = this.option() || {},
       rtlEnabled = _ref.rtlEnabled;
     this._renderElementAttributes();
@@ -103,11 +103,11 @@ var DOMComponent = _component.Component.inherit({
     this._renderVisibilityChange();
     this._renderDimensions();
   },
-  _render: function _render() {
+  _render() {
     this._attachVisibilityChangeHandlers();
     (0, _shadow_dom.addShadowDomStyles)(this.$element());
   },
-  _renderElementAttributes: function _renderElementAttributes() {
+  _renderElementAttributes() {
     var _ref2 = this.option() || {},
       elementAttr = _ref2.elementAttr;
     var attributes = (0, _extend.extend)({}, elementAttr);
@@ -116,7 +116,7 @@ var DOMComponent = _component.Component.inherit({
     this.$element().attr(attributes).removeClass(this._customClass).addClass(classNames);
     this._customClass = classNames;
   },
-  _renderVisibilityChange: function _renderVisibilityChange() {
+  _renderVisibilityChange() {
     if (this._isDimensionChangeSupported()) {
       this._attachDimensionChangeHandlers();
     }
@@ -125,7 +125,7 @@ var DOMComponent = _component.Component.inherit({
       $element.addClass('dx-visibility-change-handler');
     }
   },
-  _renderDimensions: function _renderDimensions() {
+  _renderDimensions() {
     var $element = this.$element();
     var element = $element.get(0);
     var width = this._getOptionValue('width', element);
@@ -137,45 +137,45 @@ var DOMComponent = _component.Component.inherit({
       });
     }
   },
-  _isCssUpdateRequired: function _isCssUpdateRequired(element, height, width) {
+  _isCssUpdateRequired(element, height, width) {
     return !!((0, _type.isDefined)(width) || (0, _type.isDefined)(height) || element.style.width || element.style.height);
   },
-  _attachDimensionChangeHandlers: function _attachDimensionChangeHandlers() {
+  _attachDimensionChangeHandlers() {
     var _this2 = this;
     var $el = this.$element();
     var namespace = "".concat(this.NAME, "VisibilityChange");
     _short.resize.off($el, {
-      namespace: namespace
+      namespace
     });
     _short.resize.on($el, function () {
       return _this2._dimensionChanged();
     }, {
-      namespace: namespace
+      namespace
     });
   },
-  _attachVisibilityChangeHandlers: function _attachVisibilityChangeHandlers() {
+  _attachVisibilityChangeHandlers() {
     var _this3 = this;
     if (this._isVisibilityChangeSupported()) {
       var $el = this.$element();
       var namespace = "".concat(this.NAME, "VisibilityChange");
       this._isHidden = !this._isVisible();
       _short.visibility.off($el, {
-        namespace: namespace
+        namespace
       });
       _short.visibility.on($el, function () {
         return _this3._checkVisibilityChanged('shown');
       }, function () {
         return _this3._checkVisibilityChanged('hiding');
       }, {
-        namespace: namespace
+        namespace
       });
     }
   },
-  _isVisible: function _isVisible() {
+  _isVisible() {
     var $element = this.$element();
     return $element.is(':visible');
   },
-  _checkVisibilityChanged: function _checkVisibilityChanged(action) {
+  _checkVisibilityChanged(action) {
     var isVisible = this._isVisible();
     if (isVisible) {
       if (action === 'hiding' && !this._isHidden) {
@@ -187,42 +187,42 @@ var DOMComponent = _component.Component.inherit({
       }
     }
   },
-  _isVisibilityChangeSupported: function _isVisibilityChangeSupported() {
+  _isVisibilityChangeSupported() {
     return this._visibilityChanged !== abstract && (0, _window.hasWindow)();
   },
   _clean: _common.noop,
-  _modelByElement: function _modelByElement() {
+  _modelByElement() {
     var _this$option = this.option(),
       modelByElement = _this$option.modelByElement;
     var $element = this.$element();
     return modelByElement ? modelByElement($element) : undefined;
   },
-  _invalidate: function _invalidate() {
+  _invalidate() {
     if (this._isUpdateAllowed()) {
       throw _errors.default.Error('E0007');
     }
     this._requireRefresh = true;
   },
-  _refresh: function _refresh() {
+  _refresh() {
     this._clean();
     this._renderComponent();
   },
-  _dispose: function _dispose() {
+  _dispose() {
     this._templateManager && this._templateManager.dispose();
     this.callBase();
     this._clean();
     this._detachWindowResizeCallback();
   },
-  _detachWindowResizeCallback: function _detachWindowResizeCallback() {
+  _detachWindowResizeCallback() {
     if (this._isDimensionChangeSupported()) {
       _resize_callbacks.default.remove(this._windowResizeCallBack);
     }
   },
-  _toggleRTLDirection: function _toggleRTLDirection(rtl) {
+  _toggleRTLDirection(rtl) {
     var $element = this.$element();
     $element.toggleClass('dx-rtl', rtl);
   },
-  _createComponent: function _createComponent(element, component) {
+  _createComponent(element, component) {
     var _this4 = this;
     var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var synchronizableOptions = (0, _common.grep)(this._getSynchronizableOptionsForCreateComponent(), function (value) {
@@ -234,7 +234,7 @@ var DOMComponent = _component.Component.inherit({
       nestedComponentOptions = _this$option3.nestedComponentOptions;
     nestedComponentOptions = nestedComponentOptions || _common.noop;
     var nestedComponentConfig = (0, _extend.extend)({
-      integrationOptions: integrationOptions
+      integrationOptions
     }, nestedComponentOptions(this));
     synchronizableOptions.forEach(function (optionName) {
       return nestedComponentConfig[optionName] = _this4.option(optionName);
@@ -267,28 +267,28 @@ var DOMComponent = _component.Component.inherit({
     }
     return instance;
   },
-  _extendConfig: function _extendConfig(config, extendConfig) {
+  _extendConfig(config, extendConfig) {
     (0, _iterator.each)(extendConfig, function (key, value) {
       !Object.prototype.hasOwnProperty.call(config, key) && (config[key] = value);
     });
   },
-  _defaultActionConfig: function _defaultActionConfig() {
+  _defaultActionConfig() {
     var $element = this.$element();
     var context = this._modelByElement($element);
     return (0, _extend.extend)(this.callBase(), {
-      context: context
+      context
     });
   },
-  _defaultActionArgs: function _defaultActionArgs() {
+  _defaultActionArgs() {
     var $element = this.$element();
     var model = this._modelByElement($element);
     var element = this.element();
     return (0, _extend.extend)(this.callBase(), {
-      element: element,
-      model: model
+      element,
+      model
     });
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     switch (args.name) {
       case 'width':
       case 'height':
@@ -308,7 +308,7 @@ var DOMComponent = _component.Component.inherit({
         break;
     }
   },
-  _removeAttributes: function _removeAttributes(element) {
+  _removeAttributes(element) {
     var attrs = element.attributes;
     for (var i = attrs.length - 1; i >= 0; i--) {
       var attr = attrs[i];
@@ -320,12 +320,12 @@ var DOMComponent = _component.Component.inherit({
       }
     }
   },
-  _removeClasses: function _removeClasses(element) {
+  _removeClasses(element) {
     element.className = element.className.split(' ').filter(function (cssClass) {
       return cssClass.lastIndexOf('dx-', 0) !== 0;
     }).join(' ');
   },
-  _updateDOMComponent: function _updateDOMComponent(renderRequired) {
+  _updateDOMComponent(renderRequired) {
     if (renderRequired) {
       this._renderComponent();
     } else if (this._requireRefresh) {
@@ -333,36 +333,36 @@ var DOMComponent = _component.Component.inherit({
       this._refresh();
     }
   },
-  endUpdate: function endUpdate() {
+  endUpdate() {
     var renderRequired = this._isInitializingRequired();
     this.callBase();
     this._isUpdateAllowed() && this._updateDOMComponent(renderRequired);
   },
-  $element: function $element() {
+  $element() {
     return this._$element;
   },
-  element: function element() {
+  element() {
     var $element = this.$element();
     return (0, _element.getPublicElement)($element);
   },
-  dispose: function dispose() {
+  dispose() {
     var element = this.$element().get(0);
     (0, _element_data.cleanDataRecursive)(element, true);
     element.textContent = '';
     this._removeAttributes(element);
     this._removeClasses(element);
   },
-  resetOption: function resetOption(optionName) {
+  resetOption(optionName) {
     this.callBase(optionName);
     if (optionName === 'width' || optionName === 'height') {
       var initialOption = this.initialOption(optionName);
       !(0, _type.isDefined)(initialOption) && this.$element().css(optionName, '');
     }
   },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+  _getAnonymousTemplateName() {
     return void 0;
   },
-  _initTemplateManager: function _initTemplateManager() {
+  _initTemplateManager() {
     if (this._templateManager || !this._useTemplates()) return void 0;
     var _this$option4 = this.option(),
       _this$option4$integra = _this$option4.integrationOptions,
@@ -371,7 +371,7 @@ var DOMComponent = _component.Component.inherit({
     this._templateManager = new _template_manager.TemplateManager(createTemplate, this._getAnonymousTemplateName());
     this._initTemplates();
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates() {
     var _this5 = this;
     var _this$_templateManage = this._templateManager.extractTemplates(this.$element()),
       templates = _this$_templateManage.templates,
@@ -387,22 +387,22 @@ var DOMComponent = _component.Component.inherit({
       this._options.silent('_hasAnonymousTemplateContent', true);
     }
   },
-  _getTemplateByOption: function _getTemplateByOption(optionName) {
+  _getTemplateByOption(optionName) {
     return this._getTemplate(this.option(optionName));
   },
-  _getTemplate: function _getTemplate(templateSource) {
+  _getTemplate(templateSource) {
     var templates = this.option('integrationOptions.templates');
     var isAsyncTemplate = this.option('templatesRenderAsynchronously');
     var skipTemplates = this.option('integrationOptions.skipTemplates');
     return this._templateManager.getTemplate(templateSource, templates, {
-      isAsyncTemplate: isAsyncTemplate,
-      skipTemplates: skipTemplates
+      isAsyncTemplate,
+      skipTemplates
     }, this);
   },
-  _saveTemplate: function _saveTemplate(name, template) {
+  _saveTemplate(name, template) {
     this._setOptionWithoutOptionChange('integrationOptions.templates.' + name, this._templateManager._createTemplate(template));
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates() {
     return true;
   }
 });

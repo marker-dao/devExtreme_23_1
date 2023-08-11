@@ -18,7 +18,7 @@ var MultiLineStrategy = /*#__PURE__*/function () {
     return (_this$_toolbar$option = this._toolbar.option('items')) !== null && _this$_toolbar$option !== void 0 ? _this$_toolbar$option : [];
   };
   _proto._getItemsWidth = function _getItemsWidth() {
-    return this._toolbar._getSummaryItemsWidth(this._toolbar.itemElements(), true);
+    return this._toolbar._getSummaryItemsSize('width', this._toolbar.itemElements(), true);
   };
   _proto._arrangeItems = function _arrangeItems() {
     var $label = this._toolbar._$toolbarItemsContainer.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0);

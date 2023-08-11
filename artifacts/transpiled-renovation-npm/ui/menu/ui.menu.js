@@ -201,7 +201,7 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
   };
   _proto._updateItemsWidthCache = function _updateItemsWidthCache() {
     var $menuItems = this.$element().find('ul').first().children('li').children(".".concat(DX_MENU_ITEM_CLASS));
-    this._menuItemsWidth = this._getSummaryItemsWidth($menuItems, true);
+    this._menuItemsWidth = this._getSummaryItemsSize('width', $menuItems, true);
   };
   _proto._dimensionChanged = function _dimensionChanged() {
     if (!this._isAdaptivityEnabled()) {
@@ -296,7 +296,7 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
         _this2._toggleHamburgerActiveState(false);
       },
       height: 'auto',
-      hideOnOutsideClick: function hideOnOutsideClick(e) {
+      hideOnOutsideClick(e) {
         return !(0, _renderer.default)(e.target).closest(".".concat(DX_ADAPTIVE_HAMBURGER_BUTTON_CLASS)).length;
       },
       position: {
@@ -568,7 +568,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     var rtlEnabled = this.option('rtlEnabled');
     var submenuPosition = {
       collision: 'flip',
-      of: $rootItem
+      of: $rootItem,
+      precise: true
     };
     switch (submenuDirection) {
       case 'leftortop':

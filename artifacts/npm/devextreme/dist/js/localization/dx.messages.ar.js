@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "فرز تصاعدي",
             "dxDataGrid-sortingDescendingText": "ترتيب تنازلي",
             "dxDataGrid-sortingClearText": "مسح الفرز",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "احفظ التغييرات",
             "dxDataGrid-editingCancelAllChanges": "تجاهل التغييرات",
             "dxDataGrid-editingAddRow": "أضف صفًا",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "تصفية الخلية",
             "dxDataGrid-ariaCollapse": "طي",
             "dxDataGrid-ariaExpand": "توسيع",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "شبكة البيانات",
             "dxDataGrid-ariaSearchInGrid": "البحث في شبكة البيانات",
             "dxDataGrid-ariaSelectAll": "حدد الكل",
             "dxDataGrid-ariaSelectRow": "تحديد صف",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "عامل التصفية",
             "dxDataGrid-filterPanelCreateFilter": "إنشاء عامل تصفية",
             "dxDataGrid-filterPanelClearFilter": "مسح",

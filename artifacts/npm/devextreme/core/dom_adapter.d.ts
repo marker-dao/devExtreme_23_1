@@ -1,7 +1,7 @@
 /**
 * DevExtreme (core/dom_adapter.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,6 +26,8 @@ export interface DomAdapter {
   setClass(element: HTMLElement, className: string, isAdd: boolean): void;
   removeElement(element: HTMLElement): void;
   inject(obj: Record<string, unknown>): void;
+  setStyle(element: HTMLElement, name: string, value: string): void;
+  insertElement(parentElement: HTMLElement, newElement: HTMLElement, nextSiblingElement?: HTMLElement): void;
 }
 
 declare const domAdapter: DomAdapter;

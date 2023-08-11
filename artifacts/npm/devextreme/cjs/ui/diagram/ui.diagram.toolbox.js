@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.toolbox.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -223,7 +223,7 @@ var DiagramToolbox = /*#__PURE__*/function (_DiagramFloatingPanel) {
       var category = toolboxGroups[i].category;
       var title = toolboxGroups[i].title;
       var groupObj = {
-        category: category,
+        category,
         title: title || category,
         expanded: toolboxGroups[i].expanded,
         displayMode: toolboxGroups[i].displayMode,

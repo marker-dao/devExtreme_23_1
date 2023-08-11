@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/columns_controller/m_columns_controller_utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -508,7 +508,7 @@ var updateColumnChanges = function updateColumnChanges(that, changeType, optionN
     changeTypes: {
       length: 0
     },
-    columnIndex: columnIndex // TODO replace columnIndex -> columnIndices
+    columnIndex // TODO replace columnIndex -> columnIndices
   };
 
   optionName = optionName || 'all';
@@ -525,7 +525,10 @@ var updateColumnChanges = function updateColumnChanges(that, changeType, optionN
   }
   if (columnIndex === undefined || columnIndex !== columnChanges.columnIndex) {
     if ((0, _type.isDefined)(columnIndex)) {
-      (_a = columnChanges.columnIndices) !== null && _a !== void 0 ? _a : columnChanges.columnIndices = [columnChanges.columnIndex];
+      (_a = columnChanges.columnIndices) !== null && _a !== void 0 ? _a : columnChanges.columnIndices = [];
+      if ((0, _type.isDefined)(columnChanges.columnIndex)) {
+        columnChanges.columnIndices.push(columnChanges.columnIndex);
+      }
       columnChanges.columnIndices.push(columnIndex);
     }
     delete columnChanges.columnIndex;
@@ -662,10 +665,10 @@ var columnOptionCore = function columnOptionCore(that, column, optionName, value
       resetColumnsCache(that);
     }
     fullOptionName && fireOptionChanged(that, {
-      fullOptionName: fullOptionName,
-      optionName: optionName,
-      value: value,
-      prevValue: prevValue
+      fullOptionName,
+      optionName,
+      value,
+      prevValue
     });
   }
 };
@@ -728,9 +731,10 @@ var getRowCount = function getRowCount(that) {
 };
 exports.getRowCount = getRowCount;
 var isCustomCommandColumn = function isCustomCommandColumn(that, commandColumn) {
-  return !!that._columns.filter(function (column) {
+  var customCommandColumns = that._columns.filter(function (column) {
     return column.type === commandColumn.type;
-  }).length;
+  });
+  return !!customCommandColumns.length;
 };
 exports.isCustomCommandColumn = isCustomCommandColumn;
 var getFixedPosition = function getFixedPosition(that, column) {
@@ -757,7 +761,7 @@ var processExpandColumns = function processExpandColumns(columns, expandColumns,
   if (rowspan > 1) {
     expandColumnsByType = (0, _iterator.map)(expandColumnsByType, function (expandColumn) {
       return (0, _extend.extend)({}, expandColumn, {
-        rowspan: rowspan
+        rowspan
       });
     });
   }

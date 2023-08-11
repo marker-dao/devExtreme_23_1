@@ -84,8 +84,8 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
       this._$contextMenuTargetElement.show();
       if (!selection) {
         selection = {
-          x: x,
-          y: y,
+          x,
+          y,
           width: 0,
           height: 0
         };
@@ -129,12 +129,12 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
       this.bar.raiseBarCommandExecuted(command, value);
     } else if (typeof command === 'string') {
       this._onInternalCommandAction({
-        command: command
+        command
       });
     }
     if (name !== undefined) {
       this._onCustomCommandAction({
-        name: name
+        name
       });
     }
   };
@@ -259,8 +259,8 @@ var DiagramContextMenuBar = /*#__PURE__*/function (_DiagramBar) {
   return DiagramContextMenuBar;
 }(_diagram2.default);
 var _default = {
-  DiagramContextMenuWrapper: DiagramContextMenuWrapper,
-  DiagramContextMenu: DiagramContextMenu
+  DiagramContextMenuWrapper,
+  DiagramContextMenu
 };
 exports.default = _default;
 module.exports = exports.default;

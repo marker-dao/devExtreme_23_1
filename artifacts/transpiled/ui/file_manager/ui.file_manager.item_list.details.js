@@ -318,7 +318,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     });
     this._tryRaiseSelectionChanged({
       selectedItemInfos: selectedRowsData,
-      selectedItems: selectedItems,
+      selectedItems,
       selectedItemKeys: selectedRowKeys,
       currentSelectedItemKeys: currentSelectedRowKeys,
       currentDeselectedItemKeys: currentDeselectedRowKeys
@@ -389,7 +389,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
         selectedKeys.push(fileItemInfo.fileItem.key);
       }
       this._raiseSelectionChanged({
-        selectedItems: selectedItems,
+        selectedItems,
         selectedItemKeys: selectedKeys,
         currentSelectedItemKeys: [].concat(selectedKeys),
         currentDeselectedItemKeys: deselectedKeys

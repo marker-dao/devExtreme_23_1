@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/strategy/rangeCalendar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,6 +9,7 @@
 "use strict";
 
 exports.default = void 0;
+var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _uiDate_boxStrategy = _interopRequireDefault(require("../../date_box/ui.date_box.strategy.calendar"));
 var _events_engine = _interopRequireDefault(require("../../../events/core/events_engine"));
 var _extend = require("../../../core/utils/extend");
@@ -18,9 +19,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var APPLY_BUTTON_SELECTOR = '.dx-popup-done.dx-button';
-var CANCEL_BUTTON_SELECTOR = '.dx-popup-cancel.dx-button';
-var TODAY_BUTTON_CLASS = 'dx-button-today';
 var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
   _inheritsLoose(RangeCalendarStrategy, _CalendarStrategy);
   function RangeCalendarStrategy(dateBox) {
@@ -47,15 +45,11 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     return _CalendarStrategy.prototype._getPopup.call(this) || this.dateRangeBox.getStartDateBox()._popup;
   };
   _proto.getFirstPopupElement = function getFirstPopupElement() {
-    var $popupWrapper = this._getPopup().$wrapper();
-    var $todayButton = $popupWrapper.find(".".concat(TODAY_BUTTON_CLASS));
-    if ($todayButton.length) {
-      return $todayButton;
-    }
-    return $popupWrapper.find(APPLY_BUTTON_SELECTOR);
+    return (0, _renderer.default)(this._getPopup().getFocusableElements()[0]);
   };
   _proto.getLastPopupElement = function getLastPopupElement() {
-    return this._getPopup().$wrapper().find(CANCEL_BUTTON_SELECTOR);
+    var elements = this._getPopup().getFocusableElements();
+    return (0, _renderer.default)(elements[elements.length - 1]);
   };
   _proto.supportedKeys = function supportedKeys() {
     var _this2 = this;
@@ -121,7 +115,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
       multiView = _this$dateRangeBox$op.multiView;
     var disabledDates = (0, _type.isFunction)(disabledDatesValue) ? this._injectComponent(disabledDatesValue) : disabledDates;
     return (0, _extend.extend)(_CalendarStrategy.prototype._getWidgetOptions.call(this), {
-      disabledDates: disabledDates,
+      disabledDates,
       values: value,
       selectionMode: 'range',
       viewsCount: multiView ? 2 : 1,

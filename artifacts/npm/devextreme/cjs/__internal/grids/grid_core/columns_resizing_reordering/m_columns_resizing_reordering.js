@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/columns_resizing_reordering/m_columns_resizing_reordering.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,6 +29,8 @@ var _swatch_container = _interopRequireDefault(require("../../../../ui/widget/sw
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable max-classes-per-file */
 var COLUMNS_SEPARATOR_CLASS = 'columns-separator';
 var COLUMNS_SEPARATOR_TRANSPARENT = 'columns-separator-transparent';
 var DRAGGING_HEADER_CLASS = 'drag-header';
@@ -50,19 +52,24 @@ var allowResizing = function allowResizing(that) {
 var allowReordering = function allowReordering(that) {
   return that.option('allowColumnReordering') || that.getController('columns').isColumnOptionUsed('allowReordering');
 };
-var TrackerView = _m_modules.default.View.inherit({
-  _renderCore: function _renderCore() {
-    var deferred = this.callBase();
+var TrackerView = /*#__PURE__*/function (_modules$View) {
+  _inheritsLoose(TrackerView, _modules$View);
+  function TrackerView() {
+    return _modules$View.apply(this, arguments) || this;
+  }
+  var _proto = TrackerView.prototype;
+  _proto._renderCore = function _renderCore() {
+    var deferred = _modules$View.prototype._renderCore.call(this);
     this.element().addClass(this.addWidgetPrefix(TRACKER_CLASS));
     this.hide();
     return deferred;
-  },
-  _unsubscribeFromCallback: function _unsubscribeFromCallback() {
+  };
+  _proto._unsubscribeFromCallback = function _unsubscribeFromCallback() {
     if (this._positionChanged) {
       this._tablePositionController.positionChanged.remove(this._positionChanged);
     }
-  },
-  _subscribeToCallback: function _subscribeToCallback() {
+  };
+  _proto._subscribeToCallback = function _subscribeToCallback() {
     var that = this;
     that._positionChanged = function (position) {
       var $element = that.element();
@@ -74,8 +81,8 @@ var TrackerView = _m_modules.default.View.inherit({
       }
     };
     this._tablePositionController.positionChanged.add(that._positionChanged);
-  },
-  optionChanged: function optionChanged(args) {
+  };
+  _proto.optionChanged = function optionChanged(args) {
     if (args.name === 'allowColumnResizing') {
       this._unsubscribeFromCallback();
       if (args.value) {
@@ -83,46 +90,53 @@ var TrackerView = _m_modules.default.View.inherit({
         this._invalidate();
       }
     }
-    this.callBase(args);
-  },
-  init: function init() {
-    this.callBase();
+    _modules$View.prototype.optionChanged.call(this, args);
+  };
+  _proto.init = function init() {
+    _modules$View.prototype.init.call(this);
     this._tablePositionController = this.getController('tablePosition');
     this._subscribeToCallback();
-  },
-  isVisible: function isVisible() {
+  };
+  _proto.isVisible = function isVisible() {
     return allowResizing(this);
-  },
-  show: function show() {
+  };
+  _proto.show = function show() {
     this.element().show();
-  },
-  hide: function hide() {
+  };
+  _proto.hide = function hide() {
     this.element() && this.element().hide();
-  },
-  setHeight: function setHeight(value) {
+  };
+  _proto.setHeight = function setHeight(value) {
     (0, _size.setHeight)(this.element(), value);
-  },
-  dispose: function dispose() {
+  };
+  _proto.dispose = function dispose() {
     this._unsubscribeFromCallback();
-    this.callBase();
+    _modules$View.prototype.dispose.call(this);
+  };
+  return TrackerView;
+}(_m_modules.default.View);
+var SeparatorView = /*#__PURE__*/function (_modules$View2) {
+  _inheritsLoose(SeparatorView, _modules$View2);
+  function SeparatorView() {
+    return _modules$View2.apply(this, arguments) || this;
   }
-});
-var SeparatorView = _m_modules.default.View.inherit({
-  _renderSeparator: function _renderSeparator() {},
-  _renderCore: function _renderCore(options) {
-    var deferred = this.callBase(options);
+  var _proto2 = SeparatorView.prototype;
+  _proto2._renderSeparator = function _renderSeparator() {};
+  _proto2._renderCore = function _renderCore(options) {
+    // @ts-expect-error
+    var deferred = _modules$View2.prototype._renderCore.call(this, options);
     this._isShown = true;
     this._renderSeparator();
     this.hide();
     return deferred;
-  },
-  show: function show() {
+  };
+  _proto2.show = function show() {
     this._isShown = true;
-  },
-  hide: function hide() {
+  };
+  _proto2.hide = function hide() {
     this._isShown = false;
-  },
-  height: function height(value) {
+  };
+  _proto2.height = function height(value) {
     var $element = this.element();
     if ($element) {
       if ((0, _type.isDefined)(value)) {
@@ -131,8 +145,8 @@ var SeparatorView = _m_modules.default.View.inherit({
         return (0, _size.getHeight)($element);
       }
     }
-  },
-  width: function width(value) {
+  };
+  _proto2.width = function width(value) {
     var $element = this.element();
     if ($element) {
       if ((0, _type.isDefined)(value)) {
@@ -141,15 +155,22 @@ var SeparatorView = _m_modules.default.View.inherit({
         return (0, _size.getWidth)($element);
       }
     }
+  };
+  return SeparatorView;
+}(_m_modules.default.View);
+var ColumnsSeparatorView = /*#__PURE__*/function (_SeparatorView) {
+  _inheritsLoose(ColumnsSeparatorView, _SeparatorView);
+  function ColumnsSeparatorView() {
+    return _SeparatorView.apply(this, arguments) || this;
   }
-});
-var ColumnsSeparatorView = SeparatorView.inherit({
-  _renderSeparator: function _renderSeparator() {
-    this.callBase();
+  var _proto3 = ColumnsSeparatorView.prototype;
+  /// #ENDDEBUG
+  _proto3._renderSeparator = function _renderSeparator() {
+    _SeparatorView.prototype._renderSeparator.call(this);
     var $element = this.element();
     $element.addClass(this.addWidgetPrefix(COLUMNS_SEPARATOR_CLASS));
-  },
-  _subscribeToCallback: function _subscribeToCallback() {
+  };
+  _proto3._subscribeToCallback = function _subscribeToCallback() {
     var that = this;
     var $element;
     that._positionChanged = function (position) {
@@ -162,20 +183,20 @@ var ColumnsSeparatorView = SeparatorView.inherit({
       }
     };
     that._tablePositionController.positionChanged.add(that._positionChanged);
-  },
-  _unsubscribeFromCallback: function _unsubscribeFromCallback() {
+  };
+  _proto3._unsubscribeFromCallback = function _unsubscribeFromCallback() {
     this._positionChanged && this._tablePositionController.positionChanged.remove(this._positionChanged);
-  },
-  _init: function _init() {
+  };
+  _proto3._init = function _init() {
     this._isTransparent = allowResizing(this);
     if (this.isVisible()) {
       this._subscribeToCallback();
     }
-  },
-  isVisible: function isVisible() {
+  };
+  _proto3.isVisible = function isVisible() {
     return this.option('showColumnHeaders') && (allowReordering(this) || allowResizing(this));
-  },
-  optionChanged: function optionChanged(args) {
+  };
+  _proto3.optionChanged = function optionChanged(args) {
     if (args.name === 'allowColumnResizing') {
       if (args.value) {
         this._init();
@@ -187,14 +208,14 @@ var ColumnsSeparatorView = SeparatorView.inherit({
         this.hide(true);
       }
     }
-    this.callBase(args);
-  },
-  init: function init() {
-    this.callBase();
+    _SeparatorView.prototype.optionChanged.call(this, args);
+  };
+  _proto3.init = function init() {
+    _SeparatorView.prototype.init.call(this);
     this._tablePositionController = this.getController('tablePosition');
     this._init();
-  },
-  show: function show() {
+  };
+  _proto3.show = function show() {
     var that = this;
     var $element = this.element();
     if ($element && !that._isShown) {
@@ -204,9 +225,9 @@ var ColumnsSeparatorView = SeparatorView.inherit({
         $element.show();
       }
     }
-    this.callBase();
-  },
-  hide: function hide(force) {
+    _SeparatorView.prototype.show.call(this);
+  };
+  _proto3.hide = function hide(force) {
     var $element = this.element();
     var columnsSeparatorTransparent = this.addWidgetPrefix(COLUMNS_SEPARATOR_TRANSPARENT);
     if ($element && (this._isShown || force)) {
@@ -221,47 +242,47 @@ var ColumnsSeparatorView = SeparatorView.inherit({
         $element.hide();
       }
     }
-    this.callBase();
-  },
-  moveByX: function moveByX(outerX) {
+    _SeparatorView.prototype.hide.call(this);
+  };
+  _proto3.moveByX = function moveByX(outerX) {
     var $element = this.element();
     if ($element) {
       $element.css('left', outerX === null ? 0 : outerX - this._parentElement().offset().left);
-      /// #DEBUG
-      this._testPosX = outerX;
-      /// #ENDDEBUG
     }
-  },
-  changeCursor: function changeCursor(cursorName) {
+  };
+  _proto3.changeCursor = function changeCursor(cursorName) {
     cursorName = (0, _type.isDefined)(cursorName) ? cursorName : '';
     var $element = this.element();
     if ($element) {
       $element.css('cursor', cursorName);
-      /// #DEBUG
-      this._testCursorName = cursorName;
-      /// #ENDDEBUG
     }
-  },
-  dispose: function dispose() {
+  };
+  _proto3.dispose = function dispose() {
     this._unsubscribeFromCallback();
-    this.callBase();
+    _SeparatorView.prototype.dispose.call(this);
+  };
+  return ColumnsSeparatorView;
+}(SeparatorView);
+var BlockSeparatorView = /*#__PURE__*/function (_SeparatorView2) {
+  _inheritsLoose(BlockSeparatorView, _SeparatorView2);
+  function BlockSeparatorView() {
+    return _SeparatorView2.apply(this, arguments) || this;
   }
-});
-var BlockSeparatorView = SeparatorView.inherit({
-  init: function init() {
+  var _proto4 = BlockSeparatorView.prototype;
+  _proto4.init = function init() {
     var that = this;
-    this.callBase();
+    _SeparatorView2.prototype.init.call(this);
     this.getController('data').loadingChanged.add(function (isLoading) {
       if (!isLoading) {
         that.hide();
       }
     });
-  },
-  _renderSeparator: function _renderSeparator() {
-    this.callBase();
+  };
+  _proto4._renderSeparator = function _renderSeparator() {
+    _SeparatorView2.prototype._renderSeparator.call(this);
     this.element().addClass(BLOCK_SEPARATOR_CLASS).html('&nbsp;');
-  },
-  hide: function hide() {
+  };
+  _proto4.hide = function hide() {
     var that = this;
     var $parent = this._parentElement();
     var $element = this.element();
@@ -271,14 +292,14 @@ var BlockSeparatorView = SeparatorView.inherit({
     if ($parent && !$parent.children(".".concat(BLOCK_SEPARATOR_CLASS)).length) {
       $parent.prepend(that.element());
     }
-    that.callBase();
-  },
-  isVisible: function isVisible() {
+    _SeparatorView2.prototype.hide.call(this);
+  };
+  _proto4.isVisible = function isVisible() {
     var groupPanelOptions = this.option('groupPanel');
     var columnChooserOptions = this.option('columnChooser');
     return groupPanelOptions && groupPanelOptions.visible || columnChooserOptions && columnChooserOptions.enabled;
-  },
-  show: function show(targetLocation) {
+  };
+  _proto4.show = function show(targetLocation) {
     var that = this;
     var $element = this.element();
     var startAnimate = function startAnimate(toOptions) {
@@ -312,15 +333,21 @@ var BlockSeparatorView = SeparatorView.inherit({
           $element.css('display', '');
       }
     }
-    that.callBase();
+    _SeparatorView2.prototype.show.call(this);
+  };
+  return BlockSeparatorView;
+}(SeparatorView);
+var DraggingHeaderView = /*#__PURE__*/function (_modules$View3) {
+  _inheritsLoose(DraggingHeaderView, _modules$View3);
+  function DraggingHeaderView() {
+    return _modules$View3.apply(this, arguments) || this;
   }
-});
-var DraggingHeaderView = _m_modules.default.View.inherit({
-  _isDragging: false,
-  isDragging: function isDragging() {
+  var _proto5 = DraggingHeaderView.prototype;
+  /// #ENDDEBUG
+  _proto5.isDragging = function isDragging() {
     return this._isDragging;
-  },
-  _getDraggingPanelByPos: function _getDraggingPanelByPos(pos) {
+  };
+  _proto5._getDraggingPanelByPos = function _getDraggingPanelByPos(pos) {
     var that = this;
     var result;
     (0, _iterator.each)(that._dragOptions.draggingPanels, function (index, draggingPanel) {
@@ -334,50 +361,51 @@ var DraggingHeaderView = _m_modules.default.View.inherit({
       return undefined;
     });
     return result;
-  },
-  _renderCore: function _renderCore() {
+  };
+  _proto5._renderCore = function _renderCore() {
     this.element().addClass("".concat(this.addWidgetPrefix(DRAGGING_HEADER_CLASS), " ").concat(this.addWidgetPrefix(CELL_CONTENT_CLASS), " ").concat(WIDGET_CLASS)).hide();
-  },
-  _resetTargetColumnOptions: function _resetTargetColumnOptions() {
+  };
+  _proto5._resetTargetColumnOptions = function _resetTargetColumnOptions() {
     var params = this._dropOptions;
     params.targetColumnIndex = -1;
     delete params.targetColumnElement;
     delete params.isLast;
     delete params.posX;
     delete params.posY;
-  },
-  _getVisibleIndexObject: function _getVisibleIndexObject(rowIndex, visibleIndex) {
+  };
+  _proto5._getVisibleIndexObject = function _getVisibleIndexObject(rowIndex, visibleIndex) {
     if ((0, _type.isDefined)(rowIndex)) {
       return {
         columnIndex: visibleIndex,
-        rowIndex: rowIndex
+        rowIndex
       };
     }
     return visibleIndex;
-  },
-  dispose: function dispose() {
+  };
+  _proto5.dispose = function dispose() {
     var element = this.element();
     this._dragOptions = null;
     element && element.parent().find(".".concat(this.addWidgetPrefix(DRAGGING_HEADER_CLASS))).remove();
-  },
-  isVisible: function isVisible() {
+  };
+  _proto5.isVisible = function isVisible() {
     var columnsController = this.getController('columns');
     var commonColumnSettings = columnsController.getCommonSettings();
     return this.option('showColumnHeaders') && (allowReordering(this) || commonColumnSettings.allowGrouping || commonColumnSettings.allowHiding);
-  },
-  init: function init() {
+  };
+  _proto5.init = function init() {
     var that = this;
-    this.callBase();
+    _modules$View3.prototype.init.call(this);
     this._controller = this.getController('draggingHeader');
     this._columnsResizerViewController = this.getController('columnsResizer');
+    this._isDragging = false;
     this.getController('data').loadingChanged.add(function (isLoading) {
       var element = that.element();
       if (!isLoading && element) {
         element.hide();
       }
     });
-  },
-  dragHeader: function dragHeader(options) {
+  };
+  _proto5.dragHeader = function dragHeader(options) {
     var that = this;
     var columnElement = options.columnElement;
     var isCommandColumn = !!options.sourceColumn.type;
@@ -404,8 +432,8 @@ var DraggingHeaderView = _m_modules.default.View.inherit({
       whiteSpace: columnElement && columnElement.css('whiteSpace')
     }).addClass(that.addWidgetPrefix(HEADERS_DRAG_ACTION_CLASS)).toggleClass(DRAGGING_COMMAND_CELL_CLASS, isCommandColumn).text(isCommandColumn ? '' : options.sourceColumn.caption);
     that.element().appendTo(_swatch_container.default.getSwatchContainer(columnElement));
-  },
-  moveHeader: function moveHeader(args) {
+  };
+  _proto5.moveHeader = function moveHeader(args) {
     var e = args.event;
     var that = e.data.that;
     var eventData = (0, _index.eventData)(e);
@@ -427,8 +455,8 @@ var DraggingHeaderView = _m_modules.default.View.inherit({
       }
       e.preventDefault();
     }
-  },
-  dockHeader: function dockHeader(eventData) {
+  };
+  _proto5.dockHeader = function dockHeader(eventData) {
     var that = this;
     var targetDraggingPanel = that._getDraggingPanelByPos(eventData);
     var controller = that._controller;
@@ -444,16 +472,13 @@ var DraggingHeaderView = _m_modules.default.View.inherit({
       var columnElements = targetDraggingPanel.getColumnElements(rowIndex, sourceColumn === null || sourceColumn === void 0 ? void 0 : sourceColumn.ownerBand) || [];
       var pointsByTarget = dragOptions.pointsByTarget = dragOptions.pointsByTarget || {};
       var pointsByColumns = targetLocation === 'columnChooser' ? [] : pointsByTarget[targetLocation] || controller._generatePointsByColumns((0, _extend.extend)({}, dragOptions, {
-        targetDraggingPanel: targetDraggingPanel,
+        targetDraggingPanel,
         columns: targetDraggingPanel.getColumns(rowIndex),
-        columnElements: columnElements,
-        isVerticalOrientation: isVerticalOrientation,
+        columnElements,
+        isVerticalOrientation,
         startColumnIndex: targetLocation === 'headers' && (0, _renderer.default)(columnElements[0]).index()
       }));
       pointsByTarget[targetLocation] = pointsByColumns;
-      /// #DEBUG
-      this._testPointsByColumns = pointsByColumns;
-      /// #ENDDEBUG
       params.targetLocation = targetLocation;
       if (pointsByColumns.length > 0) {
         for (var i = 0; i < pointsByColumns.length; i++) {
@@ -478,8 +503,8 @@ var DraggingHeaderView = _m_modules.default.View.inherit({
         controller.dock(params);
       }
     }
-  },
-  dropHeader: function dropHeader(args) {
+  };
+  _proto5.dropHeader = function dropHeader(args) {
     var e = args.event;
     var that = e.data.that;
     var controller = that._controller;
@@ -493,13 +518,19 @@ var DraggingHeaderView = _m_modules.default.View.inherit({
     that._isDragging = false;
     // eslint-disable-next-line spellcheck/spell-checker
     _dom_adapter.default.getDocument().onselectstart = that._onSelectStart || null;
-  }
-});
+  };
+  return DraggingHeaderView;
+}(_m_modules.default.View);
 var isNextColumnResizingMode = function isNextColumnResizingMode(that) {
   return that.option('columnResizingMode') !== 'widget';
 };
-var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
-  _isHeadersRowArea: function _isHeadersRowArea(posY) {
+var ColumnsResizerViewController = /*#__PURE__*/function (_modules$ViewControll) {
+  _inheritsLoose(ColumnsResizerViewController, _modules$ViewControll);
+  function ColumnsResizerViewController() {
+    return _modules$ViewControll.apply(this, arguments) || this;
+  }
+  var _proto6 = ColumnsResizerViewController.prototype;
+  _proto6._isHeadersRowArea = function _isHeadersRowArea(posY) {
     if (this._columnHeadersView) {
       var element = this._columnHeadersView.element();
       if (element) {
@@ -509,12 +540,12 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       }
     }
     return false;
-  },
-  _isRtlParentStyle: function _isRtlParentStyle() {
+  };
+  _proto6._isRtlParentStyle = function _isRtlParentStyle() {
     var _a;
     return this.option('rtlEnabled') && ((_a = this._$parentContainer) === null || _a === void 0 ? void 0 : _a.parent().css('direction')) === 'rtl';
-  },
-  _pointCreated: function _pointCreated(point, cellsLength, columns) {
+  };
+  _proto6._pointCreated = function _pointCreated(point, cellsLength, columns) {
     var isNextColumnMode = isNextColumnResizingMode(this);
     var rtlEnabled = this.option('rtlEnabled');
     var isRtlParentStyle = this._isRtlParentStyle();
@@ -526,8 +557,8 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       return !(isNextColumnMode ? currentColumn.allowResizing && nextColumn.allowResizing : currentColumn.allowResizing);
     }
     return true;
-  },
-  _getTargetPoint: function _getTargetPoint(pointsByColumns, currentX, deltaX) {
+  };
+  _proto6._getTargetPoint = function _getTargetPoint(pointsByColumns, currentX, deltaX) {
     if (pointsByColumns) {
       for (var i = 0; i < pointsByColumns.length; i++) {
         if (pointsByColumns[i].x === pointsByColumns[0].x && pointsByColumns[i + 1] && pointsByColumns[i].x === pointsByColumns[i + 1].x) {
@@ -539,8 +570,8 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       }
     }
     return null;
-  },
-  _moveSeparator: function _moveSeparator(args) {
+  };
+  _proto6._moveSeparator = function _moveSeparator(args) {
     var _a;
     var e = args.event;
     var that = e.data;
@@ -593,8 +624,8 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
         that._columnsSeparatorView.moveByX(null);
       }
     }
-  },
-  _endResizing: function _endResizing(args) {
+  };
+  _proto6._endResizing = function _endResizing(args) {
     var e = args.event;
     var that = e.data;
     if (that._isResizing) {
@@ -606,11 +637,11 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       that._isReadyResizing = false;
       that._isResizing = false;
     }
-  },
-  _getNextColumnIndex: function _getNextColumnIndex(currentColumnIndex) {
+  };
+  _proto6._getNextColumnIndex = function _getNextColumnIndex(currentColumnIndex) {
     return currentColumnIndex + 1;
-  },
-  _setupResizingInfo: function _setupResizingInfo(posX) {
+  };
+  _proto6._setupResizingInfo = function _setupResizingInfo(posX) {
     var that = this;
     var currentColumnIndex = that._targetPoint.columnIndex;
     var nextColumnIndex = that._getNextColumnIndex(currentColumnIndex);
@@ -618,13 +649,13 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
     var nextHeader = that._columnHeadersView.getHeaderElement(nextColumnIndex);
     that._resizingInfo = {
       startPosX: posX,
-      currentColumnIndex: currentColumnIndex,
+      currentColumnIndex,
       currentColumnWidth: currentHeader && currentHeader.length > 0 ? (0, _position.getBoundingRect)(currentHeader[0]).width : 0,
-      nextColumnIndex: nextColumnIndex,
+      nextColumnIndex,
       nextColumnWidth: nextHeader && nextHeader.length > 0 ? (0, _position.getBoundingRect)(nextHeader[0]).width : 0
     };
-  },
-  _startResizing: function _startResizing(args) {
+  };
+  _proto6._startResizing = function _startResizing(args) {
     var e = args.event;
     var that = e.data;
     var eventData = (0, _index.eventData)(e);
@@ -640,11 +671,6 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       }
     }
     if (that._isReadyResizing) {
-      /// #DEBUG
-      if (that._targetPoint) {
-        that._testColumnIndex = that._targetPoint.columnIndex;
-      }
-      /// #ENDDEBUG
       that._setupResizingInfo(eventData.x);
       that._isResizing = true;
       that._tablePositionController.update(that._targetPoint.y);
@@ -660,8 +686,8 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
     if (this.isResizing()) {
       this.getController('editorFactory').loseFocus();
     }
-  },
-  _generatePointsByColumns: function _generatePointsByColumns() {
+  };
+  _proto6._generatePointsByColumns = function _generatePointsByColumns() {
     var that = this;
     var columns = that._columnsController ? that._columnsController.getVisibleColumns() : [];
     var cells = that._columnHeadersView.getColumnElements();
@@ -672,16 +698,16 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       });
     }
     that._pointsByColumns = pointsByColumns;
-  },
-  _unsubscribeFromEvents: function _unsubscribeFromEvents() {
+  };
+  _proto6._unsubscribeFromEvents = function _unsubscribeFromEvents() {
     this._moveSeparatorHandler && _events_engine.default.off(_dom_adapter.default.getDocument(), (0, _index.addNamespace)(_pointer.default.move, MODULE_NAMESPACE), this._moveSeparatorHandler);
     this._startResizingHandler && _events_engine.default.off(this._$parentContainer, (0, _index.addNamespace)(_pointer.default.down, MODULE_NAMESPACE), this._startResizingHandler);
     if (this._endResizingHandler) {
       _events_engine.default.off(this._columnsSeparatorView.element(), (0, _index.addNamespace)(_pointer.default.up, MODULE_NAMESPACE), this._endResizingHandler);
       _events_engine.default.off(_dom_adapter.default.getDocument(), (0, _index.addNamespace)(_pointer.default.up, MODULE_NAMESPACE), this._endResizingHandler);
     }
-  },
-  _subscribeToEvents: function _subscribeToEvents() {
+  };
+  _proto6._subscribeToEvents = function _subscribeToEvents() {
     this._moveSeparatorHandler = this.createAction(this._moveSeparator);
     this._startResizingHandler = this.createAction(this._startResizing);
     this._endResizingHandler = this.createAction(this._endResizing);
@@ -689,8 +715,8 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
     _events_engine.default.on(this._$parentContainer, (0, _index.addNamespace)(_pointer.default.down, MODULE_NAMESPACE), this, this._startResizingHandler);
     _events_engine.default.on(this._columnsSeparatorView.element(), (0, _index.addNamespace)(_pointer.default.up, MODULE_NAMESPACE), this, this._endResizingHandler);
     _events_engine.default.on(_dom_adapter.default.getDocument(), (0, _index.addNamespace)(_pointer.default.up, MODULE_NAMESPACE), this, this._endResizingHandler);
-  },
-  _updateColumnsWidthIfNeeded: function _updateColumnsWidthIfNeeded(posX) {
+  };
+  _proto6._updateColumnsWidthIfNeeded = function _updateColumnsWidthIfNeeded(posX) {
     var deltaX;
     var needUpdate = false;
     var contentWidth = this._rowsView.contentWidth();
@@ -809,32 +835,32 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
         if (scrollable && isRtlParentStyle) {
           var left = (0, _size.getWidth)(scrollable.$content()) - (0, _size.getWidth)(scrollable.container()) - this._scrollRight;
           scrollable.scrollTo({
-            left: left
+            left
           });
         }
       }
     }
     return needUpdate;
-  },
-  _subscribeToCallback: function _subscribeToCallback(callback, handler) {
+  };
+  _proto6._subscribeToCallback = function _subscribeToCallback(callback, handler) {
     callback.add(handler);
     this._subscribesToCallbacks.push({
-      callback: callback,
-      handler: handler
+      callback,
+      handler
     });
-  },
-  _unsubscribeFromCallbacks: function _unsubscribeFromCallbacks() {
+  };
+  _proto6._unsubscribeFromCallbacks = function _unsubscribeFromCallbacks() {
     for (var i = 0; i < this._subscribesToCallbacks.length; i++) {
       var subscribe = this._subscribesToCallbacks[i];
       subscribe.callback.remove(subscribe.handler);
     }
     this._subscribesToCallbacks = [];
-  },
-  _unsubscribes: function _unsubscribes() {
+  };
+  _proto6._unsubscribes = function _unsubscribes() {
     this._unsubscribeFromEvents();
     this._unsubscribeFromCallbacks();
-  },
-  _init: function _init() {
+  };
+  _proto6._init = function _init() {
     var that = this;
     var generatePointsByColumnsHandler = function generatePointsByColumnsHandler() {
       if (!that._isResizing) {
@@ -847,13 +873,18 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
         that.pointsByColumns(null);
       }
     };
+    // @ts-expect-error
     that._columnsSeparatorView = that.getView('columnsSeparatorView');
+    // @ts-expect-error
     that._columnHeadersView = that.getView('columnHeadersView');
+    // @ts-expect-error
     that._trackerView = that.getView('trackerView');
     that._rowsView = that.getView('rowsView');
     that._columnsController = that.getController('columns');
+    // @ts-expect-error
     that._tablePositionController = that.getController('tablePosition');
     that._$parentContainer = that.component.$element();
+    // @ts-expect-error
     that._draggingHeaderView = that.component.getView('draggingHeaderView');
     that._subscribeToCallback(that._columnHeadersView.renderCompleted, generatePointsByColumnsHandler);
     that._subscribeToCallback(that._columnHeadersView.resizeCompleted, generatePointsByColumnsHandler);
@@ -867,6 +898,7 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
     });
     var previousScrollbarVisibility = that._rowsView.getScrollbarWidth() !== 0;
     var previousTableHeight = 0;
+    // @ts-expect-error
     that._subscribeToCallback(that.getController('tablePosition').positionChanged, function (e) {
       if (that._isResizing && !that._rowsView.isResizing) {
         var scrollbarVisibility = that._rowsView.getScrollbarWidth() !== 0;
@@ -880,9 +912,9 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       }
       previousTableHeight = e.height;
     });
-  },
-  optionChanged: function optionChanged(args) {
-    this.callBase(args);
+  };
+  _proto6.optionChanged = function optionChanged(args) {
+    _modules$ViewControll.prototype.optionChanged.call(this, args);
     if (args.name === 'allowColumnResizing') {
       if (args.value) {
         this._init();
@@ -891,17 +923,17 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
         this._unsubscribes();
       }
     }
-  },
-  isResizing: function isResizing() {
+  };
+  _proto6.isResizing = function isResizing() {
     return this._isResizing;
-  },
-  init: function init() {
+  };
+  _proto6.init = function init() {
     this._subscribesToCallbacks = [];
     if (allowResizing(this)) {
       this._init();
     }
-  },
-  pointsByColumns: function pointsByColumns(value) {
+  };
+  _proto6.pointsByColumns = function pointsByColumns(value) {
     if (value !== undefined) {
       this._pointsByColumns = value;
     } else {
@@ -910,14 +942,23 @@ var ColumnsResizerViewController = _m_modules.default.ViewController.inherit({
       }
       return this._pointsByColumns;
     }
-  },
-  dispose: function dispose() {
+  };
+  _proto6.dispose = function dispose() {
     this._unsubscribes();
-    this.callBase();
+    _modules$ViewControll.prototype.dispose.call(this);
+  };
+  return ColumnsResizerViewController;
+}(_m_modules.default.ViewController);
+var TablePositionViewController = /*#__PURE__*/function (_modules$ViewControll2) {
+  _inheritsLoose(TablePositionViewController, _modules$ViewControll2);
+  function TablePositionViewController(component) {
+    var _this;
+    _this = _modules$ViewControll2.call(this, component) || this;
+    _this.positionChanged = (0, _callbacks.default)();
+    return _this;
   }
-});
-var TablePositionViewController = _m_modules.default.ViewController.inherit({
-  update: function update(top) {
+  var _proto7 = TablePositionViewController.prototype;
+  _proto7.update = function update(top) {
     var that = this;
     var params = {};
     var $element = that._columnHeadersView.element();
@@ -928,6 +969,7 @@ var TablePositionViewController = _m_modules.default.ViewController.inherit({
     var scrollBarWidth = that._rowsView.getScrollbarWidth(true);
     var rowsHeight = that._rowsView ? that._rowsView.height() - scrollBarWidth : 0;
     var columnsResizerController = that.component.getController('columnsResizer');
+    // @ts-expect-error
     var draggingHeaderView = that.component.getView('draggingHeaderView');
     params.height = columnsHeadersHeight;
     var isDraggingOrResizing = columnsResizerController.isResizing() || draggingHeaderView.isDragging();
@@ -938,12 +980,14 @@ var TablePositionViewController = _m_modules.default.ViewController.inherit({
       params.top = $element[0].offsetTop + diffOffsetTop;
     }
     that.positionChanged.fire(params);
-  },
-  init: function init() {
+  };
+  _proto7.init = function init() {
     var that = this;
-    that.callBase();
+    _modules$ViewControll2.prototype.init.call(this);
+    // @ts-expect-error
     that._columnHeadersView = this.getView('columnHeadersView');
     that._rowsView = this.getView('rowsView');
+    // @ts-expect-error
     that._pagerView = this.getView('pagerView');
     that._rowsView.resizeCompleted.add(function () {
       if (that.option('allowColumnResizing')) {
@@ -951,32 +995,62 @@ var TablePositionViewController = _m_modules.default.ViewController.inherit({
         that.update(targetPoint ? targetPoint.y : null);
       }
     });
-  },
-  ctor: function ctor(component) {
-    this.callBase(component);
-    this.positionChanged = (0, _callbacks.default)();
+  };
+  return TablePositionViewController;
+}(_m_modules.default.ViewController);
+var DraggingHeaderViewController = /*#__PURE__*/function (_modules$ViewControll3) {
+  _inheritsLoose(DraggingHeaderViewController, _modules$ViewControll3);
+  function DraggingHeaderViewController() {
+    return _modules$ViewControll3.apply(this, arguments) || this;
   }
-});
-var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
-  _generatePointsByColumns: function _generatePointsByColumns(options) {
+  var _proto8 = DraggingHeaderViewController.prototype;
+  _proto8._generatePointsByColumns = function _generatePointsByColumns(options) {
     var that = this;
+    this.isCustomGroupColumnPosition = this.checkIsCustomGroupColumnPosition(options);
     return _m_utils.default.getPointsByColumns(options.columnElements, function (point) {
       return that._pointCreated(point, options.columns, options.targetDraggingPanel.getName(), options.sourceColumn);
     }, options.isVerticalOrientation, options.startColumnIndex);
-  },
-  _pointCreated: function _pointCreated(point, columns, location, sourceColumn) {
+  };
+  _proto8.checkIsCustomGroupColumnPosition = function checkIsCustomGroupColumnPosition(options) {
+    var wasOnlyCommandColumns = true;
+    for (var i = 0; i < options.columns.length; i += 1) {
+      var col = options.columns[i];
+      if (col.command === 'expand' && !wasOnlyCommandColumns) {
+        return true;
+      }
+      if (!col.command) {
+        wasOnlyCommandColumns = false;
+      }
+    }
+    return false;
+  };
+  _proto8._pointCreated = function _pointCreated(point, columns, location, sourceColumn) {
+    var _a;
     var targetColumn = columns[point.columnIndex];
     var prevColumn = columns[point.columnIndex - 1];
+    var isColumnAfterExpandColumn = (prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.command) === 'expand';
+    var isFirstExpandColumn = (targetColumn === null || targetColumn === void 0 ? void 0 : targetColumn.command) === 'expand' && (prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.command) !== 'expand';
+    var sourceColumnReorderingDisabled = sourceColumn && !sourceColumn.allowReordering;
+    var otherColumnReorderingDisabled = !(targetColumn === null || targetColumn === void 0 ? void 0 : targetColumn.allowReordering) && !(prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.allowReordering);
     switch (location) {
       case 'columnChooser':
         return true;
       case 'headers':
-        return sourceColumn && !sourceColumn.allowReordering || (!targetColumn || !targetColumn.allowReordering) && (!prevColumn || !prevColumn.allowReordering);
+        if (!isFirstExpandColumn) {
+          return isColumnAfterExpandColumn || sourceColumnReorderingDisabled || otherColumnReorderingDisabled;
+        }
+        if (this.isCustomGroupColumnPosition) {
+          return false;
+        }
+        while (((_a = columns[point.columnIndex]) === null || _a === void 0 ? void 0 : _a.command) === 'expand') {
+          point.columnIndex += 1;
+        }
+        return false;
       default:
         return columns.length === 0;
     }
-  },
-  _subscribeToEvents: function _subscribeToEvents(draggingHeader, draggingPanels) {
+  };
+  _proto8._subscribeToEvents = function _subscribeToEvents(draggingHeader, draggingPanels) {
     var that = this;
     (0, _iterator.each)(draggingPanels, function (_, draggingPanel) {
       if (draggingPanel) {
@@ -1004,7 +1078,7 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
                 columnIndex: index,
                 columnElement: $columnElement,
                 sourceLocation: nameDraggingPanel,
-                draggingPanels: draggingPanels,
+                draggingPanels,
                 rowIndex: that._columnsController.getRowIndex(column.index, true)
               });
             }));
@@ -1025,8 +1099,8 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
         }
       }
     });
-  },
-  _unsubscribeFromEvents: function _unsubscribeFromEvents(draggingHeader, draggingPanels) {
+  };
+  _proto8._unsubscribeFromEvents = function _unsubscribeFromEvents(draggingHeader, draggingPanels) {
     var that = this;
     (0, _iterator.each)(draggingPanels, function (_, draggingPanel) {
       if (draggingPanel) {
@@ -1043,25 +1117,29 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
         });
       }
     });
-  },
-  _getSeparator: function _getSeparator(targetLocation) {
+  };
+  _proto8._getSeparator = function _getSeparator(targetLocation) {
     return targetLocation === 'headers' ? this._columnsSeparatorView : this._blockSeparatorView;
-  },
-  hideSeparators: function hideSeparators(type) {
+  };
+  _proto8.hideSeparators = function hideSeparators(type) {
     var blockSeparator = this._blockSeparatorView;
     var columnsSeparator = this._columnsSeparatorView;
-    this._animationColumnIndex = null;
+    this._animationColumnIndex = undefined;
     blockSeparator && blockSeparator.hide();
     type !== 'block' && columnsSeparator && columnsSeparator.hide();
-  },
-  init: function init() {
+  };
+  _proto8.init = function init() {
     var that = this;
-    that.callBase();
+    _modules$ViewControll3.prototype.init.call(this);
     that._columnsController = that.getController('columns');
+    // @ts-expect-error
     that._columnHeadersView = that.getView('columnHeadersView');
+    // @ts-expect-error
     that._columnsSeparatorView = that.getView('columnsSeparatorView');
+    // @ts-expect-error
     that._draggingHeaderView = that.getView('draggingHeaderView');
     that._rowsView = that.getView('rowsView');
+    // @ts-expect-error
     that._blockSeparatorView = that.getView('blockSeparatorView');
     that._headerPanelView = that.getView('headerPanel');
     that._columnChooserView = that.getView('columnChooserView');
@@ -1075,11 +1153,11 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
     that._columnHeadersView.renderCompleted.add(subscribeToEvents);
     that._headerPanelView && that._headerPanelView.renderCompleted.add(subscribeToEvents);
     that._columnChooserView && that._columnChooserView.renderCompleted.add(subscribeToEvents);
-  },
-  allowDrop: function allowDrop(parameters) {
+  };
+  _proto8.allowDrop = function allowDrop(parameters) {
     return this._columnsController.allowMoveColumn(parameters.sourceColumnIndex, parameters.targetColumnIndex, parameters.sourceLocation, parameters.targetLocation);
-  },
-  drag: function drag(parameters) {
+  };
+  _proto8.drag = function drag(parameters) {
     var sourceIndex = parameters.sourceIndex;
     var sourceLocation = parameters.sourceLocation;
     var sourceColumnElement = parameters.sourceColumnElement;
@@ -1094,8 +1172,8 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
         rowsView && rowsView.setRowsOpacity(sourceIndex, COLUMN_OPACITY);
       }
     }
-  },
-  dock: function dock(parameters) {
+  };
+  _proto8.dock = function dock(parameters) {
     var that = this;
     var targetColumnIndex = (0, _type.isObject)(parameters.targetColumnIndex) ? parameters.targetColumnIndex.columnIndex : parameters.targetColumnIndex;
     var sourceLocation = parameters.sourceLocation;
@@ -1117,6 +1195,7 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
           showSeparator();
         } else {
           that.hideSeparators('block');
+          // @ts-expect-error
           that.getController('tablePosition').update(parameters.posY);
           separator.moveByX(parameters.posX - separator.width());
           separator.show();
@@ -1125,8 +1204,8 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
         that.hideSeparators();
       }
     }
-  },
-  drop: function drop(parameters) {
+  };
+  _proto8.drop = function drop(parameters) {
     var sourceColumnElement = parameters.sourceColumnElement;
     if (sourceColumnElement) {
       sourceColumnElement.css({
@@ -1143,13 +1222,14 @@ var DraggingHeaderViewController = _m_modules.default.ViewController.inherit({
       }
       this._columnsController.moveColumn(parameters.sourceColumnIndex, parameters.targetColumnIndex, parameters.sourceLocation, parameters.targetLocation);
     }
-  },
-  dispose: function dispose() {
+  };
+  _proto8.dispose = function dispose() {
     if (this._draggingHeaderView) {
       this._unsubscribeFromEvents(this._draggingHeaderView, [this._columnChooserView, this._columnHeadersView, this._headerPanelView]);
     }
-  }
-});
+  };
+  return DraggingHeaderViewController;
+}(_m_modules.default.ViewController);
 var columnsResizingReorderingModule = {
   views: {
     columnsSeparatorView: ColumnsSeparatorView,
@@ -1165,7 +1245,7 @@ var columnsResizingReorderingModule = {
   extenders: {
     views: {
       rowsView: {
-        _needUpdateRowHeight: function _needUpdateRowHeight(itemCount) {
+        _needUpdateRowHeight(itemCount) {
           var wordWrapEnabled = this.option('wordWrapEnabled');
           var columnsResizerController = this.getController('columnsResizer');
           var isResizing = columnsResizerController.isResizing();
@@ -1175,7 +1255,7 @@ var columnsResizingReorderingModule = {
     },
     controllers: {
       editorFactory: {
-        renderFocusOverlay: function renderFocusOverlay() {
+        renderFocusOverlay() {
           if (this.getController('columnsResizer').isResizing()) {
             return;
           }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/field_chooser/m_field_chooser_base.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,14 +29,15 @@ var _m_header_filter_core = require("../../../grids/grid_core/header_filter/m_he
 var _m_utils = _interopRequireDefault(require("../../../grids/grid_core/m_utils"));
 var _m_sorting_mixin = _interopRequireDefault(require("../../../grids/grid_core/sorting/m_sorting_mixin"));
 var _m_widget_utils = require("../m_widget_utils");
-var _m_sortable = require("../sortable/m_sortable");
+var _m_sortable = _interopRequireDefault(require("../sortable/m_sortable"));
 var _const = require("./const");
 var _dom = require("./dom");
 var _utils = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var Sortable = _m_sortable.default.Sortable;
 var DIV = '<div>';
 var HeaderFilterView = _m_header_filter_core.HeaderFilterView.inherit({
-  _getSearchExpr: function _getSearchExpr(options, headerFilterOptions) {
+  _getSearchExpr(options, headerFilterOptions) {
     options.useDefaultSearchExpr = true;
     return this.callBase(options, headerFilterOptions);
   }
@@ -77,7 +78,7 @@ function getStringState(state) {
   return JSON.stringify([state.fields, state.columnExpandedPaths, state.rowExpandedPaths]);
 }
 var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inherit(_m_sorting_mixin.default).inherit(_m_header_filter_core.headerFilterMixin).inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       allowFieldDragging: true,
       applyChangesMode: 'instantly',
@@ -103,20 +104,20 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
       remoteSort: false
     });
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._headerFilterView = new HeaderFilterView(this);
     this._refreshDataSource();
     this.subscribeToEvents();
     _m_utils.default.logHeaderFilterDeprecatedWarningIfNeed(this);
   },
-  _refreshDataSource: function _refreshDataSource() {
+  _refreshDataSource() {
     var dataSource = this.option('dataSource');
     if (dataSource && dataSource.fields && dataSource.load /* instanceof DX.ui.dxPivotGrid.DataSource */) {
       this._dataSource = dataSource;
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     switch (args.name) {
       case 'dataSource':
         this._refreshDataSource();
@@ -143,7 +144,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
         this.callBase(args);
     }
   },
-  renderField: function renderField(field, showColumnLines) {
+  renderField(field, showColumnLines) {
     var that = this;
     var $fieldContent = (0, _renderer.default)(DIV).addClass(_const.CLASSES.area.fieldContent).text(field.caption || field.dataField);
     var $fieldElement = (0, _renderer.default)(DIV).addClass(_const.CLASSES.area.field).addClass(_const.CLASSES.area.box).data('field', field).append($fieldContent);
@@ -158,7 +159,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
             sortOrder: field.sortOrder === 'desc' ? 'desc' : 'asc',
             allowSorting: field.allowSorting
           },
-          showColumnLines: showColumnLines
+          showColumnLines
         });
       }
       that._applyColumnState({
@@ -170,7 +171,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
           allowFiltering: mainGroupField.allowFiltering && !field.groupIndex,
           allowSorting: field.allowSorting
         },
-        showColumnLines: showColumnLines
+        showColumnLines
       });
     }
     if (field.groupName) {
@@ -178,19 +179,19 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     }
     return $fieldElement;
   },
-  _clean: function _clean() {},
-  _render: function _render() {
+  _clean() {},
+  _render() {
     this.callBase();
     this._headerFilterView.render(this.$element());
   },
-  renderSortable: function renderSortable() {
+  renderSortable() {
     var that = this;
-    that._createComponent(that.$element(), _m_sortable.Sortable, (0, _extend.extend)({
+    that._createComponent(that.$element(), Sortable, (0, _extend.extend)({
       allowDragging: that.option('allowFieldDragging'),
       itemSelector: ".".concat(_const.CLASSES.area.field),
       itemContainerSelector: ".".concat(_const.CLASSES.area.fieldContainer),
       groupSelector: ".".concat(_const.CLASSES.area.fieldList),
-      groupFilter: function groupFilter() {
+      groupFilter() {
         var dataSource = that._dataSource;
         var $sortable = (0, _renderer.default)(this).closest('.dx-sortable-old');
         var pivotGrid = $sortable.data('dxPivotGrid');
@@ -204,7 +205,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
         return false;
       },
       itemRender: _dom.dragAndDropItemRender,
-      onDragging: function onDragging(e) {
+      onDragging(e) {
         var field = e.sourceElement.data('field');
         var targetGroup = e.targetGroup;
         e.cancel = false;
@@ -217,7 +218,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
         }
       },
       useIndicator: true,
-      onChanged: function onChanged(e) {
+      onChanged(e) {
         var field = e.sourceElement.data('field');
         e.removeSourceElement = !!e.sourceGroup;
         that._adjustSortableOnChangedArgs(e);
@@ -246,7 +247,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
       }
     }, that._getSortableOptions()));
   },
-  _processDemandState: function _processDemandState(func) {
+  _processDemandState(func) {
     var that = this;
     var isInstantlyMode = that.option('applyChangesMode') === 'instantly';
     var dataSource = that._dataSource;
@@ -262,7 +263,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
       dataSource.state(currentState, true);
     }
   },
-  _applyChanges: function _applyChanges(fields, props) {
+  _applyChanges(fields, props) {
     var that = this;
     that._processDemandState(function (dataSource, isInstantlyMode) {
       fields.forEach(function (_ref) {
@@ -276,25 +277,25 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
       }
     });
   },
-  _applyLocalSortChanges: function _applyLocalSortChanges(fieldIdx, sortOrder) {
+  _applyLocalSortChanges(fieldIdx, sortOrder) {
     this._processDemandState(function (dataSource) {
       dataSource.field(fieldIdx, {
-        sortOrder: sortOrder
+        sortOrder
       });
       dataSource.sortLocal();
     });
   },
-  _adjustSortableOnChangedArgs: function _adjustSortableOnChangedArgs(e) {
+  _adjustSortableOnChangedArgs(e) {
     e.removeSourceElement = false;
     e.removeTargetElement = true;
     e.removeSourceClass = false;
   },
-  _getSortableOptions: function _getSortableOptions() {
+  _getSortableOptions() {
     return {
       direction: 'auto'
     };
   },
-  subscribeToEvents: function subscribeToEvents(element) {
+  subscribeToEvents(element) {
     var that = this;
     var func = function func(e) {
       var field = (0, _renderer.default)(e.currentTarget).data('field');
@@ -305,12 +306,12 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
       var paginate = dataSource.paginate() && type === 'list';
       if (isHeaderFilter) {
         that._headerFilterView.showHeaderFilterMenu((0, _renderer.default)(e.currentTarget), (0, _extend.extend)(mainGroupField, {
-          type: type,
+          type,
           encodeHtml: that.option('encodeHtml'),
           dataSource: {
             useDefaultSearch: !paginate,
             // paginate: false,
-            load: function load(options) {
+            load(options) {
               var userData = options.userData;
               if (userData.store) {
                 return userData.store.load(options);
@@ -333,12 +334,12 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
               }).fail(d.reject);
               return d;
             },
-            postProcess: function postProcess(data) {
+            postProcess(data) {
               processItems(data, mainGroupField);
               return data;
             }
           },
-          apply: function apply() {
+          apply() {
             that._applyChanges([mainGroupField], {
               filterValues: this.filterValues,
               filterType: this.filterType
@@ -350,7 +351,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
         var sortOrder = (0, _utils.reverseSortOrder)(field.sortOrder);
         if (isRemoteSort) {
           that._applyChanges([field], {
-            sortOrder: sortOrder
+            sortOrder
           });
         } else {
           that._applyLocalSortChanges(field.index, sortOrder);
@@ -364,13 +365,13 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     _events_engine.default.on(that.$element(), _click.name, ".".concat(_const.CLASSES.area.field, ".").concat(_const.CLASSES.area.box), func);
   },
   _initTemplates: _common.noop,
-  addWidgetPrefix: function addWidgetPrefix(className) {
+  addWidgetPrefix(className) {
     return "dx-pivotgrid-".concat(className);
   }
 });
 exports.FieldChooserBase = FieldChooserBase;
 (0, _component_registrator.default)('dxPivotGridFieldChooserBase', FieldChooserBase);
 var _default = {
-  FieldChooserBase: FieldChooserBase
+  FieldChooserBase
 };
 exports.default = _default;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/slider/ui.slider_handle.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,8 +34,9 @@ var SliderHandle = _ui.default.inherit({
     this.callBase();
     this.$element().addClass(SLIDER_HANDLE_CLASS);
     this.setAria({
-      'role': 'slider',
-      'valuenow': this.option('value')
+      role: 'slider',
+      'valuenow': this.option('value'),
+      label: 'Slider'
     });
   },
   _render: function _render() {
@@ -54,18 +55,18 @@ var SliderHandle = _ui.default.inherit({
     this._sliderTooltip = this._createComponent($sliderTooltip, _ui2.default, {
       target: this.$element(),
       container: $sliderTooltip,
-      position: position,
+      position,
       visible: enabled,
-      showMode: showMode,
-      format: format,
-      value: value
+      showMode,
+      format,
+      value
     });
   },
   _clean: function _clean() {
     this.callBase();
     this._sliderTooltip = null;
   },
-  _updateTooltipOptions: function _updateTooltipOptions(args) {
+  _updateTooltipOptions(args) {
     var _this$_sliderTooltip;
     var tooltipOptions = _ui.default.getOptionsFromContainer(args);
     this._setWidgetOption('_sliderTooltip', [tooltipOptions]);

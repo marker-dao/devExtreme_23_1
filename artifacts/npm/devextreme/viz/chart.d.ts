@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/chart.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -794,7 +794,7 @@ export interface dxChartOptions extends BaseChartOptions<dxChart> {
      * @inherits dxChartOptions.commonAxisSettings
      * @public
      */
-    argumentAxis?: dxChartArgumentAxis;
+    argumentAxis?: ArgumentAxis;
     /**
      * @docid
      * @default true
@@ -825,13 +825,13 @@ export interface dxChartOptions extends BaseChartOptions<dxChart> {
      * @type object
      * @public
      */
-    commonAxisSettings?: dxChartCommonAxisSettings;
+    commonAxisSettings?: CommonAxisSettings;
     /**
      * @docid
      * @type object
      * @public
      */
-    commonPaneSettings?: dxChartCommonPaneSettings;
+    commonPaneSettings?: CommonPaneSettings;
     /**
      * @docid
      * @type object
@@ -840,7 +840,7 @@ export interface dxChartOptions extends BaseChartOptions<dxChart> {
      * @inheritAll
      * @public
      */
-    commonSeriesSettings?: dxChartCommonSeriesSettings;
+    commonSeriesSettings?: CommonSeriesSettings;
     /**
      * @docid
      * @default '#FFFFFF'
@@ -1070,7 +1070,7 @@ export interface dxChartOptions extends BaseChartOptions<dxChart> {
      * @type object
      * @public
      */
-    legend?: dxChartLegend;
+    legend?: Legend;
     /**
      * @docid
      * @default 0.2
@@ -1165,7 +1165,7 @@ export interface dxChartOptions extends BaseChartOptions<dxChart> {
      * @notUsedInTheme
      * @public
      */
-    panes?: dxChartPanes | Array<dxChartPanes>;
+    panes?: Panes | Array<Panes>;
     /**
      * @docid
      * @default false
@@ -1269,14 +1269,14 @@ export interface dxChartOptions extends BaseChartOptions<dxChart> {
      * @type object
      * @public
      */
-    tooltip?: dxChartTooltip;
+    tooltip?: Tooltip;
     /**
      * @docid
      * @type Object|Array<Object>
      * @inherits dxChartOptions.commonAxisSettings
      * @public
      */
-    valueAxis?: dxChartValueAxis | Array<dxChartValueAxis>;
+    valueAxis?: ValueAxis | Array<ValueAxis>;
     /**
      * @docid
      * @public
@@ -1330,10 +1330,11 @@ export interface dxChartOptions extends BaseChartOptions<dxChart> {
     };
 }
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxis
+ * @type object
  */
-export interface dxChartArgumentAxis extends dxChartCommonAxisSettings {
+export type ArgumentAxis = CommonAxisSettings & {
     /**
      * @docid dxChartOptions.argumentAxis.aggregateByCategory
      * @default true
@@ -1384,7 +1385,7 @@ export interface dxChartArgumentAxis extends dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    constantLineStyle?: dxChartArgumentAxisConstantLineStyle;
+    constantLineStyle?: ArgumentAxisConstantLineStyle;
     /**
      * @docid dxChartOptions.argumentAxis.constantLines
      * @type Array<Object>
@@ -1392,7 +1393,7 @@ export interface dxChartArgumentAxis extends dxChartCommonAxisSettings {
      * @notUsedInTheme
      * @public
      */
-    constantLines?: Array<dxChartArgumentAxisConstantLines>;
+    constantLines?: Array<ArgumentAxisConstantLines>;
     /**
      * @docid dxChartOptions.argumentAxis.endOnTick
      * @default false
@@ -1416,7 +1417,7 @@ export interface dxChartArgumentAxis extends dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    label?: dxChartArgumentAxisLabel;
+    label?: ArgumentAxisLabel;
     /**
      * @docid dxChartOptions.argumentAxis.linearThreshold
      * @default undefined
@@ -1488,7 +1489,7 @@ export interface dxChartArgumentAxis extends dxChartCommonAxisSettings {
      * @inherits dxChartOptions.commonAxisSettings.stripStyle
      * @public
      */
-    strips?: Array<dxChartArgumentAxisStrips>;
+    strips?: Array<ArgumentAxisStrips>;
     /**
      * @docid dxChartOptions.argumentAxis.tickInterval
      * @inherits VizTimeInterval
@@ -1501,7 +1502,7 @@ export interface dxChartArgumentAxis extends dxChartCommonAxisSettings {
      * @type string|object
      * @public
      */
-    title?: dxChartArgumentAxisTitle;
+    title?: ArgumentAxisTitle;
     /**
      * @docid dxChartOptions.argumentAxis.type
      * @default undefined
@@ -1539,24 +1540,26 @@ export interface dxChartArgumentAxis extends dxChartCommonAxisSettings {
      * @public
      */
     workdaysOnly?: boolean;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisConstantLineStyle
+ * @type object
  */
-export interface dxChartArgumentAxisConstantLineStyle extends dxChartCommonAxisSettingsConstantLineStyle {
+export type ArgumentAxisConstantLineStyle = CommonAxisSettingsConstantLineStyle & {
     /**
      * @docid dxChartOptions.argumentAxis.constantLineStyle.label
      * @type object
      * @public
      */
-    label?: dxChartArgumentAxisConstantLineStyleLabel;
-}
+    label?: ArgumentAxisConstantLineStyleLabel;
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisConstantLineStyleLabel
+ * @type object
  */
-export interface dxChartArgumentAxisConstantLineStyleLabel extends dxChartCommonAxisSettingsConstantLineStyleLabel {
+export type ArgumentAxisConstantLineStyleLabel = CommonAxisSettingsConstantLineStyleLabel & {
     /**
      * @docid dxChartOptions.argumentAxis.constantLineStyle.label.horizontalAlignment
      * @default 'right'
@@ -1569,12 +1572,13 @@ export interface dxChartArgumentAxisConstantLineStyleLabel extends dxChartCommon
      * @public
      */
     verticalAlignment?: VerticalAlignment;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisConstantLines
+ * @type object
  */
-export interface dxChartArgumentAxisConstantLines extends dxChartCommonAxisSettingsConstantLineStyle {
+export type ArgumentAxisConstantLines = CommonAxisSettingsConstantLineStyle & {
     /**
      * @docid dxChartOptions.argumentAxis.constantLines.displayBehindSeries
      * @default false
@@ -1592,19 +1596,20 @@ export interface dxChartArgumentAxisConstantLines extends dxChartCommonAxisSetti
      * @type object
      * @public
      */
-    label?: dxChartArgumentAxisConstantLinesLabel;
+    label?: ArgumentAxisConstantLinesLabel;
     /**
      * @docid dxChartOptions.argumentAxis.constantLines.value
      * @default undefined
      * @public
      */
     value?: number | Date | string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisConstantLinesLabel
+ * @type object
  */
-export interface dxChartArgumentAxisConstantLinesLabel extends dxChartCommonAxisSettingsConstantLineStyleLabel {
+export type ArgumentAxisConstantLinesLabel = CommonAxisSettingsConstantLineStyleLabel & {
     /**
      * @docid dxChartOptions.argumentAxis.constantLines.label.horizontalAlignment
      * @default 'right'
@@ -1623,12 +1628,13 @@ export interface dxChartArgumentAxisConstantLinesLabel extends dxChartCommonAxis
      * @public
      */
     verticalAlignment?: VerticalAlignment;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisLabel
+ * @type object
  */
-export interface dxChartArgumentAxisLabel extends dxChartCommonAxisSettingsLabel {
+export type ArgumentAxisLabel = CommonAxisSettingsLabel & {
     /**
      * @docid dxChartOptions.argumentAxis.label.customizeHint
      * @public
@@ -1646,12 +1652,13 @@ export interface dxChartArgumentAxisLabel extends dxChartCommonAxisSettingsLabel
      * @public
      */
     format?: Format;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisStrips
+ * @type object
  */
-export interface dxChartArgumentAxisStrips extends dxChartCommonAxisSettingsStripStyle {
+export type ArgumentAxisStrips = CommonAxisSettingsStripStyle & {
     /**
      * @docid dxChartOptions.argumentAxis.strips.color
      * @default undefined
@@ -1669,43 +1676,46 @@ export interface dxChartArgumentAxisStrips extends dxChartCommonAxisSettingsStri
      * @type object
      * @public
      */
-    label?: dxChartArgumentAxisStripsLabel;
+    label?: ArgumentAxisStripsLabel;
     /**
      * @docid dxChartOptions.argumentAxis.strips.startValue
      * @default undefined
      * @public
      */
     startValue?: number | Date | string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisStripsLabel
+ * @type object
  */
-export interface dxChartArgumentAxisStripsLabel extends dxChartCommonAxisSettingsStripStyleLabel {
+export type ArgumentAxisStripsLabel = CommonAxisSettingsStripStyleLabel & {
     /**
      * @docid dxChartOptions.argumentAxis.strips.label.text
      * @default undefined
      * @public
      */
     text?: string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartArgumentAxisTitle
+ * @type object
  */
-export interface dxChartArgumentAxisTitle extends dxChartCommonAxisSettingsTitle {
+export type ArgumentAxisTitle = CommonAxisSettingsTitle & {
     /**
      * @docid dxChartOptions.argumentAxis.title.text
      * @default undefined
      * @public
      */
     text?: string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonAxisSettings
+ * @type object
  */
-export interface dxChartCommonAxisSettings {
+export type CommonAxisSettings = {
     /**
      * @docid dxChartOptions.commonAxisSettings.allowDecimals
      * @default undefined
@@ -1744,7 +1754,7 @@ export interface dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    constantLineStyle?: dxChartCommonAxisSettingsConstantLineStyle;
+    constantLineStyle?: CommonAxisSettingsConstantLineStyle;
     /**
      * @docid dxChartOptions.commonAxisSettings.discreteAxisDivisionMode
      * @default 'betweenLabels'
@@ -1800,7 +1810,7 @@ export interface dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    label?: dxChartCommonAxisSettingsLabel;
+    label?: CommonAxisSettingsLabel;
     /**
      * @docid dxChartOptions.commonAxisSettings.maxValueMargin
      * @default undefined
@@ -1892,7 +1902,7 @@ export interface dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    stripStyle?: dxChartCommonAxisSettingsStripStyle;
+    stripStyle?: CommonAxisSettingsStripStyle;
     /**
      * @docid dxChartOptions.commonAxisSettings.tick
      * @public
@@ -1934,7 +1944,7 @@ export interface dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    title?: dxChartCommonAxisSettingsTitle;
+    title?: CommonAxisSettingsTitle;
     /**
      * @docid dxChartOptions.commonAxisSettings.valueMarginsEnabled
      * @default true
@@ -1953,12 +1963,12 @@ export interface dxChartCommonAxisSettings {
      * @public
      */
     width?: number;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonAxisSettingsConstantLineStyle
  */
-export interface dxChartCommonAxisSettingsConstantLineStyle {
+export type CommonAxisSettingsConstantLineStyle = {
     /**
      * @docid dxChartOptions.commonAxisSettings.constantLineStyle.color
      * @default '#000000'
@@ -1976,7 +1986,7 @@ export interface dxChartCommonAxisSettingsConstantLineStyle {
      * @type object
      * @public
      */
-    label?: dxChartCommonAxisSettingsConstantLineStyleLabel;
+    label?: CommonAxisSettingsConstantLineStyleLabel;
     /**
      * @docid dxChartOptions.commonAxisSettings.constantLineStyle.paddingLeftRight
      * @default 10
@@ -1995,12 +2005,12 @@ export interface dxChartCommonAxisSettingsConstantLineStyle {
      * @public
      */
     width?: number;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonAxisSettingsConstantLineStyleLabel
  */
-export interface dxChartCommonAxisSettingsConstantLineStyleLabel {
+export type CommonAxisSettingsConstantLineStyleLabel = {
     /**
      * @docid dxChartOptions.commonAxisSettings.constantLineStyle.label.font
      * @default '#767676' &prop(color)
@@ -2019,12 +2029,12 @@ export interface dxChartCommonAxisSettingsConstantLineStyleLabel {
      * @public
      */
     visible?: boolean;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonAxisSettingsLabel
  */
-export interface dxChartCommonAxisSettingsLabel {
+export type CommonAxisSettingsLabel = {
     /**
      * @docid dxChartOptions.commonAxisSettings.label.template
      * @default undefined
@@ -2100,18 +2110,18 @@ export interface dxChartCommonAxisSettingsLabel {
      * @public
      */
     wordWrap?: WordWrap;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonAxisSettingsStripStyle
  */
-export interface dxChartCommonAxisSettingsStripStyle {
+export type CommonAxisSettingsStripStyle = {
     /**
      * @docid dxChartOptions.commonAxisSettings.stripStyle.label
      * @type object
      * @public
      */
-    label?: dxChartCommonAxisSettingsStripStyleLabel;
+    label?: CommonAxisSettingsStripStyleLabel;
     /**
      * @docid dxChartOptions.commonAxisSettings.stripStyle.paddingLeftRight
      * @default 10
@@ -2124,12 +2134,12 @@ export interface dxChartCommonAxisSettingsStripStyle {
      * @public
      */
     paddingTopBottom?: number;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonAxisSettingsStripStyleLabel
  */
-export interface dxChartCommonAxisSettingsStripStyleLabel {
+export type CommonAxisSettingsStripStyleLabel = {
     /**
      * @docid dxChartOptions.commonAxisSettings.stripStyle.label.font
      * @default '#767676' &prop(color)
@@ -2148,12 +2158,12 @@ export interface dxChartCommonAxisSettingsStripStyleLabel {
      * @public
      */
     verticalAlignment?: VerticalAlignment;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonAxisSettingsTitle
  */
-export interface dxChartCommonAxisSettingsTitle {
+export type CommonAxisSettingsTitle = {
     /**
      * @docid dxChartOptions.commonAxisSettings.title.alignment
      * @default 'center'
@@ -2185,12 +2195,12 @@ export interface dxChartCommonAxisSettingsTitle {
      * @public
      */
     wordWrap?: WordWrap;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonPaneSettings
  */
-export interface dxChartCommonPaneSettings {
+export type CommonPaneSettings = {
     /**
      * @docid dxChartOptions.commonPaneSettings.backgroundColor
      * @default 'none'
@@ -2248,12 +2258,13 @@ export interface dxChartCommonPaneSettings {
        */
       width?: number;
     };
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartCommonSeriesSettings
+ * @type object
  */
-export interface dxChartCommonSeriesSettings extends dxChartSeriesTypesCommonSeries {
+export type CommonSeriesSettings = dxChartSeriesTypesCommonSeries & {
     /**
      * @docid dxChartOptions.commonSeriesSettings.area
      * @public
@@ -2376,12 +2387,12 @@ export interface dxChartCommonSeriesSettings extends dxChartSeriesTypesCommonSer
      * @public
      */
     type?: SeriesType;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartLegend
  */
-export interface dxChartLegend extends BaseChartLegend {
+export type Legend = BaseChartLegend & {
     /**
      * @docid dxChartOptions.legend.customizeHint
      * @public
@@ -2405,12 +2416,13 @@ export interface dxChartLegend extends BaseChartLegend {
      * @public
      */
     position?: RelativePosition;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartPanes
+ * @type object
  */
-export interface dxChartPanes extends dxChartCommonPaneSettings {
+export type Panes = CommonPaneSettings & {
     /**
      * @docid dxChartOptions.panes.height
      * @default undefined
@@ -2423,12 +2435,12 @@ export interface dxChartPanes extends dxChartCommonPaneSettings {
      * @public
      */
     name?: string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @bublic
+ * @docid dxChartTooltip
  */
-export interface dxChartTooltip extends BaseChartTooltip {
+export type Tooltip = BaseChartTooltip & {
     /**
      * @docid dxChartOptions.tooltip.location
      * @default 'center'
@@ -2436,12 +2448,13 @@ export interface dxChartTooltip extends BaseChartTooltip {
      * @public
      */
     location?: ChartTooltipLocation;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxis
+ * @type object
  */
-export interface dxChartValueAxis extends dxChartCommonAxisSettings {
+export type ValueAxis = CommonAxisSettings & {
     /**
      * @docid dxChartOptions.valueAxis.autoBreaksEnabled
      * @default false
@@ -2473,7 +2486,7 @@ export interface dxChartValueAxis extends dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    constantLineStyle?: dxChartValueAxisConstantLineStyle;
+    constantLineStyle?: ValueAxisConstantLineStyle;
     /**
      * @docid dxChartOptions.valueAxis.constantLines
      * @type Array<Object>
@@ -2481,7 +2494,7 @@ export interface dxChartValueAxis extends dxChartCommonAxisSettings {
      * @inherits dxChartOptions.commonAxisSettings.constantLineStyle
      * @public
      */
-    constantLines?: Array<dxChartValueAxisConstantLines>;
+    constantLines?: Array<ValueAxisConstantLines>;
     /**
      * @docid dxChartOptions.valueAxis.endOnTick
      * @default undefined
@@ -2493,7 +2506,7 @@ export interface dxChartValueAxis extends dxChartCommonAxisSettings {
      * @type object
      * @public
      */
-    label?: dxChartValueAxisLabel;
+    label?: ValueAxisLabel;
     /**
      * @docid dxChartOptions.valueAxis.linearThreshold
      * @default undefined
@@ -2584,7 +2597,7 @@ export interface dxChartValueAxis extends dxChartCommonAxisSettings {
      * @inherits dxChartOptions.commonAxisSettings.stripStyle
      * @public
      */
-    strips?: Array<dxChartValueAxisStrips>;
+    strips?: Array<ValueAxisStrips>;
     /**
      * @docid dxChartOptions.valueAxis.synchronizedValue
      * @default undefined
@@ -2603,7 +2616,7 @@ export interface dxChartValueAxis extends dxChartCommonAxisSettings {
      * @type string|object
      * @public
      */
-    title?: dxChartValueAxisTitle;
+    title?: ValueAxisTitle;
     /**
      * @docid dxChartOptions.valueAxis.type
      * @default undefined
@@ -2635,24 +2648,26 @@ export interface dxChartValueAxis extends dxChartCommonAxisSettings {
      * @public
      */
     wholeRange?: VisualRange | Array<number | string | Date>;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisConstantLineStyle
+ * @type object
  */
-export interface dxChartValueAxisConstantLineStyle extends dxChartCommonAxisSettingsConstantLineStyle {
+export type ValueAxisConstantLineStyle = CommonAxisSettingsConstantLineStyle & {
     /**
      * @docid dxChartOptions.valueAxis.constantLineStyle.label
      * @type object
      * @public
      */
-    label?: dxChartValueAxisConstantLineStyleLabel;
-}
+    label?: ValueAxisConstantLineStyleLabel;
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisConstantLineStyleLabel
+ * @type object
  */
-export interface dxChartValueAxisConstantLineStyleLabel extends dxChartCommonAxisSettingsConstantLineStyleLabel {
+export type ValueAxisConstantLineStyleLabel = CommonAxisSettingsConstantLineStyleLabel & {
     /**
      * @docid dxChartOptions.valueAxis.constantLineStyle.label.horizontalAlignment
      * @default 'left'
@@ -2665,12 +2680,13 @@ export interface dxChartValueAxisConstantLineStyleLabel extends dxChartCommonAxi
      * @public
      */
     verticalAlignment?: VerticalAlignment;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisConstantLines
+ * @type object
  */
-export interface dxChartValueAxisConstantLines extends dxChartCommonAxisSettingsConstantLineStyle {
+export type ValueAxisConstantLines = CommonAxisSettingsConstantLineStyle & {
     /**
      * @docid dxChartOptions.valueAxis.constantLines.displayBehindSeries
      * @default false
@@ -2688,19 +2704,20 @@ export interface dxChartValueAxisConstantLines extends dxChartCommonAxisSettings
      * @type object
      * @public
      */
-    label?: dxChartValueAxisConstantLinesLabel;
+    label?: ValueAxisConstantLinesLabel;
     /**
      * @docid dxChartOptions.valueAxis.constantLines.value
      * @default undefined
      * @public
      */
     value?: number | Date | string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisConstantLinesLabel
+ * @type object
  */
-export interface dxChartValueAxisConstantLinesLabel extends dxChartCommonAxisSettingsConstantLineStyleLabel {
+export type ValueAxisConstantLinesLabel = CommonAxisSettingsConstantLineStyleLabel & {
     /**
      * @docid dxChartOptions.valueAxis.constantLines.label.horizontalAlignment
      * @default 'left'
@@ -2719,12 +2736,13 @@ export interface dxChartValueAxisConstantLinesLabel extends dxChartCommonAxisSet
      * @public
      */
     verticalAlignment?: VerticalAlignment;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisLabel
+ * @type object
  */
-export interface dxChartValueAxisLabel extends dxChartCommonAxisSettingsLabel {
+export type ValueAxisLabel = CommonAxisSettingsLabel & {
     /**
      * @docid dxChartOptions.valueAxis.label.customizeHint
      * @public
@@ -2742,12 +2760,13 @@ export interface dxChartValueAxisLabel extends dxChartCommonAxisSettingsLabel {
      * @public
      */
     format?: Format;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisStrips
+ * @type object
  */
-export interface dxChartValueAxisStrips extends dxChartCommonAxisSettingsStripStyle {
+export type ValueAxisStrips = CommonAxisSettingsStripStyle & {
     /**
      * @docid dxChartOptions.valueAxis.strips.color
      * @default undefined
@@ -2765,38 +2784,40 @@ export interface dxChartValueAxisStrips extends dxChartCommonAxisSettingsStripSt
      * @type object
      * @public
      */
-    label?: dxChartValueAxisStripsLabel;
+    label?: ValueAxisStripsLabel;
     /**
      * @docid dxChartOptions.valueAxis.strips.startValue
      * @default undefined
      * @public
      */
     startValue?: number | Date | string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisStripsLabel
+ * @type object
  */
-export interface dxChartValueAxisStripsLabel extends dxChartCommonAxisSettingsStripStyleLabel {
+export type ValueAxisStripsLabel = CommonAxisSettingsStripStyleLabel & {
     /**
      * @docid dxChartOptions.valueAxis.strips.label.text
      * @default undefined
      * @public
      */
     text?: string;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxChartValueAxisTitle
+ * @type object
  */
-export interface dxChartValueAxisTitle extends dxChartCommonAxisSettingsTitle {
+export type ValueAxisTitle = CommonAxisSettingsTitle & {
     /**
      * @docid dxChartOptions.valueAxis.title.text
      * @default undefined
      * @public
      */
     text?: string;
-}
+};
 /**
  * @docid
  * @inherits BaseChart
@@ -5283,5 +5304,99 @@ export type Properties = dxChartOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxChartOptions;
+
+// #region deprecated in v23.1
+
+    /** @deprecated Use ArgumentAxis instead */
+    export type dxChartArgumentAxis = ArgumentAxis;
+
+    /** @deprecated Use ArgumentAxisConstantLines instead */
+    export type dxChartArgumentAxisConstantLines = ArgumentAxisConstantLines;
+
+    /** @deprecated Use ArgumentAxisConstantLinesLabel instead */
+    export type dxChartArgumentAxisConstantLinesLabel = ArgumentAxisConstantLinesLabel;
+
+    /** @deprecated Use ArgumentAxisConstantLineStyle instead */
+    export type dxChartArgumentAxisConstantLineStyle = ArgumentAxisConstantLineStyle;
+
+    /** @deprecated Use ArgumentAxisConstantLineStyleLabel instead */
+    export type dxChartArgumentAxisConstantLineStyleLabel = ArgumentAxisConstantLineStyleLabel;
+
+    /** @deprecated Use ArgumentAxisLabel instead */
+    export type dxChartArgumentAxisLabel = ArgumentAxisLabel;
+
+    /** @deprecated Use ArgumentAxisStrips instead */
+    export type dxChartArgumentAxisStrips = ArgumentAxisStrips;
+
+    /** @deprecated Use ArgumentAxisStripsLabel instead */
+    export type dxChartArgumentAxisStripsLabel = ArgumentAxisStripsLabel;
+
+    /** @deprecated Use ArgumentAxisTitle instead */
+    export type dxChartArgumentAxisTitle = ArgumentAxisTitle;
+
+    /** @deprecated Use CommonAxisSettings instead */
+    export type dxChartCommonAxisSettings = CommonAxisSettings;
+
+    /** @deprecated Use CommonAxisSettingsConstantLineStyle instead */
+    export type dxChartCommonAxisSettingsConstantLineStyle = CommonAxisSettingsConstantLineStyle;
+
+    /** @deprecated Use CommonAxisSettingsConstantLineStyleLabel instead */
+    export type dxChartCommonAxisSettingsConstantLineStyleLabel = CommonAxisSettingsConstantLineStyleLabel;
+
+    /** @deprecated Use CommonAxisSettingsLabel instead */
+    export type dxChartCommonAxisSettingsLabel = CommonAxisSettingsLabel;
+
+    /** @deprecated Use CommonAxisSettingsStripStyle instead */
+    export type dxChartCommonAxisSettingsStripStyle = CommonAxisSettingsStripStyle;
+
+    /** @deprecated Use CommonAxisSettingsStripStyleLabel instead */
+    export type dxChartCommonAxisSettingsStripStyleLabel = CommonAxisSettingsStripStyleLabel;
+
+    /** @deprecated Use CommonAxisSettingsTitle instead */
+    export type dxChartCommonAxisSettingsTitle = CommonAxisSettingsTitle;
+
+    /** @deprecated Use CommonPaneSettings instead */
+    export type dxChartCommonPaneSettings = CommonPaneSettings;
+
+    /** @deprecated Use CommonSeriesSettings instead */
+    export type dxChartCommonSeriesSettings = CommonSeriesSettings;
+
+    /** @deprecated Use Legend instead */
+    export type dxChartLegend = Legend;
+
+    /** @deprecated Use Panes instead */
+    export type dxChartPanes = Panes;
+
+    /** @deprecated Use Tooltip instead */
+    export type dxChartTooltip = Tooltip;
+
+    /** @deprecated Use ValueAxis instead */
+    export type dxChartValueAxis = ValueAxis;
+
+    /** @deprecated Use ValueAxisConstantLines instead */
+    export type dxChartValueAxisConstantLines = ValueAxisConstantLines;
+
+    /** @deprecated Use ValueAxisConstantLinesLabel instead */
+    export type dxChartValueAxisConstantLinesLabel = ValueAxisConstantLinesLabel;
+
+    /** @deprecated Use ValueAxisConstantLineStyle instead */
+    export type dxChartValueAxisConstantLineStyle = ValueAxisConstantLineStyle;
+
+    /** @deprecated Use ValueAxisConstantLineStyleLabel instead */
+    export type dxChartValueAxisConstantLineStyleLabel = ValueAxisConstantLineStyleLabel;
+
+    /** @deprecated Use ValueAxisLabel instead */
+    export type dxChartValueAxisLabel = ValueAxisLabel;
+
+    /** @deprecated Use ValueAxisStrips instead */
+    export type dxChartValueAxisStrips = ValueAxisStrips;
+
+    /** @deprecated Use ValueAxisStripsLabel instead */
+    export type dxChartValueAxisStripsLabel = ValueAxisStripsLabel;
+
+    /** @deprecated Use ValueAxisTitle instead */
+    export type dxChartValueAxisTitle = ValueAxisTitle;
+
+// #endregion
 
 

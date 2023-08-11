@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/viz/common/base_widget.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -83,6 +83,12 @@ export var viewFunction = viewModel => {
 export var Props = BaseWidgetProps;
 import { createRef as infernoCreateRef } from 'inferno';
 export class BaseWidget extends InfernoComponent {
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
+  }
   constructor(props) {
     super(props);
     this.containerRef = infernoCreateRef();
@@ -94,12 +100,6 @@ export class BaseWidget extends InfernoComponent {
     this.setCanvasEffect = this.setCanvasEffect.bind(this);
     this.svg = this.svg.bind(this);
     this.setCanvas = this.setCanvas.bind(this);
-  }
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.setRootElementRef, []), new InfernoEffect(this.setCanvasEffect, [this.state.canvas, this.props.canvas, this.props.defaultCanvas, this.props.margin, this.props.size, this.props.canvasChange])];

@@ -59,7 +59,7 @@ var FOCUSED_CLASS = 'dx-focused';
 exports.FOCUSED_CLASS = FOCUSED_CLASS;
 var FAST_EDITING_DELETE_KEY = 'delete';
 exports.FAST_EDITING_DELETE_KEY = FAST_EDITING_DELETE_KEY;
-var INTERACTIVE_ELEMENTS_SELECTOR = 'input:not([type=\'hidden\']), textarea, a, select, button, [tabindex], .dx-checkbox';
+var INTERACTIVE_ELEMENTS_SELECTOR = "\n  input:not([type=\"hidden\"]):not([disabled]),\n  textarea:not([disabled]),\n  a:not([disabled]),\n  select:not([disabled]),\n  button:not([disabled]),\n  [tabindex]:not([disabled]),\n  .dx-checkbox:not([disabled])\n";
 exports.INTERACTIVE_ELEMENTS_SELECTOR = INTERACTIVE_ELEMENTS_SELECTOR;
 var NON_FOCUSABLE_ELEMENTS_SELECTOR = "".concat(INTERACTIVE_ELEMENTS_SELECTOR, ", .dx-dropdowneditor-icon");
 exports.NON_FOCUSABLE_ELEMENTS_SELECTOR = NON_FOCUSABLE_ELEMENTS_SELECTOR;

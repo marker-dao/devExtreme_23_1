@@ -39,7 +39,7 @@ function calculateAdditionalRowsHeights(doc, rows) {
       var targetRectWidth = (0, _pdf_utils.calculateTargetRectWidth)(cell.pdfCell._rect.w, cell.pdfCell.padding);
       var textHeight = (0, _pdf_utils.calculateTextHeight)(doc, cell.pdfCell.text, cell.pdfCell.font, {
         wordWrapEnabled: cell.pdfCell.wordWrapEnabled,
-        targetRectWidth: targetRectWidth
+        targetRectWidth
       });
       var cellHeight = textHeight + cell.pdfCell.padding.top + cell.pdfCell.padding.bottom;
       var rowsCount = cell.rowSpan + 1;

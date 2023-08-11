@@ -21,7 +21,7 @@ module.exports = [{
   name: 'Pager',
   pathInRenovationFolder: 'ui/pager/pager.j',
   pathInJSFolder: 'ui/pager.js',
-  pathToWrapper: '/testing/helpers/renovationPagerHelper.js'
+  pathToWrapper: '/packages/devextreme/testing/helpers/renovationPagerHelper.js'
 }
 // { name: 'Bullet', pathInRenovationFolder: 'viz/sparklines/bullet.j', pathInJSFolder: 'viz/sparklines/bullet.js' },
 ];

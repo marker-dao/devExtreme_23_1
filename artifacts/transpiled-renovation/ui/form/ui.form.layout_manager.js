@@ -29,7 +29,6 @@ var _empty_item = require("./components/empty_item");
 var _uiFormLayout_manager = require("./ui.form.layout_manager.utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -204,7 +203,7 @@ var LayoutManager = _ui.default.inherit({
         dataField: item
       };
     }
-    if (_typeof(item) === 'object' && !item.itemType) {
+    if (typeof item === 'object' && !item.itemType) {
       item.itemType = _constants.SIMPLE_ITEM_TYPE;
     }
     if (!(0, _type.isDefined)(item.editorType) && (0, _type.isDefined)(item.dataField)) {
@@ -357,7 +356,7 @@ var LayoutManager = _ui.default.inherit({
         }
         templatesInfo.push({
           itemType: item.itemType,
-          item: item,
+          item,
           $parent: $itemElement,
           rootElementCssClassList: itemCssClassList
         });
@@ -469,7 +468,7 @@ var LayoutManager = _ui.default.inherit({
   },
   _renderEmptyItem: function _renderEmptyItem($container) {
     (0, _empty_item.renderEmptyItem)({
-      $container: $container
+      $container
     });
   },
   _renderButtonItem: function _renderButtonItem(_ref3) {
@@ -477,9 +476,9 @@ var LayoutManager = _ui.default.inherit({
       $parent = _ref3.$parent,
       rootElementCssClassList = _ref3.rootElementCssClassList;
     var _renderButtonItem2 = (0, _button_item.renderButtonItem)({
-        item: item,
-        $parent: $parent,
-        rootElementCssClassList: rootElementCssClassList,
+        item,
+        $parent,
+        rootElementCssClassList,
         validationGroup: this.option('validationGroup'),
         createComponentCallback: this._createComponent.bind(this)
       }),
@@ -488,7 +487,7 @@ var LayoutManager = _ui.default.inherit({
 
     // TODO: try to remove '_itemsRunTimeInfo' from 'render' function
     this._itemsRunTimeInfo.add({
-      item: item,
+      item,
       widgetInstance: buttonInstance,
       // TODO: try to remove 'widgetInstance'
       guid: item.guid,
@@ -509,9 +508,9 @@ var LayoutManager = _ui.default.inherit({
         editorType = item.editorType,
         dataField = item.dataField;
       canAssignUndefinedValueToEditor = this._isCheckboxUndefinedStateEnabled({
-        allowIndeterminateState: allowIndeterminateState,
-        editorType: editorType,
-        dataField: dataField
+        allowIndeterminateState,
+        editorType,
+        dataField
       });
     }
     var name = item.dataField || item.name;
@@ -523,12 +522,12 @@ var LayoutManager = _ui.default.inherit({
       }
     };
     var _renderFieldItem2 = (0, _field_item.renderFieldItem)((0, _uiFormLayout_manager.convertToRenderFieldItemOptions)({
-        $parent: $parent,
-        rootElementCssClassList: rootElementCssClassList,
-        item: item,
-        name: name,
-        editorValue: editorValue,
-        canAssignUndefinedValueToEditor: canAssignUndefinedValueToEditor,
+        $parent,
+        rootElementCssClassList,
+        item,
+        name,
+        editorValue,
+        canAssignUndefinedValueToEditor,
         formOrLayoutManager: this._getFormOrThis(),
         createComponentCallback: this._createComponent.bind(this),
         formLabelLocation: this.option('labelLocation'),
@@ -543,7 +542,7 @@ var LayoutManager = _ui.default.inherit({
         itemId: this.option('form') && this.option('form').getItemID(name),
         managerMarkOptions: this._getMarkOptions(),
         labelMode: this.option('labelMode'),
-        onLabelTemplateRendered: onLabelTemplateRendered
+        onLabelTemplateRendered
       })),
       $fieldEditorContainer = _renderFieldItem2.$fieldEditorContainer,
       widgetInstance = _renderFieldItem2.widgetInstance,
@@ -554,17 +553,17 @@ var LayoutManager = _ui.default.inherit({
       this._bindDataField(widgetInstance, item.dataField, item.editorType, $fieldEditorContainer);
     }
     this._itemsRunTimeInfo.add({
-      item: item,
-      widgetInstance: widgetInstance,
+      item,
+      widgetInstance,
       guid: item.guid,
       $itemContainer: $rootElement
     });
   },
-  _incTemplateRenderedCallCount: function _incTemplateRenderedCallCount() {
+  _incTemplateRenderedCallCount() {
     var _this$_labelTemplateR;
     this._labelTemplateRenderedCallCount = ((_this$_labelTemplateR = this._labelTemplateRenderedCallCount) !== null && _this$_labelTemplateR !== void 0 ? _this$_labelTemplateR : 0) + 1;
   },
-  _shouldAlignLabelsOnTemplateRendered: function _shouldAlignLabelsOnTemplateRendered(formOrLayoutManager, totalItemsWithLabelTemplate) {
+  _shouldAlignLabelsOnTemplateRendered(formOrLayoutManager, totalItemsWithLabelTemplate) {
     return formOrLayoutManager.option('templatesRenderAsynchronously') && this._labelTemplateRenderedCallCount === totalItemsWithLabelTemplate;
   },
   _getMarkOptions: function _getMarkOptions() {
@@ -690,13 +689,13 @@ var LayoutManager = _ui.default.inherit({
       });
     }
   },
-  _resetWidget: function _resetWidget(instance) {
+  _clearWidget(instance) {
     this._disableEditorValueChangedHandler = true;
-    instance.reset();
+    instance.clear();
     this._disableEditorValueChangedHandler = false;
     instance.option('isValid', true);
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var _this4 = this;
     if (args.fullName.search('layoutData.') === 0) {
       return;
@@ -723,13 +722,13 @@ var LayoutManager = _ui.default.inherit({
                     allowIndeterminateState = _itemRunTimeInfo$item.allowIndeterminateState,
                     editorType = _itemRunTimeInfo$item.editorType;
                   if (dataValue !== undefined || _this4._isCheckboxUndefinedStateEnabled({
-                    allowIndeterminateState: allowIndeterminateState,
-                    editorType: editorType,
-                    dataField: dataField
+                    allowIndeterminateState,
+                    editorType,
+                    dataField
                   })) {
                     itemRunTimeInfo.widgetInstance.option('value', dataValue);
                   } else {
-                    _this4._resetWidget(itemRunTimeInfo.widgetInstance);
+                    _this4._clearWidget(itemRunTimeInfo.widgetInstance);
                   }
                 }
               }
@@ -782,7 +781,7 @@ var LayoutManager = _ui.default.inherit({
     this._cashedColCount = null;
     this._invalidate();
   },
-  linkEditorToDataField: function linkEditorToDataField(editorInstance, dataField) {
+  linkEditorToDataField(editorInstance, dataField) {
     var _this5 = this;
     this.on('optionChanged', function (args) {
       if (args.fullName === "layoutData.".concat(dataField)) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/workspaces/base/utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -56,14 +56,14 @@ var createCellElementMetaData = function createCellElementMetaData(tableRect, ce
     x = cellRect.x,
     y = cellRect.y;
   return {
-    right: right,
-    bottom: bottom,
+    right,
+    bottom,
     left: left - tableRect.left,
     top: top - tableRect.top,
-    width: width,
-    height: height,
-    x: x,
-    y: y
+    width,
+    height,
+    x,
+    y
   };
 };
 exports.createCellElementMetaData = createCellElementMetaData;
@@ -147,8 +147,8 @@ var getCellIndices = function getCellIndices(cell) {
     return child.className.includes(_const.DATE_TABLE_ROW_CLASS);
   }).indexOf(row);
   return {
-    columnIndex: columnIndex,
-    rowIndex: rowIndex
+    columnIndex,
+    rowIndex
   };
 };
 exports.getCellIndices = getCellIndices;
@@ -185,11 +185,11 @@ var filterCellsByDateAndIndex = function filterCellsByDateAndIndex(cellsRow, fil
     var day = _date.default.trimTime(startDate).getTime();
     var daysAndIndexes = {
       date: day,
-      index: index,
+      index,
       firstDate: firstDay,
-      firstIndex: firstIndex,
+      firstIndex,
       lastDate: lastDay,
-      lastIndex: lastIndex
+      lastIndex
     };
     return compareCellsByDateAndIndex(daysAndIndexes);
   });

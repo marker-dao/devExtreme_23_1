@@ -1,7 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
+/* eslint-disable max-classes-per-file */
 import '../../../../ui/button';
 import '../../../../ui/drop_down_button';
-import Class from '../../../../core/class';
 import $ from '../../../../core/renderer';
 import { Deferred, when } from '../../../../core/utils/deferred';
 import { extend } from '../../../../core/utils/extend';
@@ -10,6 +10,7 @@ import { format } from '../../../../core/utils/string';
 import { isDefined, isFunction } from '../../../../core/utils/type';
 import messageLocalization from '../../../../localization/message';
 import List from '../../../../ui/list_light';
+import errors from '../../../../ui/widget/ui.errors';
 import { prepareItems } from '../../../grids/grid_core/m_export';
 import dataGridCore from '../m_core';
 var DATAGRID_EXPORT_MENU_CLASS = 'dx-datagrid-export-menu';
@@ -19,12 +20,12 @@ var DATAGRID_EXPORT_ICON = 'export';
 var DATAGRID_EXPORT_EXCEL_ICON = 'xlsxfile';
 var DATAGRID_EXPORT_SELECTED_ICON = 'exportselected';
 var DATAGRID_PDF_EXPORT_ICON = 'pdffile';
-export var DataProvider = Class.inherit({
-  ctor(exportController, initialColumnWidthsByColumnIndex, selectedRowsOnly) {
+export class DataProvider {
+  constructor(exportController, initialColumnWidthsByColumnIndex, selectedRowsOnly) {
     this._exportController = exportController;
     this._initialColumnWidthsByColumnIndex = initialColumnWidthsByColumnIndex;
     this._selectedRowsOnly = selectedRowsOnly;
-  },
+  }
   _getGroupValue(item) {
     var {
       key,
@@ -40,10 +41,10 @@ export var DataProvider = Class.inherit({
       result += " ".concat(dataGridCore.getGroupRowSummaryText(summaryCells[0], this._options.summaryTexts));
     }
     return result;
-  },
+  }
   _correctCellIndex(cellIndex) {
     return cellIndex;
-  },
+  }
   _initOptions() {
     var exportController = this._exportController;
     var groupColumns = exportController._columnsController.getGroupColumns();
@@ -55,7 +56,7 @@ export var DataProvider = Class.inherit({
       summaryTexts: exportController.option('summary.texts'),
       rtlEnabled: exportController.option('rtlEnabled')
     };
-  },
+  }
   getHeaderStyles() {
     return [{
       bold: true,
@@ -67,13 +68,13 @@ export var DataProvider = Class.inherit({
       bold: true,
       alignment: 'right'
     }];
-  },
+  }
   getGroupRowStyle() {
     return {
       bold: true,
       alignment: getDefaultAlignment(this._options.rtlEnabled)
     };
-  },
+  }
   getColumnStyles() {
     var columnStyles = [];
     this.getColumns().forEach(column => {
@@ -84,15 +85,15 @@ export var DataProvider = Class.inherit({
       });
     });
     return columnStyles;
-  },
+  }
   getStyles() {
     return [...this.getHeaderStyles(), ...this.getColumnStyles(), this.getGroupRowStyle()];
-  },
+  }
   _getTotalCellStyleId(cellIndex) {
     var _a;
     var alignment = ((_a = this.getColumns()[cellIndex]) === null || _a === void 0 ? void 0 : _a.alignment) || 'right';
     return this.getHeaderStyles().map(style => style.alignment).indexOf(alignment);
-  },
+  }
   getStyleId(rowIndex, cellIndex) {
     if (rowIndex < this.getHeaderRowCount()) {
       return 0;
@@ -104,29 +105,29 @@ export var DataProvider = Class.inherit({
       return this.getHeaderStyles().length + this.getColumns().length;
     }
     return cellIndex + this.getHeaderStyles().length;
-  },
+  }
   getColumns(getColumnsByAllRows) {
     var {
       columns
     } = this._options;
     return getColumnsByAllRows ? columns : columns[columns.length - 1];
-  },
+  }
   getColumnsWidths() {
     var columns = this.getColumns();
     return isDefined(columns) ? columns.map(c => c.width) : undefined;
-  },
+  }
   getRowsCount() {
     return this._options.items.length + this.getHeaderRowCount();
-  },
+  }
   getHeaderRowCount() {
     if (this.isHeadersVisible()) {
       return this._options.columns.length - 1;
     }
     return 0;
-  },
+  }
   isGroupRow(rowIndex) {
     return rowIndex < this._options.items.length && this._options.items[rowIndex].rowType === 'group';
-  },
+  }
   getGroupLevel(rowIndex) {
     var item = this._options.items[rowIndex - this.getHeaderRowCount()];
     var groupIndex = item && item.groupIndex;
@@ -134,7 +135,7 @@ export var DataProvider = Class.inherit({
       return 0;
     }
     return isDefined(groupIndex) ? groupIndex : this._options.groupColumns.length;
-  },
+  }
   getCellType(rowIndex, cellIndex) {
     var columns = this.getColumns();
     if (rowIndex < this.getHeaderRowCount()) {
@@ -151,7 +152,7 @@ export var DataProvider = Class.inherit({
       }
       return 'string';
     }
-  },
+  }
   ready() {
     var that = this;
     that._initOptions();
@@ -161,7 +162,7 @@ export var DataProvider = Class.inherit({
     }).fail(() => {
       options.items = [];
     });
-  },
+  }
   _convertFromGridGroupSummaryItems(gridGroupSummaryItems) {
     if (isDefined(gridGroupSummaryItems) && gridGroupSummaryItems.length > 0) {
       return gridGroupSummaryItems.map(item => ({
@@ -169,7 +170,7 @@ export var DataProvider = Class.inherit({
         name: item.name
       }));
     }
-  },
+  }
   getCellData(rowIndex, cellIndex, isExcelJS) {
     var value;
     var column;
@@ -249,10 +250,10 @@ export var DataProvider = Class.inherit({
       }
     }
     return result;
-  },
+  }
   isHeadersVisible() {
     return this._options.isHeadersVisible;
-  },
+  }
   isTotalCell(rowIndex, cellIndex) {
     var {
       items
@@ -261,7 +262,7 @@ export var DataProvider = Class.inherit({
     var correctCellIndex = this._correctCellIndex(cellIndex);
     var isSummaryAlignByColumn = item.summaryCells && item.summaryCells[correctCellIndex] && item.summaryCells[correctCellIndex].length > 0 && item.summaryCells[correctCellIndex][0].alignByColumn;
     return item && item.rowType === 'groupFooter' || item.rowType === 'totalFooter' || isSummaryAlignByColumn;
-  },
+  }
   getCellMerging(rowIndex, cellIndex) {
     var {
       columns
@@ -274,7 +275,7 @@ export var DataProvider = Class.inherit({
       colspan: 0,
       rowspan: 0
     };
-  },
+  }
   getFrozenArea() {
     var that = this;
     return {
@@ -282,18 +283,18 @@ export var DataProvider = Class.inherit({
       y: that.getHeaderRowCount()
     };
   }
-});
-export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
+}
+export class ExportController extends dataGridCore.ViewController {
   _getEmptyCell() {
     return {
       caption: '',
       colspan: 1,
       rowspan: 1
     };
-  },
+  }
   _updateColumnWidth(column, width) {
     column.width = width;
-  },
+  }
   _getColumns(initialColumnWidthsByColumnIndex) {
     var result = [];
     var i;
@@ -339,7 +340,7 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
     result = prepareItems(result.slice(0, -1), this._getEmptyCell());
     result.push(columns);
     return result;
-  },
+  }
   _calculateExportColspan(column) {
     if (!column.isBand) {
       return;
@@ -354,10 +355,10 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       }
       return result;
     }, 0);
-  },
+  }
   _needColumnExporting(column) {
     return !column.command && (column.allowExporting || column.allowExporting === undefined);
-  },
+  }
   _getFooterSummaryItems(summaryCells, isTotal) {
     var result = [];
     var estimatedItemsCount = 1;
@@ -378,7 +379,7 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       });
     } while (i++ < estimatedItemsCount - 1);
     return result;
-  },
+  }
   _hasSummaryGroupFooters() {
     var groupItems = this.option('summary.groupItems');
     if (isDefined(groupItems)) {
@@ -389,7 +390,7 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       }
     }
     return false;
-  },
+  }
   _getItemsWithSummaryGroupFooters(sourceItems) {
     var result = [];
     var beforeGroupFooterItems = [];
@@ -405,7 +406,7 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       }
     }
     return result.length ? result : beforeGroupFooterItems;
-  },
+  }
   _updateGroupValuesWithSummaryByColumn(sourceItems) {
     var summaryValues = [];
     for (var i = 0; i < sourceItems.length; i++) {
@@ -432,7 +433,7 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
         }
       }
     }
-  },
+  }
   _processUnExportedItems(items) {
     var columns = this._columnsController.getVisibleColumns(null, true);
     var groupColumns = this._columnsController.getGroupColumns();
@@ -471,8 +472,9 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
         item.summaryCells = summaryCells;
       }
     }
-  },
+  }
   _getAllItems(data) {
+    var skipFilter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var that = this;
     // @ts-expect-error
     var d = new Deferred();
@@ -482,7 +484,7 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
     var summaryTotalItems = that.option('summary.totalItems');
     var summaryCells;
     when(data).done(data => {
-      dataController.loadAll(data).done((sourceItems, totalAggregates) => {
+      dataController.loadAll(data, skipFilter).done((sourceItems, totalAggregates) => {
         that._updateGroupValuesWithSummaryByColumn(sourceItems);
         if (that._hasSummaryGroupFooters()) {
           sourceItems = that._getItemsWithSummaryGroupFooters(sourceItems);
@@ -500,31 +502,36 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       }).fail(d.reject);
     }).fail(d.reject);
     return d;
-  },
+  }
   _getSummaryCells(summaryTotalItems, totalAggregates) {
     var dataController = this.getController('data');
     var columnsController = dataController._columnsController;
     return dataController._calculateSummaryCells(summaryTotalItems, totalAggregates, columnsController.getVisibleColumns(null, true), (summaryItem, column) => dataController._isDataColumn(column) ? column.index : -1);
-  },
+  }
   _getSelectedItems() {
     var selectionController = this.getController('selection');
-    var selectedRowData = selectionController.getSelectedRowsData();
-    return this._getAllItems(selectedRowData);
-  },
+    if (this.needLoadItemsOnExportingSelectedItems()) {
+      return this._getAllItems(selectionController.loadSelectedItemsWithFilter(), true);
+    }
+    return this._getAllItems(selectionController.getSelectedRowsData());
+  }
   _getColumnWidths(headersView, rowsView) {
     return headersView && headersView.isVisible() ? headersView.getColumnWidths() : rowsView.getColumnWidths();
-  },
+  }
   init() {
+    if (this.option('export.enabled') && !isDefined(this.option('onExporting'))) {
+      errors.log('W1024');
+    }
     this._columnsController = this.getController('columns');
     this._rowsView = this.getView('rowsView');
     this._headersView = this.getView('columnHeadersView');
     this.createAction('onExporting', {
       excludeValidators: ['disabled', 'readOnly']
     });
-  },
+  }
   callbackNames() {
     return ['selectionOnlyChanged'];
-  },
+  }
   getDataProvider(selectedRowsOnly) {
     var columnWidths = this._getColumnWidths(this._headersView, this._rowsView);
     var initialColumnWidthsByColumnIndex;
@@ -536,7 +543,7 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       }
     }
     return new DataProvider(this, initialColumnWidthsByColumnIndex, selectedRowsOnly);
-  },
+  }
   exportTo(selectedRowsOnly, format) {
     this._selectionOnly = selectedRowsOnly;
     var onExporting = this.getAction('onExporting');
@@ -548,10 +555,10 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       cancel: false
     };
     isFunction(onExporting) && onExporting(eventArgs);
-  },
+  }
   publicMethods() {
     return ['getDataProvider'];
-  },
+  }
   selectionOnly(value) {
     if (isDefined(value)) {
       this._isSelectedRows = value;
@@ -560,7 +567,11 @@ export var ExportController = dataGridCore.ViewController.inherit({}).inherit({
       return this._isSelectedRows;
     }
   }
-});
+  needLoadItemsOnExportingSelectedItems() {
+    var _a;
+    return (_a = this.option('loadItemsOnExportingSelectedItems')) !== null && _a !== void 0 ? _a : this.getController('data')._dataSource.remoteOperations().filtering;
+  }
+}
 dataGridCore.registerModule('export', {
   defaultOptions() {
     return {
@@ -585,11 +596,11 @@ dataGridCore.registerModule('export', {
       editing: {
         callbackNames() {
           var callbackList = this.callBase();
-          return isDefined(callbackList) ? callbackList.push('editingChanged') : ['editingChanged'];
+          return isDefined(callbackList) ? callbackList.push('editingButtonsUpdated') : ['editingButtonsUpdated'];
         },
         _updateEditButtons() {
           this.callBase();
-          this.editingChanged.fire(this.hasChanges());
+          this.editingButtonsUpdated.fire();
         }
       }
     },
@@ -609,6 +620,7 @@ dataGridCore.registerModule('export', {
           if (items.length === 0) {
             return null;
           }
+          var disabled = this._needDisableExportButton();
           var toolbarButtonOptions = {
             name: DATAGRID_EXPORT_TOOLBAR_BUTTON_NAME,
             location: 'after',
@@ -616,7 +628,8 @@ dataGridCore.registerModule('export', {
             sortIndex: 30,
             options: {
               items
-            }
+            },
+            disabled
           };
           if (items.length === 1) {
             var widgetOptions = _extends(_extends({}, items[0]), {
@@ -702,15 +715,33 @@ dataGridCore.registerModule('export', {
           if (args.name === 'export') {
             args.handled = true;
             this._invalidate();
+            if (args.fullName === 'export.enabled') {
+              if (args.value && !isDefined(this.option('onExporting'))) {
+                errors.log('W1024');
+              }
+            }
+          }
+        },
+        _needDisableExportButton() {
+          var isDataColumnsInvisible = !this._columnsController.hasVisibleDataColumns();
+          var hasUnsavedChanges = this._editingController.hasChanges();
+          return isDataColumnsInvisible || hasUnsavedChanges;
+        },
+        _columnOptionChanged(e) {
+          this.callBase(e);
+          var isColumnLocationChanged = dataGridCore.checkChanges(e.optionNames, ['groupIndex', 'visible', 'all']);
+          if (isColumnLocationChanged) {
+            var disabled = this._needDisableExportButton();
+            this.setToolbarItemDisabled('exportButton', disabled);
           }
         },
         init() {
-          var that = this;
           this.callBase();
           this._exportController = this.getController('export');
           this._editingController = this.getController('editing');
-          this._editingController.editingChanged.add(hasChanges => {
-            that.setToolbarItemDisabled('exportButton', hasChanges);
+          this._editingController.editingButtonsUpdated.add(() => {
+            var disabled = this._needDisableExportButton();
+            this.setToolbarItemDisabled('exportButton', disabled);
           });
         },
         isVisible() {

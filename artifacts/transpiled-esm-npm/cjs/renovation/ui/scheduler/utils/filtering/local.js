@@ -1,27 +1,27 @@
 "use strict";
 
 exports.getFilterStrategy = void 0;
-var _appointmentFilter = require("../../../../../ui/scheduler/appointments/dataProvider/appointmentFilter");
+var _m_appointment_filter = require("../../../../../__internal/scheduler/appointments/data_provider/m_appointment_filter");
 var getFilterStrategy = function getFilterStrategy(resources, startDayHour, endDayHour, cellDurationInMinutes, showAllDayPanel, supportAllDayRow, firstDayOfWeek, viewType, dateRange, groupCount, loadedResources, isVirtualScrolling, timeZoneCalculator, dataAccessors, viewDataProvider) {
   var filterOptions = {
-    resources: resources,
-    startDayHour: startDayHour,
-    endDayHour: endDayHour,
+    resources,
+    startDayHour,
+    endDayHour,
     appointmentDuration: cellDurationInMinutes,
-    showAllDayPanel: showAllDayPanel,
-    supportAllDayRow: supportAllDayRow,
-    firstDayOfWeek: firstDayOfWeek,
-    viewType: viewType,
+    showAllDayPanel,
+    supportAllDayRow,
+    firstDayOfWeek,
+    viewType,
     viewDirection: 'vertical',
-    dateRange: dateRange,
-    groupCount: groupCount,
-    loadedResources: loadedResources,
-    isVirtualScrolling: isVirtualScrolling,
-    timeZoneCalculator: timeZoneCalculator,
+    dateRange,
+    groupCount,
+    loadedResources,
+    isVirtualScrolling,
+    timeZoneCalculator,
     dataSource: undefined,
-    dataAccessors: dataAccessors,
-    viewDataProvider: viewDataProvider
+    dataAccessors,
+    viewDataProvider
   };
-  return isVirtualScrolling ? new _appointmentFilter.AppointmentFilterVirtualStrategy(filterOptions) : new _appointmentFilter.AppointmentFilterBaseStrategy(filterOptions);
+  return isVirtualScrolling ? new _m_appointment_filter.AppointmentFilterVirtualStrategy(filterOptions) : new _m_appointment_filter.AppointmentFilterBaseStrategy(filterOptions);
 };
 exports.getFilterStrategy = getFilterStrategy;

@@ -139,7 +139,7 @@ var _default = {
     }, $element);
     $element.attr('tabIndex', null);
   },
-  _clean: function _clean() {
+  _clean() {
     this.callBase();
     this._cleanAria();
   },

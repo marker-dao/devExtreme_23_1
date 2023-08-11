@@ -17,6 +17,6 @@ var forEachGroup = function forEachGroup(data, callback, level) {
 };
 exports.forEachGroup = forEachGroup;
 var _default = {
-  forEachGroup: forEachGroup
+  forEachGroup
 };
 exports.default = _default;

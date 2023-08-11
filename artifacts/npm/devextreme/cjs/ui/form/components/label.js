@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/form/components/label.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -52,7 +52,7 @@ function renderLabel(_ref) {
     labelTemplate.render({
       container: (0, _element.getPublicElement)($labelContent),
       model: labelTemplateData,
-      onRendered: function onRendered() {
+      onRendered() {
         onLabelTemplateRendered === null || onLabelTemplateRendered === void 0 ? void 0 : onLabelTemplateRendered();
       }
     });

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/m_master_detail.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,13 +16,13 @@ _m_core.default.registerModule('masterDetail', (0, _extend.extend)(true, {}, _m_
   extenders: {
     controllers: {
       data: {
-        isRowExpanded: function isRowExpanded() {
+        isRowExpanded() {
           return this.callBase.apply(this, arguments);
         },
-        _processItems: function _processItems() {
+        _processItems() {
           return this.callBase.apply(this, arguments);
         },
-        _processDataItem: function _processDataItem() {
+        _processDataItem() {
           return this.callBase.apply(this, arguments);
         }
       }

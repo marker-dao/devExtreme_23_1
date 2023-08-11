@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.lt.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Rūšiuoti didėjančiai",
             "dxDataGrid-sortingDescendingText": "Rūšiuoti mažėjančiai",
             "dxDataGrid-sortingClearText": "Nerūšiuoti",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Išsaugoti pakeitimus",
             "dxDataGrid-editingCancelAllChanges": "Atmesti pakeitimus",
             "dxDataGrid-editingAddRow": "Pridėti eilutę",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filtro laukas",
             "dxDataGrid-ariaCollapse": "Suskleisti",
             "dxDataGrid-ariaExpand": "Išskleisti",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Duomenų lentelė",
             "dxDataGrid-ariaSearchInGrid": "Ieškoti duomenų lentelėje",
             "dxDataGrid-ariaSelectAll": "Pasirinkti viską",
             "dxDataGrid-ariaSelectRow": "Pasirinkti eilutę",
             "dxDataGrid-ariaToolbar": "Duomenų lentelės įrankių juosta",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Filtrų konstruktorius",
             "dxDataGrid-filterPanelCreateFilter": "Sukurti filtrą",
             "dxDataGrid-filterPanelClearFilter": "Išvalyti",

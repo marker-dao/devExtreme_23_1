@@ -676,9 +676,9 @@ var LayoutManager = Widget.inherit({
       Object.getOwnPropertyNames(newLayoutData).forEach(property => this._optionsByReference['layoutData.' + property] = true);
     }
   },
-  _resetWidget(instance) {
+  _clearWidget(instance) {
     this._disableEditorValueChangedHandler = true;
-    instance.reset();
+    instance.clear();
     this._disableEditorValueChangedHandler = false;
     instance.option('isValid', true);
   },
@@ -715,7 +715,7 @@ var LayoutManager = Widget.inherit({
                   })) {
                     itemRunTimeInfo.widgetInstance.option('value', dataValue);
                   } else {
-                    this._resetWidget(itemRunTimeInfo.widgetInstance);
+                    this._clearWidget(itemRunTimeInfo.widgetInstance);
                   }
                 }
               }

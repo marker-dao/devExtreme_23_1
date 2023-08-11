@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/xmla_store/m_xmla_store.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -26,14 +25,14 @@ var _errors = require("../../../../data/errors");
 var _language_codes = require("../../../../localization/language_codes");
 var _m_widget_utils = _interopRequireWildcard(require("../m_widget_utils"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; } // @ts-expect-error
 var window = (0, _window.getWindow)();
 var XmlaStore = _class.default.inherit(function () {
   var discover = '<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><Discover xmlns="urn:schemas-microsoft-com:xml-analysis"><RequestType>{2}</RequestType><Restrictions><RestrictionList><CATALOG_NAME>{0}</CATALOG_NAME><CUBE_NAME>{1}</CUBE_NAME></RestrictionList></Restrictions><Properties><PropertyList><Catalog>{0}</Catalog>{3}</PropertyList></Properties></Discover></Body></Envelope>';
@@ -57,7 +56,7 @@ var XmlaStore = _class.default.inherit(function () {
     var ajaxSettings = {
       url: requestOptions.url,
       dataType: 'text',
-      data: data,
+      data,
       headers: {
         'Content-Type': 'text/xml'
       },
@@ -426,7 +425,7 @@ var XmlaStore = _class.default.inherit(function () {
             members[i] = {
               caption: getFirstChildText(tuple, 'Caption'),
               value: parseValue(getFirstChildText(tuple, 'MEMBER_VALUE')),
-              level: level,
+              level,
               // eslint-disable-next-line no-plusplus
               index: index++,
               hasValue: !levelSum && (!!level || i === 0),
@@ -651,12 +650,12 @@ var XmlaStore = _class.default.inherit(function () {
         result.push({
           dimension: dimensions.names[dimension] || dimension,
           groupIndex: levelNumber ? getNumber(levelNumber) - 1 : undefined,
-          dataField: dataField,
+          dataField,
           caption: getFirstChildText(row, "".concat(schema, "_CAPTION")),
-          hierarchyName: hierarchyName,
+          hierarchyName,
           groupName: hierarchyName,
-          displayFolder: displayFolder,
-          isMeasure: isMeasure,
+          displayFolder,
+          isMeasure,
           isDefault: !!dimensions.defaultHierarchies[dataField]
         });
       }
@@ -751,10 +750,10 @@ var XmlaStore = _class.default.inherit(function () {
     }
   }
   return {
-    ctor: function ctor(options) {
+    ctor(options) {
       this._options = options;
     },
-    getFields: function getFields() {
+    getFields() {
       var options = this._options;
       var catalog = options.catalog;
       var cube = options.cube;
@@ -788,7 +787,7 @@ var XmlaStore = _class.default.inherit(function () {
       }).fail(result.reject);
       return result;
     },
-    load: function load(options) {
+    load(options) {
       // @ts-expect-error
       var result = new _deferred.Deferred();
       var storeOptions = this._options;
@@ -837,10 +836,10 @@ var XmlaStore = _class.default.inherit(function () {
       }
       return result;
     },
-    supportPaging: function supportPaging() {
+    supportPaging() {
       return true;
     },
-    getDrillDownItems: function getDrillDownItems(options, params) {
+    getDrillDownItems(options, params) {
       // @ts-expect-error
       var result = new _deferred.Deferred();
       var storeOptions = this._options;
@@ -866,6 +865,6 @@ var XmlaStore = _class.default.inherit(function () {
 // NOTE: Exports default object for mocks in QUnit only.
 exports.XmlaStore = XmlaStore;
 var _default = {
-  XmlaStore: XmlaStore
+  XmlaStore
 };
 exports.default = _default;

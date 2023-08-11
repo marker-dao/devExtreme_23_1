@@ -81,10 +81,10 @@ var RecurrenceProcessor = /*#__PURE__*/function () {
     var startDateDSTDifferenceMs = _utils.default.getDiffBetweenClientTimezoneOffsets(options.start, startIntervalDate);
     var switchToSummerTime = startDateDSTDifferenceMs < 0;
     return {
-      startIntervalDate: startIntervalDate,
-      minViewTime: minViewTime,
-      minViewDate: minViewDate,
-      maxViewDate: maxViewDate,
+      startIntervalDate,
+      minViewTime,
+      minViewDate,
+      maxViewDate,
       startIntervalDateDSTShift: switchToSummerTime ? 0 : startDateDSTDifferenceMs,
       appointmentDuration: duration
     };

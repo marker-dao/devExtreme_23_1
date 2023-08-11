@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/components/legend.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -73,7 +73,7 @@ function getAttributes(item, state, size) {
   }
   attrs.opacity = attrs.opacity >= 0 ? attrs.opacity : 1;
   return (0, _extend2.extend)({}, attrs, {
-    size: size
+    size
   });
 }
 function parseMargins(options) {
@@ -347,18 +347,18 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       dataItem.size = _Number(dataItem.size > 0 ? dataItem.size : initMarkerSize);
       dataItem.marker = getAttributes(dataItem, dataItem.states.normal);
       Object.defineProperty(dataItem.marker, 'size', {
-        get: function get() {
+        get() {
           return dataItem.size;
         },
-        set: function set(value) {
+        set(value) {
           dataItem.size = value;
         }
       });
       Object.defineProperty(dataItem.marker, 'opacity', {
-        get: function get() {
+        get() {
           return dataItem.states.normal.opacity;
         },
-        set: function set(value) {
+        set(value) {
           dataItem.states.normal.opacity = dataItem.states.hover.opacity = dataItem.states.selection.opacity = value;
         }
       });
@@ -493,7 +493,7 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       var item = {
         label: that._createLabel(dataItem, itemGroup),
         marker: markerGroup,
-        renderer: renderer,
+        renderer,
         group: itemGroup,
         tracker: {
           id: dataItem.id,
@@ -504,7 +504,7 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
         itemTextPosition: options.itemTextPosition,
         markerOffset: 0,
         bBoxes: [],
-        renderMarker: function renderMarker(state) {
+        renderMarker(state) {
           dataItem.marker = getAttributes(item, state, dataItem.size);
           markerGroup.clear();
           template.render({

@@ -215,7 +215,7 @@ var DiagramToolbox = /*#__PURE__*/function (_DiagramFloatingPanel) {
       var category = toolboxGroups[i].category;
       var title = toolboxGroups[i].title;
       var groupObj = {
-        category: category,
+        category,
         title: title || category,
         expanded: toolboxGroups[i].expanded,
         displayMode: toolboxGroups[i].displayMode,

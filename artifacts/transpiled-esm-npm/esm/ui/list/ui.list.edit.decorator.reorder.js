@@ -15,7 +15,7 @@ registerDecorator('reorder', 'default', EditDecorator.inherit({
     var list = this._list;
     this._groupedEnabled = this._list.option('grouped');
     this._lockedDrag = false;
-    var filter = this._groupedEnabled ? '> .dx-list-group > .dx-list-group-body > .dx-list-item' : '> .dx-list-item';
+    var filter = this._groupedEnabled ? '> .dx-list-items > .dx-list-group > .dx-list-group-body > .dx-list-item' : '> .dx-list-items > .dx-list-item';
     this._sortable = list._createComponent(list._scrollView.content(), Sortable, extend({
       component: list,
       contentTemplate: null,

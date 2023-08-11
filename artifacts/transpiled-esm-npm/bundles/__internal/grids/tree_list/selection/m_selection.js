@@ -18,7 +18,7 @@ var nodeExists = function nodeExists(array, currentKey) {
   }).length;
 };
 _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_selection.selectionModule, {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return (0, _extend.extend)(true, _m_selection.selectionModule.defaultOptions(), {
       selection: {
         showCheckBoxesMode: 'always',
@@ -29,7 +29,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
   extenders: {
     controllers: {
       data: {
-        _handleDataChanged: function _handleDataChanged(e) {
+        _handleDataChanged(e) {
           var selectionController = this.getController('selection');
           var isRecursiveSelection = selectionController.isRecursiveSelection();
           if (isRecursiveSelection && (!e || e.changeType !== 'updateSelectionState')) {
@@ -39,7 +39,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           originalHandleDataChanged.apply(this, arguments);
         },
-        loadDescendants: function loadDescendants() {
+        loadDescendants() {
           var that = this;
           var d = that.callBase.apply(that, arguments);
           var selectionController = that.getController('selection');
@@ -55,11 +55,11 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
         }
       },
       selection: {
-        init: function init() {
+        init() {
           this.callBase.apply(this, arguments);
           this._selectionStateByKey = {};
         },
-        _getSelectionConfig: function _getSelectionConfig() {
+        _getSelectionConfig() {
           var _arguments = arguments,
             _this = this;
           var config = this.callBase.apply(this, arguments);
@@ -89,7 +89,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           };
           return config;
         },
-        renderSelectCheckBoxContainer: function renderSelectCheckBoxContainer($container, model) {
+        renderSelectCheckBoxContainer($container, model) {
           var that = this;
           var rowsView = that.component.getView('rowsView');
           $container.addClass(CELL_FOCUS_DISABLED_CLASS);
@@ -101,7 +101,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           rowsView._attachCheckBoxClickEvent($checkbox);
         },
         _updateSelectColumn: _common.noop,
-        _getSelectAllNodeKeys: function _getSelectAllNodeKeys() {
+        _getSelectAllNodeKeys() {
           var component = this.component;
           var root = component.getRootNode();
           var cache = {};
@@ -118,7 +118,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
           return keys;
         },
-        isSelectAll: function isSelectAll() {
+        isSelectAll() {
           var selectedRowKeys = this.option('selectedRowKeys') || [];
           if (selectedRowKeys.length === 0) return false;
           var component = this.component;
@@ -140,7 +140,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           return undefined;
         },
-        selectAll: function selectAll() {
+        selectAll() {
           var _this2 = this;
           var visibleKeys = this._getSelectAllNodeKeys().filter(function (key) {
             return !_this2.isRowSelected(key);
@@ -148,12 +148,12 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           this.focusedItemIndex(-1);
           return this.selectRows(visibleKeys, true);
         },
-        deselectAll: function deselectAll() {
+        deselectAll() {
           var visibleKeys = this._getSelectAllNodeKeys();
           this.focusedItemIndex(-1);
           return this.deselectRows(visibleKeys);
         },
-        selectedItemKeys: function selectedItemKeys(value, preserve, isDeselect, isSelectAll) {
+        selectedItemKeys(value, preserve, isDeselect, isSelectAll) {
           var that = this;
           var selectedRowKeys = that.option('selectedRowKeys');
           var isRecursiveSelection = this.isRecursiveSelection();
@@ -171,7 +171,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           return this.callBase(value, preserve, isDeselect, isSelectAll);
         },
-        changeItemSelection: function changeItemSelection(itemIndex, keyboardKeys) {
+        changeItemSelection(itemIndex, keyboardKeys) {
           var _this3 = this;
           var isRecursiveSelection = this.isRecursiveSelection();
           if (isRecursiveSelection && !keyboardKeys.shift) {
@@ -182,7 +182,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           return this.callBase.apply(this, arguments);
         },
-        _updateParentSelectionState: function _updateParentSelectionState(node, isSelected) {
+        _updateParentSelectionState(node, isSelected) {
           var that = this;
           var state = isSelected;
           var parentNode = node.parent;
@@ -206,7 +206,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
             }
           }
         },
-        _updateChildrenSelectionState: function _updateChildrenSelectionState(node, isSelected) {
+        _updateChildrenSelectionState(node, isSelected) {
           var that = this;
           var children = node.children;
           children && children.forEach(function (childNode) {
@@ -216,7 +216,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
             }
           });
         },
-        _updateSelectionStateCore: function _updateSelectionStateCore(keys, isSelected) {
+        _updateSelectionStateCore(keys, isSelected) {
           var dataController = this._dataController;
           for (var i = 0; i < keys.length; i++) {
             this._selectionStateByKey[keys[i]] = isSelected;
@@ -227,7 +227,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
             }
           }
         },
-        _getSelectedParentKeys: function _getSelectedParentKeys(key, selectedItemKeys, useCash) {
+        _getSelectedParentKeys(key, selectedItemKeys, useCash) {
           var selectedParentNode;
           var node = this._dataController.getNodeByKey(key);
           var parentNode = node && node.parent;
@@ -246,7 +246,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           return selectedParentNode && result || [];
         },
-        _getSelectedChildKeys: function _getSelectedChildKeys(key, keysToIgnore) {
+        _getSelectedChildKeys(key, keysToIgnore) {
           var _this4 = this;
           var childKeys = [];
           var node = this._dataController.getNodeByKey(key);
@@ -259,7 +259,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
           return childKeys;
         },
-        _normalizeParentKeys: function _normalizeParentKeys(key, args) {
+        _normalizeParentKeys(key, args) {
           var that = this;
           var keysToIgnore = [key];
           var parentNodeKeys = that._getSelectedParentKeys(key, args.selectedRowKeys);
@@ -275,7 +275,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
             args.selectedRowKeys = args.selectedRowKeys.concat(childKeys);
           }
         },
-        _normalizeChildrenKeys: function _normalizeChildrenKeys(key, args) {
+        _normalizeChildrenKeys(key, args) {
           var _this5 = this;
           var node = this._dataController.getNodeByKey(key);
           node && node.children.forEach(function (childNode) {
@@ -286,7 +286,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
             _this5._normalizeChildrenKeys(childNode.key, args);
           });
         },
-        _normalizeSelectedRowKeysCore: function _normalizeSelectedRowKeysCore(keys, args, preserve, isSelect) {
+        _normalizeSelectedRowKeysCore(keys, args, preserve, isSelect) {
           var that = this;
           keys.forEach(function (key) {
             if (preserve && that.isRowSelected(key) === isSelect) {
@@ -308,7 +308,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
             }
           });
         },
-        _normalizeSelectionArgs: function _normalizeSelectionArgs(args, preserve, isSelect) {
+        _normalizeSelectionArgs(args, preserve, isSelect) {
           var result;
           var keys = Array.isArray(args.keys) ? args.keys : [args.keys];
           var selectedRowKeys = this.option('selectedRowKeys') || [];
@@ -322,19 +322,19 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           return result;
         },
-        _updateSelectedItems: function _updateSelectedItems(args) {
+        _updateSelectedItems(args) {
           this.updateSelectionState(args);
           this.callBase(args);
         },
-        _fireSelectionChanged: function _fireSelectionChanged() {
+        _fireSelectionChanged() {
           if (!this._isSelectionNormalizing) {
             this.callBase.apply(this, arguments);
           }
         },
-        _isModeLeavesOnly: function _isModeLeavesOnly(mode) {
+        _isModeLeavesOnly(mode) {
           return mode === 'leavesOnly';
         },
-        _removeDuplicatedKeys: function _removeDuplicatedKeys(keys) {
+        _removeDuplicatedKeys(keys) {
           var result = [];
           var processedKeys = {};
           keys.forEach(function (key) {
@@ -345,7 +345,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
           return result;
         },
-        _getAllChildKeys: function _getAllChildKeys(key) {
+        _getAllChildKeys(key) {
           var childKeys = [];
           var node = this._dataController.getNodeByKey(key);
           node && _m_core.default.foreachNodes(node.children, function (childNode) {
@@ -353,7 +353,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }, true);
           return childKeys;
         },
-        _getAllSelectedRowKeys: function _getAllSelectedRowKeys(keys) {
+        _getAllSelectedRowKeys(keys) {
           var _this6 = this;
           var result = [];
           keys.forEach(function (key) {
@@ -364,7 +364,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           result = this._removeDuplicatedKeys(result);
           return result;
         },
-        _getParentSelectedRowKeys: function _getParentSelectedRowKeys(keys) {
+        _getParentSelectedRowKeys(keys) {
           var that = this;
           var result = [];
           keys.forEach(function (key) {
@@ -373,7 +373,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
           return result;
         },
-        _getLeafSelectedRowKeys: function _getLeafSelectedRowKeys(keys) {
+        _getLeafSelectedRowKeys(keys) {
           var that = this;
           var result = [];
           var dataController = that._dataController;
@@ -383,12 +383,12 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
           return result;
         },
-        isRecursiveSelection: function isRecursiveSelection() {
+        isRecursiveSelection() {
           var selectionMode = this.option('selection.mode');
           var isRecursive = this.option('selection.recursive');
           return selectionMode === 'multiple' && isRecursive;
         },
-        updateSelectionState: function updateSelectionState(options) {
+        updateSelectionState(options) {
           var removedItemKeys = options.removedItemKeys || [];
           var selectedItemKeys = options.selectedItemKeys || [];
           if (this.isRecursiveSelection()) {
@@ -396,7 +396,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
             this._updateSelectionStateCore(selectedItemKeys, true);
           }
         },
-        isRowSelected: function isRowSelected(key, isRecursiveSelection) {
+        isRowSelected(key, isRecursiveSelection) {
           var result = this.callBase.apply(this, arguments);
           isRecursiveSelection = isRecursiveSelection !== null && isRecursiveSelection !== void 0 ? isRecursiveSelection : this.isRecursiveSelection();
           if (!result && isRecursiveSelection) {
@@ -407,7 +407,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           return result;
         },
-        getSelectedRowKeys: function getSelectedRowKeys(mode) {
+        getSelectedRowKeys(mode) {
           var that = this;
           if (!that._dataController) {
             return [];
@@ -427,7 +427,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
           return selectedRowKeys;
         },
-        getSelectedRowsData: function getSelectedRowsData(mode) {
+        getSelectedRowsData(mode) {
           var that = this;
           var dataController = that._dataController;
           var selectedKeys = this.getSelectedRowKeys(mode) || [];
@@ -438,7 +438,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
           return selectedRowsData;
         },
-        refresh: function refresh() {
+        refresh() {
           this._selectionStateByKey = {};
           return this.callBase.apply(this, arguments);
         }
@@ -446,14 +446,14 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
     },
     views: {
       columnHeadersView: {
-        _processTemplate: function _processTemplate(template, options) {
+        _processTemplate(template, options) {
           var that = this;
           var resultTemplate;
           var renderingTemplate = this.callBase(template, options);
           var firstDataColumnIndex = that._columnsController.getFirstDataColumnIndex();
           if (renderingTemplate && options.rowType === 'header' && options.column.index === firstDataColumnIndex) {
             resultTemplate = {
-              render: function render(options) {
+              render(options) {
                 if (that.option('selection.mode') === 'multiple') {
                   that.renderSelectAll(options.container, options.model);
                 }
@@ -466,23 +466,23 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return resultTemplate;
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        renderSelectAll: function renderSelectAll($cell, options) {
+        renderSelectAll($cell, options) {
           $cell.addClass(TREELIST_SELECT_ALL_CLASS);
           this._renderSelectAllCheckBox($cell);
         },
-        _isSortableElement: function _isSortableElement($target) {
+        _isSortableElement($target) {
           return this.callBase($target) && !$target.closest(".".concat(SELECT_CHECKBOX_CLASS)).length;
         }
       },
       rowsView: {
-        _renderIcons: function _renderIcons($iconContainer, options) {
+        _renderIcons($iconContainer, options) {
           this.callBase.apply(this, arguments);
           if (!options.row.isNewRow && this.option('selection.mode') === 'multiple') {
             this.getController('selection').renderSelectCheckBoxContainer($iconContainer, options);
           }
           return $iconContainer;
         },
-        _rowClick: function _rowClick(e) {
+        _rowClick(e) {
           var $targetElement = (0, _renderer.default)(e.event.target);
           if (this.isExpandIcon($targetElement)) {
             this.callBase.apply(this, arguments);

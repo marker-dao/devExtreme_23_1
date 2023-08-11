@@ -17,7 +17,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var DAY_INTERVAL = 86400000;
-var RANGE_OFFSET = DAY_INTERVAL * 120;
 var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionStr) {
   _inheritsLoose(CalendarRangeSelectionStrategy, _CalendarSelectionStr);
   function CalendarRangeSelectionStrategy(component) {
@@ -31,8 +30,8 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     var value = this._getValues();
     var range = this._getDaysInRange(value[0], value[1]);
     return {
-      value: value,
-      range: range,
+      value,
+      range,
       selectionMode: 'range',
       onCellHover: this._cellHoverHandler.bind(this)
     };
@@ -97,6 +96,9 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     });
     return this._getLowestDateInArray(dates);
   };
+  _proto.restoreValue = function restoreValue() {
+    this.calendar.option('values', [null, null]);
+  };
   _proto._getValues = function _getValues() {
     var values = this.dateOption('values');
     if (!values.length) {
@@ -123,12 +125,14 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     if (!startDate || !endDate) {
       return [];
     }
-
-    // TODO: Rework this range reducing algorithm to support different multi views
-    // and optimise single views.
-    var currentDate = this.calendar.option('currentDate').getTime();
-    var rangeStartDate = new Date(Math.max(currentDate - RANGE_OFFSET, startDate));
-    var rangeEndDate = new Date(Math.min(currentDate + RANGE_OFFSET, endDate));
+    var _this$calendar$option2 = this.calendar.option(),
+      currentDate = _this$calendar$option2.currentDate,
+      viewsCount = _this$calendar$option2.viewsCount;
+    var isAdditionalViewDate = this.calendar._isAdditionalViewDate(currentDate);
+    var firstDateInViews = _date.default.getFirstMonthDate(_date.default.addDateInterval(currentDate, 'month', isAdditionalViewDate ? -2 : -1));
+    var lastDateInViews = _date.default.getLastMonthDate(_date.default.addDateInterval(currentDate, 'month', isAdditionalViewDate ? 1 : viewsCount));
+    var rangeStartDate = new Date(Math.max(firstDateInViews, startDate));
+    var rangeEndDate = new Date(Math.min(lastDateInViews, endDate));
     return [].concat(_toConsumableArray(_date.default.getDatesOfInterval(rangeStartDate, rangeEndDate, DAY_INTERVAL)), [rangeEndDate]);
   };
   _proto._cellHoverHandler = function _cellHoverHandler(e) {
@@ -137,9 +141,9 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
       _this$_getValues6 = _slicedToArray(_this$_getValues5, 2),
       startDate = _this$_getValues6[0],
       endDate = _this$_getValues6[1];
-    var _this$calendar$option2 = this.calendar.option(),
-      _allowChangeSelectionOrder = _this$calendar$option2._allowChangeSelectionOrder,
-      _currentSelection = _this$calendar$option2._currentSelection;
+    var _this$calendar$option3 = this.calendar.option(),
+      _allowChangeSelectionOrder = _this$calendar$option3._allowChangeSelectionOrder,
+      _currentSelection = _this$calendar$option3._currentSelection;
     if (isMaxZoomLevel) {
       var skipHoveredRange = _allowChangeSelectionOrder && _currentSelection === 'startDate';
       if (startDate && !endDate && !skipHoveredRange) {

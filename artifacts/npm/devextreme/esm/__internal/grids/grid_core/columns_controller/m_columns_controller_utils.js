@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/columns_controller/m_columns_controller_utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -488,7 +488,10 @@ export var updateColumnChanges = function updateColumnChanges(that, changeType, 
   }
   if (columnIndex === undefined || columnIndex !== columnChanges.columnIndex) {
     if (isDefined(columnIndex)) {
-      (_a = columnChanges.columnIndices) !== null && _a !== void 0 ? _a : columnChanges.columnIndices = [columnChanges.columnIndex];
+      (_a = columnChanges.columnIndices) !== null && _a !== void 0 ? _a : columnChanges.columnIndices = [];
+      if (isDefined(columnChanges.columnIndex)) {
+        columnChanges.columnIndices.push(columnChanges.columnIndex);
+      }
       columnChanges.columnIndices.push(columnIndex);
     }
     delete columnChanges.columnIndex;
@@ -683,7 +686,10 @@ export var getRowCount = function getRowCount(that) {
   });
   return rowCount;
 };
-export var isCustomCommandColumn = (that, commandColumn) => !!that._columns.filter(column => column.type === commandColumn.type).length;
+export var isCustomCommandColumn = (that, commandColumn) => {
+  var customCommandColumns = that._columns.filter(column => column.type === commandColumn.type);
+  return !!customCommandColumns.length;
+};
 export var getFixedPosition = function getFixedPosition(that, column) {
   var rtlEnabled = that.option('rtlEnabled');
   if (column.command && !isCustomCommandColumn(that, column) || !column.fixedPosition) {

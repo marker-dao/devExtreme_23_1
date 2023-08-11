@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.fi.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Lajittele nouseva",
             "dxDataGrid-sortingDescendingText": "Lajittele laskeva",
             "dxDataGrid-sortingClearText": "Tyhjennä lajittelu",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Tallenna muutokset",
             "dxDataGrid-editingCancelAllChanges": "Hylkää muutokset",
             "dxDataGrid-editingAddRow": "Lisää rivi",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Suodatinsolu",
             "dxDataGrid-ariaCollapse": "Tiivistä",
             "dxDataGrid-ariaExpand": "Laajenna",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Tietoruudukko",
             "dxDataGrid-ariaSearchInGrid": "Hae tietoriviltä",
             "dxDataGrid-ariaSelectAll": "Valitse kaikki",
             "dxDataGrid-ariaSelectRow": "Valitse rivi",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Suodattimen muodostin",
             "dxDataGrid-filterPanelCreateFilter": "Luo suodatin",
             "dxDataGrid-filterPanelClearFilter": "Tyhjennä",

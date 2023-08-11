@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/renovation/component_wrapper/common/component.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _inferno = require("inferno");
 var _keyboard_processor = _interopRequireDefault(require("../../../events/core/keyboard_processor"));
@@ -29,7 +28,6 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -39,8 +37,8 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var setDefaultOptionValue = function setDefaultOptionValue(options, defaultValueGetter) {
@@ -88,16 +86,20 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
     var _this2 = this;
     var viewDefaultProps = this._getViewComponentDefaultProps();
     return (0, _extend.extend)(true, _DOMComponent.prototype._getDefaultOptions.call(this), viewDefaultProps, this._propsInfo.twoWay.reduce(function (options, _ref) {
-      var _extends2;
       var _ref2 = _slicedToArray(_ref, 3),
         name = _ref2[0],
         defaultName = _ref2[1],
         eventName = _ref2[2];
-      return _extends({}, options, (_extends2 = {}, _defineProperty(_extends2, name, viewDefaultProps[defaultName]), _defineProperty(_extends2, eventName, function (value) {
-        return _this2.option(name, value);
-      }), _extends2));
+      return _extends({}, options, {
+        [name]: viewDefaultProps[defaultName],
+        [eventName]: function (value) {
+          return _this2.option(name, value);
+        }
+      });
     }, {}), this._propsInfo.templates.reduce(function (options, name) {
-      return _extends({}, options, _defineProperty({}, name, null));
+      return _extends({}, options, {
+        [name]: null
+      });
     }, {}));
   };
   _proto._getUnwrappedOption = function _getUnwrappedOption() {
@@ -182,9 +184,9 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
       onKeyboardHandled(event_options);
     } : undefined;
     var widgetProps = {
-      ref: ref,
-      children: children,
-      onKeyDown: onKeyDown
+      ref,
+      children,
+      onKeyDown
     };
     [].concat(_toConsumableArray(props), _toConsumableArray(this._getAdditionalProps())).forEach(function (propName) {
       if (Object.prototype.hasOwnProperty.call(options, propName)) {
@@ -268,7 +270,9 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
       var _ref6 = _slicedToArray(_ref5, 2),
         templateName = _ref6[0],
         templateValue = _ref6[1];
-      return _extends({}, result, _defineProperty({}, templateName, (_options$templateName = options[templateName]) !== null && _options$templateName !== void 0 ? _options$templateName : templateValue));
+      return _extends({}, result, {
+        [templateName]: (_options$templateName = options[templateName]) !== null && _options$templateName !== void 0 ? _options$templateName : templateValue
+      });
     }, {});
     return _extends({}, options, templateOptions);
   };
@@ -449,8 +453,9 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
   }]);
   return ComponentWrapper;
 }(_dom_component.default);
-exports.default = ComponentWrapper;
 ComponentWrapper.IS_RENOVATED_WIDGET = false;
+var _default = ComponentWrapper;
+exports.default = _default;
 ComponentWrapper.IS_RENOVATED_WIDGET = true;
 module.exports = exports.default;
 module.exports.default = exports.default;

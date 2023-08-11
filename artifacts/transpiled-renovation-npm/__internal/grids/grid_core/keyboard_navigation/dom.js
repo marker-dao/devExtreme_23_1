@@ -17,7 +17,7 @@ var getCellToFocus = function getCellToFocus($cellElements, columnIndex) {
   return $cellElements.filter("[".concat(_const.ATTRIBUTES.ariaColIndex, "=\"").concat(columnIndex + 1, "\"]:not([").concat(_const.ATTRIBUTES.dragCell, "])")).first();
 };
 var GridCoreKeyboardNavigationDom = {
-  isDragCell: isDragCell,
-  getCellToFocus: getCellToFocus
+  isDragCell,
+  getCellToFocus
 };
 exports.GridCoreKeyboardNavigationDom = GridCoreKeyboardNavigationDom;

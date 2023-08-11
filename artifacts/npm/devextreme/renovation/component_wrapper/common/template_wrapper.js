@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/component_wrapper/common/template_wrapper.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -39,7 +39,7 @@ function isDxElementWrapper(element) {
 function buildTemplateArgs(model, template) {
   var _model$data;
   var args = {
-    template: template,
+    template,
     model: _extends({}, model)
   };
   var _ref = (_model$data = model.data) !== null && _model$data !== void 0 ? _model$data : {},
@@ -66,14 +66,14 @@ function buildTemplateContent(props, container) {
     });
   }
   var rendered = props.template.render(_extends({
-    container: container,
+    container,
     transclude: props.transclude
   }, {
     renovated: props.renovated
   }, !props.transclude ? {
     model: data
   } : {}, !props.transclude && Number.isFinite(index) ? {
-    index: index
+    index
   } : {}));
   if (rendered === undefined) {
     return [];

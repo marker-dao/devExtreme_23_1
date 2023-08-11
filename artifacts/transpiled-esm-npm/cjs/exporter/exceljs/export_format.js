@@ -126,7 +126,7 @@ function _includesCSVExpression(value) {
   return !(0, _type.isNumeric)(value);
 }
 var ExportFormat = {
-  formatObjectConverter: function formatObjectConverter(format, dataType) {
+  formatObjectConverter(format, dataType) {
     var result = {
       format: format,
       precision: format && format.precision,
@@ -140,7 +140,7 @@ var ExportFormat = {
     }
     return result;
   },
-  convertFormat: function convertFormat(format, precision, type, currency) {
+  convertFormat(format, precision, type, currency) {
     if ((0, _type.isDefined)(format)) {
       if (type === 'date') {
         return _convertDateFormat(format);
@@ -151,7 +151,7 @@ var ExportFormat = {
       }
     }
   },
-  encode: function encode(value) {
+  encode(value) {
     var textQualifier = '"';
     var escaped = false;
     if (_hasCSVInjection(value)) {

@@ -1,7 +1,6 @@
 "use strict";
 
 exports.type = exports.isWindow = exports.isString = exports.isRenderer = exports.isPromise = exports.isPrimitive = exports.isPlainObject = exports.isObject = exports.isNumeric = exports.isFunction = exports.isExponential = exports.isEvent = exports.isEmptyObject = exports.isDefined = exports.isDeferred = exports.isDate = exports.isBoolean = void 0;
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var types = {
   '[object Array]': 'array',
   '[object Date]': 'date',
@@ -13,7 +12,7 @@ var type = function type(object) {
     return 'null';
   }
   var typeOfObject = Object.prototype.toString.call(object);
-  return _typeof(object) === 'object' ? types[typeOfObject] || 'object' : _typeof(object);
+  return typeof object === 'object' ? types[typeOfObject] || 'object' : typeof object;
 };
 exports.type = type;
 var isBoolean = function isBoolean(object) {

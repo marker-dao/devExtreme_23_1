@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.notification.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _size = require("../../core/utils/size");
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
@@ -21,9 +20,6 @@ var _ui2 = _interopRequireDefault(require("../popup/ui.popup"));
 var _ui3 = _interopRequireDefault(require("../drawer/ui.drawer"));
 var _uiFile_manager = require("./ui.file_manager.notification_manager");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var window = (0, _window.getWindow)();
@@ -91,7 +87,9 @@ var FileManagerNotificationControl = /*#__PURE__*/function (_Widget) {
   _proto._clearManagerMap = function _clearManagerMap() {
     var stubManager = this._managerMap[this._notificationManagerStubId];
     delete this._managerMap;
-    this._managerMap = _defineProperty({}, this._notificationManagerStubId, stubManager);
+    this._managerMap = {
+      [this._notificationManagerStubId]: stubManager
+    };
   };
   _proto._getActualNotificationManagerId = function _getActualNotificationManagerId() {
     var _this2 = this;
@@ -291,18 +289,18 @@ var FileManagerNotificationControl = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseActionProgress = function _raiseActionProgress(message, status) {
     this._actions.onActionProgress({
-      message: message,
-      status: status
+      message,
+      status
     });
   };
   _proto._raiseOperationCanceled = function _raiseOperationCanceled(info) {
     this._actions.onOperationCanceled({
-      info: info
+      info
     });
   };
   _proto._raiseOperationItemCanceled = function _raiseOperationItemCanceled(item, index) {
     this._actions.onOperationItemCanceled({
-      item: item,
+      item,
       itemIndex: index
     });
   };

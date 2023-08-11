@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popup/popup_drag.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -78,9 +78,9 @@ var PopupDrag = /*#__PURE__*/function () {
     var updateEventName = (0, _index.addNamespace)(_drag.move, namespace);
     var endEventName = (0, _index.addNamespace)(_drag.end, namespace);
     return {
-      startEventName: startEventName,
-      updateEventName: updateEventName,
-      endEventName: endEventName
+      startEventName,
+      updateEventName,
+      endEventName
     };
   };
   _proto._dragStartHandler = function _dragStartHandler(e) {

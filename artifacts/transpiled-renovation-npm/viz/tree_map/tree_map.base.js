@@ -7,7 +7,7 @@ var _tiling = require("./tiling");
 var _colorizing = require("./colorizing");
 var _utils = require("../core/utils");
 var _common2 = require("../../core/utils/common");
-var _base_widget = _interopRequireDefault(require("../core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 require("./tiling.squarified");
 require("./colorizing.discrete");
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
@@ -31,7 +31,7 @@ var directions = {
 function pickPositiveInteger(val) {
   return val > 0 ? Math.round(val) : 0;
 }
-var dxTreeMap = _base_widget.default.inherit({
+var dxTreeMap = _m_base_widget.default.inherit({
   _handlers: {
     beginBuildNodes: _common2.noop,
     buildNode: _common2.noop,

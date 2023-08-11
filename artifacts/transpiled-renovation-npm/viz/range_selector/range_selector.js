@@ -19,7 +19,7 @@ var _range_view = require("./range_view");
 var _series_data_source = require("./series_data_source");
 var _tick_generator = require("../axes/tick_generator");
 var _axes_constants = _interopRequireDefault(require("../axes/axes_constants"));
-var _base_widget = _interopRequireDefault(require("../core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _export = require("../core/export");
 var _title = require("../core/title");
 var _loading_indicator = require("../core/loading_indicator");
@@ -442,8 +442,8 @@ function getPrecisionForSlider(startValue, endValue, screenDelta) {
   var tail = d - _floor(d);
   return tail > 0 ? _ceil(Math.abs((0, _math.adjust)((0, _utils.getLog)(tail, 10)))) : 0;
 }
-var dxRangeSelector = _base_widget.default.inherit({
-  _toggleParentsScrollSubscription: function _toggleParentsScrollSubscription() {},
+var dxRangeSelector = _m_base_widget.default.inherit({
+  _toggleParentsScrollSubscription() {},
   _eventsMap: {
     'onValueChanged': {
       name: VALUE_CHANGED
@@ -458,7 +458,7 @@ var dxRangeSelector = _base_widget.default.inherit({
   _themeDependentChanges: ['MOSTLY_TOTAL'],
   _themeSection: 'rangeSelector',
   _fontFields: ['scale.label.font', 'sliderMarker.font'],
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this.callBase();
     (0, _extend.extend)(this._deprecatedOptions, {
       'behavior.callValueChanged': {
@@ -566,7 +566,7 @@ var dxRangeSelector = _base_widget.default.inherit({
   _change_SCALE: function _change_SCALE() {
     this._change(['MOSTLY_TOTAL']);
   },
-  _setValueByDataSource: function _setValueByDataSource() {
+  _setValueByDataSource() {
     var that = this;
     var options = that._options.silent();
     var axis = that._axis;
@@ -707,7 +707,7 @@ var dxRangeSelector = _base_widget.default.inherit({
   //     that._getOption("behavior")
   // ]);
   // that._axis.update(that._getOption("scale"));
-  _completeSeriesDataSourceCreation: function _completeSeriesDataSourceCreation(scaleOptions, seriesDataSource) {
+  _completeSeriesDataSourceCreation(scaleOptions, seriesDataSource) {
     var rect = this._clientRect;
     var canvas = {
       left: rect[0],
@@ -942,7 +942,7 @@ function AxisWrapper(params) {
     widgetClass: 'dxrs',
     axisClass: 'range-selector',
     isArgumentAxis: true,
-    getTemplate: function getTemplate() {}
+    getTemplate() {}
   });
   that._updateSelectedRangeCallback = params.updateSelectedRange;
   that._axis.getAxisSharpDirection = that._axis.getSharpDirectionByCoords = getSharpDirection;
@@ -977,7 +977,7 @@ AxisWrapper.prototype = {
   getViewport: function getViewport() {
     return {};
   },
-  allScaleSelected: function allScaleSelected(value) {
+  allScaleSelected(value) {
     var _this$_axis$visualRan = this._axis.visualRange(),
       startValue = _this$_axis$visualRan.startValue,
       endValue = _this$_axis$visualRan.endValue;
@@ -986,7 +986,7 @@ AxisWrapper.prototype = {
       endValue: value[1].valueOf() === endValue.valueOf()
     };
   },
-  getOptions: function getOptions() {
+  getOptions() {
     return this._axis.getOptions() || {};
   }
 };

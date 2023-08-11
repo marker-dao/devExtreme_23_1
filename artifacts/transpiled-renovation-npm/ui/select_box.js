@@ -32,7 +32,7 @@ var SelectBox = _ui.default.inherit({
       if (!isEditable) {
         if (this.option('showClearButton')) {
           e.preventDefault();
-          this.reset();
+          this.clear();
         }
       } else if (this._valueSubstituted()) {
         this._preventFiltering = true;
@@ -175,7 +175,7 @@ var SelectBox = _ui.default.inherit({
   _popupWrapperClass: function _popupWrapperClass() {
     return this.callBase() + ' ' + SELECTBOX_POPUP_WRAPPER_CLASS;
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this.callBase();
     (0, _extend.extend)(this._deprecatedOptions, {
       'valueChangeEvent': {

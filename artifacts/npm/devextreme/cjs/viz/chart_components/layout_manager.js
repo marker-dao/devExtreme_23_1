@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/chart_components/layout_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -187,7 +187,7 @@ LayoutManager.prototype = {
     }
     correctLabelRadius(sizeLabels, radius, series, canvas, averageWidthLabels, layout.centerX);
   },
-  needMoreSpaceForPanesCanvas: function needMoreSpaceForPanesCanvas(panes, rotated, fixedSizeCallback) {
+  needMoreSpaceForPanesCanvas(panes, rotated, fixedSizeCallback) {
     var options = this._options;
     var width = options.width;
     var height = options.height;

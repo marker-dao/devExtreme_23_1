@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/pie_series.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -103,7 +103,7 @@ var pie = _extend({}, barSeries, {
       'class': 'dxc-markers'
     });
   },
-  _getMainColor: function _getMainColor(data, point) {
+  _getMainColor(data, point) {
     var pointsByArg = this.getPointsByArg(data.argument);
     var argumentIndex = point ? pointsByArg.indexOf(point) : pointsByArg.length;
     return this._options.mainSeriesColor(data.argument, argumentIndex, this._pointsCount);

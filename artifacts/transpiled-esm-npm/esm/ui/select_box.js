@@ -29,7 +29,7 @@ var SelectBox = DropDownList.inherit({
       if (!isEditable) {
         if (this.option('showClearButton')) {
           e.preventDefault();
-          this.reset();
+          this.clear();
         }
       } else if (this._valueSubstituted()) {
         this._preventFiltering = true;

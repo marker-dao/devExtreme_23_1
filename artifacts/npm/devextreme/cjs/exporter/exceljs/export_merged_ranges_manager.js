@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/exceljs/export_merged_ranges_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,7 +31,7 @@ var MergedRangesManager = /*#__PURE__*/function () {
           this.mergedRanges.push({
             masterCell: excelCell,
             rowspan: rowspan - (shouldReduceInfoRange && rowspan > 0),
-            colspan: colspan
+            colspan
           });
         }
       }
@@ -59,9 +59,9 @@ var MergedRangesManager = /*#__PURE__*/function () {
   };
   _proto.addMergedRange = function addMergedRange(masterCell, rowspan, colspan) {
     this.mergedRanges.push({
-      masterCell: masterCell,
-      rowspan: rowspan,
-      colspan: colspan
+      masterCell,
+      rowspan,
+      colspan
     });
   };
   _proto.applyMergedRages = function applyMergedRages() {

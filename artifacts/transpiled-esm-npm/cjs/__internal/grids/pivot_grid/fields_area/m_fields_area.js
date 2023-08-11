@@ -25,27 +25,27 @@ function renderGroupConnector(field, nextField, prevField, $container) {
   }
 }
 var FieldsArea = _m_area_item.AreaItem.inherit({
-  ctor: function ctor(component, area) {
+  ctor(component, area) {
     this.callBase(component);
     this._area = area;
   },
-  _getAreaName: function _getAreaName() {
+  _getAreaName() {
     return 'fields';
   },
-  _createGroupElement: function _createGroupElement() {
+  _createGroupElement() {
     return (0, _renderer.default)(DIV).addClass('dx-pivotgrid-fields-area').addClass('dx-area-fields').addClass(AREA_DRAG_CLASS).attr('group', this._area);
   },
-  isVisible: function isVisible() {
+  isVisible() {
     return !!this.option('fieldPanel.visible') && this.option("fieldPanel.show".concat((0, _m_widget_utils.capitalizeFirstLetter)(this._area), "Fields"));
   },
-  _renderButton: function _renderButton(element) {
+  _renderButton(element) {
     var that = this;
     var container = (0, _renderer.default)('<td>').appendTo((0, _renderer.default)('<tr>').appendTo(element));
     var button = that.component._createComponent((0, _renderer.default)(DIV).appendTo(container), _button.default, {
       text: 'Fields',
       icon: 'menu',
       width: 'auto',
-      onClick: function onClick() {
+      onClick() {
         var popup = that.tableElement().find('.dx-fields-area-popup').dxPopup('instance');
         if (!popup.option('visible')) {
           popup.show();
@@ -54,9 +54,9 @@ var FieldsArea = _m_area_item.AreaItem.inherit({
     });
     button.$element().addClass('dx-pivotgrid-fields-area-hamburger');
   },
-  _getPopupOptions: function _getPopupOptions(row, button) {
+  _getPopupOptions(row, button) {
     return {
-      contentTemplate: function contentTemplate() {
+      contentTemplate() {
         return (0, _renderer.default)('<table>').addClass('dx-area-field-container').append((0, _renderer.default)('<thead>').addClass('dx-pivotgrid-fields-area-head').append(row));
       },
       height: 'auto',
@@ -79,7 +79,7 @@ var FieldsArea = _m_area_item.AreaItem.inherit({
       container: button.parent()
     };
   },
-  _renderPopup: function _renderPopup(tableElement, row) {
+  _renderPopup(tableElement, row) {
     var that = this;
     var button = tableElement.find('.dx-button');
     var popupOptions = that._getPopupOptions(row, button);
@@ -94,10 +94,10 @@ var FieldsArea = _m_area_item.AreaItem.inherit({
     FieldChooserBase.subscribeToEvents(that._rowPopup.content());
     FieldChooserBase.renderSortable(that._rowPopup.content());
   },
-  _shouldCreateButton: function _shouldCreateButton() {
+  _shouldCreateButton() {
     return false;
   },
-  _renderTableContent: function _renderTableContent(tableElement, data) {
+  _renderTableContent(tableElement, data) {
     var that = this;
     var groupElement = this.groupElement();
     var isVisible = this.isVisible();
@@ -131,13 +131,13 @@ var FieldsArea = _m_area_item.AreaItem.inherit({
       head.append(row);
     }
   },
-  setGroupWidth: function setGroupWidth(value) {
+  setGroupWidth(value) {
     (0, _style.setWidth)(this.groupElement(), value);
   },
-  setGroupHeight: function setGroupHeight(value) {
+  setGroupHeight(value) {
     (0, _style.setHeight)(this.groupElement(), value);
   },
-  reset: function reset() {
+  reset() {
     this.callBase();
     this.groupElement().css('marginTop', 0);
   },
@@ -145,6 +145,6 @@ var FieldsArea = _m_area_item.AreaItem.inherit({
 });
 exports.FieldsArea = FieldsArea;
 var _default = {
-  FieldsArea: FieldsArea
+  FieldsArea
 };
 exports.default = _default;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/jspdf/common/draw_utils.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,16 +41,16 @@ function drawCellsContent(doc, customDrawCell, cellsArray, docStyles) {
       w = _rect.w,
       h = _rect.h;
     var rect = {
-      x: x,
-      y: y,
-      w: w,
-      h: h
+      x,
+      y,
+      w,
+      h
     };
     var eventArg = {
-      doc: doc,
-      rect: rect,
-      pdfCell: pdfCell,
-      gridCell: gridCell,
+      doc,
+      rect,
+      pdfCell,
+      gridCell,
       cancel: false
     };
     customDrawCell === null || customDrawCell === void 0 ? void 0 : customDrawCell(eventArg);
@@ -117,8 +117,8 @@ function drawCellText(doc, cell, docStyles) {
       _rect = cell._rect,
       padding = cell.padding;
     setTextStyles(doc, {
-      textColor: textColor,
-      font: font
+      textColor,
+      font
     }, docStyles);
     var textRect = {
       x: _rect.x + padding.left,
@@ -173,14 +173,14 @@ function drawBorders(doc, rect, _ref, docStyles) {
     return;
   } else if (drawLeftBorder && drawRightBorder && drawTopBorder && drawBottomBorder) {
     setLinesStyles(doc, {
-      borderWidth: borderWidth,
-      borderColor: borderColor
+      borderWidth,
+      borderColor
     }, docStyles);
     drawRect(doc, rect.x, rect.y, rect.w, rect.h);
   } else {
     setLinesStyles(doc, {
-      borderWidth: borderWidth,
-      borderColor: borderColor
+      borderWidth,
+      borderColor
     }, docStyles);
     if (drawTopBorder) {
       drawLine(doc, rect.x, rect.y, rect.x + rect.w, rect.y); // top
@@ -232,10 +232,10 @@ function trySetColor(doc, target, color) {
     ch3 = color.ch3,
     ch4 = color.ch4;
   var normalizedColor = doc.__private__.decodeColorString(doc.__private__.encodeColorString({
-    ch1: ch1,
-    ch2: ch2,
-    ch3: ch3,
-    ch4: ch4,
+    ch1,
+    ch2,
+    ch3,
+    ch4,
     precision: target === 'text' ? 3 : 2
   }));
   if (normalizedColor !== doc[getterName]() || target === 'fill') {

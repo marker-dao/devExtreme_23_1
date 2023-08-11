@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/slider/ui.slider_tooltip.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // NOTE: Visibility is contolled by the 'visible' option and 'dx-slider-tooltip-visible-on-hover' class.
 var SLIDER_TOOLTIP_VISIBILITY_CLASS = 'dx-slider-tooltip-visible-on-hover';
 var SliderTooltip = _tooltip.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       visible: false,
       position: 'top',
@@ -36,16 +36,17 @@ var SliderTooltip = _tooltip.default.inherit({
       value: 0
     });
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.callBase();
     this._attachToMarkup(this.option('visible'));
     this._toggleShowModeClass();
   },
-  _renderContent: function _renderContent() {
+  _renderContent() {
     this.callBase();
     this._renderContentText();
   },
-  _renderContentText: function _renderContentText() {
+  _toggleAriaAttributes() {},
+  _renderContentText() {
     var _this$option = this.option(),
       value = _this$option.value,
       format = _this$option.format;
@@ -53,19 +54,19 @@ var SliderTooltip = _tooltip.default.inherit({
     this.$content().text(formattedText);
     this._renderPosition();
   },
-  _toggleShowModeClass: function _toggleShowModeClass() {
+  _toggleShowModeClass() {
     var isHoverMode = this.option('showMode') === 'onHover';
     var $sliderHandle = this.option('target');
     $sliderHandle.toggleClass(SLIDER_TOOLTIP_VISIBILITY_CLASS, isHoverMode);
   },
-  _initPositionController: function _initPositionController() {
+  _initPositionController() {
     this._positionController = new _slider_tooltip_position_controller.SliderTooltipPositionController(this._getPositionControllerConfig());
   },
-  _attachToMarkup: function _attachToMarkup(enabled) {
+  _attachToMarkup(enabled) {
     var $sliderHandle = this.option('target');
     enabled ? this.$element().appendTo($sliderHandle) : this.$element().detach();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var name = args.name,
       value = args.value;
     switch (name) {
@@ -85,7 +86,7 @@ var SliderTooltip = _tooltip.default.inherit({
         break;
     }
   },
-  updatePosition: function updatePosition() {
+  updatePosition() {
     this._renderPosition();
   }
 });

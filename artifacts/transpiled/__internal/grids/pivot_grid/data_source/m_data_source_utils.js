@@ -85,6 +85,6 @@ function getSliceIndex(items, path) {
   return index;
 }
 var _default = {
-  sort: sort
+  sort
 };
 exports.default = _default;

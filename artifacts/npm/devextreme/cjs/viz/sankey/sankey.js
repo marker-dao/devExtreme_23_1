@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/sankey/sankey.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ var _node_item = _interopRequireDefault(require("./node_item"));
 var _link_item = _interopRequireDefault(require("./link_item"));
 var _layout = require("./layout");
 var _type = require("../../core/utils/type");
-var _base_widget = _interopRequireDefault(require("../core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _data_source = require("../core/data_source");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -57,7 +57,7 @@ function getConnectedLinks(layout, nodeName, linkType) {
   });
   return result;
 }
-var dxSankey = _base_widget.default.inherit({
+var dxSankey = _m_base_widget.default.inherit({
   _rootClass: 'dxs-sankey',
   _rootClassPrefix: 'dxs',
   _proxyData: [],

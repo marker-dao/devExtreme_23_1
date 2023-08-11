@@ -52,7 +52,7 @@ var polarSymbolPoint = _extend({}, _symbol_point.default, {
     coords.angle = angle + startAngle - 90, coords.radius = radius;
     return coords;
   },
-  _translate: function _translate() {
+  _translate() {
     var that = this;
     var center = that.series.getValueAxis().getCenter();
     var coord = that._getCoords(that.argument, that.value);
@@ -72,7 +72,7 @@ var polarSymbolPoint = _extend({}, _symbol_point.default, {
     that._translateErrorBars();
     that.inVisibleArea = that._checkRadiusForVisibleArea(normalizedRadius, maxRadius);
   },
-  _checkRadiusForVisibleArea: function _checkRadiusForVisibleArea(radius, maxRadius) {
+  _checkRadiusForVisibleArea(radius, maxRadius) {
     return (0, _type.isDefined)(radius) && radius <= maxRadius;
   },
   _translateErrorBars: function _translateErrorBars() {
@@ -140,7 +140,7 @@ var polarBarPoint = _extend({}, _bar_point.default, {
   getTooltipParams: _pie_point.default.getTooltipParams,
   _getLabelPosition: _pie_point.default._getLabelPosition,
   _getCoords: polarSymbolPoint._getCoords,
-  _translate: function _translate() {
+  _translate() {
     var that = this;
     var translator = that._getValTranslator();
     var businessRange = translator.getBusinessRange();
@@ -159,10 +159,10 @@ var polarBarPoint = _extend({}, _bar_point.default, {
     that.radiusInner = that.defaultRadius = _math.min(that.radiusInner, that.radius);
     that.middleAngle = that.angle = -(0, _utils.normalizeAngle)(that.middleAngleCorrection - that.angle);
   },
-  _checkRadiusForVisibleArea: function _checkRadiusForVisibleArea(radius) {
+  _checkRadiusForVisibleArea(radius) {
     return (0, _type.isDefined)(radius) || this._getValTranslator().translate(this.minValue) > 0;
   },
-  _getErrorBarBaseEdgeLength: function _getErrorBarBaseEdgeLength() {
+  _getErrorBarBaseEdgeLength() {
     var coord = this.getMarkerCoords();
     return _math.PI * coord.outerRadius * _math.abs(coord.startAngle - coord.endAngle) / 180;
   },

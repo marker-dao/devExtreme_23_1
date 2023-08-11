@@ -78,7 +78,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       that.addGroupInfo({
         isExpanded: that._isGroupExpanded(path.length - 1),
         path: path.slice(0),
-        offset: offset,
+        offset,
         count: count || 0
       });
     } else {
@@ -247,7 +247,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       requireGroupCount: false,
       group: null,
       sort: groups.concat(_m_core.default.normalizeSortingInfo(options.storeLoadOptions.sort || [])),
-      filter: filter
+      filter
     });
     var isPagingLocal = that._dataSource.isLastLevelGroupItemsPagingLocal();
     if (!isPagingLocal) {
@@ -292,7 +292,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     return d;
   };
   return {
-    updateTotalItemsCount: function updateTotalItemsCount(options) {
+    updateTotalItemsCount(options) {
       var totalItemsCount = 0;
       var totalCount = options.extra && options.extra.totalCount || 0;
       var groupCount = options.extra && options.extra.groupCount || 0;
@@ -315,11 +315,11 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       });
       this.callBase(totalItemsCount - totalCount + groupCount);
     },
-    _isGroupExpanded: function _isGroupExpanded(groupIndex) {
+    _isGroupExpanded(groupIndex) {
       var groups = this._dataSource.group();
       return isGroupExpanded(groups, groupIndex);
     },
-    _updatePagingOptions: function _updatePagingOptions(options, callback) {
+    _updatePagingOptions(options, callback) {
       var that = this;
       var isVirtualPaging = that._isVirtualPaging();
       var pageSize = that._dataSource.pageSize();
@@ -388,7 +388,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       options.skips = skips;
       options.takes = takes;
     },
-    changeRowExpand: function changeRowExpand(path) {
+    changeRowExpand(path) {
       var that = this;
       var groupInfo = that.findGroupInfo(path);
       var dataSource = that._dataSource;
@@ -414,7 +414,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       // @ts-expect-error
       return new _deferred.Deferred().reject();
     },
-    handleDataLoading: function handleDataLoading(options) {
+    handleDataLoading(options) {
       var that = this;
       var storeLoadOptions = options.storeLoadOptions;
       var groups = _m_core.default.normalizeSortingInfo(storeLoadOptions.group || options.loadOptions.group);
@@ -444,7 +444,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
         that._updatePagingOptions(options);
       }
     },
-    handleDataLoadedCore: function handleDataLoadedCore(options, callBase) {
+    handleDataLoadedCore(options, callBase) {
       var that = this;
       var loadedGroupCount = _m_core.default.normalizeSortingInfo(options.storeLoadOptions.group || options.loadOptions.group).length;
       var groupCount = options.group ? options.group.length : 0;
@@ -487,7 +487,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       }
       loadGroupItems(that, options, loadedGroupCount, expandedInfo, 0, options.data);
     },
-    _processSkips: function _processSkips(items, skips, groupCount) {
+    _processSkips(items, skips, groupCount) {
       if (!groupCount) return;
       var firstItem = items[0];
       var skip = skips[0];
@@ -500,7 +500,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
         }
       }
     },
-    _processTakes: function _processTakes(items, skips, takes, groupCount, parents) {
+    _processTakes(items, skips, takes, groupCount, parents) {
       if (!groupCount || !items) return;
       parents = parents || [];
       var lastItem = items[items.length - 1];
@@ -523,17 +523,17 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
         this._processTakes(children, skips.slice(1), takes.slice(1), groupCount - 1, parents);
       }
     },
-    _processPaging: function _processPaging(options, groupCount) {
+    _processPaging(options, groupCount) {
       this._processSkips(options.data, options.skips, groupCount);
       this._processTakes(options.data, options.skips, options.takes, groupCount);
     },
-    isLastLevelGroupItemsPagingLocal: function isLastLevelGroupItemsPagingLocal() {
+    isLastLevelGroupItemsPagingLocal() {
       return false;
     },
-    sortLastLevelGroupItems: function sortLastLevelGroupItems(items) {
+    sortLastLevelGroupItems(items) {
       return items;
     },
-    refresh: function refresh(options, operationTypes) {
+    refresh(options, operationTypes) {
       var that = this;
       var dataSource = that._dataSource;
       var storeLoadOptions = options.storeLoadOptions;
@@ -558,7 +558,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
           var groupCountQuery = loadGroupTotalCount(dataSource, {
             filter: (0, _m_utils.createGroupFilter)(groupInfo.path, {
               filter: storeLoadOptions.filter,
-              group: group
+              group
             }),
             group: group.slice(groupInfo.path.length),
             select: storeLoadOptions.select
@@ -566,7 +566,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
           var groupOffsetQuery = loadGroupTotalCount(dataSource, {
             filter: (0, _m_grouping_core.createOffsetFilter)(groupInfo.path, {
               filter: storeLoadOptions.filter,
-              group: group
+              group
             }, true),
             group: group.slice(groupInfo.path.length - 1, groupInfo.path.length),
             select: storeLoadOptions.select

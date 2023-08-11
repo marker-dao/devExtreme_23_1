@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/chart_components/scroll_bar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -194,7 +194,7 @@ ScrollBar.prototype = {
     that._scale = translator.getScale(min, max);
     that._applyPosition(_min(minPoint, maxPoint), _max(minPoint, maxPoint));
   },
-  customPositionIsAvailable: function customPositionIsAvailable() {
+  customPositionIsAvailable() {
     return false;
   },
   dispose: function dispose() {

@@ -8,7 +8,7 @@ var FILTER_BUILDER_RANGE_CLASS = 'dx-filterbuilder-range';
 var FILTER_BUILDER_RANGE_START_CLASS = FILTER_BUILDER_RANGE_CLASS + '-start';
 var FILTER_BUILDER_RANGE_END_CLASS = FILTER_BUILDER_RANGE_CLASS + '-end';
 var FILTER_BUILDER_RANGE_SEPARATOR_CLASS = FILTER_BUILDER_RANGE_CLASS + '-separator';
-var SEPARATOR = "\u2013";
+var SEPARATOR = '\u2013';
 function editorTemplate(conditionInfo, container) {
   var $editorStart = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_START_CLASS);
   var $editorEnd = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_END_CLASS);

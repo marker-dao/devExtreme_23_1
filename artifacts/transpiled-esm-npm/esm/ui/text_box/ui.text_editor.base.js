@@ -347,15 +347,17 @@ var TextEditorBase = Editor.inherit({
   _getFieldElement() {
     return this._getLabelContainer();
   },
-  _setFieldAria() {
+  _setFieldAria(force) {
     var _this$_$placeholder;
     var labelId = this._label.getId();
     var placeholderId = (_this$_$placeholder = this._$placeholder) === null || _this$_$placeholder === void 0 ? void 0 : _this$_$placeholder.attr('id');
     var value = [labelId, placeholderId].filter(Boolean).join(' ');
-    var aria = {
-      'labelledby': value || undefined
-    };
-    this.setAria(aria, this._getFieldElement());
+    if (value || force) {
+      var aria = {
+        'labelledby': value || undefined
+      };
+      this.setAria(aria, this._getFieldElement());
+    }
   },
   _renderLabel: function _renderLabel() {
     this._unobserveLabelContainerResize();
@@ -419,7 +421,7 @@ var TextEditorBase = Editor.inherit({
     eventsEngine.trigger($input, 'input');
   },
   _clearValue: function _clearValue() {
-    this.reset();
+    this.clear();
   },
   _renderEvents: function _renderEvents() {
     var $input = this._input();
@@ -607,11 +609,11 @@ var TextEditorBase = Editor.inherit({
         break;
       case 'placeholder':
         this._renderPlaceholder();
-        this._setFieldAria();
+        this._setFieldAria(true);
         break;
       case 'label':
         this._label.updateText(value);
-        this._setFieldAria();
+        this._setFieldAria(true);
         break;
       case 'labelMark':
         this._label.updateMark(value);
@@ -693,7 +695,7 @@ var TextEditorBase = Editor.inherit({
   focus: function focus() {
     eventsEngine.trigger(this._input(), 'focus');
   },
-  reset: function reset() {
+  clear: function clear() {
     if (this._showValidMark) {
       this._showValidMark = false;
       this._renderValidationState();

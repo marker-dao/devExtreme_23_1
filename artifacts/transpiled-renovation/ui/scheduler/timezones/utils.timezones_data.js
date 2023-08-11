@@ -30,9 +30,9 @@ var parseTimezone = function parseTimezone(timeZoneConfig) {
     };
   }(0));
   return {
-    offsetList: offsetList,
-    offsetIndexList: offsetIndexList,
-    dateList: dateList
+    offsetList,
+    offsetIndexList,
+    dateList
   };
 };
 var TimeZoneCache = /*#__PURE__*/function () {
@@ -64,8 +64,8 @@ var timeZoneDataUtils = {
       var offset = _this.getUtcOffset(timeZoneInfo, timestamp);
       var title = "(GMT ".concat(_this.formatOffset(offset), ") ").concat(_this.formatId(timezone.id));
       return {
-        offset: offset,
-        title: title,
+        offset,
+        title,
         id: timezone.id
       };
     });

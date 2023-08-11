@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/chart_components/tracker.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -104,7 +104,7 @@ var baseTrackerPrototype = {
   update: function update(options) {
     this._chart = options.chart;
   },
-  updateSeries: function updateSeries(series, resetDecorations) {
+  updateSeries(series, resetDecorations) {
     var that = this;
     var noHoveredSeries = !(series !== null && series !== void 0 && series.some(function (s) {
       return s === that.hoveredSeries;
@@ -159,14 +159,14 @@ var baseTrackerPrototype = {
     series.hover(mode);
     this.hoveredSeries = series;
   },
-  _releaseHoveredSeries: function _releaseHoveredSeries() {
+  _releaseHoveredSeries() {
     // hoveredPoint only for T273289
     if (this.hoveredSeries) {
       this.hoveredSeries.clearHover();
       this.hoveredSeries = null;
     }
   },
-  clearSelection: function clearSelection() {
+  clearSelection() {
     this._storedSeries.forEach(function (series) {
       if (series) {
         series.clearSelection();
@@ -633,7 +633,7 @@ exports.PieTracker = PieTracker;
     });
     that._eventTrigger(LEGEND_CLICK, {
       target: item.argument,
-      points: points,
+      points,
       event: e
     });
   },

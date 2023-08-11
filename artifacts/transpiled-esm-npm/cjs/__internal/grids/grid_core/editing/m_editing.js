@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -29,7 +28,7 @@ var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const = require("./const");
 var _m_editing_utils = require("./m_editing_utils");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -39,7 +38,7 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable @typescript-eslint/no-unused-vars */ // @ts-expect-error
 var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   _inheritsLoose(EditingControllerImpl, _modules$ViewControll);
   function EditingControllerImpl() {
@@ -120,7 +119,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     var _this = this;
     return function (container, options) {
       var $editor = (0, _renderer.default)('<div>').appendTo(container);
-      _this.getController('editorFactory').createEditor($editor, (0, _extend.extend)({}, options.column, {
+      var editorOptions = (0, _extend.extend)({}, options.column, {
         value: options.value,
         setValue: options.setValue,
         row: options.row,
@@ -129,7 +128,12 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
         readOnly: !options.setValue,
         isOnForm: options.isOnForm,
         id: options.id
-      }));
+      });
+      var needLabel = _const.REQUIRED_EDITOR_LABELLEDBY_MODES.includes(_this.getEditMode());
+      if (needLabel) {
+        editorOptions['aria-labelledby'] = options.column.headerId;
+      }
+      _this.getController('editorFactory').createEditor($editor, editorOptions);
     };
   };
   _proto._getNewRowPosition = function _getNewRowPosition() {
@@ -544,7 +548,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   _proto._generateNewItem = function _generateNewItem(key) {
     var _a;
     var item = {
-      key: key
+      key
     };
     var insertInfo = (_a = this._getInternalData(key)) === null || _a === void 0 ? void 0 : _a.insertInfo;
     if (insertInfo === null || insertInfo === void 0 ? void 0 : insertInfo[_const.INSERT_INDEX]) {
@@ -657,12 +661,12 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
       }
     }
     this._addInternalData({
-      insertInfo: insertInfo,
-      key: key
+      insertInfo,
+      key
     });
     return {
-      insertInfo: insertInfo,
-      key: key
+      insertInfo,
+      key
     };
   };
   _proto._setInsertAfterOrBeforeKey = function _setInsertAfterOrBeforeKey(change, parentKey) {
@@ -776,7 +780,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   };
   _proto._addRowCore = function _addRowCore(data, parentKey, initialOldEditRowIndex) {
     var change = {
-      data: data,
+      data,
       type: _const.DATA_EDIT_DATA_INSERT_TYPE
     };
     var editRowIndex = this._getVisibleEditRowIndex();
@@ -969,7 +973,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     this._needFocusEditor = true;
     this._dataController.updateItems({
       changeType: 'update',
-      rowIndices: rowIndices,
+      rowIndices,
       cancel: preventRendering
     });
   };
@@ -1134,13 +1138,13 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
         this._removeChange(editIndex);
       } else {
         this._addChange({
-          key: key,
+          key,
           type: _const.DATA_EDIT_DATA_REMOVE_TYPE
         });
       }
     } else {
       this._addChange({
-        key: key,
+        key,
         oldData: item.data,
         type: _const.DATA_EDIT_DATA_REMOVE_TYPE
       });
@@ -1164,7 +1168,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
           this._removeChange(editIndex);
         } else {
           this._addChange({
-            key: key,
+            key,
             type: _const.DATA_EDIT_DATA_UPDATE_TYPE
           });
         }
@@ -1240,14 +1244,14 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
             return store.remove(change.key).done(function (key) {
               dataChanges.push({
                 type: 'remove',
-                key: key
+                key
               });
             });
           });
           break;
         case _const.DATA_EDIT_DATA_INSERT_TYPE:
           params = {
-            data: data,
+            data,
             cancel: false
           };
           deferred = _this21._executeEditingAction('onRowInserting', params, function () {
@@ -1260,7 +1264,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
               }
               dataChanges.push({
                 type: 'insert',
-                data: data,
+                data,
                 index: 0
               });
             });
@@ -1269,7 +1273,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
         case _const.DATA_EDIT_DATA_UPDATE_TYPE:
           params = {
             newData: data,
-            oldData: oldData,
+            oldData,
             key: change.key,
             cancel: false
           };
@@ -1280,8 +1284,8 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
               }
               dataChanges.push({
                 type: 'update',
-                key: key,
-                data: data
+                key,
+                data
               });
             });
           });
@@ -1359,11 +1363,11 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
         key = _ref.key,
         type = _ref.type;
       var internalData = _this22._addInternalData({
-        key: key
+        key
       });
       var params = {
-        key: key,
-        data: data
+        key,
+        data
       };
       if (internalData.error) {
         params.error = internalData.error;
@@ -1384,7 +1388,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
       }
     });
     this.executeAction('onSaved', {
-      changes: changes
+      changes
     });
   };
   _proto.saveEditData = function saveEditData() {
@@ -1400,7 +1404,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
         if (cancel) {
           // @ts-expect-error
           _this23._resolveAfterSave(deferred, {
-            cancel: cancel
+            cancel
           });
           return;
         }
@@ -1498,7 +1502,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     }).fail(function (error) {
       // @ts-expect-error
       _this25._resolveAfterSave(deferred, {
-        error: error
+        error
       });
     });
   };
@@ -1513,7 +1517,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
       type: 'buttons',
       command: 'edit',
       visible: isEditColumnVisible,
-      cssClass: cssClass,
+      cssClass,
       width: 'auto',
       alignment: 'center',
       cellTemplate: this._getEditCommandCellTemplate(),
@@ -1521,7 +1525,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     });
     this._columnsController.columnOption('command:edit', {
       visible: isEditColumnVisible,
-      cssClass: cssClass
+      cssClass
     });
   };
   _proto._isEditColumnVisible = function _isEditColumnVisible() {
@@ -1549,13 +1553,13 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     var changes = this.getChanges();
     var params = {
       cancel: false,
-      changes: changes
+      changes
     };
     this.executeAction('onEditCanceling', params);
     if (!params.cancel) {
       this._cancelEditDataCore();
       this.executeAction('onEditCanceled', {
-        changes: changes
+        changes
       });
     }
   };
@@ -1621,7 +1625,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
         deferred.resolve({
           data: newData,
           key: rowKey,
-          oldData: oldData,
+          oldData,
           type: _const.DATA_EDIT_DATA_UPDATE_TYPE
         });
       }).fail((0, _m_editing_utils.createFailureHandler)(deferred)).fail(function (arg) {
@@ -1688,7 +1692,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   };
   _proto._applyChange = function _applyChange(options, params, forceUpdateRow) {
     var changeOptions = _extends(_extends({}, options), {
-      forceUpdateRow: forceUpdateRow
+      forceUpdateRow
     });
     this._addChange(params, changeOptions);
     this._updateEditButtons();
@@ -1817,7 +1821,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
             cancel: false,
             key: options.row.isNewRow ? undefined : options.row.key,
             data: options.row.data,
-            column: column
+            column
           };
           this._isEditingStart(editingStartOptions);
         }
@@ -1852,7 +1856,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
         } else {
           $button.addClass("dx-icon".concat(iconType === 'dxIcon' ? '-' : ' ').concat(icon)).attr('title', button.text);
         }
-        $button.addClass('dx-link-icon');
+        $button.addClass(_const.LINK_ICON_CLASS);
         $container.addClass(_const.COMMAND_EDIT_WITH_ICONS_CLASS);
         var localizationName = this.getButtonLocalizationNames()[button.name];
         localizationName && $button.attr('aria-label', _message.default.format(localizationName));
@@ -1914,7 +1918,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     return {
       widget: 'dxButton',
       options: {
-        onInitialized: onInitialized,
+        onInitialized,
         icon: "edit-button-".concat(className),
         disabled: isButtonDisabled,
         onClick: function onClick() {
@@ -1929,7 +1933,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
       name: "".concat(name, "Button"),
       location: 'after',
       locateInMenu: 'auto',
-      sortIndex: sortIndex
+      sortIndex
     };
   };
   _proto.prepareEditButtons = function prepareEditButtons(headerPanel) {
@@ -1991,7 +1995,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   return EditingControllerImpl;
 }(_m_modules.default.ViewController);
 var editingModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       editing: {
         mode: 'row',
@@ -2033,19 +2037,19 @@ var editingModule = {
   extenders: {
     controllers: {
       data: {
-        init: function init() {
+        init() {
           this._editingController = this.getController('editing');
           this.callBase();
         },
-        reload: function reload(full, repaintChangesOnly) {
+        reload(full, repaintChangesOnly) {
           !repaintChangesOnly && this._editingController.refresh();
           return this.callBase.apply(this, arguments);
         },
-        repaintRows: function repaintRows() {
+        repaintRows() {
           if (this.getController('editing').isSaving()) return;
           return this.callBase.apply(this, arguments);
         },
-        _updateEditRow: function _updateEditRow(items) {
+        _updateEditRow(items) {
           var _a;
           var editRowKey = this.option(_const.EDITING_EDITROWKEY_OPTION_NAME);
           var editRowIndex = _m_utils.default.getIndexByKey(editRowKey, items);
@@ -2055,27 +2059,27 @@ var editingModule = {
             (_a = this._updateEditItem) === null || _a === void 0 ? void 0 : _a.call(this, editItem);
           }
         },
-        _updateItemsCore: function _updateItemsCore(change) {
+        _updateItemsCore(change) {
           this.callBase(change);
           this._updateEditRow(this.items(true));
         },
-        _applyChangeUpdate: function _applyChangeUpdate(change) {
+        _applyChangeUpdate(change) {
           this._updateEditRow(change.items);
           this.callBase(change);
         },
-        _applyChangesOnly: function _applyChangesOnly(change) {
+        _applyChangesOnly(change) {
           this._updateEditRow(change.items);
           this.callBase(change);
         },
-        _processItems: function _processItems(items, change) {
+        _processItems(items, change) {
           items = this._editingController.processItems(items, change);
           return this.callBase(items, change);
         },
-        _processDataItem: function _processDataItem(dataItem, options) {
+        _processDataItem(dataItem, options) {
           this._editingController.processDataItem(dataItem, options, this.generateDataValues);
           return this.callBase(dataItem, options);
         },
-        _processItem: function _processItem(item, options) {
+        _processItem(item, options) {
           item = this.callBase(item, options);
           if (item.isNewRow) {
             options.dataIndex--;
@@ -2083,13 +2087,13 @@ var editingModule = {
           }
           return item;
         },
-        _getChangedColumnIndices: function _getChangedColumnIndices(oldItem, newItem, rowIndex, isLiveUpdate) {
+        _getChangedColumnIndices(oldItem, newItem, rowIndex, isLiveUpdate) {
           if (oldItem.isNewRow !== newItem.isNewRow || oldItem.removed !== newItem.removed) {
             return;
           }
           return this.callBase.apply(this, arguments);
         },
-        _isCellChanged: function _isCellChanged(oldRow, newRow, visibleRowIndex, columnIndex, isLiveUpdate) {
+        _isCellChanged(oldRow, newRow, visibleRowIndex, columnIndex, isLiveUpdate) {
           var editingController = this.getController('editing');
           var cell = oldRow.cells && oldRow.cells[columnIndex];
           var isEditing = editingController && editingController.isEditCell(visibleRowIndex, columnIndex);
@@ -2101,12 +2105,12 @@ var editingModule = {
           }
           return this.callBase.apply(this, arguments);
         },
-        needToRefreshOnDataSourceChange: function needToRefreshOnDataSourceChange(args) {
+        needToRefreshOnDataSourceChange(args) {
           var editingController = this.getController('editing');
           var isParasiteChange = Array.isArray(args.value) && args.value === args.previousValue && editingController.isSaving();
           return !isParasiteChange;
         },
-        _handleDataSourceChange: function _handleDataSourceChange(args) {
+        _handleDataSourceChange(args) {
           var _this32 = this;
           var result = this.callBase(args);
           var changes = this.option('editing.changes');
@@ -2139,11 +2143,11 @@ var editingModule = {
     },
     views: {
       rowsView: {
-        init: function init() {
+        init() {
           this.callBase();
           this._editingController = this.getController('editing');
         },
-        getCellIndex: function getCellIndex($cell, rowIndex) {
+        getCellIndex($cell, rowIndex) {
           if (!$cell.is('td') && rowIndex >= 0) {
             var $cellElements = this.getCellElements(rowIndex);
             var cellIndex = -1;
@@ -2157,14 +2161,14 @@ var editingModule = {
           }
           return this.callBase.apply(this, arguments);
         },
-        publicMethods: function publicMethods() {
+        publicMethods() {
           return this.callBase().concat(['cellValue']);
         },
-        _getCellTemplate: function _getCellTemplate(options) {
+        _getCellTemplate(options) {
           var template = this._editingController.getColumnTemplate(options);
           return template || this.callBase(options);
         },
-        _createRow: function _createRow(row) {
+        _createRow(row) {
           var $row = this.callBase.apply(this, arguments);
           if (row) {
             var isRowRemoved = !!row.removed;
@@ -2178,7 +2182,7 @@ var editingModule = {
           }
           return $row;
         },
-        _getColumnIndexByElement: function _getColumnIndexByElement($element) {
+        _getColumnIndexByElement($element) {
           var $tableElement = $element.closest('table');
           var $tableElements = this.getTableElements();
           while ($tableElement.length && !$tableElements.filter($tableElement).length) {
@@ -2187,17 +2191,17 @@ var editingModule = {
           }
           return this._getColumnIndexByElementCore($element);
         },
-        _getColumnIndexByElementCore: function _getColumnIndexByElementCore($element) {
+        _getColumnIndexByElementCore($element) {
           var $targetElement = $element.closest(".".concat(_const.ROW_CLASS, "> td:not(.dx-master-detail-cell)"));
           return this.getCellIndex($targetElement);
         },
-        _editCellByClick: function _editCellByClick(e, eventName) {
+        _editCellByClick(e, eventName) {
           var editingController = this._editingController;
           var $targetElement = (0, _renderer.default)(e.event.target);
           var columnIndex = this._getColumnIndexByElement($targetElement);
           var row = this._dataController.items()[e.rowIndex];
           var allowUpdating = editingController.allowUpdating({
-            row: row
+            row
           }, eventName) || row && row.isNewRow;
           var column = this._columnsController.getVisibleColumns()[columnIndex];
           var isEditedCell = editingController.isEditCell(e.rowIndex, columnIndex);
@@ -2222,25 +2226,25 @@ var editingModule = {
             return editingController.editCell(e.rowIndex, columnIndex) || editingController.isEditRow(e.rowIndex);
           }
         },
-        _rowPointerDown: function _rowPointerDown(e) {
+        _rowPointerDown(e) {
           var _this33 = this;
           this._pointerDownTimeout = setTimeout(function () {
             _this33._editCellByClick(e, 'down');
           });
         },
-        _rowClick: function _rowClick(e) {
+        _rowClick(e) {
           var isEditForm = (0, _renderer.default)(e.rowElement).hasClass(this.addWidgetPrefix(_const.EDIT_FORM_CLASS));
           e.event[_const.TARGET_COMPONENT_NAME] = this.component;
           if (!this._editCellByClick(e, 'click') && !isEditForm) {
             this.callBase.apply(this, arguments);
           }
         },
-        _rowDblClick: function _rowDblClick(e) {
+        _rowDblClick(e) {
           if (!this._editCellByClick(e, 'dblClick')) {
             this.callBase.apply(this, arguments);
           }
         },
-        _cellPrepared: function _cellPrepared($cell, parameters) {
+        _cellPrepared($cell, parameters) {
           var _a;
           var editingController = this._editingController;
           var isCommandCell = !!parameters.column.command;
@@ -2265,18 +2269,18 @@ var editingModule = {
         },
         _editCellPrepared: _common.noop,
         _formItemPrepared: _common.noop,
-        _getCellOptions: function _getCellOptions(options) {
+        _getCellOptions(options) {
           var cellOptions = this.callBase(options);
           cellOptions.isEditing = this._editingController.isEditCell(cellOptions.rowIndex, cellOptions.columnIndex);
           return cellOptions;
         },
-        _createCell: function _createCell(options) {
+        _createCell(options) {
           var $cell = this.callBase(options);
           var isEditRow = this._editingController.isEditRow(options.rowIndex);
           (0, _m_editing_utils.isEditingOrShowEditorAlwaysDataCell)(isEditRow, options) && $cell.addClass(_const.EDITOR_CELL_CLASS);
           return $cell;
         },
-        cellValue: function cellValue(rowIndex, columnIdentifier, value, text) {
+        cellValue(rowIndex, columnIdentifier, value, text) {
           var cellOptions = this.getCellOptions(rowIndex, columnIdentifier);
           if (cellOptions) {
             if (value === undefined) {
@@ -2285,11 +2289,11 @@ var editingModule = {
             this._editingController.updateFieldValue(cellOptions, value, text, true);
           }
         },
-        dispose: function dispose() {
+        dispose() {
           this.callBase.apply(this, arguments);
           clearTimeout(this._pointerDownTimeout);
         },
-        _renderCore: function _renderCore() {
+        _renderCore() {
           var _this34 = this;
           this.callBase.apply(this, arguments);
           return this.waitAsyncTemplates(true).done(function () {
@@ -2298,12 +2302,12 @@ var editingModule = {
         }
       },
       headerPanel: {
-        _getToolbarItems: function _getToolbarItems() {
+        _getToolbarItems() {
           var items = this.callBase();
           var editButtonItems = this.getController('editing').prepareEditButtons(this);
           return editButtonItems.concat(items);
         },
-        optionChanged: function optionChanged(args) {
+        optionChanged(args) {
           var fullName = args.fullName;
           switch (args.name) {
             case 'editing':
@@ -2323,7 +2327,7 @@ var editingModule = {
               this.callBase(args);
           }
         },
-        isVisible: function isVisible() {
+        isVisible() {
           var editingOptions = this.getController('editing').option('editing');
           return this.callBase() || (editingOptions === null || editingOptions === void 0 ? void 0 : editingOptions.allowAdding);
         }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/inferno_renderer.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -33,7 +33,7 @@ var _default = (0, _dependency_injector.default)({
   createElement: function createElement(component, props) {
     return (0, _infernoCreateElement.createElement)(component, props);
   },
-  remove: remove,
+  remove,
   onAfterRender: function onAfterRender() {
     _inferno2.InfernoEffectHost.callEffects();
   },

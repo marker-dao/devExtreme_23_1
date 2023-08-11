@@ -41,6 +41,10 @@ export default class Editor extends Component {
     var _this$option;
     (_this$option = this.option('_onMarkupRendered')) === null || _this$option === void 0 ? void 0 : _this$option();
   }
+  _init() {
+    super._init();
+    this._initialValue = this.option('value');
+  }
   _initializeComponent() {
     super._initializeComponent();
     this._valueChangeAction = this._createActionByOption('onValueChanged', {
@@ -97,6 +101,7 @@ export default class Editor extends Component {
     switch (name) {
       case 'value':
         this._raiseValidation(value, previousValue);
+        this.option('isDirty', this._initialValue !== value);
         this._raiseValueChangeAction(value, previousValue);
         break;
       case 'onValueChanged':
@@ -115,7 +120,7 @@ export default class Editor extends Component {
     }
     super._optionChanged(option);
   }
-  reset() {
+  clear() {
     var {
       value
     } = this._getDefaultOptions();

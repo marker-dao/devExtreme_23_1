@@ -171,7 +171,7 @@ var SortIterator = Iterator.inherit({
   _unwrap: function _unwrap(wrappedItem) {
     return wrappedItem.value;
   },
-  _getDefaultCompare: function _getDefaultCompare(langParams) {
+  _getDefaultCompare(langParams) {
     return function (xValue, yValue) {
       return defaultCompare(xValue, yValue, langParams);
     };
@@ -519,7 +519,7 @@ var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
       }
       return d.promise();
     },
-    setLangParams: function setLangParams(options) {
+    setLangParams(options) {
       iter.langParams = options;
     },
     sortBy: function sortBy(getter, desc, compare) {

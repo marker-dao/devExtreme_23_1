@@ -100,7 +100,7 @@ var editingRowBasedModule = {
       editing: editingControllerExtender,
       data: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _getChangedColumnIndices: function _getChangedColumnIndices(oldItem, newItem, rowIndex, isLiveUpdate) {
+        _getChangedColumnIndices(oldItem, newItem, rowIndex, isLiveUpdate) {
           var editingController = this.getController('editing');
           if (editingController.isRowBasedEditMode() && oldItem.isEditing !== newItem.isEditing) {
             return;
@@ -111,7 +111,7 @@ var editingRowBasedModule = {
     },
     views: {
       rowsView: {
-        _createRow: function _createRow(row) {
+        _createRow(row) {
           var $row = this.callBase.apply(this, arguments);
           if (row) {
             var editingController = this._editingController;
@@ -126,7 +126,7 @@ var editingRowBasedModule = {
           }
           return $row;
         },
-        _update: function _update(change) {
+        _update(change) {
           this.callBase(change);
           if (change.changeType === 'updateSelection') {
             this.getTableElements().children('tbody').children(".".concat(_const.EDIT_ROW)).removeClass(_const.ROW_SELECTED_CLASS);

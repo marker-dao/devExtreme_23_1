@@ -19,8 +19,8 @@ var getDateNavigator = function getDateNavigator(header, item) {
     widget: 'dxButtonGroup',
     cssClass: DATE_NAVIGATOR_CLASS,
     options: {
-      items: items,
-      stylingMode: stylingMode,
+      items,
+      stylingMode,
       selectionMode: 'none',
       onItemClick: function onItemClick(e) {
         e.itemData.clickHandler(e);

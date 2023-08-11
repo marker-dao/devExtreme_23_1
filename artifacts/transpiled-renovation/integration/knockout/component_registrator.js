@@ -6,7 +6,7 @@ var _callbacks = _interopRequireDefault(require("../../core/utils/callbacks"));
 var _type = require("../../core/utils/type");
 var _component_registrator_callbacks = _interopRequireDefault(require("../../core/component_registrator_callbacks"));
 var _ui = _interopRequireDefault(require("../../ui/widget/ui.widget"));
-var _base_widget = _interopRequireDefault(require("../../viz/core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _component = _interopRequireDefault(require("../../renovation/component_wrapper/common/component"));
 var _draggable = _interopRequireDefault(require("../../ui/draggable"));
 var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view"));
@@ -183,7 +183,7 @@ if (_knockout.default) {
         }
         createComponent();
         return {
-          controlsDescendantBindings: componentClass.subclassOf(_ui.default) || componentClass.subclassOf(_base_widget.default) || componentClass.subclassOf(_component.default) && !(component instanceof _scroll_view.default) || component instanceof _draggable.default
+          controlsDescendantBindings: componentClass.subclassOf(_ui.default) || componentClass.subclassOf(_m_base_widget.default) || componentClass.subclassOf(_component.default) && !(component instanceof _scroll_view.default) || component instanceof _draggable.default
         };
       }
     };

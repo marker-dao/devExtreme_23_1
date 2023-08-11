@@ -4,7 +4,7 @@ exports.default = void 0;
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _type = require("../../core/utils/type");
-var _base_widget = _interopRequireDefault(require("../core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _extend2 = require("../../core/utils/extend");
 var _index = require("../../events/utils/index");
 var _pointer = _interopRequireDefault(require("../../events/pointer"));
@@ -30,8 +30,8 @@ function inCanvas(_ref, x, y) {
     top: 0,
     right: width,
     bottom: height,
-    width: width,
-    height: height
+    width,
+    height
   }, x, y);
 }
 function pointerHandler(_ref2) {
@@ -48,7 +48,7 @@ function getDefaultTemplate(_ref3, textAlign) {
     var valueText = _ref4.valueText;
     var table = (0, _renderer.default)('<table>').css({
       borderSpacing: TOOLTIP_TABLE_BORDER_SPACING,
-      lineHeight: lineHeight
+      lineHeight
     });
     for (var i = 0; i < valueText.length; i += 2) {
       var tr = (0, _renderer.default)('<tr>');
@@ -57,7 +57,7 @@ function getDefaultTemplate(_ref3, textAlign) {
         width: TOOLTIP_TABLE_KEY_VALUE_SPACE
       }).appendTo(tr);
       (0, _renderer.default)('<td>').css({
-        textAlign: textAlign
+        textAlign
       }).text(valueText[i + 1]).appendTo(tr);
       table.append(tr);
     }
@@ -76,16 +76,16 @@ function createAxis(isHorizontal) {
     update: function update(range, canvas, options) {
       translator.update(range, canvas, options);
     },
-    getVisibleArea: function getVisibleArea() {
+    getVisibleArea() {
       var visibleArea = translator.getCanvasVisibleArea();
       return [visibleArea.min, visibleArea.max];
     },
     visualRange: _common.noop,
     calculateInterval: _common.noop,
-    getMarginOptions: function getMarginOptions() {
+    getMarginOptions() {
       return {};
     },
-    aggregatedPointBetweenTicks: function aggregatedPointBetweenTicks() {
+    aggregatedPointBetweenTicks() {
       return false;
     }
   };
@@ -93,7 +93,7 @@ function createAxis(isHorizontal) {
 
 /* eslint-disable-next-line */
 var _initTooltip;
-var BaseSparkline = _base_widget.default.inherit({
+var BaseSparkline = _m_base_widget.default.inherit({
   _getLayoutItems: _common.noop,
   _useLinks: false,
   _themeDependentChanges: ['OPTIONS'],
@@ -161,13 +161,13 @@ var BaseSparkline = _base_widget.default.inherit({
       y: canvas.height / 2 + rootOffset.top
     };
   },
-  _initTooltipEvents: function _initTooltipEvents() {
+  _initTooltipEvents() {
     var data = {
       widget: this
     };
     this._renderer.root.off('.' + EVENT_NS).on(POINTER_ACTION, data, pointerHandler);
   },
-  _showTooltip: function _showTooltip() {
+  _showTooltip() {
     var that = this;
     var tooltip;
     if (!that._tooltipShown) {
@@ -176,16 +176,16 @@ var BaseSparkline = _base_widget.default.inherit({
       tooltip.isEnabled() && that._tooltip.show(that._getTooltipData(), that._getTooltipCoords(), {});
     }
   },
-  _hideTooltip: function _hideTooltip() {
+  _hideTooltip() {
     if (this._tooltipShown) {
       this._tooltipShown = false;
       this._tooltip.hide();
     }
   },
-  _stopCurrentHandling: function _stopCurrentHandling() {
+  _stopCurrentHandling() {
     this._hideTooltip();
   },
-  _enableOutHandler: function _enableOutHandler() {
+  _enableOutHandler() {
     var that = this;
     if (that._outHandler) {
       return;
@@ -206,7 +206,7 @@ var BaseSparkline = _base_widget.default.inherit({
     _events_engine.default.on(_dom_adapter.default.getDocument(), POINTER_ACTION, handler);
     this._outHandler = handler;
   },
-  _disableOutHandler: function _disableOutHandler() {
+  _disableOutHandler() {
     this._outHandler && _events_engine.default.off(_dom_adapter.default.getDocument(), POINTER_ACTION, this._outHandler);
     this._outHandler = null;
   },
@@ -275,7 +275,6 @@ BaseSparkline.prototype._getDefaultTooltipTemplate = function (options) {
 
 // PLUGINS_SECTION
 // T422022
-
 var exportPlugin = (0, _extend2.extend)(true, {}, _export.plugin, {
   init: _common.noop,
   dispose: _common.noop,

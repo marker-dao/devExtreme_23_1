@@ -108,7 +108,7 @@ Tooltip.prototype = {
     }
     return (container.length ? container : (0, _renderer.default)('body')).get(0);
   },
-  setTemplate: function setTemplate(contentTemplate) {
+  setTemplate(contentTemplate) {
     var that = this;
     that._template = contentTemplate ? that._widget._getTemplate(contentTemplate) : null;
   },
@@ -314,9 +314,9 @@ Tooltip.prototype = {
       return true;
     }
     var state = {
-      formatObject: formatObject,
-      eventData: eventData,
-      templateCallback: templateCallback
+      formatObject,
+      eventData,
+      templateCallback
     };
     if (!that._prepare(formatObject, state, customizeTooltip)) {
       return false;
@@ -346,20 +346,20 @@ Tooltip.prototype = {
     // trigger event
     if (that._eventData) {
       that._eventTrigger('tooltipHidden', that._options.forceEvents ? (0, _extend.extend)({
-        isPointerOut: isPointerOut
+        isPointerOut
       }, that._eventData) : that._eventData);
       that._clear();
       that._eventData = null;
     }
   },
-  _clear: function _clear() {
+  _clear() {
     this._textHtml.empty();
   },
   move: function move(x, y, offset) {
     this.plaque.draw({
-      x: x,
-      y: y,
-      offset: offset,
+      x,
+      y,
+      offset,
       canvas: this._getCanvas(),
       isMoving: true
     });
@@ -395,7 +395,7 @@ Tooltip.prototype = {
     var options = _specialFormat ? getSpecialFormatOptions(this._options, _specialFormat) : this._options;
     return format(value, options.format);
   },
-  getOptions: function getOptions() {
+  getOptions() {
     return this._options;
   },
   getLocation: function getLocation() {
@@ -469,7 +469,7 @@ var plugin = {
     }
   },
   extenders: {
-    _stopCurrentHandling: function _stopCurrentHandling() {
+    _stopCurrentHandling() {
       this._tooltip && this._tooltip.hide();
     }
   },

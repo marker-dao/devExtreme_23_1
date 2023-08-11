@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/vector_map/vector_map.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,7 +22,7 @@ var DEFAULT_HEIGHT = 400;
 var RE_STARTS_LAYERS = /^layers/;
 var RE_ENDS_DATA_SOURCE = /\.dataSource$/;
 import './projection';
-import BaseWidget from '../core/base_widget';
+import BaseWidget from '../../__internal/viz/core/m_base_widget';
 function mergeBounds(sumBounds, dataBounds) {
   return dataBounds ? [Math.min(dataBounds[0], dataBounds[2], sumBounds[0]), Math.min(dataBounds[1], dataBounds[3], sumBounds[3]), Math.max(dataBounds[0], dataBounds[2], sumBounds[2]), Math.max(dataBounds[1], dataBounds[3], sumBounds[1])] : sumBounds;
 }

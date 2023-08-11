@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/local_store/m_local_store.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,23 +30,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // eslint-disable-next-line import/extensions
 // @ts-expect-error
-
 var PATH_DELIMETER = '/./';
 var LocalStore = _class.default.inherit(function () {
   var DATE_INTERVAL_SELECTORS = {
-    year: function year(date) {
+    year(date) {
       return date && date.getFullYear();
     },
-    quarter: function quarter(date) {
+    quarter(date) {
       return date && Math.floor(date.getMonth() / 3) + 1;
     },
-    month: function month(date) {
+    month(date) {
       return date && date.getMonth() + 1;
     },
-    day: function day(date) {
+    day(date) {
       return date && date.getDate();
     },
-    dayOfWeek: function dayOfWeek(date) {
+    dayOfWeek(date) {
       return date && date.getDay();
     }
   };
@@ -111,7 +110,7 @@ var LocalStore = _class.default.inherit(function () {
     var hierarchyItem = childrenHash[pathHash];
     if (!hierarchyItem) {
       hierarchyItem = {
-        value: value,
+        value,
         // eslint-disable-next-line no-plusplus
         index: childrenHash.length++
       };
@@ -143,7 +142,7 @@ var LocalStore = _class.default.inherit(function () {
     var expandIndex = loadOptions.headerName === headerName ? loadOptions.path.length : 0;
     var expandedPaths = headerName === 'rows' ? loadOptions.rowExpandedPaths : loadOptions.columnExpandedPaths;
     var options = {
-      data: data,
+      data,
       childrenHash: headers["".concat(headerName, "Hash")],
       dimensions: loadOptions[headerName],
       expandedPathsHash: loadOptions.headerName !== headerName && expandedPaths && expandedPaths.hash
@@ -195,7 +194,7 @@ var LocalStore = _class.default.inherit(function () {
     if (field.summaryType === 'custom') {
       field.calculateCustomSummary = field.calculateCustomSummary || _common.noop;
       return {
-        seed: function seed() {
+        seed() {
           var options = {
             summaryProcess: 'start',
             totalValue: undefined
@@ -203,13 +202,13 @@ var LocalStore = _class.default.inherit(function () {
           field.calculateCustomSummary(options);
           return options;
         },
-        step: function step(options, value) {
+        step(options, value) {
           options.summaryProcess = 'calculate';
           options.value = value;
           field.calculateCustomSummary(options);
           return options;
         },
-        finalize: function finalize(options) {
+        finalize(options) {
           options.summaryProcess = 'finalize';
           delete options.value;
           field.calculateCustomSummary(options);
@@ -363,7 +362,7 @@ var LocalStore = _class.default.inherit(function () {
       d.resolve({
         rows: headers.rows,
         columns: headers.columns,
-        values: values,
+        values,
         grandTotalRowIndex: 0,
         grandTotalColumnIndex: 0
       });
@@ -437,12 +436,12 @@ var LocalStore = _class.default.inherit(function () {
     return filter;
   }
   return {
-    ctor: function ctor(options) {
+    ctor(options) {
       this._progressChanged = options.onProgressChanged || _common.noop;
       this._dataSource = new _data_source.DataSource(options);
       this._dataSource.paginate(false);
     },
-    getFields: function getFields(fields) {
+    getFields(fields) {
       var that = this;
       var dataSource = that._dataSource;
       // @ts-expect-error
@@ -452,10 +451,10 @@ var LocalStore = _class.default.inherit(function () {
       }).fail(d.reject);
       return d;
     },
-    key: function key() {
+    key() {
       return this._dataSource.key();
     },
-    load: function load(options) {
+    load(options) {
       var that = this;
       var dataSource = that._dataSource;
       // @ts-expect-error
@@ -466,14 +465,14 @@ var LocalStore = _class.default.inherit(function () {
       }).fail(d.reject);
       return d;
     },
-    filter: function filter() {
+    filter() {
       var dataSource = this._dataSource;
       return dataSource.filter.apply(dataSource, arguments);
     },
-    supportPaging: function supportPaging() {
+    supportPaging() {
       return false;
     },
-    getDrillDownItems: function getDrillDownItems(loadOptions, params) {
+    getDrillDownItems(loadOptions, params) {
       loadOptions = loadOptions || {};
       params = params || {};
       prepareLoadOption(loadOptions);
@@ -512,6 +511,6 @@ var LocalStore = _class.default.inherit(function () {
 }()).include(_m_widget_utils.storeDrillDownMixin);
 exports.LocalStore = LocalStore;
 var _default = {
-  LocalStore: LocalStore
+  LocalStore
 };
 exports.default = _default;

@@ -36,14 +36,23 @@ export default {
           options.rootElement.addClass(that.addWidgetPrefix(HEADERS_ACTION_CLASS));
         }
       }
-      if (!isDefined(column.sortOrder)) {
-        that.setAria('sort', 'none', rootElement);
-      } else {
-        that.setAria('sort', ariaSortState, rootElement);
-      }
+      this._setAriaSortAttribute(column, ariaSortState, rootElement);
       return $sortIndicator;
     }
     return that.callBase(options);
+  },
+  _setAriaSortAttribute(column, ariaSortState, rootElement) {
+    if (column.isGrouped) {
+      var description = this.localize('dxDataGrid-ariaNotSortedColumn');
+      if (isDefined(column.sortOrder)) {
+        description = column.sortOrder === 'asc' ? this.localize('dxDataGrid-ariaSortedAscendingColumn') : this.localize('dxDataGrid-ariaSortedDescendingColumn');
+      }
+      this.setAria('roledescription', description, rootElement);
+    } else if (!isDefined(column.sortOrder)) {
+      this.setAria('sort', 'none', rootElement);
+    } else {
+      this.setAria('sort', ariaSortState, rootElement);
+    }
   },
   _getIndicatorClassName(name) {
     if (name === 'sort') {

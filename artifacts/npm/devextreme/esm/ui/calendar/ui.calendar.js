@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,7 +31,7 @@ import dateLocalization from '../../localization/date';
 import { FunctionTemplate } from '../../core/templates/function_template';
 import { isCommandKeyPressed, addNamespace } from '../../events/utils/index';
 import CalendarSingleSelectionStrategy from './ui.calendar.single.selection.strategy';
-import CalendarMultiSelectionStrategy from './ui.calendar.multi.selection.strategy';
+import CalendarMultipleSelectionStrategy from './ui.calendar.multiple.selection.strategy';
 import CalendarRangeSelectionStrategy from './ui.calendar.range.selection.strategy';
 import { end as hoverEndEventName } from '../../events/hover';
 import eventsEngine from '../../events/core/events_engine';
@@ -70,7 +70,7 @@ var ZOOM_LEVEL = {
 };
 var SELECTION_STRATEGIES = {
   SingleSelection: CalendarSingleSelectionStrategy,
-  MultiSelection: CalendarMultiSelectionStrategy,
+  MultipleSelection: CalendarMultipleSelectionStrategy,
   RangeSelection: CalendarRangeSelectionStrategy
 };
 function elementHasFocus(element) {
@@ -372,8 +372,8 @@ var Calendar = Editor.inherit({
   _getSelectionStrategyName: function _getSelectionStrategyName() {
     var selectionMode = this.option('selectionMode');
     switch (selectionMode) {
-      case 'multi':
-        return 'MultiSelection';
+      case 'multiple':
+        return 'MultipleSelection';
       case 'range':
         return 'RangeSelection';
       default:
@@ -1168,6 +1168,7 @@ var Calendar = Editor.inherit({
         break;
       case 'selectionMode':
         this._refreshSelectionStrategy();
+        this._selectionStrategy.restoreValue();
         this._initCurrentDate();
         break;
       case 'firstDayOfWeek':

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/core/events_engine.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,6 @@ var _errors = _interopRequireDefault(require("../../core/errors"));
 var _hook_touch_props = _interopRequireDefault(require("../../events/core/hook_touch_props"));
 var _call_once = _interopRequireDefault(require("../../core/utils/call_once"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var window = (0, _window.getWindow)();
 var EMPTY_EVENT_NAME = 'dxEmptyEventType';
@@ -417,7 +416,7 @@ function iterate(callback) {
     }
   };
   return function (element, eventName) {
-    if (_typeof(eventName) === 'object') {
+    if (typeof eventName === 'object') {
       var args = Array.prototype.slice.call(arguments, 0);
       for (var name in eventName) {
         args[1] = name;

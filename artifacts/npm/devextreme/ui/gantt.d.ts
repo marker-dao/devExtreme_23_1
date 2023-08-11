@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/gantt.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -83,7 +83,6 @@ export type ContextMenuPreparingEvent = Cancelable & {
     /**
      * @docid _ui_gantt_ContextMenuPreparingEvent.component
      * @type this
-     * @default Widget
      */
     readonly component?: dxGantt;
     /** @docid _ui_gantt_ContextMenuPreparingEvent.element */
@@ -115,7 +114,6 @@ export type CustomCommandEvent = {
     /**
      * @docid _ui_gantt_CustomCommandEvent.component
      * @type this
-     * @default Widget
      */
     readonly component?: dxGantt;
     /** @docid _ui_gantt_CustomCommandEvent.element */

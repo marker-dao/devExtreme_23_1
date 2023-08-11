@@ -1,4 +1,5 @@
 import $ from '../../../../core/renderer';
+import { isDefined } from '../../../../core/utils/type';
 import { rowsModule } from '../../../grids/grid_core/views/m_rows_view';
 import treeListCore from '../m_core';
 var TREELIST_TEXT_CONTENT = 'dx-treelist-text-content';
@@ -92,6 +93,10 @@ export var RowsView = rowsModule.views.rowsView.inherit(function () {
     },
     isExpandIcon($targetElement) {
       return !!$targetElement.closest(".".concat(TREELIST_EXPANDED_CLASS, ", .").concat(TREELIST_COLLAPSED_CLASS)).length;
+    },
+    setAriaExpandedAttribute($row, row) {
+      var isRowExpanded = row.isExpanded;
+      this.setAria('expanded', isDefined(isRowExpanded) && isRowExpanded.toString(), $row);
     }
   };
 }());

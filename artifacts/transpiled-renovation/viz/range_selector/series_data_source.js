@@ -125,7 +125,7 @@ SeriesDataSource.prototype = {
     }
     return series;
   },
-  createPoints: function createPoints() {
+  createPoints() {
     if (this._series.length === 0) {
       return;
     }

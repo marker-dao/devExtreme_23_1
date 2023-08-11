@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/focus/m_focus.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -99,7 +99,7 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
             }
             dataSource.load({
               filter: that._concatWithCombinedFilter(filter),
-              group: group
+              group
             }).done(function (data) {
               if (!data || data.length === 0 || !(0, _type.isDefined)(data[0].key) || data[0].key === -1) {
                 return deferred.resolve(-1).promise();
@@ -113,7 +113,7 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           };
           _proto._calculateExpandedRowGlobalIndex = function _calculateExpandedRowGlobalIndex(deferred, key, groupPath, group) {
             var groupFilter = (0, _m_utils.createGroupFilter)(groupPath, {
-              group: group
+              group
             });
             var dataSource = this._dataSource;
             var scrollingMode = this.option('scrolling.mode');

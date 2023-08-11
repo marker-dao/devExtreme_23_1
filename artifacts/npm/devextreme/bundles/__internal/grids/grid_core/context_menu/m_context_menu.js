@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/context_menu/m_context_menu.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,10 +28,10 @@ var viewName = {
 };
 var VIEW_NAMES = ['columnHeadersView', 'rowsView', 'footerView', 'headerPanel'];
 var ContextMenuController = _m_modules.default.ViewController.inherit({
-  init: function init() {
+  init() {
     this.createAction('onContextMenuPreparing');
   },
-  getContextMenuItems: function getContextMenuItems(dxEvent) {
+  getContextMenuItems(dxEvent) {
     if (!dxEvent) {
       return false;
     }
@@ -55,9 +55,9 @@ var ContextMenuController = _m_modules.default.ViewController.inherit({
           event: dxEvent,
           targetElement: (0, _element.getPublicElement)($targetElement),
           target: viewName[this],
-          rowIndex: rowIndex,
+          rowIndex,
           row: view._getRows()[rowIndex],
-          columnIndex: columnIndex,
+          columnIndex,
           column: (_b = (_a = rowOptions === null || rowOptions === void 0 ? void 0 : rowOptions.cells) === null || _a === void 0 ? void 0 : _a[columnIndex]) === null || _b === void 0 ? void 0 : _b.column
         };
         options.items = view.getContextMenuItems && view.getContextMenuItems(options);
@@ -75,12 +75,12 @@ var ContextMenuController = _m_modules.default.ViewController.inherit({
   _contextMenuPrepared: _common.noop
 });
 var ContextMenuView = _m_modules.default.View.inherit({
-  _renderCore: function _renderCore() {
+  _renderCore() {
     var that = this;
     var $element = that.element().addClass(CONTEXT_MENU);
     this.setAria('role', 'presentation', $element);
     this._createComponent($element, _context_menu.default, {
-      onPositioning: function onPositioning(actionArgs) {
+      onPositioning(actionArgs) {
         var event = actionArgs.event;
         var contextMenuInstance = actionArgs.component;
         var items = that.getController('contextMenu').getContextMenuItems(event);
@@ -91,7 +91,7 @@ var ContextMenuView = _m_modules.default.View.inherit({
           actionArgs.cancel = true;
         }
       },
-      onItemClick: function onItemClick(params) {
+      onItemClick(params) {
         params.itemData.onItemClick && params.itemData.onItemClick(params);
       },
       cssClass: that.getWidgetContainerClass(),
@@ -100,7 +100,7 @@ var ContextMenuView = _m_modules.default.View.inherit({
   }
 });
 var contextMenuModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       onContextMenuPreparing: null
     };

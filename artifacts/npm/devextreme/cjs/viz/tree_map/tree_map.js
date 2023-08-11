@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/tree_map.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,7 +28,7 @@ var _export = require("../core/export");
 var _title = require("../core/title");
 var _loading_indicator = require("../core/loading_indicator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _default = _tree_map.default;
+var _default = _tree_map.default; // PLUGINS_SECTION
 exports.default = _default;
 _tree_map.default.addPlugin(_export.plugin);
 _tree_map.default.addPlugin(_title.plugin);

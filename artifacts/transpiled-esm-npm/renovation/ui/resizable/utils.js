@@ -58,8 +58,8 @@ var getAreaFromObject = function getAreaFromObject(_ref, mainEl) {
     width: right - left,
     height: bottom - top,
     offset: {
-      left: left,
-      top: top
+      left,
+      top
     }
   }, mainEl);
 };

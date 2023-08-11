@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -155,7 +155,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
         getMultipleSelectedItems: this._getSelectedItemInfos.bind(this)
       },
       getItemThumbnail: this._getItemThumbnailInfo.bind(this),
-      notificationControl: notificationControl,
+      notificationControl,
       uploadDropZonePlaceholderContainer: this.$element(),
       rtlEnabled: this.option('rtlEnabled'),
       onSuccess: function onSuccess(_ref) {
@@ -252,8 +252,8 @@ var FileManager = /*#__PURE__*/function (_Widget) {
       onContextMenuShowing: function onContextMenuShowing(e) {
         return _this8._onContextMenuShowing(viewArea, e);
       },
-      isolateCreationItemCommands: isolateCreationItemCommands,
-      viewArea: viewArea
+      isolateCreationItemCommands,
+      viewArea
     });
   };
   _proto._initCommandManager = function _initCommandManager() {
@@ -287,10 +287,10 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     this.option('selectedItemKeys', selectedItemKeys);
     this._lockSelectionProcessing = false;
     this._actions.onSelectionChanged({
-      selectedItems: selectedItems,
-      selectedItemKeys: selectedItemKeys,
-      currentSelectedItemKeys: currentSelectedItemKeys,
-      currentDeselectedItemKeys: currentDeselectedItemKeys
+      selectedItems,
+      selectedItemKeys,
+      currentSelectedItemKeys,
+      currentDeselectedItemKeys
     });
     this._updateToolbar(selectedItemInfos);
   };
@@ -423,7 +423,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     var _e$itemData;
     var eventArgs = (0, _uiFile_manager.extendAttributes)({}, e, ['targetElement', 'cancel', 'event']);
     eventArgs = (0, _extend.extend)(eventArgs, {
-      viewArea: viewArea,
+      viewArea,
       fileSystemItem: (_e$itemData = e.itemData) === null || _e$itemData === void 0 ? void 0 : _e$itemData.fileItem,
       _isActionButton: e.isActionButton
     });
@@ -435,7 +435,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     var thumbnail = (0, _type.isFunction)(func) ? func(fileInfo.fileItem) : fileInfo.fileItem.thumbnail;
     if (thumbnail) {
       return {
-        thumbnail: thumbnail,
+        thumbnail,
         cssClass: FILE_MANAGER_ITEM_CUSTOM_THUMBNAIL_CLASS
       };
     }

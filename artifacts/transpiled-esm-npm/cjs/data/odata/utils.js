@@ -13,7 +13,6 @@ var _errors = require("../errors");
 var _utils = require("../utils");
 var _string = require("../../core/utils/string");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var GUID_REGEX = /^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/;
 var VERBOSE_DATE_REGEX = /^\/Date\((-?\d+)((\+|-)?(\d+)?)\)\/$/;
 var ISO8601_DATE_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[-+]{1}\d{2}(:?)(\d{2})?)?$/;
@@ -166,20 +165,20 @@ var ajaxOptionsForRequest = function ajaxOptionsForRequest(protocolVersion, requ
     ajaxData['$format'] = 'json';
   }
   return {
-    url: url,
+    url,
     data: ajaxData,
     dataType: useJsonp ? 'jsonp' : 'json',
     jsonp: useJsonp && '$callback',
-    method: method,
-    async: async,
-    timeout: timeout,
-    headers: headers,
-    contentType: contentType,
+    method,
+    async,
+    timeout,
+    headers,
+    contentType,
     accepts: {
       json: [JSON_VERBOSE_MIME_TYPE, 'text/plain'].join()
     },
     xhrFields: {
-      withCredentials: withCredentials
+      withCredentials
     }
   };
 };
@@ -192,8 +191,8 @@ var sendRequest = function sendRequest(protocolVersion, request, options) {
   var ajaxOptions = ajaxOptionsForRequest(protocolVersion, request, options);
   _ajax.default.sendRequest(ajaxOptions).always(function (obj, textStatus) {
     var transformOptions = {
-      deserializeDates: deserializeDates,
-      fieldTypes: fieldTypes
+      deserializeDates,
+      fieldTypes
     };
     var tuple = interpretJsonFormat(obj, textStatus, transformOptions, ajaxOptions);
     var error = tuple.error,
@@ -295,7 +294,7 @@ var interpretJsonFormat = function interpretJsonFormat(obj, textStatus, transfor
   var error = errorFromResponse(obj, textStatus, ajaxOptions);
   if (error) {
     return {
-      error: error
+      error
     };
   }
   if (!(0, _type.isPlainObject)(obj)) {
@@ -338,10 +337,10 @@ var EdmLiteral = _class.default.inherit({
   * @publicName ctor(value)
   * @param1 value:string
   */
-  ctor: function ctor(value) {
+  ctor(value) {
     this._value = value;
   },
-  valueOf: function valueOf() {
+  valueOf() {
     return this._value;
   }
 });
@@ -349,7 +348,7 @@ exports.EdmLiteral = EdmLiteral;
 var transformTypes = function transformTypes(obj) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   (0, _iterator.each)(obj, function (key, value) {
-    if (value !== null && _typeof(value) === 'object') {
+    if (value !== null && typeof value === 'object') {
       if ('results' in value) {
         obj[key] = value.results;
       }

@@ -272,7 +272,7 @@ var plugin = {
     }
   },
   members: {
-    _resolveLabelOverlapping: function _resolveLabelOverlapping() {
+    _resolveLabelOverlapping() {
       var that = this;
       var resolveLabelOverlapping = (0, _utils.normalizeEnum)(that._getOption('resolveLabelOverlapping', true));
       var labels = this._getOption('inverted', true) ? that._labels.slice().reverse() : that._labels;
@@ -287,7 +287,9 @@ var plugin = {
         }, 0);
       } else if (resolveLabelOverlapping === 'shift') {
         var maxHeight = this._labelRect[3];
-        labels.reduce(function (_ref, label, index, labels) {
+        labels.filter(function (label) {
+          return label.isVisible();
+        }).reduce(function (_ref, label, index, labels) {
           var _ref2 = _slicedToArray(_ref, 2),
             height = _ref2[0],
             emptySpace = _ref2[1];

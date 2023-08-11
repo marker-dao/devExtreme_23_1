@@ -95,7 +95,7 @@ var pie = _extend({}, barSeries, {
       'class': 'dxc-markers'
     });
   },
-  _getMainColor: function _getMainColor(data, point) {
+  _getMainColor(data, point) {
     var pointsByArg = this.getPointsByArg(data.argument);
     var argumentIndex = point ? pointsByArg.indexOf(point) : pointsByArg.length;
     return this._options.mainSeriesColor(data.argument, argumentIndex, this._pointsCount);

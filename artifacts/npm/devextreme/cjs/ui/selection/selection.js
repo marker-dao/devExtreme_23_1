@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/selection/selection.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -299,6 +299,9 @@ var Selection = /*#__PURE__*/function () {
   };
   _proto.getSelectAllState = function getSelectAllState(visibleOnly) {
     return this._selectionStrategy.getSelectAllState(visibleOnly);
+  };
+  _proto.loadSelectedItemsWithFilter = function loadSelectedItemsWithFilter() {
+    return this._selectionStrategy.loadSelectedItemsWithFilter();
   };
   return Selection;
 }();

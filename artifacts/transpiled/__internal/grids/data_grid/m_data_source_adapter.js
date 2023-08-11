@@ -8,10 +8,10 @@ var _m_data_source_adapter = _interopRequireDefault(require("../../grids/grid_co
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var dataSourceAdapterType = _m_data_source_adapter.default;
 var _default = {
-  extend: function extend(extender) {
+  extend(extender) {
     dataSourceAdapterType = dataSourceAdapterType.inherit(extender);
   },
-  create: function create(component) {
+  create(component) {
     // eslint-disable-next-line new-cap
     return new dataSourceAdapterType(component);
   }

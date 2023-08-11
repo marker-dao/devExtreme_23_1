@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/speed_dial_action/speed_dial_item.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -46,7 +46,7 @@ var SpeedDialItem = /*#__PURE__*/function (_Overlay) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _Overlay.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
+      device() {
         return (0, _themes.isMaterial)();
       },
       options: {

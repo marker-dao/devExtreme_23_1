@@ -192,7 +192,7 @@ class Menu extends MenuBase {
   }
   _updateItemsWidthCache() {
     var $menuItems = this.$element().find('ul').first().children('li').children(".".concat(DX_MENU_ITEM_CLASS));
-    this._menuItemsWidth = this._getSummaryItemsWidth($menuItems, true);
+    this._menuItemsWidth = this._getSummaryItemsSize('width', $menuItems, true);
   }
   _dimensionChanged() {
     if (!this._isAdaptivityEnabled()) {
@@ -553,7 +553,8 @@ class Menu extends MenuBase {
     var rtlEnabled = this.option('rtlEnabled');
     var submenuPosition = {
       collision: 'flip',
-      of: $rootItem
+      of: $rootItem,
+      precise: true
     };
     switch (submenuDirection) {
       case 'leftortop':

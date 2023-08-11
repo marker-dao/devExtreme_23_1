@@ -189,7 +189,7 @@ var Resizable = _dom_component.default.inherit({
     var proportionalY = this._proportionate('y', x);
     if (proportionalY >= y) {
       return {
-        x: x,
+        x,
         y: proportionalY
       };
     }
@@ -197,7 +197,7 @@ var Resizable = _dom_component.default.inherit({
     if (proportionalX >= x) {
       return {
         x: proportionalX,
-        y: y
+        y
       };
     }
     return {
@@ -251,7 +251,7 @@ var Resizable = _dom_component.default.inherit({
     if (!isFittedX()) {
       var x = this._fitIntoArea('x', getFittedWidth() - size.width);
       fittedDelta = {
-        x: x,
+        x,
         y: this._proportionate('y', x)
       };
     }
@@ -259,7 +259,7 @@ var Resizable = _dom_component.default.inherit({
       var y = this._fitIntoArea('y', getFittedHeight() - size.height);
       fittedDelta = {
         x: this._proportionate('x', y),
-        y: y
+        y
       };
     }
     return isFittedX() && isFittedY() ? fittedDelta : {
@@ -332,10 +332,10 @@ var Resizable = _dom_component.default.inherit({
     var shouldRenderWidth = delta.x || isStepPrecisionStrict || isAbsoluteSize(elementStyle.width);
     var shouldRenderHeight = delta.y || isStepPrecisionStrict || isAbsoluteSize(elementStyle.height);
     if (shouldRenderWidth) this.option({
-      width: width
+      width
     });
     if (shouldRenderHeight) this.option({
-      height: height
+      height
     });
     return {
       width: shouldRenderWidth ? width : size.width,
@@ -353,7 +353,7 @@ var Resizable = _dom_component.default.inherit({
     });
     (0, _visibility_change.triggerResizeEvent)(this.$element());
   },
-  _isCornerHandler: function _isCornerHandler(sides) {
+  _isCornerHandler(sides) {
     return Object.values(sides).reduce(function (xor, value) {
       return xor ^ value;
     }, 0) === 0;

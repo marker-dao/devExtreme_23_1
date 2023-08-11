@@ -17,12 +17,12 @@ var getSortFilterValue = function getSortFilterValue(sortInfo, rowData, _ref) {
   var rawValue = getter ? getter(rowData) : rowData[selector];
   var safeValue = isRemoteFiltering && (0, _type.isDate)(rawValue) ? _date_serialization.default.serializeDate(rawValue, dateSerializationFormat) : rawValue;
   return {
-    getter: getter,
-    rawValue: rawValue,
-    safeValue: safeValue
+    getter,
+    rawValue,
+    safeValue
   };
 };
 var UiGridCoreFocusUtils = {
-  getSortFilterValue: getSortFilterValue
+  getSortFilterValue
 };
 exports.UiGridCoreFocusUtils = UiGridCoreFocusUtils;

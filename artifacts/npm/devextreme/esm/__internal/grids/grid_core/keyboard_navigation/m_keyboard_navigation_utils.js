@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/keyboard_navigation/m_keyboard_navigation_utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,15 +9,19 @@
 import devices from '../../../../core/devices';
 import { isDefined } from '../../../../core/utils/type';
 import { EDITOR_CELL_CLASS } from '../editing/const';
-import { COMMAND_SELECT_CLASS, FREESPACE_ROW_CLASS, GROUP_ROW_CLASS, HEADER_ROW_CLASS, MASTER_DETAIL_ROW_CLASS, VIRTUAL_ROW_CLASS } from './const';
+import { COMMAND_SELECT_CLASS, DATA_ROW_CLASS, FREESPACE_ROW_CLASS, GROUP_ROW_CLASS, HEADER_ROW_CLASS, MASTER_DETAIL_ROW_CLASS, VIRTUAL_ROW_CLASS } from './const';
+var DATAGRID_GROUP_FOOTER_CLASS = 'dx-datagrid-group-footer';
 export function isGroupRow($row) {
   return $row && $row.hasClass(GROUP_ROW_CLASS);
+}
+export function isGroupFooterRow($row) {
+  return $row && $row.hasClass(DATAGRID_GROUP_FOOTER_CLASS);
 }
 export function isDetailRow($row) {
   return $row && $row.hasClass(MASTER_DETAIL_ROW_CLASS);
 }
 export function isDataRow($row) {
-  return $row && !isGroupRow($row) && !isDetailRow($row);
+  return $row && $row.hasClass(DATA_ROW_CLASS);
 }
 export function isNotFocusedRow($row) {
   return !$row || $row.hasClass(FREESPACE_ROW_CLASS) || $row.hasClass(VIRTUAL_ROW_CLASS);

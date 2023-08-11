@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -79,7 +79,7 @@ export type ButtonStyle = 'text' | 'outlined' | 'contained';
  * @public
  * @namespace DevExpress.common
  */
-export type ButtonType = 'back' | 'danger' | 'default' | 'normal' | 'success';
+export type ButtonType = 'danger' | 'default' | 'normal' | 'success';
 
 /**
  * @docid

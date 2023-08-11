@@ -262,4 +262,10 @@ export default class DeferredStrategy extends SelectionStrategy {
     }
     return undefined;
   }
+  loadSelectedItemsWithFilter() {
+    var componentFilter = this.options.filter();
+    var selectionFilter = this.options.selectionFilter;
+    var filter = componentFilter ? [componentFilter, 'and', selectionFilter] : selectionFilter;
+    return this._loadFilteredData(filter);
+  }
 }

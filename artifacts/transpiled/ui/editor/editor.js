@@ -48,6 +48,7 @@ var Editor = _ui.default.inherit({
     this.option(_validation_engine.default.initValidationOptions(options));
   },
   _init: function _init() {
+    this._initialValue = this.option('value');
     this.callBase();
     this._options.cache('validationTooltipOptions', this.option('validationTooltipOptions'));
     var $element = this.$element();
@@ -77,7 +78,8 @@ var Editor = _ui.default.inherit({
         v: 0
       },
       validationTooltipOptions: {},
-      _showValidationMessage: true
+      _showValidationMessage: true,
+      isDirty: false
     });
   },
   _attachKeyboardEvents: function _attachKeyboardEvents() {
@@ -208,8 +210,8 @@ var Editor = _ui.default.inherit({
       var validationMessageContentId = "dx-".concat(new _guid.default());
       this.setAria('describedby', validationMessageContentId);
       this._validationMessage = new _validation_message.default(this._$validationMessage, (0, _extend.extend)({
-        validationErrors: validationErrors,
-        rtlEnabled: rtlEnabled,
+        validationErrors,
+        rtlEnabled,
         target: this._getValidationMessageTarget(),
         visualContainer: $element,
         mode: validationMessageMode,
@@ -287,6 +289,7 @@ var Editor = _ui.default.inherit({
       case 'value':
         if (args.value != args.previousValue) {
           // eslint-disable-line eqeqeq
+          this.option('isDirty', this._initialValue !== args.value);
           this.validationRequest.fire({
             value: args.value,
             editor: this
@@ -325,6 +328,7 @@ var Editor = _ui.default.inherit({
         this._innerWidgetOptionChanged(this._validationMessage, args);
         break;
       case '_showValidationMessage':
+      case 'isDirty':
         break;
       default:
         this.callBase(args);
@@ -335,7 +339,7 @@ var Editor = _ui.default.inherit({
       (0, _dom.resetActiveElement)();
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     var defaultOptions = this._getDefaultOptions();
     this.option('value', defaultOptions.value);
   }

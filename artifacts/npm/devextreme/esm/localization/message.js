@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/localization/message.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,11 @@ import coreLocalization from './core';
 import { defaultMessages } from './default_messages';
 var baseDictionary = extend(true, {}, defaultMessages);
 var getDataByLocale = (localeData, locale) => {
-  return localeData[locale] || {};
+  var _Object$entries$find;
+  return localeData[locale] || (locale === null || locale === void 0 ? void 0 : locale.toLowerCase) && ((_Object$entries$find = Object.entries(localeData).find(_ref => {
+    var [key] = _ref;
+    return key.toLowerCase() === locale.toLowerCase();
+  })) === null || _Object$entries$find === void 0 ? void 0 : _Object$entries$find[1]) || {};
 };
 var newMessages = {};
 var messageLocalization = dependencyInjector({

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/resizing.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -68,8 +68,8 @@ var ResizingModule = /*#__PURE__*/function (_BaseModule) {
       var minWidth = Math.max((0, _size.getOuterWidth)($target) - (0, _size.getWidth)($target), this.resizable.option('minWidth'));
       var minHeight = Math.max((0, _size.getOuterHeight)($target) - (0, _size.getHeight)($target), this.resizable.option('minHeight'));
       this.resizable.option({
-        minWidth: minWidth,
-        minHeight: minHeight
+        minWidth,
+        minHeight
       });
       this.updateFramePosition();
       this.showFrame();

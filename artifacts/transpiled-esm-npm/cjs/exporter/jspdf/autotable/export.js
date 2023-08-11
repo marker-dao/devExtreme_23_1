@@ -122,8 +122,8 @@ var Export = {
               if (!isMergedCell || pdfCell.rowSpan > 1 || pdfCell.colSpan > 1) {
                 if ((0, _type.isFunction)(customizeCell)) {
                   customizeCell({
-                    gridCell: gridCell,
-                    pdfCell: pdfCell
+                    gridCell,
+                    pdfCell
                   });
                 }
                 row.push(pdfCell);
@@ -137,8 +137,8 @@ var Export = {
               pdfCell.content = (_pdfCell$content = pdfCell.content) !== null && _pdfCell$content !== void 0 ? _pdfCell$content : '';
               if ((0, _type.isFunction)(customizeCell)) {
                 customizeCell({
-                  gridCell: gridCell,
-                  pdfCell: pdfCell
+                  gridCell,
+                  pdfCell
                 });
               }
               row.push(pdfCell);
@@ -210,7 +210,7 @@ var Export = {
       }
     }
   },
-  _tryGetPdfColumnWidths: function _tryGetPdfColumnWidths(autoTableWidth, columnWidths) {
+  _tryGetPdfColumnWidths(autoTableWidth, columnWidths) {
     if ((0, _type.isNumeric)(autoTableWidth) && (0, _type.isDefined)(columnWidths)) {
       var tableWidth = columnWidths.reduce(function (a, b) {
         return a + b;

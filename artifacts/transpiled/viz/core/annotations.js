@@ -46,10 +46,10 @@ function coreAnnotation(options, contentTemplate) {
         });
       }
     },
-    hitTest: function hitTest(x, y) {
+    hitTest(x, y) {
       return this.plaque.hitTest(x, y);
     },
-    showTooltip: function showTooltip(tooltip, _ref) {
+    showTooltip(tooltip, _ref) {
       var x = _ref.x,
         y = _ref.y;
       var that = this;
@@ -60,8 +60,8 @@ function coreAnnotation(options, contentTemplate) {
           result && (tooltip.annotation = that);
         };
         callback(tooltip.show(options, {
-          x: x,
-          y: y
+          x,
+          y
         }, {
           target: options
         }, options.customizeTooltip, callback));
@@ -141,11 +141,11 @@ var createAnnotations = function createAnnotations(widget, items) {
 ///#DEBUG
 exports.createAnnotations = createAnnotations;
 var __test_utils = {
-  stub_createAnnotations: function stub_createAnnotations(stub) {
+  stub_createAnnotations(stub) {
     this.old_createAnnotations = createAnnotations;
     exports.createAnnotations = createAnnotations = stub;
   },
-  restore_createAnnotations: function restore_createAnnotations() {
+  restore_createAnnotations() {
     exports.createAnnotations = createAnnotations = this.old_createAnnotations;
   }
 };
@@ -153,10 +153,10 @@ var __test_utils = {
 exports.__test_utils = __test_utils;
 var chartPlugin = {
   name: 'annotations_chart',
-  init: function init() {},
-  dispose: function dispose() {},
+  init() {},
+  dispose() {},
   members: {
-    _getAnnotationCoords: function _getAnnotationCoords(annotation) {
+    _getAnnotationCoords(annotation) {
       var _axis, _axis2;
       var coords = {
         offsetX: annotation.offsetX,
@@ -216,7 +216,7 @@ var chartPlugin = {
       }
       return coords;
     },
-    _annotationsPointerEventHandler: function _annotationsPointerEventHandler(event) {
+    _annotationsPointerEventHandler(event) {
       if (this._disposed) {
         return;
       }
@@ -243,10 +243,10 @@ var chartPlugin = {
         event.stopPropagation();
       }
     },
-    _isAnnotationBounded: function _isAnnotationBounded(options) {
+    _isAnnotationBounded(options) {
       return (0, _type.isDefined)(options.value) || (0, _type.isDefined)(options.argument);
     },
-    _pullOptions: function _pullOptions(options) {
+    _pullOptions(options) {
       return {
         type: options.type,
         name: options.name,
@@ -261,10 +261,10 @@ var chartPlugin = {
         offsetY: options.offsetY
       };
     },
-    _forceAnnotationRender: function _forceAnnotationRender() {
+    _forceAnnotationRender() {
       this._change(['FORCE_RENDER']);
     },
-    _clear: function _clear() {
+    _clear() {
       this.hideTooltip();
       this.clearHover();
     }
@@ -272,10 +272,10 @@ var chartPlugin = {
 };
 var polarChartPlugin = {
   name: 'annotations_polar_chart',
-  init: function init() {},
-  dispose: function dispose() {},
+  init() {},
+  dispose() {},
   members: {
-    _getAnnotationCoords: function _getAnnotationCoords(annotation) {
+    _getAnnotationCoords(annotation) {
       var coords = {
         offsetX: annotation.offsetX,
         offsetY: annotation.offsetY,
@@ -300,7 +300,7 @@ var polarChartPlugin = {
             argument = argAxis.getTranslator().from(isFinite(angle) ? this.getActualAngle(angle) : coords.angle);
           }
           pointCoords = series.getSeriesPairCoord({
-            argument: argument,
+            argument,
             angle: -coords.angle
           }, true);
         } else if ((0, _type.isDefined)(coords.radius) && !(0, _type.isDefined)(argument) && !(0, _type.isDefined)(angle)) {
@@ -320,7 +320,7 @@ var polarChartPlugin = {
     },
     _annotationsPointerEventHandler: chartPlugin.members._annotationsPointerEventHandler,
     _isAnnotationBounded: chartPlugin.members._isAnnotationBounded,
-    _pullOptions: function _pullOptions(options) {
+    _pullOptions(options) {
       var polarOptions = (0, _extend.extend)({}, {
         radius: options.radius,
         angle: options.angle
@@ -334,13 +334,13 @@ var polarChartPlugin = {
 };
 var vectorMapPlugin = {
   name: 'annotations_vector_map',
-  init: function init() {},
-  dispose: function dispose() {
+  init() {},
+  dispose() {
     this._annotations._offTracker();
     this._annotations._offTracker = null;
   },
   members: {
-    _getAnnotationCoords: function _getAnnotationCoords(annotation) {
+    _getAnnotationCoords(annotation) {
       var coords = {
         offsetX: annotation.offsetX,
         offsetY: annotation.offsetY
@@ -354,10 +354,10 @@ var vectorMapPlugin = {
       return coords;
     },
     _annotationsPointerEventHandler: chartPlugin.members._annotationsPointerEventHandler,
-    _isAnnotationBounded: function _isAnnotationBounded(options) {
+    _isAnnotationBounded(options) {
       return (0, _type.isDefined)(options.coordinates);
     },
-    _pullOptions: function _pullOptions(options) {
+    _pullOptions(options) {
       var vectorMapOptions = (0, _extend.extend)({}, {
         coordinates: options.coordinates
       }, chartPlugin.members._pullOptions(options));
@@ -367,18 +367,18 @@ var vectorMapPlugin = {
       delete vectorMapOptions.value;
       return vectorMapOptions;
     },
-    _forceAnnotationRender: function _forceAnnotationRender() {
+    _forceAnnotationRender() {
       this._change(['EXTRA_ELEMENTS']);
     },
-    _getAnnotationStyles: function _getAnnotationStyles() {
+    _getAnnotationStyles() {
       return {
         'text-anchor': 'start'
       };
     },
-    _clear: function _clear() {}
+    _clear() {}
   },
   extenders: {
-    _prepareExtraElements: function _prepareExtraElements() {
+    _prepareExtraElements() {
       var that = this;
       var renderElements = function renderElements() {
         that._renderExtraElements();
@@ -393,10 +393,10 @@ var vectorMapPlugin = {
 };
 var pieChartPlugin = {
   name: 'annotations_pie_chart',
-  init: function init() {},
-  dispose: function dispose() {},
+  init() {},
+  dispose() {},
   members: {
-    _getAnnotationCoords: function _getAnnotationCoords(annotation) {
+    _getAnnotationCoords(annotation) {
       var series;
       var coords = {
         offsetX: annotation.offsetX,
@@ -418,11 +418,11 @@ var pieChartPlugin = {
       }
       return coords;
     },
-    _isAnnotationBounded: function _isAnnotationBounded(options) {
+    _isAnnotationBounded(options) {
       return options.argument;
     },
     _annotationsPointerEventHandler: chartPlugin.members._annotationsPointerEventHandler,
-    _pullOptions: function _pullOptions(options) {
+    _pullOptions(options) {
       var pieChartOptions = (0, _extend.extend)({}, {
         location: options.location
       }, chartPlugin.members._pullOptions(options));
@@ -435,7 +435,7 @@ var pieChartPlugin = {
 };
 var corePlugin = {
   name: 'annotations_core',
-  init: function init() {
+  init() {
     this._annotations = {
       items: [],
       _hideToolTipForDrag: false,
@@ -445,11 +445,11 @@ var corePlugin = {
         widgetRoot: this.element(),
         widget: this
       }),
-      hideTooltip: function hideTooltip() {
+      hideTooltip() {
         this.tooltip.annotation = null;
         this.tooltip.hide();
       },
-      clearItems: function clearItems() {
+      clearItems() {
         this.items.forEach(function (i) {
           return i.plaque.clear();
         });
@@ -458,14 +458,14 @@ var corePlugin = {
     };
     this._annotations.tooltip.setRendererOptions(this._getRendererOptions());
   },
-  dispose: function dispose() {
+  dispose() {
     this._annotationsGroup.linkRemove().linkOff();
     _events_engine.default.off(getDocument(), DOT_EVENT_NS);
     this._annotationsGroup.off(DOT_EVENT_NS);
     this._annotations.tooltip && this._annotations.tooltip.dispose();
   },
   extenders: {
-    _createHtmlStructure: function _createHtmlStructure() {
+    _createHtmlStructure() {
       var _this2 = this;
       this._annotationsGroup = this._renderer.g().attr({
         'class': "".concat(this._rootClassPrefix, "-annotations")
@@ -484,19 +484,19 @@ var corePlugin = {
       });
       this._annotationsGroup.on(POINTER_ACTION, this._annotationsPointerEventHandler.bind(this));
     },
-    _renderExtraElements: function _renderExtraElements() {
+    _renderExtraElements() {
       var _this3 = this;
       this._annotationsGroup.clear();
       this._annotations.items.forEach(function (item) {
         return item.draw(_this3, _this3._annotationsGroup);
       });
     },
-    _stopCurrentHandling: function _stopCurrentHandling() {
+    _stopCurrentHandling() {
       this._annotations.hideTooltip();
     }
   },
   members: {
-    _buildAnnotations: function _buildAnnotations() {
+    _buildAnnotations() {
       this._annotations.clearItems();
       var items = this._getOption('annotations', true);
       if (!(items !== null && items !== void 0 && items.length)) {
@@ -504,25 +504,25 @@ var corePlugin = {
       }
       this._annotations.items = createAnnotations(this, items, this._getOption('commonAnnotationSettings'), this._getOption('customizeAnnotation', true), this._pullOptions);
     },
-    _setAnnotationTooltipOptions: function _setAnnotationTooltipOptions() {
+    _setAnnotationTooltipOptions() {
       var tooltipOptions = (0, _extend.extend)({}, this._getOption('tooltip'));
       tooltipOptions.contentTemplate = tooltipOptions.customizeTooltip = undefined;
       this._annotations.tooltip.update(tooltipOptions);
     },
-    _getAnnotationCoords: function _getAnnotationCoords() {
+    _getAnnotationCoords() {
       return {};
     },
-    _pullOptions: function _pullOptions() {
+    _pullOptions() {
       return {};
     },
-    _getAnnotationStyles: function _getAnnotationStyles() {
+    _getAnnotationStyles() {
       return {};
     }
   },
-  customize: function customize(constructor) {
+  customize(constructor) {
     constructor.addChange({
       code: 'ANNOTATIONITEMS',
-      handler: function handler() {
+      handler() {
         this._requestChange(['ANNOTATIONS']);
       },
       isOptionChange: true,
@@ -530,7 +530,7 @@ var corePlugin = {
     });
     constructor.addChange({
       code: 'ANNOTATIONSSETTINGS',
-      handler: function handler() {
+      handler() {
         this._requestChange(['ANNOTATIONS']);
       },
       isOptionChange: true,
@@ -538,7 +538,7 @@ var corePlugin = {
     });
     constructor.addChange({
       code: 'ANNOTATIONS',
-      handler: function handler() {
+      handler() {
         this._buildAnnotations();
         this._setAnnotationTooltipOptions();
         this._forceAnnotationRender();

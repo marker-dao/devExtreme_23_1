@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.breadcrumbs.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -114,7 +114,7 @@ var FileManagerBreadcrumbs = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseCurrentDirectoryChanged = function _raiseCurrentDirectoryChanged(currentDirectory) {
     this._actions.onCurrentDirectoryChanging({
-      currentDirectory: currentDirectory
+      currentDirectory
     });
   };
   _proto._getDefaultOptions = function _getDefaultOptions() {

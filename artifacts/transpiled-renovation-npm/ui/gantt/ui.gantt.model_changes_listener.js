@@ -6,7 +6,7 @@ var GANTT_DEPENDENCIES = 'dependencies';
 var GANTT_RESOURCES = 'resources';
 var GANTT_RESOURCE_ASSIGNMENTS = 'resourceAssignments';
 var ModelChangesListener = {
-  create: function create(gantt) {
+  create(gantt) {
     return {
       // IModelChangesListener
       NotifyTaskCreated: function NotifyTaskCreated(task, callback, errorCallback) {

@@ -174,7 +174,9 @@ export var columnHeadersModule = {
         _setCellAriaAttributes($cell, cellOptions) {
           this.callBase($cell, cellOptions);
           if (cellOptions.rowType === 'header') {
-            this.setAria('role', 'columnheader', $cell);
+            if (!cellOptions.column.type) {
+              this.setAria('role', 'columnheader', $cell);
+            }
             if (cellOptions.column && !cellOptions.column.command && !cellOptions.column.isBand) {
               $cell.attr('id', cellOptions.column.headerId);
               this.setAria('label', "".concat(messageLocalization.format('dxDataGrid-ariaColumn'), " ").concat(cellOptions.column.caption), $cell);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/shared/ui.editor_factory_mixin.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -33,7 +33,8 @@ var EditorFactoryMixin = function () {
       readOnly: options.readOnly,
       placeholder: options.placeholder,
       inputAttr: {
-        id: options.id
+        id: options.id,
+        'aria-labelledby': options['aria-labelledby']
       },
       tabIndex: options.tabIndex
     }, options.editorOptions);

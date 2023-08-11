@@ -144,14 +144,14 @@ var ThemeManager = _base_theme_manager.BaseThemeManager.inherit(function () {
       } : {};
       return mergeOptions.call(this, name, userOptions);
     },
-    seriesTemplate: function seriesTemplate() {
+    seriesTemplate() {
       var value = mergeOptions.call(this, 'seriesTemplate');
       if (value) {
         value.nameField = value.nameField || 'series';
       }
       return value;
     },
-    zoomAndPan: function zoomAndPan() {
+    zoomAndPan() {
       function parseOption(option) {
         option = (0, _utils.normalizeEnum)(option);
         var pan = option === 'pan' || option === 'both';

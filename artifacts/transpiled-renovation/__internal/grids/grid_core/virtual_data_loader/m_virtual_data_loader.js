@@ -117,8 +117,8 @@ var processChanged = function processChanged(that, changed, changeType, isDelayC
   var viewportItems = dataOptions.viewportItems();
   if (changeType && (0, _type.isString)(changeType) && !that._isDelayChanged) {
     change = {
-      changeType: changeType,
-      items: items
+      changeType,
+      items
     };
     if (removeCacheItem) {
       change.removeCount = removeCacheItem.itemsCount;

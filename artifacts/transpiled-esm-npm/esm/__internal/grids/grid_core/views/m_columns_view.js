@@ -112,6 +112,15 @@ var copyAttributes = function copyAttributes(element, newElement) {
 var removeHandler = function removeHandler(templateDeferred) {
   templateDeferred.resolve();
 };
+export var normalizeWidth = width => {
+  if (typeof width === 'number') {
+    return "".concat(width.toFixed(3), "px");
+  }
+  if (width === 'adaptiveHidden') {
+    return HIDDEN_COLUMNS_WIDTH;
+  }
+  return width;
+};
 var viewWithColumnStateMixin = modules.View.inherit(columnStateMixin);
 export class ColumnsView extends viewWithColumnStateMixin {
   _createScrollableOptions() {
@@ -156,6 +165,15 @@ export class ColumnsView extends viewWithColumnStateMixin {
     }
     if (column.cssClass) {
       $cell.addClass(column.cssClass);
+    }
+    if (Array.isArray(column.elementAttr)) {
+      column.elementAttr.forEach(_ref => {
+        var {
+          name,
+          value
+        } = _ref;
+        $cell.attr(name, value);
+      });
     }
     if (column.command === 'expand') {
       $cell.addClass(column.cssClass);
@@ -651,10 +669,7 @@ export class ColumnsView extends viewWithColumnStateMixin {
     } = e;
     if (gridCoreUtils.checkChanges(optionNames, ['width', 'visibleWidth'])) {
       var visibleColumns = this._columnsController.getVisibleColumns();
-      var widths = iteratorUtils.map(visibleColumns, column => {
-        var width = column.visibleWidth || column.width;
-        return isDefined(width) ? width : 'auto';
-      });
+      var widths = visibleColumns.map(column => column.visibleWidth || column.width);
       this.setColumnWidths({
         widths,
         optionNames
@@ -687,6 +702,7 @@ export class ColumnsView extends viewWithColumnStateMixin {
       case 'onCellPrepared':
       case 'onRowPrepared':
       case 'onCellHoverChanged':
+      case 'keyboardNavigation':
         this._invalidate(true, true);
         args.handled = true;
         break;
@@ -804,104 +820,89 @@ export class ColumnsView extends viewWithColumnStateMixin {
   }
   _findContentElement() {}
   _getWidths($cellElements) {
-    var result = [];
-    var width;
-    if ($cellElements) {
-      iteratorUtils.each($cellElements, (index, item) => {
-        width = item.offsetWidth;
-        if (item.getBoundingClientRect) {
-          var clientRect = getBoundingRect(item);
-          if (clientRect.width > width - 1) {
-            width = clientRect.width;
-          }
-        }
-        result.push(width);
-      });
+    if (!$cellElements) {
+      return [];
     }
+    var result = [];
+    var cellElements = $cellElements.toArray();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    cellElements.forEach(cell => {
+      var width = cell.offsetWidth;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      if (cell.getBoundingClientRect) {
+        var rect = getBoundingRect(cell);
+        if (rect.width > cell.offsetWidth - 1) {
+          width = rect.width;
+        }
+      }
+      result.push(width);
+    });
     return result;
   }
   getColumnWidths($tableElement) {
-    var that = this;
-    var result = [];
-    var $rows;
-    var $cells;
     (this.option('forceApplyBindings') || noop)();
-    $tableElement = $tableElement || that.getTableElement();
+    $tableElement = $tableElement !== null && $tableElement !== void 0 ? $tableElement : this.getTableElement();
     if ($tableElement) {
-      $rows = $tableElement.children('tbody:not(.dx-header)').children();
+      var $rows = $tableElement.children('tbody:not(.dx-header)').children();
       for (var i = 0; i < $rows.length; i++) {
         var $row = $rows.eq(i);
+        var isGroupRow = $row.hasClass(GROUP_ROW_CLASS);
+        var isDetailRow = $row.hasClass(DETAIL_ROW_CLASS);
+        var isErrorRow = $row.hasClass(ERROR_ROW_CLASS);
         var isRowVisible = $row.get(0).style.display !== 'none' && !$row.hasClass('dx-state-invisible');
-        if (!$row.is(".".concat(GROUP_ROW_CLASS)) && !$row.is(".".concat(DETAIL_ROW_CLASS)) && !$row.is(".".concat(ERROR_ROW_CLASS)) && isRowVisible) {
-          $cells = $row.children('td');
-          break;
+        var isRelevantRow = !isGroupRow && !isDetailRow && !isErrorRow;
+        if (isRowVisible && isRelevantRow) {
+          var $cells = $row.children('td');
+          var result = this._getWidths($cells);
+          return result;
         }
       }
-      result = that._getWidths($cells);
     }
-    return result;
+    return [];
   }
   getVisibleColumnIndex(columnIndex, rowIndex) {
     return columnIndex;
   }
-  setColumnWidths(_ref) {
+  setColumnWidths(_ref2) {
     var {
       widths,
-      $tableElement,
-      columns,
-      fixed
-    } = _ref;
-    var $cols;
-    var width;
-    var minWidth;
-    var columnIndex;
+      optionNames
+    } = _ref2;
+    var $tableElement = this.getTableElement();
+    if (!($tableElement === null || $tableElement === void 0 ? void 0 : $tableElement.length) || !widths) {
+      return;
+    }
+    var columns = this.getColumns();
     var columnAutoWidth = this.option('columnAutoWidth');
-    $tableElement = $tableElement || this.getTableElement();
-    if ($tableElement && $tableElement.length && widths) {
-      columnIndex = 0;
-      $cols = $tableElement.children('colgroup').children('col');
-      setWidth($cols, 'auto');
-      columns = columns || this.getColumns(null, $tableElement);
-      for (var i = 0; i < columns.length; i++) {
-        if (columnAutoWidth && !fixed) {
-          width = columns[i].width;
-          if (width && !columns[i].command) {
-            width = columns[i].visibleWidth || width;
-            width = getWidthStyle(width);
-            minWidth = getWidthStyle(columns[i].minWidth || width);
-            // @ts-expect-error
-            var $rows = $rows || $tableElement.children().children('.dx-row').not(".".concat(DETAIL_ROW_CLASS));
-            for (var rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
-              var row = $rows[rowIndex];
-              var cell = void 0;
-              var visibleIndex = this.getVisibleColumnIndex(i, rowIndex);
-              if (row.classList.contains(GROUP_ROW_CLASS)) {
-                cell = row.querySelector("td[aria-colindex='".concat(visibleIndex + 1, "']:not(.").concat(GROUP_CELL_CLASS, ")"));
-              } else {
-                cell = row.cells[visibleIndex];
-              }
-              if (cell) {
-                setCellWidth(cell, columns[i], width);
-                cell.style.minWidth = minWidth;
-              }
-            }
+    var $cols = $tableElement.children('colgroup').children('col');
+    $cols.toArray().forEach(col => col.removeAttribute('style'));
+    columns.forEach((column, columnIndex) => {
+      /*
+      Probably we do not need this if statement. It seems like there is no point to set
+      min-width, width and max-width for each cell, beacuse below width for cols in colgroup is set.
+      Style for cols applies to all td elements.
+             Also check _createCell method because min-width, width and max-width are also set there.
+      */
+      if (columnAutoWidth && column.width && !column.command) {
+        var width = getWidthStyle(column.visibleWidth || column.width);
+        var minWidth = getWidthStyle(column.minWidth || width);
+        var $rows = $tableElement.children().children('.dx-row').not(".".concat(DETAIL_ROW_CLASS));
+        for (var rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
+          var $row = $rows.eq(rowIndex);
+          var visibleIndex = this.getVisibleColumnIndex(columnIndex, rowIndex);
+          var $cell = $row.hasClass(GROUP_ROW_CLASS) ? $row.find("td[aria-colindex='".concat(visibleIndex + 1, "']:not(.").concat(GROUP_CELL_CLASS, ")")) : $row.find('td').eq(visibleIndex);
+          var cell = $cell.get(0);
+          if (cell) {
+            setCellWidth(cell, column, width);
+            cell.style.minWidth = minWidth;
           }
         }
-        if (columns[i].colspan) {
-          columnIndex += columns[i].colspan;
-          continue;
-        }
-        width = widths[columnIndex];
-        if (width === 'adaptiveHidden') {
-          width = HIDDEN_COLUMNS_WIDTH;
-        }
-        if (typeof width === 'number') {
-          width = "".concat(width.toFixed(3), "px");
-        }
-        setWidth($cols.eq(columnIndex), isDefined(width) ? width : 'auto');
-        columnIndex++;
       }
-    }
+      var colWidth = normalizeWidth(widths[columnIndex]);
+      if (isDefined(colWidth)) {
+        setWidth($cols.eq(columnIndex), colWidth);
+      }
+    });
   }
   getCellElements(rowIndex) {
     return this._getCellElementsCore(rowIndex);
@@ -963,7 +964,7 @@ export class ColumnsView extends viewWithColumnStateMixin {
     return columnIdentifier;
   }
   getColumnElements() {}
-  getColumns(rowIndex, $tableElement) {
+  getColumns(rowIndex) {
     return this._columnsController.getVisibleColumns(rowIndex);
   }
   getCell(cellPosition, rows, cells) {

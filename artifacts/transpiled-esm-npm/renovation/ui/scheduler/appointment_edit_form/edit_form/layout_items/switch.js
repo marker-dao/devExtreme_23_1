@@ -5,7 +5,7 @@ var _renderTemplate = require("../utils/renderTemplate");
 var AppointmentFormClass = 'dx-appointment-form-switch';
 var getSwitchLayoutItemConfig = function getSwitchLayoutItemConfig(editorTemplate, dataField, label) {
   return {
-    dataField: dataField,
+    dataField,
     cssClass: AppointmentFormClass,
     label: {
       text: label,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/line_series.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,7 +50,7 @@ function obtainCubicBezierTCoef(p, p0, p1, p2, p3) {
   return (0, _math.solveCubicEquation)(a, b, c, d);
 }
 var lineMethods = {
-  autoHidePointMarkersEnabled: function autoHidePointMarkersEnabled() {
+  autoHidePointMarkersEnabled() {
     return true;
   },
   _applyGroupSettings: function _applyGroupSettings(style, settings, group) {
@@ -201,7 +201,7 @@ var lineMethods = {
     settings.points = this._getMainPointsFromSegment(segment);
     element.attr(settings);
   },
-  checkSeriesViewportCoord: function checkSeriesViewportCoord(axis, coord) {
+  checkSeriesViewportCoord(axis, coord) {
     if (!_scatter_series.chart.checkSeriesViewportCoord.call(this)) {
       return false;
     }
@@ -214,14 +214,14 @@ var lineMethods = {
   }
 };
 var lineSeries = chart['line'] = (0, _extend.extend)({}, _scatter_series.chart, lineMethods, {
-  getPointCenterByArg: function getPointCenterByArg(arg) {
+  getPointCenterByArg(arg) {
     var value = this.getArgumentAxis().getTranslator().translate(arg);
     return {
       x: value,
       y: value
     };
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var that = this;
     var oppositeCoord = null;
     var nearestPoints = this._getNearestPointsByCoord(coord, isArgument);
@@ -245,7 +245,7 @@ var lineSeries = chart['line'] = (0, _extend.extend)({}, _scatter_series.chart, 
   }
 });
 chart['stepline'] = (0, _extend.extend)({}, lineSeries, {
-  _calculateStepLinePoints: function _calculateStepLinePoints(points) {
+  _calculateStepLinePoints(points) {
     var segment = [];
     var coordName = this._options.rotated ? 'x' : 'y';
     (0, _iterator.each)(points, function (i, pt) {
@@ -267,7 +267,7 @@ chart['stepline'] = (0, _extend.extend)({}, lineSeries, {
   _prepareSegment: function _prepareSegment(points) {
     return lineSeries._prepareSegment(this._calculateStepLinePoints(points));
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var oppositeCoord;
     var rotated = this._options.rotated;
     var isOpposite = !isArgument && !rotated || isArgument && rotated;
@@ -393,7 +393,7 @@ chart['spline'] = (0, _extend.extend)({}, lineSeries, {
   _createMainElement: function _createMainElement(points, settings) {
     return this._renderer.path(points, 'bezier').attr(settings);
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var that = this;
     var oppositeCoord = null;
     var isOpposite = !isArgument && !this._options.rotated || isArgument && this._options.rotated;
@@ -429,11 +429,11 @@ chart['spline'] = (0, _extend.extend)({}, lineSeries, {
     }
     return oppositeCoord;
   },
-  _getNearestPoints: function _getNearestPoints(point, nextPoint, bezierPoints) {
+  _getNearestPoints(point, nextPoint, bezierPoints) {
     var index = bezierPoints.indexOf(point);
     return [point, bezierPoints[index + 1], bezierPoints[index + 2], nextPoint];
   },
-  _getBezierPoints: function _getBezierPoints() {
+  _getBezierPoints() {
     return this._segments.length > 0 ? this._segments.reduce(function (a, seg) {
       return a.concat(seg.line);
     }, []) : [];
@@ -467,19 +467,15 @@ polar.line = (0, _extend.extend)({}, _scatter_series.polar, lineMethods, {
     var normAngle = (0, _utils.normalizeAngle)(angle);
     return angle >= 0 ? 360 - normAngle : -normAngle;
   },
-  _closeSegment: function _closeSegment(points) {
-    var point;
-    if (this._segments.length) {
-      point = this._segments[0].line[0];
-    } else {
-      point = clonePoint(points[0], points[0].x, points[0].y, points[0].angle);
-    }
-    point = this._modifyReflectedPoint(point, points[points.length - 1]);
-    if (point) {
-      points.push(point);
+  _closeSegment(points) {
+    var point = this._segments.length ? this._segments[0].line[0] : points[0];
+    var newPoint = clonePoint(point, point.x, point.y, point.angle);
+    newPoint = this._modifyReflectedPoint(newPoint, points.at(-1));
+    if (newPoint) {
+      points.push(newPoint);
     }
   },
-  _modifyReflectedPoint: function _modifyReflectedPoint(point, lastPoint) {
+  _modifyReflectedPoint(point, lastPoint) {
     if (lastPoint.angle === point.angle) {
       return undefined;
     }
@@ -511,7 +507,7 @@ polar.line = (0, _extend.extend)({}, _scatter_series.polar, lineMethods, {
     }
     return tangentPoints;
   },
-  getSeriesPairCoord: function getSeriesPairCoord(params, isArgument) {
+  getSeriesPairCoord(params, isArgument) {
     var that = this;
     var argAxis = that.getArgumentAxis();
     var paramName = isArgument ? 'angle' : 'radius';
@@ -524,8 +520,8 @@ polar.line = (0, _extend.extend)({}, _scatter_series.polar, lineMethods, {
       var x = _ref.x,
         y = _ref.y;
       return getLengthByCoords({
-        x: x,
-        y: y
+        x,
+        y
       }, centerPoint) <= argAxis.getRadius() && min(prevPoint.x, point.x) <= x && max(prevPoint.x, point.x) >= x && min(prevPoint.y, point.y) <= y && max(prevPoint.y, point.y) >= y;
     };
     var coords;
@@ -556,14 +552,14 @@ polar.line = (0, _extend.extend)({}, _scatter_series.polar, lineMethods, {
           var x = (b2 - b1) / (k1 - k2);
           var y = k1 * x + b1;
           if (isInsideInterval(prevPoint, point, {
-            x: x,
-            y: y
+            x,
+            y
           })) {
             var quarter = abs((0, _math.trunc)((360 + coordParam) / 90) % 4);
             if (quarter === 0 && x >= centerPoint.x && y <= centerPoint.y || quarter === 1 && x <= centerPoint.x && y <= centerPoint.y || quarter === 2 && x <= centerPoint.x && y >= centerPoint.y || quarter === 3 && x >= centerPoint.x && y >= centerPoint.y) {
               coords = {
-                x: x,
-                y: y
+                x,
+                y
               };
             }
           }
@@ -598,7 +594,7 @@ polar.line = (0, _extend.extend)({}, _scatter_series.polar, lineMethods, {
     }
     return coords;
   },
-  getNeighborPoints: function getNeighborPoints(param, paramName) {
+  getNeighborPoints(param, paramName) {
     var points = this.getPoints();
     var neighborPoints = [];
     if (this.getOptions().closed) {

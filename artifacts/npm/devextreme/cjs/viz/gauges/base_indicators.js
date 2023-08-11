@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/gauges/base_indicators.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -214,14 +214,14 @@ var BaseTextCloudMarker = BaseIndicator.inherit({
     var cloudWidth = (bBox.width || text.length * that._textUnitWidth) + 2 * options.horizontalOffset;
     var cloudHeight = (bBox.height || that._textHeight) + 2 * options.verticalOffset;
     var info = getTextCloudInfo({
-      x: x,
-      y: y,
-      cloudWidth: cloudWidth,
-      cloudHeight: cloudHeight,
+      x,
+      y,
+      cloudWidth,
+      cloudHeight,
       tailLength: options.arrowLength,
       type: that._correctCloudType(textCloudOptions.type, {
-        x: x,
-        y: y
+        x,
+        y
       }, {
         width: cloudWidth,
         height: cloudHeight
@@ -282,7 +282,7 @@ var BaseTextCloudMarker = BaseIndicator.inherit({
       color: this._options.color
     };
   },
-  _correctCloudType: function _correctCloudType(type) {
+  _correctCloudType(type) {
     return type;
   }
 });

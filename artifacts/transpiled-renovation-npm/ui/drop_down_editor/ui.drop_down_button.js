@@ -50,8 +50,8 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
     }));
     this._legacyRender(editor.$element(), $element, options.visible);
     return {
-      $element: $element,
-      instance: instance
+      $element,
+      instance
     };
   };
   _proto._getOptions = function _getOptions() {
@@ -64,7 +64,7 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
       activeStateEnabled: false,
       useInkRipple: false,
       disabled: isReadOnly,
-      visible: visible
+      visible
     };
     this._addTemplate(options);
     return options;

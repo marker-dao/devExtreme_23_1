@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/form/ui.form.layout_manager.utils.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ import { each } from '../../core/utils/iterator';
 import { captionize } from '../../core/utils/inflector';
 import Guid from '../../core/guid';
 import { SIMPLE_ITEM_TYPE } from './constants';
-var EDITORS_WITH_ARRAY_VALUE = ['dxTagBox', 'dxRangeSlider'];
+var EDITORS_WITH_ARRAY_VALUE = ['dxTagBox', 'dxRangeSlider', 'dxDateRangeBox'];
 export var EDITORS_WITHOUT_LABELS = ['dxCalendar', 'dxCheckBox', 'dxHtmlEditor', 'dxRadioGroup', 'dxRangeSlider', 'dxSlider', 'dxSwitch'];
 export function convertToRenderFieldItemOptions(_ref) {
   var {
@@ -207,7 +207,7 @@ function _convertToLabelOptions(_ref5) {
     labelTemplate,
     onLabelTemplateRendered
   });
-  var editorsRequiringIdForLabel = ['dxRadioGroup', 'dxCheckBox', 'dxLookup', 'dxSlider', 'dxRangeSlider', 'dxSwitch', 'dxHtmlEditor']; // TODO: support "dxCalendar"
+  var editorsRequiringIdForLabel = ['dxRadioGroup', 'dxCheckBox', 'dxLookup', 'dxSlider', 'dxRangeSlider', 'dxSwitch', 'dxHtmlEditor', 'dxDateRangeBox']; // TODO: support "dxCalendar"
   if (editorsRequiringIdForLabel.includes(item.editorType)) {
     labelOptions.labelID = "dx-label-".concat(new Guid());
   }

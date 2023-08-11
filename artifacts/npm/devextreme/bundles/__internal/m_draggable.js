@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/m_draggable.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -36,11 +36,8 @@ var _pointer = _interopRequireDefault(require("../events/pointer"));
 var _index = require("../events/utils/index");
 var _animator = _interopRequireDefault(require("../ui/scroll_view/animator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } // @ts-expect-error
+// @ts-expect-error
 var window = (0, _window.getWindow)();
 var KEYDOWN_EVENT = 'keydown';
 var DRAGGABLE = 'dxDraggable';
@@ -171,7 +168,9 @@ var ScrollHelper = /*#__PURE__*/function () {
         var scrollableInstance = $scrollable.data('dxScrollable') || $scrollable.data('dxScrollView');
         if (scrollableInstance) {
           var nextScrollPosition = scrollableInstance.scrollOffset()[that._limitProps.start] + that._scrollSpeed;
-          scrollableInstance.scrollTo(_defineProperty({}, that._limitProps.start, nextScrollPosition));
+          scrollableInstance.scrollTo({
+            [that._limitProps.start]: nextScrollPosition
+          });
         }
       } else {
         var _nextScrollPosition = that._$scrollableAtPointer[that._scrollValue]() + that._scrollSpeed;
@@ -202,11 +201,11 @@ var ScrollHelper = /*#__PURE__*/function () {
   return ScrollHelper;
 }();
 var ScrollAnimator = _animator.default.inherit({
-  ctor: function ctor(strategy) {
+  ctor(strategy) {
     this.callBase();
     this._strategy = strategy;
   },
-  _step: function _step() {
+  _step() {
     var horizontalScrollHelper = this._strategy._horizontalScrollHelper;
     var verticalScrollHelper = this._strategy._verticalScrollHelper;
     horizontalScrollHelper && horizontalScrollHelper.scrollByStep();
@@ -218,13 +217,13 @@ var Draggable = _dom_component.default.inherit({
   dragMove: _common.noop,
   dragEnter: _common.noop,
   dragLeave: _common.noop,
-  dragEnd: function dragEnd(sourceEvent) {
+  dragEnd(sourceEvent) {
     var sourceDraggable = this._getSourceDraggable();
     sourceDraggable._fireRemoveEvent(sourceEvent);
     return (0, _deferred.Deferred)().resolve();
   },
   _fireRemoveEvent: _common.noop,
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       onDragStart: null,
       onDragMove: null,
@@ -253,7 +252,7 @@ var Draggable = _dom_component.default.inherit({
       data: undefined
     });
   },
-  _setOptionsByReference: function _setOptionsByReference() {
+  _setOptionsByReference() {
     this.callBase.apply(this, arguments);
     (0, _extend.extend)(this._optionsByReference, {
       component: true,
@@ -262,7 +261,7 @@ var Draggable = _dom_component.default.inherit({
       data: true
     });
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._attachEventHandlers();
     this._scrollAnimator = new ScrollAnimator(this);
@@ -271,7 +270,7 @@ var Draggable = _dom_component.default.inherit({
     this._initScrollTop = 0;
     this._initScrollLeft = 0;
   },
-  _normalizeCursorOffset: function _normalizeCursorOffset(offset) {
+  _normalizeCursorOffset(offset) {
     if ((0, _type.isObject)(offset)) {
       offset = {
         h: offset.x,
@@ -286,13 +285,13 @@ var Draggable = _dom_component.default.inherit({
       top: offset.length === 1 ? offset[0] : offset[1]
     };
   },
-  _getNormalizedCursorOffset: function _getNormalizedCursorOffset(offset, options) {
+  _getNormalizedCursorOffset(offset, options) {
     if ((0, _type.isFunction)(offset)) {
       offset = offset.call(this, options);
     }
     return this._normalizeCursorOffset(offset);
   },
-  _calculateElementOffset: function _calculateElementOffset(options) {
+  _calculateElementOffset(options) {
     var elementOffset;
     var dragElementOffset;
     var event = options.event;
@@ -322,7 +321,7 @@ var Draggable = _dom_component.default.inherit({
     }
     return elementOffset;
   },
-  _initPosition: function _initPosition(options) {
+  _initPosition(options) {
     var $dragElement = (0, _renderer.default)(options.dragElement);
     var elementOffset = this._calculateElementOffset(options);
     if (elementOffset) {
@@ -330,27 +329,27 @@ var Draggable = _dom_component.default.inherit({
     }
     this._startPosition = (0, _translator.locate)($dragElement);
   },
-  _startAnimator: function _startAnimator() {
+  _startAnimator() {
     if (!this._scrollAnimator.inProgress()) {
       this._scrollAnimator.start();
     }
   },
-  _stopAnimator: function _stopAnimator() {
+  _stopAnimator() {
     this._scrollAnimator.stop();
   },
-  _addWidgetPrefix: function _addWidgetPrefix(className) {
+  _addWidgetPrefix(className) {
     var componentName = this.NAME;
     return (0, _inflector.dasherize)(componentName) + (className ? "-".concat(className) : '');
   },
-  _getItemsSelector: function _getItemsSelector() {
+  _getItemsSelector() {
     return this.option('filter') || '';
   },
-  _$content: function _$content() {
+  _$content() {
     var $element = this.$element();
     var $wrapper = $element.children('.dx-template-wrapper');
     return $wrapper.length ? $wrapper : $element;
   },
-  _attachEventHandlers: function _attachEventHandlers() {
+  _attachEventHandlers() {
     var _this2 = this;
     if (this.option('disabled')) {
       return;
@@ -388,10 +387,10 @@ var Draggable = _dom_component.default.inherit({
       _events_engine.default.on($element, KEYDOWN_EVENT_NAME, this._keydownHandler.bind(this));
     }
   },
-  _dragElementIsCloned: function _dragElementIsCloned() {
+  _dragElementIsCloned() {
     return this._$dragElement && this._$dragElement.hasClass(this._addWidgetPrefix(CLONE_CLASS));
   },
-  _getDragTemplateArgs: function _getDragTemplateArgs($element, $container) {
+  _getDragTemplateArgs($element, $container) {
     return {
       container: (0, _element.getPublicElement)($container),
       model: {
@@ -400,7 +399,7 @@ var Draggable = _dom_component.default.inherit({
       }
     };
   },
-  _createDragElement: function _createDragElement($element) {
+  _createDragElement($element) {
     var result = $element;
     var clone = this.option('clone');
     var $container = this._getContainer();
@@ -418,7 +417,7 @@ var Draggable = _dom_component.default.inherit({
     }
     return result.toggleClass(this._addWidgetPrefix(CLONE_CLASS), result.get(0) !== $element.get(0)).toggleClass('dx-rtl', this.option('rtlEnabled'));
   },
-  _resetDragElement: function _resetDragElement() {
+  _resetDragElement() {
     if (this._dragElementIsCloned()) {
       this._$dragElement.remove();
     } else {
@@ -426,20 +425,20 @@ var Draggable = _dom_component.default.inherit({
     }
     this._$dragElement = null;
   },
-  _resetSourceElement: function _resetSourceElement() {
+  _resetSourceElement() {
     this._toggleDragSourceClass(false);
     this._$sourceElement = null;
   },
-  _detachEventHandlers: function _detachEventHandlers() {
+  _detachEventHandlers() {
     // @ts-expect-error
     _events_engine.default.off(this._$content(), ".".concat(DRAGGABLE));
     // @ts-expect-error
     _events_engine.default.off(this._getArea(), ".".concat(DRAGGABLE));
   },
-  _move: function _move(position, $element) {
+  _move(position, $element) {
     (0, _translator.move)($element || this._$dragElement, position);
   },
-  _getDraggableElement: function _getDraggableElement(e) {
+  _getDraggableElement(e) {
     var $sourceElement = this._getSourceElement();
     if ($sourceElement) {
       return $sourceElement;
@@ -458,11 +457,11 @@ var Draggable = _dom_component.default.inherit({
     }
     return $target;
   },
-  _getSourceElement: function _getSourceElement() {
+  _getSourceElement() {
     var draggable = this._getSourceDraggable();
     return draggable._$sourceElement;
   },
-  _pointerDownHandler: function _pointerDownHandler(e) {
+  _pointerDownHandler(e) {
     if ((0, _index.needSkipEvent)(e)) {
       return;
     }
@@ -478,7 +477,7 @@ var Draggable = _dom_component.default.inherit({
     this._move(position, $element);
     this._getAction('onDragMove')(this._getEventArgs(e));
   },
-  _isValidElement: function _isValidElement(event, $element) {
+  _isValidElement(event, $element) {
     var handle = this.option('handle');
     var $target = (0, _renderer.default)(event.originalEvent && event.originalEvent.target);
     if (handle && !$target.closest(handle).length) {
@@ -489,7 +488,7 @@ var Draggable = _dom_component.default.inherit({
     }
     return !$element.is('.dx-state-disabled, .dx-state-disabled *');
   },
-  _dragStartHandler: function _dragStartHandler(e) {
+  _dragStartHandler(e) {
     var $element = this._getDraggableElement(e);
     this.dragInProgress = true;
     if (!this._isValidElement(e, $element)) {
@@ -547,45 +546,45 @@ var Draggable = _dom_component.default.inherit({
       this._startAnimator();
     }
   },
-  _getAreaOffset: function _getAreaOffset($area) {
+  _getAreaOffset($area) {
     var offset = $area && _position.default.offset($area);
     return offset || {
       left: 0,
       top: 0
     };
   },
-  _toggleDraggingClass: function _toggleDraggingClass(value) {
+  _toggleDraggingClass(value) {
     this._$dragElement && this._$dragElement.toggleClass(this._addWidgetPrefix('dragging'), value);
   },
-  _toggleDragSourceClass: function _toggleDragSourceClass(value, $element) {
+  _toggleDragSourceClass(value, $element) {
     var $sourceElement = $element || this._$sourceElement;
     $sourceElement && $sourceElement.toggleClass(this._addWidgetPrefix('source'), value);
   },
-  _setGestureCoverCursor: function _setGestureCoverCursor($element) {
+  _setGestureCoverCursor($element) {
     (0, _renderer.default)(".".concat(GESTURE_COVER_CLASS)).css('cursor', $element.css('cursor'));
   },
-  _getBoundOffset: function _getBoundOffset() {
+  _getBoundOffset() {
     var boundOffset = this.option('boundOffset');
     if ((0, _type.isFunction)(boundOffset)) {
       boundOffset = boundOffset.call(this);
     }
     return (0, _string.quadToObject)(boundOffset);
   },
-  _getArea: function _getArea() {
+  _getArea() {
     var area = this.option('boundary');
     if ((0, _type.isFunction)(area)) {
       area = area.call(this);
     }
     return (0, _renderer.default)(area);
   },
-  _getContainer: function _getContainer() {
+  _getContainer() {
     var container = this.option('container');
     if (container === undefined) {
       container = (0, _view_port.value)();
     }
     return (0, _renderer.default)(container);
   },
-  _getDraggableElementOffset: function _getDraggableElementOffset(initialOffsetX, initialOffsetY) {
+  _getDraggableElementOffset(initialOffsetX, initialOffsetY) {
     var _a, _b, _c, _d;
     var initScrollTop = this._initScrollTop;
     var initScrollLeft = this._initScrollLeft;
@@ -605,10 +604,10 @@ var Draggable = _dom_component.default.inherit({
       top: (0, _type.isNumeric)(scrollTop) ? result.top + scrollTop - initScrollTop : result.top
     };
   },
-  _hasClonedDraggable: function _hasClonedDraggable() {
+  _hasClonedDraggable() {
     return this.option('clone') || this.option('dragTemplate');
   },
-  _dragMoveHandler: function _dragMoveHandler(e) {
+  _dragMoveHandler(e) {
     this._dragMoveArgs = e;
     if (!this._$dragElement) {
       e.cancel = true;
@@ -625,7 +624,7 @@ var Draggable = _dom_component.default.inherit({
     var targetDraggable = this._getTargetDraggable();
     targetDraggable.dragMove(e, scrollBy);
   },
-  _updateScrollable: function _updateScrollable(e) {
+  _updateScrollable(e) {
     var that = this;
     if (that.option('autoScroll')) {
       var mousePosition = getMousePosition(e);
@@ -634,7 +633,7 @@ var Draggable = _dom_component.default.inherit({
       that._horizontalScrollHelper.updateScrollable(allObjects, mousePosition);
     }
   },
-  _getScrollable: function _getScrollable($element) {
+  _getScrollable($element) {
     var _this3 = this;
     var $scrollable;
     $element.parents().toArray().some(function (parent) {
@@ -647,15 +646,15 @@ var Draggable = _dom_component.default.inherit({
     });
     return $scrollable;
   },
-  _getScrollableScrollTop: function _getScrollableScrollTop() {
+  _getScrollableScrollTop() {
     var _a, _b;
     return (_b = (_a = this._getScrollable((0, _renderer.default)(this.element()))) === null || _a === void 0 ? void 0 : _a.scrollTop()) !== null && _b !== void 0 ? _b : 0;
   },
-  _getScrollableScrollLeft: function _getScrollableScrollLeft() {
+  _getScrollableScrollLeft() {
     var _a, _b;
     return (_b = (_a = this._getScrollable((0, _renderer.default)(this.element()))) === null || _a === void 0 ? void 0 : _a.scrollLeft()) !== null && _b !== void 0 ? _b : 0;
   },
-  _defaultActionArgs: function _defaultActionArgs() {
+  _defaultActionArgs() {
     var args = this.callBase.apply(this, arguments);
     var component = this.option('component');
     if (component) {
@@ -664,7 +663,7 @@ var Draggable = _dom_component.default.inherit({
     }
     return args;
   },
-  _getEventArgs: function _getEventArgs(e) {
+  _getEventArgs(e) {
     var sourceDraggable = this._getSourceDraggable();
     var targetDraggable = this._getTargetDraggable();
     return {
@@ -677,7 +676,7 @@ var Draggable = _dom_component.default.inherit({
       toData: targetDraggable.option('data')
     };
   },
-  _getDragStartArgs: function _getDragStartArgs(e, $itemElement) {
+  _getDragStartArgs(e, $itemElement) {
     var args = this._getEventArgs(e);
     return {
       event: args.event,
@@ -686,10 +685,10 @@ var Draggable = _dom_component.default.inherit({
       fromData: args.fromData
     };
   },
-  _revertItemToInitialPosition: function _revertItemToInitialPosition() {
+  _revertItemToInitialPosition() {
     !this._dragElementIsCloned() && this._move(this._initialLocate, this._$sourceElement);
   },
-  _dragEndHandler: function _dragEndHandler(e) {
+  _dragEndHandler(e) {
     var _this4 = this;
     var d = (0, _deferred.Deferred)();
     var dragEndEventArgs = this._getEventArgs(e);
@@ -724,7 +723,7 @@ var Draggable = _dom_component.default.inherit({
       });
     }
   },
-  _isTargetOverAnotherDraggable: function _isTargetOverAnotherDraggable(e) {
+  _isTargetOverAnotherDraggable(e) {
     var _this5 = this;
     var sourceDraggable = this._getSourceDraggable();
     if (this === sourceDraggable) {
@@ -747,7 +746,7 @@ var Draggable = _dom_component.default.inherit({
     var isTargetOverNestedDraggable = (0, _renderer.default)(firstWidgetElement).closest($sourceElement).length;
     return !firstWidgetElement || firstWidgetElement === $targetDraggableElement.get(0) && !isTargetOverItself && !isTargetOverNestedDraggable;
   },
-  _dragEnterHandler: function _dragEnterHandler(e) {
+  _dragEnterHandler(e) {
     this._fireDragEnterEvent(e);
     if (this._isTargetOverAnotherDraggable(e)) {
       this._setTargetDraggable();
@@ -755,7 +754,7 @@ var Draggable = _dom_component.default.inherit({
     var sourceDraggable = this._getSourceDraggable();
     sourceDraggable.dragEnter(e);
   },
-  _dragLeaveHandler: function _dragLeaveHandler(e) {
+  _dragLeaveHandler(e) {
     this._fireDragLeaveEvent(e);
     this._resetTargetDraggable();
     if (this !== this._getSourceDraggable()) {
@@ -764,12 +763,12 @@ var Draggable = _dom_component.default.inherit({
     var sourceDraggable = this._getSourceDraggable();
     sourceDraggable.dragLeave(e);
   },
-  _keydownHandler: function _keydownHandler(e) {
+  _keydownHandler(e) {
     if (this.dragInProgress && e.key === 'Escape') {
       this._keydownEscapeHandler(e);
     }
   },
-  _keydownEscapeHandler: function _keydownEscapeHandler(e) {
+  _keydownEscapeHandler(e) {
     var $sourceElement = this._getSourceElement();
     if (!$sourceElement) {
       return;
@@ -787,20 +786,20 @@ var Draggable = _dom_component.default.inherit({
     this._resetDragOptions(targetDraggable);
     this._attachEventHandlers();
   },
-  _getAction: function _getAction(name) {
+  _getAction(name) {
     return this["_".concat(name, "Action")] || this._createActionByOption(name);
   },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+  _getAnonymousTemplateName() {
     return ANONYMOUS_TEMPLATE_NAME;
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates() {
     if (!this.option('contentTemplate')) return;
     this._templateManager.addDefaultTemplates({
       content: new _empty_template.EmptyTemplate()
     });
     this.callBase.apply(this, arguments);
   },
-  _render: function _render() {
+  _render() {
     this.callBase();
     this.$element().addClass(this._addWidgetPrefix());
     var transclude = this._templateManager.anonymousTemplateName === this.option('contentTemplate');
@@ -808,11 +807,11 @@ var Draggable = _dom_component.default.inherit({
     if (template) {
       (0, _renderer.default)(template.render({
         container: this.element(),
-        transclude: transclude
+        transclude
       }));
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var name = args.name;
     switch (name) {
       case 'onDragStart':
@@ -859,29 +858,29 @@ var Draggable = _dom_component.default.inherit({
         this.callBase(args);
     }
   },
-  _getTargetDraggable: function _getTargetDraggable() {
+  _getTargetDraggable() {
     return targetDraggable || this;
   },
-  _getSourceDraggable: function _getSourceDraggable() {
+  _getSourceDraggable() {
     return sourceDraggable || this;
   },
-  _setTargetDraggable: function _setTargetDraggable() {
+  _setTargetDraggable() {
     var currentGroup = this.option('group');
     var sourceDraggable = this._getSourceDraggable();
     if (currentGroup && currentGroup === sourceDraggable.option('group')) {
       targetDraggable = this;
     }
   },
-  _setSourceDraggable: function _setSourceDraggable() {
+  _setSourceDraggable() {
     sourceDraggable = this;
   },
-  _resetSourceDraggable: function _resetSourceDraggable() {
+  _resetSourceDraggable() {
     sourceDraggable = null;
   },
-  _resetTargetDraggable: function _resetTargetDraggable() {
+  _resetTargetDraggable() {
     targetDraggable = null;
   },
-  _resetDragOptions: function _resetDragOptions(targetDraggable) {
+  _resetDragOptions(targetDraggable) {
     this.reset();
     targetDraggable.reset();
     this._stopAnimator();
@@ -892,7 +891,7 @@ var Draggable = _dom_component.default.inherit({
     this._resetTargetDraggable();
     this._resetSourceDraggable();
   },
-  _dispose: function _dispose() {
+  _dispose() {
     this.callBase();
     this._detachEventHandlers();
     this._resetDragElement();
@@ -901,11 +900,11 @@ var Draggable = _dom_component.default.inherit({
     this._$sourceElement = null;
     this._stopAnimator();
   },
-  _fireDragEnterEvent: function _fireDragEnterEvent(sourceEvent) {
+  _fireDragEnterEvent(sourceEvent) {
     var args = this._getEventArgs(sourceEvent);
     this._getAction('onDragEnter')(args);
   },
-  _fireDragLeaveEvent: function _fireDragLeaveEvent(sourceEvent) {
+  _fireDragLeaveEvent(sourceEvent) {
     var args = this._getEventArgs(sourceEvent);
     this._getAction('onDragLeave')(args);
   }

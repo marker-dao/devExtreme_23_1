@@ -116,18 +116,18 @@ function getScrollWrapper(scrollable) {
     move();
   }
   return {
-    moveIfNeed: moveIfNeed,
-    element: function element() {
+    moveIfNeed,
+    element() {
       return $element;
     },
-    dispose: function dispose() {
+    dispose() {
       stop();
       scrollable.off('scroll', onScroll);
     }
   };
 }
 var Sortable = _dom_component.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       onChanged: null,
       onDragging: null,
@@ -144,7 +144,7 @@ var Sortable = _dom_component.default.inherit({
       useIndicator: false
     });
   },
-  _renderItem: function _renderItem($sourceItem, target) {
+  _renderItem($sourceItem, target) {
     var itemRender = this.option('itemRender');
     var $item;
     if (itemRender) {
@@ -158,7 +158,7 @@ var Sortable = _dom_component.default.inherit({
     }
     return $item;
   },
-  _renderIndicator: function _renderIndicator($item, isVertical, $targetGroup, isLast) {
+  _renderIndicator($item, isVertical, $targetGroup, isLast) {
     var height = (0, _size.getOuterHeight)($item, true);
     var width = (0, _size.getOuterWidth)($item, true);
     var top = $item.offset().top - $targetGroup.offset().top;
@@ -176,18 +176,18 @@ var Sortable = _dom_component.default.inherit({
       (0, _size.setHeight)(this._indicator, height);
     }
   },
-  _renderDraggable: function _renderDraggable($sourceItem) {
+  _renderDraggable($sourceItem) {
     this._$draggable && this._$draggable.remove();
     this._$draggable = this._renderItem($sourceItem, 'drag').addClass(this.option('dragClass')).appendTo(getSwatchContainer($sourceItem)).css({
       zIndex: 1000000,
       position: 'absolute'
     });
   },
-  _detachEventHandlers: function _detachEventHandlers() {
+  _detachEventHandlers() {
     var dragEventsString = [_drag.move, _drag.start, _drag.end, _drag.enter, _drag.leave, _drag.drop].join(' ');
     _events_engine.default.off(this._getEventListener(), (0, _index.addNamespace)(dragEventsString, SORTABLE_NAMESPACE), undefined);
   },
-  _getItemOffset: function _getItemOffset(isVertical, itemsOffset, e) {
+  _getItemOffset(isVertical, itemsOffset, e) {
     for (var i = 0; i < itemsOffset.length; i += 1) {
       var shouldInsert = void 0;
       var sameLine = e.pageY < itemsOffset[i].posVertical;
@@ -205,12 +205,12 @@ var Sortable = _dom_component.default.inherit({
     }
     return undefined;
   },
-  _getEventListener: function _getEventListener() {
+  _getEventListener() {
     var groupSelector = this.option('groupSelector');
     var element = this.$element();
     return groupSelector ? element.find(groupSelector) : element;
   },
-  _attachEventHandlers: function _attachEventHandlers() {
+  _attachEventHandlers() {
     var that = this;
     var itemSelector = that.option('itemSelector');
     var itemContainerSelector = that.option('itemContainerSelector');
@@ -248,8 +248,8 @@ var Sortable = _dom_component.default.inherit({
     };
     var invokeOnDraggingEvent = function invokeOnDraggingEvent() {
       var draggingArgs = {
-        sourceGroup: sourceGroup,
-        sourceIndex: sourceIndex,
+        sourceGroup,
+        sourceIndex,
         sourceElement: $sourceItem,
         targetGroup: $targetGroup.attr('group'),
         targetIndex: $targetGroup.find(itemSelector).index($targetItem)
@@ -358,10 +358,10 @@ var Sortable = _dom_component.default.inherit({
         }
         var onChanged = that.option('onChanged');
         var changedArgs = {
-          sourceIndex: sourceIndex,
+          sourceIndex,
           sourceElement: $sourceItem,
-          sourceGroup: sourceGroup,
-          targetIndex: targetIndex,
+          sourceGroup,
+          targetIndex,
           removeSourceElement: true,
           removeTargetElement: false,
           removeSourceClass: true
@@ -385,21 +385,21 @@ var Sortable = _dom_component.default.inherit({
       });
     }
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._attachEventHandlers();
   },
-  _render: function _render() {
+  _render() {
     this.callBase();
     this.$element().addClass(SORTABLE_CLASS);
   },
-  _dispose: function _dispose() {
+  _dispose() {
     var that = this;
     that.callBase.apply(that, arguments);
     that._$draggable && that._$draggable.detach();
     that._indicator && that._indicator.detach();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var that = this;
     switch (args.name) {
       case 'onDragging':
@@ -422,7 +422,7 @@ var Sortable = _dom_component.default.inherit({
         that.callBase(args);
     }
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates() {
     return false;
   }
 });
@@ -433,6 +433,6 @@ Sortable.prototype.__SCROLL_STEP = SCROLL_STEP;
 // TODO remove dxSortableOld component
 (0, _component_registrator.default)('dxSortableOld', Sortable);
 var _default = {
-  Sortable: Sortable
+  Sortable
 };
 exports.default = _default;

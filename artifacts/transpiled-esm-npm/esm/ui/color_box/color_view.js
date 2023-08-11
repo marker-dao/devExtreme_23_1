@@ -319,11 +319,13 @@ var ColorView = Editor.inherit({
   },
   _renderPaletteHandle: function _renderPaletteHandle() {
     this._$paletteHandle = $('<div>').addClass(COLOR_VIEW_PALETTE_HANDLE_CLASS).appendTo(this._$palette);
+    var ariaId = "dx-".concat(new Guid());
     var handleAria = {
-      id: this.option('ariaId'),
+      id: ariaId,
       role: 'application'
     };
     this.setAria(handleAria, this._$paletteHandle);
+    this.setAria('activedescendant', ariaId, this.option('target'));
     this._createComponent(this._$paletteHandle, Draggable, {
       contentTemplate: null,
       boundary: this._$palette,

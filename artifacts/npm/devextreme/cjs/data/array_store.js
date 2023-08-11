@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/array_store.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,7 +50,7 @@ var ArrayStore = _abstract_store.default.inherit({
     (0, _array_utils.applyBatch)({
       keyInfo: this,
       data: this._array,
-      changes: changes
+      changes
     });
   },
   _updateImpl: function _updateImpl(key, values) {

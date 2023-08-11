@@ -20,7 +20,7 @@ var BUTTON_GROUP_LAST_ITEM_CLASS = BUTTON_GROUP_CLASS + '-last-item';
 var BUTTON_GROUP_ITEM_HAS_WIDTH = BUTTON_GROUP_ITEM_CLASS + '-has-width';
 var SHAPE_STANDARD_CLASS = 'dx-shape-standard';
 var ButtonCollection = _uiCollection_widget.default.inherit({
-  _initTemplates: function _initTemplates() {
+  _initTemplates() {
     var _this = this;
     this.callBase();
     /**
@@ -38,7 +38,7 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
       }, ['text', 'type', 'icon', 'disabled', 'visible', 'hint'], this.option('integrationOptions.watchMethod'))
     });
   },
-  _getBasicButtonOptions: function _getBasicButtonOptions() {
+  _getBasicButtonOptions() {
     return {
       focusStateEnabled: false,
       onClick: null,
@@ -52,17 +52,17 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
       itemTemplateProperty: null
     });
   },
-  _hasCustomTemplate: function _hasCustomTemplate(template) {
+  _hasCustomTemplate(template) {
     return (0, _type.isFunction)(template) || this.option('integrationOptions.templates')[template];
   },
-  _prepareItemStyles: function _prepareItemStyles($item) {
+  _prepareItemStyles($item) {
     var itemIndex = $item.data('dxItemIndex');
     itemIndex === 0 && $item.addClass(BUTTON_GROUP_FIRST_ITEM_CLASS);
     var items = this.option('items');
     items && itemIndex === items.length - 1 && $item.addClass(BUTTON_GROUP_LAST_ITEM_CLASS);
     $item.addClass(SHAPE_STANDARD_CLASS);
   },
-  _renderItemContent: function _renderItemContent(args) {
+  _renderItemContent(args) {
     args.container = (0, _renderer.default)(args.container).parent();
     return this.callBase(args);
   },
@@ -73,17 +73,17 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
     args.container = (0, _renderer.default)(args.container.children().first());
     return this.callBase(args, $node);
   },
-  _focusTarget: function _focusTarget() {
+  _focusTarget() {
     return this.$element().parent();
   },
-  _keyboardEventBindingTarget: function _keyboardEventBindingTarget() {
+  _keyboardEventBindingTarget() {
     return this._focusTarget();
   },
-  _refreshContent: function _refreshContent() {
+  _refreshContent() {
     this._prepareContent();
     this._renderContent();
   },
-  _itemClass: function _itemClass() {
+  _itemClass() {
     return BUTTON_GROUP_ITEM_CLASS;
   },
   _itemSelectHandler: function _itemSelectHandler(e) {
@@ -94,7 +94,7 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
   }
 });
 var ButtonGroup = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       hoverStateEnabled: true,
       focusStateEnabled: true,
@@ -109,14 +109,14 @@ var ButtonGroup = _ui.default.inherit({
       onItemClick: null
     });
   },
-  _init: function _init() {
+  _init() {
     this.callBase();
     this._createItemClickAction();
   },
-  _createItemClickAction: function _createItemClickAction() {
+  _createItemClickAction() {
     this._itemClickAction = this._createActionByOption('onItemClick');
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.setAria('role', 'group');
     this.$element().addClass(BUTTON_GROUP_CLASS);
     this._renderButtons();
@@ -131,7 +131,7 @@ var ButtonGroup = _ui.default.inherit({
       removedItems: removedItems
     });
   },
-  _renderButtons: function _renderButtons() {
+  _renderButtons() {
     var _this2 = this;
     var $buttons = (0, _renderer.default)('<div>').addClass(BUTTON_GROUP_WRAPPER_CLASS).appendTo(this.$element());
     var selectedItems = this.option('selectedItems');
@@ -167,11 +167,11 @@ var ButtonGroup = _ui.default.inherit({
     }
     this._buttonsCollection = this._createComponent($buttons, ButtonCollection, options);
   },
-  _syncSelectionOptions: function _syncSelectionOptions() {
+  _syncSelectionOptions() {
     this._setOptionWithoutOptionChange('selectedItems', this._buttonsCollection.option('selectedItems'));
     this._setOptionWithoutOptionChange('selectedItemKeys', this._buttonsCollection.option('selectedItemKeys'));
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     switch (args.name) {
       case 'stylingMode':
       case 'selectionMode':

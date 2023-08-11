@@ -93,35 +93,35 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
   };
   _proto._supportedKeys = function _supportedKeys() {
     return (0, _extend.extend)(_CollectionWidget.prototype._supportedKeys.call(this), {
-      upArrow: function upArrow(e) {
+      upArrow(e) {
         this._beforeKeyProcessing(e);
         this._processArrowKeys(-1, false, e);
       },
-      downArrow: function downArrow(e) {
+      downArrow(e) {
         this._beforeKeyProcessing(e);
         this._processArrowKeys(1, false, e);
       },
-      home: function home(e) {
+      home(e) {
         this._beforeKeyProcessing(e);
         this._processHomeEndKeys(0, true, e);
       },
-      end: function end(e) {
+      end(e) {
         this._beforeKeyProcessing(e);
         this._processHomeEndKeys(this._getItemsLength() - 1, true, e);
       },
-      pageUp: function pageUp(e) {
+      pageUp(e) {
         this._beforeKeyProcessing(e);
         this._processPageChange(true, e);
       },
-      pageDown: function pageDown(e) {
+      pageDown(e) {
         this._beforeKeyProcessing(e);
         this._processPageChange(false, e);
       },
-      enter: function enter(e) {
+      enter(e) {
         this._beforeKeyProcessing(e);
         this._actions.onItemEnterKeyPressed(this._getFocusedItem());
       },
-      A: function A(e) {
+      A(e) {
         this._beforeKeyProcessing(e);
         if ((0, _index.isCommandKeyPressed)(e)) {
           this.selectAll();

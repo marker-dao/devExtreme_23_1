@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_utils.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,14 +15,13 @@ var _type = require("../../core/utils/type");
 var _iterator = require("../../core/utils/iterator");
 var _date = _interopRequireDefault(require("../../localization/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var DATE_COMPONENTS = ['year', 'day', 'month', 'day'];
 var TIME_COMPONENTS = ['hours', 'minutes', 'seconds', 'milliseconds'];
 var ONE_MINUTE = 1000 * 60;
 var ONE_DAY = ONE_MINUTE * 60 * 24;
 var ONE_YEAR = ONE_DAY * 365;
 var getStringFormat = function getStringFormat(format) {
-  var formatType = _typeof(format);
+  var formatType = typeof format;
   if (formatType === 'string') {
     return 'format';
   }
@@ -33,9 +32,9 @@ var getStringFormat = function getStringFormat(format) {
 };
 var dateUtils = {
   SUPPORTED_FORMATS: ['date', 'time', 'datetime'],
-  ONE_MINUTE: ONE_MINUTE,
-  ONE_DAY: ONE_DAY,
-  ONE_YEAR: ONE_YEAR,
+  ONE_MINUTE,
+  ONE_DAY,
+  ONE_YEAR,
   MIN_DATEVIEW_DEFAULT_DATE: new Date(1900, 0, 1),
   MAX_DATEVIEW_DEFAULT_DATE: function () {
     var newDate = new Date();

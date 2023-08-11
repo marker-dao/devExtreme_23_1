@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/error_handling/m_error_handling.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,12 +23,12 @@ var ERROR_MESSAGE_CLASS = 'dx-error-message';
 var ERROR_CLOSEBUTTON_CLASS = 'dx-closebutton';
 var ACTION_CLASS = 'action';
 var ErrorHandlingController = _m_modules.default.ViewController.inherit({
-  init: function init() {
+  init() {
     var that = this;
     that._columnHeadersView = that.getView('columnHeadersView');
     that._rowsView = that.getView('rowsView');
   },
-  _createErrorRow: function _createErrorRow(error, $tableElements) {
+  _createErrorRow(error, $tableElements) {
     var that = this;
     var $errorRow;
     var $closeButton;
@@ -57,7 +57,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
     }
     return $errorMessage;
   },
-  _renderErrorMessage: function _renderErrorMessage(error) {
+  _renderErrorMessage(error) {
     var message = error.url ? error.message.replace(error.url, '') : error.message || error;
     var $message = (0, _renderer.default)('<div>').addClass(ERROR_MESSAGE_CLASS).text(message);
     if (error.url) {
@@ -65,7 +65,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
     }
     return $message;
   },
-  renderErrorRow: function renderErrorRow(error, rowIndex, $popupContent) {
+  renderErrorRow(error, rowIndex, $popupContent) {
     var that = this;
     var $errorMessageElement;
     var $firstErrorRow;
@@ -100,7 +100,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
     resizingController && resizingController.fireContentReadyAction();
     return $firstErrorRow;
   },
-  removeErrorRow: function removeErrorRow($row) {
+  removeErrorRow($row) {
     if (!$row) {
       var $columnHeaders = this._columnHeadersView && this._columnHeadersView.element();
       $row = $columnHeaders && $columnHeaders.find(".".concat(ERROR_ROW_CLASS));
@@ -111,7 +111,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
     }
     $row && $row.hasClass(ERROR_ROW_CLASS) && $row.remove();
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     var that = this;
     switch (args.name) {
       case 'errorRowEnabled':
@@ -123,7 +123,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
   }
 });
 var errorHandlingModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       errorRowEnabled: true
     };
@@ -134,7 +134,7 @@ var errorHandlingModule = {
   extenders: {
     controllers: {
       data: {
-        init: function init() {
+        init() {
           var that = this;
           var errorHandlingController = that.getController('errorHandling');
           that.callBase();

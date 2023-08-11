@@ -203,7 +203,7 @@ function orderHtmlTree(list, line, node, parentStyle, parentClassName) {
       value: node.wholeText,
       style: parentStyle,
       className: parentClassName,
-      line: line,
+      line,
       height: parseFloat(parentStyle.fontSize) || 0
     });
   } else if (node.tagName === 'BR') {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/jspdf/common/rows_generator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,19 +48,19 @@ function generateRowsInfo(doc, dataProvider, dataGrid, headerBackgroundColor) {
     }
     result.push({
       rowType: rowType,
-      indentLevel: indentLevel,
+      indentLevel,
       cells: generateRowCells({
-        doc: doc,
-        dataProvider: dataProvider,
-        rowIndex: rowIndex,
-        wordWrapEnabled: wordWrapEnabled,
-        columns: columns,
-        styles: styles,
-        rowType: rowType,
+        doc,
+        dataProvider,
+        rowIndex,
+        wordWrapEnabled,
+        columns,
+        styles,
+        rowType,
         backgroundColor: rowType === 'header' ? headerBackgroundColor : undefined,
-        rtlEnabled: rtlEnabled
+        rtlEnabled
       }),
-      rowIndex: rowIndex
+      rowIndex
     });
   }
   return result;
@@ -87,8 +87,8 @@ function generateRowCells(_ref) {
       text: getFormattedValue(cellData.value, cellStyle.format),
       verticalAlign: 'middle',
       horizontalAlign: (_style$alignment = style.alignment) !== null && _style$alignment !== void 0 ? _style$alignment : defaultAlignment,
-      wordWrapEnabled: wordWrapEnabled,
-      backgroundColor: backgroundColor,
+      wordWrapEnabled,
+      backgroundColor,
       padding: {
         top: paddingValue,
         right: paddingValue,

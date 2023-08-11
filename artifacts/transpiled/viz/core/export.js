@@ -14,10 +14,6 @@ var _pointer = _interopRequireDefault(require("../../events/pointer"));
 var _console = require("../../core/utils/console");
 var _size = require("../../core/utils/size");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var pointerActions = [_pointer.default.down, _pointer.default.move].join(' ');
 var BUTTON_SIZE = 35;
 var ICON_COORDS = [[9, 12, 26, 12, 26, 14, 9, 14], [9, 17, 26, 17, 26, 19, 9, 19], [9, 22, 26, 22, 26, 24, 9, 24]];
@@ -64,7 +60,7 @@ function getCreatorFunc(format) {
     return _exporter.image.getData;
   }
 }
-function _print(imageSrc, options) {
+function print(imageSrc, options) {
   var document = (0, _window2.getWindow)().document;
   var iFrame = document.createElement('iframe');
   iFrame.onload = setPrint(imageSrc, options);
@@ -338,9 +334,10 @@ var ExportMenu = function ExportMenu(params) {
   this._shadow.attr({
     opacity: 0.8
   });
-  this._group = renderer.g().attr(_defineProperty({
-    'class': EXPORT_CSS_CLASS
-  }, _svg.HIDDEN_FOR_EXPORT, true)).linkOn(renderer.root, {
+  this._group = renderer.g().attr({
+    'class': EXPORT_CSS_CLASS,
+    [_svg.HIDDEN_FOR_EXPORT]: true
+  }).linkOn(renderer.root, {
     name: 'export-menu',
     after: 'peripheral'
   });
@@ -366,7 +363,7 @@ var ExportMenu = function ExportMenu(params) {
 };
 exports.ExportMenu = ExportMenu;
 (0, _extend.extend)(ExportMenu.prototype, {
-  getLayoutOptions: function getLayoutOptions() {
+  getLayoutOptions() {
     if (this._hiddenDueToLayout) {
       return {
         width: 0,
@@ -387,12 +384,12 @@ exports.ExportMenu = ExportMenu;
     bBox.horizontalAlignment = 'right';
     return bBox;
   },
-  shift: function shift(_, y) {
+  shift(_, y) {
     this._group.attr({
       translateY: this._group.attr('translateY') + y
     });
   },
-  draw: function draw(width, height, canvas) {
+  draw(width, height, canvas) {
     this._group.move(width - BUTTON_SIZE - SHADOW_OFFSET - SHADOW_BLUR + canvas.left, Math.floor(height / 2 - BUTTON_SIZE / 2));
     var layoutOptions = this.getLayoutOptions();
     if (layoutOptions.width > width || layoutOptions.height > height) {
@@ -400,13 +397,13 @@ exports.ExportMenu = ExportMenu;
     }
     return this;
   },
-  show: function show() {
+  show() {
     this._group.linkAppend();
   },
-  hide: function hide() {
+  hide() {
     this._group.linkRemove();
   },
-  setOptions: function setOptions(options) {
+  setOptions(options) {
     var _this2 = this;
     this._options = options;
     if (options.formats) {
@@ -428,43 +425,44 @@ exports.ExportMenu = ExportMenu;
       this.hide();
     }
   },
-  dispose: function dispose() {
+  dispose() {
     this._unsubscribeEvents();
     this._group.linkRemove().linkOff();
     this._group.dispose();
     this._shadow.dispose();
   },
   // BaseWidget_layout_implementation
-  layoutOptions: function layoutOptions() {
+  layoutOptions() {
     return this._options.enabled && {
       horizontalAlignment: 'right',
       verticalAlignment: 'top',
       weak: true
     };
   },
-  measure: function measure() {
+  measure() {
     this._fillSpace();
     var margin = this._options.button.margin;
     return [BUTTON_SIZE + margin.left + margin.right, BUTTON_SIZE + margin.top + margin.bottom];
   },
-  move: function move(rect) {
+  move(rect) {
     var margin = this._options.button.margin;
     this._group.attr({
       translateX: Math.round(rect[0]) + margin.left,
       translateY: Math.round(rect[1]) + margin.top
     });
   },
-  _fillSpace: function _fillSpace() {
+  _fillSpace() {
     this._hiddenDueToLayout = false;
     this.show();
   },
-  freeSpace: function freeSpace() {
+  freeSpace() {
     this._incidentOccurred('W2107');
     this._hiddenDueToLayout = true;
     this.hide();
   },
   // BaseWidget_layout_implementation
-  _hideList: function _hideList() {
+
+  _hideList() {
     this._listGroup.remove();
     this._listShown = false;
     this._setButtonState('default');
@@ -472,14 +470,14 @@ exports.ExportMenu = ExportMenu;
       return item.resetState();
     });
   },
-  _showList: function _showList() {
+  _showList() {
     this._listGroup.append(this._group);
     this._listShown = true;
     this._menuItems.forEach(function (item) {
       return item.fixPosition();
     });
   },
-  _setButtonState: function _setButtonState(state) {
+  _setButtonState(state) {
     var style = this._options.button[state];
     this._button.attr({
       stroke: style.borderColor,
@@ -489,7 +487,7 @@ exports.ExportMenu = ExportMenu;
       fill: style.color
     });
   },
-  _subscribeEvents: function _subscribeEvents() {
+  _subscribeEvents() {
     var _this3 = this;
     this._renderer.root.on(_pointer.default.up + '.export', function (e) {
       var elementType = e.target[EXPORT_DATA_KEY];
@@ -528,12 +526,12 @@ exports.ExportMenu = ExportMenu;
       return _this3._setButtonState('active');
     });
   },
-  _unsubscribeEvents: function _unsubscribeEvents() {
+  _unsubscribeEvents() {
     this._renderer.root.off('.export');
     this._listGroup.off();
     this._buttonGroup.off();
   },
-  _updateButton: function _updateButton() {
+  _updateButton() {
     var renderer = this._renderer;
     var options = this._options;
     var exportData = {
@@ -559,7 +557,7 @@ exports.ExportMenu = ExportMenu;
       this._buttonGroup.setTitle(_message.default.format('vizExport-titleMenuText'));
     }
   },
-  _updateList: function _updateList() {
+  _updateList() {
     var options = this._options;
     var buttonDefault = options.button.default;
     var listGroup = this._listGroup;
@@ -593,8 +591,8 @@ function getExportOptions(widget, exportOptions, fileName, format) {
     format: format || DEFAULT_EXPORT_FORMAT,
     fileName: fileName || exportOptions.fileName || 'file',
     backgroundColor: exportOptions.backgroundColor,
-    width: width,
-    height: height,
+    width,
+    height,
     margin: exportOptions.margin,
     svgToCanvas: exportOptions.svgToCanvas,
     exportingAction: widget._createActionByOption('onExporting', {
@@ -610,7 +608,7 @@ function getExportOptions(widget, exportOptions, fileName, format) {
 }
 var plugin = {
   name: 'export',
-  init: function init() {
+  init() {
     var _this4 = this;
     this._exportMenu = new ExportMenu({
       renderer: this._renderer,
@@ -624,23 +622,23 @@ var plugin = {
     });
     this._layout.add(this._exportMenu);
   },
-  dispose: function dispose() {
+  dispose() {
     this._exportMenu.dispose();
   },
   members: {
-    _getExportMenuOptions: function _getExportMenuOptions() {
+    _getExportMenuOptions() {
       return (0, _extend.extend)({}, this._getOption('export'), {
         rtl: this._getOption('rtlEnabled', true)
       });
     },
-    _disablePointerEvents: function _disablePointerEvents() {
+    _disablePointerEvents() {
       var pointerEventsValue = this._renderer.root.attr('pointer-events');
       this._renderer.root.attr({
         'pointer-events': 'none'
       });
       return pointerEventsValue;
     },
-    exportTo: function exportTo(fileName, format) {
+    exportTo(fileName, format) {
       var _this5 = this;
       var menu = this._exportMenu;
       var options = getExportOptions(this, this._getOption('export') || {}, fileName, format);
@@ -654,7 +652,7 @@ var plugin = {
       menu && menu.show();
       return promise;
     },
-    print: function print() {
+    print() {
       var _this6 = this;
       var menu = this._exportMenu;
       var options = getExportOptions(this, this._getOption('export') || {});
@@ -669,7 +667,7 @@ var plugin = {
       options.format = 'PNG';
       options.useBase64 = true;
       options.fileSavingAction = function (eventArgs) {
-        _print("data:image/png;base64,".concat(eventArgs.data), {
+        print("data:image/png;base64,".concat(eventArgs.data), {
           width: options.width,
           __test: options.__test
         });
@@ -686,11 +684,11 @@ var plugin = {
       return promise;
     }
   },
-  customize: function customize(constructor) {
+  customize(constructor) {
     var proto = constructor.prototype;
     constructor.addChange({
       code: 'EXPORT',
-      handler: function handler() {
+      handler() {
         this._exportMenu.setOptions(this._getExportMenuOptions());
         this._change(['LAYOUT']);
       },

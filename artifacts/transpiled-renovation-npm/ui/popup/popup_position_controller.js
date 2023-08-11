@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.PopupPositionController = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _translator = require("../../animation/translator");
@@ -14,8 +13,8 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var window = (0, _window.getWindow)();
@@ -31,17 +30,14 @@ var PopupPositionController = /*#__PURE__*/function (_OverlayPositionContr) {
       args = _objectWithoutProperties(_ref, _excluded);
     _this = _OverlayPositionContr.call(this, args) || this;
     _this._props = _extends({}, _this._props, {
-      fullScreen: fullScreen,
-      forceApplyBindings: forceApplyBindings,
-      dragOutsideBoundary: dragOutsideBoundary,
-      dragAndResizeArea: dragAndResizeArea,
-      outsideDragFactor: outsideDragFactor
+      fullScreen,
+      forceApplyBindings,
+      dragOutsideBoundary,
+      dragAndResizeArea,
+      outsideDragFactor
     });
     _this._$dragResizeContainer = undefined;
-    _this._outsideDragFactor = undefined;
-    _this._lastPositionBeforeFullScreen = undefined;
     _this._updateDragResizeContainer();
-    _this._updateOutsideDragFactor();
     return _this;
   }
   var _proto = PopupPositionController.prototype;
@@ -65,23 +61,8 @@ var PopupPositionController = /*#__PURE__*/function (_OverlayPositionContr) {
     } else {
       var _this$_props$forceApp, _this$_props;
       (_this$_props$forceApp = (_this$_props = this._props).forceApplyBindings) === null || _this$_props$forceApp === void 0 ? void 0 : _this$_props$forceApp.call(_this$_props);
-      if (!this._shouldRenderContentInitialPosition && this._lastPositionBeforeFullScreen) {
-        (0, _translator.move)(this._$content, this._lastPositionBeforeFullScreen);
-        this._lastPositionBeforeFullScreen = undefined;
-        this.detectVisualPositionChange();
-      } else {
-        _OverlayPositionContr.prototype.positionContent.call(this);
-      }
+      _OverlayPositionContr.prototype.positionContent.call(this);
     }
-  };
-  _proto._updateOutsideDragFactor = function _updateOutsideDragFactor() {
-    this._outsideDragFactor = this._getOutsideDragFactor();
-  };
-  _proto._getOutsideDragFactor = function _getOutsideDragFactor() {
-    if (this._props.dragOutsideBoundary) {
-      return 1;
-    }
-    return this._props.outsideDragFactor;
   };
   _proto._updateDragResizeContainer = function _updateDragResizeContainer() {
     this._$dragResizeContainer = this._getDragResizeContainer();
@@ -104,10 +85,9 @@ var PopupPositionController = /*#__PURE__*/function (_OverlayPositionContr) {
   };
   _proto._fullScreenEnabled = function _fullScreenEnabled() {
     this.restorePositionOnNextRender(false);
-    this._lastPositionBeforeFullScreen = this._visualPosition;
   };
   _proto._fullScreenDisabled = function _fullScreenDisabled() {
-    this.restorePositionOnNextRender(false);
+    this.restorePositionOnNextRender(true);
   };
   _createClass(PopupPositionController, [{
     key: "fullScreen",
@@ -127,11 +107,13 @@ var PopupPositionController = /*#__PURE__*/function (_OverlayPositionContr) {
   }, {
     key: "outsideDragFactor",
     get: function get() {
-      return this._outsideDragFactor;
+      if (this._props.dragOutsideBoundary) {
+        return 1;
+      }
+      return this._props.outsideDragFactor;
     },
     set: function set(outsideDragFactor) {
       this._props.outsideDragFactor = outsideDragFactor;
-      this._updateOutsideDragFactor();
     }
   }, {
     key: "dragAndResizeArea",
@@ -144,7 +126,6 @@ var PopupPositionController = /*#__PURE__*/function (_OverlayPositionContr) {
     set: function set(dragOutsideBoundary) {
       this._props.dragOutsideBoundary = dragOutsideBoundary;
       this._updateDragResizeContainer();
-      this._updateOutsideDragFactor();
     }
   }]);
   return PopupPositionController;

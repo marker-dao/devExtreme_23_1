@@ -329,7 +329,7 @@ class DateRangeBox extends Editor {
   _clearValueHandler(e) {
     e.stopPropagation();
     this._saveValueChangeEvent(e);
-    this.reset();
+    this.clear();
     !this._isStartDateActiveElement() && this.focus();
     eventsEngine.trigger($(this.startDateField()), 'input');
   }
@@ -540,12 +540,16 @@ class DateRangeBox extends Editor {
     }
     return validationMessagePosition;
   }
+  _getSerializedDates(_ref4) {
+    var [startDate, endDate] = _ref4;
+    return [this.getStartDateBox()._serializeDate(getDeserializedDate(startDate)), this.getStartDateBox()._serializeDate(getDeserializedDate(endDate))];
+  }
   updateValue(newValue, event) {
     if (!isSameDateArrays(newValue, this.option('value'))) {
       if (event) {
         this._saveValueChangeEvent(event);
       }
-      this.option('value', newValue);
+      this.option('value', this._getSerializedDates(newValue));
     }
   }
   _updateDateBoxesValue(newValue) {
@@ -841,6 +845,8 @@ class DateRangeBox extends Editor {
         {
           var _newValue = sortDatesArray(value);
           if (!isSameDateArrays(_newValue, previousValue)) {
+            var isDirty = !isSameDateArrays(_newValue, this._initialValue);
+            this.option('isDirty', isDirty);
             this._setOptionWithoutOptionChange('value', _newValue);
             this._setOptionWithoutOptionChange('startDate', _newValue[0]);
             this._setOptionWithoutOptionChange('endDate', _newValue[1]);
@@ -890,10 +896,10 @@ class DateRangeBox extends Editor {
   focus() {
     this.getStartDateBox().focus();
   }
-  reset() {
-    super.reset();
-    this.getEndDateBox().reset();
-    this.getStartDateBox().reset();
+  clear() {
+    super.clear();
+    this.getEndDateBox().clear();
+    this.getStartDateBox().clear();
   }
 }
 registerComponent('dxDateRangeBox', DateRangeBox);

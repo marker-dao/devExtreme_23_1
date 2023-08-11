@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.viewFunction = exports.Scheduler = void 0;
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
@@ -34,8 +33,8 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -601,28 +600,28 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
           timeCellTemplate = _this4$props.timeCellTemplate,
           width = _this4$props.width;
         return (0, _views.getCurrentViewConfig)(_this4.currentViewProps, {
-          firstDayOfWeek: firstDayOfWeek,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
-          cellDuration: cellDuration,
-          groupByDate: groupByDate,
-          scrolling: scrolling,
-          dataCellTemplate: dataCellTemplate,
-          timeCellTemplate: timeCellTemplate,
-          resourceCellTemplate: resourceCellTemplate,
-          dateCellTemplate: dateCellTemplate,
-          appointmentTemplate: appointmentTemplate,
-          appointmentCollectorTemplate: appointmentCollectorTemplate,
-          appointmentTooltipTemplate: appointmentTooltipTemplate,
-          maxAppointmentsPerCell: maxAppointmentsPerCell,
-          showAllDayPanel: showAllDayPanel,
-          showCurrentTimeIndicator: showCurrentTimeIndicator,
-          indicatorUpdateInterval: indicatorUpdateInterval,
-          shadeUntilCurrentTime: shadeUntilCurrentTime,
-          crossScrollingEnabled: crossScrollingEnabled,
-          height: height,
-          width: width,
-          allDayPanelMode: allDayPanelMode
+          firstDayOfWeek,
+          startDayHour,
+          endDayHour,
+          cellDuration,
+          groupByDate,
+          scrolling,
+          dataCellTemplate,
+          timeCellTemplate,
+          resourceCellTemplate,
+          dateCellTemplate,
+          appointmentTemplate,
+          appointmentCollectorTemplate,
+          appointmentTooltipTemplate,
+          maxAppointmentsPerCell,
+          showAllDayPanel,
+          showCurrentTimeIndicator,
+          indicatorUpdateInterval,
+          shadeUntilCurrentTime,
+          crossScrollingEnabled,
+          height,
+          width,
+          allDayPanelMode
         }, _this4.props.currentDate !== undefined ? _this4.props.currentDate : _this4.state.currentDate);
       }();
     }
@@ -648,20 +647,20 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
         type = _this$currentViewConf.type;
       return (0, _common.isViewDataProviderConfigValid)((_this$state$workSpace = this.state.workSpaceViewModel) === null || _this$state$workSpace === void 0 ? void 0 : _this$state$workSpace.viewDataProviderValidationOptions, {
         intervalCount: intervalCount !== null && intervalCount !== void 0 ? intervalCount : 1,
-        currentDate: currentDate,
-        type: type,
-        hoursInterval: hoursInterval,
-        startDayHour: startDayHour,
-        endDayHour: endDayHour,
-        groupOrientation: groupOrientation,
-        groupByDate: groupByDate,
-        crossScrollingEnabled: crossScrollingEnabled,
-        firstDayOfWeek: firstDayOfWeek,
-        startDate: startDate,
-        showAllDayPanel: showAllDayPanel,
-        allDayPanelExpanded: allDayPanelExpanded,
-        scrolling: scrolling,
-        cellDuration: cellDuration,
+        currentDate,
+        type,
+        hoursInterval,
+        startDayHour,
+        endDayHour,
+        groupOrientation,
+        groupByDate,
+        crossScrollingEnabled,
+        firstDayOfWeek,
+        startDate,
+        showAllDayPanel,
+        allDayPanelExpanded,
+        scrolling,
+        cellDuration,
         groups: this.state.loadedResources
       });
     }
@@ -703,11 +702,11 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
           startDayHour = _this6$currentViewCon.startDayHour,
           type = _this6$currentViewCon.type;
         var options = {
-          currentDate: currentDate,
-          startDayHour: startDayHour,
-          startDate: startDate,
-          intervalCount: intervalCount,
-          firstDayOfWeek: firstDayOfWeek
+          currentDate,
+          startDayHour,
+          startDate,
+          intervalCount,
+          firstDayOfWeek
         };
         var viewDataGenerator = (0, _utils.getViewDataGeneratorByViewType)(type);
         var startViewDate = viewDataGenerator.getStartViewDate(options);

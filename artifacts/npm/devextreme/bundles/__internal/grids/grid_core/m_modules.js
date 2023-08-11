@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/m_modules.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,11 +29,11 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; } /* eslint-disable @typescript-eslint/method-signature-style */ // @ts-expect-error
 var WIDGET_WITH_LEGACY_CONTAINER_NAME = 'dxDataGrid';
 var ModuleItem = _class.default.inherit({
-  _endUpdateCore: function _endUpdateCore() {},
-  ctor: function ctor(component) {
+  _endUpdateCore() {},
+  ctor(component) {
     var that = this;
     that._updateLockCount = 0;
     that.component = component;
@@ -47,14 +47,14 @@ var ModuleItem = _class.default.inherit({
       that[this] = (0, _callbacks.default)(flags);
     });
   },
-  init: function init() {},
-  callbackNames: function callbackNames() {},
-  callbackFlags: function callbackFlags() {},
-  publicMethods: function publicMethods() {},
-  beginUpdate: function beginUpdate() {
+  init() {},
+  callbackNames() {},
+  callbackFlags() {},
+  publicMethods() {},
+  beginUpdate() {
     this._updateLockCount++;
   },
-  endUpdate: function endUpdate() {
+  endUpdate() {
     if (this._updateLockCount > 0) {
       this._updateLockCount--;
       if (!this._updateLockCount) {
@@ -62,7 +62,7 @@ var ModuleItem = _class.default.inherit({
       }
     }
   },
-  option: function option(name) {
+  option(name) {
     var component = this.component;
     var optionCache = component._optionCache;
     if (arguments.length === 1 && optionCache) {
@@ -73,7 +73,7 @@ var ModuleItem = _class.default.inherit({
     }
     return component.option.apply(component, arguments);
   },
-  _silentOption: function _silentOption(name, value) {
+  _silentOption(name, value) {
     var component = this.component;
     var optionCache = component._optionCache;
     if (optionCache) {
@@ -81,7 +81,7 @@ var ModuleItem = _class.default.inherit({
     }
     return component._setOptionWithoutOptionChange(name, value);
   },
-  localize: function localize(name) {
+  localize(name) {
     var optionCache = this.component._optionCache;
     if (optionCache) {
       if (!(name in optionCache)) {
@@ -91,22 +91,22 @@ var ModuleItem = _class.default.inherit({
     }
     return _message.default.format(name);
   },
-  on: function on() {
+  on() {
     return this.component.on.apply(this.component, arguments);
   },
-  off: function off() {
+  off() {
     return this.component.off.apply(this.component, arguments);
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     if (args.name in this._actions) {
       this.createAction(args.name, this._actionConfigs[args.name]);
       args.handled = true;
     }
   },
-  getAction: function getAction(actionName) {
+  getAction(actionName) {
     return this._actions[actionName];
   },
-  setAria: function setAria(name, value, $target) {
+  setAria(name, value, $target) {
     var target = $target.get(0);
     var prefix = name !== 'role' && name !== 'id' ? 'aria-' : '';
     if (target.setAttribute) {
@@ -115,13 +115,13 @@ var ModuleItem = _class.default.inherit({
       $target.attr(prefix + name, value);
     }
   },
-  _createComponent: function _createComponent() {
+  _createComponent() {
     return this.component._createComponent.apply(this.component, arguments);
   },
-  getController: function getController(name) {
+  getController(name) {
     return this.component._controllers[name];
   },
-  createAction: function createAction(actionName, config) {
+  createAction(actionName, config) {
     if ((0, _type.isFunction)(actionName)) {
       var action = this.component._createAction(actionName.bind(this), config);
       return function (e) {
@@ -134,43 +134,43 @@ var ModuleItem = _class.default.inherit({
     this._actionConfigs[actionName] = config;
     return undefined;
   },
-  executeAction: function executeAction(actionName, options) {
+  executeAction(actionName, options) {
     var action = this._actions[actionName];
     return action && action(options);
   },
-  dispose: function dispose() {
+  dispose() {
     var that = this;
     (0, _iterator.each)(that.callbackNames() || [], function () {
       that[this].empty();
     });
   },
-  addWidgetPrefix: function addWidgetPrefix(className) {
+  addWidgetPrefix(className) {
     var componentName = this.component.NAME;
     return "dx-".concat(componentName.slice(2).toLowerCase()).concat(className ? "-".concat(className) : '');
   },
-  getWidgetContainerClass: function getWidgetContainerClass() {
+  getWidgetContainerClass() {
     var containerName = this.component.NAME === WIDGET_WITH_LEGACY_CONTAINER_NAME ? null : 'container';
     return this.addWidgetPrefix(containerName);
   },
-  elementIsInsideGrid: function elementIsInsideGrid($element) {
+  elementIsInsideGrid($element) {
     var $gridElement = $element.closest(".".concat(this.getWidgetContainerClass())).parent();
     return $gridElement.is(this.component.$element());
   }
 });
 var Controller = ModuleItem;
 var ViewController = Controller.inherit({
-  getView: function getView(name) {
+  getView(name) {
     return this.component._views[name];
   },
-  getViews: function getViews() {
+  getViews() {
     return this.component._views;
   }
 });
 var View = ModuleItem.inherit({
-  _isReady: function _isReady() {
+  _isReady() {
     return this.component.isReady();
   },
-  _endUpdateCore: function _endUpdateCore() {
+  _endUpdateCore() {
     this.callBase();
     if (!this._isReady() && this._requireReady) {
       this._requireRender = false;
@@ -181,25 +181,25 @@ var View = ModuleItem.inherit({
       this.render(this._$parent);
     }
   },
-  _invalidate: function _invalidate(requireResize, requireReady) {
+  _invalidate(requireResize, requireReady) {
     this._requireRender = true;
     this.component._requireResize = (0, _window.hasWindow)() && (this.component._requireResize || requireResize);
     this._requireReady = this._requireReady || requireReady;
   },
-  _renderCore: function _renderCore() {},
-  _resizeCore: function _resizeCore() {},
-  _parentElement: function _parentElement() {
+  _renderCore() {},
+  _resizeCore() {},
+  _parentElement() {
     return this._$parent;
   },
-  ctor: function ctor(component) {
+  ctor(component) {
     this.callBase(component);
     this.renderCompleted = (0, _callbacks.default)();
     this.resizeCompleted = (0, _callbacks.default)();
   },
-  element: function element() {
+  element() {
     return this._$element;
   },
-  getElementHeight: function getElementHeight() {
+  getElementHeight() {
     var $element = this.element();
     if (!$element) return 0;
     var marginTop = parseFloat($element.css('marginTop')) || 0;
@@ -208,13 +208,13 @@ var View = ModuleItem.inherit({
       offsetHeight = _$element$get.offsetHeight;
     return offsetHeight + marginTop + marginBottom;
   },
-  isVisible: function isVisible() {
+  isVisible() {
     return true;
   },
-  getTemplate: function getTemplate(name) {
+  getTemplate(name) {
     return this.component._getTemplate(name);
   },
-  render: function render($parent, options) {
+  render($parent, options) {
     var _this = this;
     var $element = this._$element;
     var isVisible = this.isVisible();
@@ -238,15 +238,15 @@ var View = ModuleItem.inherit({
       }
     }
   },
-  resize: function resize() {
+  resize() {
     this.isResizing = true;
     this._resizeCore();
     this.resizeCompleted.fire();
     this.isResizing = false;
   },
-  focus: function focus(preventScroll) {
+  focus(preventScroll) {
     this.element().get(0).focus({
-      preventScroll: preventScroll
+      preventScroll
     });
   }
 });
@@ -382,10 +382,10 @@ var callModuleItemsMethod = function callModuleItemsMethod(that, methodName, arg
 };
 var _default = {
   modules: [],
-  View: View,
-  ViewController: ViewController,
-  Controller: Controller,
-  registerModule: function registerModule(name, module) {
+  View,
+  ViewController,
+  Controller,
+  registerModule(name, module) {
     var modules = this.modules;
     for (var i = 0; i < modules.length; i++) {
       if (modules[i].name === name) {
@@ -395,15 +395,15 @@ var _default = {
     module.name = name;
     modules.push(module);
   },
-  registerModulesOrder: function registerModulesOrder(moduleNames) {
+  registerModulesOrder(moduleNames) {
     this.modulesOrder = moduleNames;
   },
-  unregisterModule: function unregisterModule(name) {
+  unregisterModule(name) {
     this.modules = (0, _common.grep)(this.modules, function (module) {
       return module.name !== name;
     });
   },
-  processModules: processModules,
-  callModuleItemsMethod: callModuleItemsMethod
+  processModules,
+  callModuleItemsMethod
 };
 exports.default = _default;

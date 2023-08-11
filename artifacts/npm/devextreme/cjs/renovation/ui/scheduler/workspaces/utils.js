@@ -1,20 +1,16 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/workspaces/utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.isVerticalGroupingApplied = exports.isHorizontalGroupingApplied = exports.isGroupingByDate = exports.getKeyByGroup = exports.getKeyByDateAndGroup = exports.getIsGroupedAllDayPanel = exports.getGroupCellClasses = exports.addWidthToStyle = exports.addToStyles = exports.addHeightToStyle = void 0;
 var _combine_classes = require("../../../utils/combine_classes");
 var _consts = require("../consts");
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var getKeyByDateAndGroup = function getKeyByDateAndGroup(date, groupIndex) {
   var key = date.getTime();
@@ -62,10 +58,11 @@ var getGroupCellClasses = function getGroupCellClasses() {
   var isFirstGroupCell = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var isLastGroupCell = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   var className = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-  return (0, _combine_classes.combineClasses)(_defineProperty({
+  return (0, _combine_classes.combineClasses)({
     'dx-scheduler-first-group-cell': isFirstGroupCell,
-    'dx-scheduler-last-group-cell': isLastGroupCell
-  }, className, true));
+    'dx-scheduler-last-group-cell': isLastGroupCell,
+    [className]: true
+  });
 };
 exports.getGroupCellClasses = getGroupCellClasses;
 var getIsGroupedAllDayPanel = function getIsGroupedAllDayPanel(hasAllDayRow, isVerticalGrouping) {

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.hu.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Növekvő",
             "dxDataGrid-sortingDescendingText": "Csökkenő",
             "dxDataGrid-sortingClearText": "Rendezés törlése",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Módosítások mentése",
             "dxDataGrid-editingCancelAllChanges": "Módosítások elvetése",
             "dxDataGrid-editingAddRow": "Sor hozzáadása",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Szűrő cella",
             "dxDataGrid-ariaCollapse": "Összecsukás",
             "dxDataGrid-ariaExpand": "Kibontás",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Adatrács",
             "dxDataGrid-ariaSearchInGrid": "Keresés az adatrácsban",
             "dxDataGrid-ariaSelectAll": "Összes kiválasztása",
             "dxDataGrid-ariaSelectRow": "Sor kiválasztása",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Szűrőkészítő",
             "dxDataGrid-filterPanelCreateFilter": "Szűrő létrehozása",
             "dxDataGrid-filterPanelClearFilter": "Törlés",

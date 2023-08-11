@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/gauges/bar_gauge.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ var _max = Math.max;
 import registerComponent from '../../core/component_registrator';
 import { clone } from '../../core/utils/object';
 import { noop } from '../../core/utils/common';
-import { overlapping } from '../chart_components/base_chart';
+import { overlapping } from '../../__internal/viz/chart_components/m_base_chart';
 import { extend } from '../../core/utils/extend';
 import { normalizeEnum as _normalizeEnum, convertAngleToRendererSpace, getCosAndSin, patchFontOptions, getVerticallyShiftedAngularCoords, normalizeArcParams, normalizeAngle } from '../core/utils';
 import { BaseGauge, getSampleText, formatValue, compareArrays } from './base_gauge';

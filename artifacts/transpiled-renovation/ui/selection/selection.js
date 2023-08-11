@@ -292,6 +292,9 @@ var Selection = /*#__PURE__*/function () {
   _proto.getSelectAllState = function getSelectAllState(visibleOnly) {
     return this._selectionStrategy.getSelectAllState(visibleOnly);
   };
+  _proto.loadSelectedItemsWithFilter = function loadSelectedItemsWithFilter() {
+    return this._selectionStrategy.loadSelectedItemsWithFilter();
+  };
   return Selection;
 }();
 exports.default = Selection;

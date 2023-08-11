@@ -35,7 +35,7 @@ function processDataCell(processCellArgs, processCell) {
   if (processedCell) {
     chartDataItem = (0, _extend.extend)({}, chartDataItem, processedCell.chartDataItem);
     processedCell = (0, _extend.extend)({}, processCellArgs, processedCell, {
-      chartDataItem: chartDataItem
+      chartDataItem
     });
     return processedCell;
   }
@@ -72,15 +72,15 @@ function createChartDataSource(pivotGridDataSource, mapOptions, axisDictionary) 
     var value = dataCell[measureIndex];
     var axis;
     var processCellArgs = {
-      rowPath: rowPath,
+      rowPath,
       maxRowLevel: rowLevel,
-      rowPathFormatted: rowPathFormatted,
-      rowFields: rowFields,
-      columnPathFormatted: columnPathFormatted,
+      rowPathFormatted,
+      rowFields,
+      columnPathFormatted,
       maxColumnLevel: columnLevel,
-      columnPath: columnPath,
-      columnFields: columnFields,
-      dataFields: dataFields,
+      columnPath,
+      columnFields,
+      dataFields,
       dataIndex: measureIndex,
       dataValues: dataCell,
       visible: columnVisibility && rowVisibility
@@ -193,7 +193,7 @@ function createPanesOptions(dataSource, options) {
   return panes;
 }
 function createChartOptions(dataSource, options) {
-  var _customizeSeries = options.customizeSeries;
+  var customizeSeries = options.customizeSeries;
   var customizeChart = options.customizeChart;
   var chartOptions = {
     valueAxis: createValueAxisOptions(dataSource, options),
@@ -206,15 +206,15 @@ function createChartOptions(dataSource, options) {
   chartOptions.dataSource = createChartDataSource(dataSource, options, axisDictionary);
   chartOptions.seriesTemplate = {
     nameField: 'series',
-    customizeSeries: function customizeSeries(seriesName) {
+    customizeSeries(seriesName) {
       var seriesOptions = {};
       if (options.dataFieldsDisplayMode === 'splitPanes') {
         seriesOptions.pane = axisDictionary[seriesName];
       } else if (options.dataFieldsDisplayMode !== 'singleAxis') {
         seriesOptions.axis = axisDictionary[seriesName];
       }
-      if (_customizeSeries) {
-        seriesOptions = (0, _extend.extend)(seriesOptions, _customizeSeries(seriesName, seriesOptions));
+      if (customizeSeries) {
+        seriesOptions = (0, _extend.extend)(seriesOptions, customizeSeries(seriesName, seriesOptions));
       }
       return seriesOptions;
     }
@@ -236,7 +236,7 @@ function removeBinding(chart) {
   unbind && unbind();
 }
 var ChartIntegrationMixin = {
-  bindChart: function bindChart(chart, integrationOptions) {
+  bindChart(chart, integrationOptions) {
     integrationOptions = (0, _extend.extend)({}, integrationOptions);
     var that = this;
     var updateChart = function updateChart() {
@@ -263,6 +263,6 @@ var ChartIntegrationMixin = {
 };
 exports.ChartIntegrationMixin = ChartIntegrationMixin;
 var _default = {
-  ChartIntegrationMixin: ChartIntegrationMixin
+  ChartIntegrationMixin
 };
 exports.default = _default;

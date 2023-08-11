@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/exceljs/export_format.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -134,7 +134,7 @@ function _includesCSVExpression(value) {
   return !(0, _type.isNumeric)(value);
 }
 var ExportFormat = {
-  formatObjectConverter: function formatObjectConverter(format, dataType) {
+  formatObjectConverter(format, dataType) {
     var result = {
       format: format,
       precision: format && format.precision,
@@ -148,7 +148,7 @@ var ExportFormat = {
     }
     return result;
   },
-  convertFormat: function convertFormat(format, precision, type, currency) {
+  convertFormat(format, precision, type, currency) {
     if ((0, _type.isDefined)(format)) {
       if (type === 'date') {
         return _convertDateFormat(format);
@@ -159,7 +159,7 @@ var ExportFormat = {
       }
     }
   },
-  encode: function encode(value) {
+  encode(value) {
     var textQualifier = '"';
     var escaped = false;
     if (_hasCSVInjection(value)) {

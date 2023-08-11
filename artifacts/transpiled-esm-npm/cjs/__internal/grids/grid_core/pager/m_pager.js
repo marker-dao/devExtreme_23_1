@@ -17,7 +17,7 @@ var getPageIndex = function getPageIndex(dataController) {
   return 1 + (parseInt(dataController.pageIndex()) || 0);
 };
 var PagerView = _m_modules.default.View.inherit({
-  init: function init() {
+  init() {
     var _this = this;
     var dataController = this.getController('data');
     dataController.changed.add(function (e) {
@@ -40,7 +40,7 @@ var PagerView = _m_modules.default.View.inherit({
       }
     });
   },
-  _renderCore: function _renderCore() {
+  _renderCore() {
     var that = this;
     var $element = that.element().addClass(that.addWidgetPrefix(PAGER_CLASS));
     var pagerOptions = that.option('pager') || {};
@@ -60,12 +60,12 @@ var PagerView = _m_modules.default.View.inherit({
       pageSizes: that.getPageSizes(),
       totalCount: dataController.totalCount(),
       hasKnownLastPage: dataController.hasKnownLastPage(),
-      pageIndexChanged: function pageIndexChanged(pageIndex) {
+      pageIndexChanged(pageIndex) {
         if (dataController.pageIndex() !== pageIndex - 1) {
           dataController.pageIndex(pageIndex - 1);
         }
       },
-      pageSizeChanged: function pageSizeChanged(pageSize) {
+      pageSizeChanged(pageSize) {
         dataController.pageSize(pageSize);
       },
       onKeyDown: function onKeyDown(e) {
@@ -87,10 +87,10 @@ var PagerView = _m_modules.default.View.inherit({
       $element.addClass('dx-pager').html('<div class="dx-pages"><div class="dx-page"></div></div>');
     }
   },
-  getPager: function getPager() {
+  getPager() {
     return this._pager;
   },
-  getPageSizes: function getPageSizes() {
+  getPageSizes() {
     var that = this;
     var dataController = that.getController('data');
     var pagerOptions = that.option('pager');
@@ -108,7 +108,7 @@ var PagerView = _m_modules.default.View.inherit({
     }
     return that._pageSizes;
   },
-  isVisible: function isVisible() {
+  isVisible() {
     var dataController = this.getController('data');
     var pagerOptions = this.option('pager');
     var pagerVisible = pagerOptions && pagerOptions.visible;
@@ -122,10 +122,10 @@ var PagerView = _m_modules.default.View.inherit({
     }
     return pagerVisible;
   },
-  getHeight: function getHeight() {
+  getHeight() {
     return this.getElementHeight();
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     var name = args.name;
     var isPager = name === 'pager';
     var isPaging = name === 'paging';
@@ -149,12 +149,12 @@ var PagerView = _m_modules.default.View.inherit({
       }
     }
   },
-  dispose: function dispose() {
+  dispose() {
     this._pager = null;
   }
 });
 var pagerModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       pager: {
         visible: 'auto',

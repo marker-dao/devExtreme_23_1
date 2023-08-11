@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/odata/context.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,7 @@ var _deferred = require("../../core/utils/deferred");
 require("./query_adapter");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var ODataContext = _class.default.inherit({
-  ctor: function ctor(options) {
+  ctor(options) {
     var _this = this;
     this._requestDispatcher = new _request_dispatcher.default(options);
     this._errorHandler = options.errorHandler;
@@ -31,10 +31,10 @@ var ODataContext = _class.default.inherit({
       }, entityOptions));
     });
   },
-  get: function get(operationName, params) {
+  get(operationName, params) {
     return this.invoke(operationName, params, 'GET');
   },
-  invoke: function invoke(operationName) {
+  invoke(operationName) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var httpMethod = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'POST';
     httpMethod = httpMethod.toLowerCase();
@@ -58,7 +58,7 @@ var ODataContext = _class.default.inherit({
     }).fail(this._errorHandler).fail(_errors.handleError).fail(d.reject);
     return d.promise();
   },
-  objectLink: function objectLink(entityAlias, key) {
+  objectLink(entityAlias, key) {
     var store = this[entityAlias];
     if (!store) {
       throw _errors.errors.Error('E4015', entityAlias);
@@ -72,7 +72,7 @@ var ODataContext = _class.default.inherit({
       }
     };
   },
-  version: function version() {
+  version() {
     return this._requestDispatcher.version;
   }
 });

@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _devices = _interopRequireDefault(require("../../core/devices"));
@@ -30,7 +29,7 @@ var zIndexPool = _interopRequireWildcard(require("../overlay/z_index"));
 var _popup_position_controller = require("./popup_position_controller");
 var _popup_overflow_manager = require("./popup_overflow_manager");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var window = (0, _window.getWindow)();
 
@@ -92,8 +91,8 @@ var getButtonPlace = function getButtonPlace(name) {
     }
   }
   return {
-    toolbar: toolbar,
-    location: location
+    toolbar,
+    location
   };
 };
 var Popup = _ui.default.inherit({
@@ -317,7 +316,7 @@ var Popup = _ui.default.inherit({
       return (0, _type.isObject)(config) && ('width' in config || 'height' in config);
     });
   },
-  _updateResizeCallbackSkipCondition: function _updateResizeCallbackSkipCondition() {
+  _updateResizeCallbackSkipCondition() {
     var _this2 = this;
     var doesShowAnimationChangeDimensions = this._doesShowAnimationChangeDimensions();
     this._shouldSkipContentResize = function (entry) {
@@ -348,7 +347,7 @@ var Popup = _ui.default.inherit({
     var contentRect = entry.contentRect;
     return parseInt(contentRect.width, 10) === ((_this$_renderedDimens3 = this._renderedDimensions) === null || _this$_renderedDimens3 === void 0 ? void 0 : _this$_renderedDimens3.width) && parseInt(contentRect.height, 10) === ((_this$_renderedDimens4 = this._renderedDimensions) === null || _this$_renderedDimens4 === void 0 ? void 0 : _this$_renderedDimens4.height);
   },
-  _renderContent: function _renderContent() {
+  _renderContent() {
     this.callBase();
     // NOTE: This observe should not be called before async showing is called. See T1130045.
     this._observeContentResize(true);
@@ -394,11 +393,11 @@ var Popup = _ui.default.inherit({
       });
       var toolbarOptions = (0, _extend.extend)(additionalToolbarOptions, {
         items: data,
-        rtlEnabled: rtlEnabled,
+        rtlEnabled,
         useDefaultButtons: useDefaultToolbarButtons,
         useFlatButtons: useFlatToolbarButtons,
-        disabled: disabled,
-        integrationOptions: integrationOptions
+        disabled,
+        integrationOptions
       });
       this._getTemplate('dx-polymorph-widget').render({
         container: $container,
@@ -427,7 +426,7 @@ var Popup = _ui.default.inherit({
   _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
     return this.callBase(visible);
   },
-  _hide: function _hide() {
+  _hide() {
     this._observeContentResize(false);
     return this.callBase();
   },
@@ -499,10 +498,10 @@ var Popup = _ui.default.inherit({
     }
     return toolbarsItems;
   },
-  _hasCloseButton: function _hasCloseButton() {
+  _hasCloseButton() {
     return this.option('showCloseButton') && this.option('showTitle');
   },
-  _getLocalizationKey: function _getLocalizationKey(itemType) {
+  _getLocalizationKey(itemType) {
     return itemType.toLowerCase() === 'done' ? 'OK' : (0, _inflector.camelize)(itemType, true);
   },
   _getToolbarItemByAlias: function _getToolbarItemByAlias(data) {
@@ -565,7 +564,7 @@ var Popup = _ui.default.inherit({
       }
     });
   },
-  _toggleFocusClass: function _toggleFocusClass(isFocused, $element) {
+  _toggleFocusClass(isFocused, $element) {
     this.callBase(isFocused, $element);
     if (isFocused && !zIndexPool.isLastZIndexInStack(this._zIndex)) {
       var zIndex = zIndexPool.create(this._zIndexInitValue());
@@ -575,11 +574,11 @@ var Popup = _ui.default.inherit({
       this._$content.css('zIndex', zIndex);
     }
   },
-  _toggleContentScrollClass: function _toggleContentScrollClass() {
+  _toggleContentScrollClass() {
     var isNativeScrollingEnabled = !this.option('preventScrollEvents');
     this.$content().toggleClass(POPUP_CONTENT_SCROLLABLE_CLASS, isNativeScrollingEnabled);
   },
-  _getPositionControllerConfig: function _getPositionControllerConfig() {
+  _getPositionControllerConfig() {
     var _this$option2 = this.option(),
       fullScreen = _this$option2.fullScreen,
       forceApplyBindings = _this$option2.forceApplyBindings,
@@ -587,14 +586,14 @@ var Popup = _ui.default.inherit({
       dragAndResizeArea = _this$option2.dragAndResizeArea,
       outsideDragFactor = _this$option2.outsideDragFactor;
     return (0, _extend.extend)({}, this.callBase(), {
-      fullScreen: fullScreen,
-      forceApplyBindings: forceApplyBindings,
-      dragOutsideBoundary: dragOutsideBoundary,
-      dragAndResizeArea: dragAndResizeArea,
-      outsideDragFactor: outsideDragFactor
+      fullScreen,
+      forceApplyBindings,
+      dragOutsideBoundary,
+      dragAndResizeArea,
+      outsideDragFactor
     });
   },
-  _initPositionController: function _initPositionController() {
+  _initPositionController() {
     this._positionController = new _popup_position_controller.PopupPositionController(this._getPositionControllerConfig());
   },
   _getDragTarget: function _getDragTarget() {
@@ -656,7 +655,7 @@ var Popup = _ui.default.inherit({
       return;
     }
     var config = {
-      dragEnabled: dragEnabled,
+      dragEnabled,
       handle: $dragTarget.get(0),
       draggableElement: this._$content.get(0),
       positionController: this._positionController
@@ -809,7 +808,7 @@ var Popup = _ui.default.inherit({
   _renderFullscreenWidthClass: function _renderFullscreenWidthClass() {
     this.$overlayContent().toggleClass(POPUP_FULL_SCREEN_WIDTH_CLASS, (0, _size.getOuterWidth)(this.$overlayContent()) === (0, _size.getWidth)(window));
   },
-  _toggleSafariScrolling: function _toggleSafariScrolling() {
+  _toggleSafariScrolling() {
     if (!this.option('enableBodyScroll')) {
       return;
     }
@@ -948,6 +947,11 @@ var Popup = _ui.default.inherit({
   },
   $overlayContent: function $overlayContent() {
     return this._$content;
+  },
+  getFocusableElements: function getFocusableElements() {
+    return this.$wrapper().find('[tabindex]').filter(function (index, item) {
+      return item.getAttribute('tabindex') >= 0;
+    });
   }
 });
 (0, _component_registrator.default)('dxPopup', Popup);

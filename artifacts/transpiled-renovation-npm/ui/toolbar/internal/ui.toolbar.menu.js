@@ -184,7 +184,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
       container = _this$option.container,
       animation = _this$option.animation;
     this._popup = this._createComponent(this._$popup, 'dxPopup', {
-      onInitialized: function onInitialized(_ref) {
+      onInitialized(_ref) {
         var component = _ref.component;
         component.$wrapper().addClass(DROP_DOWN_MENU_POPUP_WRAPPER_CLASS).addClass(DROP_DOWN_MENU_POPUP_CLASS);
       },
@@ -205,7 +205,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
         },
         of: this.$element()
       },
-      animation: animation,
+      animation,
       onOptionChanged: function onOptionChanged(_ref2) {
         var name = _ref2.name,
           value = _ref2.value;
@@ -213,7 +213,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
           _this2.option('opened', value);
         }
       },
-      container: container,
+      container,
       autoResizeEnabled: false,
       height: 'auto',
       width: 'auto',

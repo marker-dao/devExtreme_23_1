@@ -630,7 +630,7 @@ var DateBox = DropDownEditor.inherit({
       this._applyCustomValidation(null);
     }
   },
-  reset: function reset() {
+  clear: function clear() {
     var value = this.option('value');
     this.callBase();
     if (value === null) {

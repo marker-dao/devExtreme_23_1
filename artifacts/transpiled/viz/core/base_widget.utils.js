@@ -82,8 +82,8 @@ function createDeferredHandler(callback, unsubscribe) {
     timeout = setTimeout(callback, 100);
   };
   return {
-    handler: handler,
-    dispose: function dispose() {
+    handler,
+    dispose() {
       clearTimeout(timeout);
       unsubscribe(handler);
     }

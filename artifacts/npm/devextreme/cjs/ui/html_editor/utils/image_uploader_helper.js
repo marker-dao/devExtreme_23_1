@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/utils/image_uploader_helper.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,7 +27,6 @@ var _excluded = ["imageSrc", "src"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
@@ -111,7 +110,7 @@ var ImageUploader = /*#__PURE__*/function () {
     var _this2 = this;
     return new UrlTab(this.module, {
       config: this.config,
-      formData: formData,
+      formData,
       isUpdating: this.isUpdating
     }, function () {
       return _this2.updateAddButtonState();
@@ -131,7 +130,7 @@ var ImageUploader = /*#__PURE__*/function () {
       return ['url'];
     }
     return model.map(function (tab) {
-      return _typeof(tab) === 'object' ? tab.name : tab;
+      return typeof tab === 'object' ? tab.name : tab;
     });
   };
   _proto.createTabs = function createTabs(formData) {
@@ -323,7 +322,7 @@ var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
       onValueChanged: function onValueChanged(e) {
         _this7.keepAspectRatio(data, {
           dependentEditor: _this7[dependentEditorDataField + 'Editor'],
-          e: e
+          e
         });
       }
     }));

@@ -21,6 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var TABPANEL_CLASS = 'dx-tabpanel';
 var TABPANEL_TABS_CLASS = 'dx-tabpanel-tabs';
+var TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
 var TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
 var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
 var DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
@@ -201,16 +202,19 @@ var TabPanel = _multi_view.default.inherit({
         if (!this._isFocusOutHandlerExecuting) {
           this._focusOutHandler(args.event);
         }
-      }.bind(this)
+      }.bind(this),
+      _itemAttributes: {
+        class: TABPANEL_TABS_ITEM_CLASS
+      }
     };
   },
   _renderFocusTarget: function _renderFocusTarget() {
     this._focusTarget().attr('tabIndex', -1);
   },
-  _toggleWrapperFocusedClass: function _toggleWrapperFocusedClass(isFocused) {
+  _toggleWrapperFocusedClass(isFocused) {
     this._toggleFocusClass(isFocused, this._$wrapper);
   },
-  _toggleDisabledFocusedClass: function _toggleDisabledFocusedClass(isFocused) {
+  _toggleDisabledFocusedClass(isFocused) {
     this._focusTarget().toggleClass(DISABLED_FOCUSED_TAB_CLASS, isFocused);
   },
   _updateFocusState: function _updateFocusState(e, isFocused) {

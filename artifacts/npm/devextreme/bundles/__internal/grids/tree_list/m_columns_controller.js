@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/m_columns_controller.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,12 +18,12 @@ var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var ColumnsController = _m_columns_controller.columnsControllerModule.controllers.columns.inherit(function () {
   return {
-    _getFirstItems: function _getFirstItems(dataSourceAdapter) {
+    _getFirstItems(dataSourceAdapter) {
       return this.callBase(dataSourceAdapter).map(function (node) {
         return node.data;
       });
     },
-    getFirstDataColumnIndex: function getFirstDataColumnIndex() {
+    getFirstDataColumnIndex() {
       var visibleColumns = this.getVisibleColumns();
       var visibleColumnsLength = visibleColumns.length;
       var firstDataColumnIndex = 0;

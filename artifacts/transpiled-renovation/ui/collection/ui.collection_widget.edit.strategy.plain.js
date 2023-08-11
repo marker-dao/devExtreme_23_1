@@ -3,7 +3,6 @@
 exports.default = void 0;
 var _uiCollection_widgetEdit = _interopRequireDefault(require("./ui.collection_widget.edit.strategy"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var PlainEditStrategy = _uiCollection_widgetEdit.default.inherit({
   _getPlainItems: function _getPlainItems() {
     return this._collectionWidget.option('items') || [];
@@ -42,7 +41,7 @@ var PlainEditStrategy = _uiCollection_widgetEdit.default.inherit({
     if (cache && !cache.keys) {
       cache.keys = keys;
     }
-    if (_typeof(key) === 'object') {
+    if (typeof key === 'object') {
       for (var i = 0, length = keys.length; i < length; i++) {
         if (this._equalKeys(key, keys[i])) return i;
       }

@@ -2,9 +2,10 @@ import { getToday, setOptionHour } from '../../../../renovation/ui/scheduler/vie
 import { ViewDataGenerator } from './view_data_generator';
 import dateUtils from '../../../../core/utils/date';
 import { calculateCellIndex, calculateStartViewDate, getCellText, isFirstCellInMonthWithIntervalCount, getViewStartByOptions } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/month';
+import { calculateAlignedWeeksBetweenDates } from './utils';
+import dateLocalization from '../../../../localization/date';
 var DAY_IN_MILLISECONDS = dateUtils.dateToMilliseconds('day');
 var DAYS_IN_WEEK = 7;
-var WEEKS_IN_MONTH = 4;
 export class ViewDataGeneratorMonth extends ViewDataGenerator {
   get tableAllDay() {
     return undefined;
@@ -57,8 +58,13 @@ export class ViewDataGeneratorMonth extends ViewDataGenerator {
     return DAYS_IN_WEEK;
   }
   getRowCount(options) {
-    var edgeRowsCount = 2;
-    return WEEKS_IN_MONTH * options.intervalCount + edgeRowsCount;
+    var _options$firstDayOfWe;
+    var startDate = new Date(options.currentDate);
+    startDate.setDate(1);
+    var endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + options.intervalCount);
+    endDate.setDate(0);
+    return calculateAlignedWeeksBetweenDates(startDate, endDate, (_options$firstDayOfWe = options.firstDayOfWeek) !== null && _options$firstDayOfWe !== void 0 ? _options$firstDayOfWe : dateLocalization.firstDayOfWeekIndex());
   }
   getCellCountInDay() {
     return 1;

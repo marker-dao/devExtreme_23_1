@@ -317,7 +317,7 @@ var textCloud = _base_indicators.BaseTextCloudMarker.inherit({
       indent: 0
     };
   },
-  _correctCloudType: function _correctCloudType(type, _ref, _ref2) {
+  _correctCloudType(type, _ref, _ref2) {
     var x = _ref.x,
       y = _ref.y;
     var width = _ref2.width,

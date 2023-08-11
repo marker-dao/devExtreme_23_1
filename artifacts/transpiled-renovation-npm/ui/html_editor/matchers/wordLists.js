@@ -35,7 +35,7 @@ var getMatcher = function getMatcher(quill) {
       insert: '\n',
       attributes: {
         list: getListType(listDecoratorMatches),
-        indent: indent
+        indent
       }
     });
     return new Delta(ops);

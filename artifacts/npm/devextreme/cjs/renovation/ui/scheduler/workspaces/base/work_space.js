@@ -1,14 +1,13 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/workspaces/base/work_space.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.viewFunction = exports.prepareGenerationOptions = exports.WorkSpace = void 0;
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
@@ -40,7 +39,6 @@ var _excluded = ["accessKey", "activeStateEnabled", "allDayAppointments", "allDa
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -49,8 +47,8 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -79,8 +77,8 @@ var calculateDefaultVirtualScrollingState = function calculateDefaultVirtualScro
     scrollableWidth: defaultVirtualScrollingMetaData.scrollableWidth,
     groups: options.groups,
     isVerticalGrouping: options.isVerticalGrouping,
-    completeRowCount: completeRowCount,
-    completeColumnCount: completeColumnCount,
+    completeRowCount,
+    completeColumnCount,
     windowHeight: defaultVirtualScrollingMetaData.windowHeight,
     windowWidth: defaultVirtualScrollingMetaData.windowWidth,
     rtlEnabled: options.rtlEnabled
@@ -110,26 +108,26 @@ var prepareGenerationOptions = function prepareGenerationOptions(workSpaceProps,
   return {
     startRowIndex: virtualStartIndices.startRowIndex,
     startCellIndex: virtualStartIndices.startCellIndex,
-    groupOrientation: groupOrientation,
-    groupByDate: groupByDate,
-    groups: groups,
-    isProvideVirtualCellsWidth: isProvideVirtualCellsWidth,
-    isAllDayPanelVisible: isAllDayPanelVisible,
+    groupOrientation,
+    groupByDate,
+    groups,
+    isProvideVirtualCellsWidth,
+    isAllDayPanelVisible,
     selectedCells: undefined,
     focusedCell: undefined,
-    headerCellTextFormat: headerCellTextFormat,
-    getDateForHeaderText: getDateForHeaderText,
-    startDayHour: startDayHour,
-    endDayHour: endDayHour,
-    cellDuration: cellDuration,
+    headerCellTextFormat,
+    getDateForHeaderText,
+    startDayHour,
+    endDayHour,
+    cellDuration,
     viewType: type,
-    intervalCount: intervalCount,
-    hoursInterval: hoursInterval,
-    currentDate: currentDate,
-    startDate: startDate,
-    firstDayOfWeek: firstDayOfWeek,
+    intervalCount,
+    hoursInterval,
+    currentDate,
+    startDate,
+    firstDayOfWeek,
     isGenerateTimePanelData: isRenderTimePanel,
-    isGenerateWeekDaysHeaderData: isGenerateWeekDaysHeaderData
+    isGenerateWeekDaysHeaderData
   };
 };
 exports.prepareGenerationOptions = prepareGenerationOptions;
@@ -300,13 +298,13 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
       this.setState(function (__state_argument) {
         return {
           tablesWidth: (0, _utils.getDateTableWidth)(_this2.layoutRef.current.getScrollableWidth(), _this2.dateTableRef.current, _this2.viewDataProvider, {
-            intervalCount: intervalCount,
-            currentDate: currentDate,
-            viewType: viewType,
-            hoursInterval: hoursInterval,
-            startDayHour: startDayHour,
-            endDayHour: endDayHour,
-            groups: groups,
+            intervalCount,
+            currentDate,
+            viewType,
+            hoursInterval,
+            startDayHour,
+            endDayHour,
+            groups,
             groupOrientation: _this2.groupOrientation
           })
         };
@@ -326,13 +324,13 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
     var windowHeight = (0, _window.getWindow)().innerHeight;
     var windowWidth = (0, _window.getWindow)().innerWidth;
     var nextSizes = {
-      cellHeight: cellHeight,
-      cellWidth: cellWidth,
-      scrollableWidth: scrollableWidth,
-      viewHeight: viewHeight,
-      viewWidth: viewWidth,
-      windowHeight: windowHeight,
-      windowWidth: windowWidth
+      cellHeight,
+      cellWidth,
+      scrollableWidth,
+      viewHeight,
+      viewWidth,
+      windowHeight,
+      windowWidth
     };
     var isNextMetaDataNotEqualToCurrent = !this.state.virtualScrollingData || Object.entries(nextSizes).some(function (_ref2) {
       var _ref3 = _slicedToArray(_ref2, 2),
@@ -352,16 +350,16 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
       this.state.virtualScrolling.setViewOptions((0, _utils.createVirtualScrollingOptions)({
         cellHeight: nextSizes.cellHeight,
         cellWidth: nextSizes.cellWidth,
-        schedulerHeight: schedulerHeight,
-        schedulerWidth: schedulerWidth,
+        schedulerHeight,
+        schedulerWidth,
         viewHeight: nextSizes.viewHeight,
         viewWidth: nextSizes.viewWidth,
-        scrolling: scrolling,
+        scrolling,
         scrollableWidth: nextSizes.scrollableWidth,
-        groups: groups,
+        groups,
         isVerticalGrouping: this.isVerticalGrouping,
-        completeRowCount: completeRowCount,
-        completeColumnCount: completeColumnCount,
+        completeRowCount,
+        completeColumnCount,
         windowHeight: nextSizes.windowHeight,
         windowWidth: nextSizes.windowWidth,
         rtlEnabled: !!((_this$config = this.config) !== null && _this$config !== void 0 && _this$config.rtlEnabled)
@@ -429,13 +427,13 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
       startDayHour = _this$props3.startDayHour,
       viewType = _this$props3.type;
     var tableWidths = (0, _utils.getDateTableWidth)(this.layoutRef.current.getScrollableWidth(), this.dateTableRef.current, this.viewDataProvider, {
-      intervalCount: intervalCount,
-      currentDate: currentDate,
-      viewType: viewType,
-      hoursInterval: hoursInterval,
-      startDayHour: startDayHour,
-      endDayHour: endDayHour,
-      groups: groups,
+      intervalCount,
+      currentDate,
+      viewType,
+      hoursInterval,
+      startDayHour,
+      endDayHour,
+      groups,
       groupOrientation: this.groupOrientation
     });
     if (!this.isCalculateTablesWidth || tableWidths === this.state.tablesWidth) {
@@ -445,26 +443,26 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
       onViewRendered({
         viewDataProvider: this.viewDataProvider,
         cellsMetaData: {
-          dateTableCellsMeta: dateTableCellsMeta,
-          allDayPanelCellsMeta: allDayPanelCellsMeta
+          dateTableCellsMeta,
+          allDayPanelCellsMeta
         },
         viewDataProviderValidationOptions: {
-          intervalCount: intervalCount,
-          currentDate: currentDate,
+          intervalCount,
+          currentDate,
           type: viewType,
-          hoursInterval: hoursInterval,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
-          groups: groups,
-          groupOrientation: groupOrientation,
-          groupByDate: groupByDate,
-          crossScrollingEnabled: crossScrollingEnabled,
-          firstDayOfWeek: firstDayOfWeek,
-          startDate: startDate,
-          showAllDayPanel: showAllDayPanel,
-          allDayPanelExpanded: allDayPanelExpanded,
-          scrolling: scrolling,
-          cellDuration: cellDuration
+          hoursInterval,
+          startDayHour,
+          endDayHour,
+          groups,
+          groupOrientation,
+          groupByDate,
+          crossScrollingEnabled,
+          firstDayOfWeek,
+          startDate,
+          showAllDayPanel,
+          allDayPanelExpanded,
+          scrolling,
+          cellDuration
         }
       });
     }
@@ -551,7 +549,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
         return {
           cellsSelectionState: {
             focusedCell: {
-              cellData: cellData,
+              cellData,
               position: cellIndices
             },
             selectedCells: [cellData],
@@ -598,10 +596,10 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
           return {
             cellsSelectionState: {
               focusedCell: {
-                cellData: cellData,
+                cellData,
                 position: cellIndices
               },
-              selectedCells: selectedCells,
+              selectedCells,
               firstSelectedCell: __state_argument.cellsSelectionState.firstSelectedCell
             }
           };
@@ -820,16 +818,16 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
           startDayHour = _this13$props.startDayHour,
           type = _this13$props.type;
         return _this13.viewDataGenerator.getCompleteViewDataMap({
-          currentDate: currentDate,
-          startDate: startDate,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
-          groupByDate: groupByDate,
-          groups: groups,
-          intervalCount: intervalCount,
-          firstDayOfWeek: firstDayOfWeek,
-          hoursInterval: hoursInterval,
-          cellDuration: cellDuration,
+          currentDate,
+          startDate,
+          startDayHour,
+          endDayHour,
+          groupByDate,
+          groups,
+          intervalCount,
+          firstDayOfWeek,
+          hoursInterval,
+          cellDuration,
           startViewDate: _this13.props.startViewDate,
           groupOrientation: _this13.groupOrientation,
           isVerticalGrouping: _this13.isVerticalGrouping,
@@ -848,8 +846,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
       if (this.__getterCache['correctedVirtualScrollingState'] !== undefined) {
         return this.__getterCache['correctedVirtualScrollingState'];
       }
-      return this.__getterCache['correctedVirtualScrollingState'] = function () {
-        var _this14$state$virtual;
+      return this.__getterCache['correctedVirtualScrollingState'] = function (_this14$state$virtual) {
         var result = (_this14$state$virtual = _this14.state.virtualScrollingData) === null || _this14$state$virtual === void 0 ? void 0 : _this14$state$virtual.state;
         if (!result) {
           var _this14$props = _this14.props,
@@ -859,12 +856,12 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
             scrolling = _this14$props.scrolling;
           result = calculateDefaultVirtualScrollingState({
             virtualScrollingDispatcher: _this14.state.virtualScrolling,
-            scrolling: scrolling,
-            groups: groups,
+            scrolling,
+            groups,
             completeViewDataMap: _this14.completeViewDataMap,
             isVerticalGrouping: _this14.isVerticalGrouping,
-            schedulerHeight: schedulerHeight,
-            schedulerWidth: schedulerWidth,
+            schedulerHeight,
+            schedulerWidth,
             rtlEnabled: false
           });
         }
@@ -939,19 +936,19 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
         return _this18.dateHeaderDataGenerator.getCompleteDateHeaderMap({
           isGenerateWeekDaysHeaderData: _this18.renderConfig.isGenerateWeekDaysHeaderData,
           isGroupedByDate: _this18.isGroupedByDate,
-          groups: groups,
+          groups,
           groupOrientation: _this18.groupOrientation,
           isHorizontalGrouping: _this18.isHorizontalGrouping,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
-          hoursInterval: hoursInterval,
-          intervalCount: intervalCount,
+          startDayHour,
+          endDayHour,
+          hoursInterval,
+          intervalCount,
           headerCellTextFormat: _this18.renderConfig.headerCellTextFormat,
           getDateForHeaderText: _this18.renderConfig.getDateForHeaderText,
           interval: _this18.viewDataGenerator.getInterval(hoursInterval),
           startViewDate: _this18.props.startViewDate,
-          currentDate: currentDate,
-          viewType: viewType,
+          currentDate,
+          viewType,
           today: new Date()
         }, _this18.completeViewDataMap);
       }();
@@ -973,10 +970,10 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
           isGenerateWeekDaysHeaderData: _this19.renderConfig.isGenerateWeekDaysHeaderData,
           isProvideVirtualCellsWidth: _this19.renderConfig.isProvideVirtualCellsWidth,
           isMonthDateHeader: _this19.renderConfig.isMonthDateHeader,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
-          hoursInterval: hoursInterval,
-          groups: groups,
+          startDayHour,
+          endDayHour,
+          hoursInterval,
+          groups,
           groupOrientation: _this19.groupOrientation,
           isGroupedByDate: _this19.isGroupedByDate
         }, _this19.correctedVirtualScrollingState));
@@ -1003,14 +1000,14 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
           type = _this20$props.type;
         return _this20.timePanelDataGenerator.getCompleteTimePanelMap({
           startViewDate: _this20.props.startViewDate,
-          cellDuration: cellDuration,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
+          cellDuration,
+          startDayHour,
+          endDayHour,
           isVerticalGrouping: _this20.isVerticalGrouping,
-          intervalCount: intervalCount,
-          currentDate: currentDate,
+          intervalCount,
+          currentDate,
           viewType: type,
-          hoursInterval: hoursInterval
+          hoursInterval
         }, _this20.completeViewDataMap);
       }();
     }
@@ -1055,18 +1052,18 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
         viewDataProvider.completeViewDataMap = _this22.completeViewDataMap;
         viewDataProvider.viewDataMap = _this22.viewDataMap;
         var generationOptions = prepareGenerationOptions({
-          intervalCount: intervalCount,
-          groups: groups,
+          intervalCount,
+          groups,
           groupByDate: _this22.isGroupedByDate,
           groupOrientation: _this22.groupOrientation,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
-          currentDate: currentDate,
-          startDate: startDate,
-          firstDayOfWeek: firstDayOfWeek,
-          hoursInterval: hoursInterval,
-          type: type,
-          cellDuration: cellDuration
+          startDayHour,
+          endDayHour,
+          currentDate,
+          startDate,
+          firstDayOfWeek,
+          hoursInterval,
+          type,
+          cellDuration
         }, _this22.renderConfig, _this22.isAllDayPanelVisible, _this22.correctedVirtualScrollingState);
         viewDataProvider.setViewOptions(generationOptions);
         viewDataProvider.createGroupedDataMapProvider();
@@ -1090,11 +1087,11 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
           startDayHour = _this23$props.startDayHour,
           type = _this23$props.type;
         var columnCountPerGroup = _this23.viewDataGenerator.getCellCount({
-          intervalCount: intervalCount,
-          hoursInterval: hoursInterval,
-          currentDate: currentDate,
-          startDayHour: startDayHour,
-          endDayHour: endDayHour,
+          intervalCount,
+          hoursInterval,
+          currentDate,
+          startDayHour,
+          endDayHour,
           viewType: type
         });
         var groupPanelData = (0, _utils4.getGroupPanelData)(groups, columnCountPerGroup, _this23.isGroupedByDate, _this23.isGroupedByDate ? 1 : columnCountPerGroup);
@@ -1114,13 +1111,28 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
   }, {
     key: "classes",
     get: function get() {
-      var _combineClasses;
       var _this$props4 = this.props,
         allDayPanelExpanded = _this$props4.allDayPanelExpanded,
         groups = _this$props4.groups,
         intervalCount = _this$props4.intervalCount,
         scrolling = _this$props4.scrolling;
-      return (0, _combine_classes.combineClasses)((_combineClasses = {}, _defineProperty(_combineClasses, this.renderConfig.className, true), _defineProperty(_combineClasses, 'dx-scheduler-work-space-count', intervalCount > 1), _defineProperty(_combineClasses, 'dx-scheduler-work-space-odd-cells', !!this.isWorkSpaceWithOddCells), _defineProperty(_combineClasses, 'dx-scheduler-work-space-all-day-collapsed', !allDayPanelExpanded && this.isAllDayPanelVisible), _defineProperty(_combineClasses, 'dx-scheduler-work-space-all-day', this.isAllDayPanelVisible), _defineProperty(_combineClasses, 'dx-scheduler-work-space-group-by-date', this.isGroupedByDate), _defineProperty(_combineClasses, 'dx-scheduler-work-space-grouped', groups.length > 0), _defineProperty(_combineClasses, 'dx-scheduler-work-space-vertical-grouped', this.isVerticalGrouping && this.renderConfig.defaultGroupOrientation !== 'vertical'), _defineProperty(_combineClasses, 'dx-scheduler-work-space-horizontal-grouped', (0, _utils2.isHorizontalGroupingApplied)(groups, this.groupOrientation) && this.renderConfig.defaultGroupOrientation === 'vertical'), _defineProperty(_combineClasses, 'dx-scheduler-group-column-count-one', this.isVerticalGrouping && groups.length === 1), _defineProperty(_combineClasses, 'dx-scheduler-group-column-count-two', this.isVerticalGrouping && groups.length === 2), _defineProperty(_combineClasses, 'dx-scheduler-group-column-count-three', this.isVerticalGrouping && groups.length === 3), _defineProperty(_combineClasses, 'dx-scheduler-work-space-both-scrollbar', this.props.crossScrollingEnabled), _defineProperty(_combineClasses, 'dx-scheduler-work-space-virtual', scrolling.mode === 'virtual'), _defineProperty(_combineClasses, 'dx-scheduler-work-space', true), _combineClasses));
+      return (0, _combine_classes.combineClasses)({
+        [this.renderConfig.className]: true,
+        'dx-scheduler-work-space-count': intervalCount > 1,
+        'dx-scheduler-work-space-odd-cells': !!this.isWorkSpaceWithOddCells,
+        'dx-scheduler-work-space-all-day-collapsed': !allDayPanelExpanded && this.isAllDayPanelVisible,
+        'dx-scheduler-work-space-all-day': this.isAllDayPanelVisible,
+        'dx-scheduler-work-space-group-by-date': this.isGroupedByDate,
+        'dx-scheduler-work-space-grouped': groups.length > 0,
+        'dx-scheduler-work-space-vertical-grouped': this.isVerticalGrouping && this.renderConfig.defaultGroupOrientation !== 'vertical',
+        'dx-scheduler-work-space-horizontal-grouped': (0, _utils2.isHorizontalGroupingApplied)(groups, this.groupOrientation) && this.renderConfig.defaultGroupOrientation === 'vertical',
+        'dx-scheduler-group-column-count-one': this.isVerticalGrouping && groups.length === 1,
+        'dx-scheduler-group-column-count-two': this.isVerticalGrouping && groups.length === 2,
+        'dx-scheduler-group-column-count-three': this.isVerticalGrouping && groups.length === 3,
+        'dx-scheduler-work-space-both-scrollbar': this.props.crossScrollingEnabled,
+        'dx-scheduler-work-space-virtual': scrolling.mode === 'virtual',
+        'dx-scheduler-work-space': true
+      });
     }
   }, {
     key: "isStandaloneAllDayPanel",

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.cs.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Srovnat vzestupně",
             "dxDataGrid-sortingDescendingText": "Srovnat sestupně",
             "dxDataGrid-sortingClearText": "Zrušit rovnání",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Uložit změny",
             "dxDataGrid-editingCancelAllChanges": "Zrušit změny",
             "dxDataGrid-editingAddRow": "Přidat řádek",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filtrovat buňku",
             "dxDataGrid-ariaCollapse": "Sbalit",
             "dxDataGrid-ariaExpand": "Rozbalit",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Datová mřížka",
             "dxDataGrid-ariaSearchInGrid": "Hledat v datové mřížce",
             "dxDataGrid-ariaSelectAll": "Vybrat vše",
             "dxDataGrid-ariaSelectRow": "Vybrat řádek",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Tvorba Filtru",
             "dxDataGrid-filterPanelCreateFilter": "Vytvořit Filtr",
             "dxDataGrid-filterPanelClearFilter": "Smazat",

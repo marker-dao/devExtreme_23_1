@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.navigator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -81,8 +81,8 @@ var Navigator = /*#__PURE__*/function (_Widget) {
           event: e
         });
       },
-      type: type,
-      stylingMode: stylingMode,
+      type,
+      stylingMode,
       integrationOptions: {}
     });
     var $prevButton = this._prevButton.$element().addClass(CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS);
@@ -95,8 +95,8 @@ var Navigator = /*#__PURE__*/function (_Widget) {
           event: e
         });
       },
-      type: type,
-      stylingMode: stylingMode,
+      type,
+      stylingMode,
       integrationOptions: {}
     });
     var $nextButton = this._nextButton.$element().addClass(CALENDAR_NAVIGATOR_NEXT_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS);
@@ -107,8 +107,8 @@ var Navigator = /*#__PURE__*/function (_Widget) {
           event: e
         });
       },
-      type: type,
-      stylingMode: stylingMode,
+      type,
+      stylingMode,
       template: function template(_, content) {
         var _this$option2 = _this.option(),
           text = _this$option2.text;

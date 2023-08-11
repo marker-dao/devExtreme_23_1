@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/gauges/base_gauge.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ exports.getSampleText = exports.formatValue = void 0;
 var _utils = require("../core/utils");
 var _extend2 = require("../../core/utils/extend");
 var _translator1d = require("../translators/translator1d");
-var _base_widget = _interopRequireDefault(require("../core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _theme_manager = _interopRequireDefault(require("./theme_manager"));
 var _tracker = _interopRequireDefault(require("./tracker"));
 var _format_helper = _interopRequireDefault(require("../../format_helper"));
@@ -27,7 +27,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _Number = Number;
 var _extend = _extend2.extend;
 var _format = _format_helper.default.format;
-var BaseGauge = _base_widget.default.inherit({
+var BaseGauge = _m_base_widget.default.inherit({
   _rootClassPrefix: 'dxg',
   _themeSection: 'gauge',
   _createThemeManager: function _createThemeManager() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/template_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,7 +29,7 @@ var findTemplates = function findTemplates(element, name) {
   return [].slice.call(templates).map(function (element) {
     var optionsString = (0, _renderer.default)(element).attr(optionsAttributeName) || '';
     return {
-      element: element,
+      element,
       options: (0, _config.default)().optionsParser(optionsString)[name]
     };
   }).filter(function (template) {
@@ -58,10 +58,10 @@ var suitableTemplatesByName = function suitableTemplatesByName(rawTemplates) {
 };
 exports.suitableTemplatesByName = suitableTemplatesByName;
 var addOneRenderedCall = function addOneRenderedCall(template) {
-  var _render = template.render.bind(template);
+  var render = template.render.bind(template);
   return (0, _extend.extend)({}, template, {
-    render: function render(options) {
-      var templateResult = _render(options);
+    render(options) {
+      var templateResult = render(options);
       options && options.onRendered && options.onRendered();
       return templateResult;
     }

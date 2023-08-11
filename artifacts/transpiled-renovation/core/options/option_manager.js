@@ -55,7 +55,7 @@ var OptionManager = /*#__PURE__*/function () {
     cachedGetters[name] = cachedGetters[name] || (0, _data.compileGetter)(name);
     return cachedGetters[name](options, {
       functionsAsIs: true,
-      unwrapObservables: unwrapObservables
+      unwrapObservables
     });
   };
   _proto.set = function set(options, value, merge, silent) {

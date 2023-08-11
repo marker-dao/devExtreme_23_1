@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tabs.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,6 +40,8 @@ var TABS_WRAPPER_CLASS = 'dx-tabs-wrapper';
 var TABS_STRETCHED_CLASS = 'dx-tabs-stretched';
 var TABS_SCROLLABLE_CLASS = 'dx-tabs-scrollable';
 var TABS_NAV_BUTTONS_CLASS = 'dx-tabs-nav-buttons';
+var TABS_VERTICAL_CLASS = 'dx-tabs-vertical';
+var TABS_HORIZONTAL_CLASS = 'dx-tabs-horizontal';
 var OVERFLOW_HIDDEN_CLASS = 'dx-overflow-hidden';
 var TABS_ITEM_CLASS = 'dx-tab';
 var TABS_ITEM_SELECTED_CLASS = 'dx-tab-selected';
@@ -47,7 +49,9 @@ var TABS_NAV_BUTTON_CLASS = 'dx-tabs-nav-button';
 var TABS_LEFT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-left';
 var TABS_RIGHT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-right';
 var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
-var FOCUSED_NEXT_TAB_CLASS = 'dx-focused-next-tab';
+var STATE_DISABLED_CLASS = 'dx-state-disabled';
+var FOCUSED_DISABLED_NEXT_TAB_CLASS = 'dx-focused-disabled-next-tab';
+var FOCUSED_DISABLED_PREV_TAB_CLASS = 'dx-focused-disabled-prev-tab';
 var TABS_ITEM_DATA_KEY = 'dxTabData';
 var BUTTON_NEXT_ICON = 'chevronnext';
 var BUTTON_PREV_ICON = 'chevronprev';
@@ -55,6 +59,10 @@ var FEEDBACK_HIDE_TIMEOUT = 100;
 var FEEDBACK_DURATION_INTERVAL = 5;
 var FEEDBACK_SCROLL_TIMEOUT = 300;
 var TAB_OFFSET = 30;
+var ORIENTATION = {
+  horizontal: 'horizontal',
+  vertical: 'vertical'
+};
 var Tabs = _uiCollection_widget.default.inherit({
   _activeStateUnit: '.' + TABS_ITEM_CLASS,
   _getDefaultOptions: function _getDefaultOptions() {
@@ -64,6 +72,7 @@ var Tabs = _uiCollection_widget.default.inherit({
       scrollByContent: true,
       scrollingEnabled: true,
       selectionMode: 'single',
+      orientation: ORIENTATION.horizontal,
       /**
        * @name dxTabsOptions.activeStateEnabled
        * @hidden
@@ -120,6 +129,7 @@ var Tabs = _uiCollection_widget.default.inherit({
     this.callBase();
     this.setAria('role', 'tablist');
     this.$element().addClass(TABS_CLASS);
+    this._toggleOrientationClass(this.option('orientation'));
     this._renderWrapper();
     this._renderMultiple();
     this._feedbackHideTimeout = FEEDBACK_HIDE_TIMEOUT;
@@ -147,8 +157,8 @@ var Tabs = _uiCollection_widget.default.inherit({
     this._deferredTemplates[index] = new _deferred.Deferred();
     return itemTemplate.render({
       model: itemData,
-      container: container,
-      index: index,
+      container,
+      index,
       onRendered: function onRendered() {
         return _this._deferredTemplates[index].resolve();
       }
@@ -173,16 +183,16 @@ var Tabs = _uiCollection_widget.default.inherit({
     this.callBase();
     this._deferRenderScrolling();
   },
-  _deferRenderScrolling: function _deferRenderScrolling() {
+  _deferRenderScrolling() {
     var _this2 = this;
     _deferred.when.apply(this, this._deferredTemplates).done(function () {
       return _this2._renderScrolling();
     });
   },
-  _renderScrolling: function _renderScrolling() {
+  _renderScrolling() {
     var removeClasses = [TABS_STRETCHED_CLASS, _constants.TABS_EXPANDED_CLASS, OVERFLOW_HIDDEN_CLASS];
     this.$element().removeClass(removeClasses.join(' '));
-    if (this.option('scrollingEnabled') && this._isItemsWidthExceeded()) {
+    if (this.option('scrollingEnabled') && this._isItemsSizeExceeded()) {
       if (!this._scrollable) {
         this._renderScrollable();
         this._renderNavButtons();
@@ -198,17 +208,37 @@ var Tabs = _uiCollection_widget.default.inherit({
       this._updateNavButtonsVisibility();
       this._scrollToItem(this.option('selectedItem'));
     }
-    if (!(this.option('scrollingEnabled') && this._isItemsWidthExceeded())) {
+    if (!(this.option('scrollingEnabled') && this._isItemsSizeExceeded())) {
       this._cleanScrolling();
-      if (this._needStretchItems() && !this._isItemsWidthExceeded()) {
+      if (this._needStretchItems()) {
         this.$element().addClass(TABS_STRETCHED_CLASS);
       }
       this.$element().removeClass(TABS_NAV_BUTTONS_CLASS).addClass(_constants.TABS_EXPANDED_CLASS);
     }
   },
-  _isItemsWidthExceeded: function _isItemsWidthExceeded() {
-    var tabItemsWidth = this._getSummaryItemsWidth(this._getVisibleItems(), true);
-    return tabItemsWidth - 1 > (0, _size.getWidth)(this.$element());
+  _isVertical() {
+    return this.option('orientation') === ORIENTATION.vertical;
+  },
+  _isItemsSizeExceeded() {
+    var isVertical = this._isVertical();
+    var isItemsSizeExceeded = isVertical ? this._isItemsHeightExceeded() : this._isItemsWidthExceeded();
+    return isItemsSizeExceeded;
+  },
+  _isItemsWidthExceeded() {
+    var $visibleItems = this._getVisibleItems();
+    var tabItemsWidth = this._getSummaryItemsSize('width', $visibleItems, true);
+    var elementWidth = (0, _size.getWidth)(this.$element());
+    if ([tabItemsWidth, elementWidth].includes(0)) {
+      return false;
+    }
+    var isItemsWidthExceeded = tabItemsWidth + 5 > elementWidth;
+    return isItemsWidthExceeded;
+  },
+  _isItemsHeightExceeded() {
+    var $visibleItems = this._getVisibleItems();
+    var itemsHeight = this._getSummaryItemsSize('height', $visibleItems, true);
+    var elementHeight = (0, _size.getHeight)(this.$element());
+    return itemsHeight - 1 > elementHeight;
   },
   _needStretchItems: function _needStretchItems() {
     var $visibleItems = this._getVisibleItems();
@@ -218,7 +248,8 @@ var Tabs = _uiCollection_widget.default.inherit({
       itemsWidth.push((0, _size.getOuterWidth)(item, true));
     });
     var maxTabWidth = Math.max.apply(null, itemsWidth);
-    return maxTabWidth >= elementWidth / $visibleItems.length;
+    var needStretchItems = maxTabWidth >= elementWidth / $visibleItems.length;
+    return needStretchItems;
   },
   _cleanNavButtons: function _cleanNavButtons() {
     if (!this._leftButton || !this._rightButton) return;
@@ -237,7 +268,7 @@ var Tabs = _uiCollection_widget.default.inherit({
   _renderInkRipple: function _renderInkRipple() {
     this._inkRipple = (0, _utils.render)();
   },
-  _getPointerEvent: function _getPointerEvent() {
+  _getPointerEvent() {
     return _pointer.default.up;
   },
   _toggleActiveState: function _toggleActiveState($element, value, e) {
@@ -270,8 +301,10 @@ var Tabs = _uiCollection_widget.default.inherit({
   _renderScrollable: function _renderScrollable() {
     var _this3 = this;
     var $itemContainer = this.$element().wrapInner((0, _renderer.default)('<div>').addClass(TABS_SCROLLABLE_CLASS)).children();
+    var isVertical = this._isVertical();
+    var scrollableDirection = isVertical ? 'vertical' : 'horizontal';
     this._scrollable = this._createComponent($itemContainer, _ui.default, {
-      direction: 'horizontal',
+      direction: scrollableDirection,
       showScrollbar: 'never',
       useKeyboard: false,
       useNative: false,
@@ -300,10 +333,18 @@ var Tabs = _uiCollection_widget.default.inherit({
     $rightButton.addClass(TABS_RIGHT_NAV_BUTTON_CLASS);
     this.$element().append($rightButton);
   },
-  _updateNavButtonsVisibility: function _updateNavButtonsVisibility() {
+  _updateNavButtonsVisibility() {
+    var isVertical = this._isVertical();
     var scrollable = this.getScrollable();
-    this._leftButton && this._leftButton.option('disabled', (0, _get_boundary_props.isReachedLeft)(scrollable.scrollLeft(), 1));
-    this._rightButton && this._rightButton.option('disabled', (0, _get_boundary_props.isReachedRight)((0, _renderer.default)(scrollable.container()).get(0), scrollable.scrollLeft(), 1));
+    if (isVertical) {
+      var _this$_leftButton, _this$_rightButton;
+      (_this$_leftButton = this._leftButton) === null || _this$_leftButton === void 0 ? void 0 : _this$_leftButton.option('disabled', (0, _get_boundary_props.isReachedTop)(scrollable.scrollTop(), 1));
+      (_this$_rightButton = this._rightButton) === null || _this$_rightButton === void 0 ? void 0 : _this$_rightButton.option('disabled', (0, _get_boundary_props.isReachedBottom)((0, _renderer.default)(scrollable.container()).get(0), scrollable.scrollTop(), 0, 1));
+    } else {
+      var _this$_leftButton2, _this$_rightButton2;
+      (_this$_leftButton2 = this._leftButton) === null || _this$_leftButton2 === void 0 ? void 0 : _this$_leftButton2.option('disabled', (0, _get_boundary_props.isReachedLeft)(scrollable.scrollLeft(), 1));
+      (_this$_rightButton2 = this._rightButton) === null || _this$_rightButton2 === void 0 ? void 0 : _this$_rightButton2.option('disabled', (0, _get_boundary_props.isReachedRight)((0, _renderer.default)(scrollable.container()).get(0), scrollable.scrollLeft(), 1));
+    }
   },
   _updateScrollPosition: function _updateScrollPosition(offset, duration) {
     this._scrollable.update();
@@ -347,10 +388,7 @@ var Tabs = _uiCollection_widget.default.inherit({
     if (this._holdInterval) clearInterval(this._holdInterval);
   },
   _updateSelection: function _updateSelection(addedSelection) {
-    this._scrollable && this._scrollable.scrollToElement(this.itemElements().eq(addedSelection[0]), {
-      left: 1,
-      right: 1
-    });
+    this._scrollable && this._scrollable.scrollToElement(this.itemElements().eq(addedSelection[0]));
   },
   _visibilityChanged: function _visibilityChanged(visible) {
     if (visible) {
@@ -371,8 +409,35 @@ var Tabs = _uiCollection_widget.default.inherit({
     this._cleanScrolling();
     this.callBase();
   },
-  _toggleFocusedNextClass: function _toggleFocusedNextClass(index, isNextTabFocused) {
-    this._itemElements().eq(index).toggleClass(FOCUSED_NEXT_TAB_CLASS, isNextTabFocused);
+  _toggleTabsVerticalClass(value) {
+    this.$element().toggleClass(TABS_VERTICAL_CLASS, value);
+  },
+  _toggleTabsHorizontalClass(value) {
+    this.$element().toggleClass(TABS_HORIZONTAL_CLASS, value);
+  },
+  _toggleOrientationClass(orientation) {
+    var isVertical = orientation === ORIENTATION.vertical;
+    this._toggleTabsVerticalClass(isVertical);
+    this._toggleTabsHorizontalClass(!isVertical);
+  },
+  _toggleFocusedDisabledNextClass(currentIndex, isNextDisabled) {
+    this._itemElements().eq(currentIndex).toggleClass(FOCUSED_DISABLED_NEXT_TAB_CLASS, isNextDisabled);
+  },
+  _toggleFocusedDisabledPrevClass(currentIndex, isPrevDisabled) {
+    this._itemElements().eq(currentIndex).toggleClass(FOCUSED_DISABLED_PREV_TAB_CLASS, isPrevDisabled);
+  },
+  _toggleFocusedDisabledClasses(value) {
+    var _this$option = this.option(),
+      currentIndex = _this$option.selectedIndex;
+    var prevItemIndex = currentIndex - 1;
+    var nextItemIndex = currentIndex + 1;
+    var nextFocusedIndex = (0, _renderer.default)(value).index();
+    var isNextDisabled = this._itemElements().eq(nextItemIndex).hasClass(STATE_DISABLED_CLASS);
+    var isPrevDisabled = this._itemElements().eq(prevItemIndex).hasClass(STATE_DISABLED_CLASS);
+    var shouldNextClassBeSetted = isNextDisabled && nextFocusedIndex === nextItemIndex;
+    var shouldPrevClassBeSetted = isPrevDisabled && nextFocusedIndex === prevItemIndex;
+    this._toggleFocusedDisabledNextClass(currentIndex, shouldNextClassBeSetted);
+    this._toggleFocusedDisabledPrevClass(currentIndex, shouldPrevClassBeSetted);
   },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {
@@ -385,6 +450,7 @@ var Tabs = _uiCollection_widget.default.inherit({
         this._scrollable && this._scrollable.option(args.name, args.value);
         break;
       case 'width':
+      case 'height':
         this.callBase(args);
         this._dimensionChanged();
         break;
@@ -397,29 +463,27 @@ var Tabs = _uiCollection_widget.default.inherit({
         break;
       case 'focusedElement':
         {
-          var _this$option = this.option(),
-            selectedIndex = _this$option.selectedIndex;
-          var currentIndex = (0, _renderer.default)(args.value).index();
-          if (currentIndex !== selectedIndex) {
-            this._toggleFocusedNextClass(selectedIndex, currentIndex === selectedIndex + 1);
-          }
+          this._toggleFocusedDisabledClasses(args.value);
           this.callBase(args);
           this._scrollToItem(args.value);
           break;
         }
+      case 'orientation':
+        this._toggleOrientationClass(args.value);
+        break;
       default:
         this.callBase(args);
     }
   },
-  _afterItemElementInserted: function _afterItemElementInserted() {
+  _afterItemElementInserted() {
     this.callBase();
     this._deferRenderScrolling();
   },
-  _afterItemElementDeleted: function _afterItemElementDeleted($item, deletedActionArgs) {
+  _afterItemElementDeleted($item, deletedActionArgs) {
     this.callBase($item, deletedActionArgs);
     this._renderScrolling();
   },
-  getScrollable: function getScrollable() {
+  getScrollable() {
     return this._scrollable;
   }
 });

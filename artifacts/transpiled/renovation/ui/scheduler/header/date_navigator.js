@@ -42,8 +42,8 @@ var getDateNavigator = function getDateNavigator(item, showCalendar, captionText
     widget: 'dxButtonGroup',
     cssClass: DATE_NAVIGATOR_CLASS,
     options: {
-      items: items,
-      stylingMode: stylingMode,
+      items,
+      stylingMode,
       selectionMode: 'none',
       onItemClick: function onItemClick(e) {
         switch (e.itemIndex) {

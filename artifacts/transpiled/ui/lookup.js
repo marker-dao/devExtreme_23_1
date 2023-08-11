@@ -203,7 +203,7 @@ var Lookup = _ui.default.inherit({
       useHiddenSubmitElement: true
     });
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this.callBase();
     (0, _extend.extend)(this._deprecatedOptions, {
       'valueChangeEvent': {
@@ -292,7 +292,7 @@ var Lookup = _ui.default.inherit({
     this.callBase();
     this._initActions();
   },
-  _initActions: function _initActions() {
+  _initActions() {
     this.callBase();
     this._initScrollAction();
     this._initPageLoadingAction();
@@ -354,10 +354,10 @@ var Lookup = _ui.default.inherit({
     var $arrow = (0, _renderer.default)('<div>').addClass(LOOKUP_ARROW_CLASS);
     this._$fieldWrapper = (0, _renderer.default)('<div>').addClass(LOOKUP_FIELD_WRAPPER_CLASS).append(this._$field).append($arrow).appendTo(this.$element());
   },
-  _applyInputAttributes: function _applyInputAttributes(attributes) {
+  _applyInputAttributes(attributes) {
     this._$field.attr(attributes);
   },
-  _getInputContainer: function _getInputContainer() {
+  _getInputContainer() {
     return this._$fieldWrapper;
   },
   _renderField: function _renderField() {
@@ -435,7 +435,7 @@ var Lookup = _ui.default.inherit({
   _getDifferenceOffsets: function _getDifferenceOffsets(selectedListItem) {
     return selectedListItem.offset().top - (0, _renderer.default)(this.element()).offset().top;
   },
-  _isCenteringEnabled: function _isCenteringEnabled(index, count) {
+  _isCenteringEnabled(index, count) {
     return 1 < index && index < count - 2;
   },
   _getPopupOffset: function _getPopupOffset() {
@@ -490,7 +490,7 @@ var Lookup = _ui.default.inherit({
     });
   },
   _listItemGroupedElements: function _listItemGroupedElements() {
-    var groups = this._list._itemContainer().children();
+    var groups = this._list._getItemsContainer().children();
     var items = [];
     groups.each(function (_, group) {
       items.push((0, _renderer.default)(group).find('.' + GROUP_LIST_HEADER_CLASS)[0]);
@@ -733,6 +733,14 @@ var Lookup = _ui.default.inherit({
       this._setSearchPlaceholder();
     }
   },
+  _updateActiveDescendant() {
+    this.callBase();
+    if (!this._$searchBox) {
+      return;
+    }
+    var $input = this._$searchBox.find('input');
+    this.callBase($input);
+  },
   _removeSearch: function _removeSearch() {
     this._$searchWrapper && this._$searchWrapper.remove();
     delete this._$searchWrapper;
@@ -957,8 +965,8 @@ var Lookup = _ui.default.inherit({
           case 'dropDownOptions.width':
           case 'dropDownOptions.height':
             this._popupOptionChanged({
-              name: name,
-              fullName: fullName,
+              name,
+              fullName,
               value: value === 'auto' ? this.initialOption('dropDownOptions')[(0, _utils.getFieldName)(fullName)] : value
             });
             this._options.cache('dropDownOptions', this.option('dropDownOptions'));

@@ -86,7 +86,7 @@ var LocalStore = _array_store.default.inherit({
     this._backend = new localStoreBackends[options.backend || 'dom'](this, options);
     this._backend.load();
   },
-  _clearCache: function _clearCache() {
+  _clearCache() {
     this._backend.load();
   },
   clear: function clear() {

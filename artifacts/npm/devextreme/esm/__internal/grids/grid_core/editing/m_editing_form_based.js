@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/editing/m_editing_form_based.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -167,6 +167,7 @@ var editingControllerExtender = Base => class FormBasedEditingControllerExtender
         isPopupForm: true
       });
       this._rowsView.renderDelayedTemplates();
+      $(container).parent().attr('aria-label', this.localize('dxDataGrid-ariaEditForm'));
     };
   }
   _repaintEditPopup() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/filter_builder/utils.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -496,8 +496,8 @@ function getCurrentLookupValueText(field, value, handler) {
       }
       if (field.customizeText) {
         valueText = field.customizeText({
-          value: value,
-          valueText: valueText
+          value,
+          valueText
         });
       }
       handler(valueText);
@@ -581,7 +581,8 @@ function pushItemAndCheckParent(originalItems, plainItems, item) {
         dataType: 'object',
         dataField: item.parentId,
         caption: generateCaptionByDataField(item.parentId, true),
-        filterOperations: ['isblank', 'isnotblank']
+        filterOperations: ['isblank', 'isnotblank'],
+        defaultCalculateFilterExpression: _filtering.default.defaultCalculateFilterExpression
       });
     }
   }

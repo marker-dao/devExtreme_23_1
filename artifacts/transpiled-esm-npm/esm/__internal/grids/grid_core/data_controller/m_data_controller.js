@@ -1032,6 +1032,7 @@ export class DataController extends ControllerWithDataMixin {
     return dataSource && dataSource.store();
   }
   loadAll(data) {
+    var skipFilter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var that = this;
     // @ts-expect-error
     var d = new Deferred();
@@ -1045,7 +1046,7 @@ export class DataController extends ControllerWithDataMixin {
             isLoadingAll: true
           },
           loadOptions: {
-            filter: that.getCombinedFilter(),
+            filter: skipFilter ? null : that.getCombinedFilter(),
             group: dataSource.group(),
             sort: dataSource.sort()
           }
@@ -1110,7 +1111,8 @@ export class DataController extends ControllerWithDataMixin {
       return store.key();
     }
   }
-  getRowIndexOffset() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getRowIndexOffset(byLoadedRows) {
     return 0;
   }
   getDataByKeys(rowKeys) {

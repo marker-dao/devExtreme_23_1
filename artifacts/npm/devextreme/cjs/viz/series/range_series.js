@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/range_series.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,10 +16,8 @@ var _common = require("../../core/utils/common");
 var _scatter_series = require("./scatter_series");
 var _bar_series = require("./bar_series");
 var _area_series = require("./area_series");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+// there are rangebar, rangearea
+
 var _extend = _extend2.extend;
 var barSeries = _bar_series.chart.bar;
 var areaSeries = _area_series.chart.area;
@@ -55,8 +53,7 @@ var baseRangeSeries = {
   },
   _defaultAggregator: 'range',
   _aggregators: {
-    range: function range(_ref, series) {
-      var _data$reduce;
+    range(_ref, series) {
       var intervalStart = _ref.intervalStart,
         intervalEnd = _ref.intervalEnd,
         data = _ref.data;
@@ -75,7 +72,11 @@ var baseRangeSeries = {
         result[val1Field] = Math.min(result[val1Field], Math.min(val1, val2));
         result[val2Field] = Math.max(result[val2Field], Math.max(val1, val2));
         return result;
-      }, (_data$reduce = {}, _defineProperty(_data$reduce, val1Field, Infinity), _defineProperty(_data$reduce, val2Field, -Infinity), _defineProperty(_data$reduce, series.getArgumentField(), series._getIntervalCenter(intervalStart, intervalEnd)), _data$reduce));
+      }, {
+        [val1Field]: Infinity,
+        [val2Field]: -Infinity,
+        [series.getArgumentField()]: series._getIntervalCenter(intervalStart, intervalEnd)
+      });
       if (!isFinite(result[val1Field]) || !isFinite(result[val2Field])) {
         if (data.filter(function (i) {
           return i[val1Field] === null && i[val2Field] === null;
@@ -91,7 +92,7 @@ var baseRangeSeries = {
   getValueFields: function getValueFields() {
     return [this._options.rangeValue1Field || 'val1', this._options.rangeValue2Field || 'val2'];
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var oppositeCoord = null;
     var rotated = this._options.rotated;
     var isOpposite = !isArgument && !rotated || isArgument && rotated;

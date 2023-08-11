@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/m_editing.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,7 +17,7 @@ _m_core.default.registerModule('editing', (0, _extend.extend)(true, {}, _m_editi
   extenders: {
     controllers: {
       data: {
-        _changeRowExpandCore: function _changeRowExpandCore(key) {
+        _changeRowExpandCore(key) {
           var editingController = this._editingController;
           if (Array.isArray(key)) {
             editingController && editingController.refresh();

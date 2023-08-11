@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/palette.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,12 +20,7 @@ var _utils = require("./core/utils");
 var _extend = require("../core/utils/extend");
 var _color = _interopRequireDefault(require("../color"));
 var _type = require("../core/utils/type");
-var _palettes;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var _floor = Math.floor;
 var _ceil = Math.ceil;
 var _isArray = Array.isArray;
@@ -37,77 +32,94 @@ var officePalette = {
   gradientSet: ['#5f8b95', '#ba4d51'],
   accentColor: '#ba4d51'
 };
-var palettes = (_palettes = {}, _defineProperty(_palettes, DEFAULT_PALETTE, {
-  simpleSet: ['#1db2f5', '#f5564a', '#97c95c', '#ffc720', '#eb3573', '#a63db8'],
-  indicatingSet: ['#97c95c', '#ffc720', '#f5564a'],
-  gradientSet: ['#1db2f5', '#97c95c'],
-  accentColor: '#1db2f5'
-}), _defineProperty(_palettes, 'office', officePalette), _defineProperty(_palettes, 'harmony light', {
-  simpleSet: ['#fcb65e', '#679ec5', '#ad79ce', '#7abd5c', '#e18e92', '#b6d623', '#b7abea', '#85dbd5'],
-  indicatingSet: ['#b6d623', '#fcb65e', '#e18e92'],
-  gradientSet: ['#7abd5c', '#fcb65e'],
-  accentColor: '#679ec5'
-}), _defineProperty(_palettes, 'soft pastel', {
-  simpleSet: ['#60a69f', '#78b6d9', '#6682bb', '#a37182', '#eeba69', '#90ba58', '#456c68', '#7565a4'],
-  indicatingSet: ['#90ba58', '#eeba69', '#a37182'],
-  gradientSet: ['#78b6d9', '#eeba69'],
-  accentColor: '#60a69f'
-}), _defineProperty(_palettes, 'pastel', {
-  simpleSet: ['#bb7862', '#70b3a1', '#bb626a', '#057d85', '#ab394b', '#dac599', '#153459', '#b1d2c6'],
-  indicatingSet: ['#70b3a1', '#dac599', '#bb626a'],
-  gradientSet: ['#bb7862', '#70b3a1'],
-  accentColor: '#bb7862'
-}), _defineProperty(_palettes, 'bright', {
-  simpleSet: ['#70c92f', '#f8ca00', '#bd1550', '#e97f02', '#9d419c', '#7e4452', '#9ab57e', '#36a3a6'],
-  indicatingSet: ['#70c92f', '#f8ca00', '#bd1550'],
-  gradientSet: ['#e97f02', '#f8ca00'],
-  accentColor: '#e97f02'
-}), _defineProperty(_palettes, 'soft', {
-  simpleSet: ['#cbc87b', '#9ab57e', '#e55253', '#7e4452', '#e8c267', '#565077', '#6babac', '#ad6082'],
-  indicatingSet: ['#9ab57e', '#e8c267', '#e55253'],
-  gradientSet: ['#9ab57e', '#e8c267'],
-  accentColor: '#565077'
-}), _defineProperty(_palettes, 'ocean', {
-  simpleSet: ['#75c099', '#acc371', '#378a8a', '#5fa26a', '#064970', '#38c5d2', '#00a7c6', '#6f84bb'],
-  indicatingSet: ['#c8e394', '#7bc59d', '#397c8b'],
-  gradientSet: ['#acc371', '#38c5d2'],
-  accentColor: '#378a8a'
-}), _defineProperty(_palettes, 'vintage', {
-  simpleSet: ['#dea484', '#efc59c', '#cb715e', '#eb9692', '#a85c4c', '#f2c0b5', '#c96374', '#dd956c'],
-  indicatingSet: ['#ffe5c6', '#f4bb9d', '#e57660'],
-  gradientSet: ['#efc59c', '#cb715e'],
-  accentColor: '#cb715e'
-}), _defineProperty(_palettes, 'violet', {
-  simpleSet: ['#d1a1d1', '#eeacc5', '#7b5685', '#7e7cad', '#a13d73', '#5b41ab', '#e287e2', '#689cc1'],
-  indicatingSet: ['#d8e2f6', '#d0b2da', '#d56a8a'],
-  gradientSet: ['#eeacc5', '#7b5685'],
-  accentColor: '#7b5685'
-}), _defineProperty(_palettes, 'carmine', {
-  simpleSet: ['#fb7764', '#73d47f', '#fed85e', '#d47683', '#dde392', '#757ab2'],
-  indicatingSet: ['#5cb85c', '#f0ad4e', '#d9534f'],
-  gradientSet: ['#fb7764', '#73d47f'],
-  accentColor: '#f05b41'
-}), _defineProperty(_palettes, 'dark moon', {
-  simpleSet: ['#4ddac1', '#f4c99a', '#80dd9b', '#f998b3', '#4aaaa0', '#a5aef1'],
-  indicatingSet: ['#59d8a4', '#f0ad4e', '#f9517e'],
-  gradientSet: ['#4ddac1', '#f4c99a'],
-  accentColor: '#3debd3'
-}), _defineProperty(_palettes, 'soft blue', {
-  simpleSet: ['#7ab8eb', '#97da97', '#facb86', '#e78683', '#839bda', '#4db7be'],
-  indicatingSet: ['#5cb85c', '#f0ad4e', '#d9534f'],
-  gradientSet: ['#7ab8eb', '#97da97'],
-  accentColor: '#7ab8eb'
-}), _defineProperty(_palettes, 'dark violet', {
-  simpleSet: ['#9c63ff', '#64c064', '#eead51', '#d2504b', '#4b6bbf', '#2da7b0'],
-  indicatingSet: ['#5cb85c', '#f0ad4e', '#d9534f'],
-  gradientSet: ['#9c63ff', '#64c064'],
-  accentColor: '#9c63ff'
-}), _defineProperty(_palettes, 'green mist', {
-  simpleSet: ['#3cbab2', '#8ed962', '#5b9d95', '#efcc7c', '#f1929f', '#4d8dab'],
-  indicatingSet: ['#72d63c', '#ffc852', '#f74a5e'],
-  gradientSet: ['#3cbab2', '#8ed962'],
-  accentColor: '#3cbab2'
-}), _palettes);
+var palettes = {
+  [DEFAULT_PALETTE]: {
+    simpleSet: ['#1db2f5', '#f5564a', '#97c95c', '#ffc720', '#eb3573', '#a63db8'],
+    indicatingSet: ['#97c95c', '#ffc720', '#f5564a'],
+    gradientSet: ['#1db2f5', '#97c95c'],
+    accentColor: '#1db2f5'
+  },
+  'office': officePalette,
+  'harmony light': {
+    simpleSet: ['#fcb65e', '#679ec5', '#ad79ce', '#7abd5c', '#e18e92', '#b6d623', '#b7abea', '#85dbd5'],
+    indicatingSet: ['#b6d623', '#fcb65e', '#e18e92'],
+    gradientSet: ['#7abd5c', '#fcb65e'],
+    accentColor: '#679ec5'
+  },
+  'soft pastel': {
+    simpleSet: ['#60a69f', '#78b6d9', '#6682bb', '#a37182', '#eeba69', '#90ba58', '#456c68', '#7565a4'],
+    indicatingSet: ['#90ba58', '#eeba69', '#a37182'],
+    gradientSet: ['#78b6d9', '#eeba69'],
+    accentColor: '#60a69f'
+  },
+  'pastel': {
+    simpleSet: ['#bb7862', '#70b3a1', '#bb626a', '#057d85', '#ab394b', '#dac599', '#153459', '#b1d2c6'],
+    indicatingSet: ['#70b3a1', '#dac599', '#bb626a'],
+    gradientSet: ['#bb7862', '#70b3a1'],
+    accentColor: '#bb7862'
+  },
+  'bright': {
+    simpleSet: ['#70c92f', '#f8ca00', '#bd1550', '#e97f02', '#9d419c', '#7e4452', '#9ab57e', '#36a3a6'],
+    indicatingSet: ['#70c92f', '#f8ca00', '#bd1550'],
+    gradientSet: ['#e97f02', '#f8ca00'],
+    accentColor: '#e97f02'
+  },
+  'soft': {
+    simpleSet: ['#cbc87b', '#9ab57e', '#e55253', '#7e4452', '#e8c267', '#565077', '#6babac', '#ad6082'],
+    indicatingSet: ['#9ab57e', '#e8c267', '#e55253'],
+    gradientSet: ['#9ab57e', '#e8c267'],
+    accentColor: '#565077'
+  },
+  'ocean': {
+    simpleSet: ['#75c099', '#acc371', '#378a8a', '#5fa26a', '#064970', '#38c5d2', '#00a7c6', '#6f84bb'],
+    indicatingSet: ['#c8e394', '#7bc59d', '#397c8b'],
+    gradientSet: ['#acc371', '#38c5d2'],
+    accentColor: '#378a8a'
+  },
+  'vintage': {
+    simpleSet: ['#dea484', '#efc59c', '#cb715e', '#eb9692', '#a85c4c', '#f2c0b5', '#c96374', '#dd956c'],
+    indicatingSet: ['#ffe5c6', '#f4bb9d', '#e57660'],
+    gradientSet: ['#efc59c', '#cb715e'],
+    accentColor: '#cb715e'
+  },
+  'violet': {
+    simpleSet: ['#d1a1d1', '#eeacc5', '#7b5685', '#7e7cad', '#a13d73', '#5b41ab', '#e287e2', '#689cc1'],
+    indicatingSet: ['#d8e2f6', '#d0b2da', '#d56a8a'],
+    gradientSet: ['#eeacc5', '#7b5685'],
+    accentColor: '#7b5685'
+  },
+  // generic color schemes related palettes
+  'carmine': {
+    simpleSet: ['#fb7764', '#73d47f', '#fed85e', '#d47683', '#dde392', '#757ab2'],
+    indicatingSet: ['#5cb85c', '#f0ad4e', '#d9534f'],
+    gradientSet: ['#fb7764', '#73d47f'],
+    accentColor: '#f05b41'
+  },
+  'dark moon': {
+    simpleSet: ['#4ddac1', '#f4c99a', '#80dd9b', '#f998b3', '#4aaaa0', '#a5aef1'],
+    indicatingSet: ['#59d8a4', '#f0ad4e', '#f9517e'],
+    gradientSet: ['#4ddac1', '#f4c99a'],
+    accentColor: '#3debd3'
+  },
+  'soft blue': {
+    simpleSet: ['#7ab8eb', '#97da97', '#facb86', '#e78683', '#839bda', '#4db7be'],
+    indicatingSet: ['#5cb85c', '#f0ad4e', '#d9534f'],
+    gradientSet: ['#7ab8eb', '#97da97'],
+    accentColor: '#7ab8eb'
+  },
+  'dark violet': {
+    simpleSet: ['#9c63ff', '#64c064', '#eead51', '#d2504b', '#4b6bbf', '#2da7b0'],
+    indicatingSet: ['#5cb85c', '#f0ad4e', '#d9534f'],
+    gradientSet: ['#9c63ff', '#64c064'],
+    accentColor: '#9c63ff'
+  },
+  'green mist': {
+    simpleSet: ['#3cbab2', '#8ed962', '#5b9d95', '#efcc7c', '#f1929f', '#4d8dab'],
+    indicatingSet: ['#72d63c', '#ffc852', '#f74a5e'],
+    gradientSet: ['#3cbab2', '#8ed962'],
+    accentColor: '#3cbab2'
+  }
+};
 var currentPaletteName;
 function currentPalette(name) {
   if (name === undefined) {
@@ -163,7 +175,7 @@ function registerPalette(name, palette) {
 }
 function getAccentColor(palette, themeDefault) {
   palette = getPalette(palette, {
-    themeDefault: themeDefault
+    themeDefault
   });
   return palette.accentColor || palette[0];
 }
@@ -351,16 +363,16 @@ function getColorMixer(palette, parameters) {
 }
 function createPalette(palette, parameters, themeDefaultPalette) {
   var paletteObj = {
-    dispose: function dispose() {
+    dispose() {
       this._extensionStrategy = null;
     },
-    getNextColor: function getNextColor(count) {
+    getNextColor(count) {
       return this._extensionStrategy.getColor(this._currentColor++, count);
     },
-    generateColors: function generateColors(count, parameters) {
+    generateColors(count, parameters) {
       return this._extensionStrategy.generateColors(count, (parameters || {}).repeat);
     },
-    reset: function reset() {
+    reset() {
       this._currentColor = 0;
       this._extensionStrategy.reset();
       return this;

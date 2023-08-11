@@ -117,7 +117,7 @@ var Store = _class.default.inherit({
   push: function push(changes) {
     var _this = this;
     var beforePushArgs = {
-      changes: changes,
+      changes,
       waitFor: []
     };
     this._eventsStrategy.fireEvent('beforePush', [beforePushArgs]);
@@ -140,11 +140,11 @@ var Store = _class.default.inherit({
   _addFailHandlers: function _addFailHandlers(deferred) {
     return deferred.fail(this._errorHandler).fail(_errors.handleError);
   },
-  on: function on(eventName, eventHandler) {
+  on(eventName, eventHandler) {
     this._eventsStrategy.on(eventName, eventHandler);
     return this;
   },
-  off: function off(eventName, eventHandler) {
+  off(eventName, eventHandler) {
     this._eventsStrategy.off(eventName, eventHandler);
     return this;
   }

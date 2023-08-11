@@ -40,19 +40,19 @@ function generateRowsInfo(doc, dataProvider, dataGrid, headerBackgroundColor) {
     }
     result.push({
       rowType: rowType,
-      indentLevel: indentLevel,
+      indentLevel,
       cells: generateRowCells({
-        doc: doc,
-        dataProvider: dataProvider,
-        rowIndex: rowIndex,
-        wordWrapEnabled: wordWrapEnabled,
-        columns: columns,
-        styles: styles,
-        rowType: rowType,
+        doc,
+        dataProvider,
+        rowIndex,
+        wordWrapEnabled,
+        columns,
+        styles,
+        rowType,
         backgroundColor: rowType === 'header' ? headerBackgroundColor : undefined,
-        rtlEnabled: rtlEnabled
+        rtlEnabled
       }),
-      rowIndex: rowIndex
+      rowIndex
     });
   }
   return result;
@@ -79,8 +79,8 @@ function generateRowCells(_ref) {
       text: getFormattedValue(cellData.value, cellStyle.format),
       verticalAlign: 'middle',
       horizontalAlign: (_style$alignment = style.alignment) !== null && _style$alignment !== void 0 ? _style$alignment : defaultAlignment,
-      wordWrapEnabled: wordWrapEnabled,
-      backgroundColor: backgroundColor,
+      wordWrapEnabled,
+      backgroundColor,
       padding: {
         top: paddingValue,
         right: paddingValue,

@@ -133,7 +133,7 @@ function renderFieldItem(_ref) {
     template.render({
       container: (0, _element.getPublicElement)($fieldEditorContainer),
       model: getTemplateData(item, editorOptions, formOrLayoutManager),
-      onRendered: function onRendered() {
+      onRendered() {
         var $validationTarget = getValidationTarget($fieldEditorContainer);
         var validationTargetInstance = tryGetValidationTargetInstance($validationTarget);
         subscribeWrapperInvalidClassToggle(validationTargetInstance);
@@ -198,9 +198,9 @@ function renderFieldItem(_ref) {
     $editorParent.append((0, _renderer.default)('<div>').addClass(FIELD_ITEM_CONTENT_WRAPPER_CLASS).append($fieldEditorContainer).append((0, _renderer.default)('<div>').addClass(FIELD_ITEM_HELP_TEXT_CLASS).attr('id', helpID).text(helpText)));
   }
   return {
-    $fieldEditorContainer: $fieldEditorContainer,
-    $rootElement: $rootElement,
-    widgetInstance: widgetInstance
+    $fieldEditorContainer,
+    $rootElement,
+    widgetInstance
   };
 }
 function getValidationTarget($fieldEditorContainer) {
@@ -233,7 +233,7 @@ function getTemplateData(item, editorOptions, formOrLayoutManager) {
   return {
     dataField: item.dataField,
     editorType: item.editorType,
-    editorOptions: editorOptions,
+    editorOptions,
     component: formOrLayoutManager,
     name: item.name
   };

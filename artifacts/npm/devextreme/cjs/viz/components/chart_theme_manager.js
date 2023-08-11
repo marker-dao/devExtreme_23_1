@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/components/chart_theme_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -152,14 +152,14 @@ var ThemeManager = _base_theme_manager.BaseThemeManager.inherit(function () {
       } : {};
       return mergeOptions.call(this, name, userOptions);
     },
-    seriesTemplate: function seriesTemplate() {
+    seriesTemplate() {
       var value = mergeOptions.call(this, 'seriesTemplate');
       if (value) {
         value.nameField = value.nameField || 'series';
       }
       return value;
     },
-    zoomAndPan: function zoomAndPan() {
+    zoomAndPan() {
       function parseOption(option) {
         option = (0, _utils.normalizeEnum)(option);
         var pan = option === 'pan' || option === 'both';

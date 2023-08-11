@@ -35,11 +35,11 @@ var getGroupPanelData = function getGroupPanelData(groups, columnCountPerGroup, 
           id = _ref.id,
           text = _ref.text;
         return {
-          id: id,
-          text: text,
-          color: color,
+          id,
+          text,
+          color,
           key: "".concat(iterator, "_").concat(resourceName, "_").concat(id),
-          resourceName: resourceName,
+          resourceName,
           data: data === null || data === void 0 ? void 0 : data[index]
         };
       })));
@@ -54,8 +54,8 @@ var getGroupPanelData = function getGroupPanelData(groups, columnCountPerGroup, 
     groupPanelItems = extendGroupItemsForGroupingByDate(groupPanelItems, columnCountPerGroup);
   }
   return {
-    groupPanelItems: groupPanelItems,
-    baseColSpan: baseColSpan
+    groupPanelItems,
+    baseColSpan
   };
 };
 exports.getGroupPanelData = getGroupPanelData;

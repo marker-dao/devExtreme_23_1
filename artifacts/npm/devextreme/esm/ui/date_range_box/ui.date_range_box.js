@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_range_box/ui.date_range_box.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -337,7 +337,7 @@ class DateRangeBox extends Editor {
   _clearValueHandler(e) {
     e.stopPropagation();
     this._saveValueChangeEvent(e);
-    this.reset();
+    this.clear();
     !this._isStartDateActiveElement() && this.focus();
     eventsEngine.trigger($(this.startDateField()), 'input');
   }
@@ -548,12 +548,16 @@ class DateRangeBox extends Editor {
     }
     return validationMessagePosition;
   }
+  _getSerializedDates(_ref4) {
+    var [startDate, endDate] = _ref4;
+    return [this.getStartDateBox()._serializeDate(getDeserializedDate(startDate)), this.getStartDateBox()._serializeDate(getDeserializedDate(endDate))];
+  }
   updateValue(newValue, event) {
     if (!isSameDateArrays(newValue, this.option('value'))) {
       if (event) {
         this._saveValueChangeEvent(event);
       }
-      this.option('value', newValue);
+      this.option('value', this._getSerializedDates(newValue));
     }
   }
   _updateDateBoxesValue(newValue) {
@@ -849,6 +853,8 @@ class DateRangeBox extends Editor {
         {
           var _newValue = sortDatesArray(value);
           if (!isSameDateArrays(_newValue, previousValue)) {
+            var isDirty = !isSameDateArrays(_newValue, this._initialValue);
+            this.option('isDirty', isDirty);
             this._setOptionWithoutOptionChange('value', _newValue);
             this._setOptionWithoutOptionChange('startDate', _newValue[0]);
             this._setOptionWithoutOptionChange('endDate', _newValue[1]);
@@ -898,10 +904,10 @@ class DateRangeBox extends Editor {
   focus() {
     this.getStartDateBox().focus();
   }
-  reset() {
-    super.reset();
-    this.getEndDateBox().reset();
-    this.getStartDateBox().reset();
+  clear() {
+    super.clear();
+    this.getEndDateBox().clear();
+    this.getStartDateBox().clear();
   }
 }
 registerComponent('dxDateRangeBox', DateRangeBox);

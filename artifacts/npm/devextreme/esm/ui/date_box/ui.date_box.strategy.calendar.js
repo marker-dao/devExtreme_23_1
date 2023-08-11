@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_box/ui.date_box.strategy.calendar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -80,6 +80,7 @@ var CalendarStrategy = DateBoxStrategy.inherit({
     var disabledDates = this.dateBox.option('disabledDates');
     return extend(this.dateBox.option('calendarOptions'), {
       value: this.dateBoxValue() || null,
+      selectionMode: 'single',
       dateSerializationFormat: null,
       min: this.dateBox.dateOption('min'),
       max: this.dateBox.dateOption('max'),

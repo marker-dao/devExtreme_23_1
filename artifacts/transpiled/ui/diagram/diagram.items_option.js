@@ -5,7 +5,6 @@ var _extend = require("../../core/utils/extend");
 var _component = require("../../core/component");
 var _data_helper = _interopRequireDefault(require("../../data_helper"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var ItemsOptionBase = _component.Component.inherit({}).include(_data_helper.default);
@@ -65,8 +64,8 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     store.insert(this._prepareData(data)).done(function (data, key) {
       store.push([{
         type: 'insert',
-        key: key,
-        data: data,
+        key,
+        data,
         internalChange: true
       }]);
       if (callback) {
@@ -86,8 +85,8 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     store.update(storeKey, this._prepareData(data)).done(function (data, key) {
       store.push([{
         type: 'update',
-        key: key,
-        data: data,
+        key,
+        data,
         internalChange: true
       }]);
       if (callback) {
@@ -107,7 +106,7 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     store.remove(storeKey).done(function (key) {
       store.push([{
         type: 'remove',
-        key: key,
+        key,
         internalChange: true
       }]);
       if (callback) {
@@ -151,7 +150,7 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
   _proto._getIndexByKey = function _getIndexByKey(key) {
     this._ensureCache();
     var cache = this._cache;
-    if (_typeof(key) === 'object') {
+    if (typeof key === 'object') {
       for (var i = 0, length = cache.keys.length; i < length; i++) {
         if (cache.keys[i] === key) return i;
       }
@@ -226,7 +225,7 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     return storeKey;
   };
   _proto._getInternalKey = function _getInternalKey(storeKey) {
-    if (_typeof(storeKey) === 'object') {
+    if (typeof storeKey === 'object') {
       var keyExpr = this._getKeyExpr();
       return keyExpr(storeKey);
     }

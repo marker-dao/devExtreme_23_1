@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.nl.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Sorteer Oplopend",
             "dxDataGrid-sortingDescendingText": "Sorteer Aflopend",
             "dxDataGrid-sortingClearText": "Sortering wissen",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Wijzigingen opslaan",
             "dxDataGrid-editingCancelAllChanges": "Wijzigingen annuleren",
             "dxDataGrid-editingAddRow": "Rij toevoegen",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Filter cel",
             "dxDataGrid-ariaCollapse": "Inklappen",
             "dxDataGrid-ariaExpand": "Uitklappen",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Gegevenstabel",
             "dxDataGrid-ariaSearchInGrid": "Zoeken in gegevenstabel",
             "dxDataGrid-ariaSelectAll": "Selecteer alle",
             "dxDataGrid-ariaSelectRow": "Selecteer rij",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Filterbouwer",
             "dxDataGrid-filterPanelCreateFilter": "Maak Filter",
             "dxDataGrid-filterPanelClearFilter": "Wissen",

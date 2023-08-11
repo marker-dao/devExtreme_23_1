@@ -580,7 +580,7 @@ var DateBoxMask = DateBoxBase.inherit({
     delete this._activePartIndex;
     delete this._maskValue;
   },
-  reset() {
+  clear() {
     this._clearMaskState();
     this._activePartIndex = 0;
     this.callBase();

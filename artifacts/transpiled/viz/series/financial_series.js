@@ -224,7 +224,7 @@ var stock = (0, _extend2.extend)({}, _scatter_series.chart, {
     options.sizePointNormalState = DEFAULT_FINANCIAL_POINT_SIZE;
     return options;
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var oppositeCoord = null;
     var points = this.getVisiblePoints();
     for (var i = 0; i < points.length; i++) {
@@ -243,7 +243,7 @@ var stock = (0, _extend2.extend)({}, _scatter_series.chart, {
     }
     return oppositeCoord;
   },
-  usePointsToDefineAutoHiding: function usePointsToDefineAutoHiding() {
+  usePointsToDefineAutoHiding() {
     return false;
   }
 });

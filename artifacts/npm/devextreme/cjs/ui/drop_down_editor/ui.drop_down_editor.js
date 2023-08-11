@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_editor.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -215,8 +215,8 @@ var DropDownEditor = _text_box.default.inherit({
       at = _this$_getDefaultPopu.at;
     var currentPosition = this.option('popupPosition');
     this.option('popupPosition', (0, _extend.extend)({}, currentPosition, {
-      my: my,
-      at: at
+      my,
+      at
     }));
   },
   _initVisibilityActions: function _initVisibilityActions() {
@@ -328,7 +328,7 @@ var DropDownEditor = _text_box.default.inherit({
     });
     this._attachWrapperContent($container);
   },
-  _detachWrapperContent: function _detachWrapperContent() {
+  _detachWrapperContent() {
     var _this$_$submitElement, _this$_$beforeButtons, _this$_$afterButtonsC;
     var useHiddenSubmitElement = this.option('useHiddenSubmitElement');
     useHiddenSubmitElement && ((_this$_$submitElement = this._$submitElement) === null || _this$_$submitElement === void 0 ? void 0 : _this$_$submitElement.detach());
@@ -339,14 +339,14 @@ var DropDownEditor = _text_box.default.inherit({
     beforeButtonsContainerParent === null || beforeButtonsContainerParent === void 0 ? void 0 : beforeButtonsContainerParent.removeChild(this._$beforeButtonsContainer[0]);
     afterButtonsContainerParent === null || afterButtonsContainerParent === void 0 ? void 0 : afterButtonsContainerParent.removeChild(this._$afterButtonsContainer[0]);
   },
-  _attachWrapperContent: function _attachWrapperContent($container) {
+  _attachWrapperContent($container) {
     var _this$_$submitElement2;
     var useHiddenSubmitElement = this.option('useHiddenSubmitElement');
     $container.prepend(this._$beforeButtonsContainer);
     useHiddenSubmitElement && ((_this$_$submitElement2 = this._$submitElement) === null || _this$_$submitElement2 === void 0 ? void 0 : _this$_$submitElement2.appendTo($container));
     $container.append(this._$afterButtonsContainer);
   },
-  _refreshButtonsContainer: function _refreshButtonsContainer() {
+  _refreshButtonsContainer() {
     this._$buttonsContainer = this.$element().children().eq(0);
   },
   _integrateInput: function _integrateInput() {
@@ -458,7 +458,7 @@ var DropDownEditor = _text_box.default.inherit({
       this.option('opened', isVisible);
     }
   },
-  _getControlsAria: function _getControlsAria() {
+  _getControlsAria() {
     return this._popup && this._popupContentId;
   },
   _renderOpenedState: function _renderOpenedState() {
@@ -502,7 +502,7 @@ var DropDownEditor = _text_box.default.inherit({
     this._setPopupContentId(this._popup.$content());
     this._bindInnerWidgetOptions(this._popup, 'dropDownOptions');
   },
-  _setPopupContentId: function _setPopupContentId($popupContent) {
+  _setPopupContentId($popupContent) {
     this._popupContentId = 'dx-' + new _guid.default();
     this.setAria('id', this._popupContentId, $popupContent);
   },
@@ -661,10 +661,11 @@ var DropDownEditor = _text_box.default.inherit({
     return this.option('applyValueMode') === 'useButtons' ? this._popupToolbarItemsConfig() : [];
   },
   _getFirstPopupElement: function _getFirstPopupElement() {
-    return this._popup.$wrapper().find('.dx-popup-done.dx-button');
+    return (0, _renderer.default)(this._popup.getFocusableElements()[0]);
   },
   _getLastPopupElement: function _getLastPopupElement() {
-    return this._popup.$wrapper().find('.dx-popup-cancel.dx-button');
+    var elements = this._popup.getFocusableElements();
+    return (0, _renderer.default)(elements[elements.length - 1]);
   },
   _popupElementTabHandler: function _popupElementTabHandler(e) {
     var $element = (0, _renderer.default)(e.currentTarget);

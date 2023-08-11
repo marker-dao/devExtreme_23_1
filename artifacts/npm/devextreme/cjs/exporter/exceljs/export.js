@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/exceljs/export.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,7 @@ var MAX_DIGIT_WIDTH_IN_PIXELS = 7; // Calibri font with 11pt size
 // support.office.com/en-us/article/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3 - "Column width limit - 255 characters"
 var MAX_EXCEL_COLUMN_WIDTH = 255;
 var Export = {
-  getFullOptions: function getFullOptions(options) {
+  getFullOptions(options) {
     var fullOptions = (0, _extend.extend)({}, options);
     if (!((0, _type.isDefined)(fullOptions.worksheet) && (0, _type.isObject)(fullOptions.worksheet))) {
       throw Error('The "worksheet" field must contain an object.');
@@ -36,7 +36,7 @@ var Export = {
         row = _fullOptions$workshee.row,
         col = _fullOptions$workshee.col;
       fullOptions.topLeftCell = {
-        row: row,
+        row,
         column: col
       };
     }
@@ -54,13 +54,13 @@ var Export = {
     }
     return fullOptions;
   },
-  convertDateForExcelJS: function convertDateForExcelJS(date) {
+  convertDateForExcelJS(date) {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
   },
-  setNumberFormat: function setNumberFormat(excelCell, numberFormat) {
+  setNumberFormat(excelCell, numberFormat) {
     excelCell.numFmt = numberFormat;
   },
-  getCellStyles: function getCellStyles(dataProvider) {
+  getCellStyles(dataProvider) {
     var _this = this;
     var styles = dataProvider.getStyles();
     styles.forEach(function (style) {
@@ -72,14 +72,14 @@ var Export = {
     });
     return styles;
   },
-  tryConvertToExcelNumberFormat: function tryConvertToExcelNumberFormat(format, dataType) {
+  tryConvertToExcelNumberFormat(format, dataType) {
     var newFormat = _export_format.ExportFormat.formatObjectConverter(format, dataType);
     var currency = newFormat.currency;
     format = newFormat.format;
     dataType = newFormat.dataType;
     return _export_format.ExportFormat.convertFormat(format, newFormat.precision, dataType, currency);
   },
-  setAlignment: function setAlignment(excelCell, wrapText, horizontalAlignment) {
+  setAlignment(excelCell, wrapText, horizontalAlignment) {
     var _excelCell$alignment;
     excelCell.alignment = (_excelCell$alignment = excelCell.alignment) !== null && _excelCell$alignment !== void 0 ? _excelCell$alignment : {};
     if ((0, _type.isDefined)(wrapText)) {
@@ -90,7 +90,7 @@ var Export = {
     }
     excelCell.alignment.vertical = 'top';
   },
-  setColumnsWidth: function setColumnsWidth(worksheet, widths, startColumnIndex) {
+  setColumnsWidth(worksheet, widths, startColumnIndex) {
     if (!(0, _type.isDefined)(widths)) {
       return;
     }
@@ -101,7 +101,7 @@ var Export = {
       }
     }
   },
-  export: function _export(options, Helpers, getLoadPanelTargetElement, getLoadPanelContainer) {
+  export(options, Helpers, getLoadPanelTargetElement, getLoadPanelContainer) {
     var _component$_getIntern,
       _this2 = this;
     var component = options.component,
@@ -189,7 +189,7 @@ var Export = {
       });
     });
   },
-  exportRow: function exportRow(dataProvider, helpers, row, rowIndex, startColumnIndex, columnsCount, wrapText, styles, encodeExecutableContent) {
+  exportRow(dataProvider, helpers, row, rowIndex, startColumnIndex, columnsCount, wrapText, styles, encodeExecutableContent) {
     for (var cellIndex = startColumnIndex; cellIndex < columnsCount; cellIndex++) {
       var cellData = dataProvider.getCellData(rowIndex, cellIndex, true);
       var excelCell = row.getCell(helpers._getFirstColumnIndex() + cellIndex);

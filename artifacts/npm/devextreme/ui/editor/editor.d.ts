@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/editor/editor.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,9 +26,15 @@ import {
  * @hidden
  */
 export interface ValueChangedInfo {
-    /** @docid */
+    /**
+     * @docid
+     * @type object
+     */
     readonly previousValue?: any;
-    /** @docid */
+    /**
+     * @docid
+     * @type object
+     */
     readonly value?: any;
 }
 
@@ -106,6 +112,13 @@ export interface EditorOptions<TComponent> extends WidgetOptions<TComponent> {
      * @hidden
      */
     stylingMode?: EditorStyle;
+
+     /**
+     * @docid
+     * @default false
+     * @public
+     */
+     isDirty?: boolean;
 }
 /**
  * @docid
@@ -116,10 +129,18 @@ export interface EditorOptions<TComponent> extends WidgetOptions<TComponent> {
 export default class Editor<TProperties = Properties> extends Widget<TProperties> {
     /**
      * @docid
-     * @publicName reset()
+     * @publicName clear()
      * @public
      */
-    reset(): void;
+    clear(): void;
+
+    /**
+     * @docid
+     * @type_function_param1 value:any
+     * @publicName reset(value)
+     * @public
+     */
+    reset(value?: any): void;
 }
 
 interface EditorInstance extends Editor<Properties> { }

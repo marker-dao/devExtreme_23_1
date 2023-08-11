@@ -43,8 +43,11 @@ var Submenu = /*#__PURE__*/function (_ContextMenu) {
     this.$contentDelimiter = (0, _renderer.default)('<div>').appendTo(this._itemContainer()).addClass(DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS);
   };
   _proto._getOverlayOptions = function _getOverlayOptions() {
-    return (0, _extend.extend)(_ContextMenu.prototype._getOverlayOptions.call(this), {
-      onPositioned: this._overlayPositionedActionHandler.bind(this)
+    return (0, _extend.extend)(true, _ContextMenu.prototype._getOverlayOptions.call(this), {
+      onPositioned: this._overlayPositionedActionHandler.bind(this),
+      position: {
+        precise: true
+      }
     });
   };
   _proto._overlayPositionedActionHandler = function _overlayPositionedActionHandler(arg) {
@@ -94,9 +97,10 @@ var Submenu = /*#__PURE__*/function (_ContextMenu) {
       return;
     }
     var $submenu = this._itemContainer().children(".".concat(DX_SUBMENU_CLASS)).eq(0);
-    var $rootItem = this.option('position').of;
+    var $rootItem = this.option('position').of.find('.dx-context-menu-container-border');
     var position = {
-      of: $submenu
+      of: $submenu,
+      precise: true
     };
     var containerOffset = arg.position;
     var vLocation = containerOffset.v.location;
@@ -109,42 +113,42 @@ var Submenu = /*#__PURE__*/function (_ContextMenu) {
     var submenuWidth = (0, _size.getWidth)($submenu);
     var submenuHeight = (0, _size.getHeight)($submenu);
     this.$contentDelimiter.css('display', 'block');
-    (0, _size.setWidth)(this.$contentDelimiter, this._isMenuHorizontal() ? rootWidth < submenuWidth ? rootWidth - 2 : submenuWidth : 2);
-    (0, _size.setHeight)(this.$contentDelimiter, this._isMenuHorizontal() ? 2 : rootHeight < submenuHeight ? rootHeight - 2 : submenuHeight);
+    (0, _size.setWidth)(this.$contentDelimiter, this._isMenuHorizontal() ? rootWidth < submenuWidth ? rootWidth : submenuWidth : 3);
+    (0, _size.setHeight)(this.$contentDelimiter, this._isMenuHorizontal() ? 3 : rootHeight < submenuHeight ? rootHeight : submenuHeight);
     if (this._isMenuHorizontal()) {
       if (vLocation > offsetTop) {
         if (Math.round(hLocation) === offsetLeft) {
-          position.offset = '1 -1';
+          position.offset = '0 -2.5';
           position.at = position.my = 'left top';
         } else {
-          position.offset = '-1 -1';
+          position.offset = '0 -2.5';
           position.at = position.my = 'right top';
         }
       } else {
         (0, _size.setHeight)(this.$contentDelimiter, 5);
         if (Math.round(hLocation) === offsetLeft) {
-          position.offset = '1 4';
+          position.offset = '0 5';
           position.at = position.my = 'left bottom';
         } else {
-          position.offset = '-1 2';
+          position.offset = '0 5';
           position.at = position.my = 'right bottom';
         }
       }
     } else {
       if (hLocation > offsetLeft) {
         if (Math.round(vLocation) === offsetTop) {
-          position.offset = '-1 1';
+          position.offset = '-2.5 0';
           position.at = position.my = 'left top';
         } else {
-          position.offset = '-1 -1';
+          position.offset = '-2.5 0';
           position.at = position.my = 'left bottom';
         }
       } else {
         if (Math.round(vLocation) === offsetTop) {
-          position.offset = '1 1';
+          position.offset = '2.5 0';
           position.at = position.my = 'right top';
         } else {
-          position.offset = '1 -1';
+          position.offset = '2.5 0';
           position.at = position.my = 'right bottom';
         }
       }

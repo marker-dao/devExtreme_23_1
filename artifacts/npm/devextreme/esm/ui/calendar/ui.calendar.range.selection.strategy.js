@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.range.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,6 @@
 import dateUtils from '../../core/utils/date';
 import CalendarSelectionStrategy from './ui.calendar.selection.strategy';
 var DAY_INTERVAL = 86400000;
-var RANGE_OFFSET = DAY_INTERVAL * 120;
 class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
   constructor(component) {
     super(component);
@@ -81,6 +80,9 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
     var dates = values.filter(value => value);
     return this._getLowestDateInArray(dates);
   }
+  restoreValue() {
+    this.calendar.option('values', [null, null]);
+  }
   _getValues() {
     var values = this.dateOption('values');
     if (!values.length) {
@@ -100,12 +102,15 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
     if (!startDate || !endDate) {
       return [];
     }
-
-    // TODO: Rework this range reducing algorithm to support different multi views
-    // and optimise single views.
-    var currentDate = this.calendar.option('currentDate').getTime();
-    var rangeStartDate = new Date(Math.max(currentDate - RANGE_OFFSET, startDate));
-    var rangeEndDate = new Date(Math.min(currentDate + RANGE_OFFSET, endDate));
+    var {
+      currentDate,
+      viewsCount
+    } = this.calendar.option();
+    var isAdditionalViewDate = this.calendar._isAdditionalViewDate(currentDate);
+    var firstDateInViews = dateUtils.getFirstMonthDate(dateUtils.addDateInterval(currentDate, 'month', isAdditionalViewDate ? -2 : -1));
+    var lastDateInViews = dateUtils.getLastMonthDate(dateUtils.addDateInterval(currentDate, 'month', isAdditionalViewDate ? 1 : viewsCount));
+    var rangeStartDate = new Date(Math.max(firstDateInViews, startDate));
+    var rangeEndDate = new Date(Math.min(lastDateInViews, endDate));
     return [...dateUtils.getDatesOfInterval(rangeStartDate, rangeEndDate, DAY_INTERVAL), rangeEndDate];
   }
   _cellHoverHandler(e) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tab_panel.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,6 +26,7 @@ import { hasWindow } from '../core/utils/window';
 
 var TABPANEL_CLASS = 'dx-tabpanel';
 var TABPANEL_TABS_CLASS = 'dx-tabpanel-tabs';
+var TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
 var TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
 var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
 var DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
@@ -206,7 +207,10 @@ var TabPanel = MultiView.inherit({
         if (!this._isFocusOutHandlerExecuting) {
           this._focusOutHandler(args.event);
         }
-      }.bind(this)
+      }.bind(this),
+      _itemAttributes: {
+        class: TABPANEL_TABS_ITEM_CLASS
+      }
     };
   },
   _renderFocusTarget: function _renderFocusTarget() {

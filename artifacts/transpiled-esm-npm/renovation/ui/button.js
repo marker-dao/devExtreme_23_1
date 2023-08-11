@@ -13,37 +13,38 @@ var _combine_classes = require("../utils/combine_classes");
 var _icon = require("../../core/utils/icon");
 var _inflector = require("../../core/utils/inflector");
 var _icon2 = require("./common/icon");
-var _errors = _interopRequireDefault(require("../../core/errors"));
 var _ink_ripple = require("./common/ink_ripple");
 var _widget = require("./common/widget");
 var _base_props = require("./common/base_props");
 var _message = _interopRequireDefault(require("../../localization/message"));
 var _excluded = ["accessKey", "activeStateEnabled", "children", "className", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "icon", "iconPosition", "iconTemplate", "onClick", "onKeyDown", "onSubmit", "pressed", "rtlEnabled", "stylingMode", "tabIndex", "template", "templateData", "text", "type", "useInkRipple", "useSubmitBehavior", "visible", "width"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var stylingModes = ['outlined', 'text', 'contained'];
 var getCssClasses = function getCssClasses(model) {
-  var _classesMap;
   var icon = model.icon,
     iconPosition = model.iconPosition,
     stylingMode = model.stylingMode,
     text = model.text,
     type = model.type;
   var isValidStylingMode = stylingMode && stylingModes.includes(stylingMode);
-  var classesMap = (_classesMap = {
-    'dx-button': true
-  }, _defineProperty(_classesMap, "dx-button-mode-".concat(isValidStylingMode ? stylingMode : 'contained'), true), _defineProperty(_classesMap, "dx-button-".concat(type !== null && type !== void 0 ? type : 'normal'), true), _defineProperty(_classesMap, 'dx-button-has-text', !!text), _defineProperty(_classesMap, 'dx-button-has-icon', !!icon), _defineProperty(_classesMap, 'dx-button-icon-right', iconPosition !== 'left'), _classesMap);
+  var classesMap = {
+    'dx-button': true,
+    ["dx-button-mode-".concat(isValidStylingMode ? stylingMode : 'contained')]: true,
+    ["dx-button-".concat(type !== null && type !== void 0 ? type : 'normal')]: true,
+    'dx-button-has-text': !!text,
+    'dx-button-has-icon': !!icon,
+    'dx-button-icon-right': iconPosition !== 'left'
+  };
   return (0, _combine_classes.combineClasses)(classesMap);
 };
 var viewFunction = function viewFunction(viewModel) {
@@ -140,7 +141,6 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
     _this.activate = _this.activate.bind(_assertThisInitialized(_this));
     _this.deactivate = _this.deactivate.bind(_assertThisInitialized(_this));
     _this.submitEffect = _this.submitEffect.bind(_assertThisInitialized(_this));
-    _this.checkDeprecation = _this.checkDeprecation.bind(_assertThisInitialized(_this));
     _this.onActive = _this.onActive.bind(_assertThisInitialized(_this));
     _this.onInactive = _this.onInactive.bind(_assertThisInitialized(_this));
     _this.onWidgetClick = _this.onWidgetClick.bind(_assertThisInitialized(_this));
@@ -149,12 +149,11 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
   }
   var _proto = Button.prototype;
   _proto.createEffects = function createEffects() {
-    return [new _inferno2.InfernoEffect(this.submitEffect, [this.props.onSubmit, this.props.useSubmitBehavior]), new _inferno2.InfernoEffect(this.checkDeprecation, [this.props.type]), (0, _inferno2.createReRenderEffect)()];
+    return [new _inferno2.InfernoEffect(this.submitEffect, [this.props.onSubmit, this.props.useSubmitBehavior]), (0, _inferno2.createReRenderEffect)()];
   };
   _proto.updateEffects = function updateEffects() {
-    var _this$_effects$, _this$_effects$2;
+    var _this$_effects$;
     (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.onSubmit, this.props.useSubmitBehavior]);
-    (_this$_effects$2 = this._effects[1]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([this.props.type]);
   };
   _proto.submitEffect = function submitEffect() {
     var _this2 = this;
@@ -165,38 +164,32 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
     if (useSubmitBehavior && onSubmit) {
       _short.click.on(this.submitInputRef.current, function (event) {
         return onSubmit({
-          event: event,
+          event,
           submitInput: _this2.submitInputRef.current
         });
       }, {
-        namespace: namespace
+        namespace
       });
       return function () {
         return _short.click.off(_this2.submitInputRef.current, {
-          namespace: namespace
+          namespace
         });
       };
     }
     return undefined;
   };
-  _proto.checkDeprecation = function checkDeprecation() {
-    var type = this.props.type;
-    if (type === 'back') {
-      _errors.default.log('W0016', 'type', 'back', '22.2', "Use the 'back' icon instead");
-    }
-  };
   _proto.onActive = function onActive(event) {
     var useInkRipple = this.props.useInkRipple;
     useInkRipple && this.inkRippleRef.current.showWave({
       element: this.contentRef.current,
-      event: event
+      event
     });
   };
   _proto.onInactive = function onInactive(event) {
     var useInkRipple = this.props.useInkRipple;
     useInkRipple && this.inkRippleRef.current.hideWave({
       element: this.contentRef.current,
-      event: event
+      event
     });
   };
   _proto.onWidgetClick = function onWidgetClick(event) {
@@ -204,7 +197,7 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
       onClick = _this$props2.onClick,
       useSubmitBehavior = _this$props2.useSubmitBehavior;
     onClick === null || onClick === void 0 ? void 0 : onClick({
-      event: event
+      event
     });
     useSubmitBehavior && this.submitInputRef.current.click();
   };
@@ -234,7 +227,7 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _proto.componentWillUpdate = function componentWillUpdate(nextProps, nextState, context) {
     _InfernoWrapperCompon.prototype.componentWillUpdate.call(this);
-    if (this.props['icon'] !== nextProps['icon'] || this.props['text'] !== nextProps['text'] || this.props['type'] !== nextProps['type']) {
+    if (this.props['icon'] !== nextProps['icon'] || this.props['text'] !== nextProps['text']) {
       this.__getterCache['inkRippleConfig'] = undefined;
     }
   };
@@ -299,7 +292,7 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
       return _extends({
         role: 'button'
       }, label ? {
-        label: label
+        label
       } : {});
     }
   }, {
@@ -310,13 +303,8 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
   }, {
     key: "iconSource",
     get: function get() {
-      var _this$props4 = this.props,
-        icon = _this$props4.icon,
-        type = _this$props4.type;
-      if (icon || type === 'back') {
-        return (icon !== null && icon !== void 0 ? icon : '') || 'back';
-      }
-      return '';
+      var icon = this.props.icon;
+      return icon !== null && icon !== void 0 ? icon : '';
     }
   }, {
     key: "inkRippleConfig",
@@ -328,9 +316,8 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
       return this.__getterCache['inkRippleConfig'] = function () {
         var _this3$props = _this3.props,
           icon = _this3$props.icon,
-          text = _this3$props.text,
-          type = _this3$props.type;
-        return !text && icon || type === 'back' ? {
+          text = _this3$props.text;
+        return !text && icon ? {
           isCentered: true,
           useHoldAnimation: false,
           waveSizeCoefficient: 1
@@ -340,47 +327,47 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
   }, {
     key: "buttonTemplateData",
     get: function get() {
-      var _this$props5 = this.props,
-        icon = _this$props5.icon,
-        templateData = _this$props5.templateData,
-        text = _this$props5.text;
+      var _this$props4 = this.props,
+        icon = _this$props4.icon,
+        templateData = _this$props4.templateData,
+        text = _this$props4.text;
       return _extends({
-        icon: icon,
-        text: text
+        icon,
+        text
       }, templateData);
     }
   }, {
     key: "restAttributes",
     get: function get() {
-      var _this$props6 = this.props,
-        accessKey = _this$props6.accessKey,
-        activeStateEnabled = _this$props6.activeStateEnabled,
-        children = _this$props6.children,
-        className = _this$props6.className,
-        disabled = _this$props6.disabled,
-        focusStateEnabled = _this$props6.focusStateEnabled,
-        height = _this$props6.height,
-        hint = _this$props6.hint,
-        hoverStateEnabled = _this$props6.hoverStateEnabled,
-        icon = _this$props6.icon,
-        iconPosition = _this$props6.iconPosition,
-        iconTemplate = _this$props6.iconTemplate,
-        onClick = _this$props6.onClick,
-        onKeyDown = _this$props6.onKeyDown,
-        onSubmit = _this$props6.onSubmit,
-        pressed = _this$props6.pressed,
-        rtlEnabled = _this$props6.rtlEnabled,
-        stylingMode = _this$props6.stylingMode,
-        tabIndex = _this$props6.tabIndex,
-        template = _this$props6.template,
-        templateData = _this$props6.templateData,
-        text = _this$props6.text,
-        type = _this$props6.type,
-        useInkRipple = _this$props6.useInkRipple,
-        useSubmitBehavior = _this$props6.useSubmitBehavior,
-        visible = _this$props6.visible,
-        width = _this$props6.width,
-        restProps = _objectWithoutProperties(_this$props6, _excluded);
+      var _this$props5 = this.props,
+        accessKey = _this$props5.accessKey,
+        activeStateEnabled = _this$props5.activeStateEnabled,
+        children = _this$props5.children,
+        className = _this$props5.className,
+        disabled = _this$props5.disabled,
+        focusStateEnabled = _this$props5.focusStateEnabled,
+        height = _this$props5.height,
+        hint = _this$props5.hint,
+        hoverStateEnabled = _this$props5.hoverStateEnabled,
+        icon = _this$props5.icon,
+        iconPosition = _this$props5.iconPosition,
+        iconTemplate = _this$props5.iconTemplate,
+        onClick = _this$props5.onClick,
+        onKeyDown = _this$props5.onKeyDown,
+        onSubmit = _this$props5.onSubmit,
+        pressed = _this$props5.pressed,
+        rtlEnabled = _this$props5.rtlEnabled,
+        stylingMode = _this$props5.stylingMode,
+        tabIndex = _this$props5.tabIndex,
+        template = _this$props5.template,
+        templateData = _this$props5.templateData,
+        text = _this$props5.text,
+        type = _this$props5.type,
+        useInkRipple = _this$props5.useInkRipple,
+        useSubmitBehavior = _this$props5.useSubmitBehavior,
+        visible = _this$props5.visible,
+        width = _this$props5.width,
+        restProps = _objectWithoutProperties(_this$props5, _excluded);
       return restProps;
     }
   }]);

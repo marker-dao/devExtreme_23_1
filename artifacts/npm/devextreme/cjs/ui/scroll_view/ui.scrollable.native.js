@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scroll_view/ui.scrollable.native.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -122,7 +122,7 @@ var NativeStrategy = _class.default.inherit({
       left: this._normalizeOffsetLeft(-left)
     };
   },
-  _normalizeOffsetLeft: function _normalizeOffsetLeft(scrollLeft) {
+  _normalizeOffsetLeft(scrollLeft) {
     if (this._isRtlNativeStrategy()) {
       return this._getMaxOffset().left + scrollLeft;
     }
@@ -242,7 +242,7 @@ var NativeStrategy = _class.default.inherit({
   },
   // TODO: rtl
   // TODO: horizontal scroll when shift is pressed
-  _isScrolledInMaxDirection: function _isScrolledInMaxDirection(e) {
+  _isScrolledInMaxDirection(e) {
     var container = this._$container.get(0);
     var result;
     if (e.delta > 0) {

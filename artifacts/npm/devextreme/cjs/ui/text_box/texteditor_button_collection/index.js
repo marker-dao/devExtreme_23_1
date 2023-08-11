@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/texteditor_button_collection/index.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,11 +14,10 @@ var _custom = _interopRequireDefault(require("./custom"));
 var _extend = require("../../../core/utils/extend");
 var _ui = _interopRequireDefault(require("../../widget/ui.errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var TEXTEDITOR_BUTTONS_CONTAINER_CLASS = 'dx-texteditor-buttons-container';
 function checkButtonInfo(buttonInfo) {
   var checkButtonType = function checkButtonType() {
-    if (!buttonInfo || _typeof(buttonInfo) !== 'object' || Array.isArray(buttonInfo)) {
+    if (!buttonInfo || typeof buttonInfo !== 'object' || Array.isArray(buttonInfo)) {
       throw _ui.default.Error('E1053');
     }
   };

@@ -191,6 +191,10 @@ var NumberBoxMask = NumberBoxBase.inherit({
       if (this._parsedValue < 0 || 1 / this._parsedValue === -Infinity) {
         this._revertSign(e);
         this._setTextByParsedValue();
+        var shouldTriggerInputEvent = this.option('valueChangeEvent').split(' ').includes('input');
+        if (shouldTriggerInputEvent) {
+          eventsEngine.trigger(this._input(), 'input');
+        }
       }
       e.preventDefault();
       return;

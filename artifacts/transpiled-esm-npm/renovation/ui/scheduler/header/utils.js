@@ -42,8 +42,8 @@ var formatViews = function formatViews(views) {
     var text = (0, _utils.getViewText)(view);
     var name = (0, _utils.getViewName)(view);
     return {
-      text: text,
-      name: name
+      text,
+      name
     };
   });
 };

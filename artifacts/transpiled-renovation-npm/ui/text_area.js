@@ -148,7 +148,7 @@ var TextArea = _text_box.default.inherit({
     _events_engine.default.off(this._input(), (0, _index.addNamespace)('input paste', this.NAME));
     this.callBase();
   },
-  _getHeightDifference: function _getHeightDifference($input) {
+  _getHeightDifference($input) {
     return (0, _size.getVerticalOffsets)(this._$element.get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorContainer.get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorInputContainer.get(0), false) + (0, _size.getElementBoxParams)('height', (0, _window.getWindow)().getComputedStyle($input.get(0))).margin;
   },
   _updateInputHeight: function _updateInputHeight() {

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.vi.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Sắp xếp Tăng dần",
             "dxDataGrid-sortingDescendingText": "Sắp xếp Giảm dần",
             "dxDataGrid-sortingClearText": "Loại bỏ việc sắp xếp",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Lưu lại các thay đổi",
             "dxDataGrid-editingCancelAllChanges": "Loại bỏ các thay đổi",
             "dxDataGrid-editingAddRow": "Thêm một hàng",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Lọc ô",
             "dxDataGrid-ariaCollapse": "Thu lại",
             "dxDataGrid-ariaExpand": "Mở ra",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Lưới dữ liệu",
             "dxDataGrid-ariaSearchInGrid": "Tìm kiếm trong lưới dữ liệu",
             "dxDataGrid-ariaSelectAll": "Chọn tất cả",
             "dxDataGrid-ariaSelectRow": "Chọn hàng",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Trình dựng Bộ lọc",
             "dxDataGrid-filterPanelCreateFilter": "Tạo Bộ lọc",
             "dxDataGrid-filterPanelClearFilter": "Loại bỏ",

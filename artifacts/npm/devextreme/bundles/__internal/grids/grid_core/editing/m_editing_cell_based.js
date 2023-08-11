@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/editing/m_editing_cell_based.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -175,8 +175,8 @@ var editingControllerExtender = function editingControllerExtender(Base) {
     };
     _proto.editCell = function editCell(rowIndex, columnIndex) {
       return this._editCell({
-        rowIndex: rowIndex,
-        columnIndex: columnIndex
+        rowIndex,
+        columnIndex
       });
     };
     _proto._editCell = function _editCell(options) {
@@ -202,7 +202,7 @@ var editingControllerExtender = function editingControllerExtender(Base) {
       var params = {
         data: item === null || item === void 0 ? void 0 : item.data,
         cancel: false,
-        column: column
+        column
       };
       if (item.key === undefined) {
         this._dataController.fireError('E1043');
@@ -263,12 +263,12 @@ var editingControllerExtender = function editingControllerExtender(Base) {
       }
       var column = visibleColumns[columnIndex];
       return {
-        oldColumn: oldColumn,
-        columnIndex: columnIndex,
-        oldRowIndex: oldRowIndex,
-        rowIndex: rowIndex,
-        column: column,
-        item: item
+        oldColumn,
+        columnIndex,
+        oldRowIndex,
+        rowIndex,
+        column,
+        item
       };
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -333,7 +333,7 @@ var editingControllerExtender = function editingControllerExtender(Base) {
           if (!isError) {
             dataController.updateItems({
               changeType: 'update',
-              rowIndices: rowIndices
+              rowIndices
             });
           }
         }
@@ -505,7 +505,8 @@ var editingControllerExtender = function editingControllerExtender(Base) {
       var _a;
       var editingOptions = (_a = this.option('editing')) !== null && _a !== void 0 ? _a : {};
       var buttonItems = _Base.prototype.prepareEditButtons.call(this, headerPanel);
-      if ((editingOptions.allowUpdating || editingOptions.allowAdding || editingOptions.allowDeleting) && this.isBatchEditMode()) {
+      var needEditingButtons = editingOptions.allowUpdating || editingOptions.allowAdding || editingOptions.allowDeleting;
+      if (needEditingButtons && this.isBatchEditMode()) {
         buttonItems.push(this.prepareButtonItem(headerPanel, 'save', 'saveEditData', 21));
         buttonItems.push(this.prepareButtonItem(headerPanel, 'revert', 'cancelEditData', 22));
       }
@@ -588,7 +589,7 @@ var editingCellBasedModule = {
     },
     views: {
       rowsView: {
-        _createTable: function _createTable() {
+        _createTable() {
           var $table = this.callBase.apply(this, arguments);
           var editingController = this._editingController;
           if (editingController.isCellOrBatchEditMode() && this.option('editing.allowUpdating')) {
@@ -600,7 +601,7 @@ var editingCellBasedModule = {
           }
           return $table;
         },
-        _createRow: function _createRow(row) {
+        _createRow(row) {
           var $row = this.callBase.apply(this, arguments);
           if (row) {
             var editingController = this._editingController;
@@ -613,7 +614,7 @@ var editingCellBasedModule = {
         }
       },
       headerPanel: {
-        isVisible: function isVisible() {
+        isVisible() {
           var editingOptions = this.getController('editing').option('editing');
           return this.callBase() || editingOptions && (editingOptions.allowUpdating || editingOptions.allowDeleting) && editingOptions.mode === _const.EDIT_MODE_BATCH;
         }

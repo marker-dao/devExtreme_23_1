@@ -140,6 +140,12 @@ export var BulletProps = Object.create(Object.prototype, _extends(Object.getOwnP
 import { createReRenderEffect } from '@devextreme/runtime/inferno';
 import { createRef as infernoCreateRef } from 'inferno';
 export class Bullet extends InfernoWrapperComponent {
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
+  }
   constructor(props) {
     super(props);
     this.widgetRef = infernoCreateRef();
@@ -169,12 +175,6 @@ export class Bullet extends InfernoWrapperComponent {
     this.getSimpleShape = this.getSimpleShape.bind(this);
     this.pointerHandler = this.pointerHandler.bind(this);
     this.pointerOutHandler = this.pointerOutHandler.bind(this);
-  }
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.tooltipEffect, [this.props.disabled, this.props.onTooltipHidden, this.props.onTooltipShown, this.props.tooltip, this.props.value, this.props.target, this.props.rtlEnabled, this.config, this.state.canvasState, this.state.offsetState]), new InfernoEffect(this.tooltipOutEffect, [this.state.tooltipVisible, this.state.offsetState, this.state.canvasState]), createReRenderEffect()];

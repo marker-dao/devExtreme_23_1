@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _extend = require("../../core/utils/extend");
@@ -22,8 +21,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
@@ -253,8 +252,8 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     var context = new FileManagerActionContext(actionMetadata, actionInfo.itemInfos, actionInfo.directory);
     var operationInfo = this._notificationControl.addOperation(context.processingMessage, actionMetadata.allowCancel, !actionMetadata.allowItemProgress);
     (0, _extend.extend)(actionInfo.customData, {
-      context: context,
-      operationInfo: operationInfo
+      context,
+      operationInfo
     });
     switch (actionInfo.name) {
       case 'upload':
@@ -262,7 +261,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
           var sessionId = actionInfo.customData.sessionInfo.sessionId;
           operationInfo.uploadSessionId = sessionId;
           this._uploadOperationInfoMap[sessionId] = {
-            operationInfo: operationInfo
+            operationInfo
           };
         }
         break;
@@ -352,8 +351,8 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     var itemName = itemInfos[0].fileItem.name;
     var itemCount = itemInfos.length;
     return this._showDialog(this._dialogManager.getDeleteItemDialog(), {
-      itemName: itemName,
-      itemCount: itemCount
+      itemName,
+      itemCount
     }).then(function () {
       return _this9._controller.deleteItems(itemInfos);
     });
@@ -442,7 +441,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     var errorArgs = {
       fileSystemItem: itemInfo === null || itemInfo === void 0 ? void 0 : itemInfo.fileItem,
       errorCode: errorInfo.errorCode,
-      errorText: errorText
+      errorText
     };
     this._raiseOnError(errorArgs);
     return errorArgs.errorText;
@@ -518,7 +517,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseOnSuccess = function _raiseOnSuccess(updatedOnlyFiles) {
     this._actions.onSuccess({
-      updatedOnlyFiles: updatedOnlyFiles
+      updatedOnlyFiles
     });
   };
   _proto._raiseOnError = function _raiseOnError(args) {
@@ -602,9 +601,9 @@ var FileManagerActionContext = /*#__PURE__*/function () {
   };
   _proto2._setCurrentDetailError = function _setCurrentDetailError(itemIndex, itemInfo, errorText) {
     this._errorState.currentDetailError = {
-      itemIndex: itemIndex,
-      itemInfo: itemInfo,
-      errorText: errorText
+      itemIndex,
+      itemInfo,
+      errorText
     };
   };
   _proto2._hasCompletedItems = function _hasCompletedItems() {

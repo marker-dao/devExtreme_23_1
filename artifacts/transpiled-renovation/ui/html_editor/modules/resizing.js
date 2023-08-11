@@ -60,8 +60,8 @@ var ResizingModule = /*#__PURE__*/function (_BaseModule) {
       var minWidth = Math.max((0, _size.getOuterWidth)($target) - (0, _size.getWidth)($target), this.resizable.option('minWidth'));
       var minHeight = Math.max((0, _size.getOuterHeight)($target) - (0, _size.getHeight)($target), this.resizable.option('minHeight'));
       this.resizable.option({
-        minWidth: minWidth,
-        minHeight: minHeight
+        minWidth,
+        minHeight
       });
       this.updateFramePosition();
       this.showFrame();

@@ -25,7 +25,7 @@ var _default = (0, _dependency_injector.default)({
   createElement: function createElement(component, props) {
     return (0, _infernoCreateElement.createElement)(component, props);
   },
-  remove: remove,
+  remove,
   onAfterRender: function onAfterRender() {
     _inferno2.InfernoEffectHost.callEffects();
   },

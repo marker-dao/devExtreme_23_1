@@ -72,6 +72,7 @@ var CalendarStrategy = DateBoxStrategy.inherit({
     var disabledDates = this.dateBox.option('disabledDates');
     return extend(this.dateBox.option('calendarOptions'), {
       value: this.dateBoxValue() || null,
+      selectionMode: 'single',
       dateSerializationFormat: null,
       min: this.dateBox.dateOption('min'),
       max: this.dateBox.dateOption('max'),

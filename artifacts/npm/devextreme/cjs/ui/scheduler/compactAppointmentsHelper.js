@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/compactAppointmentsHelper.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -111,9 +111,9 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
       var options = {
         filter: ".".concat(_constants.LIST_ITEM_CLASS),
         isSetCursorOffset: true,
-        initialPosition: initialPosition,
-        getItemData: getItemData,
-        getItemSettings: getItemSettings
+        initialPosition,
+        getItemData,
+        getItemSettings
       };
       workSpace._createDragBehaviorBase($element, $schedulerElement, options);
     };

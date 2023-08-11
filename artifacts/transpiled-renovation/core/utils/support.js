@@ -69,6 +69,8 @@ var touchPointersPresent = !!maxTouchPoints;
 
 ///#DEBUG
 
+///#ENDDEBUG
+
 var touch = touchEvents || pointerEvents && touchPointersPresent;
 exports.touch = touch;
 var transition = (0, _call_once.default)(function () {

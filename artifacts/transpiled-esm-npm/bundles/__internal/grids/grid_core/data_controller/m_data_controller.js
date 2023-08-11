@@ -19,7 +19,7 @@ var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable @typescript-eslint/method-signature-style */
 var changePaging = function changePaging(that, optionName, value) {
   var dataSource = that._dataSource;
   if (dataSource) {
@@ -80,7 +80,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     that.createAction('onDataErrorOccurred');
     that.dataErrorOccurred.add(function (error) {
       return that.executeAction('onDataErrorOccurred', {
-        error: error
+        error
       });
     });
     that._refreshDataSource();
@@ -222,7 +222,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
         return change.repaintChangesOnly;
       });
       this.updateItems(changes.length === 1 ? changes[0] : {
-        repaintChangesOnly: repaintChangesOnly
+        repaintChangesOnly
       });
     }
     if (this._readyDeferred) {
@@ -390,9 +390,9 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     }
     if (isPaginateChanged || isPageSizeChanged || isPageIndexChanged) {
       return {
-        isPaginateChanged: isPaginateChanged,
-        isPageSizeChanged: isPageSizeChanged,
-        isPageIndexChanged: isPageIndexChanged
+        isPaginateChanged,
+        isPageSizeChanged,
+        isPageIndexChanged
       };
     }
     return false;
@@ -460,8 +460,8 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     var visibleColumns = that._columnsController.getVisibleColumns(null, changeType === 'loadingAll');
     var dataIndex = this.getDataIndex(change);
     var options = {
-      visibleColumns: visibleColumns,
-      dataIndex: dataIndex
+      visibleColumns,
+      dataIndex
     };
     var result = [];
     (0, _iterator.each)(items, function (index, item) {
@@ -485,7 +485,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
   _proto._generateDataItem = function _generateDataItem(data, options) {
     return {
       rowType: 'data',
-      data: data,
+      data,
       key: this.keyOf(data)
     };
   };
@@ -1054,6 +1054,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return dataSource && dataSource.store();
   };
   _proto.loadAll = function loadAll(data) {
+    var skipFilter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var that = this;
     // @ts-expect-error
     var d = new _deferred.Deferred();
@@ -1061,13 +1062,13 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     if (dataSource) {
       if (data) {
         var options = {
-          data: data,
+          data,
           isCustomLoading: true,
           storeLoadOptions: {
             isLoadingAll: true
           },
           loadOptions: {
-            filter: that.getCombinedFilter(),
+            filter: skipFilter ? null : that.getCombinedFilter(),
             group: dataSource.group(),
             sort: dataSource.sort()
           }
@@ -1131,8 +1132,10 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     if (store) {
       return store.key();
     }
-  };
-  _proto.getRowIndexOffset = function getRowIndexOffset() {
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ;
+  _proto.getRowIndexOffset = function getRowIndexOffset(byLoadedRows) {
     return 0;
   };
   _proto.getDataByKeys = function getDataByKeys(rowKeys) {
@@ -1282,7 +1285,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
 }(ControllerWithDataMixin);
 exports.DataController = DataController;
 var dataControllerModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       loadingTimeout: 0,
       dataSource: null,

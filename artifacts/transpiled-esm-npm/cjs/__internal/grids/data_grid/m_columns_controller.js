@@ -5,7 +5,7 @@ var _m_columns_controller = require("../../grids/grid_core/columns_controller/m_
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 _m_core.default.registerModule('columns', {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return (0, _extend.extend)(true, {}, _m_columns_controller.columnsControllerModule.defaultOptions(), {
       commonColumnSettings: {
         allowExporting: true

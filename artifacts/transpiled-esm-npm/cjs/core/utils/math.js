@@ -41,8 +41,8 @@ function getExponentialNotation(value) {
   var mantissa = parseFloat(parts[0]);
   var exponent = parseInt(parts[1]);
   return {
-    exponent: exponent,
-    mantissa: mantissa
+    exponent,
+    mantissa
   };
 }
 function multiplyInExponentialForm(value, exponentShift) {

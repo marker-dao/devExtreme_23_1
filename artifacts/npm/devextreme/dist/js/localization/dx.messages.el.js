@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.el.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Ταξινόμηση αύξουσα",
             "dxDataGrid-sortingDescendingText": "Ταξινόμηση φθήνουσα",
             "dxDataGrid-sortingClearText": "Εκκαθάριση ταξινόμισης",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Αποθήκευση αλλαγών",
             "dxDataGrid-editingCancelAllChanges": "Απόρριψη αλλαγών",
             "dxDataGrid-editingAddRow": "Προσθήκη γραμμής",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Φιλτράρισμα κελιού",
             "dxDataGrid-ariaCollapse": "Συρρίκνωση",
             "dxDataGrid-ariaExpand": "Επέκταση",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Πλέγμα δεδομένων",
             "dxDataGrid-ariaSearchInGrid": "Αναζήτηση στο πλέγμα δεδομένων",
             "dxDataGrid-ariaSelectAll": "Επιλογή όλων",
             "dxDataGrid-ariaSelectRow": "Επιλέξτε σειρά",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Δημιουργία φίλτρου",
             "dxDataGrid-filterPanelCreateFilter": "Δημιουργία φίλτρου",
             "dxDataGrid-filterPanelClearFilter": "Εκκαθάριση",

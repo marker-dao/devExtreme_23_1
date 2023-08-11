@@ -23,9 +23,6 @@ var loadTotalCount = function loadTotalCount(dataSource, options) {
   }).fail(d.reject.bind(d));
   return d;
 };
-/// #DEBUG
-export { loadTotalCount };
-/// #ENDDEBUG
 export var GroupingHelper = GroupingHelperCore.inherit(function () {
   var foreachCollapsedGroups = function foreachCollapsedGroups(that, callback, updateOffsets) {
     return that.foreachGroups(groupInfo => {

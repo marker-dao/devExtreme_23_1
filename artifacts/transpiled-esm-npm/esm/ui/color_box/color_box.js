@@ -5,7 +5,6 @@ import ColorView from './color_view';
 import { extend } from '../../core/utils/extend';
 import registerComponent from '../../core/component_registrator';
 import DropDownEditor from '../drop_down_editor/ui.drop_down_editor';
-import Guid from '../../core/guid';
 
 // STYLE colorBox
 
@@ -134,16 +133,10 @@ var ColorBox = DropDownEditor.inherit({
     var $colorView = $('<div>').appendTo(this._popup.$content());
     this._colorView = this._createComponent($colorView, ColorView, this._colorViewConfig());
     this._colorView.registerKeyHandler('escape', this._escapeHandler.bind(this));
-    eventsEngine.on($colorView, 'focus', function () {
-      this.focus();
-    }.bind(this));
   },
   _escapeHandler: function _escapeHandler() {
     this.close();
     this.focus();
-  },
-  _getFirstPopupElement: function _getFirstPopupElement() {
-    return $(this._colorView._rgbInputs[0].element()).find('input');
   },
   _applyNewColor: function _applyNewColor(value) {
     this.option('value', value);
@@ -164,7 +157,7 @@ var ColorBox = DropDownEditor.inherit({
       applyValueMode: that.option('applyValueMode'),
       focusStateEnabled: that.option('focusStateEnabled'),
       stylingMode: this.option('stylingMode'),
-      ariaId: this._ariaId,
+      target: this._input(),
       onEnterKeyPressed: function onEnterKeyPressed(_ref) {
         var {
           event
@@ -245,8 +238,6 @@ var ColorBox = DropDownEditor.inherit({
   },
   _renderInput: function _renderInput() {
     this.callBase();
-    this._ariaId = "dx-".concat(new Guid());
-    this.setAria('activedescendant', this._ariaId);
     this._input().addClass(COLOR_BOX_INPUT_CLASS);
     this._renderColorPreview();
   },

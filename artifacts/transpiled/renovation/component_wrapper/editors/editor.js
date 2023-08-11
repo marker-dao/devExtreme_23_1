@@ -53,6 +53,10 @@ var Editor = /*#__PURE__*/function (_Component) {
     var _this$option;
     (_this$option = this.option('_onMarkupRendered')) === null || _this$option === void 0 ? void 0 : _this$option();
   };
+  _proto._init = function _init() {
+    _Component.prototype._init.call(this);
+    this._initialValue = this.option('value');
+  };
   _proto._initializeComponent = function _initializeComponent() {
     _Component.prototype._initializeComponent.call(this);
     this._valueChangeAction = this._createActionByOption('onValueChanged', {
@@ -85,7 +89,7 @@ var Editor = /*#__PURE__*/function (_Component) {
     var areValuesEmpty = !(0, _type.isDefined)(value) && !(0, _type.isDefined)(previousValue);
     if (value !== previousValue && !areValuesEmpty) {
       this.validationRequest.fire({
-        value: value,
+        value,
         editor: this
       });
     }
@@ -94,8 +98,8 @@ var Editor = /*#__PURE__*/function (_Component) {
     var _this$_valueChangeAct;
     (_this$_valueChangeAct = this._valueChangeAction) === null || _this$_valueChangeAct === void 0 ? void 0 : _this$_valueChangeAct.call(this, {
       element: this.$element(),
-      previousValue: previousValue,
-      value: value,
+      previousValue,
+      value,
       event: this._valueChangeEventInstance
     });
     this._valueChangeEventInstance = undefined;
@@ -110,6 +114,7 @@ var Editor = /*#__PURE__*/function (_Component) {
     switch (name) {
       case 'value':
         this._raiseValidation(value, previousValue);
+        this.option('isDirty', this._initialValue !== value);
         this._raiseValueChangeAction(value, previousValue);
         break;
       case 'onValueChanged':
@@ -128,11 +133,11 @@ var Editor = /*#__PURE__*/function (_Component) {
     }
     _Component.prototype._optionChanged.call(this, option);
   };
-  _proto.reset = function reset() {
+  _proto.clear = function clear() {
     var _this$_getDefaultOpti = this._getDefaultOptions(),
       value = _this$_getDefaultOpti.value;
     this.option({
-      value: value
+      value
     });
   };
   _proto._dispose = function _dispose() {

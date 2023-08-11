@@ -198,9 +198,12 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
   };
   _proto._getTextContainer = function _getTextContainer(itemData) {
     var text = itemData.text;
+    if (!text) {
+      return;
+    }
     var $itemContainer = (0, _renderer.default)('<span>').addClass(DX_MENU_ITEM_CAPTION_CLASS);
     var itemText = (0, _type.isPlainObject)(itemData) ? text : String(itemData);
-    return text && $itemContainer.text(itemText);
+    return $itemContainer.text(itemText);
   };
   _proto._getItemExtraPropNames = function _getItemExtraPropNames() {
     return ['url', 'linkAttr'];

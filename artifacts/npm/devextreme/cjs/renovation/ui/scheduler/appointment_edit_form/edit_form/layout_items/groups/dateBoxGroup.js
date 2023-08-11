@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment_edit_form/edit_form/layout_items/groups/dateBoxGroup.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,12 +29,12 @@ var getDateBoxGroupConfig = function getDateBoxGroupConfig(dataExpr, allowTimeZo
       xs: 1
     },
     items: createDateBoxItems({
-      dataExpr: dataExpr,
-      allowTimeZoneEditing: allowTimeZoneEditing,
-      startDateEditorTemplate: startDateEditorTemplate,
-      endDateEditorTemplate: endDateEditorTemplate,
-      startDatetimeZoneEditorTemplate: startDatetimeZoneEditorTemplate,
-      endDateTimeZoneEditorTemplate: endDateTimeZoneEditorTemplate
+      dataExpr,
+      allowTimeZoneEditing,
+      startDateEditorTemplate,
+      endDateEditorTemplate,
+      startDatetimeZoneEditorTemplate,
+      endDateTimeZoneEditorTemplate
     })
   };
 };

@@ -39,12 +39,14 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } // TODO: remove reference to 'ui.form.layout_manager.utils.js'
+// STYLE form
 var FOCUSED_STATE_CLASS = 'dx-state-focused';
 var ITEM_OPTIONS_FOR_VALIDATION_UPDATING = ['items', 'isRequired', 'validationRules', 'visible'];
 var Form = _ui.default.inherit({
   _init: function _init() {
     this.callBase();
+    this._dirtyFields = new Set();
     this._cachedColCountOptions = [];
     this._itemsRunTimeInfo = new _uiForm.default();
     this._groupsColCount = [];
@@ -77,7 +79,8 @@ var Form = _ui.default.inherit({
       scrollingEnabled: false,
       validationGroup: undefined,
       stylingMode: (0, _config.default)().editorStylingMode,
-      labelMode: 'outside'
+      labelMode: 'outside',
+      isDirty: false
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
@@ -246,10 +249,10 @@ var Form = _ui.default.inherit({
   _alignLabels: function _alignLabels(layoutManager, inOneColumn) {
     this._alignLabelsInColumn({
       $container: this.$element(),
-      layoutManager: layoutManager,
+      layoutManager,
       excludeTabbed: true,
       items: this.option('items'),
-      inOneColumn: inOneColumn
+      inOneColumn
     });
     (0, _visibility_change.triggerResizeEvent)(this.$element().find(".".concat(_constants2.TOOLBAR_CLASS)));
   },
@@ -289,16 +292,16 @@ var Form = _ui.default.inherit({
       }).dxValidationSummary('instance');
     }
   },
-  _prepareItems: function _prepareItems(items, parentIsTabbedItem, currentPath, isTabs) {
+  _prepareItems(items, parentIsTabbedItem, currentPath, isTabs) {
     if (items) {
       var result = [];
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
         var path = (0, _uiForm4.concatPaths)(currentPath, (0, _uiForm4.createItemPathByIndex)(i, isTabs));
         var itemRunTimeInfo = {
-          item: item,
+          item,
           itemIndex: i,
-          path: path
+          path
         };
         var guid = this._itemsRunTimeInfo.add(itemRunTimeInfo);
         if ((0, _type.isString)(item)) {
@@ -408,22 +411,22 @@ var Form = _ui.default.inherit({
           cssItemClass: itemData.cssItemClass,
           onLayoutChanged: function onLayoutChanged(inOneColumn) {
             _this3._alignLabelsInColumn({
-              $container: $container,
-              layoutManager: layoutManager,
+              $container,
+              layoutManager,
               items: itemData.items,
-              inOneColumn: inOneColumn
+              inOneColumn
             });
           }
         }));
         if (_this3._itemsRunTimeInfo) {
           _this3._itemsRunTimeInfo.extendRunTimeItemInfoByKey(itemData.guid, {
-            layoutManager: layoutManager
+            layoutManager
           });
         }
         if (alignItemLabels) {
           _this3._alignLabelsInColumn({
-            $container: $container,
-            layoutManager: layoutManager,
+            $container,
+            layoutManager,
             items: itemData.items,
             inOneColumn: layoutManager.isSingleColumnMode()
           });
@@ -485,7 +488,7 @@ var Form = _ui.default.inherit({
         cssItemClass: item.cssItemClass
       }));
       this._itemsRunTimeInfo && this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(item.guid, {
-        layoutManager: layoutManager
+        layoutManager
       });
       var colCount = layoutManager._getColCount();
       if (!this._groupsColCount.includes(colCount)) {
@@ -501,9 +504,9 @@ var Form = _ui.default.inherit({
       form: this,
       formOptions: this.option(),
       $formElement: this.$element(),
-      items: items,
+      items,
       validationGroup: this._getValidationGroup(),
-      extendedLayoutManagerOptions: extendedLayoutManagerOptions,
+      extendedLayoutManagerOptions,
       onFieldDataChanged: function onFieldDataChanged(args) {
         if (!_this5._isDataUpdating) {
           _this5._triggerOnFieldDataChanged(args);
@@ -636,6 +639,7 @@ var Form = _ui.default.inherit({
         break;
       case 'alignRootItemLabels':
       case 'readOnly':
+      case 'isDirty':
         break;
       case 'width':
         this.callBase(args);
@@ -676,8 +680,8 @@ var Form = _ui.default.inherit({
       editor.option('value', value);
     } else {
       this._triggerOnFieldDataChanged({
-        dataField: dataField,
-        value: value
+        dataField,
+        value
       });
     }
     return true;
@@ -689,9 +693,9 @@ var Form = _ui.default.inherit({
     }
 
     return (0, _uiForm2.default)(optionName, {
-      item: item,
-      value: value,
-      previousValue: previousValue,
+      item,
+      value,
+      previousValue,
       itemsRunTimeInfo: this._itemsRunTimeInfo
     });
   },
@@ -708,7 +712,7 @@ var Form = _ui.default.inherit({
       }
     }
   },
-  _setLayoutManagerItemOption: function _setLayoutManagerItemOption(layoutManager, optionName, value, path) {
+  _setLayoutManagerItemOption(layoutManager, optionName, value, path) {
     var _this7 = this;
     if (this._updateLockCount > 0) {
       !layoutManager._updateLockCount && layoutManager.beginUpdate();
@@ -739,7 +743,7 @@ var Form = _ui.default.inherit({
     layoutManager.option(optionName, value);
     this._updateValidationGroupAndSummaryIfNeeded(optionName);
   },
-  _tryChangeLayoutManagerItemOption: function _tryChangeLayoutManagerItemOption(fullName, value) {
+  _tryChangeLayoutManagerItemOption(fullName, value) {
     var nameParts = fullName.split('.');
     var optionName = (0, _uiForm4.getOptionNameFromFullName)(fullName);
     if (optionName === 'items' && nameParts.length > 1) {
@@ -780,7 +784,7 @@ var Form = _ui.default.inherit({
     }
     return false;
   },
-  _tryChangeLayoutManagerItemOptions: function _tryChangeLayoutManagerItemOptions(itemPath, options) {
+  _tryChangeLayoutManagerItemOptions(itemPath, options) {
     var _this8 = this;
     var result;
     this.beginUpdate();
@@ -806,6 +810,7 @@ var Form = _ui.default.inherit({
     return itemPath;
   },
   _triggerOnFieldDataChanged: function _triggerOnFieldDataChanged(args) {
+    this._updateIsDirty(args.dataField);
     this._createActionByOption('onFieldDataChanged')(args);
   },
   _triggerOnFieldDataChangedByDataSet: function _triggerOnFieldDataChangedByDataSet(data) {
@@ -978,10 +983,20 @@ var Form = _ui.default.inherit({
     _events_engine.default.trigger(this.$element().find(editorSelector), 'change');
     this.callBase();
   },
+  _updateIsDirty: function _updateIsDirty(dataField) {
+    var editor = this.getEditor(dataField);
+    if (!editor) return;
+    if (editor.option('isDirty')) {
+      this._dirtyFields.add(dataField);
+    } else {
+      this._dirtyFields.delete(dataField);
+    }
+    this.option('isDirty', !!this._dirtyFields.size);
+  },
   _resetValues: function _resetValues() {
     this._itemsRunTimeInfo.each(function (_, itemRunTimeInfo) {
       if ((0, _type.isDefined)(itemRunTimeInfo.widgetInstance) && _editor.default.isEditor(itemRunTimeInfo.widgetInstance)) {
-        itemRunTimeInfo.widgetInstance.reset();
+        itemRunTimeInfo.widgetInstance.clear();
         itemRunTimeInfo.widgetInstance.option('isValid', true);
       }
     });

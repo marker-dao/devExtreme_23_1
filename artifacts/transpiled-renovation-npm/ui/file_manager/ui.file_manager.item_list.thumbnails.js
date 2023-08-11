@@ -38,7 +38,7 @@ var FileManagerThumbnailsItemList = /*#__PURE__*/function (_FileManagerItemListB
     var $itemListContainer = (0, _renderer.default)('<div>').appendTo(this.$element());
     this._itemList = this._createComponent($itemListContainer, _uiFile_managerItems_listThumbnails.default, {
       dataSource: this._createDataSource(),
-      selectionMode: selectionMode,
+      selectionMode,
       selectedItemKeys: this.option('selectedItemKeys'),
       focusedItemKey: this.option('focusedItemKey'),
       activeStateEnabled: true,
@@ -129,9 +129,9 @@ var FileManagerThumbnailsItemList = /*#__PURE__*/function (_FileManagerItemListB
       return item.key;
     });
     this._tryRaiseSelectionChanged({
-      selectedItemInfos: selectedItemInfos,
-      selectedItems: selectedItems,
-      selectedItemKeys: selectedItemKeys,
+      selectedItemInfos,
+      selectedItems,
+      selectedItemKeys,
       currentSelectedItemKeys: addedItemKeys,
       currentDeselectedItemKeys: removedItemKeys
     });

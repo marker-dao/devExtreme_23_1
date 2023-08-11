@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/form/ui.form.layout_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -684,9 +684,9 @@ var LayoutManager = Widget.inherit({
       Object.getOwnPropertyNames(newLayoutData).forEach(property => this._optionsByReference['layoutData.' + property] = true);
     }
   },
-  _resetWidget(instance) {
+  _clearWidget(instance) {
     this._disableEditorValueChangedHandler = true;
-    instance.reset();
+    instance.clear();
     this._disableEditorValueChangedHandler = false;
     instance.option('isValid', true);
   },
@@ -723,7 +723,7 @@ var LayoutManager = Widget.inherit({
                   })) {
                     itemRunTimeInfo.widgetInstance.option('value', dataValue);
                   } else {
-                    this._resetWidget(itemRunTimeInfo.widgetInstance);
+                    this._clearWidget(itemRunTimeInfo.widgetInstance);
                   }
                 }
               }

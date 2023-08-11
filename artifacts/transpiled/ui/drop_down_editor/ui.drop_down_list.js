@@ -23,7 +23,6 @@ var _child_default_template = require("../../core/templates/child_default_templa
 var _deferred = require("../../core/utils/deferred");
 var _grouped_data_converter_mixin = _interopRequireDefault(require("../shared/grouped_data_converter_mixin"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var window = (0, _window.getWindow)();
 var LIST_ITEM_SELECTOR = '.dx-list-item';
 var LIST_ITEM_DATA_KEY = 'dxListItemData';
@@ -247,7 +246,7 @@ var DropDownList = _ui.default.inherit({
   _getItemFromPlain: function _getItemFromPlain(value, cache) {
     var plainItems;
     var selectedItem;
-    if (cache && _typeof(value) !== 'object') {
+    if (cache && typeof value !== 'object') {
       if (!cache.itemByValue) {
         cache.itemByValue = {};
         plainItems = this._getPlainItems();
@@ -281,7 +280,7 @@ var DropDownList = _ui.default.inherit({
     }
     return plainItems;
   },
-  _updateActiveDescendant: function _updateActiveDescendant() {
+  _updateActiveDescendant($target) {
     var _this$_list;
     var opened = this.option('opened');
     var listFocusedItemId = (_this$_list = this._list) === null || _this$_list === void 0 ? void 0 : _this$_list.getFocusedItemId();
@@ -289,7 +288,7 @@ var DropDownList = _ui.default.inherit({
     var activedescendant = opened && isElementOnDom && listFocusedItemId;
     this.setAria({
       'activedescendant': activedescendant || null
-    });
+    }, $target);
   },
   _setSelectedItem: function _setSelectedItem(item) {
     var displayValue = this._displayValue(item);
@@ -349,7 +348,7 @@ var DropDownList = _ui.default.inherit({
   _isCustomValueAllowed: function _isCustomValueAllowed() {
     return this.option('displayCustomValue');
   },
-  reset: function reset() {
+  clear: function clear() {
     this.callBase();
     this._clearFilter();
     this._clearSelectedItem();
@@ -368,7 +367,7 @@ var DropDownList = _ui.default.inherit({
     this.callBase();
     this._renderList();
   },
-  _getKeyboardListeners: function _getKeyboardListeners() {
+  _getKeyboardListeners() {
     var canListHaveFocus = this._canListHaveFocus();
     return this.callBase().concat([!canListHaveFocus && this._list]);
   },
@@ -388,7 +387,7 @@ var DropDownList = _ui.default.inherit({
       return e.preventDefault();
     });
   },
-  _getControlsAria: function _getControlsAria() {
+  _getControlsAria() {
     return this._list && this._listId;
   },
   _renderOpenedState: function _renderOpenedState() {

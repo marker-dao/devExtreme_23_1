@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/common/utils/get_updated_options.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,8 +24,8 @@ var propsToIgnore = {
 function getDiffItem(key, value, previousValue) {
   return {
     path: key,
-    value: value,
-    previousValue: previousValue
+    value,
+    previousValue
   };
 }
 function compare(resultPaths, item1, item2, key, fullPropName, notDeepCopyArrays) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.toolbar.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -83,7 +83,7 @@ var DiagramToolbar = /*#__PURE__*/function (_DiagramPanel) {
     });
     var dataSource = [].concat(this._prepareToolbarItems(beforeCommands, 'before', this._executeCommand)).concat(this._prepareToolbarItems(centerCommands, 'center', this._executeCommand)).concat(this._prepareToolbarItems(afterCommands, 'after', this._executeCommand));
     this._toolbarInstance = this._createComponent($toolbar, _toolbar.default, {
-      dataSource: dataSource
+      dataSource
     });
   };
   _proto._prepareToolbarItems = function _prepareToolbarItems(items, location, actionHandler) {
@@ -399,12 +399,12 @@ var DiagramToolbar = /*#__PURE__*/function (_DiagramPanel) {
       this.bar.raiseBarCommandExecuted(command, value);
     } else if (typeof command === 'string') {
       this._onInternalCommandAction({
-        command: command
+        command
       });
     }
     if (name !== undefined) {
       this._onCustomCommandAction({
-        name: name
+        name
       });
     }
   };

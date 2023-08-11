@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.zh-tw.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "遞增排序",
             "dxDataGrid-sortingDescendingText": "遞減排序",
             "dxDataGrid-sortingClearText": "清除排序",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "保存修改",
             "dxDataGrid-editingCancelAllChanges": "放棄修改",
             "dxDataGrid-editingAddRow": "添加一列",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "過濾單元",
             "dxDataGrid-ariaCollapse": "摺疊",
             "dxDataGrid-ariaExpand": "展開",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "資料網格",
             "dxDataGrid-ariaSearchInGrid": "在資料網格中搜尋",
             "dxDataGrid-ariaSelectAll": "全選",
             "dxDataGrid-ariaSelectRow": "選擇列",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "過濾器生成器",
             "dxDataGrid-filterPanelCreateFilter": "創建過濾器",
             "dxDataGrid-filterPanelClearFilter": "清空",

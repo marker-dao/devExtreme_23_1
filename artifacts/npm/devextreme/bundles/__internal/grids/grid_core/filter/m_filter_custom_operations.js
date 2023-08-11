@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/filter/m_filter_custom_operations.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -108,8 +108,8 @@ function baseOperation(grid) {
   };
   return {
     dataTypes: ['string', 'date', 'datetime', 'number', 'boolean', 'object'],
-    calculateFilterExpression: calculateFilterExpression,
-    editorTemplate: function editorTemplate(conditionInfo, container) {
+    calculateFilterExpression,
+    editorTemplate(conditionInfo, container) {
       var div = (0, _renderer.default)('<div>').addClass('dx-filterbuilder-item-value-text').appendTo(container);
       var column = (0, _extend.extend)(true, {}, grid.columnOption(conditionInfo.field.dataField));
       (0, _utils.renderValueText)(div, conditionInfo.text && conditionInfo.text.split('|'));
@@ -120,20 +120,20 @@ function baseOperation(grid) {
       column.filterValues = conditionInfo.value ? conditionInfo.value.slice() : [];
       headerFilterController.showHeaderFilterMenuBase({
         columnElement: div,
-        column: column,
-        apply: function apply() {
+        column,
+        apply() {
           setValue(this.filterValues);
           headerFilterController.hideHeaderFilterMenu();
           conditionInfo.closeEditor();
         },
-        onHidden: function onHidden() {
+        onHidden() {
           conditionInfo.closeEditor();
         },
         isFilterBuilder: true
       });
       return container;
     },
-    customizeText: customizeText
+    customizeText
   };
 }
 function anyOf(grid) {
@@ -146,7 +146,7 @@ function anyOf(grid) {
 function noneOf(grid) {
   var baseOp = baseOperation(grid);
   return (0, _extend.extend)({}, baseOp, {
-    calculateFilterExpression: function calculateFilterExpression(filterValue, field, fields) {
+    calculateFilterExpression(filterValue, field, fields) {
       var baseFilter = baseOp.calculateFilterExpression(filterValue, field, fields);
       if (!baseFilter || baseFilter.length === 0) return null;
       return baseFilter[0] === '!' ? baseFilter : ['!', baseFilter];

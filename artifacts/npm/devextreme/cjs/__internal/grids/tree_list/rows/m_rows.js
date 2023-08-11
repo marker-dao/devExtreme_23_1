@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/rows/m_rows.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.RowsView = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
+var _type = require("../../../../core/utils/type");
 var _m_rows_view = require("../../../grids/grid_core/views/m_rows_view");
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -34,7 +35,7 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
     return $iconElement;
   };
   return {
-    _renderIconContainer: function _renderIconContainer($container, options) {
+    _renderIconContainer($container, options) {
       var _this = this;
       var $iconContainer = (0, _renderer.default)('<div>').addClass(TREELIST_EXPAND_ICON_CONTAINER_CLASS).appendTo($container);
       options.watch && options.watch(function () {
@@ -46,7 +47,7 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
       $container.addClass(TREELIST_CELL_EXPANDABLE_CLASS);
       return this._renderIcons($iconContainer, options);
     },
-    _renderIcons: function _renderIcons($iconContainer, options) {
+    _renderIcons($iconContainer, options) {
       var row = options.row;
       var level = row.level;
       for (var i = 0; i <= level; i++) {
@@ -54,11 +55,11 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
       }
       return $iconContainer;
     },
-    _renderCellCommandContent: function _renderCellCommandContent(container, model) {
+    _renderCellCommandContent(container, model) {
       this._renderIconContainer(container, model);
       return true;
     },
-    _processTemplate: function _processTemplate(template, options) {
+    _processTemplate(template, options) {
       var _a;
       var that = this;
       var resultTemplate;
@@ -66,7 +67,7 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
       var firstDataColumnIndex = that._columnsController.getFirstDataColumnIndex();
       if (renderingTemplate && ((_a = options.column) === null || _a === void 0 ? void 0 : _a.index) === firstDataColumnIndex) {
         resultTemplate = {
-          render: function render(options) {
+          render(options) {
             var $container = options.container;
             if (that._renderCellCommandContent($container, options.model)) {
               options.container = createCellContent($container);
@@ -79,11 +80,11 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
       }
       return resultTemplate;
     },
-    _updateCell: function _updateCell($cell, options) {
+    _updateCell($cell, options) {
       $cell = $cell.hasClass(TREELIST_TEXT_CONTENT) ? $cell.parent() : $cell;
       this.callBase($cell, options);
     },
-    _rowClick: function _rowClick(e) {
+    _rowClick(e) {
       var dataController = this._dataController;
       var $targetElement = (0, _renderer.default)(e.event.target);
       var isExpandIcon = this.isExpandIcon($targetElement);
@@ -93,7 +94,7 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
       }
       this.callBase(e);
     },
-    _createRow: function _createRow(row) {
+    _createRow(row) {
       var node = row && row.node;
       var $rowElement = this.callBase.apply(this, arguments);
       if (node) {
@@ -104,8 +105,12 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
       }
       return $rowElement;
     },
-    isExpandIcon: function isExpandIcon($targetElement) {
+    isExpandIcon($targetElement) {
       return !!$targetElement.closest(".".concat(TREELIST_EXPANDED_CLASS, ", .").concat(TREELIST_COLLAPSED_CLASS)).length;
+    },
+    setAriaExpandedAttribute($row, row) {
+      var isRowExpanded = row.isExpanded;
+      this.setAria('expanded', (0, _type.isDefined)(isRowExpanded) && isRowExpanded.toString(), $row);
     }
   };
 }());

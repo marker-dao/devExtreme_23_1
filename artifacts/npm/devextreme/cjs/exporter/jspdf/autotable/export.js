@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/jspdf/autotable/export.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -130,8 +130,8 @@ var Export = {
               if (!isMergedCell || pdfCell.rowSpan > 1 || pdfCell.colSpan > 1) {
                 if ((0, _type.isFunction)(customizeCell)) {
                   customizeCell({
-                    gridCell: gridCell,
-                    pdfCell: pdfCell
+                    gridCell,
+                    pdfCell
                   });
                 }
                 row.push(pdfCell);
@@ -145,8 +145,8 @@ var Export = {
               pdfCell.content = (_pdfCell$content = pdfCell.content) !== null && _pdfCell$content !== void 0 ? _pdfCell$content : '';
               if ((0, _type.isFunction)(customizeCell)) {
                 customizeCell({
-                  gridCell: gridCell,
-                  pdfCell: pdfCell
+                  gridCell,
+                  pdfCell
                 });
               }
               row.push(pdfCell);
@@ -218,7 +218,7 @@ var Export = {
       }
     }
   },
-  _tryGetPdfColumnWidths: function _tryGetPdfColumnWidths(autoTableWidth, columnWidths) {
+  _tryGetPdfColumnWidths(autoTableWidth, columnWidths) {
     if ((0, _type.isNumeric)(autoTableWidth) && (0, _type.isDefined)(columnWidths)) {
       var tableWidth = columnWidths.reduce(function (a, b) {
         return a + b;

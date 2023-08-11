@@ -483,7 +483,7 @@ var Lookup = DropDownList.inherit({
     });
   },
   _listItemGroupedElements: function _listItemGroupedElements() {
-    var groups = this._list._itemContainer().children();
+    var groups = this._list._getItemsContainer().children();
     var items = [];
     groups.each((_, group) => {
       items.push($(group).find('.' + GROUP_LIST_HEADER_CLASS)[0]);
@@ -712,6 +712,14 @@ var Lookup = DropDownList.inherit({
       $searchWrapper.insertBefore(this._$list);
       this._setSearchPlaceholder();
     }
+  },
+  _updateActiveDescendant() {
+    this.callBase();
+    if (!this._$searchBox) {
+      return;
+    }
+    var $input = this._$searchBox.find('input');
+    this.callBase($input);
   },
   _removeSearch: function _removeSearch() {
     this._$searchWrapper && this._$searchWrapper.remove();

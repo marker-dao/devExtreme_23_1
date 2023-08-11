@@ -145,7 +145,7 @@ var SplitterControl = /*#__PURE__*/function (_Widget) {
     this._$splitter.toggleClass(SPLITTER_INACTIVE_CLASS, !isActive);
     this._isSplitterActive = isActive;
     this._actions.onActiveStateChanged({
-      isActive: isActive
+      isActive
     });
   };
   _proto.toggleDisabled = function toggleDisabled(isDisabled) {

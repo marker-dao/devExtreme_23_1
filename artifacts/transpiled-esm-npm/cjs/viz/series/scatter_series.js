@@ -1,17 +1,13 @@
 "use strict";
 
 exports.polar = exports.chart = void 0;
-var _extend3 = require("../../core/utils/extend");
+var _extend2 = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _range_data_calculator = _interopRequireDefault(require("./helpers/range_data_calculator"));
 var _type = require("../../core/utils/type");
 var _utils = require("../core/utils");
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var math = Math;
 var _abs = math.abs;
 var _sqrt = math.sqrt;
@@ -108,7 +104,9 @@ function getMinMaxAggregator(compare) {
       }
       return result;
     }, targetData);
-    return (0, _extend3.extend)({}, targetData, _defineProperty({}, series.getArgumentField(), series._getIntervalCenter(intervalStart, intervalEnd)));
+    return (0, _extend2.extend)({}, targetData, {
+      [series.getArgumentField()]: series._getIntervalCenter(intervalStart, intervalEnd)
+    });
   };
 }
 function checkFields(data, fieldsToCheck, skippedFields) {
@@ -139,7 +137,7 @@ var baseScatterMethods = {
   _createLegendState: function _createLegendState(styleOptions, defaultColor) {
     return {
       fill: (0, _utils.extractColor)(styleOptions.color, true) || defaultColor,
-      hatching: styleOptions.hatching ? (0, _extend3.extend)({}, styleOptions.hatching, {
+      hatching: styleOptions.hatching ? (0, _extend2.extend)({}, styleOptions.hatching, {
         direction: 'right'
       }) : undefined
     };
@@ -185,7 +183,7 @@ var baseScatterMethods = {
     var errorBarOptions = this._options.valueErrorBar;
     return errorBarOptions && this._errorBarsEnabled() && errorBarOptions.displayMode !== 'none' && (isErrorBarTypeCorrect((0, _utils.normalizeEnum)(errorBarOptions.type)) || (0, _type.isDefined)(errorBarOptions.lowValueField) || (0, _type.isDefined)(errorBarOptions.highValueField));
   },
-  groupPointsByCoords: function groupPointsByCoords(rotated) {
+  groupPointsByCoords(rotated) {
     var cat = [];
     (0, _iterator.each)(this.getVisiblePoints(), function (_, p) {
       var pointCoord = parseInt(rotated ? p.vy : p.vx);
@@ -227,7 +225,7 @@ var baseScatterMethods = {
     var normalStyle;
     if (!creatingPointOptions) {
       defaultPointOptions = that._getPointOptions();
-      that._predefinedPointOptions = creatingPointOptions = (0, _extend3.extend)(true, {
+      that._predefinedPointOptions = creatingPointOptions = (0, _extend2.extend)(true, {
         styles: {}
       }, defaultPointOptions);
       normalStyle = defaultPointOptions.styles && defaultPointOptions.styles.normal || {};
@@ -276,7 +274,7 @@ var baseScatterMethods = {
     fieldsToCheck.argument = this.getArgumentField();
     return checkFields(data, fieldsToCheck, skippedFields || {}) && data.value === data.value;
   },
-  getArgumentRangeInitialValue: function getArgumentRangeInitialValue() {
+  getArgumentRangeInitialValue() {
     var points = this.getPoints();
     if (this.useAggregation() && points.length) {
       var _points$0$aggregation, _points$aggregationIn;
@@ -357,7 +355,7 @@ var baseScatterMethods = {
       });
     });
   },
-  _getIntervalCenter: function _getIntervalCenter(intervalStart, intervalEnd) {
+  _getIntervalCenter(intervalStart, intervalEnd) {
     var argAxis = this.getArgumentAxis();
     var axisOptions = argAxis.getOptions();
     if (argAxis.aggregatedPointBetweenTicks()) {
@@ -370,8 +368,7 @@ var baseScatterMethods = {
   },
   _defaultAggregator: 'avg',
   _aggregators: {
-    avg: function avg(_ref2, series) {
-      var _calculateAvgErrorBar;
+    avg(_ref2, series) {
       var data = _ref2.data,
         intervalStart = _ref2.intervalStart,
         intervalEnd = _ref2.intervalEnd;
@@ -389,10 +386,12 @@ var baseScatterMethods = {
         }
         return result;
       }, [0, 0, 0]);
-      return calculateAvgErrorBars((_calculateAvgErrorBar = {}, _defineProperty(_calculateAvgErrorBar, valueField, aggregationResult[2] === data.length ? null : aggregationResult[0] / aggregationResult[1]), _defineProperty(_calculateAvgErrorBar, series.getArgumentField(), series._getIntervalCenter(intervalStart, intervalEnd)), _calculateAvgErrorBar), data, series);
+      return calculateAvgErrorBars({
+        [valueField]: aggregationResult[2] === data.length ? null : aggregationResult[0] / aggregationResult[1],
+        [series.getArgumentField()]: series._getIntervalCenter(intervalStart, intervalEnd)
+      }, data, series);
     },
-    sum: function sum(_ref3, series) {
-      var _calculateSumErrorBar;
+    sum(_ref3, series) {
       var intervalStart = _ref3.intervalStart,
         intervalEnd = _ref3.intervalEnd,
         data = _ref3.data;
@@ -419,17 +418,22 @@ var baseScatterMethods = {
       if (aggregationResult[2] === data.length) {
         return;
       }
-      return calculateSumErrorBars((_calculateSumErrorBar = {}, _defineProperty(_calculateSumErrorBar, valueField, value), _defineProperty(_calculateSumErrorBar, series.getArgumentField(), series._getIntervalCenter(intervalStart, intervalEnd)), _calculateSumErrorBar), data, series);
+      return calculateSumErrorBars({
+        [valueField]: value,
+        [series.getArgumentField()]: series._getIntervalCenter(intervalStart, intervalEnd)
+      }, data, series);
     },
-    count: function count(_ref4, series) {
-      var _ref5;
+    count(_ref4, series) {
       var data = _ref4.data,
         intervalStart = _ref4.intervalStart,
         intervalEnd = _ref4.intervalEnd;
       var valueField = series.getValueFields()[0];
-      return _ref5 = {}, _defineProperty(_ref5, series.getArgumentField(), series._getIntervalCenter(intervalStart, intervalEnd)), _defineProperty(_ref5, valueField, data.filter(function (i) {
-        return i[valueField] !== undefined;
-      }).length), _ref5;
+      return {
+        [series.getArgumentField()]: series._getIntervalCenter(intervalStart, intervalEnd),
+        [valueField]: data.filter(function (i) {
+          return i[valueField] !== undefined;
+        }).length
+      };
     },
     min: getMinMaxAggregator(function (a, b) {
       return a < b;
@@ -536,11 +540,11 @@ var baseScatterMethods = {
     options.sizePointNormalState = pointOptions.visible ? styles.normal.r * 2 + styles.normal['stroke-width'] : 2;
     return options;
   },
-  usePointsToDefineAutoHiding: function usePointsToDefineAutoHiding() {
+  usePointsToDefineAutoHiding() {
     return true;
   }
 };
-exports.chart = chart = (0, _extend3.extend)({}, baseScatterMethods, {
+exports.chart = chart = (0, _extend2.extend)({}, baseScatterMethods, {
   drawTrackers: function drawTrackers() {
     var that = this;
     var trackers;
@@ -572,15 +576,15 @@ exports.chart = chart = (0, _extend3.extend)({}, baseScatterMethods, {
     }
     that._trackersTranslator = that.groupPointsByCoords(rotated);
   },
-  _checkAxisVisibleAreaCoord: function _checkAxisVisibleAreaCoord(isArgument, coord) {
+  _checkAxisVisibleAreaCoord(isArgument, coord) {
     var axis = isArgument ? this.getArgumentAxis() : this.getValueAxis();
     var visibleArea = axis.getVisibleArea();
     return (0, _type.isDefined)(coord) && visibleArea[0] <= coord && visibleArea[1] >= coord;
   },
-  checkSeriesViewportCoord: function checkSeriesViewportCoord(axis, coord) {
+  checkSeriesViewportCoord(axis, coord) {
     return this.getPoints().length && this.isVisible();
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var oppositeCoord = null;
     var isOpposite = !isArgument && !this._options.rotated || isArgument && this._options.rotated;
     var coordName = !isOpposite ? 'vx' : 'vy';
@@ -596,13 +600,13 @@ exports.chart = chart = (0, _extend3.extend)({}, baseScatterMethods, {
     }
     return oppositeCoord;
   },
-  _getNearestPoints: function _getNearestPoints(point, nextPoint) {
+  _getNearestPoints(point, nextPoint) {
     return [point, nextPoint];
   },
-  _getBezierPoints: function _getBezierPoints() {
+  _getBezierPoints() {
     return [];
   },
-  _getNearestPointsByCoord: function _getNearestPointsByCoord(coord, isArgument) {
+  _getNearestPointsByCoord(coord, isArgument) {
     var that = this;
     var rotated = that.getOptions().rotated;
     var isOpposite = !isArgument && !rotated || isArgument && rotated;
@@ -662,12 +666,12 @@ exports.chart = chart = (0, _extend3.extend)({}, baseScatterMethods, {
       maxY: visibleY[1]
     };
   },
-  getPointCenterByArg: function getPointCenterByArg(arg) {
+  getPointCenterByArg(arg) {
     var point = this.getPointsByArg(arg)[0];
     return point ? point.getCenterCoord() : undefined;
   }
 });
-exports.polar = polar = (0, _extend3.extend)({}, baseScatterMethods, {
+exports.polar = polar = (0, _extend2.extend)({}, baseScatterMethods, {
   drawTrackers: function drawTrackers() {
     chart.drawTrackers.call(this);
     var cat = this._trackersTranslator;
@@ -697,7 +701,7 @@ exports.polar = polar = (0, _extend3.extend)({}, baseScatterMethods, {
       maxY: canvas.height - canvas.bottom
     };
   },
-  getSeriesPairCoord: function getSeriesPairCoord(params, isArgument) {
+  getSeriesPairCoord(params, isArgument) {
     var coords = null;
     var paramName = isArgument ? 'argument' : 'radius';
     var points = this.getVisiblePoints();

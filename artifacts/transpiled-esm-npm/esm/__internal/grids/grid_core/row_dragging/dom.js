@@ -5,10 +5,9 @@ import $ from '../../../../core/renderer';
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports,
 // eslint-disable-next-line forbidden-imports/no-restricted-imports
 import gridCoreUtils from '../m_utils';
-import { ATTRIBUTES, CLASSES } from './const';
+import { CLASSES } from './const';
 var createHandleTemplateFunc = addWidgetPrefix => (container, options) => {
   var $container = $(container);
-  $container.attr(ATTRIBUTES.dragCell, '');
   if (options.rowType === 'data') {
     $container.addClass(CLASSES.cellFocusDisabled);
     return $('<span>').addClass(addWidgetPrefix(CLASSES.handleIcon));

@@ -98,4 +98,6 @@ var ClickEmitter = _emitter.default.inherit({
   events: [CLICK_EVENT_NAME]
 });
 
+///#DEBUG
+
 ///#ENDDEBUG

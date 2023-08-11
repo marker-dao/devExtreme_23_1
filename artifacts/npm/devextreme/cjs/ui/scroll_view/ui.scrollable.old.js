@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scroll_view/ui.scrollable.old.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -162,13 +162,13 @@ var Scrollable = _dom_component.default.inherit({
     this._updateIfNeed();
     return this._moveIsAllowed(e);
   },
-  _moveIsAllowed: function _moveIsAllowed(e) {
+  _moveIsAllowed(e) {
     return this._strategy.validate(e);
   },
-  handleMove: function handleMove(e) {
+  handleMove(e) {
     this._strategy.handleMove(e);
   },
-  _prepareDirections: function _prepareDirections(value) {
+  _prepareDirections(value) {
     this._strategy._prepareDirections(value);
   },
   _initHandler: function _initHandler() {

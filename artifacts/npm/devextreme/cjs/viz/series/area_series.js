@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/area_series.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -129,7 +129,7 @@ function createAreaPoints(points) {
   }));
 }
 var areaSeries = chart['area'] = _extend({}, chartLineSeries, baseAreaMethods, {
-  _prepareSegment: function _prepareSegment(points, rotated) {
+  _prepareSegment(points, rotated) {
     var that = this;
     var processedPoints = that._processSinglePointsAreaSegment(points, rotated);
     var areaPoints = createAreaPoints(processedPoints);

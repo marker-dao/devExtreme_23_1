@@ -179,7 +179,7 @@ LayoutManager.prototype = {
     }
     correctLabelRadius(sizeLabels, radius, series, canvas, averageWidthLabels, layout.centerX);
   },
-  needMoreSpaceForPanesCanvas: function needMoreSpaceForPanesCanvas(panes, rotated, fixedSizeCallback) {
+  needMoreSpaceForPanesCanvas(panes, rotated, fixedSizeCallback) {
     var options = this._options;
     var width = options.width;
     var height = options.height;

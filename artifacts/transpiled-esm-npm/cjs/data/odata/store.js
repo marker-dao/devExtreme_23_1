@@ -11,13 +11,11 @@ var _request_dispatcher = _interopRequireDefault(require("./request_dispatcher")
 var _deferred = require("../../core/utils/deferred");
 require("./query_adapter");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var ANONYMOUS_KEY_NAME = '5d46402c-7899-4ea9-bd81-8b73c47c7683';
 var expandKeyType = function expandKeyType(key, keyType) {
-  return _defineProperty({}, key, keyType);
+  return {
+    [key]: keyType
+  };
 };
 var mergeFieldTypesWithKeyType = function mergeFieldTypesWithKeyType(fieldTypes, keyType) {
   var result = {};
@@ -36,7 +34,7 @@ var mergeFieldTypesWithKeyType = function mergeFieldTypesWithKeyType(fieldTypes,
   return result;
 };
 var ODataStore = _abstract_store.default.inherit({
-  ctor: function ctor(options) {
+  ctor(options) {
     this.callBase(options);
     this._requestDispatcher = new _request_dispatcher.default(options);
     var key = this.key();
@@ -60,10 +58,10 @@ var ODataStore = _abstract_store.default.inherit({
       this._updateMethod = 'PATCH';
     }
   },
-  _customLoadOptions: function _customLoadOptions() {
+  _customLoadOptions() {
     return ['expand', 'customQueryParams'];
   },
-  _byKeyImpl: function _byKeyImpl(key, extraOptions) {
+  _byKeyImpl(key, extraOptions) {
     var params = {};
     if (extraOptions) {
       params['$expand'] = (0, _utils.generateExpand)(this.version(), extraOptions.expand, extraOptions.select) || undefined;
@@ -71,7 +69,7 @@ var ODataStore = _abstract_store.default.inherit({
     }
     return this._requestDispatcher.sendRequest(this._byKeyUrl(key), 'GET', params);
   },
-  createQuery: function createQuery(loadOptions) {
+  createQuery(loadOptions) {
     var _loadOptions$urlOverr;
     var url;
     var queryOptions = {
@@ -102,7 +100,7 @@ var ODataStore = _abstract_store.default.inherit({
     }
     return (0, _query.default)(url, queryOptions);
   },
-  _insertImpl: function _insertImpl(values) {
+  _insertImpl(values) {
     var _this = this;
     this._requireKey();
     var d = new _deferred.Deferred();
@@ -111,21 +109,21 @@ var ODataStore = _abstract_store.default.inherit({
     }).fail(d.reject);
     return d.promise();
   },
-  _updateImpl: function _updateImpl(key, values) {
+  _updateImpl(key, values) {
     var d = new _deferred.Deferred();
     (0, _deferred.when)(this._requestDispatcher.sendRequest(this._byKeyUrl(key), this._updateMethod, null, values)).done(function (serverResponse) {
       return (0, _config.default)().useLegacyStoreResult ? d.resolve(key, values) : d.resolve(serverResponse || values, key);
     }).fail(d.reject);
     return d.promise();
   },
-  _removeImpl: function _removeImpl(key) {
+  _removeImpl(key) {
     var d = new _deferred.Deferred();
     (0, _deferred.when)(this._requestDispatcher.sendRequest(this._byKeyUrl(key), 'DELETE')).done(function () {
       return d.resolve(key);
     }).fail(d.reject);
     return d.promise();
   },
-  _convertKey: function _convertKey(value) {
+  _convertKey(value) {
     var result = value;
     var fieldTypes = this._fieldTypes;
     var key = this.key() || this._legacyAnonymousKey;
@@ -140,12 +138,12 @@ var ODataStore = _abstract_store.default.inherit({
     }
     return result;
   },
-  _byKeyUrl: function _byKeyUrl(value) {
+  _byKeyUrl(value) {
     var baseUrl = this._requestDispatcher.url;
     var convertedKey = this._convertKey(value);
     return "".concat(baseUrl, "(").concat(encodeURIComponent((0, _utils.serializeKey)(convertedKey, this.version())), ")");
   },
-  version: function version() {
+  version() {
     return this._requestDispatcher.version;
   }
 }, 'odata');

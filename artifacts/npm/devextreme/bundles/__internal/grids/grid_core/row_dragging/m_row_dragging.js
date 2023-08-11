@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/row_dragging/m_row_dragging.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,32 +22,36 @@ var _const = require("./const");
 var _dom = require("./dom");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var RowDraggingExtender = {
-  init: function init() {
+  init() {
     this.callBase.apply(this, arguments);
     this._updateHandleColumn();
   },
-  _allowReordering: function _allowReordering() {
+  _allowReordering() {
     var rowDragging = this.option('rowDragging');
     return !!(rowDragging && (rowDragging.allowReordering || rowDragging.allowDropInsideItem || rowDragging.group));
   },
-  _updateHandleColumn: function _updateHandleColumn() {
+  _updateHandleColumn() {
     var rowDragging = this.option('rowDragging');
     var allowReordering = this._allowReordering();
     var columnsController = this._columnsController;
     var isHandleColumnVisible = allowReordering && rowDragging.showDragIcons;
-    columnsController && columnsController.addCommandColumn({
+    columnsController === null || columnsController === void 0 ? void 0 : columnsController.addCommandColumn({
       type: 'drag',
       command: 'drag',
       visibleIndex: -2,
       alignment: 'center',
+      elementAttr: [{
+        name: _const.ATTRIBUTES.dragCell,
+        value: ''
+      }],
       cssClass: _const.CLASSES.commandDrag,
       width: 'auto',
       cellTemplate: this._getHandleTemplate(),
       visible: isHandleColumnVisible
     });
-    columnsController.columnOption('type:drag', 'visible', isHandleColumnVisible);
+    columnsController === null || columnsController === void 0 ? void 0 : columnsController.columnOption('type:drag', 'visible', isHandleColumnVisible);
   },
-  _renderContent: function _renderContent() {
+  _renderContent() {
     var _this = this;
     var rowDragging = this.option('rowDragging');
     var allowReordering = this._allowReordering();
@@ -68,7 +72,7 @@ var RowDraggingExtender = {
       this[currentSortableName] = this._createComponent($content, _sortable.default, (0, _extend.extend)({
         component: this.component,
         contentTemplate: null,
-        filter: filter,
+        filter,
         cursorOffset: function cursorOffset(options) {
           var event = options.event;
           var rowsViewOffset = (0, _renderer.default)(_this.element()).offset();
@@ -129,7 +133,7 @@ var RowDraggingExtender = {
     }
     return $content;
   },
-  _renderCore: function _renderCore(e) {
+  _renderCore(e) {
     var _this2 = this;
     this.callBase.apply(this, arguments);
     if (e && e.changeType === 'update' && e.repaintChangesOnly && _m_utils.default.isVirtualRowRendering(this)) {
@@ -138,18 +142,18 @@ var RowDraggingExtender = {
       });
     }
   },
-  _updateSortable: function _updateSortable() {
+  _updateSortable() {
     var offset = this._dataController.getRowIndexOffset();
     [this._sortable, this._sortableFixed].forEach(function (sortable) {
       sortable === null || sortable === void 0 ? void 0 : sortable.option('offset', offset);
       sortable === null || sortable === void 0 ? void 0 : sortable.update();
     });
   },
-  _resizeCore: function _resizeCore() {
+  _resizeCore() {
     this.callBase.apply(this, arguments);
     this._updateSortable();
   },
-  _getDraggableGridOptions: function _getDraggableGridOptions(options) {
+  _getDraggableGridOptions(options) {
     var gridOptions = this.option();
     var columns = this.getColumns();
     var $rowElement = (0, _renderer.default)(this.getRowElement(options.rowIndex));
@@ -184,13 +188,13 @@ var RowDraggingExtender = {
       }
     };
   },
-  _synchronizeScrollLeftPosition: function _synchronizeScrollLeftPosition(gridInstance) {
+  _synchronizeScrollLeftPosition(gridInstance) {
     var scrollable = gridInstance === null || gridInstance === void 0 ? void 0 : gridInstance.getScrollable();
     scrollable === null || scrollable === void 0 ? void 0 : scrollable.scrollTo({
       x: this._scrollLeft
     });
   },
-  _getDraggableRowTemplate: function _getDraggableRowTemplate() {
+  _getDraggableRowTemplate() {
     var _this3 = this;
     return function (options) {
       var $rootElement = _this3.component.$element();
@@ -204,13 +208,13 @@ var RowDraggingExtender = {
       return $dataGridContainer;
     };
   },
-  _getHandleTemplate: function _getHandleTemplate() {
+  _getHandleTemplate() {
     var _this4 = this;
     return _dom.GridCoreRowDraggingDom.createHandleTemplateFunc(function (string) {
       return _this4.addWidgetPrefix(string);
     });
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     if (args.name === 'rowDragging') {
       this._updateHandleColumn();
       this._invalidate(true, true);
@@ -220,7 +224,7 @@ var RowDraggingExtender = {
   }
 };
 var rowDraggingModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       rowDragging: {
         showDragIcons: true,

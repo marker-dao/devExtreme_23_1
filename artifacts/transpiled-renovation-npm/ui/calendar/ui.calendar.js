@@ -25,7 +25,7 @@ var _date3 = _interopRequireDefault(require("../../localization/date"));
 var _function_template = require("../../core/templates/function_template");
 var _index = require("../../events/utils/index");
 var _uiCalendarSingleSelection = _interopRequireDefault(require("./ui.calendar.single.selection.strategy"));
-var _uiCalendarMultiSelection = _interopRequireDefault(require("./ui.calendar.multi.selection.strategy"));
+var _uiCalendarMultipleSelection = _interopRequireDefault(require("./ui.calendar.multiple.selection.strategy"));
 var _uiCalendarRangeSelection = _interopRequireDefault(require("./ui.calendar.range.selection.strategy"));
 var _hover = require("../../events/hover");
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
@@ -65,7 +65,7 @@ var ZOOM_LEVEL = {
 };
 var SELECTION_STRATEGIES = {
   SingleSelection: _uiCalendarSingleSelection.default,
-  MultiSelection: _uiCalendarMultiSelection.default,
+  MultipleSelection: _uiCalendarMultipleSelection.default,
   RangeSelection: _uiCalendarRangeSelection.default
 };
 function elementHasFocus(element) {
@@ -291,7 +291,7 @@ var Calendar = _editor.default.inherit({
       this.option('currentDate', currentDate);
     }
   },
-  _areDatesInSameView: function _areDatesInSameView(zoomLevel, date1, date2) {
+  _areDatesInSameView(zoomLevel, date1, date2) {
     switch (zoomLevel) {
       case ZOOM_LEVEL.MONTH:
         return date1.getMonth() === date2.getMonth();
@@ -303,7 +303,7 @@ var Calendar = _editor.default.inherit({
         return parseInt(date1.getYear() / 100) === parseInt(date2.getYear() / 100);
     }
   },
-  _areDatesInNeighborView: function _areDatesInNeighborView(zoomLevel, date1, date2) {
+  _areDatesInNeighborView(zoomLevel, date1, date2) {
     var monthMinDistance = function monthMinDistance(a, b) {
       var abs = Math.abs(a - b);
       return Math.min(abs, 12 - abs);
@@ -374,8 +374,8 @@ var Calendar = _editor.default.inherit({
   _getSelectionStrategyName: function _getSelectionStrategyName() {
     var selectionMode = this.option('selectionMode');
     switch (selectionMode) {
-      case 'multi':
-        return 'MultiSelection';
+      case 'multiple':
+        return 'MultipleSelection';
       case 'range':
         return 'RangeSelection';
       default:
@@ -459,7 +459,7 @@ var Calendar = _editor.default.inherit({
     }
     this._skipNavigate = false;
   },
-  _isAdditionalViewDate: function _isAdditionalViewDate(date) {
+  _isAdditionalViewDate(date) {
     if (!this._additionalView) {
       return false;
     }
@@ -582,7 +582,7 @@ var Calendar = _editor.default.inherit({
       this.$body.append(this._$viewsWrapper);
     }
   },
-  _getKeyboardListeners: function _getKeyboardListeners() {
+  _getKeyboardListeners() {
     return this.callBase().concat([this._view]);
   },
   _renderViews: function _renderViews() {
@@ -628,14 +628,14 @@ var Calendar = _editor.default.inherit({
       tabIndex: undefined,
       focusStateEnabled: this.option('focusStateEnabled'),
       hoverStateEnabled: this.option('hoverStateEnabled'),
-      disabledDates: disabledDates,
+      disabledDates,
       onCellClick: this._cellClickHandler.bind(this),
       cellTemplate: this._getTemplateByOption('cellTemplate'),
       allowValueSelection: this._isMaxZoomLevel(),
       _todayDate: this.option('_todayDate')
     });
   },
-  _renderEvents: function _renderEvents() {
+  _renderEvents() {
     var _this3 = this;
     _events_engine.default.off(this._$viewsWrapper, CALENDAR_DXHOVEREND_EVENT_NAME);
     if (this.option('selectionMode') === 'range') {
@@ -670,7 +670,7 @@ var Calendar = _editor.default.inherit({
     this._moveViewElement(this._afterView, viewsCount);
     this._moveViewElement(this._additionalView, 1);
   },
-  _moveViewElement: function _moveViewElement(view, coefficient) {
+  _moveViewElement(view, coefficient) {
     view && (0, _translator.move)(view.$element(), {
       left: this._getViewPosition(coefficient),
       top: 0
@@ -742,7 +742,7 @@ var Calendar = _editor.default.inherit({
       text: this._getViewsCaption(this._view, this._additionalView),
       onClick: this._navigatorClickHandler.bind(this),
       onCaptionClick: this._navigateUp.bind(this),
-      rtlEnabled: rtlEnabled
+      rtlEnabled
     };
   },
   _navigatorClickHandler: function _navigatorClickHandler(e) {
@@ -974,7 +974,7 @@ var Calendar = _editor.default.inherit({
       duration: duration
     });
   },
-  _getDate: function _getDate(value) {
+  _getDate(value) {
     return new Date(value);
   },
   _toTodayView: function _toTodayView(args) {
@@ -1163,6 +1163,7 @@ var Calendar = _editor.default.inherit({
         break;
       case 'selectionMode':
         this._refreshSelectionStrategy();
+        this._selectionStrategy.restoreValue();
         this._initCurrentDate();
         break;
       case 'firstDayOfWeek':

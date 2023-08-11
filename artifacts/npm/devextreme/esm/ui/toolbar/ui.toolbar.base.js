@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/toolbar/ui.toolbar.base.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -143,7 +143,7 @@ class ToolbarBase extends AsyncCollectionWidget {
       var sectionClass = "dx-toolbar-".concat(section);
       var $section = $container.find(".".concat(sectionClass));
       if (!$section.length) {
-        this["_$".concat(section, "Section")] = $('<div>').addClass(sectionClass).appendTo($container);
+        this["_$".concat(section, "Section")] = $('<div>').addClass(sectionClass).attr('role', 'presentation').appendTo($container);
       }
     });
   }
@@ -231,7 +231,7 @@ class ToolbarBase extends AsyncCollectionWidget {
   _applyCompactMode() {
     var $element = this.$element();
     $element.removeClass(TOOLBAR_COMPACT_CLASS);
-    if (this.option('compactMode') && this._getSummaryItemsWidth(this.itemElements(), true) > getWidth($element)) {
+    if (this.option('compactMode') && this._getSummaryItemsSize('width', this.itemElements(), true) > getWidth($element)) {
       $element.addClass(TOOLBAR_COMPACT_CLASS);
     }
   }

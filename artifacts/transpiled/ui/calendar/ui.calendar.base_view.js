@@ -112,8 +112,8 @@ var BaseView = _ui.default.inherit({
       'label': this.getCellAriaLabel(cellDate)
     }, $cell);
     return {
-      cell: cell,
-      $cell: $cell
+      cell,
+      $cell
     };
   },
   _renderCell: function _renderCell(params, cellIndex) {
@@ -172,9 +172,9 @@ var BaseView = _ui.default.inherit({
     var view = this._getViewName();
     return {
       model: {
-        text: text,
-        date: date,
-        view: view
+        text,
+        date,
+        view
       },
       container: (0, _element.getPublicElement)($cell),
       index: cellIndex
@@ -310,7 +310,7 @@ var BaseView = _ui.default.inherit({
     (_this$_$rangeStartDat2 = this._$rangeStartDateCell) === null || _this$_$rangeStartDat2 === void 0 ? void 0 : _this$_$rangeStartDat2.addClass(CALENDAR_RANGE_START_DATE_CLASS);
     (_this$_$rangeEndDateC2 = this._$rangeEndDateCell) === null || _this$_$rangeEndDateC2 === void 0 ? void 0 : _this$_$rangeEndDateC2.addClass(CALENDAR_RANGE_END_DATE_CLASS);
   },
-  _renderHoveredRange: function _renderHoveredRange() {
+  _renderHoveredRange() {
     var _this$_$hoveredRangeC2,
       _this$_$rangeStartHov2,
       _this$_$rangeEndHover2,

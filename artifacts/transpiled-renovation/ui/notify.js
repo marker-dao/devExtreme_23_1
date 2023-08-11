@@ -65,8 +65,8 @@ var setContainerStyles = function setContainerStyles(container, direction, posit
     toastWidth = _container$children$f.offsetWidth,
     toastHeight = _container$children$f.offsetHeight;
   var dimensions = {
-    toastWidth: toastWidth,
-    toastHeight: toastHeight,
+    toastWidth,
+    toastHeight,
     windowHeight: window.innerHeight,
     windowWidth: window.innerWidth
   };

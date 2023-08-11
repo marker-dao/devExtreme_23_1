@@ -70,8 +70,8 @@ var DataGridHelpers = /*#__PURE__*/function () {
   _proto._customizeCell = function _customizeCell(excelCell, gridCell) {
     if ((0, _type.isFunction)(this.customizeCell)) {
       this.customizeCell({
-        excelCell: excelCell,
-        gridCell: gridCell
+        excelCell,
+        gridCell
       });
     }
   };

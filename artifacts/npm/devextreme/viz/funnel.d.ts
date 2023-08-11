@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/funnel.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -514,7 +514,7 @@ export interface dxFunnelOptions extends BaseWidgetOptions<dxFunnel> {
      * @type object
      * @public
      */
-    legend?: dxFunnelLegend;
+    legend?: Legend;
     /**
      * @docid
      * @default 0
@@ -600,7 +600,7 @@ export interface dxFunnelOptions extends BaseWidgetOptions<dxFunnel> {
      * @type object
      * @public
      */
-    tooltip?: dxFunnelTooltip;
+    tooltip?: Tooltip;
     /**
      * @docid
      * @default 'val'
@@ -609,10 +609,10 @@ export interface dxFunnelOptions extends BaseWidgetOptions<dxFunnel> {
     valueField?: string;
 }
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxFunnelLegend
  */
-export interface dxFunnelLegend extends BaseLegend {
+export type Legend = BaseLegend & {
     /**
      * @docid dxFunnelOptions.legend.customizeHint
      * @type_function_param1_field item:dxFunnelItem
@@ -647,12 +647,12 @@ export interface dxFunnelLegend extends BaseLegend {
      * @public
      */
     visible?: boolean;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxFunnelTooltip
  */
-export interface dxFunnelTooltip extends BaseWidgetTooltip {
+export type Tooltip = BaseWidgetTooltip & {
     /**
      * @docid dxFunnelOptions.tooltip.contentTemplate
      * @type_function_param1_field item:dxFunnelItem
@@ -669,7 +669,7 @@ export interface dxFunnelTooltip extends BaseWidgetTooltip {
      * @public
      */
     customizeTooltip?: ((info: { item?: Item; value?: number; valueText?: string; percent?: number; percentText?: string }) => any);
-}
+};
 /**
  * @docid
  * @inherits BaseWidget, DataHelperMixin
@@ -773,5 +773,15 @@ export type Properties = dxFunnelOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxFunnelOptions;
+
+// #region deprecated in v23.1
+
+/** @deprecated Use Legend instead */
+export type dxFunnelLegend = Legend;
+
+/** @deprecated Use Tooltip instead */
+export type dxFunnelTooltip = Tooltip;
+
+// #endregion
 
 

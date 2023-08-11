@@ -170,6 +170,7 @@ var resizingControllerMembers = {
     var visibleColumns = columnsController.getVisibleColumns();
     var columnAutoWidth = this.option('columnAutoWidth');
     var wordWrapEnabled = this.option('wordWrapEnabled');
+    var hasUndefinedColumnWidth = visibleColumns.some(column => !isDefined(column.width));
     var needBestFit = this._needBestFit();
     var hasMinWidth = false;
     var resetBestFitMode;
@@ -217,6 +218,7 @@ var resizingControllerMembers = {
       delete this._maxWidth;
       $element[0].style.maxWidth = '';
     }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     deferUpdate(() => {
       if (needBestFit) {
         resultWidths = this._getBestFitWidths();
@@ -256,8 +258,9 @@ var resizingControllerMembers = {
           this._processStretch(resultWidths, visibleColumns);
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       deferRender(() => {
-        if (needBestFit || isColumnWidthsCorrected) {
+        if (needBestFit || isColumnWidthsCorrected || hasUndefinedColumnWidth) {
           this._setVisibleWidths(visibleColumns, resultWidths);
         }
         if (wordWrapEnabled) {

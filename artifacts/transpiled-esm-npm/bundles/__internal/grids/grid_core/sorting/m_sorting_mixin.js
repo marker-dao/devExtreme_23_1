@@ -15,7 +15,7 @@ var SORT_INDEX_CLASS = 'dx-sort-index';
 var SORT_INDEX_ICON_CLASS = 'dx-sort-index-icon';
 var HEADERS_ACTION_CLASS = 'action';
 var _default = {
-  _applyColumnState: function _applyColumnState(options) {
+  _applyColumnState(options) {
     var that = this;
     var ariaSortState;
     var $sortIndicator;
@@ -39,16 +39,25 @@ var _default = {
           options.rootElement.addClass(that.addWidgetPrefix(HEADERS_ACTION_CLASS));
         }
       }
-      if (!(0, _type.isDefined)(column.sortOrder)) {
-        that.setAria('sort', 'none', rootElement);
-      } else {
-        that.setAria('sort', ariaSortState, rootElement);
-      }
+      this._setAriaSortAttribute(column, ariaSortState, rootElement);
       return $sortIndicator;
     }
     return that.callBase(options);
   },
-  _getIndicatorClassName: function _getIndicatorClassName(name) {
+  _setAriaSortAttribute(column, ariaSortState, rootElement) {
+    if (column.isGrouped) {
+      var description = this.localize('dxDataGrid-ariaNotSortedColumn');
+      if ((0, _type.isDefined)(column.sortOrder)) {
+        description = column.sortOrder === 'asc' ? this.localize('dxDataGrid-ariaSortedAscendingColumn') : this.localize('dxDataGrid-ariaSortedDescendingColumn');
+      }
+      this.setAria('roledescription', description, rootElement);
+    } else if (!(0, _type.isDefined)(column.sortOrder)) {
+      this.setAria('sort', 'none', rootElement);
+    } else {
+      this.setAria('sort', ariaSortState, rootElement);
+    }
+  },
+  _getIndicatorClassName(name) {
     if (name === 'sort') {
       return SORT_CLASS;
     }
@@ -57,7 +66,7 @@ var _default = {
     }
     return this.callBase(name);
   },
-  _renderIndicator: function _renderIndicator(options) {
+  _renderIndicator(options) {
     var column = options.column;
     var $container = options.container;
     var $indicator = options.indicator;
@@ -73,13 +82,13 @@ var _default = {
     }
     this.callBase(options);
   },
-  _updateIndicator: function _updateIndicator($cell, column, indicatorName) {
+  _updateIndicator($cell, column, indicatorName) {
     if (indicatorName === 'sort' && (0, _type.isDefined)(column.groupIndex)) {
       return;
     }
     return this.callBase.apply(this, arguments);
   },
-  _getIndicatorElements: function _getIndicatorElements($cell, returnAll) {
+  _getIndicatorElements($cell, returnAll) {
     var $indicatorElements = this.callBase($cell);
     return returnAll ? $indicatorElements : $indicatorElements && $indicatorElements.not(".".concat(SORT_NONE_CLASS));
   }

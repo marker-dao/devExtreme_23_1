@@ -32,9 +32,10 @@ var SelectionFilterCreator = function SelectionFilterCreator(selectedItemKeys, i
     return filterExpr;
   };
   this.getCombinedFilter = function (keyExpr, dataSourceFilter) {
+    var forceCombinedFilter = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var filterExpr = this.getExpr(keyExpr);
     var combinedFilter = filterExpr;
-    if (isSelectAll && dataSourceFilter) {
+    if ((forceCombinedFilter || isSelectAll) && dataSourceFilter) {
       if (filterExpr) {
         combinedFilter = [];
         combinedFilter.push(filterExpr);

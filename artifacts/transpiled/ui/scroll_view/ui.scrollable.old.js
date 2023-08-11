@@ -154,13 +154,13 @@ var Scrollable = _dom_component.default.inherit({
     this._updateIfNeed();
     return this._moveIsAllowed(e);
   },
-  _moveIsAllowed: function _moveIsAllowed(e) {
+  _moveIsAllowed(e) {
     return this._strategy.validate(e);
   },
-  handleMove: function handleMove(e) {
+  handleMove(e) {
     this._strategy.handleMove(e);
   },
-  _prepareDirections: function _prepareDirections(value) {
+  _prepareDirections(value) {
     this._strategy._prepareDirections(value);
   },
   _initHandler: function _initHandler() {

@@ -175,9 +175,9 @@ function calculateTableSize(doc, cells, options) {
   var w = (0, _type.isDefined)(rightPos) ? rightPos - x : 0;
   var h = (0, _type.isDefined)(bottomPos) ? bottomPos - y : 0;
   return {
-    x: x,
-    y: y,
-    w: w,
-    h: h
+    x,
+    y,
+    w,
+    h
   };
 }

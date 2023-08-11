@@ -480,7 +480,8 @@ var editingControllerExtender = Base => class CellBasedEditingControllerExtender
     var _a;
     var editingOptions = (_a = this.option('editing')) !== null && _a !== void 0 ? _a : {};
     var buttonItems = super.prepareEditButtons(headerPanel);
-    if ((editingOptions.allowUpdating || editingOptions.allowAdding || editingOptions.allowDeleting) && this.isBatchEditMode()) {
+    var needEditingButtons = editingOptions.allowUpdating || editingOptions.allowAdding || editingOptions.allowDeleting;
+    if (needEditingButtons && this.isBatchEditMode()) {
       buttonItems.push(this.prepareButtonItem(headerPanel, 'save', 'saveEditData', 21));
       buttonItems.push(this.prepareButtonItem(headerPanel, 'revert', 'cancelEditData', 22));
     }

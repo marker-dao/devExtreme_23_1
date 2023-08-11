@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/area_item/m_area_item.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -453,7 +453,7 @@ var AreaItem = Class.inherit({
       } catch (e) {
         that._tableElement.empty();
       }
-      that._tableElement.attr('style', '');
+      that._tableElement.removeAttr('style');
     } else {
       that._groupElement = that._createGroupElement();
       that._tableElement = that._createTableElement();

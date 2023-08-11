@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.file_uploader.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -52,7 +52,7 @@ var FileManagerFileUploader = /*#__PURE__*/function (_Widget) {
       labelText: '',
       readyToUploadMessage: '',
       accept: '*',
-      chunkSize: chunkSize,
+      chunkSize,
       dropZone: this.option('dropZone'),
       onValueChanged: function onValueChanged(e) {
         return _this._onFileUploaderValueChanged(e);
@@ -92,7 +92,7 @@ var FileManagerFileUploader = /*#__PURE__*/function (_Widget) {
       return _this._shouldRaiseDragLeave(e, fileUploader);
     };
     var uploaderInfo = {
-      fileUploader: fileUploader
+      fileUploader
     };
     this._uploaderInfos.push(uploaderInfo);
   };
@@ -157,9 +157,9 @@ var FileManagerFileUploader = /*#__PURE__*/function (_Widget) {
     var commonValue = component.option('progress') / 100;
     var args = {
       sessionId: session.id,
-      fileIndex: fileIndex,
-      commonValue: commonValue,
-      fileValue: fileValue
+      fileIndex,
+      commonValue,
+      fileValue
     };
     this._raiseUploadProgress(args);
   };
@@ -236,20 +236,20 @@ var FileManagerFileUploader = /*#__PURE__*/function (_Widget) {
     });
     var session = {
       id: sessionId,
-      controller: controller,
-      files: files,
-      deferreds: deferreds
+      controller,
+      files,
+      deferreds
     };
     uploaderInfo.session = session;
     var sessionInfo = {
-      sessionId: sessionId,
-      deferreds: deferreds,
-      files: files
+      sessionId,
+      deferreds,
+      files
     };
     this._raiseUploadSessionStarted(sessionInfo);
     return (0, _uiFile_manager.whenSome)(deferreds).always(function () {
       return setTimeout(function () {
-        uploaderInfo.fileUploader.reset();
+        uploaderInfo.fileUploader.clear();
         uploaderInfo.session = null;
       });
     });
@@ -265,8 +265,8 @@ var FileManagerFileUploader = /*#__PURE__*/function (_Widget) {
     var session = uploaderInfo.session;
     var fileIndex = session.files.indexOf(file);
     return {
-      session: session,
-      fileIndex: fileIndex
+      session,
+      fileIndex
     };
   };
   _proto._findUploaderInfoBySessionId = function _findUploaderInfoBySessionId(sessionId) {
@@ -307,7 +307,7 @@ var FileManagerFileUploader = /*#__PURE__*/function (_Widget) {
   };
   _proto._raiseUploadSessionStarted = function _raiseUploadSessionStarted(sessionInfo) {
     this._actions.onUploadSessionStarted({
-      sessionInfo: sessionInfo
+      sessionInfo
     });
   };
   _proto._raiseUploadProgress = function _raiseUploadProgress(args) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/circular_gauge.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -155,13 +155,13 @@ export interface dxCircularGaugeOptions extends BaseGaugeOptions<dxCircularGauge
      * @type object
      * @public
      */
-    rangeContainer?: dxCircularGaugeRangeContainer;
+    rangeContainer?: RangeContainer;
     /**
      * @docid
      * @type object
      * @public
      */
-    scale?: dxCircularGaugeScale;
+    scale?: Scale;
     /**
      * @docid
      * @inheritAll
@@ -176,10 +176,10 @@ export interface dxCircularGaugeOptions extends BaseGaugeOptions<dxCircularGauge
     valueIndicator?: GaugeIndicator;
 }
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxCircularGaugeRangeContainer
  */
-export interface dxCircularGaugeRangeContainer extends BaseGaugeRangeContainer {
+export type RangeContainer = BaseGaugeRangeContainer & {
     /**
      * @docid dxCircularGaugeOptions.rangeContainer.orientation
      * @default 'outside'
@@ -192,30 +192,30 @@ export interface dxCircularGaugeRangeContainer extends BaseGaugeRangeContainer {
      * @public
      */
     width?: number;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxCircularGaugeScale
  */
-export interface dxCircularGaugeScale extends BaseGaugeScale {
+export type Scale = BaseGaugeScale & {
     /**
      * @docid dxCircularGaugeOptions.scale.label
      * @type object
      * @public
      */
-    label?: dxCircularGaugeScaleLabel;
+    label?: ScaleLabel;
     /**
      * @docid dxCircularGaugeOptions.scale.orientation
      * @default 'outside'
      * @public
      */
     orientation?: CircularGaugeElementOrientation;
-}
+};
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxCircularGaugeScaleLabel
  */
-export interface dxCircularGaugeScaleLabel extends BaseGaugeScaleLabel {
+export type ScaleLabel = BaseGaugeScaleLabel & {
     /**
      * @docid dxCircularGaugeOptions.scale.label.hideFirstOrLast
      * @default 'last'
@@ -228,7 +228,7 @@ export interface dxCircularGaugeScaleLabel extends BaseGaugeScaleLabel {
      * @public
      */
     indentFromTick?: number;
-}
+};
 /**
  * @docid
  * @inherits BaseGauge
@@ -242,5 +242,18 @@ export type Properties = dxCircularGaugeOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxCircularGaugeOptions;
+
+// #region deprecated in v23.1
+
+/** @deprecated Use RangeContainer instead */
+export type dxCircularGaugeRangeContainer = RangeContainer;
+
+/** @deprecated Use Scale instead */
+export type dxCircularGaugeScale = Scale;
+
+/** @deprecated Use ScaleLabel instead */
+export type dxCircularGaugeScaleLabel = ScaleLabel;
+
+// #endregion
 
 

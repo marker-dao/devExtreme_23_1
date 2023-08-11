@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/diagram.commands_manager.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -666,7 +666,7 @@ var DiagramCommandsManager = {
   _getDefaultContextMenuCommands: function _getDefaultContextMenuCommands(allCommands) {
     return this._defaultContextMenuCommands || (this._defaultContextMenuCommands = [allCommands['cut'], allCommands['copy'], allCommands['paste'], allCommands['delete'], allCommands['separator'], allCommands['selectAll'], allCommands['separator'], allCommands['bringToFront'], allCommands['sendToBack'], allCommands['separator'], allCommands['lock'], allCommands['unlock'], allCommands['separator'], allCommands['insertShapeImage'], allCommands['editShapeImage'], allCommands['deleteShapeImage']]);
   },
-  _getPreparedCommands: function _getPreparedCommands(allCommands, commands) {
+  _getPreparedCommands(allCommands, commands) {
     var _this3 = this;
     return commands.map(function (c) {
       if (c.widget && c.widget === SEPARATOR) {
@@ -707,7 +707,7 @@ var DiagramCommandsManager = {
       return c;
     });
   },
-  _prepareContextMenuCommands: function _prepareContextMenuCommands(commands, excludeCommands, rootCommand) {
+  _prepareContextMenuCommands(commands, excludeCommands, rootCommand) {
     var _this4 = this;
     var beginGroup = false;
     return commands.map(function (c) {
@@ -726,7 +726,7 @@ var DiagramCommandsManager = {
       return c;
     });
   },
-  _prepareToolbarCommands: function _prepareToolbarCommands(commands, excludeCommands) {
+  _prepareToolbarCommands(commands, excludeCommands) {
     var _this5 = this;
     return commands.map(function (c) {
       if (_this5._isValidCommand(c, excludeCommands)) {
@@ -741,18 +741,18 @@ var DiagramCommandsManager = {
       return c;
     });
   },
-  _cloneCommand: function _cloneCommand(c, excludeCommands) {
+  _cloneCommand(c, excludeCommands) {
     var command = (0, _extend.extend)({}, c);
     if (Array.isArray(c.items)) {
       command.items = this._prepareContextMenuCommands(c.items, excludeCommands, command);
     }
     return command;
   },
-  _isValidCommand: function _isValidCommand(c, excludeCommands) {
+  _isValidCommand(c, excludeCommands) {
     excludeCommands = excludeCommands || [];
     return excludeCommands.indexOf(c.command) === -1;
   },
-  _exportTo: function _exportTo(widget, dataURI, format, mimeString) {
+  _exportTo(widget, dataURI, format, mimeString) {
     var window = (0, _window.getWindow)();
     if (window && window.atob && (0, _type.isFunction)(window.Blob)) {
       var blob = this._getBlobByDataURI(window, dataURI, mimeString);
@@ -760,7 +760,7 @@ var DiagramCommandsManager = {
       _file_saver.fileSaver.saveAs(options.fileName || 'foo', format, blob);
     }
   },
-  _getBlobByDataURI: function _getBlobByDataURI(window, dataURI, mimeString) {
+  _getBlobByDataURI(window, dataURI, mimeString) {
     var byteString = window.atob(dataURI.split(',')[1]);
     var ia = new Uint8Array(byteString.length);
     for (var i = 0; i < byteString.length; i++) {

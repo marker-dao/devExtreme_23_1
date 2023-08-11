@@ -32,8 +32,11 @@ class Submenu extends ContextMenu {
     this.$contentDelimiter = $('<div>').appendTo(this._itemContainer()).addClass(DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS);
   }
   _getOverlayOptions() {
-    return extend(super._getOverlayOptions(), {
-      onPositioned: this._overlayPositionedActionHandler.bind(this)
+    return extend(true, super._getOverlayOptions(), {
+      onPositioned: this._overlayPositionedActionHandler.bind(this),
+      position: {
+        precise: true
+      }
     });
   }
   _overlayPositionedActionHandler(arg) {
@@ -82,9 +85,10 @@ class Submenu extends ContextMenu {
       return;
     }
     var $submenu = this._itemContainer().children(".".concat(DX_SUBMENU_CLASS)).eq(0);
-    var $rootItem = this.option('position').of;
+    var $rootItem = this.option('position').of.find('.dx-context-menu-container-border');
     var position = {
-      of: $submenu
+      of: $submenu,
+      precise: true
     };
     var containerOffset = arg.position;
     var vLocation = containerOffset.v.location;
@@ -97,42 +101,42 @@ class Submenu extends ContextMenu {
     var submenuWidth = getWidth($submenu);
     var submenuHeight = getHeight($submenu);
     this.$contentDelimiter.css('display', 'block');
-    setWidth(this.$contentDelimiter, this._isMenuHorizontal() ? rootWidth < submenuWidth ? rootWidth - 2 : submenuWidth : 2);
-    setHeight(this.$contentDelimiter, this._isMenuHorizontal() ? 2 : rootHeight < submenuHeight ? rootHeight - 2 : submenuHeight);
+    setWidth(this.$contentDelimiter, this._isMenuHorizontal() ? rootWidth < submenuWidth ? rootWidth : submenuWidth : 3);
+    setHeight(this.$contentDelimiter, this._isMenuHorizontal() ? 3 : rootHeight < submenuHeight ? rootHeight : submenuHeight);
     if (this._isMenuHorizontal()) {
       if (vLocation > offsetTop) {
         if (Math.round(hLocation) === offsetLeft) {
-          position.offset = '1 -1';
+          position.offset = '0 -2.5';
           position.at = position.my = 'left top';
         } else {
-          position.offset = '-1 -1';
+          position.offset = '0 -2.5';
           position.at = position.my = 'right top';
         }
       } else {
         setHeight(this.$contentDelimiter, 5);
         if (Math.round(hLocation) === offsetLeft) {
-          position.offset = '1 4';
+          position.offset = '0 5';
           position.at = position.my = 'left bottom';
         } else {
-          position.offset = '-1 2';
+          position.offset = '0 5';
           position.at = position.my = 'right bottom';
         }
       }
     } else {
       if (hLocation > offsetLeft) {
         if (Math.round(vLocation) === offsetTop) {
-          position.offset = '-1 1';
+          position.offset = '-2.5 0';
           position.at = position.my = 'left top';
         } else {
-          position.offset = '-1 -1';
+          position.offset = '-2.5 0';
           position.at = position.my = 'left bottom';
         }
       } else {
         if (Math.round(vLocation) === offsetTop) {
-          position.offset = '1 1';
+          position.offset = '2.5 0';
           position.at = position.my = 'right top';
         } else {
-          position.offset = '1 -1';
+          position.offset = '2.5 0';
           position.at = position.my = 'right bottom';
         }
       }

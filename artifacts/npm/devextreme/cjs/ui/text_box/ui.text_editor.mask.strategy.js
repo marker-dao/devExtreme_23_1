@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.mask.strategy.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -108,7 +108,7 @@ var MaskStrategy = /*#__PURE__*/function () {
       this.editor.setBackwardDirection();
       this._updateEditorMask({
         start: caret.start,
-        length: length,
+        length,
         text: getEmptyString(length)
       });
     }
@@ -121,7 +121,7 @@ var MaskStrategy = /*#__PURE__*/function () {
     var hasValidChars = this._updateEditorMask({
       start: (_this$_prevCaret$star = (_this$_prevCaret3 = this._prevCaret) === null || _this$_prevCaret3 === void 0 ? void 0 : _this$_prevCaret3.start) !== null && _this$_prevCaret$star !== void 0 ? _this$_prevCaret$star : 0,
       length: text.length || 1,
-      text: text
+      text
     });
     if (!hasValidChars) {
       this._editorCaret(this._prevCaret);

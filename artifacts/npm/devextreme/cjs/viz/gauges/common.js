@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/gauges/common.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -73,7 +73,7 @@ var dxGauge = _base_gauge.BaseGauge.inherit({
       axisType: that._scaleTypes.type,
       drawingType: that._scaleTypes.drawingType,
       widgetClass: 'dxg',
-      getTemplate: function getTemplate() {}
+      getTemplate() {}
     });
   },
   _disposeCore: function _disposeCore() {

@@ -61,11 +61,7 @@ var Tooltip = Popover.inherit({
   },
   _renderContent: function _renderContent() {
     this.callBase();
-    this._contentId = 'dx-' + new Guid();
-    this.$overlayContent().attr({
-      'id': this._contentId
-    });
-    this._toggleAriaDescription(true);
+    this._toggleAriaAttributes();
   },
   _toggleAriaDescription: function _toggleAriaDescription(showing) {
     var $target = $(this.option('target'));
@@ -73,6 +69,13 @@ var Tooltip = Popover.inherit({
     if (!isWindow($target.get(0))) {
       this.setAria('describedby', label, $target);
     }
+  },
+  _toggleAriaAttributes: function _toggleAriaAttributes() {
+    this._contentId = "dx-".concat(new Guid());
+    this.$overlayContent().attr({
+      'id': this._contentId
+    });
+    this._toggleAriaDescription(true);
   }
 });
 registerComponent('dxTooltip', Tooltip);

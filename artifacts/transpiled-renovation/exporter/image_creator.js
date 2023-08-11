@@ -649,7 +649,7 @@ function convertSvgToCanvas(svg, canvas, rootAppended) {
     filters: {},
     linearGradients: {},
     radialGradients: {},
-    rootAppended: rootAppended
+    rootAppended
   });
 }
 function getCanvasFromSvg(markup, _ref4) {
@@ -717,7 +717,7 @@ var imageCreator = {
   _getBase64: function _getBase64(binaryData) {
     return window.btoa(binaryData);
   },
-  _createCanvas: function _createCanvas(width, height, margin) {
+  _createCanvas(width, height, margin) {
     var canvas = (0, _renderer.default)('<canvas>')[0];
     canvas.width = width + margin * 2;
     canvas.height = height + margin * 2;
@@ -747,7 +747,7 @@ function testFormats(formats) {
 function calcScaledInfo(width, height) {
   var pixelRatio = window.devicePixelRatio || 1;
   return {
-    pixelRatio: pixelRatio,
+    pixelRatio,
     width: width * pixelRatio,
     height: height * pixelRatio
   };

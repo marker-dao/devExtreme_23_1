@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/filter_builder/between.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ var FILTER_BUILDER_RANGE_CLASS = 'dx-filterbuilder-range';
 var FILTER_BUILDER_RANGE_START_CLASS = FILTER_BUILDER_RANGE_CLASS + '-start';
 var FILTER_BUILDER_RANGE_END_CLASS = FILTER_BUILDER_RANGE_CLASS + '-end';
 var FILTER_BUILDER_RANGE_SEPARATOR_CLASS = FILTER_BUILDER_RANGE_CLASS + '-separator';
-var SEPARATOR = "\u2013";
+var SEPARATOR = '\u2013';
 function editorTemplate(conditionInfo, container) {
   var $editorStart = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_START_CLASS);
   var $editorEnd = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_END_CLASS);

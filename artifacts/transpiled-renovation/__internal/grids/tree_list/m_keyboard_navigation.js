@@ -9,7 +9,7 @@ _m_core.default.registerModule('keyboardNavigation', (0, _extend.extend)(true, {
     controllers: {
       keyboardNavigation: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _leftRightKeysHandler: function _leftRightKeysHandler(eventArgs, isEditing) {
+        _leftRightKeysHandler(eventArgs, isEditing) {
           var rowIndex = this.getVisibleRowIndex();
           var dataController = this._dataController;
           if (eventArgs.ctrl) {

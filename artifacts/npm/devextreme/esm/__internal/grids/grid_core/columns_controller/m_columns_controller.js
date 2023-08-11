@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/columns_controller/m_columns_controller.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,7 +28,7 @@ import filterUtils from '../../../../ui/shared/filtering';
 import errors from '../../../../ui/widget/ui.errors';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
-import { COLUMN_CHOOSER_LOCATION, COLUMN_OPTION_REGEXP, COMMAND_EXPAND_CLASS, DATATYPE_OPERATIONS, GROUP_COMMAND_COLUMN_NAME, GROUP_LOCATION, MAX_SAFE_INTEGER, USER_STATE_FIELD_NAMES } from './const';
+import { COLUMN_CHOOSER_LOCATION, COLUMN_OPTION_REGEXP, COMMAND_EXPAND_CLASS, DATATYPE_OPERATIONS, DETAIL_COMMAND_COLUMN_NAME, GROUP_COMMAND_COLUMN_NAME, GROUP_LOCATION, MAX_SAFE_INTEGER, USER_STATE_FIELD_NAMES } from './const';
 import { addExpandColumn, applyUserState, assignColumns, columnOptionCore, convertOwnerBandToColumnReference, createColumn, createColumnsFromDataSource, createColumnsFromOptions, defaultSetCellValue, digitsCount, findColumn, fireColumnsChanged, getAlignmentByDataType, getChildrenByBandColumn, getColumnByIndexes, getColumnIndexByVisibleIndex, getCustomizeTextByDataType, getDataColumns, getFixedPosition, getParentBandColumns, getRowCount, getSerializationFormat, getValueDataType, isColumnFixed, isCustomCommandColumn, isSortOrderValid, mergeColumns, moveColumnToGroup, numberToString, processBandColumns, processExpandColumns, resetBandColumnsCache, resetColumnsCache, setFilterOperationsAsDefaultValues, sortColumns, strictParseNumber, updateColumnChanges, updateColumnGroupIndexes, updateIndexes, updateSerializers } from './m_columns_controller_utils';
 export class ColumnsController extends modules.Controller {
   _getExpandColumnOptions() {
@@ -472,93 +472,124 @@ export class ColumnsController extends modules.Controller {
   _isColumnVisible(column) {
     return column.visible && this.isParentColumnVisible(column.index);
   }
+  _isColumnInGroupPanel(column) {
+    return isDefined(column.groupIndex) && !column.showWhenGrouped;
+  }
+  hasVisibleDataColumns() {
+    var columns = this._columns;
+    return columns.some(column => {
+      var isVisible = this._isColumnVisible(column);
+      var isInGroupPanel = this._isColumnInGroupPanel(column);
+      var isCommand = !!column.command;
+      return isVisible && !isInGroupPanel && !isCommand;
+    });
+  }
   _compileVisibleColumnsCore() {
-    var that = this;
-    var i;
-    var result = [];
-    var rowspanGroupColumns = 0;
-    var rowspanExpandColumns = 0;
-    var rowCount = that.getRowCount();
+    var bandColumnsCache = this.getBandColumnsCache();
+    var columns = mergeColumns(this, this._columns, this._commandColumns, true);
+    processBandColumns(this, columns, bandColumnsCache);
+    var indexedColumns = this._getIndexedColumns(columns);
+    var visibleColumns = this._getVisibleColumnsFromIndexed(indexedColumns);
+    var isDataColumnsInvisible = !this.hasVisibleDataColumns();
+    if (isDataColumnsInvisible && this._columns.length) {
+      visibleColumns[visibleColumns.length - 1].push({
+        command: 'empty'
+      });
+    }
+    return visibleColumns;
+  }
+  _getIndexedColumns(columns) {
+    var rtlEnabled = this.option('rtlEnabled');
+    var rowCount = this.getRowCount();
+    var columnDigitsCount = digitsCount(columns.length);
+    var bandColumnsCache = this.getBandColumnsCache();
     var positiveIndexedColumns = [];
     var negativeIndexedColumns = [];
-    var notGroupedColumnsCount = 0;
-    var isFixedToEnd;
-    var rtlEnabled = that.option('rtlEnabled');
-    var bandColumnsCache = that.getBandColumnsCache();
-    var expandColumns = mergeColumns(that, that.getExpandColumns(), that._columns);
-    var columns = mergeColumns(that, that._columns, that._commandColumns, true);
-    var columnDigitsCount = digitsCount(columns.length);
-    processBandColumns(that, columns, bandColumnsCache);
-    for (i = 0; i < rowCount; i++) {
-      result[i] = [];
+    for (var i = 0; i < rowCount; i += 1) {
       negativeIndexedColumns[i] = [{}];
+      // 0 - fixed columns on the left side
+      // 1 - not fixed columns
+      // 2 - fixed columns on the right side
       positiveIndexedColumns[i] = [{}, {}, {}];
     }
-    each(columns, function () {
-      var column = this;
+    columns.forEach(column => {
+      var _a, _b, _c, _d;
       var {
         visibleIndex
       } = column;
       var indexedColumns;
       var parentBandColumns = getParentBandColumns(column.index, bandColumnsCache.columnParentByIndex);
-      var visible = that._isColumnVisible(column);
-      if (visible && (!isDefined(column.groupIndex) || column.showWhenGrouped)) {
+      var isVisible = this._isColumnVisible(column);
+      var isInGroupPanel = this._isColumnInGroupPanel(column);
+      if (isVisible && !isInGroupPanel) {
         var rowIndex = parentBandColumns.length;
         if (visibleIndex < 0) {
           visibleIndex = -visibleIndex;
           indexedColumns = negativeIndexedColumns[rowIndex];
         } else {
-          column.fixed = parentBandColumns.length ? parentBandColumns[0].fixed : column.fixed;
-          column.fixedPosition = parentBandColumns.length ? parentBandColumns[0].fixedPosition : column.fixedPosition;
+          column.fixed = (_b = (_a = parentBandColumns[0]) === null || _a === void 0 ? void 0 : _a.fixed) !== null && _b !== void 0 ? _b : column.fixed;
+          column.fixedPosition = (_d = (_c = parentBandColumns[0]) === null || _c === void 0 ? void 0 : _c.fixedPosition) !== null && _d !== void 0 ? _d : column.fixedPosition;
           if (column.fixed) {
-            isFixedToEnd = column.fixedPosition === 'right';
-            if (rtlEnabled && (!column.command || isCustomCommandColumn(that, column))) {
+            var isDefaultCommandColumn = !!column.command && !isCustomCommandColumn(this, column);
+            var isFixedToEnd = column.fixedPosition === 'right';
+            if (rtlEnabled && !isDefaultCommandColumn) {
               isFixedToEnd = !isFixedToEnd;
             }
-            if (isFixedToEnd) {
-              indexedColumns = positiveIndexedColumns[rowIndex][2];
-            } else {
-              indexedColumns = positiveIndexedColumns[rowIndex][0];
-            }
+            indexedColumns = isFixedToEnd ? positiveIndexedColumns[rowIndex][2] : positiveIndexedColumns[rowIndex][0];
           } else {
             indexedColumns = positiveIndexedColumns[rowIndex][1];
           }
         }
         if (parentBandColumns.length) {
           visibleIndex = numberToString(visibleIndex, columnDigitsCount);
-          for (i = parentBandColumns.length - 1; i >= 0; i--) {
-            visibleIndex = numberToString(parentBandColumns[i].visibleIndex, columnDigitsCount) + visibleIndex;
+          for (var _i = parentBandColumns.length - 1; _i >= 0; _i -= 1) {
+            visibleIndex = numberToString(parentBandColumns[_i].visibleIndex, columnDigitsCount) + visibleIndex;
           }
         }
         indexedColumns[visibleIndex] = indexedColumns[visibleIndex] || [];
         indexedColumns[visibleIndex].push(column);
-        notGroupedColumnsCount++;
       }
     });
-    each(result, rowIndex => {
+    return {
+      positiveIndexedColumns,
+      negativeIndexedColumns
+    };
+  }
+  _getVisibleColumnsFromIndexed(_ref) {
+    var _this = this;
+    var {
+      positiveIndexedColumns,
+      negativeIndexedColumns
+    } = _ref;
+    var result = [];
+    var rowCount = this.getRowCount();
+    var expandColumns = mergeColumns(this, this.getExpandColumns(), this._columns);
+    var rowspanGroupColumns = 0;
+    var rowspanExpandColumns = 0;
+    var _loop = function _loop(rowIndex) {
+      result.push([]);
       orderEach(negativeIndexedColumns[rowIndex], (_, columns) => {
         result[rowIndex].unshift.apply(result[rowIndex], columns);
       });
       var firstPositiveIndexColumn = result[rowIndex].length;
-      each(positiveIndexedColumns[rowIndex], (index, columnsByFixing) => {
+      var positiveIndexedRowColumns = positiveIndexedColumns[rowIndex];
+      positiveIndexedRowColumns.forEach(columnsByFixing => {
         orderEach(columnsByFixing, (_, columnsByVisibleIndex) => {
           result[rowIndex].push.apply(result[rowIndex], columnsByVisibleIndex);
         });
       });
       // The order of processing is important
-      if (rowspanExpandColumns < rowIndex + 1) {
-        rowspanExpandColumns += processExpandColumns.call(that, result[rowIndex], expandColumns, 'detailExpand', firstPositiveIndexColumn);
+      if (rowspanExpandColumns <= rowIndex) {
+        rowspanExpandColumns += processExpandColumns.call(_this, result[rowIndex], expandColumns, DETAIL_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
-      if (rowspanGroupColumns < rowIndex + 1) {
-        rowspanGroupColumns += processExpandColumns.call(that, result[rowIndex], expandColumns, GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
+      if (rowspanGroupColumns <= rowIndex) {
+        rowspanGroupColumns += processExpandColumns.call(_this, result[rowIndex], expandColumns, GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
-    });
-    result.push(getDataColumns(result));
-    if (!notGroupedColumnsCount && that._columns.length) {
-      result[rowCount].push({
-        command: 'empty'
-      });
+    };
+    for (var rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
+      _loop(rowIndex);
     }
+    result.push(getDataColumns(result));
     return result;
   }
   getInvisibleColumns(columns, bandColumnIndex) {
@@ -995,9 +1026,6 @@ export class ColumnsController extends modules.Controller {
         assignColumns(that, createColumnsFromOptions(that, that._columns));
       }
       if ((fromDataSource || !columnsGroupParameters && !that._hasUserState) && (groupingChanged || groupExpandingChanged)) {
-        /// #DEBUG
-        that.__groupingUpdated = true;
-        /// #ENDDEBUG
         updateSortGroupParameterIndexes(that._columns, groupParameters, 'groupIndex');
         if (fromDataSource) {
           groupingChanged && updateColumnChanges(that, 'grouping');
@@ -1006,9 +1034,6 @@ export class ColumnsController extends modules.Controller {
         }
       }
       if ((fromDataSource || !columnsSortParameters && !that._hasUserState) && !gridCoreUtils.equalSortParameters(sortParameters, columnsSortParameters)) {
-        /// #DEBUG
-        that.__sortingUpdated = true;
-        /// #ENDDEBUG
         updateSortGroupParameterIndexes(that._columns, sortParameters, 'sortIndex');
         if (fromDataSource) {
           updateColumnChanges(that, 'sorting');

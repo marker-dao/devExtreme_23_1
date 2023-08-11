@@ -231,7 +231,7 @@ var Plaque = /*#__PURE__*/function () {
       var size = _this._size = {
         width: max(contentWidth, bBox.width) + options.paddingLeftRight * 2,
         height: max(contentHeight, bBox.height) + options.paddingTopBottom * 2,
-        offset: offset
+        offset
       };
       var xOff = shadowSettings.offsetX;
       var yOff = shadowSettings.offsetY;
@@ -242,10 +242,10 @@ var Plaque = /*#__PURE__*/function () {
       var bm = max(blur + yOff, 0); // bottom margin
 
       _this.margins = {
-        lm: lm,
-        rm: rm,
-        tm: tm,
-        bm: bm
+        lm,
+        rm,
+        tm,
+        bm
       };
       if (!(0, _type.isDefined)(x)) {
         if ((0, _type.isDefined)(offsetX)) {
@@ -303,7 +303,7 @@ var Plaque = /*#__PURE__*/function () {
     } else {
       return this.contentTemplate(_extends({
         group: this._contentGroup,
-        onRender: onRender
+        onRender
       }, restProps));
     }
     return true;

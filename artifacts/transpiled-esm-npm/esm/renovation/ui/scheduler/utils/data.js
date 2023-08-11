@@ -1,4 +1,4 @@
-import { replaceWrongEndDate } from '../../../../ui/scheduler/appointments/dataProvider/utils';
+import { replaceWrongEndDate } from '../../../../__internal/scheduler/appointments/data_provider/m_utils';
 import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
 import { isDefined } from '../../../../core/utils/type';
 var RECURRENCE_FREQ = 'freq';

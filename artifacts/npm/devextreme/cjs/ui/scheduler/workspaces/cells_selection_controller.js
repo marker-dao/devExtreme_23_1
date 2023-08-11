@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/cells_selection_controller.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,7 +41,7 @@ var CellsSelectionController = /*#__PURE__*/function () {
     }
     var currentCellData = getCellDataByPosition(nextCellIndices.rowIndex, nextCellIndices.columnIndex, isAllDayPanelCell);
     return this.moveToCell(_extends({}, options, {
-      currentCellData: currentCellData
+      currentCellData
     }));
   };
   _proto.getCellFromNextRowPosition = function getCellFromNextRowPosition(focusedCellPosition, direction, edgeIndices) {
@@ -51,7 +51,7 @@ var CellsSelectionController = /*#__PURE__*/function () {
     var nextRowIndex = rowIndex + deltaPosition;
     var validRowIndex = nextRowIndex >= 0 && nextRowIndex <= edgeIndices.lastRowIndex ? nextRowIndex : rowIndex;
     return {
-      columnIndex: columnIndex,
+      columnIndex,
       rowIndex: validRowIndex
     };
   };
@@ -78,18 +78,18 @@ var CellsSelectionController = /*#__PURE__*/function () {
     if (isValidColumnIndex) {
       return {
         columnIndex: nextColumnIndex,
-        rowIndex: rowIndex
+        rowIndex
       };
     }
     return (0, _base.isDateAndTimeView)(viewType) ? focusedCellPosition : this._processEdgeCell({
-      nextColumnIndex: nextColumnIndex,
-      rowIndex: rowIndex,
-      columnIndex: columnIndex,
-      firstColumnIndex: firstColumnIndex,
-      lastColumnIndex: lastColumnIndex,
-      firstRowIndex: firstRowIndex,
-      lastRowIndex: lastRowIndex,
-      step: step
+      nextColumnIndex,
+      rowIndex,
+      columnIndex,
+      firstColumnIndex,
+      lastColumnIndex,
+      firstRowIndex,
+      lastRowIndex,
+      step
     });
   };
   _proto._processEdgeCell = function _processEdgeCell(options) {

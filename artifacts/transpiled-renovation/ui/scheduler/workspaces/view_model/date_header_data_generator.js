@@ -46,7 +46,7 @@ var DateHeaderDataGenerator = /*#__PURE__*/function () {
     for (var dayIndex = 0; dayIndex < daysInView; dayIndex += 1) {
       var cell = completeViewDataMap[index][dayIndex * colSpan];
       weekDaysRow.push(_extends({}, cell, {
-        colSpan: colSpan,
+        colSpan,
         text: (0, _base.formatWeekdayAndDay)(cell.startDate),
         isFirstGroupCell: false,
         isLastGroupCell: false
@@ -74,12 +74,12 @@ var DateHeaderDataGenerator = /*#__PURE__*/function () {
     var colSpan = isGroupedByDate ? horizontalGroupCount : 1;
     var isVerticalGrouping = groupOrientation === 'vertical';
     var cellCountInGroupRow = this._viewDataGenerator.getCellCount({
-      intervalCount: intervalCount,
-      currentDate: currentDate,
-      viewType: viewType,
-      hoursInterval: hoursInterval,
-      startDayHour: startDayHour,
-      endDayHour: endDayHour
+      intervalCount,
+      currentDate,
+      viewType,
+      hoursInterval,
+      startDayHour,
+      endDayHour
     });
     var cellCountInDay = this._viewDataGenerator.getCellCountInDay(startDayHour, endDayHour, hoursInterval);
     var slicedByColumnsData = isGroupedByDate ? completeViewDataMap[index].filter(function (_, columnIndex) {
@@ -92,16 +92,16 @@ var DateHeaderDataGenerator = /*#__PURE__*/function () {
         isLastGroupCell = _ref.isLastGroupCell,
         restProps = _objectWithoutProperties(_ref, _excluded);
       var text = (0, _base.getHeaderCellText)(index % cellCountInGroupRow, startDate, headerCellTextFormat, getDateForHeaderText, {
-        interval: interval,
-        startViewDate: startViewDate,
-        startDayHour: startDayHour,
-        cellCountInDay: cellCountInDay
+        interval,
+        startViewDate,
+        startDayHour,
+        cellCountInDay
       });
       return _extends({}, restProps, {
-        startDate: startDate,
-        text: text,
+        startDate,
+        text,
         today: _date.default.sameDate(startDate, today),
-        colSpan: colSpan,
+        colSpan,
         isFirstGroupCell: isGroupedByDate || isFirstGroupCell && !isVerticalGrouping,
         isLastGroupCell: isGroupedByDate || isLastGroupCell && !isVerticalGrouping
       });
@@ -125,7 +125,7 @@ var DateHeaderDataGenerator = /*#__PURE__*/function () {
     var datesRowConfig = this._generateDateHeaderDataRow(options, completeDateHeaderMap, completeViewDataMap, 1, isGenerateWeekDaysHeaderData ? 1 : 0, validCellWidth);
     dataMap.push(datesRowConfig.dateRow);
     return {
-      dataMap: dataMap,
+      dataMap,
       leftVirtualCellWidth: isProvideVirtualCellsWidth ? datesRowConfig.leftVirtualCellWidth : undefined,
       rightVirtualCellWidth: isProvideVirtualCellsWidth ? datesRowConfig.rightVirtualCellWidth : undefined,
       leftVirtualCellCount: datesRowConfig.leftVirtualCellCount,
@@ -134,7 +134,7 @@ var DateHeaderDataGenerator = /*#__PURE__*/function () {
       weekDayRightVirtualCellWidth: weekDayRowConfig.rightVirtualCellWidth,
       weekDayLeftVirtualCellCount: weekDayRowConfig.leftVirtualCellCount,
       weekDayRightVirtualCellCount: weekDayRowConfig.rightVirtualCellCount,
-      isMonthDateHeader: isMonthDateHeader
+      isMonthDateHeader
     };
   };
   _proto._generateDateHeaderDataRow = function _generateDateHeaderDataRow(options, completeDateHeaderMap, completeViewDataMap, baseColSpan, rowIndex, cellWidth) {
@@ -156,7 +156,7 @@ var DateHeaderDataGenerator = /*#__PURE__*/function () {
     var finalRightVirtualCellCount = totalCellCount - actualCellCount * colSpan;
     var finalRightVirtualCellWidth = finalRightVirtualCellCount * cellWidth;
     return {
-      dateRow: dateRow,
+      dateRow,
       leftVirtualCellCount: finalLeftVirtualCellCount,
       leftVirtualCellWidth: isProvideVirtualCellsWidth ? finalLeftVirtualCellWidth : undefined,
       rightVirtualCellCount: finalRightVirtualCellCount,

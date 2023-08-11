@@ -100,7 +100,7 @@ var MaskStrategy = /*#__PURE__*/function () {
       this.editor.setBackwardDirection();
       this._updateEditorMask({
         start: caret.start,
-        length: length,
+        length,
         text: getEmptyString(length)
       });
     }
@@ -113,7 +113,7 @@ var MaskStrategy = /*#__PURE__*/function () {
     var hasValidChars = this._updateEditorMask({
       start: (_this$_prevCaret$star = (_this$_prevCaret3 = this._prevCaret) === null || _this$_prevCaret3 === void 0 ? void 0 : _this$_prevCaret3.start) !== null && _this$_prevCaret$star !== void 0 ? _this$_prevCaret$star : 0,
       length: text.length || 1,
-      text: text
+      text
     });
     if (!hasValidChars) {
       this._editorCaret(this._prevCaret);

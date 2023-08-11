@@ -13,7 +13,7 @@ var _map_layer = require("./map_layer");
 var _tooltip_viewer = require("./tooltip_viewer");
 var _vector_map = require("./vector_map.utils");
 require("./projection");
-var _base_widget = _interopRequireDefault(require("../core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _export = require("../core/export");
 var _title = require("../core/title");
@@ -28,7 +28,7 @@ var RE_ENDS_DATA_SOURCE = /\.dataSource$/;
 function mergeBounds(sumBounds, dataBounds) {
   return dataBounds ? [Math.min(dataBounds[0], dataBounds[2], sumBounds[0]), Math.min(dataBounds[1], dataBounds[3], sumBounds[3]), Math.max(dataBounds[0], dataBounds[2], sumBounds[2]), Math.max(dataBounds[1], dataBounds[3], sumBounds[1])] : sumBounds;
 }
-var dxVectorMap = _base_widget.default.inherit({
+var dxVectorMap = _m_base_widget.default.inherit({
   _eventsMap: {
     'onClick': {
       name: 'click'
@@ -63,7 +63,7 @@ var dxVectorMap = _base_widget.default.inherit({
       tooltip: that._tooltip,
       notifyDirty: that._notifyDirty,
       notifyReady: that._notifyReady,
-      dataReady: function dataReady() {
+      dataReady() {
         var bounds;
         if (that.option('getBoundsFromData') && !that.option('bounds')) {
           that._preventProjectionEvents();
@@ -77,10 +77,10 @@ var dxVectorMap = _base_widget.default.inherit({
             var longitudeLength = bounds[2] - bounds[0];
             var latitudeLength = bounds[1] - bounds[3];
             that._projection.setEngine({
-              to: function to(coordinates) {
+              to(coordinates) {
                 return [(coordinates[0] - bounds[0]) * 2 / longitudeLength - 1, (coordinates[1] - bounds[3]) * 2 / latitudeLength - 1];
               },
-              from: function from(coordinates) {
+              from(coordinates) {
                 return [(coordinates[0] + 1) * longitudeLength / 2 + bounds[0], (coordinates[1] + 1) * latitudeLength / 2 + bounds[3]];
               }
             });
@@ -89,7 +89,7 @@ var dxVectorMap = _base_widget.default.inherit({
       }
     });
   },
-  _getBoundsFromData: function _getBoundsFromData() {
+  _getBoundsFromData() {
     var bounds = this._getBoundingBoxFromDataSource();
     if (!bounds) {
       var boundsByData = (0, _map_layer.getMaxBound)(this.getLayers().map(function (l) {
@@ -343,7 +343,7 @@ var dxVectorMap = _base_widget.default.inherit({
   _setLayerCollectionOptions: function _setLayerCollectionOptions() {
     this._layerCollection.setOptions(this.option('layers'));
   },
-  _getBoundingBoxFromDataSource: function _getBoundingBoxFromDataSource() {
+  _getBoundingBoxFromDataSource() {
     var that = this;
     var layers = that._layerCollection.items();
     var infinityBounds = [Infinity, -Infinity, -Infinity, Infinity];
@@ -376,7 +376,7 @@ var dxVectorMap = _base_widget.default.inherit({
       wheelEnabled: this._getOption('wheelEnabled', true)
     });
   },
-  getLayers: function getLayers() {
+  getLayers() {
     return this._layerCollection.items().map(function (l) {
       return l.proxy;
     });

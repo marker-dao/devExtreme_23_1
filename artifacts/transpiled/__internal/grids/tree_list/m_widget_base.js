@@ -29,7 +29,7 @@ var TREELIST_CLASS = 'dx-treelist';
 _m_core.default.registerModulesOrder(['stateStoring', 'columns', 'selection', 'editorFactory', 'columnChooser', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'editing', 'grouping', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'gridView']);
 var TreeList = _ui.default.inherit({
   _activeStateUnit: DATAGRID_ROW_SELECTOR,
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions() {
     var that = this;
     var result = that.callBase();
     (0, _iterator.each)(_m_core.default.modules, function () {
@@ -39,7 +39,7 @@ var TreeList = _ui.default.inherit({
     });
     return result;
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
+  _setDeprecatedOptions() {
     this.callBase();
     (0, _extend.extend)(this._deprecatedOptions, {
       'columnChooser.allowSearch': {
@@ -52,9 +52,9 @@ var TreeList = _ui.default.inherit({
       }
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules() {
     return this.callBase().concat([{
-      device: function device() {
+      device() {
         // @ts-expect-error
         return (0, _themes.isMaterial)();
       },
@@ -70,7 +70,7 @@ var TreeList = _ui.default.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init() {
     var that = this;
     that.callBase();
     if (!this.option('_disableDeprecationWarnings')) {
@@ -80,60 +80,60 @@ var TreeList = _ui.default.inherit({
     callModuleItemsMethod(that, 'init');
   },
   _clean: _common.noop,
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged(args) {
     var that = this;
     callModuleItemsMethod(that, 'optionChanged', [args]);
     if (!args.handled) {
       that.callBase(args);
     }
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged() {
     this.updateDimensions(true);
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged(visible) {
     if (visible) {
       this.updateDimensions();
     }
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup() {
     this.callBase.apply(this, arguments);
     this.$element().addClass(TREELIST_CLASS);
     this.getView('gridView').render(this.$element());
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl() {
     this.getView('gridView').update();
   },
-  _renderContent: function _renderContent() {
+  _renderContent() {
     var that = this;
     (0, _common.deferRender)(function () {
       that._renderContentImpl();
     });
   },
-  _dispose: function _dispose() {
+  _dispose() {
     var that = this;
     that.callBase();
     callModuleItemsMethod(that, 'dispose');
   },
-  isReady: function isReady() {
+  isReady() {
     return this.getController('data').isReady();
   },
-  beginUpdate: function beginUpdate() {
+  beginUpdate() {
     var that = this;
     that.callBase();
     callModuleItemsMethod(that, 'beginUpdate');
   },
-  endUpdate: function endUpdate() {
+  endUpdate() {
     var that = this;
     callModuleItemsMethod(that, 'endUpdate');
     that.callBase();
   },
-  getController: function getController(name) {
+  getController(name) {
     return this._controllers[name];
   },
-  getView: function getView(name) {
+  getView(name) {
     return this._views[name];
   },
-  focus: function focus(element) {
+  focus(element) {
     this.callBase();
     if ((0, _type.isDefined)(element)) {
       this.getController('keyboardNavigation').focus(element);

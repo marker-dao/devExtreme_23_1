@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/color_box/color_box.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,6 @@ var _color_view = _interopRequireDefault(require("./color_view"));
 var _extend = require("../../core/utils/extend");
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _ui = _interopRequireDefault(require("../drop_down_editor/ui.drop_down_editor"));
-var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE colorBox
 
@@ -145,16 +144,10 @@ var ColorBox = _ui.default.inherit({
     var $colorView = (0, _renderer.default)('<div>').appendTo(this._popup.$content());
     this._colorView = this._createComponent($colorView, _color_view.default, this._colorViewConfig());
     this._colorView.registerKeyHandler('escape', this._escapeHandler.bind(this));
-    _events_engine.default.on($colorView, 'focus', function () {
-      this.focus();
-    }.bind(this));
   },
   _escapeHandler: function _escapeHandler() {
     this.close();
     this.focus();
-  },
-  _getFirstPopupElement: function _getFirstPopupElement() {
-    return (0, _renderer.default)(this._colorView._rgbInputs[0].element()).find('input');
   },
   _applyNewColor: function _applyNewColor(value) {
     this.option('value', value);
@@ -175,7 +168,7 @@ var ColorBox = _ui.default.inherit({
       applyValueMode: that.option('applyValueMode'),
       focusStateEnabled: that.option('focusStateEnabled'),
       stylingMode: this.option('stylingMode'),
-      ariaId: this._ariaId,
+      target: this._input(),
       onEnterKeyPressed: function onEnterKeyPressed(_ref) {
         var event = _ref.event;
         that._colorViewEnterKeyPressed = true;
@@ -239,7 +232,7 @@ var ColorBox = _ui.default.inherit({
     this._resetInputValue();
     this.callBase();
   },
-  _getKeyboardListeners: function _getKeyboardListeners() {
+  _getKeyboardListeners() {
     return this.callBase().concat([this._colorView]);
   },
   _init: function _init() {
@@ -251,8 +244,6 @@ var ColorBox = _ui.default.inherit({
   },
   _renderInput: function _renderInput() {
     this.callBase();
-    this._ariaId = "dx-".concat(new _guid.default());
-    this.setAria('activedescendant', this._ariaId);
     this._input().addClass(COLOR_BOX_INPUT_CLASS);
     this._renderColorPreview();
   },

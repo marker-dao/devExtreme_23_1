@@ -103,7 +103,8 @@ var HeaderPanelSortingExtender = extend({}, sortingMixin, {
       column: {
         alignment: that.option('rtlEnabled') ? 'right' : 'left',
         allowSorting: groupColumn.allowSorting,
-        sortOrder: groupColumn.sortOrder === 'desc' ? 'desc' : 'asc'
+        sortOrder: groupColumn.sortOrder === 'desc' ? 'desc' : 'asc',
+        isGrouped: true
       },
       showColumnLines: true
     });

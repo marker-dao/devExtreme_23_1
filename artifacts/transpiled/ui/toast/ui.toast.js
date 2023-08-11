@@ -128,23 +128,23 @@ var Toast = _ui.default.inherit({
       animation: tabletAndMobileAnimation
     };
     return this.callBase().concat([{
-      device: function device(_device) {
-        return _device.deviceType === 'phone';
+      device(device) {
+        return device.deviceType === 'phone';
       },
       options: _extends({
         width: "calc(100vw - ".concat(DEFAULT_MARGIN * 2, "px)")
       }, tabletAndMobileCommonOptions)
     }, {
-      device: function device(_device2) {
-        return _device2.deviceType === 'tablet';
+      device(device) {
+        return device.deviceType === 'tablet';
       },
       options: _extends({
         width: 'auto',
         maxWidth: '80vw'
       }, tabletAndMobileCommonOptions)
     }, {
-      device: function device(_device3) {
-        return (0, _themes.isMaterial)() && _device3.deviceType === 'desktop';
+      device(device) {
+        return (0, _themes.isMaterial)() && device.deviceType === 'desktop';
       },
       options: {
         minWidth: 344,

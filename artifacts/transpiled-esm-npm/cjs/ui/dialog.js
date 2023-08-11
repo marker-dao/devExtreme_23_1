@@ -134,7 +134,7 @@ var custom = function custom(options) {
       var isPortrait = (0, _size.getHeight)(window) > (0, _size.getWidth)(window);
       var width = isPortrait ? '90%' : '60%';
       popupInstance.option({
-        width: width
+        width
       });
     }
     popupInstance.show();
@@ -154,9 +154,9 @@ var alert = function alert(messageHtml) {
   var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var showTitle = arguments.length > 2 ? arguments[2] : undefined;
   var options = (0, _type.isPlainObject)(messageHtml) ? messageHtml : {
-    title: title,
-    messageHtml: messageHtml,
-    showTitle: showTitle,
+    title,
+    messageHtml,
+    showTitle,
     dragEnabled: showTitle
   };
   return custom(options).show();
@@ -166,9 +166,9 @@ var confirm = function confirm(messageHtml) {
   var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var showTitle = arguments.length > 2 ? arguments[2] : undefined;
   var options = (0, _type.isPlainObject)(messageHtml) ? messageHtml : {
-    title: title,
-    messageHtml: messageHtml,
-    showTitle: showTitle,
+    title,
+    messageHtml,
+    showTitle,
     buttons: [{
       text: _message.default.format('Yes'),
       onClick: function onClick() {

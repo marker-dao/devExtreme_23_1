@@ -60,7 +60,7 @@ function createColumnsInfo(info, startIndex, endIndex) {
       }
       if (colspan !== cellColspan) {
         cell = (0, _extend.extend)({}, cell, {
-          colspan: colspan
+          colspan
         });
       }
       newInfo[rowIndex].push(cell);

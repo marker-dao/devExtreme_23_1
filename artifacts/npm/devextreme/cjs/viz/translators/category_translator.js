@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/translators/category_translator.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,7 +141,7 @@ var _default = {
   },
   toValue: getValue,
   isValueProlonged: true,
-  getRangeByMinZoomValue: function getRangeByMinZoomValue(minZoom, visualRange) {
+  getRangeByMinZoomValue(minZoom, visualRange) {
     var categories = this._categories;
     var minVisibleIndex = categories.indexOf(visualRange.minVisible);
     var maxVisibleIndex = categories.indexOf(visualRange.maxVisible);

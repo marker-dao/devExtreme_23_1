@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ro.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -141,6 +141,9 @@
             "dxDataGrid-sortingAscendingText": "Sortare crescătoare",
             "dxDataGrid-sortingDescendingText": "Sortare descrescătoare",
             "dxDataGrid-sortingClearText": "Curăță Sortarea",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
             "dxDataGrid-editingSaveAllChanges": "Salvează modificările",
             "dxDataGrid-editingCancelAllChanges": "Renunţă la modificări",
             "dxDataGrid-editingAddRow": "Adaugă un rând",
@@ -176,11 +179,14 @@
             "dxDataGrid-ariaFilterCell": "Celulă de filtrare",
             "dxDataGrid-ariaCollapse": "Restrângere",
             "dxDataGrid-ariaExpand": "Extindere",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Grilă de date",
             "dxDataGrid-ariaSearchInGrid": "Caută in grila de date",
             "dxDataGrid-ariaSelectAll": "Selectează tot",
             "dxDataGrid-ariaSelectRow": "Selectează rând",
             "dxDataGrid-ariaToolbar": "Data grid toolbar",
+            "dxDataGrid-ariaEditForm": "Edit form",
             "dxDataGrid-filterBuilderPopupTitle": "Filtrează Constructor",
             "dxDataGrid-filterPanelCreateFilter": "Crează Fișier",
             "dxDataGrid-filterPanelClearFilter": "Curăță",

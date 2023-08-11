@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/gauges/base_gauge.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@ import { getAppropriateFormat as _getAppropriateFormat } from '../core/utils';
 import { extend } from '../../core/utils/extend';
 import { Translator1D } from '../translators/translator1d';
 var _extend = extend;
-import BaseWidget from '../core/base_widget';
+import BaseWidget from '../../__internal/viz/core/m_base_widget';
 import themeManagerModule from './theme_manager';
 import Tracker from './tracker';
 import formatHelper from '../../format_helper';

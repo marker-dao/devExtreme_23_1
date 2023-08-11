@@ -65,7 +65,7 @@ var dxGauge = _base_gauge.BaseGauge.inherit({
       axisType: that._scaleTypes.type,
       drawingType: that._scaleTypes.drawingType,
       widgetClass: 'dxg',
-      getTemplate: function getTemplate() {}
+      getTemplate() {}
     });
   },
   _disposeCore: function _disposeCore() {

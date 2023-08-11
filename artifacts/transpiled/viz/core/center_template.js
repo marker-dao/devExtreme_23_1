@@ -10,18 +10,18 @@ var pieChartPlugin = {
     this._centerTemplateGroup.linkOff().dispose();
   },
   extenders: {
-    _createHtmlStructure: function _createHtmlStructure() {
+    _createHtmlStructure() {
       var patchedFontOptions = (0, _utils.patchFontOptions)(this._themeManager._font);
       this._centerTemplateGroup = this._renderer.g().attr({
         class: 'dxc-hole-template'
       }).linkOn(this._renderer.root, 'center-template').css(patchedFontOptions).linkAppend();
     },
-    _renderExtraElements: function _renderExtraElements() {
+    _renderExtraElements() {
       this._requestChange(['CENTER_TEMPLATE']);
     }
   },
   members: {
-    _renderCenterTemplate: function _renderCenterTemplate() {
+    _renderCenterTemplate() {
       var template = this.option('centerTemplate');
       var centerTemplateGroup = this._centerTemplateGroup.clear();
       if (!template) {
@@ -47,7 +47,7 @@ var pieChartPlugin = {
       });
     }
   },
-  customize: function customize(constructor) {
+  customize(constructor) {
     constructor.addChange({
       code: 'CENTER_TEMPLATE',
       handler: function handler() {
@@ -62,21 +62,21 @@ var gaugePlugin = {
   init: _common.noop,
   dispose: pieChartPlugin.dispose,
   extenders: {
-    _initCore: function _initCore() {
+    _initCore() {
       this._createCenterTemplateGroup();
     },
-    _renderContent: function _renderContent() {
+    _renderContent() {
       var patchedFontOptions = (0, _utils.patchFontOptions)(this._themeManager._font);
       this._centerTemplateGroup.css(patchedFontOptions);
       this._requestChange(['CENTER_TEMPLATE']);
     },
-    _updateExtraElements: function _updateExtraElements() {
+    _updateExtraElements() {
       this._requestChange(['CENTER_TEMPLATE']);
     }
   },
   members: {
     _renderCenterTemplate: pieChartPlugin.members._renderCenterTemplate,
-    _createCenterTemplateGroup: function _createCenterTemplateGroup() {
+    _createCenterTemplateGroup() {
       this._centerTemplateGroup = this._renderer.g().attr({
         class: 'dxg-hole-template'
       }).linkOn(this._renderer.root, 'center-template').linkAppend();

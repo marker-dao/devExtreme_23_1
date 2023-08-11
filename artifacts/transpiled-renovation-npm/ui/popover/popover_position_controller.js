@@ -60,8 +60,8 @@ var PopoverPositionController = /*#__PURE__*/function (_OverlayPositionContr) {
       args = _objectWithoutProperties(_ref, _excluded);
     _this = _OverlayPositionContr.call(this, args) || this;
     _this._props = _extends({}, _this._props, {
-      shading: shading,
-      target: target
+      shading,
+      target
     });
     _this._$arrow = $arrow;
     _this._positionSide = undefined;

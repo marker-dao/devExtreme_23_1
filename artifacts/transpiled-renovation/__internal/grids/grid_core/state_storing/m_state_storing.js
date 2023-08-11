@@ -76,7 +76,7 @@ var getFilterValue = function getFilterValue(that, state) {
   return DEFAULT_FILTER_VALUE;
 };
 var stateStoringModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       stateStoring: {
         enabled: false,
@@ -94,7 +94,7 @@ var stateStoringModule = {
   extenders: {
     views: {
       rowsView: {
-        init: function init() {
+        init() {
           var that = this;
           var dataController = that.getController('data');
           that.callBase();
@@ -112,21 +112,21 @@ var stateStoringModule = {
     },
     controllers: {
       stateStoring: {
-        init: function init() {
+        init() {
           this.callBase.apply(this, arguments);
           processLoadState(this);
         },
-        isLoading: function isLoading() {
+        isLoading() {
           return this.callBase() || this.getController('data').isStateLoading();
         },
-        state: function state(_state) {
+        state(state) {
           var result = this.callBase.apply(this, arguments);
-          if (_state !== undefined) {
-            this.applyState((0, _extend.extend)(true, {}, _state));
+          if (state !== undefined) {
+            this.applyState((0, _extend.extend)(true, {}, state));
           }
           return result;
         },
-        updateState: function updateState(state) {
+        updateState(state) {
           if (this.isEnabled()) {
             var oldState = this.state();
             var newState = (0, _extend.extend)({}, oldState, state);
@@ -141,7 +141,7 @@ var stateStoringModule = {
             (0, _extend.extend)(this._state, state);
           }
         },
-        applyState: function applyState(state) {
+        applyState(state) {
           var _a;
           var allowedPageSizes = state.allowedPageSizes;
           var searchText = state.searchText;
@@ -182,17 +182,17 @@ var stateStoringModule = {
         }
       },
       columns: {
-        _shouldReturnVisibleColumns: function _shouldReturnVisibleColumns() {
+        _shouldReturnVisibleColumns() {
           var result = this.callBase.apply(this, arguments);
           var stateStoringController = this.getController('stateStoring');
           return result && (!stateStoringController.isEnabled() || stateStoringController.isLoaded());
         }
       },
       data: {
-        callbackNames: function callbackNames() {
+        callbackNames() {
           return this.callBase().concat(['stateLoaded']);
         },
-        _refreshDataSource: function _refreshDataSource() {
+        _refreshDataSource() {
           var _this = this;
           var callBase = this.callBase;
           var stateStoringController = this.getController('stateStoring');
@@ -219,25 +219,25 @@ var stateStoringModule = {
             callBase.call(this);
           }
         },
-        isLoading: function isLoading() {
+        isLoading() {
           var that = this;
           var stateStoringController = that.getController('stateStoring');
           return this.callBase() || stateStoringController.isLoading();
         },
-        isStateLoading: function isStateLoading() {
+        isStateLoading() {
           return (0, _type.isDefined)(this._restoreStateTimeoutID);
         },
-        isLoaded: function isLoaded() {
+        isLoaded() {
           return this.callBase() && !this.isStateLoading();
         },
-        dispose: function dispose() {
+        dispose() {
           clearTimeout(this._restoreStateTimeoutID);
           this.callBase();
         }
       },
       selection: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _fireSelectionChanged: function _fireSelectionChanged(options) {
+        _fireSelectionChanged(options) {
           var stateStoringController = this.getController('stateStoring');
           var isDeferredSelection = this.option('selection.deferred');
           if (stateStoringController.isLoading() && isDeferredSelection) {

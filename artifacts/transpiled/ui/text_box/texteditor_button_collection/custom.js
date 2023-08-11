@@ -40,8 +40,8 @@ var CustomButton = /*#__PURE__*/function (_TextEditorButton) {
       integrationOptions: this._prepareIntegrationOptions(editor)
     }));
     return {
-      $element: $element,
-      instance: instance
+      $element,
+      instance
     };
   };
   _proto._prepareIntegrationOptions = function _prepareIntegrationOptions(editor) {

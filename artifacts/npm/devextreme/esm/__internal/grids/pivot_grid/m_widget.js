@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/m_widget.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1058,10 +1058,6 @@ var PivotGrid = Widget.inherit({
       }
       hasRowsScroll = that._hasHeight && calculateHasScroll(dataAreaHeight, totalHeight);
       hasColumnsScroll = calculateHasScroll(groupWidth, totalWidth);
-      /// #DEBUG
-      that.__scrollBarUseNative = that._dataArea.getUseNativeValue();
-      that.__scrollBarWidth = scrollBarWidth;
-      /// #ENDDEBUG
       var groupHeight = calculateGroupHeight(dataAreaHeight, totalHeight, hasRowsScroll, hasColumnsScroll, scrollBarWidth);
       deferRender(() => {
         that._columnsArea.tableElement().append(that._dataArea.headElement());
@@ -1124,10 +1120,6 @@ var PivotGrid = Widget.inherit({
         });
         that._updateLoading();
         that._renderNoDataText(dataAreaCell);
-        /// #DEBUG
-        that._testResultWidths = resultWidths;
-        that._testResultHeights = resultHeights;
-        /// #ENDDEBUG
         when.apply($, updateScrollableResults).done(() => {
           that._updateScrollPosition(that._columnsArea, that._rowsArea, that._dataArea, true);
           that._subscribeToEvents(that._columnsArea, that._rowsArea, that._dataArea);

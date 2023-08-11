@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/filter/m_filter_panel.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,17 +31,17 @@ var FILTER_PANEL_CLEAR_FILTER_CLASS = "".concat(FILTER_PANEL_CLASS, "-clear-filt
 var FILTER_PANEL_LEFT_CONTAINER = "".concat(FILTER_PANEL_CLASS, "-left");
 var FILTER_PANEL_TARGET = 'filterPanel';
 var FilterPanelView = _m_modules.default.View.inherit({
-  isVisible: function isVisible() {
+  isVisible() {
     return this.option('filterPanel.visible') && this.getController('data').dataSource();
   },
-  init: function init() {
+  init() {
     var _this = this;
     this.getController('data').dataSourceChanged.add(function () {
       return _this.render();
     });
     this._columnsController = this.getController('columns');
   },
-  _renderCore: function _renderCore() {
+  _renderCore() {
     var $element = this.element();
     $element.empty();
     var isColumnsDefined = !!this._columnsController.getColumns().length;
@@ -52,7 +52,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
     var $leftContainer = (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(FILTER_PANEL_LEFT_CONTAINER)).appendTo($element);
     this._renderFilterBuilderText($element, $leftContainer);
   },
-  _renderFilterBuilderText: function _renderFilterBuilderText($element, $leftContainer) {
+  _renderFilterBuilderText($element, $leftContainer) {
     var $filterElement = this._getFilterElement();
     var $textElement = this._getTextElement();
     if (this.option('filterValue') || this._filterValueBuffer) {
@@ -64,19 +64,19 @@ var FilterPanelView = _m_modules.default.View.inherit({
     }
     $leftContainer.append($filterElement).append($textElement);
   },
-  _getCheckElement: function _getCheckElement() {
+  _getCheckElement() {
     var that = this;
     var $element = (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(FILTER_PANEL_CHECKBOX_CLASS));
     that._createComponent($element, _check_box.default, {
       value: that.option('filterPanel.filterEnabled'),
-      onValueChanged: function onValueChanged(e) {
+      onValueChanged(e) {
         that.option('filterPanel.filterEnabled', e.value);
       }
     });
     $element.attr('title', this.option('filterPanel.texts.filterEnabledHint'));
     return $element;
   },
-  _getFilterElement: function _getFilterElement() {
+  _getFilterElement() {
     var that = this;
     var $element = (0, _renderer.default)('<div>').addClass('dx-icon-filter');
     _events_engine.default.on($element, 'click', function () {
@@ -88,7 +88,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
     that._addTabIndexToElement($element);
     return $element;
   },
-  _getTextElement: function _getTextElement() {
+  _getTextElement() {
     var that = this;
     var $textElement = (0, _renderer.default)('<div>').addClass(that.addWidgetPrefix(FILTER_PANEL_TEXT_CLASS));
     var filterText;
@@ -99,7 +99,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
         if (customizeText) {
           var customText = customizeText({
             component: that.component,
-            filterValue: filterValue,
+            filterValue,
             text: filterText
           });
           if (typeof customText === 'string') {
@@ -121,10 +121,10 @@ var FilterPanelView = _m_modules.default.View.inherit({
     that._addTabIndexToElement($textElement);
     return $textElement;
   },
-  _showFilterBuilder: function _showFilterBuilder() {
+  _showFilterBuilder() {
     this.option('filterBuilderPopup.visible', true);
   },
-  _getRemoveButtonElement: function _getRemoveButtonElement() {
+  _getRemoveButtonElement() {
     var that = this;
     var clearFilterValue = function clearFilterValue() {
       return that.option('filterValue', null);
@@ -135,13 +135,13 @@ var FilterPanelView = _m_modules.default.View.inherit({
     that._addTabIndexToElement($element);
     return $element;
   },
-  _addTabIndexToElement: function _addTabIndexToElement($element) {
+  _addTabIndexToElement($element) {
     if (!this.option('useLegacyKeyboardNavigation')) {
       var tabindex = this.option('tabindex') || 0;
       $element.attr('tabindex', tabindex);
     }
   },
-  optionChanged: function optionChanged(args) {
+  optionChanged(args) {
     switch (args.name) {
       case 'filterValue':
         this._invalidate();
@@ -156,17 +156,17 @@ var FilterPanelView = _m_modules.default.View.inherit({
         this.callBase(args);
     }
   },
-  _getConditionText: function _getConditionText(fieldText, operationText, valueText) {
+  _getConditionText(fieldText, operationText, valueText) {
     var result = "[".concat(fieldText, "] ").concat(operationText);
     if ((0, _type.isDefined)(valueText)) {
       result += valueText;
     }
     return result;
   },
-  _getValueMaskedText: function _getValueMaskedText(value) {
+  _getValueMaskedText(value) {
     return Array.isArray(value) ? "('".concat(value.join('\', \''), "')") : " '".concat(value, "'");
   },
-  _getValueText: function _getValueText(field, customOperation, value) {
+  _getValueText(field, customOperation, value) {
     var _this2 = this;
     // @ts-expect-error
     var deferred = new _deferred.Deferred();
@@ -187,7 +187,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
     }
     return deferred.promise();
   },
-  getConditionText: function getConditionText(filterValue, options) {
+  getConditionText(filterValue, options) {
     var that = this;
     var operation = filterValue[1];
     // @ts-expect-error
@@ -209,7 +209,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
     });
     return deferred;
   },
-  getGroupText: function getGroupText(filterValue, options, isInnerGroup) {
+  getGroupText(filterValue, options, isInnerGroup) {
     var that = this;
     // @ts-expect-error
     var result = new _deferred.Deferred();
@@ -240,10 +240,10 @@ var FilterPanelView = _m_modules.default.View.inherit({
     });
     return result;
   },
-  getFilterText: function getFilterText(filterValue, customOperations) {
+  getFilterText(filterValue, customOperations) {
     var that = this;
     var options = {
-      customOperations: customOperations,
+      customOperations,
       columns: that.getController('columns').getFilteringColumns(),
       filterOperationDescriptions: that.option('filterBuilder.filterOperationDescriptions'),
       groupOperationDescriptions: that.option('filterBuilder.groupOperationDescriptions')
@@ -252,7 +252,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
   }
 });
 var filterPanelModule = {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return {
       filterPanel: {
         visible: false,
@@ -271,7 +271,7 @@ var filterPanelModule = {
   extenders: {
     controllers: {
       data: {
-        optionChanged: function optionChanged(args) {
+        optionChanged(args) {
           switch (args.name) {
             case 'filterPanel':
               this._applyFilter();

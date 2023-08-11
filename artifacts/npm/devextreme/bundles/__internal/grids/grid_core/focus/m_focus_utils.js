@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/focus/m_focus_utils.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,12 +25,12 @@ var getSortFilterValue = function getSortFilterValue(sortInfo, rowData, _ref) {
   var rawValue = getter ? getter(rowData) : rowData[selector];
   var safeValue = isRemoteFiltering && (0, _type.isDate)(rawValue) ? _date_serialization.default.serializeDate(rawValue, dateSerializationFormat) : rawValue;
   return {
-    getter: getter,
-    rawValue: rawValue,
-    safeValue: safeValue
+    getter,
+    rawValue,
+    safeValue
   };
 };
 var UiGridCoreFocusUtils = {
-  getSortFilterValue: getSortFilterValue
+  getSortFilterValue
 };
 exports.UiGridCoreFocusUtils = UiGridCoreFocusUtils;

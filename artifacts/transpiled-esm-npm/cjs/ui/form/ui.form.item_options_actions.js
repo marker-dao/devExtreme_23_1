@@ -156,7 +156,7 @@ var tryCreateItemOptionAction = function tryCreateItemOptionAction(optionName, i
     case 'title':
       // TabbedItem/tabs/#title
       return new TabOptionItemOptionAction((0, _extend.extend)(itemActionOptions, {
-        optionName: optionName
+        optionName
       }));
     case 'tabs':
       // TabbedItem/tabs
@@ -172,7 +172,7 @@ var tryCreateItemOptionAction = function tryCreateItemOptionAction(optionName, i
           return new GroupItemTemplateChangedAction(itemActionOptions);
         }
         return new TabOptionItemOptionAction((0, _extend.extend)(itemActionOptions, {
-          optionName: optionName
+          optionName
         }));
       }
     default:

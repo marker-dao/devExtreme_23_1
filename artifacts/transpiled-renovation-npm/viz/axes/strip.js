@@ -9,21 +9,21 @@ function createStrip(axis, options) {
   var lastStoredCoordinates;
   var labelOptions = options.label || {};
   return {
-    options: options,
+    options,
     label: null,
     rect: null,
-    _getCoord: function _getCoord() {
+    _getCoord() {
       var canvas = axis._getCanvasStartEnd();
       var range = axis._translator.getBusinessRange();
       return axis._getStripPos(options.startValue, options.endValue, canvas.start, canvas.end, range);
     },
-    _drawLabel: function _drawLabel(coords) {
+    _drawLabel(coords) {
       return axis._renderer.text(labelOptions.text, coords.x, coords.y).css((0, _utils.patchFontOptions)((0, _extend.extend)({}, axis.getOptions().label.font, labelOptions.font))).attr({
         align: 'center',
         'class': labelOptions.cssClass
       }).append(axis._axisStripLabelGroup);
     },
-    draw: function draw() {
+    draw() {
       if (axis._translator.getBusinessRange().isEmpty()) {
         return;
       }
@@ -39,11 +39,11 @@ function createStrip(axis, options) {
         this.label = labelOptions.text ? this._drawLabel(this.labelCoords) : null;
       }
     },
-    getContentContainer: function getContentContainer() {
+    getContentContainer() {
       return this.label;
     },
-    removeLabel: function removeLabel() {},
-    updatePosition: function updatePosition(animate) {
+    removeLabel() {},
+    updatePosition(animate) {
       var stripPos = this._getCoord();
       if (animate && storedCoord) {
         this.label && this.label.attr(axis._getStripLabelCoords(storedCoord.from, storedCoord.to, options.label));
@@ -55,11 +55,11 @@ function createStrip(axis, options) {
         this.rect && this.rect.attr(axis._getStripGraphicAttributes(stripPos.from, stripPos.to));
       }
     },
-    saveCoords: function saveCoords() {
+    saveCoords() {
       lastStoredCoordinates = storedCoord;
       storedCoord = this._getCoord();
     },
-    resetCoordinates: function resetCoordinates() {
+    resetCoordinates() {
       storedCoord = lastStoredCoordinates;
     }
   };

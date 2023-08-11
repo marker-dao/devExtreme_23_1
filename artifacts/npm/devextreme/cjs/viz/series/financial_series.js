@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/financial_series.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -232,7 +232,7 @@ var stock = (0, _extend2.extend)({}, _scatter_series.chart, {
     options.sizePointNormalState = DEFAULT_FINANCIAL_POINT_SIZE;
     return options;
   },
-  getSeriesPairCoord: function getSeriesPairCoord(coord, isArgument) {
+  getSeriesPairCoord(coord, isArgument) {
     var oppositeCoord = null;
     var points = this.getVisiblePoints();
     for (var i = 0; i < points.length; i++) {
@@ -251,7 +251,7 @@ var stock = (0, _extend2.extend)({}, _scatter_series.chart, {
     }
     return oppositeCoord;
   },
-  usePointsToDefineAutoHiding: function usePointsToDefineAutoHiding() {
+  usePointsToDefineAutoHiding() {
     return false;
   }
 });

@@ -114,7 +114,7 @@ var NativeStrategy = _class.default.inherit({
       left: this._normalizeOffsetLeft(-left)
     };
   },
-  _normalizeOffsetLeft: function _normalizeOffsetLeft(scrollLeft) {
+  _normalizeOffsetLeft(scrollLeft) {
     if (this._isRtlNativeStrategy()) {
       return this._getMaxOffset().left + scrollLeft;
     }
@@ -234,7 +234,7 @@ var NativeStrategy = _class.default.inherit({
   },
   // TODO: rtl
   // TODO: horizontal scroll when shift is pressed
-  _isScrolledInMaxDirection: function _isScrolledInMaxDirection(e) {
+  _isScrolledInMaxDirection(e) {
     var container = this._$container.get(0);
     var result;
     if (e.delta > 0) {

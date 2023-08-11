@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/number_box/number_box.spins.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -72,8 +72,8 @@ var SpinButtons = /*#__PURE__*/function (_TextEditorButton) {
     var visible = this._isVisible();
     var disabled = editor.option('disabled');
     return {
-      visible: visible,
-      disabled: disabled
+      visible,
+      disabled
     };
   };
   _proto._isVisible = function _isVisible() {

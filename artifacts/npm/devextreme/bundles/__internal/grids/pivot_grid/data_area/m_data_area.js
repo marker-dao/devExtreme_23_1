@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/pivot_grid/data_area/m_data_area.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,13 +23,13 @@ var PIVOTGRID_TOTAL_CLASS = 'dx-total';
 var PIVOTGRID_GRAND_TOTAL_CLASS = 'dx-grandtotal';
 var PIVOTGRID_ROW_TOTAL_CLASS = 'dx-row-total';
 var DataArea = _m_area_item.AreaItem.inherit({
-  _getAreaName: function _getAreaName() {
+  _getAreaName() {
     return 'data';
   },
-  _createGroupElement: function _createGroupElement() {
+  _createGroupElement() {
     return (0, _renderer.default)('<div>').addClass(PIVOTGRID_AREA_CLASS).addClass(PIVOTGRID_AREA_DATA_CLASS).css('borderTopWidth', 0);
   },
-  _applyCustomStyles: function _applyCustomStyles(options) {
+  _applyCustomStyles(options) {
     var cell = options.cell;
     var classArray = options.classArray;
     if (cell.rowType === 'T' || cell.columnType === 'T') {
@@ -46,12 +46,12 @@ var DataArea = _m_area_item.AreaItem.inherit({
     }
     this.callBase(options);
   },
-  _moveFakeTable: function _moveFakeTable(scrollPos) {
+  _moveFakeTable(scrollPos) {
     this._moveFakeTableHorizontally(scrollPos.x);
     this._moveFakeTableTop(scrollPos.y);
     this.callBase();
   },
-  renderScrollable: function renderScrollable() {
+  renderScrollable() {
     this._groupElement.dxScrollable({
       useNative: this.getUseNativeValue(),
       useSimulatedScrollbar: false,
@@ -60,25 +60,25 @@ var DataArea = _m_area_item.AreaItem.inherit({
       updateManually: true
     });
   },
-  getUseNativeValue: function getUseNativeValue() {
+  getUseNativeValue() {
     var _this$component$optio = this.component.option('scrolling'),
       useNative = _this$component$optio.useNative;
     return useNative === 'auto' ? !!_support.nativeScrolling : !!useNative;
   },
-  getScrollbarWidth: function getScrollbarWidth() {
+  getScrollbarWidth() {
     return this.getUseNativeValue() ? (0, _m_widget_utils.calculateScrollbarWidth)() : 0;
   },
-  updateScrollableOptions: function updateScrollableOptions(_ref) {
+  updateScrollableOptions(_ref) {
     var direction = _ref.direction,
       rtlEnabled = _ref.rtlEnabled;
     var scrollable = this._getScrollable();
     scrollable.option('useNative', this.getUseNativeValue());
     scrollable.option({
-      direction: direction,
-      rtlEnabled: rtlEnabled
+      direction,
+      rtlEnabled
     });
   },
-  getScrollableDirection: function getScrollableDirection(horizontal, vertical) {
+  getScrollableDirection(horizontal, vertical) {
     if (horizontal && !vertical) {
       return 'horizontal';
     }
@@ -87,13 +87,13 @@ var DataArea = _m_area_item.AreaItem.inherit({
     }
     return 'both';
   },
-  reset: function reset() {
+  reset() {
     this.callBase();
     if (this._virtualContent) {
       this._virtualContent.parent().css('height', 'auto');
     }
   },
-  setVirtualContentParams: function setVirtualContentParams(params) {
+  setVirtualContentParams(params) {
     this.callBase(params);
     this._virtualContent.parent().css('height', params.height);
     this._setTableCss({
@@ -104,6 +104,6 @@ var DataArea = _m_area_item.AreaItem.inherit({
 });
 exports.DataArea = DataArea;
 var _default = {
-  DataArea: DataArea
+  DataArea
 };
 exports.default = _default;

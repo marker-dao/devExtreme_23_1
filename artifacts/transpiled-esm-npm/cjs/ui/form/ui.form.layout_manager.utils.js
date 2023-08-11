@@ -11,7 +11,7 @@ var _inflector = require("../../core/utils/inflector");
 var _guid = _interopRequireDefault(require("../../core/guid"));
 var _constants = require("./constants");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EDITORS_WITH_ARRAY_VALUE = ['dxTagBox', 'dxRangeSlider'];
+var EDITORS_WITH_ARRAY_VALUE = ['dxTagBox', 'dxRangeSlider', 'dxDateRangeBox'];
 var EDITORS_WITHOUT_LABELS = ['dxCalendar', 'dxCheckBox', 'dxHtmlEditor', 'dxRadioGroup', 'dxRangeSlider', 'dxSlider', 'dxSwitch'];
 exports.EDITORS_WITHOUT_LABELS = EDITORS_WITHOUT_LABELS;
 function convertToRenderFieldItemOptions(_ref) {
@@ -40,15 +40,15 @@ function convertToRenderFieldItemOptions(_ref) {
   var isSimpleItem = item.itemType === _constants.SIMPLE_ITEM_TYPE;
   var helpID = item.helpText ? 'dx-' + new _guid.default() : null;
   var labelOptions = _convertToLabelOptions({
-    item: item,
+    item,
     id: itemId,
-    isRequired: isRequired,
-    managerMarkOptions: managerMarkOptions,
-    showColonAfterLabel: showColonAfterLabel,
+    isRequired,
+    managerMarkOptions,
+    showColonAfterLabel,
     labelLocation: managerLabelLocation,
     formLabelMode: labelMode,
-    labelTemplate: labelTemplate,
-    onLabelTemplateRendered: onLabelTemplateRendered
+    labelTemplate,
+    onLabelTemplateRendered
   });
   var needRenderLabel = labelOptions.visible && (labelOptions.text || labelOptions.labelTemplate && isSimpleItem);
   var labelLocation = labelOptions.location,
@@ -56,13 +56,13 @@ function convertToRenderFieldItemOptions(_ref) {
   var labelNeedBaselineAlign = labelLocation !== 'top' && ['dxTextArea', 'dxRadioGroup', 'dxCalendar', 'dxHtmlEditor'].includes(item.editorType);
   var editorOptions = _convertToEditorOptions({
     editorType: item.editorType,
-    editorValue: editorValue,
+    editorValue,
     defaultEditorName: item.dataField,
-    canAssignUndefinedValueToEditor: canAssignUndefinedValueToEditor,
+    canAssignUndefinedValueToEditor,
     externalEditorOptions: item.editorOptions,
     editorInputId: itemId,
-    editorValidationBoundary: editorValidationBoundary,
-    editorStylingMode: editorStylingMode,
+    editorValidationBoundary,
+    editorStylingMode,
     formLabelMode: labelMode,
     labelText: labelOptions.textWithoutColon,
     labelMark: labelOptions.markOptions.showRequiredMark ? String.fromCharCode(160) + labelOptions.markOptions.requiredMark : ''
@@ -70,26 +70,26 @@ function convertToRenderFieldItemOptions(_ref) {
   var needRenderOptionalMarkAsHelpText = labelOptions.markOptions.showOptionalMark && !labelOptions.visible && editorOptions.labelMode !== 'hidden' && !(0, _type.isDefined)(item.helpText);
   var helpText = needRenderOptionalMarkAsHelpText ? labelOptions.markOptions.optionalMark : item.helpText;
   return {
-    $parent: $parent,
-    rootElementCssClassList: rootElementCssClassList,
-    formOrLayoutManager: formOrLayoutManager,
-    createComponentCallback: createComponentCallback,
-    labelOptions: labelOptions,
-    labelNeedBaselineAlign: labelNeedBaselineAlign,
-    labelLocation: labelLocation,
-    needRenderLabel: needRenderLabel,
-    item: item,
-    isSimpleItem: isSimpleItem,
-    isRequired: isRequired,
-    template: template,
-    helpID: helpID,
-    labelID: labelID,
-    name: name,
-    helpText: helpText,
-    formLabelLocation: formLabelLocation,
-    requiredMessageTemplate: requiredMessageTemplate,
-    validationGroup: validationGroup,
-    editorOptions: editorOptions
+    $parent,
+    rootElementCssClassList,
+    formOrLayoutManager,
+    createComponentCallback,
+    labelOptions,
+    labelNeedBaselineAlign,
+    labelLocation,
+    needRenderLabel,
+    item,
+    isSimpleItem,
+    isRequired,
+    template,
+    helpID,
+    labelID,
+    name,
+    helpText,
+    formLabelLocation,
+    requiredMessageTemplate,
+    validationGroup,
+    editorOptions
   };
 }
 function getLabelMarkText(_ref2) {
@@ -109,9 +109,9 @@ function convertToLabelMarkOptions(_ref3, isRequired) {
     optionalMark = _ref3.optionalMark;
   return {
     showRequiredMark: showRequiredMark && isRequired,
-    requiredMark: requiredMark,
+    requiredMark,
     showOptionalMark: showOptionalMark && !isRequired,
-    optionalMark: optionalMark
+    optionalMark
   };
 }
 function _convertToEditorOptions(_ref4) {
@@ -143,10 +143,10 @@ function _convertToEditorOptions(_ref4) {
       id: editorInputId
     },
     validationBoundary: editorValidationBoundary,
-    stylingMode: stylingMode,
+    stylingMode,
     label: labelText,
-    labelMode: labelMode,
-    labelMark: labelMark
+    labelMode,
+    labelMark
   });
   if (externalEditorOptions) {
     if (result.dataSource) {
@@ -192,10 +192,10 @@ function _convertToLabelOptions(_ref5) {
     isRequired: isRequired
   }, item ? item.label : {}, {
     markOptions: convertToLabelMarkOptions(managerMarkOptions, isRequired),
-    labelTemplate: labelTemplate,
-    onLabelTemplateRendered: onLabelTemplateRendered
+    labelTemplate,
+    onLabelTemplateRendered
   });
-  var editorsRequiringIdForLabel = ['dxRadioGroup', 'dxCheckBox', 'dxLookup', 'dxSlider', 'dxRangeSlider', 'dxSwitch', 'dxHtmlEditor']; // TODO: support "dxCalendar"
+  var editorsRequiringIdForLabel = ['dxRadioGroup', 'dxCheckBox', 'dxLookup', 'dxSlider', 'dxRangeSlider', 'dxSwitch', 'dxHtmlEditor', 'dxDateRangeBox']; // TODO: support "dxCalendar"
   if (editorsRequiringIdForLabel.includes(item.editorType)) {
     labelOptions.labelID = "dx-label-".concat(new _guid.default());
   }

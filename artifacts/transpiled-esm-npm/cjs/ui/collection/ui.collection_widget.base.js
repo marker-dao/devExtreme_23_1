@@ -27,6 +27,7 @@ var _click = require("../../events/click");
 var _contextmenu = require("../../events/contextmenu");
 var _bindable_template = require("../../core/templates/bindable_template");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var COLLECTION_CLASS = 'dx-collection';
 var ITEM_CLASS = 'dx-item';
 var CONTENT_CLASS_POSTFIX = '-content';
@@ -245,7 +246,7 @@ var CollectionWidget = _ui.default.inherit({
     var $target = (0, _renderer.default)(this.option('focusedElement'));
     this._updateFocusedItemState($target, false);
   },
-  _findActiveTarget: function _findActiveTarget($element) {
+  _findActiveTarget($element) {
     return $element.find(this._activeStateUnit);
   },
   _getActiveItem: function _getActiveItem(last) {
@@ -343,7 +344,7 @@ var CollectionWidget = _ui.default.inherit({
       this.setAria('id', null, $target);
     }
   },
-  _isDisabled: function _isDisabled($element) {
+  _isDisabled($element) {
     return $element && (0, _renderer.default)($element).attr('aria-disabled') === 'true';
   },
   _setFocusedItem: function _setFocusedItem($target) {
@@ -387,7 +388,7 @@ var CollectionWidget = _ui.default.inherit({
       this._resetItemFocus($item);
     }
   },
-  _resetItemFocus: function _resetItemFocus($item) {
+  _resetItemFocus($item) {
     if ($item.is(this.option('focusedElement'))) {
       this.option('focusedElement', null);
     }
@@ -570,10 +571,10 @@ var CollectionWidget = _ui.default.inherit({
     this._attachHoldEvent();
     this._attachContextMenuEvent();
   },
-  _getPointerEvent: function _getPointerEvent() {
+  _getPointerEvent() {
     return _pointer.default.down;
   },
-  _attachClickEvent: function _attachClickEvent() {
+  _attachClickEvent() {
     var _this2 = this;
     var itemSelector = this._itemSelector();
     var pointerEvent = this._getPointerEvent();
@@ -694,13 +695,25 @@ var CollectionWidget = _ui.default.inherit({
     }
     this._renderEmptyMessage();
   },
+  _getItemsContainer: function _getItemsContainer() {
+    return this._itemContainer();
+  },
+  _setAttributes($element) {
+    var attributes = _extends({}, this.option('_itemAttributes'));
+    var customClassValue = attributes.class;
+    if (customClassValue) {
+      var currentClassValue = $element.get(0).className;
+      attributes.class = [currentClassValue, customClassValue].join(' ');
+    }
+    $element.attr(attributes);
+  },
   _renderItem: function _renderItem(index, itemData, $container, $itemToReplace) {
     var _index$item;
     var itemIndex = (_index$item = index === null || index === void 0 ? void 0 : index.item) !== null && _index$item !== void 0 ? _index$item : index;
-    $container = $container || this._itemContainer();
+    $container = $container || this._getItemsContainer();
     var $itemFrame = this._renderItemFrame(itemIndex, itemData, $container, $itemToReplace);
     this._setElementData($itemFrame, itemData, itemIndex);
-    $itemFrame.attr(this.option('_itemAttributes'));
+    this._setAttributes($itemFrame);
     this._attachItemClickEvent(itemData, $itemFrame);
     var $itemContent = this._getItemContent($itemFrame);
     var renderContentPromise = this._renderItemContent({
@@ -884,11 +897,15 @@ var CollectionWidget = _ui.default.inherit({
   _getItemData: function _getItemData(itemElement) {
     return (0, _renderer.default)(itemElement).data(this._itemDataKey());
   },
-  _getSummaryItemsWidth: function _getSummaryItemsWidth(items, includeMargin) {
+  _getSummaryItemsSize(dimension, items, includeMargin) {
     var result = 0;
     if (items) {
       (0, _iterator.each)(items, function (_, item) {
-        result += (0, _size.getOuterWidth)(item, includeMargin || false);
+        if (dimension === 'width') {
+          result += (0, _size.getOuterWidth)(item, includeMargin || false);
+        } else if (dimension === 'height') {
+          result += (0, _size.getOuterHeight)(item, includeMargin || false);
+        }
       });
     }
     return result;

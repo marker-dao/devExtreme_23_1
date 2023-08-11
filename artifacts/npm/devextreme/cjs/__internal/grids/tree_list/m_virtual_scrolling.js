@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/m_virtual_scrolling.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,14 +17,14 @@ var oldDefaultOptions = _m_virtual_scrolling.virtualScrollingModule.defaultOptio
 var originalDataControllerExtender = _m_virtual_scrolling.virtualScrollingModule.extenders.controllers.data;
 var originalDataSourceAdapterExtender = _m_virtual_scrolling.virtualScrollingModule.extenders.dataSourceAdapter;
 _m_virtual_scrolling.virtualScrollingModule.extenders.controllers.data = (0, _extend.extend)({}, originalDataControllerExtender, {
-  _loadOnOptionChange: function _loadOnOptionChange() {
+  _loadOnOptionChange() {
     var virtualScrollController = this._dataSource && this._dataSource._virtualScrollController;
     virtualScrollController && virtualScrollController.reset();
     this.callBase();
   }
 });
 _m_virtual_scrolling.virtualScrollingModule.extenders.dataSourceAdapter = (0, _extend.extend)({}, originalDataSourceAdapterExtender, {
-  changeRowExpand: function changeRowExpand() {
+  changeRowExpand() {
     var _this = this;
     return this.callBase.apply(this, arguments).done(function () {
       var viewportItemIndex = _this.getViewportItemIndex();
@@ -33,7 +33,7 @@ _m_virtual_scrolling.virtualScrollingModule.extenders.dataSourceAdapter = (0, _e
   }
 });
 _m_core.default.registerModule('virtualScrolling', (0, _extend.extend)({}, _m_virtual_scrolling.virtualScrollingModule, {
-  defaultOptions: function defaultOptions() {
+  defaultOptions() {
     return (0, _extend.extend)(true, oldDefaultOptions(), {
       scrolling: {
         mode: 'virtual'

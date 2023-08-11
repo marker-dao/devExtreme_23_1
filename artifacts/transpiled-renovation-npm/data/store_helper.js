@@ -74,9 +74,9 @@ function queryByOptions(query, options, isCountQuery) {
   return query;
 }
 var _default = {
-  multiLevelGroup: multiLevelGroup,
-  arrangeSortingInfo: arrangeSortingInfo,
-  queryByOptions: queryByOptions
+  multiLevelGroup,
+  arrangeSortingInfo,
+  queryByOptions
 };
 exports.default = _default;
 module.exports = exports.default;

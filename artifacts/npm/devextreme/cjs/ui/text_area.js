@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_area.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -156,7 +156,7 @@ var TextArea = _text_box.default.inherit({
     _events_engine.default.off(this._input(), (0, _index.addNamespace)('input paste', this.NAME));
     this.callBase();
   },
-  _getHeightDifference: function _getHeightDifference($input) {
+  _getHeightDifference($input) {
     return (0, _size.getVerticalOffsets)(this._$element.get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorContainer.get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorInputContainer.get(0), false) + (0, _size.getElementBoxParams)('height', (0, _window.getWindow)().getComputedStyle($input.get(0))).margin;
   },
   _updateInputHeight: function _updateInputHeight() {

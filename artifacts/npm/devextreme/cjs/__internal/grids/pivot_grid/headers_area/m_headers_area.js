@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/headers_area/m_headers_area.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -43,20 +43,20 @@ function getCellPath(tableElement, cell) {
   return undefined;
 }
 var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
-  ctor: function ctor(component) {
+  ctor(component) {
     this.callBase(component);
     this._scrollBarWidth = 0;
   },
-  _getAreaName: function _getAreaName() {
+  _getAreaName() {
     return 'column';
   },
-  _getAreaClassName: function _getAreaClassName() {
+  _getAreaClassName() {
     return PIVOTGRID_AREA_COLUMN_CLASS;
   },
-  _createGroupElement: function _createGroupElement() {
+  _createGroupElement() {
     return (0, _renderer.default)('<div>').addClass(this._getAreaClassName()).addClass(PIVOTGRID_AREA_CLASS);
   },
-  _applyCustomStyles: function _applyCustomStyles(options) {
+  _applyCustomStyles(options) {
     var cssArray = options.cssArray;
     var cell = options.cell;
     var rowsCount = options.rowsCount;
@@ -81,15 +81,15 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     }
     this.callBase(options);
   },
-  _getMainElementMarkup: function _getMainElementMarkup() {
+  _getMainElementMarkup() {
     var thead = _dom_adapter.default.createElement('thead');
     thead.setAttribute('class', this._getAreaClassName());
     return thead;
   },
-  _getCloseMainElementMarkup: function _getCloseMainElementMarkup() {
+  _getCloseMainElementMarkup() {
     return '</thead>';
   },
-  setVirtualContentParams: function setVirtualContentParams(params) {
+  setVirtualContentParams(params) {
     this.callBase(params);
     this._setTableCss({
       left: params.left,
@@ -97,7 +97,7 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     });
     this._virtualContentWidth = params.width;
   },
-  hasScroll: function hasScroll() {
+  hasScroll() {
     var tableWidth = this._virtualContent ? this._virtualContentWidth : this._tableWidth;
     var groupWidth = this.getGroupWidth();
     if (groupWidth && tableWidth) {
@@ -105,7 +105,7 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     }
     return false;
   },
-  renderScrollable: function renderScrollable() {
+  renderScrollable() {
     this._groupElement.dxScrollable({
       useNative: false,
       useSimulatedScrollbar: false,
@@ -116,14 +116,14 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
       updateManually: true
     });
   },
-  updateScrollableOptions: function updateScrollableOptions(_ref) {
+  updateScrollableOptions(_ref) {
     var rtlEnabled = _ref.rtlEnabled;
     var scrollable = this._getScrollable();
     isRenovatedScrollable && scrollable.option({
-      rtlEnabled: rtlEnabled
+      rtlEnabled
     });
   },
-  processScrollBarSpacing: function processScrollBarSpacing(scrollBarWidth) {
+  processScrollBarSpacing(scrollBarWidth) {
     var groupAlignment = this.option('rtlEnabled') ? 'right' : 'left';
     var groupWidth = this.getGroupWidth();
     if (groupWidth) {
@@ -136,7 +136,7 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     (0, _size.setWidth)(this._groupElement.css('float', groupAlignment), this.getGroupHeight());
     this._scrollBarWidth = scrollBarWidth;
   },
-  getScrollPath: function getScrollPath(offset) {
+  getScrollPath(offset) {
     var tableElement = this.tableElement();
     var cell;
     offset -= parseInt(tableElement[0].style.left, 10) || 0;
@@ -149,17 +149,17 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     });
     return getCellPath(tableElement, cell);
   },
-  _moveFakeTable: function _moveFakeTable(scrollPos) {
+  _moveFakeTable(scrollPos) {
     this._moveFakeTableHorizontally(scrollPos);
     this.callBase();
   }
 });
 exports.HorizontalHeadersArea = HorizontalHeadersArea;
 var VerticalHeadersArea = HorizontalHeadersArea.inherit({
-  _getAreaClassName: function _getAreaClassName() {
+  _getAreaClassName() {
     return PIVOTGRID_AREA_ROW_CLASS;
   },
-  _applyCustomStyles: function _applyCustomStyles(options) {
+  _applyCustomStyles(options) {
     this.callBase(options);
     if (options.cellIndex === options.cellsCount - 1) {
       options.classArray.push(PIVOTGRID_LAST_CELL_CLASS);
@@ -171,10 +171,10 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
       options.classArray.push('dx-white-space-column');
     }
   },
-  _getAreaName: function _getAreaName() {
+  _getAreaName() {
     return 'row';
   },
-  setVirtualContentParams: function setVirtualContentParams(params) {
+  setVirtualContentParams(params) {
     this.callBase(params);
     this._setTableCss({
       top: params.top,
@@ -182,7 +182,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     });
     this._virtualContentHeight = params.height;
   },
-  hasScroll: function hasScroll() {
+  hasScroll() {
     var tableHeight = this._virtualContent ? this._virtualContentHeight : this._tableHeight;
     var groupHeight = this.getGroupHeight();
     if (groupHeight && tableHeight) {
@@ -190,7 +190,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     }
     return false;
   },
-  renderScrollable: function renderScrollable() {
+  renderScrollable() {
     this._groupElement.dxScrollable({
       useNative: false,
       useSimulatedScrollbar: false,
@@ -200,7 +200,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
       updateManually: true
     });
   },
-  processScrollBarSpacing: function processScrollBarSpacing(scrollBarWidth) {
+  processScrollBarSpacing(scrollBarWidth) {
     var groupHeight = this.getGroupHeight();
     if (groupHeight) {
       this.setGroupHeight(groupHeight - scrollBarWidth);
@@ -216,7 +216,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     }
     this._scrollBarWidth = scrollBarWidth;
   },
-  getScrollPath: function getScrollPath(offset) {
+  getScrollPath(offset) {
     var tableElement = this.tableElement();
     var cell;
     offset -= parseInt(tableElement[0].style.top, 10) || 0;
@@ -230,25 +230,25 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     });
     return getCellPath(tableElement, cell);
   },
-  _moveFakeTable: function _moveFakeTable(scrollPos) {
+  _moveFakeTable(scrollPos) {
     this._moveFakeTableTop(scrollPos);
     this.callBase();
   },
-  _getRowClassNames: function _getRowClassNames(rowIndex, cell, rowClassNames) {
+  _getRowClassNames(rowIndex, cell, rowClassNames) {
     // @ts-expect-error
     if (rowIndex !== 0 & cell.expanded && !rowClassNames.includes(PIVOTGRID_EXPAND_BORDER)) {
       rowClassNames.push(PIVOTGRID_EXPAND_BORDER);
     }
   },
-  _getMainElementMarkup: function _getMainElementMarkup() {
+  _getMainElementMarkup() {
     var tbody = _dom_adapter.default.createElement('tbody');
     tbody.classList.add(this._getAreaClassName());
     return tbody;
   },
-  _getCloseMainElementMarkup: function _getCloseMainElementMarkup() {
+  _getCloseMainElementMarkup() {
     return '</tbody>';
   },
-  updateColspans: function updateColspans(columnCount) {
+  updateColspans(columnCount) {
     var rows = this.tableElement()[0].rows;
     var columnOffset = 0;
     var columnOffsetResetIndexes = [];
@@ -275,7 +275,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
 });
 exports.VerticalHeadersArea = VerticalHeadersArea;
 var _default = {
-  HorizontalHeadersArea: HorizontalHeadersArea,
-  VerticalHeadersArea: VerticalHeadersArea
+  HorizontalHeadersArea,
+  VerticalHeadersArea
 };
 exports.default = _default;

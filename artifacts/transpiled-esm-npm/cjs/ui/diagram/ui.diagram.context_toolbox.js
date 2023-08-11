@@ -124,9 +124,9 @@ var DiagramContextToolbox = /*#__PURE__*/function (_Widget) {
         var _this = this;
         var $element = this.$element().find('.' + DIAGRAM_CONTEXT_TOOLBOX_CONTENT_CLASS);
         this._onShownAction({
-          category: category,
-          callback: callback,
-          $element: $element,
+          category,
+          callback,
+          $element,
           hide: function hide() {
             return _this._popoverInstance.hide();
           }

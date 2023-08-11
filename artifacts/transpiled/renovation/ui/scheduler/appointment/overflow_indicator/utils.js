@@ -45,8 +45,8 @@ var getIndicatorColor = function getIndicatorColor(appointmentContext, viewModel
     loadedResources: appointmentContext.loadedResources
   }, {
     itemData: appointment,
-    groupIndex: groupIndex,
-    groups: groups
+    groupIndex,
+    groups
   });
 };
 exports.getIndicatorColor = getIndicatorColor;

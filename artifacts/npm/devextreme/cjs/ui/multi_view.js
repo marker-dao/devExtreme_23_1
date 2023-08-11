@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/multi_view.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -250,10 +250,10 @@ var MultiView = _uiCollection_widget.default.inherit({
     var directionSignVariable = isSwipePresent ? containerPosition : indexDifference;
     return (0, _math.sign)(directionSignVariable);
   },
-  _getSwipeDisabledState: function _getSwipeDisabledState() {
+  _getSwipeDisabledState() {
     return !this.option('swipeEnabled') || this._itemsCount() <= 1;
   },
-  _initSwipeable: function _initSwipeable() {
+  _initSwipeable() {
     var _this2 = this;
     this._createComponent(this.$element(), _swipeable.default, {
       disabled: this._getSwipeDisabledState(),
@@ -270,7 +270,7 @@ var MultiView = _uiCollection_widget.default.inherit({
       }
     });
   },
-  _findBoundaryIndices: function _findBoundaryIndices() {
+  _findBoundaryIndices() {
     var _firstIndex2, _lastIndex;
     var items = this.option('items');
     var firstIndex;
@@ -284,8 +284,10 @@ var MultiView = _uiCollection_widget.default.inherit({
       }
     });
     this._boundaryIndices = {
-      firstIndex: (_firstIndex2 = firstIndex) !== null && _firstIndex2 !== void 0 ? _firstIndex2 : 0,
-      lastIndex: (_lastIndex = lastIndex) !== null && _lastIndex !== void 0 ? _lastIndex : items.length - 1
+      firstAvailableIndex: (_firstIndex2 = firstIndex) !== null && _firstIndex2 !== void 0 ? _firstIndex2 : 0,
+      lastAvailableIndex: (_lastIndex = lastIndex) !== null && _lastIndex !== void 0 ? _lastIndex : items.length - 1,
+      firstTrueIndex: 0,
+      lastTrueIndex: items.length - 1
     };
   },
   _swipeStartHandler: function _swipeStartHandler(e) {
@@ -293,11 +295,11 @@ var MultiView = _uiCollection_widget.default.inherit({
     var selectedIndex = this.option('selectedIndex');
     var loop = this.option('loop');
     var _this$_boundaryIndice = this._boundaryIndices,
-      firstIndex = _this$_boundaryIndice.firstIndex,
-      lastIndex = _this$_boundaryIndice.lastIndex;
+      firstAvailableIndex = _this$_boundaryIndice.firstAvailableIndex,
+      lastAvailableIndex = _this$_boundaryIndice.lastAvailableIndex;
     var rtl = this.option('rtlEnabled');
-    e.maxLeftOffset = toNumber(loop || (rtl ? selectedIndex > firstIndex : selectedIndex < lastIndex));
-    e.maxRightOffset = toNumber(loop || (rtl ? selectedIndex < lastIndex : selectedIndex > firstIndex));
+    e.maxLeftOffset = toNumber(loop || (rtl ? selectedIndex > firstAvailableIndex : selectedIndex < lastAvailableIndex));
+    e.maxRightOffset = toNumber(loop || (rtl ? selectedIndex < lastAvailableIndex : selectedIndex > firstAvailableIndex));
     this._swipeDirection = null;
   },
   _swipeUpdateHandler: function _swipeUpdateHandler(e) {
@@ -311,21 +313,25 @@ var MultiView = _uiCollection_widget.default.inherit({
       this._updateItems(selectedIndex, newIndex);
     }
   },
-  _findNextAvailableIndex: function _findNextAvailableIndex(index, offset) {
+  _findNextAvailableIndex(index, offset) {
     var _this$option = this.option(),
       items = _this$option.items,
       loop = _this$option.loop;
     var _this$_boundaryIndice2 = this._boundaryIndices,
-      firstIndex = _this$_boundaryIndice2.firstIndex,
-      lastIndex = _this$_boundaryIndice2.lastIndex;
+      firstAvailableIndex = _this$_boundaryIndice2.firstAvailableIndex,
+      lastAvailableIndex = _this$_boundaryIndice2.lastAvailableIndex,
+      firstTrueIndex = _this$_boundaryIndice2.firstTrueIndex,
+      lastTrueIndex = _this$_boundaryIndice2.lastTrueIndex;
+    var isFirstActive = [firstTrueIndex, firstAvailableIndex].includes(index);
+    var isLastActive = [lastTrueIndex, lastAvailableIndex].includes(index);
     if (loop) {
-      if (index === firstIndex) {
-        return lastIndex;
-      } else if (index === lastIndex) {
-        return firstIndex;
+      if (isFirstActive && offset < 0) {
+        return lastAvailableIndex;
+      } else if (isLastActive && offset > 0) {
+        return firstAvailableIndex;
       }
     }
-    for (var i = index + offset; i >= firstIndex && i <= lastIndex; i += offset) {
+    for (var i = index + offset; i >= firstAvailableIndex && i <= lastAvailableIndex; i += offset) {
       var isDisabled = Boolean(items[i].disabled);
       if (!isDisabled) {
         return i;
@@ -371,7 +377,7 @@ var MultiView = _uiCollection_widget.default.inherit({
       this._dimensionChanged();
     }
   },
-  _updateSwipeDisabledState: function _updateSwipeDisabledState() {
+  _updateSwipeDisabledState() {
     var disabled = this._getSwipeDisabledState();
     _swipeable.default.getInstance(this.$element()).option('disabled', disabled);
   },

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/widget/ui.errors.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -290,5 +290,13 @@ export default errorUtils(errors.ERROR_MESSAGES, {
   /**
    * @name ErrorsUIWidgets.W1022
    */
-  W1022: '{0} JSON parsing error: \'{1}\''
+  W1022: '{0} JSON parsing error: \'{1}\'',
+  /**
+   * @name ErrorsUIWidgets.W1023
+   */
+  W1023: 'Appointments require unique keys. Otherwise, the agenda view may not work correctly.',
+  /**
+   * @name ErrorsUIWidgets.W1024
+   */
+  W1024: 'The client-side export is enabled. Implement the \'onExporting\' function.'
 });

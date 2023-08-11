@@ -9,6 +9,7 @@ exports.isDetailRow = isDetailRow;
 exports.isEditorCell = isEditorCell;
 exports.isElementDefined = isElementDefined;
 exports.isFixedColumnIndexOffsetRequired = isFixedColumnIndexOffsetRequired;
+exports.isGroupFooterRow = isGroupFooterRow;
 exports.isGroupRow = isGroupRow;
 exports.isMobile = isMobile;
 exports.isNotFocusedRow = isNotFocusedRow;
@@ -18,14 +19,18 @@ var _type = require("../../../../core/utils/type");
 var _const = require("../editing/const");
 var _const2 = require("./const");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var DATAGRID_GROUP_FOOTER_CLASS = 'dx-datagrid-group-footer';
 function isGroupRow($row) {
   return $row && $row.hasClass(_const2.GROUP_ROW_CLASS);
+}
+function isGroupFooterRow($row) {
+  return $row && $row.hasClass(DATAGRID_GROUP_FOOTER_CLASS);
 }
 function isDetailRow($row) {
   return $row && $row.hasClass(_const2.MASTER_DETAIL_ROW_CLASS);
 }
 function isDataRow($row) {
-  return $row && !isGroupRow($row) && !isDetailRow($row);
+  return $row && $row.hasClass(_const2.DATA_ROW_CLASS);
 }
 function isNotFocusedRow($row) {
   return !$row || $row.hasClass(_const2.FREESPACE_ROW_CLASS) || $row.hasClass(_const2.VIRTUAL_ROW_CLASS);

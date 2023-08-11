@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/form/components/button_item.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,9 +26,9 @@ function renderButtonItem(_ref) {
   $parent.css('justifyContent', convertAlignmentToJustifyContent(item.verticalAlignment));
   var $button = (0, _renderer.default)('<div>').appendTo($rootElement);
   return {
-    $rootElement: $rootElement,
+    $rootElement,
     buttonInstance: createComponentCallback($button, 'dxButton', (0, _extend.extend)({
-      validationGroup: validationGroup
+      validationGroup
     }, item.buttonOptions))
   };
 }

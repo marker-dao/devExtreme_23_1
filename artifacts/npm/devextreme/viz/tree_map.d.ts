@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/tree_map.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -589,7 +589,7 @@ export interface dxTreeMapOptions extends BaseWidgetOptions<dxTreeMap> {
      * @type object
      * @public
      */
-    tooltip?: dxTreeMapTooltip;
+    tooltip?: Tooltip;
     /**
      * @docid
      * @default 'value'
@@ -598,10 +598,10 @@ export interface dxTreeMapOptions extends BaseWidgetOptions<dxTreeMap> {
     valueField?: string;
 }
 /**
- * @docid
- * @namespace DevExpress.viz
+ * @public
+ * @docid dxTreeMapTooltip
  */
-export interface dxTreeMapTooltip extends BaseWidgetTooltip {
+export type Tooltip = BaseWidgetTooltip & {
     /**
      * @docid dxTreeMapOptions.tooltip.contentTemplate
      * @type_function_return string|Element|jQuery
@@ -616,7 +616,7 @@ export interface dxTreeMapTooltip extends BaseWidgetTooltip {
      * @public
      */
     customizeTooltip?: ((info: { value?: number; valueText?: string; node?: dxTreeMapNode }) => any);
-}
+};
 /**
  * @docid
  * @inherits BaseWidget, DataHelperMixin
@@ -794,5 +794,12 @@ export type Properties = dxTreeMapOptions;
 
 /** @deprecated use Properties instead */
 export type Options = dxTreeMapOptions;
+
+// #region deprecated in v23.1
+
+/** @deprecated Use Tooltip instead */
+export type dxTreeMapTooltip = Tooltip;
+
+// #endregion
 
 

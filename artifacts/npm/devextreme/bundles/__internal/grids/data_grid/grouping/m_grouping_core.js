@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/grouping/m_grouping_core.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -104,35 +104,35 @@ var GroupingHelper = _class.default.inherit(function () {
     return result;
   };
   return {
-    ctor: function ctor(dataSourceAdapter) {
+    ctor(dataSourceAdapter) {
       this._dataSource = dataSourceAdapter;
       this.reset();
     },
-    reset: function reset() {
+    reset() {
       this._groupsInfo = [];
       this._totalCountCorrection = 0;
     },
-    totalCountCorrection: function totalCountCorrection() {
+    totalCountCorrection() {
       return this._totalCountCorrection;
     },
-    updateTotalItemsCount: function updateTotalItemsCount(totalCountCorrection) {
+    updateTotalItemsCount(totalCountCorrection) {
       this._totalCountCorrection = totalCountCorrection || 0;
     },
-    isGroupItemCountable: function isGroupItemCountable(item) {
+    isGroupItemCountable(item) {
       return !this._isVirtualPaging() || !item.isContinuation;
     },
-    _isVirtualPaging: function _isVirtualPaging() {
+    _isVirtualPaging() {
       var scrollingMode = this._dataSource.option('scrolling.mode');
       return scrollingMode === 'virtual' || scrollingMode === 'infinite';
     },
-    itemsCount: function itemsCount() {
+    itemsCount() {
       var dataSourceAdapter = this._dataSource;
       var dataSource = dataSourceAdapter._dataSource;
       var groupCount = _m_core.default.normalizeSortingInfo(dataSource.group() || []).length;
       var itemsCount = calculateItemsCount(this, dataSource.items(), groupCount);
       return itemsCount;
     },
-    foreachGroups: function foreachGroups(callback, childrenAtFirst, foreachCollapsedGroups, updateOffsets, updateParentOffsets) {
+    foreachGroups(callback, childrenAtFirst, foreachCollapsedGroups, updateOffsets, updateParentOffsets) {
       var that = this;
       function foreachGroupsCore(groupsInfo, callback, childrenAtFirst, parents) {
         var callbackResults = [];
@@ -169,7 +169,7 @@ var GroupingHelper = _class.default.inherit(function () {
       }
       return foreachGroupsCore(that._groupsInfo, callback, childrenAtFirst, []);
     },
-    _updateGroupInfoOffsets: function _updateGroupInfoOffsets(groupsInfo, parents) {
+    _updateGroupInfoOffsets(groupsInfo, parents) {
       parents = parents || [];
       for (var index = 0; index < groupsInfo.length; index++) {
         var groupInfo = groupsInfo[index];
@@ -184,7 +184,7 @@ var GroupingHelper = _class.default.inherit(function () {
         return a.offset - b.offset;
       });
     },
-    findGroupInfo: function findGroupInfo(path) {
+    findGroupInfo(path) {
       var that = this;
       var groupInfo;
       var groupsInfo = that._groupsInfo;
@@ -194,7 +194,7 @@ var GroupingHelper = _class.default.inherit(function () {
       }
       return groupInfo && groupInfo.data;
     },
-    addGroupInfo: function addGroupInfo(groupInfoData) {
+    addGroupInfo(groupInfoData) {
       var that = this;
       var groupInfo;
       var path = groupInfoData.path;
@@ -226,10 +226,10 @@ var GroupingHelper = _class.default.inherit(function () {
         groupsInfo = groupInfo.children;
       }
     },
-    allowCollapseAll: function allowCollapseAll() {
+    allowCollapseAll() {
       return true;
     },
-    refresh: function refresh(options) {
+    refresh(options) {
       var that = this;
       var storeLoadOptions = options.storeLoadOptions;
       var groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group || []);
@@ -248,11 +248,11 @@ var GroupingHelper = _class.default.inherit(function () {
         cleanGroupsInfo(that._groupsInfo, 0, groupsCount);
       }
     },
-    handleDataLoading: function handleDataLoading() {},
-    handleDataLoaded: function handleDataLoaded(options, callBase) {
+    handleDataLoading() {},
+    handleDataLoaded(options, callBase) {
       callBase(options);
     },
-    handleDataLoadedCore: function handleDataLoadedCore(options, callBase) {
+    handleDataLoadedCore(options, callBase) {
       callBase(options);
     }
   };

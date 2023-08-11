@@ -357,7 +357,7 @@ var NumberBoxBase = TextEditor.inherit({
     }
     this.callBase();
   },
-  reset: function reset() {
+  clear: function clear() {
     if (this.option('value') === null) {
       this.option('text', '');
       if (this._input().length) {

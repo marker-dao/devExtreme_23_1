@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/drop_down_editor/ui.drop_down_editor.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -653,10 +653,11 @@ var DropDownEditor = TextBox.inherit({
     return this.option('applyValueMode') === 'useButtons' ? this._popupToolbarItemsConfig() : [];
   },
   _getFirstPopupElement: function _getFirstPopupElement() {
-    return this._popup.$wrapper().find('.dx-popup-done.dx-button');
+    return $(this._popup.getFocusableElements()[0]);
   },
   _getLastPopupElement: function _getLastPopupElement() {
-    return this._popup.$wrapper().find('.dx-popup-cancel.dx-button');
+    var elements = this._popup.getFocusableElements();
+    return $(elements[elements.length - 1]);
   },
   _popupElementTabHandler: function _popupElementTabHandler(e) {
     var $element = $(e.currentTarget);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/funnel/funnel.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@ import { addAlgorithm, getAlgorithm } from './tiling';
 import dynamicSlope from './tiling.funnel';
 import dynamicHeight from './tiling.pyramid';
 import { noop } from '../../core/utils/common';
-import baseWidget from '../core/base_widget';
+import baseWidget from '../../__internal/viz/core/m_base_widget';
 import componentRegistrator from '../../core/component_registrator';
 import Item from './item';
 var NODES_CREATE_CHANGE = 'NODES_CREATE';

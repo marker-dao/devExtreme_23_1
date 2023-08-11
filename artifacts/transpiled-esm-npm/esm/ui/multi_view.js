@@ -261,8 +261,10 @@ var MultiView = CollectionWidget.inherit({
       }
     });
     this._boundaryIndices = {
-      firstIndex: (_firstIndex2 = firstIndex) !== null && _firstIndex2 !== void 0 ? _firstIndex2 : 0,
-      lastIndex: (_lastIndex = lastIndex) !== null && _lastIndex !== void 0 ? _lastIndex : items.length - 1
+      firstAvailableIndex: (_firstIndex2 = firstIndex) !== null && _firstIndex2 !== void 0 ? _firstIndex2 : 0,
+      lastAvailableIndex: (_lastIndex = lastIndex) !== null && _lastIndex !== void 0 ? _lastIndex : items.length - 1,
+      firstTrueIndex: 0,
+      lastTrueIndex: items.length - 1
     };
   },
   _swipeStartHandler: function _swipeStartHandler(e) {
@@ -270,12 +272,12 @@ var MultiView = CollectionWidget.inherit({
     var selectedIndex = this.option('selectedIndex');
     var loop = this.option('loop');
     var {
-      firstIndex,
-      lastIndex
+      firstAvailableIndex,
+      lastAvailableIndex
     } = this._boundaryIndices;
     var rtl = this.option('rtlEnabled');
-    e.maxLeftOffset = toNumber(loop || (rtl ? selectedIndex > firstIndex : selectedIndex < lastIndex));
-    e.maxRightOffset = toNumber(loop || (rtl ? selectedIndex < lastIndex : selectedIndex > firstIndex));
+    e.maxLeftOffset = toNumber(loop || (rtl ? selectedIndex > firstAvailableIndex : selectedIndex < lastAvailableIndex));
+    e.maxRightOffset = toNumber(loop || (rtl ? selectedIndex < lastAvailableIndex : selectedIndex > firstAvailableIndex));
     this._swipeDirection = null;
   },
   _swipeUpdateHandler: function _swipeUpdateHandler(e) {
@@ -295,17 +297,21 @@ var MultiView = CollectionWidget.inherit({
       loop
     } = this.option();
     var {
-      firstIndex,
-      lastIndex
+      firstAvailableIndex,
+      lastAvailableIndex,
+      firstTrueIndex,
+      lastTrueIndex
     } = this._boundaryIndices;
+    var isFirstActive = [firstTrueIndex, firstAvailableIndex].includes(index);
+    var isLastActive = [lastTrueIndex, lastAvailableIndex].includes(index);
     if (loop) {
-      if (index === firstIndex) {
-        return lastIndex;
-      } else if (index === lastIndex) {
-        return firstIndex;
+      if (isFirstActive && offset < 0) {
+        return lastAvailableIndex;
+      } else if (isLastActive && offset > 0) {
+        return firstAvailableIndex;
       }
     }
-    for (var i = index + offset; i >= firstIndex && i <= lastIndex; i += offset) {
+    for (var i = index + offset; i >= firstAvailableIndex && i <= lastAvailableIndex; i += offset) {
       var isDisabled = Boolean(items[i].disabled);
       if (!isDisabled) {
         return i;

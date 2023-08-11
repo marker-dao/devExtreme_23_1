@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/data_grid_types.d.ts)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -71,13 +71,6 @@ export {
   DataGridPredefinedColumnButton,
   DataGridPredefinedToolbarItem,
   GroupData,
-  GridBaseEditing,
-  GridBaseEditingTexts,
-  GridBasePaging,
-  GridBaseScrolling,
-  GridBaseSelection,
-  GridBaseColumn,
-  GridBaseColumnButton,
   AdaptiveDetailRowPreparingEvent,
   CellClickEvent,
   CellDblClickEvent,
@@ -144,7 +137,9 @@ export {
   Grouping,
   GroupingTexts,
   MasterDetail,
+  SortByGroupSummaryInfoItem,
   CustomSummaryInfo,
+  Paging,
   RowDragging,
   Summary,
   SummaryItemTextInfo,
@@ -153,11 +148,9 @@ export {
   SummaryTexts,
   ToolbarItem,
   Toolbar,
-  dxDataGridEditing,
   Editing,
-  dxDataGridScrolling,
+  EditingTexts,
   Scrolling,
-  dxDataGridSelection,
   Selection,
   Column,
   ColumnButton,

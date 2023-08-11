@@ -70,9 +70,9 @@ var PopupDrag = /*#__PURE__*/function () {
     var updateEventName = (0, _index.addNamespace)(_drag.move, namespace);
     var endEventName = (0, _index.addNamespace)(_drag.end, namespace);
     return {
-      startEventName: startEventName,
-      updateEventName: updateEventName,
-      endEventName: endEventName
+      startEventName,
+      updateEventName,
+      endEventName
     };
   };
   _proto._dragStartHandler = function _dragStartHandler(e) {

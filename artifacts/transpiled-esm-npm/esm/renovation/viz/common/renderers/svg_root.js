@@ -40,17 +40,17 @@ export var RootSvgElementProps = {
 };
 import { createRef as infernoCreateRef } from 'inferno';
 export class RootSvgElement extends InfernoComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.svgRef = infernoCreateRef();
-    this.setRootElementRef = this.setRootElementRef.bind(this);
-  }
   get config() {
     if (this.context[ConfigContext.id]) {
       return this.context[ConfigContext.id];
     }
     return ConfigContext.defaultValue;
+  }
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.svgRef = infernoCreateRef();
+    this.setRootElementRef = this.setRootElementRef.bind(this);
   }
   createEffects() {
     return [new InfernoEffect(this.setRootElementRef, [])];

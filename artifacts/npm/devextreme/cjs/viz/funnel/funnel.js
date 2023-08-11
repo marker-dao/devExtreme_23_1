@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/funnel/funnel.js)
 * Version: 23.2.0
-* Build date: Thu Jun 29 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ var _tiling = require("./tiling");
 var _tiling2 = _interopRequireDefault(require("./tiling.funnel"));
 var _tiling3 = _interopRequireDefault(require("./tiling.pyramid"));
 var _common = require("../../core/utils/common");
-var _base_widget = _interopRequireDefault(require("../core/base_widget"));
+var _m_base_widget = _interopRequireDefault(require("../../__internal/viz/core/m_base_widget"));
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _item = _interopRequireDefault(require("./item"));
 var _data_source = require("../core/data_source");
@@ -32,7 +32,7 @@ function getLegendItemState(itemState) {
     hatching: itemState.hatching
   };
 }
-var dxFunnel = _base_widget.default.inherit({
+var dxFunnel = _m_base_widget.default.inherit({
   _rootClass: 'dxf-funnel',
   _rootClassPrefix: 'dxf',
   _proxyData: [],
@@ -229,7 +229,7 @@ var dxFunnel = _base_widget.default.inherit({
   getAllItems: function getAllItems() {
     return this._items.slice();
   },
-  _getLegendData: function _getLegendData() {
+  _getLegendData() {
     return this._items.map(function (item) {
       var states = item.states;
       return {

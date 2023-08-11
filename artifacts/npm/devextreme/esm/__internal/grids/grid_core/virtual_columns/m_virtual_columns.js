@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/virtual_columns/m_virtual_columns.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,6 +27,25 @@ var VirtualScrollingRowsViewExtender = {
       left = getWidth(scrollable.$content()) - getWidth(scrollable.$element()) - left;
     }
     that._columnsController.setScrollPosition(left);
+  },
+  _restoreScrollTop() {
+    var scrollable = this.getScrollable();
+    var scrollTop = scrollable === null || scrollable === void 0 ? void 0 : scrollable.scrollTop();
+    if (this._scrollTop > 0 && scrollTop !== this._scrollTop) {
+      scrollable.scrollTo({
+        y: this._scrollTop
+      });
+    }
+  },
+  _renderCore(e) {
+    if (e === null || e === void 0 ? void 0 : e.virtualColumnsScrolling) {
+      var resizeCompletedHandler = () => {
+        this.resizeCompleted.remove(resizeCompletedHandler);
+        this._restoreScrollTop();
+      };
+      this.resizeCompleted.add(resizeCompletedHandler);
+    }
+    return this.callBase.apply(this, arguments);
   }
 };
 var HeaderViewExtender = {

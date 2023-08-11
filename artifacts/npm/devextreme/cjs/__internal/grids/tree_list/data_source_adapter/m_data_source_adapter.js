@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/data_source_adapter/m_data_source_adapter.js)
 * Version: 23.2.0
-* Build date: Mon Jul 03 2023
+* Build date: Fri Aug 11 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -44,49 +44,49 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
     return childKeys;
   };
   return {
-    _createKeyGetter: function _createKeyGetter() {
+    _createKeyGetter() {
       var keyExpr = this.getKeyExpr();
       return (0, _data.compileGetter)(keyExpr);
     },
-    _createKeySetter: function _createKeySetter() {
+    _createKeySetter() {
       var keyExpr = this.getKeyExpr();
       if ((0, _type.isFunction)(keyExpr)) {
         return keyExpr;
       }
       return (0, _data.compileSetter)(keyExpr);
     },
-    createParentIdGetter: function createParentIdGetter() {
+    createParentIdGetter() {
       return (0, _data.compileGetter)(this.option('parentIdExpr'));
     },
-    createParentIdSetter: function createParentIdSetter() {
+    createParentIdSetter() {
       var parentIdExpr = this.option('parentIdExpr');
       if ((0, _type.isFunction)(parentIdExpr)) {
         return parentIdExpr;
       }
       return (0, _data.compileSetter)(parentIdExpr);
     },
-    _createItemsGetter: function _createItemsGetter() {
+    _createItemsGetter() {
       return (0, _data.compileGetter)(this.option('itemsExpr'));
     },
-    _createHasItemsGetter: function _createHasItemsGetter() {
+    _createHasItemsGetter() {
       var hasItemsExpr = this.option('hasItemsExpr');
       return hasItemsExpr && (0, _data.compileGetter)(hasItemsExpr);
     },
-    _createHasItemsSetter: function _createHasItemsSetter() {
+    _createHasItemsSetter() {
       var hasItemsExpr = this.option('hasItemsExpr');
       if ((0, _type.isFunction)(hasItemsExpr)) {
         return hasItemsExpr;
       }
       return hasItemsExpr && (0, _data.compileSetter)(hasItemsExpr);
     },
-    _updateIndexByKeyObject: function _updateIndexByKeyObject(items) {
+    _updateIndexByKeyObject(items) {
       var that = this;
       that._indexByKey = {};
       (0, _iterator.each)(items, function (index, item) {
         that._indexByKey[item.key] = index;
       });
     },
-    _calculateHasItems: function _calculateHasItems(node, options) {
+    _calculateHasItems(node, options) {
       var that = this;
       var parentIds = options.storeLoadOptions.parentIds;
       var hasItems;
@@ -105,7 +105,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
       return !!hasItems;
     },
-    _fillVisibleItemsByNodes: function _fillVisibleItemsByNodes(nodes, options, result) {
+    _fillVisibleItemsByNodes(nodes, options, result) {
       for (var i = 0; i < nodes.length; i++) {
         if (nodes[i].visible) {
           result.push(nodes[i]);
@@ -115,7 +115,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         }
       }
     },
-    _convertItemToNode: function _convertItemToNode(item, rootValue, nodeByKey) {
+    _convertItemToNode(item, rootValue, nodeByKey) {
       var key = this._keyGetter(item);
       var parentId = this._parentIdGetter(item);
       parentId = (0, _type.isDefined)(parentId) ? parentId : rootValue;
@@ -124,14 +124,14 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         children: []
       };
       var node = nodeByKey[key] = nodeByKey[key] || {
-        key: key,
+        key,
         children: []
       };
       node.data = item;
       node.parent = parentNode;
       return node;
     },
-    _createNodesByItems: function _createNodesByItems(items, visibleItems) {
+    _createNodesByItems(items, visibleItems) {
       var that = this;
       var rootValue = that.option('rootValue');
       var visibleByKey = {};
@@ -159,7 +159,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       rootNode.level = -1;
       return rootNode;
     },
-    _convertDataToPlainStructure: function _convertDataToPlainStructure(data, parentId, result) {
+    _convertDataToPlainStructure(data, parentId, result) {
       var key;
       if (this._itemsGetter && !data.isConverted) {
         result = result || [];
@@ -187,14 +187,14 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
       return data;
     },
-    _createIdFilter: function _createIdFilter(field, keys) {
+    _createIdFilter(field, keys) {
       var parentIdFilters = [];
       for (var i = 0; i < keys.length; i++) {
         parentIdFilters.push([field, '=', keys[i]]);
       }
       return _m_utils.default.combineFilters(parentIdFilters, 'or');
     },
-    _customizeRemoteOperations: function _customizeRemoteOperations(options, operationTypes) {
+    _customizeRemoteOperations(options, operationTypes) {
       this.callBase.apply(this, arguments);
       options.remoteOperations.paging = false;
       var expandVisibleNodes = false;
@@ -223,7 +223,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
       options.expandVisibleNodes = expandVisibleNodes;
     },
-    _getParentIdsToLoad: function _getParentIdsToLoad(parentIds) {
+    _getParentIdsToLoad(parentIds) {
       var parentIdsToLoad = [];
       for (var i = 0; i < parentIds.length; i++) {
         var node = this.getNodeByKey(parentIds[i]);
@@ -233,7 +233,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
       return parentIdsToLoad;
     },
-    _handleCustomizeStoreLoadOptions: function _handleCustomizeStoreLoadOptions(options) {
+    _handleCustomizeStoreLoadOptions(options) {
       var rootValue = this.option('rootValue');
       var parentIdExpr = this.option('parentIdExpr');
       var parentIds = options.storeLoadOptions.parentIds;
@@ -258,7 +258,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         }
       }
     },
-    _generateInfoToLoad: function _generateInfoToLoad(data, needChildren) {
+    _generateInfoToLoad(data, needChildren) {
       var that = this;
       var key;
       var keyMap = {};
@@ -283,7 +283,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         keys: resultKeys
       };
     },
-    _loadParentsOrChildren: function _loadParentsOrChildren(data, options, needChildren) {
+    _loadParentsOrChildren(data, options, needChildren) {
       var _this = this;
       var that = this;
       var filter;
@@ -347,16 +347,16 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }).fail(d.reject);
       return d;
     },
-    _loadParents: function _loadParents(data, options) {
+    _loadParents(data, options) {
       return this._loadParentsOrChildren(data, options);
     },
-    _loadChildrenIfNeed: function _loadChildrenIfNeed(data, options) {
+    _loadChildrenIfNeed(data, options) {
       if (isFullBranchFilterMode(this)) {
         return this._loadParentsOrChildren(data, options, true);
       }
       return (0, _deferred.when)(data);
     },
-    _updateHasItemsMap: function _updateHasItemsMap(options) {
+    _updateHasItemsMap(options) {
       var parentIds = options.storeLoadOptions.parentIds;
       if (parentIds) {
         for (var i = 0; i < parentIds.length; i++) {
@@ -364,7 +364,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         }
       }
     },
-    _getKeyInfo: function _getKeyInfo() {
+    _getKeyInfo() {
       return {
         key: function key() {
           return 'key';
@@ -374,7 +374,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         }
       };
     },
-    _processChanges: function _processChanges(changes) {
+    _processChanges(changes) {
       var _this2 = this;
       var processedChanges = [];
       changes.forEach(function (change) {
@@ -394,7 +394,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       });
       return processedChanges;
     },
-    _handleChanging: function _handleChanging(e) {
+    _handleChanging(e) {
       var _this3 = this;
       this.callBase.apply(this, arguments);
       var processChanges = function processChanges(changes) {
@@ -405,18 +405,18 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       };
       e.postProcessChanges = processChanges;
     },
-    _applyBatch: function _applyBatch(changes) {
+    _applyBatch(changes) {
       var processedChanges = this._processChanges(changes);
       this.callBase(processedChanges);
     },
-    _setHasItems: function _setHasItems(node, value) {
+    _setHasItems(node, value) {
       var hasItemsSetter = this._hasItemsSetter;
       node.hasChildren = value;
       if (hasItemsSetter && node.data) {
         hasItemsSetter(node.data, value);
       }
     },
-    _applyInsert: function _applyInsert(change) {
+    _applyInsert(change) {
       var that = this;
       var baseChanges = [];
       var parentId = that.parentKeyOf(change.data);
@@ -436,16 +436,16 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
           baseChanges.push({
             type: change.type,
             data: node,
-            index: index
+            index
           });
         }
       }
       return baseChanges;
     },
-    _needToCopyDataObject: function _needToCopyDataObject() {
+    _needToCopyDataObject() {
       return false;
     },
-    _applyRemove: function _applyRemove(change) {
+    _applyRemove(change) {
       var baseChanges = [];
       var node = this.getNodeByKey(change.key);
       var parentNode = node && node.parent;
@@ -460,14 +460,14 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
           baseChanges = baseChanges.concat(this.getChildNodeKeys(change.key).map(function (key) {
             return {
               type: change.type,
-              key: key
+              key
             };
           }));
         }
       }
       return baseChanges;
     },
-    _handleDataLoaded: function _handleDataLoaded(options) {
+    _handleDataLoaded(options) {
       var data = options.data = this._convertDataToPlainStructure(options.data);
       if (!options.remoteOperations.filtering && options.loadOptions.filter) {
         options.fullData = queryByOptions((0, _query.default)(options.data), {
@@ -480,7 +480,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         this._cachedStoreData.isConverted = true;
       }
     },
-    _fillNodes: function _fillNodes(nodes, options, expandedRowKeys, level) {
+    _fillNodes(nodes, options, expandedRowKeys, level) {
       var isFullBranch = isFullBranchFilterMode(this);
       level = level || 0;
       for (var i = 0; i < nodes.length; i++) {
@@ -513,7 +513,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         }
       }
     },
-    _processTreeStructure: function _processTreeStructure(options, visibleItems) {
+    _processTreeStructure(options, visibleItems) {
       var data = options.data;
       var parentIds = options.storeLoadOptions.parentIds;
       var expandedRowKeys = [];
@@ -544,7 +544,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       options.data = resultData;
       this._totalItemsCount = resultData.length;
     },
-    _handleDataLoadedCore: function _handleDataLoadedCore(options) {
+    _handleDataLoadedCore(options) {
       var that = this;
       var data = options.data;
       var callBase = that.callBase;
@@ -573,7 +573,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
       that.callBase(options);
     },
-    _handlePush: function _handlePush(_ref) {
+    _handlePush(_ref) {
       var changes = _ref.changes;
       var reshapeOnPush = this._dataSource._reshapeOnPush;
       var isNeedReshape = reshapeOnPush && !!changes.length;
@@ -587,7 +587,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       this.callBase.apply(this, arguments);
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    init: function init(dataSource, remoteOperations) {
+    init(dataSource, remoteOperations) {
       this.callBase.apply(this, arguments);
       var dataStructure = this.option('dataStructure');
       this._keyGetter = this._createKeyGetter();
@@ -604,7 +604,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       this._totalItemsCount = 0;
       this.createAction('onNodesInitialized');
     },
-    getKeyExpr: function getKeyExpr() {
+    getKeyExpr() {
       var store = this.store();
       var key = store && store.key();
       var keyExpr = this.option('keyExpr');
@@ -615,19 +615,19 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
       return key || keyExpr || DEFAULT_KEY_EXPRESSION;
     },
-    keyOf: function keyOf(data) {
+    keyOf(data) {
       return this._keyGetter && this._keyGetter(data);
     },
-    parentKeyOf: function parentKeyOf(data) {
+    parentKeyOf(data) {
       return this._parentIdGetter && this._parentIdGetter(data);
     },
-    getRootNode: function getRootNode() {
+    getRootNode() {
       return this._rootNode;
     },
-    totalItemsCount: function totalItemsCount() {
+    totalItemsCount() {
       return this._totalItemsCount + this._totalCountCorrection;
     },
-    isRowExpanded: function isRowExpanded(key, cache) {
+    isRowExpanded(key, cache) {
       if (cache) {
         var isExpandedByKey = cache.isExpandedByKey;
         if (!isExpandedByKey) {
@@ -641,7 +641,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       var indexExpandedNodeKey = _m_utils.default.getIndexByKey(key, this.option('expandedRowKeys'), null);
       return indexExpandedNodeKey >= 0;
     },
-    _changeRowExpandCore: function _changeRowExpandCore(key) {
+    _changeRowExpandCore(key) {
       var expandedRowKeys = this.option('expandedRowKeys').slice();
       var indexExpandedNodeKey = _m_utils.default.getIndexByKey(key, expandedRowKeys, null);
       if (indexExpandedNodeKey < 0) {
@@ -651,17 +651,17 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
       this.option('expandedRowKeys', expandedRowKeys);
     },
-    changeRowExpand: function changeRowExpand(key) {
+    changeRowExpand(key) {
       this._changeRowExpandCore(key);
       // @ts-expect-error
       return this._isNodesInitializing ? new _deferred.Deferred().resolve() : this.load();
     },
-    getNodeByKey: function getNodeByKey(key) {
+    getNodeByKey(key) {
       if (this._nodeByKey) {
         return this._nodeByKey[key];
       }
     },
-    getNodeLeafKeys: function getNodeLeafKeys() {
+    getNodeLeafKeys() {
       var that = this;
       var result = [];
       var keys = that._rootNode ? [that._rootNode.key] : [];
@@ -673,7 +673,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       });
       return result;
     },
-    getChildNodeKeys: function getChildNodeKeys(parentKey) {
+    getChildNodeKeys(parentKey) {
       var node = this.getNodeByKey(parentKey);
       var childrenKeys = [];
       node && _m_core.default.foreachNodes(node.children, function (childNode) {
@@ -681,7 +681,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       });
       return childrenKeys;
     },
-    loadDescendants: function loadDescendants(keys, childrenOnly) {
+    loadDescendants(keys, childrenOnly) {
       var that = this;
       // @ts-expect-error
       var d = new _deferred.Deferred();
@@ -708,7 +708,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }).fail(d.reject);
       return d.promise();
     },
-    forEachNode: function forEachNode() {
+    forEachNode() {
       var nodes = [];
       var callback;
       if (arguments.length === 1) {
@@ -728,10 +728,10 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
   };
 }());
 var _default = {
-  extend: function extend(extender) {
+  extend(extender) {
     DataSourceAdapterTreeList = DataSourceAdapterTreeList.inherit(extender);
   },
-  create: function create(component) {
+  create(component) {
     return new DataSourceAdapterTreeList(component);
   }
 };
