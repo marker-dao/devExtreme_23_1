@@ -104,9 +104,11 @@ function subscribeVisibilityChange() {
 function unsubscribeVisibilityChange() {
   _events_engine.default.off(_dom_adapter.default.getDocument(), 'visibilitychange', onDocumentVisibilityChange);
 }
-function hiddenFocus(element) {
+function hiddenFocus(element, preventScroll) {
   isHiddenFocusing = true;
-  element.focus();
+  element.focus({
+    preventScroll
+  });
   isHiddenFocusing = false;
 }
 function registerKeyboardAction(viewName, instance, $element, selector, action, executeKeyDown) {

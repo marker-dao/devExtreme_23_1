@@ -34,7 +34,7 @@ var calculateFreeWidthWithCurrentMinWidth = function calculateFreeWidthWithCurre
   return calculateFreeWidth(that, widths.map((width, index) => index === columnIndex ? currentMinWidth : width));
 };
 var restoreFocus = function restoreFocus(focusedElement, selectionRange) {
-  accessibility.hiddenFocus(focusedElement);
+  accessibility.hiddenFocus(focusedElement, true);
   gridCoreUtils.setSelectionRange(focusedElement, selectionRange);
 };
 var resizingControllerMembers = {

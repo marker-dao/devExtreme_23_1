@@ -101,9 +101,11 @@ export function subscribeVisibilityChange() {
 export function unsubscribeVisibilityChange() {
   eventsEngine.off(domAdapter.getDocument(), 'visibilitychange', onDocumentVisibilityChange);
 }
-export function hiddenFocus(element) {
+export function hiddenFocus(element, preventScroll) {
   isHiddenFocusing = true;
-  element.focus();
+  element.focus({
+    preventScroll
+  });
   isHiddenFocusing = false;
 }
 export function registerKeyboardAction(viewName, instance, $element, selector, action, executeKeyDown) {

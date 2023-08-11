@@ -45,7 +45,7 @@ var calculateFreeWidthWithCurrentMinWidth = function calculateFreeWidthWithCurre
   }));
 };
 var restoreFocus = function restoreFocus(focusedElement, selectionRange) {
-  accessibility.hiddenFocus(focusedElement);
+  accessibility.hiddenFocus(focusedElement, true);
   _m_utils.default.setSelectionRange(focusedElement, selectionRange);
 };
 var resizingControllerMembers = {

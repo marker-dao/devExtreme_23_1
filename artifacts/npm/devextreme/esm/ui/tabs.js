@@ -29,6 +29,7 @@ import { BindableTemplate } from '../core/templates/bindable_template';
 import { Deferred, when } from '../core/utils/deferred';
 import { isReachedLeft, isReachedRight, isReachedTop, isReachedBottom } from '../renovation/ui/scroll_view/utils/get_boundary_props';
 import { getScrollLeftMax } from '../renovation/ui/scroll_view/utils/get_scroll_left_max';
+import { getWindow } from '../core/utils/window';
 
 // STYLE tabs
 
@@ -57,6 +58,10 @@ var FEEDBACK_DURATION_INTERVAL = 5;
 var FEEDBACK_SCROLL_TIMEOUT = 300;
 var TAB_OFFSET = 30;
 var ORIENTATION = {
+  horizontal: 'horizontal',
+  vertical: 'vertical'
+};
+var SCROLLABLE_DIRECTION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
@@ -212,6 +217,10 @@ var Tabs = CollectionWidget.inherit({
   _isVertical() {
     return this.option('orientation') === ORIENTATION.vertical;
   },
+  _isServerSide() {
+    var window = getWindow();
+    return window.isWindowMock || !window;
+  },
   _isItemsSizeExceeded() {
     var isVertical = this._isVertical();
     var isItemsSizeExceeded = isVertical ? this._isItemsHeightExceeded() : this._isItemsWidthExceeded();
@@ -233,7 +242,7 @@ var Tabs = CollectionWidget.inherit({
     var elementHeight = getHeight(this.$element());
     return itemsHeight - 1 > elementHeight;
   },
-  _needStretchItems: function _needStretchItems() {
+  _needStretchItems() {
     var $visibleItems = this._getVisibleItems();
     var elementWidth = getWidth(this.$element());
     var itemsWidth = [];
@@ -291,12 +300,24 @@ var Tabs = CollectionWidget.inherit({
   _itemContainer: function _itemContainer() {
     return this._$wrapper;
   },
-  _renderScrollable: function _renderScrollable() {
-    var $itemContainer = this.$element().wrapInner($('<div>').addClass(TABS_SCROLLABLE_CLASS)).children();
+  _getScrollableDirection() {
     var isVertical = this._isVertical();
-    var scrollableDirection = isVertical ? 'vertical' : 'horizontal';
+    var scrollableDirection = isVertical ? SCROLLABLE_DIRECTION.vertical : SCROLLABLE_DIRECTION.horizontal;
+    return scrollableDirection;
+  },
+  _updateScrollableDirection() {
+    var scrollable = this.getScrollable();
+    if (!scrollable) {
+      this._renderScrolling();
+    } else {
+      var scrollableDirection = this._getScrollableDirection();
+      scrollable.option('direction', scrollableDirection);
+    }
+  },
+  _renderScrollable() {
+    var $itemContainer = this.$element().wrapInner($('<div>').addClass(TABS_SCROLLABLE_CLASS)).children();
     this._scrollable = this._createComponent($itemContainer, Scrollable, {
-      direction: scrollableDirection,
+      direction: this._getScrollableDirection(),
       showScrollbar: 'never',
       useKeyboard: false,
       useNative: false,
@@ -462,8 +483,13 @@ var Tabs = CollectionWidget.inherit({
           break;
         }
       case 'orientation':
-        this._toggleOrientationClass(args.value);
-        break;
+        {
+          this._toggleOrientationClass(args.value);
+          if (!this._isServerSide()) {
+            this._updateScrollableDirection();
+          }
+          break;
+        }
       default:
         this.callBase(args);
     }

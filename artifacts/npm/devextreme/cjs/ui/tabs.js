@@ -32,6 +32,7 @@ var _bindable_template = require("../core/templates/bindable_template");
 var _deferred = require("../core/utils/deferred");
 var _get_boundary_props = require("../renovation/ui/scroll_view/utils/get_boundary_props");
 var _get_scroll_left_max = require("../renovation/ui/scroll_view/utils/get_scroll_left_max");
+var _window = require("../core/utils/window");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE tabs
 
@@ -60,6 +61,10 @@ var FEEDBACK_DURATION_INTERVAL = 5;
 var FEEDBACK_SCROLL_TIMEOUT = 300;
 var TAB_OFFSET = 30;
 var ORIENTATION = {
+  horizontal: 'horizontal',
+  vertical: 'vertical'
+};
+var SCROLLABLE_DIRECTION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
@@ -219,6 +224,10 @@ var Tabs = _uiCollection_widget.default.inherit({
   _isVertical() {
     return this.option('orientation') === ORIENTATION.vertical;
   },
+  _isServerSide() {
+    var window = (0, _window.getWindow)();
+    return window.isWindowMock || !window;
+  },
   _isItemsSizeExceeded() {
     var isVertical = this._isVertical();
     var isItemsSizeExceeded = isVertical ? this._isItemsHeightExceeded() : this._isItemsWidthExceeded();
@@ -240,7 +249,7 @@ var Tabs = _uiCollection_widget.default.inherit({
     var elementHeight = (0, _size.getHeight)(this.$element());
     return itemsHeight - 1 > elementHeight;
   },
-  _needStretchItems: function _needStretchItems() {
+  _needStretchItems() {
     var $visibleItems = this._getVisibleItems();
     var elementWidth = (0, _size.getWidth)(this.$element());
     var itemsWidth = [];
@@ -298,13 +307,25 @@ var Tabs = _uiCollection_widget.default.inherit({
   _itemContainer: function _itemContainer() {
     return this._$wrapper;
   },
-  _renderScrollable: function _renderScrollable() {
+  _getScrollableDirection() {
+    var isVertical = this._isVertical();
+    var scrollableDirection = isVertical ? SCROLLABLE_DIRECTION.vertical : SCROLLABLE_DIRECTION.horizontal;
+    return scrollableDirection;
+  },
+  _updateScrollableDirection() {
+    var scrollable = this.getScrollable();
+    if (!scrollable) {
+      this._renderScrolling();
+    } else {
+      var scrollableDirection = this._getScrollableDirection();
+      scrollable.option('direction', scrollableDirection);
+    }
+  },
+  _renderScrollable() {
     var _this3 = this;
     var $itemContainer = this.$element().wrapInner((0, _renderer.default)('<div>').addClass(TABS_SCROLLABLE_CLASS)).children();
-    var isVertical = this._isVertical();
-    var scrollableDirection = isVertical ? 'vertical' : 'horizontal';
     this._scrollable = this._createComponent($itemContainer, _ui.default, {
-      direction: scrollableDirection,
+      direction: this._getScrollableDirection(),
       showScrollbar: 'never',
       useKeyboard: false,
       useNative: false,
@@ -469,8 +490,13 @@ var Tabs = _uiCollection_widget.default.inherit({
           break;
         }
       case 'orientation':
-        this._toggleOrientationClass(args.value);
-        break;
+        {
+          this._toggleOrientationClass(args.value);
+          if (!this._isServerSide()) {
+            this._updateScrollableDirection();
+          }
+          break;
+        }
       default:
         this.callBase(args);
     }
