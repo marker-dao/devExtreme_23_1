@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/model/views.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,25 +9,9 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 var _excluded = ["height", "scrolling", "width"];
-import { isObject, isString } from '../../../../core/utils/type';
-var VIEW_TYPES = ['day', 'week', 'workWeek', 'month', 'timelineDay', 'timelineWeek', 'timelineWorkWeek', 'timelineMonth', 'agenda'];
-export var getCurrentView = (currentView, views) => {
-  var currentViewProps = views.find(view => {
-    var names = isObject(view) ? [view.name, view.type] : [view];
-    if (names.includes(currentView)) {
-      return true;
-    }
-    return false;
-  });
-  if (currentViewProps === undefined) {
-    if (VIEW_TYPES.includes(currentView)) {
-      currentViewProps = currentView;
-    } else {
-      [currentViewProps] = views;
-    }
-  }
-  return currentViewProps;
-};
+import { renovationGetCurrentView } from './untyped_getCurrentView';
+import { isString } from '../../../../core/utils/type';
+export var getCurrentView = renovationGetCurrentView;
 export var getCurrentViewProps = (currentView, views) => {
   var currentViewProps = getCurrentView(currentView, views);
   return isString(currentViewProps) ? {

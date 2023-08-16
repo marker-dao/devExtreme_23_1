@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/view_model/view_data_generator.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,9 +11,9 @@
 exports.ViewDataGenerator = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _constants = require("../../constants");
-var _utils = require("../../resources/utils");
+var _m_utils = require("../../../../__internal/scheduler/resources/m_utils");
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
-var _utils2 = require("../../../../renovation/ui/scheduler/workspaces/utils");
+var _utils = require("../../../../renovation/ui/scheduler/workspaces/utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -51,7 +51,7 @@ var ViewDataGenerator = /*#__PURE__*/function () {
       hoursInterval = options.hoursInterval;
     this._setVisibilityDates(options);
     this.setHiddenInterval(startDayHour, endDayHour, hoursInterval);
-    var groupsList = (0, _utils.getAllGroups)(groups);
+    var groupsList = (0, _m_utils.getAllGroups)(groups);
     var cellCountInGroupRow = this.getCellCount({
       intervalCount,
       currentDate,
@@ -232,9 +232,9 @@ var ViewDataGenerator = /*#__PURE__*/function () {
         if (currentGroupIndex !== previousGroupIndex) {
           groupedData.push({
             dateTable: [],
-            isGroupedAllDayPanel: (0, _utils2.getIsGroupedAllDayPanel)(!!isAllDayRow, isVerticalGrouping),
+            isGroupedAllDayPanel: (0, _utils.getIsGroupedAllDayPanel)(!!isAllDayRow, isVerticalGrouping),
             groupIndex: currentGroupIndex,
-            key: (0, _utils2.getKeyByGroup)(currentGroupIndex, isVerticalGrouping)
+            key: (0, _utils.getKeyByGroup)(currentGroupIndex, isVerticalGrouping)
           });
         }
         if (isAllDayRow) {
@@ -310,7 +310,7 @@ var ViewDataGenerator = /*#__PURE__*/function () {
       endDayHour = options.endDayHour,
       interval = options.interval,
       hoursInterval = options.hoursInterval;
-    var groupsList = (0, _utils.getAllGroups)(groups);
+    var groupsList = (0, _m_utils.getAllGroups)(groups);
     var startDate = this.getDateByCellIndices(options, rowIndex, columnIndex, this.getCellCountInDay(startDayHour, endDayHour, hoursInterval));
     var endDate = this.calculateEndDate(startDate, interval, endDayHour);
     var data = {
@@ -421,7 +421,7 @@ var ViewDataGenerator = /*#__PURE__*/function () {
     var groupOrientation = options.groupOrientation,
       groups = options.groups,
       isGroupedByDate = options.isGroupedByDate;
-    var groupCount = (0, _utils.getGroupCount)(groups);
+    var groupCount = (0, _m_utils.getGroupCount)(groups);
     if (isGroupedByDate) {
       return columnIndex % groupCount === 0;
     }
@@ -434,7 +434,7 @@ var ViewDataGenerator = /*#__PURE__*/function () {
     var groupOrientation = options.groupOrientation,
       groups = options.groups,
       isGroupedByDate = options.isGroupedByDate;
-    var groupCount = (0, _utils.getGroupCount)(groups);
+    var groupCount = (0, _m_utils.getGroupCount)(groups);
     if (isGroupedByDate) {
       return (columnIndex + 1) % groupCount === 0;
     }

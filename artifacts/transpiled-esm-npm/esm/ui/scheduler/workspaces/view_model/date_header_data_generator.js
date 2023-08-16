@@ -2,7 +2,7 @@ import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWith
 import _extends from "@babel/runtime/helpers/esm/extends";
 var _excluded = ["startDate", "endDate", "isFirstGroupCell", "isLastGroupCell"];
 import dateUtils from '../../../../core/utils/date';
-import { getGroupCount } from '../../resources/utils';
+import { getGroupCount } from '../../../../__internal/scheduler/resources/m_utils';
 import { getHeaderCellText, formatWeekdayAndDay, getHorizontalGroupCount, getTotalCellCountByCompleteData, getDisplayedCellCount } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 export class DateHeaderDataGenerator {
   constructor(viewDataGenerator) {

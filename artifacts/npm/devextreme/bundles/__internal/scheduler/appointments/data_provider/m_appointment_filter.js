@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/data_provider/m_appointment_filter.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,8 +23,8 @@ var _getDatesWithoutTime5 = _interopRequireDefault(require("../../../../renovati
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
 var _recurrence = require("../../../../ui/scheduler/recurrence");
-var _utils = require("../../../../ui/scheduler/resources/utils");
-var _m_utils = require("./m_utils");
+var _m_utils = require("../../resources/m_utils");
+var _m_utils2 = require("./m_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -137,7 +137,7 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
         }
       }
       var appointmentTakesAllDay = (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(appointment, viewStartDayHour, viewEndDayHour, _this3.allDayPanelMode);
-      var appointmentTakesSeveralDays = (0, _m_utils.getAppointmentTakesSeveralDays)(appointment);
+      var appointmentTakesSeveralDays = (0, _m_utils2.getAppointmentTakesSeveralDays)(appointment);
       var isAllDay = appointment.allDay;
       var isLongAppointment = appointmentTakesSeveralDays || appointmentTakesAllDay;
       if ((resources === null || resources === void 0 ? void 0 : resources.length) && !_this3._filterAppointmentByResources(appointment.rawAppointment, resources)) {
@@ -147,7 +147,7 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
         return false;
       }
       if (hasRecurrenceRule) {
-        var recurrenceException = (0, _m_utils.getRecurrenceException)(appointment, _this3.timeZoneCalculator, _this3.timezone);
+        var recurrenceException = (0, _m_utils2.getRecurrenceException)(appointment, _this3.timeZoneCalculator, _this3.timezone);
         if (!_this3._filterAppointmentByRRule(_extends(_extends({}, appointment), {
           recurrenceException,
           allDay: appointmentTakesAllDay
@@ -161,12 +161,12 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
         }
       }
       if ((0, _type.isDefined)(startDayHour) && (!useRecurrence || !filterOptions.isVirtualScrolling)) {
-        if (!(0, _m_utils.compareDateWithStartDayHour)(startDate, endDate, startDayHour, appointmentTakesAllDay, appointmentTakesSeveralDays)) {
+        if (!(0, _m_utils2.compareDateWithStartDayHour)(startDate, endDate, startDayHour, appointmentTakesAllDay, appointmentTakesSeveralDays)) {
           return false;
         }
       }
       if ((0, _type.isDefined)(endDayHour)) {
-        if (!(0, _m_utils.compareDateWithEndDayHour)({
+        if (!(0, _m_utils2.compareDateWithEndDayHour)({
           startDate,
           endDate,
           startDayHour,
@@ -233,7 +233,7 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
     var appointmentStartDate = appointment.startDate;
     var appointmentEndDate = appointment.endDate;
     var recurrenceProcessor = (0, _recurrence.getRecurrenceProcessor)();
-    if (allDay || (0, _m_utils._appointmentPartInInterval)(appointmentStartDate, appointmentEndDate, startDayHour, endDayHour)) {
+    if (allDay || (0, _m_utils2._appointmentPartInInterval)(appointmentStartDate, appointmentEndDate, startDayHour, endDayHour)) {
       var _getDatesWithoutTime3 = (0, _getDatesWithoutTime5.default)(min, max),
         _getDatesWithoutTime4 = _slicedToArray(_getDatesWithoutTime3, 2),
         trimMin = _getDatesWithoutTime4[0],
@@ -434,7 +434,7 @@ var AppointmentFilterVirtualStrategy = /*#__PURE__*/function (_AppointmentFilter
   };
   _proto2._getPrerenderFilterResources = function _getPrerenderFilterResources(groupIndex) {
     var cellGroup = this.viewDataProvider.getCellsGroup(groupIndex);
-    return (0, _utils.getResourcesDataByGroups)(this.loadedResources, this.resources, [cellGroup]);
+    return (0, _m_utils.getResourcesDataByGroups)(this.loadedResources, this.resources, [cellGroup]);
   };
   _createClass(AppointmentFilterVirtualStrategy, [{
     key: "strategyName",

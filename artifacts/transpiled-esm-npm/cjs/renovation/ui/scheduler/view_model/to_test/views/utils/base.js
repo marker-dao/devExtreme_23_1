@@ -8,8 +8,8 @@ var _date2 = _interopRequireDefault(require("../../../../../../../localization/d
 var _utils = _interopRequireDefault(require("../../../../../../../ui/scheduler/utils.timeZone"));
 var _classes = require("../../../../../../../ui/scheduler/classes");
 var _constants = require("../../../../../../../ui/scheduler/constants");
-var _utils2 = require("../../../../../../../ui/scheduler/resources/utils");
-var _utils3 = require("../../../../workspaces/utils");
+var _m_utils = require("../../../../../../../__internal/scheduler/resources/m_utils");
+var _utils2 = require("../../../../workspaces/utils");
 var _const = require("./const");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var isDateInRange = function isDateInRange(date, startDate, endDate, diff) {
@@ -114,13 +114,13 @@ var isTimelineView = function isTimelineView(viewType) {
 };
 exports.isTimelineView = isTimelineView;
 var getHorizontalGroupCount = function getHorizontalGroupCount(groups, groupOrientation) {
-  var groupCount = (0, _utils2.getGroupCount)(groups) || 1;
-  var isVerticalGrouping = (0, _utils3.isVerticalGroupingApplied)(groups, groupOrientation);
+  var groupCount = (0, _m_utils.getGroupCount)(groups) || 1;
+  var isVerticalGrouping = (0, _utils2.isVerticalGroupingApplied)(groups, groupOrientation);
   return isVerticalGrouping ? 1 : groupCount;
 };
 exports.getHorizontalGroupCount = getHorizontalGroupCount;
 var calculateIsGroupedAllDayPanel = function calculateIsGroupedAllDayPanel(groups, groupOrientation, isAllDayPanelVisible) {
-  return (0, _utils3.isVerticalGroupingApplied)(groups, groupOrientation) && isAllDayPanelVisible;
+  return (0, _utils2.isVerticalGroupingApplied)(groups, groupOrientation) && isAllDayPanelVisible;
 };
 exports.calculateIsGroupedAllDayPanel = calculateIsGroupedAllDayPanel;
 var calculateDayDuration = function calculateDayDuration(startDayHour, endDayHour) {

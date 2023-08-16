@@ -28,6 +28,9 @@ class CalendarSelectionStrategy {
     }
     this._currentDateChanged = false;
   }
+  _isDateDisabled(date) {
+    return this.calendar._view.isDateDisabled(date);
+  }
   _getLowestDateInArray(dates) {
     if (dates.length) {
       return new Date(Math.min(...dates));
@@ -47,6 +50,13 @@ class CalendarSelectionStrategy {
   }
   _updateCurrentDate(value) {
     this.calendar.option('currentDate', value !== null && value !== void 0 ? value : new Date());
+  }
+  _shouldHandleWeekNumberClick() {
+    var {
+      selectionMode,
+      selectWeekOnClick
+    } = this.calendar.option();
+    return selectWeekOnClick && selectionMode !== 'single';
   }
 }
 export default CalendarSelectionStrategy;

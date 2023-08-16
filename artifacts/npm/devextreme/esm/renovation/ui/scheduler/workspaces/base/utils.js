@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/workspaces/base/utils.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import dateUtils from '../../../../../core/utils/date';
-import { getGroupCount as _getGroupCount } from '../../../../../ui/scheduler/resources/utils';
+import { getGroupCount as _getGroupCount } from '../../../../../__internal/scheduler/resources/m_utils';
 import { isHorizontalGroupingApplied, isVerticalGroupingApplied } from '../utils';
 import { ALL_DAY_PANEL_CELL_CLASS, ALL_DAY_ROW_CLASS, DATE_TABLE_CELL_CLASS, DATE_TABLE_ROW_CLASS } from '../const';
 var DAY_MS = dateUtils.dateToMilliseconds('day');

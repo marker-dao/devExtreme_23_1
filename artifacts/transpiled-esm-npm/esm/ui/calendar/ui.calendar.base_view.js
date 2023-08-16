@@ -36,6 +36,7 @@ var NOT_WEEK_CELL_SELECTOR = "td:not(.".concat(CALENDAR_WEEK_NUMBER_CELL_CLASS, 
 var CALENDAR_DXCLICK_EVENT_NAME = addNamespace(clickEventName, 'dxCalendar');
 var CALENDAR_DXHOVERSTART_EVENT_NAME = addNamespace(hoverStartEventName, 'dxCalendar');
 var CALENDAR_DATE_VALUE_KEY = 'dxDateValueKey';
+var DAY_INTERVAL = 86400000;
 var BaseView = Widget.inherit({
   _getViewName: function _getViewName() {
     return 'base';
@@ -48,6 +49,7 @@ var BaseView = Widget.inherit({
       disabledDates: null,
       onCellClick: null,
       onCellHover: null,
+      onWeekNumberClick: null,
       rowCount: 3,
       colCount: 4,
       allowValueSelection: true,
@@ -190,8 +192,11 @@ var BaseView = Widget.inherit({
         });
       }
     });
+    var {
+      selectionMode
+    } = this.option();
     eventsEngine.off(this._$table, CALENDAR_DXHOVERSTART_EVENT_NAME);
-    if (this.option('selectionMode') === 'range') {
+    if (selectionMode === 'range') {
       this._createCellHoverAction();
       eventsEngine.on(this._$table, CALENDAR_DXHOVERSTART_EVENT_NAME, NOT_WEEK_CELL_SELECTOR, e => {
         if (!$(e.currentTarget).hasClass(CALENDAR_EMPTY_CELL_CLASS)) {
@@ -202,12 +207,28 @@ var BaseView = Widget.inherit({
         }
       });
     }
+    if (selectionMode !== 'single') {
+      this._createWeekNumberCellClickAction();
+      eventsEngine.on(this._$table, CALENDAR_DXCLICK_EVENT_NAME, ".".concat(CALENDAR_WEEK_NUMBER_CELL_CLASS), e => {
+        var $row = $(e.currentTarget).closest('tr');
+        var firstDateInRow = $row.find(".".concat(CALENDAR_CELL_CLASS)).first().data(CALENDAR_DATE_VALUE_KEY);
+        var lastDateInRow = $row.find(".".concat(CALENDAR_CELL_CLASS)).last().data(CALENDAR_DATE_VALUE_KEY);
+        var rowDates = [...coreDateUtils.getDatesOfInterval(firstDateInRow, lastDateInRow, DAY_INTERVAL), lastDateInRow];
+        this._weekNumberCellClickAction({
+          event: e,
+          rowDates
+        });
+      });
+    }
   },
   _createCellClickAction: function _createCellClickAction() {
     this._cellClickAction = this._createActionByOption('onCellClick');
   },
   _createCellHoverAction: function _createCellHoverAction() {
     this._cellHoverAction = this._createActionByOption('onCellHover');
+  },
+  _createWeekNumberCellClickAction: function _createWeekNumberCellClickAction() {
+    this._weekNumberCellClickAction = this._createActionByOption('onWeekNumberClick');
   },
   _createDisabledDatesHandler: function _createDisabledDatesHandler() {
     var disabledDates = this.option('disabledDates');

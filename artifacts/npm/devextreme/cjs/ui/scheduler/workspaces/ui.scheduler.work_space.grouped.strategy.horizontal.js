@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.work_space.grouped.strategy.horizontal.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -114,7 +114,9 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
     return groupByDay ? this._calculateGroupByDateOffset(groupIndex) : this._calculateOffset(groupIndex);
   };
   _proto._calculateOffset = function _calculateOffset(groupIndex) {
-    return this._workSpace._getCellCount() * this._workSpace.getRoundedCellWidth(groupIndex - 1, 0) * groupIndex + this._workSpace.getIndicatorOffset(groupIndex) + groupIndex;
+    var indicatorStartPosition = this._workSpace.getIndicatorOffset(groupIndex);
+    var offset = this._workSpace._getCellCount() * this._workSpace.getRoundedCellWidth(groupIndex - 1, 0) * groupIndex;
+    return indicatorStartPosition + offset;
   };
   _proto._calculateGroupByDateOffset = function _calculateGroupByDateOffset(groupIndex) {
     return this._workSpace.getIndicatorOffset(0) * this._workSpace._getGroupCount() + this._workSpace.getRoundedCellWidth(groupIndex - 1, 0) * groupIndex;

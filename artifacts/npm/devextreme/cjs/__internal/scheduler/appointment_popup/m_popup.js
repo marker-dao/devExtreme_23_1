@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointment_popup/m_popup.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,7 @@ var _popup_config = require("../../../renovation/ui/scheduler/appointment_edit_f
 var _ui = _interopRequireDefault(require("../../../ui/popup/ui.popup"));
 var _appointmentAdapter = require("../../../ui/scheduler/appointmentAdapter");
 var _loading = require("../../../ui/scheduler/loading");
-var _utils = require("../../../ui/scheduler/resources/utils");
+var _m_utils = require("../resources/m_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -136,7 +136,7 @@ var AppointmentPopup = /*#__PURE__*/function () {
     var appointment = this._createAppointmentAdapter(rawAppointment);
     var dataAccessors = this.scheduler.getDataAccessors();
     var resources = this.scheduler.getResources();
-    var normalizedResources = (0, _utils.getNormalizedResources)(rawAppointment, dataAccessors, resources);
+    var normalizedResources = (0, _m_utils.getNormalizedResources)(rawAppointment, dataAccessors, resources);
     return _extends(_extends(_extends({}, rawAppointment), normalizedResources), {
       repeat: !!appointment.recurrenceRule
     });
@@ -256,7 +256,7 @@ var AppointmentPopup = /*#__PURE__*/function () {
           var inAllDayRow = allDay || endTime - startTime >= DAY_IN_MS;
           var dataAccessors = _this5.scheduler.getDataAccessors();
           var resourceList = _this5.scheduler.getResources();
-          var normalizedResources = (0, _utils.getNormalizedResources)(_this5.state.lastEditData, dataAccessors, resourceList);
+          var normalizedResources = (0, _m_utils.getNormalizedResources)(_this5.state.lastEditData, dataAccessors, resourceList);
           _this5.scheduler.updateScrollPosition(startDate, normalizedResources, inAllDayRow);
           _this5.state.lastEditData = null;
         }

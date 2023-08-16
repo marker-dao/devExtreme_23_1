@@ -162,6 +162,8 @@ var defaultMessages = {
     "dxDataGrid-ariaValue": "Value",
     "dxDataGrid-ariaFilterCell": "Filter cell",
     "dxDataGrid-ariaCollapse": "Collapse",
+    "dxDataGrid-ariaModifiedCell": "Modified",
+    "dxDataGrid-ariaDeletedCell": "Deleted",
     "dxDataGrid-ariaExpand": "Expand",
     "dxDataGrid-ariaCollapsedRow": "Collapsed row",
     "dxDataGrid-ariaExpandedRow": "Expanded row",

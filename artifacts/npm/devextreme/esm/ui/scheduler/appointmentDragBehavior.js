@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/appointmentDragBehavior.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@ import $ from '../../core/renderer';
 import Draggable from '../draggable';
 import { extend } from '../../core/utils/extend';
 import { LIST_ITEM_DATA_KEY } from './constants';
-import { isSchedulerComponent } from './utils/isSchedulerComponent';
+import { isSchedulerComponent } from '../../__internal/scheduler/utils/is_scheduler_component';
 import { Deferred } from '../../core/utils/deferred';
 var APPOINTMENT_ITEM_CLASS = 'dx-scheduler-appointment';
 export default class AppointmentDragBehavior {

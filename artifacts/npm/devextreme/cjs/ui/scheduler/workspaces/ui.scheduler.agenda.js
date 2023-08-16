@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.agenda.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,7 @@ var _extend = require("../../../core/utils/extend");
 var _date = _interopRequireDefault(require("../../../localization/date"));
 var _table_creator = _interopRequireDefault(require("../table_creator"));
 var _classes = require("../classes");
-var _utils = require("../resources/utils");
+var _m_utils = require("../../../__internal/scheduler/resources/m_utils");
 var _agenda = require("../../../renovation/ui/scheduler/view_model/to_test/views/utils/agenda");
 var _base = require("../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _constants = require("../constants");
@@ -227,8 +227,8 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
   };
   _proto._makeGroupRows = function _makeGroupRows() {
     var _this = this;
-    var tree = (0, _utils.createReducedResourcesTree)(this.option('loadedResources'), function (field, action) {
-      return (0, _utils.getDataAccessors)(_this.option('getResourceDataAccessors')(), field, action);
+    var tree = (0, _m_utils.createReducedResourcesTree)(this.option('loadedResources'), function (field, action) {
+      return (0, _m_utils.getDataAccessors)(_this.option('getResourceDataAccessors')(), field, action);
     }, this.option('getFilteredItems')());
     var cellTemplate = this.option('resourceCellTemplate');
     var getGroupHeaderContentClass = _classes.GROUP_HEADER_CONTENT_CLASS;
@@ -316,7 +316,7 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     var groupsOpt = this.option('groups');
     var groups = {};
     var isGroupedView = !!groupsOpt.length;
-    var path = isGroupedView && (0, _utils.getPathToLeaf)(rowIndex, groupsOpt) || [];
+    var path = isGroupedView && (0, _m_utils.getPathToLeaf)(rowIndex, groupsOpt) || [];
     path.forEach(function (resourceValue, resourceIndex) {
       var resourceName = groupsOpt[resourceIndex].name;
       groups[resourceName] = resourceValue;

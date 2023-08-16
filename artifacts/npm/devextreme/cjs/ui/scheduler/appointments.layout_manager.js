@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments.layout_manager.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 exports.default = void 0;
 var _common = require("../../core/utils/common");
 var _m_view_model_generator = require("../../__internal/scheduler/appointments/m_view_model_generator");
-var _utils = require("./resources/utils");
+var _m_utils = require("../../__internal/scheduler/resources/m_utils");
 var _positionHelper = require("./workspaces/helpers/positionHelper");
 var _base = require("../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _appointments = require("../../renovation/ui/scheduler/model/appointments");
@@ -41,7 +41,7 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       virtualScrollingDispatcher = _this$instance$getWor.virtualScrollingDispatcher;
     var cellCountInsideLeftVirtualCell = virtualScrollingDispatcher.cellCountInsideLeftVirtualCell,
       cellCountInsideTopVirtualRow = virtualScrollingDispatcher.cellCountInsideTopVirtualRow;
-    var groupCount = (0, _utils.getGroupCount)(this.instance.option('loadedResources'));
+    var groupCount = (0, _m_utils.getGroupCount)(this.instance.option('loadedResources'));
     var DOMMetaData = workspace.getDOMElementsMetaData();
     var allDayHeight = (0, _positionHelper.getAllDayHeight)(workspace.option('showAllDayPanel'), workspace._isVerticalGroupedWorkSpace(), DOMMetaData);
     var rowCount = workspace._getRowCount();

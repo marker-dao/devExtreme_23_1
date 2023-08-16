@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/model/appointments.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,8 +10,8 @@
 
 exports.getAppointmentsModel = exports.getAppointmentsConfig = exports.getAppointmentRenderingStrategyName = void 0;
 var _positionHelper = require("../../../../ui/scheduler/workspaces/helpers/positionHelper");
-var _utils = require("../../../../ui/scheduler/resources/utils");
-var _utils2 = require("../workspaces/utils");
+var _m_utils = require("../../../../__internal/scheduler/resources/m_utils");
+var _utils = require("../workspaces/utils");
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _base = require("../view_model/to_test/views/utils/base");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -54,7 +54,7 @@ var getAppointmentRenderingStrategyName = function getAppointmentRenderingStrate
 };
 exports.getAppointmentRenderingStrategyName = getAppointmentRenderingStrategyName;
 var getAppointmentsConfig = function getAppointmentsConfig(schedulerConfig, viewConfig, loadedResources, viewDataProvider, isAllDayPanelSupported) {
-  var groupCount = (0, _utils.getGroupCount)(loadedResources);
+  var groupCount = (0, _m_utils.getGroupCount)(loadedResources);
   var startViewDate = viewDataProvider.getStartViewDate();
   var dateRange = [startViewDate, viewDataProvider.getLastViewDateByEndDayHour(viewConfig.endDayHour)];
   return {
@@ -94,7 +94,7 @@ var getAppointmentsConfig = function getAppointmentsConfig(schedulerConfig, view
 };
 exports.getAppointmentsConfig = getAppointmentsConfig;
 var getAppointmentsModel = function getAppointmentsModel(appointmentsConfig, viewDataProvider, timeZoneCalculator, dataAccessors, cellsMetaData) {
-  var groupedByDate = (0, _utils2.isGroupingByDate)(appointmentsConfig.groups, appointmentsConfig.groupOrientation, appointmentsConfig.groupByDate);
+  var groupedByDate = (0, _utils.isGroupingByDate)(appointmentsConfig.groups, appointmentsConfig.groupOrientation, appointmentsConfig.groupByDate);
   var groupCount = appointmentsConfig.groupCount,
     isVerticalGroupOrientation = appointmentsConfig.isVerticalGroupOrientation;
   var positionHelper = new _positionHelper.PositionHelper({

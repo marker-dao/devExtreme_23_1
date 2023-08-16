@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/header/utils.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 exports.isMonthView = exports.isMobileLayout = exports.formatViews = exports.formToolbarItem = void 0;
 var _view_switcher = require("./view_switcher");
 var _date_navigator = require("./date_navigator");
-var _utils = require("../../../../ui/scheduler/header/utils");
+var _m_utils = require("../../../../__internal/scheduler/header/m_utils");
 var _devices = _interopRequireDefault(require("../../../../core/devices"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var DEFAULT_ELEMENT = 'defaultElement';
@@ -45,10 +45,10 @@ var formToolbarItem = function formToolbarItem(item, options) {
 };
 exports.formToolbarItem = formToolbarItem;
 var formatViews = function formatViews(views) {
-  (0, _utils.validateViews)(views);
+  (0, _m_utils.validateViews)(views);
   return views.map(function (view) {
-    var text = (0, _utils.getViewText)(view);
-    var name = (0, _utils.getViewName)(view);
+    var text = (0, _m_utils.getViewText)(view);
+    var name = (0, _m_utils.getViewName)(view);
     return {
       text,
       name
@@ -57,7 +57,7 @@ var formatViews = function formatViews(views) {
 };
 exports.formatViews = formatViews;
 var isMonthView = function isMonthView(currentView) {
-  return (0, _utils.getViewType)(currentView) === 'month';
+  return (0, _m_utils.getViewType)(currentView) === 'month';
 };
 exports.isMonthView = isMonthView;
 var isMobileLayout = function isMobileLayout() {

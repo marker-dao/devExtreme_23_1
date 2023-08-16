@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.multiple.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,7 +32,8 @@ var CalendarMultiSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     return {
       value: this.dateOption('values'),
       range: [],
-      selectionMode: 'multi'
+      selectionMode: 'multi',
+      onWeekNumberClick: this._shouldHandleWeekNumberClick() ? this._weekNumberClickHandler.bind(this) : null
     };
   };
   _proto.selectValue = function selectValue(selectedValue, e) {
@@ -64,6 +65,15 @@ var CalendarMultiSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
   };
   _proto.restoreValue = function restoreValue() {
     this.calendar.option('values', []);
+  };
+  _proto._weekNumberClickHandler = function _weekNumberClickHandler(_ref) {
+    var _this2 = this;
+    var rowDates = _ref.rowDates,
+      event = _ref.event;
+    var selectedDates = rowDates.filter(function (date) {
+      return !_this2._isDateDisabled(date);
+    });
+    this.dateValue(selectedDates, event);
   };
   return CalendarMultiSelectionStrategy;
 }(_uiCalendarSelection.default);

@@ -8,7 +8,7 @@ import { getMaxWidth, getPopupToolbarItems, isPopupFullScreenNeeded } from '../.
 import Popup from '../../../ui/popup/ui.popup';
 import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
 import { hide as hideLoading, show as showLoading } from '../../../ui/scheduler/loading';
-import { getNormalizedResources } from '../../../ui/scheduler/resources/utils';
+import { getNormalizedResources } from '../resources/m_utils';
 var toMs = dateUtils.dateToMilliseconds;
 var APPOINTMENT_POPUP_CLASS = 'dx-scheduler-appointment-popup';
 var DAY_IN_MS = toMs('day');

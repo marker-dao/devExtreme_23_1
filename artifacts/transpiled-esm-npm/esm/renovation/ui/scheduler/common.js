@@ -1,5 +1,5 @@
 import { utils } from '../../../ui/scheduler/utils';
-import { createExpressions } from '../../../ui/scheduler/resources/utils';
+import { createExpressions } from '../../../__internal/scheduler/resources/m_utils';
 export var createDataAccessors = function createDataAccessors(dataAccessorsProps) {
   var forceIsoDateParsing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   var dataAccessors = utils.dataAccessors.create({

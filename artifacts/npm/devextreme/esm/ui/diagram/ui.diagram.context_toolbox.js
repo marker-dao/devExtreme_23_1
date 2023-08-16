@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/diagram/ui.diagram.context_toolbox.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,10 +15,12 @@ var DIAGRAM_CONTEXT_TOOLBOX_TARGET_CLASS = 'dx-diagram-context-toolbox-target';
 var DIAGRAM_CONTEXT_TOOLBOX_CLASS = 'dx-diagram-context-toolbox';
 var DIAGRAM_TOUCH_CONTEXT_TOOLBOX_CLASS = 'dx-diagram-touch-context-toolbox';
 var DIAGRAM_CONTEXT_TOOLBOX_CONTENT_CLASS = 'dx-diagram-context-toolbox-content';
+var DIAGRAM_CONTEXT_TOOLBOX_MINHEIGHT = 150;
 class DiagramContextToolbox extends Widget {
   _init() {
     super._init();
     this._onShownAction = this._createActionByOption('onShown');
+    var window = getWindow();
     this._popoverPositionData = [{
       my: {
         x: 'center',
@@ -31,7 +33,8 @@ class DiagramContextToolbox extends Widget {
       offset: {
         x: 0,
         y: 5
-      }
+      },
+      calcMaxHeight: rect => Math.max(DIAGRAM_CONTEXT_TOOLBOX_MINHEIGHT, window.innerHeight - rect.bottom - 6)
     }, {
       my: {
         x: 'right',
@@ -44,7 +47,8 @@ class DiagramContextToolbox extends Widget {
       offset: {
         x: -5,
         y: 0
-      }
+      },
+      calcMaxHeight: rect => Math.max(DIAGRAM_CONTEXT_TOOLBOX_MINHEIGHT, Math.min(rect.top, window.innerHeight - rect.bottom) * 2 - 2)
     }, {
       my: {
         x: 'center',
@@ -57,7 +61,8 @@ class DiagramContextToolbox extends Widget {
       offset: {
         x: 0,
         y: -5
-      }
+      },
+      calcMaxHeight: rect => Math.max(DIAGRAM_CONTEXT_TOOLBOX_MINHEIGHT, rect.top - 6)
     }, {
       my: {
         x: 'left',
@@ -70,22 +75,21 @@ class DiagramContextToolbox extends Widget {
       offset: {
         x: 5,
         y: 0
-      }
+      },
+      calcMaxHeight: rect => Math.max(DIAGRAM_CONTEXT_TOOLBOX_MINHEIGHT, Math.min(rect.top, window.innerHeight - rect.bottom) * 2 - 2)
     }];
   }
   _initMarkup() {
     super._initMarkup();
     this._$popoverTargetElement = $('<div>').addClass(DIAGRAM_CONTEXT_TOOLBOX_TARGET_CLASS).appendTo(this.$element());
-    var $popoverElement = $('<div>').appendTo(this.$element());
-    var popoverClass = DIAGRAM_CONTEXT_TOOLBOX_CLASS;
+    var $popoverElement = $('<div>').addClass(DIAGRAM_CONTEXT_TOOLBOX_CLASS).appendTo(this.$element());
     if (this._isTouchMode()) {
-      popoverClass += ' ' + DIAGRAM_TOUCH_CONTEXT_TOOLBOX_CLASS;
+      $popoverElement.addClass(DIAGRAM_TOUCH_CONTEXT_TOOLBOX_CLASS);
     }
     this._popoverInstance = this._createComponent($popoverElement, Popover, {
       hideOnOutsideClick: false,
       container: this.$element()
     });
-    this._popoverInstance.$element().addClass(popoverClass);
   }
   _isTouchMode() {
     var {
@@ -95,10 +99,6 @@ class DiagramContextToolbox extends Widget {
   }
   _show(x, y, side, category, callback) {
     this._popoverInstance.hide();
-    var $content = $('<div>').addClass(DIAGRAM_CONTEXT_TOOLBOX_CONTENT_CLASS);
-    if (this.option('toolboxWidth') !== undefined) {
-      $content.css('width', this.option('toolboxWidth'));
-    }
     this._$popoverTargetElement.css({
       left: x + this._popoverPositionData[side].offset.x,
       top: y + this._popoverPositionData[side].offset.y
@@ -111,14 +111,22 @@ class DiagramContextToolbox extends Widget {
       left: targetDiv.offsetLeft - (targetDiv.getBoundingClientRect().left + window.scrollX - targetDiv.offsetLeft),
       top: targetDiv.offsetTop - (targetDiv.getBoundingClientRect().top + window.scrollY - targetDiv.offsetTop)
     });
+    var posRect = targetDiv.getBoundingClientRect();
     this._popoverInstance.option({
+      maxHeight: this._popoverPositionData[side].calcMaxHeight(posRect),
+      width: this.option('toolboxWidth') !== undefined ? this.option('toolboxWidth') : undefined,
       position: {
         my: this._popoverPositionData[side].my,
         at: this._popoverPositionData[side].at,
         of: this._$popoverTargetElement
       },
-      contentTemplate: $content,
-      onContentReady: function () {
+      contentTemplate: () => {
+        return $('<div>').append($('<div>').addClass(DIAGRAM_CONTEXT_TOOLBOX_CONTENT_CLASS)).dxScrollView({
+          width: '100%',
+          height: '100%'
+        });
+      },
+      onContentReady: () => {
         var $element = this.$element().find('.' + DIAGRAM_CONTEXT_TOOLBOX_CONTENT_CLASS);
         this._onShownAction({
           category,
@@ -126,7 +134,7 @@ class DiagramContextToolbox extends Widget {
           $element,
           hide: () => this._popoverInstance.hide()
         });
-      }.bind(this)
+      }
     });
     this._popoverInstance.show();
   }

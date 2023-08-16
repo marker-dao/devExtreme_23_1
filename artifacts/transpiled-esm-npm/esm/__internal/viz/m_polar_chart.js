@@ -115,28 +115,26 @@ var dxPolarChart = AdvancedChart.inherit({
     this._getValueAxis().applyClipRects(this._getElementsClipRectID(), canvasClipRectID);
   },
   _createClipPathForPane() {
-    var that = this;
-    var valueAxis = that._getValueAxis();
+    var valueAxis = this._getValueAxis();
     var center = valueAxis.getCenter();
     var radius = valueAxis.getRadius();
-    var panesClipRects = that._panesClipRects;
+    var panesClipRects = this._panesClipRects;
     center = {
       x: Math.round(center.x),
       y: Math.round(center.y)
     };
-    that._createClipCircle(panesClipRects.fixed, center.x, center.y, radius);
-    that._createClipCircle(panesClipRects.base, center.x, center.y, radius);
-    if (that.series.some(s => s.areErrorBarsVisible())) {
-      that._createClipCircle(panesClipRects.wide, center.x, center.y, radius);
+    this._createClipCircle(panesClipRects.fixed, center.x, center.y, radius);
+    this._createClipCircle(panesClipRects.base, center.x, center.y, radius);
+    if (this.series.some(s => s.areErrorBarsVisible())) {
+      this._createClipCircle(panesClipRects.wide, center.x, center.y, radius);
     } else {
       panesClipRects.wide[0] = null;
     }
   },
   _createClipCircle(clipArray, left, top, radius) {
-    var that = this;
     var clipCircle = clipArray[0];
     if (!clipCircle) {
-      clipCircle = that._renderer.clipCircle(left, top, radius);
+      clipCircle = this._renderer.clipCircle(left, top, radius);
       clipArray[0] = clipCircle;
     } else {
       clipCircle.attr({

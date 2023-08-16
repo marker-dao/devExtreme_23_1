@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointment_popup/m_popup.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ import { getMaxWidth, getPopupToolbarItems, isPopupFullScreenNeeded } from '../.
 import Popup from '../../../ui/popup/ui.popup';
 import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
 import { hide as hideLoading, show as showLoading } from '../../../ui/scheduler/loading';
-import { getNormalizedResources } from '../../../ui/scheduler/resources/utils';
+import { getNormalizedResources } from '../resources/m_utils';
 var toMs = dateUtils.dateToMilliseconds;
 var APPOINTMENT_POPUP_CLASS = 'dx-scheduler-appointment-popup';
 var DAY_IN_MS = toMs('day');

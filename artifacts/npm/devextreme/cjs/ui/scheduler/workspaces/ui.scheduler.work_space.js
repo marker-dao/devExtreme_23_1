@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.work_space.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,7 +35,7 @@ var _uiSchedulerCurrent_time_shader = _interopRequireDefault(require("../shaders
 var _appointmentDragBehavior = _interopRequireDefault(require("../appointmentDragBehavior"));
 var _constants = require("../constants");
 var _classes = require("../classes");
-var _widgetObserver = _interopRequireDefault(require("../base/widgetObserver"));
+var _m_widget_observer = _interopRequireDefault(require("../../../__internal/scheduler/base/m_widget_observer"));
 var _translator = require("../../../animation/translator");
 var _uiScheduler = require("./ui.scheduler.virtual_scrolling");
 var _view_data_provider = _interopRequireDefault(require("./view_model/view_data_provider"));
@@ -49,9 +49,9 @@ var _cells_selection_state = _interopRequireDefault(require("./cells_selection_s
 var _cache = require("./cache");
 var _cells_selection_controller = require("./cells_selection_controller");
 var _base = require("../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
-var _utils = require("../resources/utils");
+var _m_utils = require("../../../__internal/scheduler/resources/m_utils");
 var _positionHelper = require("./helpers/positionHelper");
-var _utils2 = require("../utils");
+var _utils = require("../utils");
 var _data = require("../../../core/utils/data");
 var _getMemoizeScrollTo = require("../../../renovation/ui/common/utils/scroll/getMemoizeScrollTo");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -71,7 +71,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
 var tableCreator = _table_creator.default.tableCreator;
 // TODO: The constant is needed so that the dragging is not sharp. To prevent small twitches
 var DRAGGING_MOUSE_FAULT = 10;
-var abstract = _widgetObserver.default.abstract;
+var abstract = _m_widget_observer.default.abstract;
 var toMs = _date.default.dateToMilliseconds;
 var COMPONENT_CLASS = 'dx-scheduler-work-space';
 var GROUPED_WORKSPACE_CLASS = 'dx-scheduler-work-space-grouped';
@@ -507,7 +507,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
   };
   _proto._getGroupIndexByResourceId = function _getGroupIndexByResourceId(id) {
     var groups = this.option('groups');
-    var resourceTree = (0, _utils.createResourcesTree)(groups);
+    var resourceTree = (0, _m_utils.createResourcesTree)(groups);
     if (!resourceTree.length) return 0;
     return this._getGroupIndexRecursively(resourceTree, id);
   };
@@ -687,7 +687,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     return viewDataGenerator.calculateEndDate(startDate, viewDataGenerator.getInterval(this.option('hoursInterval')), this.option('endDayHour'));
   };
   _proto._getGroupCount = function _getGroupCount() {
-    return (0, _utils.getGroupCount)(this.option('groups'));
+    return (0, _m_utils.getGroupCount)(this.option('groups'));
   };
   _proto._attachTablesEvents = function _attachTablesEvents() {
     var element = this.$element();
@@ -1435,9 +1435,9 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
         allDay: true,
         groupIndex: validGroupIndex
       };
-      var groupsArray = (0, _utils.getCellGroups)(validGroupIndex, _this16.option('groups'));
+      var groupsArray = (0, _m_utils.getCellGroups)(validGroupIndex, _this16.option('groups'));
       if (groupsArray.length) {
-        data.groups = (0, _utils.getGroupsObjectFromGroupsArray)(groupsArray);
+        data.groups = (0, _m_utils.getGroupsObjectFromGroupsArray)(groupsArray);
       }
       return {
         key: CELL_DATA,
@@ -1464,7 +1464,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     components.allDayPanel && this.renderRAllDayPanel();
   };
   _proto.renderRDateTable = function renderRDateTable() {
-    _utils2.utils.renovation.renderComponent(this, this._$dateTable, _layout.default, 'renovatedDateTable', this._getRDateTableProps());
+    _utils.utils.renovation.renderComponent(this, this._$dateTable, _layout.default, 'renovatedDateTable', this._getRDateTableProps());
   };
   _proto.renderRGroupPanel = function renderRGroupPanel() {
     var options = {
@@ -1477,7 +1477,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     };
     if (this.option('groups').length) {
       this._attachGroupCountClass();
-      _utils2.utils.renovation.renderComponent(this, this._getGroupHeaderContainer(), _group_panel.default, 'renovatedGroupPanel', options);
+      _utils.utils.renovation.renderComponent(this, this._getGroupHeaderContainer(), _group_panel.default, 'renovatedGroupPanel', options);
     } else {
       this._detachGroupCountClass();
     }
@@ -1492,13 +1492,13 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
         dataCellTemplate: this.option('dataCellTemplate'),
         startCellIndex: 0
       }, ((_this$virtualScrollin = this.virtualScrollingDispatcher.horizontalVirtualScrolling) === null || _this$virtualScrollin === void 0 ? void 0 : _this$virtualScrollin.getRenderState()) || {});
-      _utils2.utils.renovation.renderComponent(this, this._$allDayTable, _table.default, 'renovatedAllDayPanel', options);
-      _utils2.utils.renovation.renderComponent(this, this._$allDayTitle, _title.default, 'renovatedAllDayPanelTitle', {});
+      _utils.utils.renovation.renderComponent(this, this._$allDayTable, _table.default, 'renovatedAllDayPanel', options);
+      _utils.utils.renovation.renderComponent(this, this._$allDayTitle, _title.default, 'renovatedAllDayPanelTitle', {});
     }
     this._toggleAllDayVisibility(true);
   };
   _proto.renderRTimeTable = function renderRTimeTable() {
-    _utils2.utils.renovation.renderComponent(this, this._$timePanel, _layout2.default, 'renovatedTimePanel', {
+    _utils.utils.renovation.renderComponent(this, this._$timePanel, _layout2.default, 'renovatedTimePanel', {
       timePanelData: this.viewDataProvider.timePanelData,
       timeCellTemplate: this.option('timeCellTemplate'),
       groupOrientation: this.option('groupOrientation')
@@ -1511,7 +1511,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     } else {
       this._detachGroupCountClass();
     }
-    _utils2.utils.renovation.renderComponent(this, this._$thead, this.renovatedHeaderPanelComponent, 'renovatedHeaderPanel', {
+    _utils.utils.renovation.renderComponent(this, this._$thead, this.renovatedHeaderPanelComponent, 'renovatedHeaderPanel', {
       dateHeaderData: this.viewDataProvider.dateHeaderData,
       groupPanelData: this.viewDataProvider.getGroupPanelData(this.generateRenderOptions()),
       dateCellTemplate: this.option('dateCellTemplate'),
@@ -2253,8 +2253,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     var groups;
     if (this._isHorizontalGroupedWorkSpace() && !this.isGroupedByDate()) {
       groupIndex = this._getGroupIndex(0, templateIndex * indexMultiplier);
-      var groupsArray = (0, _utils.getCellGroups)(groupIndex, this.option('groups'));
-      groups = (0, _utils.getGroupsObjectFromGroupsArray)(groupsArray);
+      var groupsArray = (0, _m_utils.getCellGroups)(groupIndex, this.option('groups'));
+      groups = (0, _m_utils.getGroupsObjectFromGroupsArray)(groupsArray);
     }
     return {
       groups,
@@ -2304,8 +2304,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
         return {};
       }
       var groupIndex = _this23._getGroupIndex(rowIndex, 0);
-      var groupsArray = (0, _utils.getCellGroups)(groupIndex, _this23.option('groups'));
-      var groups = (0, _utils.getGroupsObjectFromGroupsArray)(groupsArray);
+      var groupsArray = (0, _m_utils.getCellGroups)(groupIndex, _this23.option('groups'));
+      var groups = (0, _m_utils.getGroupsObjectFromGroupsArray)(groupsArray);
       return {
         groupIndex,
         groups
@@ -2468,7 +2468,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     }
   }]);
   return SchedulerWorkSpace;
-}(_widgetObserver.default);
+}(_m_widget_observer.default);
 var createDragBehaviorConfig = function createDragBehaviorConfig(container, rootElement, isDefaultDraggingMode, dragBehavior, enableDefaultDragging, disableDefaultDragging, getDroppableCell, getDateTables, removeDroppableCellClass, getCellWidth, options) {
   var state = {
     dragElement: undefined,

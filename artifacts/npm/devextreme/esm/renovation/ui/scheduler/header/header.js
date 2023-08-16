@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/header/header.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ import { Toolbar } from '../../toolbar/toolbar';
 import '../../../../ui/button_group';
 import '../../../../ui/drop_down_button';
 import dateUtils from '../../../../core/utils/date';
-import { getCaption, nextWeek, getStep, getViewName, getNextIntervalDate } from '../../../../ui/scheduler/header/utils';
+import { getCaption, nextWeek, getStep, getViewName, getNextIntervalDate } from '../../../../__internal/scheduler/header/m_utils';
 import { formToolbarItem, formatViews, isMonthView } from './utils';
 import { SchedulerProps } from '../props';
 import { SchedulerCalendar } from './calendar';

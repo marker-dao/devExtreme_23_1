@@ -2203,8 +2203,25 @@ export var editingModule = {
         _formItemPrepared: noop,
         _getCellOptions(options) {
           var cellOptions = this.callBase(options);
+          var {
+            columnIndex,
+            row
+          } = options;
           cellOptions.isEditing = this._editingController.isEditCell(cellOptions.rowIndex, cellOptions.columnIndex);
+          cellOptions.removed = row.removed;
+          if (row.modified) {
+            cellOptions.modified = row.modifiedValues[columnIndex] !== undefined;
+          }
           return cellOptions;
+        },
+        _setCellAriaAttributes($cell, cellOptions) {
+          this.callBase($cell, cellOptions);
+          if (cellOptions.removed) {
+            this.setAria('roledescription', messageLocalization.format('dxDataGrid-ariaDeletedCell'), $cell);
+          }
+          if (cellOptions.modified) {
+            this.setAria('roledescription', messageLocalization.format('dxDataGrid-ariaModifiedCell'), $cell);
+          }
         },
         _createCell(options) {
           var $cell = this.callBase(options);

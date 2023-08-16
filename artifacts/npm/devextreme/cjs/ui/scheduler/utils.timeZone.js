@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/utils.timeZone.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@
 
 exports.default = void 0;
 var _date = _interopRequireDefault(require("../../core/utils/date"));
-var _utils = _interopRequireDefault(require("./timezones/utils.timezones_data"));
+var _m_utils_timezones_data = _interopRequireDefault(require("../../__internal/scheduler/timezones/m_utils_timezones_data"));
 var _dateAdapter = _interopRequireDefault(require("./dateAdapter"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -38,7 +38,7 @@ var createDateFromUTCWithLocalOffset = function createDateFromUTCWithLocalOffset
 var getTimeZones = function getTimeZones() {
   var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
   var dateInUTC = createUTCDate(date);
-  return _utils.default.getDisplayedTimeZones(dateInUTC.getTime());
+  return _m_utils_timezones_data.default.getDisplayedTimeZones(dateInUTC.getTime());
 };
 var createUTCDate = function createUTCDate(date) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes()));
@@ -60,7 +60,7 @@ var calculateTimezoneByValue = function calculateTimezoneByValue(timezone) {
   // NOTE: This check could be removed. We don't support numerical timezones
   if (typeof timezone === 'string') {
     var dateUtc = createUTCDate(date);
-    return _utils.default.getTimeZoneOffsetById(timezone, dateUtc.getTime());
+    return _m_utils_timezones_data.default.getTimeZoneOffsetById(timezone, dateUtc.getTime());
   }
   return timezone;
 };
@@ -137,13 +137,13 @@ var isEqualLocalTimeZoneByDeclaration = function isEqualLocalTimeZoneByDeclarati
   var getDateAndMoveHourBack = function getDateAndMoveHourBack(dateStamp) {
     return new Date(dateStamp - 3600000);
   };
-  var configTuple = _utils.default.getTimeZoneDeclarationTuple(timeZoneName, year);
+  var configTuple = _m_utils_timezones_data.default.getTimeZoneDeclarationTuple(timeZoneName, year);
   var _configTuple = _slicedToArray(configTuple, 2),
     summerTime = _configTuple[0],
     winterTime = _configTuple[1];
   var noDSTInTargetTimeZone = configTuple.length < 2;
   if (noDSTInTargetTimeZone) {
-    var targetTimeZoneOffset = _utils.default.getTimeZoneOffsetById(timeZoneName, date);
+    var targetTimeZoneOffset = _m_utils_timezones_data.default.getTimeZoneOffsetById(timeZoneName, date);
     var localTimeZoneOffset = getOffset(date);
     if (targetTimeZoneOffset !== localTimeZoneOffset) {
       return false;

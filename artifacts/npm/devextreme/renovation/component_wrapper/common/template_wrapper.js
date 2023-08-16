@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/component_wrapper/common/template_wrapper.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,21 +12,14 @@ exports.TemplateWrapper = void 0;
 exports.buildTemplateArgs = buildTemplateArgs;
 var _inferno = require("@devextreme/runtime/inferno");
 var _inferno2 = require("inferno");
+var _dom = require("../../../core/utils/dom");
 var _shallow_equals = require("../../utils/shallow_equals");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _element = require("../../../core/element");
 var _type = require("../../../core/utils/type");
-var _common = require("../../../core/utils/common");
-var _mutations_recording = require("./mutations_recording");
 var _excluded = ["isEqual"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -51,7 +44,7 @@ function buildTemplateArgs(model, template) {
   }
   return args;
 }
-function buildTemplateContent(props, container) {
+function renderTemplateContent(props, container) {
   var _props$model;
   var _ref2 = (_props$model = props.model) !== null && _props$model !== void 0 ? _props$model : {
       data: {}
@@ -80,27 +73,40 @@ function buildTemplateContent(props, container) {
   }
   return isDxElementWrapper(rendered) ? rendered.toArray() : [(0, _renderer.default)(rendered).get(0)];
 }
+function removeDifferentElements(oldChildren, newChildren) {
+  newChildren.forEach(function (newElement) {
+    var hasOldChild = !!oldChildren.find(function (oldElement) {
+      return newElement === oldElement;
+    });
+    if (!hasOldChild && newElement.parentNode) {
+      newElement.parentNode.removeChild(newElement);
+    }
+  });
+}
 var TemplateWrapper = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(TemplateWrapper, _InfernoComponent);
   function TemplateWrapper(props) {
     var _this;
     _this = _InfernoComponent.call(this, props) || this;
-    _this.cleanParent = _common.noop;
     _this.renderTemplate = _this.renderTemplate.bind(_assertThisInitialized(_this));
     return _this;
   }
   var _proto = TemplateWrapper.prototype;
   _proto.renderTemplate = function renderTemplate() {
-    var _this2 = this;
     var node = (0, _inferno2.findDOMfromVNode)(this.$LI, true);
-    var container = node.parentElement;
-    this.cleanParent();
-    this.cleanParent = (0, _mutations_recording.recordMutations)(container, function () {
-      var content = buildTemplateContent(_this2.props, (0, _element.getPublicElement)((0, _renderer.default)(container)));
-      if (content.length !== 0 && !(content.length === 1 && content[0] === container)) {
-        node.after.apply(node, _toConsumableArray(content));
-      }
-    });
+    if (!(node !== null && node !== void 0 && node.parentNode)) {
+      return function () {};
+    }
+    var container = node.parentNode;
+    var $container = (0, _renderer.default)(container);
+    var $oldContainerContent = $container.contents().toArray();
+    var content = renderTemplateContent(this.props, (0, _element.getPublicElement)($container));
+    (0, _dom.replaceWith)((0, _renderer.default)(node), (0, _renderer.default)(content));
+    return function () {
+      var $actualContainerContent = (0, _renderer.default)(container).contents().toArray();
+      removeDifferentElements($oldContainerContent, $actualContainerContent);
+      container.appendChild(node);
+    };
   };
   _proto.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
     var _this$props = this.props,
@@ -131,9 +137,7 @@ var TemplateWrapper = /*#__PURE__*/function (_InfernoComponent) {
   _proto.updateEffects = function updateEffects() {
     this._effects[0].update([this.props.template, this.props.model]);
   };
-  _proto.componentWillUnmount = function componentWillUnmount() {
-    this.cleanParent();
-  };
+  _proto.componentWillUnmount = function componentWillUnmount() {};
   _proto.render = function render() {
     return null;
   };

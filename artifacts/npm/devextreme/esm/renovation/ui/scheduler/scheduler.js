@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/scheduler.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ import { SchedulerToolbar } from './header/header';
 import { getViewDataGeneratorByViewType } from '../../../ui/scheduler/workspaces/view_model/utils';
 import { createDataAccessors, isViewDataProviderConfigValid } from './common';
 import { createTimeZoneCalculator } from './timeZoneCalculator/createTimeZoneCalculator';
-import { getGroupCount, loadResources } from '../../../ui/scheduler/resources/utils';
+import { getGroupCount, loadResources } from '../../../__internal/scheduler/resources/m_utils';
 import { getAppointmentsViewModel } from './view_model/appointments/appointments';
 import { getAppointmentsConfig, getAppointmentsModel } from './model/appointments';
 import { AppointmentTooltip } from './appointment/tooltip/appointment_tooltip';

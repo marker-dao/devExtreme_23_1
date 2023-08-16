@@ -12,7 +12,7 @@ import { SchedulerToolbar } from './header/header';
 import { getViewDataGeneratorByViewType } from '../../../ui/scheduler/workspaces/view_model/utils';
 import { createDataAccessors, isViewDataProviderConfigValid } from './common';
 import { createTimeZoneCalculator } from './timeZoneCalculator/createTimeZoneCalculator';
-import { getGroupCount, loadResources } from '../../../ui/scheduler/resources/utils';
+import { getGroupCount, loadResources } from '../../../__internal/scheduler/resources/m_utils';
 import { getAppointmentsViewModel } from './view_model/appointments/appointments';
 import { getAppointmentsConfig, getAppointmentsModel } from './model/appointments';
 import { AppointmentTooltip } from './appointment/tooltip/appointment_tooltip';

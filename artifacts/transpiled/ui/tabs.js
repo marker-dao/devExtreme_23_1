@@ -306,11 +306,11 @@ var Tabs = _uiCollection_widget.default.inherit({
   },
   _updateScrollableDirection() {
     var scrollable = this.getScrollable();
-    if (!scrollable) {
-      this._renderScrolling();
-    } else {
+    if (scrollable) {
       var scrollableDirection = this._getScrollableDirection();
       scrollable.option('direction', scrollableDirection);
+    } else {
+      this._renderScrolling();
     }
   },
   _renderScrollable() {
@@ -442,6 +442,7 @@ var Tabs = _uiCollection_widget.default.inherit({
   _toggleFocusedDisabledClasses(value) {
     var _this$option = this.option(),
       currentIndex = _this$option.selectedIndex;
+    this._itemElements().removeClass(FOCUSED_DISABLED_NEXT_TAB_CLASS).removeClass(FOCUSED_DISABLED_PREV_TAB_CLASS);
     var prevItemIndex = currentIndex - 1;
     var nextItemIndex = currentIndex + 1;
     var nextFocusedIndex = (0, _renderer.default)(value).index();

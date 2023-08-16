@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/appointment_edit_form/edit_form/editors/timeZoneEditor.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ import { createComponentVNode } from "inferno";
 import { InfernoEffect, InfernoComponent } from '@devextreme/runtime/inferno';
 import { SelectBox } from '../../../../editors/drop_down_editors/select_box';
 import messageLocalization from '../../../../../../localization/message';
-import timeZoneDataUtils from '../../../../../../ui/scheduler/timezones/utils.timezones_data';
+import timeZoneDataUtils from '../../../../../../__internal/scheduler/timezones/m_utils_timezones_data';
 import DataSource from '../../../../../../data/data_source';
 var noTzTitle = messageLocalization.format('dxScheduler-noTimezoneTitle');
 export var viewFunction = _ref => {

@@ -1,25 +1,9 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 var _excluded = ["height", "scrolling", "width"];
-import { isObject, isString } from '../../../../core/utils/type';
-var VIEW_TYPES = ['day', 'week', 'workWeek', 'month', 'timelineDay', 'timelineWeek', 'timelineWorkWeek', 'timelineMonth', 'agenda'];
-export var getCurrentView = (currentView, views) => {
-  var currentViewProps = views.find(view => {
-    var names = isObject(view) ? [view.name, view.type] : [view];
-    if (names.includes(currentView)) {
-      return true;
-    }
-    return false;
-  });
-  if (currentViewProps === undefined) {
-    if (VIEW_TYPES.includes(currentView)) {
-      currentViewProps = currentView;
-    } else {
-      [currentViewProps] = views;
-    }
-  }
-  return currentViewProps;
-};
+import { renovationGetCurrentView } from './untyped_getCurrentView';
+import { isString } from '../../../../core/utils/type';
+export var getCurrentView = renovationGetCurrentView;
 export var getCurrentViewProps = (currentView, views) => {
   var currentViewProps = getCurrentView(currentView, views);
   return isString(currentViewProps) ? {

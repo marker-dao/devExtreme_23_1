@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/header/utils.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { getViewSwitcher, getDropDownViewSwitcher } from './view_switcher';
 import { getDateNavigator } from './date_navigator';
-import { validateViews, getViewName, getViewText, getViewType } from '../../../../ui/scheduler/header/utils';
+import { validateViews, getViewName, getViewText, getViewType } from '../../../../__internal/scheduler/header/m_utils';
 import devices from '../../../../core/devices';
 var DEFAULT_ELEMENT = 'defaultElement';
 var VIEW_SWITCHER = 'viewSwitcher';

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/form.d.ts)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -361,6 +361,13 @@ export default class dxForm extends Widget<dxFormOptions> {
      * @public
      */
     resetValues(): void;
+    /**
+     * @docid
+     * @publicName reset(editorsData)
+     * @param1 editorsData:object
+     * @public
+     */
+    reset(editorsData?: Record<string, any>): void;
     /**
      * @docid
      * @publicName updateData(data)

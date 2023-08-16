@@ -19,7 +19,7 @@ var _message = _interopRequireDefault(require("../../../localization/message"));
 var _semaphore = require("../../../renovation/ui/scheduler/utils/semaphore/semaphore");
 var _form = _interopRequireDefault(require("../../../ui/form"));
 var _appointmentAdapter = require("../../../ui/scheduler/appointmentAdapter");
-var _utils = _interopRequireDefault(require("../../../ui/scheduler/timezones/utils.timezones_data"));
+var _m_utils_timezones_data = _interopRequireDefault(require("../timezones/m_utils_timezones_data"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -147,7 +147,7 @@ var AppointmentForm = /*#__PURE__*/function () {
   };
   _proto.createTimeZoneDataSource = function createTimeZoneDataSource(date) {
     return new _data_source.default({
-      store: _utils.default.getDisplayedTimeZones(date),
+      store: _m_utils_timezones_data.default.getDisplayedTimeZones(date),
       paginate: true,
       pageSize: 10
     });

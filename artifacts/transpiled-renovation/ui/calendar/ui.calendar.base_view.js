@@ -16,6 +16,12 @@ var _index = require("../../events/utils/index");
 var _click = require("../../events/click");
 var _hover = require("../../events/hover");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 var abstract = _ui.default.abstract;
 var CALENDAR_OTHER_VIEW_CLASS = 'dx-calendar-other-view';
 var CALENDAR_CELL_CLASS = 'dx-calendar-cell';
@@ -38,6 +44,7 @@ var NOT_WEEK_CELL_SELECTOR = "td:not(.".concat(CALENDAR_WEEK_NUMBER_CELL_CLASS, 
 var CALENDAR_DXCLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxCalendar');
 var CALENDAR_DXHOVERSTART_EVENT_NAME = (0, _index.addNamespace)(_hover.start, 'dxCalendar');
 var CALENDAR_DATE_VALUE_KEY = 'dxDateValueKey';
+var DAY_INTERVAL = 86400000;
 var BaseView = _ui.default.inherit({
   _getViewName: function _getViewName() {
     return 'base';
@@ -50,6 +57,7 @@ var BaseView = _ui.default.inherit({
       disabledDates: null,
       onCellClick: null,
       onCellHover: null,
+      onWeekNumberClick: null,
       rowCount: 3,
       colCount: 4,
       allowValueSelection: true,
@@ -192,8 +200,10 @@ var BaseView = _ui.default.inherit({
         });
       }
     });
+    var _this$option = this.option(),
+      selectionMode = _this$option.selectionMode;
     _events_engine.default.off(this._$table, CALENDAR_DXHOVERSTART_EVENT_NAME);
-    if (this.option('selectionMode') === 'range') {
+    if (selectionMode === 'range') {
       this._createCellHoverAction();
       _events_engine.default.on(this._$table, CALENDAR_DXHOVERSTART_EVENT_NAME, NOT_WEEK_CELL_SELECTOR, function (e) {
         if (!(0, _renderer.default)(e.currentTarget).hasClass(CALENDAR_EMPTY_CELL_CLASS)) {
@@ -204,12 +214,28 @@ var BaseView = _ui.default.inherit({
         }
       });
     }
+    if (selectionMode !== 'single') {
+      this._createWeekNumberCellClickAction();
+      _events_engine.default.on(this._$table, CALENDAR_DXCLICK_EVENT_NAME, ".".concat(CALENDAR_WEEK_NUMBER_CELL_CLASS), function (e) {
+        var $row = (0, _renderer.default)(e.currentTarget).closest('tr');
+        var firstDateInRow = $row.find(".".concat(CALENDAR_CELL_CLASS)).first().data(CALENDAR_DATE_VALUE_KEY);
+        var lastDateInRow = $row.find(".".concat(CALENDAR_CELL_CLASS)).last().data(CALENDAR_DATE_VALUE_KEY);
+        var rowDates = [].concat(_toConsumableArray(_date.default.getDatesOfInterval(firstDateInRow, lastDateInRow, DAY_INTERVAL)), [lastDateInRow]);
+        _this._weekNumberCellClickAction({
+          event: e,
+          rowDates
+        });
+      });
+    }
   },
   _createCellClickAction: function _createCellClickAction() {
     this._cellClickAction = this._createActionByOption('onCellClick');
   },
   _createCellHoverAction: function _createCellHoverAction() {
     this._cellHoverAction = this._createActionByOption('onCellHover');
+  },
+  _createWeekNumberCellClickAction: function _createWeekNumberCellClickAction() {
+    this._weekNumberCellClickAction = this._createActionByOption('onWeekNumberClick');
   },
   _createDisabledDatesHandler: function _createDisabledDatesHandler() {
     var disabledDates = this.option('disabledDates');
@@ -281,11 +307,11 @@ var BaseView = _ui.default.inherit({
       _this3 = this,
       _this$_$rangeStartDat2,
       _this$_$rangeEndDateC2;
-    var _this$option = this.option(),
-      allowValueSelection = _this$option.allowValueSelection,
-      selectionMode = _this$option.selectionMode,
-      value = _this$option.value,
-      range = _this$option.range;
+    var _this$option2 = this.option(),
+      allowValueSelection = _this$option2.allowValueSelection,
+      selectionMode = _this$option2.selectionMode,
+      value = _this$option2.value,
+      range = _this$option2.range;
     if (!allowValueSelection || selectionMode !== 'range') {
       return;
     }
@@ -317,10 +343,10 @@ var BaseView = _ui.default.inherit({
       _this4 = this,
       _this$_$rangeStartHov3,
       _this$_$rangeEndHover3;
-    var _this$option2 = this.option(),
-      allowValueSelection = _this$option2.allowValueSelection,
-      selectionMode = _this$option2.selectionMode,
-      hoveredRange = _this$option2.hoveredRange;
+    var _this$option3 = this.option(),
+      allowValueSelection = _this$option3.allowValueSelection,
+      selectionMode = _this$option3.selectionMode,
+      hoveredRange = _this$option3.hoveredRange;
     if (!allowValueSelection || selectionMode !== 'range') {
       return;
     }

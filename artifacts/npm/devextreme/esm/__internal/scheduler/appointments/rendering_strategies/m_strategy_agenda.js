@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_agenda.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@ import dateUtils from '../../../../core/utils/date';
 import { each } from '../../../../core/utils/iterator';
 import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
 import { ExpressionUtils } from '../../../../ui/scheduler/expressionUtils';
-import { groupAppointmentsByResources } from '../../../../ui/scheduler/resources/utils';
+import { groupAppointmentsByResources } from '../../resources/m_utils';
 import { getAppointmentTakesSeveralDays, replaceWrongEndDate } from '../data_provider/m_utils';
 import BaseRenderingStrategy from './m_strategy_base';
 class AgendaRenderingStrategy extends BaseRenderingStrategy {

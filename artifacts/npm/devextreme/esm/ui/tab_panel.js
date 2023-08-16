@@ -1,12 +1,11 @@
 /**
 * DevExtreme (esm/ui/tab_panel.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import { getOuterHeight } from '../core/utils/size';
 import $ from '../core/renderer';
 import { touch } from '../core/utils/support';
 import { extend } from '../core/utils/extend';
@@ -20,7 +19,6 @@ import { getImageContainer } from '../core/utils/icon';
 import { getPublicElement } from '../core/element';
 import { isPlainObject, isDefined } from '../core/utils/type';
 import { BindableTemplate } from '../core/templates/bindable_template';
-import { hasWindow } from '../core/utils/window';
 
 // STYLE tabPanel
 
@@ -30,6 +28,22 @@ var TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
 var TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
 var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
 var DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
+var TABPANEL_TABS_POSITION_CLASS = {
+  top: 'dx-tabpanel-tabs-position-top',
+  right: 'dx-tabpanel-tabs-position-right',
+  bottom: 'dx-tabpanel-tabs-position-bottom',
+  left: 'dx-tabpanel-tabs-position-left'
+};
+var TABS_POSITION = {
+  top: 'top',
+  right: 'right',
+  bottom: 'bottom',
+  left: 'left'
+};
+var TABS_ORIENTATION = {
+  horizontal: 'horizontal',
+  vertical: 'vertical'
+};
 var TabPanel = MultiView.inherit({
   _getDefaultOptions: function _getDefaultOptions() {
     return extend(this.callBase(), {
@@ -38,6 +52,7 @@ var TabPanel = MultiView.inherit({
       showNavButtons: false,
       scrollByContent: true,
       scrollingEnabled: true,
+      tabsPosition: TABS_POSITION.top,
       onTitleClick: null,
       onTitleHold: null,
       onTitleRendered: null,
@@ -79,6 +94,7 @@ var TabPanel = MultiView.inherit({
   _init: function _init() {
     this.callBase();
     this.$element().addClass(TABPANEL_CLASS);
+    this._toggleTabPanelTabsPositionClass();
     this.setAria('role', 'tabpanel');
   },
   _initMarkup: function _initMarkup() {
@@ -121,18 +137,8 @@ var TabPanel = MultiView.inherit({
   _createTitleRenderedAction: function _createTitleRenderedAction() {
     this._titleRenderedAction = this._createActionByOption('onTitleRendered');
   },
-  _renderContent: function _renderContent() {
-    var that = this;
-    this.callBase();
-    if (this.option('templatesRenderAsynchronously')) {
-      this._resizeEventTimer = setTimeout(function () {
-        that._updateLayout();
-      }, 0);
-    }
-  },
   _renderLayout: function _renderLayout() {
     if (this._tabs) {
-      this._updateLayout();
       return;
     }
     var $element = this.$element();
@@ -141,16 +147,6 @@ var TabPanel = MultiView.inherit({
     this._tabs = this._createComponent($tabs, Tabs, this._tabConfig());
     this._$container = $('<div>').addClass(TABPANEL_CONTAINER_CLASS).appendTo($element);
     this._$container.append(this._$wrapper);
-    this._updateLayout();
-  },
-  _updateLayout: function _updateLayout() {
-    if (hasWindow()) {
-      var tabsHeight = getOuterHeight(this._$tabContainer);
-      this._$container.css({
-        'marginTop': -tabsHeight,
-        'paddingTop': tabsHeight
-      });
-    }
   },
   _refreshActiveDescendant: function _refreshActiveDescendant() {
     if (!this._tabs) {
@@ -208,6 +204,7 @@ var TabPanel = MultiView.inherit({
           this._focusOutHandler(args.event);
         }
       }.bind(this),
+      orientation: this._getTabsOrientation(),
       _itemAttributes: {
         class: TABPANEL_TABS_ITEM_CLASS
       }
@@ -215,6 +212,40 @@ var TabPanel = MultiView.inherit({
   },
   _renderFocusTarget: function _renderFocusTarget() {
     this._focusTarget().attr('tabIndex', -1);
+  },
+  _getTabsOrientation() {
+    var {
+      tabsPosition
+    } = this.option();
+    if ([TABS_POSITION.right, TABS_POSITION.left].includes(tabsPosition)) {
+      return TABS_ORIENTATION.vertical;
+    }
+    return TABS_ORIENTATION.horizontal;
+  },
+  _getTabPanelTabsPositionClass() {
+    var position = this.option('tabsPosition');
+    switch (position) {
+      case TABS_POSITION.right:
+        return TABPANEL_TABS_POSITION_CLASS.right;
+      case TABS_POSITION.bottom:
+        return TABPANEL_TABS_POSITION_CLASS.bottom;
+      case TABS_POSITION.left:
+        return TABPANEL_TABS_POSITION_CLASS.left;
+      case TABS_POSITION.top:
+      default:
+        return TABPANEL_TABS_POSITION_CLASS.top;
+    }
+  },
+  _toggleTabPanelTabsPositionClass() {
+    for (var key in TABPANEL_TABS_POSITION_CLASS) {
+      this.$element().removeClass(TABPANEL_TABS_POSITION_CLASS[key]);
+    }
+    var newClass = this._getTabPanelTabsPositionClass();
+    this.$element().addClass(newClass);
+  },
+  _updateTabsOrientation() {
+    var orientation = this._getTabsOrientation();
+    this._tabs.option('orientation', orientation);
   },
   _toggleWrapperFocusedClass(isFocused) {
     this._toggleFocusClass(isFocused, this._$wrapper);
@@ -252,7 +283,6 @@ var TabPanel = MultiView.inherit({
   _visibilityChanged: function _visibilityChanged(visible) {
     if (visible) {
       this._tabs._dimensionChanged();
-      this._updateLayout();
     }
   },
   registerKeyHandler: function registerKeyHandler(key, handler) {
@@ -266,16 +296,17 @@ var TabPanel = MultiView.inherit({
     this._tabs.repaint();
   },
   _optionChanged: function _optionChanged(args) {
-    var name = args.name;
-    var value = args.value;
-    var fullName = args.fullName;
+    var {
+      name,
+      value,
+      fullName
+    } = args;
     switch (name) {
       case 'dataSource':
         this.callBase(args);
         break;
       case 'items':
         this._setTabsOption(name, this.option(name));
-        this._updateLayout();
         if (!this.option('repaintChangesOnly')) {
           this._tabs.repaint();
         }
@@ -340,13 +371,13 @@ var TabPanel = MultiView.inherit({
       case 'badgeExpr':
         this._invalidate();
         break;
+      case 'tabsPosition':
+        this._toggleTabPanelTabsPositionClass();
+        this._updateTabsOrientation();
+        break;
       default:
         this.callBase(args);
     }
-  },
-  _clean: function _clean() {
-    clearTimeout(this._resizeEventTimer);
-    this.callBase();
   }
 });
 TabPanel.ItemClass = TabPanelItem;

@@ -5,7 +5,7 @@ import { createComponentVNode } from "inferno";
 import { InfernoEffect, InfernoComponent } from '@devextreme/runtime/inferno';
 import { SelectBox } from '../../../../editors/drop_down_editors/select_box';
 import messageLocalization from '../../../../../../localization/message';
-import timeZoneDataUtils from '../../../../../../ui/scheduler/timezones/utils.timezones_data';
+import timeZoneDataUtils from '../../../../../../__internal/scheduler/timezones/m_utils_timezones_data';
 import DataSource from '../../../../../../data/data_source';
 var noTzTitle = messageLocalization.format('dxScheduler-noTimezoneTitle');
 export var viewFunction = _ref => {

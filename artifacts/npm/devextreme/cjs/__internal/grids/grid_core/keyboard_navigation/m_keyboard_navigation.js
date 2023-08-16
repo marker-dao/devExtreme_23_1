@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/keyboard_navigation/m_keyboard_navigation.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,6 +34,7 @@ var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const2 = require("./const");
 var _dom = require("./dom");
 var _m_keyboard_navigation_utils = require("./m_keyboard_navigation_utils");
+var _scrollable_a11y = require("./scrollable_a11y");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -1640,9 +1641,9 @@ var KeyboardNavigationController = /*#__PURE__*/function (_modules$ViewControll)
     return isLast ? $focusedElement.last() : $focusedElement.first();
   };
   _proto._applyTabIndexToElement = function _applyTabIndexToElement($element) {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    var tabIndex = this.option('tabIndex') || 0;
-    $element.attr('tabindex', (0, _type.isDefined)(tabIndex) ? tabIndex : 0);
+    var _a;
+    var tabIndex = (_a = this.option('tabIndex')) !== null && _a !== void 0 ? _a : 0;
+    $element.attr('tabindex', tabIndex);
   };
   _proto._getCell = function _getCell(cellPosition) {
     if (this._focusedView && cellPosition) {
@@ -1816,12 +1817,15 @@ var keyboardNavigationModule = {
   extenders: {
     views: {
       rowsView: {
+        init() {
+          this.callBase();
+          this._keyboardController = this.getController('keyboardNavigation');
+        },
         _rowClick(e) {
           var editRowIndex = this.getController('editing').getEditRowIndex();
-          var keyboardController = this.getController('keyboardNavigation');
-          var isKeyboardEnabled = keyboardController.isKeyboardEnabled();
+          var isKeyboardEnabled = this._keyboardController.isKeyboardEnabled();
           if (editRowIndex === e.rowIndex) {
-            keyboardController.setCellFocusType();
+            this._keyboardController.setCellFocusType();
           }
           var needTriggerPointerEventHandler = ((0, _m_keyboard_navigation_utils.isMobile)() || !isKeyboardEnabled) && this.option('focusedRowEnabled');
           if (needTriggerPointerEventHandler) {
@@ -1832,16 +1836,15 @@ var keyboardNavigationModule = {
         _triggerPointerDownEventHandler(e, force) {
           var originalEvent = e.event.originalEvent;
           if (originalEvent) {
-            var keyboardController = this.getController('keyboardNavigation');
             var $cell = (0, _renderer.default)(originalEvent.target);
             var columnIndex = this.getCellIndex($cell);
             var column = this.getController('columns').getVisibleColumns()[columnIndex];
             var row = this.getController('data').items()[e.rowIndex];
-            if (keyboardController._isAllowEditing(row, column) || force) {
+            if (this._keyboardController._isAllowEditing(row, column) || force) {
               var eventArgs = (0, _index.createEvent)(originalEvent, {
                 currentTarget: originalEvent.target
               });
-              keyboardController._pointerEventHandler(eventArgs);
+              this._keyboardController._pointerEventHandler(eventArgs);
             }
           }
         },
@@ -1849,28 +1852,26 @@ var keyboardNavigationModule = {
           var _ref = params !== null && params !== void 0 ? params : {},
             preventScroll = _ref.preventScroll,
             pageSizeChanged = _ref.pageSizeChanged;
-          var keyboardController = this.getController('keyboardNavigation');
           var $rowsViewElement = this.element();
           if ($rowsViewElement && !(0, _selectors.focused)($rowsViewElement)) {
             $rowsViewElement.attr('tabindex', null);
           }
-          pageSizeChanged && keyboardController.updateFocusedRowIndex();
-          var rowIndex = keyboardController.getVisibleRowIndex();
+          pageSizeChanged && this._keyboardController.updateFocusedRowIndex();
+          var rowIndex = this._keyboardController.getVisibleRowIndex();
           if (!(0, _type.isDefined)(rowIndex) || rowIndex < 0) {
             rowIndex = 0;
           }
           var cellElements = this.getCellElements(rowIndex);
-          if (keyboardController.isKeyboardEnabled() && (cellElements === null || cellElements === void 0 ? void 0 : cellElements.length)) {
+          if (this._keyboardController.isKeyboardEnabled() && (cellElements === null || cellElements === void 0 ? void 0 : cellElements.length)) {
             this.updateFocusElementTabIndex(cellElements, preventScroll);
           }
         },
         updateFocusElementTabIndex(cellElements) {
-          var keyboardController = this.getController('keyboardNavigation');
           var $row = cellElements.eq(0).parent();
           if ((0, _m_keyboard_navigation_utils.isGroupRow)($row)) {
-            keyboardController._applyTabIndexToElement($row);
+            this._keyboardController._applyTabIndexToElement($row);
           } else {
-            var columnIndex = keyboardController.getColumnIndex();
+            var columnIndex = this._keyboardController.getColumnIndex();
             if (!(0, _type.isDefined)(columnIndex) || columnIndex < 0) {
               columnIndex = 0;
             }
@@ -1878,7 +1879,7 @@ var keyboardNavigationModule = {
           }
         },
         _updateFocusedCellTabIndex(cellElements, columnIndex) {
-          var keyboardController = this.getController('keyboardNavigation');
+          var keyboardController = this._keyboardController;
           var cellElementsLength = cellElements ? cellElements.length : -1;
           var updateCellTabIndex = function updateCellTabIndex($cell) {
             var isMasterDetailCell = keyboardController._isMasterDetailCell($cell);
@@ -1929,9 +1930,9 @@ var keyboardNavigationModule = {
           return deferred;
         },
         _editCellPrepared($cell) {
+          var _a;
           var editorInstance = this._getEditorInstance($cell);
-          var keyboardController = this.getController('keyboardNavigation');
-          var isEditingNavigationMode = keyboardController && keyboardController._isFastEditingStarted();
+          var isEditingNavigationMode = (_a = this._keyboardController) === null || _a === void 0 ? void 0 : _a._isFastEditingStarted();
           if (editorInstance && isEditingNavigationMode) {
             this._handleEditingNavigationMode(editorInstance);
           }
@@ -2077,7 +2078,8 @@ var keyboardNavigationModule = {
             $cell.removeAttr('tabindex');
           }
         }
-      }
+      },
+      keyboardNavigation: _scrollable_a11y.keyboardNavigationScrollableA11yExtender
     }
   }
 };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointmentDragBehavior.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _draggable = _interopRequireDefault(require("../draggable"));
 var _extend = require("../../core/utils/extend");
 var _constants = require("./constants");
-var _isSchedulerComponent = require("./utils/isSchedulerComponent");
+var _is_scheduler_component = require("../../__internal/scheduler/utils/is_scheduler_component");
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var APPOINTMENT_ITEM_CLASS = 'dx-scheduler-appointment';
@@ -118,7 +118,7 @@ var AppointmentDragBehavior = /*#__PURE__*/function () {
       if (e.cancel === true) {
         _this2.removeDroppableClasses();
       }
-      if (e.cancel !== true && (0, _isSchedulerComponent.isSchedulerComponent)(e.toComponent)) {
+      if (e.cancel !== true && (0, _is_scheduler_component.isSchedulerComponent)(e.toComponent)) {
         var targetDragBehavior = e.toComponent._getDragBehavior();
         targetDragBehavior.dragBetweenComponentsPromise = new _deferred.Deferred();
       }

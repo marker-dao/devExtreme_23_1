@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/data_provider/m_appointment_filter.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,7 @@ import getDatesWithoutTime from '../../../../renovation/ui/scheduler/utils/filte
 import { isDateAndTimeView as calculateIsDateAndTimeView, isTimelineView } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
 import { getRecurrenceProcessor } from '../../../../ui/scheduler/recurrence';
-import { getResourcesDataByGroups } from '../../../../ui/scheduler/resources/utils';
+import { getResourcesDataByGroups } from '../../resources/m_utils';
 import { _appointmentPartInInterval, compareDateWithEndDayHour, compareDateWithStartDayHour, getAppointmentTakesSeveralDays, getRecurrenceException } from './m_utils';
 var toMs = dateUtils.dateToMilliseconds;
 var FilterStrategies = {

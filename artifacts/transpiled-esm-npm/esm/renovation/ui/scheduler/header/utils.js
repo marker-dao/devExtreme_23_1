@@ -1,6 +1,6 @@
 import { getViewSwitcher, getDropDownViewSwitcher } from './view_switcher';
 import { getDateNavigator } from './date_navigator';
-import { validateViews, getViewName, getViewText, getViewType } from '../../../../ui/scheduler/header/utils';
+import { validateViews, getViewName, getViewText, getViewType } from '../../../../__internal/scheduler/header/m_utils';
 import devices from '../../../../core/devices';
 var DEFAULT_ELEMENT = 'defaultElement';
 var VIEW_SWITCHER = 'viewSwitcher';

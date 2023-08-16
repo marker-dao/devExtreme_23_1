@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/common.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@
 
 exports.isViewDataProviderConfigValid = exports.createDataAccessors = void 0;
 var _utils = require("../../../ui/scheduler/utils");
-var _utils2 = require("../../../ui/scheduler/resources/utils");
+var _m_utils = require("../../../__internal/scheduler/resources/m_utils");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -30,7 +30,7 @@ var createDataAccessors = function createDataAccessors(dataAccessorsProps) {
     recurrenceRule: dataAccessorsProps.recurrenceRuleExpr,
     recurrenceException: dataAccessorsProps.recurrenceExceptionExpr
   }, null, forceIsoDateParsing, dataAccessorsProps.dateSerializationFormat);
-  dataAccessors.resources = (0, _utils2.createExpressions)(dataAccessorsProps.resources);
+  dataAccessors.resources = (0, _m_utils.createExpressions)(dataAccessorsProps.resources);
   return dataAccessors;
 };
 exports.createDataAccessors = createDataAccessors;

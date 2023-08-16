@@ -10,11 +10,11 @@ var _toolbar = require("../../toolbar/toolbar");
 require("../../../../ui/button_group");
 require("../../../../ui/drop_down_button");
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
-var _utils = require("../../../../ui/scheduler/header/utils");
-var _utils2 = require("./utils");
+var _m_utils = require("../../../../__internal/scheduler/header/m_utils");
+var _utils = require("./utils");
 var _props = require("../props");
 var _calendar = require("./calendar");
-var _utils3 = require("../../../../core/options/utils");
+var _utils2 = require("../../../../core/options/utils");
 var _excluded = ["agendaDuration", "currentDate", "currentView", "currentViewChange", "customizationFunction", "defaultCurrentView", "firstDayOfWeek", "intervalCount", "items", "max", "min", "onCurrentDateUpdate", "onCurrentViewUpdate", "startViewDate", "useDropDownViewSwitcher", "useShortDateFormat", "viewType", "views"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -162,7 +162,7 @@ var SchedulerToolbar = /*#__PURE__*/function (_BaseInfernoComponent) {
     var options = _extends({}, this.intervalOptions, {
       date
     });
-    return (0, _utils.getNextIntervalDate)(options, direction);
+    return (0, _m_utils.getNextIntervalDate)(options, direction);
   };
   _proto.updateDateByDirection = function updateDateByDirection(direction) {
     var date = this.getNextDate(direction);
@@ -248,7 +248,7 @@ var SchedulerToolbar = /*#__PURE__*/function (_BaseInfernoComponent) {
   _createClass(SchedulerToolbar, [{
     key: "step",
     get: function get() {
-      return (0, _utils.getStep)(this.props.viewType);
+      return (0, _m_utils.getStep)(this.props.viewType);
     }
   }, {
     key: "displayedDate",
@@ -259,8 +259,8 @@ var SchedulerToolbar = /*#__PURE__*/function (_BaseInfernoComponent) {
       }
       return this.__getterCache['displayedDate'] = function () {
         var startViewDate = new Date(_this2.props.startViewDate);
-        if ((0, _utils2.isMonthView)(_this2.props.viewType)) {
-          return (0, _utils.nextWeek)(startViewDate);
+        if ((0, _utils.isMonthView)(_this2.props.viewType)) {
+          return (0, _m_utils.nextWeek)(startViewDate);
         }
         return startViewDate;
       }();
@@ -275,7 +275,7 @@ var SchedulerToolbar = /*#__PURE__*/function (_BaseInfernoComponent) {
         agendaDuration: this.props.agendaDuration,
         date: trimTime(this.displayedDate)
       };
-      return (0, _utils.getCaption)(options, this.props.useShortDateFormat, this.props.customizationFunction);
+      return (0, _m_utils.getCaption)(options, this.props.useShortDateFormat, this.props.customizationFunction);
     }
   }, {
     key: "captionText",
@@ -290,13 +290,13 @@ var SchedulerToolbar = /*#__PURE__*/function (_BaseInfernoComponent) {
         return this.__getterCache['views'];
       }
       return this.__getterCache['views'] = function () {
-        return (0, _utils2.formatViews)(_this3.props.views);
+        return (0, _utils.formatViews)(_this3.props.views);
       }();
     }
   }, {
     key: "selectedView",
     get: function get() {
-      return (0, _utils.getViewName)(this.props.currentView !== undefined ? this.props.currentView : this.state.currentView);
+      return (0, _m_utils.getViewName)(this.props.currentView !== undefined ? this.props.currentView : this.state.currentView);
     }
   }, {
     key: "intervalOptions",
@@ -340,7 +340,7 @@ var SchedulerToolbar = /*#__PURE__*/function (_BaseInfernoComponent) {
           isNextButtonDisabled: _this5.isNextButtonDisabled()
         };
         return _this5.props.items.map(function (item) {
-          return (0, _utils2.formToolbarItem)(item, options);
+          return (0, _utils.formToolbarItem)(item, options);
         });
       }();
     }
@@ -390,5 +390,5 @@ SchedulerToolbar.defaultProps = SchedulerToolbarProps;
 var __defaultOptionRules = [];
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
-  SchedulerToolbar.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(SchedulerToolbar.defaultProps), Object.getOwnPropertyDescriptors(__processTwoWayProps((0, _utils3.convertRulesToOptions)(__defaultOptionRules)))));
+  SchedulerToolbar.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(SchedulerToolbar.defaultProps), Object.getOwnPropertyDescriptors(__processTwoWayProps((0, _utils2.convertRulesToOptions)(__defaultOptionRules)))));
 }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,7 @@ var Calendar = Editor.inherit({
       maxZoomLevel: ZOOM_LEVEL.MONTH,
       minZoomLevel: ZOOM_LEVEL.CENTURY,
       selectionMode: 'single',
+      selectWeekOnClick: true,
       showTodayButton: false,
       showWeekNumbers: false,
       weekNumberRule: 'auto',
@@ -622,6 +623,7 @@ var Calendar = Editor.inherit({
       max: this._getMaxDate(),
       firstDayOfWeek: (_this$option2 = this.option('firstDayOfWeek')) !== null && _this$option2 !== void 0 ? _this$option2 : dateLocalization.firstDayOfWeekIndex(),
       showWeekNumbers: this.option('showWeekNumbers'),
+      selectWeekOnClick: this.option('selectWeekOnClick'),
       weekNumberRule: this.option('weekNumberRule'),
       zoomLevel: this.option('zoomLevel'),
       tabIndex: undefined,
@@ -1170,6 +1172,9 @@ var Calendar = Editor.inherit({
         this._refreshSelectionStrategy();
         this._selectionStrategy.restoreValue();
         this._initCurrentDate();
+        break;
+      case 'selectWeekOnClick':
+        this._refreshViews();
         break;
       case 'firstDayOfWeek':
         this._refreshViews();

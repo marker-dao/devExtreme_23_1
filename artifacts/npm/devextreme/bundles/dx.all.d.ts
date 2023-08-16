@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15933,6 +15933,10 @@ declare module DevExpress.ui {
      */
     resetValues(): void;
     /**
+     * [descr:dxForm.reset(editorsData)]
+     */
+    reset(editorsData?: Record<string, any>): void;
+    /**
      * [descr:dxForm.updateData(data)]
      */
     updateData(data: any): void;
@@ -25091,6 +25095,10 @@ declare module DevExpress.ui {
      * [descr:dxTabPanelOptions.swipeEnabled]
      */
     swipeEnabled?: boolean;
+    /**
+     * [descr:dxTabPanelOptions.tabsPosition]
+     */
+    tabsPosition?: DevExpress.common.Position;
   }
   /**
    * [descr:dxTabs]

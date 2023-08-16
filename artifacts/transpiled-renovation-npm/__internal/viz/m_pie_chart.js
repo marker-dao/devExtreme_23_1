@@ -25,6 +25,31 @@ var HOVER_STATE = states.hoverMark;
 var SELECTED_STATE = states.selectedMark;
 var MAX_RESOLVE_ITERATION_COUNT = 5;
 var LEGEND_ACTIONS = [states.resetItem, states.applyHover, states.applySelected, states.applySelected];
+function shiftInColumnFunction(box, length) {
+  return {
+    x: box.x,
+    y: box.y - length
+  };
+}
+function dividePoints(series, points) {
+  return series.getVisiblePoints().reduce(function (r, point) {
+    var angle = (0, _utils.normalizeAngle)(point.middleAngle);
+    (angle <= 90 || angle >= 270 ? r.right : r.left).push(point);
+    return r;
+  }, points || {
+    left: [],
+    right: []
+  });
+}
+function resolveOverlappedLabels(points, shiftCallback, inverseDirection, canvas) {
+  var overlapped = false;
+  if (inverseDirection) {
+    points.left.reverse();
+    points.right.reverse();
+  }
+  overlapped = _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.left, canvas, false, false, shiftCallback);
+  return _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.right, canvas, false, false, shiftCallback) || overlapped;
+}
 function getLegendItemAction(points) {
   var state = NORMAL_STATE;
   points.forEach(function (point) {
@@ -116,6 +141,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     this.callBase();
   },
   _groupSeries() {
+    var _a;
     var series = this.series;
     this._groupsData = {
       groups: [{
@@ -124,7 +150,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
           valueType: 'numeric'
         }
       }],
-      argumentOptions: series[0] && series[0].getOptions()
+      argumentOptions: (_a = series[0]) === null || _a === void 0 ? void 0 : _a.getOptions()
     };
   },
   getArgumentAxis() {
@@ -180,9 +206,9 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return legendItem;
   },
   _getLegendTargets() {
-    var that = this;
+    var _this = this;
     var itemsByArgument = {};
-    (that.series || []).forEach(function (series) {
+    (this.series || []).forEach(function (series) {
       series.getPoints().forEach(function (point) {
         var argument = point.argument.valueOf();
         var index = series.getPointsByArg(argument).indexOf(point);
@@ -197,7 +223,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     (0, _iterator.each)(itemsByArgument, function (_, points) {
       points.forEach(function (point, index) {
         if (index === 0) {
-          items.push(that._getLegendOptions(point));
+          items.push(_this._getLegendOptions(point));
           return;
         }
         var item = items[items.length - 1];
@@ -215,22 +241,21 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     }];
   },
   _getLayoutSeries(series, drawOptions) {
-    var that = this;
     var layout;
-    var canvas = that._canvas;
+    var canvas = this._canvas;
     var drawnLabels = false;
-    layout = that.layoutManager.applyPieChartSeriesLayout(canvas, series, true);
+    layout = this.layoutManager.applyPieChartSeriesLayout(canvas, series, true);
     series.forEach(function (singleSeries) {
       singleSeries.correctPosition(layout, canvas);
       drawnLabels = singleSeries.drawLabelsWOPoints() || drawnLabels;
     });
     if (drawnLabels) {
-      layout = that.layoutManager.applyPieChartSeriesLayout(canvas, series, drawOptions.hideLayoutLabels);
+      layout = this.layoutManager.applyPieChartSeriesLayout(canvas, series, drawOptions.hideLayoutLabels);
     }
     series.forEach(function (singleSeries) {
       singleSeries.hideLabels();
     });
-    that._sizeGroupLayout = {
+    this._sizeGroupLayout = {
       x: layout.centerX,
       y: layout.centerY,
       radius: layout.radiusOuter,
@@ -249,18 +274,17 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return layout;
   },
   _updateSeriesDimensions(drawOptions) {
-    var that = this;
-    var visibleSeries = that._getVisibleSeries();
+    var visibleSeries = this._getVisibleSeries();
     var lengthVisibleSeries = visibleSeries.length;
     var innerRad;
     var delta;
     var layout;
     var sizeGroupLayout = drawOptions.sizeGroupLayout;
     if (lengthVisibleSeries) {
-      layout = sizeGroupLayout ? that._getLayoutSeriesForEqualPies(visibleSeries, sizeGroupLayout) : that._getLayoutSeries(visibleSeries, drawOptions);
+      layout = sizeGroupLayout ? this._getLayoutSeriesForEqualPies(visibleSeries, sizeGroupLayout) : this._getLayoutSeries(visibleSeries, drawOptions);
       delta = (layout.radiusOuter - layout.radiusInner - seriesSpacing * (lengthVisibleSeries - 1)) / lengthVisibleSeries;
       innerRad = layout.radiusInner;
-      that._setGeometry(layout);
+      this._setGeometry(layout);
       visibleSeries.forEach(function (singleSeries) {
         singleSeries.correctRadius({
           radiusInner: innerRad,
@@ -286,7 +310,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return this._innerRadius;
   },
   _getLegendCallBack() {
-    var that = this;
+    var _this2 = this;
     var legend = this._legend;
     var items = this._getLegendTargets().map(function (i) {
       return i.legendData;
@@ -297,7 +321,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
         var callback = legend.getActionCallback({
           index: data.id
         });
-        that.series.forEach(function (series) {
+        _this2.series.forEach(function (series) {
           var seriesPoints = series.getPointsByKeys(data.argument, data.argumentIndex);
           points.push.apply(points, seriesPoints);
         });
@@ -324,9 +348,9 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
   },
   _applyExtraSettings: _common.noop,
   _resolveLabelOverlappingShift() {
-    var that = this;
-    var inverseDirection = that.option('segmentsDirection') === 'anticlockwise';
-    var seriesByPosition = that.series.reduce(function (r, s) {
+    var _this3 = this;
+    var inverseDirection = this.option('segmentsDirection') === 'anticlockwise';
+    var seriesByPosition = this.series.reduce(function (r, s) {
       (r[s.getOptions().label.position] || r.outside).push(s);
       return r;
     }, {
@@ -335,54 +359,31 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
       outside: []
     });
     var labelsOverlapped = false;
+    var shiftFunction = function shiftFunction(box, length) {
+      return (0, _utils.getVerticallyShiftedAngularCoords)(box, -length, _this3._center);
+    };
     if (seriesByPosition.inside.length > 0) {
-      labelsOverlapped = resolve(seriesByPosition.inside.reduce(function (r, singleSeries) {
-        return singleSeries.getVisiblePoints().reduce(function (r, point) {
+      var pointsToResolve = seriesByPosition.inside.reduce(function (r, singleSeries) {
+        var visiblePoints = singleSeries.getVisiblePoints();
+        return visiblePoints.reduce(function (r, point) {
           r.left.push(point);
           return r;
         }, r);
       }, {
         left: [],
         right: []
-      }), shiftInColumnFunction) || labelsOverlapped;
+      });
+      labelsOverlapped = resolveOverlappedLabels(pointsToResolve, shiftInColumnFunction, inverseDirection, this._canvas) || labelsOverlapped;
     }
     labelsOverlapped = seriesByPosition.columns.reduce(function (r, singleSeries) {
-      return resolve(dividePoints(singleSeries), shiftInColumnFunction) || r;
+      return resolveOverlappedLabels(dividePoints(singleSeries), shiftInColumnFunction, inverseDirection, _this3._canvas) || r;
     }, labelsOverlapped);
     if (seriesByPosition.outside.length > 0) {
-      labelsOverlapped = resolve(seriesByPosition.outside.reduce(function (r, singleSeries) {
+      labelsOverlapped = resolveOverlappedLabels(seriesByPosition.outside.reduce(function (r, singleSeries) {
         return dividePoints(singleSeries, r);
-      }, null), shiftFunction) || labelsOverlapped;
+      }, null), shiftFunction, inverseDirection, this._canvas) || labelsOverlapped;
     }
     return labelsOverlapped;
-    function dividePoints(series, points) {
-      return series.getVisiblePoints().reduce(function (r, point) {
-        var angle = (0, _utils.normalizeAngle)(point.middleAngle);
-        (angle <= 90 || angle >= 270 ? r.right : r.left).push(point);
-        return r;
-      }, points || {
-        left: [],
-        right: []
-      });
-    }
-    function resolve(points, shiftCallback) {
-      var overlapped = false;
-      if (inverseDirection) {
-        points.left.reverse();
-        points.right.reverse();
-      }
-      overlapped = _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.left, that._canvas, false, false, shiftCallback);
-      return _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.right, that._canvas, false, false, shiftCallback) || overlapped;
-    }
-    function shiftFunction(box, length) {
-      return (0, _utils.getVerticallyShiftedAngularCoords)(box, -length, that._center);
-    }
-    function shiftInColumnFunction(box, length) {
-      return {
-        x: box.x,
-        y: box.y - length
-      };
-    }
   },
   _setGeometry(_ref) {
     var x = _ref.centerX,
@@ -416,12 +417,11 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
   _reinitAxes: _common.noop,
   _correctAxes: _common.noop,
   _getExtraOptions() {
-    var that = this;
     return {
-      startAngle: that.option('startAngle'),
-      innerRadius: that.option('innerRadius'),
-      segmentsDirection: that.option('segmentsDirection'),
-      type: that.option('type')
+      startAngle: this.option('startAngle'),
+      innerRadius: this.option('innerRadius'),
+      segmentsDirection: this.option('segmentsDirection'),
+      type: this.option('type')
     };
   },
   getSizeGroup() {

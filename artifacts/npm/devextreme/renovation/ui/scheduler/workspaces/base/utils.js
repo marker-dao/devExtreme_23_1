@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/workspaces/base/utils.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,8 +10,8 @@
 
 exports.isCellAllDay = exports.getTotalRowCount = exports.getTotalCellCount = exports.getSelectedCells = exports.getRowCountWithAllDayRow = exports.getHiddenInterval = exports.getDateTableWidth = exports.getDateForHeaderText = exports.getCellIndices = exports.createVirtualScrollingOptions = exports.createCellElementMetaData = exports.compareCellsByDateAndIndex = exports.DATE_TABLE_MIN_CELL_WIDTH = void 0;
 var _date = _interopRequireDefault(require("../../../../../core/utils/date"));
-var _utils = require("../../../../../ui/scheduler/resources/utils");
-var _utils2 = require("../utils");
+var _m_utils = require("../../../../../__internal/scheduler/resources/m_utils");
+var _utils = require("../utils");
 var _const = require("../const");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -25,15 +25,15 @@ var HOUR_MS = _date.default.dateToMilliseconds('hour');
 var DATE_TABLE_MIN_CELL_WIDTH = 75;
 exports.DATE_TABLE_MIN_CELL_WIDTH = DATE_TABLE_MIN_CELL_WIDTH;
 var getTotalRowCount = function getTotalRowCount(rowCount, groupOrientation, groups, isAllDayPanelVisible) {
-  var isVerticalGrouping = (0, _utils2.isVerticalGroupingApplied)(groups, groupOrientation);
-  var groupCount = (0, _utils.getGroupCount)(groups);
+  var isVerticalGrouping = (0, _utils.isVerticalGroupingApplied)(groups, groupOrientation);
+  var groupCount = (0, _m_utils.getGroupCount)(groups);
   var totalRowCount = isVerticalGrouping ? rowCount * groupCount : rowCount;
   return isAllDayPanelVisible ? totalRowCount + groupCount : totalRowCount;
 };
 exports.getTotalRowCount = getTotalRowCount;
 var getTotalCellCount = function getTotalCellCount(cellCount, groupOrientation, groups) {
-  var isHorizontalGrouping = (0, _utils2.isHorizontalGroupingApplied)(groups, groupOrientation);
-  var groupCount = (0, _utils.getGroupCount)(groups);
+  var isHorizontalGrouping = (0, _utils.isHorizontalGroupingApplied)(groups, groupOrientation);
+  var groupCount = (0, _m_utils.getGroupCount)(groups);
   return isHorizontalGrouping ? cellCount * groupCount : cellCount;
 };
 exports.getTotalCellCount = getTotalCellCount;
@@ -116,7 +116,7 @@ var createVirtualScrollingOptions = function createVirtualScrollingOptions(optio
       return options.scrollableWidth;
     },
     getGroupCount: function getGroupCount() {
-      return (0, _utils.getGroupCount)(options.groups);
+      return (0, _m_utils.getGroupCount)(options.groups);
     },
     isVerticalGrouping: function isVerticalGrouping() {
       return options.isVerticalGrouping;

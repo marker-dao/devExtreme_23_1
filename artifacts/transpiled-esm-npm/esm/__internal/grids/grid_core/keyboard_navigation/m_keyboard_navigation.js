@@ -20,6 +20,7 @@ import gridCoreUtils from '../m_utils';
 import { CELL_FOCUS_DISABLED_CLASS, COLUMN_HEADERS_VIEW, COMMAND_CELL_SELECTOR, COMMAND_EDIT_CLASS, COMMAND_EXPAND_CLASS, COMMAND_SELECT_CLASS, DATA_ROW_CLASS, DATEBOX_WIDGET_NAME, DROPDOWN_EDITOR_OVERLAY_CLASS, EDIT_FORM_ITEM_CLASS, FAST_EDITING_DELETE_KEY, FOCUS_STATE_CLASS, FOCUS_TYPE_CELL, FOCUS_TYPE_ROW, FOCUSED_CLASS, FREESPACE_ROW_CLASS, FUNCTIONAL_KEYS, INTERACTIVE_ELEMENTS_SELECTOR, MASTER_DETAIL_CELL_CLASS, NON_FOCUSABLE_ELEMENTS_SELECTOR, REVERT_BUTTON_CLASS, ROWS_VIEW_CLASS, WIDGET_CLASS } from './const';
 import { GridCoreKeyboardNavigationDom } from './dom';
 import { isCellInHeaderRow, isDataRow, isDetailRow, isEditorCell, isElementDefined, isFixedColumnIndexOffsetRequired, isGroupFooterRow, isGroupRow, isMobile, isNotFocusedRow, shouldPreventScroll } from './m_keyboard_navigation_utils';
+import { keyboardNavigationScrollableA11yExtender } from './scrollable_a11y';
 export class KeyboardNavigationController extends modules.ViewController {
   // #region Initialization
   init() {
@@ -1618,9 +1619,9 @@ export class KeyboardNavigationController extends modules.ViewController {
     return isLast ? $focusedElement.last() : $focusedElement.first();
   }
   _applyTabIndexToElement($element) {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    var tabIndex = this.option('tabIndex') || 0;
-    $element.attr('tabindex', isDefined(tabIndex) ? tabIndex : 0);
+    var _a;
+    var tabIndex = (_a = this.option('tabIndex')) !== null && _a !== void 0 ? _a : 0;
+    $element.attr('tabindex', tabIndex);
   }
   _getCell(cellPosition) {
     if (this._focusedView && cellPosition) {
@@ -1793,12 +1794,15 @@ export var keyboardNavigationModule = {
   extenders: {
     views: {
       rowsView: {
+        init() {
+          this.callBase();
+          this._keyboardController = this.getController('keyboardNavigation');
+        },
         _rowClick(e) {
           var editRowIndex = this.getController('editing').getEditRowIndex();
-          var keyboardController = this.getController('keyboardNavigation');
-          var isKeyboardEnabled = keyboardController.isKeyboardEnabled();
+          var isKeyboardEnabled = this._keyboardController.isKeyboardEnabled();
           if (editRowIndex === e.rowIndex) {
-            keyboardController.setCellFocusType();
+            this._keyboardController.setCellFocusType();
           }
           var needTriggerPointerEventHandler = (isMobile() || !isKeyboardEnabled) && this.option('focusedRowEnabled');
           if (needTriggerPointerEventHandler) {
@@ -1811,16 +1815,15 @@ export var keyboardNavigationModule = {
             originalEvent
           } = e.event;
           if (originalEvent) {
-            var keyboardController = this.getController('keyboardNavigation');
             var $cell = $(originalEvent.target);
             var columnIndex = this.getCellIndex($cell);
             var column = this.getController('columns').getVisibleColumns()[columnIndex];
             var row = this.getController('data').items()[e.rowIndex];
-            if (keyboardController._isAllowEditing(row, column) || force) {
+            if (this._keyboardController._isAllowEditing(row, column) || force) {
               var eventArgs = createEvent(originalEvent, {
                 currentTarget: originalEvent.target
               });
-              keyboardController._pointerEventHandler(eventArgs);
+              this._keyboardController._pointerEventHandler(eventArgs);
             }
           }
         },
@@ -1829,28 +1832,26 @@ export var keyboardNavigationModule = {
             preventScroll,
             pageSizeChanged
           } = params !== null && params !== void 0 ? params : {};
-          var keyboardController = this.getController('keyboardNavigation');
           var $rowsViewElement = this.element();
           if ($rowsViewElement && !focused($rowsViewElement)) {
             $rowsViewElement.attr('tabindex', null);
           }
-          pageSizeChanged && keyboardController.updateFocusedRowIndex();
-          var rowIndex = keyboardController.getVisibleRowIndex();
+          pageSizeChanged && this._keyboardController.updateFocusedRowIndex();
+          var rowIndex = this._keyboardController.getVisibleRowIndex();
           if (!isDefined(rowIndex) || rowIndex < 0) {
             rowIndex = 0;
           }
           var cellElements = this.getCellElements(rowIndex);
-          if (keyboardController.isKeyboardEnabled() && (cellElements === null || cellElements === void 0 ? void 0 : cellElements.length)) {
+          if (this._keyboardController.isKeyboardEnabled() && (cellElements === null || cellElements === void 0 ? void 0 : cellElements.length)) {
             this.updateFocusElementTabIndex(cellElements, preventScroll);
           }
         },
         updateFocusElementTabIndex(cellElements) {
-          var keyboardController = this.getController('keyboardNavigation');
           var $row = cellElements.eq(0).parent();
           if (isGroupRow($row)) {
-            keyboardController._applyTabIndexToElement($row);
+            this._keyboardController._applyTabIndexToElement($row);
           } else {
-            var columnIndex = keyboardController.getColumnIndex();
+            var columnIndex = this._keyboardController.getColumnIndex();
             if (!isDefined(columnIndex) || columnIndex < 0) {
               columnIndex = 0;
             }
@@ -1858,7 +1859,7 @@ export var keyboardNavigationModule = {
           }
         },
         _updateFocusedCellTabIndex(cellElements, columnIndex) {
-          var keyboardController = this.getController('keyboardNavigation');
+          var keyboardController = this._keyboardController;
           var cellElementsLength = cellElements ? cellElements.length : -1;
           var updateCellTabIndex = function updateCellTabIndex($cell) {
             var isMasterDetailCell = keyboardController._isMasterDetailCell($cell);
@@ -1911,9 +1912,9 @@ export var keyboardNavigationModule = {
           return deferred;
         },
         _editCellPrepared($cell) {
+          var _a;
           var editorInstance = this._getEditorInstance($cell);
-          var keyboardController = this.getController('keyboardNavigation');
-          var isEditingNavigationMode = keyboardController && keyboardController._isFastEditingStarted();
+          var isEditingNavigationMode = (_a = this._keyboardController) === null || _a === void 0 ? void 0 : _a._isFastEditingStarted();
           if (editorInstance && isEditingNavigationMode) {
             this._handleEditingNavigationMode(editorInstance);
           }
@@ -2062,7 +2063,8 @@ export var keyboardNavigationModule = {
             $cell.removeAttr('tabindex');
           }
         }
-      }
+      },
+      keyboardNavigation: keyboardNavigationScrollableA11yExtender
     }
   }
 };

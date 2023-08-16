@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/component_wrapper/common/template_wrapper.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,13 +11,12 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 var _excluded = ["isEqual"];
 import { InfernoComponent, InfernoEffect } from '@devextreme/runtime/inferno';
 import { findDOMfromVNode } from 'inferno';
+import { replaceWith } from '../../../core/utils/dom';
 import { shallowEquals } from '../../utils/shallow_equals';
 import $ from '../../../core/renderer';
 import domAdapter from '../../../core/dom_adapter';
 import { getPublicElement } from '../../../core/element';
 import { isDefined } from '../../../core/utils/type';
-import { noop } from '../../../core/utils/common';
-import { recordMutations } from './mutations_recording';
 function isDxElementWrapper(element) {
   return !!element.toArray;
 }
@@ -38,7 +37,7 @@ export function buildTemplateArgs(model, template) {
   }
   return args;
 }
-function buildTemplateContent(props, container) {
+function renderTemplateContent(props, container) {
   var _props$model;
   var {
     data,
@@ -68,22 +67,34 @@ function buildTemplateContent(props, container) {
   }
   return isDxElementWrapper(rendered) ? rendered.toArray() : [$(rendered).get(0)];
 }
+function removeDifferentElements(oldChildren, newChildren) {
+  newChildren.forEach(newElement => {
+    var hasOldChild = !!oldChildren.find(oldElement => newElement === oldElement);
+    if (!hasOldChild && newElement.parentNode) {
+      newElement.parentNode.removeChild(newElement);
+    }
+  });
+}
 export class TemplateWrapper extends InfernoComponent {
   constructor(props) {
     super(props);
-    this.cleanParent = noop;
     this.renderTemplate = this.renderTemplate.bind(this);
   }
   renderTemplate() {
     var node = findDOMfromVNode(this.$LI, true);
-    var container = node.parentElement;
-    this.cleanParent();
-    this.cleanParent = recordMutations(container, () => {
-      var content = buildTemplateContent(this.props, getPublicElement($(container)));
-      if (content.length !== 0 && !(content.length === 1 && content[0] === container)) {
-        node.after(...content);
-      }
-    });
+    if (!(node !== null && node !== void 0 && node.parentNode)) {
+      return () => {};
+    }
+    var container = node.parentNode;
+    var $container = $(container);
+    var $oldContainerContent = $container.contents().toArray();
+    var content = renderTemplateContent(this.props, getPublicElement($container));
+    replaceWith($(node), $(content));
+    return () => {
+      var $actualContainerContent = $(container).contents().toArray();
+      removeDifferentElements($oldContainerContent, $actualContainerContent);
+      container.appendChild(node);
+    };
   }
   shouldComponentUpdate(nextProps) {
     var {
@@ -121,9 +132,7 @@ export class TemplateWrapper extends InfernoComponent {
   updateEffects() {
     this._effects[0].update([this.props.template, this.props.model]);
   }
-  componentWillUnmount() {
-    this.cleanParent();
-  }
+  componentWillUnmount() {}
   render() {
     return null;
   }

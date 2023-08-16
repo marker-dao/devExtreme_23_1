@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/rendering_strategies/m_strategy_agenda.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,8 +16,8 @@ var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _iterator = require("../../../../core/utils/iterator");
 var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
 var _expressionUtils = require("../../../../ui/scheduler/expressionUtils");
-var _utils = require("../../../../ui/scheduler/resources/utils");
-var _m_utils = require("../data_provider/m_utils");
+var _m_utils = require("../../resources/m_utils");
+var _m_utils2 = require("../data_provider/m_utils");
 var _m_strategy_base = _interopRequireDefault(require("./m_strategy_base"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -53,7 +53,7 @@ var AgendaRenderingStrategy = /*#__PURE__*/function (_BaseRenderingStrateg) {
       resources: this.options.resources,
       dataAccessors: this.dataAccessors.resources
     };
-    return (0, _utils.groupAppointmentsByResources)(config, appointments, groups);
+    return (0, _m_utils.groupAppointmentsByResources)(config, appointments, groups);
   };
   _proto.createTaskPositionMap = function createTaskPositionMap(appointments) {
     var _this = this;
@@ -154,7 +154,7 @@ var AgendaRenderingStrategy = /*#__PURE__*/function (_BaseRenderingStrateg) {
   ;
   _proto.replaceWrongAppointmentEndDate = function replaceWrongAppointmentEndDate(rawAppointment, startDate, endDate) {
     var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
-    (0, _m_utils.replaceWrongEndDate)(adapter, startDate, endDate, this.cellDuration, this.dataAccessors);
+    (0, _m_utils2.replaceWrongEndDate)(adapter, startDate, endDate, this.cellDuration, this.dataAccessors);
   }
   // TODO: get rid of an extra 'needClearSettings' argument
   ;
@@ -195,7 +195,7 @@ var AgendaRenderingStrategy = /*#__PURE__*/function (_BaseRenderingStrateg) {
         for (var j = 0; j < appointmentCount; j++) {
           var appointmentData = currentAppointments[j].settings || currentAppointments[j];
           var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(currentAppointments[j], _this2.dataAccessors, _this2.timeZoneCalculator);
-          var appointmentIsLong = (0, _m_utils.getAppointmentTakesSeveralDays)(adapter);
+          var appointmentIsLong = (0, _m_utils2.getAppointmentTakesSeveralDays)(adapter);
           var appointmentIsRecurrence = _expressionUtils.ExpressionUtils.getField(_this2.dataAccessors, 'recurrenceRule', currentAppointments[j]);
           if (_this2.instance.fire('dayHasAppointment', day, appointmentData, true) || !appointmentIsRecurrence && appointmentIsLong && _this2.instance.fire('dayHasAppointment', day, currentAppointments[j], true)) {
             groupResult[i] += 1;

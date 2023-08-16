@@ -14,7 +14,7 @@ import messageLocalization from '../../../localization/message';
 import { Semaphore } from '../../../renovation/ui/scheduler/utils/semaphore/semaphore';
 import Form from '../../../ui/form';
 import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
-import timeZoneDataUtils from '../../../ui/scheduler/timezones/utils.timezones_data';
+import timeZoneDataUtils from '../timezones/m_utils_timezones_data';
 var SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
 export var APPOINTMENT_FORM_GROUP_NAMES = {
   Main: 'mainGroup',

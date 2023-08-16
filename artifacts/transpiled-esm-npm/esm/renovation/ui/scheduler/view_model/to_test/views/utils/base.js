@@ -5,7 +5,7 @@ import dateLocalization from '../../../../../../../localization/date';
 import timeZoneUtils from '../../../../../../../ui/scheduler/utils.timeZone';
 import { VERTICAL_GROUP_COUNT_CLASSES } from '../../../../../../../ui/scheduler/classes';
 import { VIEWS } from '../../../../../../../ui/scheduler/constants';
-import { getGroupCount } from '../../../../../../../ui/scheduler/resources/utils';
+import { getGroupCount } from '../../../../../../../__internal/scheduler/resources/m_utils';
 import { isVerticalGroupingApplied } from '../../../../workspaces/utils';
 import { TIMELINE_VIEWS } from './const';
 export var isDateInRange = (date, startDate, endDate, diff) => diff > 0 ? dateUtils.dateInRange(date, startDate, new Date(endDate.getTime() - 1)) : dateUtils.dateInRange(date, endDate, startDate, 'date');

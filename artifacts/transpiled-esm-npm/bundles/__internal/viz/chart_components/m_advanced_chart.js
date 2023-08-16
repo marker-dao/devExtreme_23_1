@@ -23,13 +23,16 @@ var COMMON_AXIS_SETTINGS = 'commonAxisSettings';
 var DEFAULT_PANE_NAME = 'default';
 var VISUAL_RANGE = 'VISUAL_RANGE';
 function prepareAxis(axisOptions) {
-  return isArray(axisOptions) ? axisOptions.length === 0 ? [{}] : axisOptions : [axisOptions];
-}
-function processBubbleMargin(opt, bubbleSize) {
-  if (opt.processBubbleSize) {
-    opt.size = bubbleSize;
+  if (isArray(axisOptions)) {
+    return axisOptions.length === 0 ? [{}] : axisOptions;
   }
-  return opt;
+  return [axisOptions];
+}
+function processBubbleMargin(marginOptions, bubbleSize) {
+  if (marginOptions.processBubbleSize) {
+    marginOptions.size = bubbleSize;
+  }
+  return marginOptions;
 }
 function estimateBubbleSize(size, panesCount, maxSize, rotated) {
   var width = rotated ? size.width / panesCount : size.width;
@@ -63,9 +66,9 @@ function getAxisTypes(groupsData, axis, isArgumentAxes) {
       argumentType: groupsData.argumentType
     };
   }
-  var _groupsData$groups$fi = groupsData.groups.filter(function (g) {
+  var _groupsData$groups$fi = groupsData.groups.find(function (g) {
       return g.valueAxis === axis;
-    })[0],
+    }),
     valueAxisType = _groupsData$groups$fi.valueAxisType,
     valueType = _groupsData$groups$fi.valueType;
   return {
@@ -75,7 +78,7 @@ function getAxisTypes(groupsData, axis, isArgumentAxes) {
 }
 function wrapVisualRange(fullName, value) {
   var pathElements = fullName.split('.');
-  var destElem = pathElements[pathElements.length - 1];
+  var destElem = pathElements.at(-1);
   if (destElem === 'endValue' || destElem === 'startValue') {
     return {
       [destElem]: value
@@ -112,17 +115,16 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._labelsAxesGroup = null;
   },
   _dispose() {
-    var that = this;
     var disposeObjectsInArray = this._disposeObjectsInArray;
-    that.callBase();
-    that.panes = null;
-    if (that._legend) {
-      that._legend.dispose();
-      that._legend = null;
+    this.callBase();
+    this.panes = null;
+    if (this._legend) {
+      this._legend.dispose();
+      this._legend = null;
     }
-    disposeObjectsInArray.call(that, 'panesBackground');
-    disposeObjectsInArray.call(that, 'seriesFamilies');
-    that._disposeAxes();
+    disposeObjectsInArray.call(this, 'panesBackground');
+    disposeObjectsInArray.call(this, 'seriesFamilies');
+    this._disposeAxes();
   },
   _createPanes() {
     this._cleanPanesClipRects('fixed');
@@ -132,25 +134,19 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
   _cleanPanesClipRects(clipArrayName) {
     var clipArray = this._panesClipRects[clipArrayName];
     (clipArray || []).forEach(function (clipRect) {
-      return clipRect && clipRect.dispose();
+      clipRect === null || clipRect === void 0 ? void 0 : clipRect.dispose();
     });
     this._panesClipRects[clipArrayName] = [];
   },
   _getElementsClipRectID(paneName) {
     var clipShape = this._panesClipRects.fixed[this._getPaneIndex(paneName)];
-    return clipShape && clipShape.id;
+    return clipShape === null || clipShape === void 0 ? void 0 : clipShape.id;
   },
   _getPaneIndex(paneName) {
-    var paneIndex;
     var name = paneName || DEFAULT_PANE_NAME;
-    (0, _iterator.each)(this.panes, function (index, pane) {
-      if (pane.name === name) {
-        paneIndex = index;
-        return false;
-      }
-      return undefined;
+    return this.panes.findIndex(function (pane) {
+      return pane.name === name;
     });
-    return paneIndex;
   },
   _updateSize() {
     this.callBase();
@@ -162,20 +158,22 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._axesReinitialized = true;
   },
   _populateAxes() {
-    var that = this;
-    var panes = that.panes;
-    var rotated = that._isRotated();
-    var argumentAxesOptions = prepareAxis(that.option('argumentAxis') || {})[0];
-    var valueAxisOption = that.option('valueAxis');
+    var _this = this;
+    var panes = this.panes;
+    var rotated = this._isRotated();
+    var argumentAxesOptions = prepareAxis(this.option('argumentAxis') || {})[0];
+    var valueAxisOption = this.option('valueAxis');
     var valueAxesOptions = prepareAxis(valueAxisOption || {});
     var argumentAxesPopulatedOptions = [];
     var valueAxesPopulatedOptions = [];
     var axisNames = [];
     var valueAxesCounter = 0;
     var paneWithNonVirtualAxis;
-    var crosshairMargins = that._getCrosshairMargins();
+    var crosshairMargins = this._getCrosshairMargins();
     function getNextAxisName() {
-      return DEFAULT_AXIS_NAME + valueAxesCounter++;
+      var name = DEFAULT_AXIS_NAME + String(valueAxesCounter);
+      valueAxesCounter += 1;
+      return name;
     }
     if (rotated) {
       paneWithNonVirtualAxis = argumentAxesOptions.position === 'right' ? panes[panes.length - 1].name : panes[0].name;
@@ -184,19 +182,19 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     }
     argumentAxesPopulatedOptions = (0, _utils.map)(panes, function (pane) {
       var virtual = pane.name !== paneWithNonVirtualAxis;
-      return that._populateAxesOptions('argumentAxis', argumentAxesOptions, {
+      return _this._populateAxesOptions('argumentAxis', argumentAxesOptions, {
         pane: pane.name,
         name: null,
         optionPath: 'argumentAxis',
         crosshairMargin: rotated ? crosshairMargins.x : crosshairMargins.y
       }, rotated, virtual);
     });
-    (0, _iterator.each)(valueAxesOptions, function (priority, axisOptions) {
+    valueAxesOptions.forEach(function (axisOptions, priority) {
       var _a;
       var axisPanes = [];
       var name = axisOptions.name;
       if (name && axisNames.includes(name)) {
-        that._incidentOccurred('E2102');
+        _this._incidentOccurred('E2102');
         return;
       }
       if (name) {
@@ -212,9 +210,9 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       if (!axisPanes.length) {
         axisPanes.push(undefined);
       }
-      (0, _iterator.each)(axisPanes, function (_, pane) {
-        var optionPath = isArray(valueAxisOption) ? "valueAxis[".concat(priority, "]") : 'valueAxis';
-        valueAxesPopulatedOptions.push(that._populateAxesOptions('valueAxis', axisOptions, {
+      axisPanes.forEach(function (pane) {
+        var optionPath = isArray(valueAxisOption) ? "valueAxis[".concat(String(priority), "]") : 'valueAxis';
+        valueAxesPopulatedOptions.push(_this._populateAxesOptions('valueAxis', axisOptions, {
           name: name || getNextAxisName(),
           pane,
           priority,
@@ -223,22 +221,22 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         }, rotated));
       });
     });
-    that._redesignAxes(argumentAxesPopulatedOptions, true, paneWithNonVirtualAxis);
-    that._redesignAxes(valueAxesPopulatedOptions, false);
+    this._redesignAxes(argumentAxesPopulatedOptions, true, paneWithNonVirtualAxis);
+    this._redesignAxes(valueAxesPopulatedOptions, false);
   },
   _redesignAxes(options, isArgumentAxes, paneWithNonVirtualAxis) {
-    var that = this;
+    var _this2 = this;
     var axesBasis = [];
-    var axes = isArgumentAxes ? that._argumentAxes : that._valueAxes;
-    (0, _iterator.each)(options, function (_, opt) {
-      var curAxes = axes && axes.filter(function (a) {
-        return a.name === opt.name && (!(0, _type.isDefined)(opt.pane) && that.panes.some(function (p) {
+    var axes = isArgumentAxes ? this._argumentAxes : this._valueAxes;
+    options.forEach(function (opt) {
+      var curAxes = axes === null || axes === void 0 ? void 0 : axes.filter(function (a) {
+        return a.name === opt.name && (!(0, _type.isDefined)(opt.pane) && _this2.panes.some(function (p) {
           return p.name === a.pane;
         }) || a.pane === opt.pane);
       });
-      if (curAxes && curAxes.length > 0) {
-        (0, _iterator.each)(curAxes, function (_, axis) {
-          var axisTypes = getAxisTypes(that._groupsData, axis, isArgumentAxes); // T891599
+      if (curAxes === null || curAxes === void 0 ? void 0 : curAxes.length) {
+        curAxes.forEach(function (axis) {
+          var axisTypes = getAxisTypes(_this2._groupsData, axis, isArgumentAxes); // T891599
           axis.updateOptions(opt);
           if (isArgumentAxes) {
             axis.setTypes(axisTypes.argumentAxisType, axisTypes.argumentType, 'argumentType');
@@ -261,23 +259,23 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         if (!axesBasis.some(function (basis) {
           return basis.axis && basis.axis === axis;
         })) {
-          that._disposeAxis(index, isArgumentAxes);
+          _this2._disposeAxis(index, isArgumentAxes);
         }
       });
     } else if (isArgumentAxes) {
-      axes = that._argumentAxes = [];
+      axes = this._argumentAxes = [];
     } else {
-      axes = that._valueAxes = [];
+      axes = this._valueAxes = [];
     }
-    (0, _iterator.each)(axesBasis, function (_, basis) {
+    axesBasis.forEach(function (basis) {
       var axis = basis.axis;
       if (basis.axis && isArgumentAxes) {
         basis.axis.isVirtual = basis.axis.pane !== paneWithNonVirtualAxis;
       } else if (basis.options) {
-        axis = that._createAxis(isArgumentAxes, basis.options, isArgumentAxes ? basis.options.pane !== paneWithNonVirtualAxis : undefined);
+        axis = _this2._createAxis(isArgumentAxes, basis.options, isArgumentAxes ? basis.options.pane !== paneWithNonVirtualAxis : undefined);
         axes.push(axis);
       }
-      axis.applyVisualRangeSetter(that._getVisualRangeSetter());
+      axis.applyVisualRangeSetter(_this2._getVisualRangeSetter());
     });
   },
   _disposeAxis(index, isArgumentAxis) {
@@ -288,21 +286,22 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     axes.splice(index, 1);
   },
   _disposeAxes() {
-    var that = this;
-    var disposeObjectsInArray = that._disposeObjectsInArray;
-    disposeObjectsInArray.call(that, '_argumentAxes');
-    disposeObjectsInArray.call(that, '_valueAxes');
+    var disposeObjectsInArray = this._disposeObjectsInArray;
+    disposeObjectsInArray.call(this, '_argumentAxes');
+    disposeObjectsInArray.call(this, '_valueAxes');
   },
   _appendAdditionalSeriesGroups() {
     this._crosshairCursorGroup.linkAppend();
     // this._legendGroup.linkAppend();
-    this._scrollBar && this._scrollBarGroup.linkAppend(); // TODO: Must be appended in the same place where removed (chart)
+    if (this._scrollBar) {
+      // TODO: Must be appended in the same place where removed (chart)
+      this._scrollBarGroup.linkAppend();
+    }
   },
-
   _getLegendTargets() {
-    var _this = this;
+    var _this3 = this;
     return (this.series || []).map(function (s) {
-      var item = _this._getLegendOptions(s);
+      var item = _this3._getLegendOptions(s);
       item.legendData.series = s;
       if (!s.getOptions().showInLegend) {
         item.legendData.visible = false;
@@ -316,10 +315,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._processValueAxisFormat();
   },
   _renderTrackers() {
-    var that = this;
-    var i;
-    for (i = 0; i < that.series.length; ++i) {
-      that.series[i].drawTrackers();
+    for (var i = 0; i < this.series.length; i += 1) {
+      this.series[i].drawTrackers();
     }
     // TODO we don't need it
     // if (that._legend) {
@@ -331,12 +328,12 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._processSeriesFamilies();
   },
   _processSeriesFamilies() {
+    var _this4 = this;
     var _a;
-    var that = this;
     var types = [];
     var families = [];
     var paneSeries;
-    var themeManager = that._themeManager;
+    var themeManager = this._themeManager;
     var negativesAsZeroes = themeManager.getOptions('negativesAsZeroes');
     var negativesAsZeros = themeManager.getOptions('negativesAsZeros'); // misspelling case
     var familyOptions = {
@@ -346,21 +343,21 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       barGroupWidth: themeManager.getOptions('barGroupWidth'),
       negativesAsZeroes: (0, _type.isDefined)(negativesAsZeroes) ? negativesAsZeroes : negativesAsZeros
     };
-    if ((_a = that.seriesFamilies) === null || _a === void 0 ? void 0 : _a.length) {
-      (0, _iterator.each)(that.seriesFamilies, function (_, family) {
+    if ((_a = this.seriesFamilies) === null || _a === void 0 ? void 0 : _a.length) {
+      this.seriesFamilies.forEach(function (family) {
         family.updateOptions(familyOptions);
         family.adjustSeriesValues();
       });
       return;
     }
-    (0, _iterator.each)(that.series, function (_, item) {
+    this.series.forEach(function (item) {
       if (!types.includes(item.type)) {
         types.push(item.type);
       }
     });
-    (0, _iterator.each)(that._getLayoutTargets(), function (_, pane) {
-      paneSeries = that._getSeriesForPane(pane.name);
-      (0, _iterator.each)(types, function (_, type) {
+    this._getLayoutTargets().forEach(function (pane) {
+      paneSeries = _this4._getSeriesForPane(pane.name);
+      types.forEach(function (type) {
         var family = new _series_family.SeriesFamily({
           type,
           pane: pane.name,
@@ -369,44 +366,42 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
           barGroupPadding: familyOptions.barGroupPadding,
           barGroupWidth: familyOptions.barGroupWidth,
           negativesAsZeroes: familyOptions.negativesAsZeroes,
-          rotated: that._isRotated()
+          rotated: _this4._isRotated()
         });
         family.add(paneSeries);
         family.adjustSeriesValues();
         families.push(family);
       });
     });
-    that.seriesFamilies = families;
+    this.seriesFamilies = families;
   },
   _updateSeriesDimensions() {
-    var that = this;
-    var i;
-    var seriesFamilies = that.seriesFamilies || [];
-    for (i = 0; i < seriesFamilies.length; i++) {
+    var seriesFamilies = this.seriesFamilies || [];
+    for (var i = 0; i < seriesFamilies.length; i += 1) {
       var family = seriesFamilies[i];
       family.updateSeriesValues();
       family.adjustSeriesDimensions();
     }
   },
   _getLegendCallBack(series) {
-    return this._legend && this._legend.getActionCallback(series);
+    var _a;
+    return (_a = this._legend) === null || _a === void 0 ? void 0 : _a.getActionCallback(series);
   },
   _appendAxesGroups() {
-    var that = this;
-    that._stripsGroup.linkAppend();
-    that._gridGroup.linkAppend();
-    that._axesGroup.linkAppend();
-    that._labelsAxesGroup.linkAppend();
-    that._constantLinesGroup.linkAppend();
-    that._stripLabelAxesGroup.linkAppend();
-    that._scaleBreaksGroup.linkAppend();
+    this._stripsGroup.linkAppend();
+    this._gridGroup.linkAppend();
+    this._axesGroup.linkAppend();
+    this._labelsAxesGroup.linkAppend();
+    this._constantLinesGroup.linkAppend();
+    this._stripLabelAxesGroup.linkAppend();
+    this._scaleBreaksGroup.linkAppend();
   },
   _populateMarginOptions() {
-    var that = this;
-    var bubbleSize = estimateBubbleSize(that.getSize(), that.panes.length, that._themeManager.getOptions('maxBubbleSize'), that._isRotated());
+    var _this5 = this;
+    var bubbleSize = estimateBubbleSize(this.getSize(), this.panes.length, this._themeManager.getOptions('maxBubbleSize'), this._isRotated());
     var argumentMarginOptions = {};
-    that._valueAxes.forEach(function (valueAxis) {
-      var groupSeries = that.series.filter(function (series) {
+    this._valueAxes.forEach(function (valueAxis) {
+      var groupSeries = _this5.series.filter(function (series) {
         return series.getValueAxis() === valueAxis;
       });
       var marginOptions = {};
@@ -419,14 +414,14 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       });
       valueAxis.setMarginOptions(marginOptions);
     });
-    that._argumentAxes.forEach(function (a) {
+    this._argumentAxes.forEach(function (a) {
       return a.setMarginOptions(argumentMarginOptions);
     });
   },
   _populateBusinessRange(updatedAxis, keepRange) {
-    var that = this;
-    var rotated = that._isRotated();
-    var series = that._getVisibleSeries();
+    var _this6 = this;
+    var rotated = this._isRotated();
+    var series = this._getVisibleSeries();
     var argRanges = {};
     var commonArgRange = new _range.Range({
       rotated: !!rotated
@@ -434,12 +429,12 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     var getPaneName = function getPaneName(axis) {
       return axis.pane || DEFAULT_PANE_NAME;
     };
-    that.panes.forEach(function (p) {
+    this.panes.forEach(function (p) {
       argRanges[p.name] = new _range.Range({
         rotated: !!rotated
       });
     });
-    that._valueAxes.forEach(function (valueAxis) {
+    this._valueAxes.forEach(function (valueAxis) {
       var groupRange = new _range.Range({
         rotated: !!rotated,
         pane: valueAxis.pane,
@@ -455,7 +450,7 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       });
       if (!updatedAxis || updatedAxis && groupSeries.length && valueAxis === updatedAxis) {
         valueAxis.setGroupSeries(groupSeries);
-        valueAxis.setBusinessRange(groupRange, that._axesReinitialized || keepRange, that._argumentAxes[0]._lastVisualRangeUpdateMode);
+        valueAxis.setBusinessRange(groupRange, _this6._axesReinitialized || keepRange, _this6._argumentAxes[0]._lastVisualRangeUpdateMode);
       }
     });
     if (!updatedAxis || updatedAxis && series.length) {
@@ -463,35 +458,35 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         return commonArgRange.addRange(argRanges[p]);
       });
       var commonInterval = commonArgRange.interval;
-      that._argumentAxes.forEach(function (a) {
+      this._argumentAxes.forEach(function (a) {
         var _a;
         var currentInterval = (_a = argRanges[getPaneName(a)].interval) !== null && _a !== void 0 ? _a : commonInterval; // T956425
         a.setBusinessRange(new _range.Range(_extends(_extends({}, commonArgRange), {
           interval: currentInterval
-        })), that._axesReinitialized, undefined, that._groupsData.categories);
+        })), _this6._axesReinitialized, undefined, _this6._groupsData.categories);
       });
     }
-    that._populateMarginOptions();
+    this._populateMarginOptions();
   },
   getArgumentAxis() {
-    return (this._argumentAxes || []).filter(function (a) {
+    return (this._argumentAxes || []).find(function (a) {
       return !a.isVirtual;
-    })[0];
+    });
   },
   getValueAxis(name) {
-    var _this2 = this;
-    return (this._valueAxes || []).filter((0, _type.isDefined)(name) ? function (a) {
+    var _this7 = this;
+    return (this._valueAxes || []).find((0, _type.isDefined)(name) ? function (a) {
       return a.name === name;
     } : function (a) {
-      return a.pane === _this2.defaultPane;
-    })[0];
+      return a.pane === _this7.defaultPane;
+    });
   },
   _getGroupsData() {
-    var _this3 = this;
+    var _this8 = this;
     var groups = [];
     this._valueAxes.forEach(function (axis) {
       groups.push({
-        series: _this3.series.filter(function (series) {
+        series: _this8.series.filter(function (series) {
           return series.getValueAxis() === axis;
         }),
         valueAxis: axis,
@@ -505,9 +500,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     };
   },
   _groupSeries() {
-    var that = this;
-    that._correctValueAxes(false);
-    that._groupsData = that._getGroupsData();
+    this._correctValueAxes(false);
+    this._groupsData = this._getGroupsData();
   },
   _processValueAxisFormat() {
     var axesWithFullStackedFormat = [];
@@ -526,11 +520,13 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
   },
 
   _populateAxesOptions(typeSelector, userOptions, axisOptions, rotated, virtual) {
-    var that = this;
-    var preparedUserOptions = that._prepareStripsAndConstantLines(typeSelector, userOptions, rotated);
-    var options = (0, _extend2.extend)(true, {}, preparedUserOptions, axisOptions, that._prepareAxisOptions(typeSelector, preparedUserOptions, rotated));
+    var preparedUserOptions = this._prepareStripsAndConstantLines(typeSelector, userOptions, rotated);
+    var options = (0, _extend2.extend)(true, {}, preparedUserOptions, axisOptions, this._prepareAxisOptions(typeSelector, preparedUserOptions, rotated));
     if (virtual) {
-      options.visible = options.tick.visible = options.minorTick.visible = options.label.visible = false;
+      options.visible = false;
+      options.tick.visible = false;
+      options.minorTick.visible = false;
+      options.label.visible = false;
       options.title = {};
     }
     return options;
@@ -539,26 +535,26 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return _range_data_calculator.default.getViewPortFilter(series.getValueAxis().visualRange() || {});
   },
   _createAxis(isArgumentAxes, options, virtual) {
-    var that = this;
+    var _this9 = this;
     var typeSelector = isArgumentAxes ? 'argumentAxis' : 'valueAxis';
     var renderingSettings = (0, _extend2.extend)({
-      renderer: that._renderer,
-      incidentOccurred: that._incidentOccurred,
-      eventTrigger: that._eventTrigger,
+      renderer: this._renderer,
+      incidentOccurred: this._incidentOccurred,
+      eventTrigger: this._eventTrigger,
       axisClass: isArgumentAxes ? 'arg' : 'val',
       widgetClass: 'dxc',
-      stripsGroup: that._stripsGroup,
-      stripLabelAxesGroup: that._stripLabelAxesGroup,
-      constantLinesGroup: that._constantLinesGroup,
-      scaleBreaksGroup: that._scaleBreaksGroup,
-      axesContainerGroup: that._axesGroup,
-      labelsAxesGroup: that._labelsAxesGroup,
-      gridGroup: that._gridGroup,
+      stripsGroup: this._stripsGroup,
+      stripLabelAxesGroup: this._stripLabelAxesGroup,
+      constantLinesGroup: this._constantLinesGroup,
+      scaleBreaksGroup: this._scaleBreaksGroup,
+      axesContainerGroup: this._axesGroup,
+      labelsAxesGroup: this._labelsAxesGroup,
+      gridGroup: this._gridGroup,
       isArgumentAxis: isArgumentAxes,
-      getTemplate(template) {
-        return that._getTemplate(template);
+      getTemplate: function getTemplate(template) {
+        return _this9._getTemplate(template);
       }
-    }, that._getAxisRenderingOptions(typeSelector));
+    }, this._getAxisRenderingOptions(typeSelector));
     var axis = new _base_axis.Axis(renderingSettings);
     axis.updateOptions(options);
     axis.isVirtual = virtual;
@@ -568,24 +564,23 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return false;
   },
   _applyCustomVisualRangeOption(axis, range) {
-    var that = this;
     if (axis.getOptions().optionPath) {
-      that._parseVisualRangeOption("".concat(axis.getOptions().optionPath, ".visualRange"), range);
+      this._parseVisualRangeOption("".concat(axis.getOptions().optionPath, ".visualRange"), range);
     }
   },
   _getVisualRangeSetter() {
-    var chart = this;
+    var _this10 = this;
     return function (axis, _ref) {
       var skipEventRising = _ref.skipEventRising,
         range = _ref.range;
-      chart._applyCustomVisualRangeOption(axis, range);
+      _this10._applyCustomVisualRangeOption(axis, range);
       axis.setCustomVisualRange(range);
       axis.skipEventRising = skipEventRising;
-      if (!chart._applyVisualRangeByVirtualAxes(axis, range)) {
-        if (chart._applyingChanges) {
-          chart._change_VISUAL_RANGE();
+      if (!_this10._applyVisualRangeByVirtualAxes(axis, range)) {
+        if (_this10._applyingChanges) {
+          _this10._change_VISUAL_RANGE();
         } else {
-          chart._requestChange([VISUAL_RANGE]);
+          _this10._requestChange([VISUAL_RANGE]);
         }
       }
     };
@@ -598,12 +593,12 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
   _prepareStripsAndConstantLines(typeSelector, userOptions, rotated) {
     userOptions = this._themeManager.getOptions(typeSelector, userOptions, rotated);
     if (userOptions.strips) {
-      (0, _iterator.each)(userOptions.strips, function (i) {
-        userOptions.strips[i] = (0, _extend2.extend)(true, {}, userOptions.stripStyle, userOptions.strips[i]);
+      userOptions.strips.forEach(function (line, i) {
+        userOptions.strips[i] = (0, _extend2.extend)(true, {}, userOptions.stripStyle, line);
       });
     }
     if (userOptions.constantLines) {
-      (0, _iterator.each)(userOptions.constantLines, function (i, line) {
+      userOptions.constantLines.forEach(function (line, i) {
         userOptions.constantLines[i] = (0, _extend2.extend)(true, {}, userOptions.constantLineStyle, line);
       });
     }
@@ -614,9 +609,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this.callBase();
   },
   _layoutAxes(drawAxes) {
-    var that = this;
     drawAxes();
-    var needSpace = that.checkForMoreSpaceForPanesCanvas();
+    var needSpace = this.checkForMoreSpaceForPanesCanvas();
     if (needSpace) {
       var rect = this._rect.slice();
       var size = this._layout.backward(rect, rect, [needSpace.width, needSpace.height]);
@@ -630,8 +624,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return this.layoutManager.needMoreSpaceForPanesCanvas(this._getLayoutTargets(), this._isRotated());
   },
   _parseVisualRangeOption(fullName, value) {
+    var _this11 = this;
     var _a;
-    var that = this;
     var name = fullName.split(/[.[]/)[0];
     var index = fullName.match(/\d+/g);
     index = (0, _type.isDefined)(index) ? parseInt(index[0], 10) : index;
@@ -639,20 +633,21 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       if ((0, _type.type)(value) !== 'object') {
         value = (_a = wrapVisualRange(fullName, value)) !== null && _a !== void 0 ? _a : value;
       }
-      that._setCustomVisualRange(name, index, value);
+      this._setCustomVisualRange(name, index, value);
     } else if (((0, _type.type)(value) === 'object' || isArray(value)) && name.indexOf('Axis') > 0 && JSON.stringify(value).indexOf('visualRange') > 0) {
       if ((0, _type.isDefined)(value.visualRange)) {
-        that._setCustomVisualRange(name, index, value.visualRange);
+        this._setCustomVisualRange(name, index, value.visualRange);
       } else if (isArray(value)) {
         value.forEach(function (a, i) {
-          return (0, _type.isDefined)(a.visualRange) && that._setCustomVisualRange(name, i, a.visualRange);
+          if ((0, _type.isDefined)(a.visualRange)) {
+            _this11._setCustomVisualRange(name, i, a.visualRange);
+          }
         });
       }
     }
   },
   _setCustomVisualRange(axesName, index, value) {
-    var that = this;
-    var options = that._options.silent(axesName);
+    var options = this._options.silent(axesName);
     if (!options) {
       return;
     }
@@ -661,7 +656,7 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     } else {
       options[index]._customVisualRange = value;
     }
-    that._axesReinitialized = true;
+    this._axesReinitialized = true;
   },
   _raiseZoomEndHandlers() {
     this._valueAxes.forEach(function (axis) {
@@ -681,20 +676,20 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     }
   },
   _notifyVisualRange() {
-    var that = this;
-    that._valueAxes.forEach(function (axis) {
+    var _this12 = this;
+    this._valueAxes.forEach(function (axis) {
       var axisPath = axis.getOptions().optionPath;
       if (axisPath) {
         var path = "".concat(axisPath, ".visualRange");
-        var visualRange = (0, _utils.convertVisualRangeObject)(axis.visualRange(), !isArray(that.option(path)));
-        if (!axis.skipEventRising || !(0, _utils.rangesAreEqual)(visualRange, that.option(path))) {
-          if (!that.option(axisPath) && axisPath !== 'valueAxis') {
-            that.option(axisPath, {
+        var visualRange = (0, _utils.convertVisualRangeObject)(axis.visualRange(), !isArray(_this12.option(path)));
+        if (!axis.skipEventRising || !(0, _utils.rangesAreEqual)(visualRange, _this12.option(path))) {
+          if (!_this12.option(axisPath) && axisPath !== 'valueAxis') {
+            _this12.option(axisPath, {
               name: axis.name,
               visualRange
             });
           } else {
-            that.option(path, visualRange);
+            _this12.option(path, visualRange);
           }
         } else {
           axis.skipEventRising = null;
@@ -716,8 +711,7 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return this._valueAxes;
   },
   _getAxesByOptionPath(arg, isDirectOption, optionName) {
-    var that = this;
-    var sourceAxes = that._getAxesForScaling();
+    var sourceAxes = this._getAxesForScaling();
     var axes = [];
     if (isDirectOption) {
       var axisPath;
@@ -736,19 +730,20 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         var axis = sourceAxes.filter(function (a) {
           return a.getOptions().optionPath === "".concat(arg.name, "[").concat(index, "]");
         })[0];
-        (0, _type.isDefined)(v[optionName]) && (0, _type.isDefined)(axis) && (axes[index] = axis);
+        if ((0, _type.isDefined)(v[optionName]) && (0, _type.isDefined)(axis)) {
+          axes[index] = axis;
+        }
       });
     }
     return axes;
   },
   _optionChanged(arg) {
-    var that = this;
-    if (!that._optionChangedLocker) {
+    if (!this._optionChangedLocker) {
       var optionName = 'visualRange';
       var axes;
-      var isDirectOption = arg.fullName.indexOf(optionName) > 0 ? true : that.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
+      var isDirectOption = arg.fullName.indexOf(optionName) > 0 ? true : this.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
       if ((0, _type.isDefined)(isDirectOption)) {
-        axes = that._getAxesByOptionPath(arg, isDirectOption, optionName);
+        axes = this._getAxesByOptionPath(arg, isDirectOption, optionName);
         if (axes) {
           if (axes.length > 1 || isArray(arg.value)) {
             axes.forEach(function (a, index) {
@@ -760,31 +755,30 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         }
       }
     }
-    that.callBase(arg);
+    this.callBase(arg);
   },
   _change_VISUAL_RANGE() {
-    var that = this;
-    that._recreateSizeDependentObjects(false);
-    if (!that._changes.has('FULL_RENDER')) {
-      var resizePanesOnZoom = that.option('resizePanesOnZoom');
-      that._doRender({
+    this._recreateSizeDependentObjects(false);
+    if (!this._changes.has('FULL_RENDER')) {
+      var resizePanesOnZoom = this.option('resizePanesOnZoom');
+      this._doRender({
         force: true,
         drawTitle: false,
         drawLegend: false,
-        adjustAxes: resizePanesOnZoom !== null && resizePanesOnZoom !== void 0 ? resizePanesOnZoom : that.option('adjustAxesOnZoom') || false,
+        adjustAxes: resizePanesOnZoom !== null && resizePanesOnZoom !== void 0 ? resizePanesOnZoom : this.option('adjustAxesOnZoom') || false,
         animate: false
       });
-      that._raiseZoomEndHandlers();
+      this._raiseZoomEndHandlers();
     }
   },
   // API
   resetVisualRange() {
-    var that = this;
-    that._valueAxes.forEach(function (axis) {
+    var _this13 = this;
+    this._valueAxes.forEach(function (axis) {
       axis.resetVisualRange(false); // T602156
-      that._applyCustomVisualRangeOption(axis);
+      _this13._applyCustomVisualRangeOption(axis);
     });
-    that._requestChange([VISUAL_RANGE]);
+    this._requestChange([VISUAL_RANGE]);
   },
   _getCrosshairMargins() {
     return {

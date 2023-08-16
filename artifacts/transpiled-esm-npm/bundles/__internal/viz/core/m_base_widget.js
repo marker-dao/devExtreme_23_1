@@ -39,7 +39,13 @@ function getFalse() {
   return false;
 }
 function areCanvasesDifferent(canvas1, canvas2) {
-  return !(Math.abs(canvas1.width - canvas2.width) < SIZE_CHANGING_THRESHOLD && Math.abs(canvas1.height - canvas2.height) < SIZE_CHANGING_THRESHOLD && canvas1.left === canvas2.left && canvas1.top === canvas2.top && canvas1.right === canvas2.right && canvas1.bottom === canvas2.bottom);
+  var sizeLessThreshold = ['width', 'height'].every(function (key) {
+    return Math.abs(canvas1[key] - canvas2[key]) < SIZE_CHANGING_THRESHOLD;
+  });
+  var canvasCoordsIsEqual = ['left', 'right', 'top', 'bottom'].every(function (key) {
+    return canvas1[key] === canvas2[key];
+  });
+  return !(sizeLessThreshold && canvasCoordsIsEqual);
 }
 function defaultOnIncidentOccurred(e) {
   if (!e.component._eventsStrategy.hasEvent('incidentOccurred')) {
@@ -131,39 +137,47 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _useLinks: true,
   _init() {
-    var that = this;
-    that._$element.children(".".concat(SIZED_ELEMENT_CLASS)).remove();
-    that._graphicObjects = {};
-    that.callBase.apply(that, arguments);
-    that._changesLocker = 0;
-    that._optionChangedLocker = 0;
-    that._asyncFirstDrawing = true;
-    that._changes = (0, _helpers.changes)();
-    that._suspendChanges();
-    that._themeManager = that._createThemeManager();
-    that._themeManager.setCallback(function () {
-      that._requestChange(that._themeDependentChanges);
+    var _this = this;
+    this._$element.children(".".concat(SIZED_ELEMENT_CLASS)).remove();
+    this._graphicObjects = {};
+    this.callBase.apply(this, arguments);
+    this._changesLocker = 0;
+    this._optionChangedLocker = 0;
+    this._asyncFirstDrawing = true;
+    this._changes = (0, _helpers.changes)();
+    this._suspendChanges();
+    this._themeManager = this._createThemeManager();
+    this._themeManager.setCallback(function () {
+      _this._requestChange(_this._themeDependentChanges);
     });
-    that._renderElementAttributes();
-    that._initRenderer();
+    this._renderElementAttributes();
+    this._initRenderer();
     // Shouldn't "_useLinks" be passed to the renderer instead of doing 3 checks here?
-    var linkTarget = that._useLinks && that._renderer.root;
+    var useLinks = this._useLinks;
     // There is an implicit relation between `_useLinks` and `loading indicator` - it uses links
-    // Though this relation is not ensured in code we will immediately know when it is broken - `loading indicator` will break on construction
-    linkTarget && linkTarget.enableLinks().virtualLink('core').virtualLink('peripheral');
-    that._renderVisibilityChange();
-    that._attachVisibilityChangeHandlers();
-    that._toggleParentsScrollSubscription(this._isVisible());
-    that._initEventTrigger();
-    that._incidentOccurred = (0, _base_widget.createIncidentOccurred)(that.NAME, that._eventTrigger);
-    that._layout = new _layout.default();
-    // Such solution is used only to avoid writing lots of "after" for all core elements in all widgets
+    // Though this relation is not ensured in code
+    // we will immediately know when it is broken - `loading indicator` will break on construction
+    if (useLinks) {
+      this._renderer.root.enableLinks().virtualLink('core').virtualLink('peripheral');
+    }
+    this._renderVisibilityChange();
+    this._attachVisibilityChangeHandlers();
+    this._toggleParentsScrollSubscription(this._isVisible());
+    this._initEventTrigger();
+    this._incidentOccurred = (0, _base_widget.createIncidentOccurred)(this.NAME, this._eventTrigger);
+    this._layout = new _layout.default();
+    // Such solution is used only to avoid writing lots of "after"
+    // for all core elements in all widgets
     // May be later a proper solution would be found
-    linkTarget && linkTarget.linkAfter('core');
-    that._initPlugins();
-    that._initCore();
-    linkTarget && linkTarget.linkAfter();
-    that._change(that._initialChanges);
+    if (useLinks) {
+      this._renderer.root.linkAfter('core');
+    }
+    this._initPlugins();
+    this._initCore();
+    if (useLinks) {
+      this._renderer.root.linkAfter();
+    }
+    this._change(this._initialChanges);
   },
   _createThemeManager() {
     return new _base_theme_manager.BaseThemeManager(this._getThemeManagerOptions());
@@ -176,22 +190,22 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _initialChanges: ['LAYOUT', 'RESIZE_HANDLER', 'THEME', 'DISABLED'],
   _initPlugins() {
-    var _this = this;
+    var _this2 = this;
     (0, _iterator.each)(this._plugins, function (_, plugin) {
-      plugin.init.call(_this);
+      plugin.init.call(_this2);
     });
   },
   _disposePlugins() {
-    var _this2 = this;
+    var _this3 = this;
     (0, _iterator.each)(this._plugins.slice().reverse(), function (_, plugin) {
-      plugin.dispose.call(_this2);
+      plugin.dispose.call(_this3);
     });
   },
   _change(codes) {
     this._changes.add(codes);
   },
   _suspendChanges() {
-    ++this._changesLocker;
+    this._changesLocker += 1;
   },
   _resumeChanges() {
     if (--this._changesLocker === 0 && this._changes.count() > 0 && !this._applyingChanges) {
@@ -206,9 +220,9 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
         this._applyQueuedOptions();
       }
       this.resolveItemsDeferred(this._legend ? [this._legend] : []);
-      this._optionChangedLocker++;
+      this._optionChangedLocker += 1;
       this._notify();
-      this._optionChangedLocker--;
+      this._optionChangedLocker -= 1;
     }
   },
   resolveItemsDeferred(items) {
@@ -244,34 +258,34 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     };
   },
   _resolveDeferred(_ref) {
+    var _this4 = this;
     var items = _ref.items,
       launchRequest = _ref.launchRequest,
       doneRequest = _ref.doneRequest,
       groups = _ref.groups;
-    var that = this;
-    that._setGroupsVisibility(groups, 'hidden');
-    if (that._changesApplying) {
-      that._changesApplying = false;
+    this._setGroupsVisibility(groups, 'hidden');
+    if (this._changesApplying) {
+      this._changesApplying = false;
       callForEach(doneRequest);
       return;
     }
     var syncRendering = true;
-    _deferred.when.apply(that, items).done(function () {
+    _deferred.when.apply(this, items).done(function () {
       if (syncRendering) {
-        that._setGroupsVisibility(groups, 'visible');
+        _this4._setGroupsVisibility(groups, 'visible');
         return;
       }
       callForEach(launchRequest);
-      that._changesApplying = true;
+      _this4._changesApplying = true;
       var changes = ['LAYOUT', 'FULL_RENDER'];
-      if (that._asyncFirstDrawing) {
+      if (_this4._asyncFirstDrawing) {
         changes.push('FORCE_FIRST_DRAWING');
-        that._asyncFirstDrawing = false;
+        _this4._asyncFirstDrawing = false;
       } else {
         changes.push('FORCE_DRAWING');
       }
-      that._requestChange(changes);
-      that._setGroupsVisibility(groups, 'visible');
+      _this4._requestChange(changes);
+      _this4._setGroupsVisibility(groups, 'visible');
     });
     syncRendering = false;
   },
@@ -297,14 +311,12 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     this._resumeChanges();
   },
   _applyChanges() {
-    var that = this;
-    var changes = that._changes;
-    var order = that._totalChangesOrder;
-    var i;
-    var ii = order.length;
-    for (i = 0; i < ii; ++i) {
+    var changes = this._changes;
+    var order = this._totalChangesOrder;
+    var changesOrderLength = order.length;
+    for (var i = 0; i < changesOrderLength; i += 1) {
       if (changes.has(order[i])) {
-        that["_change_".concat(order[i])]();
+        this["_change_".concat(order[i])]();
       }
     }
   },
@@ -351,24 +363,24 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _themeDependentChanges: ['RENDERER'],
   _initRenderer() {
-    var that = this;
-    // Canvas is calculated before the renderer is created in order to capture actual size of the container
-    var rawCanvas = that._calculateRawCanvas();
-    that._canvas = floorCanvasDimensions(rawCanvas);
-    that._renderer = new _renderer2.Renderer({
-      cssClass: "".concat(that._rootClassPrefix, " ").concat(that._rootClass),
-      pathModified: that.option('pathModified'),
-      container: that._$element[0]
+    // Canvas is calculated before the renderer is created in order to capture actual
+    // size of the container
+    var rawCanvas = this._calculateRawCanvas();
+    this._canvas = floorCanvasDimensions(rawCanvas);
+    this._renderer = new _renderer2.Renderer({
+      cssClass: "".concat(this._rootClassPrefix, " ").concat(this._rootClass),
+      pathModified: this.option('pathModified'),
+      container: this._$element[0]
     });
-    that._renderer.resize(that._canvas.width, that._canvas.height);
+    this._renderer.resize(this._canvas.width, this._canvas.height);
   },
   _disposeRenderer() {
     this._renderer.dispose();
   },
   _disposeGraphicObjects() {
-    var _this3 = this;
+    var _this5 = this;
     Object.keys(this._graphicObjects).forEach(function (id) {
-      _this3._graphicObjects[id].dispose();
+      _this5._graphicObjects[id].dispose();
     });
     this._graphicObjects = null;
   },
@@ -396,38 +408,40 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _stopCurrentHandling: _common.noop,
   _dispose() {
-    var that = this;
     if (this._disposed) {
       return;
     }
-    that.callBase.apply(that, arguments);
-    that._toggleParentsScrollSubscription(false);
-    that._removeResizeHandler();
-    that._layout.dispose();
-    that._eventTrigger.dispose();
-    that._disposeCore();
-    that._disposePlugins();
-    that._disposeGraphicObjects();
-    that._disposeRenderer();
-    that._themeManager.dispose();
-    that._themeManager = that._renderer = that._eventTrigger = null;
+    this.callBase.apply(this, arguments);
+    this._toggleParentsScrollSubscription(false);
+    this._removeResizeHandler();
+    this._layout.dispose();
+    this._eventTrigger.dispose();
+    this._disposeCore();
+    this._disposePlugins();
+    this._disposeGraphicObjects();
+    this._disposeRenderer();
+    this._themeManager.dispose();
+    this._themeManager = null;
+    this._renderer = null;
+    this._eventTrigger = null;
   },
   _initEventTrigger() {
-    var _this4 = this;
-    this._eventTrigger = (0, _base_widget.createEventTrigger)(this._eventsMap, function (name, actionSettings) {
-      return _this4._createActionByOption(name, actionSettings);
-    });
+    var _this6 = this;
+    var callback = function callback(name, actionSettings) {
+      return _this6._createActionByOption(name, actionSettings);
+    };
+    this._eventTrigger = (0, _base_widget.createEventTrigger)(this._eventsMap, callback);
   },
   _calculateRawCanvas() {
-    var that = this;
-    var size = that.option('size') || {};
-    var margin = that.option('margin') || {};
-    var defaultCanvas = that._getDefaultSize() || {};
+    var _this7 = this;
+    var size = this.option('size') || {};
+    var margin = this.option('margin') || {};
+    var defaultCanvas = this._getDefaultSize() || {};
     var getSizeOfSide = function getSizeOfSide(size, side, getter) {
       if (sizeIsValid(size[side]) || !(0, _window.hasWindow)()) {
         return 0;
       }
-      var elementSize = getter(that._$element);
+      var elementSize = getter(_this7._$element);
       return elementSize <= 1 ? 0 : elementSize;
     };
     var elementWidth = getSizeOfSide(size, 'width', function (x) {
@@ -445,7 +459,8 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
       bottom: pickPositiveValue([margin.bottom, defaultCanvas.bottom])
     };
     // This for backward compatibility - widget was not rendered when canvas is empty.
-    // Now it will be rendered but because of "width" and "height" of the root both set to 0 it will not be visible.
+    // Now it will be rendered but because of "width" and "height"
+    // of the root both set to 0 it will not be visible.
     if (canvas.width - canvas.left - canvas.right <= 0 || canvas.height - canvas.top - canvas.bottom <= 0) {
       canvas = {
         width: 0,
@@ -482,13 +497,13 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     return isScalar ? option !== undefined ? option : theme : (0, _extend.extend)(true, {}, theme, option);
   },
   _setupResizeHandler() {
-    var _this5 = this;
+    var _this8 = this;
     var redrawOnResize = (0, _utils.parseScalar)(this._getOption('redrawOnResize', true), true);
     if (this._disposeResizeHandler) {
       this._removeResizeHandler();
     }
     this._disposeResizeHandler = (0, _base_widget.createResizeHandler)(this._$element[0], redrawOnResize, function () {
-      return _this5._requestChange(['CONTAINER_SIZE']);
+      return _this8._requestChange(['CONTAINER_SIZE']);
     });
   },
   _removeResizeHandler() {
@@ -497,10 +512,12 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
       this._disposeResizeHandler = null;
     }
   },
-  // This is actually added only to make loading indicator pluggable. This is bad but much better than entire loading indicator in BaseWidget.
+  // This is actually added only to make loading indicator pluggable.
+  // This is bad but much better than entire loading indicator in BaseWidget.
   _onBeginUpdate: _common.noop,
   beginUpdate() {
-    // The "_initialized" flag is checked because first time "beginUpdate" is called in the constructor.
+    // The "_initialized" flag is checked because
+    // first time "beginUpdate" is called in the constructor.
     if (this._initialized && this._isUpdateAllowed()) {
       this._onBeginUpdate();
       this._suspendChanges();
@@ -524,9 +541,9 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     }
   },
   _getActionForUpdating(args) {
-    var _this6 = this;
+    var _this9 = this;
     return function () {
-      baseOptionMethod.apply(_this6, args);
+      baseOptionMethod.apply(_this9, args);
     };
   },
   // For quite a long time the following method were abstract (from the Component perspective).
@@ -534,28 +551,28 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   _clean: _common.noop,
   _render: _common.noop,
   _optionChanged(arg) {
-    var that = this;
-    if (that._optionChangedLocker) {
+    var _this10 = this;
+    if (this._optionChangedLocker) {
       return;
     }
-    var partialChanges = that.getPartialChangeOptionsName(arg);
+    var partialChanges = this.getPartialChangeOptionsName(arg);
     var changes = [];
     if (partialChanges.length > 0) {
       partialChanges.forEach(function (pc) {
-        return changes.push(that._partialOptionChangesMap[pc]);
+        return changes.push(_this10._partialOptionChangesMap[pc]);
       });
     } else {
-      changes.push(that._optionChangesMap[arg.name]);
+      changes.push(this._optionChangesMap[arg.name]);
     }
     changes = changes.filter(function (c) {
       return !!c;
     });
-    if (that._eventTrigger.change(arg.name)) {
-      that._change(['EVENTS']);
+    if (this._eventTrigger.change(arg.name)) {
+      this._change(['EVENTS']);
     } else if (changes.length > 0) {
-      that._change(changes);
+      this._change(changes);
     } else {
-      that.callBase.apply(that, arguments);
+      this.callBase.apply(this, arguments);
     }
   },
   _notify: _common.noop,
@@ -573,7 +590,7 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   _partialOptionChangesMap: {},
   _partialOptionChangesPath: {},
   getPartialChangeOptionsName(changedOption) {
-    var _this7 = this;
+    var _this11 = this;
     var fullName = changedOption.fullName;
     var sections = fullName.split(/[.]/);
     var name = changedOption.name;
@@ -592,10 +609,10 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
             this._addOptionsNameForPartialUpdate(value, options, partialChangeOptionsName);
           } else if ((0, _type2.type)(value) === 'array') {
             if (value.length > 0 && value.every(function (item) {
-              return _this7._checkOptionsForPartialUpdate(item, options);
+              return _this11._checkOptionsForPartialUpdate(item, options);
             })) {
               value.forEach(function (item) {
-                return _this7._addOptionsNameForPartialUpdate(item, options, partialChangeOptionsName);
+                _this11._addOptionsNameForPartialUpdate(item, options, partialChangeOptionsName);
               });
             }
           }
@@ -651,11 +668,11 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     this.isReady = getFalse;
   },
   _renderGraphicObjects() {
-    var _this8 = this;
+    var _this12 = this;
     var renderer = this._renderer;
     var graphics = _m_charts.default.getGraphicObjects();
     Object.keys(graphics).forEach(function (id) {
-      if (!_this8._graphicObjects[id]) {
+      if (!_this12._graphicObjects[id]) {
         var _graphics$id = graphics[id],
           _type = _graphics$id.type,
           colors = _graphics$id.colors,
@@ -665,13 +682,13 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
           height = _graphics$id.height;
         switch (_type) {
           case 'linear':
-            _this8._graphicObjects[id] = renderer.linearGradient(colors, id, rotationAngle);
+            _this12._graphicObjects[id] = renderer.linearGradient(colors, id, rotationAngle);
             break;
           case 'radial':
-            _this8._graphicObjects[id] = renderer.radialGradient(colors, id);
+            _this12._graphicObjects[id] = renderer.radialGradient(colors, id);
             break;
           case 'pattern':
-            _this8._graphicObjects[id] = renderer.customPattern(id, _this8._getTemplate(template), width, height);
+            _this12._graphicObjects[id] = renderer.customPattern(id, _this12._getTemplate(template), width, height);
             break;
           default:
             break;
@@ -680,11 +697,11 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     });
   },
   _drawn() {
-    var _this9 = this;
+    var _this13 = this;
     this.isReady = getFalse;
     if (this._dataIsReady()) {
       this._renderer.onEndAnimation(function () {
-        _this9.isReady = getTrue;
+        _this13.isReady = getTrue;
       });
     }
     this._eventTrigger('drawn', {});

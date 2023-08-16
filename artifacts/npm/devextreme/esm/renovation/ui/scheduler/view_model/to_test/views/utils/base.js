@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/view_model/to_test/views/utils/base.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ import dateLocalization from '../../../../../../../localization/date';
 import timeZoneUtils from '../../../../../../../ui/scheduler/utils.timeZone';
 import { VERTICAL_GROUP_COUNT_CLASSES } from '../../../../../../../ui/scheduler/classes';
 import { VIEWS } from '../../../../../../../ui/scheduler/constants';
-import { getGroupCount } from '../../../../../../../ui/scheduler/resources/utils';
+import { getGroupCount } from '../../../../../../../__internal/scheduler/resources/m_utils';
 import { isVerticalGroupingApplied } from '../../../../workspaces/utils';
 import { TIMELINE_VIEWS } from './const';
 export var isDateInRange = (date, startDate, endDate, diff) => diff > 0 ? dateUtils.dateInRange(date, startDate, new Date(endDate.getTime() - 1)) : dateUtils.dateInRange(date, endDate, startDate, 'date');

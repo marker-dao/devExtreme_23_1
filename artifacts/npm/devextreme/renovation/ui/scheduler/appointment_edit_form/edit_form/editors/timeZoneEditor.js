@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/appointment_edit_form/edit_form/editors/timeZoneEditor.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,9 +15,9 @@ var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
 var _select_box = require("../../../../editors/drop_down_editors/select_box");
 var _message = _interopRequireDefault(require("../../../../../../localization/message"));
-var _utils = _interopRequireDefault(require("../../../../../../ui/scheduler/timezones/utils.timezones_data"));
+var _m_utils_timezones_data = _interopRequireDefault(require("../../../../../../__internal/scheduler/timezones/m_utils_timezones_data"));
 var _data_source = _interopRequireDefault(require("../../../../../../data/data_source"));
-var _utils2 = require("../../../../../../core/options/utils");
+var _utils = require("../../../../../../core/options/utils");
 var _excluded = ["date", "value", "valueChange"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -94,7 +94,7 @@ var TimeZoneEditor = /*#__PURE__*/function (_InfernoComponent) {
     key: "dataSource",
     get: function get() {
       return new _data_source.default({
-        store: _utils.default.getDisplayedTimeZones(this.props.date),
+        store: _m_utils_timezones_data.default.getDisplayedTimeZones(this.props.date),
         paginate: true,
         pageSize: 10
       });
@@ -117,5 +117,5 @@ TimeZoneEditor.defaultProps = TimeZoneEditorProps;
 var __defaultOptionRules = [];
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
-  TimeZoneEditor.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(TimeZoneEditor.defaultProps), Object.getOwnPropertyDescriptors((0, _utils2.convertRulesToOptions)(__defaultOptionRules))));
+  TimeZoneEditor.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(TimeZoneEditor.defaultProps), Object.getOwnPropertyDescriptors((0, _utils.convertRulesToOptions)(__defaultOptionRules))));
 }

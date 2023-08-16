@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/workspaces/view_model/view_data_generator.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
 import { HORIZONTAL_GROUP_ORIENTATION } from '../../constants';
-import { getAllGroups, getGroupCount } from '../../resources/utils';
+import { getAllGroups, getGroupCount } from '../../../../__internal/scheduler/resources/m_utils';
 import { calculateCellIndex, calculateDayDuration, isHorizontalView, getStartViewDateWithoutDST, getDisplayedRowCount, getTotalCellCountByCompleteData, getTotalRowCountByCompleteData, getDisplayedCellCount } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { getIsGroupedAllDayPanel, getKeyByGroup } from '../../../../renovation/ui/scheduler/workspaces/utils';
 var HOUR_MS = dateUtils.dateToMilliseconds('hour');

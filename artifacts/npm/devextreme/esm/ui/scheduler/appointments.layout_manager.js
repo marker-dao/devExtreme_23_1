@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/appointments.layout_manager.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { equalByValue } from '../../core/utils/common';
 import { AppointmentViewModelGenerator } from '../../__internal/scheduler/appointments/m_view_model_generator';
-import { getGroupCount } from './resources/utils';
+import { getGroupCount } from '../../__internal/scheduler/resources/m_utils';
 import { getCellWidth, getCellHeight, getAllDayHeight } from './workspaces/helpers/positionHelper';
 import { getCellDuration } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { getAppointmentRenderingStrategyName } from '../../renovation/ui/scheduler/model/appointments';

@@ -24,7 +24,8 @@ var CalendarMultiSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     return {
       value: this.dateOption('values'),
       range: [],
-      selectionMode: 'multi'
+      selectionMode: 'multi',
+      onWeekNumberClick: this._shouldHandleWeekNumberClick() ? this._weekNumberClickHandler.bind(this) : null
     };
   };
   _proto.selectValue = function selectValue(selectedValue, e) {
@@ -56,6 +57,15 @@ var CalendarMultiSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
   };
   _proto.restoreValue = function restoreValue() {
     this.calendar.option('values', []);
+  };
+  _proto._weekNumberClickHandler = function _weekNumberClickHandler(_ref) {
+    var _this2 = this;
+    var rowDates = _ref.rowDates,
+      event = _ref.event;
+    var selectedDates = rowDates.filter(function (date) {
+      return !_this2._isDateDisabled(date);
+    });
+    this.dateValue(selectedDates, event);
   };
   return CalendarMultiSelectionStrategy;
 }(_uiCalendarSelection.default);

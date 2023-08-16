@@ -1,7 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
 import { HORIZONTAL_GROUP_ORIENTATION } from '../../constants';
-import { getAllGroups, getGroupCount } from '../../resources/utils';
+import { getAllGroups, getGroupCount } from '../../../../__internal/scheduler/resources/m_utils';
 import { calculateCellIndex, calculateDayDuration, isHorizontalView, getStartViewDateWithoutDST, getDisplayedRowCount, getTotalCellCountByCompleteData, getTotalRowCountByCompleteData, getDisplayedCellCount } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { getIsGroupedAllDayPanel, getKeyByGroup } from '../../../../renovation/ui/scheduler/workspaces/utils';
 var HOUR_MS = dateUtils.dateToMilliseconds('hour');

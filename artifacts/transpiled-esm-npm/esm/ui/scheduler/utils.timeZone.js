@@ -1,6 +1,6 @@
 /* globals Intl */
 import dateUtils from '../../core/utils/date';
-import timeZoneDataUtils from './timezones/utils.timezones_data';
+import timeZoneDataUtils from '../../__internal/scheduler/timezones/m_utils_timezones_data';
 import DateAdapter from './dateAdapter';
 var toMs = dateUtils.dateToMilliseconds;
 var MINUTES_IN_HOUR = 60;

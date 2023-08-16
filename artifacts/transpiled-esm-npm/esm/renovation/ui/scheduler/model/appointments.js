@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { getCellWidth, getCellHeight, getAllDayHeight, PositionHelper } from '../../../../ui/scheduler/workspaces/helpers/positionHelper';
-import { getGroupCount } from '../../../../ui/scheduler/resources/utils';
+import { getGroupCount } from '../../../../__internal/scheduler/resources/m_utils';
 import { isGroupingByDate } from '../workspaces/utils';
 import dateUtils from '../../../../core/utils/date';
 import { calculateIsGroupedAllDayPanel, getCellDuration } from '../view_model/to_test/views/utils/base';

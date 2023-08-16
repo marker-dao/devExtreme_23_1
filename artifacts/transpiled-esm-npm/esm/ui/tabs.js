@@ -299,11 +299,11 @@ var Tabs = CollectionWidget.inherit({
   },
   _updateScrollableDirection() {
     var scrollable = this.getScrollable();
-    if (!scrollable) {
-      this._renderScrolling();
-    } else {
+    if (scrollable) {
       var scrollableDirection = this._getScrollableDirection();
       scrollable.option('direction', scrollableDirection);
+    } else {
+      this._renderScrolling();
     }
   },
   _renderScrollable() {
@@ -435,6 +435,7 @@ var Tabs = CollectionWidget.inherit({
     var {
       selectedIndex: currentIndex
     } = this.option();
+    this._itemElements().removeClass(FOCUSED_DISABLED_NEXT_TAB_CLASS).removeClass(FOCUSED_DISABLED_PREV_TAB_CLASS);
     var prevItemIndex = currentIndex - 1;
     var nextItemIndex = currentIndex + 1;
     var nextFocusedIndex = $(value).index();

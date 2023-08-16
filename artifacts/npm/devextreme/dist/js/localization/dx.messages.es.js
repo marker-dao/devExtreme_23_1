@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.es.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -178,6 +178,8 @@
             "dxDataGrid-ariaValue": "Valor",
             "dxDataGrid-ariaFilterCell": "Celda de filtro",
             "dxDataGrid-ariaCollapse": "Colapsar",
+            "dxDataGrid-ariaModifiedCell": "Modified",
+            "dxDataGrid-ariaDeletedCell": "Deleted",
             "dxDataGrid-ariaExpand": "Expandir",
             "dxDataGrid-ariaCollapsedRow": "Collapsed row",
             "dxDataGrid-ariaExpandedRow": "Expanded row",

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -4607,6 +4607,3148 @@ exports["default"] = _default;
 
 /***/ }),
 
+/***/ 23778:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _errors = _interopRequireDefault(__webpack_require__(17381));
+var _math = __webpack_require__(60810);
+var _query = _interopRequireDefault(__webpack_require__(96687));
+var _timezones_data = _interopRequireDefault(__webpack_require__(28882));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+/* eslint-disable radix */
+
+var getConvertedUntils = function getConvertedUntils(value) {
+  return value.split('|').map(function (until) {
+    if (until === 'Infinity') {
+      return null;
+    }
+    return parseInt(until, 36) * 1000;
+  });
+};
+var parseTimezone = function parseTimezone(timeZoneConfig) {
+  var offsets = timeZoneConfig.offsets;
+  var offsetIndices = timeZoneConfig.offsetIndices;
+  var untils = timeZoneConfig.untils;
+  var offsetList = offsets.split('|').map(function (value) {
+    return parseInt(value);
+  });
+  var offsetIndexList = offsetIndices.split('').map(function (value) {
+    return parseInt(value);
+  });
+  var dateList = getConvertedUntils(untils)
+  // eslint-disable-next-line
+  .map(function (accumulator) {
+    return function (value) {
+      return accumulator += value;
+    };
+  }(0));
+  return {
+    offsetList,
+    offsetIndexList,
+    dateList
+  };
+};
+var TimeZoneCache = /*#__PURE__*/function () {
+  function TimeZoneCache() {
+    this.map = new Map();
+  }
+  var _proto = TimeZoneCache.prototype;
+  _proto.tryGet = function tryGet(id) {
+    if (!this.map.get(id)) {
+      var config = timeZoneDataUtils.getTimezoneById(id);
+      if (!config) {
+        return false;
+      }
+      var timeZoneInfo = parseTimezone(config);
+      this.map.set(id, timeZoneInfo);
+    }
+    return this.map.get(id);
+  };
+  return TimeZoneCache;
+}();
+var tzCache = new TimeZoneCache();
+var timeZoneDataUtils = {
+  _tzCache: tzCache,
+  _timeZones: _timezones_data.default.zones,
+  getDisplayedTimeZones(timestamp) {
+    var _this = this;
+    var timeZones = this._timeZones.map(function (timezone) {
+      var timeZoneInfo = parseTimezone(timezone);
+      var offset = _this.getUtcOffset(timeZoneInfo, timestamp);
+      var title = "(GMT ".concat(_this.formatOffset(offset), ") ").concat(_this.formatId(timezone.id));
+      return {
+        offset,
+        title,
+        id: timezone.id
+      };
+    });
+    return (0, _query.default)(timeZones).sortBy('offset').toArray();
+  },
+  formatOffset(offset) {
+    var hours = Math.floor(offset);
+    var minutesInDecimal = offset - hours;
+    var signString = (0, _math.sign)(offset) >= 0 ? '+' : '-';
+    var hoursString = "0".concat(Math.abs(hours)).slice(-2);
+    var minutesString = minutesInDecimal > 0 ? ":".concat(minutesInDecimal * 60) : ':00';
+    return signString + hoursString + minutesString;
+  },
+  formatId(id) {
+    return id.split('/').join(' - ').split('_').join(' ');
+  },
+  getTimezoneById(id) {
+    if (!id) {
+      return undefined;
+    }
+    var tzList = this._timeZones;
+    for (var i = 0; i < tzList.length; i++) {
+      var currentId = tzList[i].id;
+      if (currentId === id) {
+        return tzList[i];
+      }
+    }
+    _errors.default.log('W0009', id);
+    return undefined;
+  },
+  getTimeZoneOffsetById(id, timestamp) {
+    var timeZoneInfo = tzCache.tryGet(id);
+    return timeZoneInfo ? this.getUtcOffset(timeZoneInfo, timestamp) : undefined;
+  },
+  getTimeZoneDeclarationTuple(id, year) {
+    var timeZoneInfo = tzCache.tryGet(id);
+    return timeZoneInfo ? this.getTimeZoneDeclarationTupleCore(timeZoneInfo, year) : [];
+  },
+  getTimeZoneDeclarationTupleCore(timeZoneInfo, year) {
+    var offsetList = timeZoneInfo.offsetList;
+    var offsetIndexList = timeZoneInfo.offsetIndexList;
+    var dateList = timeZoneInfo.dateList;
+    var tupleResult = [];
+    for (var i = 0; i < dateList.length; i++) {
+      var currentDate = dateList[i];
+      var currentYear = new Date(currentDate).getFullYear();
+      if (currentYear === year) {
+        var offset = offsetList[offsetIndexList[i + 1]];
+        tupleResult.push({
+          date: currentDate,
+          offset: -offset / 60
+        });
+      }
+      if (currentYear > year) {
+        break;
+      }
+    }
+    return tupleResult;
+  },
+  getUtcOffset(timeZoneInfo, dateTimeStamp) {
+    var offsetList = timeZoneInfo.offsetList;
+    var offsetIndexList = timeZoneInfo.offsetIndexList;
+    var dateList = timeZoneInfo.dateList;
+    var infinityUntilCorrection = 1;
+    var lastIntervalStartIndex = dateList.length - 1 - infinityUntilCorrection;
+    var index = lastIntervalStartIndex;
+    while (index >= 0 && dateTimeStamp < dateList[index]) {
+      index--;
+    }
+    var offset = offsetList[offsetIndexList[index + 1]];
+    return -offset / 60 || offset;
+  }
+};
+var _default = timeZoneDataUtils;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 28882:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _default = {
+  zones: [{
+    id: 'Africa/Abidjan',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Accra',
+    untils: '-r507yk|1e3pak|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|Infinity',
+    offsets: '0.8667|0|-20',
+    offsetIndices: '012121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Africa/Addis_Ababa',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Algiers',
+    untils: '-uozn3l|2qx1nl|5luo0|8y800|a4tc0|7vc00|auqo0|7idc0|b7pc0|6sg00|cyo00|7ayo0|53c00|9idxc0|3i040|51mw0|253uk0|9o2k0|92040|8l3s0|jutc0|4uy840|3rdzw0|46xc00|7x6o0|2xco40|8n180|7x9g0|9d440|kiqg0|9d440|9q2s0|9cyk0|Infinity',
+    offsets: '-9.35|0|-60|-120',
+    offsetIndices: '0121212121212121232321212122321212'
+  }, {
+    id: 'Africa/Asmara',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Asmera',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Bamako',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Bangui',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Banjul',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Bissau',
+    untils: '-u9rek0|wvoyo0|Infinity',
+    offsets: '62.3333|60|0',
+    offsetIndices: '012'
+  }, {
+    id: 'Africa/Blantyre',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Brazzaville',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Bujumbura',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Cairo',
+    untils: '-fdls80|40d80|a31g0|7x3w0|a4w40|aqyk0|80ys0|b07w0|7tk40|b07w0|8jhg0|a8fw0|60go40|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|f9x80|3i040|eluk0|462s0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|b5rw0|7m5g0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|aqvs0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7k580|b5xg0|6u7w0|bvus0|6h980|c8tg0|64ak0|cyqs0|5anw0|1jms0|12t80|1w22s0|25p80|1sw40|2vmk0|Infinity',
+    offsets: '-120|-180',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Africa/Casablanca',
+    untils: '-tblt9g|di7nxg|3huk0|51k40|2znuk0|2dp9g0|776k0|8nt2s0|657w0|3ifxg0|3jp80|va040|4qak0|e1ms0|7pp80|cnms0|3afw0|2xi840|xqqk0|bp56s0|4qak0|e1ms0|45x80|d2g40|51ek0|c8tg0|64ak0|e1sc0|47uo0|1leo0|23xc0|asw00|3lmo0|1qyo0|40g00|7x6o0|4mo00|1stc0|4deo0|7x6o0|3ylc0|1stc0|51hc0|7x6o0|3lmo0|1stc0|5reo0|7k800|2vpc0|25s00|64dc0|7k800|2iqo0|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|25s00|g7c00|1stc0|g7c00|25s00|Infinity',
+    offsets: '30.3333|0|-60',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Africa/Ceuta',
+    untils: '-qyiys0|7x3w0|2vt440|8sqs0|ssyk0|8n6s0|9px80|905g0|a2yo0|902o0|k69dc0|657w0|3ifxg0|3jp80|va040|4qak0|e1ms0|7pp80|cnms0|3afw0|2xi840|129us0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Africa/Conakry',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Dakar',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Dar_es_Salaam',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Djibouti',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Douala',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/El_Aaiun',
+    untils: '-isdxk0|m2g0c0|vek0|4qak0|e1ms0|7pp80|cnms0|3afw0|fke5g0|4qak0|e1ms0|45x80|d2g40|51ek0|c8tg0|64ak0|e1sc0|47uo0|1leo0|23xc0|asw00|3lmo0|1qyo0|40g00|7x6o0|4mo00|1stc0|4deo0|7x6o0|3ylc0|1stc0|51hc0|7x6o0|3lmo0|1stc0|5reo0|7k800|2vpc0|25s00|64dc0|7k800|2iqo0|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|25s00|g7c00|1stc0|g7c00|25s00|Infinity',
+    offsets: '52.8|60|0|-60',
+    offsetIndices: '012323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'Africa/Freetown',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Gaborone',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Harare',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Johannesburg',
+    untils: '-yvtdi0|kn7o60|9cyk0|9d440|9cyk0|Infinity',
+    offsets: '-90|-120|-180',
+    offsetIndices: '012121'
+  }, {
+    id: 'Africa/Juba',
+    untils: '-kcrsis|kixuys|8l6k0|a4w40|8n180|a6qs0|8n180|a31g0|8ovw0|a16s0|8qqk0|9zc40|8sl80|9xhg0|8wak0|9ts40|8y580|a4w40|8n180|a31g0|8ovw0|a16s0|8sl80|9xhg0|8ufw0|9vms0|8wak0|9ts40|8y580|a4w40|8ovw0|a16s0|8qqk0|7frw40|Infinity',
+    offsets: '-126.4667|-120|-180',
+    offsetIndices: '01212121212121212121212121212121212'
+  }, {
+    id: 'Africa/Kampala',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Khartoum',
+    untils: '-kcrsow|kixv4w|8l6k0|a4w40|8n180|a6qs0|8n180|a31g0|8ovw0|a16s0|8qqk0|9zc40|8sl80|9xhg0|8wak0|9ts40|8y580|a4w40|8n180|a31g0|8ovw0|a16s0|8sl80|9xhg0|8ufw0|9vms0|8wak0|9ts40|8y580|a4w40|8ovw0|a16s0|8qqk0|7frw40|9ac180|Infinity',
+    offsets: '-130.1333|-120|-180',
+    offsetIndices: '012121212121212121212121212121212121'
+  }, {
+    id: 'Africa/Kigali',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Kinshasa',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Lagos',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Libreville',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Lome',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Luanda',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Lubumbashi',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Lusaka',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Malabo',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Maputo',
+    untils: '-yvtfd8|Infinity',
+    offsets: '-130.3333|-120',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Maseru',
+    untils: '-yvtdi0|kn7o60|9cyk0|9d440|9cyk0|Infinity',
+    offsets: '-90|-120|-180',
+    offsetIndices: '012121'
+  }, {
+    id: 'Africa/Mbabane',
+    untils: '-yvtdi0|kn7o60|9cyk0|9d440|9cyk0|Infinity',
+    offsets: '-90|-120|-180',
+    offsetIndices: '012121'
+  }, {
+    id: 'Africa/Mogadishu',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Monrovia',
+    untils: '-qj6zc4|rl202a|Infinity',
+    offsets: '43.1333|44.5|0',
+    offsetIndices: '012'
+  }, {
+    id: 'Africa/Nairobi',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Africa/Ndjamena',
+    untils: '-u9rk4c|zdk5cc|7iak0|Infinity',
+    offsets: '-60.2|-60|-120',
+    offsetIndices: '0121'
+  }, {
+    id: 'Africa/Niamey',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Nouakchott',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Ouagadougou',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Porto-Novo',
+    untils: '-q9qbao|Infinity',
+    offsets: '-13.6|-60',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Sao_Tome',
+    untils: '-u9rhc0|1jbm840|irxc0|Infinity',
+    offsets: '36.75|0|-60',
+    offsetIndices: '0121'
+  }, {
+    id: 'Africa/Timbuktu',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Africa/Tripoli',
+    untils: '-q3gfrw|gl6ajw|422c0|xado0|4bbo0|wrpg0|4s580|1kdpg0|c05bw0|4mqs0|9et80|9d440|9et80|9eys0|9et80|9mdg0|95jw0|9io40|9cyk0|99es0|9et80|9eys0|9et80|9d440|9et80|b2840|3cf3w0|9kis0|9et80|7vqyw0|75eo0|asw00|Infinity',
+    offsets: '-52.7333|-60|-120',
+    offsetIndices: '012121212121212121212121212122122'
+  }, {
+    id: 'Africa/Tunis',
+    untils: '-uozn3l|enxevl|b5uo0|53c00|u8w00|7x9g0|c8w80|7k800|z3w0|ew40|8bx80|9d440|9nx00|925o0|8l100|gi3440|7k800|b9k00|7vc00|51mw00|5ytc0|9d1c0|9d1c0|b9k00|7thc0|7m0tc0|7tk40|93us0|b5uo0|7k800|b5uo0|7x6o0|asw00|Infinity',
+    offsets: '-9.35|-60|-120',
+    offsetIndices: '0121212121212121212121212121212121'
+  }, {
+    id: 'Africa/Windhoek',
+    untils: '-yvtdi0|kn7o60|9cyk0|oj2nw0|235k00|8lho0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|Infinity',
+    offsets: '-90|-120|-180|-60',
+    offsetIndices: '01211313131313131313131313131313131313131313131313131'
+  }, {
+    id: 'America/Adak',
+    untils: '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '660|600|540',
+    offsetIndices: '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Anchorage',
+    untils: '-ek1qo0|1tyx80|2e400|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '600|540|480',
+    offsetIndices: '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Anguilla',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Antigua',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Araguaina',
+    untils: '-t85j2o|99k8mo|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|2yl440|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|51udg0|64ak0|Infinity',
+    offsets: '192.8|180|120',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Argentina/Buenos_Aires',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323232323232'
+  }, {
+    id: 'America/Argentina/Catamarca',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323132321232'
+  }, {
+    id: 'America/Argentina/ComodRivadavia',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323132321232'
+  }, {
+    id: 'America/Argentina/Cordoba',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323132323232'
+  }, {
+    id: 'America/Argentina/Jujuy',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|c8w80|776k0|ag040|7k2g0|bvus0|776k0|7qcg40|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '012121212121212121212121212121212121212121232323121323232'
+  }, {
+    id: 'America/Argentina/La_Rioja',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6qik0|3g880|8jbw0|6u7w0|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '012121212121212121212121212121212121212121232323231232321232'
+  }, {
+    id: 'America/Argentina/Mendoza',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bktk0|71mk0|bqas0|73h80|bvus0|773s0|5unes0|6hes0|1p7mk0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232312121321232'
+  }, {
+    id: 'America/Argentina/Rio_Gallegos',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323232321232'
+  }, {
+    id: 'America/Argentina/Salta',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '012121212121212121212121212121212121212121232323231323232'
+  }, {
+    id: 'America/Argentina/San_Juan',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6qik0|3g880|8jbw0|6u7w0|bvus0|776k0|5v2840|2txg0|1sgak0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '012121212121212121212121212121212121212121232323231232321232'
+  }, {
+    id: 'America/Argentina/San_Luis',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|7pp80|b2aw0|71mk0|4qg40|6s8ik0|2txg0|1sgak0|14nw0|2gys0|b5xg0|7k580|b5xg0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '012121212121212121212121212121212121212121232323121212321212'
+  }, {
+    id: 'America/Argentina/Tucuman',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|mas0|1um2k0|3yik0|b5xg0|7k580|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '0121212121212121212121212121212121212121212323232313232123232'
+  }, {
+    id: 'America/Argentina/Ushuaia',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|5v0dg0|12ys0|1u93w0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323232321232'
+  }, {
+    id: 'America/Aruba',
+    untils: '-u7lckd|rlo7qd|Infinity',
+    offsets: '275.7833|270|240',
+    offsetIndices: '012'
+  }, {
+    id: 'America/Asuncion',
+    untils: '-jy93zk|ldwofk|s4vw0|s6w40|7tek0|b0dg0|7rjw0|b0dg0|7rjw0|b0dg0|9cyk0|9eys0|9et80|9eys0|9cyk0|9eys0|9cyk0|9eys0|9cyk0|9eys0|9et80|9eys0|9cyk0|9eys0|9cyk0|9eys0|9cyk0|9eys0|9et80|9eys0|9cyk0|ahus0|8a2k0|9eys0|9cyk0|9o840|7k580|b7s40|93p80|9gtg0|7nuk0|b42s0|7lzw0|b5xg0|7tek0|b9ms0|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|7kas0|b5rw0|7x9g0|ast80|a31g0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|776k0|biw40|8zzw0|905g0|9px80|905g0|9px80|9d440|8n180|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|Infinity',
+    offsets: '230.6667|240|180',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'America/Atikokan',
+    untils: '-qzov40|a2vw0|bfxjw0|pmdk0|1tz8c0|2dsw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '0101111'
+  }, {
+    id: 'America/Atka',
+    untils: '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '660|600|540',
+    offsetIndices: '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Bahia_Banderas',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|asqg0|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '421|420|360|480|300',
+    offsetIndices: '0121212131212121212121212121212121212142424242424242424242424242424242424242424242424242424242'
+  }, {
+    id: 'America/Bahia',
+    untils: '-t85kv8|99kaf8|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|4irc40|6u7w0|Infinity',
+    offsets: '154.0667|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Barbados',
+    untils: '-o0aiaj|46b400|npv1mj|5rbw0|a31g0|8n180|a31g0|8n180|ag040|84ik0|Infinity',
+    offsets: '238.4833|240|180',
+    offsetIndices: '00121212121'
+  }, {
+    id: 'America/Belem',
+    untils: '-t85j0s|99k8ks|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|Infinity',
+    offsets: '193.9333|180|120',
+    offsetIndices: '012121212121212121212121212121'
+  }, {
+    id: 'America/Belize',
+    untils: '-u52ic0|3edkc0|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|g2t2q0|3e580|4mcys0|2vmk0|Infinity',
+    offsets: '352.8|360|330|300',
+    offsetIndices: '01212121212121212121212121212121212121212121212121213131'
+  }, {
+    id: 'America/Blanc-Sablon',
+    untils: '-qzp0o0|a2vw0|c5jxg0|1tzdw0|2dnc0|Infinity',
+    offsets: '240|180',
+    offsetIndices: '010110'
+  }, {
+    id: 'America/Boa_Vista',
+    untils: '-t85grk|99k93k|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|62xk40|7k580|biw40|cvw0|Infinity',
+    offsets: '242.6667|240|180',
+    offsetIndices: '0121212121212121212121212121212121'
+  }, {
+    id: 'America/Bogota',
+    untils: '-srdoy8|14f1hi8|ha580|Infinity',
+    offsets: '296.2667|300|240',
+    offsetIndices: '0121'
+  }, {
+    id: 'America/Boise',
+    untils: '-r0emw0|ast80|7x9g0|ast80|1um840|9s7jw0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|51k40|doik0|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420|360',
+    offsetIndices: '0101012212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Buenos_Aires',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323232323232'
+  }, {
+    id: 'America/Cambridge_Bay',
+    untils: '-q3gdc0|bjeec0|1tz5k0|2dvo0|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x6o0|ast80|ct40|7kj40|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '0|420|360|300',
+    offsetIndices: '0122131212121212121212121212121212121212121212233221212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Campo_Grande',
+    untils: '-t85hvw|99ka7w|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|cls40|64ak0|dfes0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
+    offsets: '218.4667|240|180',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Cancun',
+    untils: '-p1u7c0|vauo00|7ggw40|afuk0|8a840|afuk0|8a840|64ak0|4bms0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|51k40|Infinity',
+    offsets: '347.0667|360|300|240',
+    offsetIndices: '0123232321212121212121212121212121212121212'
+  }, {
+    id: 'America/Caracas',
+    untils: '-u7lcxw|rlo83w|meoxm0|4dps00|Infinity',
+    offsets: '267.6667|270|240',
+    offsetIndices: '01212'
+  }, {
+    id: 'America/Catamarca',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323132321232'
+  }, {
+    id: 'America/Cayenne',
+    untils: '-uj7yb4|tcw6r4|Infinity',
+    offsets: '209.3333|240|180',
+    offsetIndices: '012'
+  }, {
+    id: 'America/Cayman',
+    untils: '-w757vc|Infinity',
+    offsets: '319.6|300',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Chicago',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bvus0|776k0|7kas0|b5rw0|9d440|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|7x9g0|dbjw0|8a840|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Chihuahua',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|xes2s0|afuk0|8a840|afuk0|8aaw0|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '424.3333|420|360|300',
+    offsetIndices: '0121212323221212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Coral_Harbour',
+    untils: '-qzov40|a2vw0|bfxjw0|pmdk0|1tz8c0|2dsw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '0101111'
+  }, {
+    id: 'America/Cordoba',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323132323232'
+  }, {
+    id: 'America/Costa_Rica',
+    untils: '-pjw8fn|ubtl3n|51ek0|doo40|51ek0|5jso40|8drw0|acas0|2xh80|Infinity',
+    offsets: '336.2167|360|300',
+    offsetIndices: '0121212121'
+  }, {
+    id: 'America/Creston',
+    untils: '-rshz80|vbus0|Infinity',
+    offsets: '420|480',
+    offsetIndices: '010'
+  }, {
+    id: 'America/Cuiaba',
+    untils: '-t85hm4|99k9y4|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|w5hg0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
+    offsets: '224.3333|240|180',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Curacao',
+    untils: '-u7lckd|rlo7qd|Infinity',
+    offsets: '275.7833|270|240',
+    offsetIndices: '012'
+  }, {
+    id: 'America/Danmarkshavn',
+    untils: '-rvusjk|x8nx3k|8zrk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|53hk0|Infinity',
+    offsets: '74.6667|180|120|0',
+    offsetIndices: '01212121212121212121212121212121213'
+  }, {
+    id: 'America/Dawson_Creek',
+    untils: '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|69uk0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '0101101010101010101010101010101010101010101010101010101011'
+  }, {
+    id: 'America/Dawson',
+    untils: '-qzoms0|a2vw0|asys0|882c0|bmiwc0|1tz000|2e180|a7n3w0|9q000|465k00|3e2is0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
+    offsets: '540|480|420',
+    offsetIndices: '01010110201212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'America/Denver',
+    untils: '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360',
+    offsetIndices: '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Detroit',
+    untils: '-xx8dyd|5eraud|dyeyk0|1tzb40|2dq40|1c9440|7x3w0|9rlbxo|71s2c|9d440|9cyk0|2cmdg0|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '332.1833|360|300|240',
+    offsetIndices: '0123323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'America/Dominica',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Edmonton',
+    untils: '-x1yazk|629ink|a2vw0|8n6s0|29ek0|h6lg0|9px80|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|9l0g40|1tz5k0|2dvo0|tj1g0|7x3w0|ctzk40|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '453.8667|420|360',
+    offsetIndices: '0121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Eirunepe',
+    untils: '-t85f28|99ka68|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|2yy2s0|6h980|7hg2s0|2t2t80|Infinity',
+    offsets: '279.4667|300|240',
+    offsetIndices: '0121212121212121212121212121212121'
+  }, {
+    id: 'America/El_Salvador',
+    untils: '-pkm4tc|ymao5c|7k580|b5xg0|7k580|Infinity',
+    offsets: '356.8|360|300',
+    offsetIndices: '012121'
+  }, {
+    id: 'America/Ensenada',
+    untils: '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '468.0667|420|480',
+    offsetIndices: '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'America/Fort_Nelson',
+    untils: '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '01011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'America/Fort_Wayne',
+    untils: '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Fortaleza',
+    untils: '-t85kvc|99kafc|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|puk0|id6s0|6h980|Infinity',
+    offsets: '154|180|120',
+    offsetIndices: '0121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Glace_Bay',
+    untils: '-z94kwc|89fk8c|a2vw0|c5jxg0|1tzdw0|2dnc0|3y8g40|7x3w0|9pa5g0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '239.8|240|180',
+    offsetIndices: '012122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Godthab',
+    untils: '-rvumf4|x8nqz4|8zrk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '206.9333|180|120',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Goose_Bay',
+    untils: '-qzp20k|a2vw0|8kjbw0|kzjyk|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|7k580|b5xg0|7k580|b5xg0|1pb260|2dly0|biw40|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|7k580|ag040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|6y2s0|22420|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a2lo|afuk0|8a840|asqg0|7xc80|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8tec|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '210.8667|150.8667|210|150|240|180|120',
+    offsetIndices: '010232323232323233232323232323232323232323232323232323232324545454545454545454545454545454545454545454546454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454'
+  }, {
+    id: 'America/Grand_Turk',
+    untils: '-u85og2|z3brw2|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|18ais0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '307.1667|300|240',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121222121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Grenada',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Guadeloupe',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Guatemala',
+    untils: '-qqqskk|ss0akk|4ofw0|4tidg0|6djw0|3wwas0|8n180|7n5ms0|7x3w0|Infinity',
+    offsets: '362.0667|360|300',
+    offsetIndices: '0121212121'
+  }, {
+    id: 'America/Guayaquil',
+    untils: '-kcr84o|wb620o|3jp80|Infinity',
+    offsets: '314|300|240',
+    offsetIndices: '0121'
+  }, {
+    id: 'America/Guyana',
+    untils: '-smcak8|vj4sz8|81rf90|Infinity',
+    offsets: '232.6667|225|180|240',
+    offsetIndices: '0123'
+  }, {
+    id: 'America/Halifax',
+    untils: '-z94k80|777go0|9et80|st9o0|a2vw0|ssyk0|5rbw0|cv1g0|69uk0|c6ys0|6kyk0|ci2s0|67zw0|ci2s0|6w2k0|bu040|7lzw0|bu040|66580|bu040|7lzw0|bu040|64ak0|cls40|5v180|cv1g0|6j3w0|c6ys0|79180|b42s0|7lzw0|b42s0|7yyk0|bu040|64ak0|dbpg0|66580|cls40|5ed80|bu040|7lzw0|b42s0|7lzw0|cjxg0|66580|bh1g0|7lzw0|b42s0|7lzw0|6uj00|1tzdw0|2dnc0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|1cm2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '254.4|240|180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Havana',
+    untils: '-n7762o|1icfyo|69uk0|62s040|4ofw0|e1ms0|51ek0|e1ms0|4ofw0|1fhs40|4ofw0|e1ms0|4ofw0|9s9k40|67zw0|cedg0|6h980|9o840|7yyk0|b5xg0|7k580|bvus0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|8a2k0|ag040|8bx80|ae5g0|8drw0|acas0|9cyk0|9d440|9px80|905g0|9px80|9q2s0|7x3w0|8a840|ast80|7x9g0|ast80|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|8a2k0|ag040|8a2k0|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|905g0|a2vw0|905g0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|8n400|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|7x6o0|1cm000|6uao0|bvs00|779c0|bitc0|6uao0|bvs00|779c0|bvs00|779c0|c8qo0|779c0|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|Infinity',
+    offsets: '329.6|300|240',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Hermosillo',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '443.8667|420|360|480',
+    offsetIndices: '0121212131212121'
+  }, {
+    id: 'America/Indiana/Indianapolis',
+    untils: '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Indiana/Knox',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|9px80|9d440|9cyk0|9d440|s3180|1twas0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|7j5400|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '0101011010101010101010101010101010101010101010101010101010101010101010101010101010101010111010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Indiana/Marengo',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|2wsas0|7x3w0|1c9440|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|465h80|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4g00|64dc0|clmk0|fvt9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '0101011010101010101010101212121212111212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Indiana/Petersburg',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|501ek0|7kas0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|sfzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|eu02o0|asw00|6udg0|c8nw0|6hc00|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '01010110101010101010101010101010101010101010101010111011212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Indiana/Tell_City',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|501ek0|7kas0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|1tw580|9d440|9cyk0|9d440|9cvs0|9d440|9cyk0|ihslg0|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '01010110101010101010101010101021211010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Indiana/Vevay',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|4gyis0|7txx80|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|hfzhg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '010101101212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Indiana/Vincennes',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|asys0|7x3w0|3fidg0|7x3w0|asys0|7x3w0|b5rw0|7kas0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|2lz980|9cyk0|9d440|9cyk0|ihslg0|asw00|6udg0|c8nw0|6hc00|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '01010110101010101010101010101010121211011212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Indiana/Winamac',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|465h80|9cyk0|9d440|9cyk0|ihslg0|asw00|6udg0|c8l40|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '01010110101010101010101010101010101010121211021212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Indianapolis',
+    untils: '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Inuvik',
+    untils: '-8ve5c0|6fce80|9q000|71i2w0|ipzw0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '0|480|360|420',
+    offsetIndices: '0121323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'America/Iqaluit',
+    untils: '-eb6ao0|1l3h80|2dq40|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7xc80|ast80|7x6o0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '0|240|300|180|360',
+    offsetIndices: '01123212121212121212121212121212121212121212142212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'America/Jamaica',
+    untils: '-u85og2|wbl182|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|Infinity',
+    offsets: '307.1667|300|240',
+    offsetIndices: '0121212121212121212121'
+  }, {
+    id: 'America/Jujuy',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|c8w80|776k0|ag040|7k2g0|bvus0|776k0|7qcg40|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '012121212121212121212121212121212121212121232323121323232'
+  }, {
+    id: 'America/Juneau',
+    untils: '-ek1w80|1tz2s0|2dyg0|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9d1c0|9d1c0|9cyk0|9d440|9px80|905g0|9px80|1leo0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420|540',
+    offsetIndices: '01101010101010101010101010001010122020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202'
+  }, {
+    id: 'America/Kentucky/Louisville',
+    untils: '-r0esg0|ast80|7x9g0|ast80|sg5g0|6bp80|a98o40|7x3w0|6w840|1tz8c0|2dsw0|ast9o|1sw2c|21gis0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|4bh80|3j3xc0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4g00|64dc0|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '0101010101101010101010101010101010101121212121212111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Kentucky/Monticello',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|bs6g40|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x6o0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '0101011010101010101010101010101010101010101010101010101010101010101010101121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Knox_IN',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|9px80|9d440|9cyk0|9d440|s3180|1twas0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|7j5400|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '0101011010101010101010101010101010101010101010101010101010101010101010101010101010101010111010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Kralendijk',
+    untils: '-u7lckd|rlo7qd|Infinity',
+    offsets: '275.7833|270|240',
+    offsetIndices: '012'
+  }, {
+    id: 'America/La_Paz',
+    untils: '-jxzspo|84ik0|Infinity',
+    offsets: '272.6|212.6|240',
+    offsetIndices: '012'
+  }, {
+    id: 'America/Lima',
+    untils: '-w25lpo|fcxjlo|4ml80|93us0|9cyk0|9d440|9cyk0|nw16s0|4ml80|e5c40|4ml80|1fr1g0|4ml80|1yiys0|4ml80|Infinity',
+    offsets: '308.6|300|240',
+    offsetIndices: '0121212121212121'
+  }, {
+    id: 'America/Los_Angeles',
+    untils: '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|1a3c5o|f2iic|owao0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Louisville',
+    untils: '-r0esg0|ast80|7x9g0|ast80|sg5g0|6bp80|a98o40|7x3w0|6w840|1tz8c0|2dsw0|ast9o|1sw2c|21gis0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|4bh80|3j3xc0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4g00|64dc0|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '0101010101101010101010101010101010101121212121212111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Lower_Princes',
+    untils: '-u7lckd|rlo7qd|Infinity',
+    offsets: '275.7833|270|240',
+    offsetIndices: '012'
+  }, {
+    id: 'America/Maceio',
+    untils: '-t85ldw|99kaxw|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|2yl440|64ak0|1wf1g0|7k580|biw40|puk0|id6s0|6h980|Infinity',
+    offsets: '142.8667|180|120',
+    offsetIndices: '012121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Managua',
+    untils: '-ijh6oo|ka1i0o|xqqk0|24p6s0|53980|dmtg0|53980|60itw0|dq240|53es0|235h80|4beis0|8zzw0|at4c0|7x140|Infinity',
+    offsets: '345.2|360|300',
+    offsetIndices: '0121212121212121'
+  }, {
+    id: 'America/Manaus',
+    untils: '-t85gvw|99k97w|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|2yy2s0|6h980|Infinity',
+    offsets: '240.0667|240|180',
+    offsetIndices: '01212121212121212121212121212121'
+  }, {
+    id: 'America/Marigot',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Martinique',
+    untils: '-umcvcs|zz5x4s|8zzw0|Infinity',
+    offsets: '244.3333|240|180',
+    offsetIndices: '0121'
+  }, {
+    id: 'America/Matamoros',
+    untils: '-p1u7c0|ykt480|ast80|3vppg0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '400|360|300',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Mazatlan',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '425.6667|420|360|480',
+    offsetIndices: '0121212131212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Mendoza',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bktk0|71mk0|bqas0|73h80|bvus0|773s0|5unes0|6hes0|1p7mk0|3yik0|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232312121321232'
+  }, {
+    id: 'America/Menominee',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|asys0|7x3w0|a7n9g0|9px80|1at9g0|2396k0|9d1c0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '01010110101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Merida',
+    untils: '-p1u7c0|vauo00|hoyk0|6ys0c0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '358.4667|360|300',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Metlakatla',
+    untils: '-ek1w80|1tz2s0|2dyg0|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|gpc840|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|3ylc0|2itg0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420|540',
+    offsetIndices: '01101010101010101010101010101010102020200202020202020202020202020202020202020202'
+  }, {
+    id: 'America/Mexico_City',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|3knek0|776k0|rf440|5t6k0|1evk40|71mk0|30p1g0|8n180|nufxo0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '396.6|420|360|300',
+    offsetIndices: '012121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'America/Miquelon',
+    untils: '-ulmyxk|zzqbdk|3m59g0|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '224.6667|240|180|120',
+    offsetIndices: '012323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'America/Moncton',
+    untils: '-z94i40|89fhg0|a2vw0|7mqqo0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|dmtg0|64ak0|cao40|6fek0|bkqs0|7iak0|6y5k0|1tzdw0|2dnc0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|s36s0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a2lo|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6uiyc|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240|180',
+    offsetIndices: '012121212121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Monterrey',
+    untils: '-p1u7c0|ykt480|ast80|3vppg0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '401.2667|360|300',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Montevideo',
+    untils: '-w4mll9|67elc0|1s74p9|9et80|9exe0|9czy0|9exe0|9czy0|3ydyq0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|b5w20|7k6m0|9q1e0|9czy0|asxe0|7x5a0|6do20|ppvy0|4mmm0|8g9qq0|901a0|38pe0|2inw0|2nf9g0|8zzw0|1e3s40|9o3y0|q8he0|2kik0|yxhg0|4bh80|s36s0|2vl60|905g0|5rg20|51ek0|weqs0|3yik0|e1ms0|4ofw0|erk40|3yik0|2vs40|gk7w0|41iys0|3wnw0|erk40|4bh80|c8tg0|64ak0|c8tg0|6u7w0|c8tg0|6h980|bvus0|6u7w0|614qs0|9q2s0|a31g0|7x3w0|ag040|8a2k0|asys0|7x3w0|asys0|7x3w0|asys0|8a2k0|ag040|8a2k0|ag040|8a2k0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
+    offsets: '224.85|240|180|210|150|120|90',
+    offsetIndices: '001232323232323232323232324242525242525264252525252525252525252525252525252525252525252'
+  }, {
+    id: 'America/Montreal',
+    untils: '-qzoxw0|a2vw0|7yx60|aqzy0|9q8c0|7jzo0|bw0c0|6bp80|cedg0|6h980|c8tg0|6h980|bvus0|776k0|biw40|776k0|biw40|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|xjeo0|1tzb40|2dq40|asys0|7x3w0|ast80|7x3w0|asys0|7x3w0|asys0|b5rw0|7xf00|ast80|7x9g0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240',
+    offsetIndices: '01010101010101010101010101010101010101010101011101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Montserrat',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Nassau',
+    untils: '-u6m4c6|r7u7s6|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '309.5|300|240',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/New_York',
+    untils: '-r0ev80|ast80|7x9g0|ast80|7x9g0|b5rw0|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tzb40|2dq40|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240',
+    offsetIndices: '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Nipigon',
+    untils: '-qzoxw0|a2vw0|bfxjw0|pmdk0|1tzb40|2dq40|ewvus0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240',
+    offsetIndices: '010111010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Nome',
+    untils: '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l6c0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '660|600|540|480',
+    offsetIndices: '011001010101010101010101010101010122323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'America/Noronha',
+    untils: '-t85lzw|99k8rw|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|cvw0|iq5g0|6h980|Infinity',
+    offsets: '129.6667|120|60',
+    offsetIndices: '0121212121212121212121212121212121212121'
+  }, {
+    id: 'America/North_Dakota/Beulah',
+    untils: '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hc00|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360|300',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101011212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/North_Dakota/Center',
+    untils: '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a5c0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360|300',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101011212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/North_Dakota/New_Salem',
+    untils: '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a5c0|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360|300',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Nuuk',
+    untils: '-rvumf4|x8nqz4|8zrk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '206.9333|180|120',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Ojinaga',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|xes2s0|afuk0|8a840|afuk0|8aaw0|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '417.6667|420|360|300',
+    offsetIndices: '0121212323221212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Panama',
+    untils: '-w757vc|Infinity',
+    offsets: '319.6|300',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Pangnirtung',
+    untils: '-pkmlc0|b0ke00|1tzdw0|2dnc0|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|asw00|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7xc80|ast80|7x6o0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '0|240|180|120|300|360',
+    offsetIndices: '012213121212121212121212121212121212114141414154414141414141414141414141414141414141414141414141414141414141414141414141414'
+  }, {
+    id: 'America/Paramaribo',
+    untils: '-usj4g8|cixc0c|5lydbk|kcrm6c|Infinity',
+    offsets: '220.6667|220.8667|220.6|210|180',
+    offsetIndices: '01234'
+  }, {
+    id: 'America/Phoenix',
+    untils: '-r0epo0|ast80|7x9g0|ast80|bmtus0|zjedo|4olg0|9et80|bs6lmc|9cyk0|Infinity',
+    offsets: '420|360',
+    offsetIndices: '01010101010'
+  }, {
+    id: 'America/Port_of_Spain',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Port-au-Prince',
+    untils: '-rmk9ac|ylcf6c|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8aaw0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|3vpjw0|ast80|7x9g0|ast80|2stv00|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|pkg40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '289|300|240',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Porto_Acre',
+    untils: '-t85fg0|99kak0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|2t2t80|Infinity',
+    offsets: '271.2|300|240',
+    offsetIndices: '01212121212121212121212121212121'
+  }, {
+    id: 'America/Porto_Velho',
+    untils: '-t85g60|99k8i0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|Infinity',
+    offsets: '255.6|240|180',
+    offsetIndices: '012121212121212121212121212121'
+  }, {
+    id: 'America/Puerto_Rico',
+    untils: '-efsnk0|1ppu40|2dnc0|Infinity',
+    offsets: '240|180',
+    offsetIndices: '0110'
+  }, {
+    id: 'America/Punta_Arenas',
+    untils: '-vauawq|3dlssq|157b7a|f4e0q|49hzba|aye0q|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|534ik0|351g0|2fnh80|2mg00|b73400|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|Infinity',
+    offsets: '282.7667|300|240|180',
+    offsetIndices: '0102021212121212121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'America/Rainy_River',
+    untils: '-qzov40|a2vw0|bfxjw0|pmdk0|1tz8c0|2dsw0|ewvus0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '010111010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Rankin_Inlet',
+    untils: '-6s8lc0|4c6oo0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '0|360|240|300',
+    offsetIndices: '012131313131313131313131313131313131313131313331313131313131313131313131313131313131313131313131313131313131313131313131'
+  }, {
+    id: 'America/Recife',
+    untils: '-t85ljc|99kb3c|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|cvw0|iq5g0|6h980|Infinity',
+    offsets: '139.6|180|120',
+    offsetIndices: '0121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Regina',
+    untils: '-xkq9yc|6l1hmc|a2vw0|60enw0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|1b6840|9cyk0|9d440|8zzw0|9q2s0|9cyk0|9q2s0|9cyk0|9d440|9cyk0|66gc0|1tz5k0|2dvo0|a31g0|9cyk0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|tj1g0|9cyk0|9d440|Infinity',
+    offsets: '418.6|420|360',
+    offsetIndices: '012121212121212121212121221212121212121212121212121212'
+  }, {
+    id: 'America/Resolute',
+    untils: '-bnp9c0|97nco0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '0|360|240|300',
+    offsetIndices: '012131313131313131313131313131313131313131313331313131313331313131313131313131313131313131313131313131313131313131313131'
+  }, {
+    id: 'America/Rio_Branco',
+    untils: '-t85fg0|99kak0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|2t2t80|Infinity',
+    offsets: '271.2|300|240',
+    offsetIndices: '01212121212121212121212121212121'
+  }, {
+    id: 'America/Rosario',
+    untils: '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
+    offsets: '256.8|240|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212123232323132323232'
+  }, {
+    id: 'America/Santa_Isabel',
+    untils: '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '468.0667|420|480',
+    offsetIndices: '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'America/Santarem',
+    untils: '-t85hvc|99ka7c|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|Infinity',
+    offsets: '218.8|240|180',
+    offsetIndices: '0121212121212121212121212121212'
+  }, {
+    id: 'America/Santiago',
+    untils: '-vauawq|3dlssq|157b7a|f4e0q|49hzba|aye0q|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|534ik0|351g0|229zw0|2gt80|awo40|2mg00|b73400|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
+    offsets: '282.7667|300|240|180',
+    offsetIndices: '010202121212121212321232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'America/Santo_Domingo',
+    untils: '-j6hz1c|hiw29c|67zw0|1dy840|62ha0|cnle0|4h2m0|elyq0|47ta0|ei9e0|4bim0|eek20|4dda0|ecpe0|dkmtg0|1stc0|Infinity',
+    offsets: '280|300|240|270',
+    offsetIndices: '01213131313131212'
+  }, {
+    id: 'America/Sao_Paulo',
+    untils: '-t85jd8|99k8x8|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5k02s0|6onw0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|cls40|64ak0|dfes0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
+    offsets: '186.4667|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Scoresbysund',
+    untils: '-rvurxk|x8ntpk|902o0|9cvs0|9cyk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '87.8667|120|60|0',
+    offsetIndices: '0121323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'America/Shiprock',
+    untils: '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360',
+    offsetIndices: '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Sitka',
+    untils: '-ek1w80|1tz2s0|2dyg0|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1leo0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420|540',
+    offsetIndices: '01101010101010101010101010101010122020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202'
+  }, {
+    id: 'America/St_Barthelemy',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/St_Johns',
+    untils: '-ris3ck|8bx80|ar440|a2vw0|9tjs0|53980|dkys0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|7tmw0|1wfuk|8zzw0|a3480|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|7k580|b5xg0|7k580|b5xg0|1pb260|2dly0|biw40|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|7k580|ag040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a2lo|afuk0|8a840|asqg0|7xc80|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8tec|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '210.8667|150.8667|210|150|90',
+    offsetIndices: '01010101010101010101010101010101010102323232323232323323232323232323232323232323232323232323232323232323232323232323232323232323232323232324232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'America/St_Kitts',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/St_Lucia',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/St_Thomas',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/St_Vincent',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Swift_Current',
+    untils: '-xkq9d4|6l1h14|a2vw0|c5jxg0|1tz5k0|2dvo0|asys0|8n180|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|3yles0|9cyk0|s36s0|9cyk0|9d440|7x3w0|b5xg0|7k580|5j4lg0|Infinity',
+    offsets: '431.3333|420|360',
+    offsetIndices: '012122121212121212121212'
+  }, {
+    id: 'America/Tegucigalpa',
+    untils: '-pfzh6k|yho0ik|7k580|b5xg0|7k580|96x1g0|4qak0|Infinity',
+    offsets: '348.8667|360|300',
+    offsetIndices: '01212121'
+  }, {
+    id: 'America/Thule',
+    untils: '-rvuj9g|12yzilg|9cyk0|9d440|9cyk0|9q2s0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '275.1333|240|180',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Thunder_Bay',
+    untils: '-vbavc0|gr8qs0|1tzb40|2dq40|ctmlg0|9cyk0|9d440|9px80|9d440|9cyk0|s36s0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '0122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'America/Tijuana',
+    untils: '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '468.0667|420|480',
+    offsetIndices: '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'America/Toronto',
+    untils: '-qzoxw0|a2vw0|7yx60|aqzy0|9q8c0|7jzo0|bw0c0|6bp80|cedg0|6h980|c8tg0|6h980|bvus0|776k0|biw40|776k0|biw40|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|xjeo0|1tzb40|2dq40|asys0|7x3w0|ast80|7x3w0|asys0|7x3w0|asys0|b5rw0|7xf00|ast80|7x9g0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240',
+    offsetIndices: '01010101010101010101010101010101010101010101011101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Tortola',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Vancouver',
+    untils: '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '0101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Virgin',
+    untils: '-u6m79w|Infinity',
+    offsets: '246.0667|240',
+    offsetIndices: '01'
+  }, {
+    id: 'America/Whitehorse',
+    untils: '-qzoms0|a2vw0|asys0|882c0|bmiwc0|1tz000|2e180|a7n3w0|9q000|tiyo0|6qp440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
+    offsets: '540|480|420',
+    offsetIndices: '01010110201212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'America/Winnipeg',
+    untils: '-s0s7c0|7k580|tj700|a2vw0|9ok840|6u7w0|2a5hg0|1tz8c0|2dsw0|biw40|7x3w0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b7s40|7tek0|autg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|7x3w0|1cm2s0|7k580|1cm2s0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Yakutat',
+    untils: '-ek1tg0|1tz000|2e180|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1lbw0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '540|480',
+    offsetIndices: '01101010101010101010101010101010100101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'America/Yellowknife',
+    untils: '-i9m2o0|3pk3o0|1tz5k0|2dvo0|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '0|420|360|300',
+    offsetIndices: '012213121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Antarctica/Casey',
+    untils: '-irxc0|lag4o0|73bo0|uz1o0|60l80|2fnh80|pz9g0|Infinity',
+    offsets: '0|-480|-660',
+    offsetIndices: '01212121'
+  }, {
+    id: 'Antarctica/Davis',
+    untils: '-6rmdc0|42jdw0|27wgs0|l8uss0|7eqs0|unmk0|60qs0|Infinity',
+    offsets: '0|-420|-300',
+    offsetIndices: '01012121'
+  }, {
+    id: 'Antarctica/DumontDUrville',
+    untils: '-c05eo0|2mks80|2i72g0|Infinity',
+    offsets: '0|-600',
+    offsetIndices: '0101'
+  }, {
+    id: 'Antarctica/Macquarie',
+    untils: '-rsj4w0|8zzw0|11wqk0|f4kh40|a6p8g0|9d1c0|asw00|6uao0|bvs00|6uao0|bvs00|779c0|bvs00|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660|0',
+    offsetIndices: '0102010101010101010101010101010101010101010101010101010101010101010101010101010101010101011'
+  }, {
+    id: 'Antarctica/Mawson',
+    untils: '-8aelc0|t22y80|Infinity',
+    offsets: '0|-360|-300',
+    offsetIndices: '012'
+  }, {
+    id: 'Antarctica/McMurdo',
+    untils: '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
+    offsets: '-690|-750|-720|-780',
+    offsetIndices: '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'Antarctica/Palmer',
+    untils: '-2lxhc0|31ho0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|46b6s0|8c2s0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|Infinity',
+    offsets: '0|180|240|120',
+    offsetIndices: '0121212121213121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Antarctica/Rothera',
+    untils: '3lxs00|Infinity',
+    offsets: '0|180',
+    offsetIndices: '01'
+  }, {
+    id: 'Antarctica/South_Pole',
+    untils: '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
+    offsets: '-690|-750|-720|-780',
+    offsetIndices: '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'Antarctica/Syowa',
+    untils: '-6qsqo0|Infinity',
+    offsets: '0|-180',
+    offsetIndices: '01'
+  }, {
+    id: 'Antarctica/Troll',
+    untils: 'ibruo0|27pg0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-120',
+    offsetIndices: '00101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Antarctica/Vostok',
+    untils: '-6aaao0|Infinity',
+    offsets: '0|-360',
+    offsetIndices: '01'
+  }, {
+    id: 'Arctic/Longyearbyen',
+    untils: '-rzayo0|6qfs0|cgcqo0|15tsc0|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|70q5c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|b5uo0|7k800|7law00|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Asia/Aden',
+    untils: '-bwgbbg|Infinity',
+    offsets: '-186.8667|-180',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Almaty',
+    untils: '-nu1a90|37a0d0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|Infinity',
+    offsets: '-307.8|-300|-360|-420',
+    offsetIndices: '012323232323232323232321232323232323232323232323232'
+  }, {
+    id: 'Asia/Amman',
+    untils: '-kcrtbk|m566fk|60l80|awo40|7v980|awo40|7v980|ayis0|9gnw0|9b9g0|7v980|autg0|7v980|3e6840|9et80|9io40|9cyk0|9d440|9cyk0|9d440|9px80|ayis0|7rjw0|ag040|8a2k0|9zc40|8drw0|a31g0|8zzw0|9d440|9cyk0|9d440|8n180|ag040|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|epmo0|4deo0|9o5c0|9ew00|9b6o0|9ew00|9d1c0|9d1c0|9d1c0|asw00|7x6o0|afxc0|8n400|9d1c0|9d1c0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|wel80|51k40|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|Infinity',
+    offsets: '-143.7333|-120|-180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Anadyr',
+    untils: '-nu1sv8|379zj8|qi27w0|9et80|is040|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
+    offsets: '-709.9333|-720|-780|-840|-660',
+    offsetIndices: '01232121212121212121214121212121212121212121212121212121212141'
+  }, {
+    id: 'Asia/Aqtau',
+    untils: '-nu15b4|379y74|qrh3w0|iruk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-201.0667|-240|-300|-360',
+    offsetIndices: '012323232323232323232123232312121212121212121212'
+  }, {
+    id: 'Asia/Aqtobe',
+    untils: '-nu16l4|379zh4|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|Infinity',
+    offsets: '-228.6667|-240|-300|-360',
+    offsetIndices: '0123232323232323232321232323232323232323232323232'
+  }, {
+    id: 'Asia/Ashgabat',
+    untils: '-nu16t8|379zp8|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|Infinity',
+    offsets: '-233.5333|-240|-300|-360',
+    offsetIndices: '0123232323232323232323212'
+  }, {
+    id: 'Asia/Ashkhabad',
+    untils: '-nu16t8|379zp8|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|Infinity',
+    offsets: '-233.5333|-240|-300|-360',
+    offsetIndices: '0123232323232323232323212'
+  }, {
+    id: 'Asia/Atyrau',
+    untils: '-nu15m8|37a1a8|qrh140|iruk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|j3440|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-207.7333|-180|-300|-360|-240',
+    offsetIndices: '01232323232323232323242323232323232324242424242'
+  }, {
+    id: 'Asia/Baghdad',
+    untils: '-r50g80|xkn3w0|7v980|9b9g0|9gnw0|9eys0|9et80|9d440|9b9g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9f1k0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|Infinity',
+    offsets: '-177.6|-180|-240',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Bahrain',
+    untils: '-q3gmvk|rctnrk|Infinity',
+    offsets: '-206.1333|-240|-180',
+    offsetIndices: '012'
+  }, {
+    id: 'Asia/Baku',
+    untils: '-nu158c|h4tkwc|ckinw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|9d1c0|239ew0|asw00|7x3w0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-199.4|-180|-240|-300',
+    offsetIndices: '01232323232323232323232123232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Bangkok',
+    untils: '-pysda4|Infinity',
+    offsets: '-402.0667|-420',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Barnaul',
+    untils: '-q4ljic|5hu6uc|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|38fo0|64og0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
+    offsets: '-335|-360|-420|-480',
+    offsetIndices: '0123232323232323232323212323232321212121212121212121212121212121212'
+  }, {
+    id: 'Asia/Beirut',
+    untils: '-pyzew0|aunw0|88dg0|9et80|8yas0|a2vw0|a31g0|7k580|hjqo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|7v980|5lhs40|56yk0|awo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|7v980|autg0|7v980|2wxus0|8n180|a4w40|8n180|a4w40|8n180|a4w40|8n180|bs5g0|71mk0|alk40|86d80|a4w40|8n180|a4w40|8n180|a6qs0|80t80|905g0|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|Infinity',
+    offsets: '-120|-180',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Asia/Bishkek',
+    untils: '-nu19tc|379zxc|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|h8dc0|bkl80|8n180|a31g0|8n180|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9db20|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|Infinity',
+    offsets: '-298.4|-300|-360|-420',
+    offsetIndices: '012323232323232323232321212121212121212121212121212'
+  }, {
+    id: 'Asia/Brunei',
+    untils: '-mvofy4|3khxs4|Infinity',
+    offsets: '-459.6667|-450|-480',
+    offsetIndices: '012'
+  }, {
+    id: 'Asia/Calcutta',
+    untils: '-xehava|innm9a|bmfw0|5lxg0|1mn180|Infinity',
+    offsets: '-321.1667|-330|-390',
+    offsetIndices: '012121'
+  }, {
+    id: 'Asia/Chita',
+    untils: '-q4cfog|5hkxgg|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnew0|Infinity',
+    offsets: '-453.8667|-480|-540|-600',
+    offsetIndices: '012323232323232323232321232323232323232323232323232323232323232312'
+  }, {
+    id: 'Asia/Choibalsan',
+    untils: '-xmct7c|11sndrc|2qk2k0|9eqg0|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|s6qk0|3nc0c0|9ct00|9d9o0|9ct00|Infinity',
+    offsets: '-458|-420|-480|-600|-540',
+    offsetIndices: '0123434343434343434343434343434343434343434343424242'
+  }, {
+    id: 'Asia/Chongqing',
+    untils: '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '01010101010101010101010101010'
+  }, {
+    id: 'Asia/Chungking',
+    untils: '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '01010101010101010101010101010'
+  }, {
+    id: 'Asia/Colombo',
+    untils: '-xehask|isle6k|cajy0|1mp2u0|qetjw0|7x5a0|4xvqq0|Infinity',
+    offsets: '-319.5333|-330|-360|-390',
+    offsetIndices: '01231321'
+  }, {
+    id: 'Asia/Dacca',
+    untils: '-eqtpow|bmgyw|5lxg0|4qknw0|u4ijy0|a1400|Infinity',
+    offsets: '-353.3333|-390|-330|-360|-420',
+    offsetIndices: '0121343'
+  }, {
+    id: 'Asia/Damascus',
+    untils: '-q3gk20|5k6q0|8n180|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|k4hk40|7yyk0|awo40|7tek0|b0dg0|7v980|awo40|7tek0|alk40|887w0|awo40|7v980|ayis0|7v980|awo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|6bp80|cg840|6bp80|2eh1g0|8zzw0|9ts40|8zzw0|pvk40|c33w0|7cw40|cjrw0|6zxg0|btuk0|7rpg0|9gnw0|9d440|9cyk0|9et80|9et80|9rxg0|91uk0|92040|9et80|9o840|9et80|9d440|9et80|9eys0|9et80|9b9g0|9gnw0|99es0|9iik0|9d440|9et80|9eys0|9et80|9d440|9et80|9d440|9et80|9d440|9et80|9eys0|9et80|9d440|9et80|9d440|8y580|9q2s0|b5rw0|7x9g0|aunw0|7ig40|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|Infinity',
+    offsets: '-145.2|-120|-180',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Dhaka',
+    untils: '-eqtpow|bmgyw|5lxg0|4qknw0|u4ijy0|a1400|Infinity',
+    offsets: '-353.3333|-390|-330|-360|-420',
+    offsetIndices: '0121343'
+  }, {
+    id: 'Asia/Dili',
+    untils: '-u9s4l8|fqcu98|hufs00|cpz440|Infinity',
+    offsets: '-502.3333|-480|-540',
+    offsetIndices: '01212'
+  }, {
+    id: 'Asia/Dubai',
+    untils: '-q3gnko|Infinity',
+    offsets: '-221.2|-240',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Dushanbe',
+    untils: '-nu18qo|379yuo|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|hp440|Infinity',
+    offsets: '-275.2|-300|-360|-420',
+    offsetIndices: '012323232323232323232321'
+  }, {
+    id: 'Asia/Famagusta',
+    untils: '-p4bqac|rvhy2c|9cyk0|b42s0|7nuk0|8yas0|8zzw0|9q2s0|9et80|9b9g0|9cyk0|9q2s0|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|at4c0|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|8h8w0|leog0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-135.8|-120|-180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Gaza',
+    untils: '-ffv9k0|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|5hoqs0|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|1sns0|3p6is0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|66as0|4vxc0|8n400|a2yo0|8n400|a2yo0|8n400|asw00|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|8n400|a2yo0|8ulg0|97ek0|8y580|9ts40|8hms0|a4qk0|7x3w0|asys0|8a5c0|ahs1o|71mic|bzk5o|69uic|cg840|902o0|9q000|9cyk0|9d440|ast80|7z440|aqyk0|7z6w0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|Infinity',
+    offsets: '-120|-180',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Asia/Harbin',
+    untils: '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '01010101010101010101010101010'
+  }, {
+    id: 'Asia/Hebron',
+    untils: '-ffv9k0|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|5hoqs0|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|1sns0|3p6is0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|66as0|4vxc0|8n400|a2yo0|8n400|a2yo0|8n400|asw00|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|8n400|a2yo0|8ulg0|97ek0|8y580|9ts40|8hms0|a4qk0|82nw0|anes0|8a5c0|afxc0|73h80|bzk5o|69uic|1hs40|1lbw0|9d440|902o0|9q000|9cyk0|9d440|ast80|7z440|aqyk0|7z6w0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|Infinity',
+    offsets: '-120|-180',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Asia/Ho_Chi_Minh',
+    untils: '-x56934|2isioa|gj25iu|15ct80|8so00|tmtk0|4azjw0|2cmao0|8285c0|Infinity',
+    offsets: '-426.6667|-426.5|-420|-480|-540',
+    offsetIndices: '0123423232'
+  }, {
+    id: 'Asia/Hong_Kong',
+    untils: '-y0i0s0|j44dk0|5k000|4d4y0|2195i0|7x3w0|bj320|6uao0|bvs00|7x6o0|9d1c0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|ast80|77c40|biqk0|77c40|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
+    offsets: '-456.7|-480|-540|-510',
+    offsetIndices: '0123212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Hovd',
+    untils: '-xmcoz0|11sncb0|2qk2k0|9et80|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|4fio40|9ct00|9d9o0|9ct00|Infinity',
+    offsets: '-366.6|-360|-420|-480',
+    offsetIndices: '012323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Irkutsk',
+    untils: '-q28gn5|5fh175|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-417.0833|-420|-480|-540',
+    offsetIndices: '01232323232323232323232123232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Istanbul',
+    untils: '-ux9xew|2wvx6w|7v980|1tjc40|aunw0|88dg0|9et80|8yas0|a2vw0|tzpg0|79180|awo40|7v980|7p4040|4zjw0|2vs40|f4d80|9vms0|1u5ek0|c5440|69uk0|acas0|8n180|a31g0|8n180|9q2s0|8zzw0|a31g0|8zzw0|a31g0|8n180|5md9g0|o9zw0|a6qs0|75bw0|4iwyw0|7x6o0|7kas0|b5rw0|75hg0|bkl80|77c40|biqk0|7x9g0|a2vw0|8n6s0|4iqc0|2nkw80|38l80|kdes0|8qtc0|8a5c0|9ew00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|902o0|9q000|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7kdk0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7m2o0|b4000|7k800|b5uo0|7x6o0|asw00|7z1c0|ar1c0|7x6o0|bitc0|779c0|8fe80|Infinity',
+    offsets: '-116.9333|-120|-180|-240',
+    offsetIndices: '0121212121212121212121212121212121212121212121223212121212121212121212121212121212121212121212121212121212121212122'
+  }, {
+    id: 'Asia/Jakarta',
+    untils: '-o0bdpc|4lzxc0|4wdzjc|1tu960|1cx860|11jta0|74uc20|Infinity',
+    offsets: '-427.2|-440|-450|-540|-480|-420',
+    offsetIndices: '01232425'
+  }, {
+    id: 'Asia/Jayapura',
+    untils: '-jebm20|66bqe0|a37vy0|Infinity',
+    offsets: '-562.8|-540|-570',
+    offsetIndices: '0121'
+  }, {
+    id: 'Asia/Jerusalem',
+    untils: '-r50eig|bp54yg|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|t9s40|56vs0|35700|9b3w0|9gtg0|8jbw0|7tmw0|a6ig0|biyw0|8a5c0|9d1c0|902o0|7x6o0|e1eg0|4ofw0|dzxo0|4q500|doo40|64iw0|auqo0|7i500|8rfms0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|9zc40|9iik0|9kis0|93p80|9mdg0|8qqk0|apf00|7x3w0|biw40|8zx40|9io40|8n180|9kis0|9vh80|8ulg0|9px80|9mdg0|8n180|9tuw0|9tmk0|8wg40|9gnw0|99es0|8qqk0|9zc40|9tmk0|8wg40|9gnw0|99es0|8qqk0|acas0|9gnw0|99es0|93p80|9mdg0|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|Infinity',
+    offsets: '-140.6667|-120|-180|-240',
+    offsetIndices: '012121212121321212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Kabul',
+    untils: '-d1pkg0|Infinity',
+    offsets: '-240|-270',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Kamchatka',
+    untils: '-olrupo|3z045o|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
+    offsets: '-634.6|-660|-720|-780',
+    offsetIndices: '012323232323232323232321232323232323232323232323232323232323212'
+  }, {
+    id: 'Asia/Karachi',
+    untils: '-wvpb30|im3zt0|1mn180|33xpg0|a63o20|g72qo0|9cyk0|2y85g0|7v980|8hms0|aaak0|Infinity',
+    offsets: '-268.2|-330|-390|-300|-360',
+    offsetIndices: '012133434343'
+  }, {
+    id: 'Asia/Kashgar',
+    untils: '-lx5pjw|Infinity',
+    offsets: '-350.3333|-360',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Kathmandu',
+    untils: '-q3gt4s|yg2lus|Infinity',
+    offsets: '-341.2667|-330|-345',
+    offsetIndices: '012'
+  }, {
+    id: 'Asia/Katmandu',
+    untils: '-q3gt4s|yg2lus|Infinity',
+    offsets: '-341.2667|-330|-345',
+    offsetIndices: '012'
+  }, {
+    id: 'Asia/Khandyga',
+    untils: '-q4cjrp|5hl1jp|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|3fx40|4h6s0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|8ql00|1mlho0|Infinity',
+    offsets: '-542.2167|-480|-540|-600|-660',
+    offsetIndices: '0123232323232323232323212323232323232323232323232343434343434343432'
+  }, {
+    id: 'Asia/Kolkata',
+    untils: '-xehava|innm9a|bmfw0|5lxg0|1mn180|Infinity',
+    offsets: '-321.1667|-330|-390',
+    offsetIndices: '012121'
+  }, {
+    id: 'Asia/Krasnoyarsk',
+    untils: '-q37l72|5gg8j2|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-371.4333|-360|-420|-480',
+    offsetIndices: '01232323232323232323232123232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Kuala_Lumpur',
+    untils: '-xphpwd|eeb94d|4it32o|8n3jc|1v2p60|iy3o60|Infinity',
+    offsets: '-415.4167|-420|-440|-450|-540|-480',
+    offsetIndices: '0123435'
+  }, {
+    id: 'Asia/Kuching',
+    untils: '-mvof3k|3khwxk|1epvy0|4ohqo|e5a9c|4ohqo|e3flc|4ohqo|e3flc|4ohqo|e3flc|4ohqo|e5a9c|4ohqo|e3flc|4ohqo|3ajlc|1v2qk0|Infinity',
+    offsets: '-441.3333|-450|-480|-500|-540',
+    offsetIndices: '0123232323232323242'
+  }, {
+    id: 'Asia/Kuwait',
+    untils: '-bwgbbg|Infinity',
+    offsets: '-186.8667|-180',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Macao',
+    untils: '-y0i2cy|jdvyoy|6onw0|ac580|8fs40|7v980|11luw0|awlc0|7vc00|ac800|bko00|7x6o0|9d1c0|7vc00|asw00|7x6o0|asw00|7x6o0|auqo0|88ao0|asw00|7x6o0|asw00|779c0|bitc0|779c0|bvs00|6uao0|bw1q0|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cvs0|9d6w0|9cvs0|9d6w0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
+    offsets: '-454.1667|-480|-540|-600',
+    offsetIndices: '012323212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Macau',
+    untils: '-y0i2cy|jdvyoy|6onw0|ac580|8fs40|7v980|11luw0|awlc0|7vc00|ac800|bko00|7x6o0|9d1c0|7vc00|asw00|7x6o0|asw00|7x6o0|auqo0|88ao0|asw00|7x6o0|asw00|779c0|bitc0|779c0|bvs00|6uao0|bw1q0|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cvs0|9d6w0|9cvs0|9d6w0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
+    offsets: '-454.1667|-480|-540|-600',
+    offsetIndices: '012323212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Magadan',
+    untils: '-nu1nxc|37a05c|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|s39k0|Infinity',
+    offsets: '-603.2|-600|-660|-720',
+    offsetIndices: '012323232323232323232321232323232323232323232323232323232323232312'
+  }, {
+    id: 'Asia/Makassar',
+    untils: '-q3gzg0|6p5hc0|4u87w0|1w02k0|Infinity',
+    offsets: '-477.6|-480|-540',
+    offsetIndices: '00121'
+  }, {
+    id: 'Asia/Manila',
+    untils: '-hb5y80|4qak0|2qidg0|1b2d80|4xf440|442k0|cdqdg0|9et80|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '010101010'
+  }, {
+    id: 'Asia/Muscat',
+    untils: '-q3gnko|Infinity',
+    offsets: '-221.2|-240',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Nicosia',
+    untils: '-p4bq6g|rvhxyg|9cyk0|b42s0|7nuk0|8yas0|8zzw0|9q2s0|9et80|9b9g0|9cyk0|9q2s0|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|at4c0|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-133.4667|-120|-180',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Novokuznetsk',
+    untils: '-nu36tc|37bu5c|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
+    offsets: '-348.8|-360|-420|-480',
+    offsetIndices: '012323232323232323232321232323232323232323232323232323232323212'
+  }, {
+    id: 'Asia/Novosibirsk',
+    untils: '-q4do0s|5hmbcs|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|2vh00|6hn40|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|wrpg0|Infinity',
+    offsets: '-331.6667|-360|-420|-480',
+    offsetIndices: '0123232323232323232323212323212121212121212121212121212121212121212'
+  }, {
+    id: 'Asia/Omsk',
+    untils: '-q5xmx6|5j6d16|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-293.5|-300|-360|-420',
+    offsetIndices: '01232323232323232323232123232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Oral',
+    untils: '-nu15ic|37a16c|qi2540|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|9d1c0|9d1c0|5reo0|cyo00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-205.4|-180|-300|-360|-240',
+    offsetIndices: '01232323232323232424242424242424242424242424242'
+  }, {
+    id: 'Asia/Phnom_Penh',
+    untils: '-pysda4|Infinity',
+    offsets: '-402.0667|-420',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Pontianak',
+    untils: '-w6piww|cse2o0|4tnu2w|1wkei0|1cx860|11jta0|74uc20|cixam0|Infinity',
+    offsets: '-437.3333|-450|-540|-480|-420',
+    offsetIndices: '001213134'
+  }, {
+    id: 'Asia/Pyongyang',
+    untils: '-w895yc|1yh10c|hk5da0|10ipmo0|1f4qo0|Infinity',
+    offsets: '-503|-510|-540',
+    offsetIndices: '012212'
+  }, {
+    id: 'Asia/Qatar',
+    untils: '-q3gmvk|rctnrk|Infinity',
+    offsets: '-206.1333|-240|-180',
+    offsetIndices: '012'
+  }, {
+    id: 'Asia/Qostanay',
+    untils: '-nu17s4|37a0o4|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-254.4667|-240|-300|-360',
+    offsetIndices: '012323232323232323232123232323232323232323232323'
+  }, {
+    id: 'Asia/Qyzylorda',
+    untils: '-nu184g|37a10g|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|ohhc0|cyo00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|7osl00|Infinity',
+    offsets: '-261.8667|-240|-300|-360',
+    offsetIndices: '01232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Rangoon',
+    untils: '-q3gv5b|bnjp3b|1kh520|Infinity',
+    offsets: '-384.7833|-390|-540',
+    offsetIndices: '0121'
+  }, {
+    id: 'Asia/Riyadh',
+    untils: '-bwgbbg|Infinity',
+    offsets: '-186.8667|-180',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Saigon',
+    untils: '-x56934|2isioa|gj25iu|15ct80|8so00|tmtk0|4azjw0|2cmao0|8285c0|Infinity',
+    offsets: '-426.6667|-426.5|-420|-480|-540',
+    offsetIndices: '0123423232'
+  }, {
+    id: 'Asia/Sakhalin',
+    untils: '-xl87rc|kvnarc|ikvh40|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|iq5g0|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
+    offsets: '-570.8|-540|-660|-720|-600',
+    offsetIndices: '01232323232323232323232423232323232424242424242424242424242424242'
+  }, {
+    id: 'Asia/Samarkand',
+    untils: '-nu18eh|37a1ah|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|Infinity',
+    offsets: '-267.8833|-240|-300|-360',
+    offsetIndices: '01232323232323232323232'
+  }, {
+    id: 'Asia/Seoul',
+    untils: '-w8966g|1yh18g|hkx5a0|1faao0|5cik0|ae5g0|8a2k0|ae5g0|8bx80|c8tg0|6h980|1bj6s0|l3aq0|6j3w0|d2g40|6u7w0|b5xg0|776k0|biw40|776k0|biw40|776k0|biw40|776k0|grs40|dfqxi0|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-507.8667|-510|-540|-600|-570',
+    offsetIndices: '012232323232141414141414123232'
+  }, {
+    id: 'Asia/Shanghai',
+    untils: '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '01010101010101010101010101010'
+  }, {
+    id: 'Asia/Singapore',
+    untils: '-xphpwd|eeb94d|4it32o|8n3jc|1v2p60|iy3o60|Infinity',
+    offsets: '-415.4167|-420|-440|-450|-540|-480',
+    offsetIndices: '0123435'
+  }, {
+    id: 'Asia/Srednekolymsk',
+    untils: '-nu1ogs|37a0os|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-614.8667|-600|-660|-720',
+    offsetIndices: '01232323232323232323232123232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Taipei',
+    untils: '-gtzfk0|45slc0|c51c0|75bw0|a31g0|aaak0|9d440|7v980|awo40|7v980|awo40|7v980|awo40|7v980|7tk40|clmk0|7rpg0|b07w0|7rpg0|b07w0|7rpg0|9et80|9eys0|9et80|9d440|9et80|9d440|9et80|9d440|9et80|cjxg0|69uk0|ci2s0|69uk0|6its40|9et80|9d440|9et80|1yf9g0|4qak0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '01010101010101010101010101010101010101010'
+  }, {
+    id: 'Asia/Tashkent',
+    untils: '-nu18tz|379yxz|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|Infinity',
+    offsets: '-277.1833|-300|-360|-420',
+    offsetIndices: '012323232323232323232321'
+  }, {
+    id: 'Asia/Tbilisi',
+    untils: '-nu14an|h4tjyn|ckinw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|9cvs0|9cyk0|9d440|9cyk0|9d440|ipzw0|9cyk0|9q2s0|tivw0|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|4ofw0|6hn40|7k800|Infinity',
+    offsets: '-179.1833|-180|-240|-300',
+    offsetIndices: '0123232323232323232323212121232323232323232323212'
+  }, {
+    id: 'Asia/Tehran',
+    untils: '-s6m6uw|fnolc0|gm3h4w|777y0|b07w0|3pes0|42c20|9cyk0|9gtg0|9kd80|5ja5g0|7avw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|1av440|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|Infinity',
+    offsets: '-205.7333|-210|-240|-300|-270',
+    offsetIndices: '00123214141414141414141414141414141414141414141414141414141414141414141414141414141414141414141414141'
+  }, {
+    id: 'Asia/Tel_Aviv',
+    untils: '-r50eig|bp54yg|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|t9s40|56vs0|35700|9b3w0|9gtg0|8jbw0|7tmw0|a6ig0|biyw0|8a5c0|9d1c0|902o0|7x6o0|e1eg0|4ofw0|dzxo0|4q500|doo40|64iw0|auqo0|7i500|8rfms0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|9zc40|9iik0|9kis0|93p80|9mdg0|8qqk0|apf00|7x3w0|biw40|8zx40|9io40|8n180|9kis0|9vh80|8ulg0|9px80|9mdg0|8n180|9tuw0|9tmk0|8wg40|9gnw0|99es0|8qqk0|9zc40|9tmk0|8wg40|9gnw0|99es0|8qqk0|acas0|9gnw0|99es0|93p80|9mdg0|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|Infinity',
+    offsets: '-140.6667|-120|-180|-240',
+    offsetIndices: '012121212121321212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Asia/Thimbu',
+    untils: '-bojclo|kxymno|Infinity',
+    offsets: '-358.6|-330|-360',
+    offsetIndices: '012'
+  }, {
+    id: 'Asia/Thimphu',
+    untils: '-bojclo|kxymno|Infinity',
+    offsets: '-358.6|-330|-360',
+    offsetIndices: '012'
+  }, {
+    id: 'Asia/Tokyo',
+    untils: '-bb4900|6uao0|afxc0|8a5c0|c8qo0|6hc00|c8qo0|6hc00|Infinity',
+    offsets: '-540|-600',
+    offsetIndices: '010101010'
+  }, {
+    id: 'Asia/Tomsk',
+    untils: '-q3zbqf|5h7z2f|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|1leo0|97k40|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|tw040|Infinity',
+    offsets: '-339.85|-360|-420|-480',
+    offsetIndices: '0123232323232323232323212323232323232323232323212121212121212121212'
+  }, {
+    id: 'Asia/Ujung_Pandang',
+    untils: '-q3gzg0|6p5hc0|4u87w0|1w02k0|Infinity',
+    offsets: '-477.6|-480|-540',
+    offsetIndices: '00121'
+  }, {
+    id: 'Asia/Ulaanbaatar',
+    untils: '-xmcrsk|11sncck|2qk2k0|9et80|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|4fio40|9ct00|9d9o0|9ct00|Infinity',
+    offsets: '-427.5333|-420|-480|-540',
+    offsetIndices: '012323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Ulan_Bator',
+    untils: '-xmcrsk|11sncck|2qk2k0|9et80|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|4fio40|9ct00|9d9o0|9ct00|Infinity',
+    offsets: '-427.5333|-420|-480|-540',
+    offsetIndices: '012323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Urumqi',
+    untils: '-lx5pjw|Infinity',
+    offsets: '-350.3333|-360',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Ust-Nera',
+    untils: '-q4cl6u|5hl2yu|qi27w0|9eno0|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|8ql00|1mlho0|Infinity',
+    offsets: '-572.9|-480|-540|-720|-660|-600',
+    offsetIndices: '012343434343434343434345434343434343434343434343434343434343434345'
+  }, {
+    id: 'Asia/Vientiane',
+    untils: '-pysda4|Infinity',
+    offsets: '-402.0667|-420',
+    offsetIndices: '01'
+  }, {
+    id: 'Asia/Vladivostok',
+    untils: '-oligf7|3yqvf7|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-527.5167|-540|-600|-660',
+    offsetIndices: '01232323232323232323232123232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Yakutsk',
+    untils: '-q4cioy|5hl0gy|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-518.9667|-480|-540|-600',
+    offsetIndices: '01232323232323232323232123232323232323232323232323232323232323232'
+  }, {
+    id: 'Asia/Yangon',
+    untils: '-q3gv5b|bnjp3b|1kh520|Infinity',
+    offsets: '-384.7833|-390|-540',
+    offsetIndices: '0121'
+  }, {
+    id: 'Asia/Yekaterinburg',
+    untils: '-rx5hw9|1kybx4|5pfyv5|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-242.55|-225.0833|-240|-300|-360',
+    offsetIndices: '012343434343434343434343234343434343434343434343434343434343434343'
+  }, {
+    id: 'Asia/Yerevan',
+    untils: '-nu148o|h4tjwo|ckinw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|11t180|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|Infinity',
+    offsets: '-178|-180|-240|-300',
+    offsetIndices: '0123232323232323232323212121212323232323232323232323232323232'
+  }, {
+    id: 'Atlantic/Azores',
+    untils: '-u9rbs0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5qbjo0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9cyk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '114.5333|120|60|0',
+    offsetIndices: '01212121212121212121212121212121212121212121232123212321232121212121212121212121212121212121212121232323232323232323232323232323233323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Atlantic/Bermuda',
+    untils: '-kvj2fu|n4pr3u|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '259.3|240|180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Atlantic/Canary',
+    untils: '-oytbtc|ctvupc|hhq7s0|905g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '61.6|60|0|-60',
+    offsetIndices: '01232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Atlantic/Cape_Verde',
+    untils: '-u9rbs0|g06lc0|1mn180|fpqwc0|Infinity',
+    offsets: '94.0667|120|60',
+    offsetIndices: '01212'
+  }, {
+    id: 'Atlantic/Faeroe',
+    untils: '-wcehew|127keuw|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '27.0667|0|-60',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Atlantic/Faroe',
+    untils: '-wcehew|127keuw|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '27.0667|0|-60',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Atlantic/Jan_Mayen',
+    untils: '-rzayo0|6qfs0|cgcqo0|15tsc0|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|70q5c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|b5uo0|7k800|7law00|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Atlantic/Madeira',
+    untils: '-u9rek0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5qbjo0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '67.6|60|0|-60',
+    offsetIndices: '01212121212121212121212121212121212121212121232123212321232121212121212121212121212121212121212121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Atlantic/Reykjavik',
+    untils: '-wcwx9c|4rpd9c|ci2s0|69uk0|du840|4xp80|du840|p7bw0|4w040|9bdzw0|9d6w0|64g40|cyl80|64dc0|clpc0|6hc00|bvs00|6uao0|bvs00|6uao0|bvs00|6uao0|c8qo0|6hc00|c8qo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|Infinity',
+    offsets: '88|60|0',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Atlantic/South_Georgia',
+    untils: 'Infinity',
+    offsets: '120',
+    offsetIndices: '0'
+  }, {
+    id: 'Atlantic/St_Helena',
+    untils: '-u9rgl4|Infinity',
+    offsets: '16.1333|0',
+    offsetIndices: '01'
+  }, {
+    id: 'Atlantic/Stanley',
+    untils: '-u63pac|dbvxqc|8zzw0|9q2s0|8zzw0|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|4xp80|l1pus0|7k580|b5rw0|77c40|biqk0|id6s0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|biqk0|77c40|biqk0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|biqk0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5xg0|77c40|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|77c40|biqk0|77c40|biqk0|77c40|Infinity',
+    offsets: '231.4|240|180|120',
+    offsetIndices: '012121212121212323212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Australia/ACT',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Adelaide',
+    untils: '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|7k800|b5uo0|6uao0|c8qo0|779c0|bitc0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-570|-630',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Brisbane',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|97zuo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '01010101010101010'
+  }, {
+    id: 'Australia/Broken_Hill',
+    untils: '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-570|-630',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Canberra',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Currie',
+    untils: '-rsj4w0|8zzw0|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Darwin',
+    untils: '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|Infinity',
+    offsets: '-570|-630',
+    offsetIndices: '010101010'
+  }, {
+    id: 'Australia/Eucla',
+    untils: '-rnstlc|49s2c|cxfms0|4h180|9d440|9cyk0|ghf1g0|6hc00|4ir9c0|6hc00|40r400|5eg00|7p9hc0|5reo0|b5uo0|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-525|-585',
+    offsetIndices: '0101010101010101010'
+  }, {
+    id: 'Australia/Hobart',
+    untils: '-rsj4w0|8zzw0|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|c9tms0|9d1c0|asw00|6uao0|bvs00|6uao0|bvs00|779c0|bvs00|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/LHI',
+    untils: '5tp880|c8uu0|6u7w0|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|777y0|b5w20|7k6m0|biuq0|7k6m0|biuq0|777y0|biuq0|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|7x820|asum0|b5w20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|b5w20|7x5a0|asxe0|7k6m0|b5w20|8a3y0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9pym0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|Infinity',
+    offsets: '-600|-630|-690|-660',
+    offsetIndices: '0121212121313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313'
+  }, {
+    id: 'Australia/Lindeman',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|97zuo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '010101010101010101010'
+  }, {
+    id: 'Australia/Lord_Howe',
+    untils: '5tp880|c8uu0|6u7w0|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|777y0|b5w20|7k6m0|biuq0|7k6m0|biuq0|777y0|biuq0|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|7x820|asum0|b5w20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|b5w20|7x5a0|asxe0|7k6m0|b5w20|8a3y0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9pym0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|Infinity',
+    offsets: '-600|-630|-690|-660',
+    offsetIndices: '0121212121313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313'
+  }, {
+    id: 'Australia/Melbourne',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|b5uo0|7x6o0|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/North',
+    untils: '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|Infinity',
+    offsets: '-570|-630',
+    offsetIndices: '010101010'
+  }, {
+    id: 'Australia/NSW',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Perth',
+    untils: '-rnsric|49s2c|cxfms0|4h180|9d440|9cyk0|ghf1g0|6hc00|4ir9c0|6hc00|40r400|5eg00|7p9hc0|5reo0|b5uo0|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '0101010101010101010'
+  }, {
+    id: 'Australia/Queensland',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|97zuo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '01010101010101010'
+  }, {
+    id: 'Australia/South',
+    untils: '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|7k800|b5uo0|6uao0|c8qo0|779c0|bitc0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-570|-630',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Sydney',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Tasmania',
+    untils: '-rsj4w0|8zzw0|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|c9tms0|9d1c0|asw00|6uao0|bvs00|6uao0|bvs00|779c0|bvs00|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/Victoria',
+    untils: '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|b5uo0|7x6o0|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-600|-660',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Australia/West',
+    untils: '-rnsric|49s2c|cxfms0|4h180|9d440|9cyk0|ghf1g0|6hc00|4ir9c0|6hc00|40r400|5eg00|7p9hc0|5reo0|b5uo0|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '0101010101010101010'
+  }, {
+    id: 'Australia/Yancowinna',
+    untils: '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-570|-630',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+  }, {
+    id: 'Brazil/Acre',
+    untils: '-t85fg0|99kak0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|2t2t80|Infinity',
+    offsets: '271.2|300|240',
+    offsetIndices: '01212121212121212121212121212121'
+  }, {
+    id: 'Brazil/DeNoronha',
+    untils: '-t85lzw|99k8rw|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|cvw0|iq5g0|6h980|Infinity',
+    offsets: '129.6667|120|60',
+    offsetIndices: '0121212121212121212121212121212121212121'
+  }, {
+    id: 'Brazil/East',
+    untils: '-t85jd8|99k8x8|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5k02s0|6onw0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|cls40|64ak0|dfes0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
+    offsets: '186.4667|180|120',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Brazil/West',
+    untils: '-t85gvw|99k97w|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|2yy2s0|6h980|Infinity',
+    offsets: '240.0667|240|180',
+    offsetIndices: '01212121212121212121212121212121'
+  }, {
+    id: 'Canada/Atlantic',
+    untils: '-z94k80|777go0|9et80|st9o0|a2vw0|ssyk0|5rbw0|cv1g0|69uk0|c6ys0|6kyk0|ci2s0|67zw0|ci2s0|6w2k0|bu040|7lzw0|bu040|66580|bu040|7lzw0|bu040|64ak0|cls40|5v180|cv1g0|6j3w0|c6ys0|79180|b42s0|7lzw0|b42s0|7yyk0|bu040|64ak0|dbpg0|66580|cls40|5ed80|bu040|7lzw0|b42s0|7lzw0|cjxg0|66580|bh1g0|7lzw0|b42s0|7lzw0|6uj00|1tzdw0|2dnc0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|1cm2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '254.4|240|180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Canada/Central',
+    untils: '-s0s7c0|7k580|tj700|a2vw0|9ok840|6u7w0|2a5hg0|1tz8c0|2dsw0|biw40|7x3w0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b7s40|7tek0|autg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|7x3w0|1cm2s0|7k580|1cm2s0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Canada/Eastern',
+    untils: '-qzoxw0|a2vw0|7yx60|aqzy0|9q8c0|7jzo0|bw0c0|6bp80|cedg0|6h980|c8tg0|6h980|bvus0|776k0|biw40|776k0|biw40|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|xjeo0|1tzb40|2dq40|asys0|7x3w0|ast80|7x3w0|asys0|7x3w0|asys0|b5rw0|7xf00|ast80|7x9g0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240',
+    offsetIndices: '01010101010101010101010101010101010101010101011101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Canada/Mountain',
+    untils: '-x1yazk|629ink|a2vw0|8n6s0|29ek0|h6lg0|9px80|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|9l0g40|1tz5k0|2dvo0|tj1g0|7x3w0|ctzk40|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '453.8667|420|360',
+    offsetIndices: '0121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Canada/Newfoundland',
+    untils: '-ris3ck|8bx80|ar440|a2vw0|9tjs0|53980|dkys0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|7tmw0|1wfuk|8zzw0|a3480|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|7k580|b5xg0|7k580|b5xg0|1pb260|2dly0|biw40|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|7k580|ag040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a2lo|afuk0|8a840|asqg0|7xc80|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8tec|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '210.8667|150.8667|210|150|90',
+    offsetIndices: '01010101010101010101010101010101010102323232323232323323232323232323232323232323232323232323232323232323232323232323232323232323232323232324232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Canada/Pacific',
+    untils: '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '0101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Canada/Saskatchewan',
+    untils: '-xkq9yc|6l1hmc|a2vw0|60enw0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|1b6840|9cyk0|9d440|8zzw0|9q2s0|9cyk0|9q2s0|9cyk0|9d440|9cyk0|66gc0|1tz5k0|2dvo0|a31g0|9cyk0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|tj1g0|9cyk0|9d440|Infinity',
+    offsets: '418.6|420|360',
+    offsetIndices: '012121212121212121212121221212121212121212121212121212'
+  }, {
+    id: 'Canada/Yukon',
+    untils: '-qzoms0|a2vw0|asys0|882c0|bmiwc0|1tz000|2e180|a7n3w0|9q000|tiyo0|6qp440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
+    offsets: '540|480|420',
+    offsetIndices: '01010110201212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'CET',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|8l9c0|ggp1c0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Chile/Continental',
+    untils: '-vauawq|3dlssq|157b7a|f4e0q|49hzba|aye0q|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|534ik0|351g0|229zw0|2gt80|awo40|2mg00|b73400|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
+    offsets: '282.7667|300|240|180',
+    offsetIndices: '010202121212121212321232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'Chile/EasterIsland',
+    untils: '-jhfaew|ivmeuw|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|iq2o0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
+    offsets: '437.4667|420|360|300',
+    offsetIndices: '012121212121212121212121212123232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'CST6CDT',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Cuba',
+    untils: '-n7762o|1icfyo|69uk0|62s040|4ofw0|e1ms0|51ek0|e1ms0|4ofw0|1fhs40|4ofw0|e1ms0|4ofw0|9s9k40|67zw0|cedg0|6h980|9o840|7yyk0|b5xg0|7k580|bvus0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|8a2k0|ag040|8bx80|ae5g0|8drw0|acas0|9cyk0|9d440|9px80|905g0|9px80|9q2s0|7x3w0|8a840|ast80|7x9g0|ast80|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|8a2k0|ag040|8a2k0|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|905g0|a2vw0|905g0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|8n400|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|7x6o0|1cm000|6uao0|bvs00|779c0|bitc0|6uao0|bvs00|779c0|bvs00|779c0|c8qo0|779c0|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|Infinity',
+    offsets: '329.6|300|240',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'EET',
+    untils: '3s9ms0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-120|-180',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Egypt',
+    untils: '-fdls80|40d80|a31g0|7x3w0|a4w40|aqyk0|80ys0|b07w0|7tk40|b07w0|8jhg0|a8fw0|60go40|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|f9x80|3i040|eluk0|462s0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|b5rw0|7m5g0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|aqvs0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7k580|b5xg0|6u7w0|bvus0|6h980|c8tg0|64ak0|cyqs0|5anw0|1jms0|12t80|1w22s0|25p80|1sw40|2vmk0|Infinity',
+    offsets: '-120|-180',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Eire',
+    untils: '-rzcmlr|6uao0|9pytr|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|3g8800|8a5c0|bvs00|8n400|a2yo0|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '25.35|-34.65|0|-60',
+    offsetIndices: '01232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'EST',
+    untils: 'Infinity',
+    offsets: '300',
+    offsetIndices: '0'
+  }, {
+    id: 'EST5EDT',
+    untils: '-r0ev80|ast80|7x9g0|ast80|bmtus0|1tzb40|2dq40|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Etc/GMT-0',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-1',
+    untils: 'Infinity',
+    offsets: '-60',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-10',
+    untils: 'Infinity',
+    offsets: '-600',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-11',
+    untils: 'Infinity',
+    offsets: '-660',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-12',
+    untils: 'Infinity',
+    offsets: '-720',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-13',
+    untils: 'Infinity',
+    offsets: '-780',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-14',
+    untils: 'Infinity',
+    offsets: '-840',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-2',
+    untils: 'Infinity',
+    offsets: '-120',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-3',
+    untils: 'Infinity',
+    offsets: '-180',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-4',
+    untils: 'Infinity',
+    offsets: '-240',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-5',
+    untils: 'Infinity',
+    offsets: '-300',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-6',
+    untils: 'Infinity',
+    offsets: '-360',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-7',
+    untils: 'Infinity',
+    offsets: '-420',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-8',
+    untils: 'Infinity',
+    offsets: '-480',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT-9',
+    untils: 'Infinity',
+    offsets: '-540',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+0',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+1',
+    untils: 'Infinity',
+    offsets: '60',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+10',
+    untils: 'Infinity',
+    offsets: '600',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+11',
+    untils: 'Infinity',
+    offsets: '660',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+12',
+    untils: 'Infinity',
+    offsets: '720',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+2',
+    untils: 'Infinity',
+    offsets: '120',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+3',
+    untils: 'Infinity',
+    offsets: '180',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+4',
+    untils: 'Infinity',
+    offsets: '240',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+5',
+    untils: 'Infinity',
+    offsets: '300',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+6',
+    untils: 'Infinity',
+    offsets: '360',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+7',
+    untils: 'Infinity',
+    offsets: '420',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+8',
+    untils: 'Infinity',
+    offsets: '480',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT+9',
+    untils: 'Infinity',
+    offsets: '540',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/GMT0',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/Greenwich',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/UCT',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/Universal',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/UTC',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Etc/Zulu',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Europe/Amsterdam',
+    untils: '-s0dvkk|7v980|a51o0|7x6o0|a2yo0|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9b6o0|a2yo0|c51c0|6l1c0|902o0|9q000|ci000|682o0|bgyo0|79400|bitc0|779c0|bmio0|7gio0|bbeo0|7eo00|bd9c0|7ctc0|bf400|7ayo0|bvs00|6uao0|bko00|7idc0|b9k00|7gio0|bbeo0|7eo00|bf400|7ayo0|btxc0|21uc0|4uaz8|bitc0|779c0|bko00|7idc0|bd3s0|1aarpc|7k800|9q000|9d1c0|9d1c0|9d1c0|8l9c0|ggp1c0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-19.5333|-79.5333|-80|-20|-120|-60',
+    offsetIndices: '010101010101010101010101010101010101010101012323234545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545'
+  }, {
+    id: 'Europe/Andorra',
+    untils: '-c4xmo0|k3ctg0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Astrakhan',
+    untils: '-nu2zkc|37bv8c|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
+    offsets: '-192.2|-180|-240|-300',
+    offsetIndices: '012323232323232323212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Europe/Athens',
+    untils: '-rvv0cg|8bjasg|2vmk0|4hiw40|16ik0|scog0|7lx40|9o2k0|9eys0|4atzw0|6djw0|bplus0|bq800|71uw0|9d1c0|902o0|91xc0|9o5c0|905g0|9qgo0|9akg0|9iik0|99980|9dcg0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-94.8667|-120|-180|-60',
+    offsetIndices: '012121313121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Belfast',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Belgrade',
+    untils: '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Berlin',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|2o7w0|6bs00|2txg0|7k800|91xc0|9b9g0|1sqk0|2inw0|51k40|a2yo0|8n400|9q000|902o0|fx91c0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120|-180',
+    offsetIndices: '01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Bratislava',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|b5uo0|7vc00|2vs40|4bk00|2vmk0|8n400|a2yo0|8n400|9o5c0|91xc0|fe6000|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120|0',
+    offsetIndices: '01010101010101010201010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Brussels',
+    untils: '-ss5uo0|rrx80|7vc00|a4yw0|7x6o0|asw00|7x6o0|2wh40|5omo0|b5uo0|6uao0|cyo00|7ayo0|bko00|7rmo0|a2yo0|a2yo0|8n400|902o0|9q000|9d1c0|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|90b00|a2yo0|8n400|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|4deo0|1a36k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8l9c0|clpc0|79400|fwu800|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0121212101010101010101010101010101010101010101010101212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Bucharest',
+    untils: '-k29zi0|fj8m0|6w5c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|kp0dc0|6h980|9q000|905g0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9cvs0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9cyk0|9d440|9cyk0|9q2s0|ast80|7xhs0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-104.4|-120|-180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Budapest',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|a31g0|8n180|autg0|bgvw0|b5jeg0|th9k0|7k800|9q000|9d1c0|9d1c0|awd00|9ew00|7q0c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|a4tc0|9q000|1va2g0|6u7w0|bxpg0|6u7w0|cjxg0|64ak0|cluw0|64g40|br3ek0|905g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Busingen',
+    untils: '-eyh6o0|7x6o0|asw00|7x6o0|k2zus0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Chisinau',
+    untils: '-r2p1bo|70f1to|fj8m0|6w5c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|geqo0|ha580|oc8g0|7k800|9q000|9d1c0|7cl00|j3pbw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|25p80|7kdk0|9d1c0|9d1c0|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|ast80|7xf00|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-115|-104.4|-120|-180|-60|-240',
+    offsetIndices: '012323232323232323232424235353535353535353535323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Europe/Copenhagen',
+    untils: '-rzo2w0|75bw0|cbs2w0|1aco80|7k800|9q000|9d1c0|9d1c0|9d1c0|6y000|dbmo0|6bs00|clpc0|51hc0|e1k00|4oio0|giutc0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Dublin',
+    untils: '-rzcmlr|6uao0|9pytr|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|3g8800|8a5c0|bvs00|8n400|a2yo0|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '25.35|-34.65|0|-60',
+    offsetIndices: '01232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Europe/Gibraltar',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|d0tp80|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '010101010101010101010101010101010101010101010101012121212121010121010101010101010101012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Guernsey',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Helsinki',
+    untils: '-peghyd|ax3tqd|9gqo0|k31s80|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-99.8167|-120|-180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Isle_of_Man',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Istanbul',
+    untils: '-ux9xew|2wvx6w|7v980|1tjc40|aunw0|88dg0|9et80|8yas0|a2vw0|tzpg0|79180|awo40|7v980|7p4040|4zjw0|2vs40|f4d80|9vms0|1u5ek0|c5440|69uk0|acas0|8n180|a31g0|8n180|9q2s0|8zzw0|a31g0|8zzw0|a31g0|8n180|5md9g0|o9zw0|a6qs0|75bw0|4iwyw0|7x6o0|7kas0|b5rw0|75hg0|bkl80|77c40|biqk0|7x9g0|a2vw0|8n6s0|4iqc0|2nkw80|38l80|kdes0|8qtc0|8a5c0|9ew00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|902o0|9q000|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7kdk0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7m2o0|b4000|7k800|b5uo0|7x6o0|asw00|7z1c0|ar1c0|7x6o0|bitc0|779c0|8fe80|Infinity',
+    offsets: '-116.9333|-120|-180|-240',
+    offsetIndices: '0121212121212121212121212121212121212121212121223212121212121212121212121212121212121212121212121212121212121212122'
+  }, {
+    id: 'Europe/Jersey',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Kaliningrad',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|el00|z6o0|9kd80|82tg0|i9avw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-60|-120|-180|-240',
+    offsetIndices: '01010101010101121232323232323232322121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Kiev',
+    untils: '-nu11ng|37a03g|5vd6k0|kzv40|7k800|9q000|1oyg0|jipzs0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|51ek0|neqw0|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9dcg0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-122.0667|-120|-180|-60|-240',
+    offsetIndices: '0121313242424242424242424242121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Kirov',
+    untils: '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-198.8|-180|-240|-300',
+    offsetIndices: '01232323232323232321212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Lisbon',
+    untils: '-u9rhc0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5gyl40|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '36.75|0|-60|-120',
+    offsetIndices: '012121212121212121212121212121212121212121212321232123212321212121212121212121212121212121212121212121212121212121212121212121212122323232212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Ljubljana',
+    untils: '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/London',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Luxembourg',
+    untils: '-y89550|68l290|75hg0|ast80|796s0|at1k0|7x6o0|3lh40|4zmo0|b6300|6u2c0|cytk0|7at40|bktk0|7rh40|a31g0|a2vw0|8n9k0|8zx40|9q2s0|9et80|9b9g0|a2vw0|8n6s0|9px80|905g0|a2vw0|905g0|a2vw0|8ncc0|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|42ao0|1aeak0|7k800|9q000|9d1c0|8n400|a2yo0|8l9c0|clpc0|79400|fwu800|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-24.6|-60|-120|0',
+    offsetIndices: '0121212131313131313131313131313131313131313131313131212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Madrid',
+    untils: '-qzlus0|8yas0|9cyk0|9eys0|2d2vw0|8sqs0|ssyk0|8n6s0|9px80|905g0|a2yo0|902o0|a2vw0|8n6s0|40lh80|5k2s0|9cyk0|1frw0|7z1c0|j1c80|8a2k0|13yt80|685g0|brzw0|8n6s0|a2vw0|8n6s0|a2vw0|8n6s0|a2vw0|8n6s0|1clx80|7x9g0|cswik0|905g0|9px80|905g0|8zzw0|9d440|9px80|905g0|9q5k0|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '010101010101010101210121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Malta',
+    untils: '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9b6o0|8n400|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|9b6o0|9d1c0|ahs00|7m2o0|b45k0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|a4w40|8y580|9q2s0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Mariehamn',
+    untils: '-peghyd|ax3tqd|9gqo0|k31s80|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-99.8167|-120|-180',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Minsk',
+    untils: '-nu113c|379zjc|5r1mk0|pbf40|7k800|9q000|9d1c0|4oac0|j6dmk0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|sg2o0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|Infinity',
+    offsets: '-110|-120|-180|-60|-240',
+    offsetIndices: '01213131242424242424242424221212121212121212121212121212121212121212'
+  }, {
+    id: 'Europe/Monaco',
+    untils: '-uozn3l|2qx1nl|5luo0|8y800|a4tc0|7vc00|auqo0|7idc0|b7pc0|6sg00|cyo00|7ayo0|bko00|7rmo0|a2yo0|bvs00|6uao0|902o0|9q000|9d1c0|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51po0|mdbo0|7x3w0|7x9g0|c8w80|7k800|9q000|9d1c0|9nzs0|922w0|8l9c0|fxlx80|9cyk0|9q5k0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-9.35|0|-60|-120',
+    offsetIndices: '01212121212121212121212121212121212121212121212121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Europe/Moscow',
+    untils: '-rx5dmh|ipzua|97hc0|7yyk0|5i840|d9p80|1jwk7|2cvk0|s8o00|1qvw0|8fpc0|1jms0|is040|412as0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d440|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-150.2833|-151.3167|-211.3167|-271.3167|-240|-180|-300|-120',
+    offsetIndices: '012132345464575454545454545454545455754545454545454545454545454545454545454545'
+  }, {
+    id: 'Europe/Nicosia',
+    untils: '-p4bq6g|rvhxyg|9cyk0|b42s0|7nuk0|8yas0|8zzw0|9q2s0|9et80|9b9g0|9cyk0|9q2s0|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|at4c0|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-133.4667|-120|-180',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Oslo',
+    untils: '-rzayo0|6qfs0|cgcqo0|15tsc0|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|70q5c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|b5uo0|7k800|7law00|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Paris',
+    untils: '-uozn1x|2qx1lx|5luo0|8y800|a4tc0|7vc00|auqo0|7idc0|b7pc0|6sg00|cyo00|7ayo0|bko00|7rmo0|a2yo0|bvs00|6uao0|902o0|9q000|9d1c0|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51po0|5p8w0|18rcc0|7k800|9q000|9d1c0|7efo0|29k40|922w0|8l9c0|fxlx80|9cyk0|9q5k0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-9.35|0|-60|-120',
+    offsetIndices: '0121212121212121212121212121212121212121212121212123232332323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Europe/Podgorica',
+    untils: '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Prague',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|b5uo0|7vc00|2vs40|4bk00|2vmk0|8n400|a2yo0|8n400|9o5c0|91xc0|fe6000|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120|0',
+    offsetIndices: '01010101010101010201010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Riga',
+    untils: '-qznlky|7x6o0|a4tc0|2mg00|3myns0|7fhlky|gz180|p5v40|7k800|9q000|9d1c0|9d1c0|k7s0|j14ns0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d440|asw00|7x6o0|asw00|7x6o0|b5uo0|qaao0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-96.5667|-156.5667|-120|-180|-60|-240',
+    offsetIndices: '010102324242435353535353535353323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Europe/Rome',
+    untils: '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|clpc0|64dc0|c8qo0|6hc00|clpc0|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|c8qo0|6hc00|9q5k0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Samara',
+    untils: '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|jt1g0|89zs0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
+    offsets: '-200.3333|-180|-240|-300',
+    offsetIndices: '0123232323232323232121232323232323232323232323232323232323212'
+  }, {
+    id: 'Europe/San_Marino',
+    untils: '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|clpc0|64dc0|c8qo0|6hc00|clpc0|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|c8qo0|6hc00|9q5k0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Sarajevo',
+    untils: '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Saratov',
+    untils: '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|13m040|Infinity',
+    offsets: '-184.3|-180|-240|-300',
+    offsetIndices: '012323232323232321212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Europe/Simferopol',
+    untils: '-nu12ao|37a0qo|5xiyk0|iu340|7k800|9q000|9d1c0|iac0|jajmk0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|eeio0|wrjw0|9cyk0|9d440|9cyk0|9d440|1sqk0|7k580|9d440|9cyk0|9q2s0|at4c0|7x9g0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x3w0|asqg0|Infinity',
+    offsets: '-136|-120|-180|-60|-240',
+    offsetIndices: '012131312424242424242424242121212424242212121212121212121212121212121212142'
+  }, {
+    id: 'Europe/Skopje',
+    untils: '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Sofia',
+    untils: '-e6dzw0|7k800|9q000|9d1c0|9d1c0|9d440|hqq240|9eys0|9o2k0|92040|9o2k0|90880|9pug0|90b00|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|ast80|7xhs0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-120|-60|-180',
+    offsetIndices: '01010102020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020'
+  }, {
+    id: 'Europe/Stockholm',
+    untils: '-rzo2w0|75hg0|x5bew0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Tallinn',
+    untils: '-r3exx0|3re10|7x6o0|et6g0|ygov0|a1zgd0|ktx80|l94g0|7k800|9q000|9d1c0|8uac0|j27mk0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asys0|7x6o0|b5uo0|19dc00|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-99|-60|-120|-180|-240',
+    offsetIndices: '012102321212343434343434343433232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Europe/Tirane',
+    untils: '-t85vo8|dt2gw8|18pew0|7k800|m800|g7ot40|7rjw0|autg0|7x3w0|ayis0|7x3w0|b5xg0|7k580|b42s0|7lzw0|b42s0|7lzw0|b42s0|7x3w0|ahus0|7x3w0|b5xg0|7x3w0|a4w40|8jbw0|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-79.3333|-60|-120',
+    offsetIndices: '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Tiraspol',
+    untils: '-r2p1bo|70f1to|fj8m0|6w5c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|geqo0|ha580|oc8g0|7k800|9q000|9d1c0|7cl00|j3pbw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|25p80|7kdk0|9d1c0|9d1c0|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|ast80|7xf00|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-115|-104.4|-120|-180|-60|-240',
+    offsetIndices: '012323232323232323232424235353535353535353535323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'Europe/Ulyanovsk',
+    untils: '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
+    offsets: '-193.6|-180|-240|-300|-120',
+    offsetIndices: '01232323232323232321214121212121212121212121212121212121212121212'
+  }, {
+    id: 'Europe/Uzhgorod',
+    untils: '-fizzw0|1cm000|7k800|9q000|9d1c0|al900|cnms0|int140|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|eeio0|e1sc0|iprk0|9cyk0|9d440|9cyk0|9d440|9cyk0|9dcg0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120|-180|-240',
+    offsetIndices: '010101023232323232323232320121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Vaduz',
+    untils: '-eyh6o0|7x6o0|asw00|7x6o0|k2zus0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Vatican',
+    untils: '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|clpc0|64dc0|c8qo0|6hc00|clpc0|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|c8qo0|6hc00|9q5k0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Vienna',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|t6000|8a5c0|a7a800|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|iio0|ivmo0|91xc0|9b6o0|9d1c0|a2yo0|8n400|gfyyg0|8zzw0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Vilnius',
+    untils: '-rns980|1g224o|e75nc|4kqk0|acbs40|gpp40|pits0|7k800|9q000|9d1c0|65zo0|j4vx80|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x9g0|asw00|7x6o0|b5uo0|1s3eo0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-84|-95.6|-60|-120|-180|-240',
+    offsetIndices: '012324323234545454545454545443434343434343434332334343434343434343434343434343434343434343434343434343434343434343434343'
+  }, {
+    id: 'Europe/Volgograd',
+    untils: '-q3cw84|5glrw4|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|239c40|Infinity',
+    offsets: '-177.6667|-180|-240|-300',
+    offsetIndices: '012323232323232321212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Europe/Warsaw',
+    untils: '-se9yk0|dvyc0|7ves0|a4yw0|7x6o0|asw00|7x6o0|aunw0|7x6o0|1evbs0|9fcwc0|18cao0|7k800|9q000|9d1c0|9gnw0|an980|9kd80|8fs40|922w0|ar1c0|7x6o0|a2yo0|8n400|9q000|902o0|4013w0|64dc0|9d1c0|9d1c0|clpc0|6hc00|9d1c0|9d1c0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|clpc0|64dc0|6j4tc0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-84|-60|-120|-180',
+    offsetIndices: '012121223212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Zagreb',
+    untils: '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Europe/Zaporozhye',
+    untils: '-nu12hc|37a0xc|5u1180|mc0g0|7k800|9q000|12qg0|jjc7s0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9cvs0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9dcg0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-140|-120|-180|-60|-240',
+    offsetIndices: '01213132424242424242424242422121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Europe/Zurich',
+    untils: '-eyh6o0|7x6o0|asw00|7x6o0|k2zus0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'GB-Eire',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'GB',
+    untils: '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60|-120',
+    offsetIndices: '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'GMT-0',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'GMT',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'GMT+0',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'GMT0',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Greenwich',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Hongkong',
+    untils: '-y0i0s0|j44dk0|5k000|4d4y0|2195i0|7x3w0|bj320|6uao0|bvs00|7x6o0|9d1c0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|ast80|77c40|biqk0|77c40|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
+    offsets: '-456.7|-480|-540|-510',
+    offsetIndices: '0123212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'HST',
+    untils: 'Infinity',
+    offsets: '600',
+    offsetIndices: '0'
+  }, {
+    id: 'Iceland',
+    untils: '-wcwx9c|4rpd9c|ci2s0|69uk0|du840|4xp80|du840|p7bw0|4w040|9bdzw0|9d6w0|64g40|cyl80|64dc0|clpc0|6hc00|bvs00|6uao0|bvs00|6uao0|bvs00|6uao0|c8qo0|6hc00|c8qo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|Infinity',
+    offsets: '88|60|0',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Indian/Antananarivo',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Indian/Chagos',
+    untils: '-wvpc2s|1ag64us|Infinity',
+    offsets: '-289.6667|-300|-360',
+    offsetIndices: '012'
+  }, {
+    id: 'Indian/Christmas',
+    untils: 'Infinity',
+    offsets: '-420',
+    offsetIndices: '0'
+  }, {
+    id: 'Indian/Cocos',
+    untils: 'Infinity',
+    offsets: '-390',
+    offsetIndices: '0'
+  }, {
+    id: 'Indian/Comoro',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Indian/Kerguelen',
+    untils: '-afrs00|Infinity',
+    offsets: '0|-300',
+    offsetIndices: '01'
+  }, {
+    id: 'Indian/Mahe',
+    untils: '-x6pjlo|Infinity',
+    offsets: '-221.8|-240',
+    offsetIndices: '01'
+  }, {
+    id: 'Indian/Maldives',
+    untils: '-57x6y0|Infinity',
+    offsets: '-294|-300',
+    offsetIndices: '01'
+  }, {
+    id: 'Indian/Mauritius',
+    untils: '-wvp9bc|13jnu7c|8bx80|dd0wc0|7x3w0|Infinity',
+    offsets: '-230|-240|-300',
+    offsetIndices: '012121'
+  }, {
+    id: 'Indian/Mayotte',
+    untils: '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
+    offsets: '-147.2667|-180|-150|-165',
+    offsetIndices: '01231'
+  }, {
+    id: 'Indian/Reunion',
+    untils: '-uks29s|Infinity',
+    offsets: '-221.8667|-240',
+    offsetIndices: '01'
+  }, {
+    id: 'Iran',
+    untils: '-s6m6uw|fnolc0|gm3h4w|777y0|b07w0|3pes0|42c20|9cyk0|9gtg0|9kd80|5ja5g0|7avw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|1av440|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|Infinity',
+    offsets: '-205.7333|-210|-240|-300|-270',
+    offsetIndices: '00123214141414141414141414141414141414141414141414141414141414141414141414141414141414141414141414141'
+  }, {
+    id: 'Israel',
+    untils: '-r50eig|bp54yg|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|t9s40|56vs0|35700|9b3w0|9gtg0|8jbw0|7tmw0|a6ig0|biyw0|8a5c0|9d1c0|902o0|7x6o0|e1eg0|4ofw0|dzxo0|4q500|doo40|64iw0|auqo0|7i500|8rfms0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|9zc40|9iik0|9kis0|93p80|9mdg0|8qqk0|apf00|7x3w0|biw40|8zx40|9io40|8n180|9kis0|9vh80|8ulg0|9px80|9mdg0|8n180|9tuw0|9tmk0|8wg40|9gnw0|99es0|8qqk0|9zc40|9tmk0|8wg40|9gnw0|99es0|8qqk0|acas0|9gnw0|99es0|93p80|9mdg0|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|Infinity',
+    offsets: '-140.6667|-120|-180|-240',
+    offsetIndices: '012121212121321212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Jamaica',
+    untils: '-u85og2|wbl182|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|Infinity',
+    offsets: '307.1667|300|240',
+    offsetIndices: '0121212121212121212121'
+  }, {
+    id: 'Japan',
+    untils: '-bb4900|6uao0|afxc0|8a5c0|c8qo0|6hc00|c8qo0|6hc00|Infinity',
+    offsets: '-540|-600',
+    offsetIndices: '010101010'
+  }, {
+    id: 'Kwajalein',
+    untils: '-h817w0|27sas0|1hjus0|ddxug0|cgv6k0|Infinity',
+    offsets: '-660|-600|-540|720|-720',
+    offsetIndices: '012034'
+  }, {
+    id: 'Libya',
+    untils: '-q3gfrw|gl6ajw|422c0|xado0|4bbo0|wrpg0|4s580|1kdpg0|c05bw0|4mqs0|9et80|9d440|9et80|9eys0|9et80|9mdg0|95jw0|9io40|9cyk0|99es0|9et80|9eys0|9et80|9d440|9et80|b2840|3cf3w0|9kis0|9et80|7vqyw0|75eo0|asw00|Infinity',
+    offsets: '-52.7333|-60|-120',
+    offsetIndices: '012121212121212121212121212122122'
+  }, {
+    id: 'MET',
+    untils: '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|8l9c0|ggp1c0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-60|-120',
+    offsetIndices: '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Mexico/BajaNorte',
+    untils: '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '468.0667|420|480',
+    offsetIndices: '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Mexico/BajaSur',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '425.6667|420|360|480',
+    offsetIndices: '0121212131212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Mexico/General',
+    untils: '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|3knek0|776k0|rf440|5t6k0|1evk40|71mk0|30p1g0|8n180|nufxo0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
+    offsets: '396.6|420|360|300',
+    offsetIndices: '012121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'MST',
+    untils: 'Infinity',
+    offsets: '420',
+    offsetIndices: '0'
+  }, {
+    id: 'MST7MDT',
+    untils: '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Navajo',
+    untils: '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360',
+    offsetIndices: '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'NZ-CHAT',
+    untils: '-ciya10|f1tq90|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
+    offsets: '-735|-765|-825',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'NZ',
+    untils: '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
+    offsets: '-690|-750|-720|-780',
+    offsetIndices: '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'Pacific/Apia',
+    untils: '-usiiv4|kcrmt4|vp3la0|9odo0|902o0|4zbk0|4qog0|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
+    offsets: '686.9333|690|660|600|-840|-780',
+    offsetIndices: '01232345454545454545454545454545454545454545454545454545454'
+  }, {
+    id: 'Pacific/Auckland',
+    untils: '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
+    offsets: '-690|-750|-720|-780',
+    offsetIndices: '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'Pacific/Bougainville',
+    untils: '-ecsh40|1n05g0|1071c40|Infinity',
+    offsets: '-600|-540|-660',
+    offsetIndices: '0102'
+  }, {
+    id: 'Pacific/Chatham',
+    untils: '-ciya10|f1tq90|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
+    offsets: '-735|-765|-825',
+    offsetIndices: '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
+  }, {
+    id: 'Pacific/Chuuk',
+    untils: '-su4zs0|29hes0|bkenw0|29fk40|Infinity',
+    offsets: '-600|-540',
+    offsetIndices: '01010'
+  }, {
+    id: 'Pacific/Easter',
+    untils: '-jhfaew|ivmeuw|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|iq2o0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
+    offsets: '437.4667|420|360|300',
+    offsetIndices: '012121212121212121212121212123232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
+  }, {
+    id: 'Pacific/Efate',
+    untils: '-u964i4|11f4ba4|9cyk0|awo40|7tek0|9q2s0|8zzw0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|64ak0|e1ms0|4ofw0|Infinity',
+    offsets: '-673.2667|-660|-720',
+    offsetIndices: '0121212121212121212121'
+  }, {
+    id: 'Pacific/Enderbury',
+    untils: '535io0|7yiqk0|Infinity',
+    offsets: '720|660|-780',
+    offsetIndices: '012'
+  }, {
+    id: 'Pacific/Fakaofo',
+    untils: 'lx0jw0|Infinity',
+    offsets: '660|-780',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Fiji',
+    untils: '-sa2x4w|17bs00w|64dc0|cyo00|5reo0|53a5c0|64dc0|asw00|6uao0|bvs00|4oio0|e1k00|4oio0|eeio0|4bh80|erk40|3ylc0|erhc0|3ylc0|f4g00|3lmo0|f4g00|3lmo0|f4g00|3lmo0|fheo0|38o00|fheo0|3lmo0|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|3lmo0|f4g00|3lmo0|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|3lmo0|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|3lmo0|f4g00|3lmo0|Infinity',
+    offsets: '-715.7333|-720|-780',
+    offsetIndices: '0121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Pacific/Funafuti',
+    untils: 'Infinity',
+    offsets: '-720',
+    offsetIndices: '0'
+  }, {
+    id: 'Pacific/Galapagos',
+    untils: '-kcr62o|spdryo|3lsas0|3jp80|Infinity',
+    offsets: '358.4|300|360',
+    offsetIndices: '01212'
+  }, {
+    id: 'Pacific/Gambier',
+    untils: '-tvndoc|Infinity',
+    offsets: '539.8|540',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Guadalcanal',
+    untils: '-tvowac|Infinity',
+    offsets: '-639.8|-660',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Guam',
+    untils: '-en8eg0|1dl9g0|7s1k40|txp80|3frms0|qdrpo|7kgac|3ljw0|c8tg0|6u7w0|bvus0|6u7w0|16uo40|3ljw0|16aas0|4ivxo|cls2c|6h980|c65zw0|Infinity',
+    offsets: '-600|-540|-660',
+    offsetIndices: '01020202020202020200'
+  }, {
+    id: 'Pacific/Honolulu',
+    untils: '-j50la0|13l00|4jvb00|1tyvu0|2e5e0|votg0|Infinity',
+    offsets: '630|570|600',
+    offsetIndices: '0101102'
+  }, {
+    id: 'Pacific/Johnston',
+    untils: '-j50la0|13l00|4jvb00|1tyvu0|2e5e0|votg0|Infinity',
+    offsets: '630|570|600',
+    offsetIndices: '0101102'
+  }, {
+    id: 'Pacific/Kiritimati',
+    untils: '535eyo|7yirhc|Infinity',
+    offsets: '640|600|-840',
+    offsetIndices: '012'
+  }, {
+    id: 'Pacific/Kosrae',
+    untils: '-su52k0|29hhk0|9cmd40|27sas0|29fk40|cm2540|f9l3w0|Infinity',
+    offsets: '-660|-540|-600|-720',
+    offsetIndices: '01021030'
+  }, {
+    id: 'Pacific/Kwajalein',
+    untils: '-h817w0|27sas0|1hjus0|ddxug0|cgv6k0|Infinity',
+    offsets: '-660|-600|-540|720|-720',
+    offsetIndices: '012034'
+  }, {
+    id: 'Pacific/Majuro',
+    untils: '-su52k0|29hhk0|9cmd40|27sas0|1h6w40|deat40|Infinity',
+    offsets: '-660|-540|-600|-720',
+    offsetIndices: '0102103'
+  }, {
+    id: 'Pacific/Marquesas',
+    untils: '-tvncu0|Infinity',
+    offsets: '558|570',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Midway',
+    untils: '-usij20|Infinity',
+    offsets: '682.8|660',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Nauru',
+    untils: '-pjxiws|ba66ys|1kwca0|hfzda0|Infinity',
+    offsets: '-667.6667|-690|-540|-720',
+    offsetIndices: '01213'
+  }, {
+    id: 'Pacific/Niue',
+    untils: '-9wyz6o|ehcj4o|Infinity',
+    offsets: '680|690|660',
+    offsetIndices: '012'
+  }, {
+    id: 'Pacific/Norfolk',
+    untils: '-9x0ps0|cfj8q0|6hc00|l6nk00|239aq0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
+    offsets: '-672|-690|-750|-660|-720',
+    offsetIndices: '012134343434343434343434343434343434343434'
+  }, {
+    id: 'Pacific/Noumea',
+    untils: '-u9645o|ye0ixo|4dbw0|ecqs0|4f6k0|99p700|4oio0|Infinity',
+    offsets: '-665.8|-660|-720',
+    offsetIndices: '01212121'
+  }, {
+    id: 'Pacific/Pago_Pago',
+    untils: '-usij20|Infinity',
+    offsets: '682.8|660',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Palau',
+    untils: 'Infinity',
+    offsets: '-540',
+    offsetIndices: '0'
+  }, {
+    id: 'Pacific/Pitcairn',
+    untils: 'es2cy0|Infinity',
+    offsets: '510|480',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Pohnpei',
+    untils: '-su52k0|29hhk0|9cmd40|27sas0|29fk40|Infinity',
+    offsets: '-660|-540|-600',
+    offsetIndices: '010210'
+  }, {
+    id: 'Pacific/Ponape',
+    untils: '-su52k0|29hhk0|9cmd40|27sas0|29fk40|Infinity',
+    offsets: '-660|-540|-600',
+    offsetIndices: '010210'
+  }, {
+    id: 'Pacific/Port_Moresby',
+    untils: 'Infinity',
+    offsets: '-600',
+    offsetIndices: '0'
+  }, {
+    id: 'Pacific/Rarotonga',
+    untils: '4mj960|5rbw0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|Infinity',
+    offsets: '630|570|600',
+    offsetIndices: '012121212121212121212121212'
+  }, {
+    id: 'Pacific/Saipan',
+    untils: '-en8eg0|1dl9g0|7s1k40|txp80|3frms0|qdrpo|7kgac|3ljw0|c8tg0|6u7w0|bvus0|6u7w0|16uo40|3ljw0|16aas0|4ivxo|cls2c|6h980|c65zw0|Infinity',
+    offsets: '-600|-540|-660',
+    offsetIndices: '01020202020202020200'
+  }, {
+    id: 'Pacific/Samoa',
+    untils: '-usij20|Infinity',
+    offsets: '682.8|660',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Tahiti',
+    untils: '-tvnayw|Infinity',
+    offsets: '598.2667|600',
+    offsetIndices: '01'
+  }, {
+    id: 'Pacific/Tarawa',
+    untils: 'Infinity',
+    offsets: '-720',
+    offsetIndices: '0'
+  }, {
+    id: 'Pacific/Tongatapu',
+    untils: '-f4vrlc|uo2edc|8fpc0|bvs00|4bh80|eelg0|4bh80|7pmis0|3lmo0|Infinity',
+    offsets: '-740|-780|-840',
+    offsetIndices: '0121212121'
+  }, {
+    id: 'Pacific/Truk',
+    untils: '-su4zs0|29hes0|bkenw0|29fk40|Infinity',
+    offsets: '-600|-540',
+    offsetIndices: '01010'
+  }, {
+    id: 'Pacific/Wake',
+    untils: 'Infinity',
+    offsets: '-720',
+    offsetIndices: '0'
+  }, {
+    id: 'Pacific/Wallis',
+    untils: 'Infinity',
+    offsets: '-720',
+    offsetIndices: '0'
+  }, {
+    id: 'Pacific/Yap',
+    untils: '-su4zs0|29hes0|bkenw0|29fk40|Infinity',
+    offsets: '-600|-540',
+    offsetIndices: '01010'
+  }, {
+    id: 'Poland',
+    untils: '-se9yk0|dvyc0|7ves0|a4yw0|7x6o0|asw00|7x6o0|aunw0|7x6o0|1evbs0|9fcwc0|18cao0|7k800|9q000|9d1c0|9gnw0|an980|9kd80|8fs40|922w0|ar1c0|7x6o0|a2yo0|8n400|9q000|902o0|4013w0|64dc0|9d1c0|9d1c0|clpc0|6hc00|9d1c0|9d1c0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|clpc0|64dc0|6j4tc0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '-84|-60|-120|-180',
+    offsetIndices: '012121223212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'Portugal',
+    untils: '-u9rhc0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5gyl40|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '36.75|0|-60|-120',
+    offsetIndices: '012121212121212121212121212121212121212121212321232123212321212121212121212121212121212121212121212121212121212121212121212121212122323232212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'PRC',
+    untils: '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '01010101010101010101010101010'
+  }, {
+    id: 'PST8PDT',
+    untils: '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'ROC',
+    untils: '-gtzfk0|45slc0|c51c0|75bw0|a31g0|aaak0|9d440|7v980|awo40|7v980|awo40|7v980|awo40|7v980|7tk40|clmk0|7rpg0|b07w0|7rpg0|b07w0|7rpg0|9et80|9eys0|9et80|9d440|9et80|9d440|9et80|9d440|9et80|cjxg0|69uk0|ci2s0|69uk0|6its40|9et80|9d440|9et80|1yf9g0|4qak0|Infinity',
+    offsets: '-480|-540',
+    offsetIndices: '01010101010101010101010101010101010101010'
+  }, {
+    id: 'ROK',
+    untils: '-w8966g|1yh18g|hkx5a0|1faao0|5cik0|ae5g0|8a2k0|ae5g0|8bx80|c8tg0|6h980|1bj6s0|l3aq0|6j3w0|d2g40|6u7w0|b5xg0|776k0|biw40|776k0|biw40|776k0|biw40|776k0|grs40|dfqxi0|7x6o0|asw00|7x6o0|Infinity',
+    offsets: '-507.8667|-510|-540|-600|-570',
+    offsetIndices: '012232323232141414141414123232'
+  }, {
+    id: 'Singapore',
+    untils: '-xphpwd|eeb94d|4it32o|8n3jc|1v2p60|iy3o60|Infinity',
+    offsets: '-415.4167|-420|-440|-450|-540|-480',
+    offsetIndices: '0123435'
+  }, {
+    id: 'Turkey',
+    untils: '-ux9xew|2wvx6w|7v980|1tjc40|aunw0|88dg0|9et80|8yas0|a2vw0|tzpg0|79180|awo40|7v980|7p4040|4zjw0|2vs40|f4d80|9vms0|1u5ek0|c5440|69uk0|acas0|8n180|a31g0|8n180|9q2s0|8zzw0|a31g0|8zzw0|a31g0|8n180|5md9g0|o9zw0|a6qs0|75bw0|4iwyw0|7x6o0|7kas0|b5rw0|75hg0|bkl80|77c40|biqk0|7x9g0|a2vw0|8n6s0|4iqc0|2nkw80|38l80|kdes0|8qtc0|8a5c0|9ew00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|902o0|9q000|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7kdk0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7m2o0|b4000|7k800|b5uo0|7x6o0|asw00|7z1c0|ar1c0|7x6o0|bitc0|779c0|8fe80|Infinity',
+    offsets: '-116.9333|-120|-180|-240',
+    offsetIndices: '0121212121212121212121212121212121212121212121223212121212121212121212121212121212121212121212121212121212121212122'
+  }, {
+    id: 'UCT',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'Universal',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'US/Alaska',
+    untils: '-ek1qo0|1tyx80|2e400|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '600|540|480',
+    offsetIndices: '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'US/Aleutian',
+    untils: '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '660|600|540',
+    offsetIndices: '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'US/Arizona',
+    untils: '-r0epo0|ast80|7x9g0|ast80|bmtus0|zjedo|4olg0|9et80|bs6lmc|9cyk0|Infinity',
+    offsets: '420|360',
+    offsetIndices: '01010101010'
+  }, {
+    id: 'US/Central',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bvus0|776k0|7kas0|b5rw0|9d440|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|7x9g0|dbjw0|8a840|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'US/East-Indiana',
+    untils: '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300|240',
+    offsetIndices: '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
+  }, {
+    id: 'US/Eastern',
+    untils: '-r0ev80|ast80|7x9g0|ast80|7x9g0|b5rw0|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tzb40|2dq40|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '300|240',
+    offsetIndices: '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'US/Hawaii',
+    untils: '-j50la0|13l00|4jvb00|1tyvu0|2e5e0|votg0|Infinity',
+    offsets: '630|570|600',
+    offsetIndices: '0101102'
+  }, {
+    id: 'US/Indiana-Starke',
+    untils: '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|9px80|9d440|9cyk0|9d440|s3180|1twas0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|7j5400|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '360|300',
+    offsetIndices: '0101011010101010101010101010101010101010101010101010101010101010101010101010101010101010111010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'US/Michigan',
+    untils: '-xx8dyd|5eraud|dyeyk0|1tzb40|2dq40|1c9440|7x3w0|9rlbxo|71s2c|9d440|9cyk0|2cmdg0|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '332.1833|360|300|240',
+    offsetIndices: '0123323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
+  }, {
+    id: 'US/Mountain',
+    untils: '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '420|360',
+    offsetIndices: '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'US/Pacific-New',
+    untils: '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|1a3c5o|f2iic|owao0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'US/Pacific',
+    untils: '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|1a3c5o|f2iic|owao0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
+    offsets: '480|420',
+    offsetIndices: '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'US/Samoa',
+    untils: '-usij20|Infinity',
+    offsets: '682.8|660',
+    offsetIndices: '01'
+  }, {
+    id: 'UTC',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }, {
+    id: 'W-SU',
+    untils: '-rx5dmh|ipzua|97hc0|7yyk0|5i840|d9p80|1jwk7|2cvk0|s8o00|1qvw0|8fpc0|1jms0|is040|412as0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d440|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
+    offsets: '-150.2833|-151.3167|-211.3167|-271.3167|-240|-180|-300|-120',
+    offsetIndices: '012132345464575454545454545454545455754545454545454545454545454545454545454545'
+  }, {
+    id: 'WET',
+    untils: '3s9ms0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
+    offsets: '0|-60',
+    offsetIndices: '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
+  }, {
+    id: 'Zulu',
+    untils: 'Infinity',
+    offsets: '0',
+    offsetIndices: '0'
+  }]
+};
+exports["default"] = _default;
+
+/***/ }),
+
 /***/ 41690:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -4635,13 +7777,16 @@ var COMMON_AXIS_SETTINGS = 'commonAxisSettings';
 var DEFAULT_PANE_NAME = 'default';
 var VISUAL_RANGE = 'VISUAL_RANGE';
 function prepareAxis(axisOptions) {
-  return isArray(axisOptions) ? axisOptions.length === 0 ? [{}] : axisOptions : [axisOptions];
-}
-function processBubbleMargin(opt, bubbleSize) {
-  if (opt.processBubbleSize) {
-    opt.size = bubbleSize;
+  if (isArray(axisOptions)) {
+    return axisOptions.length === 0 ? [{}] : axisOptions;
   }
-  return opt;
+  return [axisOptions];
+}
+function processBubbleMargin(marginOptions, bubbleSize) {
+  if (marginOptions.processBubbleSize) {
+    marginOptions.size = bubbleSize;
+  }
+  return marginOptions;
 }
 function estimateBubbleSize(size, panesCount, maxSize, rotated) {
   var width = rotated ? size.width / panesCount : size.width;
@@ -4675,9 +7820,9 @@ function getAxisTypes(groupsData, axis, isArgumentAxes) {
       argumentType: groupsData.argumentType
     };
   }
-  var _groupsData$groups$fi = groupsData.groups.filter(function (g) {
+  var _groupsData$groups$fi = groupsData.groups.find(function (g) {
       return g.valueAxis === axis;
-    })[0],
+    }),
     valueAxisType = _groupsData$groups$fi.valueAxisType,
     valueType = _groupsData$groups$fi.valueType;
   return {
@@ -4687,7 +7832,7 @@ function getAxisTypes(groupsData, axis, isArgumentAxes) {
 }
 function wrapVisualRange(fullName, value) {
   var pathElements = fullName.split('.');
-  var destElem = pathElements[pathElements.length - 1];
+  var destElem = pathElements.at(-1);
   if (destElem === 'endValue' || destElem === 'startValue') {
     return {
       [destElem]: value
@@ -4724,17 +7869,16 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._labelsAxesGroup = null;
   },
   _dispose() {
-    var that = this;
     var disposeObjectsInArray = this._disposeObjectsInArray;
-    that.callBase();
-    that.panes = null;
-    if (that._legend) {
-      that._legend.dispose();
-      that._legend = null;
+    this.callBase();
+    this.panes = null;
+    if (this._legend) {
+      this._legend.dispose();
+      this._legend = null;
     }
-    disposeObjectsInArray.call(that, 'panesBackground');
-    disposeObjectsInArray.call(that, 'seriesFamilies');
-    that._disposeAxes();
+    disposeObjectsInArray.call(this, 'panesBackground');
+    disposeObjectsInArray.call(this, 'seriesFamilies');
+    this._disposeAxes();
   },
   _createPanes() {
     this._cleanPanesClipRects('fixed');
@@ -4744,25 +7888,19 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
   _cleanPanesClipRects(clipArrayName) {
     var clipArray = this._panesClipRects[clipArrayName];
     (clipArray || []).forEach(function (clipRect) {
-      return clipRect && clipRect.dispose();
+      clipRect === null || clipRect === void 0 ? void 0 : clipRect.dispose();
     });
     this._panesClipRects[clipArrayName] = [];
   },
   _getElementsClipRectID(paneName) {
     var clipShape = this._panesClipRects.fixed[this._getPaneIndex(paneName)];
-    return clipShape && clipShape.id;
+    return clipShape === null || clipShape === void 0 ? void 0 : clipShape.id;
   },
   _getPaneIndex(paneName) {
-    var paneIndex;
     var name = paneName || DEFAULT_PANE_NAME;
-    (0, _iterator.each)(this.panes, function (index, pane) {
-      if (pane.name === name) {
-        paneIndex = index;
-        return false;
-      }
-      return undefined;
+    return this.panes.findIndex(function (pane) {
+      return pane.name === name;
     });
-    return paneIndex;
   },
   _updateSize() {
     this.callBase();
@@ -4774,20 +7912,22 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._axesReinitialized = true;
   },
   _populateAxes() {
-    var that = this;
-    var panes = that.panes;
-    var rotated = that._isRotated();
-    var argumentAxesOptions = prepareAxis(that.option('argumentAxis') || {})[0];
-    var valueAxisOption = that.option('valueAxis');
+    var _this = this;
+    var panes = this.panes;
+    var rotated = this._isRotated();
+    var argumentAxesOptions = prepareAxis(this.option('argumentAxis') || {})[0];
+    var valueAxisOption = this.option('valueAxis');
     var valueAxesOptions = prepareAxis(valueAxisOption || {});
     var argumentAxesPopulatedOptions = [];
     var valueAxesPopulatedOptions = [];
     var axisNames = [];
     var valueAxesCounter = 0;
     var paneWithNonVirtualAxis;
-    var crosshairMargins = that._getCrosshairMargins();
+    var crosshairMargins = this._getCrosshairMargins();
     function getNextAxisName() {
-      return DEFAULT_AXIS_NAME + valueAxesCounter++;
+      var name = DEFAULT_AXIS_NAME + String(valueAxesCounter);
+      valueAxesCounter += 1;
+      return name;
     }
     if (rotated) {
       paneWithNonVirtualAxis = argumentAxesOptions.position === 'right' ? panes[panes.length - 1].name : panes[0].name;
@@ -4796,19 +7936,19 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     }
     argumentAxesPopulatedOptions = (0, _utils.map)(panes, function (pane) {
       var virtual = pane.name !== paneWithNonVirtualAxis;
-      return that._populateAxesOptions('argumentAxis', argumentAxesOptions, {
+      return _this._populateAxesOptions('argumentAxis', argumentAxesOptions, {
         pane: pane.name,
         name: null,
         optionPath: 'argumentAxis',
         crosshairMargin: rotated ? crosshairMargins.x : crosshairMargins.y
       }, rotated, virtual);
     });
-    (0, _iterator.each)(valueAxesOptions, function (priority, axisOptions) {
+    valueAxesOptions.forEach(function (axisOptions, priority) {
       var _a;
       var axisPanes = [];
       var name = axisOptions.name;
       if (name && axisNames.includes(name)) {
-        that._incidentOccurred('E2102');
+        _this._incidentOccurred('E2102');
         return;
       }
       if (name) {
@@ -4824,9 +7964,9 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       if (!axisPanes.length) {
         axisPanes.push(undefined);
       }
-      (0, _iterator.each)(axisPanes, function (_, pane) {
-        var optionPath = isArray(valueAxisOption) ? "valueAxis[".concat(priority, "]") : 'valueAxis';
-        valueAxesPopulatedOptions.push(that._populateAxesOptions('valueAxis', axisOptions, {
+      axisPanes.forEach(function (pane) {
+        var optionPath = isArray(valueAxisOption) ? "valueAxis[".concat(String(priority), "]") : 'valueAxis';
+        valueAxesPopulatedOptions.push(_this._populateAxesOptions('valueAxis', axisOptions, {
           name: name || getNextAxisName(),
           pane,
           priority,
@@ -4835,22 +7975,22 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         }, rotated));
       });
     });
-    that._redesignAxes(argumentAxesPopulatedOptions, true, paneWithNonVirtualAxis);
-    that._redesignAxes(valueAxesPopulatedOptions, false);
+    this._redesignAxes(argumentAxesPopulatedOptions, true, paneWithNonVirtualAxis);
+    this._redesignAxes(valueAxesPopulatedOptions, false);
   },
   _redesignAxes(options, isArgumentAxes, paneWithNonVirtualAxis) {
-    var that = this;
+    var _this2 = this;
     var axesBasis = [];
-    var axes = isArgumentAxes ? that._argumentAxes : that._valueAxes;
-    (0, _iterator.each)(options, function (_, opt) {
-      var curAxes = axes && axes.filter(function (a) {
-        return a.name === opt.name && (!(0, _type.isDefined)(opt.pane) && that.panes.some(function (p) {
+    var axes = isArgumentAxes ? this._argumentAxes : this._valueAxes;
+    options.forEach(function (opt) {
+      var curAxes = axes === null || axes === void 0 ? void 0 : axes.filter(function (a) {
+        return a.name === opt.name && (!(0, _type.isDefined)(opt.pane) && _this2.panes.some(function (p) {
           return p.name === a.pane;
         }) || a.pane === opt.pane);
       });
-      if (curAxes && curAxes.length > 0) {
-        (0, _iterator.each)(curAxes, function (_, axis) {
-          var axisTypes = getAxisTypes(that._groupsData, axis, isArgumentAxes); // T891599
+      if (curAxes === null || curAxes === void 0 ? void 0 : curAxes.length) {
+        curAxes.forEach(function (axis) {
+          var axisTypes = getAxisTypes(_this2._groupsData, axis, isArgumentAxes); // T891599
           axis.updateOptions(opt);
           if (isArgumentAxes) {
             axis.setTypes(axisTypes.argumentAxisType, axisTypes.argumentType, 'argumentType');
@@ -4873,23 +8013,23 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         if (!axesBasis.some(function (basis) {
           return basis.axis && basis.axis === axis;
         })) {
-          that._disposeAxis(index, isArgumentAxes);
+          _this2._disposeAxis(index, isArgumentAxes);
         }
       });
     } else if (isArgumentAxes) {
-      axes = that._argumentAxes = [];
+      axes = this._argumentAxes = [];
     } else {
-      axes = that._valueAxes = [];
+      axes = this._valueAxes = [];
     }
-    (0, _iterator.each)(axesBasis, function (_, basis) {
+    axesBasis.forEach(function (basis) {
       var axis = basis.axis;
       if (basis.axis && isArgumentAxes) {
         basis.axis.isVirtual = basis.axis.pane !== paneWithNonVirtualAxis;
       } else if (basis.options) {
-        axis = that._createAxis(isArgumentAxes, basis.options, isArgumentAxes ? basis.options.pane !== paneWithNonVirtualAxis : undefined);
+        axis = _this2._createAxis(isArgumentAxes, basis.options, isArgumentAxes ? basis.options.pane !== paneWithNonVirtualAxis : undefined);
         axes.push(axis);
       }
-      axis.applyVisualRangeSetter(that._getVisualRangeSetter());
+      axis.applyVisualRangeSetter(_this2._getVisualRangeSetter());
     });
   },
   _disposeAxis(index, isArgumentAxis) {
@@ -4900,21 +8040,22 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     axes.splice(index, 1);
   },
   _disposeAxes() {
-    var that = this;
-    var disposeObjectsInArray = that._disposeObjectsInArray;
-    disposeObjectsInArray.call(that, '_argumentAxes');
-    disposeObjectsInArray.call(that, '_valueAxes');
+    var disposeObjectsInArray = this._disposeObjectsInArray;
+    disposeObjectsInArray.call(this, '_argumentAxes');
+    disposeObjectsInArray.call(this, '_valueAxes');
   },
   _appendAdditionalSeriesGroups() {
     this._crosshairCursorGroup.linkAppend();
     // this._legendGroup.linkAppend();
-    this._scrollBar && this._scrollBarGroup.linkAppend(); // TODO: Must be appended in the same place where removed (chart)
+    if (this._scrollBar) {
+      // TODO: Must be appended in the same place where removed (chart)
+      this._scrollBarGroup.linkAppend();
+    }
   },
-
   _getLegendTargets() {
-    var _this = this;
+    var _this3 = this;
     return (this.series || []).map(function (s) {
-      var item = _this._getLegendOptions(s);
+      var item = _this3._getLegendOptions(s);
       item.legendData.series = s;
       if (!s.getOptions().showInLegend) {
         item.legendData.visible = false;
@@ -4928,10 +8069,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._processValueAxisFormat();
   },
   _renderTrackers() {
-    var that = this;
-    var i;
-    for (i = 0; i < that.series.length; ++i) {
-      that.series[i].drawTrackers();
+    for (var i = 0; i < this.series.length; i += 1) {
+      this.series[i].drawTrackers();
     }
     // TODO we don't need it
     // if (that._legend) {
@@ -4943,12 +8082,12 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this._processSeriesFamilies();
   },
   _processSeriesFamilies() {
+    var _this4 = this;
     var _a;
-    var that = this;
     var types = [];
     var families = [];
     var paneSeries;
-    var themeManager = that._themeManager;
+    var themeManager = this._themeManager;
     var negativesAsZeroes = themeManager.getOptions('negativesAsZeroes');
     var negativesAsZeros = themeManager.getOptions('negativesAsZeros'); // misspelling case
     var familyOptions = {
@@ -4958,21 +8097,21 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       barGroupWidth: themeManager.getOptions('barGroupWidth'),
       negativesAsZeroes: (0, _type.isDefined)(negativesAsZeroes) ? negativesAsZeroes : negativesAsZeros
     };
-    if ((_a = that.seriesFamilies) === null || _a === void 0 ? void 0 : _a.length) {
-      (0, _iterator.each)(that.seriesFamilies, function (_, family) {
+    if ((_a = this.seriesFamilies) === null || _a === void 0 ? void 0 : _a.length) {
+      this.seriesFamilies.forEach(function (family) {
         family.updateOptions(familyOptions);
         family.adjustSeriesValues();
       });
       return;
     }
-    (0, _iterator.each)(that.series, function (_, item) {
+    this.series.forEach(function (item) {
       if (!types.includes(item.type)) {
         types.push(item.type);
       }
     });
-    (0, _iterator.each)(that._getLayoutTargets(), function (_, pane) {
-      paneSeries = that._getSeriesForPane(pane.name);
-      (0, _iterator.each)(types, function (_, type) {
+    this._getLayoutTargets().forEach(function (pane) {
+      paneSeries = _this4._getSeriesForPane(pane.name);
+      types.forEach(function (type) {
         var family = new _series_family.SeriesFamily({
           type,
           pane: pane.name,
@@ -4981,44 +8120,42 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
           barGroupPadding: familyOptions.barGroupPadding,
           barGroupWidth: familyOptions.barGroupWidth,
           negativesAsZeroes: familyOptions.negativesAsZeroes,
-          rotated: that._isRotated()
+          rotated: _this4._isRotated()
         });
         family.add(paneSeries);
         family.adjustSeriesValues();
         families.push(family);
       });
     });
-    that.seriesFamilies = families;
+    this.seriesFamilies = families;
   },
   _updateSeriesDimensions() {
-    var that = this;
-    var i;
-    var seriesFamilies = that.seriesFamilies || [];
-    for (i = 0; i < seriesFamilies.length; i++) {
+    var seriesFamilies = this.seriesFamilies || [];
+    for (var i = 0; i < seriesFamilies.length; i += 1) {
       var family = seriesFamilies[i];
       family.updateSeriesValues();
       family.adjustSeriesDimensions();
     }
   },
   _getLegendCallBack(series) {
-    return this._legend && this._legend.getActionCallback(series);
+    var _a;
+    return (_a = this._legend) === null || _a === void 0 ? void 0 : _a.getActionCallback(series);
   },
   _appendAxesGroups() {
-    var that = this;
-    that._stripsGroup.linkAppend();
-    that._gridGroup.linkAppend();
-    that._axesGroup.linkAppend();
-    that._labelsAxesGroup.linkAppend();
-    that._constantLinesGroup.linkAppend();
-    that._stripLabelAxesGroup.linkAppend();
-    that._scaleBreaksGroup.linkAppend();
+    this._stripsGroup.linkAppend();
+    this._gridGroup.linkAppend();
+    this._axesGroup.linkAppend();
+    this._labelsAxesGroup.linkAppend();
+    this._constantLinesGroup.linkAppend();
+    this._stripLabelAxesGroup.linkAppend();
+    this._scaleBreaksGroup.linkAppend();
   },
   _populateMarginOptions() {
-    var that = this;
-    var bubbleSize = estimateBubbleSize(that.getSize(), that.panes.length, that._themeManager.getOptions('maxBubbleSize'), that._isRotated());
+    var _this5 = this;
+    var bubbleSize = estimateBubbleSize(this.getSize(), this.panes.length, this._themeManager.getOptions('maxBubbleSize'), this._isRotated());
     var argumentMarginOptions = {};
-    that._valueAxes.forEach(function (valueAxis) {
-      var groupSeries = that.series.filter(function (series) {
+    this._valueAxes.forEach(function (valueAxis) {
+      var groupSeries = _this5.series.filter(function (series) {
         return series.getValueAxis() === valueAxis;
       });
       var marginOptions = {};
@@ -5031,14 +8168,14 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       });
       valueAxis.setMarginOptions(marginOptions);
     });
-    that._argumentAxes.forEach(function (a) {
+    this._argumentAxes.forEach(function (a) {
       return a.setMarginOptions(argumentMarginOptions);
     });
   },
   _populateBusinessRange(updatedAxis, keepRange) {
-    var that = this;
-    var rotated = that._isRotated();
-    var series = that._getVisibleSeries();
+    var _this6 = this;
+    var rotated = this._isRotated();
+    var series = this._getVisibleSeries();
     var argRanges = {};
     var commonArgRange = new _range.Range({
       rotated: !!rotated
@@ -5046,12 +8183,12 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     var getPaneName = function getPaneName(axis) {
       return axis.pane || DEFAULT_PANE_NAME;
     };
-    that.panes.forEach(function (p) {
+    this.panes.forEach(function (p) {
       argRanges[p.name] = new _range.Range({
         rotated: !!rotated
       });
     });
-    that._valueAxes.forEach(function (valueAxis) {
+    this._valueAxes.forEach(function (valueAxis) {
       var groupRange = new _range.Range({
         rotated: !!rotated,
         pane: valueAxis.pane,
@@ -5067,7 +8204,7 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       });
       if (!updatedAxis || updatedAxis && groupSeries.length && valueAxis === updatedAxis) {
         valueAxis.setGroupSeries(groupSeries);
-        valueAxis.setBusinessRange(groupRange, that._axesReinitialized || keepRange, that._argumentAxes[0]._lastVisualRangeUpdateMode);
+        valueAxis.setBusinessRange(groupRange, _this6._axesReinitialized || keepRange, _this6._argumentAxes[0]._lastVisualRangeUpdateMode);
       }
     });
     if (!updatedAxis || updatedAxis && series.length) {
@@ -5075,35 +8212,35 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         return commonArgRange.addRange(argRanges[p]);
       });
       var commonInterval = commonArgRange.interval;
-      that._argumentAxes.forEach(function (a) {
+      this._argumentAxes.forEach(function (a) {
         var _a;
         var currentInterval = (_a = argRanges[getPaneName(a)].interval) !== null && _a !== void 0 ? _a : commonInterval; // T956425
         a.setBusinessRange(new _range.Range(_extends(_extends({}, commonArgRange), {
           interval: currentInterval
-        })), that._axesReinitialized, undefined, that._groupsData.categories);
+        })), _this6._axesReinitialized, undefined, _this6._groupsData.categories);
       });
     }
-    that._populateMarginOptions();
+    this._populateMarginOptions();
   },
   getArgumentAxis() {
-    return (this._argumentAxes || []).filter(function (a) {
+    return (this._argumentAxes || []).find(function (a) {
       return !a.isVirtual;
-    })[0];
+    });
   },
   getValueAxis(name) {
-    var _this2 = this;
-    return (this._valueAxes || []).filter((0, _type.isDefined)(name) ? function (a) {
+    var _this7 = this;
+    return (this._valueAxes || []).find((0, _type.isDefined)(name) ? function (a) {
       return a.name === name;
     } : function (a) {
-      return a.pane === _this2.defaultPane;
-    })[0];
+      return a.pane === _this7.defaultPane;
+    });
   },
   _getGroupsData() {
-    var _this3 = this;
+    var _this8 = this;
     var groups = [];
     this._valueAxes.forEach(function (axis) {
       groups.push({
-        series: _this3.series.filter(function (series) {
+        series: _this8.series.filter(function (series) {
           return series.getValueAxis() === axis;
         }),
         valueAxis: axis,
@@ -5117,9 +8254,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     };
   },
   _groupSeries() {
-    var that = this;
-    that._correctValueAxes(false);
-    that._groupsData = that._getGroupsData();
+    this._correctValueAxes(false);
+    this._groupsData = this._getGroupsData();
   },
   _processValueAxisFormat() {
     var axesWithFullStackedFormat = [];
@@ -5138,11 +8274,13 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
   },
 
   _populateAxesOptions(typeSelector, userOptions, axisOptions, rotated, virtual) {
-    var that = this;
-    var preparedUserOptions = that._prepareStripsAndConstantLines(typeSelector, userOptions, rotated);
-    var options = (0, _extend2.extend)(true, {}, preparedUserOptions, axisOptions, that._prepareAxisOptions(typeSelector, preparedUserOptions, rotated));
+    var preparedUserOptions = this._prepareStripsAndConstantLines(typeSelector, userOptions, rotated);
+    var options = (0, _extend2.extend)(true, {}, preparedUserOptions, axisOptions, this._prepareAxisOptions(typeSelector, preparedUserOptions, rotated));
     if (virtual) {
-      options.visible = options.tick.visible = options.minorTick.visible = options.label.visible = false;
+      options.visible = false;
+      options.tick.visible = false;
+      options.minorTick.visible = false;
+      options.label.visible = false;
       options.title = {};
     }
     return options;
@@ -5151,26 +8289,26 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return _range_data_calculator.default.getViewPortFilter(series.getValueAxis().visualRange() || {});
   },
   _createAxis(isArgumentAxes, options, virtual) {
-    var that = this;
+    var _this9 = this;
     var typeSelector = isArgumentAxes ? 'argumentAxis' : 'valueAxis';
     var renderingSettings = (0, _extend2.extend)({
-      renderer: that._renderer,
-      incidentOccurred: that._incidentOccurred,
-      eventTrigger: that._eventTrigger,
+      renderer: this._renderer,
+      incidentOccurred: this._incidentOccurred,
+      eventTrigger: this._eventTrigger,
       axisClass: isArgumentAxes ? 'arg' : 'val',
       widgetClass: 'dxc',
-      stripsGroup: that._stripsGroup,
-      stripLabelAxesGroup: that._stripLabelAxesGroup,
-      constantLinesGroup: that._constantLinesGroup,
-      scaleBreaksGroup: that._scaleBreaksGroup,
-      axesContainerGroup: that._axesGroup,
-      labelsAxesGroup: that._labelsAxesGroup,
-      gridGroup: that._gridGroup,
+      stripsGroup: this._stripsGroup,
+      stripLabelAxesGroup: this._stripLabelAxesGroup,
+      constantLinesGroup: this._constantLinesGroup,
+      scaleBreaksGroup: this._scaleBreaksGroup,
+      axesContainerGroup: this._axesGroup,
+      labelsAxesGroup: this._labelsAxesGroup,
+      gridGroup: this._gridGroup,
       isArgumentAxis: isArgumentAxes,
-      getTemplate(template) {
-        return that._getTemplate(template);
+      getTemplate: function getTemplate(template) {
+        return _this9._getTemplate(template);
       }
-    }, that._getAxisRenderingOptions(typeSelector));
+    }, this._getAxisRenderingOptions(typeSelector));
     var axis = new _base_axis.Axis(renderingSettings);
     axis.updateOptions(options);
     axis.isVirtual = virtual;
@@ -5180,24 +8318,23 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return false;
   },
   _applyCustomVisualRangeOption(axis, range) {
-    var that = this;
     if (axis.getOptions().optionPath) {
-      that._parseVisualRangeOption("".concat(axis.getOptions().optionPath, ".visualRange"), range);
+      this._parseVisualRangeOption("".concat(axis.getOptions().optionPath, ".visualRange"), range);
     }
   },
   _getVisualRangeSetter() {
-    var chart = this;
+    var _this10 = this;
     return function (axis, _ref) {
       var skipEventRising = _ref.skipEventRising,
         range = _ref.range;
-      chart._applyCustomVisualRangeOption(axis, range);
+      _this10._applyCustomVisualRangeOption(axis, range);
       axis.setCustomVisualRange(range);
       axis.skipEventRising = skipEventRising;
-      if (!chart._applyVisualRangeByVirtualAxes(axis, range)) {
-        if (chart._applyingChanges) {
-          chart._change_VISUAL_RANGE();
+      if (!_this10._applyVisualRangeByVirtualAxes(axis, range)) {
+        if (_this10._applyingChanges) {
+          _this10._change_VISUAL_RANGE();
         } else {
-          chart._requestChange([VISUAL_RANGE]);
+          _this10._requestChange([VISUAL_RANGE]);
         }
       }
     };
@@ -5210,12 +8347,12 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
   _prepareStripsAndConstantLines(typeSelector, userOptions, rotated) {
     userOptions = this._themeManager.getOptions(typeSelector, userOptions, rotated);
     if (userOptions.strips) {
-      (0, _iterator.each)(userOptions.strips, function (i) {
-        userOptions.strips[i] = (0, _extend2.extend)(true, {}, userOptions.stripStyle, userOptions.strips[i]);
+      userOptions.strips.forEach(function (line, i) {
+        userOptions.strips[i] = (0, _extend2.extend)(true, {}, userOptions.stripStyle, line);
       });
     }
     if (userOptions.constantLines) {
-      (0, _iterator.each)(userOptions.constantLines, function (i, line) {
+      userOptions.constantLines.forEach(function (line, i) {
         userOptions.constantLines[i] = (0, _extend2.extend)(true, {}, userOptions.constantLineStyle, line);
       });
     }
@@ -5226,9 +8363,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     this.callBase();
   },
   _layoutAxes(drawAxes) {
-    var that = this;
     drawAxes();
-    var needSpace = that.checkForMoreSpaceForPanesCanvas();
+    var needSpace = this.checkForMoreSpaceForPanesCanvas();
     if (needSpace) {
       var rect = this._rect.slice();
       var size = this._layout.backward(rect, rect, [needSpace.width, needSpace.height]);
@@ -5242,8 +8378,8 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return this.layoutManager.needMoreSpaceForPanesCanvas(this._getLayoutTargets(), this._isRotated());
   },
   _parseVisualRangeOption(fullName, value) {
+    var _this11 = this;
     var _a;
-    var that = this;
     var name = fullName.split(/[.[]/)[0];
     var index = fullName.match(/\d+/g);
     index = (0, _type.isDefined)(index) ? parseInt(index[0], 10) : index;
@@ -5251,20 +8387,21 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
       if ((0, _type.type)(value) !== 'object') {
         value = (_a = wrapVisualRange(fullName, value)) !== null && _a !== void 0 ? _a : value;
       }
-      that._setCustomVisualRange(name, index, value);
+      this._setCustomVisualRange(name, index, value);
     } else if (((0, _type.type)(value) === 'object' || isArray(value)) && name.indexOf('Axis') > 0 && JSON.stringify(value).indexOf('visualRange') > 0) {
       if ((0, _type.isDefined)(value.visualRange)) {
-        that._setCustomVisualRange(name, index, value.visualRange);
+        this._setCustomVisualRange(name, index, value.visualRange);
       } else if (isArray(value)) {
         value.forEach(function (a, i) {
-          return (0, _type.isDefined)(a.visualRange) && that._setCustomVisualRange(name, i, a.visualRange);
+          if ((0, _type.isDefined)(a.visualRange)) {
+            _this11._setCustomVisualRange(name, i, a.visualRange);
+          }
         });
       }
     }
   },
   _setCustomVisualRange(axesName, index, value) {
-    var that = this;
-    var options = that._options.silent(axesName);
+    var options = this._options.silent(axesName);
     if (!options) {
       return;
     }
@@ -5273,7 +8410,7 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     } else {
       options[index]._customVisualRange = value;
     }
-    that._axesReinitialized = true;
+    this._axesReinitialized = true;
   },
   _raiseZoomEndHandlers() {
     this._valueAxes.forEach(function (axis) {
@@ -5293,20 +8430,20 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     }
   },
   _notifyVisualRange() {
-    var that = this;
-    that._valueAxes.forEach(function (axis) {
+    var _this12 = this;
+    this._valueAxes.forEach(function (axis) {
       var axisPath = axis.getOptions().optionPath;
       if (axisPath) {
         var path = "".concat(axisPath, ".visualRange");
-        var visualRange = (0, _utils.convertVisualRangeObject)(axis.visualRange(), !isArray(that.option(path)));
-        if (!axis.skipEventRising || !(0, _utils.rangesAreEqual)(visualRange, that.option(path))) {
-          if (!that.option(axisPath) && axisPath !== 'valueAxis') {
-            that.option(axisPath, {
+        var visualRange = (0, _utils.convertVisualRangeObject)(axis.visualRange(), !isArray(_this12.option(path)));
+        if (!axis.skipEventRising || !(0, _utils.rangesAreEqual)(visualRange, _this12.option(path))) {
+          if (!_this12.option(axisPath) && axisPath !== 'valueAxis') {
+            _this12.option(axisPath, {
               name: axis.name,
               visualRange
             });
           } else {
-            that.option(path, visualRange);
+            _this12.option(path, visualRange);
           }
         } else {
           axis.skipEventRising = null;
@@ -5328,8 +8465,7 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
     return this._valueAxes;
   },
   _getAxesByOptionPath(arg, isDirectOption, optionName) {
-    var that = this;
-    var sourceAxes = that._getAxesForScaling();
+    var sourceAxes = this._getAxesForScaling();
     var axes = [];
     if (isDirectOption) {
       var axisPath;
@@ -5348,19 +8484,20 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         var axis = sourceAxes.filter(function (a) {
           return a.getOptions().optionPath === "".concat(arg.name, "[").concat(index, "]");
         })[0];
-        (0, _type.isDefined)(v[optionName]) && (0, _type.isDefined)(axis) && (axes[index] = axis);
+        if ((0, _type.isDefined)(v[optionName]) && (0, _type.isDefined)(axis)) {
+          axes[index] = axis;
+        }
       });
     }
     return axes;
   },
   _optionChanged(arg) {
-    var that = this;
-    if (!that._optionChangedLocker) {
+    if (!this._optionChangedLocker) {
       var optionName = 'visualRange';
       var axes;
-      var isDirectOption = arg.fullName.indexOf(optionName) > 0 ? true : that.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
+      var isDirectOption = arg.fullName.indexOf(optionName) > 0 ? true : this.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
       if ((0, _type.isDefined)(isDirectOption)) {
-        axes = that._getAxesByOptionPath(arg, isDirectOption, optionName);
+        axes = this._getAxesByOptionPath(arg, isDirectOption, optionName);
         if (axes) {
           if (axes.length > 1 || isArray(arg.value)) {
             axes.forEach(function (a, index) {
@@ -5372,31 +8509,30 @@ var AdvancedChart = _m_base_chart.BaseChart.inherit({
         }
       }
     }
-    that.callBase(arg);
+    this.callBase(arg);
   },
   _change_VISUAL_RANGE() {
-    var that = this;
-    that._recreateSizeDependentObjects(false);
-    if (!that._changes.has('FULL_RENDER')) {
-      var resizePanesOnZoom = that.option('resizePanesOnZoom');
-      that._doRender({
+    this._recreateSizeDependentObjects(false);
+    if (!this._changes.has('FULL_RENDER')) {
+      var resizePanesOnZoom = this.option('resizePanesOnZoom');
+      this._doRender({
         force: true,
         drawTitle: false,
         drawLegend: false,
-        adjustAxes: resizePanesOnZoom !== null && resizePanesOnZoom !== void 0 ? resizePanesOnZoom : that.option('adjustAxesOnZoom') || false,
+        adjustAxes: resizePanesOnZoom !== null && resizePanesOnZoom !== void 0 ? resizePanesOnZoom : this.option('adjustAxesOnZoom') || false,
         animate: false
       });
-      that._raiseZoomEndHandlers();
+      this._raiseZoomEndHandlers();
     }
   },
   // API
   resetVisualRange() {
-    var that = this;
-    that._valueAxes.forEach(function (axis) {
+    var _this13 = this;
+    this._valueAxes.forEach(function (axis) {
       axis.resetVisualRange(false); // T602156
-      that._applyCustomVisualRangeOption(axis);
+      _this13._applyCustomVisualRangeOption(axis);
     });
-    that._requestChange([VISUAL_RANGE]);
+    this._requestChange([VISUAL_RANGE]);
   },
   _getCrosshairMargins() {
     return {
@@ -5427,7 +8563,7 @@ var _iterator = __webpack_require__(95479);
 var _type = __webpack_require__(35922);
 var _events_engine = _interopRequireDefault(__webpack_require__(55994));
 var _index = __webpack_require__(39611);
-var _layout_manager = __webpack_require__(21495);
+var _layout_manager = __webpack_require__(61189);
 var trackerModule = _interopRequireWildcard(__webpack_require__(19957));
 var _chart_theme_manager = __webpack_require__(99327);
 var _data_validator = __webpack_require__(45865);
@@ -5440,6 +8576,7 @@ var _tooltip = __webpack_require__(14371);
 var _utils = __webpack_require__(19157);
 var _base_series = __webpack_require__(54932);
 var _m_base_widget = _interopRequireDefault(__webpack_require__(55845));
+var _rolling_stock = __webpack_require__(56136);
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -5524,7 +8661,7 @@ function resolveLabelOverlappingInOneDirection(points, canvas, isRotated, isInve
     hasStackedSeries = hasStackedSeries || p.series.isStackedSeries() || p.series.isFullStackedSeries();
     p.getLabels().forEach(function (l) {
       if (l.isVisible()) {
-        rollingStocks.push(new RollingStock(l, isRotated, shiftFunction));
+        rollingStocks.push(new _rolling_stock.RollingStock(l, isRotated, shiftFunction));
       }
     });
   });
@@ -5532,7 +8669,7 @@ function resolveLabelOverlappingInOneDirection(points, canvas, isRotated, isInve
     if (Number(!isRotated) ^ Number(isInverted)) {
       rollingStocks.reverse();
     }
-    sortRollingStocks = !isInverted ? sortRollingStocksByValue(rollingStocks) : rollingStocks;
+    sortRollingStocks = isInverted ? rollingStocks : sortRollingStocksByValue(rollingStocks);
   } else {
     var rollingStocksTmp = rollingStocks.slice();
     sortRollingStocks = rollingStocks.sort(function (a, b) {
@@ -5566,11 +8703,9 @@ function sortRollingStocksByValue(rollingStocks) {
   return positiveRollingStocks.concat(negativeRollingStocks);
 }
 function prepareOverlapStacks(rollingStocks) {
-  var i;
-  var currentRollingStock;
   var root;
-  for (i = 0; i < rollingStocks.length - 1; i++) {
-    currentRollingStock = root || rollingStocks[i];
+  for (var i = 0; i < rollingStocks.length - 1; i += 1) {
+    var currentRollingStock = root || rollingStocks[i];
     if (checkStacksOverlapping(currentRollingStock, rollingStocks[i + 1])) {
       currentRollingStock.toChain(rollingStocks[i + 1]);
       rollingStocks[i + 1] = null;
@@ -5580,94 +8715,32 @@ function prepareOverlapStacks(rollingStocks) {
     }
   }
 }
-function moveRollingStock(rollingStocks, canvas) {
-  var i;
-  var j;
-  var currentRollingStock;
-  var nextRollingStock;
-  var currentBBox;
-  var nextBBox;
-  for (i = 0; i < rollingStocks.length; i++) {
-    currentRollingStock = rollingStocks[i];
-    if (rollingStocksIsOut(currentRollingStock, canvas)) {
-      currentBBox = currentRollingStock.getBoundingRect();
-      for (j = i + 1; j < rollingStocks.length; j++) {
-        nextRollingStock = rollingStocks[j];
-        if (!nextRollingStock) {
-          continue;
-        }
-        nextBBox = nextRollingStock.getBoundingRect();
-        if (nextBBox.end > currentBBox.start - (currentBBox.end - canvas.end)) {
-          nextRollingStock.toChain(currentRollingStock);
-          rollingStocks[i] = currentRollingStock = null;
-          break;
-        }
-      }
-    }
-    currentRollingStock && currentRollingStock.setRollingStockInCanvas(canvas);
-  }
-}
 function rollingStocksIsOut(rollingStock, canvas) {
-  return rollingStock && rollingStock.getBoundingRect().end > canvas.end;
+  return rollingStock.getBoundingRect().end > canvas.end;
 }
-function RollingStock(label, isRotated, shiftFunction) {
-  var bBox = label.getBoundingRect();
-  var x = bBox.x;
-  var y = bBox.y;
-  var endX = bBox.x + bBox.width;
-  var endY = bBox.y + bBox.height;
-  this.labels = [label];
-  this.shiftFunction = shiftFunction;
-  this._bBox = {
-    start: isRotated ? x : y,
-    width: isRotated ? bBox.width : bBox.height,
-    end: isRotated ? endX : endY,
-    oppositeStart: isRotated ? y : x,
-    oppositeEnd: isRotated ? endY : endX
-  };
-  this._initialPosition = isRotated ? bBox.x : bBox.y;
-}
-RollingStock.prototype = {
-  toChain(nextRollingStock) {
-    var nextRollingStockBBox = nextRollingStock.getBoundingRect();
-    nextRollingStock.shift(nextRollingStockBBox.start - this._bBox.end);
-    this._changeBoxWidth(nextRollingStockBBox.width);
-    this.labels = this.labels.concat(nextRollingStock.labels);
-  },
-  getBoundingRect() {
-    return this._bBox;
-  },
-  shift(shiftLength) {
-    var shiftFunction = this.shiftFunction;
-    (0, _iterator.each)(this.labels, function (index, label) {
-      var bBox = label.getBoundingRect();
-      var coords = shiftFunction(bBox, shiftLength);
-      if (!label.hideInsideLabel(coords)) {
-        label.shift(coords.x, coords.y);
+function moveRollingStock(rollingStocks, canvas) {
+  for (var i = 0; i < rollingStocks.length; i += 1) {
+    var currentRollingStock = rollingStocks[i];
+    var shouldSetCanvas = true;
+    if (currentRollingStock !== null && rollingStocksIsOut(currentRollingStock, canvas)) {
+      var currentBBox = currentRollingStock.getBoundingRect();
+      for (var j = i + 1; j < rollingStocks.length; j += 1) {
+        var nextRollingStock = rollingStocks[j];
+        if (nextRollingStock) {
+          var nextBBox = nextRollingStock.getBoundingRect();
+          if (nextBBox.end > currentBBox.start - (currentBBox.end - canvas.end)) {
+            nextRollingStock.toChain(currentRollingStock);
+            shouldSetCanvas = false;
+            break;
+          }
+        }
       }
-    });
-    this._bBox.end -= shiftLength;
-    this._bBox.start -= shiftLength;
-  },
-  setRollingStockInCanvas(canvas) {
-    if (this._bBox.end > canvas.end) {
-      this.shift(this._bBox.end - canvas.end);
     }
-  },
-  getLabels() {
-    return this.labels;
-  },
-  value() {
-    return this.labels[0].getData().value;
-  },
-  getInitialPosition() {
-    return this._initialPosition;
-  },
-  _changeBoxWidth(width) {
-    this._bBox.end += width;
-    this._bBox.width += width;
+    if (shouldSetCanvas) {
+      currentRollingStock === null || currentRollingStock === void 0 ? void 0 : currentRollingStock.setRollingStockInCanvas(canvas);
+    }
   }
-};
+}
 function getLegendFields(name) {
   return {
     nameField: "".concat(name, "Name"),
@@ -5751,38 +8824,37 @@ var BaseChart = _m_base_widget.default.inherit({
     return themeManager;
   },
   _initCore() {
-    var that = this;
-    that._canvasClipRect = that._renderer.clipRect();
-    that._createHtmlStructure();
-    that._createLegend();
-    that._createTracker();
-    that._needHandleRenderComplete = true;
-    that.layoutManager = new _layout_manager.LayoutManager();
-    that._createScrollBar();
-    _events_engine.default.on(that._$element, 'contextmenu', function (event) {
+    this._canvasClipRect = this._renderer.clipRect();
+    this._createHtmlStructure();
+    this._createLegend();
+    this._createTracker();
+    this._needHandleRenderComplete = true;
+    this.layoutManager = new _layout_manager.LayoutManager();
+    this._createScrollBar();
+    _events_engine.default.on(this._$element, 'contextmenu', function (event) {
       if ((0, _index.isTouchEvent)(event) || (0, _index.isPointerEvent)(event)) {
         event.preventDefault();
       }
     });
-    _events_engine.default.on(that._$element, 'MSHoldVisual', function (event) {
+    _events_engine.default.on(this._$element, 'MSHoldVisual', function (event) {
       event.preventDefault();
     });
   },
-  // Common functionality is overridden because Chart has its own layout logic. Nevertheless common logic should be used.
+  // Common functionality is overridden because Chart has its own layout logic.
+  // Nevertheless common logic should be used.
   _getLayoutItems: _common.noop,
   _layoutManagerOptions() {
     return this._themeManager.getOptions('adaptiveLayout');
   },
   _reinit() {
-    var that = this;
-    (0, _utils.setCanvasValues)(that._canvas);
-    that._reinitAxes();
-    that._requestChange(['DATA_SOURCE', 'DATA_INIT', 'CORRECT_AXIS', 'FULL_RENDER']);
+    (0, _utils.setCanvasValues)(this._canvas);
+    this._reinitAxes();
+    this._requestChange(['DATA_SOURCE', 'DATA_INIT', 'CORRECT_AXIS', 'FULL_RENDER']);
   },
   _correctAxes: _common.noop,
   _createHtmlStructure() {
-    var that = this;
-    var renderer = that._renderer;
+    var _this = this;
+    var renderer = this._renderer;
     var root = renderer.root;
     var createConstantLinesGroup = function createConstantLinesGroup() {
       // TODO: Must be created in the same place where used (advanced chart)
@@ -5790,7 +8862,7 @@ var BaseChart = _m_base_widget.default.inherit({
         class: 'dxc-constant-lines-group'
       }).linkOn(root, 'constant-lines');
     };
-    that._constantLinesGroup = {
+    this._constantLinesGroup = {
       dispose() {
         this.under.dispose();
         this.above.dispose();
@@ -5808,90 +8880,91 @@ var BaseChart = _m_base_widget.default.inherit({
         this.above.linkAppend();
       }
     };
-    that._labelsAxesGroup = renderer.g().attr({
+    this._labelsAxesGroup = renderer.g().attr({
       class: 'dxc-elements-axes-group'
     });
     var appendLabelsAxesGroup = function appendLabelsAxesGroup() {
-      that._labelsAxesGroup.linkOn(root, 'elements');
+      _this._labelsAxesGroup.linkOn(root, 'elements');
     };
-    that._backgroundRect = renderer.rect().attr({
+    this._backgroundRect = renderer.rect().attr({
       fill: 'gray',
       opacity: 0.0001
     }).append(root);
-    that._panesBackgroundGroup = renderer.g().attr({
+    this._panesBackgroundGroup = renderer.g().attr({
       class: 'dxc-background'
     }).append(root);
-    that._stripsGroup = renderer.g().attr({
+    this._stripsGroup = renderer.g().attr({
       class: 'dxc-strips-group'
     }).linkOn(root, 'strips'); // TODO: Must be created in the same place where used (advanced chart)
-    that._gridGroup = renderer.g().attr({
+    this._gridGroup = renderer.g().attr({
       class: 'dxc-grids-group'
     }).linkOn(root, 'grids'); // TODO: Must be created in the same place where used (advanced chart)
-    that._panesBorderGroup = renderer.g().attr({
+    this._panesBorderGroup = renderer.g().attr({
       class: 'dxc-border'
     }).linkOn(root, 'border'); // TODO: Must be created in the same place where used (chart)
-    that._axesGroup = renderer.g().attr({
+    this._axesGroup = renderer.g().attr({
       class: 'dxc-axes-group'
     }).linkOn(root, 'axes'); // TODO: Must be created in the same place where used (advanced chart)
-    that._executeAppendBeforeSeries(appendLabelsAxesGroup);
-    that._stripLabelAxesGroup = renderer.g().attr({
+    this._executeAppendBeforeSeries(appendLabelsAxesGroup);
+    this._stripLabelAxesGroup = renderer.g().attr({
       class: 'dxc-strips-labels-group'
     }).linkOn(root, 'strips-labels'); // TODO: Must be created in the same place where used (advanced chart)
-    that._constantLinesGroup.under = createConstantLinesGroup();
-    that._seriesGroup = renderer.g().attr({
+    this._constantLinesGroup.under = createConstantLinesGroup();
+    this._seriesGroup = renderer.g().attr({
       class: 'dxc-series-group'
     }).linkOn(root, 'series');
-    that._executeAppendAfterSeries(appendLabelsAxesGroup);
-    that._constantLinesGroup.above = createConstantLinesGroup();
-    that._scaleBreaksGroup = renderer.g().attr({
+    this._executeAppendAfterSeries(appendLabelsAxesGroup);
+    this._constantLinesGroup.above = createConstantLinesGroup();
+    this._scaleBreaksGroup = renderer.g().attr({
       class: 'dxc-scale-breaks'
     }).linkOn(root, 'scale-breaks');
-    that._labelsGroup = renderer.g().attr({
+    this._labelsGroup = renderer.g().attr({
       class: 'dxc-labels-group'
     }).linkOn(root, 'labels');
-    that._crosshairCursorGroup = renderer.g().attr({
+    this._crosshairCursorGroup = renderer.g().attr({
       class: 'dxc-crosshair-cursor'
     }).linkOn(root, 'crosshair');
-    that._legendGroup = renderer.g().attr({
+    this._legendGroup = renderer.g().attr({
       class: 'dxc-legend',
-      'clip-path': that._getCanvasClipRectID()
+      'clip-path': this._getCanvasClipRectID()
     }).linkOn(root, 'legend').linkAppend(root).enableLinks();
-    that._scrollBarGroup = renderer.g().attr({
+    this._scrollBarGroup = renderer.g().attr({
       class: 'dxc-scroll-bar'
     }).linkOn(root, 'scroll-bar');
   },
   _executeAppendBeforeSeries() {},
   _executeAppendAfterSeries() {},
   _disposeObjectsInArray(propName, fieldNames) {
-    (0, _iterator.each)(this[propName] || [], function (_, item) {
+    (this[propName] || []).forEach(function (item) {
       if (fieldNames && item) {
-        (0, _iterator.each)(fieldNames, function (_, field) {
-          item[field] && item[field].dispose();
+        fieldNames.forEach(function (field) {
+          var _a;
+          (_a = item[field]) === null || _a === void 0 ? void 0 : _a.dispose();
         });
       } else {
-        item && item.dispose();
+        item === null || item === void 0 ? void 0 : item.dispose();
       }
     });
     this[propName] = null;
   },
   _disposeCore() {
-    var that = this;
+    var _this2 = this;
     var disposeObject = function disposeObject(propName) {
       // TODO: What is the purpose of the `if` check in a private function?
-      if (that[propName]) {
-        that[propName].dispose();
-        that[propName] = null;
+      if (_this2[propName]) {
+        _this2[propName].dispose();
+        _this2[propName] = null;
       }
     };
     var unlinkGroup = function unlinkGroup(name) {
-      that[name].linkOff();
+      _this2[name].linkOff();
     };
     var disposeObjectsInArray = this._disposeObjectsInArray;
-    that._renderer.stopAllAnimations();
-    disposeObjectsInArray.call(that, 'series');
+    this._renderer.stopAllAnimations();
+    disposeObjectsInArray.call(this, 'series');
     disposeObject('_tracker');
     disposeObject('_crosshair');
-    that.layoutManager = that._userOptions = that._canvas = that._groupsData = null;
+    this.layoutManager = this._userOptions = this._canvas = this._groupsData = null;
     unlinkGroup('_stripsGroup');
     unlinkGroup('_gridGroup');
     unlinkGroup('_axesGroup');
@@ -5954,14 +9027,13 @@ var BaseChart = _m_base_widget.default.inherit({
   },
   _trackerType: 'ChartTracker',
   _createTracker() {
-    var that = this;
     // eslint-disable-next-line import/namespace
-    that._tracker = new trackerModule[that._trackerType]({
-      seriesGroup: that._seriesGroup,
-      renderer: that._renderer,
-      tooltip: that._tooltip,
-      legend: that._legend,
-      eventTrigger: that._eventTrigger
+    this._tracker = new trackerModule[this._trackerType]({
+      seriesGroup: this._seriesGroup,
+      renderer: this._renderer,
+      tooltip: this._tooltip,
+      legend: this._legend,
+      eventTrigger: this._eventTrigger
     });
   },
   _getTrackerSettings() {
@@ -5977,13 +9049,12 @@ var BaseChart = _m_base_widget.default.inherit({
     };
   },
   _updateTracker(trackerCanvases) {
-    var that = this;
-    that._tracker.update(that._getTrackerSettings());
-    that._tracker.setCanvases({
+    this._tracker.update(this._getTrackerSettings());
+    this._tracker.setCanvases({
       left: 0,
-      right: that._canvas.width,
+      right: this._canvas.width,
       top: 0,
-      bottom: that._canvas.height
+      bottom: this._canvas.height
     }, trackerCanvases);
   },
   _createCanvasFromRect(rect) {
@@ -5998,26 +9069,25 @@ var BaseChart = _m_base_widget.default.inherit({
     });
   },
   _doRender(_options) {
-    var that = this;
-    if (that._canvas.width === 0 && that._canvas.height === 0) return;
-    that._resetIsReady(); // T207606
-    var drawOptions = that._prepareDrawOptions(_options);
+    if (this._canvas.width === 0 && this._canvas.height === 0) return;
+    this._resetIsReady(); // T207606
+    var drawOptions = this._prepareDrawOptions(_options);
     var recreateCanvas = drawOptions.recreateCanvas;
     // T207665
-    that._preserveOriginalCanvas();
+    this._preserveOriginalCanvas();
     // T207665
     if (recreateCanvas) {
-      that.__currentCanvas = that._canvas;
+      this.__currentCanvas = this._canvas;
     } else {
-      that._canvas = that.__currentCanvas;
+      this._canvas = this.__currentCanvas;
     }
-    recreateCanvas && that._updateCanvasClipRect(that._canvas);
+    recreateCanvas && this._updateCanvasClipRect(this._canvas);
     this._canvas = this._createCanvasFromRect(this._rect);
-    that._renderer.stopAllAnimations(true);
-    that._cleanGroups();
+    this._renderer.stopAllAnimations(true);
+    this._cleanGroups();
     var startTime = new Date();
-    that._renderElements(drawOptions);
-    that._lastRenderingTime = Number(new Date()) - Number(startTime);
+    this._renderElements(drawOptions);
+    this._lastRenderingTime = Number(new Date()) - Number(startTime);
   },
   _preserveOriginalCanvas() {
     this.__originalCanvas = this._canvas;
@@ -6026,32 +9096,32 @@ var BaseChart = _m_base_widget.default.inherit({
 
   _layoutAxes: _common.noop,
   _renderElements(drawOptions) {
-    var that = this;
-    var preparedOptions = that._prepareToRender(drawOptions);
-    var isRotated = that._isRotated();
-    var isLegendInside = that._isLegendInside();
+    var _this3 = this;
+    var preparedOptions = this._prepareToRender(drawOptions);
+    var isRotated = this._isRotated();
+    var isLegendInside = this._isLegendInside();
     var trackerCanvases = [];
-    var dirtyCanvas = (0, _extend.extend)({}, that._canvas);
+    var dirtyCanvas = (0, _extend.extend)({}, this._canvas);
     var argBusinessRange;
     var zoomMinArg;
     var zoomMaxArg;
-    that._renderer.lock();
-    if (drawOptions.drawLegend && that._legend) {
-      that._legendGroup.linkAppend();
+    this._renderer.lock();
+    if (drawOptions.drawLegend && this._legend) {
+      this._legendGroup.linkAppend();
     }
-    that.layoutManager.setOptions(that._layoutManagerOptions());
-    var layoutTargets = that._getLayoutTargets();
+    this.layoutManager.setOptions(this._layoutManagerOptions());
+    var layoutTargets = this._getLayoutTargets();
     this._layoutAxes(function (needSpace) {
       var axisDrawOptions = needSpace ? (0, _extend.extend)({}, drawOptions, {
         animate: false,
         recreateCanvas: true
       }) : drawOptions;
-      var canvas = that._renderAxes(axisDrawOptions, preparedOptions);
-      that._shrinkAxes(needSpace, canvas);
+      var canvas = _this3._renderAxes(axisDrawOptions, preparedOptions);
+      _this3._shrinkAxes(needSpace, canvas);
     });
-    that._applyClipRects(preparedOptions);
-    that._appendSeriesGroups();
-    that._createCrosshairCursor();
+    this._applyClipRects(preparedOptions);
+    this._appendSeriesGroups();
+    this._createCrosshairCursor();
     layoutTargets.forEach(function (_ref) {
       var canvas = _ref.canvas;
       trackerCanvases.push({
@@ -6061,22 +9131,22 @@ var BaseChart = _m_base_widget.default.inherit({
         bottom: canvas.height - canvas.bottom
       });
     });
-    if (that._scrollBar) {
-      argBusinessRange = that._argumentAxes[0].getTranslator().getBusinessRange();
+    if (this._scrollBar) {
+      argBusinessRange = this._argumentAxes[0].getTranslator().getBusinessRange();
       if (argBusinessRange.axisType === 'discrete' && argBusinessRange.categories && argBusinessRange.categories.length <= 1 || argBusinessRange.axisType !== 'discrete' && argBusinessRange.min === argBusinessRange.max) {
         zoomMinArg = zoomMaxArg = undefined;
       } else {
         zoomMinArg = argBusinessRange.minVisible;
         zoomMaxArg = argBusinessRange.maxVisible;
       }
-      that._scrollBar.init(argBusinessRange, !that._argumentAxes[0].getOptions().valueMarginsEnabled).setPosition(zoomMinArg, zoomMaxArg);
+      this._scrollBar.init(argBusinessRange, !this._argumentAxes[0].getOptions().valueMarginsEnabled).setPosition(zoomMinArg, zoomMaxArg);
     }
-    that._updateTracker(trackerCanvases);
-    that._updateLegendPosition(drawOptions, isLegendInside);
-    that._applyPointMarkersAutoHiding();
-    that._renderSeries(drawOptions, isRotated, isLegendInside);
-    that._renderGraphicObjects();
-    that._renderer.unlock();
+    this._updateTracker(trackerCanvases);
+    this._updateLegendPosition(drawOptions, isLegendInside);
+    this._applyPointMarkersAutoHiding();
+    this._renderSeries(drawOptions, isRotated, isLegendInside);
+    this._renderGraphicObjects();
+    this._renderer.unlock();
   },
   _updateLegendPosition: _common.noop,
   _createCrosshairCursor: _common.noop,
@@ -6104,42 +9174,41 @@ var BaseChart = _m_base_widget.default.inherit({
     };
   },
   _getPointsToAnimation(series) {
-    var _this = this;
+    var _this4 = this;
     var argViewPortFilter = this._getArgFilter();
     return series.map(function (s) {
-      var valViewPortFilter = _this._getValFilter(s);
+      var valViewPortFilter = _this4._getValFilter(s);
       return s.getPoints().filter(function (p) {
         return p.getOptions().visible && argViewPortFilter(p.argument) && (valViewPortFilter(p.getMinValue(true)) || valViewPortFilter(p.getMaxValue(true)));
       }).length;
     });
   },
   _renderSeriesElements(drawOptions, isLegendInside) {
-    var that = this;
-    var series = that.series;
-    var resolveLabelOverlapping = that._themeManager.getOptions('resolveLabelOverlapping');
-    var pointsToAnimation = that._getPointsToAnimation(series);
+    var _this5 = this;
+    var series = this.series;
+    var resolveLabelOverlapping = this._themeManager.getOptions('resolveLabelOverlapping');
+    var pointsToAnimation = this._getPointsToAnimation(series);
     series.forEach(function (singleSeries, index) {
-      that._applyExtraSettings(singleSeries, drawOptions);
-      var animationEnabled = drawOptions.animate && pointsToAnimation[index] <= drawOptions.animationPointsLimit && that._renderer.animationEnabled();
-      singleSeries.draw(animationEnabled, drawOptions.hideLayoutLabels, that._getLegendCallBack(singleSeries));
+      _this5._applyExtraSettings(singleSeries, drawOptions);
+      var animationEnabled = drawOptions.animate && pointsToAnimation[index] <= drawOptions.animationPointsLimit && _this5._renderer.animationEnabled();
+      singleSeries.draw(animationEnabled, drawOptions.hideLayoutLabels, _this5._getLegendCallBack(singleSeries));
     });
     if (resolveLabelOverlapping === 'none') {
-      that._adjustSeriesLabels(false);
+      this._adjustSeriesLabels(false);
     } else {
-      that._locateLabels(resolveLabelOverlapping);
+      this._locateLabels(resolveLabelOverlapping);
     }
-    that._renderTrackers(isLegendInside);
-    that._tracker.repairTooltip();
-    that._renderExtraElements();
-    that._clearCanvas();
-    that._seriesElementsDrawn = true;
+    this._renderTrackers(isLegendInside);
+    this._tracker.repairTooltip();
+    this._renderExtraElements();
+    this._clearCanvas();
+    this._seriesElementsDrawn = true;
   },
   _changesApplied() {
-    var that = this;
-    if (that._seriesElementsDrawn) {
-      that._seriesElementsDrawn = false;
-      that._drawn();
-      that._renderCompleteHandler();
+    if (this._seriesElementsDrawn) {
+      this._seriesElementsDrawn = false;
+      this._drawn();
+      this._renderCompleteHandler();
     }
   },
   _locateLabels(resolveLabelOverlapping) {
@@ -6204,45 +9273,42 @@ var BaseChart = _m_base_widget.default.inherit({
     }
   },
   _cleanGroups() {
-    var that = this;
-    that._stripsGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._gridGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._axesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._constantLinesGroup.clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._stripLabelAxesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._stripsGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._gridGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._axesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._constantLinesGroup.clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._stripLabelAxesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
     // that._seriesGroup.linkRemove().clear();
-    that._labelsGroup.linkRemove().clear();
-    that._crosshairCursorGroup.linkRemove().clear();
-    that._scaleBreaksGroup.linkRemove().clear();
+    this._labelsGroup.linkRemove().clear();
+    this._crosshairCursorGroup.linkRemove().clear();
+    this._scaleBreaksGroup.linkRemove().clear();
   },
   _allowLegendInsidePosition() {
     return false;
   },
   _createLegend() {
-    var that = this;
-    var legendSettings = getLegendSettings(that._legendDataField);
-    that._legend = new _legend.Legend({
-      renderer: that._renderer,
-      widget: that,
-      group: that._legendGroup,
+    var legendSettings = getLegendSettings(this._legendDataField);
+    this._legend = new _legend.Legend({
+      renderer: this._renderer,
+      widget: this,
+      group: this._legendGroup,
       backgroundClass: 'dxc-border',
       itemGroupClass: 'dxc-item',
       titleGroupClass: 'dxc-title',
       textField: legendSettings.textField,
       getFormatObject: legendSettings.getFormatObject,
-      allowInsidePosition: that._allowLegendInsidePosition()
+      allowInsidePosition: this._allowLegendInsidePosition()
     });
-    that._updateLegend();
-    that._layout.add(that._legend);
+    this._updateLegend();
+    this._layout.add(this._legend);
   },
   _updateLegend() {
-    var that = this;
-    var themeManager = that._themeManager;
+    var themeManager = this._themeManager;
     var legendOptions = themeManager.getOptions('legend');
-    var legendData = that._getLegendData();
+    var legendData = this._getLegendData();
     legendOptions.containerBackgroundColor = themeManager.getOptions('containerBackgroundColor');
-    legendOptions._incidentOccurred = that._incidentOccurred; // TODO: Why is `_` used?
-    that._legend.update(legendData, legendOptions, themeManager.theme('legend').title);
+    legendOptions._incidentOccurred = this._incidentOccurred; // TODO: Why is `_` used?
+    this._legend.update(legendData, legendOptions, themeManager.theme('legend').title);
     this._change(['LAYOUT']);
   },
   _prepareDrawOptions(drawOptions) {
@@ -6305,38 +9371,35 @@ var BaseChart = _m_base_widget.default.inherit({
   },
   _disposeSeries(seriesIndex) {
     var _a;
-    var that = this;
-    if (that.series) {
+    if (this.series) {
       if ((0, _type.isDefined)(seriesIndex)) {
-        that.series[seriesIndex].dispose();
-        that.series.splice(seriesIndex, 1);
+        this.series[seriesIndex].dispose();
+        this.series.splice(seriesIndex, 1);
       } else {
-        (0, _iterator.each)(that.series, function (_, s) {
+        this.series.forEach(function (s) {
           return s.dispose();
         });
-        that.series.length = 0;
+        this.series.length = 0;
       }
     }
-    if (!((_a = that.series) === null || _a === void 0 ? void 0 : _a.length)) {
-      that.series = [];
+    if (!((_a = this.series) === null || _a === void 0 ? void 0 : _a.length)) {
+      this.series = [];
     }
   },
   _disposeSeriesFamilies() {
-    var that = this;
-    (0, _iterator.each)(that.seriesFamilies || [], function (_, family) {
+    (this.seriesFamilies || []).forEach(function (family) {
       family.dispose();
     });
-    that.seriesFamilies = null;
-    that._needHandleRenderComplete = true;
+    this.seriesFamilies = null;
+    this._needHandleRenderComplete = true;
   },
   _optionChanged(arg) {
     this._themeManager.resetOptions(arg.name);
     this.callBase.apply(this, arguments);
   },
   _applyChanges() {
-    var that = this;
-    that._themeManager.update(that._options.silent());
-    that.callBase.apply(that, arguments);
+    this._themeManager.update(this._options.silent());
+    this.callBase.apply(this, arguments);
   },
   _optionChangesMap: {
     animation: 'ANIMATION',
@@ -6402,10 +9465,9 @@ var BaseChart = _m_base_widget.default.inherit({
     this._refreshSeries('INIT');
   },
   _change_REFRESH_AXES() {
-    var that = this;
-    (0, _utils.setCanvasValues)(that._canvas);
-    that._reinitAxes();
-    that._requestChange(['CORRECT_AXIS', 'FULL_RENDER']);
+    (0, _utils.setCanvasValues)(this._canvas);
+    this._reinitAxes();
+    this._requestChange(['CORRECT_AXIS', 'FULL_RENDER']);
   },
   _change_SCROLL_BAR() {
     this._createScrollBar();
@@ -6443,16 +9505,15 @@ var BaseChart = _m_base_widget.default.inherit({
     }
   },
   _updateCanvasClipRect(canvas) {
-    var that = this;
     var width = Math.max(canvas.width - canvas.left - canvas.right, 0);
     var height = Math.max(canvas.height - canvas.top - canvas.bottom, 0);
-    that._canvasClipRect.attr({
+    this._canvasClipRect.attr({
       x: canvas.left,
       y: canvas.top,
       width,
       height
     });
-    that._backgroundRect.attr({
+    this._backgroundRect.attr({
       x: canvas.left,
       y: canvas.top,
       width,
@@ -6476,26 +9537,25 @@ var BaseChart = _m_base_widget.default.inherit({
     singleSeries.createPoints(false);
   },
   _handleSeriesDataUpdated() {
-    var _this2 = this;
+    var _this6 = this;
     if (this._getVisibleSeries().some(function (s) {
       return s.useAggregation();
     })) {
       this._populateMarginOptions();
     }
     this.series.forEach(function (s) {
-      return _this2._processSingleSeries(s);
+      return _this6._processSingleSeries(s);
     }, this);
   },
   _dataSpecificInit(needRedraw) {
-    var that = this;
-    if (!that.series || that.needToPopulateSeries) {
-      that.series = that._populateSeries();
+    if (!this.series || this.needToPopulateSeries) {
+      this.series = this._populateSeries();
     }
-    that._repopulateSeries();
-    that._seriesPopulatedHandlerCore();
-    that._populateBusinessRange();
-    that._tracker.updateSeries(that.series, this._changes.has('INIT'));
-    that._updateLegend();
+    this._repopulateSeries();
+    this._seriesPopulatedHandlerCore();
+    this._populateBusinessRange();
+    this._tracker.updateSeries(this.series, this._changes.has('INIT'));
+    this._updateLegend();
     if (needRedraw) {
       this._requestChange(['FULL_RENDER']);
     }
@@ -6508,33 +9568,31 @@ var BaseChart = _m_base_widget.default.inherit({
     });
   },
   _repopulateSeries() {
-    var that = this;
-    var themeManager = that._themeManager;
-    var data = that._dataSourceItems();
+    var themeManager = this._themeManager;
+    var data = this._dataSourceItems();
     var dataValidatorOptions = themeManager.getOptions('dataPrepareSettings');
     var seriesTemplate = themeManager.getOptions('seriesTemplate');
     if (seriesTemplate) {
-      that._populateSeries(data);
+      this._populateSeries(data);
     }
-    that._groupSeries();
-    var parsedData = (0, _data_validator.validateData)(data, that._groupsData, that._incidentOccurred, dataValidatorOptions);
+    this._groupSeries();
+    var parsedData = (0, _data_validator.validateData)(data, this._groupsData, this._incidentOccurred, dataValidatorOptions);
     themeManager.resetPalette();
-    that.series.forEach(function (singleSeries) {
+    this.series.forEach(function (singleSeries) {
       singleSeries.updateData(parsedData[singleSeries.getArgumentField()]);
     });
-    that._handleSeriesDataUpdated();
+    this._handleSeriesDataUpdated();
   },
   _renderCompleteHandler() {
-    var that = this;
     var allSeriesInited = true;
-    if (that._needHandleRenderComplete) {
-      (0, _iterator.each)(that.series, function (_, s) {
+    if (this._needHandleRenderComplete) {
+      this.series.forEach(function (s) {
         allSeriesInited = allSeriesInited && s.canRenderCompleteHandle();
       });
       if (allSeriesInited) {
-        that._needHandleRenderComplete = false;
-        that._eventTrigger('done', {
-          target: that
+        this._needHandleRenderComplete = false;
+        this._eventTrigger('done', {
+          target: this
         });
       }
     }
@@ -6545,54 +9603,56 @@ var BaseChart = _m_base_widget.default.inherit({
     return (0, _type.isDefined)(this.option('dataSource')) && this._dataIsLoaded();
   },
   _populateSeriesOptions(data) {
-    var that = this;
-    var themeManager = that._themeManager;
+    var _this7 = this;
+    var themeManager = this._themeManager;
     var seriesTemplate = themeManager.getOptions('seriesTemplate');
-    var seriesOptions = seriesTemplate ? (0, _utils.processSeriesTemplate)(seriesTemplate, data || []) : that.option('series');
+    var seriesOptions = seriesTemplate ? (0, _utils.processSeriesTemplate)(seriesTemplate, data || []) : this.option('series');
     var allSeriesOptions = isArray(seriesOptions) ? seriesOptions : seriesOptions ? [seriesOptions] : [];
-    var extraOptions = that._getExtraOptions();
+    var extraOptions = this._getExtraOptions();
     var particularSeriesOptions;
     var seriesTheme;
     var seriesThemes = [];
     var seriesVisibilityChanged = function seriesVisibilityChanged(target) {
-      that._specialProcessSeries();
-      that._populateBusinessRange(target && target.getValueAxis(), true);
-      that._renderer.stopAllAnimations(true);
-      that._updateLegend();
-      that._requestChange(['FULL_RENDER']);
+      _this7._specialProcessSeries();
+      _this7._populateBusinessRange(target && target.getValueAxis(), true);
+      _this7._renderer.stopAllAnimations(true);
+      _this7._updateLegend();
+      _this7._requestChange(['FULL_RENDER']);
     };
     for (var i = 0; i < allSeriesOptions.length; i++) {
       particularSeriesOptions = (0, _extend.extend)(true, {}, allSeriesOptions[i], extraOptions);
       if (!(0, _type.isDefined)(particularSeriesOptions.name) || particularSeriesOptions.name === '') {
         particularSeriesOptions.name = "Series ".concat((i + 1).toString());
       }
-      particularSeriesOptions.rotated = that._isRotated();
+      particularSeriesOptions.rotated = this._isRotated();
       particularSeriesOptions.customizePoint = themeManager.getOptions('customizePoint');
       particularSeriesOptions.customizeLabel = themeManager.getOptions('customizeLabel');
       particularSeriesOptions.visibilityChanged = seriesVisibilityChanged;
-      particularSeriesOptions.incidentOccurred = that._incidentOccurred;
+      particularSeriesOptions.incidentOccurred = this._incidentOccurred;
       seriesTheme = themeManager.getOptions('series', particularSeriesOptions, allSeriesOptions.length);
-      if (that._checkPaneName(seriesTheme)) {
+      if (this._checkPaneName(seriesTheme)) {
         seriesThemes.push(seriesTheme);
       }
     }
     return seriesThemes;
   },
   _populateSeries(data) {
+    var _this8 = this;
     var _a;
-    var that = this;
     var seriesBasis = [];
-    var incidentOccurred = that._incidentOccurred;
-    var seriesThemes = that._populateSeriesOptions(data);
+    var incidentOccurred = this._incidentOccurred;
+    var seriesThemes = this._populateSeriesOptions(data);
     var particularSeries;
     var disposeSeriesFamilies = false;
-    that.needToPopulateSeries = false;
-    (0, _iterator.each)(seriesThemes, function (_, theme) {
-      var curSeries = that.series && that.series.filter(function (s) {
+    this.needToPopulateSeries = false;
+    seriesThemes.forEach(function (theme) {
+      var _a;
+      var findSeries = function findSeries(s) {
         return s.name === theme.name && !seriesBasis.map(function (sb) {
           return sb.series;
         }).includes(s);
-      })[0];
+      };
+      var curSeries = (_a = _this8.series) === null || _a === void 0 ? void 0 : _a.find(findSeries);
       if (curSeries && curSeries.type === theme.type) {
         seriesBasis.push({
           series: curSeries,
@@ -6605,46 +9665,46 @@ var BaseChart = _m_base_widget.default.inherit({
         disposeSeriesFamilies = true;
       }
     });
-    ((_a = that.series) === null || _a === void 0 ? void 0 : _a.length) !== 0 && that._tracker.clearHover();
-    (0, _iterator.reverseEach)(that.series, function (index, series) {
+    ((_a = this.series) === null || _a === void 0 ? void 0 : _a.length) !== 0 && this._tracker.clearHover();
+    (0, _iterator.reverseEach)(this.series, function (index, series) {
       if (!seriesBasis.some(function (s) {
         return series === s.series;
       })) {
-        that._disposeSeries(index);
+        _this8._disposeSeries(index);
         disposeSeriesFamilies = true;
       }
     });
     !disposeSeriesFamilies && (disposeSeriesFamilies = seriesBasis.some(function (sb) {
       return sb.series.name !== seriesThemes[sb.series.index].name;
     }));
-    that.series = [];
-    disposeSeriesFamilies && that._disposeSeriesFamilies();
-    that._themeManager.resetPalette();
+    this.series = [];
+    disposeSeriesFamilies && this._disposeSeriesFamilies();
+    this._themeManager.resetPalette();
     var eventPipe = function eventPipe(data) {
-      that.series.forEach(function (currentSeries) {
+      _this8.series.forEach(function (currentSeries) {
         currentSeries.notify(data);
       });
     };
-    (0, _iterator.each)(seriesBasis, function (_, basis) {
+    seriesBasis.forEach(function (basis) {
       var _a, _b;
       var seriesTheme = basis.options;
-      var argumentAxis = (_b = (_a = that._argumentAxes) === null || _a === void 0 ? void 0 : _a.filter(function (a) {
+      var argumentAxis = (_b = (_a = _this8._argumentAxes) === null || _a === void 0 ? void 0 : _a.filter(function (a) {
         return a.pane === seriesTheme.pane;
-      })[0]) !== null && _b !== void 0 ? _b : that.getArgumentAxis();
+      })[0]) !== null && _b !== void 0 ? _b : _this8.getArgumentAxis();
       var renderSettings = {
-        commonSeriesModes: that._getSelectionModes(),
+        commonSeriesModes: _this8._getSelectionModes(),
         argumentAxis,
-        valueAxis: that._getValueAxis(seriesTheme.pane, seriesTheme.axis)
+        valueAxis: _this8._getValueAxis(seriesTheme.pane, seriesTheme.axis)
       };
       if (basis.series) {
         particularSeries = basis.series;
         particularSeries.updateOptions(seriesTheme, renderSettings);
       } else {
         particularSeries = new _base_series.Series((0, _extend.extend)({
-          renderer: that._renderer,
-          seriesGroup: that._seriesGroup,
-          labelsGroup: that._labelsGroup,
-          eventTrigger: that._eventTrigger,
+          renderer: _this8._renderer,
+          seriesGroup: _this8._seriesGroup,
+          labelsGroup: _this8._labelsGroup,
+          eventTrigger: _this8._eventTrigger,
           eventPipe,
           incidentOccurred
         }, renderSettings), seriesTheme);
@@ -6652,11 +9712,11 @@ var BaseChart = _m_base_widget.default.inherit({
       if (!particularSeries.isUpdated) {
         incidentOccurred('E2101', [seriesTheme.type]);
       } else {
-        particularSeries.index = that.series.length;
-        that.series.push(particularSeries);
+        particularSeries.index = _this8.series.length;
+        _this8.series.push(particularSeries);
       }
     });
-    return that.series;
+    return this.series;
   },
   getStackedPoints(point) {
     var stackName = point.series.getStackName();
@@ -6672,15 +9732,10 @@ var BaseChart = _m_base_widget.default.inherit({
     return (this.series || []).slice();
   },
   getSeriesByName: function getSeriesByName(name) {
-    var found = null;
-    (0, _iterator.each)(this.series, function (i, singleSeries) {
-      if (singleSeries.name === name) {
-        found = singleSeries;
-        return false;
-      }
-      return undefined;
+    var found = (this.series || []).find(function (singleSeries) {
+      return singleSeries.name === name;
     });
-    return found;
+    return found || null;
   },
   getSeriesByPos: function getSeriesByPos(pos) {
     return (this.series || [])[pos];
@@ -6695,12 +9750,11 @@ var BaseChart = _m_base_widget.default.inherit({
     this._tracker.clearHover();
   },
   render(renderOptions) {
-    var that = this;
-    that.__renderOptions = renderOptions;
-    that.__forceRender = renderOptions && renderOptions.force;
-    that.callBase.apply(that, arguments);
-    that.__renderOptions = that.__forceRender = null;
-    return that;
+    this.__renderOptions = renderOptions;
+    this.__forceRender = renderOptions && renderOptions.force;
+    this.callBase.apply(this, arguments);
+    this.__renderOptions = this.__forceRender = null;
+    return this;
   },
   refresh() {
     this._disposeSeries();
@@ -6753,6 +9807,79 @@ BaseChart.prototype._change_TITLE = function () {
 
 /***/ }),
 
+/***/ 56136:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.RollingStock = void 0;
+var RollingStock = /*#__PURE__*/function () {
+  function RollingStock(label, isRotated, shiftFunction) {
+    var bBox = label.getBoundingRect();
+    var x = bBox.x;
+    var y = bBox.y;
+    var endX = bBox.x + bBox.width;
+    var endY = bBox.y + bBox.height;
+    this.labels = [label];
+    this.shiftFunction = shiftFunction;
+    this.bBox = {
+      start: isRotated ? x : y,
+      width: isRotated ? bBox.width : bBox.height,
+      end: isRotated ? endX : endY,
+      oppositeStart: isRotated ? y : x,
+      oppositeEnd: isRotated ? endY : endX
+    };
+    this.initialPosition = isRotated ? bBox.x : bBox.y;
+  }
+  var _proto = RollingStock.prototype;
+  _proto.toChain = function toChain(nextRollingStock) {
+    var nextRollingStockBBox = nextRollingStock.getBoundingRect();
+    nextRollingStock.shift(nextRollingStockBBox.start - this.bBox.end);
+    this.changeBoxWidth(nextRollingStockBBox.width);
+    this.labels = this.labels.concat(nextRollingStock.labels);
+  };
+  _proto.getBoundingRect = function getBoundingRect() {
+    return this.bBox;
+  };
+  _proto.shift = function shift(shiftLength) {
+    var _this = this;
+    this.labels.forEach(function (label) {
+      var bBox = label.getBoundingRect();
+      var coords = _this.shiftFunction(bBox, shiftLength);
+      if (!label.hideInsideLabel(coords)) {
+        label.shift(coords.x, coords.y);
+      }
+    });
+    this.bBox.end -= shiftLength;
+    this.bBox.start -= shiftLength;
+  };
+  _proto.setRollingStockInCanvas = function setRollingStockInCanvas(canvas) {
+    if (this.bBox.end > canvas.end) {
+      this.shift(this.bBox.end - canvas.end);
+    }
+  };
+  _proto.getLabels = function getLabels() {
+    return this.labels;
+  };
+  _proto.value = function value() {
+    return this.labels[0].getData().value;
+  };
+  _proto.getInitialPosition = function getInitialPosition() {
+    return this.initialPosition;
+  };
+  _proto.changeBoxWidth = function changeBoxWidth(width) {
+    this.bBox.end += width;
+    this.bBox.width += width;
+  };
+  return RollingStock;
+}();
+exports.RollingStock = RollingStock;
+
+/***/ }),
+
 /***/ 55845:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -6797,7 +9924,13 @@ function getFalse() {
   return false;
 }
 function areCanvasesDifferent(canvas1, canvas2) {
-  return !(Math.abs(canvas1.width - canvas2.width) < SIZE_CHANGING_THRESHOLD && Math.abs(canvas1.height - canvas2.height) < SIZE_CHANGING_THRESHOLD && canvas1.left === canvas2.left && canvas1.top === canvas2.top && canvas1.right === canvas2.right && canvas1.bottom === canvas2.bottom);
+  var sizeLessThreshold = ['width', 'height'].every(function (key) {
+    return Math.abs(canvas1[key] - canvas2[key]) < SIZE_CHANGING_THRESHOLD;
+  });
+  var canvasCoordsIsEqual = ['left', 'right', 'top', 'bottom'].every(function (key) {
+    return canvas1[key] === canvas2[key];
+  });
+  return !(sizeLessThreshold && canvasCoordsIsEqual);
 }
 function defaultOnIncidentOccurred(e) {
   if (!e.component._eventsStrategy.hasEvent('incidentOccurred')) {
@@ -6889,39 +10022,47 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _useLinks: true,
   _init() {
-    var that = this;
-    that._$element.children(".".concat(SIZED_ELEMENT_CLASS)).remove();
-    that._graphicObjects = {};
-    that.callBase.apply(that, arguments);
-    that._changesLocker = 0;
-    that._optionChangedLocker = 0;
-    that._asyncFirstDrawing = true;
-    that._changes = (0, _helpers.changes)();
-    that._suspendChanges();
-    that._themeManager = that._createThemeManager();
-    that._themeManager.setCallback(function () {
-      that._requestChange(that._themeDependentChanges);
+    var _this = this;
+    this._$element.children(".".concat(SIZED_ELEMENT_CLASS)).remove();
+    this._graphicObjects = {};
+    this.callBase.apply(this, arguments);
+    this._changesLocker = 0;
+    this._optionChangedLocker = 0;
+    this._asyncFirstDrawing = true;
+    this._changes = (0, _helpers.changes)();
+    this._suspendChanges();
+    this._themeManager = this._createThemeManager();
+    this._themeManager.setCallback(function () {
+      _this._requestChange(_this._themeDependentChanges);
     });
-    that._renderElementAttributes();
-    that._initRenderer();
+    this._renderElementAttributes();
+    this._initRenderer();
     // Shouldn't "_useLinks" be passed to the renderer instead of doing 3 checks here?
-    var linkTarget = that._useLinks && that._renderer.root;
+    var useLinks = this._useLinks;
     // There is an implicit relation between `_useLinks` and `loading indicator` - it uses links
-    // Though this relation is not ensured in code we will immediately know when it is broken - `loading indicator` will break on construction
-    linkTarget && linkTarget.enableLinks().virtualLink('core').virtualLink('peripheral');
-    that._renderVisibilityChange();
-    that._attachVisibilityChangeHandlers();
-    that._toggleParentsScrollSubscription(this._isVisible());
-    that._initEventTrigger();
-    that._incidentOccurred = (0, _base_widget.createIncidentOccurred)(that.NAME, that._eventTrigger);
-    that._layout = new _layout.default();
-    // Such solution is used only to avoid writing lots of "after" for all core elements in all widgets
+    // Though this relation is not ensured in code
+    // we will immediately know when it is broken - `loading indicator` will break on construction
+    if (useLinks) {
+      this._renderer.root.enableLinks().virtualLink('core').virtualLink('peripheral');
+    }
+    this._renderVisibilityChange();
+    this._attachVisibilityChangeHandlers();
+    this._toggleParentsScrollSubscription(this._isVisible());
+    this._initEventTrigger();
+    this._incidentOccurred = (0, _base_widget.createIncidentOccurred)(this.NAME, this._eventTrigger);
+    this._layout = new _layout.default();
+    // Such solution is used only to avoid writing lots of "after"
+    // for all core elements in all widgets
     // May be later a proper solution would be found
-    linkTarget && linkTarget.linkAfter('core');
-    that._initPlugins();
-    that._initCore();
-    linkTarget && linkTarget.linkAfter();
-    that._change(that._initialChanges);
+    if (useLinks) {
+      this._renderer.root.linkAfter('core');
+    }
+    this._initPlugins();
+    this._initCore();
+    if (useLinks) {
+      this._renderer.root.linkAfter();
+    }
+    this._change(this._initialChanges);
   },
   _createThemeManager() {
     return new _base_theme_manager.BaseThemeManager(this._getThemeManagerOptions());
@@ -6934,22 +10075,22 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _initialChanges: ['LAYOUT', 'RESIZE_HANDLER', 'THEME', 'DISABLED'],
   _initPlugins() {
-    var _this = this;
+    var _this2 = this;
     (0, _iterator.each)(this._plugins, function (_, plugin) {
-      plugin.init.call(_this);
+      plugin.init.call(_this2);
     });
   },
   _disposePlugins() {
-    var _this2 = this;
+    var _this3 = this;
     (0, _iterator.each)(this._plugins.slice().reverse(), function (_, plugin) {
-      plugin.dispose.call(_this2);
+      plugin.dispose.call(_this3);
     });
   },
   _change(codes) {
     this._changes.add(codes);
   },
   _suspendChanges() {
-    ++this._changesLocker;
+    this._changesLocker += 1;
   },
   _resumeChanges() {
     if (--this._changesLocker === 0 && this._changes.count() > 0 && !this._applyingChanges) {
@@ -6964,9 +10105,9 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
         this._applyQueuedOptions();
       }
       this.resolveItemsDeferred(this._legend ? [this._legend] : []);
-      this._optionChangedLocker++;
+      this._optionChangedLocker += 1;
       this._notify();
-      this._optionChangedLocker--;
+      this._optionChangedLocker -= 1;
     }
   },
   resolveItemsDeferred(items) {
@@ -7002,34 +10143,34 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     };
   },
   _resolveDeferred(_ref) {
+    var _this4 = this;
     var items = _ref.items,
       launchRequest = _ref.launchRequest,
       doneRequest = _ref.doneRequest,
       groups = _ref.groups;
-    var that = this;
-    that._setGroupsVisibility(groups, 'hidden');
-    if (that._changesApplying) {
-      that._changesApplying = false;
+    this._setGroupsVisibility(groups, 'hidden');
+    if (this._changesApplying) {
+      this._changesApplying = false;
       callForEach(doneRequest);
       return;
     }
     var syncRendering = true;
-    _deferred.when.apply(that, items).done(function () {
+    _deferred.when.apply(this, items).done(function () {
       if (syncRendering) {
-        that._setGroupsVisibility(groups, 'visible');
+        _this4._setGroupsVisibility(groups, 'visible');
         return;
       }
       callForEach(launchRequest);
-      that._changesApplying = true;
+      _this4._changesApplying = true;
       var changes = ['LAYOUT', 'FULL_RENDER'];
-      if (that._asyncFirstDrawing) {
+      if (_this4._asyncFirstDrawing) {
         changes.push('FORCE_FIRST_DRAWING');
-        that._asyncFirstDrawing = false;
+        _this4._asyncFirstDrawing = false;
       } else {
         changes.push('FORCE_DRAWING');
       }
-      that._requestChange(changes);
-      that._setGroupsVisibility(groups, 'visible');
+      _this4._requestChange(changes);
+      _this4._setGroupsVisibility(groups, 'visible');
     });
     syncRendering = false;
   },
@@ -7055,14 +10196,12 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     this._resumeChanges();
   },
   _applyChanges() {
-    var that = this;
-    var changes = that._changes;
-    var order = that._totalChangesOrder;
-    var i;
-    var ii = order.length;
-    for (i = 0; i < ii; ++i) {
+    var changes = this._changes;
+    var order = this._totalChangesOrder;
+    var changesOrderLength = order.length;
+    for (var i = 0; i < changesOrderLength; i += 1) {
       if (changes.has(order[i])) {
-        that["_change_".concat(order[i])]();
+        this["_change_".concat(order[i])]();
       }
     }
   },
@@ -7109,24 +10248,24 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _themeDependentChanges: ['RENDERER'],
   _initRenderer() {
-    var that = this;
-    // Canvas is calculated before the renderer is created in order to capture actual size of the container
-    var rawCanvas = that._calculateRawCanvas();
-    that._canvas = floorCanvasDimensions(rawCanvas);
-    that._renderer = new _renderer2.Renderer({
-      cssClass: "".concat(that._rootClassPrefix, " ").concat(that._rootClass),
-      pathModified: that.option('pathModified'),
-      container: that._$element[0]
+    // Canvas is calculated before the renderer is created in order to capture actual
+    // size of the container
+    var rawCanvas = this._calculateRawCanvas();
+    this._canvas = floorCanvasDimensions(rawCanvas);
+    this._renderer = new _renderer2.Renderer({
+      cssClass: "".concat(this._rootClassPrefix, " ").concat(this._rootClass),
+      pathModified: this.option('pathModified'),
+      container: this._$element[0]
     });
-    that._renderer.resize(that._canvas.width, that._canvas.height);
+    this._renderer.resize(this._canvas.width, this._canvas.height);
   },
   _disposeRenderer() {
     this._renderer.dispose();
   },
   _disposeGraphicObjects() {
-    var _this3 = this;
+    var _this5 = this;
     Object.keys(this._graphicObjects).forEach(function (id) {
-      _this3._graphicObjects[id].dispose();
+      _this5._graphicObjects[id].dispose();
     });
     this._graphicObjects = null;
   },
@@ -7154,38 +10293,40 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   },
   _stopCurrentHandling: _common.noop,
   _dispose() {
-    var that = this;
     if (this._disposed) {
       return;
     }
-    that.callBase.apply(that, arguments);
-    that._toggleParentsScrollSubscription(false);
-    that._removeResizeHandler();
-    that._layout.dispose();
-    that._eventTrigger.dispose();
-    that._disposeCore();
-    that._disposePlugins();
-    that._disposeGraphicObjects();
-    that._disposeRenderer();
-    that._themeManager.dispose();
-    that._themeManager = that._renderer = that._eventTrigger = null;
+    this.callBase.apply(this, arguments);
+    this._toggleParentsScrollSubscription(false);
+    this._removeResizeHandler();
+    this._layout.dispose();
+    this._eventTrigger.dispose();
+    this._disposeCore();
+    this._disposePlugins();
+    this._disposeGraphicObjects();
+    this._disposeRenderer();
+    this._themeManager.dispose();
+    this._themeManager = null;
+    this._renderer = null;
+    this._eventTrigger = null;
   },
   _initEventTrigger() {
-    var _this4 = this;
-    this._eventTrigger = (0, _base_widget.createEventTrigger)(this._eventsMap, function (name, actionSettings) {
-      return _this4._createActionByOption(name, actionSettings);
-    });
+    var _this6 = this;
+    var callback = function callback(name, actionSettings) {
+      return _this6._createActionByOption(name, actionSettings);
+    };
+    this._eventTrigger = (0, _base_widget.createEventTrigger)(this._eventsMap, callback);
   },
   _calculateRawCanvas() {
-    var that = this;
-    var size = that.option('size') || {};
-    var margin = that.option('margin') || {};
-    var defaultCanvas = that._getDefaultSize() || {};
+    var _this7 = this;
+    var size = this.option('size') || {};
+    var margin = this.option('margin') || {};
+    var defaultCanvas = this._getDefaultSize() || {};
     var getSizeOfSide = function getSizeOfSide(size, side, getter) {
       if (sizeIsValid(size[side]) || !(0, _window.hasWindow)()) {
         return 0;
       }
-      var elementSize = getter(that._$element);
+      var elementSize = getter(_this7._$element);
       return elementSize <= 1 ? 0 : elementSize;
     };
     var elementWidth = getSizeOfSide(size, 'width', function (x) {
@@ -7203,7 +10344,8 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
       bottom: pickPositiveValue([margin.bottom, defaultCanvas.bottom])
     };
     // This for backward compatibility - widget was not rendered when canvas is empty.
-    // Now it will be rendered but because of "width" and "height" of the root both set to 0 it will not be visible.
+    // Now it will be rendered but because of "width" and "height"
+    // of the root both set to 0 it will not be visible.
     if (canvas.width - canvas.left - canvas.right <= 0 || canvas.height - canvas.top - canvas.bottom <= 0) {
       canvas = {
         width: 0,
@@ -7240,13 +10382,13 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     return isScalar ? option !== undefined ? option : theme : (0, _extend.extend)(true, {}, theme, option);
   },
   _setupResizeHandler() {
-    var _this5 = this;
+    var _this8 = this;
     var redrawOnResize = (0, _utils.parseScalar)(this._getOption('redrawOnResize', true), true);
     if (this._disposeResizeHandler) {
       this._removeResizeHandler();
     }
     this._disposeResizeHandler = (0, _base_widget.createResizeHandler)(this._$element[0], redrawOnResize, function () {
-      return _this5._requestChange(['CONTAINER_SIZE']);
+      return _this8._requestChange(['CONTAINER_SIZE']);
     });
   },
   _removeResizeHandler() {
@@ -7255,10 +10397,12 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
       this._disposeResizeHandler = null;
     }
   },
-  // This is actually added only to make loading indicator pluggable. This is bad but much better than entire loading indicator in BaseWidget.
+  // This is actually added only to make loading indicator pluggable.
+  // This is bad but much better than entire loading indicator in BaseWidget.
   _onBeginUpdate: _common.noop,
   beginUpdate() {
-    // The "_initialized" flag is checked because first time "beginUpdate" is called in the constructor.
+    // The "_initialized" flag is checked because
+    // first time "beginUpdate" is called in the constructor.
     if (this._initialized && this._isUpdateAllowed()) {
       this._onBeginUpdate();
       this._suspendChanges();
@@ -7282,9 +10426,9 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     }
   },
   _getActionForUpdating(args) {
-    var _this6 = this;
+    var _this9 = this;
     return function () {
-      baseOptionMethod.apply(_this6, args);
+      baseOptionMethod.apply(_this9, args);
     };
   },
   // For quite a long time the following method were abstract (from the Component perspective).
@@ -7292,28 +10436,28 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   _clean: _common.noop,
   _render: _common.noop,
   _optionChanged(arg) {
-    var that = this;
-    if (that._optionChangedLocker) {
+    var _this10 = this;
+    if (this._optionChangedLocker) {
       return;
     }
-    var partialChanges = that.getPartialChangeOptionsName(arg);
+    var partialChanges = this.getPartialChangeOptionsName(arg);
     var changes = [];
     if (partialChanges.length > 0) {
       partialChanges.forEach(function (pc) {
-        return changes.push(that._partialOptionChangesMap[pc]);
+        return changes.push(_this10._partialOptionChangesMap[pc]);
       });
     } else {
-      changes.push(that._optionChangesMap[arg.name]);
+      changes.push(this._optionChangesMap[arg.name]);
     }
     changes = changes.filter(function (c) {
       return !!c;
     });
-    if (that._eventTrigger.change(arg.name)) {
-      that._change(['EVENTS']);
+    if (this._eventTrigger.change(arg.name)) {
+      this._change(['EVENTS']);
     } else if (changes.length > 0) {
-      that._change(changes);
+      this._change(changes);
     } else {
-      that.callBase.apply(that, arguments);
+      this.callBase.apply(this, arguments);
     }
   },
   _notify: _common.noop,
@@ -7331,7 +10475,7 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
   _partialOptionChangesMap: {},
   _partialOptionChangesPath: {},
   getPartialChangeOptionsName(changedOption) {
-    var _this7 = this;
+    var _this11 = this;
     var fullName = changedOption.fullName;
     var sections = fullName.split(/[.]/);
     var name = changedOption.name;
@@ -7350,10 +10494,10 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
             this._addOptionsNameForPartialUpdate(value, options, partialChangeOptionsName);
           } else if ((0, _type2.type)(value) === 'array') {
             if (value.length > 0 && value.every(function (item) {
-              return _this7._checkOptionsForPartialUpdate(item, options);
+              return _this11._checkOptionsForPartialUpdate(item, options);
             })) {
               value.forEach(function (item) {
-                return _this7._addOptionsNameForPartialUpdate(item, options, partialChangeOptionsName);
+                _this11._addOptionsNameForPartialUpdate(item, options, partialChangeOptionsName);
               });
             }
           }
@@ -7409,11 +10553,11 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     this.isReady = getFalse;
   },
   _renderGraphicObjects() {
-    var _this8 = this;
+    var _this12 = this;
     var renderer = this._renderer;
     var graphics = _m_charts.default.getGraphicObjects();
     Object.keys(graphics).forEach(function (id) {
-      if (!_this8._graphicObjects[id]) {
+      if (!_this12._graphicObjects[id]) {
         var _graphics$id = graphics[id],
           _type = _graphics$id.type,
           colors = _graphics$id.colors,
@@ -7423,13 +10567,13 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
           height = _graphics$id.height;
         switch (_type) {
           case 'linear':
-            _this8._graphicObjects[id] = renderer.linearGradient(colors, id, rotationAngle);
+            _this12._graphicObjects[id] = renderer.linearGradient(colors, id, rotationAngle);
             break;
           case 'radial':
-            _this8._graphicObjects[id] = renderer.radialGradient(colors, id);
+            _this12._graphicObjects[id] = renderer.radialGradient(colors, id);
             break;
           case 'pattern':
-            _this8._graphicObjects[id] = renderer.customPattern(id, _this8._getTemplate(template), width, height);
+            _this12._graphicObjects[id] = renderer.customPattern(id, _this12._getTemplate(template), width, height);
             break;
           default:
             break;
@@ -7438,11 +10582,11 @@ var baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.inh
     });
   },
   _drawn() {
-    var _this9 = this;
+    var _this13 = this;
     this.isReady = getFalse;
     if (this._dataIsReady()) {
       this._renderer.onEndAnimation(function () {
-        _this9.isReady = getTrue;
+        _this13.isReady = getTrue;
       });
     }
     this._eventTrigger('drawn', {});
@@ -7472,7 +10616,7 @@ var _size = __webpack_require__(58664);
 var _type = __webpack_require__(35922);
 var _window = __webpack_require__(58201);
 var _crosshair = __webpack_require__(97574);
-var _layout_manager = __webpack_require__(21495);
+var _layout_manager = __webpack_require__(61189);
 var _multi_axes_synchronizer = _interopRequireDefault(__webpack_require__(42597));
 var _scroll_bar = __webpack_require__(97882);
 var _shutter_zoom = _interopRequireDefault(__webpack_require__(70714));
@@ -7485,8 +10629,12 @@ var _utils2 = __webpack_require__(34434);
 var _m_advanced_chart = __webpack_require__(41690);
 var _m_base_chart = __webpack_require__(14107);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-// @ts-expect-error
-
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; } // @ts-expect-error
 var DEFAULT_PANE_NAME = 'default';
 var VISUAL_RANGE = 'VISUAL_RANGE';
 var DEFAULT_PANES = [{
@@ -7497,7 +10645,7 @@ var DISCRETE = 'discrete';
 var isArray = Array.isArray;
 function getFirstAxisNameForPane(axes, paneName, defaultPane) {
   var result;
-  for (var i = 0; i < axes.length; i++) {
+  for (var i = 0; i < axes.length; i += 1) {
     if (axes[i].pane === paneName || axes[i].pane === undefined && paneName === defaultPane) {
       result = axes[i].name;
       break;
@@ -7519,18 +10667,18 @@ function hideGridsOnNonFirstValueAxisForPane(axesForPane) {
   var hiddenStubAxis = [];
   var minorGridVisibility = axesForPane.some(function (axis) {
     var minorGridOptions = axis.getOptions().minorGrid;
-    return minorGridOptions && minorGridOptions.visible;
+    return minorGridOptions === null || minorGridOptions === void 0 ? void 0 : minorGridOptions.visible;
   });
   var gridVisibility = axesForPane.some(function (axis) {
     var gridOptions = axis.getOptions().grid;
-    return gridOptions && gridOptions.visible;
+    return gridOptions === null || gridOptions === void 0 ? void 0 : gridOptions.visible;
   });
   if (axesForPane.length > 1) {
     axesForPane.forEach(function (axis) {
       var gridOpt = axis.getOptions().grid;
       if (axisShown) {
         changeVisibilityAxisGrids(axis, false, false);
-      } else if (gridOpt && gridOpt.visible) {
+      } else if (gridOpt === null || gridOpt === void 0 ? void 0 : gridOpt.visible) {
         if (axis.getTranslator().getBusinessRange().isEmpty()) {
           changeVisibilityAxisGrids(axis, false, false);
           hiddenStubAxis.push(axis);
@@ -7540,13 +10688,15 @@ function hideGridsOnNonFirstValueAxisForPane(axesForPane) {
         }
       }
     });
-    !axisShown && hiddenStubAxis.length && changeVisibilityAxisGrids(hiddenStubAxis[0], gridVisibility, minorGridVisibility);
+    if (!axisShown && hiddenStubAxis.length) {
+      changeVisibilityAxisGrids(hiddenStubAxis[0], gridVisibility, minorGridVisibility);
+    }
   }
 }
 function findAxisOptions(valueAxes, valueAxesOptions, axisName) {
   var result;
   var axInd;
-  for (axInd = 0; axInd < valueAxesOptions.length; axInd++) {
+  for (axInd = 0; axInd < valueAxesOptions.length; axInd += 1) {
     if (valueAxesOptions[axInd].name === axisName) {
       result = valueAxesOptions[axInd];
       result.priority = axInd;
@@ -7554,7 +10704,7 @@ function findAxisOptions(valueAxes, valueAxesOptions, axisName) {
     }
   }
   if (!result) {
-    for (axInd = 0; axInd < valueAxes.length; axInd++) {
+    for (axInd = 0; axInd < valueAxes.length; axInd += 1) {
       if (valueAxes[axInd].name === axisName) {
         result = valueAxes[axInd].getOptions();
         result.priority = valueAxes[axInd].priority;
@@ -7565,13 +10715,11 @@ function findAxisOptions(valueAxes, valueAxesOptions, axisName) {
   return result;
 }
 function findAxis(paneName, axisName, axes) {
-  var axis;
-  var i;
-  for (i = 0; i < axes.length; i++) {
-    axis = axes[i];
-    if (axis.name === axisName && axis.pane === paneName) {
-      return axis;
-    }
+  var axisByName = axes.find(function (axis) {
+    return axis.name === axisName && axis.pane === paneName;
+  });
+  if (axisByName) {
+    return axisByName;
   }
   if (paneName) {
     return findAxis(undefined, axisName, axes);
@@ -7622,7 +10770,8 @@ function getHorizontalAxesMargins(axes, getMarginsFunc) {
     margins.left = pickMax('left', paneMargins, margins);
     margins.right = pickMax('right', paneMargins, margins);
     var orthogonalAxis = (_a = axis.getOrthogonalAxis) === null || _a === void 0 ? void 0 : _a.call(axis);
-    if (orthogonalAxis && orthogonalAxis.customPositionIsAvailable() && (!axis.customPositionIsBoundaryOrthogonalAxis() || !orthogonalAxis.customPositionEqualsToPredefined())) {
+    var shouldResetPositionMargin = (orthogonalAxis === null || orthogonalAxis === void 0 ? void 0 : orthogonalAxis.customPositionIsAvailable()) && (!axis.customPositionIsBoundaryOrthogonalAxis() || !orthogonalAxis.customPositionEqualsToPredefined());
+    if (shouldResetPositionMargin) {
       margins[orthogonalAxis.getResolvedBoundaryPosition()] = 0;
     }
     return margins;
@@ -7650,7 +10799,7 @@ function getVerticalAxesMargins(axes) {
 }
 function performActionOnAxes(axes, action, actionArgument1, actionArgument2, actionArgument3) {
   axes.forEach(function (axis) {
-    axis[action](actionArgument1 && actionArgument1[axis.pane], actionArgument2 && actionArgument2[axis.pane] || actionArgument2, actionArgument3);
+    axis[action](actionArgument1 === null || actionArgument1 === void 0 ? void 0 : actionArgument1[axis.pane], (actionArgument2 === null || actionArgument2 === void 0 ? void 0 : actionArgument2[axis.pane]) || actionArgument2, actionArgument3);
   });
 }
 function shrinkCanvases(isRotated, canvases, sizes, verticalMargins, horizontalMargins) {
@@ -7675,13 +10824,17 @@ function shrinkCanvases(isRotated, canvases, sizes, verticalMargins, horizontalM
       });
     });
     var firstPane = canvases[paneNames[0]];
+    var initialEmptySpace = firstPane[sizeField] - firstPane[getOriginalField(endMargin)] - canvases[paneNames.at(-1)][getOriginalField(startMargin)];
     var emptySpace = paneNames.reduce(function (space, paneName) {
-      space -= getMaxMargin(startMargin, verticalMargins, horizontalMargins, paneName) + getMaxMargin(endMargin, verticalMargins, horizontalMargins, paneName);
-      return space;
-    }, firstPane[sizeField] - firstPane[getOriginalField(endMargin)] - canvases[paneNames[paneNames.length - 1]][getOriginalField(startMargin)]) - _utils.PANE_PADDING * (paneNames.length - 1);
+      var maxStartMargin = getMaxMargin(startMargin, verticalMargins, horizontalMargins, paneName);
+      var maxEndMargin = getMaxMargin(endMargin, verticalMargins, horizontalMargins, paneName);
+      return space - maxStartMargin - maxEndMargin;
+    }, initialEmptySpace) - _utils.PANE_PADDING * (paneNames.length - 1);
     emptySpace -= Object.keys(sizes).reduce(function (prev, key) {
-      return prev + (!(0, _utils.isRelativeHeightPane)(sizes[key]) ? sizes[key].height : 0);
+      var currentHeight = !(0, _utils.isRelativeHeightPane)(sizes[key]) ? sizes[key].height : 0;
+      return prev + currentHeight;
     }, 0);
+    var initialOffset = firstPane[sizeField] - firstPane[getOriginalField(endMargin)] - (emptySpace < 0 ? emptySpace : 0);
     paneNames.reduce(function (offset, pane) {
       var canvas = canvases[pane];
       var paneSize = sizes[pane];
@@ -7691,7 +10844,7 @@ function shrinkCanvases(isRotated, canvases, sizes, verticalMargins, horizontalM
       canvas[startMargin] = offset;
       offset -= getMaxMargin(startMargin, verticalMargins, horizontalMargins, pane) + _utils.PANE_PADDING;
       return offset;
-    }, firstPane[sizeField] - firstPane[getOriginalField(endMargin)] - (emptySpace < 0 ? emptySpace : 0));
+    }, initialOffset);
   }
   var paneNames = Object.keys(canvases);
   if (!isRotated) {
@@ -7776,9 +10929,10 @@ function collectMarkersInfoBySeries(allSeries, filteredSeries, argAxis) {
       overloadedSeries[seriesIndex][allSeries.indexOf(sr)] = 0;
     });
     var seriesPoints = [];
-    s.getPoints().filter(function (p) {
+    var pointsInViewport = s.getPoints().filter(function (p) {
       return p.getOptions().visible && argViewPortFilter(p.argument) && (valViewPortFilter(p.getMinValue(true)) || valViewPortFilter(p.getMaxValue(true)));
-    }).forEach(function (p) {
+    });
+    pointsInViewport.forEach(function (p) {
       var tp = {
         seriesIndex,
         argument: p.argument,
@@ -7823,7 +10977,7 @@ var isOverlay = function isOverlay(currentPoint, overlayPoint, pointRadius) {
 };
 var isPointOverlapped = function isPointOverlapped(currentPoint, points, skipSamePointsComparing) {
   var radiusPoint = currentPoint.getOptions().size / 2;
-  for (var i = 0; i < points.length; i++) {
+  for (var i = 0; i < points.length; i += 1) {
     if (!skipSamePointsComparing) {
       var isXCoordinateSame = points[i].x === currentPoint.x;
       var isYCoordinateSame = points[i].y === currentPoint.y;
@@ -7855,17 +11009,17 @@ function fastHidingPointMarkersByArea(canvas, markersInfo, series) {
       markersInfo.overloadedSeries[index] = null;
     }
   };
-  for (var i = seriesPoints.length - 1; i >= 0; i--) {
+  for (var i = seriesPoints.length - 1; i >= 0; i -= 1) {
     _loop(i);
   }
 }
 function updateMarkersInfo(points, overloadedSeries) {
   var isContinuousSeries = false;
-  for (var i = 0; i < points.length - 1; i++) {
+  for (var i = 0; i < points.length - 1; i += 1) {
     var curPoint = points[i];
     var size = curPoint.size;
     if ((0, _type.isDefined)(curPoint.x) && (0, _type.isDefined)(curPoint.y)) {
-      for (var j = i + 1; j < points.length; j++) {
+      for (var j = i + 1; j < points.length; j += 1) {
         var nextPoint = points[j];
         var nextX = nextPoint === null || nextPoint === void 0 ? void 0 : nextPoint.x;
         var nextY = nextPoint === null || nextPoint === void 0 ? void 0 : nextPoint.y;
@@ -7875,10 +11029,10 @@ function updateMarkersInfo(points, overloadedSeries) {
         } else {
           var distance = (0, _type.isDefined)(nextX) && (0, _type.isDefined)(nextY) && Math.sqrt(Math.pow(curPoint.x - nextX, 2) + Math.pow(curPoint.y - nextY, 2));
           if (distance && distance < size) {
-            overloadedSeries[curPoint.seriesIndex][nextPoint.seriesIndex]++;
-            overloadedSeries[curPoint.seriesIndex].total++;
+            overloadedSeries[curPoint.seriesIndex][nextPoint.seriesIndex] += 1;
+            overloadedSeries[curPoint.seriesIndex].total += 1;
             if (!isContinuousSeries) {
-              overloadedSeries[curPoint.seriesIndex].continuousSeries++;
+              overloadedSeries[curPoint.seriesIndex].continuousSeries += 1;
               isContinuousSeries = true;
             }
           }
@@ -7913,29 +11067,28 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
   },
   _getExtraOptions: _common.noop,
   _createPanes() {
-    var that = this;
-    var panes = that.option('panes');
+    var panes = this.option('panes');
     var panesNameCounter = 0;
     var defaultPane;
     if (!panes || isArray(panes) && !panes.length) {
       panes = DEFAULT_PANES;
     }
-    that.callBase();
-    defaultPane = that.option('defaultPane');
+    this.callBase();
+    defaultPane = this.option('defaultPane');
     panes = (0, _extend2.extend)(true, [], isArray(panes) ? panes : [panes]);
     (0, _iterator.each)(panes, function (_, pane) {
       pane.name = !(0, _type.isDefined)(pane.name) ? DEFAULT_PANE_NAME + panesNameCounter++ : pane.name;
     });
     if ((0, _type.isDefined)(defaultPane)) {
       if (!doesPaneExist(panes, defaultPane)) {
-        that._incidentOccurred('W2101', [defaultPane]);
+        this._incidentOccurred('W2101', [defaultPane]);
         defaultPane = panes[panes.length - 1].name;
       }
     } else {
       defaultPane = panes[panes.length - 1].name;
     }
-    that.defaultPane = defaultPane;
-    panes = that._isRotated() ? panes.reverse() : panes;
+    this.defaultPane = defaultPane;
+    panes = this._isRotated() ? panes.reverse() : panes;
     return panes;
   },
   _getAxisRenderingOptions() {
@@ -7958,13 +11111,13 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return paneList.includes(seriesTheme.pane);
   },
   _initCustomPositioningAxes() {
-    var that = this;
-    var argumentAxis = that.getArgumentAxis();
+    var _this = this;
+    var argumentAxis = this.getArgumentAxis();
     var valueAxisName = argumentAxis.getOptions().customPositionAxis;
-    var valueAxis = that._valueAxes.filter(function (v) {
+    var valueAxis = this._valueAxes.find(function (v) {
       return v.pane === argumentAxis.pane && (!valueAxisName || valueAxisName === v.name);
-    })[0];
-    that._valueAxes.forEach(function (v) {
+    });
+    this._valueAxes.forEach(function (v) {
       if (argumentAxis !== v.getOrthogonalAxis()) {
         v.getOrthogonalAxis = function () {
           return argumentAxis;
@@ -7979,7 +11132,7 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
         return valueAxis;
       };
       argumentAxis.customPositionIsBoundaryOrthogonalAxis = function () {
-        return that._valueAxes.some(function (v) {
+        return _this._valueAxes.some(function (v) {
           return v.customPositionIsBoundary();
         });
       };
@@ -7991,7 +11144,12 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return this._argumentAxes.concat(this._valueAxes);
   },
   _resetAxesAnimation(isFirstDrawing, isHorizontal) {
-    var axes = (0, _type.isDefined)(isHorizontal) ? isHorizontal ^ this._isRotated() ? this._argumentAxes : this._valueAxes : this._getAllAxes();
+    var axes;
+    if ((0, _type.isDefined)(isHorizontal)) {
+      axes = isHorizontal ^ this._isRotated() ? this._argumentAxes : this._valueAxes;
+    } else {
+      axes = this._getAllAxes();
+    }
     axes.forEach(function (a) {
       a.resetApplyingAnimation(isFirstDrawing);
     });
@@ -8021,50 +11179,49 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     };
   },
   _getValueAxis(paneName, axisName) {
-    var that = this;
-    var valueAxes = that._valueAxes;
-    var valueAxisOptions = that.option('valueAxis') || {};
+    var valueAxes = this._valueAxes;
+    var valueAxisOptions = this.option('valueAxis') || {};
     var valueAxesOptions = isArray(valueAxisOptions) ? valueAxisOptions : [valueAxisOptions];
-    var rotated = that._isRotated();
-    var crosshairMargins = that._getCrosshairMargins();
+    var rotated = this._isRotated();
+    var crosshairMargins = this._getCrosshairMargins();
     var axisOptions;
     var axis;
-    axisName = axisName || getFirstAxisNameForPane(valueAxes, paneName, that.defaultPane);
+    axisName = axisName || getFirstAxisNameForPane(valueAxes, paneName, this.defaultPane);
     axis = findAxis(paneName, axisName, valueAxes);
     if (!axis) {
       axisOptions = findAxisOptions(valueAxes, valueAxesOptions, axisName);
       if (!axisOptions) {
-        that._incidentOccurred('W2102', [axisName]);
+        this._incidentOccurred('W2102', [axisName]);
         axisOptions = {
           name: axisName,
           priority: valueAxes.length
         };
       }
-      axis = that._createAxis(false, that._populateAxesOptions('valueAxis', axisOptions, {
+      axis = this._createAxis(false, this._populateAxesOptions('valueAxis', axisOptions, {
         pane: paneName,
         name: axisName,
         optionPath: isArray(valueAxisOptions) ? "valueAxis[".concat(axisOptions.priority, "]") : 'valueAxis',
         crosshairMargin: rotated ? crosshairMargins.y : crosshairMargins.x
       }, rotated));
-      axis.applyVisualRangeSetter(that._getVisualRangeSetter());
+      axis.applyVisualRangeSetter(this._getVisualRangeSetter());
       valueAxes.push(axis);
     }
     axis.setPane(paneName);
     return axis;
   },
   _correctValueAxes(needHideGrids) {
-    var that = this;
-    var synchronizeMultiAxes = that._themeManager.getOptions('synchronizeMultiAxes');
-    var valueAxes = that._valueAxes;
+    var _this2 = this;
+    var synchronizeMultiAxes = this._themeManager.getOptions('synchronizeMultiAxes');
+    var valueAxes = this._valueAxes;
     var paneWithAxis = {};
-    that.series.forEach(function (series) {
+    this.series.forEach(function (series) {
       var axis = series.getValueAxis();
       paneWithAxis[axis.pane] = true;
     });
-    that.panes.forEach(function (pane) {
+    this.panes.forEach(function (pane) {
       var paneName = pane.name;
       if (!paneWithAxis[paneName]) {
-        that._getValueAxis(paneName); // creates an value axis if there is no one for pane
+        _this2._getValueAxis(paneName); // creates an value axis if there is no one for pane
       }
 
       if (needHideGrids && synchronizeMultiAxes) {
@@ -8073,11 +11230,11 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
         }));
       }
     });
-    that._valueAxes = valueAxes.filter(function (axis) {
+    this._valueAxes = valueAxes.filter(function (axis) {
       if (!axis.pane) {
-        axis.setPane(that.defaultPane);
+        axis.setPane(_this2.defaultPane);
       }
-      var paneExists = doesPaneExist(that.panes, axis.pane);
+      var paneExists = doesPaneExist(_this2.panes, axis.pane);
       if (!paneExists) {
         axis.dispose();
         axis = null;
@@ -8085,11 +11242,11 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
       return paneExists;
     }).sort(compareAxes);
     var defaultAxis = this.getValueAxis();
-    that._valueAxes.forEach(function (axis) {
+    this._valueAxes.forEach(function (axis) {
       var _axis$getOptions = axis.getOptions(),
         optionPath = _axis$getOptions.optionPath;
       if (optionPath) {
-        var axesWithSamePath = that._valueAxes.filter(function (a) {
+        var axesWithSamePath = _this2._valueAxes.filter(function (a) {
           return a.getOptions().optionPath === optionPath;
         });
         if (axesWithSamePath.length > 1) {
@@ -8130,16 +11287,16 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return panesBorderOptions;
   },
   _createScrollBar() {
-    var that = this;
-    var scrollBarOptions = that._themeManager.getOptions('scrollBar') || {};
-    var scrollBarGroup = that._scrollBarGroup;
+    var _a;
+    var scrollBarOptions = this._themeManager.getOptions('scrollBar') || {};
+    var scrollBarGroup = this._scrollBarGroup;
     if (scrollBarOptions.visible) {
-      scrollBarOptions.rotated = that._isRotated();
-      that._scrollBar = (that._scrollBar || new _scroll_bar.ScrollBar(that._renderer, scrollBarGroup)).update(scrollBarOptions);
+      scrollBarOptions.rotated = this._isRotated();
+      this._scrollBar = (this._scrollBar || new _scroll_bar.ScrollBar(this._renderer, scrollBarGroup)).update(scrollBarOptions);
     } else {
       scrollBarGroup.linkRemove();
-      that._scrollBar && that._scrollBar.dispose();
-      that._scrollBar = null;
+      (_a = this._scrollBar) === null || _a === void 0 ? void 0 : _a.dispose();
+      this._scrollBar = null;
     }
   },
   _executeAppendAfterSeries(append) {
@@ -8162,29 +11319,28 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     });
   },
   _recreateSizeDependentObjects(isCanvasChanged) {
-    var that = this;
-    var series = that._getVisibleSeries();
+    var _this3 = this;
+    var series = this._getVisibleSeries();
     var useAggregation = series.some(function (s) {
       return s.useAggregation();
     });
-    var zoomChanged = that._isZooming();
+    var zoomChanged = this._isZooming();
     if (!useAggregation) {
       return;
     }
-    that._argumentAxes.forEach(function (axis) {
-      axis.updateCanvas(that._canvas, true);
+    this._argumentAxes.forEach(function (axis) {
+      axis.updateCanvas(_this3._canvas, true);
     });
     series.forEach(function (series) {
       if (series.useAggregation() && (isCanvasChanged || zoomChanged || !series._useAllAggregatedPoints)) {
         series.createPoints();
       }
     });
-    that._processSeriesFamilies();
+    this._processSeriesFamilies();
   },
   _isZooming() {
-    var that = this;
-    var argumentAxis = that.getArgumentAxis();
-    if (!argumentAxis || !argumentAxis.getTranslator()) {
+    var argumentAxis = this.getArgumentAxis();
+    if (!(argumentAxis === null || argumentAxis === void 0 ? void 0 : argumentAxis.getTranslator())) {
       return false;
     }
     var businessRange = argumentAxis.getTranslator().getBusinessRange();
@@ -8198,21 +11354,21 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     var viewportDistance = businessRange.axisType === DISCRETE ? (0, _utils.getCategoriesInfo)(businessRange.categories, min, max).categories.length : Math.abs(max - min);
     var precision = (0, _math.getPrecision)(viewportDistance);
     precision = precision > 1 ? Math.pow(10, precision - 2) : 1;
-    var zoomChanged = Math.round((that._zoomLength - viewportDistance) * precision) / precision !== 0;
-    that._zoomLength = viewportDistance;
+    var zoomChanged = Math.round((this._zoomLength - viewportDistance) * precision) / precision !== 0;
+    this._zoomLength = viewportDistance;
     return zoomChanged;
   },
   _handleSeriesDataUpdated() {
-    var that = this;
+    var _this4 = this;
     var viewport = new _range.Range();
-    that.series.forEach(function (s) {
+    this.series.forEach(function (s) {
       viewport.addRange(s.getArgumentRange());
     });
-    that._argumentAxes.forEach(function (axis) {
-      axis.updateCanvas(that._canvas, true);
-      axis.setBusinessRange(viewport, that._axesReinitialized);
+    this._argumentAxes.forEach(function (axis) {
+      axis.updateCanvas(_this4._canvas, true);
+      axis.setBusinessRange(viewport, _this4._axesReinitialized);
     });
-    that.callBase();
+    this.callBase();
   },
   _isLegendInside() {
     return this._legend && this._legend.getPosition() === 'inside';
@@ -8224,32 +11380,29 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return this.panes;
   },
   _applyClipRects(panesBorderOptions) {
-    var that = this;
-    that._drawPanesBorders(panesBorderOptions);
-    that._createClipRectsForPanes();
-    that._applyClipRectsForAxes();
-    that._fillPanesBackground();
+    this._drawPanesBorders(panesBorderOptions);
+    this._createClipRectsForPanes();
+    this._applyClipRectsForAxes();
+    this._fillPanesBackground();
   },
   _updateLegendPosition(drawOptions, legendHasInsidePosition) {
-    var that = this;
-    if (drawOptions.drawLegend && that._legend && legendHasInsidePosition) {
-      var panes = that.panes;
+    if (drawOptions.drawLegend && this._legend && legendHasInsidePosition) {
+      var panes = this.panes;
       var newCanvas = (0, _extend2.extend)({}, panes[0].canvas);
       var layoutManager = new _layout_manager.LayoutManager();
       newCanvas.right = panes[panes.length - 1].canvas.right;
       newCanvas.bottom = panes[panes.length - 1].canvas.bottom;
-      layoutManager.layoutInsideLegend(that._legend, newCanvas);
+      layoutManager.layoutInsideLegend(this._legend, newCanvas);
     }
   },
   _allowLegendInsidePosition() {
     return true;
   },
   _applyExtraSettings(series) {
-    var that = this;
-    var paneIndex = that._getPaneIndex(series.pane);
-    var panesClipRects = that._panesClipRects;
+    var paneIndex = this._getPaneIndex(series.pane);
+    var panesClipRects = this._panesClipRects;
     var wideClipRect = panesClipRects.wide[paneIndex];
-    series.setClippingParams(panesClipRects.base[paneIndex].id, wideClipRect && wideClipRect.id, that._getPaneBorderVisibility(paneIndex));
+    series.setClippingParams(panesClipRects.base[paneIndex].id, wideClipRect === null || wideClipRect === void 0 ? void 0 : wideClipRect.id, this._getPaneBorderVisibility(paneIndex));
   },
   _updatePanesCanvases(drawOptions) {
     if (!drawOptions.recreateCanvas) {
@@ -8271,7 +11424,7 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
   _hidePointsForSingleSeriesIfNeeded(series) {
     var seriesPoints = series.getPoints();
     var overlappedPointsCount = 0;
-    for (var i = 0; i < seriesPoints.length; i++) {
+    for (var i = 0; i < seriesPoints.length; i += 1) {
       var currentPoint = seriesPoints[i];
       var overlappingPoints = seriesPoints.slice(i + 1);
       overlappedPointsCount += Number(isPointOverlapped(currentPoint, overlappingPoints));
@@ -8283,10 +11436,10 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
   },
   _applyAutoHidePointMarkers(filteredSeries) {
     var overlappingPoints = [];
-    var reducerFunc = function reducerFunc(pointsCount, currentPoint) {
+    var overlappedPointsCalculator = function overlappedPointsCalculator(pointsCount, currentPoint) {
       return pointsCount + isPointOverlapped(currentPoint, overlappingPoints, true);
     };
-    for (var i = filteredSeries.length - 1; i >= 0; i--) {
+    for (var i = filteredSeries.length - 1; i >= 0; i -= 1) {
       var currentSeries = filteredSeries[i];
       if (!currentSeries.autoHidePointMarkersEnabled()) {
         continue;
@@ -8295,7 +11448,7 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
       this._hidePointsForSingleSeriesIfNeeded(currentSeries);
       if (!currentSeries.autoHidePointMarkers) {
         var seriesPoints = currentSeries.getPoints();
-        var overlappingPointsCount = seriesPoints.reduce(reducerFunc, 0);
+        var overlappingPointsCount = seriesPoints.reduce(overlappedPointsCalculator, 0);
         if (overlappingPointsCount < seriesPoints.length) {
           overlappingPoints = overlappingPoints.concat(seriesPoints);
         } else {
@@ -8305,15 +11458,15 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     }
   },
   _applyPointMarkersAutoHiding() {
-    var that = this;
-    var allSeries = that.series;
-    if (!that._themeManager.getOptions('autoHidePointMarkers')) {
+    var _this5 = this;
+    var allSeries = this.series;
+    if (!this._themeManager.getOptions('autoHidePointMarkers')) {
       allSeries.forEach(function (s) {
         s.autoHidePointMarkers = false;
       });
       return;
     }
-    that.panes.forEach(function (_ref) {
+    this.panes.forEach(function (_ref) {
       var borderCoords = _ref.borderCoords,
         name = _ref.name;
       var series = allSeries.filter(function (s) {
@@ -8322,7 +11475,7 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
       series.forEach(function (singleSeries) {
         singleSeries.prepareCoordinatesForPoints();
       });
-      var argAxis = that.getArgumentAxis();
+      var argAxis = _this5.getArgumentAxis();
       var markersInfo = collectMarkersInfoBySeries(allSeries, series, argAxis);
       fastHidingPointMarkersByArea(borderCoords, markersInfo, series);
       if (markersInfo.series.length) {
@@ -8339,11 +11492,12 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
         });
         points.sort(sortingCallback);
         updateMarkersInfo(points, markersInfo.overloadedSeries);
-        that._applyAutoHidePointMarkers(series);
+        _this5._applyAutoHidePointMarkers(series);
       }
     });
   },
   _renderAxes(drawOptions, panesBorderOptions) {
+    var _this6 = this;
     function calculateTitlesWidth(axes) {
       return axes.map(function (axis) {
         if (!axis.getTitle) return 0;
@@ -8351,27 +11505,26 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
         return title ? title.bBox.width : 0;
       });
     }
-    var that = this;
-    var rotated = that._isRotated();
-    var synchronizeMultiAxes = that._themeManager.getOptions('synchronizeMultiAxes');
-    var scrollBar = that._scrollBar ? [that._scrollBar] : [];
-    var extendedArgAxes = that._isArgumentAxisBeforeScrollBar() ? that._argumentAxes.concat(scrollBar) : scrollBar.concat(that._argumentAxes);
-    var verticalAxes = rotated ? that._argumentAxes : that._valueAxes;
-    var verticalElements = rotated ? extendedArgAxes : that._valueAxes;
-    var horizontalAxes = rotated ? that._valueAxes : that._argumentAxes;
-    var horizontalElements = rotated ? that._valueAxes : extendedArgAxes;
+    var rotated = this._isRotated();
+    var synchronizeMultiAxes = this._themeManager.getOptions('synchronizeMultiAxes');
+    var scrollBar = this._scrollBar ? [this._scrollBar] : [];
+    var extendedArgAxes = this._isArgumentAxisBeforeScrollBar() ? this._argumentAxes.concat(scrollBar) : scrollBar.concat(this._argumentAxes);
+    var verticalAxes = rotated ? this._argumentAxes : this._valueAxes;
+    var verticalElements = rotated ? extendedArgAxes : this._valueAxes;
+    var horizontalAxes = rotated ? this._valueAxes : this._argumentAxes;
+    var horizontalElements = rotated ? this._valueAxes : extendedArgAxes;
     var allAxes = verticalAxes.concat(horizontalAxes);
     var allElements = allAxes.concat(scrollBar);
     var verticalAxesFirstDrawing = verticalAxes.some(function (v) {
       return v.isFirstDrawing();
     });
-    that._normalizePanesHeight();
-    that._updatePanesCanvases(drawOptions);
-    var panesCanvases = that.panes.reduce(function (canvases, pane) {
+    this._normalizePanesHeight();
+    this._updatePanesCanvases(drawOptions);
+    var panesCanvases = this.panes.reduce(function (canvases, pane) {
       canvases[pane.name] = (0, _extend2.extend)({}, pane.canvas);
       return canvases;
     }, {});
-    var paneSizes = that.panes.reduce(function (sizes, pane) {
+    var paneSizes = this.panes.reduce(function (sizes, pane) {
       sizes[pane.name] = {
         height: pane.height,
         unit: pane.unit
@@ -8379,13 +11532,13 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
       return sizes;
     }, {});
     var cleanPanesCanvases = (0, _extend2.extend)(true, {}, panesCanvases);
-    that._initCustomPositioningAxes();
-    var needCustomAdjustAxes = that._axesBoundaryPositioning();
+    this._initCustomPositioningAxes();
+    var needCustomAdjustAxes = this._axesBoundaryPositioning();
     if (!drawOptions.adjustAxes && !needCustomAdjustAxes) {
       drawAxesWithTicks(verticalAxes, !rotated && synchronizeMultiAxes, panesCanvases, panesBorderOptions);
       drawAxesWithTicks(horizontalAxes, rotated && synchronizeMultiAxes, panesCanvases, panesBorderOptions);
       performActionOnAxes(allAxes, 'prepareAnimation');
-      that._renderScaleBreaks();
+      this._renderScaleBreaks();
       horizontalAxes.forEach(function (a) {
         return a.resolveOverlappingForCustomPositioning(verticalAxes);
       });
@@ -8404,8 +11557,8 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
         });
       });
     }
-    if (that._scrollBar) {
-      that._scrollBar.setPane(that.panes);
+    if (this._scrollBar) {
+      this._scrollBar.setPane(this.panes);
     }
     var vAxesMargins = {
       panes: {},
@@ -8429,21 +11582,21 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     };
     drawAxesAndSetCanvases(false);
     drawAxesAndSetCanvases(true);
-    if (!that._changesApplying && that._estimateTickIntervals(verticalAxes, panesCanvases)) {
+    if (!this._changesApplying && this._estimateTickIntervals(verticalAxes, panesCanvases)) {
       drawAxesAndSetCanvases(false);
     }
     var oldTitlesWidth = calculateTitlesWidth(verticalAxes);
-    var visibleSeries = that._getVisibleSeries();
-    var pointsToAnimation = that._getPointsToAnimation(visibleSeries);
+    var visibleSeries = this._getVisibleSeries();
+    var pointsToAnimation = this._getPointsToAnimation(visibleSeries);
     var axesIsAnimated = axisAnimationEnabled(drawOptions, pointsToAnimation);
     performActionOnAxes(allElements, 'updateSize', panesCanvases, axesIsAnimated);
     horizontalElements.forEach(shiftAxis('top', 'bottom'));
     verticalElements.forEach(shiftAxis('left', 'right'));
-    that._renderScaleBreaks();
-    that.panes.forEach(function (pane) {
+    this._renderScaleBreaks();
+    this.panes.forEach(function (pane) {
       (0, _extend2.extend)(pane.canvas, panesCanvases[pane.name]);
     });
-    that._valueAxes.forEach(function (axis) {
+    this._valueAxes.forEach(function (axis) {
       axis.setInitRange();
     });
     verticalAxes.forEach(function (axis, i) {
@@ -8456,7 +11609,7 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
           vAxesMargins.right += offset;
         } else {
           vAxesMargins.left += offset;
-          that.panes.forEach(function (_ref2) {
+          _this6.panes.forEach(function (_ref2) {
             var name = _ref2.name;
             vAxesMargins.panes[name].left += offset;
           });
@@ -8469,7 +11622,7 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     if (verticalAxes.some(function (v) {
       return v.customPositionIsAvailable() && v.getCustomPosition() !== v._axisPosition;
     })) {
-      axesIsAnimated && that._resetAxesAnimation(verticalAxesFirstDrawing, false);
+      axesIsAnimated && this._resetAxesAnimation(verticalAxesFirstDrawing, false);
       performActionOnAxes(verticalAxes, 'updateSize', panesCanvases, axesIsAnimated);
     }
     horizontalAxes.forEach(function (a) {
@@ -8481,9 +11634,8 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return cleanPanesCanvases;
   },
   _getExtraTemplatesItems() {
-    var that = this;
-    var allAxes = (that._argumentAxes || []).concat(that._valueAxes || []);
-    var elements = that._collectTemplatesFromItems(allAxes);
+    var allAxes = (this._argumentAxes || []).concat(this._valueAxes || []);
+    var elements = this._collectTemplatesFromItems(allAxes);
     return {
       items: elements.items,
       groups: elements.groups,
@@ -8505,44 +11657,43 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     });
   },
   checkForMoreSpaceForPanesCanvas() {
-    var that = this;
-    var rotated = that._isRotated();
-    var panesAreCustomSized = that.panes.filter(function (p) {
+    var rotated = this._isRotated();
+    var panesAreCustomSized = this.panes.filter(function (p) {
       return p.unit;
-    }).length === that.panes.length;
+    }).length === this.panes.length;
     var needSpace = false;
     if (panesAreCustomSized) {
       var needHorizontalSpace = 0;
       var needVerticalSpace = 0;
       if (rotated) {
-        var argAxisRightMargin = that.getArgumentAxis().getMargins().right;
-        var rightPanesIndent = Math.min.apply(Math, that.panes.map(function (p) {
+        var argAxisRightMargin = this.getArgumentAxis().getMargins().right;
+        var rightPanesIndent = Math.min.apply(Math, _toConsumableArray(this.panes.map(function (p) {
           return p.canvas.right;
-        }));
-        needHorizontalSpace = that._canvas.right + argAxisRightMargin - rightPanesIndent;
+        })));
+        needHorizontalSpace = this._canvas.right + argAxisRightMargin - rightPanesIndent;
       } else {
-        var argAxisBottomMargin = that.getArgumentAxis().getMargins().bottom;
-        var bottomPanesIndent = Math.min.apply(Math, that.panes.map(function (p) {
+        var argAxisBottomMargin = this.getArgumentAxis().getMargins().bottom;
+        var bottomPanesIndent = Math.min.apply(Math, _toConsumableArray(this.panes.map(function (p) {
           return p.canvas.bottom;
-        }));
-        needVerticalSpace = that._canvas.bottom + argAxisBottomMargin - bottomPanesIndent;
+        })));
+        needVerticalSpace = this._canvas.bottom + argAxisBottomMargin - bottomPanesIndent;
       }
       needSpace = needHorizontalSpace > 0 || needVerticalSpace > 0 ? {
         width: needHorizontalSpace,
         height: needVerticalSpace
       } : false;
       if (needVerticalSpace !== 0) {
-        var realSize = that.getSize();
-        var customSize = that.option('size');
-        var container = that._$element[0];
-        var containerHasStyledHeight = !!parseInt(container.style.height, 10) || that._containerInitialHeight !== 0;
-        if (!rotated && !(customSize && customSize.height) && !containerHasStyledHeight) {
-          that._forceResize(realSize.width, realSize.height + needVerticalSpace);
+        var realSize = this.getSize();
+        var customSize = this.option('size');
+        var container = this._$element[0];
+        var containerHasStyledHeight = !!parseInt(container.style.height, 10) || this._containerInitialHeight !== 0;
+        if (!rotated && !(customSize === null || customSize === void 0 ? void 0 : customSize.height) && !containerHasStyledHeight) {
+          this._forceResize(realSize.width, realSize.height + needVerticalSpace);
           needSpace = false;
         }
       }
     } else {
-      needSpace = that.layoutManager.needMoreSpaceForPanesCanvas(that._getLayoutTargets(), rotated, function (pane) {
+      needSpace = this.layoutManager.needMoreSpaceForPanesCanvas(this._getLayoutTargets(), rotated, function (pane) {
         return {
           width: rotated && !!pane.unit,
           height: !rotated && !!pane.unit
@@ -8563,18 +11714,17 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
       return;
     }
     this._renderer.stopAllAnimations(true);
-    var that = this;
-    var rotated = that._isRotated();
-    var scrollBar = that._scrollBar ? [that._scrollBar] : [];
-    var extendedArgAxes = that._isArgumentAxisBeforeScrollBar() ? that._argumentAxes.concat(scrollBar) : scrollBar.concat(that._argumentAxes);
-    var verticalAxes = rotated ? extendedArgAxes : that._valueAxes;
-    var horizontalAxes = rotated ? that._valueAxes : extendedArgAxes;
+    var rotated = this._isRotated();
+    var scrollBar = this._scrollBar ? [this._scrollBar] : [];
+    var extendedArgAxes = this._isArgumentAxisBeforeScrollBar() ? this._argumentAxes.concat(scrollBar) : scrollBar.concat(this._argumentAxes);
+    var verticalAxes = rotated ? extendedArgAxes : this._valueAxes;
+    var horizontalAxes = rotated ? this._valueAxes : extendedArgAxes;
     var allAxes = verticalAxes.concat(horizontalAxes);
     if (sizeShortage.width || sizeShortage.height) {
       checkUsedSpace(sizeShortage, 'height', horizontalAxes, getHorizontalAxesMargins);
       checkUsedSpace(sizeShortage, 'width', verticalAxes, getVerticalAxesMargins);
       performActionOnAxes(allAxes, 'updateSize', panesCanvases);
-      var paneSizes = that.panes.reduce(function (sizes, pane) {
+      var paneSizes = this.panes.reduce(function (sizes, pane) {
         sizes[pane.name] = {
           height: pane.height,
           unit: pane.unit
@@ -8585,65 +11735,59 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
       performActionOnAxes(allAxes, 'updateSize', panesCanvases);
       horizontalAxes.forEach(shiftAxis('top', 'bottom'));
       verticalAxes.forEach(shiftAxis('left', 'right'));
-      that.panes.forEach(function (pane) {
+      this.panes.forEach(function (pane) {
         return (0, _extend2.extend)(pane.canvas, panesCanvases[pane.name]);
       });
     }
   },
   _isArgumentAxisBeforeScrollBar() {
     var _a;
-    var that = this;
-    var argumentAxis = that.getArgumentAxis();
-    if (that._scrollBar) {
+    var argumentAxis = this.getArgumentAxis();
+    if (this._scrollBar) {
       var argAxisPosition = argumentAxis.getResolvedBoundaryPosition();
       var argAxisLabelPosition = (_a = argumentAxis.getOptions().label) === null || _a === void 0 ? void 0 : _a.position;
-      var scrollBarPosition = that._scrollBar.getOptions().position;
+      var scrollBarPosition = this._scrollBar.getOptions().position;
       return argumentAxis.hasNonBoundaryPosition() || scrollBarPosition === argAxisPosition && argAxisLabelPosition !== scrollBarPosition;
     }
     return false;
   },
   _getPanesParameters() {
-    var that = this;
-    var panes = that.panes;
-    var i;
+    var panes = this.panes;
     var params = [];
-    for (i = 0; i < panes.length; i++) {
-      if (that._getPaneBorderVisibility(i)) {
+    for (var i = 0; i < panes.length; i += 1) {
+      if (this._getPaneBorderVisibility(i)) {
         params.push({
           coords: panes[i].borderCoords,
-          clipRect: that._panesClipRects.fixed[i]
+          clipRect: this._panesClipRects.fixed[i]
         });
       }
     }
     return params;
   },
   _createCrosshairCursor() {
-    var that = this;
-    var options = that._themeManager.getOptions('crosshair') || {};
-    var argumentAxis = that.getArgumentAxis();
-    var axes = !that._isRotated() ? [[argumentAxis], that._valueAxes] : [that._valueAxes, [argumentAxis]];
+    var options = this._themeManager.getOptions('crosshair') || {};
+    var argumentAxis = this.getArgumentAxis();
+    var axes = this._isRotated() ? [this._valueAxes, [argumentAxis]] : [[argumentAxis], this._valueAxes];
     var parameters = {
-      canvas: that._getCommonCanvas(),
-      panes: that._getPanesParameters(),
+      canvas: this._getCommonCanvas(),
+      panes: this._getPanesParameters(),
       axes
     };
-    if (!options || !options.enabled) {
+    if (!(options === null || options === void 0 ? void 0 : options.enabled)) {
       return;
     }
-    if (!that._crosshair) {
-      that._crosshair = new _crosshair.Crosshair(that._renderer, options, parameters, that._crosshairCursorGroup);
+    if (this._crosshair) {
+      this._crosshair.update(options, parameters);
     } else {
-      that._crosshair.update(options, parameters);
+      this._crosshair = new _crosshair.Crosshair(this._renderer, options, parameters, this._crosshairCursorGroup);
     }
-    that._crosshair.render();
+    this._crosshair.render();
   },
   _getCommonCanvas() {
-    var i;
-    var canvas;
     var commonCanvas;
     var panes = this.panes;
-    for (i = 0; i < panes.length; i++) {
-      canvas = panes[i].canvas;
+    for (var i = 0; i < panes.length; i += 1) {
+      var canvas = panes[i].canvas;
       if (!commonCanvas) {
         // TODO
         commonCanvas = (0, _extend2.extend)({}, canvas);
@@ -8655,35 +11799,30 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return commonCanvas;
   },
   _createPanesBackground() {
-    var that = this;
-    var defaultBackgroundColor = that._themeManager.getOptions('commonPaneSettings').backgroundColor;
-    var backgroundColor;
-    var renderer = that._renderer;
-    var rect;
-    var i;
+    var defaultBackgroundColor = this._themeManager.getOptions('commonPaneSettings').backgroundColor;
+    var renderer = this._renderer;
     var rects = [];
-    that._panesBackgroundGroup.clear();
-    for (i = 0; i < that.panes.length; i++) {
-      backgroundColor = that.panes[i].backgroundColor || defaultBackgroundColor;
+    this._panesBackgroundGroup.clear();
+    for (var i = 0; i < this.panes.length; i += 1) {
+      var backgroundColor = this.panes[i].backgroundColor || defaultBackgroundColor;
       if (!backgroundColor || backgroundColor === 'none') {
         rects.push(null);
         continue;
       }
-      rect = renderer.rect(0, 0, 0, 0).attr({
+      var rect = renderer.rect(0, 0, 0, 0).attr({
         fill: (0, _utils.extractColor)(backgroundColor),
         'stroke-width': 0
-      }).append(that._panesBackgroundGroup);
+      }).append(this._panesBackgroundGroup);
       rects.push(rect);
     }
-    that.panesBackground = rects;
+    this.panesBackground = rects;
   },
   _fillPanesBackground() {
-    var that = this;
-    var bc;
-    (0, _iterator.each)(that.panes, function (i, pane) {
-      bc = pane.borderCoords;
-      if (that.panesBackground[i] !== null) {
-        that.panesBackground[i].attr({
+    var _this7 = this;
+    (0, _iterator.each)(this.panes, function (i, pane) {
+      var bc = pane.borderCoords;
+      if (_this7.panesBackground[i] !== null) {
+        _this7.panesBackground[i].attr({
           x: bc.left,
           y: bc.top,
           width: bc.width,
@@ -8703,10 +11842,10 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     bc.height = Math.max(bc.bottom - bc.top, 0);
   },
   _drawPanesBorders(panesBorderOptions) {
-    var that = this;
-    var rotated = that._isRotated();
-    that._panesBorderGroup.linkRemove().clear();
-    (0, _iterator.each)(that.panes, function (i, pane) {
+    var _this8 = this;
+    var rotated = this._isRotated();
+    this._panesBorderGroup.linkRemove().clear();
+    (0, _iterator.each)(this.panes, function (i, pane) {
       var borderOptions = panesBorderOptions[pane.name];
       var attr = {
         fill: 'none',
@@ -8716,21 +11855,20 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
         dashStyle: borderOptions.dashStyle,
         'stroke-linecap': 'square'
       };
-      that._calcPaneBorderCoords(pane, rotated);
+      _this8._calcPaneBorderCoords(pane, rotated);
       if (!borderOptions.visible) {
         return;
       }
       var bc = pane.borderCoords;
       var segmentRectParams = (0, _utils2.prepareSegmentRectPoints)(bc.left, bc.top, bc.width, bc.height, borderOptions);
-      that._renderer.path(segmentRectParams.points, segmentRectParams.pathType).attr(attr).append(that._panesBorderGroup);
+      _this8._renderer.path(segmentRectParams.points, segmentRectParams.pathType).attr(attr).append(_this8._panesBorderGroup);
     });
-    that._panesBorderGroup.linkAppend();
+    this._panesBorderGroup.linkAppend();
   },
   _createClipRect(clipArray, index, left, top, width, height) {
-    var that = this;
     var clipRect = clipArray[index];
     if (!clipRect) {
-      clipRect = that._renderer.clipRect(left, top, width, height);
+      clipRect = this._renderer.clipRect(left, top, width, height);
       clipArray[index] = clipRect;
     } else {
       clipRect.attr({
@@ -8742,75 +11880,69 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     }
   },
   _createClipRectsForPanes() {
-    var that = this;
-    var canvas = that._canvas;
-    (0, _iterator.each)(that.panes, function (i, pane) {
+    var _this9 = this;
+    var canvas = this._canvas;
+    (0, _iterator.each)(this.panes, function (i, pane) {
       var needWideClipRect = false;
       var bc = pane.borderCoords;
       var left = bc.left;
       var top = bc.top;
       var width = bc.width;
       var height = bc.height;
-      var panesClipRects = that._panesClipRects;
-      that._createClipRect(panesClipRects.fixed, i, left, top, width, height);
-      that._createClipRect(panesClipRects.base, i, left, top, width, height);
-      (0, _iterator.each)(that.series, function (_, series) {
+      var panesClipRects = _this9._panesClipRects;
+      _this9._createClipRect(panesClipRects.fixed, i, left, top, width, height);
+      _this9._createClipRect(panesClipRects.base, i, left, top, width, height);
+      (0, _iterator.each)(_this9.series, function (_, series) {
         if (series.pane === pane.name && (series.isFinancialSeries() || series.areErrorBarsVisible())) {
           needWideClipRect = true;
         }
       });
       if (needWideClipRect) {
-        if (that._isRotated()) {
+        if (_this9._isRotated()) {
           top = 0;
           height = canvas.height;
         } else {
           left = 0;
           width = canvas.width;
         }
-        that._createClipRect(panesClipRects.wide, i, left, top, width, height);
+        _this9._createClipRect(panesClipRects.wide, i, left, top, width, height);
       } else {
         panesClipRects.wide[i] = null;
       }
     });
   },
   _applyClipRectsForAxes() {
-    var that = this;
-    var axes = that._getAllAxes();
-    var chartCanvasClipRectID = that._getCanvasClipRectID();
-    for (var i = 0; i < axes.length; i++) {
-      var elementsClipRectID = that._getElementsClipRectID(axes[i].pane);
+    var axes = this._getAllAxes();
+    var chartCanvasClipRectID = this._getCanvasClipRectID();
+    for (var i = 0; i < axes.length; i += 1) {
+      var elementsClipRectID = this._getElementsClipRectID(axes[i].pane);
       axes[i].applyClipRects(elementsClipRectID, chartCanvasClipRectID);
     }
   },
   _getPaneBorderVisibility(paneIndex) {
+    var _a;
     var commonPaneBorderVisible = this._themeManager.getOptions('commonPaneSettings').border.visible;
-    var pane = this.panes[paneIndex] || {};
-    var paneBorder = pane.border || {};
-    return 'visible' in paneBorder ? paneBorder.visible : commonPaneBorderVisible;
+    var pane = this.panes[paneIndex];
+    var paneVisibility = (_a = pane === null || pane === void 0 ? void 0 : pane.border) === null || _a === void 0 ? void 0 : _a.visible;
+    return paneVisibility === undefined ? commonPaneBorderVisible : paneVisibility;
   },
   _getCanvasForPane(paneName) {
-    var panes = this.panes;
-    var panesNumber = panes.length;
-    var i;
-    for (i = 0; i < panesNumber; i++) {
-      if (panes[i].name === paneName) {
-        return panes[i].canvas;
-      }
-    }
+    var _a;
+    return (_a = this.panes.find(function (pane) {
+      return pane.name === paneName;
+    })) === null || _a === void 0 ? void 0 : _a.canvas;
   },
   _getTrackerSettings() {
-    var that = this;
-    var themeManager = that._themeManager;
     return (0, _extend2.extend)(this.callBase(), {
-      chart: that,
-      rotated: that._isRotated(),
-      crosshair: that._getCrosshairOptions().enabled ? that._crosshair : null,
-      stickyHovering: themeManager.getOptions('stickyHovering')
+      chart: this,
+      rotated: this._isRotated(),
+      crosshair: this._getCrosshairOptions().enabled ? this._crosshair : null,
+      stickyHovering: this._themeManager.getOptions('stickyHovering')
     });
   },
   _resolveLabelOverlappingStack() {
-    var that = this;
-    var isRotated = that._isRotated();
+    var _this10 = this;
+    var isRotated = this._isRotated();
     var shiftDirection = isRotated ? function (box, length) {
       return {
         x: box.x - length,
@@ -8822,18 +11954,21 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
         y: box.y - length
       };
     };
-    (0, _iterator.each)(that._getStackPoints(), function (_, stacks) {
+    var processor = function processor(a, b) {
+      var coordPosition = isRotated ? 1 : 0;
+      var figureCenter1 = a.labels[0].getFigureCenter()[coordPosition];
+      var figureCenter12 = b.labels[0].getFigureCenter()[coordPosition];
+      if (figureCenter1 - figureCenter12 === 0) {
+        var translator = a.labels[0].getPoint().series.getValueAxis().getTranslator();
+        var direction = translator.isInverted() ? -1 : 1;
+        return (a.value() - b.value()) * direction;
+      }
+      return 0;
+    };
+    (0, _iterator.each)(this._getStackPoints(), function (_, stacks) {
       (0, _iterator.each)(stacks, function (_, points) {
         var isInverted = points[0].series.getValueAxis().getOptions().inverted;
-        _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points, that._getCommonCanvas(), isRotated, isInverted, shiftDirection, function (a, b) {
-          var coordPosition = isRotated ? 1 : 0;
-          var figureCenter1 = a.labels[0].getFigureCenter()[coordPosition];
-          var figureCenter12 = b.labels[0].getFigureCenter()[coordPosition];
-          if (figureCenter1 - figureCenter12 === 0) {
-            return (a.value() - b.value()) * (a.labels[0].getPoint().series.getValueAxis().getTranslator().isInverted() ? -1 : 1);
-          }
-          return 0;
-        });
+        _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points, _this10._getCommonCanvas(), isRotated, isInverted, shiftDirection, processor);
       });
     });
   },
@@ -8861,21 +11996,20 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
   },
   // API
   zoomArgument(min, max) {
-    var that = this;
-    if (!that._initialized || !(0, _type.isDefined)(min) && !(0, _type.isDefined)(max)) {
+    if (!this._initialized || !(0, _type.isDefined)(min) && !(0, _type.isDefined)(max)) {
       return;
     }
-    that.getArgumentAxis().visualRange([min, max]);
+    this.getArgumentAxis().visualRange([min, max]);
   },
   resetVisualRange() {
-    var that = this;
-    var axes = that._argumentAxes;
-    var nonVirtualArgumentAxis = that.getArgumentAxis();
+    var _this11 = this;
+    var axes = this._argumentAxes;
+    var nonVirtualArgumentAxis = this.getArgumentAxis();
     axes.forEach(function (axis) {
       axis.resetVisualRange(nonVirtualArgumentAxis !== axis);
-      that._applyCustomVisualRangeOption(axis);
+      _this11._applyCustomVisualRangeOption(axis);
     });
-    that.callBase();
+    this.callBase();
   },
   // T218011 for dashboards
   getVisibleArgumentBounds() {
@@ -8898,12 +12032,11 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return [this.getArgumentAxis()].concat(this._valueAxes);
   },
   _applyVisualRangeByVirtualAxes(axis, range) {
-    var that = this;
     if (axis.isArgumentAxis) {
-      if (axis !== that.getArgumentAxis()) {
+      if (axis !== this.getArgumentAxis()) {
         return true;
       }
-      that._argumentAxes.filter(function (a) {
+      this._argumentAxes.filter(function (a) {
         return a !== axis;
       }).forEach(function (a) {
         return a.visualRange(range, {
@@ -8930,7 +12063,7 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     var option = this.callBase.apply(this, arguments);
     var valueAxis = this._options.silent('valueAxis');
     if ((0, _type.type)(valueAxis) === 'array') {
-      for (var i = 0; i < valueAxis.length; i++) {
+      for (var i = 0; i < valueAxis.length; i += 1) {
         var optionPath = "valueAxis[".concat(i, "].visualRange");
         this._optionsByReference[optionPath] = true;
       }
@@ -8938,15 +12071,14 @@ var dxChart = _m_advanced_chart.AdvancedChart.inherit({
     return option;
   },
   _notifyVisualRange() {
-    var that = this;
-    var argAxis = that._argumentAxes[0];
-    var argumentVisualRange = (0, _utils.convertVisualRangeObject)(argAxis.visualRange(), !isArray(that.option('argumentAxis.visualRange')));
-    if (!argAxis.skipEventRising || !(0, _utils.rangesAreEqual)(argumentVisualRange, that.option('argumentAxis.visualRange'))) {
-      that.option('argumentAxis.visualRange', argumentVisualRange);
+    var argAxis = this._argumentAxes[0];
+    var argumentVisualRange = (0, _utils.convertVisualRangeObject)(argAxis.visualRange(), !isArray(this.option('argumentAxis.visualRange')));
+    if (!argAxis.skipEventRising || !(0, _utils.rangesAreEqual)(argumentVisualRange, this.option('argumentAxis.visualRange'))) {
+      this.option('argumentAxis.visualRange', argumentVisualRange);
     } else {
       argAxis.skipEventRising = null;
     }
-    that.callBase();
+    this.callBase();
   }
 });
 dxChart.addPlugin(_shutter_zoom.default);
@@ -8989,6 +12121,31 @@ var HOVER_STATE = states.hoverMark;
 var SELECTED_STATE = states.selectedMark;
 var MAX_RESOLVE_ITERATION_COUNT = 5;
 var LEGEND_ACTIONS = [states.resetItem, states.applyHover, states.applySelected, states.applySelected];
+function shiftInColumnFunction(box, length) {
+  return {
+    x: box.x,
+    y: box.y - length
+  };
+}
+function dividePoints(series, points) {
+  return series.getVisiblePoints().reduce(function (r, point) {
+    var angle = (0, _utils.normalizeAngle)(point.middleAngle);
+    (angle <= 90 || angle >= 270 ? r.right : r.left).push(point);
+    return r;
+  }, points || {
+    left: [],
+    right: []
+  });
+}
+function resolveOverlappedLabels(points, shiftCallback, inverseDirection, canvas) {
+  var overlapped = false;
+  if (inverseDirection) {
+    points.left.reverse();
+    points.right.reverse();
+  }
+  overlapped = _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.left, canvas, false, false, shiftCallback);
+  return _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.right, canvas, false, false, shiftCallback) || overlapped;
+}
 function getLegendItemAction(points) {
   var state = NORMAL_STATE;
   points.forEach(function (point) {
@@ -9080,6 +12237,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     this.callBase();
   },
   _groupSeries() {
+    var _a;
     var series = this.series;
     this._groupsData = {
       groups: [{
@@ -9088,7 +12246,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
           valueType: 'numeric'
         }
       }],
-      argumentOptions: series[0] && series[0].getOptions()
+      argumentOptions: (_a = series[0]) === null || _a === void 0 ? void 0 : _a.getOptions()
     };
   },
   getArgumentAxis() {
@@ -9144,9 +12302,9 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return legendItem;
   },
   _getLegendTargets() {
-    var that = this;
+    var _this = this;
     var itemsByArgument = {};
-    (that.series || []).forEach(function (series) {
+    (this.series || []).forEach(function (series) {
       series.getPoints().forEach(function (point) {
         var argument = point.argument.valueOf();
         var index = series.getPointsByArg(argument).indexOf(point);
@@ -9161,7 +12319,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     (0, _iterator.each)(itemsByArgument, function (_, points) {
       points.forEach(function (point, index) {
         if (index === 0) {
-          items.push(that._getLegendOptions(point));
+          items.push(_this._getLegendOptions(point));
           return;
         }
         var item = items[items.length - 1];
@@ -9179,22 +12337,21 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     }];
   },
   _getLayoutSeries(series, drawOptions) {
-    var that = this;
     var layout;
-    var canvas = that._canvas;
+    var canvas = this._canvas;
     var drawnLabels = false;
-    layout = that.layoutManager.applyPieChartSeriesLayout(canvas, series, true);
+    layout = this.layoutManager.applyPieChartSeriesLayout(canvas, series, true);
     series.forEach(function (singleSeries) {
       singleSeries.correctPosition(layout, canvas);
       drawnLabels = singleSeries.drawLabelsWOPoints() || drawnLabels;
     });
     if (drawnLabels) {
-      layout = that.layoutManager.applyPieChartSeriesLayout(canvas, series, drawOptions.hideLayoutLabels);
+      layout = this.layoutManager.applyPieChartSeriesLayout(canvas, series, drawOptions.hideLayoutLabels);
     }
     series.forEach(function (singleSeries) {
       singleSeries.hideLabels();
     });
-    that._sizeGroupLayout = {
+    this._sizeGroupLayout = {
       x: layout.centerX,
       y: layout.centerY,
       radius: layout.radiusOuter,
@@ -9213,18 +12370,17 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return layout;
   },
   _updateSeriesDimensions(drawOptions) {
-    var that = this;
-    var visibleSeries = that._getVisibleSeries();
+    var visibleSeries = this._getVisibleSeries();
     var lengthVisibleSeries = visibleSeries.length;
     var innerRad;
     var delta;
     var layout;
     var sizeGroupLayout = drawOptions.sizeGroupLayout;
     if (lengthVisibleSeries) {
-      layout = sizeGroupLayout ? that._getLayoutSeriesForEqualPies(visibleSeries, sizeGroupLayout) : that._getLayoutSeries(visibleSeries, drawOptions);
+      layout = sizeGroupLayout ? this._getLayoutSeriesForEqualPies(visibleSeries, sizeGroupLayout) : this._getLayoutSeries(visibleSeries, drawOptions);
       delta = (layout.radiusOuter - layout.radiusInner - seriesSpacing * (lengthVisibleSeries - 1)) / lengthVisibleSeries;
       innerRad = layout.radiusInner;
-      that._setGeometry(layout);
+      this._setGeometry(layout);
       visibleSeries.forEach(function (singleSeries) {
         singleSeries.correctRadius({
           radiusInner: innerRad,
@@ -9250,7 +12406,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return this._innerRadius;
   },
   _getLegendCallBack() {
-    var that = this;
+    var _this2 = this;
     var legend = this._legend;
     var items = this._getLegendTargets().map(function (i) {
       return i.legendData;
@@ -9261,7 +12417,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
         var callback = legend.getActionCallback({
           index: data.id
         });
-        that.series.forEach(function (series) {
+        _this2.series.forEach(function (series) {
           var seriesPoints = series.getPointsByKeys(data.argument, data.argumentIndex);
           points.push.apply(points, seriesPoints);
         });
@@ -9288,9 +12444,9 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
   },
   _applyExtraSettings: _common.noop,
   _resolveLabelOverlappingShift() {
-    var that = this;
-    var inverseDirection = that.option('segmentsDirection') === 'anticlockwise';
-    var seriesByPosition = that.series.reduce(function (r, s) {
+    var _this3 = this;
+    var inverseDirection = this.option('segmentsDirection') === 'anticlockwise';
+    var seriesByPosition = this.series.reduce(function (r, s) {
       (r[s.getOptions().label.position] || r.outside).push(s);
       return r;
     }, {
@@ -9299,54 +12455,31 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
       outside: []
     });
     var labelsOverlapped = false;
+    var shiftFunction = function shiftFunction(box, length) {
+      return (0, _utils.getVerticallyShiftedAngularCoords)(box, -length, _this3._center);
+    };
     if (seriesByPosition.inside.length > 0) {
-      labelsOverlapped = resolve(seriesByPosition.inside.reduce(function (r, singleSeries) {
-        return singleSeries.getVisiblePoints().reduce(function (r, point) {
+      var pointsToResolve = seriesByPosition.inside.reduce(function (r, singleSeries) {
+        var visiblePoints = singleSeries.getVisiblePoints();
+        return visiblePoints.reduce(function (r, point) {
           r.left.push(point);
           return r;
         }, r);
       }, {
         left: [],
         right: []
-      }), shiftInColumnFunction) || labelsOverlapped;
+      });
+      labelsOverlapped = resolveOverlappedLabels(pointsToResolve, shiftInColumnFunction, inverseDirection, this._canvas) || labelsOverlapped;
     }
     labelsOverlapped = seriesByPosition.columns.reduce(function (r, singleSeries) {
-      return resolve(dividePoints(singleSeries), shiftInColumnFunction) || r;
+      return resolveOverlappedLabels(dividePoints(singleSeries), shiftInColumnFunction, inverseDirection, _this3._canvas) || r;
     }, labelsOverlapped);
     if (seriesByPosition.outside.length > 0) {
-      labelsOverlapped = resolve(seriesByPosition.outside.reduce(function (r, singleSeries) {
+      labelsOverlapped = resolveOverlappedLabels(seriesByPosition.outside.reduce(function (r, singleSeries) {
         return dividePoints(singleSeries, r);
-      }, null), shiftFunction) || labelsOverlapped;
+      }, null), shiftFunction, inverseDirection, this._canvas) || labelsOverlapped;
     }
     return labelsOverlapped;
-    function dividePoints(series, points) {
-      return series.getVisiblePoints().reduce(function (r, point) {
-        var angle = (0, _utils.normalizeAngle)(point.middleAngle);
-        (angle <= 90 || angle >= 270 ? r.right : r.left).push(point);
-        return r;
-      }, points || {
-        left: [],
-        right: []
-      });
-    }
-    function resolve(points, shiftCallback) {
-      var overlapped = false;
-      if (inverseDirection) {
-        points.left.reverse();
-        points.right.reverse();
-      }
-      overlapped = _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.left, that._canvas, false, false, shiftCallback);
-      return _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.right, that._canvas, false, false, shiftCallback) || overlapped;
-    }
-    function shiftFunction(box, length) {
-      return (0, _utils.getVerticallyShiftedAngularCoords)(box, -length, that._center);
-    }
-    function shiftInColumnFunction(box, length) {
-      return {
-        x: box.x,
-        y: box.y - length
-      };
-    }
   },
   _setGeometry(_ref) {
     var x = _ref.centerX,
@@ -9380,12 +12513,11 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
   _reinitAxes: _common.noop,
   _correctAxes: _common.noop,
   _getExtraOptions() {
-    var that = this;
     return {
-      startAngle: that.option('startAngle'),
-      innerRadius: that.option('innerRadius'),
-      segmentsDirection: that.option('segmentsDirection'),
-      type: that.option('type')
+      startAngle: this.option('startAngle'),
+      innerRadius: this.option('innerRadius'),
+      segmentsDirection: this.option('segmentsDirection'),
+      type: this.option('type')
     };
   },
   getSizeGroup() {
@@ -9534,30 +12666,28 @@ var dxPolarChart = _m_advanced_chart.AdvancedChart.inherit({
     this._getValueAxis().applyClipRects(this._getElementsClipRectID(), canvasClipRectID);
   },
   _createClipPathForPane() {
-    var that = this;
-    var valueAxis = that._getValueAxis();
+    var valueAxis = this._getValueAxis();
     var center = valueAxis.getCenter();
     var radius = valueAxis.getRadius();
-    var panesClipRects = that._panesClipRects;
+    var panesClipRects = this._panesClipRects;
     center = {
       x: Math.round(center.x),
       y: Math.round(center.y)
     };
-    that._createClipCircle(panesClipRects.fixed, center.x, center.y, radius);
-    that._createClipCircle(panesClipRects.base, center.x, center.y, radius);
-    if (that.series.some(function (s) {
+    this._createClipCircle(panesClipRects.fixed, center.x, center.y, radius);
+    this._createClipCircle(panesClipRects.base, center.x, center.y, radius);
+    if (this.series.some(function (s) {
       return s.areErrorBarsVisible();
     })) {
-      that._createClipCircle(panesClipRects.wide, center.x, center.y, radius);
+      this._createClipCircle(panesClipRects.wide, center.x, center.y, radius);
     } else {
       panesClipRects.wide[0] = null;
     }
   },
   _createClipCircle(clipArray, left, top, radius) {
-    var that = this;
     var clipCircle = clipArray[0];
     if (!clipCircle) {
-      clipCircle = that._renderer.clipCircle(left, top, radius);
+      clipCircle = this._renderer.clipCircle(left, top, radius);
       clipArray[0] = clipCircle;
     } else {
       clipCircle.attr({
@@ -44514,6 +47644,8 @@ var defaultMessages = {
     "dxDataGrid-ariaValue": "Value",
     "dxDataGrid-ariaFilterCell": "Filter cell",
     "dxDataGrid-ariaCollapse": "Collapse",
+    "dxDataGrid-ariaModifiedCell": "Modified",
+    "dxDataGrid-ariaDeletedCell": "Deleted",
     "dxDataGrid-ariaExpand": "Expand",
     "dxDataGrid-ariaCollapsedRow": "Collapsed row",
     "dxDataGrid-ariaExpandedRow": "Expanded row",
@@ -48373,44 +51505,6 @@ module.exports["default"] = exports.default;
 
 /***/ }),
 
-/***/ 48384:
-/***/ (function(__unused_webpack_module, exports) {
-
-
-
-exports.recordMutations = recordMutations;
-function isChildNode(node) {
-  return typeof node.remove === 'function';
-}
-function revertMutation(_ref) {
-  var addedNodes = _ref.addedNodes,
-    type = _ref.type;
-  switch (type) {
-    case 'childList':
-      addedNodes.forEach(function (n) {
-        return isChildNode(n) && n.remove();
-      });
-      break;
-    default:
-      break;
-  }
-}
-function recordMutations(target, func) {
-  var observer = new MutationObserver(function () {});
-  observer.observe(target, {
-    childList: true,
-    subtree: false
-  });
-  func();
-  var mutations = observer.takeRecords();
-  observer.disconnect();
-  return function () {
-    return mutations.forEach(revertMutation);
-  };
-}
-
-/***/ }),
-
 /***/ 93407:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -48420,21 +51514,14 @@ exports.TemplateWrapper = void 0;
 exports.buildTemplateArgs = buildTemplateArgs;
 var _inferno = __webpack_require__(74219);
 var _inferno2 = __webpack_require__(65414);
+var _dom = __webpack_require__(3532);
 var _shallow_equals = __webpack_require__(33502);
 var _renderer = _interopRequireDefault(__webpack_require__(68374));
 var _dom_adapter = _interopRequireDefault(__webpack_require__(73349));
 var _element = __webpack_require__(6415);
 var _type = __webpack_require__(35922);
-var _common = __webpack_require__(20576);
-var _mutations_recording = __webpack_require__(48384);
 var _excluded = ["isEqual"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -48459,7 +51546,7 @@ function buildTemplateArgs(model, template) {
   }
   return args;
 }
-function buildTemplateContent(props, container) {
+function renderTemplateContent(props, container) {
   var _props$model;
   var _ref2 = (_props$model = props.model) !== null && _props$model !== void 0 ? _props$model : {
       data: {}
@@ -48488,27 +51575,40 @@ function buildTemplateContent(props, container) {
   }
   return isDxElementWrapper(rendered) ? rendered.toArray() : [(0, _renderer.default)(rendered).get(0)];
 }
+function removeDifferentElements(oldChildren, newChildren) {
+  newChildren.forEach(function (newElement) {
+    var hasOldChild = !!oldChildren.find(function (oldElement) {
+      return newElement === oldElement;
+    });
+    if (!hasOldChild && newElement.parentNode) {
+      newElement.parentNode.removeChild(newElement);
+    }
+  });
+}
 var TemplateWrapper = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(TemplateWrapper, _InfernoComponent);
   function TemplateWrapper(props) {
     var _this;
     _this = _InfernoComponent.call(this, props) || this;
-    _this.cleanParent = _common.noop;
     _this.renderTemplate = _this.renderTemplate.bind(_assertThisInitialized(_this));
     return _this;
   }
   var _proto = TemplateWrapper.prototype;
   _proto.renderTemplate = function renderTemplate() {
-    var _this2 = this;
     var node = (0, _inferno2.findDOMfromVNode)(this.$LI, true);
-    var container = node.parentElement;
-    this.cleanParent();
-    this.cleanParent = (0, _mutations_recording.recordMutations)(container, function () {
-      var content = buildTemplateContent(_this2.props, (0, _element.getPublicElement)((0, _renderer.default)(container)));
-      if (content.length !== 0 && !(content.length === 1 && content[0] === container)) {
-        node.after.apply(node, _toConsumableArray(content));
-      }
-    });
+    if (!(node !== null && node !== void 0 && node.parentNode)) {
+      return function () {};
+    }
+    var container = node.parentNode;
+    var $container = (0, _renderer.default)(container);
+    var $oldContainerContent = $container.contents().toArray();
+    var content = renderTemplateContent(this.props, (0, _element.getPublicElement)($container));
+    (0, _dom.replaceWith)((0, _renderer.default)(node), (0, _renderer.default)(content));
+    return function () {
+      var $actualContainerContent = (0, _renderer.default)(container).contents().toArray();
+      removeDifferentElements($oldContainerContent, $actualContainerContent);
+      container.appendChild(node);
+    };
   };
   _proto.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
     var _this$props = this.props,
@@ -48539,9 +51639,7 @@ var TemplateWrapper = /*#__PURE__*/function (_InfernoComponent) {
   _proto.updateEffects = function updateEffects() {
     this._effects[0].update([this.props.template, this.props.model]);
   };
-  _proto.componentWillUnmount = function componentWillUnmount() {
-    this.cleanParent();
-  };
+  _proto.componentWillUnmount = function componentWillUnmount() {};
   _proto.render = function render() {
     return null;
   };
@@ -53344,3142 +56442,6 @@ module.exports["default"] = exports.default;
 
 /***/ }),
 
-/***/ 61189:
-/***/ (function(module, exports) {
-
-
-
-exports["default"] = void 0;
-var _default = {
-  'zones': [{
-    'id': 'Africa/Abidjan',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Accra',
-    'untils': '-r507yk|1e3pak|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|cjvlc|681qo|clq9c|681qo|cjvlc|681qo|cjvlc|681qo|Infinity',
-    'offsets': '0.8667|0|-20',
-    'offsetIndices': '012121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Africa/Addis_Ababa',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Algiers',
-    'untils': '-uozn3l|2qx1nl|5luo0|8y800|a4tc0|7vc00|auqo0|7idc0|b7pc0|6sg00|cyo00|7ayo0|53c00|9idxc0|3i040|51mw0|253uk0|9o2k0|92040|8l3s0|jutc0|4uy840|3rdzw0|46xc00|7x6o0|2xco40|8n180|7x9g0|9d440|kiqg0|9d440|9q2s0|9cyk0|Infinity',
-    'offsets': '-9.35|0|-60|-120',
-    'offsetIndices': '0121212121212121232321212122321212'
-  }, {
-    'id': 'Africa/Asmara',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Asmera',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Bamako',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Bangui',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Banjul',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Bissau',
-    'untils': '-u9rek0|wvoyo0|Infinity',
-    'offsets': '62.3333|60|0',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Africa/Blantyre',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Brazzaville',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Bujumbura',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Cairo',
-    'untils': '-fdls80|40d80|a31g0|7x3w0|a4w40|aqyk0|80ys0|b07w0|7tk40|b07w0|8jhg0|a8fw0|60go40|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|f9x80|3i040|eluk0|462s0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|b5rw0|7m5g0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|aqvs0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7k580|b5xg0|6u7w0|bvus0|6h980|c8tg0|64ak0|cyqs0|5anw0|1jms0|12t80|1w22s0|25p80|1sw40|2vmk0|Infinity',
-    'offsets': '-120|-180',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Africa/Casablanca',
-    'untils': '-tblt9g|di7nxg|3huk0|51k40|2znuk0|2dp9g0|776k0|8nt2s0|657w0|3ifxg0|3jp80|va040|4qak0|e1ms0|7pp80|cnms0|3afw0|2xi840|xqqk0|bp56s0|4qak0|e1ms0|45x80|d2g40|51ek0|c8tg0|64ak0|e1sc0|47uo0|1leo0|23xc0|asw00|3lmo0|1qyo0|40g00|7x6o0|4mo00|1stc0|4deo0|7x6o0|3ylc0|1stc0|51hc0|7x6o0|3lmo0|1stc0|5reo0|7k800|2vpc0|25s00|64dc0|7k800|2iqo0|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|25s00|g7c00|1stc0|g7c00|25s00|Infinity',
-    'offsets': '30.3333|0|-60',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Africa/Ceuta',
-    'untils': '-qyiys0|7x3w0|2vt440|8sqs0|ssyk0|8n6s0|9px80|905g0|a2yo0|902o0|k69dc0|657w0|3ifxg0|3jp80|va040|4qak0|e1ms0|7pp80|cnms0|3afw0|2xi840|129us0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Africa/Conakry',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Dakar',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Dar_es_Salaam',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Djibouti',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Douala',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/El_Aaiun',
-    'untils': '-isdxk0|m2g0c0|vek0|4qak0|e1ms0|7pp80|cnms0|3afw0|fke5g0|4qak0|e1ms0|45x80|d2g40|51ek0|c8tg0|64ak0|e1sc0|47uo0|1leo0|23xc0|asw00|3lmo0|1qyo0|40g00|7x6o0|4mo00|1stc0|4deo0|7x6o0|3ylc0|1stc0|51hc0|7x6o0|3lmo0|1stc0|5reo0|7k800|2vpc0|25s00|64dc0|7k800|2iqo0|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|1stc0|gkao0|1stc0|g7c00|25s00|g7c00|1stc0|g7c00|25s00|g7c00|25s00|g7c00|1stc0|g7c00|25s00|Infinity',
-    'offsets': '52.8|60|0|-60',
-    'offsetIndices': '012323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'Africa/Freetown',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Gaborone',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Harare',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Johannesburg',
-    'untils': '-yvtdi0|kn7o60|9cyk0|9d440|9cyk0|Infinity',
-    'offsets': '-90|-120|-180',
-    'offsetIndices': '012121'
-  }, {
-    'id': 'Africa/Juba',
-    'untils': '-kcrsis|kixuys|8l6k0|a4w40|8n180|a6qs0|8n180|a31g0|8ovw0|a16s0|8qqk0|9zc40|8sl80|9xhg0|8wak0|9ts40|8y580|a4w40|8n180|a31g0|8ovw0|a16s0|8sl80|9xhg0|8ufw0|9vms0|8wak0|9ts40|8y580|a4w40|8ovw0|a16s0|8qqk0|7frw40|Infinity',
-    'offsets': '-126.4667|-120|-180',
-    'offsetIndices': '01212121212121212121212121212121212'
-  }, {
-    'id': 'Africa/Kampala',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Khartoum',
-    'untils': '-kcrsow|kixv4w|8l6k0|a4w40|8n180|a6qs0|8n180|a31g0|8ovw0|a16s0|8qqk0|9zc40|8sl80|9xhg0|8wak0|9ts40|8y580|a4w40|8n180|a31g0|8ovw0|a16s0|8sl80|9xhg0|8ufw0|9vms0|8wak0|9ts40|8y580|a4w40|8ovw0|a16s0|8qqk0|7frw40|9ac180|Infinity',
-    'offsets': '-130.1333|-120|-180',
-    'offsetIndices': '012121212121212121212121212121212121'
-  }, {
-    'id': 'Africa/Kigali',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Kinshasa',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Lagos',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Libreville',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Lome',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Luanda',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Lubumbashi',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Lusaka',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Malabo',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Maputo',
-    'untils': '-yvtfd8|Infinity',
-    'offsets': '-130.3333|-120',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Maseru',
-    'untils': '-yvtdi0|kn7o60|9cyk0|9d440|9cyk0|Infinity',
-    'offsets': '-90|-120|-180',
-    'offsetIndices': '012121'
-  }, {
-    'id': 'Africa/Mbabane',
-    'untils': '-yvtdi0|kn7o60|9cyk0|9d440|9cyk0|Infinity',
-    'offsets': '-90|-120|-180',
-    'offsetIndices': '012121'
-  }, {
-    'id': 'Africa/Mogadishu',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Monrovia',
-    'untils': '-qj6zc4|rl202a|Infinity',
-    'offsets': '43.1333|44.5|0',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Africa/Nairobi',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Africa/Ndjamena',
-    'untils': '-u9rk4c|zdk5cc|7iak0|Infinity',
-    'offsets': '-60.2|-60|-120',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'Africa/Niamey',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Nouakchott',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Ouagadougou',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Porto-Novo',
-    'untils': '-q9qbao|Infinity',
-    'offsets': '-13.6|-60',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Sao_Tome',
-    'untils': '-u9rhc0|1jbm840|irxc0|Infinity',
-    'offsets': '36.75|0|-60',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'Africa/Timbuktu',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Africa/Tripoli',
-    'untils': '-q3gfrw|gl6ajw|422c0|xado0|4bbo0|wrpg0|4s580|1kdpg0|c05bw0|4mqs0|9et80|9d440|9et80|9eys0|9et80|9mdg0|95jw0|9io40|9cyk0|99es0|9et80|9eys0|9et80|9d440|9et80|b2840|3cf3w0|9kis0|9et80|7vqyw0|75eo0|asw00|Infinity',
-    'offsets': '-52.7333|-60|-120',
-    'offsetIndices': '012121212121212121212121212122122'
-  }, {
-    'id': 'Africa/Tunis',
-    'untils': '-uozn3l|enxevl|b5uo0|53c00|u8w00|7x9g0|c8w80|7k800|z3w0|ew40|8bx80|9d440|9nx00|925o0|8l100|gi3440|7k800|b9k00|7vc00|51mw00|5ytc0|9d1c0|9d1c0|b9k00|7thc0|7m0tc0|7tk40|93us0|b5uo0|7k800|b5uo0|7x6o0|asw00|Infinity',
-    'offsets': '-9.35|-60|-120',
-    'offsetIndices': '0121212121212121212121212121212121'
-  }, {
-    'id': 'Africa/Windhoek',
-    'untils': '-yvtdi0|kn7o60|9cyk0|oj2nw0|235k00|8lho0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|Infinity',
-    'offsets': '-90|-120|-180|-60',
-    'offsetIndices': '01211313131313131313131313131313131313131313131313131'
-  }, {
-    'id': 'America/Adak',
-    'untils': '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '660|600|540',
-    'offsetIndices': '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Anchorage',
-    'untils': '-ek1qo0|1tyx80|2e400|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '600|540|480',
-    'offsetIndices': '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Anguilla',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Antigua',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Araguaina',
-    'untils': '-t85j2o|99k8mo|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|2yl440|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|51udg0|64ak0|Infinity',
-    'offsets': '192.8|180|120',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Argentina/Buenos_Aires',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323232323232'
-  }, {
-    'id': 'America/Argentina/Catamarca',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323132321232'
-  }, {
-    'id': 'America/Argentina/ComodRivadavia',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323132321232'
-  }, {
-    'id': 'America/Argentina/Cordoba',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323132323232'
-  }, {
-    'id': 'America/Argentina/Jujuy',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|c8w80|776k0|ag040|7k2g0|bvus0|776k0|7qcg40|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '012121212121212121212121212121212121212121232323121323232'
-  }, {
-    'id': 'America/Argentina/La_Rioja',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6qik0|3g880|8jbw0|6u7w0|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '012121212121212121212121212121212121212121232323231232321232'
-  }, {
-    'id': 'America/Argentina/Mendoza',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bktk0|71mk0|bqas0|73h80|bvus0|773s0|5unes0|6hes0|1p7mk0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232312121321232'
-  }, {
-    'id': 'America/Argentina/Rio_Gallegos',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323232321232'
-  }, {
-    'id': 'America/Argentina/Salta',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '012121212121212121212121212121212121212121232323231323232'
-  }, {
-    'id': 'America/Argentina/San_Juan',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6qik0|3g880|8jbw0|6u7w0|bvus0|776k0|5v2840|2txg0|1sgak0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '012121212121212121212121212121212121212121232323231232321232'
-  }, {
-    'id': 'America/Argentina/San_Luis',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|7pp80|b2aw0|71mk0|4qg40|6s8ik0|2txg0|1sgak0|14nw0|2gys0|b5xg0|7k580|b5xg0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '012121212121212121212121212121212121212121232323121212321212'
-  }, {
-    'id': 'America/Argentina/Tucuman',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|mas0|1um2k0|3yik0|b5xg0|7k580|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '0121212121212121212121212121212121212121212323232313232123232'
-  }, {
-    'id': 'America/Argentina/Ushuaia',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|5v0dg0|12ys0|1u93w0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323232321232'
-  }, {
-    'id': 'America/Aruba',
-    'untils': '-u7lckd|rlo7qd|Infinity',
-    'offsets': '275.7833|270|240',
-    'offsetIndices': '012'
-  }, {
-    'id': 'America/Asuncion',
-    'untils': '-jy93zk|ldwofk|s4vw0|s6w40|7tek0|b0dg0|7rjw0|b0dg0|7rjw0|b0dg0|9cyk0|9eys0|9et80|9eys0|9cyk0|9eys0|9cyk0|9eys0|9cyk0|9eys0|9et80|9eys0|9cyk0|9eys0|9cyk0|9eys0|9cyk0|9eys0|9et80|9eys0|9cyk0|ahus0|8a2k0|9eys0|9cyk0|9o840|7k580|b7s40|93p80|9gtg0|7nuk0|b42s0|7lzw0|b5xg0|7tek0|b9ms0|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|7kas0|b5rw0|7x9g0|ast80|a31g0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|776k0|biw40|8zzw0|905g0|9px80|905g0|9px80|9d440|8n180|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|a31g0|8n180|a31g0|8n180|a31g0|Infinity',
-    'offsets': '230.6667|240|180',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'America/Atikokan',
-    'untils': '-qzov40|a2vw0|bfxjw0|pmdk0|1tz8c0|2dsw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '0101111'
-  }, {
-    'id': 'America/Atka',
-    'untils': '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '660|600|540',
-    'offsetIndices': '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Bahia_Banderas',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|asqg0|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '421|420|360|480|300',
-    'offsetIndices': '0121212131212121212121212121212121212142424242424242424242424242424242424242424242424242424242'
-  }, {
-    'id': 'America/Bahia',
-    'untils': '-t85kv8|99kaf8|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|4irc40|6u7w0|Infinity',
-    'offsets': '154.0667|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Barbados',
-    'untils': '-o0aiaj|46b400|npv1mj|5rbw0|a31g0|8n180|a31g0|8n180|ag040|84ik0|Infinity',
-    'offsets': '238.4833|240|180',
-    'offsetIndices': '00121212121'
-  }, {
-    'id': 'America/Belem',
-    'untils': '-t85j0s|99k8ks|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|Infinity',
-    'offsets': '193.9333|180|120',
-    'offsetIndices': '012121212121212121212121212121'
-  }, {
-    'id': 'America/Belize',
-    'untils': '-u52ic0|3edkc0|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|bvte0|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|bvte0|6u9a0|g2t2q0|3e580|4mcys0|2vmk0|Infinity',
-    'offsets': '352.8|360|330|300',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121213131'
-  }, {
-    'id': 'America/Blanc-Sablon',
-    'untils': '-qzp0o0|a2vw0|c5jxg0|1tzdw0|2dnc0|Infinity',
-    'offsets': '240|180',
-    'offsetIndices': '010110'
-  }, {
-    'id': 'America/Boa_Vista',
-    'untils': '-t85grk|99k93k|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|62xk40|7k580|biw40|cvw0|Infinity',
-    'offsets': '242.6667|240|180',
-    'offsetIndices': '0121212121212121212121212121212121'
-  }, {
-    'id': 'America/Bogota',
-    'untils': '-srdoy8|14f1hi8|ha580|Infinity',
-    'offsets': '296.2667|300|240',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'America/Boise',
-    'untils': '-r0emw0|ast80|7x9g0|ast80|1um840|9s7jw0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|51k40|doik0|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420|360',
-    'offsetIndices': '0101012212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Buenos_Aires',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvus0|6u7w0|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323232323232'
-  }, {
-    'id': 'America/Cambridge_Bay',
-    'untils': '-q3gdc0|bjeec0|1tz5k0|2dvo0|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x6o0|ast80|ct40|7kj40|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '0|420|360|300',
-    'offsetIndices': '0122131212121212121212121212121212121212121212233221212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Campo_Grande',
-    'untils': '-t85hvw|99ka7w|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|cls40|64ak0|dfes0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
-    'offsets': '218.4667|240|180',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Cancun',
-    'untils': '-p1u7c0|vauo00|7ggw40|afuk0|8a840|afuk0|8a840|64ak0|4bms0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|51k40|Infinity',
-    'offsets': '347.0667|360|300|240',
-    'offsetIndices': '0123232321212121212121212121212121212121212'
-  }, {
-    'id': 'America/Caracas',
-    'untils': '-u7lcxw|rlo83w|meoxm0|4dps00|Infinity',
-    'offsets': '267.6667|270|240',
-    'offsetIndices': '01212'
-  }, {
-    'id': 'America/Catamarca',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|5v42s0|z9g0|1u93w0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323132321232'
-  }, {
-    'id': 'America/Cayenne',
-    'untils': '-uj7yb4|tcw6r4|Infinity',
-    'offsets': '209.3333|240|180',
-    'offsetIndices': '012'
-  }, {
-    'id': 'America/Cayman',
-    'untils': '-w757vc|Infinity',
-    'offsets': '319.6|300',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Chicago',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bvus0|776k0|7kas0|b5rw0|9d440|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|7x9g0|dbjw0|8a840|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Chihuahua',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|xes2s0|afuk0|8a840|afuk0|8aaw0|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '424.3333|420|360|300',
-    'offsetIndices': '0121212323221212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Coral_Harbour',
-    'untils': '-qzov40|a2vw0|bfxjw0|pmdk0|1tz8c0|2dsw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '0101111'
-  }, {
-    'id': 'America/Cordoba',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323132323232'
-  }, {
-    'id': 'America/Costa_Rica',
-    'untils': '-pjw8fn|ubtl3n|51ek0|doo40|51ek0|5jso40|8drw0|acas0|2xh80|Infinity',
-    'offsets': '336.2167|360|300',
-    'offsetIndices': '0121212121'
-  }, {
-    'id': 'America/Creston',
-    'untils': '-rshz80|vbus0|Infinity',
-    'offsets': '420|480',
-    'offsetIndices': '010'
-  }, {
-    'id': 'America/Cuiaba',
-    'untils': '-t85hm4|99k9y4|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|w5hg0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
-    'offsets': '224.3333|240|180',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Curacao',
-    'untils': '-u7lckd|rlo7qd|Infinity',
-    'offsets': '275.7833|270|240',
-    'offsetIndices': '012'
-  }, {
-    'id': 'America/Danmarkshavn',
-    'untils': '-rvusjk|x8nx3k|8zrk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|53hk0|Infinity',
-    'offsets': '74.6667|180|120|0',
-    'offsetIndices': '01212121212121212121212121212121213'
-  }, {
-    'id': 'America/Dawson_Creek',
-    'untils': '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|69uk0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '0101101010101010101010101010101010101010101010101010101011'
-  }, {
-    'id': 'America/Dawson',
-    'untils': '-qzoms0|a2vw0|asys0|882c0|bmiwc0|1tz000|2e180|a7n3w0|9q000|465k00|3e2is0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
-    'offsets': '540|480|420',
-    'offsetIndices': '01010110201212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'America/Denver',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360',
-    'offsetIndices': '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Detroit',
-    'untils': '-xx8dyd|5eraud|dyeyk0|1tzb40|2dq40|1c9440|7x3w0|9rlbxo|71s2c|9d440|9cyk0|2cmdg0|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '332.1833|360|300|240',
-    'offsetIndices': '0123323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'America/Dominica',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Edmonton',
-    'untils': '-x1yazk|629ink|a2vw0|8n6s0|29ek0|h6lg0|9px80|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|9l0g40|1tz5k0|2dvo0|tj1g0|7x3w0|ctzk40|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '453.8667|420|360',
-    'offsetIndices': '0121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Eirunepe',
-    'untils': '-t85f28|99ka68|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|2yy2s0|6h980|7hg2s0|2t2t80|Infinity',
-    'offsets': '279.4667|300|240',
-    'offsetIndices': '0121212121212121212121212121212121'
-  }, {
-    'id': 'America/El_Salvador',
-    'untils': '-pkm4tc|ymao5c|7k580|b5xg0|7k580|Infinity',
-    'offsets': '356.8|360|300',
-    'offsetIndices': '012121'
-  }, {
-    'id': 'America/Ensenada',
-    'untils': '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '468.0667|420|480',
-    'offsetIndices': '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'America/Fort_Nelson',
-    'untils': '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '01011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'America/Fort_Wayne',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Fortaleza',
-    'untils': '-t85kvc|99kafc|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|puk0|id6s0|6h980|Infinity',
-    'offsets': '154|180|120',
-    'offsetIndices': '0121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Glace_Bay',
-    'untils': '-z94kwc|89fk8c|a2vw0|c5jxg0|1tzdw0|2dnc0|3y8g40|7x3w0|9pa5g0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '239.8|240|180',
-    'offsetIndices': '012122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Godthab',
-    'untils': '-rvumf4|x8nqz4|8zrk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '206.9333|180|120',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Goose_Bay',
-    'untils': '-qzp20k|a2vw0|8kjbw0|kzjyk|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|7k580|b5xg0|7k580|b5xg0|1pb260|2dly0|biw40|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|7k580|ag040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|6y2s0|22420|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a2lo|afuk0|8a840|asqg0|7xc80|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8tec|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '210.8667|150.8667|210|150|240|180|120',
-    'offsetIndices': '010232323232323233232323232323232323232323232323232323232324545454545454545454545454545454545454545454546454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454'
-  }, {
-    'id': 'America/Grand_Turk',
-    'untils': '-u85og2|z3brw2|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|18ais0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '307.1667|300|240',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121222121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Grenada',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Guadeloupe',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Guatemala',
-    'untils': '-qqqskk|ss0akk|4ofw0|4tidg0|6djw0|3wwas0|8n180|7n5ms0|7x3w0|Infinity',
-    'offsets': '362.0667|360|300',
-    'offsetIndices': '0121212121'
-  }, {
-    'id': 'America/Guayaquil',
-    'untils': '-kcr84o|wb620o|3jp80|Infinity',
-    'offsets': '314|300|240',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'America/Guyana',
-    'untils': '-smcak8|vj4sz8|81rf90|Infinity',
-    'offsets': '232.6667|225|180|240',
-    'offsetIndices': '0123'
-  }, {
-    'id': 'America/Halifax',
-    'untils': '-z94k80|777go0|9et80|st9o0|a2vw0|ssyk0|5rbw0|cv1g0|69uk0|c6ys0|6kyk0|ci2s0|67zw0|ci2s0|6w2k0|bu040|7lzw0|bu040|66580|bu040|7lzw0|bu040|64ak0|cls40|5v180|cv1g0|6j3w0|c6ys0|79180|b42s0|7lzw0|b42s0|7yyk0|bu040|64ak0|dbpg0|66580|cls40|5ed80|bu040|7lzw0|b42s0|7lzw0|cjxg0|66580|bh1g0|7lzw0|b42s0|7lzw0|6uj00|1tzdw0|2dnc0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|1cm2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '254.4|240|180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Havana',
-    'untils': '-n7762o|1icfyo|69uk0|62s040|4ofw0|e1ms0|51ek0|e1ms0|4ofw0|1fhs40|4ofw0|e1ms0|4ofw0|9s9k40|67zw0|cedg0|6h980|9o840|7yyk0|b5xg0|7k580|bvus0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|8a2k0|ag040|8bx80|ae5g0|8drw0|acas0|9cyk0|9d440|9px80|905g0|9px80|9q2s0|7x3w0|8a840|ast80|7x9g0|ast80|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|8a2k0|ag040|8a2k0|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|905g0|a2vw0|905g0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|8n400|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|7x6o0|1cm000|6uao0|bvs00|779c0|bitc0|6uao0|bvs00|779c0|bvs00|779c0|c8qo0|779c0|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|Infinity',
-    'offsets': '329.6|300|240',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Hermosillo',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '443.8667|420|360|480',
-    'offsetIndices': '0121212131212121'
-  }, {
-    'id': 'America/Indiana/Indianapolis',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Indiana/Knox',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|9px80|9d440|9cyk0|9d440|s3180|1twas0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|7j5400|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '0101011010101010101010101010101010101010101010101010101010101010101010101010101010101010111010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Indiana/Marengo',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|2wsas0|7x3w0|1c9440|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|465h80|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4g00|64dc0|clmk0|fvt9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '0101011010101010101010101212121212111212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Indiana/Petersburg',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|501ek0|7kas0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|sfzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|eu02o0|asw00|6udg0|c8nw0|6hc00|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '01010110101010101010101010101010101010101010101010111011212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Indiana/Tell_City',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|501ek0|7kas0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|1tw580|9d440|9cyk0|9d440|9cvs0|9d440|9cyk0|ihslg0|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '01010110101010101010101010101021211010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Indiana/Vevay',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|4gyis0|7txx80|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|hfzhg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '010101101212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Indiana/Vincennes',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|asys0|7x3w0|3fidg0|7x3w0|asys0|7x3w0|b5rw0|7kas0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|2lz980|9cyk0|9d440|9cyk0|ihslg0|asw00|6udg0|c8nw0|6hc00|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '01010110101010101010101010101010121211011212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Indiana/Winamac',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|465h80|9cyk0|9d440|9cyk0|ihslg0|asw00|6udg0|c8l40|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '01010110101010101010101010101010101010121211021212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Indianapolis',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Inuvik',
-    'untils': '-8ve5c0|6fce80|9q000|71i2w0|ipzw0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '0|480|360|420',
-    'offsetIndices': '0121323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'America/Iqaluit',
-    'untils': '-eb6ao0|1l3h80|2dq40|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7xc80|ast80|7x6o0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '0|240|300|180|360',
-    'offsetIndices': '01123212121212121212121212121212121212121212142212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'America/Jamaica',
-    'untils': '-u85og2|wbl182|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|Infinity',
-    'offsets': '307.1667|300|240',
-    'offsetIndices': '0121212121212121212121'
-  }, {
-    'id': 'America/Jujuy',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|c8w80|776k0|ag040|7k2g0|bvus0|776k0|7qcg40|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '012121212121212121212121212121212121212121232323121323232'
-  }, {
-    'id': 'America/Juneau',
-    'untils': '-ek1w80|1tz2s0|2dyg0|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9d1c0|9d1c0|9cyk0|9d440|9px80|905g0|9px80|1leo0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420|540',
-    'offsetIndices': '01101010101010101010101010001010122020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202'
-  }, {
-    'id': 'America/Kentucky/Louisville',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|sg5g0|6bp80|a98o40|7x3w0|6w840|1tz8c0|2dsw0|ast9o|1sw2c|21gis0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|4bh80|3j3xc0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4g00|64dc0|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '0101010101101010101010101010101010101121212121212111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Kentucky/Monticello',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|bs6g40|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x6o0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '0101011010101010101010101010101010101010101010101010101010101010101010101121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Knox_IN',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|9px80|9d440|9cyk0|9d440|s3180|1twas0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|7j5400|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '0101011010101010101010101010101010101010101010101010101010101010101010101010101010101010111010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Kralendijk',
-    'untils': '-u7lckd|rlo7qd|Infinity',
-    'offsets': '275.7833|270|240',
-    'offsetIndices': '012'
-  }, {
-    'id': 'America/La_Paz',
-    'untils': '-jxzspo|84ik0|Infinity',
-    'offsets': '272.6|212.6|240',
-    'offsetIndices': '012'
-  }, {
-    'id': 'America/Lima',
-    'untils': '-w25lpo|fcxjlo|4ml80|93us0|9cyk0|9d440|9cyk0|nw16s0|4ml80|e5c40|4ml80|1fr1g0|4ml80|1yiys0|4ml80|Infinity',
-    'offsets': '308.6|300|240',
-    'offsetIndices': '0121212121212121'
-  }, {
-    'id': 'America/Los_Angeles',
-    'untils': '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|1a3c5o|f2iic|owao0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Louisville',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|sg5g0|6bp80|a98o40|7x3w0|6w840|1tz8c0|2dsw0|ast9o|1sw2c|21gis0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|4bh80|3j3xc0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4g00|64dc0|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '0101010101101010101010101010101010101121212121212111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Lower_Princes',
-    'untils': '-u7lckd|rlo7qd|Infinity',
-    'offsets': '275.7833|270|240',
-    'offsetIndices': '012'
-  }, {
-    'id': 'America/Maceio',
-    'untils': '-t85ldw|99kaxw|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|2yl440|64ak0|1wf1g0|7k580|biw40|puk0|id6s0|6h980|Infinity',
-    'offsets': '142.8667|180|120',
-    'offsetIndices': '012121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Managua',
-    'untils': '-ijh6oo|ka1i0o|xqqk0|24p6s0|53980|dmtg0|53980|60itw0|dq240|53es0|235h80|4beis0|8zzw0|at4c0|7x140|Infinity',
-    'offsets': '345.2|360|300',
-    'offsetIndices': '0121212121212121'
-  }, {
-    'id': 'America/Manaus',
-    'untils': '-t85gvw|99k97w|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|2yy2s0|6h980|Infinity',
-    'offsets': '240.0667|240|180',
-    'offsetIndices': '01212121212121212121212121212121'
-  }, {
-    'id': 'America/Marigot',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Martinique',
-    'untils': '-umcvcs|zz5x4s|8zzw0|Infinity',
-    'offsets': '244.3333|240|180',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'America/Matamoros',
-    'untils': '-p1u7c0|ykt480|ast80|3vppg0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '400|360|300',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Mazatlan',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '425.6667|420|360|480',
-    'offsetIndices': '0121212131212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Mendoza',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bktk0|71mk0|bqas0|73h80|bvus0|773s0|5unes0|6hes0|1p7mk0|3yik0|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232312121321232'
-  }, {
-    'id': 'America/Menominee',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|asys0|7x3w0|a7n9g0|9px80|1at9g0|2396k0|9d1c0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '01010110101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Merida',
-    'untils': '-p1u7c0|vauo00|hoyk0|6ys0c0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '358.4667|360|300',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Metlakatla',
-    'untils': '-ek1w80|1tz2s0|2dyg0|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|gpc840|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|3ylc0|2itg0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420|540',
-    'offsetIndices': '01101010101010101010101010101010102020200202020202020202020202020202020202020202'
-  }, {
-    'id': 'America/Mexico_City',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|3knek0|776k0|rf440|5t6k0|1evk40|71mk0|30p1g0|8n180|nufxo0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '396.6|420|360|300',
-    'offsetIndices': '012121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'America/Miquelon',
-    'untils': '-ulmyxk|zzqbdk|3m59g0|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '224.6667|240|180|120',
-    'offsetIndices': '012323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'America/Moncton',
-    'untils': '-z94i40|89fhg0|a2vw0|7mqqo0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|e1ms0|4ofw0|dmtg0|64ak0|cao40|6fek0|bkqs0|7iak0|6y5k0|1tzdw0|2dnc0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|s36s0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a2lo|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6uiyc|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240|180',
-    'offsetIndices': '012121212121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Monterrey',
-    'untils': '-p1u7c0|ykt480|ast80|3vppg0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '401.2667|360|300',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Montevideo',
-    'untils': '-w4mll9|67elc0|1s74p9|9et80|9exe0|9czy0|9exe0|9czy0|3ydyq0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|b5w20|7k6m0|9q1e0|9czy0|asxe0|7x5a0|6do20|ppvy0|4mmm0|8g9qq0|901a0|38pe0|2inw0|2nf9g0|8zzw0|1e3s40|9o3y0|q8he0|2kik0|yxhg0|4bh80|s36s0|2vl60|905g0|5rg20|51ek0|weqs0|3yik0|e1ms0|4ofw0|erk40|3yik0|2vs40|gk7w0|41iys0|3wnw0|erk40|4bh80|c8tg0|64ak0|c8tg0|6u7w0|c8tg0|6h980|bvus0|6u7w0|614qs0|9q2s0|a31g0|7x3w0|ag040|8a2k0|asys0|7x3w0|asys0|7x3w0|asys0|8a2k0|ag040|8a2k0|ag040|8a2k0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
-    'offsets': '224.85|240|180|210|150|120|90',
-    'offsetIndices': '001232323232323232323232324242525242525264252525252525252525252525252525252525252525252'
-  }, {
-    'id': 'America/Montreal',
-    'untils': '-qzoxw0|a2vw0|7yx60|aqzy0|9q8c0|7jzo0|bw0c0|6bp80|cedg0|6h980|c8tg0|6h980|bvus0|776k0|biw40|776k0|biw40|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|xjeo0|1tzb40|2dq40|asys0|7x3w0|ast80|7x3w0|asys0|7x3w0|asys0|b5rw0|7xf00|ast80|7x9g0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240',
-    'offsetIndices': '01010101010101010101010101010101010101010101011101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Montserrat',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Nassau',
-    'untils': '-u6m4c6|r7u7s6|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '309.5|300|240',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/New_York',
-    'untils': '-r0ev80|ast80|7x9g0|ast80|7x9g0|b5rw0|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tzb40|2dq40|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Nipigon',
-    'untils': '-qzoxw0|a2vw0|bfxjw0|pmdk0|1tzb40|2dq40|ewvus0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240',
-    'offsetIndices': '010111010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Nome',
-    'untils': '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l6c0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '660|600|540|480',
-    'offsetIndices': '011001010101010101010101010101010122323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'America/Noronha',
-    'untils': '-t85lzw|99k8rw|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|cvw0|iq5g0|6h980|Infinity',
-    'offsets': '129.6667|120|60',
-    'offsetIndices': '0121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/North_Dakota/Beulah',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hc00|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360|300',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101011212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/North_Dakota/Center',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a5c0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360|300',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101011212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/North_Dakota/New_Salem',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a5c0|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360|300',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Nuuk',
-    'untils': '-rvumf4|x8nqz4|8zrk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '206.9333|180|120',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Ojinaga',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|xes2s0|afuk0|8a840|afuk0|8aaw0|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '417.6667|420|360|300',
-    'offsetIndices': '0121212323221212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Panama',
-    'untils': '-w757vc|Infinity',
-    'offsets': '319.6|300',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Pangnirtung',
-    'untils': '-pkmlc0|b0ke00|1tzdw0|2dnc0|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|asw00|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7xc80|ast80|7x6o0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '0|240|180|120|300|360',
-    'offsetIndices': '012213121212121212121212121212121212114141414154414141414141414141414141414141414141414141414141414141414141414141414141414'
-  }, {
-    'id': 'America/Paramaribo',
-    'untils': '-usj4g8|cixc0c|5lydbk|kcrm6c|Infinity',
-    'offsets': '220.6667|220.8667|220.6|210|180',
-    'offsetIndices': '01234'
-  }, {
-    'id': 'America/Phoenix',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|bmtus0|zjedo|4olg0|9et80|bs6lmc|9cyk0|Infinity',
-    'offsets': '420|360',
-    'offsetIndices': '01010101010'
-  }, {
-    'id': 'America/Port_of_Spain',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Port-au-Prince',
-    'untils': '-rmk9ac|ylcf6c|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8aaw0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|3vpjw0|ast80|7x9g0|ast80|2stv00|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|pkg40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '289|300|240',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Porto_Acre',
-    'untils': '-t85fg0|99kak0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|2t2t80|Infinity',
-    'offsets': '271.2|300|240',
-    'offsetIndices': '01212121212121212121212121212121'
-  }, {
-    'id': 'America/Porto_Velho',
-    'untils': '-t85g60|99k8i0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|Infinity',
-    'offsets': '255.6|240|180',
-    'offsetIndices': '012121212121212121212121212121'
-  }, {
-    'id': 'America/Puerto_Rico',
-    'untils': '-efsnk0|1ppu40|2dnc0|Infinity',
-    'offsets': '240|180',
-    'offsetIndices': '0110'
-  }, {
-    'id': 'America/Punta_Arenas',
-    'untils': '-vauawq|3dlssq|157b7a|f4e0q|49hzba|aye0q|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|534ik0|351g0|2fnh80|2mg00|b73400|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|Infinity',
-    'offsets': '282.7667|300|240|180',
-    'offsetIndices': '0102021212121212121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'America/Rainy_River',
-    'untils': '-qzov40|a2vw0|bfxjw0|pmdk0|1tz8c0|2dsw0|ewvus0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '010111010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Rankin_Inlet',
-    'untils': '-6s8lc0|4c6oo0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '0|360|240|300',
-    'offsetIndices': '012131313131313131313131313131313131313131313331313131313131313131313131313131313131313131313131313131313131313131313131'
-  }, {
-    'id': 'America/Recife',
-    'untils': '-t85ljc|99kb3c|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|cvw0|iq5g0|6h980|Infinity',
-    'offsets': '139.6|180|120',
-    'offsetIndices': '0121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Regina',
-    'untils': '-xkq9yc|6l1hmc|a2vw0|60enw0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|1b6840|9cyk0|9d440|8zzw0|9q2s0|9cyk0|9q2s0|9cyk0|9d440|9cyk0|66gc0|1tz5k0|2dvo0|a31g0|9cyk0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|tj1g0|9cyk0|9d440|Infinity',
-    'offsets': '418.6|420|360',
-    'offsetIndices': '012121212121212121212121221212121212121212121212121212'
-  }, {
-    'id': 'America/Resolute',
-    'untils': '-bnp9c0|97nco0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '0|360|240|300',
-    'offsetIndices': '012131313131313131313131313131313131313131313331313131313331313131313131313131313131313131313131313131313131313131313131'
-  }, {
-    'id': 'America/Rio_Branco',
-    'untils': '-t85fg0|99kak0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|2t2t80|Infinity',
-    'offsets': '271.2|300|240',
-    'offsetIndices': '01212121212121212121212121212121'
-  }, {
-    'id': 'America/Rosario',
-    'untils': '-px7ys0|5iv8k0|67zw0|a4w40|73h80|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|cls40|66580|cls40|66580|cls40|66580|cls40|67zw0|6a040|hy7w0|6a040|xovw0|3uys0|18nbw0|b0dg0|8ve2k0|3uys0|3yik0|bqas0|71mk0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|7m2qs0|4tzw0|biw40|776k0|bvus0|6u7w0|bvxk0|6u540|bvus0|776k0|7qcg40|3yik0|b5xg0|7k580|Infinity',
-    'offsets': '256.8|240|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212123232323132323232'
-  }, {
-    'id': 'America/Santa_Isabel',
-    'untils': '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '468.0667|420|480',
-    'offsetIndices': '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'America/Santarem',
-    'untils': '-t85hvc|99ka7c|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|Infinity',
-    'offsets': '218.8|240|180',
-    'offsetIndices': '0121212121212121212121212121212'
-  }, {
-    'id': 'America/Santiago',
-    'untils': '-vauawq|3dlssq|157b7a|f4e0q|49hzba|aye0q|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|534ik0|351g0|229zw0|2gt80|awo40|2mg00|b73400|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
-    'offsets': '282.7667|300|240|180',
-    'offsetIndices': '010202121212121212321232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'America/Santo_Domingo',
-    'untils': '-j6hz1c|hiw29c|67zw0|1dy840|62ha0|cnle0|4h2m0|elyq0|47ta0|ei9e0|4bim0|eek20|4dda0|ecpe0|dkmtg0|1stc0|Infinity',
-    'offsets': '280|300|240|270',
-    'offsetIndices': '01213131313131212'
-  }, {
-    'id': 'America/Sao_Paulo',
-    'untils': '-t85jd8|99k8x8|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5k02s0|6onw0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|cls40|64ak0|dfes0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
-    'offsets': '186.4667|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Scoresbysund',
-    'untils': '-rvurxk|x8ntpk|902o0|9cvs0|9cyk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '87.8667|120|60|0',
-    'offsetIndices': '0121323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'America/Shiprock',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360',
-    'offsetIndices': '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Sitka',
-    'untils': '-ek1w80|1tz2s0|2dyg0|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1leo0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420|540',
-    'offsetIndices': '01101010101010101010101010101010122020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202'
-  }, {
-    'id': 'America/St_Barthelemy',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/St_Johns',
-    'untils': '-ris3ck|8bx80|ar440|a2vw0|9tjs0|53980|dkys0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|7tmw0|1wfuk|8zzw0|a3480|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|7k580|b5xg0|7k580|b5xg0|1pb260|2dly0|biw40|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|7k580|ag040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a2lo|afuk0|8a840|asqg0|7xc80|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8tec|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '210.8667|150.8667|210|150|90',
-    'offsetIndices': '01010101010101010101010101010101010102323232323232323323232323232323232323232323232323232323232323232323232323232323232323232323232323232324232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'America/St_Kitts',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/St_Lucia',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/St_Thomas',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/St_Vincent',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Swift_Current',
-    'untils': '-xkq9d4|6l1h14|a2vw0|c5jxg0|1tz5k0|2dvo0|asys0|8n180|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|3yles0|9cyk0|s36s0|9cyk0|9d440|7x3w0|b5xg0|7k580|5j4lg0|Infinity',
-    'offsets': '431.3333|420|360',
-    'offsetIndices': '012122121212121212121212'
-  }, {
-    'id': 'America/Tegucigalpa',
-    'untils': '-pfzh6k|yho0ik|7k580|b5xg0|7k580|96x1g0|4qak0|Infinity',
-    'offsets': '348.8667|360|300',
-    'offsetIndices': '01212121'
-  }, {
-    'id': 'America/Thule',
-    'untils': '-rvuj9g|12yzilg|9cyk0|9d440|9cyk0|9q2s0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '275.1333|240|180',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Thunder_Bay',
-    'untils': '-vbavc0|gr8qs0|1tzb40|2dq40|ctmlg0|9cyk0|9d440|9px80|9d440|9cyk0|s36s0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '0122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'America/Tijuana',
-    'untils': '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '468.0667|420|480',
-    'offsetIndices': '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'America/Toronto',
-    'untils': '-qzoxw0|a2vw0|7yx60|aqzy0|9q8c0|7jzo0|bw0c0|6bp80|cedg0|6h980|c8tg0|6h980|bvus0|776k0|biw40|776k0|biw40|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|xjeo0|1tzb40|2dq40|asys0|7x3w0|ast80|7x3w0|asys0|7x3w0|asys0|b5rw0|7xf00|ast80|7x9g0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240',
-    'offsetIndices': '01010101010101010101010101010101010101010101011101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Tortola',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Vancouver',
-    'untils': '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '0101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Virgin',
-    'untils': '-u6m79w|Infinity',
-    'offsets': '246.0667|240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'America/Whitehorse',
-    'untils': '-qzoms0|a2vw0|asys0|882c0|bmiwc0|1tz000|2e180|a7n3w0|9q000|tiyo0|6qp440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
-    'offsets': '540|480|420',
-    'offsetIndices': '01010110201212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'America/Winnipeg',
-    'untils': '-s0s7c0|7k580|tj700|a2vw0|9ok840|6u7w0|2a5hg0|1tz8c0|2dsw0|biw40|7x3w0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b7s40|7tek0|autg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|7x3w0|1cm2s0|7k580|1cm2s0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Yakutat',
-    'untils': '-ek1tg0|1tz000|2e180|cawis0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1lbw0|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '540|480',
-    'offsetIndices': '01101010101010101010101010101010100101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'America/Yellowknife',
-    'untils': '-i9m2o0|3pk3o0|1tz5k0|2dvo0|a7n3w0|9q000|7k85k0|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '0|420|360|300',
-    'offsetIndices': '012213121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Antarctica/Casey',
-    'untils': '-irxc0|lag4o0|73bo0|uz1o0|60l80|2fnh80|pz9g0|Infinity',
-    'offsets': '0|-480|-660',
-    'offsetIndices': '01212121'
-  }, {
-    'id': 'Antarctica/Davis',
-    'untils': '-6rmdc0|42jdw0|27wgs0|l8uss0|7eqs0|unmk0|60qs0|Infinity',
-    'offsets': '0|-420|-300',
-    'offsetIndices': '01012121'
-  }, {
-    'id': 'Antarctica/DumontDUrville',
-    'untils': '-c05eo0|2mks80|2i72g0|Infinity',
-    'offsets': '0|-600',
-    'offsetIndices': '0101'
-  }, {
-    'id': 'Antarctica/Macquarie',
-    'untils': '-rsj4w0|8zzw0|11wqk0|f4kh40|a6p8g0|9d1c0|asw00|6uao0|bvs00|6uao0|bvs00|779c0|bvs00|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660|0',
-    'offsetIndices': '0102010101010101010101010101010101010101010101010101010101010101010101010101010101010101011'
-  }, {
-    'id': 'Antarctica/Mawson',
-    'untils': '-8aelc0|t22y80|Infinity',
-    'offsets': '0|-360|-300',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Antarctica/McMurdo',
-    'untils': '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
-    'offsets': '-690|-750|-720|-780',
-    'offsetIndices': '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'Antarctica/Palmer',
-    'untils': '-2lxhc0|31ho0|bqas0|71mk0|bqas0|8ovw0|9d440|9px80|9d440|9cyk0|9d440|28t6k0|51ek0|46b6s0|8c2s0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|Infinity',
-    'offsets': '0|180|240|120',
-    'offsetIndices': '0121212121213121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Antarctica/Rothera',
-    'untils': '3lxs00|Infinity',
-    'offsets': '0|180',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Antarctica/South_Pole',
-    'untils': '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
-    'offsets': '-690|-750|-720|-780',
-    'offsetIndices': '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'Antarctica/Syowa',
-    'untils': '-6qsqo0|Infinity',
-    'offsets': '0|-180',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Antarctica/Troll',
-    'untils': 'ibruo0|27pg0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-120',
-    'offsetIndices': '00101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Antarctica/Vostok',
-    'untils': '-6aaao0|Infinity',
-    'offsets': '0|-360',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Arctic/Longyearbyen',
-    'untils': '-rzayo0|6qfs0|cgcqo0|15tsc0|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|70q5c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|b5uo0|7k800|7law00|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Asia/Aden',
-    'untils': '-bwgbbg|Infinity',
-    'offsets': '-186.8667|-180',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Almaty',
-    'untils': '-nu1a90|37a0d0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|Infinity',
-    'offsets': '-307.8|-300|-360|-420',
-    'offsetIndices': '012323232323232323232321232323232323232323232323232'
-  }, {
-    'id': 'Asia/Amman',
-    'untils': '-kcrtbk|m566fk|60l80|awo40|7v980|awo40|7v980|ayis0|9gnw0|9b9g0|7v980|autg0|7v980|3e6840|9et80|9io40|9cyk0|9d440|9cyk0|9d440|9px80|ayis0|7rjw0|ag040|8a2k0|9zc40|8drw0|a31g0|8zzw0|9d440|9cyk0|9d440|8n180|ag040|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|epmo0|4deo0|9o5c0|9ew00|9b6o0|9ew00|9d1c0|9d1c0|9d1c0|asw00|7x6o0|afxc0|8n400|9d1c0|9d1c0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|wel80|51k40|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|Infinity',
-    'offsets': '-143.7333|-120|-180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Anadyr',
-    'untils': '-nu1sv8|379zj8|qi27w0|9et80|is040|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
-    'offsets': '-709.9333|-720|-780|-840|-660',
-    'offsetIndices': '01232121212121212121214121212121212121212121212121212121212141'
-  }, {
-    'id': 'Asia/Aqtau',
-    'untils': '-nu15b4|379y74|qrh3w0|iruk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-201.0667|-240|-300|-360',
-    'offsetIndices': '012323232323232323232123232312121212121212121212'
-  }, {
-    'id': 'Asia/Aqtobe',
-    'untils': '-nu16l4|379zh4|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|Infinity',
-    'offsets': '-228.6667|-240|-300|-360',
-    'offsetIndices': '0123232323232323232321232323232323232323232323232'
-  }, {
-    'id': 'Asia/Ashgabat',
-    'untils': '-nu16t8|379zp8|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|Infinity',
-    'offsets': '-233.5333|-240|-300|-360',
-    'offsetIndices': '0123232323232323232323212'
-  }, {
-    'id': 'Asia/Ashkhabad',
-    'untils': '-nu16t8|379zp8|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|Infinity',
-    'offsets': '-233.5333|-240|-300|-360',
-    'offsetIndices': '0123232323232323232323212'
-  }, {
-    'id': 'Asia/Atyrau',
-    'untils': '-nu15m8|37a1a8|qrh140|iruk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|j3440|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-207.7333|-180|-300|-360|-240',
-    'offsetIndices': '01232323232323232323242323232323232324242424242'
-  }, {
-    'id': 'Asia/Baghdad',
-    'untils': '-r50g80|xkn3w0|7v980|9b9g0|9gnw0|9eys0|9et80|9d440|9b9g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9f1k0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|9ew00|9ew00|9d1c0|9ew00|9d1c0|9ew00|9d1c0|9ew00|Infinity',
-    'offsets': '-177.6|-180|-240',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Bahrain',
-    'untils': '-q3gmvk|rctnrk|Infinity',
-    'offsets': '-206.1333|-240|-180',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Asia/Baku',
-    'untils': '-nu158c|h4tkwc|ckinw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|9d1c0|239ew0|asw00|7x3w0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-199.4|-180|-240|-300',
-    'offsetIndices': '01232323232323232323232123232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Bangkok',
-    'untils': '-pysda4|Infinity',
-    'offsets': '-402.0667|-420',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Barnaul',
-    'untils': '-q4ljic|5hu6uc|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|38fo0|64og0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
-    'offsets': '-335|-360|-420|-480',
-    'offsetIndices': '0123232323232323232323212323232321212121212121212121212121212121212'
-  }, {
-    'id': 'Asia/Beirut',
-    'untils': '-pyzew0|aunw0|88dg0|9et80|8yas0|a2vw0|a31g0|7k580|hjqo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|7v980|5lhs40|56yk0|awo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|7v980|autg0|7v980|2wxus0|8n180|a4w40|8n180|a4w40|8n180|a4w40|8n180|bs5g0|71mk0|alk40|86d80|a4w40|8n180|a4w40|8n180|a6qs0|80t80|905g0|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|Infinity',
-    'offsets': '-120|-180',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Asia/Bishkek',
-    'untils': '-nu19tc|379zxc|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|h8dc0|bkl80|8n180|a31g0|8n180|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|9db20|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|Infinity',
-    'offsets': '-298.4|-300|-360|-420',
-    'offsetIndices': '012323232323232323232321212121212121212121212121212'
-  }, {
-    'id': 'Asia/Brunei',
-    'untils': '-mvofy4|3khxs4|Infinity',
-    'offsets': '-459.6667|-450|-480',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Asia/Calcutta',
-    'untils': '-xehava|innm9a|bmfw0|5lxg0|1mn180|Infinity',
-    'offsets': '-321.1667|-330|-390',
-    'offsetIndices': '012121'
-  }, {
-    'id': 'Asia/Chita',
-    'untils': '-q4cfog|5hkxgg|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnew0|Infinity',
-    'offsets': '-453.8667|-480|-540|-600',
-    'offsetIndices': '012323232323232323232321232323232323232323232323232323232323232312'
-  }, {
-    'id': 'Asia/Choibalsan',
-    'untils': '-xmct7c|11sndrc|2qk2k0|9eqg0|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|s6qk0|3nc0c0|9ct00|9d9o0|9ct00|Infinity',
-    'offsets': '-458|-420|-480|-600|-540',
-    'offsetIndices': '0123434343434343434343434343434343434343434343424242'
-  }, {
-    'id': 'Asia/Chongqing',
-    'untils': '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '01010101010101010101010101010'
-  }, {
-    'id': 'Asia/Chungking',
-    'untils': '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '01010101010101010101010101010'
-  }, {
-    'id': 'Asia/Colombo',
-    'untils': '-xehask|isle6k|cajy0|1mp2u0|qetjw0|7x5a0|4xvqq0|Infinity',
-    'offsets': '-319.5333|-330|-360|-390',
-    'offsetIndices': '01231321'
-  }, {
-    'id': 'Asia/Dacca',
-    'untils': '-eqtpow|bmgyw|5lxg0|4qknw0|u4ijy0|a1400|Infinity',
-    'offsets': '-353.3333|-390|-330|-360|-420',
-    'offsetIndices': '0121343'
-  }, {
-    'id': 'Asia/Damascus',
-    'untils': '-q3gk20|5k6q0|8n180|a31g0|8n180|a31g0|8n180|a31g0|8zzw0|k4hk40|7yyk0|awo40|7tek0|b0dg0|7v980|awo40|7tek0|alk40|887w0|awo40|7v980|ayis0|7v980|awo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|7v980|awo40|7v980|awo40|7v980|ayis0|7v980|awo40|6bp80|cg840|6bp80|2eh1g0|8zzw0|9ts40|8zzw0|pvk40|c33w0|7cw40|cjrw0|6zxg0|btuk0|7rpg0|9gnw0|9d440|9cyk0|9et80|9et80|9rxg0|91uk0|92040|9et80|9o840|9et80|9d440|9et80|9eys0|9et80|9b9g0|9gnw0|99es0|9iik0|9d440|9et80|9eys0|9et80|9d440|9et80|9d440|9et80|9d440|9et80|9eys0|9et80|9d440|9et80|9d440|8y580|9q2s0|b5rw0|7x9g0|aunw0|7ig40|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|Infinity',
-    'offsets': '-145.2|-120|-180',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Dhaka',
-    'untils': '-eqtpow|bmgyw|5lxg0|4qknw0|u4ijy0|a1400|Infinity',
-    'offsets': '-353.3333|-390|-330|-360|-420',
-    'offsetIndices': '0121343'
-  }, {
-    'id': 'Asia/Dili',
-    'untils': '-u9s4l8|fqcu98|hufs00|cpz440|Infinity',
-    'offsets': '-502.3333|-480|-540',
-    'offsetIndices': '01212'
-  }, {
-    'id': 'Asia/Dubai',
-    'untils': '-q3gnko|Infinity',
-    'offsets': '-221.2|-240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Dushanbe',
-    'untils': '-nu18qo|379yuo|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|hp440|Infinity',
-    'offsets': '-275.2|-300|-360|-420',
-    'offsetIndices': '012323232323232323232321'
-  }, {
-    'id': 'Asia/Famagusta',
-    'untils': '-p4bqac|rvhy2c|9cyk0|b42s0|7nuk0|8yas0|8zzw0|9q2s0|9et80|9b9g0|9cyk0|9q2s0|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|at4c0|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|8h8w0|leog0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-135.8|-120|-180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Gaza',
-    'untils': '-ffv9k0|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|5hoqs0|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|1sns0|3p6is0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|66as0|4vxc0|8n400|a2yo0|8n400|a2yo0|8n400|asw00|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|8n400|a2yo0|8ulg0|97ek0|8y580|9ts40|8hms0|a4qk0|7x3w0|asys0|8a5c0|ahs1o|71mic|bzk5o|69uic|cg840|902o0|9q000|9cyk0|9d440|ast80|7z440|aqyk0|7z6w0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|Infinity',
-    'offsets': '-120|-180',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Asia/Harbin',
-    'untils': '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '01010101010101010101010101010'
-  }, {
-    'id': 'Asia/Hebron',
-    'untils': '-ffv9k0|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|5hoqs0|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|1sns0|3p6is0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|66as0|4vxc0|8n400|a2yo0|8n400|a2yo0|8n400|asw00|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|8n400|a2yo0|8ulg0|97ek0|8y580|9ts40|8hms0|a4qk0|82nw0|anes0|8a5c0|afxc0|73h80|bzk5o|69uic|1hs40|1lbw0|9d440|902o0|9q000|9cyk0|9d440|ast80|7z440|aqyk0|7z6w0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|7idc0|b7pc0|7vc00|auqo0|7vc00|auqo0|7vc00|auqo0|7vc00|b7pc0|Infinity',
-    'offsets': '-120|-180',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Asia/Ho_Chi_Minh',
-    'untils': '-x56934|2isioa|gj25iu|15ct80|8so00|tmtk0|4azjw0|2cmao0|8285c0|Infinity',
-    'offsets': '-426.6667|-426.5|-420|-480|-540',
-    'offsetIndices': '0123423232'
-  }, {
-    'id': 'Asia/Hong_Kong',
-    'untils': '-y0i0s0|j44dk0|5k000|4d4y0|2195i0|7x3w0|bj320|6uao0|bvs00|7x6o0|9d1c0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|ast80|77c40|biqk0|77c40|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
-    'offsets': '-456.7|-480|-540|-510',
-    'offsetIndices': '0123212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Hovd',
-    'untils': '-xmcoz0|11sncb0|2qk2k0|9et80|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|4fio40|9ct00|9d9o0|9ct00|Infinity',
-    'offsets': '-366.6|-360|-420|-480',
-    'offsetIndices': '012323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Irkutsk',
-    'untils': '-q28gn5|5fh175|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-417.0833|-420|-480|-540',
-    'offsetIndices': '01232323232323232323232123232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Istanbul',
-    'untils': '-ux9xew|2wvx6w|7v980|1tjc40|aunw0|88dg0|9et80|8yas0|a2vw0|tzpg0|79180|awo40|7v980|7p4040|4zjw0|2vs40|f4d80|9vms0|1u5ek0|c5440|69uk0|acas0|8n180|a31g0|8n180|9q2s0|8zzw0|a31g0|8zzw0|a31g0|8n180|5md9g0|o9zw0|a6qs0|75bw0|4iwyw0|7x6o0|7kas0|b5rw0|75hg0|bkl80|77c40|biqk0|7x9g0|a2vw0|8n6s0|4iqc0|2nkw80|38l80|kdes0|8qtc0|8a5c0|9ew00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|902o0|9q000|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7kdk0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7m2o0|b4000|7k800|b5uo0|7x6o0|asw00|7z1c0|ar1c0|7x6o0|bitc0|779c0|8fe80|Infinity',
-    'offsets': '-116.9333|-120|-180|-240',
-    'offsetIndices': '0121212121212121212121212121212121212121212121223212121212121212121212121212121212121212121212121212121212121212122'
-  }, {
-    'id': 'Asia/Jakarta',
-    'untils': '-o0bdpc|4lzxc0|4wdzjc|1tu960|1cx860|11jta0|74uc20|Infinity',
-    'offsets': '-427.2|-440|-450|-540|-480|-420',
-    'offsetIndices': '01232425'
-  }, {
-    'id': 'Asia/Jayapura',
-    'untils': '-jebm20|66bqe0|a37vy0|Infinity',
-    'offsets': '-562.8|-540|-570',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'Asia/Jerusalem',
-    'untils': '-r50eig|bp54yg|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|t9s40|56vs0|35700|9b3w0|9gtg0|8jbw0|7tmw0|a6ig0|biyw0|8a5c0|9d1c0|902o0|7x6o0|e1eg0|4ofw0|dzxo0|4q500|doo40|64iw0|auqo0|7i500|8rfms0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|9zc40|9iik0|9kis0|93p80|9mdg0|8qqk0|apf00|7x3w0|biw40|8zx40|9io40|8n180|9kis0|9vh80|8ulg0|9px80|9mdg0|8n180|9tuw0|9tmk0|8wg40|9gnw0|99es0|8qqk0|9zc40|9tmk0|8wg40|9gnw0|99es0|8qqk0|acas0|9gnw0|99es0|93p80|9mdg0|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|Infinity',
-    'offsets': '-140.6667|-120|-180|-240',
-    'offsetIndices': '012121212121321212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Kabul',
-    'untils': '-d1pkg0|Infinity',
-    'offsets': '-240|-270',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Kamchatka',
-    'untils': '-olrupo|3z045o|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
-    'offsets': '-634.6|-660|-720|-780',
-    'offsetIndices': '012323232323232323232321232323232323232323232323232323232323212'
-  }, {
-    'id': 'Asia/Karachi',
-    'untils': '-wvpb30|im3zt0|1mn180|33xpg0|a63o20|g72qo0|9cyk0|2y85g0|7v980|8hms0|aaak0|Infinity',
-    'offsets': '-268.2|-330|-390|-300|-360',
-    'offsetIndices': '012133434343'
-  }, {
-    'id': 'Asia/Kashgar',
-    'untils': '-lx5pjw|Infinity',
-    'offsets': '-350.3333|-360',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Kathmandu',
-    'untils': '-q3gt4s|yg2lus|Infinity',
-    'offsets': '-341.2667|-330|-345',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Asia/Katmandu',
-    'untils': '-q3gt4s|yg2lus|Infinity',
-    'offsets': '-341.2667|-330|-345',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Asia/Khandyga',
-    'untils': '-q4cjrp|5hl1jp|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|3fx40|4h6s0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|8ql00|1mlho0|Infinity',
-    'offsets': '-542.2167|-480|-540|-600|-660',
-    'offsetIndices': '0123232323232323232323212323232323232323232323232343434343434343432'
-  }, {
-    'id': 'Asia/Kolkata',
-    'untils': '-xehava|innm9a|bmfw0|5lxg0|1mn180|Infinity',
-    'offsets': '-321.1667|-330|-390',
-    'offsetIndices': '012121'
-  }, {
-    'id': 'Asia/Krasnoyarsk',
-    'untils': '-q37l72|5gg8j2|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-371.4333|-360|-420|-480',
-    'offsetIndices': '01232323232323232323232123232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Kuala_Lumpur',
-    'untils': '-xphpwd|eeb94d|4it32o|8n3jc|1v2p60|iy3o60|Infinity',
-    'offsets': '-415.4167|-420|-440|-450|-540|-480',
-    'offsetIndices': '0123435'
-  }, {
-    'id': 'Asia/Kuching',
-    'untils': '-mvof3k|3khwxk|1epvy0|4ohqo|e5a9c|4ohqo|e3flc|4ohqo|e3flc|4ohqo|e3flc|4ohqo|e5a9c|4ohqo|e3flc|4ohqo|3ajlc|1v2qk0|Infinity',
-    'offsets': '-441.3333|-450|-480|-500|-540',
-    'offsetIndices': '0123232323232323242'
-  }, {
-    'id': 'Asia/Kuwait',
-    'untils': '-bwgbbg|Infinity',
-    'offsets': '-186.8667|-180',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Macao',
-    'untils': '-y0i2cy|jdvyoy|6onw0|ac580|8fs40|7v980|11luw0|awlc0|7vc00|ac800|bko00|7x6o0|9d1c0|7vc00|asw00|7x6o0|asw00|7x6o0|auqo0|88ao0|asw00|7x6o0|asw00|779c0|bitc0|779c0|bvs00|6uao0|bw1q0|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cvs0|9d6w0|9cvs0|9d6w0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
-    'offsets': '-454.1667|-480|-540|-600',
-    'offsetIndices': '012323212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Macau',
-    'untils': '-y0i2cy|jdvyoy|6onw0|ac580|8fs40|7v980|11luw0|awlc0|7vc00|ac800|bko00|7x6o0|9d1c0|7vc00|asw00|7x6o0|asw00|7x6o0|auqo0|88ao0|asw00|7x6o0|asw00|779c0|bitc0|779c0|bvs00|6uao0|bw1q0|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cvs0|9d6w0|9cvs0|9d6w0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
-    'offsets': '-454.1667|-480|-540|-600',
-    'offsetIndices': '012323212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Magadan',
-    'untils': '-nu1nxc|37a05c|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|s39k0|Infinity',
-    'offsets': '-603.2|-600|-660|-720',
-    'offsetIndices': '012323232323232323232321232323232323232323232323232323232323232312'
-  }, {
-    'id': 'Asia/Makassar',
-    'untils': '-q3gzg0|6p5hc0|4u87w0|1w02k0|Infinity',
-    'offsets': '-477.6|-480|-540',
-    'offsetIndices': '00121'
-  }, {
-    'id': 'Asia/Manila',
-    'untils': '-hb5y80|4qak0|2qidg0|1b2d80|4xf440|442k0|cdqdg0|9et80|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '010101010'
-  }, {
-    'id': 'Asia/Muscat',
-    'untils': '-q3gnko|Infinity',
-    'offsets': '-221.2|-240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Nicosia',
-    'untils': '-p4bq6g|rvhxyg|9cyk0|b42s0|7nuk0|8yas0|8zzw0|9q2s0|9et80|9b9g0|9cyk0|9q2s0|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|at4c0|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-133.4667|-120|-180',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Novokuznetsk',
-    'untils': '-nu36tc|37bu5c|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
-    'offsets': '-348.8|-360|-420|-480',
-    'offsetIndices': '012323232323232323232321232323232323232323232323232323232323212'
-  }, {
-    'id': 'Asia/Novosibirsk',
-    'untils': '-q4do0s|5hmbcs|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|2vh00|6hn40|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|wrpg0|Infinity',
-    'offsets': '-331.6667|-360|-420|-480',
-    'offsetIndices': '0123232323232323232323212323212121212121212121212121212121212121212'
-  }, {
-    'id': 'Asia/Omsk',
-    'untils': '-q5xmx6|5j6d16|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-293.5|-300|-360|-420',
-    'offsetIndices': '01232323232323232323232123232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Oral',
-    'untils': '-nu15ic|37a16c|qi2540|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|9d1c0|9d1c0|5reo0|cyo00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-205.4|-180|-300|-360|-240',
-    'offsetIndices': '01232323232323232424242424242424242424242424242'
-  }, {
-    'id': 'Asia/Phnom_Penh',
-    'untils': '-pysda4|Infinity',
-    'offsets': '-402.0667|-420',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Pontianak',
-    'untils': '-w6piww|cse2o0|4tnu2w|1wkei0|1cx860|11jta0|74uc20|cixam0|Infinity',
-    'offsets': '-437.3333|-450|-540|-480|-420',
-    'offsetIndices': '001213134'
-  }, {
-    'id': 'Asia/Pyongyang',
-    'untils': '-w895yc|1yh10c|hk5da0|10ipmo0|1f4qo0|Infinity',
-    'offsets': '-503|-510|-540',
-    'offsetIndices': '012212'
-  }, {
-    'id': 'Asia/Qatar',
-    'untils': '-q3gmvk|rctnrk|Infinity',
-    'offsets': '-206.1333|-240|-180',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Asia/Qostanay',
-    'untils': '-nu17s4|37a0o4|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-254.4667|-240|-300|-360',
-    'offsetIndices': '012323232323232323232123232323232323232323232323'
-  }, {
-    'id': 'Asia/Qyzylorda',
-    'untils': '-nu184g|37a10g|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|ohhc0|cyo00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|7osl00|Infinity',
-    'offsets': '-261.8667|-240|-300|-360',
-    'offsetIndices': '01232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Rangoon',
-    'untils': '-q3gv5b|bnjp3b|1kh520|Infinity',
-    'offsets': '-384.7833|-390|-540',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'Asia/Riyadh',
-    'untils': '-bwgbbg|Infinity',
-    'offsets': '-186.8667|-180',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Saigon',
-    'untils': '-x56934|2isioa|gj25iu|15ct80|8so00|tmtk0|4azjw0|2cmao0|8285c0|Infinity',
-    'offsets': '-426.6667|-426.5|-420|-480|-540',
-    'offsetIndices': '0123423232'
-  }, {
-    'id': 'Asia/Sakhalin',
-    'untils': '-xl87rc|kvnarc|ikvh40|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|iq5g0|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
-    'offsets': '-570.8|-540|-660|-720|-600',
-    'offsetIndices': '01232323232323232323232423232323232424242424242424242424242424242'
-  }, {
-    'id': 'Asia/Samarkand',
-    'untils': '-nu18eh|37a1ah|qi27w0|s6qk0|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|Infinity',
-    'offsets': '-267.8833|-240|-300|-360',
-    'offsetIndices': '01232323232323232323232'
-  }, {
-    'id': 'Asia/Seoul',
-    'untils': '-w8966g|1yh18g|hkx5a0|1faao0|5cik0|ae5g0|8a2k0|ae5g0|8bx80|c8tg0|6h980|1bj6s0|l3aq0|6j3w0|d2g40|6u7w0|b5xg0|776k0|biw40|776k0|biw40|776k0|biw40|776k0|grs40|dfqxi0|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-507.8667|-510|-540|-600|-570',
-    'offsetIndices': '012232323232141414141414123232'
-  }, {
-    'id': 'Asia/Shanghai',
-    'untils': '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '01010101010101010101010101010'
-  }, {
-    'id': 'Asia/Singapore',
-    'untils': '-xphpwd|eeb94d|4it32o|8n3jc|1v2p60|iy3o60|Infinity',
-    'offsets': '-415.4167|-420|-440|-450|-540|-480',
-    'offsetIndices': '0123435'
-  }, {
-    'id': 'Asia/Srednekolymsk',
-    'untils': '-nu1ogs|37a0os|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-614.8667|-600|-660|-720',
-    'offsetIndices': '01232323232323232323232123232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Taipei',
-    'untils': '-gtzfk0|45slc0|c51c0|75bw0|a31g0|aaak0|9d440|7v980|awo40|7v980|awo40|7v980|awo40|7v980|7tk40|clmk0|7rpg0|b07w0|7rpg0|b07w0|7rpg0|9et80|9eys0|9et80|9d440|9et80|9d440|9et80|9d440|9et80|cjxg0|69uk0|ci2s0|69uk0|6its40|9et80|9d440|9et80|1yf9g0|4qak0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '01010101010101010101010101010101010101010'
-  }, {
-    'id': 'Asia/Tashkent',
-    'untils': '-nu18tz|379yxz|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|Infinity',
-    'offsets': '-277.1833|-300|-360|-420',
-    'offsetIndices': '012323232323232323232321'
-  }, {
-    'id': 'Asia/Tbilisi',
-    'untils': '-nu14an|h4tjyn|ckinw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|9cvs0|9cyk0|9d440|9cyk0|9d440|ipzw0|9cyk0|9q2s0|tivw0|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|4ofw0|6hn40|7k800|Infinity',
-    'offsets': '-179.1833|-180|-240|-300',
-    'offsetIndices': '0123232323232323232323212121232323232323232323212'
-  }, {
-    'id': 'Asia/Tehran',
-    'untils': '-s6m6uw|fnolc0|gm3h4w|777y0|b07w0|3pes0|42c20|9cyk0|9gtg0|9kd80|5ja5g0|7avw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|1av440|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|Infinity',
-    'offsets': '-205.7333|-210|-240|-300|-270',
-    'offsetIndices': '00123214141414141414141414141414141414141414141414141414141414141414141414141414141414141414141414141'
-  }, {
-    'id': 'Asia/Tel_Aviv',
-    'untils': '-r50eig|bp54yg|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|t9s40|56vs0|35700|9b3w0|9gtg0|8jbw0|7tmw0|a6ig0|biyw0|8a5c0|9d1c0|902o0|7x6o0|e1eg0|4ofw0|dzxo0|4q500|doo40|64iw0|auqo0|7i500|8rfms0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|9zc40|9iik0|9kis0|93p80|9mdg0|8qqk0|apf00|7x3w0|biw40|8zx40|9io40|8n180|9kis0|9vh80|8ulg0|9px80|9mdg0|8n180|9tuw0|9tmk0|8wg40|9gnw0|99es0|8qqk0|9zc40|9tmk0|8wg40|9gnw0|99es0|8qqk0|acas0|9gnw0|99es0|93p80|9mdg0|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|Infinity',
-    'offsets': '-140.6667|-120|-180|-240',
-    'offsetIndices': '012121212121321212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Asia/Thimbu',
-    'untils': '-bojclo|kxymno|Infinity',
-    'offsets': '-358.6|-330|-360',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Asia/Thimphu',
-    'untils': '-bojclo|kxymno|Infinity',
-    'offsets': '-358.6|-330|-360',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Asia/Tokyo',
-    'untils': '-bb4900|6uao0|afxc0|8a5c0|c8qo0|6hc00|c8qo0|6hc00|Infinity',
-    'offsets': '-540|-600',
-    'offsetIndices': '010101010'
-  }, {
-    'id': 'Asia/Tomsk',
-    'untils': '-q3zbqf|5h7z2f|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|1leo0|97k40|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|tw040|Infinity',
-    'offsets': '-339.85|-360|-420|-480',
-    'offsetIndices': '0123232323232323232323212323232323232323232323212121212121212121212'
-  }, {
-    'id': 'Asia/Ujung_Pandang',
-    'untils': '-q3gzg0|6p5hc0|4u87w0|1w02k0|Infinity',
-    'offsets': '-477.6|-480|-540',
-    'offsetIndices': '00121'
-  }, {
-    'id': 'Asia/Ulaanbaatar',
-    'untils': '-xmcrsk|11sncck|2qk2k0|9et80|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|4fio40|9ct00|9d9o0|9ct00|Infinity',
-    'offsets': '-427.5333|-420|-480|-540',
-    'offsetIndices': '012323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Ulan_Bator',
-    'untils': '-xmcrsk|11sncck|2qk2k0|9et80|9eys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|1ckdo0|7x3w0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|4fio40|9ct00|9d9o0|9ct00|Infinity',
-    'offsets': '-427.5333|-420|-480|-540',
-    'offsetIndices': '012323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Urumqi',
-    'untils': '-lx5pjw|Infinity',
-    'offsets': '-350.3333|-360',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Ust-Nera',
-    'untils': '-q4cl6u|5hl2yu|qi27w0|9eno0|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|8ql00|1mlho0|Infinity',
-    'offsets': '-572.9|-480|-540|-720|-660|-600',
-    'offsetIndices': '012343434343434343434345434343434343434343434343434343434343434345'
-  }, {
-    'id': 'Asia/Vientiane',
-    'untils': '-pysda4|Infinity',
-    'offsets': '-402.0667|-420',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Asia/Vladivostok',
-    'untils': '-oligf7|3yqvf7|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-527.5167|-540|-600|-660',
-    'offsetIndices': '01232323232323232323232123232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Yakutsk',
-    'untils': '-q4cioy|5hl0gy|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-518.9667|-480|-540|-600',
-    'offsetIndices': '01232323232323232323232123232323232323232323232323232323232323232'
-  }, {
-    'id': 'Asia/Yangon',
-    'untils': '-q3gv5b|bnjp3b|1kh520|Infinity',
-    'offsets': '-384.7833|-390|-540',
-    'offsetIndices': '0121'
-  }, {
-    'id': 'Asia/Yekaterinburg',
-    'untils': '-rx5hw9|1kybx4|5pfyv5|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-242.55|-225.0833|-240|-300|-360',
-    'offsetIndices': '012343434343434343434343234343434343434343434343434343434343434343'
-  }, {
-    'id': 'Asia/Yerevan',
-    'untils': '-nu148o|h4tjwo|ckinw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|iq5g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|11t180|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|Infinity',
-    'offsets': '-178|-180|-240|-300',
-    'offsetIndices': '0123232323232323232323212121212323232323232323232323232323232'
-  }, {
-    'id': 'Atlantic/Azores',
-    'untils': '-u9rbs0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5qbjo0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9cyk0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '114.5333|120|60|0',
-    'offsetIndices': '01212121212121212121212121212121212121212121232123212321232121212121212121212121212121212121212121232323232323232323232323232323233323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Atlantic/Bermuda',
-    'untils': '-kvj2fu|n4pr3u|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '259.3|240|180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Atlantic/Canary',
-    'untils': '-oytbtc|ctvupc|hhq7s0|905g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '61.6|60|0|-60',
-    'offsetIndices': '01232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Atlantic/Cape_Verde',
-    'untils': '-u9rbs0|g06lc0|1mn180|fpqwc0|Infinity',
-    'offsets': '94.0667|120|60',
-    'offsetIndices': '01212'
-  }, {
-    'id': 'Atlantic/Faeroe',
-    'untils': '-wcehew|127keuw|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '27.0667|0|-60',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Atlantic/Faroe',
-    'untils': '-wcehew|127keuw|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '27.0667|0|-60',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Atlantic/Jan_Mayen',
-    'untils': '-rzayo0|6qfs0|cgcqo0|15tsc0|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|70q5c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|b5uo0|7k800|7law00|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Atlantic/Madeira',
-    'untils': '-u9rek0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5qbjo0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '67.6|60|0|-60',
-    'offsetIndices': '01212121212121212121212121212121212121212121232123212321232121212121212121212121212121212121212121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Atlantic/Reykjavik',
-    'untils': '-wcwx9c|4rpd9c|ci2s0|69uk0|du840|4xp80|du840|p7bw0|4w040|9bdzw0|9d6w0|64g40|cyl80|64dc0|clpc0|6hc00|bvs00|6uao0|bvs00|6uao0|bvs00|6uao0|c8qo0|6hc00|c8qo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|Infinity',
-    'offsets': '88|60|0',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Atlantic/South_Georgia',
-    'untils': 'Infinity',
-    'offsets': '120',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Atlantic/St_Helena',
-    'untils': '-u9rgl4|Infinity',
-    'offsets': '16.1333|0',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Atlantic/Stanley',
-    'untils': '-u63pac|dbvxqc|8zzw0|9q2s0|8zzw0|a31g0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|4xp80|l1pus0|7k580|b5rw0|77c40|biqk0|id6s0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|biqk0|77c40|biqk0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|biqk0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5rw0|7kas0|b5xg0|77c40|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|77c40|biqk0|77c40|biqk0|77c40|Infinity',
-    'offsets': '231.4|240|180|120',
-    'offsetIndices': '012121212121212323212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Australia/ACT',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Adelaide',
-    'untils': '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|7k800|b5uo0|6uao0|c8qo0|779c0|bitc0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-570|-630',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Brisbane',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|97zuo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '01010101010101010'
-  }, {
-    'id': 'Australia/Broken_Hill',
-    'untils': '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-570|-630',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Canberra',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Currie',
-    'untils': '-rsj4w0|8zzw0|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Darwin',
-    'untils': '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|Infinity',
-    'offsets': '-570|-630',
-    'offsetIndices': '010101010'
-  }, {
-    'id': 'Australia/Eucla',
-    'untils': '-rnstlc|49s2c|cxfms0|4h180|9d440|9cyk0|ghf1g0|6hc00|4ir9c0|6hc00|40r400|5eg00|7p9hc0|5reo0|b5uo0|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-525|-585',
-    'offsetIndices': '0101010101010101010'
-  }, {
-    'id': 'Australia/Hobart',
-    'untils': '-rsj4w0|8zzw0|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|c9tms0|9d1c0|asw00|6uao0|bvs00|6uao0|bvs00|779c0|bvs00|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/LHI',
-    'untils': '5tp880|c8uu0|6u7w0|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|777y0|b5w20|7k6m0|biuq0|7k6m0|biuq0|777y0|biuq0|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|7x820|asum0|b5w20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|b5w20|7x5a0|asxe0|7k6m0|b5w20|8a3y0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9pym0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|Infinity',
-    'offsets': '-600|-630|-690|-660',
-    'offsetIndices': '0121212121313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313'
-  }, {
-    'id': 'Australia/Lindeman',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|97zuo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '010101010101010101010'
-  }, {
-    'id': 'Australia/Lord_Howe',
-    'untils': '5tp880|c8uu0|6u7w0|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|777y0|b5w20|7k6m0|biuq0|7k6m0|biuq0|777y0|biuq0|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|7x820|asum0|b5w20|7x5a0|asxe0|7x5a0|asxe0|7x5a0|b5w20|7k6m0|b5w20|7x5a0|asxe0|7k6m0|b5w20|8a3y0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9pym0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9d2q0|9czy0|9q1e0|9czy0|9d2q0|9czy0|9d2q0|Infinity',
-    'offsets': '-600|-630|-690|-660',
-    'offsetIndices': '0121212121313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313'
-  }, {
-    'id': 'Australia/Melbourne',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|b5uo0|7x6o0|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/North',
-    'untils': '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|Infinity',
-    'offsets': '-570|-630',
-    'offsetIndices': '010101010'
-  }, {
-    'id': 'Australia/NSW',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Perth',
-    'untils': '-rnsric|49s2c|cxfms0|4h180|9d440|9cyk0|ghf1g0|6hc00|4ir9c0|6hc00|40r400|5eg00|7p9hc0|5reo0|b5uo0|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '0101010101010101010'
-  }, {
-    'id': 'Australia/Queensland',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|97zuo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '01010101010101010'
-  }, {
-    'id': 'Australia/South',
-    'untils': '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|7k800|b5uo0|6uao0|c8qo0|779c0|bitc0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-570|-630',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Sydney',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Tasmania',
-    'untils': '-rsj4w0|8zzw0|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|c9tms0|9d1c0|asw00|6uao0|bvs00|6uao0|bvs00|779c0|bvs00|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|b5uo0|7k800|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|bvs00|7k800|bitc0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x6o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|7x6o0|asw00|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/Victoria',
-    'untils': '-rnsx2c|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|b5uo0|7x6o0|bitc0|779c0|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|7x6o0|asw00|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-600|-660',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Australia/West',
-    'untils': '-rnsric|49s2c|cxfms0|4h180|9d440|9cyk0|ghf1g0|6hc00|4ir9c0|6hc00|40r400|5eg00|7p9hc0|5reo0|b5uo0|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '0101010101010101010'
-  }, {
-    'id': 'Australia/Yancowinna',
-    'untils': '-rnsvoc|49s2c|cxfms0|4h180|9d440|9cyk0|9q2s0|8zzw0|eeiqs0|64dc0|clpc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|8a5c0|asw00|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|779c0|b5uo0|7k800|bitc0|7k800|bitc0|779c0|bitc0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|8a5c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-570|-630',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
-  }, {
-    'id': 'Brazil/Acre',
-    'untils': '-t85fg0|99kak0|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|amves0|2t2t80|Infinity',
-    'offsets': '271.2|300|240',
-    'offsetIndices': '01212121212121212121212121212121'
-  }, {
-    'id': 'Brazil/DeNoronha',
-    'untils': '-t85lzw|99k8rw|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|514g40|7k580|biw40|cvw0|iq5g0|6h980|Infinity',
-    'offsets': '129.6667|120|60',
-    'offsetIndices': '0121212121212121212121212121212121212121'
-  }, {
-    'id': 'Brazil/East',
-    'untils': '-t85jd8|99k8x8|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5k02s0|6onw0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|cyqs0|5ed80|dbpg0|64ak0|cyqs0|64ak0|cls40|5rbw0|dbpg0|51ek0|dbpg0|6h980|c8tg0|6h980|c8tg0|64ak0|c8tg0|6u7w0|bxpg0|7iak0|biw40|6u7w0|biw40|7k580|biw40|6u7w0|c8tg0|6h980|dbpg0|5ed80|cls40|64ak0|dfes0|5nmk0|c8tg0|6h980|dbpg0|5rbw0|bvus0|6h980|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6u7w0|c8tg0|64ak0|cls40|64ak0|cls40|6h980|c8tg0|6h980|c8tg0|6h980|c8tg0|6h980|dbpg0|5ed80|Infinity',
-    'offsets': '186.4667|180|120',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Brazil/West',
-    'untils': '-t85gvw|99k97w|9a9c0|9io40|99980|8p65g0|6zuo0|bs2o0|67zw0|cjxg0|69uk0|cjxg0|4ml80|5mf440|49mk0|haas0|316k0|cls40|4ml80|cls40|66580|cls40|67zw0|981s40|6u7w0|biw40|5rbw0|d0lg0|5ed80|2yy2s0|6h980|Infinity',
-    'offsets': '240.0667|240|180',
-    'offsetIndices': '01212121212121212121212121212121'
-  }, {
-    'id': 'Canada/Atlantic',
-    'untils': '-z94k80|777go0|9et80|st9o0|a2vw0|ssyk0|5rbw0|cv1g0|69uk0|c6ys0|6kyk0|ci2s0|67zw0|ci2s0|6w2k0|bu040|7lzw0|bu040|66580|bu040|7lzw0|bu040|64ak0|cls40|5v180|cv1g0|6j3w0|c6ys0|79180|b42s0|7lzw0|b42s0|7yyk0|bu040|64ak0|dbpg0|66580|cls40|5ed80|bu040|7lzw0|b42s0|7lzw0|cjxg0|66580|bh1g0|7lzw0|b42s0|7lzw0|6uj00|1tzdw0|2dnc0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|tw040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|1cm2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '254.4|240|180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Canada/Central',
-    'untils': '-s0s7c0|7k580|tj700|a2vw0|9ok840|6u7w0|2a5hg0|1tz8c0|2dsw0|biw40|7x3w0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b7s40|7tek0|autg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|7x3w0|1cm2s0|7k580|1cm2s0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|asw00|7x6o0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Canada/Eastern',
-    'untils': '-qzoxw0|a2vw0|7yx60|aqzy0|9q8c0|7jzo0|bw0c0|6bp80|cedg0|6h980|c8tg0|6h980|bvus0|776k0|biw40|776k0|biw40|776k0|biw40|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|xjeo0|1tzb40|2dq40|asys0|7x3w0|ast80|7x3w0|asys0|7x3w0|asys0|b5rw0|7xf00|ast80|7x9g0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240',
-    'offsetIndices': '01010101010101010101010101010101010101010101011101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Canada/Mountain',
-    'untils': '-x1yazk|629ink|a2vw0|8n6s0|29ek0|h6lg0|9px80|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|9l0g40|1tz5k0|2dvo0|tj1g0|7x3w0|ctzk40|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '453.8667|420|360',
-    'offsetIndices': '0121212121212122121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Canada/Newfoundland',
-    'untils': '-ris3ck|8bx80|ar440|a2vw0|9tjs0|53980|dkys0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9d440|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|8zzw0|9q2s0|9cyk0|9q2s0|8zzw0|9q2s0|8zzw0|7tmw0|1wfuk|8zzw0|a3480|7k580|b5xg0|7k580|b5xg0|7k580|biw40|776k0|biw40|7k580|b5xg0|7k580|b5xg0|1pb260|2dly0|biw40|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|biw40|7k580|ag040|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a2lo|afuk0|8a840|asqg0|7xc80|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8tec|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '210.8667|150.8667|210|150|90',
-    'offsetIndices': '01010101010101010101010101010101010102323232323232323323232323232323232323232323232323232323232323232323232323232323232323232323232323232324232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Canada/Pacific',
-    'untils': '-qzopk0|a2vw0|c5jxg0|1tz2s0|2dyg0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '0101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Canada/Saskatchewan',
-    'untils': '-xkq9yc|6l1hmc|a2vw0|60enw0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|1b6840|9cyk0|9d440|8zzw0|9q2s0|9cyk0|9q2s0|9cyk0|9d440|9cyk0|66gc0|1tz5k0|2dvo0|a31g0|9cyk0|a31g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|tj1g0|9cyk0|9d440|Infinity',
-    'offsets': '418.6|420|360',
-    'offsetIndices': '012121212121212121212121221212121212121212121212121212'
-  }, {
-    'id': 'Canada/Yukon',
-    'untils': '-qzoms0|a2vw0|asys0|882c0|bmiwc0|1tz000|2e180|a7n3w0|9q000|tiyo0|6qp440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|Infinity',
-    'offsets': '540|480|420',
-    'offsetIndices': '01010110201212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'CET',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|8l9c0|ggp1c0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Chile/Continental',
-    'untils': '-vauawq|3dlssq|157b7a|f4e0q|49hzba|aye0q|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|534ik0|351g0|229zw0|2gt80|awo40|2mg00|b73400|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
-    'offsets': '282.7667|300|240|180',
-    'offsetIndices': '010202121212121212321232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'Chile/EasterIsland',
-    'untils': '-jhfaew|ivmeuw|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|iq2o0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
-    'offsets': '437.4667|420|360|300',
-    'offsetIndices': '012121212121212121212121212123232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'CST6CDT',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Cuba',
-    'untils': '-n7762o|1icfyo|69uk0|62s040|4ofw0|e1ms0|51ek0|e1ms0|4ofw0|1fhs40|4ofw0|e1ms0|4ofw0|9s9k40|67zw0|cedg0|6h980|9o840|7yyk0|b5xg0|7k580|bvus0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|8a2k0|ag040|8bx80|ae5g0|8drw0|acas0|9cyk0|9d440|9px80|905g0|9px80|9q2s0|7x3w0|8a840|ast80|7x9g0|ast80|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|8a2k0|ag040|8a2k0|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|905g0|a2vw0|905g0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|8n400|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|8a5c0|afxc0|8a5c0|afxc0|7x6o0|1cm000|6uao0|bvs00|779c0|bitc0|6uao0|bvs00|779c0|bvs00|779c0|c8qo0|779c0|b5uo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|Infinity',
-    'offsets': '329.6|300|240',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'EET',
-    'untils': '3s9ms0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-120|-180',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Egypt',
-    'untils': '-fdls80|40d80|a31g0|7x3w0|a4w40|aqyk0|80ys0|b07w0|7tk40|b07w0|8jhg0|a8fw0|60go40|7el80|awo40|7v980|awqw0|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7tk40|ayd80|7tk40|b07w0|7tk40|ayd80|7tk40|ayd80|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|f9x80|3i040|eluk0|462s0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|b5rw0|7m5g0|awik0|7ves0|awik0|7ves0|ayd80|7ves0|awik0|7ves0|awik0|7ves0|aqvs0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7k580|b5xg0|6u7w0|bvus0|6h980|c8tg0|64ak0|cyqs0|5anw0|1jms0|12t80|1w22s0|25p80|1sw40|2vmk0|Infinity',
-    'offsets': '-120|-180',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Eire',
-    'untils': '-rzcmlr|6uao0|9pytr|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|3g8800|8a5c0|bvs00|8n400|a2yo0|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '25.35|-34.65|0|-60',
-    'offsetIndices': '01232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'EST',
-    'untils': 'Infinity',
-    'offsets': '300',
-    'offsetIndices': '0'
-  }, {
-    'id': 'EST5EDT',
-    'untils': '-r0ev80|ast80|7x9g0|ast80|bmtus0|1tzb40|2dq40|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Etc/GMT-0',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-1',
-    'untils': 'Infinity',
-    'offsets': '-60',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-10',
-    'untils': 'Infinity',
-    'offsets': '-600',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-11',
-    'untils': 'Infinity',
-    'offsets': '-660',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-12',
-    'untils': 'Infinity',
-    'offsets': '-720',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-13',
-    'untils': 'Infinity',
-    'offsets': '-780',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-14',
-    'untils': 'Infinity',
-    'offsets': '-840',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-2',
-    'untils': 'Infinity',
-    'offsets': '-120',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-3',
-    'untils': 'Infinity',
-    'offsets': '-180',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-4',
-    'untils': 'Infinity',
-    'offsets': '-240',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-5',
-    'untils': 'Infinity',
-    'offsets': '-300',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-6',
-    'untils': 'Infinity',
-    'offsets': '-360',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-7',
-    'untils': 'Infinity',
-    'offsets': '-420',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-8',
-    'untils': 'Infinity',
-    'offsets': '-480',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT-9',
-    'untils': 'Infinity',
-    'offsets': '-540',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+0',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+1',
-    'untils': 'Infinity',
-    'offsets': '60',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+10',
-    'untils': 'Infinity',
-    'offsets': '600',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+11',
-    'untils': 'Infinity',
-    'offsets': '660',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+12',
-    'untils': 'Infinity',
-    'offsets': '720',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+2',
-    'untils': 'Infinity',
-    'offsets': '120',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+3',
-    'untils': 'Infinity',
-    'offsets': '180',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+4',
-    'untils': 'Infinity',
-    'offsets': '240',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+5',
-    'untils': 'Infinity',
-    'offsets': '300',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+6',
-    'untils': 'Infinity',
-    'offsets': '360',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+7',
-    'untils': 'Infinity',
-    'offsets': '420',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+8',
-    'untils': 'Infinity',
-    'offsets': '480',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT+9',
-    'untils': 'Infinity',
-    'offsets': '540',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/GMT0',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/Greenwich',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/UCT',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/Universal',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/UTC',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Etc/Zulu',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Europe/Amsterdam',
-    'untils': '-s0dvkk|7v980|a51o0|7x6o0|a2yo0|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9b6o0|a2yo0|c51c0|6l1c0|902o0|9q000|ci000|682o0|bgyo0|79400|bitc0|779c0|bmio0|7gio0|bbeo0|7eo00|bd9c0|7ctc0|bf400|7ayo0|bvs00|6uao0|bko00|7idc0|b9k00|7gio0|bbeo0|7eo00|bf400|7ayo0|btxc0|21uc0|4uaz8|bitc0|779c0|bko00|7idc0|bd3s0|1aarpc|7k800|9q000|9d1c0|9d1c0|9d1c0|8l9c0|ggp1c0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-19.5333|-79.5333|-80|-20|-120|-60',
-    'offsetIndices': '010101010101010101010101010101010101010101012323234545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545454545'
-  }, {
-    'id': 'Europe/Andorra',
-    'untils': '-c4xmo0|k3ctg0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Astrakhan',
-    'untils': '-nu2zkc|37bv8c|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
-    'offsets': '-192.2|-180|-240|-300',
-    'offsetIndices': '012323232323232323212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Europe/Athens',
-    'untils': '-rvv0cg|8bjasg|2vmk0|4hiw40|16ik0|scog0|7lx40|9o2k0|9eys0|4atzw0|6djw0|bplus0|bq800|71uw0|9d1c0|902o0|91xc0|9o5c0|905g0|9qgo0|9akg0|9iik0|99980|9dcg0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-94.8667|-120|-180|-60',
-    'offsetIndices': '012121313121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Belfast',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Belgrade',
-    'untils': '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Berlin',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|2o7w0|6bs00|2txg0|7k800|91xc0|9b9g0|1sqk0|2inw0|51k40|a2yo0|8n400|9q000|902o0|fx91c0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120|-180',
-    'offsetIndices': '01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Bratislava',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|b5uo0|7vc00|2vs40|4bk00|2vmk0|8n400|a2yo0|8n400|9o5c0|91xc0|fe6000|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120|0',
-    'offsetIndices': '01010101010101010201010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Brussels',
-    'untils': '-ss5uo0|rrx80|7vc00|a4yw0|7x6o0|asw00|7x6o0|2wh40|5omo0|b5uo0|6uao0|cyo00|7ayo0|bko00|7rmo0|a2yo0|a2yo0|8n400|902o0|9q000|9d1c0|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|90b00|a2yo0|8n400|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|4deo0|1a36k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8l9c0|clpc0|79400|fwu800|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0121212101010101010101010101010101010101010101010101212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Bucharest',
-    'untils': '-k29zi0|fj8m0|6w5c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|kp0dc0|6h980|9q000|905g0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9cvs0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9cyk0|9d440|9cyk0|9q2s0|ast80|7xhs0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-104.4|-120|-180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Budapest',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|a31g0|8n180|autg0|bgvw0|b5jeg0|th9k0|7k800|9q000|9d1c0|9d1c0|awd00|9ew00|7q0c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|a4tc0|9q000|1va2g0|6u7w0|bxpg0|6u7w0|cjxg0|64ak0|cluw0|64g40|br3ek0|905g0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Busingen',
-    'untils': '-eyh6o0|7x6o0|asw00|7x6o0|k2zus0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Chisinau',
-    'untils': '-r2p1bo|70f1to|fj8m0|6w5c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|geqo0|ha580|oc8g0|7k800|9q000|9d1c0|7cl00|j3pbw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|25p80|7kdk0|9d1c0|9d1c0|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|ast80|7xf00|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-115|-104.4|-120|-180|-60|-240',
-    'offsetIndices': '012323232323232323232424235353535353535353535323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Europe/Copenhagen',
-    'untils': '-rzo2w0|75bw0|cbs2w0|1aco80|7k800|9q000|9d1c0|9d1c0|9d1c0|6y000|dbmo0|6bs00|clpc0|51hc0|e1k00|4oio0|giutc0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Dublin',
-    'untils': '-rzcmlr|6uao0|9pytr|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|3g8800|8a5c0|bvs00|8n400|a2yo0|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '25.35|-34.65|0|-60',
-    'offsetIndices': '01232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Europe/Gibraltar',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|d0tp80|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '010101010101010101010101010101010101010101010101012121212121010121010101010101010101012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Guernsey',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Helsinki',
-    'untils': '-peghyd|ax3tqd|9gqo0|k31s80|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-99.8167|-120|-180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Isle_of_Man',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Istanbul',
-    'untils': '-ux9xew|2wvx6w|7v980|1tjc40|aunw0|88dg0|9et80|8yas0|a2vw0|tzpg0|79180|awo40|7v980|7p4040|4zjw0|2vs40|f4d80|9vms0|1u5ek0|c5440|69uk0|acas0|8n180|a31g0|8n180|9q2s0|8zzw0|a31g0|8zzw0|a31g0|8n180|5md9g0|o9zw0|a6qs0|75bw0|4iwyw0|7x6o0|7kas0|b5rw0|75hg0|bkl80|77c40|biqk0|7x9g0|a2vw0|8n6s0|4iqc0|2nkw80|38l80|kdes0|8qtc0|8a5c0|9ew00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|902o0|9q000|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7kdk0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7m2o0|b4000|7k800|b5uo0|7x6o0|asw00|7z1c0|ar1c0|7x6o0|bitc0|779c0|8fe80|Infinity',
-    'offsets': '-116.9333|-120|-180|-240',
-    'offsetIndices': '0121212121212121212121212121212121212121212121223212121212121212121212121212121212121212121212121212121212121212122'
-  }, {
-    'id': 'Europe/Jersey',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Kaliningrad',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|el00|z6o0|9kd80|82tg0|i9avw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-60|-120|-180|-240',
-    'offsetIndices': '01010101010101121232323232323232322121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Kiev',
-    'untils': '-nu11ng|37a03g|5vd6k0|kzv40|7k800|9q000|1oyg0|jipzs0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|51ek0|neqw0|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9dcg0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-122.0667|-120|-180|-60|-240',
-    'offsetIndices': '0121313242424242424242424242121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Kirov',
-    'untils': '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-198.8|-180|-240|-300',
-    'offsetIndices': '01232323232323232321212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Lisbon',
-    'untils': '-u9rhc0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5gyl40|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '36.75|0|-60|-120',
-    'offsetIndices': '012121212121212121212121212121212121212121212321232123212321212121212121212121212121212121212121212121212121212121212121212121212122323232212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Ljubljana',
-    'untils': '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/London',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Luxembourg',
-    'untils': '-y89550|68l290|75hg0|ast80|796s0|at1k0|7x6o0|3lh40|4zmo0|b6300|6u2c0|cytk0|7at40|bktk0|7rh40|a31g0|a2vw0|8n9k0|8zx40|9q2s0|9et80|9b9g0|a2vw0|8n6s0|9px80|905g0|a2vw0|905g0|a2vw0|8ncc0|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|42ao0|1aeak0|7k800|9q000|9d1c0|8n400|a2yo0|8l9c0|clpc0|79400|fwu800|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-24.6|-60|-120|0',
-    'offsetIndices': '0121212131313131313131313131313131313131313131313131212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Madrid',
-    'untils': '-qzlus0|8yas0|9cyk0|9eys0|2d2vw0|8sqs0|ssyk0|8n6s0|9px80|905g0|a2yo0|902o0|a2vw0|8n6s0|40lh80|5k2s0|9cyk0|1frw0|7z1c0|j1c80|8a2k0|13yt80|685g0|brzw0|8n6s0|a2vw0|8n6s0|a2vw0|8n6s0|a2vw0|8n6s0|1clx80|7x9g0|cswik0|905g0|9px80|905g0|8zzw0|9d440|9px80|905g0|9q5k0|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '010101010101010101210121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Malta',
-    'untils': '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9b6o0|8n400|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|9b6o0|9d1c0|ahs00|7m2o0|b45k0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|a4w40|8y580|9q2s0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Mariehamn',
-    'untils': '-peghyd|ax3tqd|9gqo0|k31s80|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-99.8167|-120|-180',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Minsk',
-    'untils': '-nu113c|379zjc|5r1mk0|pbf40|7k800|9q000|9d1c0|4oac0|j6dmk0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|sg2o0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|Infinity',
-    'offsets': '-110|-120|-180|-60|-240',
-    'offsetIndices': '01213131242424242424242424221212121212121212121212121212121212121212'
-  }, {
-    'id': 'Europe/Monaco',
-    'untils': '-uozn3l|2qx1nl|5luo0|8y800|a4tc0|7vc00|auqo0|7idc0|b7pc0|6sg00|cyo00|7ayo0|bko00|7rmo0|a2yo0|bvs00|6uao0|902o0|9q000|9d1c0|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51po0|mdbo0|7x3w0|7x9g0|c8w80|7k800|9q000|9d1c0|9nzs0|922w0|8l9c0|fxlx80|9cyk0|9q5k0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-9.35|0|-60|-120',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Europe/Moscow',
-    'untils': '-rx5dmh|ipzua|97hc0|7yyk0|5i840|d9p80|1jwk7|2cvk0|s8o00|1qvw0|8fpc0|1jms0|is040|412as0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d440|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-150.2833|-151.3167|-211.3167|-271.3167|-240|-180|-300|-120',
-    'offsetIndices': '012132345464575454545454545454545455754545454545454545454545454545454545454545'
-  }, {
-    'id': 'Europe/Nicosia',
-    'untils': '-p4bq6g|rvhxyg|9cyk0|b42s0|7nuk0|8yas0|8zzw0|9q2s0|9et80|9b9g0|9cyk0|9q2s0|8zzw0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|9cyk0|9d440|9cyk0|9d440|at4c0|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-133.4667|-120|-180',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Oslo',
-    'untils': '-rzayo0|6qfs0|cgcqo0|15tsc0|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|70q5c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|b5uo0|7k800|7law00|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Paris',
-    'untils': '-uozn1x|2qx1lx|5luo0|8y800|a4tc0|7vc00|auqo0|7idc0|b7pc0|6sg00|cyo00|7ayo0|bko00|7rmo0|a2yo0|bvs00|6uao0|902o0|9q000|9d1c0|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|9d1c0|9d1c0|902o0|a2yo0|9d1c0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51po0|5p8w0|18rcc0|7k800|9q000|9d1c0|7efo0|29k40|922w0|8l9c0|fxlx80|9cyk0|9q5k0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-9.35|0|-60|-120',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212123232332323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Europe/Podgorica',
-    'untils': '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Prague',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|9d1c0|b5uo0|7vc00|2vs40|4bk00|2vmk0|8n400|a2yo0|8n400|9o5c0|91xc0|fe6000|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120|0',
-    'offsetIndices': '01010101010101010201010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Riga',
-    'untils': '-qznlky|7x6o0|a4tc0|2mg00|3myns0|7fhlky|gz180|p5v40|7k800|9q000|9d1c0|9d1c0|k7s0|j14ns0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d440|asw00|7x6o0|asw00|7x6o0|b5uo0|qaao0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-96.5667|-156.5667|-120|-180|-60|-240',
-    'offsetIndices': '010102324242435353535353535353323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Europe/Rome',
-    'untils': '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|clpc0|64dc0|c8qo0|6hc00|clpc0|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|c8qo0|6hc00|9q5k0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Samara',
-    'untils': '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|jt1g0|89zs0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|j3440|7k800|Infinity',
-    'offsets': '-200.3333|-180|-240|-300',
-    'offsetIndices': '0123232323232323232121232323232323232323232323232323232323212'
-  }, {
-    'id': 'Europe/San_Marino',
-    'untils': '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|clpc0|64dc0|c8qo0|6hc00|clpc0|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|c8qo0|6hc00|9q5k0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Sarajevo',
-    'untils': '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Saratov',
-    'untils': '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|13m040|Infinity',
-    'offsets': '-184.3|-180|-240|-300',
-    'offsetIndices': '012323232323232321212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Europe/Simferopol',
-    'untils': '-nu12ao|37a0qo|5xiyk0|iu340|7k800|9q000|9d1c0|iac0|jajmk0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|eeio0|wrjw0|9cyk0|9d440|9cyk0|9d440|1sqk0|7k580|9d440|9cyk0|9q2s0|at4c0|7x9g0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x3w0|asqg0|Infinity',
-    'offsets': '-136|-120|-180|-60|-240',
-    'offsetIndices': '012131312424242424242424242121212424242212121212121212121212121212121212142'
-  }, {
-    'id': 'Europe/Skopje',
-    'untils': '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Sofia',
-    'untils': '-e6dzw0|7k800|9q000|9d1c0|9d1c0|9d440|hqq240|9eys0|9o2k0|92040|9o2k0|90880|9pug0|90b00|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|ast80|7xhs0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-120|-60|-180',
-    'offsetIndices': '01010102020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020'
-  }, {
-    'id': 'Europe/Stockholm',
-    'untils': '-rzo2w0|75hg0|x5bew0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Tallinn',
-    'untils': '-r3exx0|3re10|7x6o0|et6g0|ygov0|a1zgd0|ktx80|l94g0|7k800|9q000|9d1c0|8uac0|j27mk0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asys0|7x6o0|b5uo0|19dc00|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-99|-60|-120|-180|-240',
-    'offsetIndices': '012102321212343434343434343433232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Europe/Tirane',
-    'untils': '-t85vo8|dt2gw8|18pew0|7k800|m800|g7ot40|7rjw0|autg0|7x3w0|ayis0|7x3w0|b5xg0|7k580|b42s0|7lzw0|b42s0|7lzw0|b42s0|7x3w0|ahus0|7x3w0|b5xg0|7x3w0|a4w40|8jbw0|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-79.3333|-60|-120',
-    'offsetIndices': '01212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Tiraspol',
-    'untils': '-r2p1bo|70f1to|fj8m0|6w5c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|geqo0|ha580|oc8g0|7k800|9q000|9d1c0|7cl00|j3pbw0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|25p80|7kdk0|9d1c0|9d1c0|9cvs0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|ast80|7xf00|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-115|-104.4|-120|-180|-60|-240',
-    'offsetIndices': '012323232323232323232424235353535353535353535323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'Europe/Ulyanovsk',
-    'untils': '-qcx400|5q5zo0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9q000|iq5g0|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|qnc40|Infinity',
-    'offsets': '-193.6|-180|-240|-300|-120',
-    'offsetIndices': '01232323232323232321214121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Europe/Uzhgorod',
-    'untils': '-fizzw0|1cm000|7k800|9q000|9d1c0|al900|cnms0|int140|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|eeio0|e1sc0|iprk0|9cyk0|9d440|9cyk0|9d440|9cyk0|9dcg0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120|-180|-240',
-    'offsetIndices': '010101023232323232323232320121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Vaduz',
-    'untils': '-eyh6o0|7x6o0|asw00|7x6o0|k2zus0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Vatican',
-    'untils': '-rymys0|64ak0|9d440|9et80|88dg0|aunw0|7ig40|b5rw0|8n6s0|9cyk0|aau2s0|18r9k0|7k800|9q000|9d1c0|8l9c0|a4tc0|8j940|9f1k0|afxc0|89zs0|afxc0|7kdk0|b5uo0|979rs0|6h980|cls40|64dc0|clpc0|64dc0|cyo00|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|clpc0|64dc0|c8qo0|6hc00|clpc0|64dc0|clpc0|64dc0|c8qo0|6hc00|clpc0|6hc00|c8qo0|6hc00|9q5k0|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Vienna',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|t6000|8a5c0|a7a800|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|iio0|ivmo0|91xc0|9b6o0|9d1c0|a2yo0|8n400|gfyyg0|8zzw0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Vilnius',
-    'untils': '-rns980|1g224o|e75nc|4kqk0|acbs40|gpp40|pits0|7k800|9q000|9d1c0|65zo0|j4vx80|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x9g0|asw00|7x6o0|b5uo0|1s3eo0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-84|-95.6|-60|-120|-180|-240',
-    'offsetIndices': '012324323234545454545454545443434343434343434332334343434343434343434343434343434343434343434343434343434343434343434343'
-  }, {
-    'id': 'Europe/Volgograd',
-    'untils': '-q3cw84|5glrw4|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|iq5g0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|s3400|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|239c40|Infinity',
-    'offsets': '-177.6667|-180|-240|-300',
-    'offsetIndices': '012323232323232321212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Europe/Warsaw',
-    'untils': '-se9yk0|dvyc0|7ves0|a4yw0|7x6o0|asw00|7x6o0|aunw0|7x6o0|1evbs0|9fcwc0|18cao0|7k800|9q000|9d1c0|9gnw0|an980|9kd80|8fs40|922w0|ar1c0|7x6o0|a2yo0|8n400|9q000|902o0|4013w0|64dc0|9d1c0|9d1c0|clpc0|6hc00|9d1c0|9d1c0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|clpc0|64dc0|6j4tc0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-84|-60|-120|-180',
-    'offsetIndices': '012121223212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Zagreb',
-    'untils': '-ezayw0|swz00|7k800|9q000|9d1c0|9d1c0|b7pc0|6qlc0|jl1hc0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Europe/Zaporozhye',
-    'untils': '-nu12hc|37a0xc|5u1180|mc0g0|7k800|9q000|12qg0|jjc7s0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9cvs0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9dcg0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-140|-120|-180|-60|-240',
-    'offsetIndices': '01213132424242424242424242422121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Europe/Zurich',
-    'untils': '-eyh6o0|7x6o0|asw00|7x6o0|k2zus0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'GB-Eire',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'GB',
-    'untils': '-rzcns0|6uao0|9q000|8c000|9o5c0|9ruo0|9b6o0|9ew00|9b6o0|auqo0|88ao0|9ew00|8y800|a2yo0|a2yo0|7k800|asw00|8a5c0|asw00|8n400|a2yo0|8n400|9q000|902o0|afxc0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|9d1c0|a2yo0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|a2yo0|b5uo0|51hc0|mbmk0|51hc0|c8qo0|6hc00|c8qo0|6uao0|bvs00|8n400|a4tc0|5clc0|4bms0|9q000|902o0|8a5c0|1frw0|64dc0|4bms0|6uao0|bvs00|7x6o0|asw00|8n400|9q000|902o0|9q000|9d1c0|9q000|902o0|8n400|9q000|902o0|a2yo0|8n400|afxc0|8n400|9q000|902o0|a2yo0|8n400|a2yo0|8n400|9q000|902o0|902o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|5reo0|1xhuo0|779c0|bitc0|779c0|bitc0|779c0|bitc0|779c0|bitc0|7k800|b5uo0|7k800|b5uo0|7k800|bitc0|779c0|bitc0|779c0|bitc0|7x3w0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60|-120',
-    'offsetIndices': '0101010101010101010101010101010101010101010101010121212121210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'GMT-0',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'GMT',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'GMT+0',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'GMT0',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Greenwich',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Hongkong',
-    'untils': '-y0i0s0|j44dk0|5k000|4d4y0|2195i0|7x3w0|bj320|6uao0|bvs00|7x6o0|9d1c0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|8a5c0|asw00|7x6o0|ast80|77c40|biqk0|77c40|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|77c40|biqk0|77c40|bvp80|6udg0|bvp80|6udg0|bvp80|77c40|biqk0|77c40|biqk0|8n6s0|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9cyk0|1c9440|8a2k0|Infinity',
-    'offsets': '-456.7|-480|-540|-510',
-    'offsetIndices': '0123212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'HST',
-    'untils': 'Infinity',
-    'offsets': '600',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Iceland',
-    'untils': '-wcwx9c|4rpd9c|ci2s0|69uk0|du840|4xp80|du840|p7bw0|4w040|9bdzw0|9d6w0|64g40|cyl80|64dc0|clpc0|6hc00|bvs00|6uao0|bvs00|6uao0|bvs00|6uao0|c8qo0|6hc00|c8qo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|7x6o0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|asw00|8a5c0|Infinity',
-    'offsets': '88|60|0',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Indian/Antananarivo',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Indian/Chagos',
-    'untils': '-wvpc2s|1ag64us|Infinity',
-    'offsets': '-289.6667|-300|-360',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Indian/Christmas',
-    'untils': 'Infinity',
-    'offsets': '-420',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Indian/Cocos',
-    'untils': 'Infinity',
-    'offsets': '-390',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Indian/Comoro',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Indian/Kerguelen',
-    'untils': '-afrs00|Infinity',
-    'offsets': '0|-300',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Indian/Mahe',
-    'untils': '-x6pjlo|Infinity',
-    'offsets': '-221.8|-240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Indian/Maldives',
-    'untils': '-57x6y0|Infinity',
-    'offsets': '-294|-300',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Indian/Mauritius',
-    'untils': '-wvp9bc|13jnu7c|8bx80|dd0wc0|7x3w0|Infinity',
-    'offsets': '-230|-240|-300',
-    'offsetIndices': '012121'
-  }, {
-    'id': 'Indian/Mayotte',
-    'untils': '-lnsetg|s8mhg|57v020|afrrb0|Infinity',
-    'offsets': '-147.2667|-180|-150|-165',
-    'offsetIndices': '01231'
-  }, {
-    'id': 'Indian/Reunion',
-    'untils': '-uks29s|Infinity',
-    'offsets': '-221.8667|-240',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Iran',
-    'untils': '-s6m6uw|fnolc0|gm3h4w|777y0|b07w0|3pes0|42c20|9cyk0|9gtg0|9kd80|5ja5g0|7avw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|1av440|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9d440|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|9b9g0|9gnw0|Infinity',
-    'offsets': '-205.7333|-210|-240|-300|-270',
-    'offsetIndices': '00123214141414141414141414141414141414141414141414141414141414141414141414141414141414141414141414141'
-  }, {
-    'id': 'Israel',
-    'untils': '-r50eig|bp54yg|19f3w0|7rv00|b02c0|7tk40|b07w0|8jhg0|a8lg0|8jhg0|a8ac0|t9s40|56vs0|35700|9b3w0|9gtg0|8jbw0|7tmw0|a6ig0|biyw0|8a5c0|9d1c0|902o0|7x6o0|e1eg0|4ofw0|dzxo0|4q500|doo40|64iw0|auqo0|7i500|8rfms0|51ek0|9q2s0|6u7w0|2khpg0|25s00|1weyo0|5reo0|bxmo0|7x3w0|cls40|5rbw0|bbhg0|7rjw0|asys0|7k580|c8tg0|6h980|ag040|7x3w0|asys0|8a2k0|asys0|8a2k0|ap9g0|80t80|ap9g0|7nuk0|b2840|80t80|9zc40|9iik0|9kis0|93p80|9mdg0|8qqk0|apf00|7x3w0|biw40|8zx40|9io40|8n180|9kis0|9vh80|8ulg0|9px80|9mdg0|8n180|9tuw0|9tmk0|8wg40|9gnw0|99es0|8qqk0|9zc40|9tmk0|8wg40|9gnw0|99es0|8qqk0|acas0|9gnw0|99es0|93p80|9mdg0|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|7tk40|b9h80|7glg0|b9h80|7glg0|b9h80|7glg0|b9h80|7tk40|awik0|7tk40|awik0|Infinity',
-    'offsets': '-140.6667|-120|-180|-240',
-    'offsetIndices': '012121212121321212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Jamaica',
-    'untils': '-u85og2|wbl182|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|Infinity',
-    'offsets': '307.1667|300|240',
-    'offsetIndices': '0121212121212121212121'
-  }, {
-    'id': 'Japan',
-    'untils': '-bb4900|6uao0|afxc0|8a5c0|c8qo0|6hc00|c8qo0|6hc00|Infinity',
-    'offsets': '-540|-600',
-    'offsetIndices': '010101010'
-  }, {
-    'id': 'Kwajalein',
-    'untils': '-h817w0|27sas0|1hjus0|ddxug0|cgv6k0|Infinity',
-    'offsets': '-660|-600|-540|720|-720',
-    'offsetIndices': '012034'
-  }, {
-    'id': 'Libya',
-    'untils': '-q3gfrw|gl6ajw|422c0|xado0|4bbo0|wrpg0|4s580|1kdpg0|c05bw0|4mqs0|9et80|9d440|9et80|9eys0|9et80|9mdg0|95jw0|9io40|9cyk0|99es0|9et80|9eys0|9et80|9d440|9et80|b2840|3cf3w0|9kis0|9et80|7vqyw0|75eo0|asw00|Infinity',
-    'offsets': '-52.7333|-60|-120',
-    'offsetIndices': '012121212121212121212121212122122'
-  }, {
-    'id': 'MET',
-    'untils': '-s0e080|7ves0|a4yw0|7x6o0|asw00|7x6o0|b8qdc0|1cm000|7k800|9q000|9d1c0|9d1c0|9d1c0|8l9c0|ggp1c0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-60|-120',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Mexico/BajaNorte',
-    'untils': '-p1u1s0|11jrw0|1sns00|1sgdc0|71s40|9cyk0|5iidg0|1q6700|4lfk0|190g40|eluk0|2r4o80|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|84qys0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|77c40|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '468.0667|420|480',
-    'offsetIndices': '012121211212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Mexico/BajaSur',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|591h80|3ie2s0|axvpg0|dpgw40|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '425.6667|420|360|480',
-    'offsetIndices': '0121212131212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Mexico/General',
-    'untils': '-p1u4k0|2u7jw0|1sgdc0|8n400|7thc0|9eys0|3knek0|776k0|rf440|5t6k0|1evk40|71mk0|30p1g0|8n180|nufxo0|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|9q2s0|7k580|9q2s0|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|Infinity',
-    'offsets': '396.6|420|360|300',
-    'offsetIndices': '012121232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'MST',
-    'untils': 'Infinity',
-    'offsets': '420',
-    'offsetIndices': '0'
-  }, {
-    'id': 'MST7MDT',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|bmtus0|1tz5k0|2dvo0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Navajo',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360',
-    'offsetIndices': '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'NZ-CHAT',
-    'untils': '-ciya10|f1tq90|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
-    'offsets': '-735|-765|-825',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'NZ',
-    'untils': '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
-    'offsets': '-690|-750|-720|-780',
-    'offsetIndices': '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'Pacific/Apia',
-    'untils': '-usiiv4|kcrmt4|vp3la0|9odo0|902o0|4zbk0|4qog0|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
-    'offsets': '686.9333|690|660|600|-840|-780',
-    'offsetIndices': '01232345454545454545454545454545454545454545454545454545454'
-  }, {
-    'id': 'Pacific/Auckland',
-    'untils': '-m01p20|64ak0|biw40|7x5a0|asxe0|7x5a0|asxe0|7x5a0|asxe0|8a3y0|afyq0|8a3y0|afyq0|afvy0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|asum0|7x820|b5ta0|7k9e0|b5ta0|7x820|hsl2m0|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
-    'offsets': '-690|-750|-720|-780',
-    'offsetIndices': '01020202020202020202020202023232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'Pacific/Bougainville',
-    'untils': '-ecsh40|1n05g0|1071c40|Infinity',
-    'offsets': '-600|-540|-660',
-    'offsetIndices': '0102'
-  }, {
-    'id': 'Pacific/Chatham',
-    'untils': '-ciya10|f1tq90|5reo0|clpc0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6uao0|c8qo0|6hc00|b5uo0|8a5c0|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|afxc0|8a5c0|afxc0|8a5c0|afxc0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|8n400|a2yo0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|a2yo0|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|902o0|9q000|9d1c0|9q000|902o0|9q000|902o0|Infinity',
-    'offsets': '-735|-765|-825',
-    'offsetIndices': '012121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212'
-  }, {
-    'id': 'Pacific/Chuuk',
-    'untils': '-su4zs0|29hes0|bkenw0|29fk40|Infinity',
-    'offsets': '-600|-540',
-    'offsetIndices': '01010'
-  }, {
-    'id': 'Pacific/Easter',
-    'untils': '-jhfaew|ivmeuw|7k580|c8tg0|6h980|a31g0|7x3w0|asys0|7x3w0|b5xg0|7k580|ag040|8a2k0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|iq2o0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|9cyk0|9d440|7x3w0|asys0|7x3w0|b5xg0|7k580|9q2s0|8zzw0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|a31g0|9px80|9q2s0|7x3w0|b5xg0|7k580|b5xg0|7k580|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|8n180|a31g0|7x3w0|asys0|8zzw0|9q2s0|ast80|5eis0|cyl80|6hes0|c8nw0|6udg0|bvp80|6udg0|vonw0|4olg0|e1h80|4olg0|e1h80|4olg0|c8nw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|b5rw0|7x9g0|ast80|7x9g0|Infinity',
-    'offsets': '437.4667|420|360|300',
-    'offsetIndices': '012121212121212121212121212123232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323'
-  }, {
-    'id': 'Pacific/Efate',
-    'untils': '-u964i4|11f4ba4|9cyk0|awo40|7tek0|9q2s0|8zzw0|9q2s0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9q2s0|64ak0|e1ms0|4ofw0|Infinity',
-    'offsets': '-673.2667|-660|-720',
-    'offsetIndices': '0121212121212121212121'
-  }, {
-    'id': 'Pacific/Enderbury',
-    'untils': '535io0|7yiqk0|Infinity',
-    'offsets': '720|660|-780',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Pacific/Fakaofo',
-    'untils': 'lx0jw0|Infinity',
-    'offsets': '660|-780',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Fiji',
-    'untils': '-sa2x4w|17bs00w|64dc0|cyo00|5reo0|53a5c0|64dc0|asw00|6uao0|bvs00|4oio0|e1k00|4oio0|eeio0|4bh80|erk40|3ylc0|erhc0|3ylc0|f4g00|3lmo0|f4g00|3lmo0|f4g00|3lmo0|fheo0|38o00|fheo0|3lmo0|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|3lmo0|f4g00|3lmo0|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|3lmo0|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|38o00|fheo0|3lmo0|f4g00|3lmo0|Infinity',
-    'offsets': '-715.7333|-720|-780',
-    'offsetIndices': '0121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Pacific/Funafuti',
-    'untils': 'Infinity',
-    'offsets': '-720',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Pacific/Galapagos',
-    'untils': '-kcr62o|spdryo|3lsas0|3jp80|Infinity',
-    'offsets': '358.4|300|360',
-    'offsetIndices': '01212'
-  }, {
-    'id': 'Pacific/Gambier',
-    'untils': '-tvndoc|Infinity',
-    'offsets': '539.8|540',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Guadalcanal',
-    'untils': '-tvowac|Infinity',
-    'offsets': '-639.8|-660',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Guam',
-    'untils': '-en8eg0|1dl9g0|7s1k40|txp80|3frms0|qdrpo|7kgac|3ljw0|c8tg0|6u7w0|bvus0|6u7w0|16uo40|3ljw0|16aas0|4ivxo|cls2c|6h980|c65zw0|Infinity',
-    'offsets': '-600|-540|-660',
-    'offsetIndices': '01020202020202020200'
-  }, {
-    'id': 'Pacific/Honolulu',
-    'untils': '-j50la0|13l00|4jvb00|1tyvu0|2e5e0|votg0|Infinity',
-    'offsets': '630|570|600',
-    'offsetIndices': '0101102'
-  }, {
-    'id': 'Pacific/Johnston',
-    'untils': '-j50la0|13l00|4jvb00|1tyvu0|2e5e0|votg0|Infinity',
-    'offsets': '630|570|600',
-    'offsetIndices': '0101102'
-  }, {
-    'id': 'Pacific/Kiritimati',
-    'untils': '535eyo|7yirhc|Infinity',
-    'offsets': '640|600|-840',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Pacific/Kosrae',
-    'untils': '-su52k0|29hhk0|9cmd40|27sas0|29fk40|cm2540|f9l3w0|Infinity',
-    'offsets': '-660|-540|-600|-720',
-    'offsetIndices': '01021030'
-  }, {
-    'id': 'Pacific/Kwajalein',
-    'untils': '-h817w0|27sas0|1hjus0|ddxug0|cgv6k0|Infinity',
-    'offsets': '-660|-600|-540|720|-720',
-    'offsetIndices': '012034'
-  }, {
-    'id': 'Pacific/Majuro',
-    'untils': '-su52k0|29hhk0|9cmd40|27sas0|1h6w40|deat40|Infinity',
-    'offsets': '-660|-540|-600|-720',
-    'offsetIndices': '0102103'
-  }, {
-    'id': 'Pacific/Marquesas',
-    'untils': '-tvncu0|Infinity',
-    'offsets': '558|570',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Midway',
-    'untils': '-usij20|Infinity',
-    'offsets': '682.8|660',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Nauru',
-    'untils': '-pjxiws|ba66ys|1kwca0|hfzda0|Infinity',
-    'offsets': '-667.6667|-690|-540|-720',
-    'offsetIndices': '01213'
-  }, {
-    'id': 'Pacific/Niue',
-    'untils': '-9wyz6o|ehcj4o|Infinity',
-    'offsets': '680|690|660',
-    'offsetIndices': '012'
-  }, {
-    'id': 'Pacific/Norfolk',
-    'untils': '-9x0ps0|cfj8q0|6hc00|l6nk00|239aq0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|Infinity',
-    'offsets': '-672|-690|-750|-660|-720',
-    'offsetIndices': '012134343434343434343434343434343434343434'
-  }, {
-    'id': 'Pacific/Noumea',
-    'untils': '-u9645o|ye0ixo|4dbw0|ecqs0|4f6k0|99p700|4oio0|Infinity',
-    'offsets': '-665.8|-660|-720',
-    'offsetIndices': '01212121'
-  }, {
-    'id': 'Pacific/Pago_Pago',
-    'untils': '-usij20|Infinity',
-    'offsets': '682.8|660',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Palau',
-    'untils': 'Infinity',
-    'offsets': '-540',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Pacific/Pitcairn',
-    'untils': 'es2cy0|Infinity',
-    'offsets': '510|480',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Pohnpei',
-    'untils': '-su52k0|29hhk0|9cmd40|27sas0|29fk40|Infinity',
-    'offsets': '-660|-540|-600',
-    'offsetIndices': '010210'
-  }, {
-    'id': 'Pacific/Ponape',
-    'untils': '-su52k0|29hhk0|9cmd40|27sas0|29fk40|Infinity',
-    'offsets': '-660|-540|-600',
-    'offsetIndices': '010210'
-  }, {
-    'id': 'Pacific/Port_Moresby',
-    'untils': 'Infinity',
-    'offsets': '-600',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Pacific/Rarotonga',
-    'untils': '4mj960|5rbw0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|c8s20|6u9a0|c8s20|6ham0|c8s20|6ham0|c8s20|6ham0|Infinity',
-    'offsets': '630|570|600',
-    'offsetIndices': '012121212121212121212121212'
-  }, {
-    'id': 'Pacific/Saipan',
-    'untils': '-en8eg0|1dl9g0|7s1k40|txp80|3frms0|qdrpo|7kgac|3ljw0|c8tg0|6u7w0|bvus0|6u7w0|16uo40|3ljw0|16aas0|4ivxo|cls2c|6h980|c65zw0|Infinity',
-    'offsets': '-600|-540|-660',
-    'offsetIndices': '01020202020202020200'
-  }, {
-    'id': 'Pacific/Samoa',
-    'untils': '-usij20|Infinity',
-    'offsets': '682.8|660',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Tahiti',
-    'untils': '-tvnayw|Infinity',
-    'offsets': '598.2667|600',
-    'offsetIndices': '01'
-  }, {
-    'id': 'Pacific/Tarawa',
-    'untils': 'Infinity',
-    'offsets': '-720',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Pacific/Tongatapu',
-    'untils': '-f4vrlc|uo2edc|8fpc0|bvs00|4bh80|eelg0|4bh80|7pmis0|3lmo0|Infinity',
-    'offsets': '-740|-780|-840',
-    'offsetIndices': '0121212121'
-  }, {
-    'id': 'Pacific/Truk',
-    'untils': '-su4zs0|29hes0|bkenw0|29fk40|Infinity',
-    'offsets': '-600|-540',
-    'offsetIndices': '01010'
-  }, {
-    'id': 'Pacific/Wake',
-    'untils': 'Infinity',
-    'offsets': '-720',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Pacific/Wallis',
-    'untils': 'Infinity',
-    'offsets': '-720',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Pacific/Yap',
-    'untils': '-su4zs0|29hes0|bkenw0|29fk40|Infinity',
-    'offsets': '-600|-540',
-    'offsetIndices': '01010'
-  }, {
-    'id': 'Poland',
-    'untils': '-se9yk0|dvyc0|7ves0|a4yw0|7x6o0|asw00|7x6o0|aunw0|7x6o0|1evbs0|9fcwc0|18cao0|7k800|9q000|9d1c0|9gnw0|an980|9kd80|8fs40|922w0|ar1c0|7x6o0|a2yo0|8n400|9q000|902o0|4013w0|64dc0|9d1c0|9d1c0|clpc0|6hc00|9d1c0|9d1c0|c8qo0|6hc00|c8qo0|6hc00|c8qo0|6hc00|clpc0|64dc0|6j4tc0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '-84|-60|-120|-180',
-    'offsetIndices': '012121223212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'Portugal',
-    'untils': '-u9rhc0|2bufw0|6zxg0|66580|bq800|73k00|bodc0|71pc0|bq800|73k00|bq800|71pc0|bq800|1b2g00|9b6o0|saio0|8n400|9q000|902o0|a2yo0|902o0|a2yo0|8n400|st1c0|8n400|9d1c0|9d1c0|sg2o0|9d1c0|902o0|9q000|a2yo0|8n400|9d1c0|9d1c0|902o0|9q000|a2yo0|b5uo0|51hc0|bitc0|9d1c0|9ew00|88ao0|25p80|5reo0|3lpg0|779c0|1sqk0|6uao0|38qs0|6uao0|25p80|6hc00|38qs0|6uao0|25p80|6hc00|38qs0|8a5c0|9d1c0|9d9o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|s3400|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|5gyl40|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d440|9cyk0|9d440|9d1c0|9d1c0|9d1c0|9d1c0|9d440|9cyk0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '36.75|0|-60|-120',
-    'offsetIndices': '012121212121212121212121212121212121212121212321232123212321212121212121212121212121212121212121212121212121212121212121212121212122323232212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'PRC',
-    'untils': '-qh00w0|8sl80|asbpg0|6w2k0|7ves0|bxjw0|4mqs0|1vduk0|d4as0|75bw0|a31g0|aaak0|9d440|7v980|awo40|1dx80|j9xpo0|6u7w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '01010101010101010101010101010'
-  }, {
-    'id': 'PST8PDT',
-    'untils': '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|b9gdg0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'ROC',
-    'untils': '-gtzfk0|45slc0|c51c0|75bw0|a31g0|aaak0|9d440|7v980|awo40|7v980|awo40|7v980|awo40|7v980|7tk40|clmk0|7rpg0|b07w0|7rpg0|b07w0|7rpg0|9et80|9eys0|9et80|9d440|9et80|9d440|9et80|9d440|9et80|cjxg0|69uk0|ci2s0|69uk0|6its40|9et80|9d440|9et80|1yf9g0|4qak0|Infinity',
-    'offsets': '-480|-540',
-    'offsetIndices': '01010101010101010101010101010101010101010'
-  }, {
-    'id': 'ROK',
-    'untils': '-w8966g|1yh18g|hkx5a0|1faao0|5cik0|ae5g0|8a2k0|ae5g0|8bx80|c8tg0|6h980|1bj6s0|l3aq0|6j3w0|d2g40|6u7w0|b5xg0|776k0|biw40|776k0|biw40|776k0|biw40|776k0|grs40|dfqxi0|7x6o0|asw00|7x6o0|Infinity',
-    'offsets': '-507.8667|-510|-540|-600|-570',
-    'offsetIndices': '012232323232141414141414123232'
-  }, {
-    'id': 'Singapore',
-    'untils': '-xphpwd|eeb94d|4it32o|8n3jc|1v2p60|iy3o60|Infinity',
-    'offsets': '-415.4167|-420|-440|-450|-540|-480',
-    'offsetIndices': '0123435'
-  }, {
-    'id': 'Turkey',
-    'untils': '-ux9xew|2wvx6w|7v980|1tjc40|aunw0|88dg0|9et80|8yas0|a2vw0|tzpg0|79180|awo40|7v980|7p4040|4zjw0|2vs40|f4d80|9vms0|1u5ek0|c5440|69uk0|acas0|8n180|a31g0|8n180|9q2s0|8zzw0|a31g0|8zzw0|a31g0|8n180|5md9g0|o9zw0|a6qs0|75bw0|4iwyw0|7x6o0|7kas0|b5rw0|75hg0|bkl80|77c40|biqk0|7x9g0|a2vw0|8n6s0|4iqc0|2nkw80|38l80|kdes0|8qtc0|8a5c0|9ew00|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|902o0|9q000|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7kdk0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7m2o0|b4000|7k800|b5uo0|7x6o0|asw00|7z1c0|ar1c0|7x6o0|bitc0|779c0|8fe80|Infinity',
-    'offsets': '-116.9333|-120|-180|-240',
-    'offsetIndices': '0121212121212121212121212121212121212121212121223212121212121212121212121212121212121212121212121212121212121212122'
-  }, {
-    'id': 'UCT',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'Universal',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'US/Alaska',
-    'untils': '-ek1qo0|1tyx80|2e400|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '600|540|480',
-    'offsetIndices': '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'US/Aleutian',
-    'untils': '-ek1nw0|1tyug0|2e6s0|b7yik0|12y080|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|1l940|7rs80|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '660|600|540',
-    'offsetIndices': '011001010101010101010101010101010111212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'US/Arizona',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|bmtus0|zjedo|4olg0|9et80|bs6lmc|9cyk0|Infinity',
-    'offsets': '420|360',
-    'offsetIndices': '01010101010'
-  }, {
-    'id': 'US/Central',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bvus0|776k0|7kas0|b5rw0|9d440|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|7x9g0|dbjw0|8a840|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'US/East-Indiana',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|baw840|51ek0|6w840|1tz8c0|2dsw0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|19q7w0|asys0|5qonw0|9cyk0|9d440|9cyk0|ihslg0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300|240',
-    'offsetIndices': '010101011010101010101010101010121212121212121212121212121212121212121212121212121212121212121212121'
-  }, {
-    'id': 'US/Eastern',
-    'untils': '-r0ev80|ast80|7x9g0|ast80|7x9g0|b5rw0|905g0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|6w840|1tzb40|2dq40|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '300|240',
-    'offsetIndices': '01010101010101010101010101010101010101010101010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'US/Hawaii',
-    'untils': '-j50la0|13l00|4jvb00|1tyvu0|2e5e0|votg0|Infinity',
-    'offsets': '630|570|600',
-    'offsetIndices': '0101102'
-  }, {
-    'id': 'US/Indiana-Starke',
-    'untils': '-r0esg0|ast80|7x9g0|ast80|bmtus0|1tz8c0|2dsw0|tj1g0|7x3w0|asys0|7x3w0|asys0|7x3w0|b5xg0|7k580|b5xg0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|7x3w0|asys0|9px80|9d440|9cyk0|9d440|7x3w0|asys0|7x3w0|asys0|9cyk0|9d440|9px80|9d440|9cyk0|9d440|s3180|1twas0|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|7j5400|asw00|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '360|300',
-    'offsetIndices': '0101011010101010101010101010101010101010101010101010101010101010101010101010101010101010111010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'US/Michigan',
-    'untils': '-xx8dyd|5eraud|dyeyk0|1tzb40|2dq40|1c9440|7x3w0|9rlbxo|71s2c|9d440|9cyk0|2cmdg0|9cyk0|3lpg0|f4d80|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '332.1833|360|300|240',
-    'offsetIndices': '0123323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232'
-  }, {
-    'id': 'US/Mountain',
-    'untils': '-r0epo0|ast80|7x9g0|ast80|7x9g0|b5rw0|7kas0|2vmk0|ataw40|1tz5k0|2dvo0|a7n9g0|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '420|360',
-    'offsetIndices': '01010101011010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'US/Pacific-New',
-    'untils': '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|1a3c5o|f2iic|owao0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'US/Pacific',
-    'untils': '-r0emw0|ast80|7x9g0|ast80|bmtus0|1tz2s0|2dyg0|1a3c5o|f2iic|owao0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|902o0|9q000|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|9d440|9cyk0|9d440|9cyk0|3lpg0|f4d80|64g40|clmk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|9d440|9px80|905g0|9px80|9d440|9cyk0|9d440|9cyk0|9d440|9cyk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|8a840|afuk0|8a840|afuk0|8a840|ast80|7x9g0|ast80|7x9g0|ast80|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6udg0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|6hes0|c8nw0|Infinity',
-    'offsets': '480|420',
-    'offsetIndices': '010101101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'US/Samoa',
-    'untils': '-usij20|Infinity',
-    'offsets': '682.8|660',
-    'offsetIndices': '01'
-  }, {
-    'id': 'UTC',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }, {
-    'id': 'W-SU',
-    'untils': '-rx5dmh|ipzua|97hc0|7yyk0|5i840|d9p80|1jwk7|2cvk0|s8o00|1qvw0|8fpc0|1jms0|is040|412as0|qi27w0|9et80|9d440|9et80|9d440|9et80|9eys0|9d6w0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d440|5reo0|3ljw0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|1vbzw0|Infinity',
-    'offsets': '-150.2833|-151.3167|-211.3167|-271.3167|-240|-180|-300|-120',
-    'offsetIndices': '012132345464575454545454545454545455754545454545454545454545454545454545454545'
-  }, {
-    'id': 'WET',
-    'untils': '3s9ms0|902o0|9q000|9d1c0|9d1c0|9d1c0|9q000|902o0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9d1c0|9q000|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|7x6o0|b5uo0|7k800|b5uo0|7k800|b5uo0|7k800|b5uo0|7x6o0|asw00|7x6o0|asw00|Infinity',
-    'offsets': '0|-60',
-    'offsetIndices': '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010'
-  }, {
-    'id': 'Zulu',
-    'untils': 'Infinity',
-    'offsets': '0',
-    'offsetIndices': '0'
-  }]
-};
-exports["default"] = _default;
-module.exports = exports.default;
-module.exports["default"] = exports.default;
-
-/***/ }),
-
-/***/ 51690:
-/***/ (function(module, exports, __webpack_require__) {
-
-
-
-exports["default"] = void 0;
-var _query = _interopRequireDefault(__webpack_require__(96687));
-var _errors = _interopRequireDefault(__webpack_require__(17381));
-var _timezones_data = _interopRequireDefault(__webpack_require__(61189));
-var _math = __webpack_require__(60810);
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var getConvertedUntils = function getConvertedUntils(value) {
-  return value.split('|').map(function (until) {
-    if (until === 'Infinity') {
-      return null;
-    }
-    return parseInt(until, 36) * 1000;
-  });
-};
-var parseTimezone = function parseTimezone(timeZoneConfig) {
-  var offsets = timeZoneConfig.offsets;
-  var offsetIndices = timeZoneConfig.offsetIndices;
-  var untils = timeZoneConfig.untils;
-  var offsetList = offsets.split('|').map(function (value) {
-    return parseInt(value);
-  });
-  var offsetIndexList = offsetIndices.split('').map(function (value) {
-    return parseInt(value);
-  });
-  var dateList = getConvertedUntils(untils).map(function (accumulator) {
-    return function (value) {
-      return accumulator += value;
-    };
-  }(0));
-  return {
-    offsetList,
-    offsetIndexList,
-    dateList
-  };
-};
-var TimeZoneCache = /*#__PURE__*/function () {
-  function TimeZoneCache() {
-    this.map = new Map();
-  }
-  var _proto = TimeZoneCache.prototype;
-  _proto.tryGet = function tryGet(id) {
-    if (!this.map.get(id)) {
-      var config = timeZoneDataUtils.getTimezoneById(id);
-      if (!config) {
-        return false;
-      }
-      var timeZoneInfo = parseTimezone(config);
-      this.map.set(id, timeZoneInfo);
-    }
-    return this.map.get(id);
-  };
-  return TimeZoneCache;
-}();
-var tzCache = new TimeZoneCache();
-var timeZoneDataUtils = {
-  _tzCache: tzCache,
-  _timeZones: _timezones_data.default.zones,
-  getDisplayedTimeZones: function getDisplayedTimeZones(timestamp) {
-    var _this = this;
-    var timeZones = this._timeZones.map(function (timezone) {
-      var timeZoneInfo = parseTimezone(timezone);
-      var offset = _this.getUtcOffset(timeZoneInfo, timestamp);
-      var title = "(GMT ".concat(_this.formatOffset(offset), ") ").concat(_this.formatId(timezone.id));
-      return {
-        offset,
-        title,
-        id: timezone.id
-      };
-    });
-    return (0, _query.default)(timeZones).sortBy('offset').toArray();
-  },
-  formatOffset: function formatOffset(offset) {
-    var hours = Math.floor(offset);
-    var minutesInDecimal = offset - hours;
-    var signString = (0, _math.sign)(offset) >= 0 ? '+' : '-';
-    var hoursString = "0".concat(Math.abs(hours)).slice(-2);
-    var minutesString = minutesInDecimal > 0 ? ":".concat(minutesInDecimal * 60) : ':00';
-    return signString + hoursString + minutesString;
-  },
-  formatId: function formatId(id) {
-    return id.split('/').join(' - ').split('_').join(' ');
-  },
-  getTimezoneById: function getTimezoneById(id) {
-    if (!id) {
-      return;
-    }
-    var tzList = this._timeZones;
-    for (var i = 0; i < tzList.length; i++) {
-      var currentId = tzList[i]['id'];
-      if (currentId === id) {
-        return tzList[i];
-      }
-    }
-    _errors.default.log('W0009', id);
-    return;
-  },
-  getTimeZoneOffsetById: function getTimeZoneOffsetById(id, timestamp) {
-    var timeZoneInfo = tzCache.tryGet(id);
-    return timeZoneInfo ? this.getUtcOffset(timeZoneInfo, timestamp) : undefined;
-  },
-  getTimeZoneDeclarationTuple: function getTimeZoneDeclarationTuple(id, year) {
-    var timeZoneInfo = tzCache.tryGet(id);
-    return timeZoneInfo ? this.getTimeZoneDeclarationTupleCore(timeZoneInfo, year) : [];
-  },
-  getTimeZoneDeclarationTupleCore: function getTimeZoneDeclarationTupleCore(timeZoneInfo, year) {
-    var offsetList = timeZoneInfo.offsetList;
-    var offsetIndexList = timeZoneInfo.offsetIndexList;
-    var dateList = timeZoneInfo.dateList;
-    var tupleResult = [];
-    for (var i = 0; i < dateList.length; i++) {
-      var currentDate = dateList[i];
-      var currentYear = new Date(currentDate).getFullYear();
-      if (currentYear === year) {
-        var offset = offsetList[offsetIndexList[i + 1]];
-        tupleResult.push({
-          date: currentDate,
-          offset: -offset / 60
-        });
-      }
-      if (currentYear > year) {
-        break;
-      }
-    }
-    return tupleResult;
-  },
-  getUtcOffset: function getUtcOffset(timeZoneInfo, dateTimeStamp) {
-    var offsetList = timeZoneInfo.offsetList;
-    var offsetIndexList = timeZoneInfo.offsetIndexList;
-    var dateList = timeZoneInfo.dateList;
-    var infinityUntilCorrection = 1;
-    var lastIntervalStartIndex = dateList.length - 1 - infinityUntilCorrection;
-    var index = lastIntervalStartIndex;
-    while (index >= 0 && dateTimeStamp < dateList[index]) {
-      index--;
-    }
-    var offset = offsetList[offsetIndexList[index + 1]];
-    return -offset / 60 || offset;
-  }
-};
-var _default = timeZoneDataUtils;
-exports["default"] = _default;
-module.exports = exports.default;
-module.exports["default"] = exports.default;
-
-/***/ }),
-
 /***/ 32511:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -56487,7 +56449,7 @@ module.exports["default"] = exports.default;
 
 exports["default"] = void 0;
 var _date = _interopRequireDefault(__webpack_require__(91198));
-var _utils = _interopRequireDefault(__webpack_require__(51690));
+var _m_utils_timezones_data = _interopRequireDefault(__webpack_require__(23778));
 var _dateAdapter = _interopRequireDefault(__webpack_require__(26983));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -56515,7 +56477,7 @@ var createDateFromUTCWithLocalOffset = function createDateFromUTCWithLocalOffset
 var getTimeZones = function getTimeZones() {
   var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
   var dateInUTC = createUTCDate(date);
-  return _utils.default.getDisplayedTimeZones(dateInUTC.getTime());
+  return _m_utils_timezones_data.default.getDisplayedTimeZones(dateInUTC.getTime());
 };
 var createUTCDate = function createUTCDate(date) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes()));
@@ -56537,7 +56499,7 @@ var calculateTimezoneByValue = function calculateTimezoneByValue(timezone) {
   // NOTE: This check could be removed. We don't support numerical timezones
   if (typeof timezone === 'string') {
     var dateUtc = createUTCDate(date);
-    return _utils.default.getTimeZoneOffsetById(timezone, dateUtc.getTime());
+    return _m_utils_timezones_data.default.getTimeZoneOffsetById(timezone, dateUtc.getTime());
   }
   return timezone;
 };
@@ -56614,13 +56576,13 @@ var isEqualLocalTimeZoneByDeclaration = function isEqualLocalTimeZoneByDeclarati
   var getDateAndMoveHourBack = function getDateAndMoveHourBack(dateStamp) {
     return new Date(dateStamp - 3600000);
   };
-  var configTuple = _utils.default.getTimeZoneDeclarationTuple(timeZoneName, year);
+  var configTuple = _m_utils_timezones_data.default.getTimeZoneDeclarationTuple(timeZoneName, year);
   var _configTuple = _slicedToArray(configTuple, 2),
     summerTime = _configTuple[0],
     winterTime = _configTuple[1];
   var noDSTInTargetTimeZone = configTuple.length < 2;
   if (noDSTInTargetTimeZone) {
-    var targetTimeZoneOffset = _utils.default.getTimeZoneOffsetById(timeZoneName, date);
+    var targetTimeZoneOffset = _m_utils_timezones_data.default.getTimeZoneOffsetById(timeZoneName, date);
     var localTimeZoneOffset = getOffset(date);
     if (targetTimeZoneOffset !== localTimeZoneOffset) {
       return false;
@@ -70008,7 +69970,7 @@ Crosshair.prototype = {
 
 /***/ }),
 
-/***/ 21495:
+/***/ 61189:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 

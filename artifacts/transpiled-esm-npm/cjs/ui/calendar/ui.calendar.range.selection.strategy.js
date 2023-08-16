@@ -33,7 +33,8 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
       value,
       range,
       selectionMode: 'range',
-      onCellHover: this._cellHoverHandler.bind(this)
+      onCellHover: this._cellHoverHandler.bind(this),
+      onWeekNumberClick: this._shouldHandleWeekNumberClick() ? this._weekNumberClickHandler.bind(this) : null
     };
   };
   _proto.selectValue = function selectValue(selectedValue, e) {
@@ -167,6 +168,16 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
       }
       this._updateViewsOption('hoveredRange', []);
     }
+  };
+  _proto._weekNumberClickHandler = function _weekNumberClickHandler(_ref2) {
+    var _this2 = this;
+    var rowDates = _ref2.rowDates,
+      event = _ref2.event;
+    var selectedDates = rowDates.filter(function (date) {
+      return !_this2._isDateDisabled(date);
+    });
+    var values = selectedDates.length ? [selectedDates[0], selectedDates[selectedDates.length - 1]] : [null, null];
+    this.dateValue(values, event);
   };
   return CalendarRangeSelectionStrategy;
 }(_uiCalendarSelection.default);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/m_settings_generator.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,8 +19,8 @@ var _base = require("../../../renovation/ui/scheduler/view_model/to_test/views/u
 var _appointmentAdapter = require("../../../ui/scheduler/appointmentAdapter");
 var _expressionUtils = require("../../../ui/scheduler/expressionUtils");
 var _recurrence = require("../../../ui/scheduler/recurrence");
-var _utils = require("../../../ui/scheduler/resources/utils");
-var _utils2 = _interopRequireDefault(require("../../../ui/scheduler/utils.timeZone"));
+var _utils = _interopRequireDefault(require("../../../ui/scheduler/utils.timeZone"));
+var _m_utils = require("../resources/m_utils");
 var _m_cell_position_calculator = require("./m_cell_position_calculator");
 var _m_text_utils = require("./m_text_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -127,7 +127,7 @@ var DateGeneratorBaseStrategy = /*#__PURE__*/function () {
     if (!appointment.isRecurrent) {
       return false;
     }
-    return !_utils2.default.isEqualLocalTimeZone(this.timeZone, appointment.startDate);
+    return !_utils.default.isEqualLocalTimeZone(this.timeZone, appointment.startDate);
   };
   _proto._getProcessedNotNativeDateIfCrossDST = function _getProcessedNotNativeDateIfCrossDST(date, offset) {
     if (offset < 0) {
@@ -264,7 +264,7 @@ var DateGeneratorBaseStrategy = /*#__PURE__*/function () {
       endViewDateByEndDayHour = this.timeZoneCalculator.createDate(endViewDateByEndDayHour, {
         path: 'fromGrid'
       });
-      var daylightOffset = _utils2.default.getDaylightOffsetInMs(startViewDate, endViewDateByEndDayHour);
+      var daylightOffset = _utils.default.getDaylightOffsetInMs(startViewDate, endViewDateByEndDayHour);
       if (daylightOffset) {
         endViewDateByEndDayHour = new Date(endViewDateByEndDayHour.getTime() + daylightOffset);
       }
@@ -287,7 +287,7 @@ var DateGeneratorBaseStrategy = /*#__PURE__*/function () {
       end: appointment.endDate,
       appointmentTimezoneOffset: this.timeZoneCalculator.getOriginStartDateOffsetInMs(appointment.startDate, appointment.rawAppointment.startDateTimeZone, true),
       getPostProcessedException: function getPostProcessedException(date) {
-        if ((0, _type.isEmptyObject)(_this6.timeZone) || _utils2.default.isEqualLocalTimeZone(_this6.timeZone, date)) {
+        if ((0, _type.isEmptyObject)(_this6.timeZone) || _utils.default.isEqualLocalTimeZone(_this6.timeZone, date)) {
           return date;
         }
         var appointmentOffset = _this6.timeZoneCalculator.getOffsets(appointment.startDate).common;
@@ -305,9 +305,9 @@ var DateGeneratorBaseStrategy = /*#__PURE__*/function () {
     var option = this._createRecurrenceOptions(appointment);
     var generatedStartDates = (0, _recurrence.getRecurrenceProcessor)().generateDates(option);
     return generatedStartDates.map(function (date) {
-      var utcDate = _utils2.default.createUTCDateWithLocalOffset(date);
+      var utcDate = _utils.default.createUTCDateWithLocalOffset(date);
       utcDate.setTime(utcDate.getTime() + duration);
-      var endDate = _utils2.default.createDateFromUTCWithLocalOffset(utcDate);
+      var endDate = _utils.default.createDateFromUTCWithLocalOffset(utcDate);
       return {
         startDate: new Date(date),
         endDate
@@ -373,9 +373,9 @@ var DateGeneratorBaseStrategy = /*#__PURE__*/function () {
     var _this10 = this;
     var result = [];
     if (rawAppointment && this.loadedResources.length) {
-      var tree = (0, _utils.createResourcesTree)(this.loadedResources);
-      result = (0, _utils.getResourceTreeLeaves)(function (field, action) {
-        return (0, _utils.getDataAccessors)(_this10.options.dataAccessors.resources, field, action);
+      var tree = (0, _m_utils.createResourcesTree)(this.loadedResources);
+      result = (0, _m_utils.getResourceTreeLeaves)(function (field, action) {
+        return (0, _m_utils.getDataAccessors)(_this10.options.dataAccessors.resources, field, action);
       }, tree, rawAppointment);
     }
     return result;
@@ -490,9 +490,9 @@ var DateGeneratorVirtualStrategy = /*#__PURE__*/function (_DateGeneratorBaseStr)
       var generatedStartDates = (0, _recurrence.getRecurrenceProcessor)().generateDates(option);
       var recurrentInfo = generatedStartDates.map(function (date) {
         var startDate = new Date(date);
-        var utcDate = _utils2.default.createUTCDateWithLocalOffset(date);
+        var utcDate = _utils.default.createUTCDateWithLocalOffset(date);
         utcDate.setTime(utcDate.getTime() + duration);
-        var endDate = _utils2.default.createDateFromUTCWithLocalOffset(utcDate);
+        var endDate = _utils.default.createDateFromUTCWithLocalOffset(utcDate);
         return {
           startDate,
           endDate,
@@ -535,7 +535,7 @@ var DateGeneratorVirtualStrategy = /*#__PURE__*/function (_DateGeneratorBaseStr)
   _createClass(DateGeneratorVirtualStrategy, [{
     key: "groupCount",
     get: function get() {
-      return (0, _utils.getGroupCount)(this.loadedResources);
+      return (0, _m_utils.getGroupCount)(this.loadedResources);
     }
   }]);
   return DateGeneratorVirtualStrategy;

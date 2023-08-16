@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/scheduler.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ var _header = require("./header/header");
 var _utils = require("../../../ui/scheduler/workspaces/view_model/utils");
 var _common = require("./common");
 var _createTimeZoneCalculator = require("./timeZoneCalculator/createTimeZoneCalculator");
-var _utils2 = require("../../../ui/scheduler/resources/utils");
+var _m_utils = require("../../../__internal/scheduler/resources/m_utils");
 var _appointments = require("./view_model/appointments/appointments");
 var _appointments2 = require("./model/appointments");
 var _appointment_tooltip = require("./appointment/tooltip/appointment_tooltip");
@@ -280,7 +280,7 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _proto.loadGroupResources = function loadGroupResources() {
     var _this2 = this;
-    (0, _utils2.loadResources)(this.mergedGroups, this.props.resources, this.state.resourcePromisesMap).then(function (loadedResources) {
+    (0, _m_utils.loadResources)(this.mergedGroups, this.props.resources, this.state.resourcePromisesMap).then(function (loadedResources) {
       _this2.setState(function (__state_argument) {
         return {
           loadedResources: loadedResources
@@ -846,7 +846,7 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
       if (!crossScrollingEnabled) {
         return '';
       }
-      var groupCount = (0, _utils2.getGroupCount)((_this$state$loadedRes = this.state.loadedResources) !== null && _this$state$loadedRes !== void 0 ? _this$state$loadedRes : []);
+      var groupCount = (0, _m_utils.getGroupCount)((_this$state$loadedRes = this.state.loadedResources) !== null && _this$state$loadedRes !== void 0 ? _this$state$loadedRes : []);
       return "".concat(this.props.currentView !== undefined ? this.props.currentView : this.state.currentView, "_").concat(groupOrientation, "_").concat(intervalCount, "_").concat(groupCount);
     }
   }, {

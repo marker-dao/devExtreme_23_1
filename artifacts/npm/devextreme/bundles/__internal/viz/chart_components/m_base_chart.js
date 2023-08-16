@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/viz/chart_components/m_base_chart.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,6 +31,7 @@ var _tooltip = require("../../../viz/core/tooltip");
 var _utils = require("../../../viz/core/utils");
 var _base_series = require("../../../viz/series/base_series");
 var _m_base_widget = _interopRequireDefault(require("../core/m_base_widget"));
+var _rolling_stock = require("./rolling_stock");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -115,7 +116,7 @@ function resolveLabelOverlappingInOneDirection(points, canvas, isRotated, isInve
     hasStackedSeries = hasStackedSeries || p.series.isStackedSeries() || p.series.isFullStackedSeries();
     p.getLabels().forEach(function (l) {
       if (l.isVisible()) {
-        rollingStocks.push(new RollingStock(l, isRotated, shiftFunction));
+        rollingStocks.push(new _rolling_stock.RollingStock(l, isRotated, shiftFunction));
       }
     });
   });
@@ -123,7 +124,7 @@ function resolveLabelOverlappingInOneDirection(points, canvas, isRotated, isInve
     if (Number(!isRotated) ^ Number(isInverted)) {
       rollingStocks.reverse();
     }
-    sortRollingStocks = !isInverted ? sortRollingStocksByValue(rollingStocks) : rollingStocks;
+    sortRollingStocks = isInverted ? rollingStocks : sortRollingStocksByValue(rollingStocks);
   } else {
     var rollingStocksTmp = rollingStocks.slice();
     sortRollingStocks = rollingStocks.sort(function (a, b) {
@@ -157,11 +158,9 @@ function sortRollingStocksByValue(rollingStocks) {
   return positiveRollingStocks.concat(negativeRollingStocks);
 }
 function prepareOverlapStacks(rollingStocks) {
-  var i;
-  var currentRollingStock;
   var root;
-  for (i = 0; i < rollingStocks.length - 1; i++) {
-    currentRollingStock = root || rollingStocks[i];
+  for (var i = 0; i < rollingStocks.length - 1; i += 1) {
+    var currentRollingStock = root || rollingStocks[i];
     if (checkStacksOverlapping(currentRollingStock, rollingStocks[i + 1])) {
       currentRollingStock.toChain(rollingStocks[i + 1]);
       rollingStocks[i + 1] = null;
@@ -171,94 +170,32 @@ function prepareOverlapStacks(rollingStocks) {
     }
   }
 }
-function moveRollingStock(rollingStocks, canvas) {
-  var i;
-  var j;
-  var currentRollingStock;
-  var nextRollingStock;
-  var currentBBox;
-  var nextBBox;
-  for (i = 0; i < rollingStocks.length; i++) {
-    currentRollingStock = rollingStocks[i];
-    if (rollingStocksIsOut(currentRollingStock, canvas)) {
-      currentBBox = currentRollingStock.getBoundingRect();
-      for (j = i + 1; j < rollingStocks.length; j++) {
-        nextRollingStock = rollingStocks[j];
-        if (!nextRollingStock) {
-          continue;
-        }
-        nextBBox = nextRollingStock.getBoundingRect();
-        if (nextBBox.end > currentBBox.start - (currentBBox.end - canvas.end)) {
-          nextRollingStock.toChain(currentRollingStock);
-          rollingStocks[i] = currentRollingStock = null;
-          break;
-        }
-      }
-    }
-    currentRollingStock && currentRollingStock.setRollingStockInCanvas(canvas);
-  }
-}
 function rollingStocksIsOut(rollingStock, canvas) {
-  return rollingStock && rollingStock.getBoundingRect().end > canvas.end;
+  return rollingStock.getBoundingRect().end > canvas.end;
 }
-function RollingStock(label, isRotated, shiftFunction) {
-  var bBox = label.getBoundingRect();
-  var x = bBox.x;
-  var y = bBox.y;
-  var endX = bBox.x + bBox.width;
-  var endY = bBox.y + bBox.height;
-  this.labels = [label];
-  this.shiftFunction = shiftFunction;
-  this._bBox = {
-    start: isRotated ? x : y,
-    width: isRotated ? bBox.width : bBox.height,
-    end: isRotated ? endX : endY,
-    oppositeStart: isRotated ? y : x,
-    oppositeEnd: isRotated ? endY : endX
-  };
-  this._initialPosition = isRotated ? bBox.x : bBox.y;
-}
-RollingStock.prototype = {
-  toChain(nextRollingStock) {
-    var nextRollingStockBBox = nextRollingStock.getBoundingRect();
-    nextRollingStock.shift(nextRollingStockBBox.start - this._bBox.end);
-    this._changeBoxWidth(nextRollingStockBBox.width);
-    this.labels = this.labels.concat(nextRollingStock.labels);
-  },
-  getBoundingRect() {
-    return this._bBox;
-  },
-  shift(shiftLength) {
-    var shiftFunction = this.shiftFunction;
-    (0, _iterator.each)(this.labels, function (index, label) {
-      var bBox = label.getBoundingRect();
-      var coords = shiftFunction(bBox, shiftLength);
-      if (!label.hideInsideLabel(coords)) {
-        label.shift(coords.x, coords.y);
+function moveRollingStock(rollingStocks, canvas) {
+  for (var i = 0; i < rollingStocks.length; i += 1) {
+    var currentRollingStock = rollingStocks[i];
+    var shouldSetCanvas = true;
+    if (currentRollingStock !== null && rollingStocksIsOut(currentRollingStock, canvas)) {
+      var currentBBox = currentRollingStock.getBoundingRect();
+      for (var j = i + 1; j < rollingStocks.length; j += 1) {
+        var nextRollingStock = rollingStocks[j];
+        if (nextRollingStock) {
+          var nextBBox = nextRollingStock.getBoundingRect();
+          if (nextBBox.end > currentBBox.start - (currentBBox.end - canvas.end)) {
+            nextRollingStock.toChain(currentRollingStock);
+            shouldSetCanvas = false;
+            break;
+          }
+        }
       }
-    });
-    this._bBox.end -= shiftLength;
-    this._bBox.start -= shiftLength;
-  },
-  setRollingStockInCanvas(canvas) {
-    if (this._bBox.end > canvas.end) {
-      this.shift(this._bBox.end - canvas.end);
     }
-  },
-  getLabels() {
-    return this.labels;
-  },
-  value() {
-    return this.labels[0].getData().value;
-  },
-  getInitialPosition() {
-    return this._initialPosition;
-  },
-  _changeBoxWidth(width) {
-    this._bBox.end += width;
-    this._bBox.width += width;
+    if (shouldSetCanvas) {
+      currentRollingStock === null || currentRollingStock === void 0 ? void 0 : currentRollingStock.setRollingStockInCanvas(canvas);
+    }
   }
-};
+}
 function getLegendFields(name) {
   return {
     nameField: "".concat(name, "Name"),
@@ -342,38 +279,37 @@ var BaseChart = _m_base_widget.default.inherit({
     return themeManager;
   },
   _initCore() {
-    var that = this;
-    that._canvasClipRect = that._renderer.clipRect();
-    that._createHtmlStructure();
-    that._createLegend();
-    that._createTracker();
-    that._needHandleRenderComplete = true;
-    that.layoutManager = new _layout_manager.LayoutManager();
-    that._createScrollBar();
-    _events_engine.default.on(that._$element, 'contextmenu', function (event) {
+    this._canvasClipRect = this._renderer.clipRect();
+    this._createHtmlStructure();
+    this._createLegend();
+    this._createTracker();
+    this._needHandleRenderComplete = true;
+    this.layoutManager = new _layout_manager.LayoutManager();
+    this._createScrollBar();
+    _events_engine.default.on(this._$element, 'contextmenu', function (event) {
       if ((0, _index.isTouchEvent)(event) || (0, _index.isPointerEvent)(event)) {
         event.preventDefault();
       }
     });
-    _events_engine.default.on(that._$element, 'MSHoldVisual', function (event) {
+    _events_engine.default.on(this._$element, 'MSHoldVisual', function (event) {
       event.preventDefault();
     });
   },
-  // Common functionality is overridden because Chart has its own layout logic. Nevertheless common logic should be used.
+  // Common functionality is overridden because Chart has its own layout logic.
+  // Nevertheless common logic should be used.
   _getLayoutItems: _common.noop,
   _layoutManagerOptions() {
     return this._themeManager.getOptions('adaptiveLayout');
   },
   _reinit() {
-    var that = this;
-    (0, _utils.setCanvasValues)(that._canvas);
-    that._reinitAxes();
-    that._requestChange(['DATA_SOURCE', 'DATA_INIT', 'CORRECT_AXIS', 'FULL_RENDER']);
+    (0, _utils.setCanvasValues)(this._canvas);
+    this._reinitAxes();
+    this._requestChange(['DATA_SOURCE', 'DATA_INIT', 'CORRECT_AXIS', 'FULL_RENDER']);
   },
   _correctAxes: _common.noop,
   _createHtmlStructure() {
-    var that = this;
-    var renderer = that._renderer;
+    var _this = this;
+    var renderer = this._renderer;
     var root = renderer.root;
     var createConstantLinesGroup = function createConstantLinesGroup() {
       // TODO: Must be created in the same place where used (advanced chart)
@@ -381,7 +317,7 @@ var BaseChart = _m_base_widget.default.inherit({
         class: 'dxc-constant-lines-group'
       }).linkOn(root, 'constant-lines');
     };
-    that._constantLinesGroup = {
+    this._constantLinesGroup = {
       dispose() {
         this.under.dispose();
         this.above.dispose();
@@ -399,90 +335,91 @@ var BaseChart = _m_base_widget.default.inherit({
         this.above.linkAppend();
       }
     };
-    that._labelsAxesGroup = renderer.g().attr({
+    this._labelsAxesGroup = renderer.g().attr({
       class: 'dxc-elements-axes-group'
     });
     var appendLabelsAxesGroup = function appendLabelsAxesGroup() {
-      that._labelsAxesGroup.linkOn(root, 'elements');
+      _this._labelsAxesGroup.linkOn(root, 'elements');
     };
-    that._backgroundRect = renderer.rect().attr({
+    this._backgroundRect = renderer.rect().attr({
       fill: 'gray',
       opacity: 0.0001
     }).append(root);
-    that._panesBackgroundGroup = renderer.g().attr({
+    this._panesBackgroundGroup = renderer.g().attr({
       class: 'dxc-background'
     }).append(root);
-    that._stripsGroup = renderer.g().attr({
+    this._stripsGroup = renderer.g().attr({
       class: 'dxc-strips-group'
     }).linkOn(root, 'strips'); // TODO: Must be created in the same place where used (advanced chart)
-    that._gridGroup = renderer.g().attr({
+    this._gridGroup = renderer.g().attr({
       class: 'dxc-grids-group'
     }).linkOn(root, 'grids'); // TODO: Must be created in the same place where used (advanced chart)
-    that._panesBorderGroup = renderer.g().attr({
+    this._panesBorderGroup = renderer.g().attr({
       class: 'dxc-border'
     }).linkOn(root, 'border'); // TODO: Must be created in the same place where used (chart)
-    that._axesGroup = renderer.g().attr({
+    this._axesGroup = renderer.g().attr({
       class: 'dxc-axes-group'
     }).linkOn(root, 'axes'); // TODO: Must be created in the same place where used (advanced chart)
-    that._executeAppendBeforeSeries(appendLabelsAxesGroup);
-    that._stripLabelAxesGroup = renderer.g().attr({
+    this._executeAppendBeforeSeries(appendLabelsAxesGroup);
+    this._stripLabelAxesGroup = renderer.g().attr({
       class: 'dxc-strips-labels-group'
     }).linkOn(root, 'strips-labels'); // TODO: Must be created in the same place where used (advanced chart)
-    that._constantLinesGroup.under = createConstantLinesGroup();
-    that._seriesGroup = renderer.g().attr({
+    this._constantLinesGroup.under = createConstantLinesGroup();
+    this._seriesGroup = renderer.g().attr({
       class: 'dxc-series-group'
     }).linkOn(root, 'series');
-    that._executeAppendAfterSeries(appendLabelsAxesGroup);
-    that._constantLinesGroup.above = createConstantLinesGroup();
-    that._scaleBreaksGroup = renderer.g().attr({
+    this._executeAppendAfterSeries(appendLabelsAxesGroup);
+    this._constantLinesGroup.above = createConstantLinesGroup();
+    this._scaleBreaksGroup = renderer.g().attr({
       class: 'dxc-scale-breaks'
     }).linkOn(root, 'scale-breaks');
-    that._labelsGroup = renderer.g().attr({
+    this._labelsGroup = renderer.g().attr({
       class: 'dxc-labels-group'
     }).linkOn(root, 'labels');
-    that._crosshairCursorGroup = renderer.g().attr({
+    this._crosshairCursorGroup = renderer.g().attr({
       class: 'dxc-crosshair-cursor'
     }).linkOn(root, 'crosshair');
-    that._legendGroup = renderer.g().attr({
+    this._legendGroup = renderer.g().attr({
       class: 'dxc-legend',
-      'clip-path': that._getCanvasClipRectID()
+      'clip-path': this._getCanvasClipRectID()
     }).linkOn(root, 'legend').linkAppend(root).enableLinks();
-    that._scrollBarGroup = renderer.g().attr({
+    this._scrollBarGroup = renderer.g().attr({
       class: 'dxc-scroll-bar'
     }).linkOn(root, 'scroll-bar');
   },
   _executeAppendBeforeSeries() {},
   _executeAppendAfterSeries() {},
   _disposeObjectsInArray(propName, fieldNames) {
-    (0, _iterator.each)(this[propName] || [], function (_, item) {
+    (this[propName] || []).forEach(function (item) {
       if (fieldNames && item) {
-        (0, _iterator.each)(fieldNames, function (_, field) {
-          item[field] && item[field].dispose();
+        fieldNames.forEach(function (field) {
+          var _a;
+          (_a = item[field]) === null || _a === void 0 ? void 0 : _a.dispose();
         });
       } else {
-        item && item.dispose();
+        item === null || item === void 0 ? void 0 : item.dispose();
       }
     });
     this[propName] = null;
   },
   _disposeCore() {
-    var that = this;
+    var _this2 = this;
     var disposeObject = function disposeObject(propName) {
       // TODO: What is the purpose of the `if` check in a private function?
-      if (that[propName]) {
-        that[propName].dispose();
-        that[propName] = null;
+      if (_this2[propName]) {
+        _this2[propName].dispose();
+        _this2[propName] = null;
       }
     };
     var unlinkGroup = function unlinkGroup(name) {
-      that[name].linkOff();
+      _this2[name].linkOff();
     };
     var disposeObjectsInArray = this._disposeObjectsInArray;
-    that._renderer.stopAllAnimations();
-    disposeObjectsInArray.call(that, 'series');
+    this._renderer.stopAllAnimations();
+    disposeObjectsInArray.call(this, 'series');
     disposeObject('_tracker');
     disposeObject('_crosshair');
-    that.layoutManager = that._userOptions = that._canvas = that._groupsData = null;
+    this.layoutManager = this._userOptions = this._canvas = this._groupsData = null;
     unlinkGroup('_stripsGroup');
     unlinkGroup('_gridGroup');
     unlinkGroup('_axesGroup');
@@ -545,14 +482,13 @@ var BaseChart = _m_base_widget.default.inherit({
   },
   _trackerType: 'ChartTracker',
   _createTracker() {
-    var that = this;
     // eslint-disable-next-line import/namespace
-    that._tracker = new trackerModule[that._trackerType]({
-      seriesGroup: that._seriesGroup,
-      renderer: that._renderer,
-      tooltip: that._tooltip,
-      legend: that._legend,
-      eventTrigger: that._eventTrigger
+    this._tracker = new trackerModule[this._trackerType]({
+      seriesGroup: this._seriesGroup,
+      renderer: this._renderer,
+      tooltip: this._tooltip,
+      legend: this._legend,
+      eventTrigger: this._eventTrigger
     });
   },
   _getTrackerSettings() {
@@ -568,13 +504,12 @@ var BaseChart = _m_base_widget.default.inherit({
     };
   },
   _updateTracker(trackerCanvases) {
-    var that = this;
-    that._tracker.update(that._getTrackerSettings());
-    that._tracker.setCanvases({
+    this._tracker.update(this._getTrackerSettings());
+    this._tracker.setCanvases({
       left: 0,
-      right: that._canvas.width,
+      right: this._canvas.width,
       top: 0,
-      bottom: that._canvas.height
+      bottom: this._canvas.height
     }, trackerCanvases);
   },
   _createCanvasFromRect(rect) {
@@ -589,26 +524,25 @@ var BaseChart = _m_base_widget.default.inherit({
     });
   },
   _doRender(_options) {
-    var that = this;
-    if (that._canvas.width === 0 && that._canvas.height === 0) return;
-    that._resetIsReady(); // T207606
-    var drawOptions = that._prepareDrawOptions(_options);
+    if (this._canvas.width === 0 && this._canvas.height === 0) return;
+    this._resetIsReady(); // T207606
+    var drawOptions = this._prepareDrawOptions(_options);
     var recreateCanvas = drawOptions.recreateCanvas;
     // T207665
-    that._preserveOriginalCanvas();
+    this._preserveOriginalCanvas();
     // T207665
     if (recreateCanvas) {
-      that.__currentCanvas = that._canvas;
+      this.__currentCanvas = this._canvas;
     } else {
-      that._canvas = that.__currentCanvas;
+      this._canvas = this.__currentCanvas;
     }
-    recreateCanvas && that._updateCanvasClipRect(that._canvas);
+    recreateCanvas && this._updateCanvasClipRect(this._canvas);
     this._canvas = this._createCanvasFromRect(this._rect);
-    that._renderer.stopAllAnimations(true);
-    that._cleanGroups();
+    this._renderer.stopAllAnimations(true);
+    this._cleanGroups();
     var startTime = new Date();
-    that._renderElements(drawOptions);
-    that._lastRenderingTime = Number(new Date()) - Number(startTime);
+    this._renderElements(drawOptions);
+    this._lastRenderingTime = Number(new Date()) - Number(startTime);
   },
   _preserveOriginalCanvas() {
     this.__originalCanvas = this._canvas;
@@ -617,32 +551,32 @@ var BaseChart = _m_base_widget.default.inherit({
 
   _layoutAxes: _common.noop,
   _renderElements(drawOptions) {
-    var that = this;
-    var preparedOptions = that._prepareToRender(drawOptions);
-    var isRotated = that._isRotated();
-    var isLegendInside = that._isLegendInside();
+    var _this3 = this;
+    var preparedOptions = this._prepareToRender(drawOptions);
+    var isRotated = this._isRotated();
+    var isLegendInside = this._isLegendInside();
     var trackerCanvases = [];
-    var dirtyCanvas = (0, _extend.extend)({}, that._canvas);
+    var dirtyCanvas = (0, _extend.extend)({}, this._canvas);
     var argBusinessRange;
     var zoomMinArg;
     var zoomMaxArg;
-    that._renderer.lock();
-    if (drawOptions.drawLegend && that._legend) {
-      that._legendGroup.linkAppend();
+    this._renderer.lock();
+    if (drawOptions.drawLegend && this._legend) {
+      this._legendGroup.linkAppend();
     }
-    that.layoutManager.setOptions(that._layoutManagerOptions());
-    var layoutTargets = that._getLayoutTargets();
+    this.layoutManager.setOptions(this._layoutManagerOptions());
+    var layoutTargets = this._getLayoutTargets();
     this._layoutAxes(function (needSpace) {
       var axisDrawOptions = needSpace ? (0, _extend.extend)({}, drawOptions, {
         animate: false,
         recreateCanvas: true
       }) : drawOptions;
-      var canvas = that._renderAxes(axisDrawOptions, preparedOptions);
-      that._shrinkAxes(needSpace, canvas);
+      var canvas = _this3._renderAxes(axisDrawOptions, preparedOptions);
+      _this3._shrinkAxes(needSpace, canvas);
     });
-    that._applyClipRects(preparedOptions);
-    that._appendSeriesGroups();
-    that._createCrosshairCursor();
+    this._applyClipRects(preparedOptions);
+    this._appendSeriesGroups();
+    this._createCrosshairCursor();
     layoutTargets.forEach(function (_ref) {
       var canvas = _ref.canvas;
       trackerCanvases.push({
@@ -652,22 +586,22 @@ var BaseChart = _m_base_widget.default.inherit({
         bottom: canvas.height - canvas.bottom
       });
     });
-    if (that._scrollBar) {
-      argBusinessRange = that._argumentAxes[0].getTranslator().getBusinessRange();
+    if (this._scrollBar) {
+      argBusinessRange = this._argumentAxes[0].getTranslator().getBusinessRange();
       if (argBusinessRange.axisType === 'discrete' && argBusinessRange.categories && argBusinessRange.categories.length <= 1 || argBusinessRange.axisType !== 'discrete' && argBusinessRange.min === argBusinessRange.max) {
         zoomMinArg = zoomMaxArg = undefined;
       } else {
         zoomMinArg = argBusinessRange.minVisible;
         zoomMaxArg = argBusinessRange.maxVisible;
       }
-      that._scrollBar.init(argBusinessRange, !that._argumentAxes[0].getOptions().valueMarginsEnabled).setPosition(zoomMinArg, zoomMaxArg);
+      this._scrollBar.init(argBusinessRange, !this._argumentAxes[0].getOptions().valueMarginsEnabled).setPosition(zoomMinArg, zoomMaxArg);
     }
-    that._updateTracker(trackerCanvases);
-    that._updateLegendPosition(drawOptions, isLegendInside);
-    that._applyPointMarkersAutoHiding();
-    that._renderSeries(drawOptions, isRotated, isLegendInside);
-    that._renderGraphicObjects();
-    that._renderer.unlock();
+    this._updateTracker(trackerCanvases);
+    this._updateLegendPosition(drawOptions, isLegendInside);
+    this._applyPointMarkersAutoHiding();
+    this._renderSeries(drawOptions, isRotated, isLegendInside);
+    this._renderGraphicObjects();
+    this._renderer.unlock();
   },
   _updateLegendPosition: _common.noop,
   _createCrosshairCursor: _common.noop,
@@ -695,42 +629,41 @@ var BaseChart = _m_base_widget.default.inherit({
     };
   },
   _getPointsToAnimation(series) {
-    var _this = this;
+    var _this4 = this;
     var argViewPortFilter = this._getArgFilter();
     return series.map(function (s) {
-      var valViewPortFilter = _this._getValFilter(s);
+      var valViewPortFilter = _this4._getValFilter(s);
       return s.getPoints().filter(function (p) {
         return p.getOptions().visible && argViewPortFilter(p.argument) && (valViewPortFilter(p.getMinValue(true)) || valViewPortFilter(p.getMaxValue(true)));
       }).length;
     });
   },
   _renderSeriesElements(drawOptions, isLegendInside) {
-    var that = this;
-    var series = that.series;
-    var resolveLabelOverlapping = that._themeManager.getOptions('resolveLabelOverlapping');
-    var pointsToAnimation = that._getPointsToAnimation(series);
+    var _this5 = this;
+    var series = this.series;
+    var resolveLabelOverlapping = this._themeManager.getOptions('resolveLabelOverlapping');
+    var pointsToAnimation = this._getPointsToAnimation(series);
     series.forEach(function (singleSeries, index) {
-      that._applyExtraSettings(singleSeries, drawOptions);
-      var animationEnabled = drawOptions.animate && pointsToAnimation[index] <= drawOptions.animationPointsLimit && that._renderer.animationEnabled();
-      singleSeries.draw(animationEnabled, drawOptions.hideLayoutLabels, that._getLegendCallBack(singleSeries));
+      _this5._applyExtraSettings(singleSeries, drawOptions);
+      var animationEnabled = drawOptions.animate && pointsToAnimation[index] <= drawOptions.animationPointsLimit && _this5._renderer.animationEnabled();
+      singleSeries.draw(animationEnabled, drawOptions.hideLayoutLabels, _this5._getLegendCallBack(singleSeries));
     });
     if (resolveLabelOverlapping === 'none') {
-      that._adjustSeriesLabels(false);
+      this._adjustSeriesLabels(false);
     } else {
-      that._locateLabels(resolveLabelOverlapping);
+      this._locateLabels(resolveLabelOverlapping);
     }
-    that._renderTrackers(isLegendInside);
-    that._tracker.repairTooltip();
-    that._renderExtraElements();
-    that._clearCanvas();
-    that._seriesElementsDrawn = true;
+    this._renderTrackers(isLegendInside);
+    this._tracker.repairTooltip();
+    this._renderExtraElements();
+    this._clearCanvas();
+    this._seriesElementsDrawn = true;
   },
   _changesApplied() {
-    var that = this;
-    if (that._seriesElementsDrawn) {
-      that._seriesElementsDrawn = false;
-      that._drawn();
-      that._renderCompleteHandler();
+    if (this._seriesElementsDrawn) {
+      this._seriesElementsDrawn = false;
+      this._drawn();
+      this._renderCompleteHandler();
     }
   },
   _locateLabels(resolveLabelOverlapping) {
@@ -795,45 +728,42 @@ var BaseChart = _m_base_widget.default.inherit({
     }
   },
   _cleanGroups() {
-    var that = this;
-    that._stripsGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._gridGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._axesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._constantLinesGroup.clear(); // TODO: Must be removed in the same place where appended (advanced chart)
-    that._stripLabelAxesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._stripsGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._gridGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._axesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._constantLinesGroup.clear(); // TODO: Must be removed in the same place where appended (advanced chart)
+    this._stripLabelAxesGroup.linkRemove().clear(); // TODO: Must be removed in the same place where appended (advanced chart)
     // that._seriesGroup.linkRemove().clear();
-    that._labelsGroup.linkRemove().clear();
-    that._crosshairCursorGroup.linkRemove().clear();
-    that._scaleBreaksGroup.linkRemove().clear();
+    this._labelsGroup.linkRemove().clear();
+    this._crosshairCursorGroup.linkRemove().clear();
+    this._scaleBreaksGroup.linkRemove().clear();
   },
   _allowLegendInsidePosition() {
     return false;
   },
   _createLegend() {
-    var that = this;
-    var legendSettings = getLegendSettings(that._legendDataField);
-    that._legend = new _legend.Legend({
-      renderer: that._renderer,
-      widget: that,
-      group: that._legendGroup,
+    var legendSettings = getLegendSettings(this._legendDataField);
+    this._legend = new _legend.Legend({
+      renderer: this._renderer,
+      widget: this,
+      group: this._legendGroup,
       backgroundClass: 'dxc-border',
       itemGroupClass: 'dxc-item',
       titleGroupClass: 'dxc-title',
       textField: legendSettings.textField,
       getFormatObject: legendSettings.getFormatObject,
-      allowInsidePosition: that._allowLegendInsidePosition()
+      allowInsidePosition: this._allowLegendInsidePosition()
     });
-    that._updateLegend();
-    that._layout.add(that._legend);
+    this._updateLegend();
+    this._layout.add(this._legend);
   },
   _updateLegend() {
-    var that = this;
-    var themeManager = that._themeManager;
+    var themeManager = this._themeManager;
     var legendOptions = themeManager.getOptions('legend');
-    var legendData = that._getLegendData();
+    var legendData = this._getLegendData();
     legendOptions.containerBackgroundColor = themeManager.getOptions('containerBackgroundColor');
-    legendOptions._incidentOccurred = that._incidentOccurred; // TODO: Why is `_` used?
-    that._legend.update(legendData, legendOptions, themeManager.theme('legend').title);
+    legendOptions._incidentOccurred = this._incidentOccurred; // TODO: Why is `_` used?
+    this._legend.update(legendData, legendOptions, themeManager.theme('legend').title);
     this._change(['LAYOUT']);
   },
   _prepareDrawOptions(drawOptions) {
@@ -896,38 +826,35 @@ var BaseChart = _m_base_widget.default.inherit({
   },
   _disposeSeries(seriesIndex) {
     var _a;
-    var that = this;
-    if (that.series) {
+    if (this.series) {
       if ((0, _type.isDefined)(seriesIndex)) {
-        that.series[seriesIndex].dispose();
-        that.series.splice(seriesIndex, 1);
+        this.series[seriesIndex].dispose();
+        this.series.splice(seriesIndex, 1);
       } else {
-        (0, _iterator.each)(that.series, function (_, s) {
+        this.series.forEach(function (s) {
           return s.dispose();
         });
-        that.series.length = 0;
+        this.series.length = 0;
       }
     }
-    if (!((_a = that.series) === null || _a === void 0 ? void 0 : _a.length)) {
-      that.series = [];
+    if (!((_a = this.series) === null || _a === void 0 ? void 0 : _a.length)) {
+      this.series = [];
     }
   },
   _disposeSeriesFamilies() {
-    var that = this;
-    (0, _iterator.each)(that.seriesFamilies || [], function (_, family) {
+    (this.seriesFamilies || []).forEach(function (family) {
       family.dispose();
     });
-    that.seriesFamilies = null;
-    that._needHandleRenderComplete = true;
+    this.seriesFamilies = null;
+    this._needHandleRenderComplete = true;
   },
   _optionChanged(arg) {
     this._themeManager.resetOptions(arg.name);
     this.callBase.apply(this, arguments);
   },
   _applyChanges() {
-    var that = this;
-    that._themeManager.update(that._options.silent());
-    that.callBase.apply(that, arguments);
+    this._themeManager.update(this._options.silent());
+    this.callBase.apply(this, arguments);
   },
   _optionChangesMap: {
     animation: 'ANIMATION',
@@ -993,10 +920,9 @@ var BaseChart = _m_base_widget.default.inherit({
     this._refreshSeries('INIT');
   },
   _change_REFRESH_AXES() {
-    var that = this;
-    (0, _utils.setCanvasValues)(that._canvas);
-    that._reinitAxes();
-    that._requestChange(['CORRECT_AXIS', 'FULL_RENDER']);
+    (0, _utils.setCanvasValues)(this._canvas);
+    this._reinitAxes();
+    this._requestChange(['CORRECT_AXIS', 'FULL_RENDER']);
   },
   _change_SCROLL_BAR() {
     this._createScrollBar();
@@ -1034,16 +960,15 @@ var BaseChart = _m_base_widget.default.inherit({
     }
   },
   _updateCanvasClipRect(canvas) {
-    var that = this;
     var width = Math.max(canvas.width - canvas.left - canvas.right, 0);
     var height = Math.max(canvas.height - canvas.top - canvas.bottom, 0);
-    that._canvasClipRect.attr({
+    this._canvasClipRect.attr({
       x: canvas.left,
       y: canvas.top,
       width,
       height
     });
-    that._backgroundRect.attr({
+    this._backgroundRect.attr({
       x: canvas.left,
       y: canvas.top,
       width,
@@ -1067,26 +992,25 @@ var BaseChart = _m_base_widget.default.inherit({
     singleSeries.createPoints(false);
   },
   _handleSeriesDataUpdated() {
-    var _this2 = this;
+    var _this6 = this;
     if (this._getVisibleSeries().some(function (s) {
       return s.useAggregation();
     })) {
       this._populateMarginOptions();
     }
     this.series.forEach(function (s) {
-      return _this2._processSingleSeries(s);
+      return _this6._processSingleSeries(s);
     }, this);
   },
   _dataSpecificInit(needRedraw) {
-    var that = this;
-    if (!that.series || that.needToPopulateSeries) {
-      that.series = that._populateSeries();
+    if (!this.series || this.needToPopulateSeries) {
+      this.series = this._populateSeries();
     }
-    that._repopulateSeries();
-    that._seriesPopulatedHandlerCore();
-    that._populateBusinessRange();
-    that._tracker.updateSeries(that.series, this._changes.has('INIT'));
-    that._updateLegend();
+    this._repopulateSeries();
+    this._seriesPopulatedHandlerCore();
+    this._populateBusinessRange();
+    this._tracker.updateSeries(this.series, this._changes.has('INIT'));
+    this._updateLegend();
     if (needRedraw) {
       this._requestChange(['FULL_RENDER']);
     }
@@ -1099,33 +1023,31 @@ var BaseChart = _m_base_widget.default.inherit({
     });
   },
   _repopulateSeries() {
-    var that = this;
-    var themeManager = that._themeManager;
-    var data = that._dataSourceItems();
+    var themeManager = this._themeManager;
+    var data = this._dataSourceItems();
     var dataValidatorOptions = themeManager.getOptions('dataPrepareSettings');
     var seriesTemplate = themeManager.getOptions('seriesTemplate');
     if (seriesTemplate) {
-      that._populateSeries(data);
+      this._populateSeries(data);
     }
-    that._groupSeries();
-    var parsedData = (0, _data_validator.validateData)(data, that._groupsData, that._incidentOccurred, dataValidatorOptions);
+    this._groupSeries();
+    var parsedData = (0, _data_validator.validateData)(data, this._groupsData, this._incidentOccurred, dataValidatorOptions);
     themeManager.resetPalette();
-    that.series.forEach(function (singleSeries) {
+    this.series.forEach(function (singleSeries) {
       singleSeries.updateData(parsedData[singleSeries.getArgumentField()]);
     });
-    that._handleSeriesDataUpdated();
+    this._handleSeriesDataUpdated();
   },
   _renderCompleteHandler() {
-    var that = this;
     var allSeriesInited = true;
-    if (that._needHandleRenderComplete) {
-      (0, _iterator.each)(that.series, function (_, s) {
+    if (this._needHandleRenderComplete) {
+      this.series.forEach(function (s) {
         allSeriesInited = allSeriesInited && s.canRenderCompleteHandle();
       });
       if (allSeriesInited) {
-        that._needHandleRenderComplete = false;
-        that._eventTrigger('done', {
-          target: that
+        this._needHandleRenderComplete = false;
+        this._eventTrigger('done', {
+          target: this
         });
       }
     }
@@ -1136,54 +1058,56 @@ var BaseChart = _m_base_widget.default.inherit({
     return (0, _type.isDefined)(this.option('dataSource')) && this._dataIsLoaded();
   },
   _populateSeriesOptions(data) {
-    var that = this;
-    var themeManager = that._themeManager;
+    var _this7 = this;
+    var themeManager = this._themeManager;
     var seriesTemplate = themeManager.getOptions('seriesTemplate');
-    var seriesOptions = seriesTemplate ? (0, _utils.processSeriesTemplate)(seriesTemplate, data || []) : that.option('series');
+    var seriesOptions = seriesTemplate ? (0, _utils.processSeriesTemplate)(seriesTemplate, data || []) : this.option('series');
     var allSeriesOptions = isArray(seriesOptions) ? seriesOptions : seriesOptions ? [seriesOptions] : [];
-    var extraOptions = that._getExtraOptions();
+    var extraOptions = this._getExtraOptions();
     var particularSeriesOptions;
     var seriesTheme;
     var seriesThemes = [];
     var seriesVisibilityChanged = function seriesVisibilityChanged(target) {
-      that._specialProcessSeries();
-      that._populateBusinessRange(target && target.getValueAxis(), true);
-      that._renderer.stopAllAnimations(true);
-      that._updateLegend();
-      that._requestChange(['FULL_RENDER']);
+      _this7._specialProcessSeries();
+      _this7._populateBusinessRange(target && target.getValueAxis(), true);
+      _this7._renderer.stopAllAnimations(true);
+      _this7._updateLegend();
+      _this7._requestChange(['FULL_RENDER']);
     };
     for (var i = 0; i < allSeriesOptions.length; i++) {
       particularSeriesOptions = (0, _extend.extend)(true, {}, allSeriesOptions[i], extraOptions);
       if (!(0, _type.isDefined)(particularSeriesOptions.name) || particularSeriesOptions.name === '') {
         particularSeriesOptions.name = "Series ".concat((i + 1).toString());
       }
-      particularSeriesOptions.rotated = that._isRotated();
+      particularSeriesOptions.rotated = this._isRotated();
       particularSeriesOptions.customizePoint = themeManager.getOptions('customizePoint');
       particularSeriesOptions.customizeLabel = themeManager.getOptions('customizeLabel');
       particularSeriesOptions.visibilityChanged = seriesVisibilityChanged;
-      particularSeriesOptions.incidentOccurred = that._incidentOccurred;
+      particularSeriesOptions.incidentOccurred = this._incidentOccurred;
       seriesTheme = themeManager.getOptions('series', particularSeriesOptions, allSeriesOptions.length);
-      if (that._checkPaneName(seriesTheme)) {
+      if (this._checkPaneName(seriesTheme)) {
         seriesThemes.push(seriesTheme);
       }
     }
     return seriesThemes;
   },
   _populateSeries(data) {
+    var _this8 = this;
     var _a;
-    var that = this;
     var seriesBasis = [];
-    var incidentOccurred = that._incidentOccurred;
-    var seriesThemes = that._populateSeriesOptions(data);
+    var incidentOccurred = this._incidentOccurred;
+    var seriesThemes = this._populateSeriesOptions(data);
     var particularSeries;
     var disposeSeriesFamilies = false;
-    that.needToPopulateSeries = false;
-    (0, _iterator.each)(seriesThemes, function (_, theme) {
-      var curSeries = that.series && that.series.filter(function (s) {
+    this.needToPopulateSeries = false;
+    seriesThemes.forEach(function (theme) {
+      var _a;
+      var findSeries = function findSeries(s) {
         return s.name === theme.name && !seriesBasis.map(function (sb) {
           return sb.series;
         }).includes(s);
-      })[0];
+      };
+      var curSeries = (_a = _this8.series) === null || _a === void 0 ? void 0 : _a.find(findSeries);
       if (curSeries && curSeries.type === theme.type) {
         seriesBasis.push({
           series: curSeries,
@@ -1196,46 +1120,46 @@ var BaseChart = _m_base_widget.default.inherit({
         disposeSeriesFamilies = true;
       }
     });
-    ((_a = that.series) === null || _a === void 0 ? void 0 : _a.length) !== 0 && that._tracker.clearHover();
-    (0, _iterator.reverseEach)(that.series, function (index, series) {
+    ((_a = this.series) === null || _a === void 0 ? void 0 : _a.length) !== 0 && this._tracker.clearHover();
+    (0, _iterator.reverseEach)(this.series, function (index, series) {
       if (!seriesBasis.some(function (s) {
         return series === s.series;
       })) {
-        that._disposeSeries(index);
+        _this8._disposeSeries(index);
         disposeSeriesFamilies = true;
       }
     });
     !disposeSeriesFamilies && (disposeSeriesFamilies = seriesBasis.some(function (sb) {
       return sb.series.name !== seriesThemes[sb.series.index].name;
     }));
-    that.series = [];
-    disposeSeriesFamilies && that._disposeSeriesFamilies();
-    that._themeManager.resetPalette();
+    this.series = [];
+    disposeSeriesFamilies && this._disposeSeriesFamilies();
+    this._themeManager.resetPalette();
     var eventPipe = function eventPipe(data) {
-      that.series.forEach(function (currentSeries) {
+      _this8.series.forEach(function (currentSeries) {
         currentSeries.notify(data);
       });
     };
-    (0, _iterator.each)(seriesBasis, function (_, basis) {
+    seriesBasis.forEach(function (basis) {
       var _a, _b;
       var seriesTheme = basis.options;
-      var argumentAxis = (_b = (_a = that._argumentAxes) === null || _a === void 0 ? void 0 : _a.filter(function (a) {
+      var argumentAxis = (_b = (_a = _this8._argumentAxes) === null || _a === void 0 ? void 0 : _a.filter(function (a) {
         return a.pane === seriesTheme.pane;
-      })[0]) !== null && _b !== void 0 ? _b : that.getArgumentAxis();
+      })[0]) !== null && _b !== void 0 ? _b : _this8.getArgumentAxis();
       var renderSettings = {
-        commonSeriesModes: that._getSelectionModes(),
+        commonSeriesModes: _this8._getSelectionModes(),
         argumentAxis,
-        valueAxis: that._getValueAxis(seriesTheme.pane, seriesTheme.axis)
+        valueAxis: _this8._getValueAxis(seriesTheme.pane, seriesTheme.axis)
       };
       if (basis.series) {
         particularSeries = basis.series;
         particularSeries.updateOptions(seriesTheme, renderSettings);
       } else {
         particularSeries = new _base_series.Series((0, _extend.extend)({
-          renderer: that._renderer,
-          seriesGroup: that._seriesGroup,
-          labelsGroup: that._labelsGroup,
-          eventTrigger: that._eventTrigger,
+          renderer: _this8._renderer,
+          seriesGroup: _this8._seriesGroup,
+          labelsGroup: _this8._labelsGroup,
+          eventTrigger: _this8._eventTrigger,
           eventPipe,
           incidentOccurred
         }, renderSettings), seriesTheme);
@@ -1243,11 +1167,11 @@ var BaseChart = _m_base_widget.default.inherit({
       if (!particularSeries.isUpdated) {
         incidentOccurred('E2101', [seriesTheme.type]);
       } else {
-        particularSeries.index = that.series.length;
-        that.series.push(particularSeries);
+        particularSeries.index = _this8.series.length;
+        _this8.series.push(particularSeries);
       }
     });
-    return that.series;
+    return this.series;
   },
   getStackedPoints(point) {
     var stackName = point.series.getStackName();
@@ -1263,15 +1187,10 @@ var BaseChart = _m_base_widget.default.inherit({
     return (this.series || []).slice();
   },
   getSeriesByName: function getSeriesByName(name) {
-    var found = null;
-    (0, _iterator.each)(this.series, function (i, singleSeries) {
-      if (singleSeries.name === name) {
-        found = singleSeries;
-        return false;
-      }
-      return undefined;
+    var found = (this.series || []).find(function (singleSeries) {
+      return singleSeries.name === name;
     });
-    return found;
+    return found || null;
   },
   getSeriesByPos: function getSeriesByPos(pos) {
     return (this.series || [])[pos];
@@ -1286,12 +1205,11 @@ var BaseChart = _m_base_widget.default.inherit({
     this._tracker.clearHover();
   },
   render(renderOptions) {
-    var that = this;
-    that.__renderOptions = renderOptions;
-    that.__forceRender = renderOptions && renderOptions.force;
-    that.callBase.apply(that, arguments);
-    that.__renderOptions = that.__forceRender = null;
-    return that;
+    this.__renderOptions = renderOptions;
+    this.__forceRender = renderOptions && renderOptions.force;
+    this.callBase.apply(this, arguments);
+    this.__renderOptions = this.__forceRender = null;
+    return this;
   },
   refresh() {
     this._disposeSeries();

@@ -2271,8 +2271,23 @@ var editingModule = {
         _formItemPrepared: _common.noop,
         _getCellOptions(options) {
           var cellOptions = this.callBase(options);
+          var columnIndex = options.columnIndex,
+            row = options.row;
           cellOptions.isEditing = this._editingController.isEditCell(cellOptions.rowIndex, cellOptions.columnIndex);
+          cellOptions.removed = row.removed;
+          if (row.modified) {
+            cellOptions.modified = row.modifiedValues[columnIndex] !== undefined;
+          }
           return cellOptions;
+        },
+        _setCellAriaAttributes($cell, cellOptions) {
+          this.callBase($cell, cellOptions);
+          if (cellOptions.removed) {
+            this.setAria('roledescription', _message.default.format('dxDataGrid-ariaDeletedCell'), $cell);
+          }
+          if (cellOptions.modified) {
+            this.setAria('roledescription', _message.default.format('dxDataGrid-ariaModifiedCell'), $cell);
+          }
         },
         _createCell(options) {
           var $cell = this.callBase(options);

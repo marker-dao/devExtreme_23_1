@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.range.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,7 +41,8 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
       value,
       range,
       selectionMode: 'range',
-      onCellHover: this._cellHoverHandler.bind(this)
+      onCellHover: this._cellHoverHandler.bind(this),
+      onWeekNumberClick: this._shouldHandleWeekNumberClick() ? this._weekNumberClickHandler.bind(this) : null
     };
   };
   _proto.selectValue = function selectValue(selectedValue, e) {
@@ -175,6 +176,16 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
       }
       this._updateViewsOption('hoveredRange', []);
     }
+  };
+  _proto._weekNumberClickHandler = function _weekNumberClickHandler(_ref2) {
+    var _this2 = this;
+    var rowDates = _ref2.rowDates,
+      event = _ref2.event;
+    var selectedDates = rowDates.filter(function (date) {
+      return !_this2._isDateDisabled(date);
+    });
+    var values = selectedDates.length ? [selectedDates[0], selectedDates[selectedDates.length - 1]] : [null, null];
+    this.dateValue(values, event);
   };
   return CalendarRangeSelectionStrategy;
 }(_uiCalendarSelection.default);

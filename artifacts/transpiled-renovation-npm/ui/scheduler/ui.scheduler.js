@@ -29,12 +29,12 @@ var _ui2 = _interopRequireDefault(require("../widget/ui.widget"));
 var _m_popup = require("../../__internal/scheduler/appointment_popup/m_popup");
 var _m_form = require("../../__internal/scheduler/appointment_popup/m_form");
 var _compactAppointmentsHelper = require("./compactAppointmentsHelper");
-var _desktopTooltipStrategy = require("./tooltip_strategies/desktopTooltipStrategy");
-var _mobileTooltipStrategy = require("./tooltip_strategies/mobileTooltipStrategy");
+var _m_desktop_tooltip_strategy = require("../../__internal/scheduler/tooltip_strategies/m_desktop_tooltip_strategy");
+var _m_mobile_tooltip_strategy = require("../../__internal/scheduler/tooltip_strategies/m_mobile_tooltip_strategy");
 var _loading = require("./loading");
 var _m_appointment_collection = _interopRequireDefault(require("../../__internal/scheduler/appointments/m_appointment_collection"));
 var _appointments = _interopRequireDefault(require("./appointments.layout_manager"));
-var _header = require("./header/header");
+var _m_header = require("../../__internal/scheduler/header/m_header");
 var _subscribes = _interopRequireDefault(require("./subscribes"));
 var _recurrence = require("./recurrence");
 var _utils = _interopRequireDefault(require("./utils.timeZone"));
@@ -50,11 +50,11 @@ var _uiScheduler9 = _interopRequireDefault(require("./workspaces/ui.scheduler.wo
 var _appointmentAdapter = require("./appointmentAdapter");
 var _dataStructures = require("./dataStructures");
 var _utils2 = require("./utils");
-var _utils3 = require("./resources/utils");
+var _m_utils = require("../../__internal/scheduler/resources/m_utils");
 var _expressionUtils = require("./expressionUtils");
 var _base = require("../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _m_render = require("../../__internal/scheduler/appointments/m_render");
-var _agendaResourceProcessor = require("./resources/agendaResourceProcessor");
+var _m_agenda_resource_processor = require("../../__internal/scheduler/resources/m_agenda_resource_processor");
 var _m_appointment_data_provider = require("../../__internal/scheduler/appointments/data_provider/m_appointment_data_provider");
 var _getAppointmentTakesAllDay = require("../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay");
 var _data2 = require("../../renovation/ui/scheduler/utils/data");
@@ -331,7 +331,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
     var _this = this;
     var whenLoaded = this.postponedOperations.add('loadResources', function () {
       var groups = _this._getCurrentViewOption('groups');
-      return (0, _utils3.loadResources)(groups, _this.option('resources'), _this.option('resourceLoaderMap'));
+      return (0, _m_utils.loadResources)(groups, _this.option('resources'), _this.option('resourceLoaderMap'));
     });
     var resolveCallbacks = new _deferred.Deferred();
     whenLoaded.done(function (resources) {
@@ -430,7 +430,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
         });
         break;
       case 'resources':
-        this._dataAccessors.resources = (0, _utils3.createExpressions)(this.option('resources'));
+        this._dataAccessors.resources = (0, _m_utils.createExpressions)(this.option('resources'));
         this.agendaResourceProcessor.initializeState(this.option('resources'));
         this.updateInstances();
         this._postponeResourceLoading().done(function (resources) {
@@ -773,7 +773,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
     this._asyncTemplatesTimers = [];
     this._dataSourceLoadedCallback = (0, _callbacks.default)();
     this._subscribes = _subscribes.default;
-    this.agendaResourceProcessor = new _agendaResourceProcessor.AgendaResourceProcessor(this.option('resources'));
+    this.agendaResourceProcessor = new _m_agenda_resource_processor.AgendaResourceProcessor(this.option('resources'));
   };
   _proto.createAppointmentDataProvider = function createAppointmentDataProvider() {
     var _this$appointmentData,
@@ -929,7 +929,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
   };
   _proto._initExpressions = function _initExpressions(fields) {
     this._dataAccessors = _utils2.utils.dataAccessors.create(fields, this._dataAccessors, (0, _config.default)().forceIsoDateParsing, this.option('dateSerializationFormat'));
-    this._dataAccessors.resources = (0, _utils3.createExpressions)(this.option('resources'));
+    this._dataAccessors.resources = (0, _m_utils.createExpressions)(this.option('resources'));
   };
   _proto._updateExpression = function _updateExpression(name, value) {
     var exprObj = {};
@@ -1005,7 +1005,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
     this._layoutManager = new _appointments.default(this);
     this._appointments = this._createComponent('<div>', _m_appointment_collection.default, this._appointmentsConfig());
     this._appointments.option('itemTemplate', this._getAppointmentTemplate('appointmentTemplate'));
-    this._appointmentTooltip = new (this.option('adaptivityEnabled') ? _mobileTooltipStrategy.MobileTooltipStrategy : _desktopTooltipStrategy.DesktopTooltipStrategy)(this._getAppointmentTooltipOptions());
+    this._appointmentTooltip = new (this.option('adaptivityEnabled') ? _m_mobile_tooltip_strategy.MobileTooltipStrategy : _m_desktop_tooltip_strategy.DesktopTooltipStrategy)(this._getAppointmentTooltipOptions());
     this._createAppointmentPopupForm();
     if (this._isDataSourceLoaded() || this._isDataSourceLoading()) {
       this._initMarkupCore(this.option('loadedResources'));
@@ -1013,7 +1013,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
       this._fireContentReadyAction();
     } else {
       var groups = this._getCurrentViewOption('groups');
-      (0, _utils3.loadResources)(groups, this.option('resources'), this.option('resourceLoaderMap')).done(function (resources) {
+      (0, _m_utils.loadResources)(groups, this.option('resources'), this.option('resourceLoaderMap')).done(function (resources) {
         _this6.option('loadedResources', resources);
         _this6._initMarkupCore(resources);
         _this6._reloadDataSource();
@@ -1038,7 +1038,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
     var _this7 = this;
     var scheduler = {
       createResourceEditorModel: function createResourceEditorModel() {
-        return (0, _utils3.createResourceEditorModel)(_this7.option('resources'), _this7.option('loadedResources'));
+        return (0, _m_utils.createResourceEditorModel)(_this7.option('resources'), _this7.option('loadedResources'));
       },
       getDataAccessors: function getDataAccessors() {
         return _this7._dataAccessors;
@@ -1179,7 +1179,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
   _proto._renderHeader = function _renderHeader() {
     if (this.option('toolbar').length !== 0) {
       var $header = (0, _renderer.default)('<div>').appendTo(this._mainContainer);
-      this._header = this._createComponent($header, _header.SchedulerHeader, this._headerConfig());
+      this._header = this._createComponent($header, _m_header.SchedulerHeader, this._headerConfig());
     }
   };
   _proto._headerConfig = function _headerConfig() {
@@ -1633,7 +1633,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
     var timeZoneOffset = _utils.default.getTimezoneOffsetChangeInMs(appointmentStartDate, appointmentEndDate, resultedStartDate, resultedEndDate);
     result.endDate = new Date(resultedEndDate.getTime() - timeZoneOffset);
     var rawResult = result.source();
-    (0, _utils3.setResourceToAppointment)(this.option('resources'), this.getResourceDataAccessors(), rawResult, targetCell.groups);
+    (0, _m_utils.setResourceToAppointment)(this.option('resources'), this.getResourceDataAccessors(), rawResult, targetCell.groups);
     return rawResult;
   };
   _proto.getTargetedAppointment = function getTargetedAppointment(appointment, element) {
@@ -1802,7 +1802,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
       if (this._isAgenda()) {
         getGroups = function getGroups() {
           var apptSettings = this.getLayoutManager()._positionMap[appointmentIndex];
-          return (0, _utils3.getCellGroups)(apptSettings[0].groupIndex, this.getWorkSpace().option('groups'));
+          return (0, _m_utils.getCellGroups)(apptSettings[0].groupIndex, this.getWorkSpace().option('groups'));
         };
         setResourceCallback = function setResourceCallback(_, group) {
           resourcesSetter[group.name](rawAppointment, group.id);
@@ -1911,7 +1911,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
         loadedResources: _this24.option('loadedResources'),
         resourceLoaderMap: _this24.option('resourceLoaderMap')
       };
-      return (0, _utils3.getAppointmentColor)(resourceConfig, appointmentConfig);
+      return (0, _m_utils.getAppointmentColor)(resourceConfig, appointmentConfig);
     };
   };
   _proto.showAppointmentTooltipCore = function showAppointmentTooltipCore(target, data, options) {

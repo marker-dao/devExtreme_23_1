@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.multiple.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,8 @@ class CalendarMultiSelectionStrategy extends CalendarSelectionStrategy {
     return {
       value: this.dateOption('values'),
       range: [],
-      selectionMode: 'multi'
+      selectionMode: 'multi',
+      onWeekNumberClick: this._shouldHandleWeekNumberClick() ? this._weekNumberClickHandler.bind(this) : null
     };
   }
   selectValue(selectedValue, e) {
@@ -44,6 +45,14 @@ class CalendarMultiSelectionStrategy extends CalendarSelectionStrategy {
   }
   restoreValue() {
     this.calendar.option('values', []);
+  }
+  _weekNumberClickHandler(_ref) {
+    var {
+      rowDates,
+      event
+    } = _ref;
+    var selectedDates = rowDates.filter(date => !this._isDateDisabled(date));
+    this.dateValue(selectedDates, event);
   }
 }
 export default CalendarMultiSelectionStrategy;

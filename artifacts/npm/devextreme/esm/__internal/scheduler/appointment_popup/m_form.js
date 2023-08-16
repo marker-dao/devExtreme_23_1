@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointment_popup/m_form.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,7 +22,7 @@ import messageLocalization from '../../../localization/message';
 import { Semaphore } from '../../../renovation/ui/scheduler/utils/semaphore/semaphore';
 import Form from '../../../ui/form';
 import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
-import timeZoneDataUtils from '../../../ui/scheduler/timezones/utils.timezones_data';
+import timeZoneDataUtils from '../timezones/m_utils_timezones_data';
 var SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
 export var APPOINTMENT_FORM_GROUP_NAMES = {
   Main: 'mainGroup',

@@ -44,6 +44,9 @@ var CalendarSelectionStrategy = /*#__PURE__*/function () {
     }
     this._currentDateChanged = false;
   };
+  _proto._isDateDisabled = function _isDateDisabled(date) {
+    return this.calendar._view.isDateDisabled(date);
+  };
   _proto._getLowestDateInArray = function _getLowestDateInArray(dates) {
     if (dates.length) {
       return new Date(Math.min.apply(Math, _toConsumableArray(dates)));
@@ -63,6 +66,12 @@ var CalendarSelectionStrategy = /*#__PURE__*/function () {
   };
   _proto._updateCurrentDate = function _updateCurrentDate(value) {
     this.calendar.option('currentDate', value !== null && value !== void 0 ? value : new Date());
+  };
+  _proto._shouldHandleWeekNumberClick = function _shouldHandleWeekNumberClick() {
+    var _this$calendar$option = this.calendar.option(),
+      selectionMode = _this$calendar$option.selectionMode,
+      selectWeekOnClick = _this$calendar$option.selectWeekOnClick;
+    return selectWeekOnClick && selectionMode !== 'single';
   };
   return CalendarSelectionStrategy;
 }();

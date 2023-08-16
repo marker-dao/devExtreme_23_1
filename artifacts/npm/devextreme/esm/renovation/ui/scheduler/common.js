@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/common.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { utils } from '../../../ui/scheduler/utils';
-import { createExpressions } from '../../../ui/scheduler/resources/utils';
+import { createExpressions } from '../../../__internal/scheduler/resources/m_utils';
 export var createDataAccessors = function createDataAccessors(dataAccessorsProps) {
   var forceIsoDateParsing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   var dataAccessors = utils.dataAccessors.create({

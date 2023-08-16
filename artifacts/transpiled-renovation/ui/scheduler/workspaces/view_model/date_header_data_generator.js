@@ -2,7 +2,7 @@
 
 exports.DateHeaderDataGenerator = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
-var _utils = require("../../resources/utils");
+var _m_utils = require("../../../../__internal/scheduler/resources/m_utils");
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _excluded = ["startDate", "endDate", "isFirstGroupCell", "isLastGroupCell"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -38,7 +38,7 @@ var DateHeaderDataGenerator = /*#__PURE__*/function () {
     var horizontalGroupCount = (0, _base.getHorizontalGroupCount)(groups, groupOrientation);
     var index = completeViewDataMap[0][0].allDay ? 1 : 0;
     var colSpan = isGroupedByDate ? horizontalGroupCount * cellCountInDay : cellCountInDay;
-    var groupCount = (0, _utils.getGroupCount)(groups);
+    var groupCount = (0, _m_utils.getGroupCount)(groups);
     var datesRepeatCount = isHorizontalGrouping && !isGroupedByDate ? groupCount : 1;
     var daysInGroup = this._viewDataGenerator.daysInInterval * intervalCount;
     var daysInView = daysInGroup * datesRepeatCount;

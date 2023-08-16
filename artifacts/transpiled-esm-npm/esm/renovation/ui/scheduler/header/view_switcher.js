@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { isOneView } from '../../../../ui/scheduler/header/utils';
+import { isOneView } from '../../../../__internal/scheduler/header/m_utils';
 var VIEW_SWITCHER_CLASS = 'dx-scheduler-view-switcher';
 var VIEW_SWITCHER_DROP_DOWN_BUTTON_CLASS = 'dx-scheduler-view-switcher-dropdown-button';
 var VIEW_SWITCHER_DROP_DOWN_BUTTON_CONTENT_CLASS = 'dx-scheduler-view-switcher-dropdown-button-content';

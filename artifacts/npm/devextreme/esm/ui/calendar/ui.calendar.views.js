@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.views.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,6 +17,7 @@ import dateSerialization from '../../core/utils/date_serialization';
 var CALENDAR_OTHER_MONTH_CLASS = 'dx-calendar-other-month';
 var CALENDAR_OTHER_VIEW_CLASS = 'dx-calendar-other-view';
 var CALENDAR_WEEK_NUMBER_CELL_CLASS = 'dx-calendar-week-number-cell';
+var CALENDAR_WEEK_SELECTION_CLASS = 'dx-calendar-week-selection';
 var Views = {
   'month': BaseView.inherit({
     _getViewName: function _getViewName() {
@@ -77,7 +78,9 @@ var Views = {
     _renderWeekNumberCell: function _renderWeekNumberCell(rowData) {
       var {
         showWeekNumbers,
-        cellTemplate
+        cellTemplate,
+        selectionMode,
+        selectWeekOnClick
       } = this.option();
       if (!showWeekNumbers) {
         return;
@@ -86,6 +89,9 @@ var Views = {
       var cell = domAdapter.createElement('td');
       var $cell = $(cell);
       cell.className = CALENDAR_WEEK_NUMBER_CELL_CLASS;
+      if (selectionMode !== 'single' && selectWeekOnClick) {
+        $cell.addClass(CALENDAR_WEEK_SELECTION_CLASS);
+      }
       if (cellTemplate) {
         cellTemplate.render(this._prepareCellTemplateData(weekNumber, -1, $cell));
       } else {

@@ -28,7 +28,7 @@ import VerticalShader from '../shaders/ui.scheduler.current_time_shader.vertical
 import AppointmentDragBehavior from '../appointmentDragBehavior';
 import { APPOINTMENT_SETTINGS_KEY } from '../constants';
 import { FIXED_CONTAINER_CLASS, VIRTUAL_CELL_CLASS, TIME_PANEL_CLASS, DATE_TABLE_CLASS, DATE_TABLE_ROW_CLASS, GROUP_ROW_CLASS, GROUP_HEADER_CONTENT_CLASS, VERTICAL_GROUP_COUNT_CLASSES } from '../classes';
-import WidgetObserver from '../base/widgetObserver';
+import WidgetObserver from '../../../__internal/scheduler/base/m_widget_observer';
 import { resetPosition, locate } from '../../../animation/translator';
 import { VirtualScrollingDispatcher, VirtualScrollingRenderer } from './ui.scheduler.virtual_scrolling';
 import ViewDataProvider from './view_model/view_data_provider';
@@ -42,7 +42,7 @@ import CellsSelectionState from './cells_selection_state';
 import { Cache } from './cache';
 import { CellsSelectionController } from './cells_selection_controller';
 import { calculateViewStartDate, getViewStartByOptions, validateDayHours, getStartViewDateTimeOffset, isDateAndTimeView, calculateIsGroupedAllDayPanel, getCellDuration } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
-import { createResourcesTree, getCellGroups, getGroupsObjectFromGroupsArray, getGroupCount } from '../resources/utils';
+import { createResourcesTree, getCellGroups, getGroupsObjectFromGroupsArray, getGroupCount } from '../../../__internal/scheduler/resources/m_utils';
 import { getCellWidth, getCellHeight, getAllDayHeight, getMaxAllowedPosition, PositionHelper } from './helpers/positionHelper';
 import { utils } from '../utils';
 import { compileGetter } from '../../../core/utils/data';

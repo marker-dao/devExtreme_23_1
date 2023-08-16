@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/ui.scheduler.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,12 +35,12 @@ import Widget from '../widget/ui.widget';
 import { AppointmentPopup, ACTION_TO_APPOINTMENT } from '../../__internal/scheduler/appointment_popup/m_popup';
 import { AppointmentForm } from '../../__internal/scheduler/appointment_popup/m_form';
 import { CompactAppointmentsHelper } from './compactAppointmentsHelper';
-import { DesktopTooltipStrategy } from './tooltip_strategies/desktopTooltipStrategy';
-import { MobileTooltipStrategy } from './tooltip_strategies/mobileTooltipStrategy';
+import { DesktopTooltipStrategy } from '../../__internal/scheduler/tooltip_strategies/m_desktop_tooltip_strategy';
+import { MobileTooltipStrategy } from '../../__internal/scheduler/tooltip_strategies/m_mobile_tooltip_strategy';
 import { hide as hideLoading, show as showLoading } from './loading';
 import AppointmentCollection from '../../__internal/scheduler/appointments/m_appointment_collection';
 import AppointmentLayoutManager from './appointments.layout_manager';
-import { SchedulerHeader } from './header/header';
+import { SchedulerHeader } from '../../__internal/scheduler/header/m_header';
 import subscribes from './subscribes';
 import { getRecurrenceProcessor } from './recurrence';
 import timeZoneUtils from './utils.timeZone';
@@ -56,11 +56,11 @@ import SchedulerWorkSpaceWorkWeek from './workspaces/ui.scheduler.work_space_wor
 import { createAppointmentAdapter } from './appointmentAdapter';
 import { AppointmentTooltipInfo } from './dataStructures';
 import { utils } from './utils';
-import { createExpressions, createResourceEditorModel as _createResourceEditorModel, getAppointmentColor, getCellGroups, loadResources, setResourceToAppointment } from './resources/utils';
+import { createExpressions, createResourceEditorModel as _createResourceEditorModel, getAppointmentColor, getCellGroups, loadResources, setResourceToAppointment } from '../../__internal/scheduler/resources/m_utils';
 import { ExpressionUtils } from './expressionUtils';
 import { validateDayHours, isDateAndTimeView as _isDateAndTimeView, isTimelineView } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { renderAppointments } from '../../__internal/scheduler/appointments/m_render';
-import { AgendaResourceProcessor } from './resources/agendaResourceProcessor';
+import { AgendaResourceProcessor } from '../../__internal/scheduler/resources/m_agenda_resource_processor';
 import { AppointmentDataProvider } from '../../__internal/scheduler/appointments/data_provider/m_appointment_data_provider';
 import { getAppointmentTakesAllDay } from '../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay';
 import { getPreparedDataItems } from '../../renovation/ui/scheduler/utils/data';

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tabs.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -314,11 +314,11 @@ var Tabs = _uiCollection_widget.default.inherit({
   },
   _updateScrollableDirection() {
     var scrollable = this.getScrollable();
-    if (!scrollable) {
-      this._renderScrolling();
-    } else {
+    if (scrollable) {
       var scrollableDirection = this._getScrollableDirection();
       scrollable.option('direction', scrollableDirection);
+    } else {
+      this._renderScrolling();
     }
   },
   _renderScrollable() {
@@ -450,6 +450,7 @@ var Tabs = _uiCollection_widget.default.inherit({
   _toggleFocusedDisabledClasses(value) {
     var _this$option = this.option(),
       currentIndex = _this$option.selectedIndex;
+    this._itemElements().removeClass(FOCUSED_DISABLED_NEXT_TAB_CLASS).removeClass(FOCUSED_DISABLED_PREV_TAB_CLASS);
     var prevItemIndex = currentIndex - 1;
     var nextItemIndex = currentIndex + 1;
     var nextFocusedIndex = (0, _renderer.default)(value).index();

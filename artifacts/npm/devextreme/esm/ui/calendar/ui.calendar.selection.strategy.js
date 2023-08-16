@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 11 2023
+* Build date: Wed Aug 16 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -36,6 +36,9 @@ class CalendarSelectionStrategy {
     }
     this._currentDateChanged = false;
   }
+  _isDateDisabled(date) {
+    return this.calendar._view.isDateDisabled(date);
+  }
   _getLowestDateInArray(dates) {
     if (dates.length) {
       return new Date(Math.min(...dates));
@@ -55,6 +58,13 @@ class CalendarSelectionStrategy {
   }
   _updateCurrentDate(value) {
     this.calendar.option('currentDate', value !== null && value !== void 0 ? value : new Date());
+  }
+  _shouldHandleWeekNumberClick() {
+    var {
+      selectionMode,
+      selectWeekOnClick
+    } = this.calendar.option();
+    return selectWeekOnClick && selectionMode !== 'single';
   }
 }
 export default CalendarSelectionStrategy;

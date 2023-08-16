@@ -13,6 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var CALENDAR_OTHER_MONTH_CLASS = 'dx-calendar-other-month';
 var CALENDAR_OTHER_VIEW_CLASS = 'dx-calendar-other-view';
 var CALENDAR_WEEK_NUMBER_CELL_CLASS = 'dx-calendar-week-number-cell';
+var CALENDAR_WEEK_SELECTION_CLASS = 'dx-calendar-week-selection';
 var Views = {
   'month': _uiCalendar.default.inherit({
     _getViewName: function _getViewName() {
@@ -71,7 +72,9 @@ var Views = {
     _renderWeekNumberCell: function _renderWeekNumberCell(rowData) {
       var _this$option2 = this.option(),
         showWeekNumbers = _this$option2.showWeekNumbers,
-        cellTemplate = _this$option2.cellTemplate;
+        cellTemplate = _this$option2.cellTemplate,
+        selectionMode = _this$option2.selectionMode,
+        selectWeekOnClick = _this$option2.selectWeekOnClick;
       if (!showWeekNumbers) {
         return;
       }
@@ -79,6 +82,9 @@ var Views = {
       var cell = _dom_adapter.default.createElement('td');
       var $cell = (0, _renderer.default)(cell);
       cell.className = CALENDAR_WEEK_NUMBER_CELL_CLASS;
+      if (selectionMode !== 'single' && selectWeekOnClick) {
+        $cell.addClass(CALENDAR_WEEK_SELECTION_CLASS);
+      }
       if (cellTemplate) {
         cellTemplate.render(this._prepareCellTemplateData(weekNumber, -1, $cell));
       } else {
