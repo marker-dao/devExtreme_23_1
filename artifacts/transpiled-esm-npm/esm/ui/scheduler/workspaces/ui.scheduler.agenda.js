@@ -223,12 +223,8 @@ class SchedulerAgenda extends WorkSpace {
       groupTableClass: GROUP_TABLE_CLASS,
       groupRowClass: GROUP_ROW_CLASS,
       groupCellClass: this._getGroupHeaderClass(),
-      groupCellCustomContent(cell, cellText, index, data) {
+      groupCellCustomContent(cell, cellTextElement, index, data) {
         var container = domAdapter.createElement('div');
-        var contentWrapper = domAdapter.createElement('div');
-        container.className = getGroupHeaderContentClass;
-        contentWrapper.appendChild(cellText);
-        container.appendChild(contentWrapper);
         container.className = getGroupHeaderContentClass;
         if (cellTemplate && cellTemplate.render) {
           cellTemplates.push(cellTemplate.render.bind(cellTemplate, {
@@ -236,13 +232,14 @@ class SchedulerAgenda extends WorkSpace {
               data: data.data,
               id: data.value,
               color: data.color,
-              text: cellText.textContent
+              text: cellTextElement.textContent
             },
             container: getPublicElement($(container)),
             index: index
           }));
         } else {
-          contentWrapper.appendChild(cellText);
+          var contentWrapper = domAdapter.createElement('div');
+          contentWrapper.appendChild(cellTextElement);
           container.appendChild(contentWrapper);
         }
         cell.appendChild(container);

@@ -31,18 +31,18 @@ export var LightButtonProps = {
 };
 import { createRef as infernoCreateRef } from 'inferno';
 export class LightButton extends InfernoComponent {
-  get keyboardContext() {
-    if (this.context[KeyboardActionContext.id]) {
-      return this.context[KeyboardActionContext.id];
-    }
-    return KeyboardActionContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {};
     this.widgetRef = infernoCreateRef();
     this.keyboardEffect = this.keyboardEffect.bind(this);
     this.subscribeToClick = this.subscribeToClick.bind(this);
+  }
+  get keyboardContext() {
+    if (this.context[KeyboardActionContext.id]) {
+      return this.context[KeyboardActionContext.id];
+    }
+    return KeyboardActionContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.keyboardEffect, [this.keyboardContext, this.props.onClick]), new InfernoEffect(this.subscribeToClick, [this.props.onClick])];

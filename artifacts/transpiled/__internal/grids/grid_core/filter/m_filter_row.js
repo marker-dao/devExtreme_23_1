@@ -476,15 +476,16 @@ var ColumnHeadersViewFilterRowExtender = function () {
         cssClass: "".concat(that.getWidgetContainerClass(), " ").concat(CELL_FOCUS_DISABLED_CLASS, " ").concat(FILTER_MENU),
         showFirstSubmenuMode: 'onHover',
         hideSubmenuOnMouseLeave: true,
-        elementAttr: {
-          'aria-label': ARIA_SEARCH_BOX
-        },
         items: [{
           disabled: !(column.filterOperations && column.filterOperations.length),
           icon: OPERATION_ICONS[getColumnSelectedFilterOperation(that, column) || 'default'],
           selectable: false,
           items: that._getFilterOperationMenuItems(column)
         }],
+        onItemRendered(_ref) {
+          var itemElement = _ref.itemElement;
+          this.setAria('label', ARIA_SEARCH_BOX, (0, _renderer.default)(itemElement));
+        },
         onItemClick(properties) {
           var selectedFilterOperation = properties.itemData.name;
           var columnSelectedFilterOperation = getColumnSelectedFilterOperation(that, column);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1172,6 +1172,7 @@ declare module DevExpress.common {
     | 'right bottom'
     | 'right top'
     | 'top';
+  export type PositionRelative = 'top' | 'end' | 'bottom' | 'start';
   /**
    * [descr:RangeRule]
    */
@@ -15929,7 +15930,12 @@ declare module DevExpress.ui {
      */
     itemOption(id: string, options: any): void;
     /**
+     * [descr:dxForm.clear()]
+     */
+    clear(): void;
+    /**
      * [descr:dxForm.resetValues()]
+     * @deprecated [depNote:dxForm.resetValues()]
      */
     resetValues(): void;
     /**
@@ -20347,13 +20353,13 @@ declare module DevExpress.ui {
    * [descr:dxMultiView]
    */
   export class dxMultiView<
-    TProperties extends dxMultiViewOptions<TItem, TKey> = dxMultiViewOptions<
-      any,
-      any
-    >,
     TItem extends DevExpress.ui.dxMultiView.ItemLike = any,
     TKey = any
-  > extends CollectionWidget<TProperties, TItem, TKey> {}
+  > extends CollectionWidget<
+    DevExpress.ui.dxMultiView.Properties<TItem, TKey>,
+    TItem,
+    TKey
+  > {}
   module dxMultiView {
     /**
      * [descr:_ui_multi_view_ContentReadyEvent]
@@ -20361,14 +20367,14 @@ declare module DevExpress.ui {
     export type ContentReadyEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<MultiViewInstance<TItem, TKey>>;
+    > = DevExpress.events.EventInfo<dxMultiView<TItem, TKey>>;
     /**
      * [descr:_ui_multi_view_DisposingEvent]
      */
     export type DisposingEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<MultiViewInstance<TItem, TKey>>;
+    > = DevExpress.events.EventInfo<dxMultiView<TItem, TKey>>;
     export type ExplicitTypes<TItem extends ItemLike, TKey> = {
       Properties: Properties<TItem, TKey>;
       ContentReadyEvent: ContentReadyEvent<TItem, TKey>;
@@ -20387,7 +20393,7 @@ declare module DevExpress.ui {
     export type InitializedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.InitializedEventInfo<MultiViewInstance<TItem, TKey>>;
+    > = DevExpress.events.InitializedEventInfo<dxMultiView<TItem, TKey>>;
     /**
      * [descr:_ui_multi_view_ItemClickEvent]
      */
@@ -20395,7 +20401,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.NativeEventInfo<
-      MultiViewInstance<TItem, TKey>,
+      dxMultiView<TItem, TKey>,
       KeyboardEvent | MouseEvent | PointerEvent
     > &
       DevExpress.events.ItemInfo<TItem>;
@@ -20406,7 +20412,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.NativeEventInfo<
-      MultiViewInstance<TItem, TKey>,
+      dxMultiView<TItem, TKey>,
       MouseEvent | PointerEvent | TouchEvent
     > &
       DevExpress.events.ItemInfo<TItem>;
@@ -20417,7 +20423,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.NativeEventInfo<
-      MultiViewInstance<TItem, TKey>,
+      dxMultiView<TItem, TKey>,
       MouseEvent | PointerEvent | TouchEvent
     > &
       DevExpress.events.ItemInfo<TItem>;
@@ -20431,20 +20437,15 @@ declare module DevExpress.ui {
     export type ItemRenderedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<MultiViewInstance<TItem, TKey>> &
+    > = DevExpress.events.EventInfo<dxMultiView<TItem, TKey>> &
       DevExpress.events.ItemInfo<TItem>;
-    /**
-     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
-     */
-    interface MultiViewInstance<TItem, TKey>
-      extends dxMultiView<Properties<TItem, TKey>, TItem, TKey> {}
     /**
      * [descr:_ui_multi_view_OptionChangedEvent]
      */
     export type OptionChangedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<MultiViewInstance<TItem, TKey>> &
+    > = DevExpress.events.EventInfo<dxMultiView<TItem, TKey>> &
       DevExpress.events.ChangedOptionInfo;
     export type Properties<
       TItem extends ItemLike = any,
@@ -20456,7 +20457,7 @@ declare module DevExpress.ui {
     export type SelectionChangedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<MultiViewInstance<TItem, TKey>> &
+    > = DevExpress.events.EventInfo<dxMultiView<TItem, TKey>> &
       DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
   }
   /**
@@ -20465,11 +20466,7 @@ declare module DevExpress.ui {
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export interface dxMultiViewBaseOptions<
-    TComponent extends dxMultiView<any, TItem, TKey> = dxMultiView<
-      any,
-      any,
-      any
-    >,
+    TComponent extends dxMultiView<TItem, TKey> = dxMultiView<any, any>,
     TItem extends DevExpress.ui.dxMultiView.ItemLike = any,
     TKey = any
   > extends CollectionWidgetOptions<TComponent, TItem, TKey> {
@@ -20518,11 +20515,7 @@ declare module DevExpress.ui {
   export interface dxMultiViewOptions<
     TItem extends DevExpress.ui.dxMultiView.ItemLike = any,
     TKey = any
-  > extends dxMultiViewBaseOptions<
-      DevExpress.ui.dxMultiView.MultiViewInstance<TItem, TKey>,
-      TItem,
-      TKey
-    > {}
+  > extends dxMultiViewBaseOptions<dxMultiView<TItem, TKey>, TItem, TKey> {}
   /**
    * [descr:dxNumberBox]
    */
@@ -24851,7 +24844,11 @@ declare module DevExpress.ui {
   export class dxTabPanel<
     TItem extends DevExpress.ui.dxTabPanel.ItemLike = any,
     TKey = any
-  > extends dxMultiView<dxTabPanelOptions<TItem, TKey>, TItem, TKey> {}
+  > extends CollectionWidget<
+    DevExpress.ui.dxTabPanel.Properties<TItem, TKey>,
+    TItem,
+    TKey
+  > {}
   module dxTabPanel {
     /**
      * [descr:_ui_tab_panel_ContentReadyEvent]
@@ -25054,6 +25051,10 @@ declare module DevExpress.ui {
           itemElement: DevExpress.core.DxElement
         ) => string | DevExpress.core.UserDefinedElement);
     /**
+     * [descr:dxTabPanelOptions.iconPosition]
+     */
+    iconPosition?: DevExpress.common.PositionRelative;
+    /**
      * [descr:dxTabPanelOptions.items]
      */
     items?: Array<TItem>;
@@ -25104,10 +25105,13 @@ declare module DevExpress.ui {
    * [descr:dxTabs]
    */
   export class dxTabs<
-    TProperties extends dxTabsOptions<TItem, TKey> = dxTabsOptions<any, any>,
     TItem extends DevExpress.ui.dxTabs.ItemLike = any,
     TKey = any
-  > extends CollectionWidget<TProperties, TItem, TKey> {}
+  > extends CollectionWidget<
+    DevExpress.ui.dxTabs.Properties<TItem, TKey>,
+    TItem,
+    TKey
+  > {}
   module dxTabs {
     /**
      * [descr:_ui_tabs_ContentReadyEvent]
@@ -25115,14 +25119,14 @@ declare module DevExpress.ui {
     export type ContentReadyEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<TabsInstance<TItem, TKey>>;
+    > = DevExpress.events.EventInfo<dxTabs<TItem, TKey>>;
     /**
      * [descr:_ui_tabs_DisposingEvent]
      */
     export type DisposingEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<TabsInstance<TItem, TKey>>;
+    > = DevExpress.events.EventInfo<dxTabs<TItem, TKey>>;
     export type ExplicitTypes<TItem extends ItemLike, TKey> = {
       Properties: Properties<TItem, TKey>;
       ContentReadyEvent: ContentReadyEvent<TItem, TKey>;
@@ -25141,7 +25145,7 @@ declare module DevExpress.ui {
     export type InitializedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.InitializedEventInfo<TabsInstance<TItem, TKey>>;
+    > = DevExpress.events.InitializedEventInfo<dxTabs<TItem, TKey>>;
     /**
      * [descr:_ui_tabs_ItemClickEvent]
      */
@@ -25149,7 +25153,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.NativeEventInfo<
-      TabsInstance<TItem, TKey>,
+      dxTabs<TItem, TKey>,
       KeyboardEvent | MouseEvent | PointerEvent
     > &
       DevExpress.events.ItemInfo<TItem>;
@@ -25160,7 +25164,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.NativeEventInfo<
-      TabsInstance<TItem, TKey>,
+      dxTabs<TItem, TKey>,
       MouseEvent | PointerEvent | TouchEvent
     > &
       DevExpress.events.ItemInfo<TItem>;
@@ -25171,7 +25175,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.NativeEventInfo<
-      TabsInstance<TItem, TKey>,
+      dxTabs<TItem, TKey>,
       MouseEvent | PointerEvent | TouchEvent
     > &
       DevExpress.events.ItemInfo<TItem>;
@@ -25185,7 +25189,7 @@ declare module DevExpress.ui {
     export type ItemRenderedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<TabsInstance<TItem, TKey>> &
+    > = DevExpress.events.EventInfo<dxTabs<TItem, TKey>> &
       DevExpress.events.ItemInfo<TItem>;
     /**
      * [descr:_ui_tabs_OptionChangedEvent]
@@ -25193,25 +25197,20 @@ declare module DevExpress.ui {
     export type OptionChangedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<TabsInstance<TItem, TKey>> &
+    > = DevExpress.events.EventInfo<dxTabs<TItem, TKey>> &
       DevExpress.events.ChangedOptionInfo;
     export type Properties<
       TItem extends ItemLike = any,
       TKey = any
-    > = dxTabsBaseOptions<TabsInstance<TItem, TKey>, TItem, TKey>;
+    > = dxTabsBaseOptions<dxTabs<TItem, TKey>, TItem, TKey>;
     /**
      * [descr:_ui_tabs_SelectionChangedEvent]
      */
     export type SelectionChangedEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.EventInfo<TabsInstance<TItem, TKey>> &
+    > = DevExpress.events.EventInfo<dxTabs<TItem, TKey>> &
       DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
-    /**
-     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
-     */
-    interface TabsInstance<TItem, TKey>
-      extends dxTabs<Properties<TItem, TKey>, TItem, TKey> {}
   }
   /**
    * [descr:dxTabsOptions]
@@ -25219,7 +25218,7 @@ declare module DevExpress.ui {
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export interface dxTabsBaseOptions<
-    TComponent extends dxTabs<any, TItem, TKey> = dxTabs<any, any, any>,
+    TComponent extends dxTabs<TItem, TKey> = dxTabs<any, any>,
     TItem extends DevExpress.ui.dxTabs.ItemLike = any,
     TKey = any
   > extends CollectionWidgetOptions<TComponent, TItem, TKey> {
@@ -25235,6 +25234,10 @@ declare module DevExpress.ui {
      * [descr:dxTabsOptions.hoverStateEnabled]
      */
     hoverStateEnabled?: boolean;
+    /**
+     * [descr:dxTabsOptions.iconPosition]
+     */
+    iconPosition?: DevExpress.common.PositionRelative;
     /**
      * [descr:dxTabsOptions.items]
      */

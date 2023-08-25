@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ru.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -180,6 +180,7 @@
             "dxDataGrid-ariaCollapse": "Свернуть",
             "dxDataGrid-ariaModifiedCell": "Modified",
             "dxDataGrid-ariaDeletedCell": "Deleted",
+            "dxDataGrid-ariaEditableCell": "Editable",
             "dxDataGrid-ariaExpand": "Развернуть",
             "dxDataGrid-ariaCollapsedRow": "Collapsed row",
             "dxDataGrid-ariaExpandedRow": "Expanded row",
@@ -193,7 +194,7 @@
             "dxDataGrid-filterPanelCreateFilter": "Создать фильтр",
             "dxDataGrid-filterPanelClearFilter": "Очистить",
             "dxDataGrid-filterPanelFilterEnabledHint": "Активировать фильтр",
-            "dxTreeList-ariaTreeList": "Иерархическая таблица данных",
+            "dxTreeList-ariaTreeList": "Иерархическая таблица данных с {0} строками и {1} колонками",
             "dxTreeList-ariaSearchInGrid": "Искать в иерархической таблице данных",
             "dxTreeList-ariaToolbar": "Панель инструментов иерархической таблицы данных",
             "dxTreeList-editingAddRowToNode": "Добавить",
@@ -272,7 +273,18 @@
             "dxScheduler-moreAppointments": "и еще {0}",
             "dxCalendar-todayButtonText": "Сегодня",
             "dxCalendar-ariaWidgetName": "Календарь",
-            "dxCalendar-ariaHotKeysInfo": "To navigate between views, press Control, and then Left Arrow or Right Arrow. To zoom in on a view, press Control, and then Down Arrow. To zoom out, press Control, and then Up Arrow.",
+            "dxCalendar-previousMonthButtonLabel": "Previous month",
+            "dxCalendar-previousYearButtonLabel": "Previous year",
+            "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+            "dxCalendar-previousCenturyButtonLabel": "Previous century",
+            "dxCalendar-nextMonthButtonLabel": "Next month",
+            "dxCalendar-nextYearButtonLabel": "Next year",
+            "dxCalendar-nextDecadeButtonLabel": "Next decade",
+            "dxCalendar-nextCenturyButtonLabel": "Next century",
+            "dxCalendar-captionMonthLabel": "Month selection",
+            "dxCalendar-captionYearLabel": "Year selection",
+            "dxCalendar-captionDecadeLabel": "Decade selection",
+            "dxCalendar-captionCenturyLabel": "Century selection",
             "dxColorView-ariaRed": "Красный",
             "dxColorView-ariaGreen": "Зеленый",
             "dxColorView-ariaBlue": "Синий",

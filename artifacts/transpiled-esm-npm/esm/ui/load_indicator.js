@@ -107,7 +107,11 @@ var LoadIndicator = Widget.inherit({
     this._$wrapper.append(this._$content);
   },
   _renderMarkup: function _renderMarkup() {
-    if (animation() && !this.option('viaImage') && !this.option('indicatorSrc')) {
+    var {
+      viaImage,
+      indicatorSrc
+    } = this.option();
+    if (animation() && !viaImage && !indicatorSrc) {
       // B236922
       this._renderMarkupForAnimation();
     } else {
@@ -129,10 +133,14 @@ var LoadIndicator = Widget.inherit({
     }
   },
   _renderMarkupForImage: function _renderMarkupForImage() {
-    var indicatorSrc = this.option('indicatorSrc');
-    this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
+    var {
+      indicatorSrc
+    } = this.option();
     if (indicatorSrc) {
+      this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
       this._$wrapper.css('backgroundImage', 'url(' + indicatorSrc + ')');
+    } else if (animation()) {
+      this._renderMarkupForAnimation();
     }
   },
   _renderDimensions: function _renderDimensions() {

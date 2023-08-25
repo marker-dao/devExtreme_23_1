@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/core/renderers/renderer.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1640,7 +1640,6 @@ function Renderer(options) {
   }).css({
     'line-height': 'normal',
     // T179515
-    '-ms-user-select': NONE,
     '-moz-user-select': NONE,
     '-webkit-user-select': NONE,
     '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)',

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.base_view.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -80,9 +80,8 @@ var BaseView = Widget.inherit({
   _createTable: function _createTable() {
     this._$table = $('<table>');
     var localizedWidgetName = messageLocalization.format('dxCalendar-ariaWidgetName');
-    var localizedHotKeysInfo = messageLocalization.format('dxCalendar-ariaHotKeysInfo');
     this.setAria({
-      label: "".concat(localizedWidgetName, ". ").concat(localizedHotKeysInfo),
+      label: localizedWidgetName,
       role: 'grid'
     }, this._$table);
     return this._$table;

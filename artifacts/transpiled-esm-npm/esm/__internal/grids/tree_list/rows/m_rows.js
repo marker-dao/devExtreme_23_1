@@ -97,6 +97,9 @@ export var RowsView = rowsModule.views.rowsView.inherit(function () {
     setAriaExpandedAttribute($row, row) {
       var isRowExpanded = row.isExpanded;
       this.setAria('expanded', isDefined(isRowExpanded) && isRowExpanded.toString(), $row);
+    },
+    setTableRole($tableElement) {
+      this.setAria('role', 'treegrid', $tableElement);
     }
   };
 }());

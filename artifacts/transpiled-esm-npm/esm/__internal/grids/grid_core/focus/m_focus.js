@@ -3,6 +3,7 @@ import { equalByValue } from '../../../../core/utils/common';
 import { Deferred, when } from '../../../../core/utils/deferred';
 import { each } from '../../../../core/utils/iterator';
 import { isBoolean, isDefined } from '../../../../core/utils/type';
+import { isNewRowTempKey } from '../editing/m_editing_utils';
 import core from '../m_modules';
 import gridCoreUtils from '../m_utils';
 import { UiGridCoreFocusUtils } from './m_focus_utils';
@@ -554,7 +555,7 @@ export var focusModule = {
           // @ts-expect-error
           var deferred = new Deferred();
           var dataSource = that._dataSource;
-          if (Array.isArray(key)) {
+          if (Array.isArray(key) || isNewRowTempKey(key)) {
             return deferred.resolve(-1).promise();
           }
           var filter = that._generateFilterByKey(key);

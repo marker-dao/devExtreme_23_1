@@ -645,15 +645,14 @@ var FileItemsController = /*#__PURE__*/function () {
         var cachedItem = cachedDirectoryInfo.items.find(function (cache) {
           return dirInfos[i].fileItem.key === cache.fileItem.key;
         });
-        if (!cachedItem) return "continue";
+        if (!cachedItem) return 1; // continue
         dirInfos[i].expanded = cachedItem.expanded;
         if (dirInfos[i].expanded) {
           itemDeferreds.push(_this18._loadItemsRecursive(dirInfos[i], cachedItem));
         }
       };
       for (var i = 0; i < dirInfos.length; i++) {
-        var _ret = _loop(i);
-        if (_ret === "continue") continue;
+        if (_loop(i)) continue;
       }
       return (0, _uiFile_manager.whenSome)(itemDeferreds);
     }, function () {

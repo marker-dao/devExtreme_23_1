@@ -408,12 +408,11 @@ chart['spline'] = extend({}, lineSeries, {
         });
       }
       if (oppositeCoord !== null) {
-        return "break";
+        return 1; // break
       }
     };
     for (var i = 0; i < nearestPoints.length; i++) {
-      var _ret = _loop();
-      if (_ret === "break") break;
+      if (_loop()) break;
     }
     return oppositeCoord;
   },

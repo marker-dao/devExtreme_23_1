@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/lookup.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,10 +20,8 @@ import { getFieldName } from '../core/options/utils';
 import messageLocalization from '../localization/message';
 import devices from '../core/devices';
 import registerComponent from '../core/component_registrator';
-import { addNamespace } from '../events/utils/index';
 import DropDownList from './drop_down_editor/ui.drop_down_list';
 import { current, isMaterial } from './themes';
-import { name as clickEventName } from '../events/click';
 import Popover from './popover/ui.popover';
 import TextBox from './text_box';
 import { ChildDefaultTemplate } from '../core/templates/child_default_template';
@@ -46,6 +44,7 @@ var LOOKUP_POPOVER_MODE = 'dx-lookup-popover-mode';
 var LOOKUP_EMPTY_CLASS = 'dx-lookup-empty';
 var LOOKUP_POPOVER_FLIP_VERTICAL_CLASS = 'dx-popover-flipped-vertical';
 var TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
+var TEXTEDITOR_EMPTY_CLASS = 'dx-texteditor-empty';
 var LIST_ITEM_CLASS = 'dx-list-item';
 var LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
 var GROUP_LIST_HEADER_CLASS = 'dx-list-group-header';
@@ -108,7 +107,7 @@ var Lookup = DropDownList.inherit({
        * @name dxLookupOptions.openOnFieldClick
        * @hidden
        */
-
+      openOnFieldClick: true,
       /**
        * @name dxLookupOptions.showDropDownButton
        * @hidden
@@ -342,16 +341,8 @@ var Lookup = DropDownList.inherit({
     return '';
   },
   _renderInput: function _renderInput() {
-    var fieldClickAction = this._createAction(() => {
-      this._toggleOpenState();
-    });
     this._$field = $('<div>').addClass(LOOKUP_FIELD_CLASS);
     this._applyInputAttributes(this.option('inputAttr'));
-    eventsEngine.on(this._$field, addNamespace(clickEventName, this.NAME), e => {
-      fieldClickAction({
-        event: e
-      });
-    });
     var $arrow = $('<div>').addClass(LOOKUP_ARROW_CLASS);
     this._$fieldWrapper = $('<div>').addClass(LOOKUP_FIELD_WRAPPER_CLASS).append(this._$field).append($arrow).appendTo(this.$element());
   },
@@ -369,7 +360,8 @@ var Lookup = DropDownList.inherit({
     }
     var displayValue = this.option('displayValue');
     this._updateField(displayValue);
-    this.$element().toggleClass(LOOKUP_EMPTY_CLASS, !this.option('selectedItem'));
+    var isFieldEmpty = !this.option('selectedItem');
+    this.$element().toggleClass(LOOKUP_EMPTY_CLASS, isFieldEmpty).toggleClass(TEXTEDITOR_EMPTY_CLASS, isFieldEmpty);
   },
   _getLabelContainer: function _getLabelContainer() {
     return this._$field;
@@ -382,8 +374,17 @@ var Lookup = DropDownList.inherit({
     }
   },
   _updateField: function _updateField(text) {
-    text = isDefined(text) && String(text) || this.option('placeholder');
-    this._$field.text(text);
+    text = isDefined(text) && String(text);
+    this._$field.empty();
+    if (text) {
+      this._$field.text(text);
+    } else {
+      var $placeholder = $('<div>').attr({
+        'data-dx_placeholder': this.option('placeholder')
+      });
+      this._$field.append($placeholder);
+      $placeholder.addClass('dx-placeholder');
+    }
   },
   _renderFieldTemplate: function _renderFieldTemplate(template) {
     this._$field.empty();

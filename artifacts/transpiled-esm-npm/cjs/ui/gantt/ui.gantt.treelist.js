@@ -15,6 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var GANTT_TASKS = 'tasks';
 var GANTT_COLLAPSABLE_ROW = 'dx-gantt-collapsable-row';
 var GANTT_DEFAULT_ROW_HEIGHT = 34;
+var GANTT_SCROLL_ACTIVATION_LEVEL = 1;
 var GanttTreeList = /*#__PURE__*/function () {
   function GanttTreeList(gantt) {
     this._gantt = gantt;
@@ -183,7 +184,7 @@ var GanttTreeList = /*#__PURE__*/function () {
     var treeListScrollable = this._treeList.getScrollable();
     if (treeListScrollable) {
       var diff = scrollTop - treeListScrollable.scrollTop();
-      if (diff !== 0) {
+      if (Math.abs(diff) >= GANTT_SCROLL_ACTIVATION_LEVEL) {
         treeListScrollable.scrollBy({
           left: 0,
           top: diff

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tabs.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,8 +41,6 @@ var TABS_WRAPPER_CLASS = 'dx-tabs-wrapper';
 var TABS_STRETCHED_CLASS = 'dx-tabs-stretched';
 var TABS_SCROLLABLE_CLASS = 'dx-tabs-scrollable';
 var TABS_NAV_BUTTONS_CLASS = 'dx-tabs-nav-buttons';
-var TABS_VERTICAL_CLASS = 'dx-tabs-vertical';
-var TABS_HORIZONTAL_CLASS = 'dx-tabs-horizontal';
 var OVERFLOW_HIDDEN_CLASS = 'dx-overflow-hidden';
 var TABS_ITEM_CLASS = 'dx-tab';
 var TABS_ITEM_SELECTED_CLASS = 'dx-tab-selected';
@@ -53,6 +51,16 @@ var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
 var STATE_DISABLED_CLASS = 'dx-state-disabled';
 var FOCUSED_DISABLED_NEXT_TAB_CLASS = 'dx-focused-disabled-next-tab';
 var FOCUSED_DISABLED_PREV_TAB_CLASS = 'dx-focused-disabled-prev-tab';
+var TABS_ORIENTATION_CLASS = {
+  vertical: 'dx-tabs-vertical',
+  horizontal: 'dx-tabs-horizontal'
+};
+var TABS_ICON_POSITION_CLASS = {
+  top: 'dx-tabs-icon-position-top',
+  end: 'dx-tabs-icon-position-end',
+  bottom: 'dx-tabs-icon-position-bottom',
+  start: 'dx-tabs-icon-position-start'
+};
 var TABS_ITEM_DATA_KEY = 'dxTabData';
 var BUTTON_NEXT_ICON = 'chevronnext';
 var BUTTON_PREV_ICON = 'chevronprev';
@@ -68,6 +76,12 @@ var SCROLLABLE_DIRECTION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
+var ICON_POSITION = {
+  top: 'top',
+  end: 'end',
+  bottom: 'bottom',
+  start: 'start'
+};
 var Tabs = _uiCollection_widget.default.inherit({
   _activeStateUnit: '.' + TABS_ITEM_CLASS,
   _getDefaultOptions: function _getDefaultOptions() {
@@ -78,6 +92,7 @@ var Tabs = _uiCollection_widget.default.inherit({
       scrollingEnabled: true,
       selectionMode: 'single',
       orientation: ORIENTATION.horizontal,
+      iconPosition: ICON_POSITION.start,
       /**
        * @name dxTabsOptions.activeStateEnabled
        * @hidden
@@ -126,7 +141,8 @@ var Tabs = _uiCollection_widget.default.inherit({
       },
       options: {
         useInkRipple: true,
-        selectOnFocus: false
+        selectOnFocus: false,
+        iconPosition: ICON_POSITION.top
       }
     }]);
   },
@@ -135,6 +151,7 @@ var Tabs = _uiCollection_widget.default.inherit({
     this.setAria('role', 'tablist');
     this.$element().addClass(TABS_CLASS);
     this._toggleOrientationClass(this.option('orientation'));
+    this._toggleIconPositionClass();
     this._renderWrapper();
     this._renderMultiple();
     this._feedbackHideTimeout = FEEDBACK_HIDE_TIMEOUT;
@@ -431,15 +448,36 @@ var Tabs = _uiCollection_widget.default.inherit({
     this.callBase();
   },
   _toggleTabsVerticalClass(value) {
-    this.$element().toggleClass(TABS_VERTICAL_CLASS, value);
+    this.$element().toggleClass(TABS_ORIENTATION_CLASS.vertical, value);
   },
   _toggleTabsHorizontalClass(value) {
-    this.$element().toggleClass(TABS_HORIZONTAL_CLASS, value);
+    this.$element().toggleClass(TABS_ORIENTATION_CLASS.horizontal, value);
   },
   _toggleOrientationClass(orientation) {
     var isVertical = orientation === ORIENTATION.vertical;
     this._toggleTabsVerticalClass(isVertical);
     this._toggleTabsHorizontalClass(!isVertical);
+  },
+  _getTabIconPositionClass() {
+    var position = this.option('iconPosition');
+    switch (position) {
+      case ICON_POSITION.top:
+        return TABS_ICON_POSITION_CLASS.top;
+      case ICON_POSITION.end:
+        return TABS_ICON_POSITION_CLASS.end;
+      case ICON_POSITION.bottom:
+        return TABS_ICON_POSITION_CLASS.bottom;
+      case ICON_POSITION.start:
+      default:
+        return TABS_ICON_POSITION_CLASS.start;
+    }
+  },
+  _toggleIconPositionClass() {
+    for (var key in TABS_ICON_POSITION_CLASS) {
+      this.$element().removeClass(TABS_ICON_POSITION_CLASS[key]);
+    }
+    var newClass = this._getTabIconPositionClass();
+    this.$element().addClass(newClass);
   },
   _toggleFocusedDisabledNextClass(currentIndex, isNextDisabled) {
     this._itemElements().eq(currentIndex).toggleClass(FOCUSED_DISABLED_NEXT_TAB_CLASS, isNextDisabled);
@@ -496,6 +534,11 @@ var Tabs = _uiCollection_widget.default.inherit({
           if (!this._isServerSide()) {
             this._updateScrollableDirection();
           }
+          break;
+        }
+      case 'iconPosition':
+        {
+          this._toggleIconPositionClass();
           break;
         }
       default:

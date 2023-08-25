@@ -497,7 +497,7 @@ var DropDownEditor = TextBox.inherit({
   _contentReadyHandler: noop,
   _popupConfig: function _popupConfig() {
     return {
-      onInitialized: this._popupInitializedHandler(),
+      onInitialized: this._getPopupInitializedHandler(),
       position: extend(this.option('popupPosition'), {
         of: this.$element()
       }),
@@ -534,14 +534,16 @@ var DropDownEditor = TextBox.inherit({
       _ignorePreventScrollEventsDeprecation: true
     };
   },
-  _popupInitializedHandler: function _popupInitializedHandler() {
-    if (!this.option('onPopupInitialized')) {
-      return null;
-    }
+  _popupInitializedHandler: noop,
+  _getPopupInitializedHandler: function _getPopupInitializedHandler() {
+    var onPopupInitialized = this.option('onPopupInitialized');
     return e => {
-      this._popupInitializedAction({
-        popup: e.component
-      });
+      this._popupInitializedHandler(e);
+      if (onPopupInitialized) {
+        this._popupInitializedAction({
+          popup: e.component
+        });
+      }
     };
   },
   _dimensionChanged: function _dimensionChanged() {
@@ -749,6 +751,7 @@ var DropDownEditor = TextBox.inherit({
         this._initVisibilityActions();
         break;
       case 'onPopupInitialized':
+        // for dashboards
         this._initPopupInitializedAction();
         break;
       case 'fieldTemplate':

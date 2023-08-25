@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/component_wrapper/common/component.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -453,9 +453,8 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
   }]);
   return ComponentWrapper;
 }(_dom_component.default);
+exports.default = ComponentWrapper;
 ComponentWrapper.IS_RENOVATED_WIDGET = false;
-var _default = ComponentWrapper;
-exports.default = _default;
 ComponentWrapper.IS_RENOVATED_WIDGET = true;
 module.exports = exports.default;
 module.exports.default = exports.default;

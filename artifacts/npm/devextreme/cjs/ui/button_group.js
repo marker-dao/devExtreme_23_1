@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/button_group.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,6 +27,11 @@ var BUTTON_GROUP_FIRST_ITEM_CLASS = BUTTON_GROUP_CLASS + '-first-item';
 var BUTTON_GROUP_LAST_ITEM_CLASS = BUTTON_GROUP_CLASS + '-last-item';
 var BUTTON_GROUP_ITEM_HAS_WIDTH = BUTTON_GROUP_ITEM_CLASS + '-has-width';
 var SHAPE_STANDARD_CLASS = 'dx-shape-standard';
+var BUTTON_GROUP_STYLING_MODE_CLASS = {
+  contained: 'dx-buttongroup-mode-contained',
+  outlined: 'dx-buttongroup-mode-outlined',
+  text: 'dx-buttongroup-mode-text'
+};
 var ButtonCollection = _uiCollection_widget.default.inherit({
   _initTemplates() {
     var _this = this;
@@ -62,6 +67,9 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
   },
   _hasCustomTemplate(template) {
     return (0, _type.isFunction)(template) || this.option('integrationOptions.templates')[template];
+  },
+  _selectedItemClass() {
+    return 'dx-item-selected dx-state-selected';
   },
   _prepareItemStyles($item) {
     var itemIndex = $item.data('dxItemIndex');
@@ -127,9 +135,19 @@ var ButtonGroup = _ui.default.inherit({
   _initMarkup() {
     this.setAria('role', 'group');
     this.$element().addClass(BUTTON_GROUP_CLASS);
+    this._renderStylingMode();
     this._renderButtons();
     this._syncSelectionOptions();
     this.callBase();
+  },
+  _renderStylingMode() {
+    var _BUTTON_GROUP_STYLING;
+    var _this$option = this.option(),
+      stylingMode = _this$option.stylingMode;
+    for (var key in BUTTON_GROUP_STYLING_MODE_CLASS) {
+      this.$element().removeClass(BUTTON_GROUP_STYLING_MODE_CLASS[key]);
+    }
+    this.$element().addClass((_BUTTON_GROUP_STYLING = BUTTON_GROUP_STYLING_MODE_CLASS[stylingMode]) !== null && _BUTTON_GROUP_STYLING !== void 0 ? _BUTTON_GROUP_STYLING : BUTTON_GROUP_STYLING_MODE_CLASS.contained);
   },
   _fireSelectionChangeEvent: function _fireSelectionChangeEvent(addedItems, removedItems) {
     this._createActionByOption('onSelectionChanged', {

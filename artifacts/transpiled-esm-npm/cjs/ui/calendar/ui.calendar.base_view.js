@@ -82,9 +82,8 @@ var BaseView = _ui.default.inherit({
   _createTable: function _createTable() {
     this._$table = (0, _renderer.default)('<table>');
     var localizedWidgetName = _message.default.format('dxCalendar-ariaWidgetName');
-    var localizedHotKeysInfo = _message.default.format('dxCalendar-ariaHotKeysInfo');
     this.setAria({
-      label: "".concat(localizedWidgetName, ". ").concat(localizedHotKeysInfo),
+      label: localizedWidgetName,
       role: 'grid'
     }, this._$table);
     return this._$table;

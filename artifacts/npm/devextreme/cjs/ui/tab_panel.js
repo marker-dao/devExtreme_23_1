@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tab_panel.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -47,6 +47,12 @@ var TABS_ORIENTATION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
+var ICON_POSITION = {
+  top: 'top',
+  end: 'end',
+  bottom: 'bottom',
+  start: 'start'
+};
 var TabPanel = _multi_view.default.inherit({
   _getDefaultOptions: function _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
@@ -56,6 +62,7 @@ var TabPanel = _multi_view.default.inherit({
       scrollByContent: true,
       scrollingEnabled: true,
       tabsPosition: TABS_POSITION.top,
+      iconPosition: ICON_POSITION.start,
       onTitleClick: null,
       onTitleHold: null,
       onTitleRendered: null,
@@ -208,6 +215,7 @@ var TabPanel = _multi_view.default.inherit({
         }
       }.bind(this),
       orientation: this._getTabsOrientation(),
+      iconPosition: this.option('iconPosition'),
       _itemAttributes: {
         class: TABPANEL_TABS_ITEM_CLASS
       }
@@ -248,6 +256,11 @@ var TabPanel = _multi_view.default.inherit({
   _updateTabsOrientation() {
     var orientation = this._getTabsOrientation();
     this._tabs.option('orientation', orientation);
+  },
+  _updateTabsIconPosition(iconPosition) {
+    this._tabs.option({
+      iconPosition
+    });
   },
   _toggleWrapperFocusedClass(isFocused) {
     this._toggleFocusClass(isFocused, this._$wrapper);
@@ -376,6 +389,9 @@ var TabPanel = _multi_view.default.inherit({
       case 'tabsPosition':
         this._toggleTabPanelTabsPositionClass();
         this._updateTabsOrientation();
+        break;
+      case 'iconPosition':
+        this._updateTabsIconPosition(value);
         break;
       default:
         this.callBase(args);

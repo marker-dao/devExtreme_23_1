@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/editing/m_editing.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -46,7 +46,7 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable @typescript-eslint/no-unused-vars */ // @ts-expect-error
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // @ts-expect-error
 var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   _inheritsLoose(EditingControllerImpl, _modules$ViewControll);
   function EditingControllerImpl() {
@@ -117,11 +117,16 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     this.component._optionsByReference[_const.EDITING_CHANGES_OPTION_NAME] = true;
   };
   _proto.getEditMode = function getEditMode() {
-    var editMode = this.option('editing.mode');
+    var _a;
+    var editMode = (_a = this.option('editing.mode')) !== null && _a !== void 0 ? _a : _const.EDIT_MODE_ROW;
     if (_const.EDIT_MODES.includes(editMode)) {
       return editMode;
     }
     return _const.EDIT_MODE_ROW;
+  };
+  _proto.isCellBasedEditMode = function isCellBasedEditMode() {
+    var editMode = this.getEditMode();
+    return _const.CELL_BASED_MODES.includes(editMode);
   };
   _proto._getDefaultEditorTemplate = function _getDefaultEditorTemplate() {
     var _this = this;
@@ -655,11 +660,8 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   _proto._addInsertInfo = function _addInsertInfo(change, parentKey) {
     var _a;
     var insertInfo;
+    change.key = this.getChangeKeyValue(change);
     var key = change.key;
-    if (!(0, _type.isDefined)(key)) {
-      key = String(new _guid.default());
-      change.key = key;
-    }
     insertInfo = (_a = this._getInternalData(key)) === null || _a === void 0 ? void 0 : _a.insertInfo;
     if (!(0, _type.isDefined)(insertInfo)) {
       var insertAfterOrBeforeKey = this._getInsertAfterOrBeforeKey(change);
@@ -676,6 +678,20 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
       insertInfo,
       key
     };
+  };
+  _proto.getChangeKeyValue = function getChangeKeyValue(change) {
+    if ((0, _type.isDefined)(change.key)) {
+      return change.key;
+    }
+    var keyExpr = this._dataController.key();
+    var keyValue;
+    if (change.data && keyExpr && !Array.isArray(keyExpr)) {
+      keyValue = change.data[keyExpr];
+    }
+    if (!(0, _type.isDefined)(keyValue)) {
+      keyValue = (0, _m_editing_utils.generateNewRowTempKey)();
+    }
+    return keyValue;
   };
   _proto._setInsertAfterOrBeforeKey = function _setInsertAfterOrBeforeKey(change, parentKey) {
     var dataController = this._dataController;
@@ -2295,6 +2311,10 @@ var editingModule = {
           }
           if (cellOptions.modified) {
             this.setAria('roledescription', _message.default.format('dxDataGrid-ariaModifiedCell'), $cell);
+          }
+          var isEditableCell = cellOptions.column.allowEditing && !cellOptions.removed && !cellOptions.modified && cellOptions.rowType === 'data' && cellOptions.column.calculateCellValue === cellOptions.column.defaultCalculateCellValue && this._editingController.isCellBasedEditMode();
+          if (isEditableCell) {
+            this.setAria('roledescription', _message.default.format('dxDataGrid-ariaEditableCell'), $cell);
           }
         },
         _createCell(options) {

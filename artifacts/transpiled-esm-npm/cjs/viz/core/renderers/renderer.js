@@ -1632,7 +1632,6 @@ function Renderer(options) {
   }).css({
     'line-height': 'normal',
     // T179515
-    '-ms-user-select': NONE,
     '-moz-user-select': NONE,
     '-webkit-user-select': NONE,
     '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)',

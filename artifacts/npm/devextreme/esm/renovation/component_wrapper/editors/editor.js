@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/component_wrapper/editors/editor.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -135,6 +135,15 @@ export default class Editor extends Component {
     this.option({
       value
     });
+  }
+  reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this._initialValue = value;
+    }
+    this.option('value', this._initialValue);
+    this.option('isDirty', false);
+    this.option('isValid', true);
   }
   _dispose() {
     super._dispose();

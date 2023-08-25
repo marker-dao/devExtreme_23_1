@@ -445,9 +445,8 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
   }]);
   return ComponentWrapper;
 }(_dom_component.default);
+exports.default = ComponentWrapper;
 ComponentWrapper.IS_RENOVATED_WIDGET = false;
-var _default = ComponentWrapper;
-exports.default = _default;
 ComponentWrapper.IS_RENOVATED_WIDGET = true;
 module.exports = exports.default;
 module.exports.default = exports.default;

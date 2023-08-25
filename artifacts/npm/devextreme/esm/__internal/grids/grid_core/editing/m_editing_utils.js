@@ -1,12 +1,15 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/editing/m_editing_utils.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import Guid from '../../../../core/guid';
 import { isObject } from '../../../../core/utils/type';
+var NEW_ROW_TEMP_KEY_PREFIX = '_DX_KEY_';
+var GUID_LENGTH = 36;
 export var createFailureHandler = function createFailureHandler(deferred) {
   return function (arg) {
     var error = arg instanceof Error ? arg : new Error(arg && String(arg) || 'Unknown error');
@@ -33,6 +36,8 @@ export var getEditingTexts = options => {
     add: editingTexts.addRowToNode
   };
 };
+export var generateNewRowTempKey = () => "".concat(NEW_ROW_TEMP_KEY_PREFIX).concat(new Guid());
+export var isNewRowTempKey = key => typeof key === 'string' && key.startsWith(NEW_ROW_TEMP_KEY_PREFIX) && key.length === NEW_ROW_TEMP_KEY_PREFIX.length + GUID_LENGTH;
 export var getButtonIndex = (buttons, name) => {
   var result = -1;
   // @ts-expect-error

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toolbar/strategy/toolbar.singleline.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -199,8 +199,6 @@ var SingleLineStrategy = /*#__PURE__*/function () {
         (_this$_menu = this._menu) === null || _this$_menu === void 0 ? void 0 : _this$_menu._itemOptionChanged(item, property, value);
         return;
       }
-      this._toolbar.option('overflowMenuVisible', false);
-      this._arrangeItems();
     }
     this.renderMenuItems();
   };

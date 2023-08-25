@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_manager/file_items_controller.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -572,15 +572,14 @@ export class FileItemsController {
       var itemDeferreds = [];
       var _loop = function _loop(i) {
         var cachedItem = cachedDirectoryInfo.items.find(cache => dirInfos[i].fileItem.key === cache.fileItem.key);
-        if (!cachedItem) return "continue";
+        if (!cachedItem) return 1; // continue
         dirInfos[i].expanded = cachedItem.expanded;
         if (dirInfos[i].expanded) {
           itemDeferreds.push(_this._loadItemsRecursive(dirInfos[i], cachedItem));
         }
       };
       for (var i = 0; i < dirInfos.length; i++) {
-        var _ret = _loop(i);
-        if (_ret === "continue") continue;
+        if (_loop(i)) continue;
       }
       return whenSome(itemDeferreds);
     }, () => null);

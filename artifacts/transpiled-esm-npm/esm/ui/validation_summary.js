@@ -206,7 +206,7 @@ var ValidationSummary = CollectionWidget.inherit({
         if (isValid || !foundRule) {
           items.splice(itemIndex, 1);
           itemsChanged = true;
-          return "continue";
+          return 1; // continue
         }
         if (foundRule.message !== item.text) {
           item.text = foundRule.message;
@@ -216,8 +216,7 @@ var ValidationSummary = CollectionWidget.inherit({
       itemIndex++;
     };
     while (itemIndex < items.length) {
-      var _ret = _loop();
-      if (_ret === "continue") continue;
+      if (_loop()) continue;
     }
     each(brokenRules, function (_, rule) {
       var foundItem = grep(items, function (item) {

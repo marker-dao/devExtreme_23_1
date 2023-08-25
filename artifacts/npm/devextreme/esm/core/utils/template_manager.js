@@ -1,13 +1,15 @@
 /**
 * DevExtreme (esm/core/utils/template_manager.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import config from '../config';
 import devices from '../devices';
+import { getPublicElement } from '../element';
 import Errors from '../errors';
 import $ from '../renderer';
 import { ChildDefaultTemplate } from '../templates/child_default_template';
@@ -55,6 +57,17 @@ export var addOneRenderedCall = template => {
     }
   });
 };
+export var addPublicElementNormalization = template => {
+  var render = template.render.bind(template);
+  return extend({}, template, {
+    render(options) {
+      var $container = $(options.container);
+      return render(_extends({}, options, {
+        container: getPublicElement($container)
+      }));
+    }
+  });
+};
 export var getNormalizedTemplateArgs = options => {
   var args = [];
   if ('model' in options) {
@@ -77,8 +90,13 @@ export var acquireIntegrationTemplate = (templateSource, templates, isAsyncTempl
   var integrationTemplate = null;
   if (!skipTemplates || skipTemplates.indexOf(templateSource) === -1) {
     integrationTemplate = templates[templateSource];
-    if (integrationTemplate && !(integrationTemplate instanceof TemplateBase) && !isAsyncTemplate) {
-      integrationTemplate = addOneRenderedCall(integrationTemplate);
+    if (integrationTemplate && !(integrationTemplate instanceof TemplateBase)) {
+      if (isFunction(integrationTemplate.render)) {
+        integrationTemplate = addPublicElementNormalization(integrationTemplate);
+      }
+      if (!isAsyncTemplate) {
+        integrationTemplate = addOneRenderedCall(integrationTemplate);
+      }
     }
   }
   return integrationTemplate;

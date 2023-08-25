@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.lv.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -180,6 +180,7 @@
             "dxDataGrid-ariaCollapse": "Savērst",
             "dxDataGrid-ariaModifiedCell": "Modified",
             "dxDataGrid-ariaDeletedCell": "Deleted",
+            "dxDataGrid-ariaEditableCell": "Editable",
             "dxDataGrid-ariaExpand": "Izvērst",
             "dxDataGrid-ariaCollapsedRow": "Collapsed row",
             "dxDataGrid-ariaExpandedRow": "Expanded row",
@@ -193,7 +194,7 @@
             "dxDataGrid-filterPanelCreateFilter": "Izveidot filtru",
             "dxDataGrid-filterPanelClearFilter": "Notīrīt",
             "dxDataGrid-filterPanelFilterEnabledHint": "Iespējot filtru",
-            "dxTreeList-ariaTreeList": "Koks",
+            "dxTreeList-ariaTreeList": "Tree list with {0} rows and {1} columns",
             "dxTreeList-ariaSearchInGrid": "Meklēt kokā",
             "dxTreeList-ariaToolbar": "Koka rīkjosla",
             "dxTreeList-editingAddRowToNode": "Pievienot",
@@ -272,7 +273,18 @@
             "dxScheduler-moreAppointments": "{0} vairāk",
             "dxCalendar-todayButtonText": "Šodien",
             "dxCalendar-ariaWidgetName": "Kalendārs",
-            "dxCalendar-ariaHotKeysInfo": "Lai pārvietotos starp skatiem, nospiediet Control un tad Bultu Pa Kreisi vai Bultu Pa Labi. Lai pietuvinātu skatu, nospiediet Control, un tad Bultu Uz Leju. Lai attālinātu skalu, nospiediet Control un tad Bultu Uz Augšu",
+            "dxCalendar-previousMonthButtonLabel": "Previous month",
+            "dxCalendar-previousYearButtonLabel": "Previous year",
+            "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+            "dxCalendar-previousCenturyButtonLabel": "Previous century",
+            "dxCalendar-nextMonthButtonLabel": "Next month",
+            "dxCalendar-nextYearButtonLabel": "Next year",
+            "dxCalendar-nextDecadeButtonLabel": "Next decade",
+            "dxCalendar-nextCenturyButtonLabel": "Next century",
+            "dxCalendar-captionMonthLabel": "Month selection",
+            "dxCalendar-captionYearLabel": "Year selection",
+            "dxCalendar-captionDecadeLabel": "Decade selection",
+            "dxCalendar-captionCenturyLabel": "Century selection",
             "dxColorView-ariaRed": "Sarkans",
             "dxColorView-ariaGreen": "Zaļš",
             "dxColorView-ariaBlue": "Zils",

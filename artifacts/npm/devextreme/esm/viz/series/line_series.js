@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/series/line_series.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -416,12 +416,11 @@ chart['spline'] = extend({}, lineSeries, {
         });
       }
       if (oppositeCoord !== null) {
-        return "break";
+        return 1; // break
       }
     };
     for (var i = 0; i < nearestPoints.length; i++) {
-      var _ret = _loop();
-      if (_ret === "break") break;
+      if (_loop()) break;
     }
     return oppositeCoord;
   },

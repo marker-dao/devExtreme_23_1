@@ -328,6 +328,9 @@ var Editor = Widget.inherit({
         this.callBase(args);
     }
   },
+  _resetToInitialValue: function _resetToInitialValue() {
+    this.option('value', this._initialValue);
+  },
   blur: function blur() {
     if (this._hasActiveElement()) {
       resetActiveElement();
@@ -336,6 +339,15 @@ var Editor = Widget.inherit({
   clear: function clear() {
     var defaultOptions = this._getDefaultOptions();
     this.option('value', defaultOptions.value);
+  },
+  reset: function reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this._initialValue = value;
+    }
+    this._resetToInitialValue();
+    this.option('isDirty', false);
+    this.option('isValid', true);
   }
 });
 Editor.isEditor = instance => {

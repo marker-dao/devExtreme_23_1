@@ -589,7 +589,7 @@ var Form = Widget.inherit({
         if (!this.option('items')) {
           this._invalidate();
         } else if (isEmptyObject(args.value)) {
-          this._resetValues();
+          this._clear();
         }
         break;
       case 'onFieldDataChanged':
@@ -977,12 +977,18 @@ var Form = Widget.inherit({
     }
     this.option('isDirty', !!this._dirtyFields.size);
   },
-  _resetValues: function _resetValues() {
+  _doForAllEditors: function _doForAllEditors(editorAction) {
     this._itemsRunTimeInfo.each(function (_, itemRunTimeInfo) {
-      if (isDefined(itemRunTimeInfo.widgetInstance) && Editor.isEditor(itemRunTimeInfo.widgetInstance)) {
-        itemRunTimeInfo.widgetInstance.clear();
-        itemRunTimeInfo.widgetInstance.option('isValid', true);
+      var widgetInstance = itemRunTimeInfo.widgetInstance;
+      if (isDefined(widgetInstance) && Editor.isEditor(widgetInstance)) {
+        editorAction(widgetInstance);
       }
+    });
+  },
+  _clear: function _clear() {
+    this._doForAllEditors(editor => {
+      editor.clear();
+      editor.option('isValid', true);
     });
     ValidationEngine.resetGroup(this._getValidationGroup());
   },
@@ -1022,8 +1028,22 @@ var Form = Widget.inherit({
     ValidationEngine.removeGroup(this._getValidationGroup());
     this.callBase();
   },
+  clear: function clear() {
+    this._clear();
+  },
   resetValues: function resetValues() {
-    this._resetValues();
+    this._clear();
+  },
+  reset: function reset(editorsData) {
+    this._doForAllEditors(editor => {
+      var editorName = editor.option('name');
+      if (editorsData && editorName in editorsData) {
+        editor.reset(editorsData[editorName]);
+      } else {
+        editor.reset();
+      }
+    });
+    this._clearValidationSummary();
   },
   updateData: function updateData(data, value) {
     this._updateData(data, value);

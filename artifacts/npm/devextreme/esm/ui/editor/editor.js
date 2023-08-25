@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/editor/editor.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -336,6 +336,9 @@ var Editor = Widget.inherit({
         this.callBase(args);
     }
   },
+  _resetToInitialValue: function _resetToInitialValue() {
+    this.option('value', this._initialValue);
+  },
   blur: function blur() {
     if (this._hasActiveElement()) {
       resetActiveElement();
@@ -344,6 +347,15 @@ var Editor = Widget.inherit({
   clear: function clear() {
     var defaultOptions = this._getDefaultOptions();
     this.option('value', defaultOptions.value);
+  },
+  reset: function reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this._initialValue = value;
+    }
+    this._resetToInitialValue();
+    this.option('isDirty', false);
+    this.option('isValid', true);
   }
 });
 Editor.isEditor = instance => {

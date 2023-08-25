@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/validation_summary.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -214,7 +214,7 @@ var ValidationSummary = CollectionWidget.inherit({
         if (isValid || !foundRule) {
           items.splice(itemIndex, 1);
           itemsChanged = true;
-          return "continue";
+          return 1; // continue
         }
         if (foundRule.message !== item.text) {
           item.text = foundRule.message;
@@ -224,8 +224,7 @@ var ValidationSummary = CollectionWidget.inherit({
       itemIndex++;
     };
     while (itemIndex < items.length) {
-      var _ret = _loop();
-      if (_ret === "continue") continue;
+      if (_loop()) continue;
     }
     each(brokenRules, function (_, rule) {
       var foundItem = grep(items, function (item) {

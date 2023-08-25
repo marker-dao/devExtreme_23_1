@@ -123,6 +123,7 @@ export var normalizeWidth = width => {
 };
 var viewWithColumnStateMixin = modules.View.inherit(columnStateMixin);
 export class ColumnsView extends viewWithColumnStateMixin {
+  setTableRole($tableElement) {}
   _createScrollableOptions() {
     var that = this;
     var scrollingOptions = that.option('scrolling');
@@ -201,17 +202,17 @@ export class ColumnsView extends viewWithColumnStateMixin {
     return row && row.dataIndex % 2 === 1;
   }
   _createTable(columns, isAppend) {
-    var that = this;
-    var $table = $('<table>').addClass(that.addWidgetPrefix(TABLE_CLASS)).addClass(that.addWidgetPrefix(TABLE_FIXED_CLASS));
+    var $table = $('<table>').addClass(this.addWidgetPrefix(TABLE_CLASS)).addClass(this.addWidgetPrefix(TABLE_FIXED_CLASS));
     if (columns && !isAppend) {
-      $table.append(that._createColGroup(columns));
+      $table.append(this._createColGroup(columns));
       if (browser.safari) {
         // T198380, T809552
         // @ts-expect-error
         $table.append($('<thead>').append('<tr>'));
       }
+      this.setTableRole($table);
     } else {
-      that.setAria('hidden', true, $table);
+      this.setAria('hidden', true, $table);
     }
     this.setAria('role', 'presentation', $('<tbody>').appendTo($table));
     if (isAppend) {
@@ -225,13 +226,13 @@ export class ColumnsView extends viewWithColumnStateMixin {
         }
       });
     }
-    if (that.option('cellHintEnabled')) {
+    if (this.option('cellHintEnabled')) {
       eventsEngine.on($table, 'mousemove', '.dx-row > td', this.createAction(args => {
         var e = args.event;
         var $element = $(e.target);
         var $cell = $(e.currentTarget);
         var $row = $cell.parent();
-        var visibleColumns = that._columnsController.getVisibleColumns();
+        var visibleColumns = this._columnsController.getVisibleColumns();
         var rowOptions = $row.data('options');
         var columnIndex = $cell.index();
         // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
@@ -241,7 +242,7 @@ export class ColumnsView extends viewWithColumnStateMixin {
         var isDataRow = $row.hasClass('dx-data-row');
         var isMasterDetailRow = $row.hasClass(DETAIL_ROW_CLASS);
         var isGroupRow = $row.hasClass(GROUP_ROW_CLASS);
-        var isFilterRow = $row.hasClass(that.addWidgetPrefix(FILTER_ROW_CLASS));
+        var isFilterRow = $row.hasClass(this.addWidgetPrefix(FILTER_ROW_CLASS));
         var isDataRowWithTemplate = isDataRow && (!column || column.cellTemplate);
         var isEditorShown = isDataRow && cellOptions && (rowOptions.isEditing || cellOptions.isEditing || (column === null || column === void 0 ? void 0 : column.showEditorAlways));
         var isHeaderRowWithTemplate = isHeaderRow && (!column || column.headerCellTemplate);
@@ -260,7 +261,7 @@ export class ColumnsView extends viewWithColumnStateMixin {
         }
       }));
     }
-    var getOptions = function getOptions(event) {
+    var getOptions = event => {
       var $cell = $(event.currentTarget);
       var $fieldItemContent = $(event.target).closest(".".concat(FORM_FIELD_ITEM_CONTENT_CLASS));
       var $row = $cell.parent();
@@ -272,33 +273,33 @@ export class ColumnsView extends viewWithColumnStateMixin {
         event,
         eventType: event.type
       });
-      resultOptions.rowIndex = that.getRowIndex($row);
+      resultOptions.rowIndex = this.getRowIndex($row);
       if ($fieldItemContent.length) {
         var formItemOptions = $fieldItemContent.data('dx-form-item');
         if (formItemOptions.column) {
           resultOptions.column = formItemOptions.column;
-          resultOptions.columnIndex = that._columnsController.getVisibleIndex(resultOptions.column.index);
+          resultOptions.columnIndex = this._columnsController.getVisibleIndex(resultOptions.column.index);
         }
       }
       return resultOptions;
     };
     eventsEngine.on($table, 'mouseover', '.dx-row > td', e => {
       var options = getOptions(e);
-      options && that.executeAction('onCellHoverChanged', options);
+      options && this.executeAction('onCellHoverChanged', options);
     });
     eventsEngine.on($table, 'mouseout', '.dx-row > td', e => {
       var options = getOptions(e);
-      options && that.executeAction('onCellHoverChanged', options);
+      options && this.executeAction('onCellHoverChanged', options);
     });
     eventsEngine.on($table, clickEventName, '.dx-row > td', e => {
       var options = getOptions(e);
-      options && that.executeAction('onCellClick', options);
+      options && this.executeAction('onCellClick', options);
     });
     eventsEngine.on($table, dblclickEvent, '.dx-row > td', e => {
       var options = getOptions(e);
-      options && that.executeAction('onCellDblClick', options);
+      options && this.executeAction('onCellDblClick', options);
     });
-    subscribeToRowEvents(that, $table);
+    subscribeToRowEvents(this, $table);
     return $table;
   }
   _rowPointerDown() {}

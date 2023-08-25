@@ -128,6 +128,15 @@ export default class Editor extends Component {
       value
     });
   }
+  reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this._initialValue = value;
+    }
+    this.option('value', this._initialValue);
+    this.option('isDirty', false);
+    this.option('isValid', true);
+  }
   _dispose() {
     super._dispose();
     data(this.element(), VALIDATION_TARGET, null);

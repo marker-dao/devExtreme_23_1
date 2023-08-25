@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_button.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -87,7 +87,7 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
   _proto._legacyRender = function _legacyRender($editor, $element, isVisible) {
     $editor.toggleClass(DROP_DOWN_EDITOR_BUTTON_VISIBLE, isVisible);
     if ($element) {
-      $element.removeClass('dx-button').addClass(DROP_DOWN_EDITOR_BUTTON_CLASS);
+      $element.removeClass('dx-button').removeClass('dx-button-mode-contained').addClass(DROP_DOWN_EDITOR_BUTTON_CLASS);
     }
   };
   _proto._isSameTemplate = function _isSameTemplate() {

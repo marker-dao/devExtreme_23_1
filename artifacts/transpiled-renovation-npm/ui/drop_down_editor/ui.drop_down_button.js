@@ -79,7 +79,7 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
   _proto._legacyRender = function _legacyRender($editor, $element, isVisible) {
     $editor.toggleClass(DROP_DOWN_EDITOR_BUTTON_VISIBLE, isVisible);
     if ($element) {
-      $element.removeClass('dx-button').addClass(DROP_DOWN_EDITOR_BUTTON_CLASS);
+      $element.removeClass('dx-button').removeClass('dx-button-mode-contained').addClass(DROP_DOWN_EDITOR_BUTTON_CLASS);
     }
   };
   _proto._isSameTemplate = function _isSameTemplate() {

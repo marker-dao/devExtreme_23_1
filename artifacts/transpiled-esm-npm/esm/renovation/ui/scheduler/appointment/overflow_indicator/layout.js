@@ -33,18 +33,18 @@ export var viewFunction = _ref => {
 export var OverflowIndicatorProps = {};
 var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => normalizeProps(createComponentVNode(2, TemplateProp, _extends({}, props))) : TemplateProp);
 export class OverflowIndicator extends InfernoComponent {
-  get appointmentsContextValue() {
-    if (this.context[AppointmentsContext.id]) {
-      return this.context[AppointmentsContext.id];
-    }
-    return AppointmentsContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {
       color: undefined
     };
     this.updateStylesEffect = this.updateStylesEffect.bind(this);
+  }
+  get appointmentsContextValue() {
+    if (this.context[AppointmentsContext.id]) {
+      return this.context[AppointmentsContext.id];
+    }
+    return AppointmentsContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.updateStylesEffect, [this.props.groups, this.props.viewModel, this.appointmentsContextValue])];

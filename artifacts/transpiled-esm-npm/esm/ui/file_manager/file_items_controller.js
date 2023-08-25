@@ -564,15 +564,14 @@ export class FileItemsController {
       var itemDeferreds = [];
       var _loop = function _loop(i) {
         var cachedItem = cachedDirectoryInfo.items.find(cache => dirInfos[i].fileItem.key === cache.fileItem.key);
-        if (!cachedItem) return "continue";
+        if (!cachedItem) return 1; // continue
         dirInfos[i].expanded = cachedItem.expanded;
         if (dirInfos[i].expanded) {
           itemDeferreds.push(_this._loadItemsRecursive(dirInfos[i], cachedItem));
         }
       };
       for (var i = 0; i < dirInfos.length; i++) {
-        var _ret = _loop(i);
-        if (_ret === "continue") continue;
+        if (_loop(i)) continue;
       }
       return whenSome(itemDeferreds);
     }, () => null);

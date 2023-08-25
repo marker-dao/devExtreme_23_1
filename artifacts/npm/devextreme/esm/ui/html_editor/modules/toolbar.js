@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/html_editor/modules/toolbar.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,6 +32,7 @@ if (Quill) {
   var TOOLBAR_SEPARATOR_CLASS = 'dx-htmleditor-toolbar-separator';
   var TOOLBAR_MENU_SEPARATOR_CLASS = 'dx-htmleditor-toolbar-menu-separator';
   var ACTIVE_FORMAT_CLASS = 'dx-format-active';
+  var SELECTED_STATE_CLASS = 'dx-state-selected';
   var ICON_CLASS = 'dx-icon';
   var SELECTION_CHANGE_EVENT = 'selection-change';
   var USER_ACTION = 'user';
@@ -457,6 +458,7 @@ if (Quill) {
         this._setValueSilent(widget, formats[name]);
       } else {
         widget.$element().addClass(ACTIVE_FORMAT_CLASS);
+        widget.$element().addClass(SELECTED_STATE_CLASS);
       }
     }
     _toggleClearFormatting(hasFormats) {
@@ -510,6 +512,7 @@ if (Quill) {
     }
     _resetFormatWidget(name, widget) {
       widget.$element().removeClass(ACTIVE_FORMAT_CLASS);
+      widget.$element().removeClass(SELECTED_STATE_CLASS);
       if (this._isColorFormat(name)) {
         this._updateColorWidget(name);
       }

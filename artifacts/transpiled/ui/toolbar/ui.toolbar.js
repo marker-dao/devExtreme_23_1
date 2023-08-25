@@ -162,10 +162,10 @@ var Toolbar = /*#__PURE__*/function (_ToolbarBase) {
     }
   };
   _proto._itemOptionChanged = function _itemOptionChanged(item, property, value) {
-    this._layoutStrategy._itemOptionChanged(item, property, value);
     if (!this._isMenuItem(item)) {
       _ToolbarBase.prototype._itemOptionChanged.call(this, item, property, value);
     }
+    this._layoutStrategy._itemOptionChanged(item, property, value);
     if (property === 'disabled' || property === 'options.disabled') {
       (0, _uiToolbar2.toggleItemFocusableElementTabIndex)(this, item);
     }

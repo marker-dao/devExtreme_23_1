@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common.d.ts)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -90,7 +90,7 @@ export type ButtonType = 'danger' | 'default' | 'normal' | 'success';
 export type CompareRule = {
   /**
   * @docid
-  * @type_function_return object
+  * @type_function_return any
   * @public
   */
   comparisonTarget?: (() => any);
@@ -502,6 +502,12 @@ export type Position = 'bottom' | 'left' | 'right' | 'top';
  * @namespace DevExpress.common
  */
 export type PositionAlignment = 'bottom' | 'center' | 'left' | 'left bottom' | 'left top' | 'right' | 'right bottom' | 'right top' | 'top';
+
+/**
+ * @public
+ * @namespace DevExpress.common
+ */
+export type PositionRelative = 'top' | 'end' | 'bottom' | 'start';
 
 /**
  * @docid

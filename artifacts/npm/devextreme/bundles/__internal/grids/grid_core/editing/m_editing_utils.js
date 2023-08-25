@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/editing/m_editing_utils.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,12 +11,16 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getButtonIndex = exports.forEachFormItems = exports.createFailureHandler = void 0;
+exports.getButtonIndex = exports.generateNewRowTempKey = exports.forEachFormItems = exports.createFailureHandler = void 0;
 exports.getButtonName = getButtonName;
 exports.getEditorType = exports.getEditingTexts = void 0;
 exports.isEditable = isEditable;
-exports.isEditingOrShowEditorAlwaysDataCell = exports.isEditingCell = void 0;
+exports.isNewRowTempKey = exports.isEditingOrShowEditorAlwaysDataCell = exports.isEditingCell = void 0;
+var _guid = _interopRequireDefault(require("../../../../core/guid"));
 var _type = require("../../../../core/utils/type");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var NEW_ROW_TEMP_KEY_PREFIX = '_DX_KEY_';
+var GUID_LENGTH = 36;
 var createFailureHandler = function createFailureHandler(deferred) {
   return function (arg) {
     var error = arg instanceof Error ? arg : new Error(arg && String(arg) || 'Unknown error');
@@ -47,6 +51,14 @@ var getEditingTexts = function getEditingTexts(options) {
   };
 };
 exports.getEditingTexts = getEditingTexts;
+var generateNewRowTempKey = function generateNewRowTempKey() {
+  return "".concat(NEW_ROW_TEMP_KEY_PREFIX).concat(new _guid.default());
+};
+exports.generateNewRowTempKey = generateNewRowTempKey;
+var isNewRowTempKey = function isNewRowTempKey(key) {
+  return typeof key === 'string' && key.startsWith(NEW_ROW_TEMP_KEY_PREFIX) && key.length === NEW_ROW_TEMP_KEY_PREFIX.length + GUID_LENGTH;
+};
+exports.isNewRowTempKey = isNewRowTempKey;
 var getButtonIndex = function getButtonIndex(buttons, name) {
   var result = -1;
   // @ts-expect-error

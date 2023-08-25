@@ -137,6 +137,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return _viewWithColumnStateM.apply(this, arguments) || this;
   }
   var _proto = ColumnsView.prototype;
+  _proto.setTableRole = function setTableRole($tableElement) {};
   _proto._createScrollableOptions = function _createScrollableOptions() {
     var that = this;
     var scrollingOptions = that.option('scrolling');
@@ -211,17 +212,18 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return row && row.dataIndex % 2 === 1;
   };
   _proto._createTable = function _createTable(columns, isAppend) {
-    var that = this;
-    var $table = (0, _renderer.default)('<table>').addClass(that.addWidgetPrefix(TABLE_CLASS)).addClass(that.addWidgetPrefix(TABLE_FIXED_CLASS));
+    var _this = this;
+    var $table = (0, _renderer.default)('<table>').addClass(this.addWidgetPrefix(TABLE_CLASS)).addClass(this.addWidgetPrefix(TABLE_FIXED_CLASS));
     if (columns && !isAppend) {
-      $table.append(that._createColGroup(columns));
+      $table.append(this._createColGroup(columns));
       if (_browser.default.safari) {
         // T198380, T809552
         // @ts-expect-error
         $table.append((0, _renderer.default)('<thead>').append('<tr>'));
       }
+      this.setTableRole($table);
     } else {
-      that.setAria('hidden', true, $table);
+      this.setAria('hidden', true, $table);
     }
     this.setAria('role', 'presentation', (0, _renderer.default)('<tbody>').appendTo($table));
     if (isAppend) {
@@ -235,13 +237,13 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
         }
       });
     }
-    if (that.option('cellHintEnabled')) {
+    if (this.option('cellHintEnabled')) {
       _events_engine.default.on($table, 'mousemove', '.dx-row > td', this.createAction(function (args) {
         var e = args.event;
         var $element = (0, _renderer.default)(e.target);
         var $cell = (0, _renderer.default)(e.currentTarget);
         var $row = $cell.parent();
-        var visibleColumns = that._columnsController.getVisibleColumns();
+        var visibleColumns = _this._columnsController.getVisibleColumns();
         var rowOptions = $row.data('options');
         var columnIndex = $cell.index();
         // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
@@ -251,7 +253,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
         var isDataRow = $row.hasClass('dx-data-row');
         var isMasterDetailRow = $row.hasClass(DETAIL_ROW_CLASS);
         var isGroupRow = $row.hasClass(GROUP_ROW_CLASS);
-        var isFilterRow = $row.hasClass(that.addWidgetPrefix(FILTER_ROW_CLASS));
+        var isFilterRow = $row.hasClass(_this.addWidgetPrefix(FILTER_ROW_CLASS));
         var isDataRowWithTemplate = isDataRow && (!column || column.cellTemplate);
         var isEditorShown = isDataRow && cellOptions && (rowOptions.isEditing || cellOptions.isEditing || (column === null || column === void 0 ? void 0 : column.showEditorAlways));
         var isHeaderRowWithTemplate = isHeaderRow && (!column || column.headerCellTemplate);
@@ -282,33 +284,33 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
         event,
         eventType: event.type
       });
-      resultOptions.rowIndex = that.getRowIndex($row);
+      resultOptions.rowIndex = _this.getRowIndex($row);
       if ($fieldItemContent.length) {
         var formItemOptions = $fieldItemContent.data('dx-form-item');
         if (formItemOptions.column) {
           resultOptions.column = formItemOptions.column;
-          resultOptions.columnIndex = that._columnsController.getVisibleIndex(resultOptions.column.index);
+          resultOptions.columnIndex = _this._columnsController.getVisibleIndex(resultOptions.column.index);
         }
       }
       return resultOptions;
     };
     _events_engine.default.on($table, 'mouseover', '.dx-row > td', function (e) {
       var options = getOptions(e);
-      options && that.executeAction('onCellHoverChanged', options);
+      options && _this.executeAction('onCellHoverChanged', options);
     });
     _events_engine.default.on($table, 'mouseout', '.dx-row > td', function (e) {
       var options = getOptions(e);
-      options && that.executeAction('onCellHoverChanged', options);
+      options && _this.executeAction('onCellHoverChanged', options);
     });
     _events_engine.default.on($table, _click.name, '.dx-row > td', function (e) {
       var options = getOptions(e);
-      options && that.executeAction('onCellClick', options);
+      options && _this.executeAction('onCellClick', options);
     });
     _events_engine.default.on($table, _double_click.name, '.dx-row > td', function (e) {
       var options = getOptions(e);
-      options && that.executeAction('onCellDblClick', options);
+      options && _this.executeAction('onCellDblClick', options);
     });
-    subscribeToRowEvents(that, $table);
+    subscribeToRowEvents(this, $table);
     return $table;
   };
   _proto._rowPointerDown = function _rowPointerDown() {};
@@ -346,11 +348,11 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     this._renderDelayedTemplatesCoreAsync(asyncTemplates);
   };
   _proto._renderDelayedTemplatesCoreAsync = function _renderDelayedTemplatesCoreAsync(templates) {
-    var _this = this;
+    var _this2 = this;
     if (templates.length) {
       var templateTimeout = (0, _window.getWindow)().setTimeout(function () {
-        _this._templateTimeouts.delete(templateTimeout);
-        _this._renderDelayedTemplatesCore(templates, true);
+        _this2._templateTimeouts.delete(templateTimeout);
+        _this2._renderDelayedTemplatesCore(templates, true);
       });
       this._templateTimeouts.add(templateTimeout);
     }
@@ -415,7 +417,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return renderingTemplate;
   };
   _proto.renderTemplate = function renderTemplate(container, template, options, allowRenderToDetachedContainer, change) {
-    var _this2 = this;
+    var _this3 = this;
     var _a;
     var renderingTemplate = this._processTemplate(template, options);
     var column = options.column;
@@ -427,7 +429,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
       model: options,
       deferred: templateDeferred,
       onRendered: function onRendered() {
-        if (_this2.isDisposed()) {
+        if (_this3.isDisposed()) {
           templateDeferred.reject();
         } else {
           templateDeferred.resolve();
@@ -453,7 +455,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
       templateDeferred.reject();
     }
     return templateDeferred.promise().always(function () {
-      _this2._templateDeferreds.delete(templateDeferred);
+      _this3._templateDeferreds.delete(templateDeferred);
     });
   };
   _proto._getBodies = function _getBodies(tableElement) {
@@ -599,10 +601,10 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return $cell;
   };
   _proto._renderCellContent = function _renderCellContent($cell, options, renderOptions) {
-    var _this3 = this;
+    var _this4 = this;
     var template = this._getCellTemplate(options);
     (0, _deferred.when)(!template || this.renderTemplate($cell, template, options, undefined, renderOptions.change)).done(function () {
-      _this3._updateCell($cell, options);
+      _this4._updateCell($cell, options);
     });
   };
   _proto._getCellTemplate = function _getCellTemplate(options) {};
@@ -720,7 +722,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     }
   };
   _proto.init = function init() {
-    var _this4 = this;
+    var _this5 = this;
     this._scrollLeft = -1;
     this._columnsController = this.getController('columns');
     this._dataController = this.getController('data');
@@ -743,7 +745,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
       excludeValidators: ['disabled', 'readOnly'],
       category: 'rendering',
       afterExecute: function afterExecute(e) {
-        _this4._afterRowPrepared(e);
+        _this5._afterRowPrepared(e);
       }
     });
     this._columnsController.columnsChanged.add(this._columnOptionChanged.bind(this));
@@ -782,7 +784,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     }
   };
   _proto._wrapTableInScrollContainer = function _wrapTableInScrollContainer($table, isFixedTableRendering) {
-    var _this5 = this;
+    var _this6 = this;
     var $scrollContainer = (0, _renderer.default)('<div>');
     var useNative = this.option('scrolling.useNative');
     if (useNative === false || useNative === 'auto' && !_support.nativeScrolling) {
@@ -790,10 +792,10 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     }
     _events_engine.default.on($scrollContainer, 'scroll', function () {
       var scrollLeft = $scrollContainer.scrollLeft();
-      if (scrollLeft !== _this5._scrollLeft) {
-        _this5.scrollChanged.fire({
+      if (scrollLeft !== _this6._scrollLeft) {
+        _this6.scrollChanged.fire({
           left: scrollLeft
-        }, _this5.name);
+        }, _this6.name);
       }
     });
     $scrollContainer.addClass(this.addWidgetPrefix(CONTENT_CLASS)).addClass(this.addWidgetPrefix(SCROLL_CONTAINER_CLASS)).append($table).appendTo(this.element());
@@ -805,7 +807,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return this.option('templatesRenderAsynchronously') && this.option('renderAsync') === false;
   };
   _proto.waitAsyncTemplates = function waitAsyncTemplates() {
-    var _this6 = this;
+    var _this7 = this;
     var forceWaiting = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     // @ts-expect-error
     var result = new _deferred.Deferred();
@@ -814,10 +816,10 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
       return result.resolve();
     }
     var waitTemplatesRecursion = function waitTemplatesRecursion() {
-      return _deferred.when.apply(_this6, Array.from(_this6._templateDeferreds)).done(function () {
-        if (_this6.isDisposed()) {
+      return _deferred.when.apply(_this7, Array.from(_this7._templateDeferreds)).done(function () {
+        if (_this7.isDisposed()) {
           result.reject();
-        } else if (_this6._templateDeferreds.size > 0) {
+        } else if (_this7._templateDeferreds.size > 0) {
           waitTemplatesRecursion();
         } else {
           result.resolve();
@@ -828,11 +830,11 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return result.promise();
   };
   _proto._updateContent = function _updateContent($newTableElement, change, isFixedTableRendering) {
-    var _this7 = this;
+    var _this8 = this;
     return this.waitAsyncTemplates().done(function () {
-      _this7._removeContent(isFixedTableRendering);
-      _this7.setTableElement($newTableElement, isFixedTableRendering);
-      _this7._wrapTableInScrollContainer($newTableElement, isFixedTableRendering);
+      _this8._removeContent(isFixedTableRendering);
+      _this8.setTableElement($newTableElement, isFixedTableRendering);
+      _this8._wrapTableInScrollContainer($newTableElement, isFixedTableRendering);
     });
   };
   _proto._findContentElement = function _findContentElement() {};
@@ -881,7 +883,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return columnIndex;
   };
   _proto.setColumnWidths = function setColumnWidths(_ref2) {
-    var _this8 = this;
+    var _this9 = this;
     var widths = _ref2.widths,
       optionNames = _ref2.optionNames;
     var $tableElement = this.getTableElement();
@@ -907,7 +909,7 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
         var $rows = $tableElement.children().children('.dx-row').not(".".concat(DETAIL_ROW_CLASS));
         for (var rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
           var $row = $rows.eq(rowIndex);
-          var visibleIndex = _this8.getVisibleColumnIndex(columnIndex, rowIndex);
+          var visibleIndex = _this9.getVisibleColumnIndex(columnIndex, rowIndex);
           var $cell = $row.hasClass(GROUP_ROW_CLASS) ? $row.find("td[aria-colindex='".concat(visibleIndex + 1, "']:not(.").concat(GROUP_CELL_CLASS, ")")) : $row.find('td').eq(visibleIndex);
           var cell = $cell.get(0);
           if (cell) {

@@ -708,6 +708,22 @@ var TextEditorBase = Editor.inherit({
       this.option('value', defaultOptions.value);
     }
   },
+  _resetToInitialValue() {
+    if (this.option('value') === this._initialValue) {
+      this._options.silent('text', this._initialValue);
+      this._renderValue();
+    } else {
+      this.callBase();
+    }
+  },
+  reset: function reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this.callBase(value);
+    } else {
+      this.callBase();
+    }
+  },
   on: function on(eventName, eventHandler) {
     var result = this.callBase(eventName, eventHandler);
     var event = eventName.charAt(0).toUpperCase() + eventName.substr(1);

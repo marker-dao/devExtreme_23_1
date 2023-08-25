@@ -28,12 +28,6 @@ export var viewFunction = _ref => {
 export var DomComponentWrapperProps = {};
 import { createRef as infernoCreateRef } from 'inferno';
 export class DomComponentWrapper extends InfernoComponent {
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -41,6 +35,12 @@ export class DomComponentWrapper extends InfernoComponent {
     this.getInstance = this.getInstance.bind(this);
     this.setupWidget = this.setupWidget.bind(this);
     this.updateWidget = this.updateWidget.bind(this);
+  }
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.setupWidget, []), new InfernoEffect(this.updateWidget, [this.props.componentProps, this.config, this.props.templateNames])];

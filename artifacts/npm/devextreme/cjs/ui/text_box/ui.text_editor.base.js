@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.base.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -716,6 +716,22 @@ var TextEditorBase = _editor.default.inherit({
       this._renderValue();
     } else {
       this.option('value', defaultOptions.value);
+    }
+  },
+  _resetToInitialValue() {
+    if (this.option('value') === this._initialValue) {
+      this._options.silent('text', this._initialValue);
+      this._renderValue();
+    } else {
+      this.callBase();
+    }
+  },
+  reset: function reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this.callBase(value);
+    } else {
+      this.callBase();
     }
   },
   on: function on(eventName, eventHandler) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,7 +48,6 @@ var CALENDAR_VIEWS_WRAPPER_CLASS = 'dx-calendar-views-wrapper';
 var CALENDAR_VIEW_CLASS = 'dx-calendar-view';
 var CALENDAR_MULTIVIEW_CLASS = 'dx-calendar-multiview';
 var CALENDAR_RANGE_CLASS = 'dx-calendar-range';
-var FOCUSED_STATE_CLASS = 'dx-state-focused';
 var GESTURE_COVER_CLASS = 'dx-gesture-cover';
 var ANIMATION_DURATION_SHOW_VIEW = 250;
 var POP_ANIMATION_FROM = 0.6;
@@ -73,9 +72,6 @@ var SELECTION_STRATEGIES = {
   MultipleSelection: CalendarMultipleSelectionStrategy,
   RangeSelection: CalendarRangeSelectionStrategy
 };
-function elementHasFocus(element) {
-  return element.hasClass(FOCUSED_STATE_CLASS);
-}
 var Calendar = Editor.inherit({
   _activeStateUnit: '.' + CALENDAR_CELL_CLASS,
   _getDefaultOptions: function _getDefaultOptions() {
@@ -468,7 +464,7 @@ var Calendar = Editor.inherit({
     return this._isAdditionalViewDate(date) ? this._additionalView : this._view;
   },
   _setViewContoured: function _setViewContoured(date) {
-    if (this.option('skipFocusCheck') || elementHasFocus(this._focusTarget())) {
+    if (this.option('skipFocusCheck') || $(this._$viewsWrapper).is(':focus')) {
       var _this$_additionalView;
       this._view.option('contouredDate', null);
       (_this$_additionalView = this._additionalView) === null || _this$_additionalView === void 0 ? void 0 : _this$_additionalView.option('contouredDate', null);
@@ -548,24 +544,28 @@ var Calendar = Editor.inherit({
     return date;
   },
   _focusTarget: function _focusTarget() {
+    return this._$viewsWrapper;
+  },
+  _focusEventTarget() {
     return this.$element();
   },
   _initMarkup: function _initMarkup() {
     this._renderSubmitElement();
-    this.callBase();
     var $element = this.$element();
     $element.addClass(CALENDAR_CLASS);
     $element.toggleClass(CALENDAR_RANGE_CLASS, this.option('selectionMode') === 'range');
     this._renderBody();
     $element.append(this.$body);
     this._renderViews();
-    this._renderEvents();
     this._renderNavigator();
+    this.callBase();
+    this._renderEvents();
     $element.prepend(this._navigator.$element());
     this._renderSwipeable();
     this._renderFooter();
     this._selectionStrategy.updateAriaSelected();
     this._updateAriaId();
+    this._updateNavigatorLabels();
     this.setAria('role', 'application');
     this._moveToClosestAvailableDate();
   },
@@ -738,13 +738,16 @@ var Calendar = Editor.inherit({
   },
   _navigatorConfig: function _navigatorConfig() {
     var {
+      focusStateEnabled,
       rtlEnabled
     } = this.option();
     return {
       text: this._getViewsCaption(this._view, this._additionalView),
       onClick: this._navigatorClickHandler.bind(this),
       onCaptionClick: this._navigateUp.bind(this),
-      rtlEnabled
+      focusStateEnabled,
+      rtlEnabled,
+      tabIndex: undefined
     };
   },
   _navigatorClickHandler: function _navigatorClickHandler(e) {
@@ -1084,15 +1087,34 @@ var Calendar = Editor.inherit({
   _visibilityChanged: function _visibilityChanged() {
     this._translateViews();
   },
-  _focusInHandler: function _focusInHandler() {
-    this.callBase.apply(this, arguments);
-    this._setViewContoured(this.option('currentDate'));
+  _shouldSkipFocusEvent(event) {
+    var {
+      target,
+      relatedTarget
+    } = event;
+    return $(target).parents(".".concat(CALENDAR_CLASS)).length && $(relatedTarget).parents(".".concat(CALENDAR_CLASS)).length;
   },
-  _focusOutHandler: function _focusOutHandler() {
-    var _this$_additionalView2;
+  _focusInHandler: function _focusInHandler(event) {
+    if ($(event.target).is(this._$viewsWrapper)) {
+      this._setViewContoured(this.option('currentDate'));
+    }
+    if (this._shouldSkipFocusEvent(event)) {
+      return;
+    }
     this.callBase.apply(this, arguments);
-    this._view.option('contouredDate', null);
-    (_this$_additionalView2 = this._additionalView) === null || _this$_additionalView2 === void 0 ? void 0 : _this$_additionalView2.option('contouredDate', null);
+    this._toggleFocusClass(true, this.$element());
+  },
+  _focusOutHandler: function _focusOutHandler(event) {
+    if ($(event.target).is(this._$viewsWrapper)) {
+      var _this$_additionalView2;
+      this._view.option('contouredDate', null);
+      (_this$_additionalView2 = this._additionalView) === null || _this$_additionalView2 === void 0 ? void 0 : _this$_additionalView2.option('contouredDate', null);
+    }
+    if (this._shouldSkipFocusEvent(event)) {
+      return;
+    }
+    this.callBase.apply(this, arguments);
+    this._toggleFocusClass(false, this.$element());
   },
   _updateViewsOption: function _updateViewsOption(optionName, newValue) {
     var _this$_additionalView3, _this$_beforeView, _this$_afterView;
@@ -1118,6 +1140,17 @@ var Calendar = Editor.inherit({
     });
     this._updateViewsOption('min', this._getMinDate());
     this._updateViewsOption('max', this._getMaxDate());
+  },
+  _updateNavigatorLabels: function _updateNavigatorLabels() {
+    var zoomLevel = this.option('zoomLevel');
+    zoomLevel = zoomLevel.charAt(0).toUpperCase() + zoomLevel.slice(1);
+    var captionButtonText = this._navigator._caption.option('text');
+    var localizedPrevButtonLabel = messageLocalization.format("dxCalendar-previous".concat(zoomLevel, "ButtonLabel"));
+    var localizedCaptionLabel = messageLocalization.format("dxCalendar-caption".concat(zoomLevel, "Label"));
+    var localizedNextButtonLabel = messageLocalization.format("dxCalendar-next".concat(zoomLevel, "ButtonLabel"));
+    this.setAria('label', localizedPrevButtonLabel, this._navigator._prevButton.$element());
+    this.setAria('label', "".concat(captionButtonText, ". ").concat(localizedCaptionLabel), this._navigator._caption.$element());
+    this.setAria('label', localizedNextButtonLabel, this._navigator._nextButton.$element());
   },
   _updateAriaSelected: function _updateAriaSelected(value, previousValue) {
     previousValue.forEach(item => {
@@ -1180,6 +1213,9 @@ var Calendar = Editor.inherit({
         this._refreshViews();
         this._updateButtonsVisibility();
         break;
+      case 'focusStateEnabled':
+        this._invalidate();
+        break;
       case 'currentDate':
         this.setAria('id', undefined, this._view._getCellByDate(previousValue));
         this._updateCurrentDate(value);
@@ -1190,6 +1226,7 @@ var Calendar = Editor.inherit({
         this._refreshViews();
         this._renderNavigator();
         this._updateAriaId();
+        this._updateNavigatorLabels();
         break;
       case 'minZoomLevel':
       case 'maxZoomLevel':

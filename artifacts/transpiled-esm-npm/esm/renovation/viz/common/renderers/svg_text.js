@@ -68,12 +68,6 @@ export var TextSvgElementProps = Object.create(Object.prototype, _extends(Object
 })));
 import { createRef as infernoCreateRef } from 'inferno';
 export class TextSvgElement extends InfernoComponent {
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -84,6 +78,12 @@ export class TextSvgElement extends InfernoComponent {
     this.alignTextNodes = this.alignTextNodes.bind(this);
     this.locateTextNodes = this.locateTextNodes.bind(this);
     this.strokeTextNodes = this.strokeTextNodes.bind(this);
+  }
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.effectUpdateText, [this.props.text, this.props.encodeHtml, this.props.stroke, this.props.strokeWidth, this.props.textsAlignment, this.props.x, this.props.y, this.props.styles, this.props.strokeOpacity])];

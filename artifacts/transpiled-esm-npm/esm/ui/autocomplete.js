@@ -190,6 +190,15 @@ var Autocomplete = DropDownList.inherit({
   clear: function clear() {
     this.callBase();
     this.close();
+  },
+  reset: function reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this.callBase(value);
+    } else {
+      this.callBase();
+    }
+    this.close();
   }
 });
 registerComponent('dxAutocomplete', Autocomplete);

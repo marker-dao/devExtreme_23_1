@@ -209,7 +209,7 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
         if (isValid || !foundRule) {
           items.splice(itemIndex, 1);
           itemsChanged = true;
-          return "continue";
+          return 1; // continue
         }
         if (foundRule.message !== item.text) {
           item.text = foundRule.message;
@@ -219,8 +219,7 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
       itemIndex++;
     };
     while (itemIndex < items.length) {
-      var _ret = _loop();
-      if (_ret === "continue") continue;
+      if (_loop()) continue;
     }
     (0, _iterator.each)(brokenRules, function (_, rule) {
       var foundItem = (0, _common.grep)(items, function (item) {

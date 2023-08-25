@@ -18,7 +18,12 @@ var setDefaultOptionValue = (options, defaultValueGetter) => name => {
     options[name] = defaultValueGetter(name);
   }
 };
-class ComponentWrapper extends DOMComponent {
+export default class ComponentWrapper extends DOMComponent {
+  constructor(element, options) {
+    super(element, options);
+    this._shouldRaiseContentReady = false;
+    this.validateKeyDownHandler();
+  }
   get _propsInfo() {
     return {
       allowNull: [],
@@ -27,11 +32,6 @@ class ComponentWrapper extends DOMComponent {
       templates: [],
       props: []
     };
-  }
-  constructor(element, options) {
-    super(element, options);
-    this._shouldRaiseContentReady = false;
-    this.validateKeyDownHandler();
   }
   validateKeyDownHandler() {
     var supportedKeyNames = this.getSupportedKeyNames();
@@ -386,5 +386,4 @@ class ComponentWrapper extends DOMComponent {
   }
 }
 ComponentWrapper.IS_RENOVATED_WIDGET = false;
-export default ComponentWrapper;
 ComponentWrapper.IS_RENOVATED_WIDGET = true;

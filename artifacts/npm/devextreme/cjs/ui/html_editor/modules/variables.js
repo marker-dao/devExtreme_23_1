@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/variables.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,6 +24,7 @@ var VariableModule = _base.default;
 if (_devextremeQuill.default) {
   var VARIABLE_FORMAT_CLASS = 'dx-variable-format';
   var ACTIVE_FORMAT_CLASS = 'dx-format-active';
+  var SELECTED_STATE_CLASS = 'dx-state-selected';
   _devextremeQuill.default.register({
     'formats/variable': _variable.default
   }, true);
@@ -51,6 +52,7 @@ if (_devextremeQuill.default) {
         var $ofElement = (0, _renderer.default)(e.component.option('position').of);
         if ($ofElement.hasClass(VARIABLE_FORMAT_CLASS)) {
           $ofElement.addClass(ACTIVE_FORMAT_CLASS);
+          $ofElement.addClass(SELECTED_STATE_CLASS);
         }
       });
       return _this;

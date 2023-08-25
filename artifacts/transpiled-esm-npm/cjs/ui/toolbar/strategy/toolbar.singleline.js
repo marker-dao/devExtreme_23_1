@@ -191,8 +191,6 @@ var SingleLineStrategy = /*#__PURE__*/function () {
         (_this$_menu = this._menu) === null || _this$_menu === void 0 ? void 0 : _this$_menu._itemOptionChanged(item, property, value);
         return;
       }
-      this._toolbar.option('overflowMenuVisible', false);
-      this._arrangeItems();
     }
     this.renderMenuItems();
   };

@@ -48,6 +48,7 @@ var FILEUPLOADER_UPLOAD_BUTTON_CLASS = 'dx-fileuploader-upload-button';
 var FILEUPLOADER_INVALID_CLASS = 'dx-fileuploader-invalid';
 var FILEUPLOADER_AFTER_LOAD_DELAY = 400;
 var FILEUPLOADER_CHUNK_META_DATA_NAME = 'chunkMetadata';
+var DRAG_EVENT_DELTA = 1;
 var renderFileUploaderInput = () => $('<input>').attr('type', 'file');
 var isFormDataSupported = () => !!window.FormData;
 class FileUploader extends Editor {
@@ -741,7 +742,7 @@ class FileUploader extends Editor {
     }
   }
   _shouldRaiseDragLeave(e, isCustomTarget) {
-    return this._activeDropZone !== null && !this.isMouseOverElement(e, this._activeDropZone, !isCustomTarget);
+    return this._activeDropZone !== null && !this.isMouseOverElement(e, this._activeDropZone, !isCustomTarget, -DRAG_EVENT_DELTA);
   }
   _tryToggleDropZoneActive(active, isCustom, event) {
     var classAction = active ? 'addClass' : 'removeClass';
@@ -944,6 +945,7 @@ class FileUploader extends Editor {
     this._updateTotalProgress(this._getTotalFilesSize(), this._getTotalLoadedFilesSize());
   }
   isMouseOverElement(mouseEvent, element, correctPseudoElements) {
+    var dragEventDelta = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : DRAG_EVENT_DELTA;
     if (!element) return false;
     var beforeHeight = correctPseudoElements ? parseFloat(window.getComputedStyle(element, ':before').height) : 0;
     var afterHeight = correctPseudoElements ? parseFloat(window.getComputedStyle(element, ':after').height) : 0;
@@ -953,7 +955,7 @@ class FileUploader extends Editor {
     var h = element.offsetHeight - beforeHeight - afterHeight;
     var eventX = this._getEventX(mouseEvent);
     var eventY = this._getEventY(mouseEvent);
-    return eventX >= x && eventX < x + w && eventY >= y && eventY < y + h;
+    return eventX + dragEventDelta >= x && eventX - dragEventDelta < x + w && eventY + dragEventDelta >= y && eventY - dragEventDelta < y + h;
   }
   _getEventX(e) {
     return isTouchEvent(e) ? this._getTouchEventX(e) : e.clientX + this._getDocumentScrollLeft();

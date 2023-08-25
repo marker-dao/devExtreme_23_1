@@ -140,6 +140,15 @@ var Editor = /*#__PURE__*/function (_Component) {
       value
     });
   };
+  _proto.reset = function reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this._initialValue = value;
+    }
+    this.option('value', this._initialValue);
+    this.option('isDirty', false);
+    this.option('isValid', true);
+  };
   _proto._dispose = function _dispose() {
     _Component.prototype._dispose.call(this);
     (0, _element_data.data)(this.element(), VALIDATION_TARGET, null);

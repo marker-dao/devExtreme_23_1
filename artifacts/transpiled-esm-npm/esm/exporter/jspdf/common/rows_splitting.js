@@ -154,12 +154,11 @@ function splitRectsByPages(rects, marginValue, coordinate, dimension, isFitToPag
       pages.push(rectsToSplit);
     } else {
       pages.push(rectsToSplit);
-      return "break";
+      return 1; // break
     }
   };
   while (rectsToSplit.length > 0) {
-    var _ret = _loop();
-    if (_ret === "break") break;
+    if (_loop()) break;
   }
   return pages;
 }

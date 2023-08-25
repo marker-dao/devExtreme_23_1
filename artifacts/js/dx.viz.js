@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23700,9 +23700,10 @@ function getSvgElement(markup) {
 
 
 
-exports.validateTemplateSource = exports.templateKey = exports.suitableTemplatesByName = exports.getNormalizedTemplateArgs = exports.findTemplates = exports.defaultCreateElement = exports.addOneRenderedCall = exports.acquireTemplate = exports.acquireIntegrationTemplate = void 0;
+exports.validateTemplateSource = exports.templateKey = exports.suitableTemplatesByName = exports.getNormalizedTemplateArgs = exports.findTemplates = exports.defaultCreateElement = exports.addPublicElementNormalization = exports.addOneRenderedCall = exports.acquireTemplate = exports.acquireIntegrationTemplate = void 0;
 var _config = _interopRequireDefault(__webpack_require__(80209));
 var _devices = _interopRequireDefault(__webpack_require__(20530));
+var _element = __webpack_require__(6415);
 var _errors = _interopRequireDefault(__webpack_require__(17381));
 var _renderer = _interopRequireDefault(__webpack_require__(68374));
 var _child_default_template = __webpack_require__(91627);
@@ -23715,6 +23716,7 @@ var _dom = __webpack_require__(3532);
 var _extend = __webpack_require__(13306);
 var _type = __webpack_require__(35922);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var findTemplates = function findTemplates(element, name) {
   var optionsAttributeName = 'data-options';
   var templates = (0, _renderer.default)(element).contents().filter("[".concat(optionsAttributeName, "*=\"").concat(name, "\"]"));
@@ -23760,6 +23762,18 @@ var addOneRenderedCall = function addOneRenderedCall(template) {
   });
 };
 exports.addOneRenderedCall = addOneRenderedCall;
+var addPublicElementNormalization = function addPublicElementNormalization(template) {
+  var render = template.render.bind(template);
+  return (0, _extend.extend)({}, template, {
+    render(options) {
+      var $container = (0, _renderer.default)(options.container);
+      return render(_extends({}, options, {
+        container: (0, _element.getPublicElement)($container)
+      }));
+    }
+  });
+};
+exports.addPublicElementNormalization = addPublicElementNormalization;
 var getNormalizedTemplateArgs = function getNormalizedTemplateArgs(options) {
   var args = [];
   if ('model' in options) {
@@ -23788,8 +23802,13 @@ var acquireIntegrationTemplate = function acquireIntegrationTemplate(templateSou
   var integrationTemplate = null;
   if (!skipTemplates || skipTemplates.indexOf(templateSource) === -1) {
     integrationTemplate = templates[templateSource];
-    if (integrationTemplate && !(integrationTemplate instanceof _template_base.TemplateBase) && !isAsyncTemplate) {
-      integrationTemplate = addOneRenderedCall(integrationTemplate);
+    if (integrationTemplate && !(integrationTemplate instanceof _template_base.TemplateBase)) {
+      if ((0, _type.isFunction)(integrationTemplate.render)) {
+        integrationTemplate = addPublicElementNormalization(integrationTemplate);
+      }
+      if (!isAsyncTemplate) {
+        integrationTemplate = addOneRenderedCall(integrationTemplate);
+      }
     }
   }
   return integrationTemplate;
@@ -36051,12 +36070,11 @@ function splitRectsByPages(rects, marginValue, coordinate, dimension, isFitToPag
       pages.push(rectsToSplit);
     } else {
       pages.push(rectsToSplit);
-      return "break";
+      return 1; // break
     }
   };
   while (rectsToSplit.length > 0) {
-    var _ret = _loop();
-    if (_ret === "break") break;
+    if (_loop()) break;
   }
   return pages;
 }
@@ -47646,6 +47664,7 @@ var defaultMessages = {
     "dxDataGrid-ariaCollapse": "Collapse",
     "dxDataGrid-ariaModifiedCell": "Modified",
     "dxDataGrid-ariaDeletedCell": "Deleted",
+    "dxDataGrid-ariaEditableCell": "Editable",
     "dxDataGrid-ariaExpand": "Expand",
     "dxDataGrid-ariaCollapsedRow": "Collapsed row",
     "dxDataGrid-ariaExpandedRow": "Expanded row",
@@ -47659,7 +47678,7 @@ var defaultMessages = {
     "dxDataGrid-filterPanelCreateFilter": "Create Filter",
     "dxDataGrid-filterPanelClearFilter": "Clear",
     "dxDataGrid-filterPanelFilterEnabledHint": "Enable the filter",
-    "dxTreeList-ariaTreeList": "Tree list",
+    "dxTreeList-ariaTreeList": "Tree list with {0} rows and {1} columns",
     "dxTreeList-ariaSearchInGrid": "Search in the tree list",
     "dxTreeList-ariaToolbar": "Tree list toolbar",
     "dxTreeList-editingAddRowToNode": "Add",
@@ -47738,7 +47757,18 @@ var defaultMessages = {
     "dxScheduler-moreAppointments": "{0} more",
     "dxCalendar-todayButtonText": "Today",
     "dxCalendar-ariaWidgetName": "Calendar",
-    "dxCalendar-ariaHotKeysInfo": "To navigate between views, press Control, and then Left Arrow or Right Arrow. To zoom in on a view, press Control, and then Down Arrow. To zoom out, press Control, and then Up Arrow.",
+    "dxCalendar-previousMonthButtonLabel": "Previous month",
+    "dxCalendar-previousYearButtonLabel": "Previous year",
+    "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+    "dxCalendar-previousCenturyButtonLabel": "Previous century",
+    "dxCalendar-nextMonthButtonLabel": "Next month",
+    "dxCalendar-nextYearButtonLabel": "Next year",
+    "dxCalendar-nextDecadeButtonLabel": "Next decade",
+    "dxCalendar-nextCenturyButtonLabel": "Next century",
+    "dxCalendar-captionMonthLabel": "Month selection",
+    "dxCalendar-captionYearLabel": "Year selection",
+    "dxCalendar-captionDecadeLabel": "Decade selection",
+    "dxCalendar-captionCenturyLabel": "Century selection",
     "dxColorView-ariaRed": "Red",
     "dxColorView-ariaGreen": "Green",
     "dxColorView-ariaBlue": "Blue",
@@ -51496,9 +51526,8 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
   }]);
   return ComponentWrapper;
 }(_dom_component.default);
+exports["default"] = ComponentWrapper;
 ComponentWrapper.IS_RENOVATED_WIDGET = false;
-var _default = ComponentWrapper;
-exports["default"] = _default;
 ComponentWrapper.IS_RENOVATED_WIDGET = true;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
@@ -54504,6 +54533,9 @@ var Editor = _ui.default.inherit({
         this.callBase(args);
     }
   },
+  _resetToInitialValue: function _resetToInitialValue() {
+    this.option('value', this._initialValue);
+  },
   blur: function blur() {
     if (this._hasActiveElement()) {
       (0, _dom.resetActiveElement)();
@@ -54512,6 +54544,15 @@ var Editor = _ui.default.inherit({
   clear: function clear() {
     var defaultOptions = this._getDefaultOptions();
     this.option('value', defaultOptions.value);
+  },
+  reset: function reset() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (arguments.length) {
+      this._initialValue = value;
+    }
+    this._resetToInitialValue();
+    this.option('isDirty', false);
+    this.option('isValid', true);
   }
 });
 Editor.isEditor = function (instance) {
@@ -54655,7 +54696,10 @@ var LoadIndicator = _ui.default.inherit({
     this._$wrapper.append(this._$content);
   },
   _renderMarkup: function _renderMarkup() {
-    if ((0, _support.animation)() && !this.option('viaImage') && !this.option('indicatorSrc')) {
+    var _this$option = this.option(),
+      viaImage = _this$option.viaImage,
+      indicatorSrc = _this$option.indicatorSrc;
+    if ((0, _support.animation)() && !viaImage && !indicatorSrc) {
       // B236922
       this._renderMarkupForAnimation();
     } else {
@@ -54677,10 +54721,13 @@ var LoadIndicator = _ui.default.inherit({
     }
   },
   _renderMarkupForImage: function _renderMarkupForImage() {
-    var indicatorSrc = this.option('indicatorSrc');
-    this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
+    var _this$option2 = this.option(),
+      indicatorSrc = _this$option2.indicatorSrc;
     if (indicatorSrc) {
+      this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
       this._$wrapper.css('backgroundImage', 'url(' + indicatorSrc + ')');
+    } else if ((0, _support.animation)()) {
+      this._renderMarkupForAnimation();
     }
   },
   _renderDimensions: function _renderDimensions() {
@@ -72110,8 +72157,7 @@ var _default = {
         zoomAndPan.actionData && zoomAndPan.actionData.rect && zoomAndPan.actionData.rect.dispose();
         zoomAndPan.actionData = null;
         renderer.root.css({
-          'touch-action': '',
-          '-ms-touch-action': ''
+          'touch-action': ''
         });
       },
       setup: function setup(options) {
@@ -78809,7 +78855,6 @@ function Renderer(options) {
   }).css({
     'line-height': 'normal',
     // T179515
-    '-ms-user-select': NONE,
     '-moz-user-select': NONE,
     '-webkit-user-select': NONE,
     '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)',
@@ -83951,7 +83996,6 @@ Tooltip.prototype = {
     var pointerEvents = options.interactive ? 'auto' : 'none';
     if (options.interactive) {
       this._renderer.root.css({
-        '-ms-user-select': 'auto',
         '-moz-user-select': 'auto',
         '-webkit-user-select': 'auto'
       });
@@ -97424,12 +97468,11 @@ chart['spline'] = (0, _extend.extend)({}, lineSeries, {
         });
       }
       if (oppositeCoord !== null) {
-        return "break";
+        return 1; // break
       }
     };
     for (var i = 0; i < nearestPoints.length; i++) {
-      var _ret = _loop();
-      if (_ret === "break") break;
+      if (_loop()) break;
     }
     return oppositeCoord;
   },

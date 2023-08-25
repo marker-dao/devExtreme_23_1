@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/load_indicator.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -115,7 +115,11 @@ var LoadIndicator = Widget.inherit({
     this._$wrapper.append(this._$content);
   },
   _renderMarkup: function _renderMarkup() {
-    if (animation() && !this.option('viaImage') && !this.option('indicatorSrc')) {
+    var {
+      viaImage,
+      indicatorSrc
+    } = this.option();
+    if (animation() && !viaImage && !indicatorSrc) {
       // B236922
       this._renderMarkupForAnimation();
     } else {
@@ -137,10 +141,14 @@ var LoadIndicator = Widget.inherit({
     }
   },
   _renderMarkupForImage: function _renderMarkupForImage() {
-    var indicatorSrc = this.option('indicatorSrc');
-    this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
+    var {
+      indicatorSrc
+    } = this.option();
     if (indicatorSrc) {
+      this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
       this._$wrapper.css('backgroundImage', 'url(' + indicatorSrc + ')');
+    } else if (animation()) {
+      this._renderMarkupForAnimation();
     }
   },
   _renderDimensions: function _renderDimensions() {

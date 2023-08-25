@@ -514,8 +514,7 @@ var _default = {
         zoomAndPan.actionData && zoomAndPan.actionData.rect && zoomAndPan.actionData.rect.dispose();
         zoomAndPan.actionData = null;
         renderer.root.css({
-          'touch-action': '',
-          '-ms-touch-action': ''
+          'touch-action': ''
         });
       },
       setup: function setup(options) {

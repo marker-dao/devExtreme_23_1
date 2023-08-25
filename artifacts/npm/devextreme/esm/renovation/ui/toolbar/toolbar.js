@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/toolbar/toolbar.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,16 +29,16 @@ export var viewFunction = _ref => {
   }, restAttributes)));
 };
 export class Toolbar extends BaseInfernoComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.__getterCache = {};
+  }
   get config() {
     if (this.context[ConfigContext.id]) {
       return this.context[ConfigContext.id];
     }
     return ConfigContext.defaultValue;
-  }
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.__getterCache = {};
   }
   get componentProps() {
     if (this.__getterCache['componentProps'] !== undefined) {

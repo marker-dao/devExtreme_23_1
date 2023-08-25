@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.navigator.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -70,10 +70,11 @@ var Navigator = /*#__PURE__*/function (_Widget) {
     var _this$option = this.option(),
       rtlEnabled = _this$option.rtlEnabled,
       type = _this$option.type,
-      stylingMode = _this$option.stylingMode;
+      stylingMode = _this$option.stylingMode,
+      focusStateEnabled = _this$option.focusStateEnabled;
     var direction = 1;
     this._prevButton = this._createComponent((0, _renderer.default)('<div>'), _button.default, {
-      focusStateEnabled: false,
+      focusStateEnabled,
       icon: rtlEnabled ? 'chevronright' : 'chevronleft',
       onClick: function onClick(e) {
         _this._clickAction({
@@ -87,7 +88,7 @@ var Navigator = /*#__PURE__*/function (_Widget) {
     });
     var $prevButton = this._prevButton.$element().addClass(CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS);
     this._nextButton = this._createComponent((0, _renderer.default)('<div>'), _button.default, {
-      focusStateEnabled: false,
+      focusStateEnabled,
       icon: rtlEnabled ? 'chevronleft' : 'chevronright',
       onClick: function onClick(e) {
         _this._clickAction({
@@ -101,7 +102,7 @@ var Navigator = /*#__PURE__*/function (_Widget) {
     });
     var $nextButton = this._nextButton.$element().addClass(CALENDAR_NAVIGATOR_NEXT_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS);
     this._caption = this._createComponent((0, _renderer.default)('<div>').addClass(CALENDAR_NAVIGATOR_CAPTION_BUTTON_CLASS), _button.default, {
-      focusStateEnabled: false,
+      focusStateEnabled,
       onClick: function onClick(e) {
         _this._captionClickAction({
           event: e

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/viz/common/renderers/svg_text.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -76,12 +76,6 @@ export var TextSvgElementProps = Object.create(Object.prototype, _extends(Object
 })));
 import { createRef as infernoCreateRef } from 'inferno';
 export class TextSvgElement extends InfernoComponent {
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -92,6 +86,12 @@ export class TextSvgElement extends InfernoComponent {
     this.alignTextNodes = this.alignTextNodes.bind(this);
     this.locateTextNodes = this.locateTextNodes.bind(this);
     this.strokeTextNodes = this.strokeTextNodes.bind(this);
+  }
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.effectUpdateText, [this.props.text, this.props.encodeHtml, this.props.stroke, this.props.strokeWidth, this.props.textsAlignment, this.props.x, this.props.y, this.props.styles, this.props.strokeOpacity])];

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/appointment/appointment.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -70,12 +70,6 @@ export var AppointmentProps = {
 import { createRef as infernoCreateRef } from 'inferno';
 var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => normalizeProps(createComponentVNode(2, TemplateProp, _extends({}, props))) : TemplateProp);
 export class Appointment extends InfernoComponent {
-  get appointmentsContextValue() {
-    if (this.context[AppointmentsContext.id]) {
-      return this.context[AppointmentsContext.id];
-    }
-    return AppointmentsContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.ref = infernoCreateRef();
@@ -86,6 +80,12 @@ export class Appointment extends InfernoComponent {
     this.bindDoubleClickEffect = this.bindDoubleClickEffect.bind(this);
     this.onItemClick = this.onItemClick.bind(this);
     this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
+  }
+  get appointmentsContextValue() {
+    if (this.context[AppointmentsContext.id]) {
+      return this.context[AppointmentsContext.id];
+    }
+    return AppointmentsContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.updateStylesEffect, [this.props.viewModel, this.appointmentsContextValue, this.props.groups]), new InfernoEffect(this.bindDoubleClickEffect, [])];

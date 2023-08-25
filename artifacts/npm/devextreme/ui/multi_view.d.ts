@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/multi_view.d.ts)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,7 +30,7 @@ export type ItemLike = string | Item | any;
  * @type object
  * @inherits EventInfo
  */
-export type ContentReadyEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>>;
+export type ContentReadyEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxMultiView<TItem, TKey>>;
 
 /**
  * @docid _ui_multi_view_DisposingEvent
@@ -38,7 +38,7 @@ export type ContentReadyEvent<TItem extends ItemLike = any, TKey = any> = EventI
  * @type object
  * @inherits EventInfo
  */
-export type DisposingEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>>;
+export type DisposingEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxMultiView<TItem, TKey>>;
 
 /**
  * @docid _ui_multi_view_InitializedEvent
@@ -46,7 +46,7 @@ export type DisposingEvent<TItem extends ItemLike = any, TKey = any> = EventInfo
  * @type object
  * @inherits InitializedEventInfo
  */
-export type InitializedEvent<TItem extends ItemLike = any, TKey = any> = InitializedEventInfo<MultiViewInstance<TItem, TKey>>;
+export type InitializedEvent<TItem extends ItemLike = any, TKey = any> = InitializedEventInfo<dxMultiView<TItem, TKey>>;
 
 /**
  * @docid _ui_multi_view_ItemClickEvent
@@ -54,7 +54,7 @@ export type InitializedEvent<TItem extends ItemLike = any, TKey = any> = Initial
  * @type object
  * @inherits NativeEventInfo,ItemInfo
  */
-export type ItemClickEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<MultiViewInstance<TItem, TKey>, KeyboardEvent | MouseEvent | PointerEvent> & ItemInfo<TItem>;
+export type ItemClickEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxMultiView<TItem, TKey>, KeyboardEvent | MouseEvent | PointerEvent> & ItemInfo<TItem>;
 
 /**
  * @docid _ui_multi_view_ItemContextMenuEvent
@@ -62,7 +62,7 @@ export type ItemClickEvent<TItem extends ItemLike = any, TKey = any> = NativeEve
  * @type object
  * @inherits NativeEventInfo,ItemInfo
  */
-export type ItemContextMenuEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<MultiViewInstance<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>;
+export type ItemContextMenuEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxMultiView<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>;
 
 /**
  * @docid _ui_multi_view_ItemHoldEvent
@@ -70,7 +70,7 @@ export type ItemContextMenuEvent<TItem extends ItemLike = any, TKey = any> = Nat
  * @type object
  * @inherits NativeEventInfo,ItemInfo
  */
-export type ItemHoldEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<MultiViewInstance<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>;
+export type ItemHoldEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxMultiView<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>;
 
 /**
  * @docid _ui_multi_view_ItemRenderedEvent
@@ -78,7 +78,7 @@ export type ItemHoldEvent<TItem extends ItemLike = any, TKey = any> = NativeEven
  * @type object
  * @inherits EventInfo,ItemInfo
  */
-export type ItemRenderedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>> & ItemInfo<TItem>;
+export type ItemRenderedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxMultiView<TItem, TKey>> & ItemInfo<TItem>;
 
 /**
  * @docid _ui_multi_view_OptionChangedEvent
@@ -86,7 +86,7 @@ export type ItemRenderedEvent<TItem extends ItemLike = any, TKey = any> = EventI
  * @type object
  * @inherits EventInfo,ChangedOptionInfo
  */
-export type OptionChangedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>> & ChangedOptionInfo;
+export type OptionChangedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxMultiView<TItem, TKey>> & ChangedOptionInfo;
 
 /**
  * @docid _ui_multi_view_SelectionChangedEvent
@@ -94,7 +94,7 @@ export type OptionChangedEvent<TItem extends ItemLike = any, TKey = any> = Event
  * @type object
  * @inherits EventInfo,SelectionChangedInfo
  */
-export type SelectionChangedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<MultiViewInstance<TItem, TKey>> & SelectionChangedInfo<TItem>;
+export type SelectionChangedEvent<TItem extends ItemLike = any, TKey = any> = EventInfo<dxMultiView<TItem, TKey>> & SelectionChangedInfo<TItem>;
 
 /**
  * @deprecated use Properties instead
@@ -105,7 +105,7 @@ export type SelectionChangedEvent<TItem extends ItemLike = any, TKey = any> = Ev
 export interface dxMultiViewOptions<
     TItem extends ItemLike = any,
     TKey = any,
-> extends dxMultiViewBaseOptions<MultiViewInstance<TItem, TKey>, TItem, TKey> {}
+> extends dxMultiViewBaseOptions<dxMultiView<TItem, TKey>, TItem, TKey> {}
 
 /**
  * @deprecated use Properties instead
@@ -113,7 +113,7 @@ export interface dxMultiViewOptions<
  * @docid dxMultiViewOptions
  */
 export interface dxMultiViewBaseOptions<
-    TComponent extends dxMultiView<any, TItem, TKey> = dxMultiView<any, any, any>,
+    TComponent extends dxMultiView<TItem, TKey> = dxMultiView<any, any>,
     TItem extends ItemLike = any,
     TKey = any,
 > extends CollectionWidgetOptions<TComponent, TItem, TKey> {
@@ -176,10 +176,9 @@ export interface dxMultiViewBaseOptions<
  * @public
  */
 export default class dxMultiView<
-    TProperties extends dxMultiViewOptions<TItem, TKey> = dxMultiViewOptions<any, any>,
     TItem extends ItemLike = any,
     TKey = any,
-> extends CollectionWidget<TProperties, TItem, TKey> { }
+> extends CollectionWidget<Properties<TItem, TKey>, TItem, TKey> { }
 
 /**
  * @public
@@ -209,8 +208,6 @@ export type ExplicitTypes<
     OptionChangedEvent: OptionChangedEvent<TItem, TKey>;
     SelectionChangedEvent: SelectionChangedEvent<TItem, TKey>;
 };
-
-interface MultiViewInstance<TItem, TKey> extends dxMultiView<Properties<TItem, TKey>, TItem, TKey> { }
 
 /** @public */
 export type Properties<

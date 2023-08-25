@@ -9,6 +9,7 @@ var _common = require("../../../../core/utils/common");
 var _deferred = require("../../../../core/utils/deferred");
 var _iterator = require("../../../../core/utils/iterator");
 var _type = require("../../../../core/utils/type");
+var _m_editing_utils = require("../editing/m_editing_utils");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_focus_utils = require("./m_focus_utils");
@@ -561,7 +562,7 @@ var focusModule = {
           // @ts-expect-error
           var deferred = new _deferred.Deferred();
           var dataSource = that._dataSource;
-          if (Array.isArray(key)) {
+          if (Array.isArray(key) || (0, _m_editing_utils.isNewRowTempKey)(key)) {
             return deferred.resolve(-1).promise();
           }
           var filter = that._generateFilterByKey(key);

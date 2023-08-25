@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_box.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -115,8 +115,15 @@ var DropDownBox = _ui.default.inherit({
   _shouldUseDisplayValue: function _shouldUseDisplayValue(value) {
     return this.option('valueExpr') === 'this' && (0, _type.isObject)(value);
   },
-  _renderInputValue: function _renderInputValue() {
+  _popupInitializedHandler(e) {
     var _this = this;
+    e.component.registerKeyHandler('escape', function () {
+      _this.close();
+      _this.focus();
+    });
+  },
+  _renderInputValue: function _renderInputValue() {
+    var _this2 = this;
     this._rejectValueLoading();
     var values = [];
     if (!this._dataSource) {
@@ -128,11 +135,11 @@ var DropDownBox = _ui.default.inherit({
     keys = Array.isArray(keys) ? keys : [keys];
     var itemLoadDeferreds = (0, _iterator.map)(keys, function (key) {
       var deferred = new _deferred.Deferred();
-      _this._loadItem(key).always(function (item) {
-        var displayValue = _this._displayGetter(item);
+      _this2._loadItem(key).always(function (item) {
+        var displayValue = _this2._displayGetter(item);
         if ((0, _type.isDefined)(displayValue)) {
           values.push(displayValue);
-        } else if (_this.option('acceptCustomValue')) {
+        } else if (_this2.option('acceptCustomValue')) {
           values.push(key);
         }
         deferred.resolve();
@@ -141,7 +148,7 @@ var DropDownBox = _ui.default.inherit({
     });
     var callBase = this.callBase.bind(this);
     return _deferred.when.apply(this, itemLoadDeferreds).always(function () {
-      _this.option('displayValue', values);
+      _this2.option('displayValue', values);
       callBase(values.length && values);
     });
   },
@@ -185,11 +192,11 @@ var DropDownBox = _ui.default.inherit({
     }
   },
   _renderPopup: function _renderPopup(e) {
-    var _this2 = this;
+    var _this3 = this;
     this.callBase();
     if (this.option('focusStateEnabled')) {
       _short.keyboard.on(this.content(), null, function (e) {
-        return _this2._popupElementTabHandler(e);
+        return _this3._popupElementTabHandler(e);
       });
     }
   },
@@ -245,7 +252,7 @@ var DropDownBox = _ui.default.inherit({
     };
   },
   _popupConfig: function _popupConfig() {
-    var _this3 = this;
+    var _this4 = this;
     var _this$option = this.option(),
       focusStateEnabled = _this$option.focusStateEnabled;
     return (0, _extend.extend)(this.callBase(), {
@@ -258,7 +265,7 @@ var DropDownBox = _ui.default.inherit({
         of: this.$element()
       }),
       onKeyboardHandled: function onKeyboardHandled(opts) {
-        return _this3.option('focusStateEnabled') && _this3._popupElementTabHandler(opts);
+        return _this4.option('focusStateEnabled') && _this4._popupElementTabHandler(opts);
       },
       _ignoreFunctionValueDeprecation: true,
       maxHeight: function () {

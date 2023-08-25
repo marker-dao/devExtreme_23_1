@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_editor.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -510,7 +510,7 @@ var DropDownEditor = _text_box.default.inherit({
   _popupConfig: function _popupConfig() {
     var _this4 = this;
     return {
-      onInitialized: this._popupInitializedHandler(),
+      onInitialized: this._getPopupInitializedHandler(),
       position: (0, _extend.extend)(this.option('popupPosition'), {
         of: this.$element()
       }),
@@ -551,15 +551,17 @@ var DropDownEditor = _text_box.default.inherit({
       _ignorePreventScrollEventsDeprecation: true
     };
   },
-  _popupInitializedHandler: function _popupInitializedHandler() {
+  _popupInitializedHandler: _common.noop,
+  _getPopupInitializedHandler: function _getPopupInitializedHandler() {
     var _this5 = this;
-    if (!this.option('onPopupInitialized')) {
-      return null;
-    }
+    var onPopupInitialized = this.option('onPopupInitialized');
     return function (e) {
-      _this5._popupInitializedAction({
-        popup: e.component
-      });
+      _this5._popupInitializedHandler(e);
+      if (onPopupInitialized) {
+        _this5._popupInitializedAction({
+          popup: e.component
+        });
+      }
     };
   },
   _dimensionChanged: function _dimensionChanged() {
@@ -765,6 +767,7 @@ var DropDownEditor = _text_box.default.inherit({
         this._initVisibilityActions();
         break;
       case 'onPopupInitialized':
+        // for dashboards
         this._initPopupInitializedAction();
         break;
       case 'fieldTemplate':

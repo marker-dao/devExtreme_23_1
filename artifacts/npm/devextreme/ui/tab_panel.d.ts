@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tab_panel.d.ts)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,13 +26,14 @@ import {
 
 import {
     Position,
+    PositionRelative,
 } from '../common';
 
-import {
+import CollectionWidget, {
     SelectionChangedInfo,
 } from './collection/ui.collection_widget.base';
 
-import dxMultiView, {
+import {
     Item as dxMultiViewItem,
     dxMultiViewBaseOptions,
 } from './multi_view';
@@ -189,6 +190,12 @@ export interface dxTabPanelOptions<
     itemTitleTemplate?: template | ((itemData: TItem, itemIndex: number, itemElement: DxElement) => string | UserDefinedElement);
     /**
      * @docid
+     * @default 'start'
+     * @public
+     */
+    iconPosition?: PositionRelative;
+    /**
+     * @docid
      * @type Array<string | dxTabPanelItem | any>
      * @fires dxTabPanelOptions.onOptionChanged
      * @public
@@ -265,7 +272,7 @@ export interface dxTabPanelOptions<
 export default class dxTabPanel<
     TItem extends ItemLike = any,
     TKey = any,
-> extends dxMultiView<dxTabPanelOptions<TItem, TKey>, TItem, TKey> { }
+> extends CollectionWidget<Properties<TItem, TKey>, TItem, TKey> { }
 
 /**
  * @public

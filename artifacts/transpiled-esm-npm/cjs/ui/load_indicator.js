@@ -110,7 +110,10 @@ var LoadIndicator = _ui.default.inherit({
     this._$wrapper.append(this._$content);
   },
   _renderMarkup: function _renderMarkup() {
-    if ((0, _support.animation)() && !this.option('viaImage') && !this.option('indicatorSrc')) {
+    var _this$option = this.option(),
+      viaImage = _this$option.viaImage,
+      indicatorSrc = _this$option.indicatorSrc;
+    if ((0, _support.animation)() && !viaImage && !indicatorSrc) {
       // B236922
       this._renderMarkupForAnimation();
     } else {
@@ -132,10 +135,13 @@ var LoadIndicator = _ui.default.inherit({
     }
   },
   _renderMarkupForImage: function _renderMarkupForImage() {
-    var indicatorSrc = this.option('indicatorSrc');
-    this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
+    var _this$option2 = this.option(),
+      indicatorSrc = _this$option2.indicatorSrc;
     if (indicatorSrc) {
+      this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
       this._$wrapper.css('backgroundImage', 'url(' + indicatorSrc + ')');
+    } else if ((0, _support.animation)()) {
+      this._renderMarkupForAnimation();
     }
   },
   _renderDimensions: function _renderDimensions() {

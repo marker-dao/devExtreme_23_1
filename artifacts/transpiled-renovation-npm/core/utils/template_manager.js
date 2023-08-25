@@ -1,8 +1,9 @@
 "use strict";
 
-exports.validateTemplateSource = exports.templateKey = exports.suitableTemplatesByName = exports.getNormalizedTemplateArgs = exports.findTemplates = exports.defaultCreateElement = exports.addOneRenderedCall = exports.acquireTemplate = exports.acquireIntegrationTemplate = void 0;
+exports.validateTemplateSource = exports.templateKey = exports.suitableTemplatesByName = exports.getNormalizedTemplateArgs = exports.findTemplates = exports.defaultCreateElement = exports.addPublicElementNormalization = exports.addOneRenderedCall = exports.acquireTemplate = exports.acquireIntegrationTemplate = void 0;
 var _config = _interopRequireDefault(require("../config"));
 var _devices = _interopRequireDefault(require("../devices"));
+var _element = require("../element");
 var _errors = _interopRequireDefault(require("../errors"));
 var _renderer = _interopRequireDefault(require("../renderer"));
 var _child_default_template = require("../templates/child_default_template");
@@ -15,6 +16,7 @@ var _dom = require("./dom");
 var _extend = require("./extend");
 var _type = require("./type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var findTemplates = function findTemplates(element, name) {
   var optionsAttributeName = 'data-options';
   var templates = (0, _renderer.default)(element).contents().filter("[".concat(optionsAttributeName, "*=\"").concat(name, "\"]"));
@@ -60,6 +62,18 @@ var addOneRenderedCall = function addOneRenderedCall(template) {
   });
 };
 exports.addOneRenderedCall = addOneRenderedCall;
+var addPublicElementNormalization = function addPublicElementNormalization(template) {
+  var render = template.render.bind(template);
+  return (0, _extend.extend)({}, template, {
+    render(options) {
+      var $container = (0, _renderer.default)(options.container);
+      return render(_extends({}, options, {
+        container: (0, _element.getPublicElement)($container)
+      }));
+    }
+  });
+};
+exports.addPublicElementNormalization = addPublicElementNormalization;
 var getNormalizedTemplateArgs = function getNormalizedTemplateArgs(options) {
   var args = [];
   if ('model' in options) {
@@ -88,8 +102,13 @@ var acquireIntegrationTemplate = function acquireIntegrationTemplate(templateSou
   var integrationTemplate = null;
   if (!skipTemplates || skipTemplates.indexOf(templateSource) === -1) {
     integrationTemplate = templates[templateSource];
-    if (integrationTemplate && !(integrationTemplate instanceof _template_base.TemplateBase) && !isAsyncTemplate) {
-      integrationTemplate = addOneRenderedCall(integrationTemplate);
+    if (integrationTemplate && !(integrationTemplate instanceof _template_base.TemplateBase)) {
+      if ((0, _type.isFunction)(integrationTemplate.render)) {
+        integrationTemplate = addPublicElementNormalization(integrationTemplate);
+      }
+      if (!isAsyncTemplate) {
+        integrationTemplate = addOneRenderedCall(integrationTemplate);
+      }
     }
   }
   return integrationTemplate;

@@ -50,11 +50,12 @@ class Navigator extends Widget {
     var {
       rtlEnabled,
       type,
-      stylingMode
+      stylingMode,
+      focusStateEnabled
     } = this.option();
     var direction = 1;
     this._prevButton = this._createComponent($('<div>'), Button, {
-      focusStateEnabled: false,
+      focusStateEnabled,
       icon: rtlEnabled ? 'chevronright' : 'chevronleft',
       onClick: e => {
         this._clickAction({
@@ -68,7 +69,7 @@ class Navigator extends Widget {
     });
     var $prevButton = this._prevButton.$element().addClass(CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS);
     this._nextButton = this._createComponent($('<div>'), Button, {
-      focusStateEnabled: false,
+      focusStateEnabled,
       icon: rtlEnabled ? 'chevronleft' : 'chevronright',
       onClick: e => {
         this._clickAction({
@@ -82,7 +83,7 @@ class Navigator extends Widget {
     });
     var $nextButton = this._nextButton.$element().addClass(CALENDAR_NAVIGATOR_NEXT_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS);
     this._caption = this._createComponent($('<div>').addClass(CALENDAR_NAVIGATOR_CAPTION_BUTTON_CLASS), Button, {
-      focusStateEnabled: false,
+      focusStateEnabled,
       onClick: e => {
         this._captionClickAction({
           event: e

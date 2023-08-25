@@ -14,10 +14,8 @@ var _utils = require("../core/options/utils");
 var _message = _interopRequireDefault(require("../localization/message"));
 var _devices = _interopRequireDefault(require("../core/devices"));
 var _component_registrator = _interopRequireDefault(require("../core/component_registrator"));
-var _index = require("../events/utils/index");
 var _ui = _interopRequireDefault(require("./drop_down_editor/ui.drop_down_list"));
 var _themes = require("./themes");
-var _click = require("../events/click");
 var _ui2 = _interopRequireDefault(require("./popover/ui.popover"));
 var _text_box = _interopRequireDefault(require("./text_box"));
 var _child_default_template = require("../core/templates/child_default_template");
@@ -41,6 +39,7 @@ var LOOKUP_POPOVER_MODE = 'dx-lookup-popover-mode';
 var LOOKUP_EMPTY_CLASS = 'dx-lookup-empty';
 var LOOKUP_POPOVER_FLIP_VERTICAL_CLASS = 'dx-popover-flipped-vertical';
 var TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
+var TEXTEDITOR_EMPTY_CLASS = 'dx-texteditor-empty';
 var LIST_ITEM_CLASS = 'dx-list-item';
 var LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
 var GROUP_LIST_HEADER_CLASS = 'dx-list-group-header';
@@ -103,7 +102,7 @@ var Lookup = _ui.default.inherit({
        * @name dxLookupOptions.openOnFieldClick
        * @hidden
        */
-
+      openOnFieldClick: true,
       /**
        * @name dxLookupOptions.showDropDownButton
        * @hidden
@@ -340,17 +339,8 @@ var Lookup = _ui.default.inherit({
     return '';
   },
   _renderInput: function _renderInput() {
-    var _this2 = this;
-    var fieldClickAction = this._createAction(function () {
-      _this2._toggleOpenState();
-    });
     this._$field = (0, _renderer.default)('<div>').addClass(LOOKUP_FIELD_CLASS);
     this._applyInputAttributes(this.option('inputAttr'));
-    _events_engine.default.on(this._$field, (0, _index.addNamespace)(_click.name, this.NAME), function (e) {
-      fieldClickAction({
-        event: e
-      });
-    });
     var $arrow = (0, _renderer.default)('<div>').addClass(LOOKUP_ARROW_CLASS);
     this._$fieldWrapper = (0, _renderer.default)('<div>').addClass(LOOKUP_FIELD_WRAPPER_CLASS).append(this._$field).append($arrow).appendTo(this.$element());
   },
@@ -368,7 +358,8 @@ var Lookup = _ui.default.inherit({
     }
     var displayValue = this.option('displayValue');
     this._updateField(displayValue);
-    this.$element().toggleClass(LOOKUP_EMPTY_CLASS, !this.option('selectedItem'));
+    var isFieldEmpty = !this.option('selectedItem');
+    this.$element().toggleClass(LOOKUP_EMPTY_CLASS, isFieldEmpty).toggleClass(TEXTEDITOR_EMPTY_CLASS, isFieldEmpty);
   },
   _getLabelContainer: function _getLabelContainer() {
     return this._$field;
@@ -381,8 +372,17 @@ var Lookup = _ui.default.inherit({
     }
   },
   _updateField: function _updateField(text) {
-    text = (0, _type.isDefined)(text) && String(text) || this.option('placeholder');
-    this._$field.text(text);
+    text = (0, _type.isDefined)(text) && String(text);
+    this._$field.empty();
+    if (text) {
+      this._$field.text(text);
+    } else {
+      var $placeholder = (0, _renderer.default)('<div>').attr({
+        'data-dx_placeholder': this.option('placeholder')
+      });
+      this._$field.append($placeholder);
+      $placeholder.addClass('dx-placeholder');
+    }
   },
   _renderFieldTemplate: function _renderFieldTemplate(template) {
     this._$field.empty();
@@ -585,7 +585,7 @@ var Lookup = _ui.default.inherit({
   },
   _preventFocusOnPopup: _common.noop,
   _popupConfig: function _popupConfig() {
-    var _this3 = this;
+    var _this2 = this;
     var result = (0, _extend.extend)(this.callBase(), {
       toolbarItems: this._getPopupToolbarItems(),
       hideOnParentScroll: false,
@@ -614,7 +614,7 @@ var Lookup = _ui.default.inherit({
       result.hideOnParentScroll = true;
     }
     (0, _iterator.each)(['position', 'animation', 'width', 'height'], function (_, optionName) {
-      var popupOptionValue = _this3.option("dropDownOptions.".concat(optionName));
+      var popupOptionValue = _this2.option("dropDownOptions.".concat(optionName));
       if (popupOptionValue !== undefined) {
         result[optionName] = popupOptionValue;
       }
@@ -643,13 +643,13 @@ var Lookup = _ui.default.inherit({
     }];
   },
   _getCancelButtonConfig: function _getCancelButtonConfig() {
-    var _this4 = this;
+    var _this3 = this;
     return this.option('showCancelButton') ? {
       shortcut: 'cancel',
       onClick: this._cancelButtonHandler.bind(this),
       options: {
         onInitialized: function onInitialized(e) {
-          e.component.registerKeyHandler('escape', _this4.close.bind(_this4));
+          e.component.registerKeyHandler('escape', _this3.close.bind(_this3));
         },
         text: this.option('cancelButtonText')
       }
@@ -695,7 +695,7 @@ var Lookup = _ui.default.inherit({
   },
   _renderValueChangeEvent: _common.noop,
   _renderSearch: function _renderSearch() {
-    var _this5 = this;
+    var _this4 = this;
     var isSearchEnabled = this.option('searchEnabled');
     this._toggleSearchClass(isSearchEnabled);
     if (isSearchEnabled) {
@@ -721,10 +721,10 @@ var Lookup = _ui.default.inherit({
           return isKeyboardListeningEnabled = false;
         },
         onKeyboardHandled: function onKeyboardHandled(opts) {
-          return isKeyboardListeningEnabled && _this5._list._keyboardHandler(opts);
+          return isKeyboardListeningEnabled && _this4._list._keyboardHandler(opts);
         },
         onValueChanged: function onValueChanged(e) {
-          return _this5._searchHandler(e);
+          return _this4._searchHandler(e);
         }
       };
       this._searchBox = this._createComponent($searchBox, _text_box.default, textBoxOptions);
@@ -783,10 +783,10 @@ var Lookup = _ui.default.inherit({
   },
   _setAriaTargetForList: _common.noop,
   _renderList: function _renderList() {
-    var _this6 = this;
+    var _this5 = this;
     this.callBase();
     this._list.registerKeyHandler('escape', function () {
-      _this6.close();
+      _this5.close();
     });
   },
   _listConfig: function _listConfig() {
@@ -817,7 +817,7 @@ var Lookup = _ui.default.inherit({
     this._refreshSelected();
   },
   _runWithoutCloseOnScroll: function _runWithoutCloseOnScroll(callback) {
-    var _this7 = this;
+    var _this6 = this;
     // NOTE: Focus can trigger "scroll" event
 
     var _this$option = this.option(),
@@ -830,20 +830,20 @@ var Lookup = _ui.default.inherit({
       callback();
       this._hideOnParentScrollTimer = setTimeout(function () {
         // T1018037
-        _this7._popup.option('hideOnParentScroll', hideOnParentScroll);
+        _this6._popup.option('hideOnParentScroll', hideOnParentScroll);
       });
     }
   },
   _setFocusPolicy: function _setFocusPolicy() {
-    var _this8 = this;
+    var _this7 = this;
     if (!this.option('focusStateEnabled')) {
       return;
     }
     this._runWithoutCloseOnScroll(function () {
-      if (_this8.option('searchEnabled')) {
-        _this8._searchBox.focus();
+      if (_this7.option('searchEnabled')) {
+        _this7._searchBox.focus();
       } else {
-        _this8._list.focus();
+        _this7._list.focus();
       }
     });
   },
@@ -875,9 +875,9 @@ var Lookup = _ui.default.inherit({
     return this.option('searchEnabled') && this._searchBox ? this._searchBox.option('value') : '';
   },
   _renderInputValue: function _renderInputValue() {
-    var _this9 = this;
+    var _this8 = this;
     return this.callBase().always(function () {
-      _this9._refreshSelected();
+      _this8._refreshSelected();
     });
   },
   _renderPlaceholder: function _renderPlaceholder() {

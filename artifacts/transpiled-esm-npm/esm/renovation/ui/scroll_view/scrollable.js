@@ -128,12 +128,6 @@ import { createReRenderEffect } from '@devextreme/runtime/inferno';
 import { createRef as infernoCreateRef } from 'inferno';
 var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => normalizeProps(createComponentVNode(2, TemplateProp, _extends({}, props))) : TemplateProp);
 export class Scrollable extends InfernoWrapperComponent {
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -158,6 +152,12 @@ export class Scrollable extends InfernoWrapperComponent {
     this.startLoading = this.startLoading.bind(this);
     this.finishLoading = this.finishLoading.bind(this);
     this.validate = this.validate.bind(this);
+  }
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [createReRenderEffect()];

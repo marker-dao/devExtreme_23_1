@@ -76,7 +76,7 @@ export default class DropDownButton extends TextEditorButton {
   _legacyRender($editor, $element, isVisible) {
     $editor.toggleClass(DROP_DOWN_EDITOR_BUTTON_VISIBLE, isVisible);
     if ($element) {
-      $element.removeClass('dx-button').addClass(DROP_DOWN_EDITOR_BUTTON_CLASS);
+      $element.removeClass('dx-button').removeClass('dx-button-mode-contained').addClass(DROP_DOWN_EDITOR_BUTTON_CLASS);
     }
   }
   _isSameTemplate() {

@@ -1,13 +1,12 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/editing/m_editing.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import devices from '../../../../core/devices';
 import domAdapter from '../../../../core/dom_adapter';
 import Guid from '../../../../core/guid';
@@ -30,8 +29,8 @@ import messageLocalization from '../../../../localization/message';
 import { confirm } from '../../../../ui/dialog';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
-import { ACTION_OPTION_NAMES, BUTTON_NAMES, CELL_FOCUS_DISABLED_CLASS, CELL_MODIFIED, COMMAND_EDIT_CLASS, COMMAND_EDIT_WITH_ICONS_CLASS, DATA_EDIT_DATA_INSERT_TYPE, DATA_EDIT_DATA_REMOVE_TYPE, DATA_EDIT_DATA_UPDATE_TYPE, DEFAULT_START_EDIT_ACTION, EDIT_BUTTON_CLASS, EDIT_FORM_CLASS, EDIT_ICON_CLASS, EDIT_LINK_CLASS, EDIT_MODE_ROW, EDIT_MODES, EDITING_CHANGES_OPTION_NAME, EDITING_EDITCOLUMNNAME_OPTION_NAME, EDITING_EDITROWKEY_OPTION_NAME, EDITING_NAMESPACE, EDITING_POPUP_OPTION_NAME, EDITOR_CELL_CLASS, EDITORS_INPUT_SELECTOR, FIRST_NEW_ROW_POSITION, FOCUSABLE_ELEMENT_SELECTOR, INSERT_INDEX, LAST_NEW_ROW_POSITION, LINK_CLASS, LINK_ICON_CLASS, METHOD_NAMES, PAGE_BOTTOM_NEW_ROW_POSITION, PAGE_TOP_NEW_ROW_POSITION, READONLY_CLASS, REQUIRED_EDITOR_LABELLEDBY_MODES, ROW_BASED_MODES, ROW_CLASS, ROW_INSERTED, ROW_MODIFIED, ROW_SELECTED, TARGET_COMPONENT_NAME, VIEWPORT_BOTTOM_NEW_ROW_POSITION, VIEWPORT_TOP_NEW_ROW_POSITION } from './const';
-import { createFailureHandler, getButtonIndex, getButtonName, getEditingTexts, isEditingCell, isEditingOrShowEditorAlwaysDataCell } from './m_editing_utils';
+import { ACTION_OPTION_NAMES, BUTTON_NAMES, CELL_BASED_MODES, CELL_FOCUS_DISABLED_CLASS, CELL_MODIFIED, COMMAND_EDIT_CLASS, COMMAND_EDIT_WITH_ICONS_CLASS, DATA_EDIT_DATA_INSERT_TYPE, DATA_EDIT_DATA_REMOVE_TYPE, DATA_EDIT_DATA_UPDATE_TYPE, DEFAULT_START_EDIT_ACTION, EDIT_BUTTON_CLASS, EDIT_FORM_CLASS, EDIT_ICON_CLASS, EDIT_LINK_CLASS, EDIT_MODE_ROW, EDIT_MODES, EDITING_CHANGES_OPTION_NAME, EDITING_EDITCOLUMNNAME_OPTION_NAME, EDITING_EDITROWKEY_OPTION_NAME, EDITING_NAMESPACE, EDITING_POPUP_OPTION_NAME, EDITOR_CELL_CLASS, EDITORS_INPUT_SELECTOR, FIRST_NEW_ROW_POSITION, FOCUSABLE_ELEMENT_SELECTOR, INSERT_INDEX, LAST_NEW_ROW_POSITION, LINK_CLASS, LINK_ICON_CLASS, METHOD_NAMES, PAGE_BOTTOM_NEW_ROW_POSITION, PAGE_TOP_NEW_ROW_POSITION, READONLY_CLASS, REQUIRED_EDITOR_LABELLEDBY_MODES, ROW_BASED_MODES, ROW_CLASS, ROW_INSERTED, ROW_MODIFIED, ROW_SELECTED, TARGET_COMPONENT_NAME, VIEWPORT_BOTTOM_NEW_ROW_POSITION, VIEWPORT_TOP_NEW_ROW_POSITION } from './const';
+import { createFailureHandler, generateNewRowTempKey, getButtonIndex, getButtonName, getEditingTexts, isEditingCell, isEditingOrShowEditorAlwaysDataCell } from './m_editing_utils';
 class EditingControllerImpl extends modules.ViewController {
   init() {
     this._columnsController = this.getController('columns');
@@ -95,11 +94,16 @@ class EditingControllerImpl extends modules.ViewController {
     this.component._optionsByReference[EDITING_CHANGES_OPTION_NAME] = true;
   }
   getEditMode() {
-    var editMode = this.option('editing.mode');
+    var _a;
+    var editMode = (_a = this.option('editing.mode')) !== null && _a !== void 0 ? _a : EDIT_MODE_ROW;
     if (EDIT_MODES.includes(editMode)) {
       return editMode;
     }
     return EDIT_MODE_ROW;
+  }
+  isCellBasedEditMode() {
+    var editMode = this.getEditMode();
+    return CELL_BASED_MODES.includes(editMode);
   }
   _getDefaultEditorTemplate() {
     return (container, options) => {
@@ -614,13 +618,10 @@ class EditingControllerImpl extends modules.ViewController {
   _addInsertInfo(change, parentKey) {
     var _a;
     var insertInfo;
+    change.key = this.getChangeKeyValue(change);
     var {
       key
     } = change;
-    if (!isDefined(key)) {
-      key = String(new Guid());
-      change.key = key;
-    }
     insertInfo = (_a = this._getInternalData(key)) === null || _a === void 0 ? void 0 : _a.insertInfo;
     if (!isDefined(insertInfo)) {
       var insertAfterOrBeforeKey = this._getInsertAfterOrBeforeKey(change);
@@ -637,6 +638,20 @@ class EditingControllerImpl extends modules.ViewController {
       insertInfo,
       key
     };
+  }
+  getChangeKeyValue(change) {
+    if (isDefined(change.key)) {
+      return change.key;
+    }
+    var keyExpr = this._dataController.key();
+    var keyValue;
+    if (change.data && keyExpr && !Array.isArray(keyExpr)) {
+      keyValue = change.data[keyExpr];
+    }
+    if (!isDefined(keyValue)) {
+      keyValue = generateNewRowTempKey();
+    }
+    return keyValue;
   }
   _setInsertAfterOrBeforeKey(change, parentKey) {
     var dataController = this._dataController;
@@ -2229,6 +2244,10 @@ export var editingModule = {
           }
           if (cellOptions.modified) {
             this.setAria('roledescription', messageLocalization.format('dxDataGrid-ariaModifiedCell'), $cell);
+          }
+          var isEditableCell = cellOptions.column.allowEditing && !cellOptions.removed && !cellOptions.modified && cellOptions.rowType === 'data' && cellOptions.column.calculateCellValue === cellOptions.column.defaultCalculateCellValue && this._editingController.isCellBasedEditMode();
+          if (isEditableCell) {
+            this.setAria('roledescription', messageLocalization.format('dxDataGrid-ariaEditableCell'), $cell);
           }
         },
         _createCell(options) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/drop_down_box.js)
 * Version: 23.2.0
-* Build date: Thu Aug 17 2023
+* Build date: Fri Aug 25 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -111,6 +111,12 @@ var DropDownBox = DropDownEditor.inherit({
   },
   _shouldUseDisplayValue: function _shouldUseDisplayValue(value) {
     return this.option('valueExpr') === 'this' && isObject(value);
+  },
+  _popupInitializedHandler(e) {
+    e.component.registerKeyHandler('escape', () => {
+      this.close();
+      this.focus();
+    });
   },
   _renderInputValue: function _renderInputValue() {
     this._rejectValueLoading();
