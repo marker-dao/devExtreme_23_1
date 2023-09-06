@@ -63,7 +63,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
           var newDateBoxValue = _this2.dateBox.dateOption('value');
           var dateBoxValueChanged = !(0, _uiDate_range.isSameDates)(dateBoxValue, newDateBoxValue);
           if (dateBoxValueChanged) {
-            _this2.dateRangeBox.getStartDateBox()._strategy._widget.option('values', _this2.dateRangeBox.option('value'));
+            _this2.dateRangeBox.getStartDateBox()._strategy._widget.option('value', _this2.dateRangeBox.option('value'));
           } else {
             _this2.dateRangeBox.getStartDateBox()._strategy._widget._enterKeyHandler(e);
           }
@@ -108,7 +108,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     var disabledDates = (0, _type.isFunction)(disabledDatesValue) ? this._injectComponent(disabledDatesValue) : disabledDates;
     return (0, _extend.extend)(_CalendarStrategy.prototype._getWidgetOptions.call(this), {
       disabledDates,
-      values: value,
+      value,
       selectionMode: 'range',
       viewsCount: multiView ? 2 : 1,
       _allowChangeSelectionOrder: true,
@@ -130,7 +130,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     return this.dateRangeBox.getStartDateBox() ? this.dateRangeBox.getStartDateBox()._strategy._widget : this._widget;
   };
   _proto.getValue = function getValue() {
-    return this._widget.option('values');
+    return this._widget.option('value');
   };
   _proto._updateValue = function _updateValue() {
     var _this$dateRangeBox$op2 = this.dateRangeBox.option(),
@@ -139,7 +139,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
       return;
     }
     this._shouldPreventFocusChange = true;
-    this._widget.option('values', value);
+    this._widget.option('value', value);
   };
   _proto._isInstantlyMode = function _isInstantlyMode() {
     return this.dateRangeBox.option('applyValueMode') === 'instantly';

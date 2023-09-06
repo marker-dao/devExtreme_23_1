@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1172,7 +1172,6 @@ declare module DevExpress.common {
     | 'right bottom'
     | 'right top'
     | 'top';
-  export type PositionRelative = 'top' | 'end' | 'bottom' | 'start';
   /**
    * [descr:RangeRule]
    */
@@ -1279,6 +1278,8 @@ declare module DevExpress.common {
     type: 'stringLength';
   };
   export type SubmenuShowMode = 'onClick' | 'onHover';
+  export type TabsIconPosition = 'top' | 'end' | 'bottom' | 'start';
+  export type TabsStylingMode = 'primary' | 'secondary';
   export type TextBoxPredefinedButton = 'clear';
 
   /**
@@ -3917,7 +3918,7 @@ declare module DevExpress.common.grids {
     /**
      * [descr:GridBaseOptions.searchPanel.width]
      */
-    width?: number;
+    width?: string | number;
   };
   export type SelectedFilterOperation =
     | '<'
@@ -25053,7 +25054,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxTabPanelOptions.iconPosition]
      */
-    iconPosition?: DevExpress.common.PositionRelative;
+    iconPosition?: DevExpress.common.TabsIconPosition;
     /**
      * [descr:dxTabPanelOptions.items]
      */
@@ -25092,6 +25093,10 @@ declare module DevExpress.ui {
      * [descr:dxTabPanelOptions.showNavButtons]
      */
     showNavButtons?: boolean;
+    /**
+     * [descr:dxTabPanelOptions.stylingMode]
+     */
+    stylingMode?: DevExpress.common.TabsStylingMode;
     /**
      * [descr:dxTabPanelOptions.swipeEnabled]
      */
@@ -25237,7 +25242,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxTabsOptions.iconPosition]
      */
-    iconPosition?: DevExpress.common.PositionRelative;
+    iconPosition?: DevExpress.common.TabsIconPosition;
     /**
      * [descr:dxTabsOptions.items]
      */
@@ -25266,6 +25271,10 @@ declare module DevExpress.ui {
      * [descr:dxTabsOptions.showNavButtons]
      */
     showNavButtons?: boolean;
+    /**
+     * [descr:dxTabsOptions.stylingMode]
+     */
+    stylingMode?: DevExpress.common.TabsStylingMode;
   }
   /**
    * @deprecated Use Item instead

@@ -329,6 +329,7 @@ class RowsView extends ColumnsView {
           default:
             this.setTableElement(newTableElement, isFixedTableRendering);
             contentElement.addClass(this.addWidgetPrefix(CONTENT_CLASS));
+            this._setGridRole(contentElement);
             this._renderContent(contentElement, newTableElement, isFixedTableRendering);
             break;
         }
@@ -336,6 +337,17 @@ class RowsView extends ColumnsView {
     }).fail(() => {
       this._contentChanges = [];
     });
+  }
+  _getGridRoleName() {
+    return 'grid';
+  }
+  _setGridRole($element) {
+    var _a;
+    var hasData = !((_a = this._dataController) === null || _a === void 0 ? void 0 : _a.isEmpty());
+    var gridRoleName = this._getGridRoleName();
+    if (($element === null || $element === void 0 ? void 0 : $element.length) && hasData) {
+      this.setAria('role', gridRoleName, $element);
+    }
   }
   _createEmptyRow(className, isFixed, height) {
     var that = this;
@@ -1064,6 +1076,14 @@ class RowsView extends ColumnsView {
         that.renderNoDataText();
         args.handled = true;
         break;
+    }
+  }
+  setAriaOwns(headerTableId, footerTableId) {
+    var _a;
+    var $contentElement = this._findContentElement();
+    var $tableElement = this.getTableElement();
+    if ($tableElement === null || $tableElement === void 0 ? void 0 : $tableElement.length) {
+      this.setAria('owns', "".concat(headerTableId !== null && headerTableId !== void 0 ? headerTableId : '', " ").concat((_a = $tableElement.attr('id')) !== null && _a !== void 0 ? _a : '', " ").concat(footerTableId !== null && footerTableId !== void 0 ? footerTableId : '').trim(), $contentElement);
     }
   }
   dispose() {

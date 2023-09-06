@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/views/m_grid_view.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -530,6 +530,12 @@ var resizingControllerMembers = {
       this._setScrollerSpacingCore();
     }
   },
+  _setAriaOwns() {
+    var _a, _b, _c;
+    var headerTable = (_a = this._columnHeadersView) === null || _a === void 0 ? void 0 : _a.getTableElement();
+    var footerTable = (_b = this._footerView) === null || _b === void 0 ? void 0 : _b.getTableElement();
+    (_c = this._rowsView) === null || _c === void 0 ? void 0 : _c.setAriaOwns(headerTable === null || headerTable === void 0 ? void 0 : headerTable.attr('id'), footerTable === null || footerTable === void 0 ? void 0 : footerTable.attr('id'));
+  },
   _updateDimensionsCore() {
     var that = this;
     var dataController = that._dataController;
@@ -548,6 +554,7 @@ var resizingControllerMembers = {
     deferRender(() => {
       var hasHeight = that._hasHeight || !!maxHeight || isHeightSpecified;
       rowsView.hasHeight(hasHeight);
+      this._setAriaOwns();
       // IE11
       if (maxHeightHappened && !isMaxHeightApplied) {
         $(groupElement).css('height', maxHeight);

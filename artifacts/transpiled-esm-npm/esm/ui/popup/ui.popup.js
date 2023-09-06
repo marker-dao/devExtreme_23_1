@@ -25,6 +25,7 @@ import resizeObserverSingleton from '../../core/resize_observer';
 import * as zIndexPool from '../overlay/z_index';
 import { PopupPositionController } from './popup_position_controller';
 import { createBodyOverflowManager } from './popup_overflow_manager';
+import Guid from '../../core/guid';
 var window = getWindow();
 
 // STYLE popup
@@ -45,6 +46,7 @@ var POPUP_HAS_CLOSE_BUTTON_CLASS = 'dx-has-close-button';
 var TEMPLATE_WRAPPER_CLASS = 'dx-template-wrapper';
 var POPUP_CONTENT_FLEX_HEIGHT_CLASS = 'dx-popup-flex-height';
 var POPUP_CONTENT_INHERIT_HEIGHT_CLASS = 'dx-popup-inherit-height';
+var TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';
 var ALLOWED_TOOLBAR_ITEM_ALIASES = ['cancel', 'clear', 'done'];
 var APPLY_VALUE_BUTTONS_ORDER = ['cancel', 'done'];
 var BUTTON_DEFAULT_TYPE = 'default';
@@ -358,12 +360,14 @@ var Popup = Overlay.inherit({
   },
   _renderTitle: function _renderTitle() {
     var items = this._getToolbarItems('top');
-    var titleText = this.option('title');
-    var showTitle = this.option('showTitle');
-    if (showTitle && !!titleText) {
+    var {
+      title,
+      showTitle
+    } = this.option();
+    if (showTitle && !!title) {
       items.unshift({
         location: devices.current().ios ? 'center' : 'before',
-        text: titleText
+        text: title
       });
     }
     if (showTitle || items.length > 0) {
@@ -376,6 +380,18 @@ var Popup = Overlay.inherit({
     } else if (this._$title) {
       this._$title.detach();
     }
+    this._toggleAriaLabel();
+  },
+  _toggleAriaLabel() {
+    var _this$_$title;
+    var {
+      title,
+      showTitle
+    } = this.option();
+    var shouldSetAriaLabel = showTitle && !!title;
+    var titleId = shouldSetAriaLabel ? new Guid() : null;
+    (_this$_$title = this._$title) === null || _this$_$title === void 0 ? void 0 : _this$_$title.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0).attr('id', titleId);
+    this.$overlayContent().attr('aria-labelledby', titleId);
   },
   _renderTemplateByType: function _renderTemplateByType(optionName, data, $container, additionalToolbarOptions) {
     var {

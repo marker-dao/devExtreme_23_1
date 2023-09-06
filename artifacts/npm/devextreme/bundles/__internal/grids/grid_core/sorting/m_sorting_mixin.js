@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/sorting/m_sorting_mixin.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _type = require("../../../../core/utils/type");
+var _message = _interopRequireDefault(require("../../../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var SORT_CLASS = 'dx-sort';
 var SORT_NONE_CLASS = 'dx-sort-none';
@@ -35,10 +36,10 @@ var _default = {
       rootElement.find(".".concat(SORT_CLASS)).remove();
       !$indicatorsContainer.children().length && $indicatorsContainer.remove();
       var isSortingAllowed = sortingMode !== 'none' && column.allowSorting;
+      var hasSeveralSortIndexes = that.getController && !!that.getController('columns').columnOption('sortIndex:1');
       if (!(0, _type.isDefined)(column.groupIndex) && (isSortingAllowed || (0, _type.isDefined)(column.sortOrder))) {
         ariaSortState = column.sortOrder === 'asc' ? 'ascending' : 'descending';
         $sortIndicator = that.callBase(options).toggleClass(SORTUP_CLASS, column.sortOrder === 'asc').toggleClass(SORTDOWN_CLASS, column.sortOrder === 'desc');
-        var hasSeveralSortIndexes = that.getController && !!that.getController('columns').columnOption('sortIndex:1');
         if (hasSeveralSortIndexes && that.option('sorting.showSortIndexes') && column.sortIndex >= 0) {
           (0, _renderer.default)('<span>').addClass(SORT_INDEX_ICON_CLASS).text(column.sortIndex + 1).appendTo($sortIndicator);
           $sortIndicator.addClass(SORT_INDEX_CLASS);
@@ -47,22 +48,31 @@ var _default = {
           options.rootElement.addClass(that.addWidgetPrefix(HEADERS_ACTION_CLASS));
         }
       }
-      this._setAriaSortAttribute(column, ariaSortState, rootElement);
+      this._setAriaSortAttribute(column, ariaSortState, rootElement, hasSeveralSortIndexes);
       return $sortIndicator;
     }
     return that.callBase(options);
   },
-  _setAriaSortAttribute(column, ariaSortState, rootElement) {
+  _setAriaSortAttribute(column, ariaSortState, $rootElement, hasSeveralSortIndexes) {
+    $rootElement.removeAttr('aria-roledescription');
     if (column.isGrouped) {
       var description = this.localize('dxDataGrid-ariaNotSortedColumn');
       if ((0, _type.isDefined)(column.sortOrder)) {
         description = column.sortOrder === 'asc' ? this.localize('dxDataGrid-ariaSortedAscendingColumn') : this.localize('dxDataGrid-ariaSortedDescendingColumn');
       }
-      this.setAria('roledescription', description, rootElement);
+      this.setAria('roledescription', description, $rootElement);
     } else if (!(0, _type.isDefined)(column.sortOrder)) {
-      this.setAria('sort', 'none', rootElement);
+      this.setAria('sort', 'none', $rootElement);
     } else {
-      this.setAria('sort', ariaSortState, rootElement);
+      this.setAria('sort', ariaSortState, $rootElement);
+      if (hasSeveralSortIndexes && column.sortIndex >= 0) {
+        var ariaColumnHeader = _message.default.format('dxDataGrid-ariaColumnHeader');
+        var ariaSortIndex = _message.default.format('dxDataGrid-ariaSortIndex',
+        // @ts-expect-error
+        column.sortIndex + 1);
+        var _description = "".concat(ariaColumnHeader, ", ").concat(ariaSortIndex);
+        this.setAria('roledescription', _description, $rootElement);
+      }
     }
   },
   _getIndicatorClassName(name) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/context_menu/ui.menu_base.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,6 @@ var _uiMenu_baseEdit = _interopRequireDefault(require("./ui.menu_base.edit.strat
 var _devices = _interopRequireDefault(require("../../core/devices"));
 var _item = _interopRequireDefault(require("../collection/item"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var DX_MENU_CLASS = 'dx-menu';
@@ -47,7 +46,7 @@ var DEFAULT_DELAY = {
 };
 var DX_MENU_ITEM_CAPTION_URL_CLASS = "".concat(DX_MENU_ITEM_CAPTION_CLASS, "-with-url");
 var DX_ICON_WITH_URL_CLASS = 'dx-icon-with-url';
-var DX_ITEM_URL_CLASS = 'dx-item-url';
+var ITEM_URL_CLASS = 'dx-item-url';
 var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
   _inheritsLoose(MenuBase, _HierarchicalCollecti);
   function MenuBase() {
@@ -184,22 +183,20 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
       url = _ref.url;
     iconContainer === null || iconContainer === void 0 ? void 0 : iconContainer.addClass(DX_ICON_WITH_URL_CLASS);
     textContainer === null || textContainer === void 0 ? void 0 : textContainer.addClass(DX_MENU_ITEM_CAPTION_URL_CLASS);
-    var linkAttributes = (0, _type.isObject)(linkAttr) ? linkAttr : {};
-    return (0, _renderer.default)('<a>').addClass(DX_ITEM_URL_CLASS).attr(_extends({}, linkAttributes, {
-      href: url
-    })).append(iconContainer).append(textContainer);
+    return _HierarchicalCollecti.prototype._getLinkContainer.call(this, iconContainer, textContainer, {
+      linkAttr,
+      url
+    });
   };
   _proto._addContent = function _addContent($container, itemData) {
     var html = itemData.html,
       url = itemData.url;
-    var iconContainer = this._getIconContainer(itemData);
-    var textContainer = this._getTextContainer(itemData);
-    $container.html(html);
     if (url) {
-      var link = this._getLinkContainer(iconContainer, textContainer, itemData);
+      $container.html(html);
+      var link = this._getLinkContainer(this._getIconContainer(itemData), this._getTextContainer(itemData), itemData);
       $container.append(link);
     } else {
-      $container.append(iconContainer).append(textContainer);
+      _HierarchicalCollecti.prototype._addContent.call(this, $container, itemData);
     }
     $container.append(this._getPopoutContainer(itemData));
     this._addContentClasses(itemData, $container.parent());
@@ -467,7 +464,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
   };
   _proto._itemClick = function _itemClick(actionArgs) {
     var args = actionArgs.args[0];
-    var link = args.event.target.getElementsByClassName(DX_ITEM_URL_CLASS)[0];
+    var link = args.event.target.getElementsByClassName(ITEM_URL_CLASS)[0];
     if (args.itemData.url && link) {
       link.click();
     }

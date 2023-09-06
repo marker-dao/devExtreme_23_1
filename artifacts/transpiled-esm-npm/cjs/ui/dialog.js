@@ -6,6 +6,7 @@ var _renderer = _interopRequireDefault(require("../core/renderer"));
 var _action = _interopRequireDefault(require("../core/action"));
 var _devices = _interopRequireDefault(require("../core/devices"));
 var _config = _interopRequireDefault(require("../core/config"));
+var _guid = _interopRequireDefault(require("../core/guid"));
 var _dom = require("../core/utils/dom");
 var _deferred = require("../core/utils/deferred");
 var _type = require("../core/utils/type");
@@ -50,7 +51,8 @@ var custom = function custom(options) {
     _ui.default.log('W1013');
   }
   var messageHtml = String(isMessageHtmlDefined ? options.messageHtml : options.message);
-  var $message = (0, _renderer.default)('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageHtml);
+  var messageId = options.title ? null : new _guid.default();
+  var $message = (0, _renderer.default)('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageHtml).attr('id', messageId);
   var popupToolbarItems = [];
   (0, _iterator.each)(options.buttons || [DEFAULT_BUTTON], function () {
     var action = new _action.default(this.onClick, {
@@ -81,6 +83,9 @@ var custom = function custom(options) {
     dragAndResizeArea: window,
     onContentReady: function onContentReady(args) {
       args.component.$content().addClass(DX_DIALOG_CONTENT_CLASSNAME).append($message);
+      if (messageId) {
+        args.component.$overlayContent().attr('aria-labelledby', messageId);
+      }
     },
     onShowing: function onShowing(e) {
       e.component.bottomToolbar().addClass(DX_DIALOG_BUTTONS_CLASSNAME).find(".".concat(DX_BUTTON_CLASSNAME)).addClass(DX_DIALOG_BUTTON_CLASSNAME);

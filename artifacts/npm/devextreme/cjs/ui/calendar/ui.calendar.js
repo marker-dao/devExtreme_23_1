@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -89,7 +89,6 @@ var Calendar = _editor.default.inherit({
       */
       currentDate: new Date(),
       value: null,
-      values: [],
       dateSerializationFormat: undefined,
       min: new Date(1000, 0),
       max: new Date(3000, 0),
@@ -229,7 +228,6 @@ var Calendar = _editor.default.inherit({
     return _date_serialization.default.deserializeDate(value);
   },
   _dateValue: function _dateValue(value, event) {
-    var optionName = Array.isArray(value) ? 'values' : 'value';
     if (event) {
       if (event.type === 'keydown') {
         var cellElement = this._view._getContouredCell().get(0);
@@ -237,22 +235,25 @@ var Calendar = _editor.default.inherit({
       }
       this._saveValueChangeEvent(event);
     }
-    this._dateOption(optionName, value);
+    this._dateOption('value', value);
   },
   _dateOption: function _dateOption(optionName, optionValue) {
     var _this = this;
+    var isArray = optionName === 'value' && !this._isSingleMode();
+    var value = this.option('value');
     if (arguments.length === 1) {
-      var _this$option;
-      var values = (_this$option = this.option('values')) !== null && _this$option !== void 0 ? _this$option : [];
-      return optionName === 'values' ? values.map(function (value) {
+      return isArray ? (value !== null && value !== void 0 ? value : []).map(function (value) {
         return _this._convertToDate(value);
       }) : this._convertToDate(this.option(optionName));
     }
     var serializationFormat = this._getSerializationFormat(optionName);
-    var serializedValue = optionName === 'values' ? (optionValue === null || optionValue === void 0 ? void 0 : optionValue.map(function (value) {
+    var serializedValue = isArray ? (optionValue === null || optionValue === void 0 ? void 0 : optionValue.map(function (value) {
       return _date_serialization.default.serializeDate(value, serializationFormat);
     })) || [] : _date_serialization.default.serializeDate(optionValue, serializationFormat);
     this.option(optionName, serializedValue);
+  },
+  _isSingleMode: function _isSingleMode() {
+    return this.option('selectionMode') === 'single';
   },
   _shiftDate: function _shiftDate(zoomLevel, date, offset, reverse) {
     switch (zoomLevel) {
@@ -374,6 +375,7 @@ var Calendar = _editor.default.inherit({
   },
   _refreshSelectionStrategy: function _refreshSelectionStrategy() {
     this._initSelectionStrategy();
+    this._selectionStrategy.restoreValue();
     this._refresh();
   },
   _getSelectionStrategyName: function _getSelectionStrategyName() {
@@ -596,9 +598,9 @@ var Calendar = _editor.default.inherit({
   },
   _renderViews: function _renderViews() {
     this.$element().addClass(CALENDAR_VIEW_CLASS + '-' + this.option('zoomLevel'));
-    var _this$option2 = this.option(),
-      currentDate = _this$option2.currentDate,
-      viewsCount = _this$option2.viewsCount;
+    var _this$option = this.option(),
+      currentDate = _this$option.currentDate,
+      viewsCount = _this$option.viewsCount;
     this.$element().toggleClass(CALENDAR_MULTIVIEW_CLASS, viewsCount > 1);
     this._view = this._renderSpecificView(currentDate);
     if ((0, _window.hasWindow)()) {
@@ -614,8 +616,8 @@ var Calendar = _editor.default.inherit({
     this._translateViews();
   },
   _renderSpecificView: function _renderSpecificView(date) {
-    var _this$option3 = this.option(),
-      zoomLevel = _this$option3.zoomLevel;
+    var _this$option2 = this.option(),
+      zoomLevel = _this$option2.zoomLevel;
     var specificView = _uiCalendar2.default[zoomLevel];
     var $view = (0, _renderer.default)('<div>').appendTo(this._$viewsWrapper);
     var config = this._viewConfig(date);
@@ -623,14 +625,14 @@ var Calendar = _editor.default.inherit({
     return view;
   },
   _viewConfig: function _viewConfig(date) {
-    var _this$option4;
+    var _this$option3;
     var disabledDates = this.option('disabledDates');
     disabledDates = (0, _type.isFunction)(disabledDates) ? this._injectComponent(disabledDates.bind(this)) : disabledDates;
     return _extends({}, this._selectionStrategy.getViewOptions(), {
       date: date,
       min: this._getMinDate(),
       max: this._getMaxDate(),
-      firstDayOfWeek: (_this$option4 = this.option('firstDayOfWeek')) !== null && _this$option4 !== void 0 ? _this$option4 : _date3.default.firstDayOfWeekIndex(),
+      firstDayOfWeek: (_this$option3 = this.option('firstDayOfWeek')) !== null && _this$option3 !== void 0 ? _this$option3 : _date3.default.firstDayOfWeekIndex(),
       showWeekNumbers: this.option('showWeekNumbers'),
       selectWeekOnClick: this.option('selectWeekOnClick'),
       weekNumberRule: this.option('weekNumberRule'),
@@ -670,8 +672,8 @@ var Calendar = _editor.default.inherit({
     return _date2.default.dateInRange(date, min, max);
   },
   _translateViews: function _translateViews() {
-    var _this$option5 = this.option(),
-      viewsCount = _this$option5.viewsCount;
+    var _this$option4 = this.option(),
+      viewsCount = _this$option4.viewsCount;
     (0, _translator.move)(this._view.$element(), {
       left: 0,
       top: 0
@@ -705,7 +707,7 @@ var Calendar = _editor.default.inherit({
   _updateTimeComponent: function _updateTimeComponent(date) {
     var result = new Date(date);
     var currentValue = this._dateOption('value');
-    if (currentValue) {
+    if (currentValue && this._isSingleMode()) {
       result.setHours(currentValue.getHours());
       result.setMinutes(currentValue.getMinutes());
       result.setSeconds(currentValue.getSeconds());
@@ -746,9 +748,9 @@ var Calendar = _editor.default.inherit({
     this._updateButtonsVisibility();
   },
   _navigatorConfig: function _navigatorConfig() {
-    var _this$option6 = this.option(),
-      focusStateEnabled = _this$option6.focusStateEnabled,
-      rtlEnabled = _this$option6.rtlEnabled;
+    var _this$option5 = this.option(),
+      focusStateEnabled = _this$option5.focusStateEnabled,
+      rtlEnabled = _this$option5.rtlEnabled;
     return {
       text: this._getViewsCaption(this._view, this._additionalView),
       onClick: this._navigatorClickHandler.bind(this),
@@ -759,9 +761,9 @@ var Calendar = _editor.default.inherit({
     };
   },
   _navigatorClickHandler: function _navigatorClickHandler(e) {
-    var _this$option7 = this.option(),
-      currentDate = _this$option7.currentDate,
-      viewsCount = _this$option7.viewsCount;
+    var _this$option6 = this.option(),
+      currentDate = _this$option6.currentDate,
+      viewsCount = _this$option6.viewsCount;
     var offset = e.direction;
     if (viewsCount > 1) {
       var additionalViewActive = this._isAdditionalViewDate(currentDate);
@@ -806,8 +808,8 @@ var Calendar = _editor.default.inherit({
   },
   _swipeStartHandler: function _swipeStartHandler(e) {
     _fx.default.stop(this._$viewsWrapper, true);
-    var _this$option8 = this.option(),
-      viewsCount = _this$option8.viewsCount;
+    var _this$option7 = this.option(),
+      viewsCount = _this$option7.viewsCount;
     this._toggleGestureCoverCursor('grabbing');
     e.event.maxLeftOffset = this._getRequiredView('next') ? 1 / viewsCount : 0;
     e.event.maxRightOffset = this._getRequiredView('prev') ? 1 / viewsCount : 0;
@@ -835,9 +837,9 @@ var Calendar = _editor.default.inherit({
   },
   _swipeEndHandler: function _swipeEndHandler(e) {
     this._toggleGestureCoverCursor('auto');
-    var _this$option9 = this.option(),
-      currentDate = _this$option9.currentDate,
-      rtlEnabled = _this$option9.rtlEnabled;
+    var _this$option8 = this.option(),
+      currentDate = _this$option8.currentDate,
+      rtlEnabled = _this$option8.rtlEnabled;
     var targetOffset = e.event.targetOffset;
     var moveOffset = !targetOffset ? 0 : targetOffset / Math.abs(targetOffset);
     var isAdditionalViewActive = this._isAdditionalViewDate(currentDate);
@@ -882,8 +884,8 @@ var Calendar = _editor.default.inherit({
   },
   _getViewsCaption: function _getViewsCaption(view, additionalView) {
     var caption = view.getNavigatorCaption();
-    var _this$option10 = this.option(),
-      viewsCount = _this$option10.viewsCount;
+    var _this$option9 = this.option(),
+      viewsCount = _this$option9.viewsCount;
     if (viewsCount > 1 && additionalView) {
       var additionalViewCaption = additionalView.getNavigatorCaption();
       caption = "".concat(caption, " - ").concat(additionalViewCaption);
@@ -1016,8 +1018,8 @@ var Calendar = _editor.default.inherit({
     if (offset === 0) {
       return;
     }
-    var _this$option11 = this.option(),
-      viewsCount = _this$option11.viewsCount;
+    var _this$option10 = this.option(),
+      viewsCount = _this$option10.viewsCount;
     var viewOffset;
     var viewToCreateKey;
     var viewToRemoveKey;
@@ -1204,7 +1206,6 @@ var Calendar = _editor.default.inherit({
         break;
       case 'selectionMode':
         this._refreshSelectionStrategy();
-        this._selectionStrategy.restoreValue();
         this._initCurrentDate();
         break;
       case 'selectWeekOnClick':
@@ -1235,18 +1236,9 @@ var Calendar = _editor.default.inherit({
         this._updateButtonsVisibility();
         break;
       case 'value':
-        if (this.option('selectionMode') === 'single') {
-          this._selectionStrategy.processValueChanged([value], [previousValue]);
-        }
+        this._selectionStrategy.processValueChanged(value, previousValue);
         this._setSubmitValue(value);
         this.callBase(args);
-        break;
-      case 'values':
-        if (this.option('selectionMode') !== 'single') {
-          this._selectionStrategy.processValueChanged(value, previousValue);
-        }
-        this._raiseValueChangeAction(value, previousValue);
-        this._saveValueChangeEvent(undefined);
         break;
       case 'viewsCount':
         this._refreshViews();

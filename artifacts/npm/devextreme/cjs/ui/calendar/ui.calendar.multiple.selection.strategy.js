@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.multiple.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,41 +30,41 @@ var CalendarMultiSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
   var _proto = CalendarMultiSelectionStrategy.prototype;
   _proto.getViewOptions = function getViewOptions() {
     return {
-      value: this.dateOption('values'),
+      value: this.dateOption('value'),
       range: [],
       selectionMode: 'multi',
       onWeekNumberClick: this._shouldHandleWeekNumberClick() ? this._weekNumberClickHandler.bind(this) : null
     };
   };
   _proto.selectValue = function selectValue(selectedValue, e) {
-    var values = _toConsumableArray(this.dateOption('values'));
-    var alreadySelectedIndex = values.findIndex(function (date) {
+    var value = _toConsumableArray(this.dateOption('value'));
+    var alreadySelectedIndex = value.findIndex(function (date) {
       return (date === null || date === void 0 ? void 0 : date.toDateString()) === selectedValue.toDateString();
     });
     if (alreadySelectedIndex > -1) {
-      values.splice(alreadySelectedIndex, 1);
+      value.splice(alreadySelectedIndex, 1);
     } else {
-      values.push(selectedValue);
+      value.push(selectedValue);
     }
     this.skipNavigate();
     this._updateCurrentDate(selectedValue);
     this._currentDateChanged = true;
-    this.dateValue(values, e);
+    this.dateValue(value, e);
   };
   _proto.updateAriaSelected = function updateAriaSelected(value, previousValue) {
     var _value, _previousValue;
-    (_value = value) !== null && _value !== void 0 ? _value : value = this.dateOption('values');
+    (_value = value) !== null && _value !== void 0 ? _value : value = this.dateOption('value');
     (_previousValue = previousValue) !== null && _previousValue !== void 0 ? _previousValue : previousValue = [];
     _CalendarSelectionStr.prototype.updateAriaSelected.call(this, value, previousValue);
   };
   _proto.getDefaultCurrentDate = function getDefaultCurrentDate() {
-    var dates = this.dateOption('values').filter(function (value) {
+    var dates = this.dateOption('value').filter(function (value) {
       return value;
     });
     return this._getLowestDateInArray(dates);
   };
   _proto.restoreValue = function restoreValue() {
-    this.calendar.option('values', []);
+    this.calendar.option('value', []);
   };
   _proto._weekNumberClickHandler = function _weekNumberClickHandler(_ref) {
     var _this2 = this;

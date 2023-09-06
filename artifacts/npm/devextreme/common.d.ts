@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common.d.ts)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -504,12 +504,6 @@ export type Position = 'bottom' | 'left' | 'right' | 'top';
 export type PositionAlignment = 'bottom' | 'center' | 'left' | 'left bottom' | 'left top' | 'right' | 'right bottom' | 'right top' | 'top';
 
 /**
- * @public
- * @namespace DevExpress.common
- */
-export type PositionRelative = 'top' | 'end' | 'bottom' | 'start';
-
-/**
  * @docid
  * @public
  * @type object
@@ -717,6 +711,18 @@ export type StringLengthRule = {
  * @namespace DevExpress.common
  */
 export type SubmenuShowMode = 'onClick' | 'onHover';
+
+/**
+ * @public
+ * @namespace DevExpress.common
+ */
+export type TabsIconPosition = 'top' | 'end' | 'bottom' | 'start';
+
+/**
+ * @public
+ * @namespace DevExpress.common
+ */
+export type TabsStylingMode = 'primary' | 'secondary';
 
 /**
  * @public

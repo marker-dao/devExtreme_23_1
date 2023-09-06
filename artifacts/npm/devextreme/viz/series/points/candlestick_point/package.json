@@ -1,5 +1,7 @@
 {
-  "sideEffects": false,
+  "sideEffects": [
+    "../../../../esm/localization/currency.js"
+  ],
   "main": "../../../../cjs/viz/series/points/candlestick_point.js",
   "module": "../../../../esm/viz/series/points/candlestick_point.js"
 }

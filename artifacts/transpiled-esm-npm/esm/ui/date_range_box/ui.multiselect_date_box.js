@@ -102,7 +102,7 @@ class MultiselectDateBox extends DateBox {
       return;
     }
     var calendar = this._strategy.dateRangeBox.getStartDateBox()._strategy._widget;
-    var value = calendar.option('values');
+    var value = calendar.option('value');
     var startDate = getDeserializedDate(value[0]);
     var endDate = getDeserializedDate(value[1]);
     if ($(target).is(startDateInput)) {

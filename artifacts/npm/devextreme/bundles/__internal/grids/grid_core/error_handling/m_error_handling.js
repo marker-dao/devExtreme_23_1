@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/error_handling/m_error_handling.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _iterator = require("../../../../core/utils/iterator");
 var _click = require("../../../../events/click");
 var _events_engine = _interopRequireDefault(require("../../../../events/core/events_engine"));
+var _message = _interopRequireDefault(require("../../../../localization/message"));
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var ERROR_ROW_CLASS = 'dx-error-row';
@@ -34,7 +35,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
     var $closeButton;
     var $errorMessage = this._renderErrorMessage(error);
     if ($tableElements) {
-      $errorRow = (0, _renderer.default)('<tr>').addClass(ERROR_ROW_CLASS);
+      $errorRow = (0, _renderer.default)('<tr>').attr('role', 'row').addClass(ERROR_ROW_CLASS);
       $closeButton = (0, _renderer.default)('<div>').addClass(ERROR_CLOSEBUTTON_CLASS).addClass(that.addWidgetPrefix(ACTION_CLASS));
       _events_engine.default.on($closeButton, _click.name, that.createAction(function (args) {
         var e = args.event;
@@ -51,7 +52,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
       // @ts-expect-errors
       .attr({
         colSpan: that.getController('columns').getVisibleColumns().length,
-        role: 'presentation'
+        role: 'gridcell'
       }).prepend($closeButton).append($errorMessage).appendTo($errorRow);
       return $errorRow;
     }
@@ -59,7 +60,7 @@ var ErrorHandlingController = _m_modules.default.ViewController.inherit({
   },
   _renderErrorMessage(error) {
     var message = error.url ? error.message.replace(error.url, '') : error.message || error;
-    var $message = (0, _renderer.default)('<div>').addClass(ERROR_MESSAGE_CLASS).text(message);
+    var $message = (0, _renderer.default)('<div>').attr('role', 'alert').attr('aria-roledescription', _message.default.format('dxDataGrid-ariaError')).addClass(ERROR_MESSAGE_CLASS).text(message);
     if (error.url) {
       (0, _renderer.default)('<a>').attr('href', error.url).text(error.url).appendTo($message);
     }

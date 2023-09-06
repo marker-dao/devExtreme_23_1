@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/ui.multiselect_date_box.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -126,7 +126,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
       return;
     }
     var calendar = this._strategy.dateRangeBox.getStartDateBox()._strategy._widget;
-    var value = calendar.option('values');
+    var value = calendar.option('value');
     var startDate = (0, _uiDate_range.getDeserializedDate)(value[0]);
     var endDate = (0, _uiDate_range.getDeserializedDate)(value[1]);
     if ((0, _renderer.default)(target).is(startDateInput)) {

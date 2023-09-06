@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/abstract_store.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -128,9 +128,12 @@ var Store = _class.default.inherit({
       changes,
       waitFor: []
     };
-    this._eventsStrategy.fireEvent('beforePush', [beforePushArgs]);
+    this._eventsStrategy.fireEvent('beforePushAggregation', [beforePushArgs]);
     _deferred.when.apply(void 0, _toConsumableArray(beforePushArgs.waitFor)).done(function () {
       _this._pushImpl(changes);
+      _this._eventsStrategy.fireEvent('beforePush', [{
+        changes
+      }]);
       _this._eventsStrategy.fireEvent('push', [changes]);
     });
   },

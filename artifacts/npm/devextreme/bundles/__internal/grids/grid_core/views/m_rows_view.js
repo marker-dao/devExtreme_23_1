@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/views/m_rows_view.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -348,6 +348,7 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
           default:
             _this3.setTableElement(newTableElement, isFixedTableRendering);
             contentElement.addClass(_this3.addWidgetPrefix(CONTENT_CLASS));
+            _this3._setGridRole(contentElement);
             _this3._renderContent(contentElement, newTableElement, isFixedTableRendering);
             break;
         }
@@ -355,6 +356,17 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
     }).fail(function () {
       _this3._contentChanges = [];
     });
+  };
+  _proto._getGridRoleName = function _getGridRoleName() {
+    return 'grid';
+  };
+  _proto._setGridRole = function _setGridRole($element) {
+    var _a;
+    var hasData = !((_a = this._dataController) === null || _a === void 0 ? void 0 : _a.isEmpty());
+    var gridRoleName = this._getGridRoleName();
+    if (($element === null || $element === void 0 ? void 0 : $element.length) && hasData) {
+      this.setAria('role', gridRoleName, $element);
+    }
   };
   _proto._createEmptyRow = function _createEmptyRow(className, isFixed, height) {
     var that = this;
@@ -1070,6 +1082,14 @@ var RowsView = /*#__PURE__*/function (_ColumnsView) {
         that.renderNoDataText();
         args.handled = true;
         break;
+    }
+  };
+  _proto.setAriaOwns = function setAriaOwns(headerTableId, footerTableId) {
+    var _a;
+    var $contentElement = this._findContentElement();
+    var $tableElement = this.getTableElement();
+    if ($tableElement === null || $tableElement === void 0 ? void 0 : $tableElement.length) {
+      this.setAria('owns', "".concat(headerTableId !== null && headerTableId !== void 0 ? headerTableId : '', " ").concat((_a = $tableElement.attr('id')) !== null && _a !== void 0 ? _a : '', " ").concat(footerTableId !== null && footerTableId !== void 0 ? footerTableId : '').trim(), $contentElement);
     }
   };
   _proto.dispose = function dispose() {

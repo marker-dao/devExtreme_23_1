@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.fr.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -144,6 +144,7 @@
             "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
             "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
             "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "Sauvegarder les changements",
             "dxDataGrid-editingCancelAllChanges": "Ignorer les changements",
             "dxDataGrid-editingAddRow": "Ajouter ligne",
@@ -175,7 +176,10 @@
             "dxDataGrid-ariaAdaptiveCollapse": "Masquer les données supplémentaires",
             "dxDataGrid-ariaAdaptiveExpand": "Afficher des données supplémentaires",
             "dxDataGrid-ariaColumn": "Colonne",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "Valeur",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "Filtre de cellule",
             "dxDataGrid-ariaCollapse": "Réduire",
             "dxDataGrid-ariaModifiedCell": "Modified",

@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/ui/hierarchical_collection/ui.hierarchical_collection_widget.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../core/renderer';
 import { compileGetter, compileSetter } from '../../core/utils/data';
 import { extend } from '../../core/utils/extend';
@@ -15,9 +16,10 @@ import { getImageContainer } from '../../core/utils/icon';
 import HierarchicalDataAdapter from './ui.data_adapter';
 import CollectionWidget from '../collection/ui.collection_widget.edit';
 import { BindableTemplate } from '../../core/templates/bindable_template';
-import { isFunction } from '../../core/utils/type';
+import { isFunction, isObject } from '../../core/utils/type';
 import { noop } from '../../core/utils/common';
 var DISABLED_STATE_CLASS = 'dx-state-disabled';
+var ITEM_URL_CLASS = 'dx-item-url';
 var HierarchicalCollectionWidget = CollectionWidget.inherit({
   _getDefaultOptions: function _getDefaultOptions() {
     return extend(this.callBase(), {
@@ -74,6 +76,16 @@ var HierarchicalCollectionWidget = CollectionWidget.inherit({
   },
   _addContent: function _addContent($container, itemData) {
     $container.html(itemData.html).append(this._getIconContainer(itemData)).append(this._getTextContainer(itemData));
+  },
+  _getLinkContainer: function _getLinkContainer(iconContainer, textContainer, _ref) {
+    var {
+      linkAttr,
+      url
+    } = _ref;
+    var linkAttributes = isObject(linkAttr) ? linkAttr : {};
+    return $('<a>').addClass(ITEM_URL_CLASS).attr(_extends({}, linkAttributes, {
+      href: url
+    })).append(iconContainer).append(textContainer);
   },
   _getIconContainer: function _getIconContainer(itemData) {
     return itemData.icon ? getImageContainer(itemData.icon) : undefined;

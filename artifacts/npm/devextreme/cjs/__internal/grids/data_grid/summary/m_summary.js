@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/summary/m_summary.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -37,6 +37,7 @@ var DATAGRID_GROUP_FOOTER_CLASS = 'dx-datagrid-group-footer';
 var DATAGRID_GROUP_TEXT_CONTENT_CLASS = 'dx-datagrid-group-text-content';
 var DATAGRID_NOWRAP_CLASS = 'dx-datagrid-nowrap';
 var DATAGRID_FOOTER_ROW_CLASS = 'dx-footer-row';
+var DATAGRID_CELL_DISABLED = 'dx-cell-focus-disabled';
 var DATAGRID_GROUP_FOOTER_ROW_TYPE = 'groupFooter';
 var DATAGRID_TOTAL_FOOTER_ROW_TYPE = 'totalFooter';
 var renderSummaryCell = function renderSummaryCell(cell, options) {
@@ -47,7 +48,8 @@ var renderSummaryCell = function renderSummaryCell(cell, options) {
   if (!column.command && summaryItems) {
     for (var i = 0; i < summaryItems.length; i++) {
       var summaryItem = summaryItems[i];
-      $summaryItems.push((0, _renderer.default)('<div>').css('textAlign', summaryItem.alignment || column.alignment).addClass(DATAGRID_SUMMARY_ITEM_CLASS).addClass(DATAGRID_TEXT_CONTENT_CLASS).addClass(summaryItem.cssClass).toggleClass(DATAGRID_GROUP_TEXT_CONTENT_CLASS, options.rowType === 'group').text(_m_core.default.getSummaryText(summaryItem, options.summaryTexts)));
+      var text = _m_core.default.getSummaryText(summaryItem, options.summaryTexts);
+      $summaryItems.push((0, _renderer.default)('<div>').css('textAlign', summaryItem.alignment || column.alignment).addClass(DATAGRID_SUMMARY_ITEM_CLASS).addClass(DATAGRID_TEXT_CONTENT_CLASS).addClass(summaryItem.cssClass).toggleClass(DATAGRID_GROUP_TEXT_CONTENT_CLASS, options.rowType === 'group').text(text).attr('aria-label', "".concat(column.caption, " ").concat(text)));
     }
     $cell.append($summaryItems);
   }
@@ -134,6 +136,8 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
       var $row = this.callBase.apply(this, arguments);
       if (row.rowType === DATAGRID_TOTAL_FOOTER_ROW_TYPE) {
         $row.addClass(DATAGRID_FOOTER_ROW_CLASS);
+        $row.addClass(DATAGRID_CELL_DISABLED);
+        $row.attr('tabindex', 0);
       }
       return $row;
     },

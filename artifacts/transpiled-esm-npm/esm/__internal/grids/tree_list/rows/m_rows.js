@@ -91,15 +91,15 @@ export var RowsView = rowsModule.views.rowsView.inherit(function () {
       }
       return $rowElement;
     },
+    _getGridRoleName() {
+      return 'treegrid';
+    },
     isExpandIcon($targetElement) {
       return !!$targetElement.closest(".".concat(TREELIST_EXPANDED_CLASS, ", .").concat(TREELIST_COLLAPSED_CLASS)).length;
     },
     setAriaExpandedAttribute($row, row) {
       var isRowExpanded = row.isExpanded;
       this.setAria('expanded', isDefined(isRowExpanded) && isRowExpanded.toString(), $row);
-    },
-    setTableRole($tableElement) {
-      this.setAria('role', 'treegrid', $tableElement);
     }
   };
 }());

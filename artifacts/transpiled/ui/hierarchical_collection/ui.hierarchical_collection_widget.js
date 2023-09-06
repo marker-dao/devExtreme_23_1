@@ -13,7 +13,9 @@ var _bindable_template = require("../../core/templates/bindable_template");
 var _type = require("../../core/utils/type");
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var DISABLED_STATE_CLASS = 'dx-state-disabled';
+var ITEM_URL_CLASS = 'dx-item-url';
 var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
   _getDefaultOptions: function _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
@@ -70,6 +72,14 @@ var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
   },
   _addContent: function _addContent($container, itemData) {
     $container.html(itemData.html).append(this._getIconContainer(itemData)).append(this._getTextContainer(itemData));
+  },
+  _getLinkContainer: function _getLinkContainer(iconContainer, textContainer, _ref) {
+    var linkAttr = _ref.linkAttr,
+      url = _ref.url;
+    var linkAttributes = (0, _type.isObject)(linkAttr) ? linkAttr : {};
+    return (0, _renderer.default)('<a>').addClass(ITEM_URL_CLASS).attr(_extends({}, linkAttributes, {
+      href: url
+    })).append(iconContainer).append(textContainer);
   },
   _getIconContainer: function _getIconContainer(itemData) {
     return itemData.icon ? (0, _icon.getImageContainer)(itemData.icon) : undefined;

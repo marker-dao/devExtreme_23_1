@@ -471,6 +471,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
         break;
       case 'onAppointmentContextMenu':
         this._appointments.option('onItemContextMenu', this._createActionByOption(name));
+        this._appointmentTooltip._options.onItemContextMenu = this._createActionByOption(name);
         break;
       case 'noDataText':
       case 'allowMultipleCellSelection':
@@ -1123,8 +1124,23 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
       },
       getAppointmentDisabled: function getAppointmentDisabled(appointment) {
         return (0, _appointmentAdapter.createAppointmentAdapter)(appointment, _this9._dataAccessors, _this9.timeZoneCalculator).disabled;
-      }
+      },
+      onItemContextMenu: that._createActionByOption('onAppointmentContextMenu'),
+      createEventArgs: that._createEventArgs.bind(that)
     };
+  };
+  _proto._createEventArgs = function _createEventArgs(e) {
+    var config = {
+      itemData: e.itemData.appointment,
+      itemElement: e.itemElement,
+      targetedAppointment: e.itemData.targetedAppointment
+    };
+    return (0, _extend.extend)({}, this.fire('mapAppointmentFields', config), {
+      component: e.component,
+      element: e.element,
+      event: e.event,
+      model: e.model
+    });
   };
   _proto.checkAndDeleteAppointment = function checkAndDeleteAppointment(appointment, targetedAppointment) {
     var _this10 = this;

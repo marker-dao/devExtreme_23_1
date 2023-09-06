@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/column_fixing/m_column_fixing.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -723,6 +723,19 @@ var RowsViewFixedColumnsExtender = extend({}, baseFixedColumns, {
     }
     return deferred;
   },
+  setAriaOwns(headerTableId, footerTableId, isFixed) {
+    var _a, _b;
+    if (isFixed) {
+      var contentFixedClass = this.addWidgetPrefix(CONTENT_FIXED_CLASS);
+      var $contentFixedElement = (_a = this.element()) === null || _a === void 0 ? void 0 : _a.children(".".concat(contentFixedClass));
+      var $fixedTableElement = this.getFixedTableElement();
+      if ($contentFixedElement.length && ($fixedTableElement === null || $fixedTableElement === void 0 ? void 0 : $fixedTableElement.length)) {
+        this.setAria('owns', "".concat(headerTableId !== null && headerTableId !== void 0 ? headerTableId : '', " ").concat((_b = $fixedTableElement.attr('id')) !== null && _b !== void 0 ? _b : '', " ").concat(footerTableId !== null && footerTableId !== void 0 ? footerTableId : '').trim(), $contentFixedElement);
+      }
+    } else {
+      this.callBase.apply(this, arguments);
+    }
+  },
   setRowsOpacity(columnIndex, value) {
     this.callBase(columnIndex, value);
     var $rows = this._getRowElements(this._fixedTableElement);
@@ -927,6 +940,15 @@ export var columnFixingModule = {
               }
             }
             return this.callBase(pointsByColumns, currentX, deltaX);
+          }
+        },
+        resizing: {
+          _setAriaOwns() {
+            var _a, _b, _c;
+            this.callBase.apply(this, arguments);
+            var headerFixedTable = (_a = this._columnHeadersView) === null || _a === void 0 ? void 0 : _a.getFixedTableElement();
+            var footerFixedTable = (_b = this._footerView) === null || _b === void 0 ? void 0 : _b.getFixedTableElement();
+            (_c = this._rowsView) === null || _c === void 0 ? void 0 : _c.setAriaOwns(headerFixedTable === null || headerFixedTable === void 0 ? void 0 : headerFixedTable.attr('id'), footerFixedTable === null || footerFixedTable === void 0 ? void 0 : footerFixedTable.attr('id'), true);
           }
         }
       };

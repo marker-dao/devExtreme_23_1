@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tab_panel.d.ts)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,7 +26,8 @@ import {
 
 import {
     Position,
-    PositionRelative,
+    TabsIconPosition,
+    TabsStylingMode,
 } from '../common';
 
 import CollectionWidget, {
@@ -37,6 +38,12 @@ import {
     Item as dxMultiViewItem,
     dxMultiViewBaseOptions,
 } from './multi_view';
+
+export {
+    Position,
+    TabsIconPosition,
+    TabsStylingMode,
+};
 
 type ItemLike = string | Item | any;
 
@@ -193,7 +200,7 @@ export interface dxTabPanelOptions<
      * @default 'start'
      * @public
      */
-    iconPosition?: PositionRelative;
+    iconPosition?: TabsIconPosition;
     /**
      * @docid
      * @type Array<string | dxTabPanelItem | any>
@@ -250,6 +257,12 @@ export interface dxTabPanelOptions<
      * @public
      */
     showNavButtons?: boolean;
+    /**
+     * @docid
+     * @default 'primary'
+     * @public
+     */
+    stylingMode?: TabsStylingMode;
     /**
      * @docid
      * @default false &for(non-touch_devices)

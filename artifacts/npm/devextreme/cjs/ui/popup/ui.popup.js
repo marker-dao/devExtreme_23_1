@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popup/ui.popup.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -36,6 +36,7 @@ var _resize_observer = _interopRequireDefault(require("../../core/resize_observe
 var zIndexPool = _interopRequireWildcard(require("../overlay/z_index"));
 var _popup_position_controller = require("./popup_position_controller");
 var _popup_overflow_manager = require("./popup_overflow_manager");
+var _guid = _interopRequireDefault(require("../../core/guid"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -65,6 +66,7 @@ var POPUP_HAS_CLOSE_BUTTON_CLASS = 'dx-has-close-button';
 var TEMPLATE_WRAPPER_CLASS = 'dx-template-wrapper';
 var POPUP_CONTENT_FLEX_HEIGHT_CLASS = 'dx-popup-flex-height';
 var POPUP_CONTENT_INHERIT_HEIGHT_CLASS = 'dx-popup-inherit-height';
+var TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';
 var ALLOWED_TOOLBAR_ITEM_ALIASES = ['cancel', 'clear', 'done'];
 var APPLY_VALUE_BUTTONS_ORDER = ['cancel', 'done'];
 var BUTTON_DEFAULT_TYPE = 'default';
@@ -381,12 +383,13 @@ var Popup = _ui.default.inherit({
   },
   _renderTitle: function _renderTitle() {
     var items = this._getToolbarItems('top');
-    var titleText = this.option('title');
-    var showTitle = this.option('showTitle');
-    if (showTitle && !!titleText) {
+    var _this$option = this.option(),
+      title = _this$option.title,
+      showTitle = _this$option.showTitle;
+    if (showTitle && !!title) {
       items.unshift({
         location: _devices.default.current().ios ? 'center' : 'before',
-        text: titleText
+        text: title
       });
     }
     if (showTitle || items.length > 0) {
@@ -399,13 +402,24 @@ var Popup = _ui.default.inherit({
     } else if (this._$title) {
       this._$title.detach();
     }
+    this._toggleAriaLabel();
+  },
+  _toggleAriaLabel() {
+    var _this$_$title;
+    var _this$option2 = this.option(),
+      title = _this$option2.title,
+      showTitle = _this$option2.showTitle;
+    var shouldSetAriaLabel = showTitle && !!title;
+    var titleId = shouldSetAriaLabel ? new _guid.default() : null;
+    (_this$_$title = this._$title) === null || _this$_$title === void 0 ? void 0 : _this$_$title.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0).attr('id', titleId);
+    this.$overlayContent().attr('aria-labelledby', titleId);
   },
   _renderTemplateByType: function _renderTemplateByType(optionName, data, $container, additionalToolbarOptions) {
-    var _this$option = this.option(),
-      rtlEnabled = _this$option.rtlEnabled,
-      useDefaultToolbarButtons = _this$option.useDefaultToolbarButtons,
-      useFlatToolbarButtons = _this$option.useFlatToolbarButtons,
-      disabled = _this$option.disabled;
+    var _this$option3 = this.option(),
+      rtlEnabled = _this$option3.rtlEnabled,
+      useDefaultToolbarButtons = _this$option3.useDefaultToolbarButtons,
+      useFlatToolbarButtons = _this$option3.useFlatToolbarButtons,
+      disabled = _this$option3.disabled;
     var template = this._getTemplateByOption(optionName);
     var toolbarTemplate = template instanceof _empty_template.EmptyTemplate;
     if (toolbarTemplate) {
@@ -608,12 +622,12 @@ var Popup = _ui.default.inherit({
     this.$content().toggleClass(POPUP_CONTENT_SCROLLABLE_CLASS, isNativeScrollingEnabled);
   },
   _getPositionControllerConfig() {
-    var _this$option2 = this.option(),
-      fullScreen = _this$option2.fullScreen,
-      forceApplyBindings = _this$option2.forceApplyBindings,
-      dragOutsideBoundary = _this$option2.dragOutsideBoundary,
-      dragAndResizeArea = _this$option2.dragAndResizeArea,
-      outsideDragFactor = _this$option2.outsideDragFactor;
+    var _this$option4 = this.option(),
+      fullScreen = _this$option4.fullScreen,
+      forceApplyBindings = _this$option4.forceApplyBindings,
+      dragOutsideBoundary = _this$option4.dragOutsideBoundary,
+      dragAndResizeArea = _this$option4.dragAndResizeArea,
+      outsideDragFactor = _this$option4.outsideDragFactor;
     return (0, _extend.extend)({}, this.callBase(), {
       fullScreen,
       forceApplyBindings,
@@ -629,9 +643,9 @@ var Popup = _ui.default.inherit({
     return this.topToolbar();
   },
   _renderGeometry: function _renderGeometry(options) {
-    var _this$option3 = this.option(),
-      visible = _this$option3.visible,
-      useResizeObserver = _this$option3.useResizeObserver;
+    var _this$option5 = this.option(),
+      visible = _this$option5.visible,
+      useResizeObserver = _this$option5.useResizeObserver;
     if (visible && (0, _window.hasWindow)()) {
       var isAnimated = this._showAnimationProcessing;
       var shouldRepeatAnimation = isAnimated && !(options !== null && options !== void 0 && options.forceStopAnimation) && useResizeObserver;

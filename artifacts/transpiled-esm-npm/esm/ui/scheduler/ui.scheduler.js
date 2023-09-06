@@ -483,6 +483,7 @@ class Scheduler extends Widget {
         break;
       case 'onAppointmentContextMenu':
         this._appointments.option('onItemContextMenu', this._createActionByOption(name));
+        this._appointmentTooltip._options.onItemContextMenu = this._createActionByOption(name);
         break;
       case 'noDataText':
       case 'allowMultipleCellSelection':
@@ -1074,8 +1075,23 @@ class Scheduler extends Widget {
       checkAndDeleteAppointment: that.checkAndDeleteAppointment.bind(that),
       isAppointmentInAllDayPanel: that.isAppointmentInAllDayPanel.bind(that),
       createFormattedDateText: (appointment, targetedAppointment, format) => this.fire('getTextAndFormatDate', appointment, targetedAppointment, format),
-      getAppointmentDisabled: appointment => createAppointmentAdapter(appointment, this._dataAccessors, this.timeZoneCalculator).disabled
+      getAppointmentDisabled: appointment => createAppointmentAdapter(appointment, this._dataAccessors, this.timeZoneCalculator).disabled,
+      onItemContextMenu: that._createActionByOption('onAppointmentContextMenu'),
+      createEventArgs: that._createEventArgs.bind(that)
     };
+  }
+  _createEventArgs(e) {
+    var config = {
+      itemData: e.itemData.appointment,
+      itemElement: e.itemElement,
+      targetedAppointment: e.itemData.targetedAppointment
+    };
+    return extend({}, this.fire('mapAppointmentFields', config), {
+      component: e.component,
+      element: e.element,
+      event: e.event,
+      model: e.model
+    });
   }
   checkAndDeleteAppointment(appointment, targetedAppointment) {
     var targetedAdapter = createAppointmentAdapter(targetedAppointment, this._dataAccessors, this.timeZoneCalculator);

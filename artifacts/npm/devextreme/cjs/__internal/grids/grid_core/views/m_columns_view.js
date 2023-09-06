@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/views/m_columns_view.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,6 +15,7 @@ exports.normalizeWidth = exports.ColumnsView = void 0;
 var _dom_adapter = _interopRequireDefault(require("../../../../core/dom_adapter"));
 var _element = require("../../../../core/element");
 var _element_data = require("../../../../core/element_data");
+var _guid = _interopRequireDefault(require("../../../../core/guid"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _browser = _interopRequireDefault(require("../../../../core/utils/browser"));
 var _common = require("../../../../core/utils/common");
@@ -145,7 +146,6 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     return _viewWithColumnStateM.apply(this, arguments) || this;
   }
   var _proto = ColumnsView.prototype;
-  _proto.setTableRole = function setTableRole($tableElement) {};
   _proto._createScrollableOptions = function _createScrollableOptions() {
     var that = this;
     var scrollingOptions = that.option('scrolling');
@@ -223,13 +223,13 @@ var ColumnsView = /*#__PURE__*/function (_viewWithColumnStateM) {
     var _this = this;
     var $table = (0, _renderer.default)('<table>').addClass(this.addWidgetPrefix(TABLE_CLASS)).addClass(this.addWidgetPrefix(TABLE_FIXED_CLASS));
     if (columns && !isAppend) {
-      $table.append(this._createColGroup(columns));
+      $table.attr('id', "dx-".concat(new _guid.default())).append(this._createColGroup(columns));
       if (_browser.default.safari) {
         // T198380, T809552
         // @ts-expect-error
         $table.append((0, _renderer.default)('<thead>').append('<tr>'));
       }
-      this.setTableRole($table);
+      this.setAria('role', 'presentation', $table);
     } else {
       this.setAria('hidden', true, $table);
     }

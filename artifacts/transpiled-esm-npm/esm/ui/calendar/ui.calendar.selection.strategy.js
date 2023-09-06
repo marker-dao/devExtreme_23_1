@@ -1,3 +1,5 @@
+import { isDefined } from '../../core/utils/type';
+import dateUtils from '../../core/utils/date';
 class CalendarSelectionStrategy {
   constructor(component) {
     this.calendar = component;
@@ -19,6 +21,12 @@ class CalendarSelectionStrategy {
   }
   processValueChanged(value, previousValue) {
     var _value, _previousValue;
+    if (isDefined(value) && !Array.isArray(value)) {
+      value = [value];
+    }
+    if (isDefined(previousValue) && !Array.isArray(previousValue)) {
+      previousValue = [previousValue];
+    }
     value = ((_value = value) === null || _value === void 0 ? void 0 : _value.map(item => this._convertToDate(item))) || [];
     previousValue = ((_previousValue = previousValue) === null || _previousValue === void 0 ? void 0 : _previousValue.map(item => this._convertToDate(item))) || [];
     this._updateViewsValue(value);
@@ -29,7 +37,11 @@ class CalendarSelectionStrategy {
     this._currentDateChanged = false;
   }
   _isDateDisabled(date) {
-    return this.calendar._view.isDateDisabled(date);
+    var min = this.calendar._dateOption('min');
+    var max = this.calendar._dateOption('max');
+    var isLessThanMin = isDefined(min) && date < min && !dateUtils.sameDate(min, date);
+    var isBiggerThanMax = isDefined(max) && date > max && !dateUtils.sameDate(max, date);
+    return this.calendar._view.isDateDisabled(date) || isLessThanMin || isBiggerThanMax;
   }
   _getLowestDateInArray(dates) {
     if (dates.length) {

@@ -47,6 +47,7 @@ var DISABLED_STATE_CLASS = 'dx-state-disabled';
 var SELECTED_ITEM_CLASS = 'dx-state-selected';
 var EXPAND_EVENT_NAMESPACE = 'dxTreeView_expand';
 var DATA_ITEM_ID = 'data-item-id';
+var ITEM_URL_CLASS = 'dx-item-url';
 var TreeViewBase = HierarchicalCollectionWidget.inherit({
   _supportedKeys: function _supportedKeys(e) {
     var click = e => {
@@ -627,6 +628,22 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     }
     return deferred.promise();
   },
+  _getItemExtraPropNames() {
+    return ['url', 'linkAttr'];
+  },
+  _addContent: function _addContent($container, itemData) {
+    var {
+      html,
+      url
+    } = itemData;
+    if (url) {
+      $container.html(html);
+      var link = this._getLinkContainer(this._getIconContainer(itemData), this._getTextContainer(itemData), itemData);
+      $container.append(link);
+    } else {
+      this.callBase($container, itemData);
+    }
+  },
   _renderSublevel: function _renderSublevel($node, node, childNodes) {
     var $nestedNodeContainer = this._renderNodeContainer($node, node);
     var childNodesByChildrenKeys = childNodes.filter(childNode => {
@@ -1144,11 +1161,21 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       that._itemPointerDownHandler(e);
     });
   },
+  _itemClick: function _itemClick(actionArgs) {
+    var args = actionArgs.args[0];
+    var target = args.event.target[0] || args.event.target;
+    var link = target.getElementsByClassName(ITEM_URL_CLASS)[0];
+    if (args.itemData.url && link) {
+      link.click();
+    }
+  },
   _itemClickHandler: function _itemClickHandler(e, $item) {
     var itemData = this._getItemData($item);
     var node = this._getNodeByElement($item);
     this._itemDXEventHandler(e, 'onItemClick', {
       node: this._dataAdapter.getPublicNode(node)
+    }, {
+      beforeExecute: this._itemClick
     });
     if (this.option('selectByClick') && !e.isDefaultPrevented()) {
       this._updateItemSelection(!node.internalFields.selected, itemData, e);

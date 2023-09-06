@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.multiple.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,37 +14,37 @@ class CalendarMultiSelectionStrategy extends CalendarSelectionStrategy {
   }
   getViewOptions() {
     return {
-      value: this.dateOption('values'),
+      value: this.dateOption('value'),
       range: [],
       selectionMode: 'multi',
       onWeekNumberClick: this._shouldHandleWeekNumberClick() ? this._weekNumberClickHandler.bind(this) : null
     };
   }
   selectValue(selectedValue, e) {
-    var values = [...this.dateOption('values')];
-    var alreadySelectedIndex = values.findIndex(date => (date === null || date === void 0 ? void 0 : date.toDateString()) === selectedValue.toDateString());
+    var value = [...this.dateOption('value')];
+    var alreadySelectedIndex = value.findIndex(date => (date === null || date === void 0 ? void 0 : date.toDateString()) === selectedValue.toDateString());
     if (alreadySelectedIndex > -1) {
-      values.splice(alreadySelectedIndex, 1);
+      value.splice(alreadySelectedIndex, 1);
     } else {
-      values.push(selectedValue);
+      value.push(selectedValue);
     }
     this.skipNavigate();
     this._updateCurrentDate(selectedValue);
     this._currentDateChanged = true;
-    this.dateValue(values, e);
+    this.dateValue(value, e);
   }
   updateAriaSelected(value, previousValue) {
     var _value, _previousValue;
-    (_value = value) !== null && _value !== void 0 ? _value : value = this.dateOption('values');
+    (_value = value) !== null && _value !== void 0 ? _value : value = this.dateOption('value');
     (_previousValue = previousValue) !== null && _previousValue !== void 0 ? _previousValue : previousValue = [];
     super.updateAriaSelected(value, previousValue);
   }
   getDefaultCurrentDate() {
-    var dates = this.dateOption('values').filter(value => value);
+    var dates = this.dateOption('value').filter(value => value);
     return this._getLowestDateInArray(dates);
   }
   restoreValue() {
-    this.calendar.option('values', []);
+    this.calendar.option('value', []);
   }
   _weekNumberClickHandler(_ref) {
     var {

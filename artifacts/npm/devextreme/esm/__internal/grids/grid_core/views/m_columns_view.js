@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/views/m_columns_view.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,7 @@
 import domAdapter from '../../../../core/dom_adapter';
 import { getPublicElement } from '../../../../core/element';
 import { data as elementData } from '../../../../core/element_data';
+import Guid from '../../../../core/guid';
 import $ from '../../../../core/renderer';
 import browser from '../../../../core/utils/browser';
 import { noop } from '../../../../core/utils/common';
@@ -131,7 +132,6 @@ export var normalizeWidth = width => {
 };
 var viewWithColumnStateMixin = modules.View.inherit(columnStateMixin);
 export class ColumnsView extends viewWithColumnStateMixin {
-  setTableRole($tableElement) {}
   _createScrollableOptions() {
     var that = this;
     var scrollingOptions = that.option('scrolling');
@@ -212,13 +212,13 @@ export class ColumnsView extends viewWithColumnStateMixin {
   _createTable(columns, isAppend) {
     var $table = $('<table>').addClass(this.addWidgetPrefix(TABLE_CLASS)).addClass(this.addWidgetPrefix(TABLE_FIXED_CLASS));
     if (columns && !isAppend) {
-      $table.append(this._createColGroup(columns));
+      $table.attr('id', "dx-".concat(new Guid())).append(this._createColGroup(columns));
       if (browser.safari) {
         // T198380, T809552
         // @ts-expect-error
         $table.append($('<thead>').append('<tr>'));
       }
-      this.setTableRole($table);
+      this.setAria('role', 'presentation', $table);
     } else {
       this.setAria('hidden', true, $table);
     }

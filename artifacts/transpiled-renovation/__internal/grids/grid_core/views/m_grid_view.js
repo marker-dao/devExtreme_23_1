@@ -546,7 +546,14 @@ var resizingControllerMembers = {
       this._setScrollerSpacingCore();
     }
   },
+  _setAriaOwns() {
+    var _a, _b, _c;
+    var headerTable = (_a = this._columnHeadersView) === null || _a === void 0 ? void 0 : _a.getTableElement();
+    var footerTable = (_b = this._footerView) === null || _b === void 0 ? void 0 : _b.getTableElement();
+    (_c = this._rowsView) === null || _c === void 0 ? void 0 : _c.setAriaOwns(headerTable === null || headerTable === void 0 ? void 0 : headerTable.attr('id'), footerTable === null || footerTable === void 0 ? void 0 : footerTable.attr('id'));
+  },
   _updateDimensionsCore() {
+    var _this6 = this;
     var that = this;
     var dataController = that._dataController;
     var editorFactory = that.getController('editorFactory');
@@ -564,6 +571,7 @@ var resizingControllerMembers = {
     (0, _common.deferRender)(function () {
       var hasHeight = that._hasHeight || !!maxHeight || isHeightSpecified;
       rowsView.hasHeight(hasHeight);
+      _this6._setAriaOwns();
       // IE11
       if (maxHeightHappened && !isMaxHeightApplied) {
         (0, _renderer.default)(groupElement).css('height', maxHeight);

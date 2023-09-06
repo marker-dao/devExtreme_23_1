@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/dialog.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,6 +11,7 @@ import $ from '../core/renderer';
 import Action from '../core/action';
 import devices from '../core/devices';
 import config from '../core/config';
+import Guid from '../core/guid';
 import { resetActiveElement } from '../core/utils/dom';
 import { Deferred } from '../core/utils/deferred';
 import { isPlainObject } from '../core/utils/type';
@@ -54,7 +55,8 @@ export var custom = function custom(options) {
     errors.log('W1013');
   }
   var messageHtml = String(isMessageHtmlDefined ? options.messageHtml : options.message);
-  var $message = $('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageHtml);
+  var messageId = options.title ? null : new Guid();
+  var $message = $('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageHtml).attr('id', messageId);
   var popupToolbarItems = [];
   each(options.buttons || [DEFAULT_BUTTON], function () {
     var action = new Action(this.onClick, {
@@ -85,6 +87,9 @@ export var custom = function custom(options) {
     dragAndResizeArea: window,
     onContentReady: function onContentReady(args) {
       args.component.$content().addClass(DX_DIALOG_CONTENT_CLASSNAME).append($message);
+      if (messageId) {
+        args.component.$overlayContent().attr('aria-labelledby', messageId);
+      }
     },
     onShowing: function onShowing(e) {
       e.component.bottomToolbar().addClass(DX_DIALOG_BUTTONS_CLASSNAME).find(".".concat(DX_BUTTON_CLASSNAME)).addClass(DX_DIALOG_BUTTON_CLASSNAME);

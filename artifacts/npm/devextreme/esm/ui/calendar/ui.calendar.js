@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -86,7 +86,6 @@ var Calendar = Editor.inherit({
       */
       currentDate: new Date(),
       value: null,
-      values: [],
       dateSerializationFormat: undefined,
       min: new Date(1000, 0),
       max: new Date(3000, 0),
@@ -224,7 +223,6 @@ var Calendar = Editor.inherit({
     return dateSerialization.deserializeDate(value);
   },
   _dateValue: function _dateValue(value, event) {
-    var optionName = Array.isArray(value) ? 'values' : 'value';
     if (event) {
       if (event.type === 'keydown') {
         var cellElement = this._view._getContouredCell().get(0);
@@ -232,17 +230,20 @@ var Calendar = Editor.inherit({
       }
       this._saveValueChangeEvent(event);
     }
-    this._dateOption(optionName, value);
+    this._dateOption('value', value);
   },
   _dateOption: function _dateOption(optionName, optionValue) {
+    var isArray = optionName === 'value' && !this._isSingleMode();
+    var value = this.option('value');
     if (arguments.length === 1) {
-      var _this$option;
-      var values = (_this$option = this.option('values')) !== null && _this$option !== void 0 ? _this$option : [];
-      return optionName === 'values' ? values.map(value => this._convertToDate(value)) : this._convertToDate(this.option(optionName));
+      return isArray ? (value !== null && value !== void 0 ? value : []).map(value => this._convertToDate(value)) : this._convertToDate(this.option(optionName));
     }
     var serializationFormat = this._getSerializationFormat(optionName);
-    var serializedValue = optionName === 'values' ? (optionValue === null || optionValue === void 0 ? void 0 : optionValue.map(value => dateSerialization.serializeDate(value, serializationFormat))) || [] : dateSerialization.serializeDate(optionValue, serializationFormat);
+    var serializedValue = isArray ? (optionValue === null || optionValue === void 0 ? void 0 : optionValue.map(value => dateSerialization.serializeDate(value, serializationFormat))) || [] : dateSerialization.serializeDate(optionValue, serializationFormat);
     this.option(optionName, serializedValue);
+  },
+  _isSingleMode: function _isSingleMode() {
+    return this.option('selectionMode') === 'single';
   },
   _shiftDate: function _shiftDate(zoomLevel, date, offset, reverse) {
     switch (zoomLevel) {
@@ -364,6 +365,7 @@ var Calendar = Editor.inherit({
   },
   _refreshSelectionStrategy: function _refreshSelectionStrategy() {
     this._initSelectionStrategy();
+    this._selectionStrategy.restoreValue();
     this._refresh();
   },
   _getSelectionStrategyName: function _getSelectionStrategyName() {
@@ -614,14 +616,14 @@ var Calendar = Editor.inherit({
     return view;
   },
   _viewConfig: function _viewConfig(date) {
-    var _this$option2;
+    var _this$option;
     var disabledDates = this.option('disabledDates');
     disabledDates = isFunction(disabledDates) ? this._injectComponent(disabledDates.bind(this)) : disabledDates;
     return _extends({}, this._selectionStrategy.getViewOptions(), {
       date: date,
       min: this._getMinDate(),
       max: this._getMaxDate(),
-      firstDayOfWeek: (_this$option2 = this.option('firstDayOfWeek')) !== null && _this$option2 !== void 0 ? _this$option2 : dateLocalization.firstDayOfWeekIndex(),
+      firstDayOfWeek: (_this$option = this.option('firstDayOfWeek')) !== null && _this$option !== void 0 ? _this$option : dateLocalization.firstDayOfWeekIndex(),
       showWeekNumbers: this.option('showWeekNumbers'),
       selectWeekOnClick: this.option('selectWeekOnClick'),
       weekNumberRule: this.option('weekNumberRule'),
@@ -696,7 +698,7 @@ var Calendar = Editor.inherit({
   _updateTimeComponent: function _updateTimeComponent(date) {
     var result = new Date(date);
     var currentValue = this._dateOption('value');
-    if (currentValue) {
+    if (currentValue && this._isSingleMode()) {
       result.setHours(currentValue.getHours());
       result.setMinutes(currentValue.getMinutes());
       result.setSeconds(currentValue.getSeconds());
@@ -1203,7 +1205,6 @@ var Calendar = Editor.inherit({
         break;
       case 'selectionMode':
         this._refreshSelectionStrategy();
-        this._selectionStrategy.restoreValue();
         this._initCurrentDate();
         break;
       case 'selectWeekOnClick':
@@ -1234,18 +1235,9 @@ var Calendar = Editor.inherit({
         this._updateButtonsVisibility();
         break;
       case 'value':
-        if (this.option('selectionMode') === 'single') {
-          this._selectionStrategy.processValueChanged([value], [previousValue]);
-        }
+        this._selectionStrategy.processValueChanged(value, previousValue);
         this._setSubmitValue(value);
         this.callBase(args);
-        break;
-      case 'values':
-        if (this.option('selectionMode') !== 'single') {
-          this._selectionStrategy.processValueChanged(value, previousValue);
-        }
-        this._raiseValueChangeAction(value, previousValue);
-        this._saveValueChangeEvent(undefined);
         break;
       case 'viewsCount':
         this._refreshViews();

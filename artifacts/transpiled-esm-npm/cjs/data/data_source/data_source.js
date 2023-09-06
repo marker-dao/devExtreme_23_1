@@ -87,7 +87,7 @@ var DataSource = _class.default.inherit({
         lastPushWaiters = args.waitFor;
         args.waitFor.push(pushDeferred.promise());
       };
-      this._store.on('beforePush', this._onPushHandler);
+      this._store.on('beforePushAggregation', this._onPushHandler);
     } else {
       this._onPushHandler = function (changes) {
         return _this._onPush(changes);
@@ -126,7 +126,7 @@ var DataSource = _class.default.inherit({
   },
   dispose() {
     var _this$_delayedLoadTas;
-    this._store.off('beforePush', this._onPushHandler);
+    this._store.off('beforePushAggregation', this._onPushHandler);
     this._store.off('push', this._onPushHandler);
     this._eventsStrategy.dispose();
     clearTimeout(this._aggregationTimeoutId);

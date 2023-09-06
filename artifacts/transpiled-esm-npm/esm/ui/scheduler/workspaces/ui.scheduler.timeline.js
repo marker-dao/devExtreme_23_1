@@ -25,8 +25,6 @@ var HEADER_PANEL_CELL_CLASS = 'dx-scheduler-header-panel-cell';
 var HEADER_PANEL_WEEK_CELL_CLASS = 'dx-scheduler-header-panel-week-cell';
 var HEADER_ROW_CLASS = 'dx-scheduler-header-row';
 var HORIZONTAL = 'horizontal';
-var DATE_TABLE_CELL_BORDER = 1;
-var DATE_TABLE_HEADER_MARGIN = 10;
 var toMs = dateUtils.dateToMilliseconds;
 class SchedulerTimeline extends SchedulerWorkSpace {
   get verticalGroupTableClass() {
@@ -135,15 +133,15 @@ class SchedulerTimeline extends SchedulerWorkSpace {
     return false;
   }
   _setTableSizes() {
+    super._setTableSizes();
     var minHeight = this._getWorkSpaceMinHeight();
     setHeight(this._$sidebarTable, minHeight);
     setHeight(this._$dateTable, minHeight);
-    super._setTableSizes();
     this.virtualScrollingDispatcher.updateDimensions();
   }
   _getWorkSpaceMinHeight() {
     var minHeight = this._getWorkSpaceHeight();
-    var workspaceContainerHeight = getOuterHeight(this.$element(), true) - this.getHeaderPanelHeight() - 2 * DATE_TABLE_CELL_BORDER - DATE_TABLE_HEADER_MARGIN;
+    var workspaceContainerHeight = getOuterHeight(this._$flexContainer, true);
     if (minHeight < workspaceContainerHeight) {
       minHeight = workspaceContainerHeight;
     }

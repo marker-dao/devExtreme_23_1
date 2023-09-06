@@ -1,12 +1,11 @@
 /**
 * DevExtreme (esm/ui/context_menu/ui.menu_base.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../core/renderer';
 import { noop, asyncNoop } from '../../core/utils/common';
 import { isPlainObject, isObject, isDefined } from '../../core/utils/type';
@@ -41,7 +40,7 @@ var DEFAULT_DELAY = {
 };
 var DX_MENU_ITEM_CAPTION_URL_CLASS = "".concat(DX_MENU_ITEM_CAPTION_CLASS, "-with-url");
 var DX_ICON_WITH_URL_CLASS = 'dx-icon-with-url';
-var DX_ITEM_URL_CLASS = 'dx-item-url';
+var ITEM_URL_CLASS = 'dx-item-url';
 class MenuBase extends HierarchicalCollectionWidget {
   _getDefaultOptions() {
     return extend(super._getDefaultOptions(), {
@@ -175,24 +174,22 @@ class MenuBase extends HierarchicalCollectionWidget {
     } = _ref;
     iconContainer === null || iconContainer === void 0 ? void 0 : iconContainer.addClass(DX_ICON_WITH_URL_CLASS);
     textContainer === null || textContainer === void 0 ? void 0 : textContainer.addClass(DX_MENU_ITEM_CAPTION_URL_CLASS);
-    var linkAttributes = isObject(linkAttr) ? linkAttr : {};
-    return $('<a>').addClass(DX_ITEM_URL_CLASS).attr(_extends({}, linkAttributes, {
-      href: url
-    })).append(iconContainer).append(textContainer);
+    return super._getLinkContainer(iconContainer, textContainer, {
+      linkAttr,
+      url
+    });
   }
   _addContent($container, itemData) {
     var {
       html,
       url
     } = itemData;
-    var iconContainer = this._getIconContainer(itemData);
-    var textContainer = this._getTextContainer(itemData);
-    $container.html(html);
     if (url) {
-      var link = this._getLinkContainer(iconContainer, textContainer, itemData);
+      $container.html(html);
+      var link = this._getLinkContainer(this._getIconContainer(itemData), this._getTextContainer(itemData), itemData);
       $container.append(link);
     } else {
-      $container.append(iconContainer).append(textContainer);
+      super._addContent($container, itemData);
     }
     $container.append(this._getPopoutContainer(itemData));
     this._addContentClasses(itemData, $container.parent());
@@ -461,7 +458,7 @@ class MenuBase extends HierarchicalCollectionWidget {
   }
   _itemClick(actionArgs) {
     var args = actionArgs.args[0];
-    var link = args.event.target.getElementsByClassName(DX_ITEM_URL_CLASS)[0];
+    var link = args.event.target.getElementsByClassName(ITEM_URL_CLASS)[0];
     if (args.itemData.url && link) {
       link.click();
     }

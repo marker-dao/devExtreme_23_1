@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-require("./column_headers/m_column_headers");
+require("./module_not_extended/column_headers");
 require("./m_columns_controller");
 require("./data_controller/m_data_controller");
 require("./module_not_extended/sorting");

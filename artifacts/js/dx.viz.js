@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,16 +20,19 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InfernoWrapperComponent = exports.InfernoComponent = exports.BaseInfernoComponent = void 0;
 var inferno_1 = __webpack_require__(65414);
 var effect_host_1 = __webpack_require__(53213);
 var areObjectsEqual = function (firstObject, secondObject) {
@@ -140,7 +143,8 @@ var InfernoWrapperComponent = /** @class */ (function (_super) {
         el.dxClasses = el.dxClasses || {
             removed: [], added: [], previous: [],
         };
-        el.dxClasses.previous = (el === null || el === void 0 ? void 0 : el.className.length) ? el.className.split(' ')
+        el.dxClasses.previous = (el === null || el === void 0 ? void 0 : el.className.length)
+            ? el.className.split(' ')
             : [];
     };
     InfernoWrapperComponent.prototype.componentDidUpdate = function () {
@@ -176,10 +180,12 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -197,9 +203,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createContext = void 0;
 var inferno_1 = __webpack_require__(65414);
 var contextId = 0;
-exports.createContext = function (defaultValue) {
+var createContext = function (defaultValue) {
     var id = contextId++;
     return {
         id: id,
@@ -220,6 +227,7 @@ exports.createContext = function (defaultValue) {
         }(inferno_1.Component)),
     };
 };
+exports.createContext = createContext;
 
 
 /***/ }),
@@ -229,6 +237,7 @@ exports.createContext = function (defaultValue) {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InfernoEffect = void 0;
 var InfernoEffect = /** @class */ (function () {
     function InfernoEffect(effect, dependency) {
         this.dependency = dependency;
@@ -262,6 +271,7 @@ exports.InfernoEffect = InfernoEffect;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InfernoEffectHost = void 0;
 exports.InfernoEffectHost = {
     lockCount: 0,
     lock: function () {
@@ -288,19 +298,27 @@ exports.InfernoEffectHost = {
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__export(__webpack_require__(81589));
-__export(__webpack_require__(61080));
-__export(__webpack_require__(43956));
-__export(__webpack_require__(53213));
-__export(__webpack_require__(53159));
-__export(__webpack_require__(31620));
-__export(__webpack_require__(67604));
-__export(__webpack_require__(32423));
-__export(__webpack_require__(73084));
+__exportStar(__webpack_require__(81589), exports);
+__exportStar(__webpack_require__(61080), exports);
+__exportStar(__webpack_require__(43956), exports);
+__exportStar(__webpack_require__(53213), exports);
+__exportStar(__webpack_require__(53159), exports);
+__exportStar(__webpack_require__(86687), exports);
+__exportStar(__webpack_require__(31620), exports);
+__exportStar(__webpack_require__(67604), exports);
+__exportStar(__webpack_require__(32423), exports);
+__exportStar(__webpack_require__(73084), exports);
 
 
 /***/ }),
@@ -310,6 +328,7 @@ __export(__webpack_require__(73084));
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hydrate = void 0;
 var inferno_1 = __webpack_require__(65414);
 var shared_1 = __webpack_require__(45786);
 function isSameInnerHTML(dom, innerHTML) {
@@ -528,6 +547,7 @@ exports.hydrate = hydrate;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.throwError = exports.isNull = exports.isFunction = exports.isInvalid = exports.isNullOrUndef = exports.ERROR_MSG = void 0;
 exports.ERROR_MSG = 'a runtime error occured! Use Inferno in development environment to find the error.';
 function isNullOrUndef(o) {
     return o === void 0 || o === null;
@@ -577,6 +597,7 @@ var __read = (this && this.__read) || function (o, n) {
     return ar;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.normalizeStyles = void 0;
 var NUMBER_STYLES = new Set([
     'animationIterationCount',
     'borderImageOutset',
@@ -645,14 +666,16 @@ exports.normalizeStyles = normalizeStyles;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Portal = void 0;
 var inferno_1 = __webpack_require__(65414);
-exports.Portal = function (_a) {
+var Portal = function (_a) {
     var container = _a.container, children = _a.children;
     if (container) {
         return inferno_1.createPortal(children, container);
     }
     return null;
 };
+exports.Portal = Portal;
 
 
 /***/ }),
@@ -662,11 +685,22 @@ exports.Portal = function (_a) {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createReRenderEffect = void 0;
 var inferno_1 = __webpack_require__(65414);
 var effect_1 = __webpack_require__(43956);
-exports.createReRenderEffect = function () { return new effect_1.InfernoEffect(function () {
+var createReRenderEffect = function () { return new effect_1.InfernoEffect(function () {
     inferno_1.rerender();
 }, []); };
+exports.createReRenderEffect = createReRenderEffect;
+
+
+/***/ }),
+
+/***/ 86687:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 
 /***/ }),
@@ -676,6 +710,7 @@ exports.createReRenderEffect = function () { return new effect_1.InfernoEffect(f
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hasTemplate = exports.renderTemplate = void 0;
 var inferno_1 = __webpack_require__(65414);
 var inferno_create_element_1 = __webpack_require__(99038);
 var getContainer = function (props) { var _a, _b; return ((_a = props.container) === null || _a === void 0 ? void 0 : _a.get(0)) || ((_b = props.item) === null || _b === void 0 ? void 0 : _b.get(0)); };
@@ -685,10 +720,11 @@ function renderTemplate(template, props, _component) {
     }, 0);
 }
 exports.renderTemplate = renderTemplate;
-exports.hasTemplate = function (name, properties, _component) {
+var hasTemplate = function (name, properties, _component) {
     var value = properties[name];
     return !!value && typeof value !== 'string';
 };
+exports.hasTemplate = hasTemplate;
 
 
 /***/ }),
@@ -24246,9 +24282,12 @@ var Store = _class.default.inherit({
       changes,
       waitFor: []
     };
-    this._eventsStrategy.fireEvent('beforePush', [beforePushArgs]);
+    this._eventsStrategy.fireEvent('beforePushAggregation', [beforePushArgs]);
     _deferred.when.apply(void 0, _toConsumableArray(beforePushArgs.waitFor)).done(function () {
       _this._pushImpl(changes);
+      _this._eventsStrategy.fireEvent('beforePush', [{
+        changes
+      }]);
       _this._eventsStrategy.fireEvent('push', [changes]);
     });
   },
@@ -25660,7 +25699,7 @@ var DataSource = _class.default.inherit({
         lastPushWaiters = args.waitFor;
         args.waitFor.push(pushDeferred.promise());
       };
-      this._store.on('beforePush', this._onPushHandler);
+      this._store.on('beforePushAggregation', this._onPushHandler);
     } else {
       this._onPushHandler = function (changes) {
         return _this._onPush(changes);
@@ -25699,7 +25738,7 @@ var DataSource = _class.default.inherit({
   },
   dispose() {
     var _this$_delayedLoadTas;
-    this._store.off('beforePush', this._onPushHandler);
+    this._store.off('beforePushAggregation', this._onPushHandler);
     this._store.off('push', this._onPushHandler);
     this._eventsStrategy.dispose();
     clearTimeout(this._aggregationTimeoutId);
@@ -29283,7 +29322,7 @@ var eventsEngine = (0, _dependency_injector.default)({
       var parents = [];
       var getParents = function getParents(element) {
         var _element$parentNode;
-        var parent = (_element$parentNode = element.parentNode) !== null && _element$parentNode !== void 0 ? _element$parentNode : element.host;
+        var parent = (_element$parentNode = element.parentNode) !== null && _element$parentNode !== void 0 ? _element$parentNode : (0, _type.isObject)(element.host) ? element.host : null;
         if (parent) {
           parents.push(parent);
           getParents(parent);
@@ -47628,6 +47667,7 @@ var defaultMessages = {
     "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
     "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
     "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+    "dxDataGrid-ariaSortIndex": "Sort index {0}",
     "dxDataGrid-editingSaveAllChanges": "Save changes",
     "dxDataGrid-editingCancelAllChanges": "Discard changes",
     "dxDataGrid-editingAddRow": "Add a row",
@@ -47659,7 +47699,10 @@ var defaultMessages = {
     "dxDataGrid-ariaAdaptiveCollapse": "Hide additional data",
     "dxDataGrid-ariaAdaptiveExpand": "Display additional data",
     "dxDataGrid-ariaColumn": "Column",
+    "dxDataGrid-ariaColumnHeader": "Column header",
     "dxDataGrid-ariaValue": "Value",
+    "dxDataGrid-ariaError": "Error",
+    "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
     "dxDataGrid-ariaFilterCell": "Filter cell",
     "dxDataGrid-ariaCollapse": "Collapse",
     "dxDataGrid-ariaModifiedCell": "Modified",
@@ -61434,6 +61477,8 @@ var _deferred = __webpack_require__(62754);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+var EMAIL_VALIDATION_REGEX = /^[\d\w.+_-]+@[\d\w._-]+\.[\w]+$/i;
+
 // STYLE validation
 
 var STATUS = {
@@ -61735,7 +61780,7 @@ var EmailRuleValidator = /*#__PURE__*/function (_BaseRuleValidator8) {
       return true;
     }
     return rulesValidators.pattern.validate(value, (0, _extend.extend)({}, rule, {
-      pattern: /^[\d\w._-]+@[\d\w._-]+\.[\w]+$/i
+      pattern: EMAIL_VALIDATION_REGEX
     }));
   };
   return EmailRuleValidator;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/compactAppointmentsHelper.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,6 @@ var _translator = require("../../animation/translator");
 var _message = _interopRequireDefault(require("../../localization/message"));
 var _function_template = require("../../core/templates/function_template");
 var _deferred = require("../../core/utils/deferred");
-var _extend = require("../../core/utils/extend");
 var _position = require("../../core/utils/position");
 var _dataStructures = require("./dataStructures");
 var _constants = require("./constants");
@@ -82,16 +81,8 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
   _proto._clickEvent = function _clickEvent(onAppointmentClick) {
     var _this2 = this;
     return function (e) {
-      var config = {
-        itemData: e.itemData.appointment,
-        itemElement: e.itemElement,
-        targetedAppointment: e.itemData.targetedAppointment
-      };
-      var createClickEvent = (0, _extend.extendFromObject)(_this2.instance.fire('mapAppointmentFields', config), e, false);
-      delete createClickEvent.itemData;
-      delete createClickEvent.itemIndex;
-      delete createClickEvent.itemElement;
-      onAppointmentClick(createClickEvent);
+      var clickEventArgs = _this2.instance._createEventArgs(e);
+      onAppointmentClick(clickEventArgs);
     };
   };
   _proto._createTooltipDragBehavior = function _createTooltipDragBehavior($appointmentCollector) {

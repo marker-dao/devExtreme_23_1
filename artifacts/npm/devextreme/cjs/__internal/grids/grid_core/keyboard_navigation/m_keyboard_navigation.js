@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/keyboard_navigation/m_keyboard_navigation.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -57,6 +57,7 @@ var KeyboardNavigationController = /*#__PURE__*/function (_modules$ViewControll)
     this._columnsController = this.getController('columns');
     this._editorFactory = this.getController('editorFactory');
     this._focusController = this.getController('focus');
+    this._adaptiveColumnsController = this.getController('adaptiveColumns');
     this._memoFireFocusedCellChanged = (0, _memoize.memoize)(this._memoFireFocusedCellChanged.bind(this), {
       compareType: 'value'
     });
@@ -602,11 +603,11 @@ var KeyboardNavigationController = /*#__PURE__*/function (_modules$ViewControll)
   _proto._targetCellTabHandler = function _targetCellTabHandler(eventArgs, direction) {
     var $event = eventArgs.originalEvent;
     var eventTarget = $event.target;
+    var elementType = this._getElementType(eventTarget);
     var $cell = this._getCellElementFromTarget(eventTarget);
-    var $lastInteractiveElement = this._getInteractiveElement($cell, !eventArgs.shift);
+    var $lastInteractiveElement = elementType === 'cell' && this._getInteractiveElement($cell, !eventArgs.shift);
     var isOriginalHandlerRequired = false;
-    var elementType;
-    if (!(0, _m_keyboard_navigation_utils.isEditorCell)(this, $cell) && $lastInteractiveElement.length && eventTarget !== $lastInteractiveElement.get(0)) {
+    if (!(0, _m_keyboard_navigation_utils.isEditorCell)(this, $cell) && ($lastInteractiveElement === null || $lastInteractiveElement === void 0 ? void 0 : $lastInteractiveElement.length) && eventTarget !== $lastInteractiveElement.get(0)) {
       isOriginalHandlerRequired = true;
     } else {
       if (this._focusedCellPosition.rowIndex === undefined && (0, _renderer.default)(eventTarget).hasClass(_const.ROW_CLASS)) {
@@ -667,15 +668,23 @@ var KeyboardNavigationController = /*#__PURE__*/function (_modules$ViewControll)
     return $cell;
   };
   _proto._enterKeyHandler = function _enterKeyHandler(eventArgs, isEditing) {
-    var $cell = this._getFocusedCell();
+    var _a;
     var rowIndex = this.getVisibleRowIndex();
-    var $row = this._focusedView && this._focusedView.getRow(rowIndex);
-    if (this.option('grouping.allowCollapsing') && (0, _m_keyboard_navigation_utils.isGroupRow)($row) || this.option('masterDetail.enabled') && $cell && $cell.hasClass(_const2.COMMAND_EXPAND_CLASS)) {
-      var key = this._dataController.getKeyByRowIndex(rowIndex);
+    var key = this._dataController.getKeyByRowIndex(rowIndex);
+    var $row = (_a = this._focusedView) === null || _a === void 0 ? void 0 : _a.getRow(rowIndex);
+    var $cell = this._getFocusedCell();
+    var needExpandGroupRow = this.option('grouping.allowCollapsing') && (0, _m_keyboard_navigation_utils.isGroupRow)($row);
+    var needExpandMasterDetailRow = this.option('masterDetail.enabled') && ($cell === null || $cell === void 0 ? void 0 : $cell.hasClass(_const2.COMMAND_EXPAND_CLASS));
+    var needExpandAdaptiveRow = $cell === null || $cell === void 0 ? void 0 : $cell.hasClass(_const2.ADAPTIVE_COLUMN_NAME_CLASS);
+    if (needExpandGroupRow || needExpandMasterDetailRow) {
       var item = this._dataController.items()[rowIndex];
-      if (key !== undefined && item && item.data && !item.data.isContinuation) {
+      var isNotContinuation = (item === null || item === void 0 ? void 0 : item.data) && !item.data.isContinuation;
+      if ((0, _type.isDefined)(key) && isNotContinuation) {
         this._dataController.changeRowExpand(key);
       }
+    } else if (needExpandAdaptiveRow) {
+      this._adaptiveColumnsController.toggleExpandAdaptiveDetailRow(key);
+      this._updateFocusedCellPosition($cell);
     } else {
       this._processEnterKeyForDataCell(eventArgs, isEditing);
     }
@@ -1282,7 +1291,8 @@ var KeyboardNavigationController = /*#__PURE__*/function (_modules$ViewControll)
     if (!isLastRow) {
       return false;
     }
-    if (row && row.rowType === 'group' && cellPosition.columnIndex > 0) {
+    var isFullRowFocus = (row === null || row === void 0 ? void 0 : row.rowType) === 'group' || (row === null || row === void 0 ? void 0 : row.rowType) === 'groupFooter';
+    if (isFullRowFocus && cellPosition.columnIndex > 0) {
       return true;
     }
     if (cellPosition.columnIndex === this._getVisibleColumnCount() - 1) {

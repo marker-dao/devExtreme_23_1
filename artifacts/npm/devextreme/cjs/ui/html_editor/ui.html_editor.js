@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/ui.html_editor.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -125,6 +125,12 @@ var HtmlEditor = _editor.default.inherit({
     this._renderSubmitElement();
     this.callBase();
     this._updateContainerMarkup();
+  },
+  _renderValidationState() {
+    var $content = this._getContent();
+    if ($content.length === 1) {
+      this.callBase();
+    }
   },
   _renderSubmitElement: function _renderSubmitElement() {
     this._$submitElement = (0, _renderer.default)('<textarea>').addClass(HTML_EDITOR_SUBMIT_ELEMENT_CLASS).attr('hidden', true).appendTo(this.$element());
@@ -261,6 +267,7 @@ var HtmlEditor = _editor.default.inherit({
       modules: modulesConfig,
       theme: 'basic'
     });
+    this._renderValidationState();
     this._deltaConverter.setQuillInstance(this._quillInstance);
     this._textChangeHandlerWithContext = this._textChangeHandler.bind(this);
     this._quillInstance.on('text-change', this._textChangeHandlerWithContext);

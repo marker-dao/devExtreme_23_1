@@ -289,6 +289,7 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         var groupInterval = _filtering.default.getGroupInterval(column);
         var dataSource = that._dataController.dataSource();
         var remoteFiltering = dataSource && dataSource.remoteOperations().filtering;
+        var previousOnHidden = options.onHidden;
         (0, _extend.extend)(options, column, {
           type: groupInterval && groupInterval.length > 1 ? 'tree' : 'list',
           remoteFiltering,
@@ -304,7 +305,8 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
             });
           },
           onHidden: function onHidden() {
-            return (0, _accessibility.restoreFocus)(_this);
+            previousOnHidden === null || previousOnHidden === void 0 ? void 0 : previousOnHidden();
+            (0, _accessibility.restoreFocus)(_this);
           }
         });
         options.dataSource = that.getDataSource(options);

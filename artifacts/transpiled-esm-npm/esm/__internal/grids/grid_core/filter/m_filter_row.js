@@ -480,7 +480,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
           selectable: false,
           items: that._getFilterOperationMenuItems(column)
         }],
-        onItemRendered(_ref) {
+        onItemRendered: _ref => {
           var {
             itemElement
           } = _ref;

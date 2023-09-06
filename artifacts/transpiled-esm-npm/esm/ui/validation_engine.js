@@ -8,6 +8,7 @@ import { isDefined, isString, isDate, isBoolean, isObject, isFunction, isPromise
 import numberLocalization from '../localization/number';
 import messageLocalization from '../localization/message';
 import { fromPromise, Deferred } from '../core/utils/deferred';
+var EMAIL_VALIDATION_REGEX = /^[\d\w.+_-]+@[\d\w._-]+\.[\w]+$/i;
 
 // STYLE validation
 
@@ -263,7 +264,7 @@ class EmailRuleValidator extends BaseRuleValidator {
       return true;
     }
     return rulesValidators.pattern.validate(value, extend({}, rule, {
-      pattern: /^[\d\w._-]+@[\d\w._-]+\.[\w]+$/i
+      pattern: EMAIL_VALIDATION_REGEX
     }));
   }
 }

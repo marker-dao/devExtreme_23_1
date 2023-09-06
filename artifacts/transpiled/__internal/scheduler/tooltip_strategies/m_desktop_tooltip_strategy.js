@@ -63,6 +63,10 @@ var DesktopTooltipStrategy = /*#__PURE__*/function (_TooltipStrategyBase) {
   _proto._onListRender = function _onListRender(e) {
     return this._extraOptions.dragBehavior && this._extraOptions.dragBehavior(e);
   };
+  _proto._onListItemContextMenu = function _onListItemContextMenu(e) {
+    var contextMenuEventArgs = this._options.createEventArgs(e);
+    this._options.onItemContextMenu(contextMenuEventArgs);
+  };
   return DesktopTooltipStrategy;
 }(_m_tooltip_strategy_base.TooltipStrategyBase);
 exports.DesktopTooltipStrategy = DesktopTooltipStrategy;

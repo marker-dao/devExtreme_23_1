@@ -36,8 +36,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var DATERANGEBOX_CLASS = 'dx-daterangebox';
-var DATERANGEBOX_WITH_LABEL_CLASS = 'dx-daterangebox-with-label';
-var DATERANGEBOX_WITH_FLOATING_LABEL_CLASS = 'dx-daterangebox-with-floating-label';
+var TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
+var TEXTEDITOR_WITH_FLOATING_LABEL_CLASS = 'dx-texteditor-with-floating-label';
 var START_DATEBOX_CLASS = 'dx-start-datebox';
 var END_DATEBOX_CLASS = 'dx-end-datebox';
 var DATERANGEBOX_SEPARATOR_CLASS = 'dx-daterangebox-separator';
@@ -284,9 +284,9 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
       endDateLabel = _this$option4.endDateLabel,
       labelMode = _this$option4.labelMode;
     var isLabelVisible = (!!startDateLabel || !!endDateLabel) && labelMode !== 'hidden';
-    this.$element().removeClass(DATERANGEBOX_WITH_FLOATING_LABEL_CLASS).removeClass(DATERANGEBOX_WITH_LABEL_CLASS);
+    this.$element().removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_WITH_LABEL_CLASS);
     if (isLabelVisible) {
-      this.$element().addClass(labelMode === 'floating' ? DATERANGEBOX_WITH_FLOATING_LABEL_CLASS : DATERANGEBOX_WITH_LABEL_CLASS);
+      this.$element().addClass(labelMode === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS);
     }
   };
   _proto._renderStartDateBox = function _renderStartDateBox() {
@@ -906,6 +906,15 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   };
   _proto.focus = function focus() {
     this.getStartDateBox().focus();
+  };
+  _proto.reset = function reset() {
+    _Editor.prototype.reset.call(this);
+    var startDateBox = this.getStartDateBox();
+    var endDateBox = this.getEndDateBox();
+    startDateBox.reset();
+    endDateBox.reset();
+    startDateBox._updateInternalValidationState(true);
+    endDateBox._updateInternalValidationState(true);
   };
   _proto.clear = function clear() {
     _Editor.prototype.clear.call(this);

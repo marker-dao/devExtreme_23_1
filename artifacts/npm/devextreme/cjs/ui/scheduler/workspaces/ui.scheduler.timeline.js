@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.timeline.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -47,8 +47,6 @@ var HEADER_PANEL_CELL_CLASS = 'dx-scheduler-header-panel-cell';
 var HEADER_PANEL_WEEK_CELL_CLASS = 'dx-scheduler-header-panel-week-cell';
 var HEADER_ROW_CLASS = 'dx-scheduler-header-row';
 var HORIZONTAL = 'horizontal';
-var DATE_TABLE_CELL_BORDER = 1;
-var DATE_TABLE_HEADER_MARGIN = 10;
 var toMs = _date.default.dateToMilliseconds;
 var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
   _inheritsLoose(SchedulerTimeline, _SchedulerWorkSpace);
@@ -153,15 +151,15 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return false;
   };
   _proto._setTableSizes = function _setTableSizes() {
+    _SchedulerWorkSpace.prototype._setTableSizes.call(this);
     var minHeight = this._getWorkSpaceMinHeight();
     (0, _size.setHeight)(this._$sidebarTable, minHeight);
     (0, _size.setHeight)(this._$dateTable, minHeight);
-    _SchedulerWorkSpace.prototype._setTableSizes.call(this);
     this.virtualScrollingDispatcher.updateDimensions();
   };
   _proto._getWorkSpaceMinHeight = function _getWorkSpaceMinHeight() {
     var minHeight = this._getWorkSpaceHeight();
-    var workspaceContainerHeight = (0, _size.getOuterHeight)(this.$element(), true) - this.getHeaderPanelHeight() - 2 * DATE_TABLE_CELL_BORDER - DATE_TABLE_HEADER_MARGIN;
+    var workspaceContainerHeight = (0, _size.getOuterHeight)(this._$flexContainer, true);
     if (minHeight < workspaceContainerHeight) {
       minHeight = workspaceContainerHeight;
     }

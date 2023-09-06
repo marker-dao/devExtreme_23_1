@@ -17,6 +17,7 @@ export var MASTER_DETAIL_CELL_CLASS = 'dx-master-detail-cell';
 export var EDITOR_CELL_CLASS = 'dx-editor-cell';
 export var DROPDOWN_EDITOR_OVERLAY_CLASS = 'dx-dropdowneditor-overlay';
 export var COMMAND_EXPAND_CLASS = 'dx-command-expand';
+export var ADAPTIVE_COLUMN_NAME_CLASS = 'dx-command-adaptive';
 export var COMMAND_SELECT_CLASS = 'dx-command-select';
 export var COMMAND_EDIT_CLASS = 'dx-command-edit';
 export var COMMAND_CELL_SELECTOR = '[class^=dx-command]';

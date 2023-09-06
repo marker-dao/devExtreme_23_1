@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/core/events_engine.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -82,7 +82,7 @@ var eventsEngine = (0, _dependency_injector.default)({
       var parents = [];
       var getParents = function getParents(element) {
         var _element$parentNode;
-        var parent = (_element$parentNode = element.parentNode) !== null && _element$parentNode !== void 0 ? _element$parentNode : element.host;
+        var parent = (_element$parentNode = element.parentNode) !== null && _element$parentNode !== void 0 ? _element$parentNode : (0, _type.isObject)(element.host) ? element.host : null;
         if (parent) {
           parents.push(parent);
           getParents(parent);

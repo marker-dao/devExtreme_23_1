@@ -1,5 +1,7 @@
 {
-  "sideEffects": false,
+  "sideEffects": [
+    "../../../../esm/localization/currency.js"
+  ],
   "main": "../../../../cjs/viz/series/points/polar_point.js",
   "module": "../../../../esm/viz/series/points/polar_point.js"
 }

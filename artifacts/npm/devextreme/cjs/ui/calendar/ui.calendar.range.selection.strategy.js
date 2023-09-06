@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.range.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,7 +35,7 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
   }
   var _proto = CalendarRangeSelectionStrategy.prototype;
   _proto.getViewOptions = function getViewOptions() {
-    var value = this._getValues();
+    var value = this._getValue();
     var range = this._getDaysInRange(value[0], value[1]);
     return {
       value,
@@ -46,10 +46,10 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     };
   };
   _proto.selectValue = function selectValue(selectedValue, e) {
-    var _this$_getValues = this._getValues(),
-      _this$_getValues2 = _slicedToArray(_this$_getValues, 2),
-      startDate = _this$_getValues2[0],
-      endDate = _this$_getValues2[1];
+    var _this$_getValue = this._getValue(),
+      _this$_getValue2 = _slicedToArray(_this$_getValue, 2),
+      startDate = _this$_getValue2[0],
+      endDate = _this$_getValue2[1];
     this.skipNavigate();
     this._updateCurrentDate(selectedValue);
     this._currentDateChanged = true;
@@ -78,7 +78,7 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
   };
   _proto.updateAriaSelected = function updateAriaSelected(value, previousValue) {
     var _value, _previousValue;
-    (_value = value) !== null && _value !== void 0 ? _value : value = this._getValues();
+    (_value = value) !== null && _value !== void 0 ? _value : value = this._getValue();
     (_previousValue = previousValue) !== null && _previousValue !== void 0 ? _previousValue : previousValue = [];
     _CalendarSelectionStr.prototype.updateAriaSelected.call(this, value, previousValue);
   };
@@ -91,31 +91,31 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     var _this$calendar$option = this.calendar.option(),
       _allowChangeSelectionOrder = _this$calendar$option._allowChangeSelectionOrder,
       _currentSelection = _this$calendar$option._currentSelection;
-    var values = this.dateOption('values');
+    var value = this.dateOption('value');
     if (_allowChangeSelectionOrder) {
-      if (_currentSelection === 'startDate' && values[0]) {
-        return values[0];
+      if (_currentSelection === 'startDate' && value[0]) {
+        return value[0];
       }
-      if (_currentSelection === 'endDate' && values[1]) {
-        return values[1];
+      if (_currentSelection === 'endDate' && value[1]) {
+        return value[1];
       }
     }
-    var dates = values.filter(function (value) {
+    var dates = value.filter(function (value) {
       return value;
     });
     return this._getLowestDateInArray(dates);
   };
   _proto.restoreValue = function restoreValue() {
-    this.calendar.option('values', [null, null]);
+    this.calendar.option('value', [null, null]);
   };
-  _proto._getValues = function _getValues() {
-    var values = this.dateOption('values');
-    if (!values.length) {
-      return values;
+  _proto._getValue = function _getValue() {
+    var value = this.dateOption('value');
+    if (!value.length) {
+      return value;
     }
-    var _values = _slicedToArray(values, 2),
-      startDate = _values[0],
-      endDate = _values[1];
+    var _value2 = _slicedToArray(value, 2),
+      startDate = _value2[0],
+      endDate = _value2[1];
     if (startDate && endDate && startDate > endDate) {
       var _ref = [endDate, startDate];
       startDate = _ref[0];
@@ -124,10 +124,10 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     return [startDate, endDate];
   };
   _proto._getRange = function _getRange() {
-    var _this$_getValues3 = this._getValues(),
-      _this$_getValues4 = _slicedToArray(_this$_getValues3, 2),
-      startDate = _this$_getValues4[0],
-      endDate = _this$_getValues4[1];
+    var _this$_getValue3 = this._getValue(),
+      _this$_getValue4 = _slicedToArray(_this$_getValue3, 2),
+      startDate = _this$_getValue4[0],
+      endDate = _this$_getValue4[1];
     return this._getDaysInRange(startDate, endDate);
   };
   _proto._getDaysInRange = function _getDaysInRange(startDate, endDate) {
@@ -146,10 +146,10 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
   };
   _proto._cellHoverHandler = function _cellHoverHandler(e) {
     var isMaxZoomLevel = this._isMaxZoomLevel();
-    var _this$_getValues5 = this._getValues(),
-      _this$_getValues6 = _slicedToArray(_this$_getValues5, 2),
-      startDate = _this$_getValues6[0],
-      endDate = _this$_getValues6[1];
+    var _this$_getValue5 = this._getValue(),
+      _this$_getValue6 = _slicedToArray(_this$_getValue5, 2),
+      startDate = _this$_getValue6[0],
+      endDate = _this$_getValue6[1];
     var _this$calendar$option3 = this.calendar.option(),
       _allowChangeSelectionOrder = _this$calendar$option3._allowChangeSelectionOrder,
       _currentSelection = _this$calendar$option3._currentSelection;
@@ -184,8 +184,8 @@ var CalendarRangeSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionSt
     var selectedDates = rowDates.filter(function (date) {
       return !_this2._isDateDisabled(date);
     });
-    var values = selectedDates.length ? [selectedDates[0], selectedDates[selectedDates.length - 1]] : [null, null];
-    this.dateValue(values, event);
+    var value = selectedDates.length ? [selectedDates[0], selectedDates[selectedDates.length - 1]] : [null, null];
+    this.dateValue(value, event);
   };
   return CalendarRangeSelectionStrategy;
 }(_uiCalendarSelection.default);

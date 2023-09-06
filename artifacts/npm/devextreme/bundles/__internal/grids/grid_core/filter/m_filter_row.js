@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/filter/m_filter_row.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -470,6 +470,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
     },
     _updateFilterOperationChooser($menu, column, $editorContainer) {
+      var _this2 = this;
       var that = this;
       var isCellWasFocused;
       var restoreFocus = function restoreFocus() {
@@ -490,9 +491,9 @@ var ColumnHeadersViewFilterRowExtender = function () {
           selectable: false,
           items: that._getFilterOperationMenuItems(column)
         }],
-        onItemRendered(_ref) {
+        onItemRendered: function onItemRendered(_ref) {
           var itemElement = _ref.itemElement;
-          this.setAria('label', ARIA_SEARCH_BOX, (0, _renderer.default)(itemElement));
+          _this2.setAria('label', ARIA_SEARCH_BOX, (0, _renderer.default)(itemElement));
         },
         onItemClick(properties) {
           var selectedFilterOperation = properties.itemData.name;
@@ -599,7 +600,7 @@ var ColumnHeadersViewFilterRowExtender = function () {
       }
     },
     updateLookupDataSource(filterChanged) {
-      var _this2 = this;
+      var _this3 = this;
       if (!this.option('syncLookupFilterValues')) {
         return;
       }
@@ -617,11 +618,11 @@ var ColumnHeadersViewFilterRowExtender = function () {
         if (!column.lookup || column.calculateCellValue !== column.defaultCalculateCellValue) {
           return;
         }
-        var $cell = _this2._getCellElement(rowIndex, index);
+        var $cell = _this3._getCellElement(rowIndex, index);
         var editor = getEditorInstance($cell === null || $cell === void 0 ? void 0 : $cell.find('.dx-editor-container'));
         if (editor) {
           applyFilterViewController.setCurrentColumnForFiltering(column);
-          var filter = _this2._dataController.getCombinedFilter() || null;
+          var filter = _this3._dataController.getCombinedFilter() || null;
           applyFilterViewController.setCurrentColumnForFiltering(null);
           var editorDataSource = editor.option('dataSource');
           var shouldUpdateFilter = !filterChanged || !(0, _common.equalByValue)(editorDataSource.__dataGridSourceFilter, filter);

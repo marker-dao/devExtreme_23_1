@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/validation_engine.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,6 +22,8 @@ var _deferred = require("../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+var EMAIL_VALIDATION_REGEX = /^[\d\w.+_-]+@[\d\w._-]+\.[\w]+$/i;
+
 // STYLE validation
 
 var STATUS = {
@@ -323,7 +325,7 @@ var EmailRuleValidator = /*#__PURE__*/function (_BaseRuleValidator8) {
       return true;
     }
     return rulesValidators.pattern.validate(value, (0, _extend.extend)({}, rule, {
-      pattern: /^[\d\w._-]+@[\d\w._-]+\.[\w]+$/i
+      pattern: EMAIL_VALIDATION_REGEX
     }));
   };
   return EmailRuleValidator;

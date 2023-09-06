@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/keyboard_navigation/const.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.WIDGET_CLASS = exports.VIRTUAL_ROW_CLASS = exports.ROW_CLASS = exports.ROWS_VIEW_CLASS = exports.REVERT_BUTTON_CLASS = exports.NON_FOCUSABLE_ELEMENTS_SELECTOR = exports.MASTER_DETAIL_ROW_CLASS = exports.MASTER_DETAIL_CELL_CLASS = exports.INTERACTIVE_ELEMENTS_SELECTOR = exports.HEADER_ROW_CLASS = exports.GROUP_ROW_CLASS = exports.GROUP_FOOTER_CLASS = exports.FUNCTIONAL_KEYS = exports.FREESPACE_ROW_CLASS = exports.FOCUS_TYPE_ROW = exports.FOCUS_TYPE_CELL = exports.FOCUS_STATE_CLASS = exports.FOCUSED_CLASS = exports.FAST_EDITING_DELETE_KEY = exports.EDIT_MODE_FORM = exports.EDIT_FORM_ITEM_CLASS = exports.EDIT_FORM_CLASS = exports.EDITOR_CELL_CLASS = exports.DROPDOWN_EDITOR_OVERLAY_CLASS = exports.DATEBOX_WIDGET_NAME = exports.DATA_ROW_CLASS = exports.COMMAND_SELECT_CLASS = exports.COMMAND_EXPAND_CLASS = exports.COMMAND_EDIT_CLASS = exports.COMMAND_CELL_SELECTOR = exports.COLUMN_HEADERS_VIEW = exports.CELL_FOCUS_DISABLED_CLASS = exports.ATTRIBUTES = void 0;
+exports.WIDGET_CLASS = exports.VIRTUAL_ROW_CLASS = exports.ROW_CLASS = exports.ROWS_VIEW_CLASS = exports.REVERT_BUTTON_CLASS = exports.NON_FOCUSABLE_ELEMENTS_SELECTOR = exports.MASTER_DETAIL_ROW_CLASS = exports.MASTER_DETAIL_CELL_CLASS = exports.INTERACTIVE_ELEMENTS_SELECTOR = exports.HEADER_ROW_CLASS = exports.GROUP_ROW_CLASS = exports.GROUP_FOOTER_CLASS = exports.FUNCTIONAL_KEYS = exports.FREESPACE_ROW_CLASS = exports.FOCUS_TYPE_ROW = exports.FOCUS_TYPE_CELL = exports.FOCUS_STATE_CLASS = exports.FOCUSED_CLASS = exports.FAST_EDITING_DELETE_KEY = exports.EDIT_MODE_FORM = exports.EDIT_FORM_ITEM_CLASS = exports.EDIT_FORM_CLASS = exports.EDITOR_CELL_CLASS = exports.DROPDOWN_EDITOR_OVERLAY_CLASS = exports.DATEBOX_WIDGET_NAME = exports.DATA_ROW_CLASS = exports.COMMAND_SELECT_CLASS = exports.COMMAND_EXPAND_CLASS = exports.COMMAND_EDIT_CLASS = exports.COMMAND_CELL_SELECTOR = exports.COLUMN_HEADERS_VIEW = exports.CELL_FOCUS_DISABLED_CLASS = exports.ATTRIBUTES = exports.ADAPTIVE_COLUMN_NAME_CLASS = void 0;
 var ATTRIBUTES = {
   ariaColIndex: 'aria-colindex',
   dragCell: 'dx-drag-cell'
@@ -47,6 +47,8 @@ var DROPDOWN_EDITOR_OVERLAY_CLASS = 'dx-dropdowneditor-overlay';
 exports.DROPDOWN_EDITOR_OVERLAY_CLASS = DROPDOWN_EDITOR_OVERLAY_CLASS;
 var COMMAND_EXPAND_CLASS = 'dx-command-expand';
 exports.COMMAND_EXPAND_CLASS = COMMAND_EXPAND_CLASS;
+var ADAPTIVE_COLUMN_NAME_CLASS = 'dx-command-adaptive';
+exports.ADAPTIVE_COLUMN_NAME_CLASS = ADAPTIVE_COLUMN_NAME_CLASS;
 var COMMAND_SELECT_CLASS = 'dx-command-select';
 exports.COMMAND_SELECT_CLASS = COMMAND_SELECT_CLASS;
 var COMMAND_EDIT_CLASS = 'dx-command-edit';

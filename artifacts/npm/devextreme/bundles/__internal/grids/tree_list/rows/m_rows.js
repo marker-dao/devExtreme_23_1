@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/rows/m_rows.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -105,15 +105,15 @@ var RowsView = _m_rows_view.rowsModule.views.rowsView.inherit(function () {
       }
       return $rowElement;
     },
+    _getGridRoleName() {
+      return 'treegrid';
+    },
     isExpandIcon($targetElement) {
       return !!$targetElement.closest(".".concat(TREELIST_EXPANDED_CLASS, ", .").concat(TREELIST_COLLAPSED_CLASS)).length;
     },
     setAriaExpandedAttribute($row, row) {
       var isRowExpanded = row.isExpanded;
       this.setAria('expanded', (0, _type.isDefined)(isRowExpanded) && isRowExpanded.toString(), $row);
-    },
-    setTableRole($tableElement) {
-      this.setAria('role', 'treegrid', $tableElement);
     }
   };
 }());

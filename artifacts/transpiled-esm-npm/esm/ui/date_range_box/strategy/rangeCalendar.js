@@ -52,7 +52,7 @@ class RangeCalendarStrategy extends CalendarStrategy {
           var newDateBoxValue = this.dateBox.dateOption('value');
           var dateBoxValueChanged = !isSameDates(dateBoxValue, newDateBoxValue);
           if (dateBoxValueChanged) {
-            this.dateRangeBox.getStartDateBox()._strategy._widget.option('values', this.dateRangeBox.option('value'));
+            this.dateRangeBox.getStartDateBox()._strategy._widget.option('value', this.dateRangeBox.option('value'));
           } else {
             this.dateRangeBox.getStartDateBox()._strategy._widget._enterKeyHandler(e);
           }
@@ -97,7 +97,7 @@ class RangeCalendarStrategy extends CalendarStrategy {
     var disabledDates = isFunction(disabledDatesValue) ? this._injectComponent(disabledDatesValue) : disabledDates;
     return extend(super._getWidgetOptions(), {
       disabledDates,
-      values: value,
+      value,
       selectionMode: 'range',
       viewsCount: multiView ? 2 : 1,
       _allowChangeSelectionOrder: true,
@@ -116,7 +116,7 @@ class RangeCalendarStrategy extends CalendarStrategy {
     return this.dateRangeBox.getStartDateBox() ? this.dateRangeBox.getStartDateBox()._strategy._widget : this._widget;
   }
   getValue() {
-    return this._widget.option('values');
+    return this._widget.option('value');
   }
   _updateValue() {
     var {
@@ -126,7 +126,7 @@ class RangeCalendarStrategy extends CalendarStrategy {
       return;
     }
     this._shouldPreventFocusChange = true;
-    this._widget.option('values', value);
+    this._widget.option('value', value);
   }
   _isInstantlyMode() {
     return this.dateRangeBox.option('applyValueMode') === 'instantly';

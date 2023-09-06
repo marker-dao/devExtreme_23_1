@@ -87,6 +87,7 @@ var TooltipStrategyBase = /*#__PURE__*/function () {
       onItemClick: function onItemClick(e) {
         return _this2._onListItemClick(e);
       },
+      onItemContextMenu: this._onListItemContextMenu.bind(this),
       itemTemplate: function itemTemplate(item, index) {
         return _this2._renderTemplate(item.appointment, item.targetedAppointment, index, item.color);
       },
@@ -142,7 +143,10 @@ var TooltipStrategyBase = /*#__PURE__*/function () {
     this.hide();
     this._extraOptions.clickEvent && this._extraOptions.clickEvent(e);
     this._options.showAppointmentPopup(e.itemData.appointment, false, e.itemData.targetedAppointment);
-  };
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ;
+  _proto._onListItemContextMenu = function _onListItemContextMenu(e) {};
   _proto._createItemListContent = function _createItemListContent(appointment, targetedAppointment, color) {
     var editing = this._extraOptions.editing;
     var $itemElement = (0, _renderer.default)('<div>').addClass(TOOLTIP_APPOINTMENT_ITEM);

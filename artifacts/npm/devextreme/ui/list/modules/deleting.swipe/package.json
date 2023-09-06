@@ -1,5 +1,7 @@
 {
-  "sideEffects": false,
+  "sideEffects": [
+    "../../../../esm/ui/list/ui.list.edit.decorator.swipe.js"
+  ],
   "main": "../../../../cjs/ui/list/modules/deleting.swipe.js",
   "module": "../../../../esm/ui/list/modules/deleting.swipe.js"
 }

@@ -2,6 +2,7 @@ import $ from '../../../../core/renderer';
 import { each } from '../../../../core/utils/iterator';
 import { name as clickEventName } from '../../../../events/click';
 import eventsEngine from '../../../../events/core/events_engine';
+import messageLocalization from '../../../../localization/message';
 import modules from '../m_modules';
 var ERROR_ROW_CLASS = 'dx-error-row';
 var ERROR_MESSAGE_CLASS = 'dx-error-message';
@@ -19,7 +20,7 @@ var ErrorHandlingController = modules.ViewController.inherit({
     var $closeButton;
     var $errorMessage = this._renderErrorMessage(error);
     if ($tableElements) {
-      $errorRow = $('<tr>').addClass(ERROR_ROW_CLASS);
+      $errorRow = $('<tr>').attr('role', 'row').addClass(ERROR_ROW_CLASS);
       $closeButton = $('<div>').addClass(ERROR_CLOSEBUTTON_CLASS).addClass(that.addWidgetPrefix(ACTION_CLASS));
       eventsEngine.on($closeButton, clickEventName, that.createAction(args => {
         var e = args.event;
@@ -36,7 +37,7 @@ var ErrorHandlingController = modules.ViewController.inherit({
       // @ts-expect-errors
       .attr({
         colSpan: that.getController('columns').getVisibleColumns().length,
-        role: 'presentation'
+        role: 'gridcell'
       }).prepend($closeButton).append($errorMessage).appendTo($errorRow);
       return $errorRow;
     }
@@ -44,7 +45,7 @@ var ErrorHandlingController = modules.ViewController.inherit({
   },
   _renderErrorMessage(error) {
     var message = error.url ? error.message.replace(error.url, '') : error.message || error;
-    var $message = $('<div>').addClass(ERROR_MESSAGE_CLASS).text(message);
+    var $message = $('<div>').attr('role', 'alert').attr('aria-roledescription', messageLocalization.format('dxDataGrid-ariaError')).addClass(ERROR_MESSAGE_CLASS).text(message);
     if (error.url) {
       $('<a>').attr('href', error.url).text(error.url).appendTo($message);
     }

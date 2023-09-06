@@ -993,7 +993,7 @@ var Form = _ui.default.inherit({
     }
     this.option('isDirty', !!this._dirtyFields.size);
   },
-  _doForAllEditors: function _doForAllEditors(editorAction) {
+  updateRunTimeInfoForEachEditor: function updateRunTimeInfoForEachEditor(editorAction) {
     this._itemsRunTimeInfo.each(function (_, itemRunTimeInfo) {
       var widgetInstance = itemRunTimeInfo.widgetInstance;
       if ((0, _type.isDefined)(widgetInstance) && _editor.default.isEditor(widgetInstance)) {
@@ -1002,7 +1002,7 @@ var Form = _ui.default.inherit({
     });
   },
   _clear: function _clear() {
-    this._doForAllEditors(function (editor) {
+    this.updateRunTimeInfoForEachEditor(function (editor) {
       editor.clear();
       editor.option('isValid', true);
     });
@@ -1051,7 +1051,7 @@ var Form = _ui.default.inherit({
     this._clear();
   },
   reset: function reset(editorsData) {
-    this._doForAllEditors(function (editor) {
+    this.updateRunTimeInfoForEachEditor(function (editor) {
       var editorName = editor.option('name');
       if (editorsData && editorName in editorsData) {
         editor.reset(editorsData[editorName]);
@@ -1059,7 +1059,7 @@ var Form = _ui.default.inherit({
         editor.reset();
       }
     });
-    this._clearValidationSummary();
+    this._renderValidationSummary();
   },
   updateData: function updateData(data, value) {
     this._updateData(data, value);

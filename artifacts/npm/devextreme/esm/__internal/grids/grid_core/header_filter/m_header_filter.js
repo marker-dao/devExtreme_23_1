@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/header_filter/m_header_filter.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -300,6 +300,7 @@ var HeaderFilterController = modules.ViewController.inherit(function () {
         var groupInterval = filterUtils.getGroupInterval(column);
         var dataSource = that._dataController.dataSource();
         var remoteFiltering = dataSource && dataSource.remoteOperations().filtering;
+        var previousOnHidden = options.onHidden;
         extend(options, column, {
           type: groupInterval && groupInterval.length > 1 ? 'tree' : 'list',
           remoteFiltering,
@@ -314,7 +315,10 @@ var HeaderFilterController = modules.ViewController.inherit(function () {
               columnsController.columnOption(options.dataField, 'headerFilter', headerFilterByColumn, true);
             });
           },
-          onHidden: () => restoreFocus(this)
+          onHidden: () => {
+            previousOnHidden === null || previousOnHidden === void 0 ? void 0 : previousOnHidden();
+            restoreFocus(this);
+          }
         });
         options.dataSource = that.getDataSource(options);
         if (options.isFilterBuilder) {

@@ -50,6 +50,10 @@ var TABS_ICON_POSITION_CLASS = {
   bottom: 'dx-tabs-icon-position-bottom',
   start: 'dx-tabs-icon-position-start'
 };
+var TABS_STYLING_MODE_CLASS = {
+  primary: 'dx-tabs-styling-mode-primary',
+  secondary: 'dx-tabs-styling-mode-secondary'
+};
 var TABS_ITEM_DATA_KEY = 'dxTabData';
 var BUTTON_NEXT_ICON = 'chevronnext';
 var BUTTON_PREV_ICON = 'chevronprev';
@@ -71,6 +75,10 @@ var ICON_POSITION = {
   bottom: 'bottom',
   start: 'start'
 };
+var STYLING_MODE = {
+  primary: 'primary',
+  secondary: 'secondary'
+};
 var Tabs = CollectionWidget.inherit({
   _activeStateUnit: '.' + TABS_ITEM_CLASS,
   _getDefaultOptions: function _getDefaultOptions() {
@@ -82,6 +90,7 @@ var Tabs = CollectionWidget.inherit({
       selectionMode: 'single',
       orientation: ORIENTATION.horizontal,
       iconPosition: ICON_POSITION.start,
+      stylingMode: STYLING_MODE.primary,
       /**
        * @name dxTabsOptions.activeStateEnabled
        * @hidden
@@ -135,12 +144,17 @@ var Tabs = CollectionWidget.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init() {
+    var {
+      orientation,
+      stylingMode
+    } = this.option();
     this.callBase();
     this.setAria('role', 'tablist');
     this.$element().addClass(TABS_CLASS);
-    this._toggleOrientationClass(this.option('orientation'));
+    this._toggleOrientationClass(orientation);
     this._toggleIconPositionClass();
+    this._toggleStylingModeClass(stylingMode);
     this._renderWrapper();
     this._renderMultiple();
     this._feedbackHideTimeout = FEEDBACK_HIDE_TIMEOUT;
@@ -442,7 +456,7 @@ var Tabs = CollectionWidget.inherit({
     this._toggleTabsVerticalClass(isVertical);
     this._toggleTabsHorizontalClass(!isVertical);
   },
-  _getTabIconPositionClass() {
+  _getTabsIconPositionClass() {
     var position = this.option('iconPosition');
     switch (position) {
       case ICON_POSITION.top:
@@ -460,7 +474,7 @@ var Tabs = CollectionWidget.inherit({
     for (var key in TABS_ICON_POSITION_CLASS) {
       this.$element().removeClass(TABS_ICON_POSITION_CLASS[key]);
     }
-    var newClass = this._getTabIconPositionClass();
+    var newClass = this._getTabsIconPositionClass();
     this.$element().addClass(newClass);
   },
   _toggleFocusedDisabledNextClass(currentIndex, isNextDisabled) {
@@ -483,6 +497,13 @@ var Tabs = CollectionWidget.inherit({
     var shouldPrevClassBeSetted = isPrevDisabled && nextFocusedIndex === prevItemIndex;
     this._toggleFocusedDisabledNextClass(currentIndex, shouldNextClassBeSetted);
     this._toggleFocusedDisabledPrevClass(currentIndex, shouldPrevClassBeSetted);
+  },
+  _toggleStylingModeClass(value) {
+    var _TABS_STYLING_MODE_CL;
+    for (var key in TABS_STYLING_MODE_CLASS) {
+      this.$element().removeClass(TABS_STYLING_MODE_CLASS[key]);
+    }
+    this.$element().addClass((_TABS_STYLING_MODE_CL = TABS_STYLING_MODE_CLASS[value]) !== null && _TABS_STYLING_MODE_CL !== void 0 ? _TABS_STYLING_MODE_CL : TABS_STYLING_MODE_CLASS.primary);
   },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {
@@ -524,6 +545,11 @@ var Tabs = CollectionWidget.inherit({
       case 'iconPosition':
         {
           this._toggleIconPositionClass();
+          break;
+        }
+      case 'stylingMode':
+        {
+          this._toggleStylingModeClass(args.value);
           break;
         }
       default:

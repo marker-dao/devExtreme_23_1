@@ -113,6 +113,12 @@ var HtmlEditor = Editor.inherit({
     this.callBase();
     this._updateContainerMarkup();
   },
+  _renderValidationState() {
+    var $content = this._getContent();
+    if ($content.length === 1) {
+      this.callBase();
+    }
+  },
   _renderSubmitElement: function _renderSubmitElement() {
     this._$submitElement = $('<textarea>').addClass(HTML_EDITOR_SUBMIT_ELEMENT_CLASS).attr('hidden', true).appendTo(this.$element());
     this._setSubmitValue(this.option('value'));
@@ -247,6 +253,7 @@ var HtmlEditor = Editor.inherit({
       modules: modulesConfig,
       theme: 'basic'
     });
+    this._renderValidationState();
     this._deltaConverter.setQuillInstance(this._quillInstance);
     this._textChangeHandlerWithContext = this._textChangeHandler.bind(this);
     this._quillInstance.on('text-change', this._textChangeHandlerWithContext);

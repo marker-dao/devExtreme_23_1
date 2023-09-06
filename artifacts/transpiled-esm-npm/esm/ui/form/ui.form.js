@@ -977,7 +977,7 @@ var Form = Widget.inherit({
     }
     this.option('isDirty', !!this._dirtyFields.size);
   },
-  _doForAllEditors: function _doForAllEditors(editorAction) {
+  updateRunTimeInfoForEachEditor: function updateRunTimeInfoForEachEditor(editorAction) {
     this._itemsRunTimeInfo.each(function (_, itemRunTimeInfo) {
       var widgetInstance = itemRunTimeInfo.widgetInstance;
       if (isDefined(widgetInstance) && Editor.isEditor(widgetInstance)) {
@@ -986,7 +986,7 @@ var Form = Widget.inherit({
     });
   },
   _clear: function _clear() {
-    this._doForAllEditors(editor => {
+    this.updateRunTimeInfoForEachEditor(editor => {
       editor.clear();
       editor.option('isValid', true);
     });
@@ -1035,7 +1035,7 @@ var Form = Widget.inherit({
     this._clear();
   },
   reset: function reset(editorsData) {
-    this._doForAllEditors(editor => {
+    this.updateRunTimeInfoForEachEditor(editor => {
       var editorName = editor.option('name');
       if (editorsData && editorName in editorsData) {
         editor.reset(editorsData[editorName]);
@@ -1043,7 +1043,7 @@ var Form = Widget.inherit({
         editor.reset();
       }
     });
-    this._clearValidationSummary();
+    this._renderValidationSummary();
   },
   updateData: function updateData(data, value) {
     this._updateData(data, value);

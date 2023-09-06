@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -144,6 +144,7 @@
             "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
             "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
             "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "変更を保存",
             "dxDataGrid-editingCancelAllChanges": "変更を破棄",
             "dxDataGrid-editingAddRow": "行を追加",
@@ -175,7 +176,10 @@
             "dxDataGrid-ariaAdaptiveCollapse": "追加データを非表示にする",
             "dxDataGrid-ariaAdaptiveExpand": "追加データを表示する",
             "dxDataGrid-ariaColumn": "列",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "値",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "フィルター セル",
             "dxDataGrid-ariaCollapse": "折りたたむ",
             "dxDataGrid-ariaModifiedCell": "Modified",

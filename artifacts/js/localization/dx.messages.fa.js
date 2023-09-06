@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.fa.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -144,6 +144,7 @@
             "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
             "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
             "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "ثبت تغییرات",
             "dxDataGrid-editingCancelAllChanges": "لغو تغییرات",
             "dxDataGrid-editingAddRow": "افزودن سطر",
@@ -175,7 +176,10 @@
             "dxDataGrid-ariaAdaptiveCollapse": "عدم نمایش اطلاعات تکمیلی",
             "dxDataGrid-ariaAdaptiveExpand": "نمایش اطلاعات تکمیلی",
             "dxDataGrid-ariaColumn": "ستون",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "مقدار",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "فیلتر سلول",
             "dxDataGrid-ariaCollapse": "عدم نمایش",
             "dxDataGrid-ariaModifiedCell": "Modified",

@@ -120,9 +120,12 @@ var Store = _class.default.inherit({
       changes,
       waitFor: []
     };
-    this._eventsStrategy.fireEvent('beforePush', [beforePushArgs]);
+    this._eventsStrategy.fireEvent('beforePushAggregation', [beforePushArgs]);
     _deferred.when.apply(void 0, _toConsumableArray(beforePushArgs.waitFor)).done(function () {
       _this._pushImpl(changes);
+      _this._eventsStrategy.fireEvent('beforePush', [{
+        changes
+      }]);
       _this._eventsStrategy.fireEvent('push', [changes]);
     });
   },

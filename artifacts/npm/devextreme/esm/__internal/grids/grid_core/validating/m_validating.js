@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/validating/m_validating.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,14 +28,17 @@ import ValidationEngine from '../../../../ui/validation_engine';
 import Validator from '../../../../ui/validator';
 import { focused } from '../../../../ui/widget/selectors';
 import errors from '../../../../ui/widget/ui.errors';
+import { EDITORS_INPUT_SELECTOR } from '../editing/const';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
 var INVALIDATE_CLASS = 'invalid';
 var REVERT_TOOLTIP_CLASS = 'revert-tooltip';
 var INVALID_MESSAGE_CLASS = 'dx-invalid-message';
+var INVALID_MESSAGE_ID = 'dxInvalidMessage';
 var WIDGET_INVALID_MESSAGE_CLASS = 'invalid-message';
 var INVALID_MESSAGE_ALWAYS_CLASS = 'dx-invalid-message-always';
 var REVERT_BUTTON_CLASS = 'dx-revert-button';
+var REVERT_BUTTON_ID = 'dxRevertButton';
 var VALIDATOR_CLASS = 'validator';
 var PENDING_INDICATOR_CLASS = 'dx-pending-indicator';
 var VALIDATION_PENDING_CLASS = 'dx-validation-pending';
@@ -1006,7 +1009,7 @@ export var validatingModule = {
             if ($container.find($tooltipElement).length) {
               return;
             }
-            var $overlayContainer = $container.closest(".".concat(this.addWidgetPrefix(CONTENT_CLASS)));
+            var $overlayContainer = $container.closest(".".concat(this.addWidgetPrefix(CONTENT_CLASS))).parent();
             var revertTooltipClass = this.addWidgetPrefix(REVERT_TOOLTIP_CLASS);
             $tooltipElement === null || $tooltipElement === void 0 ? void 0 : $tooltipElement.remove();
             $tooltipElement = $('<div>').addClass(revertTooltipClass).appendTo($container);
@@ -1027,6 +1030,10 @@ export var validatingModule = {
                 var buttonOptions = {
                   icon: 'revert',
                   hint: this.option('editing.texts.validationCancelChanges'),
+                  elementAttr: {
+                    id: REVERT_BUTTON_ID,
+                    'aria-label': messageLocalization.format('dxDataGrid-ariaRevertButton')
+                  },
                   onClick: () => {
                     this._editingController.cancelEditData();
                   }
@@ -1106,6 +1113,7 @@ export var validatingModule = {
               propagateOutsideClick: true,
               hideOnOutsideClick: false,
               wrapperAttr: {
+                id: INVALID_MESSAGE_ID,
                 class: "".concat(INVALID_MESSAGE_CLASS, " ").concat(INVALID_MESSAGE_ALWAYS_CLASS, " ").concat(invalidMessageClass)
               },
               position: {
@@ -1206,9 +1214,11 @@ export var validatingModule = {
             var change = rowOptions ? this.getController('editing').getChangeByKey(rowOptions.key) : null;
             var column = $cell && this.getController('columns').getVisibleColumns()[$cell.index()];
             var isCellModified = ((_a = change === null || change === void 0 ? void 0 : change.data) === null || _a === void 0 ? void 0 : _a[column === null || column === void 0 ? void 0 : column.name]) !== undefined && !this._editingController.isSaving();
+            var validationDescriptionValues = [];
             if (this._editingController.getEditMode() === EDIT_MODE_CELL) {
               if ((validationResult === null || validationResult === void 0 ? void 0 : validationResult.status) === VALIDATION_STATUS.invalid || isCellModified) {
                 this._showRevertButton($focus);
+                validationDescriptionValues.push(REVERT_BUTTON_ID);
               } else {
                 this._revertTooltip && this._revertTooltip.$element().remove();
               }
@@ -1223,9 +1233,29 @@ export var validatingModule = {
               });
               if (errorMessages.length) {
                 this._showValidationMessage($focus, errorMessages, column.alignment || 'left');
+                validationDescriptionValues.push(INVALID_MESSAGE_ID);
               }
             }
+            this._updateAriaValidationAttributes($focus, validationDescriptionValues);
             !isHideBorder && this._rowsView.element() && this._rowsView.updateFreeSpaceRowHeight();
+          },
+          _updateAriaValidationAttributes($focus, inputDescriptionValues) {
+            if (inputDescriptionValues.length === 0) {
+              return;
+            }
+            var editMode = this._editingController.getEditMode();
+            var shouldSetValidationAriaAttributes = [EDIT_MODE_CELL, EDIT_MODE_BATCH, EDIT_MODE_ROW].includes(editMode);
+            if (shouldSetValidationAriaAttributes) {
+              var $focusElement = this._getCurrentFocusElement($focus);
+              $focusElement.attr('aria-labelledby', inputDescriptionValues.join(' '));
+              $focusElement.attr('aria-invalid', true);
+            }
+          },
+          _getCurrentFocusElement($focus) {
+            if (this._editingController.isEditing()) {
+              return $focus.find(EDITORS_INPUT_SELECTOR).first();
+            }
+            return $focus;
           },
           focus($element, isHideBorder) {
             if (!arguments.length) return this.callBase();

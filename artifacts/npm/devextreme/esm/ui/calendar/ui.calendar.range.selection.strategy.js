@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.range.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
     this.NAME = 'RangeSelection';
   }
   getViewOptions() {
-    var value = this._getValues();
+    var value = this._getValue();
     var range = this._getDaysInRange(value[0], value[1]);
     return {
       value,
@@ -26,7 +26,7 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
     };
   }
   selectValue(selectedValue, e) {
-    var [startDate, endDate] = this._getValues();
+    var [startDate, endDate] = this._getValue();
     this.skipNavigate();
     this._updateCurrentDate(selectedValue);
     this._currentDateChanged = true;
@@ -55,7 +55,7 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
   }
   updateAriaSelected(value, previousValue) {
     var _value, _previousValue;
-    (_value = value) !== null && _value !== void 0 ? _value : value = this._getValues();
+    (_value = value) !== null && _value !== void 0 ? _value : value = this._getValue();
     (_previousValue = previousValue) !== null && _previousValue !== void 0 ? _previousValue : previousValue = [];
     super.updateAriaSelected(value, previousValue);
   }
@@ -69,34 +69,34 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
       _allowChangeSelectionOrder,
       _currentSelection
     } = this.calendar.option();
-    var values = this.dateOption('values');
+    var value = this.dateOption('value');
     if (_allowChangeSelectionOrder) {
-      if (_currentSelection === 'startDate' && values[0]) {
-        return values[0];
+      if (_currentSelection === 'startDate' && value[0]) {
+        return value[0];
       }
-      if (_currentSelection === 'endDate' && values[1]) {
-        return values[1];
+      if (_currentSelection === 'endDate' && value[1]) {
+        return value[1];
       }
     }
-    var dates = values.filter(value => value);
+    var dates = value.filter(value => value);
     return this._getLowestDateInArray(dates);
   }
   restoreValue() {
-    this.calendar.option('values', [null, null]);
+    this.calendar.option('value', [null, null]);
   }
-  _getValues() {
-    var values = this.dateOption('values');
-    if (!values.length) {
-      return values;
+  _getValue() {
+    var value = this.dateOption('value');
+    if (!value.length) {
+      return value;
     }
-    var [startDate, endDate] = values;
+    var [startDate, endDate] = value;
     if (startDate && endDate && startDate > endDate) {
       [startDate, endDate] = [endDate, startDate];
     }
     return [startDate, endDate];
   }
   _getRange() {
-    var [startDate, endDate] = this._getValues();
+    var [startDate, endDate] = this._getValue();
     return this._getDaysInRange(startDate, endDate);
   }
   _getDaysInRange(startDate, endDate) {
@@ -116,7 +116,7 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
   }
   _cellHoverHandler(e) {
     var isMaxZoomLevel = this._isMaxZoomLevel();
-    var [startDate, endDate] = this._getValues();
+    var [startDate, endDate] = this._getValue();
     var {
       _allowChangeSelectionOrder,
       _currentSelection
@@ -151,8 +151,8 @@ class CalendarRangeSelectionStrategy extends CalendarSelectionStrategy {
       event
     } = _ref;
     var selectedDates = rowDates.filter(date => !this._isDateDisabled(date));
-    var values = selectedDates.length ? [selectedDates[0], selectedDates[selectedDates.length - 1]] : [null, null];
-    this.dateValue(values, event);
+    var value = selectedDates.length ? [selectedDates[0], selectedDates[selectedDates.length - 1]] : [null, null];
+    this.dateValue(value, event);
   }
 }
 export default CalendarRangeSelectionStrategy;

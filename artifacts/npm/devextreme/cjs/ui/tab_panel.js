@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tab_panel.js)
 * Version: 23.2.0
-* Build date: Fri Aug 25 2023
+* Build date: Wed Sep 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -53,6 +53,10 @@ var ICON_POSITION = {
   bottom: 'bottom',
   start: 'start'
 };
+var STYLING_MODE = {
+  primary: 'primary',
+  secondary: 'secondary'
+};
 var TabPanel = _multi_view.default.inherit({
   _getDefaultOptions: function _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
@@ -63,6 +67,7 @@ var TabPanel = _multi_view.default.inherit({
       scrollingEnabled: true,
       tabsPosition: TABS_POSITION.top,
       iconPosition: ICON_POSITION.start,
+      stylingMode: STYLING_MODE.primary,
       onTitleClick: null,
       onTitleHold: null,
       onTitleRendered: null,
@@ -216,6 +221,7 @@ var TabPanel = _multi_view.default.inherit({
       }.bind(this),
       orientation: this._getTabsOrientation(),
       iconPosition: this.option('iconPosition'),
+      stylingMode: this.option('stylingMode'),
       _itemAttributes: {
         class: TABPANEL_TABS_ITEM_CLASS
       }
@@ -260,6 +266,11 @@ var TabPanel = _multi_view.default.inherit({
   _updateTabsIconPosition(iconPosition) {
     this._tabs.option({
       iconPosition
+    });
+  },
+  _updateTabsStylingMode(stylingMode) {
+    this._tabs.option({
+      stylingMode
     });
   },
   _toggleWrapperFocusedClass(isFocused) {
@@ -392,6 +403,9 @@ var TabPanel = _multi_view.default.inherit({
         break;
       case 'iconPosition':
         this._updateTabsIconPosition(value);
+        break;
+      case 'stylingMode':
+        this._updateTabsStylingMode(value);
         break;
       default:
         this.callBase(args);

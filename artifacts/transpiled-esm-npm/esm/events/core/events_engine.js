@@ -5,7 +5,7 @@ import domAdapter from '../../core/dom_adapter';
 import { getWindow, hasWindow } from '../../core/utils/window';
 var window = getWindow();
 import injector from '../../core/utils/dependency_injector';
-import { isWindow, isFunction, isString } from '../../core/utils/type';
+import { isWindow, isFunction, isString, isObject } from '../../core/utils/type';
 import Callbacks from '../../core/utils/callbacks';
 import errors from '../../core/errors';
 import hookTouchProps from '../../events/core/hook_touch_props';
@@ -70,7 +70,7 @@ var eventsEngine = injector({
       var parents = [];
       var getParents = function getParents(element) {
         var _element$parentNode;
-        var parent = (_element$parentNode = element.parentNode) !== null && _element$parentNode !== void 0 ? _element$parentNode : element.host;
+        var parent = (_element$parentNode = element.parentNode) !== null && _element$parentNode !== void 0 ? _element$parentNode : isObject(element.host) ? element.host : null;
         if (parent) {
           parents.push(parent);
           getParents(parent);

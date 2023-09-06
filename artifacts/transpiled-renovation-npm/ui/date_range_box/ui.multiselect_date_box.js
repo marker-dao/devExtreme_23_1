@@ -118,7 +118,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
       return;
     }
     var calendar = this._strategy.dateRangeBox.getStartDateBox()._strategy._widget;
-    var value = calendar.option('values');
+    var value = calendar.option('value');
     var startDate = (0, _uiDate_range.getDeserializedDate)(value[0]);
     var endDate = (0, _uiDate_range.getDeserializedDate)(value[1]);
     if ((0, _renderer.default)(target).is(startDateInput)) {
