@@ -1,12 +1,12 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/view_model/to_test/views/utils/timeline_week.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import timeZoneUtils from '../../../../../../../ui/scheduler/utils.timeZone';
+import timeZoneUtils from '../../../../../../../__internal/scheduler/m_utils_time_zone';
 import { getStartViewDateWithoutDST } from './base';
 export var getDateForHeaderText = (index, date, options) => {
   if (!timeZoneUtils.isTimezoneChangeInDate(date)) {

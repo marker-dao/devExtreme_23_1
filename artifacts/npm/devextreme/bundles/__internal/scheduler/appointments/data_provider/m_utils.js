@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/data_provider/m_utils.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,8 +14,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.sortAppointmentsByStartDate = exports.replaceWrongEndDate = exports.getRecurrenceException = exports.getAppointmentTakesSeveralDays = exports.compareDateWithStartDayHour = exports.compareDateWithEndDayHour = exports._isEndDateWrong = exports._convertRecurrenceException = exports._appointmentPartInInterval = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _date_serialization = _interopRequireDefault(require("../../../../core/utils/date_serialization"));
-var _expressionUtils = require("../../../../ui/scheduler/expressionUtils");
 var _utils = _interopRequireDefault(require("../../../../ui/scheduler/utils.timeZone"));
+var _m_expression_utils = require("../../m_expression_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var toMs = _date.default.dateToMilliseconds;
 var FULL_DATE_FORMAT = 'yyyyMMddTHHmmss';
@@ -107,7 +107,7 @@ var replaceWrongEndDate = function replaceWrongEndDate(rawAppointment, startDate
     return new Date(startDate.getTime() + appointmentDuration * toMs('minute'));
   };
   if (_isEndDateWrong(startDate, endDate)) {
-    var isAllDay = _expressionUtils.ExpressionUtils.getField(dataAccessors, 'allDay', rawAppointment);
+    var isAllDay = _m_expression_utils.ExpressionUtils.getField(dataAccessors, 'allDay', rawAppointment);
     var calculatedEndDate = calculateAppointmentEndDate(isAllDay, startDate);
     dataAccessors.setter.endDate(rawAppointment, calculatedEndDate);
   }
@@ -115,8 +115,8 @@ var replaceWrongEndDate = function replaceWrongEndDate(rawAppointment, startDate
 exports.replaceWrongEndDate = replaceWrongEndDate;
 var sortAppointmentsByStartDate = function sortAppointmentsByStartDate(appointments, dataAccessors) {
   appointments.sort(function (a, b) {
-    var firstDate = new Date(_expressionUtils.ExpressionUtils.getField(dataAccessors, 'startDate', a.settings || a));
-    var secondDate = new Date(_expressionUtils.ExpressionUtils.getField(dataAccessors, 'startDate', b.settings || b));
+    var firstDate = new Date(_m_expression_utils.ExpressionUtils.getField(dataAccessors, 'startDate', a.settings || a));
+    var secondDate = new Date(_m_expression_utils.ExpressionUtils.getField(dataAccessors, 'startDate', b.settings || b));
     return Math.sign(firstDate.getTime() - secondDate.getTime());
   });
 };

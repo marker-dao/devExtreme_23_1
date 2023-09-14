@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/m_settings_generator.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,10 +12,10 @@ import dateUtils from '../../../core/utils/date';
 import { extend } from '../../../core/utils/extend';
 import { isEmptyObject } from '../../../core/utils/type';
 import { isDateAndTimeView } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
-import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
-import { ExpressionUtils } from '../../../ui/scheduler/expressionUtils';
-import { getRecurrenceProcessor } from '../../../ui/scheduler/recurrence';
 import timeZoneUtils from '../../../ui/scheduler/utils.timeZone';
+import { createAppointmentAdapter } from '../m_appointment_adapter';
+import { ExpressionUtils } from '../m_expression_utils';
+import { getRecurrenceProcessor } from '../m_recurrence';
 import { createResourcesTree, getDataAccessors, getGroupCount, getResourceTreeLeaves } from '../resources/m_utils';
 import { CellPositionCalculator } from './m_cell_position_calculator';
 import { createFormattedDateText } from './m_text_utils';

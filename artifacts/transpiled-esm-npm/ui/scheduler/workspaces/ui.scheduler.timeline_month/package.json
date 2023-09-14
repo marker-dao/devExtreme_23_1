@@ -1,9 +1,0 @@
-{
-  "sideEffects": [
-    "../../../../esm/events/click.js",
-    "../../../../esm/events/core/emitter.feedback.js",
-    "../../../../esm/events/hover.js"
-  ],
-  "main": "../../../../cjs/ui/scheduler/workspaces/ui.scheduler.timeline_month.js",
-  "module": "../../../../esm/ui/scheduler/workspaces/ui.scheduler.timeline_month.js"
-}

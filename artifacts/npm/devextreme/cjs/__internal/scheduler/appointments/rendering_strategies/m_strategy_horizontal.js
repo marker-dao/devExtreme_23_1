@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/rendering_strategies/m_strategy_horizontal.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _getSkippedHoursInRange = _interopRequireDefault(require("../../../../renovation/ui/scheduler/view_model/appointments/utils/getSkippedHoursInRange"));
-var _expressionUtils = require("../../../../ui/scheduler/expressionUtils");
+var _m_expression_utils = require("../../m_expression_utils");
 var _m_strategy_base = _interopRequireDefault(require("./m_strategy_base"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
@@ -34,7 +34,7 @@ var HorizontalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) 
   };
   _proto.calculateAppointmentWidth = function calculateAppointmentWidth(appointment, position) {
     var cellWidth = this.cellWidth || this.getAppointmentMinSize();
-    var allDay = _expressionUtils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointment);
+    var allDay = _m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointment);
     var startDate = position.info.appointment.startDate;
     var endDate = position.info.appointment.endDate;
     var normalizedEndDate = position.info.appointment.normalizedEndDate;
@@ -99,7 +99,7 @@ var HorizontalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) 
     return deltaTime;
   };
   _proto.isAllDay = function isAllDay(appointmentData) {
-    return _expressionUtils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointmentData);
+    return _m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointmentData);
   };
   _proto._isItemsCross = function _isItemsCross(firstItem, secondItem) {
     var orientation = this._getOrientation();

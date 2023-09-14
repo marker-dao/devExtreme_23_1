@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/views/m_grid_view.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -104,9 +104,10 @@ var resizingControllerMembers = {
     return 'dxDataGrid-ariaDataGrid';
   },
   _setAriaLabel() {
+    var totalItemsCount = Math.max(0, this._dataController.totalItemsCount());
     this.component.setAria('label', messageLocalization.format(this._getWidgetAriaLabel(),
     // @ts-expect-error
-    this._dataController.totalItemsCount(), this.component.columnCount()), this.component.$element().children(".".concat(GRIDBASE_CONTAINER_CLASS)));
+    totalItemsCount, this.component.columnCount()), this.component.$element().children(".".concat(GRIDBASE_CONTAINER_CLASS)));
   },
   _getBestFitWidths() {
     var _a;

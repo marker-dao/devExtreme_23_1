@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/themes.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ exports.init = init;
 exports.initialized = initialized;
 exports.isCompact = isCompact;
 exports.isDark = isDark;
+exports.isFluent = isFluent;
 exports.isGeneric = isGeneric;
 exports.isMaterial = isMaterial;
 exports.isPendingThemeLoaded = isPendingThemeLoaded;
@@ -284,6 +285,9 @@ function isTheme(themeRegExp, themeName) {
 }
 function isMaterial(themeName) {
   return isTheme('material', themeName);
+}
+function isFluent(themeName) {
+  return isTheme('fluent', themeName);
 }
 function isGeneric(themeName) {
   return isTheme('generic', themeName);

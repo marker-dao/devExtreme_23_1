@@ -1,4 +1,4 @@
-import timeZoneUtils from '../../../../../../../ui/scheduler/utils.timeZone';
+import timeZoneUtils from '../../../../../../../__internal/scheduler/m_utils_time_zone';
 import { getStartViewDateWithoutDST } from './base';
 export var getDateForHeaderText = (index, date, options) => {
   if (!timeZoneUtils.isTimezoneChangeInDate(date)) {

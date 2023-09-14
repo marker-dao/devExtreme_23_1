@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/m_settings_generator.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,10 +16,10 @@ var _date = _interopRequireDefault(require("../../../core/utils/date"));
 var _extend = require("../../../core/utils/extend");
 var _type = require("../../../core/utils/type");
 var _base = require("../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
-var _appointmentAdapter = require("../../../ui/scheduler/appointmentAdapter");
-var _expressionUtils = require("../../../ui/scheduler/expressionUtils");
-var _recurrence = require("../../../ui/scheduler/recurrence");
 var _utils = _interopRequireDefault(require("../../../ui/scheduler/utils.timeZone"));
+var _m_appointment_adapter = require("../m_appointment_adapter");
+var _m_expression_utils = require("../m_expression_utils");
+var _m_recurrence = require("../m_recurrence");
 var _m_utils = require("../resources/m_utils");
 var _m_cell_position_calculator = require("./m_cell_position_calculator");
 var _m_text_utils = require("./m_text_utils");
@@ -187,7 +187,7 @@ var DateGeneratorBaseStrategy = /*#__PURE__*/function () {
       }
     }
     var endDayHour = this.viewEndDayHour;
-    var allDay = _expressionUtils.ExpressionUtils.getField(this.dataAccessors, 'allDay', rawAppointment);
+    var allDay = _m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'allDay', rawAppointment);
     var currentViewEndTime = new Date(new Date(endDate.getTime()).setHours(endDayHour, 0, 0, 0));
     if (result.getTime() > currentViewEndTime.getTime() || allDay && result.getHours() < endDayHour) {
       result = currentViewEndTime;
@@ -303,7 +303,7 @@ var DateGeneratorBaseStrategy = /*#__PURE__*/function () {
   _proto._createRecurrenceAppointments = function _createRecurrenceAppointments(appointment, groupIndices) {
     var duration = appointment.duration;
     var option = this._createRecurrenceOptions(appointment);
-    var generatedStartDates = (0, _recurrence.getRecurrenceProcessor)().generateDates(option);
+    var generatedStartDates = (0, _m_recurrence.getRecurrenceProcessor)().generateDates(option);
     return generatedStartDates.map(function (date) {
       var utcDate = _utils.default.createUTCDateWithLocalOffset(date);
       utcDate.setTime(utcDate.getTime() + duration);
@@ -487,7 +487,7 @@ var DateGeneratorVirtualStrategy = /*#__PURE__*/function (_DateGeneratorBaseStr)
     var validGroupIndices = this.groupCount ? groupIndices : [0];
     validGroupIndices.forEach(function (groupIndex) {
       var option = _this11._createRecurrenceOptions(appointment, groupIndex);
-      var generatedStartDates = (0, _recurrence.getRecurrenceProcessor)().generateDates(option);
+      var generatedStartDates = (0, _m_recurrence.getRecurrenceProcessor)().generateDates(option);
       var recurrentInfo = generatedStartDates.map(function (date) {
         var startDate = new Date(date);
         var utcDate = _utils.default.createUTCDateWithLocalOffset(date);
@@ -544,7 +544,7 @@ exports.DateGeneratorVirtualStrategy = DateGeneratorVirtualStrategy;
 var AppointmentSettingsGenerator = /*#__PURE__*/function () {
   function AppointmentSettingsGenerator(options) {
     this.options = options;
-    this.appointmentAdapter = (0, _appointmentAdapter.createAppointmentAdapter)(this.rawAppointment, this.dataAccessors, this.timeZoneCalculator);
+    this.appointmentAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(this.rawAppointment, this.dataAccessors, this.timeZoneCalculator);
   }
   var _proto3 = AppointmentSettingsGenerator.prototype;
   _proto3.create = function create() {

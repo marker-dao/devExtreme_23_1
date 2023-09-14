@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/drop_down_editor/ui.drop_down_editor.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -296,8 +296,6 @@ var DropDownEditor = TextBox.inherit({
     promise.always(this._renderField.bind(this));
   },
   _renderTemplatedField: function _renderTemplatedField(fieldTemplate, data) {
-    var _this$_fieldRenderQue;
-    this._fieldRenderQueueLength = ((_this$_fieldRenderQue = this._fieldRenderQueueLength) !== null && _this$_fieldRenderQue !== void 0 ? _this$_fieldRenderQue : 0) + 1;
     var isFocused = focused(this._input());
     var $container = this._$container;
     this._detachKeyboardEvents();
@@ -310,8 +308,8 @@ var DropDownEditor = TextBox.inherit({
       model: data,
       container: getPublicElement($templateWrapper),
       onRendered: () => {
-        this._fieldRenderQueueLength--;
-        if (this._fieldRenderQueueLength !== 0) {
+        var isRenderedInRoot = !!this.$element().find($templateWrapper).length;
+        if (!isRenderedInRoot) {
           return;
         }
         var $input = this._input();

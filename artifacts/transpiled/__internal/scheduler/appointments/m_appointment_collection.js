@@ -23,12 +23,12 @@ var _events_engine = _interopRequireDefault(require("../../../events/core/events
 var _double_click = require("../../../events/double_click");
 var _index = require("../../../events/utils/index");
 var _uiCollection_widget = _interopRequireDefault(require("../../../ui/collection/ui.collection_widget.edit"));
-var _appointmentAdapter = require("../../../ui/scheduler/appointmentAdapter");
-var _classes = require("../../../ui/scheduler/classes");
-var _constants = require("../../../ui/scheduler/constants");
-var _expressionUtils = require("../../../ui/scheduler/expressionUtils");
-var _recurrence = require("../../../ui/scheduler/recurrence");
 var _utils = _interopRequireDefault(require("../../../ui/scheduler/utils.timeZone"));
+var _m_appointment_adapter = require("../m_appointment_adapter");
+var _m_classes = require("../m_classes");
+var _m_constants = require("../m_constants");
+var _m_expression_utils = require("../m_expression_utils");
+var _m_recurrence = require("../m_recurrence");
 var _m_utils = require("./data_provider/m_utils");
 var _m_appointment = require("./m_appointment");
 var _m_appointment_layout = require("./m_appointment_layout");
@@ -90,7 +90,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     var tabHandler = function tabHandler(e) {
       var appointments = this._getAccessAppointments();
       var focusedAppointment = appointments.filter('.dx-state-focused');
-      var index = focusedAppointment.data(_constants.APPOINTMENT_SETTINGS_KEY).sortedIndex;
+      var index = focusedAppointment.data(_m_constants.APPOINTMENT_SETTINGS_KEY).sortedIndex;
       var lastIndex = appointments.length - 1;
       if (index > 0 && e.shiftKey || index < lastIndex && !e.shiftKey) {
         e.preventDefault();
@@ -129,7 +129,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
   _proto._getAppointmentByIndex = function _getAppointmentByIndex(sortedIndex) {
     var appointments = this._getAccessAppointments();
     return appointments.filter(function (_, $item) {
-      return (0, _element_data.data)($item, _constants.APPOINTMENT_SETTINGS_KEY).sortedIndex === sortedIndex;
+      return (0, _element_data.data)($item, _m_constants.APPOINTMENT_SETTINGS_KEY).sortedIndex === sortedIndex;
     }).eq(0);
   };
   _proto._getAccessAppointments = function _getAccessAppointments() {
@@ -312,7 +312,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     return result;
   };
   _proto._itemClass = function _itemClass() {
-    return _classes.APPOINTMENT_ITEM_CLASS;
+    return _m_classes.APPOINTMENT_ITEM_CLASS;
   };
   _proto._itemContainer = function _itemContainer() {
     var $container = _CollectionWidget.prototype._itemContainer.call(this);
@@ -428,13 +428,13 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
       var setting = item.settings[i];
       this._currentAppointmentSettings = setting;
       var $item = _CollectionWidget.prototype._renderItem.call(this, index, itemData, container);
-      $item.data(_constants.APPOINTMENT_SETTINGS_KEY, setting);
+      $item.data(_m_constants.APPOINTMENT_SETTINGS_KEY, setting);
       $items.push($item);
     }
     return $items;
   };
   _proto._getItemContent = function _getItemContent($itemFrame) {
-    $itemFrame.data(_constants.APPOINTMENT_SETTINGS_KEY, this._currentAppointmentSettings);
+    $itemFrame.data(_m_constants.APPOINTMENT_SETTINGS_KEY, this._currentAppointmentSettings);
     var $itemContent = _CollectionWidget.prototype._getItemContent.call(this, $itemFrame);
     return $itemContent;
   };
@@ -464,7 +464,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
   };
   _proto._renderAppointment = function _renderAppointment(element, settings) {
     var _a;
-    element.data(_constants.APPOINTMENT_SETTINGS_KEY, settings);
+    element.data(_m_constants.APPOINTMENT_SETTINGS_KEY, settings);
     this._applyResourceDataAttr(element);
     var rawAppointment = this._getItemData(element);
     var geometry = this.invoke('getAppointmentGeometry', settings);
@@ -532,7 +532,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
         this.resizeOccur = true;
         this._$currentAppointment = (0, _renderer.default)(e.element);
         if (this.invoke('needRecalculateResizableArea')) {
-          var updatedArea = this._calculateResizableArea(this._$currentAppointment.data(_constants.APPOINTMENT_SETTINGS_KEY), this._$currentAppointment.data('dxItemData'));
+          var updatedArea = this._calculateResizableArea(this._$currentAppointment.data(_m_constants.APPOINTMENT_SETTINGS_KEY), this._$currentAppointment.data('dxItemData'));
           e.component.option('area', updatedArea);
           e.component._renderDragOffsets(e.event);
         }
@@ -600,7 +600,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
   };
   _proto.updateResizedAppointment = function updateResizedAppointment($element, dateRange, dataAccessors, timeZoneCalculator) {
     var sourceAppointment = this._getItemData($element);
-    var modifiedAppointmentAdapter = (0, _appointmentAdapter.createAppointmentAdapter)(sourceAppointment, dataAccessors, timeZoneCalculator).clone();
+    var modifiedAppointmentAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(sourceAppointment, dataAccessors, timeZoneCalculator).clone();
     modifiedAppointmentAdapter.startDate = new Date(dateRange.startDate);
     modifiedAppointmentAdapter.endDate = new Date(dateRange.endDate);
     this.notifyObserver('updateAppointmentAfterResize', {
@@ -613,9 +613,9 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
   };
   _proto._getEndResizeAppointmentStartDate = function _getEndResizeAppointmentStartDate(e, rawAppointment, appointmentInfo) {
     var timeZoneCalculator = this.option('timeZoneCalculator');
-    var appointmentAdapter = (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, this.option('dataAccessors'), timeZoneCalculator);
+    var appointmentAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.option('dataAccessors'), timeZoneCalculator);
     var startDate = appointmentInfo.startDate;
-    var recurrenceProcessor = (0, _recurrence.getRecurrenceProcessor)();
+    var recurrenceProcessor = (0, _m_recurrence.getRecurrenceProcessor)();
     var recurrenceRule = appointmentAdapter.recurrenceRule,
       startDateTimeZone = appointmentAdapter.startDateTimeZone;
     var isAllDay = this.invoke('isAllDay', rawAppointment);
@@ -761,22 +761,22 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
   };
   _proto._processRecurrenceAppointment = function _processRecurrenceAppointment(appointment, index, skipLongAppointments) {
     // NOTE: this method is actual only for agenda
-    var recurrenceRule = _expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceRule', appointment);
+    var recurrenceRule = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceRule', appointment);
     var result = {
       parts: [],
       indexes: []
     };
     if (recurrenceRule) {
       var dates = appointment.settings || appointment;
-      var startDate = new Date(_expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'startDate', dates));
-      var startDateTimeZone = _expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'startDateTimeZone', appointment);
-      var endDate = new Date(_expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'endDate', dates));
+      var startDate = new Date(_m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'startDate', dates));
+      var startDateTimeZone = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'startDateTimeZone', appointment);
+      var endDate = new Date(_m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'endDate', dates));
       var appointmentDuration = endDate.getTime() - startDate.getTime();
-      var recurrenceException = _expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceException', appointment);
+      var recurrenceException = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceException', appointment);
       var startViewDate = this.invoke('getStartViewDate');
       var endViewDate = this.invoke('getEndViewDate');
       var timezoneCalculator = this.option('timeZoneCalculator');
-      var recurrentDates = (0, _recurrence.getRecurrenceProcessor)().generateDates({
+      var recurrentDates = (0, _m_recurrence.getRecurrenceProcessor)().generateDates({
         rule: recurrenceRule,
         exception: recurrenceException,
         start: startDate,
@@ -816,7 +816,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     if (partCount > 1) {
       (0, _extend.extend)(appointment, parts[0]);
       for (var i = 1; i < partCount; i++) {
-        var startDate = _expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'startDate', parts[i].settings).getTime();
+        var startDate = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'startDate', parts[i].settings).getTime();
         startDate = timeZoneCalculator.createDate(startDate, {
           path: 'toGrid'
         });
@@ -839,11 +839,11 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     this._sortAppointmentsByStartDate(appointments);
   };
   _proto._applyStartDateToObj = function _applyStartDateToObj(startDate, obj) {
-    _expressionUtils.ExpressionUtils.setField(this.option('dataAccessors'), 'startDate', obj, startDate);
+    _m_expression_utils.ExpressionUtils.setField(this.option('dataAccessors'), 'startDate', obj, startDate);
     return obj;
   };
   _proto._applyEndDateToObj = function _applyEndDateToObj(endDate, obj) {
-    _expressionUtils.ExpressionUtils.setField(this.option('dataAccessors'), 'endDate', obj, endDate);
+    _m_expression_utils.ExpressionUtils.setField(this.option('dataAccessors'), 'endDate', obj, endDate);
     return obj;
   };
   _proto.moveAppointmentBack = function moveAppointmentBack(dragEvent) {
@@ -880,14 +880,14 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
   _proto.splitAppointmentByDay = function splitAppointmentByDay(appointment) {
     var dates = appointment.settings || appointment;
     var dataAccessors = this.option('dataAccessors');
-    var originalStartDate = new Date(_expressionUtils.ExpressionUtils.getField(dataAccessors, 'startDate', dates));
+    var originalStartDate = new Date(_m_expression_utils.ExpressionUtils.getField(dataAccessors, 'startDate', dates));
     var startDate = _date.default.makeDate(originalStartDate);
-    var endDate = _date.default.makeDate(_expressionUtils.ExpressionUtils.getField(dataAccessors, 'endDate', dates));
+    var endDate = _date.default.makeDate(_m_expression_utils.ExpressionUtils.getField(dataAccessors, 'endDate', dates));
     var maxAllowedDate = this.invoke('getEndViewDate');
     var startDayHour = this.invoke('getStartDayHour');
     var endDayHour = this.invoke('getEndDayHour');
     var timeZoneCalculator = this.option('timeZoneCalculator');
-    var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(appointment, dataAccessors, timeZoneCalculator);
+    var adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, dataAccessors, timeZoneCalculator);
     var appointmentIsLong = (0, _m_utils.getAppointmentTakesSeveralDays)(adapter);
     var result = [];
     startDate = timeZoneCalculator.createDate(startDate, {
@@ -934,7 +934,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     }
   };
   _proto._removeDragSourceClassFromDraggedAppointment = function _removeDragSourceClassFromDraggedAppointment() {
-    var $appointments = this._itemElements().filter(".".concat(_classes.APPOINTMENT_DRAG_SOURCE_CLASS));
+    var $appointments = this._itemElements().filter(".".concat(_m_classes.APPOINTMENT_DRAG_SOURCE_CLASS));
     $appointments.each(function (_, element) {
       var appointmentInstance = (0, _renderer.default)(element).dxSchedulerAppointment('instance');
       appointmentInstance.option('isDragSource', false);
@@ -947,7 +947,7 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
       endDate = _settings$info$source.endDate;
     var groupIndex = settings.groupIndex;
     $appointments.forEach(function ($item) {
-      var _$item$data = $item.data(_constants.APPOINTMENT_SETTINGS_KEY),
+      var _$item$data = $item.data(_m_constants.APPOINTMENT_SETTINGS_KEY),
         itemInfo = _$item$data.info,
         itemGroupIndex = _$item$data.groupIndex;
       var _itemInfo$sourceAppoi = itemInfo.sourceAppointment,

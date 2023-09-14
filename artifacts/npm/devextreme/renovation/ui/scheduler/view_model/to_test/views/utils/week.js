@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/view_model/to_test/views/utils/week.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ exports.getValidStartDate = exports.getTimePanelCellText = exports.getIntervalDu
 var _date = _interopRequireDefault(require("../../../../../../../core/utils/date"));
 var _date2 = _interopRequireDefault(require("../../../../../../../localization/date"));
 var _base = require("./base");
-var _utils = _interopRequireDefault(require("../../../../../../../ui/scheduler/utils.timeZone"));
+var _m_utils_time_zone = _interopRequireDefault(require("../../../../../../../__internal/scheduler/m_utils_time_zone"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var getIntervalDuration = function getIntervalDuration(intervalCount) {
   return _date.default.dateToMilliseconds('day') * 7 * intervalCount;
@@ -35,10 +35,10 @@ var calculateViewStartDate = function calculateViewStartDate(startDateOption, fi
 };
 exports.calculateViewStartDate = calculateViewStartDate;
 var getTimeCellDate = function getTimeCellDate(rowIndex, date, startViewDate, cellDuration, startDayHour) {
-  if (!_utils.default.isTimezoneChangeInDate(date)) {
+  if (!_m_utils_time_zone.default.isTimezoneChangeInDate(date)) {
     return date;
   }
-  var startViewDateWithoutDST = _utils.default.getDateWithoutTimezoneChange(startViewDate);
+  var startViewDateWithoutDST = _m_utils_time_zone.default.getDateWithoutTimezoneChange(startViewDate);
   var result = new Date(startViewDateWithoutDST);
   var timeCellDuration = Math.round(cellDuration);
   var startViewDateOffset = (0, _base.getStartViewDateTimeOffset)(startViewDate, startDayHour);

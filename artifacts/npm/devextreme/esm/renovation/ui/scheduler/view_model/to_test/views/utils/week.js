@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/view_model/to_test/views/utils/week.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 import dateUtils from '../../../../../../../core/utils/date';
 import dateLocalization from '../../../../../../../localization/date';
 import { getCalculatedFirstDayOfWeek, getStartViewDateTimeOffset, getViewStartByOptions, setOptionHour } from './base';
-import timeZoneUtils from '../../../../../../../ui/scheduler/utils.timeZone';
+import timeZoneUtils from '../../../../../../../__internal/scheduler/m_utils_time_zone';
 export var getIntervalDuration = intervalCount => dateUtils.dateToMilliseconds('day') * 7 * intervalCount;
 export var getValidStartDate = (startDate, firstDayOfWeek) => startDate ? dateUtils.getFirstWeekDate(startDate, firstDayOfWeek) : undefined;
 export var calculateStartViewDate = (currentDate, startDayHour, startDate, intervalDuration, firstDayOfWeekOption) => {

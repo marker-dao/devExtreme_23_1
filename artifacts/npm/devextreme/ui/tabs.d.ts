@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tabs.d.ts)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,7 +26,7 @@ import {
     Orientation,
     SingleOrMultiple,
     TabsIconPosition,
-    TabsStylingMode,
+    TabsStyle,
 } from '../common';
 
 export type ItemLike = string | Item | any;
@@ -35,7 +35,7 @@ export {
     SingleOrMultiple,
     Orientation,
     TabsIconPosition,
-    TabsStylingMode,
+    TabsStyle,
 };
 
 /**
@@ -206,7 +206,7 @@ export interface dxTabsBaseOptions<
      * @default 'primary'
      * @public
      */
-    stylingMode?: TabsStylingMode;
+    stylingMode?: TabsStyle;
 }
 
 /**

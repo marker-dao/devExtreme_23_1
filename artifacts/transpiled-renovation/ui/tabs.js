@@ -551,6 +551,9 @@ var Tabs = _uiCollection_widget.default.inherit({
       case 'iconPosition':
         {
           this._toggleIconPositionClass();
+          if (!this._isServerSide()) {
+            this._dimensionChanged();
+          }
           break;
         }
       case 'stylingMode':

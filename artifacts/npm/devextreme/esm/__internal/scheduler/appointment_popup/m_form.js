@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointment_popup/m_form.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
-import '../../../ui/scheduler/recurrence_editor';
+import '../m_recurrence_editor';
 import '../../../ui/text_area';
 import '../../../ui/tag_box';
 import '../../../ui/switch';
@@ -21,7 +21,7 @@ import DataSource from '../../../data/data_source';
 import messageLocalization from '../../../localization/message';
 import { Semaphore } from '../../../renovation/ui/scheduler/utils/semaphore/semaphore';
 import Form from '../../../ui/form';
-import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
+import { createAppointmentAdapter } from '../m_appointment_adapter';
 import timeZoneDataUtils from '../timezones/m_utils_timezones_data';
 var SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
 export var APPOINTMENT_FORM_GROUP_NAMES = {

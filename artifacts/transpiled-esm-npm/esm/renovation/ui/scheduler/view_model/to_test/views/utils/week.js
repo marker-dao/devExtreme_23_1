@@ -1,7 +1,7 @@
 import dateUtils from '../../../../../../../core/utils/date';
 import dateLocalization from '../../../../../../../localization/date';
 import { getCalculatedFirstDayOfWeek, getStartViewDateTimeOffset, getViewStartByOptions, setOptionHour } from './base';
-import timeZoneUtils from '../../../../../../../ui/scheduler/utils.timeZone';
+import timeZoneUtils from '../../../../../../../__internal/scheduler/m_utils_time_zone';
 export var getIntervalDuration = intervalCount => dateUtils.dateToMilliseconds('day') * 7 * intervalCount;
 export var getValidStartDate = (startDate, firstDayOfWeek) => startDate ? dateUtils.getFirstWeekDate(startDate, firstDayOfWeek) : undefined;
 export var calculateStartViewDate = (currentDate, startDayHour, startDate, intervalDuration, firstDayOfWeekOption) => {

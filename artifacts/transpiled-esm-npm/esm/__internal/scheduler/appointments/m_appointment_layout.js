@@ -1,7 +1,7 @@
 import domAdapter from '../../../core/dom_adapter';
 import $ from '../../../core/renderer';
 import messageLocalization from '../../../localization/message';
-import { APPOINTMENT_CONTENT_CLASSES } from '../../../ui/scheduler/classes';
+import { APPOINTMENT_CONTENT_CLASSES } from '../m_classes';
 var allDayText = " ".concat(messageLocalization.format('dxScheduler-allDay'), ": ");
 export var createAppointmentLayout = (formatText, config) => {
   var result = $(domAdapter.createDocumentFragment());

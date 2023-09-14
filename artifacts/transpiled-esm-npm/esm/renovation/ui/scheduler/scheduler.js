@@ -9,7 +9,7 @@ import DataSource from '../../../data/data_source';
 import { getCurrentViewConfig, getCurrentViewProps, getValidGroups } from './model/views';
 import { WorkSpace } from './workspaces/base/work_space';
 import { SchedulerToolbar } from './header/header';
-import { getViewDataGeneratorByViewType } from '../../../ui/scheduler/workspaces/view_model/utils';
+import { getViewDataGeneratorByViewType } from '../../../__internal/scheduler/workspaces/view_model/m_utils';
 import { createDataAccessors, isViewDataProviderConfigValid } from './common';
 import { createTimeZoneCalculator } from './timeZoneCalculator/createTimeZoneCalculator';
 import { getGroupCount, loadResources } from '../../../__internal/scheduler/resources/m_utils';

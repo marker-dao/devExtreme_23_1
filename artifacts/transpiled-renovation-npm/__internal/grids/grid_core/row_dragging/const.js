@@ -13,6 +13,7 @@ var CLASSES = {
   handleIcon: 'drag-icon',
   commandDrag: 'dx-command-drag',
   sortableWithoutHandle: 'dx-sortable-without-handle',
-  rowsView: 'rowsview'
+  rowsView: 'rowsview',
+  dragView: 'dragview'
 };
 exports.CLASSES = CLASSES;

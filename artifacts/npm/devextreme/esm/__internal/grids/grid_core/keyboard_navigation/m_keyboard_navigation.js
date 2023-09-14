@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/keyboard_navigation/m_keyboard_navigation.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1225,11 +1225,11 @@ export class KeyboardNavigationController extends modules.ViewController {
   }
   _isLastRow(rowIndex) {
     var dataController = this._dataController;
-    var visibleItems = dataController.items().filter(item => item.visible !== false);
     if (this._isVirtualRowRender()) {
       return rowIndex >= dataController.getMaxRowIndex();
     }
-    return rowIndex === visibleItems.length - 1;
+    var lastVisibleIndex = Math.max(...dataController.items().map((item, index) => item.visible !== false ? index : -1));
+    return rowIndex === lastVisibleIndex;
   }
   _isFirstValidCell(cellPosition) {
     var isFirstValidCell = false;

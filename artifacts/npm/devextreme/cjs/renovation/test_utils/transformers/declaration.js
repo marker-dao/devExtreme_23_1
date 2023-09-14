@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/test_utils/transformers/declaration.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,7 +31,9 @@ module.exports = {
       var result = compileCode(generator, src, {
         path: filename,
         dirname: path.dirname(filename)
-      }, true);
+      }, {
+        includeExtraComponents: true
+      });
       if (result && result[1]) {
         var componentName = (result[1].code.match(/export default class (\w+) extends/) || [])[1];
         if (!componentName) {
@@ -41,7 +43,7 @@ module.exports = {
         // eslint-disable-next-line spellcheck/spell-checker
         ts.transpileModule( // Vitik: jest.tsconfig set jsxFactory to h. Add import for support it.
         // In propduction jsx transpaled by babel-plugin-inferno
-        "import { createElement as h } from \"inferno-create-element\"; \n                        ".concat(result[0].code, "\n                ").concat(result[1].code.replace('export default', 'export ').replace(new RegExp("\\b".concat(componentName, "\\b"), 'g'), "".concat(componentName, "Class")).replace(new RegExp("import ".concat(componentName, "Component from\\s+\\S+")), "const ".concat(componentName, "Component = ").concat(componentName))), tsConfig).outputText, filename, config);
+        "import { createElement as h } from \"inferno-create-element\";\n                        ".concat(result[0].code, "\n                ").concat(result[1].code.replace('export default', 'export ').replace(new RegExp("\\b".concat(componentName, "\\b"), 'g'), "".concat(componentName, "Class")).replace(new RegExp("import ".concat(componentName, "Component from\\s+\\S+")), "const ".concat(componentName, "Component = ").concat(componentName))), tsConfig).outputText, filename, config);
       }
     }
     return jestTransformer.process(src, filename, config);

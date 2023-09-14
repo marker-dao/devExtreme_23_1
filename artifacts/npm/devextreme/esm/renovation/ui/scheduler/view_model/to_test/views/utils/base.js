@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/view_model/to_test/views/utils/base.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,9 +10,9 @@ import errors from '../../../../../../../ui/widget/ui.errors';
 import dateUtils from '../../../../../../../core/utils/date';
 import { isDefined } from '../../../../../../../core/utils/type';
 import dateLocalization from '../../../../../../../localization/date';
-import timeZoneUtils from '../../../../../../../ui/scheduler/utils.timeZone';
-import { VERTICAL_GROUP_COUNT_CLASSES } from '../../../../../../../ui/scheduler/classes';
-import { VIEWS } from '../../../../../../../ui/scheduler/constants';
+import timeZoneUtils from '../../../../../../../__internal/scheduler/m_utils_time_zone';
+import { VERTICAL_GROUP_COUNT_CLASSES } from '../../../../../../../__internal/scheduler/m_classes';
+import { VIEWS } from '../../../../../../../__internal/scheduler/m_constants';
 import { getGroupCount } from '../../../../../../../__internal/scheduler/resources/m_utils';
 import { isVerticalGroupingApplied } from '../../../../workspaces/utils';
 import { TIMELINE_VIEWS } from './const';

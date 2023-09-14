@@ -255,6 +255,9 @@ function isTheme(themeRegExp, themeName) {
 export function isMaterial(themeName) {
   return isTheme('material', themeName);
 }
+export function isFluent(themeName) {
+  return isTheme('fluent', themeName);
+}
 export function isGeneric(themeName) {
   return isTheme('generic', themeName);
 }

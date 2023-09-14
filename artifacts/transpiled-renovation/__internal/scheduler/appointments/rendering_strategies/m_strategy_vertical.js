@@ -10,9 +10,9 @@ var _math = require("../../../../core/utils/math");
 var _type = require("../../../../core/utils/type");
 var _getAppointmentTakesAllDay = require("../../../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay");
 var _getSkippedHoursInRange = _interopRequireDefault(require("../../../../renovation/ui/scheduler/view_model/appointments/utils/getSkippedHoursInRange"));
-var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
-var _expressionUtils = require("../../../../ui/scheduler/expressionUtils");
 var _utils = _interopRequireDefault(require("../../../../ui/scheduler/utils.timeZone"));
+var _m_appointment_adapter = require("../../m_appointment_adapter");
+var _m_expression_utils = require("../../m_expression_utils");
 var _m_strategy_base = _interopRequireDefault(require("./m_strategy_base"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -65,7 +65,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
     if (allDay) {
       return _BaseAppointmentsStra.prototype._getItemPosition.call(this, appointment);
     }
-    var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(appointment, this.dataAccessors, this.timeZoneCalculator);
+    var adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, this.dataAccessors, this.timeZoneCalculator);
     var isRecurring = !!adapter.recurrenceRule;
     var appointmentStartDate = adapter.calculateStartDate('toGrid');
     var appointmentEndDate = adapter.calculateEndDate('toGrid');
@@ -251,7 +251,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
     return this.cellWidth;
   };
   _proto.isAllDay = function isAllDay(appointmentData) {
-    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)((0, _appointmentAdapter.createAppointmentAdapter)(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.startDayHour, this.endDayHour, this.allDayPanelMode);
+    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)((0, _m_appointment_adapter.createAppointmentAdapter)(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.startDayHour, this.endDayHour, this.allDayPanelMode);
   };
   _proto._getAppointmentMaxWidth = function _getAppointmentMaxWidth() {
     return this.cellWidth - this._getAppointmentDefaultOffset();
@@ -275,7 +275,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
     }
     var startDate = position.info.appointment.startDate;
     var normalizedEndDate = position.info.appointment.normalizedEndDate;
-    var allDay = _expressionUtils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointment);
+    var allDay = _m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointment);
     var duration = this.getAppointmentDurationInMs(startDate, normalizedEndDate, allDay);
     var durationInMinutes = this._adjustDurationByDaylightDiff(duration, startDate, normalizedEndDate) / toMs('minute');
     var height = durationInMinutes * this._getMinuteHeight();

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/rendering_strategies/m_strategy_horizontal_month.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
-var _positionHelper = require("../../../../ui/scheduler/workspaces/helpers/positionHelper");
+var _m_position_helper = require("../../workspaces/helpers/m_position_helper");
 var _m_strategy_horizontal_month_line = _interopRequireDefault(require("./m_strategy_horizontal_month_line"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -123,7 +123,7 @@ var HorizontalMonthRenderingStrategy = /*#__PURE__*/function (_HorizontalMonthLi
     return this.rtlEnabled ? max : max - width;
   };
   _proto.getGroupWidth = function getGroupWidth(groupIndex) {
-    return (0, _positionHelper.getGroupWidth)(groupIndex, this.viewDataProvider, {
+    return (0, _m_position_helper.getGroupWidth)(groupIndex, this.viewDataProvider, {
       intervalCount: this.options.intervalCount,
       currentDate: this.options.currentDate,
       viewType: this.options.viewType,

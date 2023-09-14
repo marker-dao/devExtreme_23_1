@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/m_appointment_collection.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,12 +27,12 @@ import eventsEngine from '../../../events/core/events_engine';
 import { name as dblclickEvent } from '../../../events/double_click';
 import { addNamespace, isFakeClickEvent } from '../../../events/utils/index';
 import CollectionWidget from '../../../ui/collection/ui.collection_widget.edit';
-import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
-import { APPOINTMENT_DRAG_SOURCE_CLASS, APPOINTMENT_ITEM_CLASS } from '../../../ui/scheduler/classes';
-import { APPOINTMENT_SETTINGS_KEY } from '../../../ui/scheduler/constants';
-import { ExpressionUtils } from '../../../ui/scheduler/expressionUtils';
-import { getRecurrenceProcessor } from '../../../ui/scheduler/recurrence';
 import timeZoneUtils from '../../../ui/scheduler/utils.timeZone';
+import { createAppointmentAdapter } from '../m_appointment_adapter';
+import { APPOINTMENT_DRAG_SOURCE_CLASS, APPOINTMENT_ITEM_CLASS } from '../m_classes';
+import { APPOINTMENT_SETTINGS_KEY } from '../m_constants';
+import { ExpressionUtils } from '../m_expression_utils';
+import { getRecurrenceProcessor } from '../m_recurrence';
 import { getAppointmentTakesSeveralDays, sortAppointmentsByStartDate } from './data_provider/m_utils';
 import { AgendaAppointment, Appointment } from './m_appointment';
 import { createAgendaAppointmentLayout, createAppointmentLayout } from './m_appointment_layout';

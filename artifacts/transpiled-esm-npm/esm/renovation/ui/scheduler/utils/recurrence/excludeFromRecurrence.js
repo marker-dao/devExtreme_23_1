@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { createAppointmentAdapter } from '../../../../../ui/scheduler/appointmentAdapter';
+import { createAppointmentAdapter } from '../../../../../__internal/scheduler/m_appointment_adapter';
 import dateSerialization from '../../../../../core/utils/date_serialization';
 var FULL_DATE_FORMAT = 'yyyyMMddTHHmmss';
 var UTC_FULL_DATE_FORMAT = "".concat(FULL_DATE_FORMAT, "Z");

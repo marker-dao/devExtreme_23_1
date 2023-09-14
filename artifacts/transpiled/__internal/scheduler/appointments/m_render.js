@@ -5,8 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.renderAppointments = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
-var _utils = require("../../../ui/scheduler/utils");
 var _layout = _interopRequireDefault(require("../../../renovation/ui/scheduler/appointment/layout.j"));
+var _m_utils = require("../m_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // @ts-expect-error
 
@@ -16,7 +16,7 @@ var renderAppointments = function renderAppointments(options) {
     $dateTable = options.$dateTable,
     viewModel = options.viewModel;
   var container = getAppointmentsContainer($dateTable);
-  _utils.utils.renovation.renderComponent(instance, container, _layout.default, 'renovatedAppointments', viewModel);
+  _m_utils.utils.renovation.renderComponent(instance, container, _layout.default, 'renovatedAppointments', viewModel);
 };
 exports.renderAppointments = renderAppointments;
 var getAppointmentsContainer = function getAppointmentsContainer($dateTable) {

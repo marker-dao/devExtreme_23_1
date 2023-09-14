@@ -1,6 +1,6 @@
 import dateUtils from '../../../../core/utils/date';
 import getSkippedHoursInRange from '../../../../renovation/ui/scheduler/view_model/appointments/utils/getSkippedHoursInRange';
-import { ExpressionUtils } from '../../../../ui/scheduler/expressionUtils';
+import { ExpressionUtils } from '../../m_expression_utils';
 import BaseAppointmentsStrategy from './m_strategy_base';
 var DEFAULT_APPOINTMENT_HEIGHT = 60;
 var MIN_APPOINTMENT_HEIGHT = 35;

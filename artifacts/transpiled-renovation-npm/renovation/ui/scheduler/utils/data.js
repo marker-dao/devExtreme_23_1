@@ -2,7 +2,7 @@
 
 exports.resolveDataItems = exports.getPreparedDataItems = void 0;
 var _m_utils = require("../../../../__internal/scheduler/appointments/data_provider/m_utils");
-var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
+var _m_appointment_adapter = require("../../../../__internal/scheduler/m_appointment_adapter");
 var _type = require("../../../../core/utils/type");
 var RECURRENCE_FREQ = 'freq';
 var getPreparedDataItems = function getPreparedDataItems(dataItems, dataAccessors, cellDurationInMinutes, timeZoneCalculator) {
@@ -12,7 +12,7 @@ var getPreparedDataItems = function getPreparedDataItems(dataItems, dataAccessor
     var startDate = new Date(dataAccessors.getter.startDate(rawAppointment));
     var endDate = new Date(dataAccessors.getter.endDate(rawAppointment));
     (0, _m_utils.replaceWrongEndDate)(rawAppointment, startDate, endDate, cellDurationInMinutes, dataAccessors);
-    var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, dataAccessors, timeZoneCalculator);
+    var adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, dataAccessors, timeZoneCalculator);
     var comparableStartDate = adapter.startDate && adapter.calculateStartDate('toGrid');
     var comparableEndDate = adapter.endDate && adapter.calculateEndDate('toGrid');
     var regex = new RegExp(RECURRENCE_FREQ, 'gi');

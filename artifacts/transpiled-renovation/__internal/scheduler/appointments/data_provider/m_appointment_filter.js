@@ -13,8 +13,8 @@ var _getAppointmentTakesAllDay = require("../../../../renovation/ui/scheduler/ap
 var _hasResourceValue = require("../../../../renovation/ui/scheduler/resources/hasResourceValue");
 var _getDatesWithoutTime5 = _interopRequireDefault(require("../../../../renovation/ui/scheduler/utils/filtering/getDatesWithoutTime"));
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
-var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
-var _recurrence = require("../../../../ui/scheduler/recurrence");
+var _m_appointment_adapter = require("../../m_appointment_adapter");
+var _m_recurrence = require("../../m_recurrence");
 var _m_utils = require("../../resources/m_utils");
 var _m_utils2 = require("./m_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -74,7 +74,7 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
   _proto.hasAllDayAppointments = function hasAllDayAppointments(filteredItems, preparedItems) {
     var _this = this;
     var adapters = filteredItems.map(function (item) {
-      return (0, _appointmentAdapter.createAppointmentAdapter)(item, _this.dataAccessors, _this.timeZoneCalculator);
+      return (0, _m_appointment_adapter.createAppointmentAdapter)(item, _this.dataAccessors, _this.timeZoneCalculator);
     });
     var result = false;
     // @ts-expect-error
@@ -224,7 +224,7 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
     var result = true;
     var appointmentStartDate = appointment.startDate;
     var appointmentEndDate = appointment.endDate;
-    var recurrenceProcessor = (0, _recurrence.getRecurrenceProcessor)();
+    var recurrenceProcessor = (0, _m_recurrence.getRecurrenceProcessor)();
     if (allDay || (0, _m_utils2._appointmentPartInInterval)(appointmentStartDate, appointmentEndDate, startDayHour, endDayHour)) {
       var _getDatesWithoutTime3 = (0, _getDatesWithoutTime5.default)(min, max),
         _getDatesWithoutTime4 = _slicedToArray(_getDatesWithoutTime3, 2),

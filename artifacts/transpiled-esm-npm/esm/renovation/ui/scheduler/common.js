@@ -1,4 +1,4 @@
-import { utils } from '../../../ui/scheduler/utils';
+import { utils } from '../../../__internal/scheduler/m_utils';
 import { createExpressions } from '../../../__internal/scheduler/resources/m_utils';
 export var createDataAccessors = function createDataAccessors(dataAccessorsProps) {
   var forceIsoDateParsing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;

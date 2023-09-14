@@ -8,9 +8,9 @@ var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _extend = require("../../../../core/utils/extend");
 var _type = require("../../../../core/utils/type");
 var _getAppointmentTakesAllDay = require("../../../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay");
-var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
 var _utils = _interopRequireDefault(require("../../../../ui/scheduler/utils.timeZone"));
 var _themes = require("../../../../ui/themes");
+var _m_appointment_adapter = require("../../m_appointment_adapter");
 var _m_settings_generator = require("../m_settings_generator");
 var _m_appointments_positioning_strategy_adaptive = _interopRequireDefault(require("./m_appointments_positioning_strategy_adaptive"));
 var _m_appointments_positioning_strategy_base = _interopRequireDefault(require("./m_appointments_positioning_strategy_base"));
@@ -171,7 +171,7 @@ var BaseRenderingStrategy = /*#__PURE__*/function () {
     return this.getAppointmentSettingsGenerator(rawAppointment).create();
   };
   _proto.isAppointmentTakesAllDay = function isAppointmentTakesAllDay(rawAppointment) {
-    var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
+    var adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
     return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(adapter, this.viewStartDayHour, this.viewEndDayHour, this.allDayPanelMode);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

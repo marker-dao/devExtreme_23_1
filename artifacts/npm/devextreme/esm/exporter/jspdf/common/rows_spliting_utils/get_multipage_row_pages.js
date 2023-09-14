@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/exporter/jspdf/common/rows_spliting_utils/get_multipage_row_pages.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/

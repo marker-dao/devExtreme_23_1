@@ -16,10 +16,10 @@ var _index = require("../../../events/utils/index");
 var _date = _interopRequireDefault(require("../../../localization/date"));
 var _message = _interopRequireDefault(require("../../../localization/message"));
 var _resizable = _interopRequireDefault(require("../../../ui/resizable"));
-var _classes = require("../../../ui/scheduler/classes");
-var _expressionUtils = require("../../../ui/scheduler/expressionUtils");
-var _recurrence = require("../../../ui/scheduler/recurrence");
 var _ui = require("../../../ui/tooltip/ui.tooltip");
+var _m_classes = require("../m_classes");
+var _m_expression_utils = require("../m_expression_utils");
+var _m_recurrence = require("../m_recurrence");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -136,7 +136,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     this._renderDragSourceClass();
     this._renderDirection();
     this.$element().data('dxAppointmentStartDate', this.option('startDate'));
-    var text = _expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'text', this.rawAppointment);
+    var text = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'text', this.rawAppointment);
     this.$element().attr('title', text);
     this.$element().attr('role', 'button');
     this._renderRecurrenceClass();
@@ -170,7 +170,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
   _proto._renderEmptyClass = function _renderEmptyClass() {
     var geometry = this.option('geometry');
     if (geometry.empty || this.option('isCompact')) {
-      this.$element().addClass(_classes.EMPTY_APPOINTMENT_CLASS);
+      this.$element().addClass(_m_classes.EMPTY_APPOINTMENT_CLASS);
     }
   };
   _proto._renderReducedAppointment = function _renderReducedAppointment() {
@@ -178,11 +178,11 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     if (!reducedPart) {
       return;
     }
-    this.$element().toggleClass(_classes.REDUCED_APPOINTMENT_CLASS, true).toggleClass(_classes.REDUCED_APPOINTMENT_PARTS_CLASSES[reducedPart], true);
+    this.$element().toggleClass(_m_classes.REDUCED_APPOINTMENT_CLASS, true).toggleClass(_m_classes.REDUCED_APPOINTMENT_PARTS_CLASSES[reducedPart], true);
     this._renderAppointmentReducedIcon();
   };
   _proto._renderAppointmentReducedIcon = function _renderAppointmentReducedIcon() {
-    var $icon = (0, _renderer.default)('<div>').addClass(_classes.REDUCED_APPOINTMENT_ICON).appendTo(this.$element());
+    var $icon = (0, _renderer.default)('<div>').addClass(_m_classes.REDUCED_APPOINTMENT_ICON).appendTo(this.$element());
     var endDate = this._getEndDate();
     var tooltipLabel = _message.default.format('dxScheduler-editorLabelEndDate');
     var tooltipText = [tooltipLabel, ': ', _date.default.format(endDate, 'monthAndDay'), ', ', _date.default.format(endDate, 'year')].join('');
@@ -201,26 +201,26 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     });
   };
   _proto._getEndDate = function _getEndDate() {
-    var result = _expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'endDate', this.rawAppointment);
+    var result = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'endDate', this.rawAppointment);
     if (result) {
       return new Date(result);
     }
     return result;
   };
   _proto._renderAllDayClass = function _renderAllDayClass() {
-    this.$element().toggleClass(_classes.ALL_DAY_APPOINTMENT_CLASS, !!this.option('allDay'));
+    this.$element().toggleClass(_m_classes.ALL_DAY_APPOINTMENT_CLASS, !!this.option('allDay'));
   };
   _proto._renderDragSourceClass = function _renderDragSourceClass() {
-    this.$element().toggleClass(_classes.APPOINTMENT_DRAG_SOURCE_CLASS, !!this.option('isDragSource'));
+    this.$element().toggleClass(_m_classes.APPOINTMENT_DRAG_SOURCE_CLASS, !!this.option('isDragSource'));
   };
   _proto._renderRecurrenceClass = function _renderRecurrenceClass() {
-    var rule = _expressionUtils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceRule', this.rawAppointment);
-    if ((0, _recurrence.getRecurrenceProcessor)().isValidRecurrenceRule(rule)) {
-      this.$element().addClass(_classes.RECURRENCE_APPOINTMENT_CLASS);
+    var rule = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceRule', this.rawAppointment);
+    if ((0, _m_recurrence.getRecurrenceProcessor)().isValidRecurrenceRule(rule)) {
+      this.$element().addClass(_m_classes.RECURRENCE_APPOINTMENT_CLASS);
     }
   };
   _proto._renderDirection = function _renderDirection() {
-    this.$element().addClass(_classes.DIRECTION_APPOINTMENT_CLASSES[this.option('direction')]);
+    this.$element().addClass(_m_classes.DIRECTION_APPOINTMENT_CLASSES[this.option('direction')]);
   };
   _proto._createResizingConfig = function _createResizingConfig() {
     var config = this.option('direction') === 'vertical' ? this._getVerticalResizingRule() : this._getHorizontalResizingRule();
@@ -267,9 +267,9 @@ var AgendaAppointment = /*#__PURE__*/function (_Appointment) {
   };
   _proto2._renderResourceList = function _renderResourceList(container, list) {
     list.forEach(function (item) {
-      var itemContainer = (0, _renderer.default)('<div>').addClass(_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST_ITEM).appendTo(container);
+      var itemContainer = (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST_ITEM).appendTo(container);
       (0, _renderer.default)('<div>').text("".concat(item.label, ":")).appendTo(itemContainer);
-      (0, _renderer.default)('<div>').addClass(_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST_ITEM_VALUE).text(item.values.join(', ')).appendTo(itemContainer);
+      (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST_ITEM_VALUE).text(item.values.join(', ')).appendTo(itemContainer);
     });
   };
   _proto2._render = function _render() {
@@ -277,15 +277,15 @@ var AgendaAppointment = /*#__PURE__*/function (_Appointment) {
     _Appointment.prototype._render.call(this);
     var createPlainResourceListAsync = this.option('createPlainResourceListAsync');
     createPlainResourceListAsync(this.rawAppointment).done(function (list) {
-      var parent = _this2.$element().find(".".concat(_classes.APPOINTMENT_CONTENT_CLASSES.APPOINTMENT_CONTENT_DETAILS));
-      var container = (0, _renderer.default)('<div>').addClass(_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST).appendTo(parent);
+      var parent = _this2.$element().find(".".concat(_m_classes.APPOINTMENT_CONTENT_CLASSES.APPOINTMENT_CONTENT_DETAILS));
+      var container = (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST).appendTo(parent);
       _this2._renderResourceList(container, list);
     });
   };
   _createClass(AgendaAppointment, [{
     key: "coloredElement",
     get: function get() {
-      return this.$element().find(".".concat(_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_MARKER));
+      return this.$element().find(".".concat(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_MARKER));
     }
   }]);
   return AgendaAppointment;

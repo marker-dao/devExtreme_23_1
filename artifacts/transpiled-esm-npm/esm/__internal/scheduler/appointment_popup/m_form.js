@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import '../../../ui/scheduler/recurrence_editor';
+import '../m_recurrence_editor';
 import '../../../ui/text_area';
 import '../../../ui/tag_box';
 import '../../../ui/switch';
@@ -13,7 +13,7 @@ import DataSource from '../../../data/data_source';
 import messageLocalization from '../../../localization/message';
 import { Semaphore } from '../../../renovation/ui/scheduler/utils/semaphore/semaphore';
 import Form from '../../../ui/form';
-import { createAppointmentAdapter } from '../../../ui/scheduler/appointmentAdapter';
+import { createAppointmentAdapter } from '../m_appointment_adapter';
 import timeZoneDataUtils from '../timezones/m_utils_timezones_data';
 var SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
 export var APPOINTMENT_FORM_GROUP_NAMES = {

@@ -8,6 +8,7 @@ exports.init = init;
 exports.initialized = initialized;
 exports.isCompact = isCompact;
 exports.isDark = isDark;
+exports.isFluent = isFluent;
 exports.isGeneric = isGeneric;
 exports.isMaterial = isMaterial;
 exports.isPendingThemeLoaded = isPendingThemeLoaded;
@@ -276,6 +277,9 @@ function isTheme(themeRegExp, themeName) {
 }
 function isMaterial(themeName) {
   return isTheme('material', themeName);
+}
+function isFluent(themeName) {
+  return isTheme('fluent', themeName);
 }
 function isGeneric(themeName) {
   return isTheme('generic', themeName);

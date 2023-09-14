@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _iterator = require("../../../../core/utils/iterator");
-var _appointmentAdapter = require("../../../../ui/scheduler/appointmentAdapter");
-var _expressionUtils = require("../../../../ui/scheduler/expressionUtils");
+var _m_appointment_adapter = require("../../m_appointment_adapter");
+var _m_expression_utils = require("../../m_expression_utils");
 var _m_utils = require("../../resources/m_utils");
 var _m_utils2 = require("../data_provider/m_utils");
 var _m_strategy_base = _interopRequireDefault(require("./m_strategy_base"));
@@ -145,7 +145,7 @@ var AgendaRenderingStrategy = /*#__PURE__*/function (_BaseRenderingStrateg) {
   // From subscribe
   ;
   _proto.replaceWrongAppointmentEndDate = function replaceWrongAppointmentEndDate(rawAppointment, startDate, endDate) {
-    var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
+    var adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
     (0, _m_utils2.replaceWrongEndDate)(adapter, startDate, endDate, this.cellDuration, this.dataAccessors);
   }
   // TODO: get rid of an extra 'needClearSettings' argument
@@ -167,8 +167,8 @@ var AgendaRenderingStrategy = /*#__PURE__*/function (_BaseRenderingStrateg) {
         return true;
       }
       (0, _iterator.each)(currentAppointments, function (index, appointment) {
-        var startDate = _expressionUtils.ExpressionUtils.getField(_this2.dataAccessors, 'startDate', appointment);
-        var endDate = _expressionUtils.ExpressionUtils.getField(_this2.dataAccessors, 'endDate', appointment);
+        var startDate = _m_expression_utils.ExpressionUtils.getField(_this2.dataAccessors, 'startDate', appointment);
+        var endDate = _m_expression_utils.ExpressionUtils.getField(_this2.dataAccessors, 'endDate', appointment);
         _this2.replaceWrongAppointmentEndDate(appointment, startDate, endDate);
         needClearSettings && delete appointment.settings;
         var result = _this2.instance.getAppointmentsInstance()._processRecurrenceAppointment(appointment, index, false);
@@ -186,9 +186,9 @@ var AgendaRenderingStrategy = /*#__PURE__*/function (_BaseRenderingStrateg) {
         }
         for (var j = 0; j < appointmentCount; j++) {
           var appointmentData = currentAppointments[j].settings || currentAppointments[j];
-          var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(currentAppointments[j], _this2.dataAccessors, _this2.timeZoneCalculator);
+          var adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(currentAppointments[j], _this2.dataAccessors, _this2.timeZoneCalculator);
           var appointmentIsLong = (0, _m_utils2.getAppointmentTakesSeveralDays)(adapter);
-          var appointmentIsRecurrence = _expressionUtils.ExpressionUtils.getField(_this2.dataAccessors, 'recurrenceRule', currentAppointments[j]);
+          var appointmentIsRecurrence = _m_expression_utils.ExpressionUtils.getField(_this2.dataAccessors, 'recurrenceRule', currentAppointments[j]);
           if (_this2.instance.fire('dayHasAppointment', day, appointmentData, true) || !appointmentIsRecurrence && appointmentIsLong && _this2.instance.fire('dayHasAppointment', day, currentAppointments[j], true)) {
             groupResult[i] += 1;
           }

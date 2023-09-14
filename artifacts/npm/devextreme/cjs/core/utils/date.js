@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/date.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ var _inflector = require("./inflector");
 var _index = require("../../renovation/ui/common/utils/date/index");
 function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct.bind(); } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* globals Intl */
 var DAYS_IN_WEEK = 7;
 var THURSDAY_WEEK_NUMBER = 4;
 var SUNDAY_WEEK_NUMBER = 7;
@@ -606,6 +606,10 @@ var createDateWithFullYear = function createDateWithFullYear(year) {
   result.setFullYear(year);
   return result;
 };
+var getMachineTimezoneName = function getMachineTimezoneName() {
+  var hasIntl = typeof Intl !== 'undefined';
+  return hasIntl ? Intl.DateTimeFormat().resolvedOptions().timeZone : null;
+};
 var dateUtils = {
   dateUnitIntervals: dateUnitIntervals,
   convertMillisecondsToDateUnits: convertMillisecondsToDateUnits,
@@ -660,7 +664,8 @@ var dateUtils = {
   makeDate: makeDate,
   getDatesInterval: getDatesInterval,
   getDatesOfInterval: getDatesOfInterval,
-  createDateWithFullYear: createDateWithFullYear
+  createDateWithFullYear: createDateWithFullYear,
+  getMachineTimezoneName: getMachineTimezoneName
 };
 dateUtils.sameView = function (view, date1, date2) {
   return dateUtils[(0, _inflector.camelize)('same ' + view)](date1, date2);

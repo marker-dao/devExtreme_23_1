@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointment_popup/m_form.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.AppointmentForm = exports.APPOINTMENT_FORM_GROUP_NAMES = void 0;
-require("../../../ui/scheduler/recurrence_editor");
+require("../m_recurrence_editor");
 require("../../../ui/text_area");
 require("../../../ui/tag_box");
 require("../../../ui/switch");
@@ -26,7 +26,7 @@ var _data_source = _interopRequireDefault(require("../../../data/data_source"));
 var _message = _interopRequireDefault(require("../../../localization/message"));
 var _semaphore = require("../../../renovation/ui/scheduler/utils/semaphore/semaphore");
 var _form = _interopRequireDefault(require("../../../ui/form"));
-var _appointmentAdapter = require("../../../ui/scheduler/appointmentAdapter");
+var _m_appointment_adapter = require("../m_appointment_adapter");
 var _m_utils_timezones_data = _interopRequireDefault(require("../timezones/m_utils_timezones_data"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -161,7 +161,7 @@ var AppointmentForm = /*#__PURE__*/function () {
     });
   };
   _proto._createAppointmentAdapter = function _createAppointmentAdapter(rawAppointment) {
-    return (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, this.scheduler.getDataAccessors());
+    return (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.scheduler.getDataAccessors());
   };
   _proto._dateBoxValueChanged = function _dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
     validateAppointmentFormDate(args.component, args.value, args.previousValue);

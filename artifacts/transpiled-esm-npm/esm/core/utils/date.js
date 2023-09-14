@@ -1,3 +1,4 @@
+/* globals Intl */
 import { isObject, isString, isDate, isDefined, isNumeric } from './type';
 import { adjust } from './math';
 import { each } from './iterator';
@@ -594,6 +595,10 @@ var createDateWithFullYear = function createDateWithFullYear(year) {
   result.setFullYear(year);
   return result;
 };
+var getMachineTimezoneName = () => {
+  var hasIntl = typeof Intl !== 'undefined';
+  return hasIntl ? Intl.DateTimeFormat().resolvedOptions().timeZone : null;
+};
 var dateUtils = {
   dateUnitIntervals: dateUnitIntervals,
   convertMillisecondsToDateUnits: convertMillisecondsToDateUnits,
@@ -648,7 +653,8 @@ var dateUtils = {
   makeDate: makeDate,
   getDatesInterval: getDatesInterval,
   getDatesOfInterval: getDatesOfInterval,
-  createDateWithFullYear: createDateWithFullYear
+  createDateWithFullYear: createDateWithFullYear,
+  getMachineTimezoneName: getMachineTimezoneName
 };
 dateUtils.sameView = function (view, date1, date2) {
   return dateUtils[camelize('same ' + view)](date1, date2);

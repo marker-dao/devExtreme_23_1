@@ -291,9 +291,7 @@ var DropDownEditor = _text_box.default.inherit({
     promise.always(this._renderField.bind(this));
   },
   _renderTemplatedField: function _renderTemplatedField(fieldTemplate, data) {
-    var _this$_fieldRenderQue,
-      _this = this;
-    this._fieldRenderQueueLength = ((_this$_fieldRenderQue = this._fieldRenderQueueLength) !== null && _this$_fieldRenderQue !== void 0 ? _this$_fieldRenderQue : 0) + 1;
+    var _this = this;
     var isFocused = (0, _selectors.focused)(this._input());
     var $container = this._$container;
     this._detachKeyboardEvents();
@@ -306,8 +304,8 @@ var DropDownEditor = _text_box.default.inherit({
       model: data,
       container: (0, _element.getPublicElement)($templateWrapper),
       onRendered: function onRendered() {
-        _this._fieldRenderQueueLength--;
-        if (_this._fieldRenderQueueLength !== 0) {
+        var isRenderedInRoot = !!_this.$element().find($templateWrapper).length;
+        if (!isRenderedInRoot) {
           return;
         }
         var $input = _this._input();

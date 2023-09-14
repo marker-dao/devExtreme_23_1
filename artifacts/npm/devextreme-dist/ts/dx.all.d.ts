@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.all.d.ts)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1772,7 +1772,7 @@ declare module DevExpress.common {
   };
   export type SubmenuShowMode = 'onClick' | 'onHover';
   export type TabsIconPosition = 'top' | 'end' | 'bottom' | 'start';
-  export type TabsStylingMode = 'primary' | 'secondary';
+  export type TabsStyle = 'primary' | 'secondary';
   export type TextBoxPredefinedButton = 'clear';
 
   /**
@@ -4198,7 +4198,7 @@ declare module DevExpress.common.grids {
     /**
      * [descr:RowInsertingInfo.cancel]
      */
-    cancel: boolean | PromiseLike<void>;
+    cancel: boolean | PromiseLike<boolean> | PromiseLike<void>;
   };
   /**
    * [descr:RowKeyInfo]
@@ -4244,7 +4244,7 @@ declare module DevExpress.common.grids {
     /**
      * [descr:RowRemovingInfo.cancel]
      */
-    cancel: boolean | PromiseLike<void>;
+    cancel: boolean | PromiseLike<boolean> | PromiseLike<void>;
   }
   /**
    * [descr:RowUpdatedInfo]
@@ -4284,7 +4284,7 @@ declare module DevExpress.common.grids {
     /**
      * [descr:RowUpdatingInfo.cancel]
      */
-    cancel: boolean | PromiseLike<void>;
+    cancel: boolean | PromiseLike<boolean> | PromiseLike<void>;
   }
   /**
    * [descr:RowValidatingInfo]
@@ -9088,11 +9088,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxCalendarOptions.value]
      */
-    value?: Date | number | string;
-    /**
-     * [descr:dxCalendarOptions.values]
-     */
-    values?: Array<Date | number | string>;
+    value?: Date | number | string | Array<Date | number | string>;
     /**
      * [descr:dxCalendarOptions.zoomLevel]
      */
@@ -25589,7 +25585,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxTabPanelOptions.stylingMode]
      */
-    stylingMode?: DevExpress.common.TabsStylingMode;
+    stylingMode?: DevExpress.common.TabsStyle;
     /**
      * [descr:dxTabPanelOptions.swipeEnabled]
      */
@@ -25767,7 +25763,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxTabsOptions.stylingMode]
      */
-    stylingMode?: DevExpress.common.TabsStylingMode;
+    stylingMode?: DevExpress.common.TabsStyle;
   }
   /**
    * @deprecated Use Item instead

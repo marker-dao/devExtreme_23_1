@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
-import { getGroupWidth } from '../../../../ui/scheduler/workspaces/helpers/positionHelper';
+import { getGroupWidth } from '../../workspaces/helpers/m_position_helper';
 import HorizontalMonthLineRenderingStrategy from './m_strategy_horizontal_month_line';
 var MONTH_APPOINTMENT_HEIGHT_RATIO = 0.6;
 var MONTH_APPOINTMENT_MIN_OFFSET = 26;

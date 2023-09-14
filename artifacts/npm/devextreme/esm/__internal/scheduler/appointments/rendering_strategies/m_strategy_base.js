@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_base.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,9 +11,9 @@ import dateUtils from '../../../../core/utils/date';
 import { extend } from '../../../../core/utils/extend';
 import { isNumeric, isObject } from '../../../../core/utils/type';
 import { getAppointmentTakesAllDay } from '../../../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay';
-import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
 import timeZoneUtils from '../../../../ui/scheduler/utils.timeZone';
 import { current as currentTheme } from '../../../../ui/themes';
+import { createAppointmentAdapter } from '../../m_appointment_adapter';
 import { AppointmentSettingsGenerator } from '../m_settings_generator';
 import AdaptivePositioningStrategy from './m_appointments_positioning_strategy_adaptive';
 import AppointmentPositioningStrategy from './m_appointments_positioning_strategy_base';

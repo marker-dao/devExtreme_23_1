@@ -545,6 +545,9 @@ var Tabs = CollectionWidget.inherit({
       case 'iconPosition':
         {
           this._toggleIconPositionClass();
+          if (!this._isServerSide()) {
+            this._dimensionChanged();
+          }
           break;
         }
       case 'stylingMode':

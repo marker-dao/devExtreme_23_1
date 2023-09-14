@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/row_dragging/m_row_dragging.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -205,6 +205,7 @@ var RowDraggingExtender = {
       var gridOptions = _this3._getDraggableGridOptions(row);
       _this3._createComponent($dataGridContainer, _this3.component.NAME, gridOptions);
       $dataGridContainer.find('.dx-gridbase-container').children(":not(.".concat(_this3.addWidgetPrefix(_const.CLASSES.rowsView), ")")).hide();
+      $dataGridContainer.addClass(_this3.addWidgetPrefix(_const.CLASSES.dragView));
       return $dataGridContainer;
     };
   },

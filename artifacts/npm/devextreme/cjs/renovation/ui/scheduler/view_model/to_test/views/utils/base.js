@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/view_model/to_test/views/utils/base.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,11 +13,11 @@ var _ui = _interopRequireDefault(require("../../../../../../../ui/widget/ui.erro
 var _date = _interopRequireDefault(require("../../../../../../../core/utils/date"));
 var _type = require("../../../../../../../core/utils/type");
 var _date2 = _interopRequireDefault(require("../../../../../../../localization/date"));
-var _utils = _interopRequireDefault(require("../../../../../../../ui/scheduler/utils.timeZone"));
-var _classes = require("../../../../../../../ui/scheduler/classes");
-var _constants = require("../../../../../../../ui/scheduler/constants");
+var _m_utils_time_zone = _interopRequireDefault(require("../../../../../../../__internal/scheduler/m_utils_time_zone"));
+var _m_classes = require("../../../../../../../__internal/scheduler/m_classes");
+var _m_constants = require("../../../../../../../__internal/scheduler/m_constants");
 var _m_utils = require("../../../../../../../__internal/scheduler/resources/m_utils");
-var _utils2 = require("../../../../workspaces/utils");
+var _utils = require("../../../../workspaces/utils");
 var _const = require("./const");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var isDateInRange = function isDateInRange(date, startDate, endDate, diff) {
@@ -60,7 +60,7 @@ var calculateCellIndex = function calculateCellIndex(rowIndex, columnIndex, rowC
 };
 exports.calculateCellIndex = calculateCellIndex;
 var getStartViewDateWithoutDST = function getStartViewDateWithoutDST(startViewDate, startDayHour) {
-  var newStartViewDate = _utils.default.getDateWithoutTimezoneChange(startViewDate);
+  var newStartViewDate = _m_utils_time_zone.default.getDateWithoutTimezoneChange(startViewDate);
   newStartViewDate.setHours(startDayHour);
   return newStartViewDate;
 };
@@ -78,7 +78,7 @@ var validateDayHours = function validateDayHours(startDayHour, endDayHour) {
 exports.validateDayHours = validateDayHours;
 var getStartViewDateTimeOffset = function getStartViewDateTimeOffset(startViewDate, startDayHour) {
   var validStartDayHour = Math.floor(startDayHour);
-  var isDSTChange = _utils.default.isTimezoneChangeInDate(startViewDate);
+  var isDSTChange = _m_utils_time_zone.default.isTimezoneChangeInDate(startViewDate);
   if (isDSTChange && validStartDayHour !== startViewDate.getHours()) {
     return _date.default.dateToMilliseconds('hour');
   }
@@ -103,18 +103,18 @@ exports.getToday = getToday;
 var getVerticalGroupCountClass = function getVerticalGroupCountClass(groups) {
   switch (groups === null || groups === void 0 ? void 0 : groups.length) {
     case 1:
-      return _classes.VERTICAL_GROUP_COUNT_CLASSES[0];
+      return _m_classes.VERTICAL_GROUP_COUNT_CLASSES[0];
     case 2:
-      return _classes.VERTICAL_GROUP_COUNT_CLASSES[1];
+      return _m_classes.VERTICAL_GROUP_COUNT_CLASSES[1];
     case 3:
-      return _classes.VERTICAL_GROUP_COUNT_CLASSES[2];
+      return _m_classes.VERTICAL_GROUP_COUNT_CLASSES[2];
     default:
       return undefined;
   }
 };
 exports.getVerticalGroupCountClass = getVerticalGroupCountClass;
 var isDateAndTimeView = function isDateAndTimeView(viewType) {
-  return viewType !== _constants.VIEWS.TIMELINE_MONTH && viewType !== _constants.VIEWS.MONTH;
+  return viewType !== _m_constants.VIEWS.TIMELINE_MONTH && viewType !== _m_constants.VIEWS.MONTH;
 };
 exports.isDateAndTimeView = isDateAndTimeView;
 var isTimelineView = function isTimelineView(viewType) {
@@ -123,12 +123,12 @@ var isTimelineView = function isTimelineView(viewType) {
 exports.isTimelineView = isTimelineView;
 var getHorizontalGroupCount = function getHorizontalGroupCount(groups, groupOrientation) {
   var groupCount = (0, _m_utils.getGroupCount)(groups) || 1;
-  var isVerticalGrouping = (0, _utils2.isVerticalGroupingApplied)(groups, groupOrientation);
+  var isVerticalGrouping = (0, _utils.isVerticalGroupingApplied)(groups, groupOrientation);
   return isVerticalGrouping ? 1 : groupCount;
 };
 exports.getHorizontalGroupCount = getHorizontalGroupCount;
 var calculateIsGroupedAllDayPanel = function calculateIsGroupedAllDayPanel(groups, groupOrientation, isAllDayPanelVisible) {
-  return (0, _utils2.isVerticalGroupingApplied)(groups, groupOrientation) && isAllDayPanelVisible;
+  return (0, _utils.isVerticalGroupingApplied)(groups, groupOrientation) && isAllDayPanelVisible;
 };
 exports.calculateIsGroupedAllDayPanel = calculateIsGroupedAllDayPanel;
 var calculateDayDuration = function calculateDayDuration(startDayHour, endDayHour) {
@@ -137,11 +137,11 @@ var calculateDayDuration = function calculateDayDuration(startDayHour, endDayHou
 exports.calculateDayDuration = calculateDayDuration;
 var isHorizontalView = function isHorizontalView(viewType) {
   switch (viewType) {
-    case _constants.VIEWS.TIMELINE_DAY:
-    case _constants.VIEWS.TIMELINE_WEEK:
-    case _constants.VIEWS.TIMELINE_WORK_WEEK:
-    case _constants.VIEWS.TIMELINE_MONTH:
-    case _constants.VIEWS.MONTH:
+    case _m_constants.VIEWS.TIMELINE_DAY:
+    case _m_constants.VIEWS.TIMELINE_WEEK:
+    case _m_constants.VIEWS.TIMELINE_WORK_WEEK:
+    case _m_constants.VIEWS.TIMELINE_MONTH:
+    case _m_constants.VIEWS.MONTH:
       return true;
     default:
       return false;

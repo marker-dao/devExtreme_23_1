@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/m_appointment.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,10 +19,10 @@ import { addNamespace } from '../../../events/utils/index';
 import dateLocalization from '../../../localization/date';
 import messageLocalization from '../../../localization/message';
 import Resizable from '../../../ui/resizable';
-import { ALL_DAY_APPOINTMENT_CLASS, APPOINTMENT_CONTENT_CLASSES, APPOINTMENT_DRAG_SOURCE_CLASS, DIRECTION_APPOINTMENT_CLASSES, EMPTY_APPOINTMENT_CLASS, RECURRENCE_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_ICON, REDUCED_APPOINTMENT_PARTS_CLASSES } from '../../../ui/scheduler/classes';
-import { ExpressionUtils } from '../../../ui/scheduler/expressionUtils';
-import { getRecurrenceProcessor } from '../../../ui/scheduler/recurrence';
 import { hide, show } from '../../../ui/tooltip/ui.tooltip';
+import { ALL_DAY_APPOINTMENT_CLASS, APPOINTMENT_CONTENT_CLASSES, APPOINTMENT_DRAG_SOURCE_CLASS, DIRECTION_APPOINTMENT_CLASSES, EMPTY_APPOINTMENT_CLASS, RECURRENCE_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_ICON, REDUCED_APPOINTMENT_PARTS_CLASSES } from '../m_classes';
+import { ExpressionUtils } from '../m_expression_utils';
+import { getRecurrenceProcessor } from '../m_recurrence';
 var DEFAULT_HORIZONTAL_HANDLES = 'left right';
 var DEFAULT_VERTICAL_HANDLES = 'top bottom';
 var REDUCED_APPOINTMENT_POINTERENTER_EVENT_NAME = addNamespace(pointerEvents.enter, 'dxSchedulerAppointment');

@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/core/utils/date.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+/* globals Intl */
 import { isObject, isString, isDate, isDefined, isNumeric } from './type';
 import { adjust } from './math';
 import { each } from './iterator';
@@ -602,6 +603,10 @@ var createDateWithFullYear = function createDateWithFullYear(year) {
   result.setFullYear(year);
   return result;
 };
+var getMachineTimezoneName = () => {
+  var hasIntl = typeof Intl !== 'undefined';
+  return hasIntl ? Intl.DateTimeFormat().resolvedOptions().timeZone : null;
+};
 var dateUtils = {
   dateUnitIntervals: dateUnitIntervals,
   convertMillisecondsToDateUnits: convertMillisecondsToDateUnits,
@@ -656,7 +661,8 @@ var dateUtils = {
   makeDate: makeDate,
   getDatesInterval: getDatesInterval,
   getDatesOfInterval: getDatesOfInterval,
-  createDateWithFullYear: createDateWithFullYear
+  createDateWithFullYear: createDateWithFullYear,
+  getMachineTimezoneName: getMachineTimezoneName
 };
 dateUtils.sameView = function (view, date1, date2) {
   return dateUtils[camelize('same ' + view)](date1, date2);

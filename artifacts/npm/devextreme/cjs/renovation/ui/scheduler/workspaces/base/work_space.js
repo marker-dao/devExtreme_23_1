@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/workspaces/base/work_space.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,19 +14,19 @@ var _inferno2 = require("@devextreme/runtime/inferno");
 var _subscribe_to_event = require("../../../../utils/subscribe_to_event");
 var _combine_classes = require("../../../../utils/combine_classes");
 var _ordinary_layout = require("./ordinary_layout");
-var _uiScheduler = require("../../../../../ui/scheduler/workspaces/ui.scheduler.virtual_scrolling");
-var _view_data_provider = _interopRequireDefault(require("../../../../../ui/scheduler/workspaces/view_model/view_data_provider"));
+var _m_virtual_scrolling = require("../../../../../__internal/scheduler/workspaces/m_virtual_scrolling");
+var _m_view_data_provider = _interopRequireDefault(require("../../../../../__internal/scheduler/workspaces/view_model/m_view_data_provider"));
 var _utils = require("./utils");
 var _props = require("../props");
 var _work_space_config = require("./work_space_config");
 var _utils2 = require("../utils");
 var _cross_scrolling_layout = require("./cross_scrolling_layout");
-var _utils3 = require("../../../../../ui/scheduler/workspaces/view_model/utils");
+var _m_utils = require("../../../../../__internal/scheduler/workspaces/view_model/m_utils");
 var _base = require("../../view_model/to_test/views/utils/base");
-var _date_header_data_generator = require("../../../../../ui/scheduler/workspaces/view_model/date_header_data_generator");
-var _time_panel_data_generator = require("../../../../../ui/scheduler/workspaces/view_model/time_panel_data_generator");
-var _cells_selection_controller = require("../../../../../ui/scheduler/workspaces/cells_selection_controller");
-var _utils4 = require("../../view_model/group_panel/utils");
+var _m_date_header_data_generator = require("../../../../../__internal/scheduler/workspaces/view_model/m_date_header_data_generator");
+var _m_time_panel_data_generator = require("../../../../../__internal/scheduler/workspaces/view_model/m_time_panel_data_generator");
+var _m_cells_selection_controller = require("../../../../../__internal/scheduler/workspaces/m_cells_selection_controller");
+var _utils3 = require("../../view_model/group_panel/utils");
 var _window = require("../../../../../core/utils/window");
 var _dom_adapter = _interopRequireDefault(require("../../../../../core/dom_adapter"));
 var _config_context = require("../../../../common/config_context");
@@ -232,7 +232,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
       groupPanelHeight: undefined,
       headerEmptyCellWidth: undefined,
       tablesWidth: undefined,
-      virtualScrolling: new _uiScheduler.VirtualScrollingDispatcher(),
+      virtualScrolling: new _m_virtual_scrolling.VirtualScrollingDispatcher(),
       virtualScrollingData: undefined,
       cellsSelectionState: null,
       isPointerDown: false
@@ -578,7 +578,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
     if (cell && this.state.isPointerDown) {
       e.preventDefault();
       e.stopPropagation();
-      var cellsSelectionController = new _cells_selection_controller.CellsSelectionController();
+      var cellsSelectionController = new _m_cells_selection_controller.CellsSelectionController();
       var cellIndices = (0, _utils.getCellIndices)(cell);
       var isAllDay = (0, _utils.isCellAllDay)(cell);
       var cellData = this.viewDataProvider.getCellData(cellIndices.rowIndex, cellIndices.columnIndex, isAllDay);
@@ -772,7 +772,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
         return this.__getterCache['viewDataGenerator'];
       }
       return this.__getterCache['viewDataGenerator'] = function () {
-        return (0, _utils3.getViewDataGeneratorByViewType)(_this10.props.type);
+        return (0, _m_utils.getViewDataGeneratorByViewType)(_this10.props.type);
       }();
     }
   }, {
@@ -783,7 +783,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
         return this.__getterCache['dateHeaderDataGenerator'];
       }
       return this.__getterCache['dateHeaderDataGenerator'] = function () {
-        return new _date_header_data_generator.DateHeaderDataGenerator(_this11.viewDataGenerator);
+        return new _m_date_header_data_generator.DateHeaderDataGenerator(_this11.viewDataGenerator);
       }();
     }
   }, {
@@ -794,7 +794,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
         return this.__getterCache['timePanelDataGenerator'];
       }
       return this.__getterCache['timePanelDataGenerator'] = function () {
-        return new _time_panel_data_generator.TimePanelDataGenerator(_this12.viewDataGenerator);
+        return new _m_time_panel_data_generator.TimePanelDataGenerator(_this12.viewDataGenerator);
       }();
     }
   }, {
@@ -1048,7 +1048,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
           startDate = _this22$props.startDate,
           startDayHour = _this22$props.startDayHour,
           type = _this22$props.type;
-        var viewDataProvider = new _view_data_provider.default(type);
+        var viewDataProvider = new _m_view_data_provider.default(type);
         viewDataProvider.completeViewDataMap = _this22.completeViewDataMap;
         viewDataProvider.viewDataMap = _this22.viewDataMap;
         var generationOptions = prepareGenerationOptions({
@@ -1094,7 +1094,7 @@ var WorkSpace = /*#__PURE__*/function (_InfernoComponent) {
           endDayHour,
           viewType: type
         });
-        var groupPanelData = (0, _utils4.getGroupPanelData)(groups, columnCountPerGroup, _this23.isGroupedByDate, _this23.isGroupedByDate ? 1 : columnCountPerGroup);
+        var groupPanelData = (0, _utils3.getGroupPanelData)(groups, columnCountPerGroup, _this23.isGroupedByDate, _this23.isGroupedByDate ? 1 : columnCountPerGroup);
         return groupPanelData;
       }();
     }

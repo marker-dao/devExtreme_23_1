@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/header/m_utils.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,7 +18,7 @@ var _inflector = require("../../../core/utils/inflector");
 var _type = require("../../../core/utils/type");
 var _date2 = _interopRequireDefault(require("../../../localization/date"));
 var _message = _interopRequireDefault(require("../../../localization/message"));
-var _constants = require("../../../ui/scheduler/constants");
+var _m_constants = require("../m_constants");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var DAY_FORMAT = 'd';
 var DAYS_IN_WORK_WEEK = 5;
@@ -313,7 +313,7 @@ var getViewText = function getViewText(view) {
 };
 exports.getViewText = getViewText;
 var isValidView = function isValidView(view) {
-  return Object.values(_constants.VIEWS).includes(view);
+  return Object.values(_m_constants.VIEWS).includes(view);
 };
 var validateViews = function validateViews(views) {
   views.forEach(function (view) {

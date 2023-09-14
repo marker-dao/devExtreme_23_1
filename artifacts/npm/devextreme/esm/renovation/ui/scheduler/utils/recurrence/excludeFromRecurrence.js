@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/utils/recurrence/excludeFromRecurrence.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { createAppointmentAdapter } from '../../../../../ui/scheduler/appointmentAdapter';
+import { createAppointmentAdapter } from '../../../../../__internal/scheduler/m_appointment_adapter';
 import dateSerialization from '../../../../../core/utils/date_serialization';
 var FULL_DATE_FORMAT = 'yyyyMMddTHHmmss';
 var UTC_FULL_DATE_FORMAT = "".concat(FULL_DATE_FORMAT, "Z");

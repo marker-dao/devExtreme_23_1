@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_vertical.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,9 +13,9 @@ import { roundFloatPart } from '../../../../core/utils/math';
 import { isNumeric } from '../../../../core/utils/type';
 import { getAppointmentTakesAllDay } from '../../../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay';
 import getSkippedHoursInRange from '../../../../renovation/ui/scheduler/view_model/appointments/utils/getSkippedHoursInRange';
-import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
-import { ExpressionUtils } from '../../../../ui/scheduler/expressionUtils';
 import timeZoneUtils from '../../../../ui/scheduler/utils.timeZone';
+import { createAppointmentAdapter } from '../../m_appointment_adapter';
+import { ExpressionUtils } from '../../m_expression_utils';
 import BaseAppointmentsStrategy from './m_strategy_base';
 var ALLDAY_APPOINTMENT_MIN_VERTICAL_OFFSET = 5;
 var ALLDAY_APPOINTMENT_MAX_VERTICAL_OFFSET = 20;

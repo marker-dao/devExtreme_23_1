@@ -4,7 +4,7 @@ import { camelize } from '../../../core/utils/inflector';
 import { isFunction, isObject } from '../../../core/utils/type';
 import dateLocalization from '../../../localization/date';
 import messageLocalization from '../../../localization/message';
-import { VIEWS } from '../../../ui/scheduler/constants';
+import { VIEWS } from '../m_constants';
 var DAY_FORMAT = 'd';
 var DAYS_IN_WORK_WEEK = 5;
 var {

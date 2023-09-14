@@ -96,9 +96,10 @@ var resizingControllerMembers = {
     return 'dxDataGrid-ariaDataGrid';
   },
   _setAriaLabel() {
+    var totalItemsCount = Math.max(0, this._dataController.totalItemsCount());
     this.component.setAria('label', messageLocalization.format(this._getWidgetAriaLabel(),
     // @ts-expect-error
-    this._dataController.totalItemsCount(), this.component.columnCount()), this.component.$element().children(".".concat(GRIDBASE_CONTAINER_CLASS)));
+    totalItemsCount, this.component.columnCount()), this.component.$element().children(".".concat(GRIDBASE_CONTAINER_CLASS)));
   },
   _getBestFitWidths() {
     var _a;

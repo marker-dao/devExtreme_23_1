@@ -197,6 +197,7 @@ var RowDraggingExtender = {
       var gridOptions = _this3._getDraggableGridOptions(row);
       _this3._createComponent($dataGridContainer, _this3.component.NAME, gridOptions);
       $dataGridContainer.find('.dx-gridbase-container').children(":not(.".concat(_this3.addWidgetPrefix(_const.CLASSES.rowsView), ")")).hide();
+      $dataGridContainer.addClass(_this3.addWidgetPrefix(_const.CLASSES.dragView));
       return $dataGridContainer;
     };
   },

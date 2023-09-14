@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common/grids.d.ts)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -2760,9 +2760,9 @@ export type RowInsertingInfo<TRowData = any> = {
   data: TRowData;
   /**
    * @docid
-   * @type Promise<void>
+   * @type boolean|Promise<boolean>|Promise<void>
    */
-  cancel: boolean | PromiseLike<void>;
+  cancel: boolean | PromiseLike<boolean> | PromiseLike<void>;
 };
 
 /**
@@ -2807,9 +2807,9 @@ export interface RowRemovingInfo<TRowData = any, TKey = any> {
   readonly key: TKey;
   /**
    * @docid
-   * @type boolean|Promise<void>
+   * @type boolean|Promise<boolean>|Promise<void>
    */
-  cancel: boolean | PromiseLike<void>;
+  cancel: boolean | PromiseLike<boolean> | PromiseLike<void>;
 }
 
 /**
@@ -2849,9 +2849,9 @@ export interface RowUpdatingInfo<TRowData = any, TKey = any> {
   readonly key: TKey;
   /**
    * @docid
-   * @type boolean|Promise<void>
+   * @type boolean|Promise<boolean>|Promise<void>
    */
-  cancel: boolean | PromiseLike<void>;
+  cancel: boolean | PromiseLike<boolean> | PromiseLike<void>;
 }
 
 /**

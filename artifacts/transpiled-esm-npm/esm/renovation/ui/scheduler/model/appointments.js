@@ -1,45 +1,11 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { getCellWidth, getCellHeight, getAllDayHeight, PositionHelper } from '../../../../ui/scheduler/workspaces/helpers/positionHelper';
+import { getCellWidth, getCellHeight, getAllDayHeight, PositionHelper } from '../../../../__internal/scheduler/workspaces/helpers/m_position_helper';
 import { getGroupCount } from '../../../../__internal/scheduler/resources/m_utils';
 import { isGroupingByDate } from '../workspaces/utils';
 import dateUtils from '../../../../core/utils/date';
 import { calculateIsGroupedAllDayPanel, getCellDuration } from '../view_model/to_test/views/utils/base';
+import { getAppointmentRenderingStrategyName } from './utils';
 var toMs = name => dateUtils.dateToMilliseconds(name);
-export var getAppointmentRenderingStrategyName = viewType => {
-  var appointmentRenderingStrategyMap = {
-    day: {
-      renderingStrategy: 'vertical'
-    },
-    week: {
-      renderingStrategy: 'week'
-    },
-    workWeek: {
-      renderingStrategy: 'week'
-    },
-    month: {
-      renderingStrategy: 'horizontalMonth'
-    },
-    timelineDay: {
-      renderingStrategy: 'horizontal'
-    },
-    timelineWeek: {
-      renderingStrategy: 'horizontal'
-    },
-    timelineWorkWeek: {
-      renderingStrategy: 'horizontal'
-    },
-    timelineMonth: {
-      renderingStrategy: 'horizontalMonthLine'
-    },
-    agenda: {
-      renderingStrategy: 'agenda'
-    }
-  };
-  var {
-    renderingStrategy
-  } = appointmentRenderingStrategyMap[viewType];
-  return renderingStrategy;
-};
 export var getAppointmentsConfig = (schedulerConfig, viewConfig, loadedResources, viewDataProvider, isAllDayPanelSupported) => {
   var groupCount = getGroupCount(loadedResources);
   var startViewDate = viewDataProvider.getStartViewDate();

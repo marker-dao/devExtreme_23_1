@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_horizontal_month.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
-import { getGroupWidth } from '../../../../ui/scheduler/workspaces/helpers/positionHelper';
+import { getGroupWidth } from '../../workspaces/helpers/m_position_helper';
 import HorizontalMonthLineRenderingStrategy from './m_strategy_horizontal_month_line';
 var MONTH_APPOINTMENT_HEIGHT_RATIO = 0.6;
 var MONTH_APPOINTMENT_MIN_OFFSET = 26;

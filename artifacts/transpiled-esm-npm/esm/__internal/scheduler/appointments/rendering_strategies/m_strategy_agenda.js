@@ -1,7 +1,7 @@
 import dateUtils from '../../../../core/utils/date';
 import { each } from '../../../../core/utils/iterator';
-import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
-import { ExpressionUtils } from '../../../../ui/scheduler/expressionUtils';
+import { createAppointmentAdapter } from '../../m_appointment_adapter';
+import { ExpressionUtils } from '../../m_expression_utils';
 import { groupAppointmentsByResources } from '../../resources/m_utils';
 import { getAppointmentTakesSeveralDays, replaceWrongEndDate } from '../data_provider/m_utils';
 import BaseRenderingStrategy from './m_strategy_base';

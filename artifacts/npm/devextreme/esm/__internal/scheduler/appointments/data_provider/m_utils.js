@@ -1,15 +1,15 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/data_provider/m_utils.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import dateUtils from '../../../../core/utils/date';
 import dateSerialization from '../../../../core/utils/date_serialization';
-import { ExpressionUtils } from '../../../../ui/scheduler/expressionUtils';
 import timeZoneUtils from '../../../../ui/scheduler/utils.timeZone';
+import { ExpressionUtils } from '../../m_expression_utils';
 var toMs = dateUtils.dateToMilliseconds;
 var FULL_DATE_FORMAT = 'yyyyMMddTHHmmss';
 export var compareDateWithStartDayHour = (startDate, endDate, startDayHour, allDay, severalDays) => {

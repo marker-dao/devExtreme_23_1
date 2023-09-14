@@ -11,8 +11,8 @@ var _deferred = require("../../../core/utils/deferred");
 var _visibility_change = require("../../../events/visibility_change");
 var _popup_config = require("../../../renovation/ui/scheduler/appointment_edit_form/popup_config");
 var _ui = _interopRequireDefault(require("../../../ui/popup/ui.popup"));
-var _appointmentAdapter = require("../../../ui/scheduler/appointmentAdapter");
-var _loading = require("../../../ui/scheduler/loading");
+var _m_appointment_adapter = require("../m_appointment_adapter");
+var _m_loading = require("../m_loading");
 var _m_utils = require("../resources/m_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -149,7 +149,7 @@ var AppointmentPopup = /*#__PURE__*/function () {
     return !this.scheduler.getEditingConfig().allowUpdating;
   };
   _proto._createAppointmentAdapter = function _createAppointmentAdapter(rawAppointment) {
-    return (0, _appointmentAdapter.createAppointmentAdapter)(rawAppointment, this.scheduler.getDataAccessors(), this.scheduler.getTimeZoneCalculator());
+    return (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.scheduler.getDataAccessors(), this.scheduler.getTimeZoneCalculator());
   };
   _proto._updateForm = function _updateForm() {
     var data = this.state.appointment.data;
@@ -195,7 +195,7 @@ var AppointmentPopup = /*#__PURE__*/function () {
     isShowLoadPanel && this._showLoadPanel();
     (0, _deferred.when)(validation && validation.complete || validation).done(function (validation) {
       if (validation && !validation.isValid) {
-        (0, _loading.hide)();
+        (0, _m_loading.hide)();
         deferred.resolve(false);
         return;
       }
@@ -221,7 +221,7 @@ var AppointmentPopup = /*#__PURE__*/function () {
           break;
       }
       deferred.done(function () {
-        (0, _loading.hide)();
+        (0, _m_loading.hide)();
         _this4.state.lastEditData = appointment;
       });
     });
@@ -260,7 +260,7 @@ var AppointmentPopup = /*#__PURE__*/function () {
   };
   _proto._showLoadPanel = function _showLoadPanel() {
     var container = this.popup.$overlayContent();
-    (0, _loading.show)({
+    (0, _m_loading.show)({
       container,
       position: {
         of: container

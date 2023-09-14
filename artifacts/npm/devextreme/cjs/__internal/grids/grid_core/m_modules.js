@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/m_modules.js)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,6 +31,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; } /* eslint-disable @typescript-eslint/method-signature-style */ // @ts-expect-error
 var WIDGET_WITH_LEGACY_CONTAINER_NAME = 'dxDataGrid';
+var BORDERED_VIEWS = ['columnHeadersView', 'rowsView', 'footerView', 'filterPanelView'];
 var ModuleItem = _class.default.inherit({
   _endUpdateCore() {},
   ctor(component) {
@@ -214,8 +215,84 @@ var View = ModuleItem.inherit({
   getTemplate(name) {
     return this.component._getTemplate(name);
   },
-  render($parent, options) {
+  getView(name) {
+    return this.component._views[name];
+  },
+  getFirstVisibleViewElement() {
+    var columnHeaderView = this.getView('columnHeadersView');
+    if (columnHeaderView && columnHeaderView.isVisible()) {
+      return columnHeaderView.element();
+    }
+    return this.getView('rowsView').element();
+  },
+  getLastVisibleViewElement() {
+    var filterPanelView = this.getView('filterPanelView');
+    if (filterPanelView && filterPanelView.isVisible()) {
+      return filterPanelView.element();
+    }
+    var footerView = this.getView('footerView');
+    if (footerView && footerView.isVisible()) {
+      return footerView.element();
+    }
+    return this.getView('rowsView').element();
+  },
+  getViewElementWithClass(className) {
     var _this = this;
+    var borderedView = BORDERED_VIEWS.map(function (viewName) {
+      return _this.getView(viewName);
+    }).filter(function (view) {
+      return view && view.element();
+    }).find(function (view) {
+      return view.element().hasClass(className);
+    });
+    return borderedView && borderedView.element();
+  },
+  updateBorderedViews() {
+    var BORDERED_TOP_VIEW_CLASS = 'dx-bordered-top-view';
+    var BORDERED_BOTTOM_VIEW_CLASS = 'dx-bordered-bottom-view';
+    var oldFirstBorderedElement = this.getViewElementWithClass(BORDERED_TOP_VIEW_CLASS);
+    var oldLastBorderedElement = this.getViewElementWithClass(BORDERED_BOTTOM_VIEW_CLASS);
+    var newFirstBorderedElement = this.getFirstVisibleViewElement();
+    var newLastBorderedElement = this.getLastVisibleViewElement();
+    if (oldFirstBorderedElement && !oldFirstBorderedElement.is(newFirstBorderedElement)) {
+      oldFirstBorderedElement.removeClass(BORDERED_TOP_VIEW_CLASS);
+    }
+    if (oldLastBorderedElement && !oldLastBorderedElement.is(newLastBorderedElement)) {
+      oldLastBorderedElement.removeClass(BORDERED_BOTTOM_VIEW_CLASS);
+    }
+    if (!newFirstBorderedElement.hasClass(BORDERED_TOP_VIEW_CLASS)) {
+      newFirstBorderedElement.addClass(BORDERED_TOP_VIEW_CLASS);
+    }
+    if (!newLastBorderedElement.hasClass(BORDERED_BOTTOM_VIEW_CLASS)) {
+      newLastBorderedElement.addClass(BORDERED_BOTTOM_VIEW_CLASS);
+    }
+  },
+  isViewsStateValid() {
+    var _this2 = this;
+    var _a;
+    if (this.component._views) {
+      if (!BORDERED_VIEWS.includes(this.name)) {
+        return false;
+      }
+      var rowsView = this.getView('rowsView');
+      if (!(rowsView && (0, _type.isDefined)((_a = rowsView.element) === null || _a === void 0 ? void 0 : _a.call(rowsView)))) {
+        return false;
+      }
+      var optionalViews = ['columnHeadersView', 'footerView', 'filterPanelView'].map(function (viewName) {
+        return _this2.getView(viewName);
+      }).filter(function (view) {
+        var _a;
+        return view && ((_a = view.isVisible) === null || _a === void 0 ? void 0 : _a.call(view));
+      });
+      var isOptionalViewsRendered = optionalViews.every(function (view) {
+        return view && (0, _type.isDefined)(view.element());
+      });
+      return isOptionalViewsRendered;
+    }
+    return false;
+  },
+  render($parent, options) {
+    var _this3 = this;
     var $element = this._$element;
     var isVisible = this.isVisible();
     if (!$element && !$parent) return;
@@ -225,13 +302,16 @@ var View = ModuleItem.inherit({
       this._$parent = $parent;
     }
     $element.toggleClass('dx-hidden', !isVisible);
+    if (this.isViewsStateValid()) {
+      this.updateBorderedViews();
+    }
     if (isVisible) {
       this.component._optionCache = {};
       var deferred = this._renderCore(options);
       this.component._optionCache = undefined;
       if (deferred) {
         deferred.done(function () {
-          _this.renderCompleted.fire(options);
+          _this3.renderCompleted.fire(options);
         });
       } else {
         this.renderCompleted.fire(options);

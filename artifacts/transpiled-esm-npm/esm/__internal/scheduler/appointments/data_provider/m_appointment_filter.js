@@ -9,8 +9,8 @@ import { getAppointmentTakesAllDay } from '../../../../renovation/ui/scheduler/a
 import { hasResourceValue } from '../../../../renovation/ui/scheduler/resources/hasResourceValue';
 import getDatesWithoutTime from '../../../../renovation/ui/scheduler/utils/filtering/getDatesWithoutTime';
 import { isDateAndTimeView as calculateIsDateAndTimeView, isTimelineView } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
-import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
-import { getRecurrenceProcessor } from '../../../../ui/scheduler/recurrence';
+import { createAppointmentAdapter } from '../../m_appointment_adapter';
+import { getRecurrenceProcessor } from '../../m_recurrence';
 import { getResourcesDataByGroups } from '../../resources/m_utils';
 import { _appointmentPartInInterval, compareDateWithEndDayHour, compareDateWithStartDayHour, getAppointmentTakesSeveralDays, getRecurrenceException } from './m_utils';
 var toMs = dateUtils.dateToMilliseconds;

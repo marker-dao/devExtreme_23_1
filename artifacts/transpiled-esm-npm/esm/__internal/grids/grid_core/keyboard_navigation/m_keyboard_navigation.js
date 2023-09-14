@@ -1217,11 +1217,11 @@ export class KeyboardNavigationController extends modules.ViewController {
   }
   _isLastRow(rowIndex) {
     var dataController = this._dataController;
-    var visibleItems = dataController.items().filter(item => item.visible !== false);
     if (this._isVirtualRowRender()) {
       return rowIndex >= dataController.getMaxRowIndex();
     }
-    return rowIndex === visibleItems.length - 1;
+    var lastVisibleIndex = Math.max(...dataController.items().map((item, index) => item.visible !== false ? index : -1));
+    return rowIndex === lastVisibleIndex;
   }
   _isFirstValidCell(cellPosition) {
     var isFirstValidCell = false;

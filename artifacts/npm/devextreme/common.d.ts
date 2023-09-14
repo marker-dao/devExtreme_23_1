@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common.d.ts)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -722,7 +722,7 @@ export type TabsIconPosition = 'top' | 'end' | 'bottom' | 'start';
  * @public
  * @namespace DevExpress.common
  */
-export type TabsStylingMode = 'primary' | 'secondary';
+export type TabsStyle = 'primary' | 'secondary';
 
 /**
  * @public

@@ -1,5 +1,5 @@
 import { replaceWrongEndDate } from '../../../../__internal/scheduler/appointments/data_provider/m_utils';
-import { createAppointmentAdapter } from '../../../../ui/scheduler/appointmentAdapter';
+import { createAppointmentAdapter } from '../../../../__internal/scheduler/m_appointment_adapter';
 import { isDefined } from '../../../../core/utils/type';
 var RECURRENCE_FREQ = 'freq';
 export var getPreparedDataItems = (dataItems, dataAccessors, cellDurationInMinutes, timeZoneCalculator) => {

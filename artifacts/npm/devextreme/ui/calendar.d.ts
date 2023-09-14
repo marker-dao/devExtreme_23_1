@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/calendar.d.ts)
 * Version: 23.2.0
-* Build date: Wed Sep 06 2023
+* Build date: Thu Sep 14 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -215,13 +215,7 @@ export interface dxCalendarOptions extends EditorOptions<dxCalendar> {
      * @default null
      * @public
      */
-    value?: Date | number | string;
-    /**
-     * @docid
-     * @default []
-     * @public
-     */
-    values?: Array<Date | number | string>;
+    value?: Date | number | string | Array<Date | number | string>;
     /**
      * @docid
      * @default 'month'
