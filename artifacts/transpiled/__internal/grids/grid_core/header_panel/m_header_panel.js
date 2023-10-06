@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.headerPanelModule = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
-var _common = require("../../../../core/utils/common");
 var _data = require("../../../../core/utils/data");
 var _extend = require("../../../../core/utils/extend");
 var _type = require("../../../../core/utils/type");
@@ -14,22 +13,29 @@ var _toolbar = _interopRequireDefault(require("../../../../ui/toolbar"));
 var _m_columns_view = require("../views/m_columns_view");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var HEADER_PANEL_CLASS = 'header-panel';
 var TOOLBAR_BUTTON_CLASS = 'toolbar-button';
 var TOOLBAR_ARIA_LABEL = '-ariaToolbar';
 var DEFAULT_TOOLBAR_ITEM_NAMES = ['addRowButton', 'applyFilterButton', 'columnChooserButton', 'exportButton', 'groupPanel', 'revertButton', 'saveButton', 'searchPanel'];
-var members = {
-  _getToolbarItems() {
+var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
+  _inheritsLoose(HeaderPanel, _ColumnsView);
+  function HeaderPanel() {
+    return _ColumnsView.apply(this, arguments) || this;
+  }
+  var _proto = HeaderPanel.prototype;
+  _proto._getToolbarItems = function _getToolbarItems() {
     return [];
-  },
-  _getButtonContainer() {
+  };
+  _proto._getButtonContainer = function _getButtonContainer() {
     return (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS));
-  },
-  _getToolbarButtonClass(specificClass) {
+  };
+  _proto._getToolbarButtonClass = function _getToolbarButtonClass(specificClass) {
     var secondClass = specificClass ? " ".concat(specificClass) : '';
     return this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS) + secondClass;
-  },
-  _getToolbarOptions() {
+  };
+  _proto._getToolbarOptions = function _getToolbarOptions() {
     var userToolbarOptions = this.option('toolbar');
     var options = {
       toolbarOptions: {
@@ -52,8 +58,8 @@ var members = {
       options.toolbarOptions.visible = !!(toolbarItems === null || toolbarItems === void 0 ? void 0 : toolbarItems.length);
     }
     return options.toolbarOptions;
-  },
-  _normalizeToolbarItems(defaultItems, userItems) {
+  };
+  _proto._normalizeToolbarItems = function _normalizeToolbarItems(defaultItems, userItems) {
     defaultItems.forEach(function (button) {
       if (!DEFAULT_TOOLBAR_ITEM_NAMES.includes(button.name)) {
         throw new Error("Default toolbar item '".concat(button.name, "' is not added to DEFAULT_TOOLBAR_ITEM_NAMES"));
@@ -91,8 +97,8 @@ var members = {
       return (0, _extend.extend)(true, {}, defaultProps, button);
     });
     return isArray ? normalizedItems : normalizedItems[0];
-  },
-  _renderCore() {
+  };
+  _proto._renderCore = function _renderCore() {
     if (!this._toolbar) {
       var $headerPanel = this.element();
       $headerPanel.addClass(this.addWidgetPrefix(HEADER_PANEL_CLASS));
@@ -102,29 +108,39 @@ var members = {
     } else {
       this._toolbar.option(this._toolbarOptions);
     }
-  },
-  _columnOptionChanged: _common.noop,
-  _handleDataChanged() {
+  };
+  _proto._columnOptionChanged = function _columnOptionChanged() {};
+  _proto._handleDataChanged = function _handleDataChanged() {
     if (this._requireReady) {
       this.render();
     }
-  },
-  init() {
-    this.callBase();
+  };
+  _proto._isDisabledDefinedByUser = function _isDisabledDefinedByUser(name) {
+    var _a;
+    var userItems = (_a = this.option('toolbar')) === null || _a === void 0 ? void 0 : _a.items;
+    var userItem = userItems === null || userItems === void 0 ? void 0 : userItems.find(function (item) {
+      return (item === null || item === void 0 ? void 0 : item.name) === name;
+    });
+    return (0, _type.isDefined)(userItem === null || userItem === void 0 ? void 0 : userItem.disabled);
+  };
+  _proto.init = function init() {
+    _ColumnsView.prototype.init.call(this);
     this.createAction('onToolbarPreparing', {
       excludeValidators: ['disabled', 'readOnly']
     });
-  },
-  render() {
+  };
+  _proto.render = function render() {
     this._toolbarOptions = this._getToolbarOptions();
-    this.callBase.apply(this, arguments);
-  },
-  setToolbarItemDisabled(name, disabled) {
+    _ColumnsView.prototype.render.apply(this, arguments);
+  };
+  _proto.setToolbarItemDisabled = function setToolbarItemDisabled(name, disabled) {
+    var _a;
     var toolbar = this._toolbar;
-    if (!toolbar) {
+    var isDefinedByUser = this._isDisabledDefinedByUser(name);
+    if (!toolbar || isDefinedByUser) {
       return;
     }
-    var items = toolbar.option('items') || [];
+    var items = (_a = toolbar.option('items')) !== null && _a !== void 0 ? _a : [];
     var itemIndex = items.findIndex(function (item) {
       return item.name === name;
     });
@@ -136,18 +152,18 @@ var members = {
     if (item.options) {
       toolbar.option("items[".concat(itemIndex, "].options.disabled"), disabled);
     }
-  },
-  updateToolbarDimensions() {
+  };
+  _proto.updateToolbarDimensions = function updateToolbarDimensions() {
     var _a;
     (_a = this._toolbar) === null || _a === void 0 ? void 0 : _a.updateDimensions();
-  },
-  getHeaderPanel() {
+  };
+  _proto.getHeaderPanel = function getHeaderPanel() {
     return this.element();
-  },
-  getHeight() {
+  };
+  _proto.getHeight = function getHeight() {
     return this.getElementHeight();
-  },
-  optionChanged(args) {
+  };
+  _proto.optionChanged = function optionChanged(args) {
     if (args.name === 'onToolbarPreparing') {
       this._invalidate();
       args.handled = true;
@@ -180,15 +196,15 @@ var members = {
         }
       }
     }
-    this.callBase(args);
-  },
-  isVisible() {
+    _ColumnsView.prototype.optionChanged.call(this, args);
+  };
+  _proto.isVisible = function isVisible() {
     return !!(this._toolbarOptions && this._toolbarOptions.visible);
-  },
-  allowDragging: _common.noop,
-  hasGroupedColumns: _common.noop
-};
-var HeaderPanel = _m_columns_view.ColumnsView.inherit(members);
+  };
+  _proto.allowDragging = function allowDragging() {};
+  _proto.hasGroupedColumns = function hasGroupedColumns() {};
+  return HeaderPanel;
+}(_m_columns_view.ColumnsView);
 var headerPanelModule = {
   defaultOptions() {
     return {};

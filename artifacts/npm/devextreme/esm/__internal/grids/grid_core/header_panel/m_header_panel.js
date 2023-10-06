@@ -1,14 +1,13 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/header_panel/m_header_panel.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../core/renderer';
-import { noop } from '../../../../core/utils/common';
 import { getPathParts } from '../../../../core/utils/data';
 import { extend } from '../../../../core/utils/extend';
 import { isDefined, isString } from '../../../../core/utils/type';
@@ -19,17 +18,17 @@ var HEADER_PANEL_CLASS = 'header-panel';
 var TOOLBAR_BUTTON_CLASS = 'toolbar-button';
 var TOOLBAR_ARIA_LABEL = '-ariaToolbar';
 var DEFAULT_TOOLBAR_ITEM_NAMES = ['addRowButton', 'applyFilterButton', 'columnChooserButton', 'exportButton', 'groupPanel', 'revertButton', 'saveButton', 'searchPanel'];
-var members = {
+class HeaderPanel extends ColumnsView {
   _getToolbarItems() {
     return [];
-  },
+  }
   _getButtonContainer() {
     return $('<div>').addClass(this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS));
-  },
+  }
   _getToolbarButtonClass(specificClass) {
     var secondClass = specificClass ? " ".concat(specificClass) : '';
     return this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS) + secondClass;
-  },
+  }
   _getToolbarOptions() {
     var userToolbarOptions = this.option('toolbar');
     var options = {
@@ -53,7 +52,7 @@ var members = {
       options.toolbarOptions.visible = !!(toolbarItems === null || toolbarItems === void 0 ? void 0 : toolbarItems.length);
     }
     return options.toolbarOptions;
-  },
+  }
   _normalizeToolbarItems(defaultItems, userItems) {
     defaultItems.forEach(button => {
       if (!DEFAULT_TOOLBAR_ITEM_NAMES.includes(button.name)) {
@@ -92,7 +91,7 @@ var members = {
       return extend(true, {}, defaultProps, button);
     });
     return isArray ? normalizedItems : normalizedItems[0];
-  },
+  }
   _renderCore() {
     if (!this._toolbar) {
       var $headerPanel = this.element();
@@ -103,29 +102,37 @@ var members = {
     } else {
       this._toolbar.option(this._toolbarOptions);
     }
-  },
-  _columnOptionChanged: noop,
+  }
+  _columnOptionChanged() {}
   _handleDataChanged() {
     if (this._requireReady) {
       this.render();
     }
-  },
+  }
+  _isDisabledDefinedByUser(name) {
+    var _a;
+    var userItems = (_a = this.option('toolbar')) === null || _a === void 0 ? void 0 : _a.items;
+    var userItem = userItems === null || userItems === void 0 ? void 0 : userItems.find(item => (item === null || item === void 0 ? void 0 : item.name) === name);
+    return isDefined(userItem === null || userItem === void 0 ? void 0 : userItem.disabled);
+  }
   init() {
-    this.callBase();
+    super.init();
     this.createAction('onToolbarPreparing', {
       excludeValidators: ['disabled', 'readOnly']
     });
-  },
+  }
   render() {
     this._toolbarOptions = this._getToolbarOptions();
-    this.callBase.apply(this, arguments);
-  },
+    super.render.apply(this, arguments);
+  }
   setToolbarItemDisabled(name, disabled) {
+    var _a;
     var toolbar = this._toolbar;
-    if (!toolbar) {
+    var isDefinedByUser = this._isDisabledDefinedByUser(name);
+    if (!toolbar || isDefinedByUser) {
       return;
     }
-    var items = toolbar.option('items') || [];
+    var items = (_a = toolbar.option('items')) !== null && _a !== void 0 ? _a : [];
     var itemIndex = items.findIndex(item => item.name === name);
     if (itemIndex < 0) {
       return;
@@ -135,17 +142,17 @@ var members = {
     if (item.options) {
       toolbar.option("items[".concat(itemIndex, "].options.disabled"), disabled);
     }
-  },
+  }
   updateToolbarDimensions() {
     var _a;
     (_a = this._toolbar) === null || _a === void 0 ? void 0 : _a.updateDimensions();
-  },
+  }
   getHeaderPanel() {
     return this.element();
-  },
+  }
   getHeight() {
     return this.getElementHeight();
-  },
+  }
   optionChanged(args) {
     if (args.name === 'onToolbarPreparing') {
       this._invalidate();
@@ -179,15 +186,14 @@ var members = {
         }
       }
     }
-    this.callBase(args);
-  },
+    super.optionChanged(args);
+  }
   isVisible() {
     return !!(this._toolbarOptions && this._toolbarOptions.visible);
-  },
-  allowDragging: noop,
-  hasGroupedColumns: noop
-};
-var HeaderPanel = ColumnsView.inherit(members);
+  }
+  allowDragging() {}
+  hasGroupedColumns() {}
+}
 export var headerPanelModule = {
   defaultOptions() {
     return {};

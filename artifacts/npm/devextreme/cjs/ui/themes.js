@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/themes.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,6 +19,7 @@ exports.isDark = isDark;
 exports.isFluent = isFluent;
 exports.isGeneric = isGeneric;
 exports.isMaterial = isMaterial;
+exports.isMaterialBased = isMaterialBased;
 exports.isPendingThemeLoaded = isPendingThemeLoaded;
 exports.isWebFontLoaded = isWebFontLoaded;
 exports.ready = themeReady;
@@ -246,7 +247,7 @@ function getCssClasses(themeName) {
   if (themeNameParts) {
     result.push('dx-theme-' + themeNameParts[0], 'dx-theme-' + themeNameParts[0] + '-typography');
     if (themeNameParts.length > 1) {
-      result.push('dx-color-scheme-' + themeNameParts[1] + (isMaterial(themeName) ? '-' + themeNameParts[2] : ''));
+      result.push('dx-color-scheme-' + themeNameParts[1] + (isMaterialBased(themeName) ? '-' + themeNameParts[2] : ''));
     }
   }
   return result;
@@ -282,6 +283,9 @@ function isTheme(themeRegExp, themeName) {
     themeName = currentThemeName || readThemeMarker();
   }
   return new RegExp(themeRegExp).test(themeName);
+}
+function isMaterialBased(themeName) {
+  return isMaterial(themeName) || isFluent(themeName);
 }
 function isMaterial(themeName) {
   return isTheme('material', themeName);
@@ -389,6 +393,8 @@ var _default = {
   isDark,
   isGeneric,
   isMaterial,
+  isFluent,
+  isMaterialBased,
   detachCssClasses,
   attachCssClasses,
   current,

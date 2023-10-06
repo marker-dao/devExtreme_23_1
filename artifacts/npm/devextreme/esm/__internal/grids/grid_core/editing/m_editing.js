@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/editing/m_editing.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,6 +27,7 @@ import pointerEvents from '../../../../events/pointer';
 import { addNamespace } from '../../../../events/utils/index';
 import messageLocalization from '../../../../localization/message';
 import { confirm } from '../../../../ui/dialog';
+import { current, isFluent } from '../../../../ui/themes';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
 import { ACTION_OPTION_NAMES, BUTTON_NAMES, CELL_BASED_MODES, CELL_FOCUS_DISABLED_CLASS, CELL_MODIFIED, COMMAND_EDIT_CLASS, COMMAND_EDIT_WITH_ICONS_CLASS, DATA_EDIT_DATA_INSERT_TYPE, DATA_EDIT_DATA_REMOVE_TYPE, DATA_EDIT_DATA_UPDATE_TYPE, DEFAULT_START_EDIT_ACTION, EDIT_BUTTON_CLASS, EDIT_FORM_CLASS, EDIT_ICON_CLASS, EDIT_LINK_CLASS, EDIT_MODE_ROW, EDIT_MODES, EDITING_CHANGES_OPTION_NAME, EDITING_EDITCOLUMNNAME_OPTION_NAME, EDITING_EDITROWKEY_OPTION_NAME, EDITING_NAMESPACE, EDITING_POPUP_OPTION_NAME, EDITOR_CELL_CLASS, EDITORS_INPUT_SELECTOR, FIRST_NEW_ROW_POSITION, FOCUSABLE_ELEMENT_SELECTOR, INSERT_INDEX, LAST_NEW_ROW_POSITION, LINK_CLASS, LINK_ICON_CLASS, METHOD_NAMES, PAGE_BOTTOM_NEW_ROW_POSITION, PAGE_TOP_NEW_ROW_POSITION, READONLY_CLASS, REQUIRED_EDITOR_LABELLEDBY_MODES, ROW_BASED_MODES, ROW_CLASS, ROW_INSERTED, ROW_MODIFIED, ROW_SELECTED, TARGET_COMPONENT_NAME, VIEWPORT_BOTTOM_NEW_ROW_POSITION, VIEWPORT_TOP_NEW_ROW_POSITION } from './const';
@@ -40,7 +41,9 @@ class EditingControllerImpl extends modules.ViewController {
     // this contains the value of 'editing.changes' option, to check if it has changed in onOptionChanged
     this._changes = [];
     if (this._deferreds) {
-      this._deferreds.forEach(d => d.reject('cancel'));
+      this._deferreds.forEach(d => {
+        d.reject('cancel');
+      });
     }
     this._deferreds = [];
     if (!this._dataChangedHandler) {
@@ -968,16 +971,25 @@ class EditingControllerImpl extends modules.ViewController {
   }
   _getPopupEditFormTemplate(rowIndex) {}
   _getSaveButtonConfig() {
-    return {
+    var buttonConfig = {
       text: this.option('editing.texts.saveRowChanges'),
       onClick: this.saveEditData.bind(this)
     };
+    if (isFluent(current())) {
+      buttonConfig.stylingMode = 'contained';
+      buttonConfig.type = 'default';
+    }
+    return buttonConfig;
   }
   _getCancelButtonConfig() {
-    return {
+    var buttonConfig = {
       text: this.option('editing.texts.cancelRowChanges'),
       onClick: this.cancelEditData.bind(this)
     };
+    if (isFluent(current())) {
+      buttonConfig.stylingMode = 'outlined';
+    }
+    return buttonConfig;
   }
   _removeInternalData(key) {
     var internalData = this._getInternalData(key);
@@ -1570,8 +1582,11 @@ class EditingControllerImpl extends modules.ViewController {
   _getRowIndicesForCascadeUpdating(row, skipCurrentRow) {
     return skipCurrentRow ? [] : [row.rowIndex];
   }
+  /**
+   * Adds a deferred object to be awaited before other operations are executed
+   */
   addDeferred(deferred) {
-    if (this._deferreds.indexOf(deferred) < 0) {
+    if (!this._deferreds.includes(deferred)) {
       this._deferreds.push(deferred);
       deferred.always(() => {
         var index = this._deferreds.indexOf(deferred);

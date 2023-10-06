@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.base_view.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -286,6 +286,9 @@ var BaseView = Widget.inherit({
   },
   _updateSelectedClass: function _updateSelectedClass(value) {
     var _this$_$selectedCells;
+    if (this._isRangeMode() && !this._isMonthView()) {
+      return;
+    }
     (_this$_$selectedCells = this._$selectedCells) === null || _this$_$selectedCells === void 0 ? void 0 : _this$_$selectedCells.forEach($cell => {
       $cell.removeClass(CALENDAR_SELECTED_DATE_CLASS);
     });
@@ -298,11 +301,10 @@ var BaseView = Widget.inherit({
     var _this$_$rangeCells, _this$_$hoveredRangeC, _this$_$rangeStartHov, _this$_$rangeEndHover, _this$_$rangeStartDat, _this$_$rangeEndDateC, _this$_$rangeStartDat2, _this$_$rangeEndDateC2;
     var {
       allowValueSelection,
-      selectionMode,
       value,
       range
     } = this.option();
-    if (!allowValueSelection || selectionMode !== 'range') {
+    if (!allowValueSelection || !this._isRangeMode() || !this._isMonthView()) {
       return;
     }
     (_this$_$rangeCells = this._$rangeCells) === null || _this$_$rangeCells === void 0 ? void 0 : _this$_$rangeCells.forEach($cell => {
@@ -328,10 +330,9 @@ var BaseView = Widget.inherit({
     var _this$_$hoveredRangeC2, _this$_$rangeStartHov2, _this$_$rangeEndHover2, _this$_$rangeStartHov3, _this$_$rangeEndHover3;
     var {
       allowValueSelection,
-      selectionMode,
       hoveredRange
     } = this.option();
-    if (!allowValueSelection || selectionMode !== 'range') {
+    if (!allowValueSelection || !this._isRangeMode() || !this._isMonthView()) {
       return;
     }
     (_this$_$hoveredRangeC2 = this._$hoveredRangeCells) === null || _this$_$hoveredRangeC2 === void 0 ? void 0 : _this$_$hoveredRangeC2.forEach($cell => {
@@ -347,6 +348,12 @@ var BaseView = Widget.inherit({
     });
     (_this$_$rangeStartHov3 = this._$rangeStartHoverCell) === null || _this$_$rangeStartHov3 === void 0 ? void 0 : _this$_$rangeStartHov3.addClass(CALENDAR_CELL_RANGE_HOVER_START_CLASS);
     (_this$_$rangeEndHover3 = this._$rangeEndHoverCell) === null || _this$_$rangeEndHover3 === void 0 ? void 0 : _this$_$rangeEndHover3.addClass(CALENDAR_CELL_RANGE_HOVER_END_CLASS);
+  },
+  _isMonthView: function _isMonthView() {
+    return this.option('zoomLevel') === 'month';
+  },
+  _isRangeMode: function _isRangeMode() {
+    return this.option('selectionMode') === 'range';
   },
   getCellAriaLabel: function getCellAriaLabel(date) {
     return this._getCellText(date);

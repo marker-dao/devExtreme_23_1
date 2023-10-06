@@ -540,10 +540,15 @@ var ExportController = /*#__PURE__*/function (_dataGridCore$ViewCon) {
   _proto2._getColumnWidths = function _getColumnWidths(headersView, rowsView) {
     return headersView && headersView.isVisible() ? headersView.getColumnWidths() : rowsView.getColumnWidths();
   };
-  _proto2.init = function init() {
-    if (this.option('export.enabled') && !(0, _type.isDefined)(this.option('onExporting'))) {
+  _proto2.throwWarningIfNoOnExportingEvent = function throwWarningIfNoOnExportingEvent() {
+    var _a, _b;
+    var hasOnExporting = (_b = (_a = this.component).hasActionSubscription) === null || _b === void 0 ? void 0 : _b.call(_a, 'onExporting');
+    if (this.option('export.enabled') && !hasOnExporting) {
       _ui.default.log('W1024');
     }
+  };
+  _proto2.init = function init() {
+    this.throwWarningIfNoOnExportingEvent();
     this._columnsController = this.getController('columns');
     this._rowsView = this.getView('rowsView');
     this._headersView = this.getView('columnHeadersView');
@@ -587,6 +592,12 @@ var ExportController = /*#__PURE__*/function (_dataGridCore$ViewCon) {
       this.selectionOnlyChanged.fire();
     } else {
       return this._isSelectedRows;
+    }
+  };
+  _proto2.optionChanged = function optionChanged(args) {
+    _dataGridCore$ViewCon.prototype.optionChanged.call(this, args);
+    if (args.name === 'export') {
+      this.throwWarningIfNoOnExportingEvent();
     }
   };
   _proto2.needLoadItemsOnExportingSelectedItems = function needLoadItemsOnExportingSelectedItems() {
@@ -743,11 +754,6 @@ _m_core.default.registerModule('export', {
           if (args.name === 'export') {
             args.handled = true;
             this._invalidate();
-            if (args.fullName === 'export.enabled') {
-              if (args.value && !(0, _type.isDefined)(this.option('onExporting'))) {
-                _ui.default.log('W1024');
-              }
-            }
           }
         },
         _needDisableExportButton() {

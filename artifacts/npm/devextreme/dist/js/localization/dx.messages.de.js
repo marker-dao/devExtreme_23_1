@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.de.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -267,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "am Datum",
             "dxScheduler-recurrenceRepeatCount": "Ereignisse",
             "dxScheduler-allDay": "Ganztägig",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Möchten Sie nur diesen Termin bearbeiten, oder die gesamte Serie?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Möchten Sie nur diesen Termin löschen, oder die gesamte Serie?",
             "dxScheduler-confirmRecurrenceEditSeries": "Serie bearbeiten",
@@ -666,7 +668,8 @@
             "dxGantt-showResources": "Ressourcen Anzeigen",
             "dxGantt-showDependencies": "Abhängigkeiten Anzeigen",
             "dxGantt-dialogStartDateValidation": "Startdatum muss später sein als {0}",
-            "dxGantt-dialogEndDateValidation": "Enddatum muss später sein als {0}"
+            "dxGantt-dialogEndDateValidation": "Enddatum muss später sein als {0}",
+            "dxGallery-itemName": "Gallery item"
         }
     });
 }));

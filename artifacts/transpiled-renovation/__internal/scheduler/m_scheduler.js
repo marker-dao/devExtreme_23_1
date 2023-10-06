@@ -279,7 +279,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
       }
     }, {
       device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         useDropDownViewSwitcher: true,
@@ -1054,8 +1054,8 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
       getStartDayHour: function getStartDayHour() {
         return _this9.option('startDayHour');
       },
-      getCalculatedEndDate: function getCalculatedEndDate(startDateWithStartHour) {
-        return _this9._workSpace.calculateEndDate(startDateWithStartHour);
+      getCalculatedEndDate: function getCalculatedEndDate(date) {
+        return _this9._workSpace.calculateEndDate(date);
       },
       getTimeZoneCalculator: function getTimeZoneCalculator() {
         return _this9.timeZoneCalculator;
@@ -1573,10 +1573,12 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
     return _date_serialization.default.serializeDate(date, UTC_FULL_DATE_FORMAT);
   };
   _proto._showRecurrenceChangeConfirm = function _showRecurrenceChangeConfirm(isDeleted) {
+    var title = _message.default.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteTitle' : 'dxScheduler-confirmRecurrenceEditTitle');
     var message = _message.default.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteMessage' : 'dxScheduler-confirmRecurrenceEditMessage');
     var seriesText = _message.default.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteSeries' : 'dxScheduler-confirmRecurrenceEditSeries');
     var occurrenceText = _message.default.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteOccurrence' : 'dxScheduler-confirmRecurrenceEditOccurrence');
     this._recurrenceDialog = (0, _dialog.custom)({
+      title,
       messageHtml: message,
       showCloseButton: true,
       showTitle: true,

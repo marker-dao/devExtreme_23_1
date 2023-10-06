@@ -10,7 +10,7 @@ import { DateHeaderCell } from '../../../base/header_panel/date_header/cell';
 import { DateHeaderLayoutProps } from '../../../base/header_panel/date_header/layout';
 import getThemeType from '../../../../../../utils/getThemeType';
 var {
-  isMaterial
+  isMaterialBased
 } = getThemeType();
 export var viewFunction = _ref => {
   var {
@@ -37,7 +37,7 @@ export var viewFunction = _ref => {
     var rowsCount = dataMap.length;
     var isTimeCellTemplate = rowsCount - 1 === rowIndex;
     var isWeekDayRow = rowsCount > 1 && rowIndex === 0;
-    var splitText = isMaterial && (isMonthDateHeader || isWeekDayRow);
+    var splitText = isMaterialBased && (isMonthDateHeader || isWeekDayRow);
     var validLeftVirtualCellCount = leftVirtualCellCount;
     var validRightVirtualCellCount = rightVirtualCellCount;
     var validRightVirtualCellWidth = rightVirtualCellWidth;

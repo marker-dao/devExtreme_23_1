@@ -11,9 +11,10 @@ $pivotgrid-border-color: $base-border-color !default;
 * $name 10. Header text color
 * $type color
 */
-$pivotgrid-area-color: color.change($base-text-color, $alpha: 0.54) !default;
+$pivotgrid-area-color: $base-text-color !default;
 $pivotgrid-field-area-box-text-color: $pivotgrid-area-color !default;
-$pivotgrid-field-area-box-background-color: null !default;
+$pivotgrid-field-area-box-background-color: $base-neutral-background4 !default;
+$pivotgrid-field-area-box-font-weight: 400 !default;
 $pivotgrid-data-area-color: $base-text-color !default;
 
 /**
@@ -48,8 +49,6 @@ $pivotgrid-position-indicator-color: gray !default;
 $pivotgrid-chevron-icon-color: $pivotgrid-area-color !default;
 
 @if $mode == "light" {
-  $pivotgrid-field-area-box-background-color: darken($base-bg, 12%) !default;
-
   $pivotgrid-area-all-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJElEQVQoz2P8z4AfsDAwJELVzGfExmIiYAAD5QoYRx1JL0cCAJeiFh8Qq9chAAAAAElFTkSuQmCC") !default;
   $pivotgrid-area-filter-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAWElEQVQoz83RsQqAMAxF0fepFxzEQRz8e1sah0JTamhXeVtyCCSRaR6ZTGQsSHJgcRyk1YQ7aBcuB+KkDO0D9UDsHcmARiC2BqiVEfg2+jOoF30+YPnNWV4jV/jo04VE6gAAAABJRU5ErkJggg==") !default;
   $pivotgrid-area-column-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAIElEQVQoz2P4z4AfAlHCfwgEshogEFmMPgpGHUkfRwIAQ8IdQALkrHMAAAAASUVORK5CYII=") !default;
@@ -60,8 +59,6 @@ $pivotgrid-chevron-icon-color: $pivotgrid-area-color !default;
 }
 
 @if $mode == "dark" {
-  $pivotgrid-field-area-box-background-color: lighten($base-bg, 12%) !default;
-
   $pivotgrid-area-all-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJElEQVQoz2P8z4AfsDAwJELVzGfExmIiYAAD5QoYRx1JL0cCAJeiFh8Qq9chAAAAAElFTkSuQmCC") !default;
   $pivotgrid-area-filter-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAWElEQVQoz83RsQqAMAxF0fepFxzEQRz8e1sah0JTamhXeVtyCCSRaR6ZTGQsSHJgcRyk1YQ7aBcuB+KkDO0D9UDsHcmARiC2BqiVEfg2+jOoF30+YPnNWV4jV/jo04VE6gAAAABJRU5ErkJggg==") !default;
   $pivotgrid-area-column-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAIElEQVQoz2P4z4AfAlHCfwgEshogEFmMPgpGHUkfRwIAQ8IdQALkrHMAAAAASUVORK5CYII=") !default;

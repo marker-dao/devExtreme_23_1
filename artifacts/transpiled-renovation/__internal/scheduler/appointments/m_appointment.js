@@ -152,7 +152,10 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     };
     var deferredColor = this.option('getAppointmentColor')(appointmentConfig);
     deferredColor.done(function (color) {
-      return color && _this.coloredElement.css('backgroundColor', color);
+      if (color) {
+        _this.coloredElement.css('backgroundColor', color);
+        _this.coloredElement.addClass(_m_classes.APPOINTMENT_HAS_RESOURCE_COLOR_CLASS);
+      }
     });
   };
   _proto._renderAppointmentGeometry = function _renderAppointmentGeometry() {

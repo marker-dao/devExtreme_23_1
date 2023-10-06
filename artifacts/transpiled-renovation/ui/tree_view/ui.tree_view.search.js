@@ -79,8 +79,10 @@ var TreeViewSearch = _uiTree_view.default.inherit(_ui.default).inherit({
   _cleanItemContainer: function _cleanItemContainer() {
     this.$element().empty();
   },
-  _itemContainer: function _itemContainer(isSearchMode) {
-    if (this._selectAllEnabled()) {
+  _itemContainer: function _itemContainer(isSearchMode, selectAllEnabled) {
+    var _selectAllEnabled;
+    (_selectAllEnabled = selectAllEnabled) !== null && _selectAllEnabled !== void 0 ? _selectAllEnabled : selectAllEnabled = this._selectAllEnabled();
+    if (selectAllEnabled) {
       return this._getNodeContainer();
     }
     if (this._scrollable && isSearchMode) {

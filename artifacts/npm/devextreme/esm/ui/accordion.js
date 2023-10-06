@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/accordion.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,7 @@ import CollectionWidget from './collection/ui.collection_widget.live_update';
 import { when, Deferred } from '../core/utils/deferred';
 import { BindableTemplate } from '../core/templates/bindable_template';
 import { getImageContainer } from '../core/utils/icon';
-import { isMaterial } from './themes';
+import { isMaterialBased } from './themes';
 
 // STYLE accordion
 
@@ -68,7 +68,7 @@ var Accordion = CollectionWidget.inherit({
       }
     }, {
       device: function device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         animationDuration: 200,

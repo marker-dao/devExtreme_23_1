@@ -18,6 +18,7 @@ import Swipeable from '../events/gesture/swipeable';
 import { BindableTemplate } from '../core/templates/bindable_template';
 import { Deferred } from '../core/utils/deferred';
 import { triggerResizeEvent } from '../events/visibility_change';
+import messageLocalization from '../localization/message';
 
 // STYLE gallery
 
@@ -119,7 +120,8 @@ var Gallery = CollectionWidget.inherit({
       */
 
       _itemAttributes: {
-        role: 'option'
+        role: 'option',
+        'aria-label': messageLocalization.format('dxGallery-itemName')
       },
       loopItemFocus: false,
       selectOnFocus: true,
@@ -219,10 +221,12 @@ var Gallery = CollectionWidget.inherit({
     this.$element().addClass(GALLERY_CLASS);
     this.$element().toggleClass(GALLERY_LOOP_CLASS, this.option('loop'));
     this.callBase();
-    this.setAria({
-      'role': 'listbox',
+    var useListBoxRole = this._itemsCount() > 0;
+    var ariaAttrs = {
+      'role': useListBoxRole ? 'listbox' : undefined,
       'label': 'gallery'
-    });
+    };
+    this.setAria(ariaAttrs);
   },
   _render: function _render() {
     this._renderDragHandler();
@@ -307,9 +311,9 @@ var Gallery = CollectionWidget.inherit({
   },
   _cloneItemForDuplicate: function _cloneItemForDuplicate(item, $container) {
     if (item) {
-      var $clonedItem = $(item).clone(false).addClass(GALLERY_LOOP_ITEM_CLASS).css('margin', 0).appendTo($container);
+      var $clonedItem = $(item).clone(false).addClass(GALLERY_LOOP_ITEM_CLASS).removeAttr('id').css('margin', 0).appendTo($container);
       this.setAria({
-        role: 'presentation'
+        hidden: true
       }, $clonedItem);
     }
   },
@@ -743,7 +747,7 @@ var Gallery = CollectionWidget.inherit({
   },
   _setFocusOnSelect: function _setFocusOnSelect() {
     this._userInteraction = true;
-    var selectedItem = this.itemElements().filter('.' + GALLERY_ITEM_SELECTED_CLASS);
+    var selectedItem = this._getRealItems().filter('.' + GALLERY_ITEM_SELECTED_CLASS);
     this.option('focusedElement', getPublicElement(selectedItem));
     this._userInteraction = false;
   },

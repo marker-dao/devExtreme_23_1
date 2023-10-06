@@ -129,7 +129,7 @@ var FormDialog = /*#__PURE__*/function () {
     return {
       colCount: 1,
       width: 'auto',
-      labelLocation: (0, _themes.isMaterial)() ? 'top' : 'left'
+      labelLocation: (0, _themes.isMaterialBased)() ? 'top' : 'left'
     };
   };
   _proto.formOption = function formOption(optionName, optionValue) {

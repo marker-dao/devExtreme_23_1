@@ -1,6 +1,6 @@
 import { getWidth, getOuterWidth, getHeight } from '../../core/utils/size';
 import $ from '../../core/renderer';
-import { isMaterial, waitWebFont } from '../themes';
+import { isMaterial, isMaterialBased, waitWebFont } from '../themes';
 import { isPlainObject, isDefined } from '../../core/utils/type';
 import registerComponent from '../../core/component_registrator';
 import { extend } from '../../core/utils/extend';
@@ -88,7 +88,7 @@ class ToolbarBase extends AsyncCollectionWidget {
   _defaultOptionsRules() {
     return super._defaultOptionsRules().concat([{
       device: function device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         useFlatButtons: true

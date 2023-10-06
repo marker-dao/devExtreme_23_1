@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/list/ui.list.edit.decorator.switchable.slide.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,7 @@ import EditDecoratorMenuHelperMixin from './ui.list.edit.decorator_menu_helper';
 import { register as registerDecorator } from './ui.list.edit.decorator_registry';
 import SwitchableEditDecorator from './ui.list.edit.decorator.switchable';
 import fx from '../../animation/fx';
-import { isMaterial } from '../themes';
+import { isMaterialBased } from '../themes';
 import ActionSheet from '../action_sheet';
 var LIST_EDIT_DECORATOR = 'dxListEditDecorator';
 var CLICK_EVENT_NAME = addNamespace(clickEventName, LIST_EDIT_DECORATOR);
@@ -83,7 +83,7 @@ registerDecorator('menu', 'slide', SwitchableEditDecorator.inherit({
     if (!this._deleteEnabled()) {
       return;
     }
-    var $deleteButton = $('<div>').addClass(SLIDE_MENU_BUTTON_CLASS).addClass(SLIDE_MENU_BUTTON_DELETE_CLASS).text(isMaterial() ? '' : messageLocalization.format('dxListEditDecorator-delete'));
+    var $deleteButton = $('<div>').addClass(SLIDE_MENU_BUTTON_CLASS).addClass(SLIDE_MENU_BUTTON_DELETE_CLASS).text(isMaterialBased() ? '' : messageLocalization.format('dxListEditDecorator-delete'));
     eventsEngine.on($deleteButton, CLICK_EVENT_NAME, function (e) {
       e.stopPropagation();
       this._deleteItem();

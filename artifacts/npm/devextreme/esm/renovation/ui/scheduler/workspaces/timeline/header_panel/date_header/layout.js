@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/workspaces/timeline/header_panel/date_header/layout.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,7 +18,7 @@ import { DateHeaderCell } from '../../../base/header_panel/date_header/cell';
 import { DateHeaderLayoutProps } from '../../../base/header_panel/date_header/layout';
 import getThemeType from '../../../../../../utils/getThemeType';
 var {
-  isMaterial
+  isMaterialBased
 } = getThemeType();
 export var viewFunction = _ref => {
   var {
@@ -45,7 +45,7 @@ export var viewFunction = _ref => {
     var rowsCount = dataMap.length;
     var isTimeCellTemplate = rowsCount - 1 === rowIndex;
     var isWeekDayRow = rowsCount > 1 && rowIndex === 0;
-    var splitText = isMaterial && (isMonthDateHeader || isWeekDayRow);
+    var splitText = isMaterialBased && (isMonthDateHeader || isWeekDayRow);
     var validLeftVirtualCellCount = leftVirtualCellCount;
     var validRightVirtualCellCount = rightVirtualCellCount;
     var validRightVirtualCellWidth = rightVirtualCellWidth;

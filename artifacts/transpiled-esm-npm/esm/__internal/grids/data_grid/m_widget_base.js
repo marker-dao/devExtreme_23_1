@@ -15,7 +15,7 @@ import { logger } from '../../../core/utils/console';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { isFunction, isString } from '../../../core/utils/type';
-import { isMaterial } from '../../../ui/themes';
+import { isMaterialBased } from '../../../ui/themes';
 import Widget from '../../../ui/widget/ui.widget';
 import gridCoreUtils from '../../grids/grid_core/m_utils';
 import gridCore from './m_core';
@@ -56,6 +56,7 @@ var DataGrid = Widget.inherit({
     });
   },
   _defaultOptionsRules() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.callBase().concat([{
       device: {
         platform: 'ios'
@@ -66,7 +67,7 @@ var DataGrid = Widget.inherit({
     }, {
       device() {
         // @ts-expect-error
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         showRowLines: true,

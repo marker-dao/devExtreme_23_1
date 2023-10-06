@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ro.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -267,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "pe data",
             "dxScheduler-recurrenceRepeatCount": "apariție(s)",
             "dxScheduler-allDay": "Totă ziua",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Doriți să editați doar această programare sau întreaga serie?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Doriți să ștergeți doar această programare sau întreaga serie?",
             "dxScheduler-confirmRecurrenceEditSeries": "Editați serie",
@@ -666,7 +668,8 @@
             "dxGantt-showResources": "Show Resources",
             "dxGantt-showDependencies": "Show Dependencies",
             "dxGantt-dialogStartDateValidation": "Start date must be after {0}",
-            "dxGantt-dialogEndDateValidation": "End date must be after {0}"
+            "dxGantt-dialogEndDateValidation": "End date must be after {0}",
+            "dxGallery-itemName": "Gallery item"
         }
     });
 }));

@@ -23,6 +23,7 @@ var TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
 var TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
 var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
 var DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
+var TABS_DATA_DX_TEXT_ATTRIBUTE = 'data-dx_text';
 var TABPANEL_TABS_POSITION_CLASS = {
   top: 'dx-tabpanel-tabs-position-top',
   right: 'dx-tabpanel-tabs-position-right',
@@ -126,7 +127,11 @@ var TabPanel = _multi_view.default.inherit({
             $container.text(String(data));
           }
         }
-        $container.wrapInner((0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_CLASS));
+        var $tabItem = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_CLASS);
+        if (data !== null && data !== void 0 && data.title) {
+          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, data.title);
+        }
+        $container.wrapInner($tabItem);
       }, ['title', 'icon'], this.option('integrationOptions.watchMethod'))
     });
   },

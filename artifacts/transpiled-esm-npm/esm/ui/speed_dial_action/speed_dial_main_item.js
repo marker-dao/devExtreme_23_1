@@ -6,7 +6,7 @@ import eventsEngine from '../../events/core/events_engine';
 import errors from '../widget/ui.errors';
 import swatchContainer from '../widget/swatch_container';
 import SpeedDialItem from './speed_dial_item';
-import { isMaterial, isCompact } from '../themes';
+import { isCompact, isMaterialBased } from '../themes';
 var {
   getSwatchContainer
 } = swatchContainer;
@@ -97,7 +97,7 @@ class SpeedDialMainItem extends SpeedDialItem {
   _defaultOptionsRules() {
     return super._defaultOptionsRules().concat([{
       device() {
-        return isMaterial() && !isCompact();
+        return isMaterialBased() && !isCompact();
       },
       options: {
         indent: 72,
@@ -106,7 +106,7 @@ class SpeedDialMainItem extends SpeedDialItem {
       }
     }, {
       device() {
-        return isMaterial() && isCompact();
+        return isMaterialBased() && isCompact();
       },
       options: {
         indent: 58,

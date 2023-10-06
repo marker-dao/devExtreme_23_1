@@ -63,6 +63,7 @@ var DataGrid = _ui.default.inherit({
     });
   },
   _defaultOptionsRules() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.callBase().concat([{
       device: {
         platform: 'ios'
@@ -73,7 +74,7 @@ var DataGrid = _ui.default.inherit({
     }, {
       device() {
         // @ts-expect-error
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         showRowLines: true,

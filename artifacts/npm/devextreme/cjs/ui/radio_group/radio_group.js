@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/radio_group/radio_group.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -190,6 +190,11 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
   _proto2._setSelection = function _setSelection(currentValue) {
     var value = this._unwrappedValue(currentValue);
     this._setCollectionWidgetOption('selectedItemKeys', this._getSelectedItemKeys(value));
+  };
+  _proto2._renderValidationState = function _renderValidationState() {
+    var _this$_validationMess;
+    _Editor.prototype._renderValidationState.call(this);
+    (_this$_validationMess = this._validationMessage) === null || _this$_validationMess === void 0 ? void 0 : _this$_validationMess.$content().attr('role', 'alert');
   };
   _proto2._optionChanged = function _optionChanged(args) {
     var name = args.name,

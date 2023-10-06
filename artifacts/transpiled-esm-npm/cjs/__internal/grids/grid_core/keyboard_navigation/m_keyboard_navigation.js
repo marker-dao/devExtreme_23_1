@@ -2001,7 +2001,9 @@ var keyboardNavigationModule = {
         getFocusedCellInRow(rowIndex) {
           var keyboardNavigationController = this.getController('keyboardNavigation');
           var $cell = this.callBase(rowIndex);
-          if (keyboardNavigationController.isKeyboardEnabled() && keyboardNavigationController._focusedCellPosition.rowIndex === rowIndex) {
+          var rowIndexOffset = this._dataController.getRowIndexOffset();
+          var focusedRowIndex = keyboardNavigationController._focusedCellPosition.rowIndex - rowIndexOffset;
+          if (keyboardNavigationController.isKeyboardEnabled() && focusedRowIndex === rowIndex) {
             var $focusedCell = keyboardNavigationController._getFocusedCell();
             if ((0, _m_keyboard_navigation_utils.isElementDefined)($focusedCell) && !$focusedCell.hasClass(_const2.COMMAND_EDIT_CLASS)) {
               $cell = $focusedCell;

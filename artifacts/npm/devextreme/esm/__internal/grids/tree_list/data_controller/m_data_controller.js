@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/tree_list/data_controller/m_data_controller.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,7 +41,7 @@ export var DataController = dataControllerModule.controllers.data.inherit(functi
       this._dataSource.load();
     },
     _isItemEquals(item1, item2) {
-      if (!this.callBase.apply(this, arguments)) {
+      if (item1.isSelected !== item2.isSelected) {
         return false;
       }
       if (item1.node && item2.node && item1.node.hasChildren !== item2.node.hasChildren) {
@@ -50,7 +50,15 @@ export var DataController = dataControllerModule.controllers.data.inherit(functi
       if (item1.level !== item2.level || item1.isExpanded !== item2.isExpanded) {
         return false;
       }
-      return true;
+      return this.callBase.apply(this, arguments);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _isCellChanged(oldRow, newRow, visibleRowIndex, columnIndex, isLiveUpdate) {
+      var firstDataColumnIndex = this._columnsController.getFirstDataColumnIndex();
+      if (columnIndex === firstDataColumnIndex && oldRow.isSelected !== newRow.isSelected) {
+        return true;
+      }
+      return this.callBase.apply(this, arguments);
     },
     init() {
       this.createAction('onRowExpanding');

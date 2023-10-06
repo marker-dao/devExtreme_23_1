@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/form/ui.form.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,7 +27,7 @@ import { default as FormItemsRunTimeInfo } from './ui.form.items_runtime_info';
 import TabPanel from '../tab_panel';
 import Scrollable from '../scroll_view/ui.scrollable';
 import { Deferred } from '../../core/utils/deferred';
-import { isMaterial } from '../themes';
+import { isMaterialBased } from '../themes';
 import tryCreateItemOptionAction from './ui.form.item_options_actions';
 import resizeObserverSingleton from '../../core/resize_observer';
 import './ui.form.layout_manager';
@@ -86,7 +86,7 @@ var Form = Widget.inherit({
   _defaultOptionsRules: function _defaultOptionsRules() {
     return this.callBase().concat([{
       device: function device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         showColonAfterLabel: false,

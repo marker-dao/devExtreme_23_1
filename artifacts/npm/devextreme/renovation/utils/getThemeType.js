@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/utils/getThemeType.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,9 @@ var getThemeType = function getThemeType() {
   var theme = (0, _themes.current)();
   return {
     isCompact: (0, _themes.isCompact)(theme),
-    isMaterial: (0, _themes.isMaterial)(theme)
+    isMaterial: (0, _themes.isMaterial)(theme),
+    isFluent: (0, _themes.isFluent)(theme),
+    isMaterialBased: (0, _themes.isMaterialBased)(theme)
   };
 };
 var _default = getThemeType;

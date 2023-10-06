@@ -11,7 +11,7 @@ import SwipeDownStrategy from './ui.scroll_view.native.swipe_down';
 import SimulatedStrategy from './ui.scroll_view.simulated';
 import Scrollable from './ui.scrollable';
 import LoadIndicator from '../load_indicator';
-import { isMaterial } from './../themes';
+import { isMaterialBased } from './../themes';
 import LoadPanel from '../load_panel';
 
 // STYLE scrollView
@@ -68,7 +68,7 @@ var ScrollView = Scrollable.inherit(isServerSide ? scrollViewServerConfig : {
       }
     }, {
       device: function device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         pullingDownText: '',

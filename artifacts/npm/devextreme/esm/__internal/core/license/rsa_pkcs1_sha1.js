@@ -1,12 +1,12 @@
 /**
 * DevExtreme (esm/__internal/core/license/rsa_pkcs1_sha1.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import sha1 from 'sha1';
+import sha1 from 'sha-1';
 import BigInteger from './jsbn';
 // see https://datatracker.ietf.org/doc/html/rfc8017#page-47
 var ASN1_SHA1 = '3021300906052b0e03021a05000414';
@@ -66,9 +66,7 @@ export function verify(_ref) {
     text,
     signature: encodedSignature
   } = _ref;
-  var actual = pad(new Uint8Array(sha1(text, {
-    asBytes: true
-  })));
+  var actual = pad(new Uint8Array(fromHexString(sha1(text))));
   var signature = new BigInteger(normalizeBigIntegerBytes(fromBase64String(encodedSignature)));
   var exponent = PUBLIC_KEY.e;
   var modulus = new BigInteger(normalizeBigIntegerBytes(PUBLIC_KEY.n));

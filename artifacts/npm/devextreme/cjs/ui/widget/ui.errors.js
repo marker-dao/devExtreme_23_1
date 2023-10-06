@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/widget/ui.errors.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -300,7 +300,11 @@ var _default = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
   /**
    * @name ErrorsUIWidgets.W1024
    */
-  W1024: 'The client-side export is enabled. Implement the \'onExporting\' function.'
+  W1024: 'The client-side export is enabled. Implement the \'onExporting\' function.',
+  /**
+   * @name ErrorsUIWidgets.W1025
+   */
+  W1025: '\'scrolling.mode\' is set to \'virtual\' or \'infinite\'. Specify the height of the component.'
 });
 exports.default = _default;
 module.exports = exports.default;

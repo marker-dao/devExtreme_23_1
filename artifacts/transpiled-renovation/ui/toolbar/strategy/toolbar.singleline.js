@@ -176,8 +176,8 @@ var SingleLineStrategy = /*#__PURE__*/function () {
     var itemsWidth = this._getItemsWidth();
     while (overflowItems.length && elementWidth < itemsWidth) {
       var $item = overflowItems.eq(-1);
-      itemsWidth -= (0, _size.getOuterWidth)($item);
       $item.addClass(TOOLBAR_HIDDEN_ITEM);
+      itemsWidth = this._getItemsWidth();
       overflowItems.splice(-1, 1);
     }
   };

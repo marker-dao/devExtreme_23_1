@@ -6,7 +6,7 @@ import { Deferred } from '../../../core/utils/deferred';
 import localizationMessage from '../../../localization/message';
 import { getCurrentScreenFactor, hasWindow } from '../../../core/utils/window';
 import devices from '../../../core/devices';
-import { isMaterial } from '../../themes';
+import { isMaterialBased } from '../../themes';
 var DIALOG_CLASS = 'dx-formdialog';
 var FORM_CLASS = 'dx-formdialog-form';
 class FormDialog {
@@ -118,7 +118,7 @@ class FormDialog {
     return {
       colCount: 1,
       width: 'auto',
-      labelLocation: isMaterial() ? 'top' : 'left'
+      labelLocation: isMaterialBased() ? 'top' : 'left'
     };
   }
   formOption(optionName, optionValue) {

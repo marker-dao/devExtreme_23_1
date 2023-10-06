@@ -19,7 +19,7 @@ var viewFunction = function viewFunction(_ref) {
     text = _ref$props.text,
     textParts = _ref.textParts;
   return (0, _inferno.createFragment)(splitText ? textParts.map(function (part) {
-    return (0, _inferno.createVNode)(1, "span", "dx-scheduler-header-panel-cell-date", part, 0);
+    return (0, _inferno.createVNode)(1, "div", "dx-scheduler-header-panel-cell-date", (0, _inferno.createVNode)(1, "span", null, part, 0), 2);
   }) : text, 0);
 };
 exports.viewFunction = viewFunction;

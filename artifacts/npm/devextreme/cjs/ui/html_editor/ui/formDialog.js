@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/ui/formDialog.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -137,7 +137,7 @@ var FormDialog = /*#__PURE__*/function () {
     return {
       colCount: 1,
       width: 'auto',
-      labelLocation: (0, _themes.isMaterial)() ? 'top' : 'left'
+      labelLocation: (0, _themes.isMaterialBased)() ? 'top' : 'left'
     };
   };
   _proto.formOption = function formOption(optionName, optionValue) {

@@ -39,55 +39,60 @@ var restoreFocus = function restoreFocus(focusedElement, selectionRange) {
 };
 var resizingControllerMembers = {
   _initPostRenderHandlers() {
-    var dataController = this._dataController;
     if (!this._refreshSizesHandler) {
       this._refreshSizesHandler = e => {
-        dataController.changed.remove(this._refreshSizesHandler);
+        // @ts-expect-error
+        var resizeDeferred = new Deferred().resolve(null);
+        var changeType = e === null || e === void 0 ? void 0 : e.changeType;
+        var isDelayed = e === null || e === void 0 ? void 0 : e.isDelayed;
+        var needFireContentReady = changeType && changeType !== 'updateSelection' && changeType !== 'updateFocusedRow' && changeType !== 'pageIndex' && !isDelayed;
+        this._dataController.changed.remove(this._refreshSizesHandler);
         if (this._checkSize()) {
-          this._refreshSizes(e);
+          resizeDeferred = this._refreshSizes(e);
+        }
+        if (needFireContentReady) {
+          when(resizeDeferred).done(() => {
+            this._setAriaLabel();
+            this.fireContentReadyAction();
+          });
         }
       };
       // TODO remove resubscribing
-      dataController.changed.add(() => {
-        dataController.changed.add(this._refreshSizesHandler);
+      this._dataController.changed.add(() => {
+        this._dataController.changed.add(this._refreshSizesHandler);
       });
     }
   },
   _refreshSizes(e) {
     var _a;
-    var resizeDeferred;
-    var that = this;
-    var changeType = e && e.changeType;
-    var isDelayed = e && e.isDelayed;
-    var items = that._dataController.items();
+    // @ts-expect-error
+    var resizeDeferred = new Deferred().resolve(null);
+    var changeType = e === null || e === void 0 ? void 0 : e.changeType;
+    var isDelayed = e === null || e === void 0 ? void 0 : e.isDelayed;
+    var items = this._dataController.items();
     if (!e || changeType === 'refresh' || changeType === 'prepend' || changeType === 'append') {
       if (!isDelayed) {
-        resizeDeferred = that.resize();
+        resizeDeferred = this.resize();
       }
     } else if (changeType === 'update') {
       if (((_a = e.changeTypes) === null || _a === void 0 ? void 0 : _a.length) === 0) {
-        return;
+        return resizeDeferred;
       }
       if ((items.length > 1 || e.changeTypes[0] !== 'insert') && !(items.length === 0 && e.changeTypes[0] === 'remove') && !e.needUpdateDimensions) {
         // @ts-expect-error
         resizeDeferred = new Deferred();
         this._waitAsyncTemplates().done(() => {
           deferUpdate(() => deferRender(() => deferUpdate(() => {
-            that._setScrollerSpacing();
-            that._rowsView.resize();
+            this._setScrollerSpacing();
+            this._rowsView.resize();
             resizeDeferred.resolve();
           })));
         }).fail(resizeDeferred.reject);
       } else {
-        resizeDeferred = that.resize();
+        resizeDeferred = this.resize();
       }
     }
-    if (changeType && changeType !== 'updateSelection' && changeType !== 'updateFocusedRow' && changeType !== 'pageIndex' && !isDelayed) {
-      when(resizeDeferred).done(() => {
-        that._setAriaLabel();
-        that.fireContentReadyAction();
-      });
-    }
+    return resizeDeferred;
   },
   fireContentReadyAction() {
     this.component._fireContentReadyAction();

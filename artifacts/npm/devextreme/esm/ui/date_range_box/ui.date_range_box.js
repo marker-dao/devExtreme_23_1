@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_range_box/ui.date_range_box.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ import { getImageContainer } from '../../core/utils/icon';
 import config from '../../core/config';
 import devices from '../../core/devices';
 import messageLocalization from '../../localization/message';
-import { current, isMaterial } from '../themes';
+import { current, isMaterial, isMaterialBased } from '../themes';
 import Editor from '../editor/editor';
 import MultiselectDateBox from './ui.multiselect_date_box';
 import TextEditorButtonCollection from '../text_box/texteditor_button_collection/index';
@@ -123,11 +123,18 @@ class DateRangeBox extends Editor {
     return super._defaultOptionsRules().concat([{
       device: function device() {
         var themeName = current();
+        return isMaterialBased(themeName);
+      },
+      options: {
+        labelMode: 'floating'
+      }
+    }, {
+      device: function device() {
+        var themeName = current();
         return isMaterial(themeName);
       },
       options: {
-        stylingMode: config().editorStylingMode || 'filled',
-        labelMode: 'floating'
+        stylingMode: config().editorStylingMode || 'filled'
       }
     }, {
       device: function device() {

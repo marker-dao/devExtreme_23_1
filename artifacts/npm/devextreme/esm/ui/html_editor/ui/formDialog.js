@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/html_editor/ui/formDialog.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ import { Deferred } from '../../../core/utils/deferred';
 import localizationMessage from '../../../localization/message';
 import { getCurrentScreenFactor, hasWindow } from '../../../core/utils/window';
 import devices from '../../../core/devices';
-import { isMaterial } from '../../themes';
+import { isMaterialBased } from '../../themes';
 var DIALOG_CLASS = 'dx-formdialog';
 var FORM_CLASS = 'dx-formdialog-form';
 class FormDialog {
@@ -126,7 +126,7 @@ class FormDialog {
     return {
       colCount: 1,
       width: 'auto',
-      labelLocation: isMaterial() ? 'top' : 'left'
+      labelLocation: isMaterialBased() ? 'top' : 'left'
     };
   }
   formOption(optionName, optionValue) {

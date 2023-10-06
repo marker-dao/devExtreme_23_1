@@ -12,7 +12,7 @@ export var viewFunction = _ref => {
     },
     textParts
   } = _ref;
-  return createFragment(splitText ? textParts.map(part => createVNode(1, "span", "dx-scheduler-header-panel-cell-date", part, 0)) : text, 0);
+  return createFragment(splitText ? textParts.map(part => createVNode(1, "div", "dx-scheduler-header-panel-cell-date", createVNode(1, "span", null, part, 0), 2)) : text, 0);
 };
 export var DateHeaderTextProps = {
   text: '',

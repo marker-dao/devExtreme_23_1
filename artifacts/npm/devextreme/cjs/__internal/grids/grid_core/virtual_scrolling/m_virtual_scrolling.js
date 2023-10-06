@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/virtual_scrolling/m_virtual_scrolling.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,6 +22,7 @@ var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
 var _window = require("../../../../core/utils/window");
 var _load_indicator = _interopRequireDefault(require("../../../../ui/load_indicator"));
+var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_virtual_scrolling_core = require("./m_virtual_scrolling_core");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -431,6 +432,7 @@ var VirtualScrollingRowsViewExtender = function () {
       var contentElement = this._findContentElement();
       var changeType = change && change.changeType;
       var d = (0, _deferred.Deferred)();
+      this.throwHeightWarningIfNeed();
       var contentTable = contentElement.children().first();
       if (changeType === 'append' || changeType === 'prepend') {
         this.waitAsyncTemplates().done(function () {
@@ -645,6 +647,13 @@ var VirtualScrollingRowsViewExtender = function () {
         isLoading = false;
       }
       this.callBase.call(this, isLoading, messageText);
+    },
+    throwHeightWarningIfNeed() {
+      var needToThrow = !this._hasHeight && isVirtualPaging(this);
+      if (needToThrow && !this._heightWarningIsThrown) {
+        this._heightWarningIsThrown = true;
+        _ui.default.log('W1025');
+      }
     },
     _resizeCore() {
       var that = this;
@@ -1261,7 +1270,7 @@ var virtualScrollingModule = {
             return result;
           },
           loadViewport(params) {
-            var _a, _b;
+            var _a, _b, _c;
             var _ref2 = params !== null && params !== void 0 ? params : {},
               checkLoadedParamsOnly = _ref2.checkLoadedParamsOnly,
               checkLoading = _ref2.checkLoading,
@@ -1270,9 +1279,11 @@ var virtualScrollingModule = {
             if (virtualPaging || _m_utils.default.isVirtualRowRendering(this)) {
               this._updateLoadViewportParams();
               var loadingItemsStarted = this._loadItems(checkLoading, !viewportIsNotFilled);
-              var needToUpdateItems = !(loadingItemsStarted || this._isLoading && checkLoading || checkLoadedParamsOnly);
+              var isCustomLoading = (_a = this._dataSource) === null || _a === void 0 ? void 0 : _a.isCustomLoading();
+              var isLoading = checkLoading && !isCustomLoading && this._isLoading;
+              var needToUpdateItems = !(loadingItemsStarted || isLoading || checkLoadedParamsOnly);
               if (needToUpdateItems) {
-                var noPendingChangesInEditing = !((_b = (_a = this.getController('editing')) === null || _a === void 0 ? void 0 : _a.getChanges()) === null || _b === void 0 ? void 0 : _b.length);
+                var noPendingChangesInEditing = !((_c = (_b = this.getController('editing')) === null || _b === void 0 ? void 0 : _b.getChanges()) === null || _c === void 0 ? void 0 : _c.length);
                 this.updateItems({
                   repaintChangesOnly: true,
                   needUpdateDimensions: true,

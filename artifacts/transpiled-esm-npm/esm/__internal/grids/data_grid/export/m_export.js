@@ -518,10 +518,15 @@ export class ExportController extends dataGridCore.ViewController {
   _getColumnWidths(headersView, rowsView) {
     return headersView && headersView.isVisible() ? headersView.getColumnWidths() : rowsView.getColumnWidths();
   }
-  init() {
-    if (this.option('export.enabled') && !isDefined(this.option('onExporting'))) {
+  throwWarningIfNoOnExportingEvent() {
+    var _a, _b;
+    var hasOnExporting = (_b = (_a = this.component).hasActionSubscription) === null || _b === void 0 ? void 0 : _b.call(_a, 'onExporting');
+    if (this.option('export.enabled') && !hasOnExporting) {
       errors.log('W1024');
     }
+  }
+  init() {
+    this.throwWarningIfNoOnExportingEvent();
     this._columnsController = this.getController('columns');
     this._rowsView = this.getView('rowsView');
     this._headersView = this.getView('columnHeadersView');
@@ -565,6 +570,12 @@ export class ExportController extends dataGridCore.ViewController {
       this.selectionOnlyChanged.fire();
     } else {
       return this._isSelectedRows;
+    }
+  }
+  optionChanged(args) {
+    super.optionChanged(args);
+    if (args.name === 'export') {
+      this.throwWarningIfNoOnExportingEvent();
     }
   }
   needLoadItemsOnExportingSelectedItems() {
@@ -715,11 +726,6 @@ dataGridCore.registerModule('export', {
           if (args.name === 'export') {
             args.handled = true;
             this._invalidate();
-            if (args.fullName === 'export.enabled') {
-              if (args.value && !isDefined(this.option('onExporting'))) {
-                errors.log('W1024');
-              }
-            }
           }
         },
         _needDisableExportButton() {

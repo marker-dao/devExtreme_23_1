@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/form/components/field_item.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -220,7 +220,7 @@ function tryGetValidationTargetInstance($validationTarget) {
   return ($validationTarget === null || $validationTarget === void 0 ? void 0 : $validationTarget.data(VALIDATION_TARGET_CLASS)) || ($validationTarget === null || $validationTarget === void 0 ? void 0 : (_$validationTarget$pa = $validationTarget.parent) === null || _$validationTarget$pa === void 0 ? void 0 : (_$validationTarget$pa2 = _$validationTarget$pa.call($validationTarget)) === null || _$validationTarget$pa2 === void 0 ? void 0 : _$validationTarget$pa2.data(VALIDATION_TARGET_CLASS));
 }
 function subscribeWrapperInvalidClassToggle(validationTargetInstance) {
-  if (validationTargetInstance && (0, _themes.isMaterial)()) {
+  if (validationTargetInstance && (0, _themes.isMaterialBased)()) {
     var wrapperClass = ".".concat(FIELD_ITEM_CONTENT_WRAPPER_CLASS);
     var toggleInvalidClass = function toggleInvalidClass(_ref2) {
       var element = _ref2.element,

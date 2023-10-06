@@ -56,7 +56,7 @@ var TreeList = _ui.default.inherit({
     return this.callBase().concat([{
       device() {
         // @ts-expect-error
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         showRowLines: true,

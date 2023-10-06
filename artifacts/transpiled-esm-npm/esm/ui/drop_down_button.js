@@ -56,6 +56,7 @@ var DropDownButton = Widget.inherit({
       splitButton: false,
       showArrowIcon: true,
       text: '',
+      type: 'normal',
       icon: undefined,
       onButtonClick: null,
       onSelectionChanged: null,
@@ -200,20 +201,31 @@ var DropDownButton = Widget.inherit({
     });
   },
   _actionButtonConfig() {
+    var {
+      icon,
+      text,
+      type
+    } = this.option();
     return {
-      text: this.option('text'),
-      icon: this.option('icon'),
+      text,
+      icon,
+      type,
       elementAttr: {
         class: DROP_DOWN_BUTTON_ACTION_CLASS
       }
     };
   },
   _getButtonGroupItems() {
+    var {
+      splitButton,
+      type
+    } = this.option();
     var items = [];
     items.push(this._actionButtonConfig());
-    if (this.option('splitButton')) {
+    if (splitButton) {
       items.push({
         icon: 'spindown',
+        type,
         elementAttr: {
           class: DROP_DOWN_BUTTON_TOGGLE_CLASS
         }
@@ -636,6 +648,9 @@ var DropDownButton = Widget.inherit({
         break;
       case 'stylingMode':
         this._updateButtonGroup(name, value);
+        break;
+      case 'type':
+        this._updateButtonGroup('items', this._getButtonGroupItems());
         break;
       case 'itemTemplate':
       case 'grouped':

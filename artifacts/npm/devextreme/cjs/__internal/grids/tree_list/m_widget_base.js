@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/m_widget_base.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -64,7 +64,7 @@ var TreeList = _ui.default.inherit({
     return this.callBase().concat([{
       device() {
         // @ts-expect-error
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         showRowLines: true,

@@ -199,15 +199,20 @@ var editingControllerExtender = Base => class CellBasedEditingControllerExtender
     }
     return false;
   }
+  /**
+   * @returns whether to cancel cell editing
+   */
   _beforeEditCell(rowIndex, columnIndex, item) {
     if (this.isCellEditMode() && !item.isNewRow && this.hasChanges()) {
       // @ts-expect-error
-      var d = new Deferred();
+      var isSaving = new Deferred();
       this.saveEditData().always(() => {
-        d.resolve(this.hasChanges());
+        isSaving.resolve(this.hasChanges());
       });
-      return d;
+      this.addDeferred(isSaving);
+      return isSaving;
     }
+    return false;
   }
   publicMethods() {
     var publicMethods = super.publicMethods();

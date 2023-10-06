@@ -99,7 +99,7 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _AsyncCollectionWidge.prototype._defaultOptionsRules.call(this).concat([{
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         useFlatButtons: true

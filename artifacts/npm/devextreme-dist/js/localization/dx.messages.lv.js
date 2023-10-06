@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.lv.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -267,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "datumā",
             "dxScheduler-recurrenceRepeatCount": "atkārtošanā(s)",
             "dxScheduler-allDay": "Visa diena",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Vai vēlaties atkārtot šo apmeklējumu vai visu apmeklējumu secību?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Vai vēlaties dzēst šo apmeklējumu vai visu apmeklējumu secību?",
             "dxScheduler-confirmRecurrenceEditSeries": "Rediģēt secību",
@@ -666,7 +668,8 @@
             "dxGantt-showResources": "Rādīt Resursus",
             "dxGantt-showDependencies": "Rādīt Sasaistes",
             "dxGantt-dialogStartDateValidation": "Sākuma datumam jābūt vēlākam par {0}",
-            "dxGantt-dialogEndDateValidation": "Beigu datumam jābūt vēlākam par {0}"
+            "dxGantt-dialogEndDateValidation": "Beigu datumam jābūt vēlākam par {0}",
+            "dxGallery-itemName": "Gallery item"
         }
     });
 }));

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/views/m_grid_view.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -59,34 +59,45 @@ var restoreFocus = function restoreFocus(focusedElement, selectionRange) {
 var resizingControllerMembers = {
   _initPostRenderHandlers() {
     var _this = this;
-    var dataController = this._dataController;
     if (!this._refreshSizesHandler) {
       this._refreshSizesHandler = function (e) {
-        dataController.changed.remove(_this._refreshSizesHandler);
+        // @ts-expect-error
+        var resizeDeferred = new _deferred.Deferred().resolve(null);
+        var changeType = e === null || e === void 0 ? void 0 : e.changeType;
+        var isDelayed = e === null || e === void 0 ? void 0 : e.isDelayed;
+        var needFireContentReady = changeType && changeType !== 'updateSelection' && changeType !== 'updateFocusedRow' && changeType !== 'pageIndex' && !isDelayed;
+        _this._dataController.changed.remove(_this._refreshSizesHandler);
         if (_this._checkSize()) {
-          _this._refreshSizes(e);
+          resizeDeferred = _this._refreshSizes(e);
+        }
+        if (needFireContentReady) {
+          (0, _deferred.when)(resizeDeferred).done(function () {
+            _this._setAriaLabel();
+            _this.fireContentReadyAction();
+          });
         }
       };
       // TODO remove resubscribing
-      dataController.changed.add(function () {
-        dataController.changed.add(_this._refreshSizesHandler);
+      this._dataController.changed.add(function () {
+        _this._dataController.changed.add(_this._refreshSizesHandler);
       });
     }
   },
   _refreshSizes(e) {
+    var _this2 = this;
     var _a;
-    var resizeDeferred;
-    var that = this;
-    var changeType = e && e.changeType;
-    var isDelayed = e && e.isDelayed;
-    var items = that._dataController.items();
+    // @ts-expect-error
+    var resizeDeferred = new _deferred.Deferred().resolve(null);
+    var changeType = e === null || e === void 0 ? void 0 : e.changeType;
+    var isDelayed = e === null || e === void 0 ? void 0 : e.isDelayed;
+    var items = this._dataController.items();
     if (!e || changeType === 'refresh' || changeType === 'prepend' || changeType === 'append') {
       if (!isDelayed) {
-        resizeDeferred = that.resize();
+        resizeDeferred = this.resize();
       }
     } else if (changeType === 'update') {
       if (((_a = e.changeTypes) === null || _a === void 0 ? void 0 : _a.length) === 0) {
-        return;
+        return resizeDeferred;
       }
       if ((items.length > 1 || e.changeTypes[0] !== 'insert') && !(items.length === 0 && e.changeTypes[0] === 'remove') && !e.needUpdateDimensions) {
         // @ts-expect-error
@@ -95,23 +106,18 @@ var resizingControllerMembers = {
           (0, _common.deferUpdate)(function () {
             return (0, _common.deferRender)(function () {
               return (0, _common.deferUpdate)(function () {
-                that._setScrollerSpacing();
-                that._rowsView.resize();
+                _this2._setScrollerSpacing();
+                _this2._rowsView.resize();
                 resizeDeferred.resolve();
               });
             });
           });
         }).fail(resizeDeferred.reject);
       } else {
-        resizeDeferred = that.resize();
+        resizeDeferred = this.resize();
       }
     }
-    if (changeType && changeType !== 'updateSelection' && changeType !== 'updateFocusedRow' && changeType !== 'pageIndex' && !isDelayed) {
-      (0, _deferred.when)(resizeDeferred).done(function () {
-        that._setAriaLabel();
-        that.fireContentReadyAction();
-      });
-    }
+    return resizeDeferred;
   },
   fireContentReadyAction() {
     this.component._fireContentReadyAction();
@@ -148,7 +154,7 @@ var resizingControllerMembers = {
     columnsController.endUpdate();
   },
   _toggleBestFitModeForView(view, className, isBestFit) {
-    var _this2 = this;
+    var _this3 = this;
     if (!view || !view.isVisible()) return;
     var $rowsTables = this._rowsView.getTableElements();
     var $viewTables = view.getTableElements();
@@ -163,7 +169,7 @@ var resizingControllerMembers = {
           $tableBody = $rowsTable.children(".".concat(className)).appendTo($viewTable);
         }
         $tableBody.toggleClass(className, isBestFit);
-        $tableBody.toggleClass(_this2.addWidgetPrefix('best-fit'), isBestFit);
+        $tableBody.toggleClass(_this3.addWidgetPrefix('best-fit'), isBestFit);
       }
     });
   },
@@ -194,7 +200,7 @@ var resizingControllerMembers = {
     }
   },
   _synchronizeColumns() {
-    var _this3 = this;
+    var _this4 = this;
     var columnsController = this._columnsController;
     var visibleColumns = columnsController.getVisibleColumns();
     var columnAutoWidth = this.option('columnAutoWidth');
@@ -252,13 +258,13 @@ var resizingControllerMembers = {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     (0, _common.deferUpdate)(function () {
       if (needBestFit) {
-        resultWidths = _this3._getBestFitWidths();
+        resultWidths = _this4._getBestFitWidths();
         (0, _iterator.each)(visibleColumns, function (index, column) {
           var columnId = columnsController.getColumnId(column);
           columnsController.columnOption(columnId, 'bestFitWidth', resultWidths[index], true);
         });
       } else if (hasMinWidth) {
-        resultWidths = _this3._getBestFitWidths();
+        resultWidths = _this4._getBestFitWidths();
       }
       (0, _iterator.each)(visibleColumns, function (index) {
         var width = this.width;
@@ -271,7 +277,7 @@ var resizingControllerMembers = {
         }
       });
       if (resetBestFitMode) {
-        _this3._toggleBestFitMode(false);
+        _this4._toggleBestFitMode(false);
         resetBestFitMode = false;
         if (focusedElement && focusedElement !== _dom_adapter.default.getActiveElement()) {
           var isFocusOutsideWindow = (0, _position.getBoundingRect)(focusedElement).bottom < 0;
@@ -280,20 +286,20 @@ var resizingControllerMembers = {
           }
         }
       }
-      isColumnWidthsCorrected = _this3._correctColumnWidths(resultWidths, visibleColumns);
+      isColumnWidthsCorrected = _this4._correctColumnWidths(resultWidths, visibleColumns);
       if (columnAutoWidth) {
         normalizeWidthsByExpandColumns();
-        if (_this3._needStretch()) {
-          _this3._processStretch(resultWidths, visibleColumns);
+        if (_this4._needStretch()) {
+          _this4._processStretch(resultWidths, visibleColumns);
         }
       }
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       (0, _common.deferRender)(function () {
         if (needBestFit || isColumnWidthsCorrected || hasUndefinedColumnWidth) {
-          _this3._setVisibleWidths(visibleColumns, resultWidths);
+          _this4._setVisibleWidths(visibleColumns, resultWidths);
         }
         if (wordWrapEnabled) {
-          _this3._toggleContentMinHeight(false);
+          _this4._toggleContentMinHeight(false);
         }
       });
     });
@@ -477,14 +483,14 @@ var resizingControllerMembers = {
     return (0, _deferred.when)((_a = this._columnHeadersView) === null || _a === void 0 ? void 0 : _a.waitAsyncTemplates(true), (_b = this._rowsView) === null || _b === void 0 ? void 0 : _b.waitAsyncTemplates(true), (_c = this._footerView) === null || _c === void 0 ? void 0 : _c.waitAsyncTemplates(true));
   },
   resize() {
-    var _this4 = this;
+    var _this5 = this;
     if (this.component._requireResize) {
       return;
     }
     // @ts-expect-error
     var d = new _deferred.Deferred();
     this._waitAsyncTemplates().done(function () {
-      (0, _deferred.when)(_this4.updateDimensions()).done(d.resolve).fail(d.reject);
+      (0, _deferred.when)(_this5.updateDimensions()).done(d.resolve).fail(d.reject);
     }).fail(d.reject);
     return d.promise();
   },
@@ -541,14 +547,14 @@ var resizingControllerMembers = {
     });
   },
   _setScrollerSpacing() {
-    var _this5 = this;
+    var _this6 = this;
     var scrollable = this._rowsView.getScrollable();
     // T722415, T758955
     var isNativeScrolling = this.option('scrolling.useNative') === true;
     if (!scrollable || isNativeScrolling) {
       (0, _common.deferRender)(function () {
         (0, _common.deferUpdate)(function () {
-          _this5._setScrollerSpacingCore();
+          _this6._setScrollerSpacingCore();
         });
       });
     } else {
@@ -562,7 +568,7 @@ var resizingControllerMembers = {
     (_c = this._rowsView) === null || _c === void 0 ? void 0 : _c.setAriaOwns(headerTable === null || headerTable === void 0 ? void 0 : headerTable.attr('id'), footerTable === null || footerTable === void 0 ? void 0 : footerTable.attr('id'));
   },
   _updateDimensionsCore() {
-    var _this6 = this;
+    var _this7 = this;
     var that = this;
     var dataController = that._dataController;
     var editorFactory = that.getController('editorFactory');
@@ -580,7 +586,7 @@ var resizingControllerMembers = {
     (0, _common.deferRender)(function () {
       var hasHeight = that._hasHeight || !!maxHeight || isHeightSpecified;
       rowsView.hasHeight(hasHeight);
-      _this6._setAriaOwns();
+      _this7._setAriaOwns();
       // IE11
       if (maxHeightHappened && !isMaxHeightApplied) {
         (0, _renderer.default)(groupElement).css('height', maxHeight);

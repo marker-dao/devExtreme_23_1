@@ -7,38 +7,46 @@ var __rest = this && this.__rest || function (s, e) {
   }
   return t;
 };
+import errors from '../../../core/errors';
+import { version as packageVersion } from '../../../core/version';
 import { verify } from './rsa_pkcs1_sha1';
+var TokenKind;
+(function (TokenKind) {
+  TokenKind["corrupted"] = "corrupted";
+  TokenKind["verified"] = "verified";
+})(TokenKind || (TokenKind = {}));
 var SPLITTER = '.';
 var FORMAT = 1;
 var GENERAL_ERROR = {
-  kind: 'corrupted',
+  kind: TokenKind.corrupted,
   error: 'general'
 };
 var VERIFICATION_ERROR = {
-  kind: 'corrupted',
+  kind: TokenKind.corrupted,
   error: 'verification'
 };
 var DECODING_ERROR = {
-  kind: 'corrupted',
+  kind: TokenKind.corrupted,
   error: 'decoding'
 };
 var DESERIALIZATION_ERROR = {
-  kind: 'corrupted',
+  kind: TokenKind.corrupted,
   error: 'deserialization'
 };
 var PAYLOAD_ERROR = {
-  kind: 'corrupted',
+  kind: TokenKind.corrupted,
   error: 'payload'
 };
 var VERSION_ERROR = {
-  kind: 'corrupted',
+  kind: TokenKind.corrupted,
   error: 'version'
 };
-export function parseToken(encodedToken) {
-  if (encodedToken === undefined) {
+var isLicenseVerified = false;
+export function parseLicenseKey(encodedKey) {
+  if (encodedKey === undefined) {
     return GENERAL_ERROR;
   }
-  var parts = encodedToken.split(SPLITTER);
+  var parts = encodedKey.split(SPLITTER);
   if (parts.length !== 2 || parts[0].length === 0 || parts[1].length === 0) {
     return GENERAL_ERROR;
   }
@@ -73,10 +81,49 @@ export function parseToken(encodedToken) {
     return VERSION_ERROR;
   }
   return {
-    kind: 'verified',
+    kind: TokenKind.verified,
     payload: _extends({
       customerId,
       maxVersionAllowed
     }, rest)
   };
 }
+export function verifyLicense(licenseKey) {
+  var version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : packageVersion;
+  if (isLicenseVerified) {
+    return;
+  }
+  isLicenseVerified = true;
+  var warning = null;
+  try {
+    if (!licenseKey) {
+      warning = 'W0019';
+      return;
+    }
+    var license = parseLicenseKey(licenseKey);
+    if (license.kind === TokenKind.corrupted) {
+      warning = 'W0021';
+      return;
+    }
+    var [major, minor] = version.split('.').map(Number);
+    if (!(major && minor)) {
+      warning = 'W0021';
+      return;
+    }
+    if (major * 10 + minor > license.payload.maxVersionAllowed) {
+      warning = 'W0020';
+    }
+  } catch (e) {
+    warning = 'W0021';
+  } finally {
+    if (warning) {
+      errors.log(warning);
+    }
+  }
+}
+
+// NOTE: We need this default export
+// to allow QUnit mock the verifyLicense function
+export default {
+  verifyLicense
+};

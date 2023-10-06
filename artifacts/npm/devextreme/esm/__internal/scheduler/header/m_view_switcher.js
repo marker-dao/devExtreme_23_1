@@ -1,12 +1,13 @@
 /**
 * DevExtreme (esm/__internal/scheduler/header/m_view_switcher.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
+import { isFluent } from '../../../ui/themes';
 import { formatViews, getViewName, isOneView } from './m_utils';
 var VIEW_SWITCHER_CLASS = 'dx-scheduler-view-switcher';
 var VIEW_SWITCHER_DROP_DOWN_BUTTON_CLASS = 'dx-scheduler-view-switcher-dropdown-button';
@@ -26,6 +27,8 @@ export var getViewSwitcher = (header, item) => {
     selectedView,
     views
   } = getViewsAndSelectedView(header);
+  // @ts-expect-error
+  var stylingMode = isFluent() ? 'outlined' : 'contained';
   return _extends({
     widget: 'dxButtonGroup',
     locateInMenu: 'auto',
@@ -34,7 +37,7 @@ export var getViewSwitcher = (header, item) => {
       items: views,
       keyExpr: 'name',
       selectedItemKeys: [selectedView],
-      stylingMode: 'contained',
+      stylingMode,
       onItemClick: e => {
         var {
           view

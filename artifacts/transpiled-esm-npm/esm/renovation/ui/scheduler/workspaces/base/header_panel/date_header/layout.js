@@ -9,7 +9,7 @@ import { isHorizontalGroupingApplied } from '../../../utils';
 import { DateHeaderCell } from './cell';
 import getThemeType from '../../../../../../utils/getThemeType';
 var {
-  isMaterial
+  isMaterialBased
 } = getThemeType();
 export var viewFunction = _ref => {
   var {
@@ -59,7 +59,7 @@ export var viewFunction = _ref => {
         "isLastGroupCell": isLastGroupCell,
         "dateCellTemplate": dateCellTemplate,
         "colSpan": colSpan,
-        "splitText": isMaterial
+        "splitText": isMaterialBased
       }, key);
     })
   }, rowIndex.toString())), 0);

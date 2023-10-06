@@ -65,7 +65,7 @@ var Accordion = _uiCollection_widget.default.inherit({
       }
     }, {
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         animationDuration: 200,

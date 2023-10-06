@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_box.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -122,6 +122,14 @@ var DropDownBox = _ui.default.inherit({
       _this.focus();
     });
   },
+  _sortValuesByKeysOrder(orderedKeys, values) {
+    var sortedValues = values.sort(function (a, b) {
+      return orderedKeys.indexOf(a.itemKey) - orderedKeys.indexOf(b.itemKey);
+    });
+    return sortedValues.map(function (x) {
+      return x.itemDisplayValue;
+    });
+  },
   _renderInputValue: function _renderInputValue() {
     var _this2 = this;
     this._rejectValueLoading();
@@ -138,9 +146,15 @@ var DropDownBox = _ui.default.inherit({
       _this2._loadItem(key).always(function (item) {
         var displayValue = _this2._displayGetter(item);
         if ((0, _type.isDefined)(displayValue)) {
-          values.push(displayValue);
+          values.push({
+            itemKey: key,
+            itemDisplayValue: displayValue
+          });
         } else if (_this2.option('acceptCustomValue')) {
-          values.push(key);
+          values.push({
+            itemKey: key,
+            itemDisplayValue: key
+          });
         }
         deferred.resolve();
       });
@@ -148,8 +162,9 @@ var DropDownBox = _ui.default.inherit({
     });
     var callBase = this.callBase.bind(this);
     return _deferred.when.apply(this, itemLoadDeferreds).always(function () {
-      _this2.option('displayValue', values);
-      callBase(values.length && values);
+      var orderedValues = _this2._sortValuesByKeysOrder(keys, values);
+      _this2.option('displayValue', orderedValues);
+      callBase(values.length && orderedValues);
     });
   },
   _loadItem: function _loadItem(value) {

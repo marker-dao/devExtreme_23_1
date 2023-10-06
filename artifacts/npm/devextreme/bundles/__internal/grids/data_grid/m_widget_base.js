@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/m_widget_base.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -71,6 +71,7 @@ var DataGrid = _ui.default.inherit({
     });
   },
   _defaultOptionsRules() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.callBase().concat([{
       device: {
         platform: 'ios'
@@ -81,7 +82,7 @@ var DataGrid = _ui.default.inherit({
     }, {
       device() {
         // @ts-expect-error
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         showRowLines: true,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/columns_resizing_reordering/m_columns_resizing_reordering.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -318,10 +318,7 @@ var BlockSeparatorView = /*#__PURE__*/function (_SeparatorView2) {
     if ($element && !that._isShown) {
       switch (targetLocation) {
         case 'group':
-          startAnimate({
-            width: '50px',
-            display: 'inline-block'
-          });
+          this.element().css('display', 'block');
           break;
         case 'columnChooser':
           startAnimate({

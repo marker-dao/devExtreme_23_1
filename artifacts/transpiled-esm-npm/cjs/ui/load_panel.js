@@ -75,7 +75,7 @@ var LoadPanel = _ui.default.inherit({
       }
     }, {
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         message: '',

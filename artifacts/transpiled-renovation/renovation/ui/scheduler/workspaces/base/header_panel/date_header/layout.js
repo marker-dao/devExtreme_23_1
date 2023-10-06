@@ -19,7 +19,7 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var _getThemeType = (0, _getThemeType2.default)(),
-  isMaterial = _getThemeType.isMaterial;
+  isMaterialBased = _getThemeType.isMaterialBased;
 var viewFunction = function viewFunction(_ref) {
   var isHorizontalGrouping = _ref.isHorizontalGrouping,
     _ref$props = _ref.props,
@@ -62,7 +62,7 @@ var viewFunction = function viewFunction(_ref) {
           "isLastGroupCell": isLastGroupCell,
           "dateCellTemplate": dateCellTemplate,
           "colSpan": colSpan,
-          "splitText": isMaterial
+          "splitText": isMaterialBased
         }, key);
       })
     }, rowIndex.toString());

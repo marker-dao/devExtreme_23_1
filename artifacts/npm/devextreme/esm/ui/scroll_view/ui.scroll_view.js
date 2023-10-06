@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scroll_view/ui.scroll_view.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,7 @@ import SwipeDownStrategy from './ui.scroll_view.native.swipe_down';
 import SimulatedStrategy from './ui.scroll_view.simulated';
 import Scrollable from './ui.scrollable';
 import LoadIndicator from '../load_indicator';
-import { isMaterial } from './../themes';
+import { isMaterialBased } from './../themes';
 import LoadPanel from '../load_panel';
 
 // STYLE scrollView
@@ -76,7 +76,7 @@ var ScrollView = Scrollable.inherit(isServerSide ? scrollViewServerConfig : {
       }
     }, {
       device: function device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         pullingDownText: '',

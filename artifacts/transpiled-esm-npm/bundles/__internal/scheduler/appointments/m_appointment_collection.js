@@ -351,6 +351,9 @@ var SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     };
     var formatText = this.invoke('getTextAndFormatDate', model.appointmentData, this._currentAppointmentSettings.agendaSettings || model.targetedAppointmentData, 'TIME');
     $container.append(this.isAgendaView ? (0, _m_appointment_layout.createAgendaAppointmentLayout)(formatText, config) : (0, _m_appointment_layout.createAppointmentLayout)(formatText, config));
+    if (!this.isAgendaView) {
+      $container.parent().prepend((0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.STRIP));
+    }
   };
   _proto._executeItemRenderAction = function _executeItemRenderAction(index, itemData, itemElement) {
     var action = this._getItemRenderAction();

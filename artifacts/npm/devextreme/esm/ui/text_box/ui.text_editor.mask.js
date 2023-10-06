@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/text_box/ui.text_editor.mask.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,6 +30,7 @@ var ESCAPED_CHAR = '\\';
 var TEXTEDITOR_MASKED_CLASS = 'dx-texteditor-masked';
 var FORWARD_DIRECTION = 'forward';
 var BACKWARD_DIRECTION = 'backward';
+var DROP_EVENT_NAME = 'drop';
 var buildInMaskRules = {
   '0': /[0-9]/,
   '9': /[0-9\s]/,
@@ -125,9 +126,23 @@ var TextEditorMask = TextEditorBase.inherit({
     });
   },
   _onMouseWheel: noop,
-  _render: function _render() {
+  _useMaskBehavior() {
+    return Boolean(this.option('mask'));
+  },
+  _attachDropEventHandler() {
+    var useMaskBehavior = this._useMaskBehavior();
+    if (!useMaskBehavior) {
+      return;
+    }
+    var eventName = addNamespace(DROP_EVENT_NAME, this.NAME);
+    var input = this._input();
+    eventsEngine.off(input, eventName);
+    eventsEngine.on(input, eventName, e => e.preventDefault());
+  },
+  _render() {
     this._renderMask();
     this.callBase();
+    this._attachDropEventHandler();
     this._attachMouseWheelEventHandlers();
   },
   _renderHiddenElement: function _renderHiddenElement() {

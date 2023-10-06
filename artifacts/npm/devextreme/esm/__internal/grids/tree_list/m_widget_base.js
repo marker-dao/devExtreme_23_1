@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/tree_list/m_widget_base.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ import { deferRender, noop } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { isDefined, isFunction } from '../../../core/utils/type';
-import { isMaterial } from '../../../ui/themes';
+import { isMaterialBased } from '../../../ui/themes';
 import Widget from '../../../ui/widget/ui.widget';
 import gridCoreUtils from '../../grids/grid_core/m_utils';
 import treeListCore from './m_core';
@@ -59,7 +59,7 @@ var TreeList = Widget.inherit({
     return this.callBase().concat([{
       device() {
         // @ts-expect-error
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         showRowLines: true,

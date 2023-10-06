@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/workspaces/base/header_panel/date_header/dateHeaderText.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ export var viewFunction = _ref => {
     },
     textParts
   } = _ref;
-  return createFragment(splitText ? textParts.map(part => createVNode(1, "span", "dx-scheduler-header-panel-cell-date", part, 0)) : text, 0);
+  return createFragment(splitText ? textParts.map(part => createVNode(1, "div", "dx-scheduler-header-panel-cell-date", createVNode(1, "span", null, part, 0), 2)) : text, 0);
 };
 export var DateHeaderTextProps = {
   text: '',

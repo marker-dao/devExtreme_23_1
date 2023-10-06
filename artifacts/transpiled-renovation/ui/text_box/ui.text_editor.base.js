@@ -92,11 +92,18 @@ var TextEditorBase = _editor.default.inherit({
     return this.callBase().concat([{
       device: function device() {
         var themeName = (0, _themes.current)();
+        return (0, _themes.isMaterialBased)(themeName);
+      },
+      options: {
+        labelMode: 'floating'
+      }
+    }, {
+      device: function device() {
+        var themeName = (0, _themes.current)();
         return (0, _themes.isMaterial)(themeName);
       },
       options: {
-        stylingMode: (0, _config.default)().editorStylingMode || 'filled',
-        labelMode: 'floating'
+        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
       }
     }]);
   },
@@ -173,7 +180,6 @@ var TextEditorBase = _editor.default.inherit({
   _renderValidationState: function _renderValidationState() {
     this.callBase();
     var isPending = this.option('validationStatus') === 'pending';
-    var $element = this.$element();
     if (isPending) {
       !this._pendingIndicator && this._renderPendingIndicator();
       this._showValidMark = false;
@@ -186,7 +192,7 @@ var TextEditorBase = _editor.default.inherit({
       }
       this._disposePendingIndicator();
     }
-    $element.toggleClass(TEXTEDITOR_VALID_CLASS, !!this._showValidMark);
+    this._toggleValidMark();
   },
   _renderButtonContainers: function _renderButtonContainers() {
     var buttons = this.option('buttons');
@@ -222,18 +228,23 @@ var TextEditorBase = _editor.default.inherit({
     var inputAttributes = (0, _extend.extend)(this._getDefaultAttributes(), customAttributes);
     $input.attr(inputAttributes).addClass(TEXTEDITOR_INPUT_CLASS).css('minHeight', this.option('height') ? '0' : '');
   },
-  _getDefaultAttributes: function _getDefaultAttributes() {
-    var defaultAttributes = {
-      autocomplete: 'off'
-    };
+  _getPlaceholderAttr() {
     var _devices$real = _devices.default.real(),
       ios = _devices$real.ios,
       mac = _devices$real.mac;
-    if (ios || mac) {
-      // WA to fix vAlign (T898735)
-      // https://bugs.webkit.org/show_bug.cgi?id=142968
-      defaultAttributes.placeholder = ' ';
-    }
+    var _this$option = this.option(),
+      placeholder = _this$option.placeholder;
+
+    // WA to fix vAlign (T898735)
+    // https://bugs.webkit.org/show_bug.cgi?id=142968
+    var value = placeholder || (ios || mac ? ' ' : null);
+    return value;
+  },
+  _getDefaultAttributes() {
+    var defaultAttributes = {
+      autocomplete: 'off',
+      placeholder: this._getPlaceholderAttr()
+    };
     return defaultAttributes;
   },
   _updateButtons: function _updateButtons(names) {
@@ -351,12 +362,15 @@ var TextEditorBase = _editor.default.inherit({
   },
   _setFieldAria(force) {
     var _this$_$placeholder;
+    var _this$option2 = this.option('inputAttr'),
+      ariaLabel = _this$option2['aria-label'];
     var labelId = this._label.getId();
     var placeholderId = (_this$_$placeholder = this._$placeholder) === null || _this$_$placeholder === void 0 ? void 0 : _this$_$placeholder.attr('id');
-    var value = [labelId, placeholderId].filter(Boolean).join(' ');
+    var value = ariaLabel ? undefined : [labelId, placeholderId].filter(Boolean).join(' ');
     if (value || force) {
       var aria = {
-        'labelledby': value || undefined
+        'labelledby': value || undefined,
+        label: ariaLabel
       };
       this.setAria(aria, this._getFieldElement());
     }
@@ -364,10 +378,10 @@ var TextEditorBase = _editor.default.inherit({
   _renderLabel: function _renderLabel() {
     this._unobserveLabelContainerResize();
     this._labelContainerElement = (0, _renderer.default)(this._getLabelContainer()).get(0);
-    var _this$option = this.option(),
-      label = _this$option.label,
-      labelMode = _this$option.labelMode,
-      labelMark = _this$option.labelMark;
+    var _this$option3 = this.option(),
+      label = _this$option3.label,
+      labelMode = _this$option3.labelMode,
+      labelMark = _this$option3.labelMark;
     var labelConfig = {
       $editor: this.$element(),
       text: label,
@@ -612,6 +626,9 @@ var TextEditorBase = _editor.default.inherit({
       case 'placeholder':
         this._renderPlaceholder();
         this._setFieldAria(true);
+        this._input().attr({
+          placeholder: this._getPlaceholderAttr()
+        });
         break;
       case 'label':
         this._label.updateText(value);
@@ -717,6 +734,12 @@ var TextEditorBase = _editor.default.inherit({
     } else {
       this.callBase();
     }
+    this._disposePendingIndicator();
+    this._showValidMark = false;
+    this._toggleValidMark();
+  },
+  _toggleValidMark() {
+    this.$element().toggleClass(TEXTEDITOR_VALID_CLASS, !!this._showValidMark);
   },
   reset: function reset() {
     var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;

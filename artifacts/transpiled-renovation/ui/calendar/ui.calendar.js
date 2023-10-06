@@ -29,6 +29,7 @@ var _uiCalendarMultipleSelection = _interopRequireDefault(require("./ui.calendar
 var _uiCalendarRangeSelection = _interopRequireDefault(require("./ui.calendar.range.selection.strategy"));
 var _hover = require("../../events/hover");
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
+var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 // STYLE calendar
@@ -903,8 +904,8 @@ var Calendar = _editor.default.inherit({
         onClick: function onClick(args) {
           _this4._toTodayView(args);
         },
-        type: 'default',
-        stylingMode: 'text',
+        type: (0, _themes.isFluent)() ? 'normal' : 'default',
+        stylingMode: (0, _themes.isFluent)() ? 'outlined' : 'text',
         integrationOptions: {}
       }).$element().addClass(CALENDAR_TODAY_BUTTON_CLASS);
       this._$footer = (0, _renderer.default)('<div>').addClass(CALENDAR_FOOTER_CLASS).append($todayButton);

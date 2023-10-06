@@ -5,7 +5,7 @@ import { focused } from '../widget/selectors';
 import { isDefined } from '../../core/utils/type';
 import { extend } from '../../core/utils/extend';
 import { each } from '../../core/utils/iterator';
-import { current, isMaterial } from '../themes';
+import { current, isMaterial, isMaterialBased } from '../themes';
 import devices from '../../core/devices';
 import Editor from '../editor/editor';
 import { addNamespace, normalizeKeyName } from '../../events/utils/index';
@@ -88,11 +88,18 @@ var TextEditorBase = Editor.inherit({
     return this.callBase().concat([{
       device: function device() {
         var themeName = current();
+        return isMaterialBased(themeName);
+      },
+      options: {
+        labelMode: 'floating'
+      }
+    }, {
+      device: function device() {
+        var themeName = current();
         return isMaterial(themeName);
       },
       options: {
-        stylingMode: config().editorStylingMode || 'filled',
-        labelMode: 'floating'
+        stylingMode: config().editorStylingMode || 'filled'
       }
     }]);
   },
@@ -169,7 +176,6 @@ var TextEditorBase = Editor.inherit({
   _renderValidationState: function _renderValidationState() {
     this.callBase();
     var isPending = this.option('validationStatus') === 'pending';
-    var $element = this.$element();
     if (isPending) {
       !this._pendingIndicator && this._renderPendingIndicator();
       this._showValidMark = false;
@@ -182,7 +188,7 @@ var TextEditorBase = Editor.inherit({
       }
       this._disposePendingIndicator();
     }
-    $element.toggleClass(TEXTEDITOR_VALID_CLASS, !!this._showValidMark);
+    this._toggleValidMark();
   },
   _renderButtonContainers: function _renderButtonContainers() {
     var buttons = this.option('buttons');
@@ -218,19 +224,25 @@ var TextEditorBase = Editor.inherit({
     var inputAttributes = extend(this._getDefaultAttributes(), customAttributes);
     $input.attr(inputAttributes).addClass(TEXTEDITOR_INPUT_CLASS).css('minHeight', this.option('height') ? '0' : '');
   },
-  _getDefaultAttributes: function _getDefaultAttributes() {
-    var defaultAttributes = {
-      autocomplete: 'off'
-    };
+  _getPlaceholderAttr() {
     var {
       ios,
       mac
     } = devices.real();
-    if (ios || mac) {
-      // WA to fix vAlign (T898735)
-      // https://bugs.webkit.org/show_bug.cgi?id=142968
-      defaultAttributes.placeholder = ' ';
-    }
+    var {
+      placeholder
+    } = this.option();
+
+    // WA to fix vAlign (T898735)
+    // https://bugs.webkit.org/show_bug.cgi?id=142968
+    var value = placeholder || (ios || mac ? ' ' : null);
+    return value;
+  },
+  _getDefaultAttributes() {
+    var defaultAttributes = {
+      autocomplete: 'off',
+      placeholder: this._getPlaceholderAttr()
+    };
     return defaultAttributes;
   },
   _updateButtons: function _updateButtons(names) {
@@ -349,12 +361,16 @@ var TextEditorBase = Editor.inherit({
   },
   _setFieldAria(force) {
     var _this$_$placeholder;
+    var {
+      'aria-label': ariaLabel
+    } = this.option('inputAttr');
     var labelId = this._label.getId();
     var placeholderId = (_this$_$placeholder = this._$placeholder) === null || _this$_$placeholder === void 0 ? void 0 : _this$_$placeholder.attr('id');
-    var value = [labelId, placeholderId].filter(Boolean).join(' ');
+    var value = ariaLabel ? undefined : [labelId, placeholderId].filter(Boolean).join(' ');
     if (value || force) {
       var aria = {
-        'labelledby': value || undefined
+        'labelledby': value || undefined,
+        label: ariaLabel
       };
       this.setAria(aria, this._getFieldElement());
     }
@@ -610,6 +626,9 @@ var TextEditorBase = Editor.inherit({
       case 'placeholder':
         this._renderPlaceholder();
         this._setFieldAria(true);
+        this._input().attr({
+          placeholder: this._getPlaceholderAttr()
+        });
         break;
       case 'label':
         this._label.updateText(value);
@@ -715,6 +734,12 @@ var TextEditorBase = Editor.inherit({
     } else {
       this.callBase();
     }
+    this._disposePendingIndicator();
+    this._showValidMark = false;
+    this._toggleValidMark();
+  },
+  _toggleValidMark() {
+    this.$element().toggleClass(TEXTEDITOR_VALID_CLASS, !!this._showValidMark);
   },
   reset: function reset() {
     var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;

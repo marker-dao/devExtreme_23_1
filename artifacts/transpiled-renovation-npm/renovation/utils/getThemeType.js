@@ -6,7 +6,9 @@ var getThemeType = function getThemeType() {
   var theme = (0, _themes.current)();
   return {
     isCompact: (0, _themes.isCompact)(theme),
-    isMaterial: (0, _themes.isMaterial)(theme)
+    isMaterial: (0, _themes.isMaterial)(theme),
+    isFluent: (0, _themes.isFluent)(theme),
+    isMaterialBased: (0, _themes.isMaterialBased)(theme)
   };
 };
 var _default = getThemeType;

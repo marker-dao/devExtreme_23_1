@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/ui/toolbar/ui.toolbar.base.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { getWidth, getOuterWidth, getHeight } from '../../core/utils/size';
 import $ from '../../core/renderer';
-import { isMaterial, waitWebFont } from '../themes';
+import { isMaterial, isMaterialBased, waitWebFont } from '../themes';
 import { isPlainObject, isDefined } from '../../core/utils/type';
 import registerComponent from '../../core/component_registrator';
 import { extend } from '../../core/utils/extend';
@@ -96,7 +96,7 @@ class ToolbarBase extends AsyncCollectionWidget {
   _defaultOptionsRules() {
     return super._defaultOptionsRules().concat([{
       device: function device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         useFlatButtons: true

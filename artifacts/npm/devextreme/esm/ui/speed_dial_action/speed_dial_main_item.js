@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/speed_dial_action/speed_dial_main_item.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ import eventsEngine from '../../events/core/events_engine';
 import errors from '../widget/ui.errors';
 import swatchContainer from '../widget/swatch_container';
 import SpeedDialItem from './speed_dial_item';
-import { isMaterial, isCompact } from '../themes';
+import { isCompact, isMaterialBased } from '../themes';
 var {
   getSwatchContainer
 } = swatchContainer;
@@ -105,7 +105,7 @@ class SpeedDialMainItem extends SpeedDialItem {
   _defaultOptionsRules() {
     return super._defaultOptionsRules().concat([{
       device() {
-        return isMaterial() && !isCompact();
+        return isMaterialBased() && !isCompact();
       },
       options: {
         indent: 72,
@@ -114,7 +114,7 @@ class SpeedDialMainItem extends SpeedDialItem {
       }
     }, {
       device() {
-        return isMaterial() && isCompact();
+        return isMaterialBased() && isCompact();
       },
       options: {
         indent: 58,

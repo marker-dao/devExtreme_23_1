@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getViewSwitcher = exports.getDropDownViewSwitcher = void 0;
+var _themes = require("../../../ui/themes");
 var _m_utils = require("./m_utils");
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var VIEW_SWITCHER_CLASS = 'dx-scheduler-view-switcher';
@@ -25,6 +26,8 @@ var getViewSwitcher = function getViewSwitcher(header, item) {
   var _getViewsAndSelectedV = getViewsAndSelectedView(header),
     selectedView = _getViewsAndSelectedV.selectedView,
     views = _getViewsAndSelectedV.views;
+  // @ts-expect-error
+  var stylingMode = (0, _themes.isFluent)() ? 'outlined' : 'contained';
   return _extends({
     widget: 'dxButtonGroup',
     locateInMenu: 'auto',
@@ -33,7 +36,7 @@ var getViewSwitcher = function getViewSwitcher(header, item) {
       items: views,
       keyExpr: 'name',
       selectedItemKeys: [selectedView],
-      stylingMode: 'contained',
+      stylingMode,
       onItemClick: function onItemClick(e) {
         var view = e.itemData.view;
         header._updateCurrentView(view);

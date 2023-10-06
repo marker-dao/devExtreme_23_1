@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/editing/m_editing_cell_based.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -223,17 +223,22 @@ var editingControllerExtender = function editingControllerExtender(Base) {
         });
       }
       return false;
-    };
+    }
+    /**
+     * @returns whether to cancel cell editing
+     */;
     _proto._beforeEditCell = function _beforeEditCell(rowIndex, columnIndex, item) {
       var _this6 = this;
       if (this.isCellEditMode() && !item.isNewRow && this.hasChanges()) {
         // @ts-expect-error
-        var d = new _deferred.Deferred();
+        var isSaving = new _deferred.Deferred();
         this.saveEditData().always(function () {
-          d.resolve(_this6.hasChanges());
+          isSaving.resolve(_this6.hasChanges());
         });
-        return d;
+        this.addDeferred(isSaving);
+        return isSaving;
       }
+      return false;
     };
     _proto.publicMethods = function publicMethods() {
       var publicMethods = _Base.prototype.publicMethods.call(this);

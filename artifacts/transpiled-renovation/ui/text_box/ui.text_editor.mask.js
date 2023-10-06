@@ -26,6 +26,7 @@ var ESCAPED_CHAR = '\\';
 var TEXTEDITOR_MASKED_CLASS = 'dx-texteditor-masked';
 var FORWARD_DIRECTION = 'forward';
 var BACKWARD_DIRECTION = 'backward';
+var DROP_EVENT_NAME = 'drop';
 var buildInMaskRules = {
   '0': /[0-9]/,
   '9': /[0-9\s]/,
@@ -119,9 +120,25 @@ var TextEditorMask = _uiText_editor.default.inherit({
     });
   },
   _onMouseWheel: _common.noop,
-  _render: function _render() {
+  _useMaskBehavior() {
+    return Boolean(this.option('mask'));
+  },
+  _attachDropEventHandler() {
+    var useMaskBehavior = this._useMaskBehavior();
+    if (!useMaskBehavior) {
+      return;
+    }
+    var eventName = (0, _index.addNamespace)(DROP_EVENT_NAME, this.NAME);
+    var input = this._input();
+    _events_engine.default.off(input, eventName);
+    _events_engine.default.on(input, eventName, function (e) {
+      return e.preventDefault();
+    });
+  },
+  _render() {
     this._renderMask();
     this.callBase();
+    this._attachDropEventHandler();
     this._attachMouseWheelEventHandlers();
   },
   _renderHiddenElement: function _renderHiddenElement() {

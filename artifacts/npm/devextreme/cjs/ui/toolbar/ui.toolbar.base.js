@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toolbar/ui.toolbar.base.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -107,7 +107,7 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _AsyncCollectionWidge.prototype._defaultOptionsRules.call(this).concat([{
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         useFlatButtons: true

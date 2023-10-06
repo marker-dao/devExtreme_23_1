@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.verify = verify;
-var _sha = _interopRequireDefault(require("sha1"));
+var _sha = _interopRequireDefault(require("sha-1"));
 var _jsbn = _interopRequireDefault(require("./jsbn"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -73,9 +73,7 @@ function normalizeBigIntegerBytes(bytes) {
 function verify(_ref) {
   var text = _ref.text,
     encodedSignature = _ref.signature;
-  var actual = pad(new Uint8Array((0, _sha.default)(text, {
-    asBytes: true
-  })));
+  var actual = pad(new Uint8Array(fromHexString((0, _sha.default)(text))));
   var signature = new _jsbn.default(normalizeBigIntegerBytes(fromBase64String(encodedSignature)));
   var exponent = PUBLIC_KEY.e;
   var modulus = new _jsbn.default(normalizeBigIntegerBytes(PUBLIC_KEY.n));

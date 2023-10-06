@@ -73,7 +73,7 @@ var LoadIndicator = _ui.default.inherit({
       }
     }, {
       device: function device() {
-        return (0, _themes.isMaterial)(themeName);
+        return (0, _themes.isMaterialBased)(themeName);
       },
       options: {
         _animatingSegmentCount: 2,

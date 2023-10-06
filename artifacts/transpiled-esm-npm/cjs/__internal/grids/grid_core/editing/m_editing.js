@@ -23,6 +23,7 @@ var _pointer = _interopRequireDefault(require("../../../../events/pointer"));
 var _index = require("../../../../events/utils/index");
 var _message = _interopRequireDefault(require("../../../../localization/message"));
 var _dialog = require("../../../../ui/dialog");
+var _themes = require("../../../../ui/themes");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const = require("./const");
@@ -54,7 +55,7 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     this._changes = [];
     if (this._deferreds) {
       this._deferreds.forEach(function (d) {
-        return d.reject('cancel');
+        d.reject('cancel');
       });
     }
     this._deferreds = [];
@@ -1006,16 +1007,25 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   };
   _proto._getPopupEditFormTemplate = function _getPopupEditFormTemplate(rowIndex) {};
   _proto._getSaveButtonConfig = function _getSaveButtonConfig() {
-    return {
+    var buttonConfig = {
       text: this.option('editing.texts.saveRowChanges'),
       onClick: this.saveEditData.bind(this)
     };
+    if ((0, _themes.isFluent)((0, _themes.current)())) {
+      buttonConfig.stylingMode = 'contained';
+      buttonConfig.type = 'default';
+    }
+    return buttonConfig;
   };
   _proto._getCancelButtonConfig = function _getCancelButtonConfig() {
-    return {
+    var buttonConfig = {
       text: this.option('editing.texts.cancelRowChanges'),
       onClick: this.cancelEditData.bind(this)
     };
+    if ((0, _themes.isFluent)((0, _themes.current)())) {
+      buttonConfig.stylingMode = 'outlined';
+    }
+    return buttonConfig;
   };
   _proto._removeInternalData = function _removeInternalData(key) {
     var internalData = this._getInternalData(key);
@@ -1613,10 +1623,13 @@ var EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
   };
   _proto._getRowIndicesForCascadeUpdating = function _getRowIndicesForCascadeUpdating(row, skipCurrentRow) {
     return skipCurrentRow ? [] : [row.rowIndex];
-  };
+  }
+  /**
+   * Adds a deferred object to be awaited before other operations are executed
+   */;
   _proto.addDeferred = function addDeferred(deferred) {
     var _this26 = this;
-    if (this._deferreds.indexOf(deferred) < 0) {
+    if (!this._deferreds.includes(deferred)) {
       this._deferreds.push(deferred);
       deferred.always(function () {
         var index = _this26._deferreds.indexOf(deferred);

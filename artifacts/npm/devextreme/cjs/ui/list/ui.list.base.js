@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.base.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -198,11 +198,17 @@ var ListBase = _uiCollection_widget.default.inherit({
         return (0, _themes.isMaterial)(themeName);
       },
       options: {
+        useInkRipple: true
+      }
+    }, {
+      device: function device() {
+        return (0, _themes.isMaterialBased)(themeName);
+      },
+      options: {
         pullingDownText: '',
         pulledDownText: '',
         refreshingText: '',
-        pageLoadingText: '',
-        useInkRipple: true
+        pageLoadingText: ''
       }
     }]);
   },
@@ -641,7 +647,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       container: (0, _element.getPublicElement)($groupHeaderElement)
     };
     this._createItemByTemplate(groupTemplate, renderArgs);
-    if ((0, _themes.isMaterial)()) {
+    if ((0, _themes.isMaterialBased)()) {
       (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
     }
     this._renderingGroupIndex = index;
@@ -721,7 +727,7 @@ var ListBase = _uiCollection_widget.default.inherit({
     this._createComponent($button, _button.default, {
       text: this.option('nextButtonText'),
       onClick: this._nextButtonHandler.bind(this),
-      type: (0, _themes.isMaterial)() ? 'default' : undefined,
+      type: (0, _themes.isMaterialBased)() ? 'default' : undefined,
       integrationOptions: {}
     });
     return $result;

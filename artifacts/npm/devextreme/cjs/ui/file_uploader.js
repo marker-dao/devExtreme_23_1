@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_uploader.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -259,6 +259,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._$fileInput.prop({
       multiple: this.option('multiple'),
       accept: this.option('accept'),
+      title: this.option('hint') || null,
       tabIndex: -1
     });
   };
@@ -770,7 +771,9 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     }
   };
   _proto._shouldRaiseDragOver = function _shouldRaiseDragOver(e, dropZoneElement) {
-    return this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false) && e.originalEvent.dataTransfer.types[0] === 'Files';
+    return this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false) && e.originalEvent.dataTransfer.types.find(function (item) {
+      return item === 'Files';
+    });
   };
   _proto._dragOverHandler = function _dragOverHandler(isCustomTarget, e) {
     if (!this._useInputForDrop()) {
@@ -1216,6 +1219,10 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
         break;
       case 'inputAttr':
         this._applyInputAttributes(this.option(name));
+        break;
+      case 'hint':
+        this._initFileInput();
+        _Editor.prototype._optionChanged.call(this, args);
         break;
       default:
         _Editor.prototype._optionChanged.call(this, args);

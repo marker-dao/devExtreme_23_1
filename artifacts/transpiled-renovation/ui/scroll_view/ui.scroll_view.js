@@ -73,7 +73,7 @@ var ScrollView = _ui.default.inherit(isServerSide ? scrollViewServerConfig : {
       }
     }, {
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         pullingDownText: '',

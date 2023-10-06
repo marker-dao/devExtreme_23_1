@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/header/m_date_navigator.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,7 +26,7 @@ var DIRECTION_RIGHT = 1;
 var getDateNavigator = function getDateNavigator(header, item) {
   var items = [getPreviousButtonOptions(header), getCalendarButtonOptions(header), getNextButtonOptions(header)];
   // @ts-expect-error
-  var stylingMode = (0, _themes.isMaterial)() ? 'text' : 'contained';
+  var stylingMode = (0, _themes.isMaterialBased)() ? 'text' : 'contained';
   return _extends({
     widget: 'dxButtonGroup',
     cssClass: DATE_NAVIGATOR_CLASS,

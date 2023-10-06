@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../core/utils/date';
-import { isMaterial } from '../../../ui/themes';
+import { isMaterialBased } from '../../../ui/themes';
 var {
   trimTime
 } = dateUtils;
@@ -13,7 +13,7 @@ var DIRECTION_RIGHT = 1;
 export var getDateNavigator = (header, item) => {
   var items = [getPreviousButtonOptions(header), getCalendarButtonOptions(header), getNextButtonOptions(header)];
   // @ts-expect-error
-  var stylingMode = isMaterial() ? 'text' : 'contained';
+  var stylingMode = isMaterialBased() ? 'text' : 'contained';
   return _extends({
     widget: 'dxButtonGroup',
     cssClass: DATE_NAVIGATOR_CLASS,

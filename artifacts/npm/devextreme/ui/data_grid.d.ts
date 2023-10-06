@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/data_grid.d.ts)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1043,9 +1043,22 @@ export type RowDraggingRemoveEvent<TRowData = any, TKey = any> = ReducedNativeEv
 /** @public */
 export type RowDraggingReorderEvent<TRowData = any, TKey = any> = ReducedNativeEventInfo<dxDataGrid<TRowData, TKey>> & RowDraggingEventInfo<TRowData> & DragReorderInfo;
 
-/** @public */
+/**
+ * @docid _ui_data_grid_ColumnButtonClickEvent
+ * @public
+ * @type object
+ * @inherits NativeEventInfo
+ */
 export type ColumnButtonClickEvent<TRowData = any, TKey = any> = NativeEventInfo<dxDataGrid<TRowData, TKey>, PointerEvent | MouseEvent> & {
+  /**
+   * @docid _ui_data_grid_ColumnButtonClickEvent.row
+   * @type dxDataGridRowObject
+   */
   row?: Row<TRowData, TKey>;
+  /**
+   * @docid _ui_data_grid_ColumnButtonClickEvent.column
+   * @type dxDataGridColumn
+   */
   column?: Column<TRowData, TKey>;
 };
 
@@ -2001,6 +2014,7 @@ export type Selection = SelectionBase & {
      * @docid dxDataGridOptions.selection.showCheckBoxesMode
      * @default "onClick"
      * @default "always" &for(Material)
+     * @default "always" &for(Fluent)
      * @public
      */
     showCheckBoxesMode?: SelectionColumnDisplayMode;
@@ -2311,12 +2325,7 @@ export interface dxDataGridColumnButton<TRowData = any, TKey = any> extends Colu
     name?: DataGridPredefinedColumnButton | string;
     /**
      * @docid dxDataGridColumnButton.onClick
-     * @type_function_param1 e:object
-     * @type_function_param1_field component:dxDataGrid
-     * @type_function_param1_field model:object
-     * @type_function_param1_field event:event
-     * @type_function_param1_field row:dxDataGridRowObject
-     * @type_function_param1_field column:dxDataGridColumn
+     * @type_function_param1 e:{ui/data_grid:ColumnButtonClickEvent}
      * @public
      */
     onClick?: ((e: ColumnButtonClickEvent<TRowData, TKey>) => void);

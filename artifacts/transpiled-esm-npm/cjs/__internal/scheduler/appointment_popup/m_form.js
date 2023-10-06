@@ -38,8 +38,8 @@ var APPOINTMENT_FORM_GROUP_NAMES = {
   Recurrence: 'recurrenceGroup'
 };
 exports.APPOINTMENT_FORM_GROUP_NAMES = APPOINTMENT_FORM_GROUP_NAMES;
-var getStartDateWithStartHour = function getStartDateWithStartHour(startDate, startDayHour) {
-  return new Date(new Date(startDate).setHours(startDayHour));
+var getDateWithStartHour = function getDateWithStartHour(date, startDayHour) {
+  return new Date(new Date(date).setHours(startDayHour));
 };
 var validateAppointmentFormDate = function validateAppointmentFormDate(editor, value, previousValue) {
   var isCurrentDateCorrect = value === null || !!value;
@@ -109,7 +109,7 @@ var AppointmentForm = /*#__PURE__*/function () {
       items: this._createRecurrenceEditor(expr)
     }];
     var element = (0, _renderer.default)('<div>');
-    this.form = this.scheduler.createComponent(element, _form.default, {
+    this.scheduler.createComponent(element, _form.default, {
       items,
       showValidationSummary: true,
       scrollingEnabled: true,
@@ -121,6 +121,9 @@ var AppointmentForm = /*#__PURE__*/function () {
       formData,
       showColonAfterLabel: false,
       labelLocation: 'top',
+      onInitialized: function onInitialized(e) {
+        _this.form = e.component;
+      },
       customizeItem: function customizeItem(e) {
         if (_this.form && e.itemType === 'group') {
           var dataExprs = _this.scheduler.getDataAccessors().expr;
@@ -254,16 +257,19 @@ var AppointmentForm = /*#__PURE__*/function () {
             var startDateEditor = _this4.form.getEditor(dataExprs.startDateExpr);
             var endDateEditor = _this4.form.getEditor(dataExprs.endDateExpr);
             var startDate = _date_serialization.default.deserializeDate(startDateEditor.option('value'));
+            var endDate = _date_serialization.default.deserializeDate(endDateEditor.option('value'));
             if (_this4.semaphore.isFree() && startDate) {
               if (value) {
                 var allDayStartDate = _date.default.trimTime(startDate);
+                var allDayEndDate = _date.default.trimTime(endDate);
                 startDateEditor.option('value', new Date(allDayStartDate));
-                endDateEditor.option('value', new Date(allDayStartDate));
+                endDateEditor.option('value', new Date(allDayEndDate));
               } else {
-                var startDateWithStartHour = getStartDateWithStartHour(startDate, _this4.scheduler.getStartDayHour());
-                var endDate = _this4.scheduler.getCalculatedEndDate(startDateWithStartHour);
+                var startDateWithStartHour = getDateWithStartHour(startDate, _this4.scheduler.getStartDayHour());
+                var endDateWithStartHour = getDateWithStartHour(endDate, _this4.scheduler.getStartDayHour());
+                var calculatedEndDate = _this4.scheduler.getCalculatedEndDate(endDateWithStartHour);
                 startDateEditor.option('value', startDateWithStartHour);
-                endDateEditor.option('value', endDate);
+                endDateEditor.option('value', calculatedEndDate);
               }
             }
             var startDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(dataExprs.startDateExpr);

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.lt.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -267,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "iki datos",
             "dxScheduler-recurrenceRepeatCount": "kartą(us)",
             "dxScheduler-allDay": "Visa diena",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Norite redaguoti tik šį paskyrimą ar visą seriją?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Norite ištrinti tik šį paskyrimą ar visą seriją?",
             "dxScheduler-confirmRecurrenceEditSeries": "Redaguoti seriją",
@@ -666,7 +668,8 @@
             "dxGantt-showResources": "Rodyti resursus",
             "dxGantt-showDependencies": "Rodyti priklausomybes",
             "dxGantt-dialogStartDateValidation": "Pradžios data turi būti po {0}",
-            "dxGantt-dialogEndDateValidation": "Pabaigos data turi būti po {0}"
+            "dxGantt-dialogEndDateValidation": "Pabaigos data turi būti po {0}",
+            "dxGallery-itemName": "Gallery item"
         }
     });
 }));

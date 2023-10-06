@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/speed_dial_action/speed_dial_main_item.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -115,7 +115,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _SpeedDialItem.prototype._defaultOptionsRules.call(this).concat([{
       device() {
-        return (0, _themes.isMaterial)() && !(0, _themes.isCompact)();
+        return (0, _themes.isMaterialBased)() && !(0, _themes.isCompact)();
       },
       options: {
         indent: 72,
@@ -124,7 +124,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
       }
     }, {
       device() {
-        return (0, _themes.isMaterial)() && (0, _themes.isCompact)();
+        return (0, _themes.isMaterialBased)() && (0, _themes.isCompact)();
       },
       options: {
         indent: 58,

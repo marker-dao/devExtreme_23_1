@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/ui.date_range_box.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -143,11 +143,18 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     return _Editor.prototype._defaultOptionsRules.call(this).concat([{
       device: function device() {
         var themeName = (0, _themes.current)();
+        return (0, _themes.isMaterialBased)(themeName);
+      },
+      options: {
+        labelMode: 'floating'
+      }
+    }, {
+      device: function device() {
+        var themeName = (0, _themes.current)();
         return (0, _themes.isMaterial)(themeName);
       },
       options: {
-        stylingMode: (0, _config.default)().editorStylingMode || 'filled',
-        labelMode: 'floating'
+        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
       }
     }, {
       device: function device() {

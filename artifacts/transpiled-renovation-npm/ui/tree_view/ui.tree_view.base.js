@@ -211,6 +211,11 @@ var TreeViewBase = _ui.default.inherit({
     });
   },
   _checkBoxModeChange: function _checkBoxModeChange(value, previousValue) {
+    var searchEnabled = this.option('searchEnabled');
+    var previousSelectAllEnabled = this._selectAllEnabled(previousValue);
+    var previousItemsContainer = this._itemContainer(searchEnabled, previousSelectAllEnabled);
+    this._detachClickEvent(previousItemsContainer);
+    this._detachExpandEvent(previousItemsContainer);
     if (previousValue === 'none' || value === 'none') {
       return;
     }
@@ -273,7 +278,7 @@ var TreeViewBase = _ui.default.inherit({
         this.repaint();
         break;
       case 'expandEvent':
-        this._initExpandEvent();
+        this._attachExpandEvent();
         break;
       case 'deferRendering':
       case 'dataStructure':
@@ -494,7 +499,7 @@ var TreeViewBase = _ui.default.inherit({
       return;
     }
     this._renderItems($nodeContainer, this._dataAdapter.getRootNodes());
-    this._initExpandEvent();
+    this._attachExpandEvent();
     if (this._selectAllEnabled()) {
       this._createSelectAllValueChangedAction();
       this._renderSelectAllItem($nodeContainer);
@@ -564,8 +569,9 @@ var TreeViewBase = _ui.default.inherit({
   _hasCustomExpanderIcons: function _hasCustomExpanderIcons() {
     return this.option('expandIcon') || this.option('collapseIcon');
   },
-  _selectAllEnabled: function _selectAllEnabled() {
-    return this.option('showCheckBoxesMode') === 'selectAll' && !this._isSingleSelection();
+  _selectAllEnabled: function _selectAllEnabled(showCheckBoxesMode) {
+    var mode = showCheckBoxesMode !== null && showCheckBoxesMode !== void 0 ? showCheckBoxesMode : this.option('showCheckBoxesMode');
+    return mode === 'selectAll' && !this._isSingleSelection();
   },
   _renderItems: function _renderItems($nodeContainer, nodes) {
     var length = nodes.length - 1;
@@ -683,12 +689,14 @@ var TreeViewBase = _ui.default.inherit({
       this._toggleExpandedState(e.currentTarget, undefined, e);
     }
   },
-  _initExpandEvent: function _initExpandEvent() {
+  _attachExpandEvent: function _attachExpandEvent() {
     var expandedEventName = this._getEventNameByOption(this.option('expandEvent'));
     var $itemsContainer = this._itemContainer();
-    var itemSelector = this._itemSelector();
-    _events_engine.default.off($itemsContainer, '.' + EXPAND_EVENT_NAMESPACE, itemSelector);
-    _events_engine.default.on($itemsContainer, expandedEventName, itemSelector, this._expandEventHandler.bind(this));
+    this._detachExpandEvent($itemsContainer);
+    _events_engine.default.on($itemsContainer, expandedEventName, this._itemSelector(), this._expandEventHandler.bind(this));
+  },
+  _detachExpandEvent(itemsContainer) {
+    _events_engine.default.off(itemsContainer, ".".concat(EXPAND_EVENT_NAMESPACE), this._itemSelector());
   },
   _getEventNameByOption: function _getEventNameByOption(name) {
     var event = name === 'click' ? _click.name : _double_click.name;
@@ -1156,20 +1164,41 @@ var TreeViewBase = _ui.default.inherit({
     return ITEM_DATA_KEY;
   },
   _attachClickEvent: function _attachClickEvent() {
-    var clickSelector = '.' + this._itemClass();
-    var pointerDownSelector = '.' + NODE_CLASS + ', .' + SELECT_ALL_ITEM_CLASS;
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
-    var pointerDownEvent = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
+    var _this12 = this;
     var $itemContainer = this._itemContainer();
-    var that = this;
-    _events_engine.default.off($itemContainer, eventName, clickSelector);
-    _events_engine.default.off($itemContainer, pointerDownEvent, pointerDownSelector);
-    _events_engine.default.on($itemContainer, eventName, clickSelector, function (e) {
-      that._itemClickHandler(e, (0, _renderer.default)(this));
+    this._detachClickEvent($itemContainer);
+    var _this$_getItemClickEv = this._getItemClickEventData(),
+      clickEventNamespace = _this$_getItemClickEv.clickEventNamespace,
+      itemSelector = _this$_getItemClickEv.itemSelector,
+      pointerDownEventNamespace = _this$_getItemClickEv.pointerDownEventNamespace,
+      nodeSelector = _this$_getItemClickEv.nodeSelector;
+    _events_engine.default.on($itemContainer, clickEventNamespace, itemSelector, function (e) {
+      _this12._itemClickHandler(e, (0, _renderer.default)(e.currentTarget));
     });
-    _events_engine.default.on($itemContainer, pointerDownEvent, pointerDownSelector, function (e) {
-      that._itemPointerDownHandler(e);
+    _events_engine.default.on($itemContainer, pointerDownEventNamespace, nodeSelector, function (e) {
+      _this12._itemPointerDownHandler(e);
     });
+  },
+  _detachClickEvent: function _detachClickEvent(itemsContainer) {
+    var _this$_getItemClickEv2 = this._getItemClickEventData(),
+      clickEventNamespace = _this$_getItemClickEv2.clickEventNamespace,
+      itemSelector = _this$_getItemClickEv2.itemSelector,
+      pointerDownEventNamespace = _this$_getItemClickEv2.pointerDownEventNamespace,
+      nodeSelector = _this$_getItemClickEv2.nodeSelector;
+    _events_engine.default.off(itemsContainer, clickEventNamespace, itemSelector);
+    _events_engine.default.off(itemsContainer, pointerDownEventNamespace, nodeSelector);
+  },
+  _getItemClickEventData: function _getItemClickEventData() {
+    var itemSelector = ".".concat(this._itemClass());
+    var nodeSelector = ".".concat(NODE_CLASS, ", .").concat(SELECT_ALL_ITEM_CLASS);
+    var clickEventNamespace = (0, _index.addNamespace)(_click.name, this.NAME);
+    var pointerDownEventNamespace = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
+    return {
+      clickEventNamespace,
+      itemSelector,
+      pointerDownEventNamespace,
+      nodeSelector
+    };
   },
   _itemClick: function _itemClick(actionArgs) {
     var args = actionArgs.args[0];
@@ -1216,14 +1245,14 @@ var TreeViewBase = _ui.default.inherit({
     this.callBase();
   },
   _focusInHandler: function _focusInHandler(e) {
-    var _this12 = this;
+    var _this13 = this;
     this._updateFocusState(e, true);
     var isSelectAllItem = (0, _renderer.default)(e.target).hasClass(SELECT_ALL_ITEM_CLASS);
     if (isSelectAllItem || this.option('focusedElement')) {
       clearTimeout(this._setFocusedItemTimeout);
       this._setFocusedItemTimeout = setTimeout(function () {
-        var element = isSelectAllItem ? (0, _element.getPublicElement)(_this12._$selectAllItem) : (0, _renderer.default)(_this12.option('focusedElement'));
-        _this12._setFocusedItem(element);
+        var element = isSelectAllItem ? (0, _element.getPublicElement)(_this13._$selectAllItem) : (0, _renderer.default)(_this13.option('focusedElement'));
+        _this13._setFocusedItem(element);
       });
       return;
     }
@@ -1370,12 +1399,12 @@ var TreeViewBase = _ui.default.inherit({
     return this._scrollable;
   },
   updateDimensions: function updateDimensions() {
-    var _this13 = this;
+    var _this14 = this;
     var deferred = new _deferred.Deferred();
     var scrollable = this.getScrollable();
     if (scrollable) {
       scrollable.update().done(function () {
-        deferred.resolveWith(_this13);
+        deferred.resolveWith(_this14);
       });
     } else {
       deferred.resolveWith(this);
@@ -1398,10 +1427,10 @@ var TreeViewBase = _ui.default.inherit({
     return this._dataAdapter.getTreeNodes();
   },
   getSelectedNodes: function getSelectedNodes() {
-    var _this14 = this;
+    var _this15 = this;
     return this.getSelectedNodeKeys().map(function (key) {
-      var node = _this14._dataAdapter.getNodeByKey(key);
-      return _this14._dataAdapter.getPublicNode(node);
+      var node = _this15._dataAdapter.getNodeByKey(key);
+      return _this15._dataAdapter.getPublicNode(node);
     });
   },
   getSelectedNodeKeys: function getSelectedNodeKeys() {
@@ -1430,18 +1459,18 @@ var TreeViewBase = _ui.default.inherit({
     this._fireContentReadyAction();
   },
   expandAll: function expandAll() {
-    var _this15 = this;
+    var _this16 = this;
     var nodes = this._dataAdapter.getData();
     var expandingPromises = [];
     this._skipContentReadyAndItemExpanded = true;
 
     // NOTE: This is needed to support animation on expandAll, but stop triggering multiple contentReady/itemExpanded events.
     nodes.forEach(function (node) {
-      return expandingPromises.push(_this15._toggleExpandedState(node.internalFields.key, true));
+      return expandingPromises.push(_this16._toggleExpandedState(node.internalFields.key, true));
     });
     Promise.allSettled(expandingPromises).then(function () {
-      var _this15$_allItemsExpa;
-      return (_this15$_allItemsExpa = _this15._allItemsExpanded) === null || _this15$_allItemsExpa === void 0 ? void 0 : _this15$_allItemsExpa.call(_this15);
+      var _this16$_allItemsExpa;
+      return (_this16$_allItemsExpa = _this16._allItemsExpanded) === null || _this16$_allItemsExpa === void 0 ? void 0 : _this16$_allItemsExpa.call(_this16);
     });
   },
   collapseAll: function collapseAll() {
@@ -1450,7 +1479,7 @@ var TreeViewBase = _ui.default.inherit({
     }.bind(this));
   },
   scrollToItem: function scrollToItem(keyOrItemOrElement) {
-    var _this16 = this;
+    var _this17 = this;
     var node = this._getNode(keyOrItemOrElement);
     if (!node) {
       return new _deferred.Deferred().reject().promise();
@@ -1465,9 +1494,9 @@ var TreeViewBase = _ui.default.inherit({
     }
     var scrollCallback = new _deferred.Deferred();
     this._expandNodes(nodeKeysToExpand.reverse()).always(function () {
-      var $element = _this16._getNodeElement(node);
+      var $element = _this17._getNodeElement(node);
       if ($element && $element.length) {
-        _this16.scrollToElementTopLeft($element.get(0));
+        _this17.scrollToElementTopLeft($element.get(0));
         scrollCallback.resolve();
       } else {
         scrollCallback.reject();
@@ -1495,13 +1524,13 @@ var TreeViewBase = _ui.default.inherit({
     scrollable.scrollTo(targetLocation);
   },
   _expandNodes: function _expandNodes(keysToExpand) {
-    var _this17 = this;
+    var _this18 = this;
     if (!keysToExpand || keysToExpand.length === 0) {
       return new _deferred.Deferred().resolve().promise();
     }
     var resultCallback = new _deferred.Deferred();
     var callbacksByNodes = keysToExpand.map(function (key) {
-      return _this17.expandItem(key);
+      return _this18.expandItem(key);
     });
     _deferred.when.apply(_renderer.default, callbacksByNodes).done(function () {
       return resultCallback.resolve();

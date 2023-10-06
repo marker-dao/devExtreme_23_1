@@ -22,12 +22,14 @@ export var APPOINTMENT_CONTENT_CLASSES = {
   APPOINTMENT_DATE: 'dx-scheduler-appointment-content-date',
   ALL_DAY_CONTENT: 'dx-scheduler-appointment-content-allday',
   ITEM: 'dx-scheduler-appointment',
+  STRIP: 'dx-scheduler-appointment-strip',
   AGENDA_MARKER: 'dx-scheduler-agenda-appointment-marker',
   AGENDA_RESOURCE_LIST: 'dx-scheduler-appointment-resource-list',
   AGENDA_RESOURCE_LIST_ITEM: 'dx-scheduler-appointment-resource-item',
   AGENDA_RESOURCE_LIST_ITEM_VALUE: 'dx-scheduler-appointment-resource-item-value'
 };
 export var AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS = 'dx-scheduler-last-in-date-agenda-appointment';
+export var APPOINTMENT_HAS_RESOURCE_COLOR_CLASS = 'dx-scheduler-appointment-has-resource-color';
 export var HEADER_CURRENT_TIME_CELL_CLASS = 'dx-scheduler-header-panel-current-time-cell';
 export var VIRTUAL_CELL_CLASS = 'dx-scheduler-virtual-cell';
 export var TIME_PANEL_CLASS = 'dx-scheduler-time-panel';

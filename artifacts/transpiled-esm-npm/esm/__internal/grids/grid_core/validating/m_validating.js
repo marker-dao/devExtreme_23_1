@@ -16,6 +16,7 @@ import messageLocalization from '../../../../localization/message';
 import Button from '../../../../ui/button';
 import LoadIndicator from '../../../../ui/load_indicator';
 import Overlay from '../../../../ui/overlay/ui.overlay';
+import { current, isFluent } from '../../../../ui/themes';
 import ValidationEngine from '../../../../ui/validation_engine';
 import Validator from '../../../../ui/validator';
 import { focused } from '../../../../ui/widget/selectors';
@@ -821,6 +822,12 @@ export var validatingModule = {
           }
           return result.promise ? result.promise() : result;
         },
+        /**
+        * @param rowIndex Row index
+        * @param columnIndex Column index
+        * @param item Data item
+        * @returns A deferred object that resolves to a boolean or just a boolean to determine whether to cancel cell editing
+        */
         _beforeEditCell(rowIndex, columnIndex, item) {
           var result = this.callBase(rowIndex, columnIndex, item);
           if (this.getEditMode() === EDIT_MODE_CELL) {
@@ -841,6 +848,7 @@ export var validatingModule = {
               return result;
             }
           }
+          return false;
         },
         _afterSaveEditData(cancel) {
           var $firstErrorRow;
@@ -1281,7 +1289,7 @@ export var validatingModule = {
                     })) {
                       return;
                     }
-                    if (validationResult.status === VALIDATION_STATUS.invalid) {
+                    if (!isFluent(current()) && validationResult.status === VALIDATION_STATUS.invalid) {
                       isHideBorder = true;
                     }
                     this.updateCellState($element, validationResult, isHideBorder);

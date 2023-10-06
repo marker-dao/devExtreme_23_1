@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/m_appointment.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -160,7 +160,10 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     };
     var deferredColor = this.option('getAppointmentColor')(appointmentConfig);
     deferredColor.done(function (color) {
-      return color && _this.coloredElement.css('backgroundColor', color);
+      if (color) {
+        _this.coloredElement.css('backgroundColor', color);
+        _this.coloredElement.addClass(_m_classes.APPOINTMENT_HAS_RESOURCE_COLOR_CLASS);
+      }
     });
   };
   _proto._renderAppointmentGeometry = function _renderAppointmentGeometry() {

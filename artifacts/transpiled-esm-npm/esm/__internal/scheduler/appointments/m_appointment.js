@@ -12,7 +12,7 @@ import dateLocalization from '../../../localization/date';
 import messageLocalization from '../../../localization/message';
 import Resizable from '../../../ui/resizable';
 import { hide, show } from '../../../ui/tooltip/ui.tooltip';
-import { ALL_DAY_APPOINTMENT_CLASS, APPOINTMENT_CONTENT_CLASSES, APPOINTMENT_DRAG_SOURCE_CLASS, DIRECTION_APPOINTMENT_CLASSES, EMPTY_APPOINTMENT_CLASS, RECURRENCE_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_ICON, REDUCED_APPOINTMENT_PARTS_CLASSES } from '../m_classes';
+import { ALL_DAY_APPOINTMENT_CLASS, APPOINTMENT_CONTENT_CLASSES, APPOINTMENT_DRAG_SOURCE_CLASS, APPOINTMENT_HAS_RESOURCE_COLOR_CLASS, DIRECTION_APPOINTMENT_CLASSES, EMPTY_APPOINTMENT_CLASS, RECURRENCE_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_CLASS, REDUCED_APPOINTMENT_ICON, REDUCED_APPOINTMENT_PARTS_CLASSES } from '../m_classes';
 import { ExpressionUtils } from '../m_expression_utils';
 import { getRecurrenceProcessor } from '../m_recurrence';
 var DEFAULT_HORIZONTAL_HANDLES = 'left right';
@@ -138,7 +138,12 @@ export class Appointment extends DOMComponent {
       groups: this.option('groups')
     };
     var deferredColor = this.option('getAppointmentColor')(appointmentConfig);
-    deferredColor.done(color => color && this.coloredElement.css('backgroundColor', color));
+    deferredColor.done(color => {
+      if (color) {
+        this.coloredElement.css('backgroundColor', color);
+        this.coloredElement.addClass(APPOINTMENT_HAS_RESOURCE_COLOR_CLASS);
+      }
+    });
   }
   _renderAppointmentGeometry() {
     var geometry = this.option('geometry');

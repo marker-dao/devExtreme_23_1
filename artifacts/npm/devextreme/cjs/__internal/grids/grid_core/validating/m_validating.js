@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/validating/m_validating.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,6 +28,7 @@ var _message = _interopRequireDefault(require("../../../../localization/message"
 var _button = _interopRequireDefault(require("../../../../ui/button"));
 var _load_indicator = _interopRequireDefault(require("../../../../ui/load_indicator"));
 var _ui = _interopRequireDefault(require("../../../../ui/overlay/ui.overlay"));
+var _themes = require("../../../../ui/themes");
 var _validation_engine = _interopRequireDefault(require("../../../../ui/validation_engine"));
 var _validator = _interopRequireDefault(require("../../../../ui/validator"));
 var _selectors = require("../../../../ui/widget/selectors");
@@ -822,6 +823,12 @@ var validatingModule = {
           }
           return result.promise ? result.promise() : result;
         },
+        /**
+        * @param rowIndex Row index
+        * @param columnIndex Column index
+        * @param item Data item
+        * @returns A deferred object that resolves to a boolean or just a boolean to determine whether to cancel cell editing
+        */
         _beforeEditCell(rowIndex, columnIndex, item) {
           var result = this.callBase(rowIndex, columnIndex, item);
           if (this.getEditMode() === EDIT_MODE_CELL) {
@@ -842,6 +849,7 @@ var validatingModule = {
               return result;
             }
           }
+          return false;
         },
         _afterSaveEditData(cancel) {
           var _this8 = this;
@@ -1287,7 +1295,7 @@ var validatingModule = {
                     })) {
                       return;
                     }
-                    if (validationResult.status === VALIDATION_STATUS.invalid) {
+                    if (!(0, _themes.isFluent)((0, _themes.current)()) && validationResult.status === VALIDATION_STATUS.invalid) {
                       isHideBorder = true;
                     }
                     _this13.updateCellState($element, validationResult, isHideBorder);

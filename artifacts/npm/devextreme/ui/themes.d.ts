@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/themes.d.ts)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,9 +41,10 @@ export default class themes {
      * @public
      */
     static initialized(callback: Function): void;
-    static isMaterial(theme: string): boolean;
 }
 
 export function current(): string;
+export function isMaterialBased(theme: string): boolean;
+export function isFluent(theme: string): boolean;
 export function isMaterial(theme: string): boolean;
 export function isCompact(theme: string): boolean;

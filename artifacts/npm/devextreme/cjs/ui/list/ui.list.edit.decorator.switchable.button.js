@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.edit.decorator.switchable.button.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ var _button = _interopRequireDefault(require("../button"));
 var _message = _interopRequireDefault(require("../../localization/message"));
 var _uiListEdit = require("./ui.list.edit.decorator_registry");
 var _uiListEditDecorator = _interopRequireDefault(require("./ui.list.edit.decorator.switchable"));
+var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var SWITCHABLE_DELETE_BUTTON_CONTAINER_CLASS = 'dx-list-switchable-delete-button-container';
 var SWITCHABLE_DELETE_BUTTON_WRAPPER_CLASS = 'dx-list-switchable-delete-button-wrapper';
@@ -32,6 +33,7 @@ var SwitchableButtonEditDecorator = _uiListEditDecorator.default.inherit({
     this._list._createComponent($button, _button.default, {
       text: _message.default.format('dxListEditDecorator-delete'),
       type: 'danger',
+      stylingMode: (0, _themes.isMaterialBased)() ? 'text' : 'contained',
       onClick: function (e) {
         this._deleteItem();
         e.event.stopPropagation();

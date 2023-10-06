@@ -107,7 +107,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _SpeedDialItem.prototype._defaultOptionsRules.call(this).concat([{
       device() {
-        return (0, _themes.isMaterial)() && !(0, _themes.isCompact)();
+        return (0, _themes.isMaterialBased)() && !(0, _themes.isCompact)();
       },
       options: {
         indent: 72,
@@ -116,7 +116,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
       }
     }, {
       device() {
-        return (0, _themes.isMaterial)() && (0, _themes.isCompact)();
+        return (0, _themes.isMaterialBased)() && (0, _themes.isCompact)();
       },
       options: {
         indent: 58,

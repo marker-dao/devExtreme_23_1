@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/load_panel.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ import { extend } from '../core/utils/extend';
 import LoadIndicator from './load_indicator';
 import Overlay from './overlay/ui.overlay';
 import { Deferred } from '../core/utils/deferred';
-import { isMaterial } from './themes';
+import { isMaterialBased } from './themes';
 
 // STYLE loadPanel
 
@@ -80,7 +80,7 @@ var LoadPanel = Overlay.inherit({
       }
     }, {
       device: function device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         message: '',

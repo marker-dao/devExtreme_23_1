@@ -28,6 +28,9 @@ var DataSourceAdapterTreeList = DataSourceAdapter.inherit(function () {
     });
     return childKeys;
   };
+  var applySorting = (data, sort) => queryByOptions(query(data), {
+    sort
+  }).toArray();
   return {
     _createKeyGetter() {
       var keyExpr = this.getKeyExpr();
@@ -273,24 +276,25 @@ var DataSourceAdapterTreeList = DataSourceAdapter.inherit(function () {
       };
     },
     _loadParentsOrChildren(data, options, needChildren) {
-      var that = this;
+      var _a, _b, _c;
       var filter;
       var needLocalFiltering;
       var {
         keys,
         keyMap
-      } = that._generateInfoToLoad(data, needChildren);
+      } = this._generateInfoToLoad(data, needChildren);
       // @ts-expect-error
       var d = new Deferred();
       var isRemoteFiltering = options.remoteOperations.filtering;
-      var maxFilterLengthInRequest = that.option('maxFilterLengthInRequest');
+      var maxFilterLengthInRequest = this.option('maxFilterLengthInRequest');
+      var sort = (_b = (_a = options.storeLoadOptions) === null || _a === void 0 ? void 0 : _a.sort) !== null && _b !== void 0 ? _b : (_c = options.loadOptions) === null || _c === void 0 ? void 0 : _c.sort;
       var loadOptions = isRemoteFiltering ? options.storeLoadOptions : options.loadOptions;
-      function concatLoadedData(loadedData) {
+      var concatLoadedData = loadedData => {
         if (isRemoteFiltering) {
-          that._cachedStoreData = that._cachedStoreData.concat(loadedData);
+          this._cachedStoreData = applySorting(this._cachedStoreData.concat(loadedData), sort);
         }
-        return data.concat(loadedData);
-      }
+        return applySorting(data.concat(loadedData), sort);
+      };
       if (!keys.length) {
         return d.resolve(data);
       }
@@ -300,28 +304,26 @@ var DataSourceAdapterTreeList = DataSourceAdapter.inherit(function () {
           cachedNodes = cachedNodes.reduce((result, node) => result.concat(node.children), []);
         }
         if (cachedNodes.length) {
-          return that._loadParentsOrChildren(concatLoadedData(cachedNodes.map(node => node.data)), options, needChildren);
+          return this._loadParentsOrChildren(concatLoadedData(cachedNodes.map(node => node.data)), options, needChildren);
         }
       }
-      var keyExpr = needChildren ? that.option('parentIdExpr') : that.getKeyExpr();
-      filter = that._createIdFilter(keyExpr, keys);
+      var keyExpr = needChildren ? this.option('parentIdExpr') : this.getKeyExpr();
+      filter = this._createIdFilter(keyExpr, keys);
       var filterLength = encodeURI(JSON.stringify(filter)).length;
       if (filterLength > maxFilterLengthInRequest) {
-        filter = function filter(itemData) {
-          return keyMap[needChildren ? that._parentIdGetter(itemData) : that._keyGetter(itemData)];
-        };
+        filter = itemData => keyMap[needChildren ? this._parentIdGetter(itemData) : this._keyGetter(itemData)];
         needLocalFiltering = isRemoteFiltering;
       }
       loadOptions = extend({}, loadOptions, {
         filter: !needLocalFiltering ? filter : null
       });
-      var store = options.fullData ? new ArrayStore(options.fullData) : that._dataSource.store();
-      that.loadFromStore(loadOptions, store).done(loadedData => {
+      var store = options.fullData ? new ArrayStore(options.fullData) : this._dataSource.store();
+      this.loadFromStore(loadOptions, store).done(loadedData => {
         if (loadedData.length) {
           if (needLocalFiltering) {
             loadedData = query(loadedData).filter(filter).toArray();
           }
-          that._loadParentsOrChildren(concatLoadedData(loadedData), options, needChildren).done(d.resolve).fail(d.reject);
+          this._loadParentsOrChildren(concatLoadedData(loadedData), options, needChildren).done(d.resolve).fail(d.reject);
         } else {
           d.resolve(data);
         }

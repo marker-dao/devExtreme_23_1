@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toolbar/internal/ui.toolbar.menu.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -85,7 +85,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
       }
     }, {
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         useInkRipple: true,
@@ -161,6 +161,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     this._button = this._createComponent($button, _button.default, {
       icon: 'overflow',
       template: 'content',
+      stylingMode: (0, _themes.isFluent)() ? 'text' : 'contained',
       useInkRipple: this.option('useInkRipple'),
       hoverStateEnabled: false,
       focusStateEnabled: false,

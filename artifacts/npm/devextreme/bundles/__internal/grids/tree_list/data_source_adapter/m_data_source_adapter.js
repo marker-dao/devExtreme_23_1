@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/data_source_adapter/m_data_source_adapter.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -42,6 +42,11 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       });
     });
     return childKeys;
+  };
+  var applySorting = function applySorting(data, sort) {
+    return queryByOptions((0, _query.default)(data), {
+      sort
+    }).toArray();
   };
   return {
     _createKeyGetter() {
@@ -285,23 +290,24 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
     },
     _loadParentsOrChildren(data, options, needChildren) {
       var _this = this;
-      var that = this;
+      var _a, _b, _c;
       var filter;
       var needLocalFiltering;
-      var _that$_generateInfoTo = that._generateInfoToLoad(data, needChildren),
-        keys = _that$_generateInfoTo.keys,
-        keyMap = _that$_generateInfoTo.keyMap;
+      var _this$_generateInfoTo = this._generateInfoToLoad(data, needChildren),
+        keys = _this$_generateInfoTo.keys,
+        keyMap = _this$_generateInfoTo.keyMap;
       // @ts-expect-error
       var d = new _deferred.Deferred();
       var isRemoteFiltering = options.remoteOperations.filtering;
-      var maxFilterLengthInRequest = that.option('maxFilterLengthInRequest');
+      var maxFilterLengthInRequest = this.option('maxFilterLengthInRequest');
+      var sort = (_b = (_a = options.storeLoadOptions) === null || _a === void 0 ? void 0 : _a.sort) !== null && _b !== void 0 ? _b : (_c = options.loadOptions) === null || _c === void 0 ? void 0 : _c.sort;
       var loadOptions = isRemoteFiltering ? options.storeLoadOptions : options.loadOptions;
-      function concatLoadedData(loadedData) {
+      var concatLoadedData = function concatLoadedData(loadedData) {
         if (isRemoteFiltering) {
-          that._cachedStoreData = that._cachedStoreData.concat(loadedData);
+          _this._cachedStoreData = applySorting(_this._cachedStoreData.concat(loadedData), sort);
         }
-        return data.concat(loadedData);
-      }
+        return applySorting(data.concat(loadedData), sort);
+      };
       if (!keys.length) {
         return d.resolve(data);
       }
@@ -317,30 +323,30 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
           }, []);
         }
         if (cachedNodes.length) {
-          return that._loadParentsOrChildren(concatLoadedData(cachedNodes.map(function (node) {
+          return this._loadParentsOrChildren(concatLoadedData(cachedNodes.map(function (node) {
             return node.data;
           })), options, needChildren);
         }
       }
-      var keyExpr = needChildren ? that.option('parentIdExpr') : that.getKeyExpr();
-      filter = that._createIdFilter(keyExpr, keys);
+      var keyExpr = needChildren ? this.option('parentIdExpr') : this.getKeyExpr();
+      filter = this._createIdFilter(keyExpr, keys);
       var filterLength = encodeURI(JSON.stringify(filter)).length;
       if (filterLength > maxFilterLengthInRequest) {
         filter = function filter(itemData) {
-          return keyMap[needChildren ? that._parentIdGetter(itemData) : that._keyGetter(itemData)];
+          return keyMap[needChildren ? _this._parentIdGetter(itemData) : _this._keyGetter(itemData)];
         };
         needLocalFiltering = isRemoteFiltering;
       }
       loadOptions = (0, _extend.extend)({}, loadOptions, {
         filter: !needLocalFiltering ? filter : null
       });
-      var store = options.fullData ? new _array_store.default(options.fullData) : that._dataSource.store();
-      that.loadFromStore(loadOptions, store).done(function (loadedData) {
+      var store = options.fullData ? new _array_store.default(options.fullData) : this._dataSource.store();
+      this.loadFromStore(loadOptions, store).done(function (loadedData) {
         if (loadedData.length) {
           if (needLocalFiltering) {
             loadedData = (0, _query.default)(loadedData).filter(filter).toArray();
           }
-          that._loadParentsOrChildren(concatLoadedData(loadedData), options, needChildren).done(d.resolve).fail(d.reject);
+          _this._loadParentsOrChildren(concatLoadedData(loadedData), options, needChildren).done(d.resolve).fail(d.reject);
         } else {
           d.resolve(data);
         }

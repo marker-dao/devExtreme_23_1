@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/editor_factory/m_editor_factory.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,6 +31,10 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var EDITOR_INLINE_BLOCK = 'dx-editor-inline-block';
 var CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
+var CELL_MODIFIED_CLASS = 'dx-cell-modified';
+var CELL_INVALID_CLASS = 'invalid';
+var FOCUSED_CELL_MODIFIED_CLASS = 'dx-focused-cell-modified';
+var FOCUSED_CELL_INVALID_CLASS = 'dx-focused-cell-invalid';
 var FOCUS_OVERLAY_CLASS = 'focus-overlay';
 var CONTENT_CLASS = 'content';
 var FOCUSED_ELEMENT_CLASS = 'dx-focused';
@@ -150,7 +154,9 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
       var align = _browser.default.mozilla ? 'right bottom' : 'left top';
       var $content = $element.closest(".".concat(that.addWidgetPrefix(CONTENT_CLASS)));
       var elemCoord = (0, _position2.getBoundingRect)($element.get(0));
-      that._$focusOverlay.removeClass(DX_HIDDEN).appendTo($content);
+      var isFocusedCellInvalid = $element.hasClass(this.addWidgetPrefix(CELL_INVALID_CLASS));
+      var isFocusedCellModified = $element.hasClass(CELL_MODIFIED_CLASS) && !isFocusedCellInvalid;
+      that._$focusOverlay.removeClass(DX_HIDDEN).toggleClass(FOCUSED_CELL_INVALID_CLASS, isFocusedCellInvalid).toggleClass(FOCUSED_CELL_MODIFIED_CLASS, isFocusedCellModified).appendTo($content);
       (0, _size.setOuterHeight)(that._$focusOverlay, elemCoord.bottom - elemCoord.top + 1);
       (0, _size.setOuterWidth)(that._$focusOverlay, elemCoord.right - elemCoord.left + 1);
       var focusOverlayPosition = {

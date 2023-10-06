@@ -77,7 +77,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
       }
     }, {
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         useInkRipple: true,
@@ -153,6 +153,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     this._button = this._createComponent($button, _button.default, {
       icon: 'overflow',
       template: 'content',
+      stylingMode: (0, _themes.isFluent)() ? 'text' : 'contained',
       useInkRipple: this.option('useInkRipple'),
       hoverStateEnabled: false,
       focusStateEnabled: false,

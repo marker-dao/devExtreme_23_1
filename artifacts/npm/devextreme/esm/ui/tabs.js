@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tabs.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ import pointerEvents from '../events/pointer';
 import { each } from '../core/utils/iterator';
 import TabsItem from './tabs/item';
 import { TABS_EXPANDED_CLASS } from './tabs/constants';
-import { isMaterial, current as currentTheme } from './themes';
+import { isMaterial, isFluent, current as currentTheme } from './themes';
 import holdEvent from '../events/hold';
 import Scrollable from './scroll_view/ui.scrollable';
 import { default as CollectionWidget } from './collection/ui.collection_widget.live_update';
@@ -48,6 +48,7 @@ var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
 var STATE_DISABLED_CLASS = 'dx-state-disabled';
 var FOCUSED_DISABLED_NEXT_TAB_CLASS = 'dx-focused-disabled-next-tab';
 var FOCUSED_DISABLED_PREV_TAB_CLASS = 'dx-focused-disabled-prev-tab';
+var TABS_DATA_DX_TEXT_ATTRIBUTE = 'data-dx_text';
 var TABS_ORIENTATION_CLASS = {
   vertical: 'dx-tabs-vertical',
   horizontal: 'dx-tabs-horizontal'
@@ -121,7 +122,7 @@ var Tabs = CollectionWidget.inherit({
   _defaultOptionsRules: function _defaultOptionsRules() {
     var themeName = currentTheme();
     return this.callBase().concat([{
-      device: function device() {
+      device() {
         return devices.real().deviceType !== 'desktop';
       },
       options: {
@@ -135,14 +136,22 @@ var Tabs = CollectionWidget.inherit({
         scrollByContent: false
       }
     }, {
-      device: function device() {
+      device() {
         return devices.real().deviceType === 'desktop' && !devices.isSimulator();
       },
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
+      device() {
+        return isFluent(themeName);
+      },
+      options: {
+        iconPosition: ICON_POSITION.top,
+        stylingMode: STYLING_MODE.secondary
+      }
+    }, {
+      device() {
         return isMaterial(themeName);
       },
       options: {
@@ -158,7 +167,6 @@ var Tabs = CollectionWidget.inherit({
       stylingMode
     } = this.option();
     this.callBase();
-    this.setAria('role', 'tablist');
     this.$element().addClass(TABS_CLASS);
     this._toggleOrientationClass(orientation);
     this._toggleIconPositionClass();
@@ -178,7 +186,11 @@ var Tabs = CollectionWidget.inherit({
         }
         var $iconElement = getImageContainer(data.icon);
         $iconElement && $iconElement.prependTo($container);
-        $container.wrapInner($('<span>').addClass(TABS_ITEM_TEXT_CLASS));
+        var $tabItem = $('<span>').addClass(TABS_ITEM_TEXT_CLASS);
+        if (data !== null && data !== void 0 && data.text || ['string', 'number'].includes(typeof data)) {
+          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, ['string', 'number'].includes(typeof data) ? data : data.text);
+        }
+        $container.wrapInner($tabItem);
       }.bind(this), ['text', 'html', 'icon'], this.option('integrationOptions.watchMethod'))
     });
   },
@@ -234,7 +246,7 @@ var Tabs = CollectionWidget.inherit({
           left: maxLeftOffset
         });
       }
-      this._updateNavButtonsVisibility();
+      this._updateNavButtonsState();
       this._scrollToItem(this.option('selectedItem'));
     }
     if (!(this.option('scrollingEnabled') && this._isItemsSizeExceeded())) {
@@ -326,6 +338,7 @@ var Tabs = CollectionWidget.inherit({
   },
   _renderWrapper: function _renderWrapper() {
     this._$wrapper = $('<div>').addClass(TABS_WRAPPER_CLASS);
+    this.setAria('role', 'tablist', this._$wrapper);
     this.$element().append(this._$wrapper);
   },
   _itemContainer: function _itemContainer() {
@@ -336,14 +349,11 @@ var Tabs = CollectionWidget.inherit({
     var scrollableDirection = isVertical ? SCROLLABLE_DIRECTION.vertical : SCROLLABLE_DIRECTION.horizontal;
     return scrollableDirection;
   },
-  _updateScrollableDirection() {
-    var scrollable = this.getScrollable();
-    if (scrollable) {
-      var scrollableDirection = this._getScrollableDirection();
-      scrollable.option('direction', scrollableDirection);
-    } else {
-      this._renderScrolling();
+  _updateScrollable() {
+    if (this.getScrollable()) {
+      this._cleanScrolling();
     }
+    this._renderScrolling();
   },
   _renderScrollable() {
     var $itemContainer = this.$element().wrapInner($('<div>').addClass(TABS_SCROLLABLE_CLASS)).children();
@@ -354,7 +364,7 @@ var Tabs = CollectionWidget.inherit({
       useNative: false,
       scrollByContent: this.option('scrollByContent'),
       onScroll: () => {
-        this._updateNavButtonsVisibility();
+        this._updateNavButtonsState();
       }
     });
     this.$element().append(this._scrollable.$element());
@@ -377,7 +387,7 @@ var Tabs = CollectionWidget.inherit({
     $rightButton.addClass(TABS_RIGHT_NAV_BUTTON_CLASS);
     this.$element().append($rightButton);
   },
-  _updateNavButtonsVisibility() {
+  _updateNavButtonsState() {
     var isVertical = this._isVertical();
     var scrollable = this.getScrollable();
     if (isVertical) {
@@ -447,6 +457,9 @@ var Tabs = CollectionWidget.inherit({
       return;
     }
     this.callBase(e);
+  },
+  _refreshActiveDescendant: function _refreshActiveDescendant() {
+    this.callBase(this._$wrapper);
   },
   _clean: function _clean() {
     this._deferredTemplates = [];
@@ -546,7 +559,7 @@ var Tabs = CollectionWidget.inherit({
         {
           this._toggleOrientationClass(args.value);
           if (!this._isServerSide()) {
-            this._updateScrollableDirection();
+            this._updateScrollable();
           }
           break;
         }
@@ -561,6 +574,9 @@ var Tabs = CollectionWidget.inherit({
       case 'stylingMode':
         {
           this._toggleStylingModeClass(args.value);
+          if (!this._isServerSide()) {
+            this._dimensionChanged();
+          }
           break;
         }
       default:

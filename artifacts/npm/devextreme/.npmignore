@@ -1,4 +1,5 @@
 dist/js
 dist/ts
 !dist/css
+!/scss/bundles/*.scss
 project.json

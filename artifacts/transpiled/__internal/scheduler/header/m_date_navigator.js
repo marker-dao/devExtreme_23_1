@@ -18,7 +18,7 @@ var DIRECTION_RIGHT = 1;
 var getDateNavigator = function getDateNavigator(header, item) {
   var items = [getPreviousButtonOptions(header), getCalendarButtonOptions(header), getNextButtonOptions(header)];
   // @ts-expect-error
-  var stylingMode = (0, _themes.isMaterial)() ? 'text' : 'contained';
+  var stylingMode = (0, _themes.isMaterialBased)() ? 'text' : 'contained';
   return _extends({
     widget: 'dxButtonGroup',
     cssClass: DATE_NAVIGATOR_CLASS,

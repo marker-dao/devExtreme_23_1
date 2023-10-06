@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popup/ui.popup.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -203,7 +203,7 @@ var Popup = _ui.default.inherit({
       }
     }, {
       device: function device() {
-        return (0, _themes.isMaterial)(themeName);
+        return (0, _themes.isMaterialBased)(themeName);
       },
       options: {
         useDefaultToolbarButtons: true,

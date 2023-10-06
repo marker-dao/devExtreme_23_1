@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/workspaces/base/header_panel/date_header/layout.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,7 +17,7 @@ import { isHorizontalGroupingApplied } from '../../../utils';
 import { DateHeaderCell } from './cell';
 import getThemeType from '../../../../../../utils/getThemeType';
 var {
-  isMaterial
+  isMaterialBased
 } = getThemeType();
 export var viewFunction = _ref => {
   var {
@@ -67,7 +67,7 @@ export var viewFunction = _ref => {
         "isLastGroupCell": isLastGroupCell,
         "dateCellTemplate": dateCellTemplate,
         "colSpan": colSpan,
-        "splitText": isMaterial
+        "splitText": isMaterialBased
       }, key);
     })
   }, rowIndex.toString())), 0);

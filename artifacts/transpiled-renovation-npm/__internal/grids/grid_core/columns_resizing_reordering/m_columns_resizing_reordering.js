@@ -310,10 +310,7 @@ var BlockSeparatorView = /*#__PURE__*/function (_SeparatorView2) {
     if ($element && !that._isShown) {
       switch (targetLocation) {
         case 'group':
-          startAnimate({
-            width: '50px',
-            display: 'inline-block'
-          });
+          this.element().css('display', 'block');
           break;
         case 'columnChooser':
           startAnimate({

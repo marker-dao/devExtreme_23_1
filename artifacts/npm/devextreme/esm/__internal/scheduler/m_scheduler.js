@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_scheduler.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -36,7 +36,7 @@ import { getPreparedDataItems } from '../../renovation/ui/scheduler/utils/data';
 import { excludeFromRecurrence } from '../../renovation/ui/scheduler/utils/recurrence/excludeFromRecurrence';
 import { isDateAndTimeView as _isDateAndTimeView, isTimelineView, validateDayHours } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { custom as customDialog } from '../../ui/dialog';
-import { isMaterial } from '../../ui/themes';
+import { isMaterialBased } from '../../ui/themes';
 import errors from '../../ui/widget/ui.errors';
 import Widget from '../../ui/widget/ui.widget';
 import { AppointmentForm } from './appointment_popup/m_form';
@@ -300,7 +300,7 @@ class Scheduler extends Widget {
       }
     }, {
       device() {
-        return isMaterial();
+        return isMaterialBased();
       },
       options: {
         useDropDownViewSwitcher: true,
@@ -1043,7 +1043,7 @@ class Scheduler extends Widget {
       getEditingConfig: () => this._editing,
       getFirstDayOfWeek: () => this.option('firstDayOfWeek'),
       getStartDayHour: () => this.option('startDayHour'),
-      getCalculatedEndDate: startDateWithStartHour => this._workSpace.calculateEndDate(startDateWithStartHour),
+      getCalculatedEndDate: date => this._workSpace.calculateEndDate(date),
       getTimeZoneCalculator: () => this.timeZoneCalculator
     };
     return new AppointmentForm(scheduler);
@@ -1493,10 +1493,12 @@ class Scheduler extends Widget {
     return dateSerialization.serializeDate(date, UTC_FULL_DATE_FORMAT);
   }
   _showRecurrenceChangeConfirm(isDeleted) {
+    var title = messageLocalization.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteTitle' : 'dxScheduler-confirmRecurrenceEditTitle');
     var message = messageLocalization.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteMessage' : 'dxScheduler-confirmRecurrenceEditMessage');
     var seriesText = messageLocalization.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteSeries' : 'dxScheduler-confirmRecurrenceEditSeries');
     var occurrenceText = messageLocalization.format(isDeleted ? 'dxScheduler-confirmRecurrenceDeleteOccurrence' : 'dxScheduler-confirmRecurrenceEditOccurrence');
     this._recurrenceDialog = customDialog({
+      title,
       messageHtml: message,
       showCloseButton: true,
       showTitle: true,

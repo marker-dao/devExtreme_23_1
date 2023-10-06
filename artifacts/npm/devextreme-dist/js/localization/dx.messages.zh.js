@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.zh.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -267,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "于日期",
             "dxScheduler-recurrenceRepeatCount": "事件",
             "dxScheduler-allDay": "全天",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "你想只修改该日程还是想修改整个系列的日程?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "你想只删除这个日程还是想删除整个系列的日程?",
             "dxScheduler-confirmRecurrenceEditSeries": "修改该系列的日程",
@@ -666,7 +668,8 @@
             "dxGantt-showResources": "Show Resources",
             "dxGantt-showDependencies": "Show Dependencies",
             "dxGantt-dialogStartDateValidation": "Start date must be after {0}",
-            "dxGantt-dialogEndDateValidation": "End date must be after {0}"
+            "dxGantt-dialogEndDateValidation": "End date must be after {0}",
+            "dxGallery-itemName": "Gallery item"
         }
     });
 }));

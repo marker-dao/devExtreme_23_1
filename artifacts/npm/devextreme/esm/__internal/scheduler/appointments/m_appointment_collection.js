@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/m_appointment_collection.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,7 +29,7 @@ import { addNamespace, isFakeClickEvent } from '../../../events/utils/index';
 import CollectionWidget from '../../../ui/collection/ui.collection_widget.edit';
 import timeZoneUtils from '../../../ui/scheduler/utils.timeZone';
 import { createAppointmentAdapter } from '../m_appointment_adapter';
-import { APPOINTMENT_DRAG_SOURCE_CLASS, APPOINTMENT_ITEM_CLASS } from '../m_classes';
+import { APPOINTMENT_CONTENT_CLASSES, APPOINTMENT_DRAG_SOURCE_CLASS, APPOINTMENT_ITEM_CLASS } from '../m_classes';
 import { APPOINTMENT_SETTINGS_KEY } from '../m_constants';
 import { ExpressionUtils } from '../m_expression_utils';
 import { getRecurrenceProcessor } from '../m_recurrence';
@@ -341,6 +341,9 @@ class SchedulerAppointments extends CollectionWidget {
     };
     var formatText = this.invoke('getTextAndFormatDate', model.appointmentData, this._currentAppointmentSettings.agendaSettings || model.targetedAppointmentData, 'TIME');
     $container.append(this.isAgendaView ? createAgendaAppointmentLayout(formatText, config) : createAppointmentLayout(formatText, config));
+    if (!this.isAgendaView) {
+      $container.parent().prepend($('<div>').addClass(APPOINTMENT_CONTENT_CLASSES.STRIP));
+    }
   }
   _executeItemRenderAction(index, itemData, itemElement) {
     var action = this._getItemRenderAction();

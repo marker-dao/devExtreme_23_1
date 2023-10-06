@@ -78,7 +78,7 @@ var SLIDE_MENU_ANIMATION_EASING = 'cubic-bezier(0.075, 0.82, 0.165, 1)';
     if (!this._deleteEnabled()) {
       return;
     }
-    var $deleteButton = (0, _renderer.default)('<div>').addClass(SLIDE_MENU_BUTTON_CLASS).addClass(SLIDE_MENU_BUTTON_DELETE_CLASS).text((0, _themes.isMaterial)() ? '' : _message.default.format('dxListEditDecorator-delete'));
+    var $deleteButton = (0, _renderer.default)('<div>').addClass(SLIDE_MENU_BUTTON_CLASS).addClass(SLIDE_MENU_BUTTON_DELETE_CLASS).text((0, _themes.isMaterialBased)() ? '' : _message.default.format('dxListEditDecorator-delete'));
     _events_engine.default.on($deleteButton, CLICK_EVENT_NAME, function (e) {
       e.stopPropagation();
       this._deleteItem();

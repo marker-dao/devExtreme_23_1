@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_uploader.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -233,6 +233,7 @@ class FileUploader extends Editor {
     this._$fileInput.prop({
       multiple: this.option('multiple'),
       accept: this.option('accept'),
+      title: this.option('hint') || null,
       tabIndex: -1
     });
   }
@@ -722,7 +723,7 @@ class FileUploader extends Editor {
     }
   }
   _shouldRaiseDragOver(e, dropZoneElement) {
-    return this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false) && e.originalEvent.dataTransfer.types[0] === 'Files';
+    return this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false) && e.originalEvent.dataTransfer.types.find(item => item === 'Files');
   }
   _dragOverHandler(isCustomTarget, e) {
     if (!this._useInputForDrop()) {
@@ -1157,6 +1158,10 @@ class FileUploader extends Editor {
         break;
       case 'inputAttr':
         this._applyInputAttributes(this.option(name));
+        break;
+      case 'hint':
+        this._initFileInput();
+        super._optionChanged(args);
         break;
       default:
         super._optionChanged(args);

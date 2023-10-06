@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/virtual_scrolling/m_virtual_scrolling.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ import { getOuterHeight } from '../../../../core/utils/size';
 import { isDefined } from '../../../../core/utils/type';
 import { getWindow } from '../../../../core/utils/window';
 import LoadIndicator from '../../../../ui/load_indicator';
+import errors from '../../../../ui/widget/ui.errors';
 import gridCoreUtils from '../m_utils';
 import { subscribeToExternalScrollers, VirtualScrollController } from './m_virtual_scrolling_core';
 var BOTTOM_LOAD_PANEL_CLASS = 'bottom-load-panel';
@@ -420,6 +421,7 @@ var VirtualScrollingRowsViewExtender = function () {
       var contentElement = this._findContentElement();
       var changeType = change && change.changeType;
       var d = Deferred();
+      this.throwHeightWarningIfNeed();
       var contentTable = contentElement.children().first();
       if (changeType === 'append' || changeType === 'prepend') {
         this.waitAsyncTemplates().done(() => {
@@ -631,6 +633,13 @@ var VirtualScrollingRowsViewExtender = function () {
         isLoading = false;
       }
       this.callBase.call(this, isLoading, messageText);
+    },
+    throwHeightWarningIfNeed() {
+      var needToThrow = !this._hasHeight && isVirtualPaging(this);
+      if (needToThrow && !this._heightWarningIsThrown) {
+        this._heightWarningIsThrown = true;
+        errors.log('W1025');
+      }
     },
     _resizeCore() {
       var that = this;
@@ -1252,7 +1261,7 @@ export var virtualScrollingModule = {
             return result;
           },
           loadViewport(params) {
-            var _a, _b;
+            var _a, _b, _c;
             var {
               checkLoadedParamsOnly,
               checkLoading,
@@ -1262,9 +1271,11 @@ export var virtualScrollingModule = {
             if (virtualPaging || gridCoreUtils.isVirtualRowRendering(this)) {
               this._updateLoadViewportParams();
               var loadingItemsStarted = this._loadItems(checkLoading, !viewportIsNotFilled);
-              var needToUpdateItems = !(loadingItemsStarted || this._isLoading && checkLoading || checkLoadedParamsOnly);
+              var isCustomLoading = (_a = this._dataSource) === null || _a === void 0 ? void 0 : _a.isCustomLoading();
+              var isLoading = checkLoading && !isCustomLoading && this._isLoading;
+              var needToUpdateItems = !(loadingItemsStarted || isLoading || checkLoadedParamsOnly);
               if (needToUpdateItems) {
-                var noPendingChangesInEditing = !((_b = (_a = this.getController('editing')) === null || _a === void 0 ? void 0 : _a.getChanges()) === null || _b === void 0 ? void 0 : _b.length);
+                var noPendingChangesInEditing = !((_c = (_b = this.getController('editing')) === null || _b === void 0 ? void 0 : _b.getChanges()) === null || _c === void 0 ? void 0 : _c.length);
                 this.updateItems({
                   repaintChangesOnly: true,
                   needUpdateDimensions: true,

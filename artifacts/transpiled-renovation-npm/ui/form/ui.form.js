@@ -86,7 +86,7 @@ var Form = _ui.default.inherit({
   _defaultOptionsRules: function _defaultOptionsRules() {
     return this.callBase().concat([{
       device: function device() {
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterialBased)();
       },
       options: {
         showColonAfterLabel: false,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/keyboard_navigation/m_keyboard_navigation.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -2009,7 +2009,9 @@ var keyboardNavigationModule = {
         getFocusedCellInRow(rowIndex) {
           var keyboardNavigationController = this.getController('keyboardNavigation');
           var $cell = this.callBase(rowIndex);
-          if (keyboardNavigationController.isKeyboardEnabled() && keyboardNavigationController._focusedCellPosition.rowIndex === rowIndex) {
+          var rowIndexOffset = this._dataController.getRowIndexOffset();
+          var focusedRowIndex = keyboardNavigationController._focusedCellPosition.rowIndex - rowIndexOffset;
+          if (keyboardNavigationController.isKeyboardEnabled() && focusedRowIndex === rowIndex) {
             var $focusedCell = keyboardNavigationController._getFocusedCell();
             if ((0, _m_keyboard_navigation_utils.isElementDefined)($focusedCell) && !$focusedCell.hasClass(_const2.COMMAND_EDIT_CLASS)) {
               $cell = $focusedCell;

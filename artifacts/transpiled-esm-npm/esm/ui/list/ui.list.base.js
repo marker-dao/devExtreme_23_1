@@ -18,7 +18,7 @@ import devices from '../../core/devices';
 import ListItem from './item';
 import Button from '../button';
 import { addNamespace } from '../../events/utils/index';
-import { current, isMaterial } from '../themes';
+import { current, isMaterial, isMaterialBased } from '../themes';
 import { hasWindow } from '../../core/utils/window';
 import ScrollView from '../scroll_view';
 import { deviceDependentOptions } from '../scroll_view/ui.scrollable.device';
@@ -185,11 +185,17 @@ export var ListBase = CollectionWidget.inherit({
         return isMaterial(themeName);
       },
       options: {
+        useInkRipple: true
+      }
+    }, {
+      device: function device() {
+        return isMaterialBased(themeName);
+      },
+      options: {
         pullingDownText: '',
         pulledDownText: '',
         refreshingText: '',
-        pageLoadingText: '',
-        useInkRipple: true
+        pageLoadingText: ''
       }
     }]);
   },
@@ -628,7 +634,7 @@ export var ListBase = CollectionWidget.inherit({
       container: getPublicElement($groupHeaderElement)
     };
     this._createItemByTemplate(groupTemplate, renderArgs);
-    if (isMaterial()) {
+    if (isMaterialBased()) {
       $('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
     }
     this._renderingGroupIndex = index;
@@ -708,7 +714,7 @@ export var ListBase = CollectionWidget.inherit({
     this._createComponent($button, Button, {
       text: this.option('nextButtonText'),
       onClick: this._nextButtonHandler.bind(this),
-      type: isMaterial() ? 'default' : undefined,
+      type: isMaterialBased() ? 'default' : undefined,
       integrationOptions: {}
     });
     return $result;

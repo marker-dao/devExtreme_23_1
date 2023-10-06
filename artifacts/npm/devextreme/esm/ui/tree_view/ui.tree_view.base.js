@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tree_view/ui.tree_view.base.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -214,6 +214,11 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     });
   },
   _checkBoxModeChange: function _checkBoxModeChange(value, previousValue) {
+    var searchEnabled = this.option('searchEnabled');
+    var previousSelectAllEnabled = this._selectAllEnabled(previousValue);
+    var previousItemsContainer = this._itemContainer(searchEnabled, previousSelectAllEnabled);
+    this._detachClickEvent(previousItemsContainer);
+    this._detachExpandEvent(previousItemsContainer);
     if (previousValue === 'none' || value === 'none') {
       return;
     }
@@ -278,7 +283,7 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
         this.repaint();
         break;
       case 'expandEvent':
-        this._initExpandEvent();
+        this._attachExpandEvent();
         break;
       case 'deferRendering':
       case 'dataStructure':
@@ -496,7 +501,7 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       return;
     }
     this._renderItems($nodeContainer, this._dataAdapter.getRootNodes());
-    this._initExpandEvent();
+    this._attachExpandEvent();
     if (this._selectAllEnabled()) {
       this._createSelectAllValueChangedAction();
       this._renderSelectAllItem($nodeContainer);
@@ -566,8 +571,9 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
   _hasCustomExpanderIcons: function _hasCustomExpanderIcons() {
     return this.option('expandIcon') || this.option('collapseIcon');
   },
-  _selectAllEnabled: function _selectAllEnabled() {
-    return this.option('showCheckBoxesMode') === 'selectAll' && !this._isSingleSelection();
+  _selectAllEnabled: function _selectAllEnabled(showCheckBoxesMode) {
+    var mode = showCheckBoxesMode !== null && showCheckBoxesMode !== void 0 ? showCheckBoxesMode : this.option('showCheckBoxesMode');
+    return mode === 'selectAll' && !this._isSingleSelection();
   },
   _renderItems: function _renderItems($nodeContainer, nodes) {
     var length = nodes.length - 1;
@@ -685,12 +691,14 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       this._toggleExpandedState(e.currentTarget, undefined, e);
     }
   },
-  _initExpandEvent: function _initExpandEvent() {
+  _attachExpandEvent: function _attachExpandEvent() {
     var expandedEventName = this._getEventNameByOption(this.option('expandEvent'));
     var $itemsContainer = this._itemContainer();
-    var itemSelector = this._itemSelector();
-    eventsEngine.off($itemsContainer, '.' + EXPAND_EVENT_NAMESPACE, itemSelector);
-    eventsEngine.on($itemsContainer, expandedEventName, itemSelector, this._expandEventHandler.bind(this));
+    this._detachExpandEvent($itemsContainer);
+    eventsEngine.on($itemsContainer, expandedEventName, this._itemSelector(), this._expandEventHandler.bind(this));
+  },
+  _detachExpandEvent(itemsContainer) {
+    eventsEngine.off(itemsContainer, ".".concat(EXPAND_EVENT_NAMESPACE), this._itemSelector());
   },
   _getEventNameByOption: function _getEventNameByOption(name) {
     var event = name === 'click' ? clickEventName : dblclickEvent;
@@ -1154,20 +1162,42 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     return ITEM_DATA_KEY;
   },
   _attachClickEvent: function _attachClickEvent() {
-    var clickSelector = '.' + this._itemClass();
-    var pointerDownSelector = '.' + NODE_CLASS + ', .' + SELECT_ALL_ITEM_CLASS;
-    var eventName = addNamespace(clickEventName, this.NAME);
-    var pointerDownEvent = addNamespace(pointerEvents.down, this.NAME);
     var $itemContainer = this._itemContainer();
-    var that = this;
-    eventsEngine.off($itemContainer, eventName, clickSelector);
-    eventsEngine.off($itemContainer, pointerDownEvent, pointerDownSelector);
-    eventsEngine.on($itemContainer, eventName, clickSelector, function (e) {
-      that._itemClickHandler(e, $(this));
+    this._detachClickEvent($itemContainer);
+    var {
+      clickEventNamespace,
+      itemSelector,
+      pointerDownEventNamespace,
+      nodeSelector
+    } = this._getItemClickEventData();
+    eventsEngine.on($itemContainer, clickEventNamespace, itemSelector, e => {
+      this._itemClickHandler(e, $(e.currentTarget));
     });
-    eventsEngine.on($itemContainer, pointerDownEvent, pointerDownSelector, function (e) {
-      that._itemPointerDownHandler(e);
+    eventsEngine.on($itemContainer, pointerDownEventNamespace, nodeSelector, e => {
+      this._itemPointerDownHandler(e);
     });
+  },
+  _detachClickEvent: function _detachClickEvent(itemsContainer) {
+    var {
+      clickEventNamespace,
+      itemSelector,
+      pointerDownEventNamespace,
+      nodeSelector
+    } = this._getItemClickEventData();
+    eventsEngine.off(itemsContainer, clickEventNamespace, itemSelector);
+    eventsEngine.off(itemsContainer, pointerDownEventNamespace, nodeSelector);
+  },
+  _getItemClickEventData: function _getItemClickEventData() {
+    var itemSelector = ".".concat(this._itemClass());
+    var nodeSelector = ".".concat(NODE_CLASS, ", .").concat(SELECT_ALL_ITEM_CLASS);
+    var clickEventNamespace = addNamespace(clickEventName, this.NAME);
+    var pointerDownEventNamespace = addNamespace(pointerEvents.down, this.NAME);
+    return {
+      clickEventNamespace,
+      itemSelector,
+      pointerDownEventNamespace,
+      nodeSelector
+    };
   },
   _itemClick: function _itemClick(actionArgs) {
     var args = actionArgs.args[0];

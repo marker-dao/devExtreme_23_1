@@ -41,6 +41,14 @@ var Navigator = /*#__PURE__*/function (_Widget) {
         type: 'default',
         stylingMode: 'text'
       }
+    }, {
+      device: function device() {
+        return (0, _themes.isFluent)();
+      },
+      options: {
+        type: 'normal',
+        stylingMode: 'text'
+      }
     }]);
   };
   _proto._init = function _init() {

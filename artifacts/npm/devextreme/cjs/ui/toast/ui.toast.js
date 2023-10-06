@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toast/ui.toast.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -131,7 +131,7 @@ var Toast = _ui.default.inherit({
       }
     };
     var tabletAndMobileCommonOptions = {
-      displayTime: (0, _themes.isMaterial)() ? 4000 : 2000,
+      displayTime: (0, _themes.isMaterialBased)() ? 4000 : 2000,
       hideOnOutsideClick: true,
       animation: tabletAndMobileAnimation
     };
@@ -152,7 +152,7 @@ var Toast = _ui.default.inherit({
       }, tabletAndMobileCommonOptions)
     }, {
       device(device) {
-        return (0, _themes.isMaterial)() && device.deviceType === 'desktop';
+        return (0, _themes.isMaterialBased)() && device.deviceType === 'desktop';
       },
       options: {
         minWidth: 344,

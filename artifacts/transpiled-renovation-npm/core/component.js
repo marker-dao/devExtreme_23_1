@@ -15,6 +15,7 @@ var _postponed_operations = require("./postponed_operations");
 var _type = require("./utils/type");
 var _common = require("./utils/common");
 var _data = require("./utils/data");
+var _license_validation = _interopRequireDefault(require("../__internal/core/license/license_validation"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var getEventName = function getEventName(actionName) {
   return actionName.charAt(2).toLowerCase() + actionName.substr(3);
@@ -72,6 +73,7 @@ var Component = _class.default.inherit({
     this._disposingCallbacks = _disposingCallbacks || (0, _callbacks.default)();
     this.postponedOperations = new _postponed_operations.PostponedOperations();
     this._createOptions(options);
+    _license_validation.default.verifyLicense((0, _config.default)().licenseKey);
   },
   _createOptions(options) {
     var _this = this;

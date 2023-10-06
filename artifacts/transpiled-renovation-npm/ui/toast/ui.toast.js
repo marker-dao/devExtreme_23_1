@@ -123,7 +123,7 @@ var Toast = _ui.default.inherit({
       }
     };
     var tabletAndMobileCommonOptions = {
-      displayTime: (0, _themes.isMaterial)() ? 4000 : 2000,
+      displayTime: (0, _themes.isMaterialBased)() ? 4000 : 2000,
       hideOnOutsideClick: true,
       animation: tabletAndMobileAnimation
     };
@@ -144,7 +144,7 @@ var Toast = _ui.default.inherit({
       }, tabletAndMobileCommonOptions)
     }, {
       device(device) {
-        return (0, _themes.isMaterial)() && device.deviceType === 'desktop';
+        return (0, _themes.isMaterialBased)() && device.deviceType === 'desktop';
       },
       options: {
         minWidth: 344,

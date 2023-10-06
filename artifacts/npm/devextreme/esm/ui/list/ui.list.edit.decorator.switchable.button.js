@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/list/ui.list.edit.decorator.switchable.button.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,6 +13,7 @@ import Button from '../button';
 import messageLocalization from '../../localization/message';
 import { register as registerDecorator } from './ui.list.edit.decorator_registry';
 import SwitchableEditDecorator from './ui.list.edit.decorator.switchable';
+import { isMaterialBased } from '../themes';
 var SWITCHABLE_DELETE_BUTTON_CONTAINER_CLASS = 'dx-list-switchable-delete-button-container';
 var SWITCHABLE_DELETE_BUTTON_WRAPPER_CLASS = 'dx-list-switchable-delete-button-wrapper';
 var SWITCHABLE_DELETE_BUTTON_INNER_WRAPPER_CLASS = 'dx-list-switchable-delete-button-inner-wrapper';
@@ -28,6 +29,7 @@ var SwitchableButtonEditDecorator = SwitchableEditDecorator.inherit({
     this._list._createComponent($button, Button, {
       text: messageLocalization.format('dxListEditDecorator-delete'),
       type: 'danger',
+      stylingMode: isMaterialBased() ? 'text' : 'contained',
       onClick: function (e) {
         this._deleteItem();
         e.event.stopPropagation();

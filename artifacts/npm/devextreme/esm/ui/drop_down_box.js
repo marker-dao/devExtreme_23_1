@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/drop_down_box.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -118,6 +118,12 @@ var DropDownBox = DropDownEditor.inherit({
       this.focus();
     });
   },
+  _sortValuesByKeysOrder(orderedKeys, values) {
+    var sortedValues = values.sort((a, b) => {
+      return orderedKeys.indexOf(a.itemKey) - orderedKeys.indexOf(b.itemKey);
+    });
+    return sortedValues.map(x => x.itemDisplayValue);
+  },
   _renderInputValue: function _renderInputValue() {
     this._rejectValueLoading();
     var values = [];
@@ -133,9 +139,15 @@ var DropDownBox = DropDownEditor.inherit({
       this._loadItem(key).always(item => {
         var displayValue = this._displayGetter(item);
         if (isDefined(displayValue)) {
-          values.push(displayValue);
+          values.push({
+            itemKey: key,
+            itemDisplayValue: displayValue
+          });
         } else if (this.option('acceptCustomValue')) {
-          values.push(key);
+          values.push({
+            itemKey: key,
+            itemDisplayValue: key
+          });
         }
         deferred.resolve();
       });
@@ -143,8 +155,9 @@ var DropDownBox = DropDownEditor.inherit({
     });
     var callBase = this.callBase.bind(this);
     return when.apply(this, itemLoadDeferreds).always(() => {
-      this.option('displayValue', values);
-      callBase(values.length && values);
+      var orderedValues = this._sortValuesByKeysOrder(keys, values);
+      this.option('displayValue', orderedValues);
+      callBase(values.length && orderedValues);
     });
   },
   _loadItem: function _loadItem(value) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/radio_group/radio_group.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -177,6 +177,11 @@ class RadioGroup extends Editor {
   _setSelection(currentValue) {
     var value = this._unwrappedValue(currentValue);
     this._setCollectionWidgetOption('selectedItemKeys', this._getSelectedItemKeys(value));
+  }
+  _renderValidationState() {
+    var _this$_validationMess;
+    super._renderValidationState();
+    (_this$_validationMess = this._validationMessage) === null || _this$_validationMess === void 0 ? void 0 : _this$_validationMess.$content().attr('role', 'alert');
   }
   _optionChanged(args) {
     var {

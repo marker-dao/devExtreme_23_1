@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_button.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -67,6 +67,7 @@ var DropDownButton = _ui.default.inherit({
       splitButton: false,
       showArrowIcon: true,
       text: '',
+      type: 'normal',
       icon: undefined,
       onButtonClick: null,
       onSelectionChanged: null,
@@ -208,20 +209,29 @@ var DropDownButton = _ui.default.inherit({
     });
   },
   _actionButtonConfig() {
+    var _this$option = this.option(),
+      icon = _this$option.icon,
+      text = _this$option.text,
+      type = _this$option.type;
     return {
-      text: this.option('text'),
-      icon: this.option('icon'),
+      text,
+      icon,
+      type,
       elementAttr: {
         class: DROP_DOWN_BUTTON_ACTION_CLASS
       }
     };
   },
   _getButtonGroupItems() {
+    var _this$option2 = this.option(),
+      splitButton = _this$option2.splitButton,
+      type = _this$option2.type;
     var items = [];
     items.push(this._actionButtonConfig());
-    if (this.option('splitButton')) {
+    if (splitButton) {
       items.push({
         icon: 'spindown',
+        type,
         elementAttr: {
           class: DROP_DOWN_BUTTON_TOGGLE_CLASS
         }
@@ -248,14 +258,14 @@ var DropDownButton = _ui.default.inherit({
   },
   _buttonGroupOptions() {
     var _this2 = this;
-    var _this$option = this.option(),
-      splitButton = _this$option.splitButton,
-      showArrowIcon = _this$option.showArrowIcon,
-      focusStateEnabled = _this$option.focusStateEnabled,
-      hoverStateEnabled = _this$option.hoverStateEnabled,
-      stylingMode = _this$option.stylingMode,
-      accessKey = _this$option.accessKey,
-      tabIndex = _this$option.tabIndex;
+    var _this$option3 = this.option(),
+      splitButton = _this$option3.splitButton,
+      showArrowIcon = _this$option3.showArrowIcon,
+      focusStateEnabled = _this$option3.focusStateEnabled,
+      hoverStateEnabled = _this$option3.hoverStateEnabled,
+      stylingMode = _this$option3.stylingMode,
+      accessKey = _this$option3.accessKey,
+      tabIndex = _this$option3.tabIndex;
     var buttonTemplate = splitButton || !showArrowIcon ? 'content' : function (_ref4, buttonContent) {
       var text = _ref4.text,
         icon = _ref4.icon;
@@ -650,6 +660,9 @@ var DropDownButton = _ui.default.inherit({
         break;
       case 'stylingMode':
         this._updateButtonGroup(name, value);
+        break;
+      case 'type':
+        this._updateButtonGroup('items', this._getButtonGroupItems());
         break;
       case 'itemTemplate':
       case 'grouped':

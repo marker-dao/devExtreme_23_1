@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/popup/ui.popup.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,7 +27,7 @@ import PopupDrag from './popup_drag';
 import Resizable from '../resizable';
 import Button from '../button';
 import Overlay from '../overlay/ui.overlay';
-import { isMaterial, current as currentTheme } from '../themes';
+import { isMaterialBased, current as currentTheme } from '../themes';
 import '../toolbar/ui.toolbar.base';
 import resizeObserverSingleton from '../../core/resize_observer';
 import * as zIndexPool from '../overlay/z_index';
@@ -190,7 +190,7 @@ var Popup = Overlay.inherit({
       }
     }, {
       device: function device() {
-        return isMaterial(themeName);
+        return isMaterialBased(themeName);
       },
       options: {
         useDefaultToolbarButtons: true,

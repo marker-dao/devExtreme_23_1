@@ -215,17 +215,22 @@ var editingControllerExtender = function editingControllerExtender(Base) {
         });
       }
       return false;
-    };
+    }
+    /**
+     * @returns whether to cancel cell editing
+     */;
     _proto._beforeEditCell = function _beforeEditCell(rowIndex, columnIndex, item) {
       var _this6 = this;
       if (this.isCellEditMode() && !item.isNewRow && this.hasChanges()) {
         // @ts-expect-error
-        var d = new _deferred.Deferred();
+        var isSaving = new _deferred.Deferred();
         this.saveEditData().always(function () {
-          d.resolve(_this6.hasChanges());
+          isSaving.resolve(_this6.hasChanges());
         });
-        return d;
+        this.addDeferred(isSaving);
+        return isSaving;
       }
+      return false;
     };
     _proto.publicMethods = function publicMethods() {
       var publicMethods = _Base.prototype.publicMethods.call(this);

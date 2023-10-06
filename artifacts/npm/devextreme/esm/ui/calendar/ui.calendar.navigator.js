@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.navigator.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@ import $ from '../../core/renderer';
 import { extend } from '../../core/utils/extend';
 import Widget from '../widget/ui.widget';
 import Button from '../button';
-import { isMaterial } from '../themes';
+import { isFluent, isMaterial } from '../themes';
 var CALENDAR_NAVIGATOR_CLASS = 'dx-calendar-navigator';
 var CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS = 'dx-calendar-navigator-previous-month';
 var CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS = 'dx-calendar-navigator-next-month';
@@ -36,6 +36,14 @@ class Navigator extends Widget {
       },
       options: {
         type: 'default',
+        stylingMode: 'text'
+      }
+    }, {
+      device: function device() {
+        return isFluent();
+      },
+      options: {
+        type: 'normal',
         stylingMode: 'text'
       }
     }]);

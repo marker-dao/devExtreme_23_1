@@ -286,6 +286,9 @@ var BaseView = _ui.default.inherit({
   _updateSelectedClass: function _updateSelectedClass(value) {
     var _this$_$selectedCells,
       _this2 = this;
+    if (this._isRangeMode() && !this._isMonthView()) {
+      return;
+    }
     (_this$_$selectedCells = this._$selectedCells) === null || _this$_$selectedCells === void 0 ? void 0 : _this$_$selectedCells.forEach(function ($cell) {
       $cell.removeClass(CALENDAR_SELECTED_DATE_CLASS);
     });
@@ -308,10 +311,9 @@ var BaseView = _ui.default.inherit({
       _this$_$rangeEndDateC2;
     var _this$option2 = this.option(),
       allowValueSelection = _this$option2.allowValueSelection,
-      selectionMode = _this$option2.selectionMode,
       value = _this$option2.value,
       range = _this$option2.range;
-    if (!allowValueSelection || selectionMode !== 'range') {
+    if (!allowValueSelection || !this._isRangeMode() || !this._isMonthView()) {
       return;
     }
     (_this$_$rangeCells = this._$rangeCells) === null || _this$_$rangeCells === void 0 ? void 0 : _this$_$rangeCells.forEach(function ($cell) {
@@ -344,9 +346,8 @@ var BaseView = _ui.default.inherit({
       _this$_$rangeEndHover3;
     var _this$option3 = this.option(),
       allowValueSelection = _this$option3.allowValueSelection,
-      selectionMode = _this$option3.selectionMode,
       hoveredRange = _this$option3.hoveredRange;
-    if (!allowValueSelection || selectionMode !== 'range') {
+    if (!allowValueSelection || !this._isRangeMode() || !this._isMonthView()) {
       return;
     }
     (_this$_$hoveredRangeC2 = this._$hoveredRangeCells) === null || _this$_$hoveredRangeC2 === void 0 ? void 0 : _this$_$hoveredRangeC2.forEach(function ($cell) {
@@ -364,6 +365,12 @@ var BaseView = _ui.default.inherit({
     });
     (_this$_$rangeStartHov3 = this._$rangeStartHoverCell) === null || _this$_$rangeStartHov3 === void 0 ? void 0 : _this$_$rangeStartHov3.addClass(CALENDAR_CELL_RANGE_HOVER_START_CLASS);
     (_this$_$rangeEndHover3 = this._$rangeEndHoverCell) === null || _this$_$rangeEndHover3 === void 0 ? void 0 : _this$_$rangeEndHover3.addClass(CALENDAR_CELL_RANGE_HOVER_END_CLASS);
+  },
+  _isMonthView: function _isMonthView() {
+    return this.option('zoomLevel') === 'month';
+  },
+  _isRangeMode: function _isRangeMode() {
+    return this.option('selectionMode') === 'range';
   },
   getCellAriaLabel: function getCellAriaLabel(date) {
     return this._getCellText(date);

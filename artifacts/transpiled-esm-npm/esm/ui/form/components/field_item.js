@@ -4,7 +4,7 @@ import { name as clickEventName } from '../../../events/click';
 import { getPublicElement } from '../../../core/element';
 import { captionize } from '../../../core/utils/inflector';
 import { format } from '../../../core/utils/string';
-import { isMaterial } from '../../themes';
+import { isMaterialBased } from '../../themes';
 import errors from '../../widget/ui.errors';
 import Validator from '../../validator';
 import { FIELD_ITEM_CONTENT_CLASS } from '../constants';
@@ -208,7 +208,7 @@ function tryGetValidationTargetInstance($validationTarget) {
   return ($validationTarget === null || $validationTarget === void 0 ? void 0 : $validationTarget.data(VALIDATION_TARGET_CLASS)) || ($validationTarget === null || $validationTarget === void 0 ? void 0 : (_$validationTarget$pa = $validationTarget.parent) === null || _$validationTarget$pa === void 0 ? void 0 : (_$validationTarget$pa2 = _$validationTarget$pa.call($validationTarget)) === null || _$validationTarget$pa2 === void 0 ? void 0 : _$validationTarget$pa2.data(VALIDATION_TARGET_CLASS));
 }
 function subscribeWrapperInvalidClassToggle(validationTargetInstance) {
-  if (validationTargetInstance && isMaterial()) {
+  if (validationTargetInstance && isMaterialBased()) {
     var wrapperClass = ".".concat(FIELD_ITEM_CONTENT_WRAPPER_CLASS);
     var toggleInvalidClass = _ref2 => {
       var {

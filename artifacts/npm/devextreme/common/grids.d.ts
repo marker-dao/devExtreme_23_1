@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common/grids.d.ts)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -933,6 +933,7 @@ export interface EditingBase<TRowData = any, TKey = any> {
   /**
    * @docid GridBaseOptions.editing.useIcons
    * @default true &for(Material)
+   * @default true &for(Fluent)
    * @default false
    * @public
    */
@@ -1236,6 +1237,7 @@ export type HeaderFilter = {
   /**
    * @docid GridBaseOptions.headerFilter.height
    * @default 315 &for(Material)
+   * @default 315 &for(Fluent)
    * @default 325
    */
   height?: number;
@@ -2270,6 +2272,7 @@ export type GridBaseOptions<TComponent extends GridBase<TRowData, TKey>, TRowDat
   /**
    * @docid
    * @default false &for(Material)
+   * @default false &for(Fluent)
    * @default true
    * @public
    */
@@ -2278,6 +2281,7 @@ export type GridBaseOptions<TComponent extends GridBase<TRowData, TKey>, TRowDat
    * @docid
    * @default true &for(iOS)
    * @default true &for(Material)
+   * @default true &for(Fluent)
    * @default false
    * @public
    */

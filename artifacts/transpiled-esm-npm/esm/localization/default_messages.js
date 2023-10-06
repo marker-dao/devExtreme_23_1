@@ -248,6 +248,8 @@ export var defaultMessages = {
     "dxScheduler-recurrenceRepeatOnDate": "on date",
     "dxScheduler-recurrenceRepeatCount": "occurrence(s)",
     "dxScheduler-allDay": "All day",
+    "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+    "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
     "dxScheduler-confirmRecurrenceEditMessage": "Do you want to edit only this appointment or the whole series?",
     "dxScheduler-confirmRecurrenceDeleteMessage": "Do you want to delete only this appointment or the whole series?",
     "dxScheduler-confirmRecurrenceEditSeries": "Edit series",
@@ -647,6 +649,7 @@ export var defaultMessages = {
     "dxGantt-showResources": "Show Resources",
     "dxGantt-showDependencies": "Show Dependencies",
     "dxGantt-dialogStartDateValidation": "Start date must be after {0}",
-    "dxGantt-dialogEndDateValidation": "End date must be after {0}"
+    "dxGantt-dialogEndDateValidation": "End date must be after {0}",
+    "dxGallery-itemName": "Gallery item"
   }
 };

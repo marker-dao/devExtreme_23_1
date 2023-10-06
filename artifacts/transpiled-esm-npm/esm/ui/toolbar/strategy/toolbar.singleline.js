@@ -1,4 +1,4 @@
-import { getWidth, getOuterWidth } from '../../../core/utils/size';
+import { getWidth } from '../../../core/utils/size';
 import $ from '../../../core/renderer';
 import { each } from '../../../core/utils/iterator';
 import { grep, deferRender } from '../../../core/utils/common';
@@ -159,8 +159,8 @@ export class SingleLineStrategy {
     var itemsWidth = this._getItemsWidth();
     while (overflowItems.length && elementWidth < itemsWidth) {
       var $item = overflowItems.eq(-1);
-      itemsWidth -= getOuterWidth($item);
       $item.addClass(TOOLBAR_HIDDEN_ITEM);
+      itemsWidth = this._getItemsWidth();
       overflowItems.splice(-1, 1);
     }
   }

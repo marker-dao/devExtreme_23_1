@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/calendar/ui.calendar.js)
 * Version: 23.2.0
-* Build date: Thu Sep 14 2023
+* Build date: Fri Oct 06 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,6 +35,7 @@ import CalendarMultipleSelectionStrategy from './ui.calendar.multiple.selection.
 import CalendarRangeSelectionStrategy from './ui.calendar.range.selection.strategy';
 import { end as hoverEndEventName } from '../../events/hover';
 import eventsEngine from '../../events/core/events_engine';
+import { isFluent } from '../themes';
 
 // STYLE calendar
 
@@ -906,8 +907,8 @@ var Calendar = Editor.inherit({
         onClick: args => {
           this._toTodayView(args);
         },
-        type: 'default',
-        stylingMode: 'text',
+        type: isFluent() ? 'normal' : 'default',
+        stylingMode: isFluent() ? 'outlined' : 'text',
         integrationOptions: {}
       }).$element().addClass(CALENDAR_TODAY_BUTTON_CLASS);
       this._$footer = $('<div>').addClass(CALENDAR_FOOTER_CLASS).append($todayButton);

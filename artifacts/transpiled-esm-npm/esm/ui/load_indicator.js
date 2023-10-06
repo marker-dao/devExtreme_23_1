@@ -3,7 +3,7 @@ import $ from '../core/renderer';
 import { getNavigator } from '../core/utils/window';
 var navigator = getNavigator();
 import { animation } from '../core/utils/support';
-import { current, isMaterial, isGeneric } from './themes';
+import { current, isGeneric, isMaterialBased } from './themes';
 import { extend } from '../core/utils/extend';
 import devices from '../core/devices';
 import registerComponent from '../core/component_registrator';
@@ -70,7 +70,7 @@ var LoadIndicator = Widget.inherit({
       }
     }, {
       device: function device() {
-        return isMaterial(themeName);
+        return isMaterialBased(themeName);
       },
       options: {
         _animatingSegmentCount: 2,
