@@ -89,8 +89,14 @@ var Form = _ui.default.inherit({
         return (0, _themes.isMaterialBased)();
       },
       options: {
-        showColonAfterLabel: false,
         labelLocation: 'top'
+      }
+    }, {
+      device: function device() {
+        return (0, _themes.isMaterial)();
+      },
+      options: {
+        showColonAfterLabel: false
       }
     }]);
   },

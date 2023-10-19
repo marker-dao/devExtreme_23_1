@@ -16,6 +16,7 @@ var _component_registrator = _interopRequireDefault(require("../core/component_r
 var _uiCollection_widget = _interopRequireDefault(require("./collection/ui.collection_widget.live_update"));
 var _swipeable = _interopRequireDefault(require("../events/gesture/swipeable"));
 var _deferred = require("../core/utils/deferred");
+var _message = _interopRequireDefault(require("../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE multiView
 
@@ -62,9 +63,6 @@ var MultiView = _uiCollection_widget.default.inherit({
       * @hidden
       */
 
-      _itemAttributes: {
-        role: 'tabpanel'
-      },
       loopItemFocus: false,
       selectOnFocus: true,
       selectionMode: 'single',
@@ -136,6 +134,8 @@ var MultiView = _uiCollection_widget.default.inherit({
     this.callBase();
     var selectedItemIndices = this._getSelectedItemIndices();
     this._updateItemsVisibility(selectedItemIndices[0]);
+    this._setElementAria();
+    this._setItemsAria();
   },
   _afterItemElementDeleted: function _afterItemElementDeleted($item, deletedActionArgs) {
     this.callBase($item, deletedActionArgs);
@@ -174,6 +174,39 @@ var MultiView = _uiCollection_widget.default.inherit({
       _this._updateItems(selectedItemIndices[0]);
     });
   },
+  _getElementAria() {
+    return {
+      role: 'group',
+      'roledescription': _message.default.format('dxMultiView-elementAriaRoleDescription'),
+      label: _message.default.format('dxMultiView-elementAriaLabel')
+    };
+  },
+  _setElementAria() {
+    var aria = this._getElementAria();
+    this.setAria(aria, this.$element());
+  },
+  _setItemsAria() {
+    var _this2 = this;
+    var $itemElements = this._itemElements();
+    var itemsCount = this._itemsCount();
+    $itemElements.each(function (itemIndex, item) {
+      var aria = _this2._getItemAria({
+        itemIndex,
+        itemsCount
+      });
+      _this2.setAria(aria, (0, _renderer.default)(item));
+    });
+  },
+  _getItemAria(_ref) {
+    var itemIndex = _ref.itemIndex,
+      itemsCount = _ref.itemsCount;
+    var aria = {
+      'role': 'group',
+      'roledescription': _message.default.format('dxMultiView-itemAriaRoleDescription'),
+      'label': _message.default.format('dxMultiView-itemAriaLabel', itemIndex + 1, itemsCount)
+    };
+    return aria;
+  },
   _updateItems: function _updateItems(selectedIndex, newIndex) {
     this._updateItemsPosition(selectedIndex, newIndex);
     this._updateItemsVisibility(selectedIndex, newIndex);
@@ -192,17 +225,18 @@ var MultiView = _uiCollection_widget.default.inherit({
       _uiMulti_view._translator.move($itemElements.eq(newIndex), positionSign * 100 + '%');
     }
   },
-  _updateItemsVisibility: function _updateItemsVisibility(selectedIndex, newIndex) {
+  _updateItemsVisibility(selectedIndex, newIndex) {
+    var _this3 = this;
     var $itemElements = this._itemElements();
     $itemElements.each(function (itemIndex, item) {
       var $item = (0, _renderer.default)(item);
       var isHidden = itemIndex !== selectedIndex && itemIndex !== newIndex;
       if (!isHidden) {
-        this._renderSpecificItem(itemIndex);
+        _this3._renderSpecificItem(itemIndex);
       }
       $item.toggleClass(MULTIVIEW_ITEM_HIDDEN_CLASS, isHidden);
-      this.setAria('hidden', isHidden || undefined, $item);
-    }.bind(this));
+      _this3.setAria('hidden', isHidden || undefined, $item);
+    });
   },
   _renderSpecificItem: function _renderSpecificItem(index) {
     var $item = this._itemElements().eq(index);
@@ -246,19 +280,19 @@ var MultiView = _uiCollection_widget.default.inherit({
     return !this.option('swipeEnabled') || this._itemsCount() <= 1;
   },
   _initSwipeable() {
-    var _this2 = this;
+    var _this4 = this;
     this._createComponent(this.$element(), _swipeable.default, {
       disabled: this._getSwipeDisabledState(),
       elastic: false,
       itemSizeFunc: this._itemWidth.bind(this),
       onStart: function onStart(args) {
-        return _this2._swipeStartHandler(args.event);
+        return _this4._swipeStartHandler(args.event);
       },
       onUpdated: function onUpdated(args) {
-        return _this2._swipeUpdateHandler(args.event);
+        return _this4._swipeUpdateHandler(args.event);
       },
       onEnd: function onEnd(args) {
-        return _this2._swipeEndHandler(args.event);
+        return _this4._swipeEndHandler(args.event);
       }
     });
   },

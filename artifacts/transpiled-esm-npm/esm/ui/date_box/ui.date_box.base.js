@@ -298,12 +298,6 @@ var DateBox = DropDownEditor.inherit({
     this.callBase();
     this._strategy.renderPopupContent();
   },
-  _getFirstPopupElement: function _getFirstPopupElement() {
-    return this._strategy.getFirstPopupElement() || this.callBase();
-  },
-  _getLastPopupElement: function _getLastPopupElement() {
-    return this._strategy.getLastPopupElement() || this.callBase();
-  },
   _popupShowingHandler: function _popupShowingHandler() {
     this.callBase();
     this._strategy.popupShowingHandler();

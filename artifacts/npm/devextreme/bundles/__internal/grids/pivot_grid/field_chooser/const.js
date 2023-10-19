@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/pivot_grid/field_chooser/const.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -58,9 +58,14 @@ var CLASSES = {
 };
 exports.CLASSES = CLASSES;
 var ICONS = {
-  measure: 'measure',
+  all: 'smalliconslayout',
+  column: 'columnfield',
+  row: 'rowfield',
+  filter: 'filter',
+  data: 'formula',
+  measure: 'formula',
   hierarchy: 'hierarchy',
-  dimension: 'dimension'
+  dimension: 'detailslayout'
 };
 exports.ICONS = ICONS;
 var SORTABLE_CONST = {

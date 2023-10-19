@@ -1949,11 +1949,15 @@ class EditingControllerImpl extends modules.ViewController {
     return this._allowEditAction('allowDeleting', options);
   }
   isCellModified(parameters) {
+    var _a, _b, _c;
     var {
       columnIndex
     } = parameters;
-    var modifiedValues = parameters.row && (parameters.row.isNewRow ? parameters.row.values : parameters.row.modifiedValues);
-    return !!modifiedValues && modifiedValues[columnIndex] !== undefined;
+    var modifiedValue = (_b = (_a = parameters === null || parameters === void 0 ? void 0 : parameters.row) === null || _a === void 0 ? void 0 : _a.modifiedValues) === null || _b === void 0 ? void 0 : _b[columnIndex];
+    if ((_c = parameters === null || parameters === void 0 ? void 0 : parameters.row) === null || _c === void 0 ? void 0 : _c.isNewRow) {
+      modifiedValue = parameters.value;
+    }
+    return modifiedValue !== undefined;
   }
   isNewRowInEditMode() {
     var visibleEditRowIndex = this._getVisibleEditRowIndex();

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_box/ui.date_box.strategy.calendar.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -86,7 +86,6 @@ var CalendarStrategy = DateBoxStrategy.inherit({
       max: this.dateBox.dateOption('max'),
       onValueChanged: this._valueChangedHandler.bind(this),
       onCellClick: this._cellClickHandler.bind(this),
-      tabIndex: null,
       disabledDates: isFunction(disabledDates) ? this._injectComponent(disabledDates.bind(this.dateBox)) : disabledDates,
       onContouredChanged: this._refreshActiveDescendant.bind(this),
       skipFocusCheck: true
@@ -114,9 +113,6 @@ var CalendarStrategy = DateBoxStrategy.inherit({
       toolbar: position[0],
       location: position[1] === 'after' ? 'before' : position[1],
       options: {
-        onInitialized: function (e) {
-          e.component.registerKeyHandler('escape', this._escapeHandler.bind(this));
-        }.bind(this),
         onClick: args => {
           this._widget._toTodayView(args);
         },
@@ -147,10 +143,6 @@ var CalendarStrategy = DateBoxStrategy.inherit({
       },
       width: 'auto'
     });
-  },
-  _escapeHandler: function _escapeHandler() {
-    this.dateBox.close();
-    this.dateBox.focus();
   },
   _valueChangedHandler: function _valueChangedHandler(e) {
     var value = e.value;

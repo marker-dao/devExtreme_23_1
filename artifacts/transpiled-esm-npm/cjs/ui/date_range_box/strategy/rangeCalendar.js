@@ -1,7 +1,6 @@
 "use strict";
 
 exports.default = void 0;
-var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _uiDate_boxStrategy = _interopRequireDefault(require("../../date_box/ui.date_box.strategy.calendar"));
 var _events_engine = _interopRequireDefault(require("../../../events/core/events_engine"));
 var _extend = require("../../../core/utils/extend");
@@ -36,13 +35,6 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
   _proto._getPopup = function _getPopup() {
     return _CalendarStrategy.prototype._getPopup.call(this) || this.dateRangeBox.getStartDateBox()._popup;
   };
-  _proto.getFirstPopupElement = function getFirstPopupElement() {
-    return (0, _renderer.default)(this._getPopup().getFocusableElements()[0]);
-  };
-  _proto.getLastPopupElement = function getLastPopupElement() {
-    var elements = this._getPopup().getFocusableElements();
-    return (0, _renderer.default)(elements[elements.length - 1]);
-  };
   _proto.supportedKeys = function supportedKeys() {
     var _this2 = this;
     return _extends({}, _CalendarStrategy.prototype.supportedKeys.call(this), {
@@ -74,7 +66,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
         if (!_this2.getDateRangeBox().option('opened')) {
           return;
         }
-        if (_this2._isInstantlyMode()) {
+        if (!_this2._getPopup().getFocusableElements().length) {
           if (!e.shiftKey && _this2.getDateRangeBox()._isEndDateActiveElement() || e.shiftKey && _this2.getDateRangeBox()._isStartDateActiveElement()) {
             _this2.dateRangeBox.close();
           }
@@ -83,7 +75,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
         if (!e.shiftKey && _this2.getDateRangeBox()._isStartDateActiveElement() || e.shiftKey && _this2.getDateRangeBox()._isEndDateActiveElement()) {
           return;
         }
-        var $focusableElement = e.shiftKey ? _this2.getLastPopupElement() : _this2.getFirstPopupElement();
+        var $focusableElement = e.shiftKey ? _this2.getDateRangeBox().getStartDateBox()._getLastPopupElement() : _this2.getDateRangeBox().getStartDateBox()._getFirstPopupElement();
         if ($focusableElement) {
           _events_engine.default.trigger($focusableElement, 'focus');
           $focusableElement.select();
@@ -91,14 +83,6 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
         e.preventDefault();
       }
     });
-  };
-  _proto._getTodayButtonConfig = function _getTodayButtonConfig() {
-    var _this3 = this;
-    var todayButtonConfig = _CalendarStrategy.prototype._getTodayButtonConfig.call(this);
-    todayButtonConfig.options.onInitialized = function (e) {
-      _this3.dateBox._popupButtonInitializedHandler(e);
-    };
-    return todayButtonConfig;
   };
   _proto._getWidgetOptions = function _getWidgetOptions() {
     var _this$dateRangeBox$op = this.dateRangeBox.option(),
@@ -119,10 +103,10 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     this.dateRangeBox.setAria('activedescendant', e.actionValue);
   };
   _proto._injectComponent = function _injectComponent(func) {
-    var _this4 = this;
+    var _this3 = this;
     return function (params) {
       return func((0, _extend.extend)(params, {
-        component: _this4.dateRangeBox
+        component: _this3.dateRangeBox
       }));
     };
   };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/editing/m_editing.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1957,11 +1957,15 @@ class EditingControllerImpl extends modules.ViewController {
     return this._allowEditAction('allowDeleting', options);
   }
   isCellModified(parameters) {
+    var _a, _b, _c;
     var {
       columnIndex
     } = parameters;
-    var modifiedValues = parameters.row && (parameters.row.isNewRow ? parameters.row.values : parameters.row.modifiedValues);
-    return !!modifiedValues && modifiedValues[columnIndex] !== undefined;
+    var modifiedValue = (_b = (_a = parameters === null || parameters === void 0 ? void 0 : parameters.row) === null || _a === void 0 ? void 0 : _a.modifiedValues) === null || _b === void 0 ? void 0 : _b[columnIndex];
+    if ((_c = parameters === null || parameters === void 0 ? void 0 : parameters.row) === null || _c === void 0 ? void 0 : _c.isNewRow) {
+      modifiedValue = parameters.value;
+    }
+    return modifiedValue !== undefined;
   }
   isNewRowInEditMode() {
     var visibleEditRowIndex = this._getVisibleEditRowIndex();

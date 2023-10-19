@@ -47,7 +47,6 @@ var CalendarWithTimeStrategy = _uiDate_boxStrategy.default.inherit({
       onValueChanged: this._valueChangedHandler.bind(this),
       stylingMode: this.dateBox.option('stylingMode')
     });
-    this._timeView.registerKeyHandler('escape', this._escapeHandler.bind(this));
   },
   renderOpenedState: function renderOpenedState() {
     this.callBase();
@@ -130,23 +129,12 @@ var CalendarWithTimeStrategy = _uiDate_boxStrategy.default.inherit({
         return $container;
       }.bind(this)
     });
-    this._attachTabHandler();
   },
   popupConfig: function popupConfig(_popupConfig) {
     var calendarPopupConfig = this.callBase(_popupConfig);
     return (0, _extend.extend)(calendarPopupConfig, {
       width: 'auto'
     });
-  },
-  _attachTabHandler: function _attachTabHandler() {
-    var dateBox = this.dateBox;
-    var handler = function handler(e) {
-      if (e.shiftKey) {
-        e.preventDefault();
-        dateBox.focus();
-      }
-    };
-    this._timeView._hourBox.registerKeyHandler('tab', handler);
   },
   _preventFocusOnPopup: function _preventFocusOnPopup(e) {
     if (!(0, _renderer.default)(e.target).hasClass('dx-texteditor-input')) {

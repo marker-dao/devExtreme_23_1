@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.base.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,18 +100,19 @@ var TextEditorBase = _editor.default.inherit({
     return this.callBase().concat([{
       device: function device() {
         var themeName = (0, _themes.current)();
-        return (0, _themes.isMaterialBased)(themeName);
+        return (0, _themes.isMaterial)(themeName);
       },
       options: {
-        labelMode: 'floating'
+        labelMode: 'floating',
+        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
       }
     }, {
       device: function device() {
         var themeName = (0, _themes.current)();
-        return (0, _themes.isMaterial)(themeName);
+        return (0, _themes.isFluent)(themeName);
       },
       options: {
-        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
+        labelMode: 'outside'
       }
     }]);
   },

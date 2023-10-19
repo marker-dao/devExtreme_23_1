@@ -47,7 +47,7 @@ var SelectBox = _ui.default.inherit({
     };
     return (0, _extend.extend)({}, parent, {
       tab: function tab() {
-        if (this.option('opened') && this.option('applyValueMode') === 'instantly') {
+        if (this.option('opened') && !this._popup.getFocusableElements().length) {
           this._resetCaretPosition(true);
         }
         parent.tab && parent.tab.apply(this, arguments);

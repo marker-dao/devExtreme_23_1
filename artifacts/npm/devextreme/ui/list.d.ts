@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/list.d.ts)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -511,6 +511,7 @@ export interface dxListOptions<
      * @docid
      * @default "Loading..."
      * @default "" &for(Material)
+     * @default "" &for(Fluent)
      * @public
      */
     pageLoadingText?: string;
@@ -524,6 +525,7 @@ export interface dxListOptions<
      * @docid
      * @default "Release to refresh..."
      * @default "" &for(Material)
+     * @default "" &for(Fluent)
      * @public
      */
     pulledDownText?: string;
@@ -531,6 +533,7 @@ export interface dxListOptions<
      * @docid
      * @default "Pull down to refresh..."
      * @default "" &for(Material)
+     * @default "" &for(Fluent)
      * @public
      */
     pullingDownText?: string;
@@ -538,6 +541,7 @@ export interface dxListOptions<
      * @docid
      * @default "Refreshing..."
      * @default "" &for(Material)
+     * @default "" &for(Fluent)
      * @public
      */
     refreshingText?: string;

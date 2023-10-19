@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/drop_down_box.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,6 @@ import { extend } from '../core/utils/extend';
 import { getElementMaxHeightByWindow } from '../ui/overlay/utils';
 import registerComponent from '../core/component_registrator';
 import { normalizeKeyName } from '../events/utils/index';
-import { keyboard } from '../events/short';
 import devices from '../core/devices';
 import domAdapter from '../core/dom_adapter';
 import { getPublicElement } from '../core/element';
@@ -112,12 +111,6 @@ var DropDownBox = DropDownEditor.inherit({
   _shouldUseDisplayValue: function _shouldUseDisplayValue(value) {
     return this.option('valueExpr') === 'this' && isObject(value);
   },
-  _popupInitializedHandler(e) {
-    e.component.registerKeyHandler('escape', () => {
-      this.close();
-      this.focus();
-    });
-  },
   _sortValuesByKeysOrder(orderedKeys, values) {
     var sortedValues = values.sort((a, b) => {
       return orderedKeys.indexOf(a.itemKey) - orderedKeys.indexOf(b.itemKey);
@@ -184,25 +177,19 @@ var DropDownBox = DropDownEditor.inherit({
     }
     return deferred.promise();
   },
-  _popupElementTabHandler: function _popupElementTabHandler(e) {
+  _popupTabHandler: function _popupTabHandler(e) {
     if (normalizeKeyName(e) !== 'tab') return;
     var $firstTabbable = this._getTabbableElements().first().get(0);
     var $lastTabbable = this._getTabbableElements().last().get(0);
-    var $target = e.originalEvent.target;
-    var moveBackward = !!($target === $firstTabbable && e.shift);
-    var moveForward = !!($target === $lastTabbable && !e.shift);
+    var $target = e.target;
+    var moveBackward = !!($target === $firstTabbable && e.shiftKey);
+    var moveForward = !!($target === $lastTabbable && !e.shiftKey);
     if (moveBackward || moveForward) {
       this.close();
       eventsEngine.trigger(this._input(), 'focus');
       if (moveBackward) {
-        e.originalEvent.preventDefault();
+        e.preventDefault();
       }
-    }
-  },
-  _renderPopup: function _renderPopup(e) {
-    this.callBase();
-    if (this.option('focusStateEnabled')) {
-      keyboard.on(this.content(), null, e => this._popupElementTabHandler(e));
     }
   },
   _renderPopupContent: function _renderPopupContent() {
@@ -270,7 +257,6 @@ var DropDownBox = DropDownEditor.inherit({
       position: extend(this.option('popupPosition'), {
         of: this.$element()
       }),
-      onKeyboardHandled: opts => this.option('focusStateEnabled') && this._popupElementTabHandler(opts),
       _ignoreFunctionValueDeprecation: true,
       maxHeight: function () {
         var _this$_popupPosition;

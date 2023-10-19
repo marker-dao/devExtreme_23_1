@@ -13,8 +13,10 @@ import { name as clickEventName } from '../../../events/click';
 import eventsEngine from '../../../events/core/events_engine';
 import { addNamespace } from '../../../events/utils/index';
 import localizationMessage from '../../../localization/message';
+import Button from '../../../ui/button';
 import ContextMenu from '../../../ui/context_menu';
 import Popup from '../../../ui/popup/ui.popup';
+import { current, isFluent } from '../../../ui/themes';
 import Widget from '../../../ui/widget/ui.widget';
 import gridCoreUtils from '../../grids/grid_core/m_utils';
 import { ChartIntegrationMixin } from './chart_integration/m_chart_integration';
@@ -755,27 +757,30 @@ var PivotGrid = Widget.inherit({
     $descriptionCell.toggleClass('dx-pivotgrid-background', fieldPanel.visible && (fieldPanel.showDataFields || fieldPanel.showColumnFields || fieldPanel.showRowFields));
     this.$element().find('.dx-pivotgrid-toolbar').remove();
     $toolbarContainer.prependTo($targetContainer);
+    var stylingMode = isFluent(current()) ? 'text' : 'contained';
     if (this.option('fieldChooser.enabled')) {
       var $buttonElement = $(DIV).appendTo($toolbarContainer).addClass('dx-pivotgrid-field-chooser-button');
       var buttonOptions = {
         icon: 'columnchooser',
         hint: this.option('texts.showFieldChooser'),
+        stylingMode,
         onClick: () => {
           this.getFieldChooserPopup().show();
         }
       };
-      this._createComponent($buttonElement, 'dxButton', buttonOptions);
+      this._createComponent($buttonElement, Button, buttonOptions);
     }
     if (this.option('export.enabled')) {
       var _$buttonElement = $(DIV).appendTo($toolbarContainer).addClass('dx-pivotgrid-export-button');
       var _buttonOptions = {
         icon: 'xlsxfile',
         hint: this.option('texts.exportToExcel'),
+        stylingMode,
         onClick: () => {
           this.exportTo();
         }
       };
-      this._createComponent(_$buttonElement, 'dxButton', _buttonOptions);
+      this._createComponent(_$buttonElement, Button, _buttonOptions);
     }
   },
   _detectHasContainerHeight() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/core/component.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -240,7 +240,7 @@ export var Component = Class.inherit({
           actionValue: e
         };
       }
-      action = action || new Action(actionSource, extend(config, this._defaultActionConfig()));
+      action = action || new Action(actionSource, extend({}, config, this._defaultActionConfig()));
       return action.execute.call(action, extend(e, this._defaultActionArgs()));
     };
   },
@@ -249,6 +249,7 @@ export var Component = Class.inherit({
     var action;
     var eventName;
     var actionFunc;
+    config = extend({}, config);
     var result = function result() {
       if (!eventName) {
         config = config || {};

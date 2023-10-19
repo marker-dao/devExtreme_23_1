@@ -19,8 +19,10 @@ var _click = require("../../../events/click");
 var _events_engine = _interopRequireDefault(require("../../../events/core/events_engine"));
 var _index = require("../../../events/utils/index");
 var _message = _interopRequireDefault(require("../../../localization/message"));
+var _button = _interopRequireDefault(require("../../../ui/button"));
 var _context_menu = _interopRequireDefault(require("../../../ui/context_menu"));
 var _ui = _interopRequireDefault(require("../../../ui/popup/ui.popup"));
+var _themes = require("../../../ui/themes");
 var _ui2 = _interopRequireDefault(require("../../../ui/widget/ui.widget"));
 var _m_utils = _interopRequireDefault(require("../../grids/grid_core/m_utils"));
 var _m_chart_integration = require("./chart_integration/m_chart_integration");
@@ -757,27 +759,30 @@ var PivotGrid = _ui2.default.inherit({
     $descriptionCell.toggleClass('dx-pivotgrid-background', fieldPanel.visible && (fieldPanel.showDataFields || fieldPanel.showColumnFields || fieldPanel.showRowFields));
     this.$element().find('.dx-pivotgrid-toolbar').remove();
     $toolbarContainer.prependTo($targetContainer);
+    var stylingMode = (0, _themes.isFluent)((0, _themes.current)()) ? 'text' : 'contained';
     if (this.option('fieldChooser.enabled')) {
       var $buttonElement = (0, _renderer.default)(DIV).appendTo($toolbarContainer).addClass('dx-pivotgrid-field-chooser-button');
       var buttonOptions = {
         icon: 'columnchooser',
         hint: this.option('texts.showFieldChooser'),
+        stylingMode,
         onClick: function onClick() {
           _this.getFieldChooserPopup().show();
         }
       };
-      this._createComponent($buttonElement, 'dxButton', buttonOptions);
+      this._createComponent($buttonElement, _button.default, buttonOptions);
     }
     if (this.option('export.enabled')) {
       var _$buttonElement = (0, _renderer.default)(DIV).appendTo($toolbarContainer).addClass('dx-pivotgrid-export-button');
       var _buttonOptions = {
         icon: 'xlsxfile',
         hint: this.option('texts.exportToExcel'),
+        stylingMode,
         onClick: function onClick() {
           _this.exportTo();
         }
       };
-      this._createComponent(_$buttonElement, 'dxButton', _buttonOptions);
+      this._createComponent(_$buttonElement, _button.default, _buttonOptions);
     }
   },
   _detectHasContainerHeight() {

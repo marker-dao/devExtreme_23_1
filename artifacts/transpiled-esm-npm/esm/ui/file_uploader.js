@@ -17,7 +17,7 @@ import devices from '../core/devices';
 import { addNamespace, isTouchEvent } from '../events/utils/index';
 import { name as clickEventName } from '../events/click';
 import messageLocalization from '../localization/message';
-import { isMaterial } from './themes';
+import { isFluent, isMaterial } from './themes';
 import domAdapter from '../core/dom_adapter';
 
 // STYLE fileUploader
@@ -137,7 +137,8 @@ class FileUploader extends Editor {
       useNativeInputClick: false,
       useDragOver: true,
       nativeDropSupported: true,
-      _uploadButtonType: 'normal'
+      _uploadButtonType: 'normal',
+      _buttonStylingMode: 'contained'
     });
   }
   _defaultOptionsRules() {
@@ -174,6 +175,11 @@ class FileUploader extends Editor {
       device: () => isMaterial(),
       options: {
         _uploadButtonType: 'default'
+      }
+    }, {
+      device: () => isFluent(),
+      options: {
+        _buttonStylingMode: 'text'
       }
     }]);
   }
@@ -507,13 +513,20 @@ class FileUploader extends Editor {
     if (this.option('uploadMode') === 'useForm') {
       return null;
     }
+    var {
+      allowCanceling,
+      readOnly,
+      hoverStateEnabled,
+      _buttonStylingMode
+    } = this.option();
     file.cancelButton = this._createComponent($('<div>').addClass(FILEUPLOADER_BUTTON_CLASS + ' ' + FILEUPLOADER_CANCEL_BUTTON_CLASS), Button, {
       onClick: () => this._removeFile(file),
       icon: 'close',
-      visible: this.option('allowCanceling'),
-      disabled: this.option('readOnly'),
+      visible: allowCanceling,
+      disabled: readOnly,
       integrationOptions: {},
-      hoverStateEnabled: this.option('hoverStateEnabled')
+      hoverStateEnabled: hoverStateEnabled,
+      stylingMode: _buttonStylingMode
     });
     return $('<div>').addClass(FILEUPLOADER_BUTTON_CONTAINER_CLASS).append(file.cancelButton.$element());
   }
@@ -521,10 +534,15 @@ class FileUploader extends Editor {
     if (!file.isValid() || this.option('uploadMode') !== 'useButtons') {
       return null;
     }
+    var {
+      hoverStateEnabled,
+      _buttonStylingMode
+    } = this.option();
     file.uploadButton = this._createComponent($('<div>').addClass(FILEUPLOADER_BUTTON_CLASS + ' ' + FILEUPLOADER_UPLOAD_BUTTON_CLASS), Button, {
       onClick: () => this._uploadFile(file),
       icon: 'upload',
-      hoverStateEnabled: this.option('hoverStateEnabled')
+      hoverStateEnabled: hoverStateEnabled,
+      stylingMode: _buttonStylingMode
     });
     file.onLoadStart.add(() => file.uploadButton.option({
       visible: false,
@@ -1061,6 +1079,13 @@ class FileUploader extends Editor {
         break;
       case '_uploadButtonType':
         this._uploadButton && this._uploadButton.option('type', value);
+        break;
+      case '_buttonStylingMode':
+        this._files.forEach(file => {
+          var _file$uploadButton2, _file$cancelButton3;
+          (_file$uploadButton2 = file.uploadButton) === null || _file$uploadButton2 === void 0 ? void 0 : _file$uploadButton2.option('stylingMode', value);
+          (_file$cancelButton3 = file.cancelButton) === null || _file$cancelButton3 === void 0 ? void 0 : _file$cancelButton3.option('stylingMode', value);
+        });
         break;
       case 'dialogTrigger':
         this._detachSelectFileDialogHandler(previousValue);

@@ -517,19 +517,12 @@ var TagBox = SelectBox.inherit({
     }
     this.callBase(e);
   },
-  _getFirstPopupElement: function _getFirstPopupElement() {
-    return this.option('showSelectionControls') ? this._list._focusTarget() : this.callBase();
-  },
   _initSelectAllValueChangedAction: function _initSelectAllValueChangedAction() {
     this._selectAllValueChangeAction = this._createActionByOption('onSelectAllValueChanged');
   },
   _renderList: function _renderList() {
     this.callBase();
     this._setListDataSourceFilter();
-    if (this.option('showSelectionControls')) {
-      this._list.registerKeyHandler('tab', e => this._popupElementTabHandler(e));
-      this._list.registerKeyHandler('escape', e => this._popupElementEscHandler(e));
-    }
   },
   _canListHaveFocus: function _canListHaveFocus() {
     return this.option('applyValueMode') === 'useButtons';
@@ -537,6 +530,7 @@ var TagBox = SelectBox.inherit({
   _listConfig: function _listConfig() {
     var selectionMode = this.option('showSelectionControls') ? 'all' : 'multiple';
     return extend(this.callBase(), {
+      maxFilterLengthInRequest: this.option('maxFilterQueryLength'),
       selectionMode: selectionMode,
       selectAllText: this.option('selectAllText'),
       onSelectAllValueChanged: _ref => {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/button.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -153,6 +153,7 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
     _this.onInactive = _this.onInactive.bind(_assertThisInitialized(_this));
     _this.onWidgetClick = _this.onWidgetClick.bind(_assertThisInitialized(_this));
     _this.keyDown = _this.keyDown.bind(_assertThisInitialized(_this));
+    _this.emitClickEvent = _this.emitClickEvent.bind(_assertThisInitialized(_this));
     return _this;
   }
   var _proto = Button.prototype;
@@ -220,9 +221,12 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
     if (keyName === 'space' || which === 'space' || keyName === 'enter' || which === 'enter') {
       originalEvent.preventDefault();
-      this.onWidgetClick(originalEvent);
+      this.emitClickEvent();
     }
     return undefined;
+  };
+  _proto.emitClickEvent = function emitClickEvent() {
+    this.contentRef.current.click();
   };
   _proto.focus = function focus() {
     this.widgetRef.current.focus();
@@ -254,6 +258,7 @@ var Button = /*#__PURE__*/function (_InfernoWrapperCompon) {
       onInactive: this.onInactive,
       onWidgetClick: this.onWidgetClick,
       keyDown: this.keyDown,
+      emitClickEvent: this.emitClickEvent,
       aria: this.aria,
       cssClasses: this.cssClasses,
       iconSource: this.iconSource,

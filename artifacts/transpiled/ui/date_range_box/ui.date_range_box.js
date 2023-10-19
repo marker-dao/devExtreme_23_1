@@ -36,8 +36,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 var DATERANGEBOX_CLASS = 'dx-daterangebox';
-var TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
-var TEXTEDITOR_WITH_FLOATING_LABEL_CLASS = 'dx-texteditor-with-floating-label';
+var TEXTEDITOR_LABEL_STATIC_CLASS = 'dx-texteditor-with-label';
+var TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
+var TEXTEDITOR_LABEL_FLOATING_CLASS = 'dx-texteditor-with-floating-label';
 var START_DATEBOX_CLASS = 'dx-start-datebox';
 var END_DATEBOX_CLASS = 'dx-end-datebox';
 var DATERANGEBOX_SEPARATOR_CLASS = 'dx-daterangebox-separator';
@@ -135,18 +136,19 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     return _Editor.prototype._defaultOptionsRules.call(this).concat([{
       device: function device() {
         var themeName = (0, _themes.current)();
-        return (0, _themes.isMaterialBased)(themeName);
+        return (0, _themes.isMaterial)(themeName);
       },
       options: {
-        labelMode: 'floating'
+        labelMode: 'floating',
+        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
       }
     }, {
       device: function device() {
         var themeName = (0, _themes.current)();
-        return (0, _themes.isMaterial)(themeName);
+        return (0, _themes.isFluent)(themeName);
       },
       options: {
-        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
+        labelMode: 'outside'
       }
     }, {
       device: function device() {
@@ -291,9 +293,12 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
       endDateLabel = _this$option4.endDateLabel,
       labelMode = _this$option4.labelMode;
     var isLabelVisible = (!!startDateLabel || !!endDateLabel) && labelMode !== 'hidden';
-    this.$element().removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_WITH_LABEL_CLASS);
+    this.$element().removeClass(TEXTEDITOR_LABEL_FLOATING_CLASS).removeClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS).removeClass(TEXTEDITOR_LABEL_STATIC_CLASS);
     if (isLabelVisible) {
-      this.$element().addClass(labelMode === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS);
+      this.$element().addClass(labelMode === 'floating' ? TEXTEDITOR_LABEL_FLOATING_CLASS : TEXTEDITOR_LABEL_STATIC_CLASS);
+      if (labelMode === 'outside') {
+        this.$element().addClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS);
+      }
     }
   };
   _proto._renderStartDateBox = function _renderStartDateBox() {

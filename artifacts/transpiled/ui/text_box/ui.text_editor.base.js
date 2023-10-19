@@ -92,18 +92,19 @@ var TextEditorBase = _editor.default.inherit({
     return this.callBase().concat([{
       device: function device() {
         var themeName = (0, _themes.current)();
-        return (0, _themes.isMaterialBased)(themeName);
+        return (0, _themes.isMaterial)(themeName);
       },
       options: {
-        labelMode: 'floating'
+        labelMode: 'floating',
+        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
       }
     }, {
       device: function device() {
         var themeName = (0, _themes.current)();
-        return (0, _themes.isMaterial)(themeName);
+        return (0, _themes.isFluent)(themeName);
       },
       options: {
-        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
+        labelMode: 'outside'
       }
     }]);
   },

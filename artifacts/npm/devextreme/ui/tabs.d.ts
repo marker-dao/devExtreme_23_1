@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tabs.d.ts)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -152,7 +152,9 @@ export interface dxTabsBaseOptions<
     hoverStateEnabled?: boolean;
     /**
      * @docid dxTabsOptions.iconPosition
-     * @default 'start'
+     * @default 'start' &for(Generic)
+     * @default 'top' &for(Material)
+     * @default 'top' &for(Fluent)
      * @public
      */
     iconPosition?: TabsIconPosition;
@@ -203,7 +205,9 @@ export interface dxTabsBaseOptions<
     showNavButtons?: boolean;
     /**
      * @docid dxTabsOptions.stylingMode
-     * @default 'primary'
+     * @default 'primary' &for(Generic)
+     * @default 'primary' &for(Material)
+     * @default 'secondary' &for(Fluent)
      * @public
      */
     stylingMode?: TabsStyle;

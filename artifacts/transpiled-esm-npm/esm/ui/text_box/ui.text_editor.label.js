@@ -2,6 +2,7 @@ import $ from '../../core/renderer';
 import Guid from '../../core/guid';
 var TEXTEDITOR_LABEL_CLASS = 'dx-texteditor-label';
 var TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
+var TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
 var TEXTEDITOR_WITH_FLOATING_LABEL_CLASS = 'dx-texteditor-with-floating-label';
 var TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS = 'dx-texteditor-with-before-buttons';
 var LABEL_BEFORE_CLASS = 'dx-label-before';
@@ -52,10 +53,13 @@ class TextEditorLabel {
     visible ? this._$root.appendTo(this._props.$editor) : this._$root.detach();
   }
   _updateEditorLabelClass(visible) {
-    this._props.$editor.removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_WITH_LABEL_CLASS);
+    this._props.$editor.removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS).removeClass(TEXTEDITOR_WITH_LABEL_CLASS);
     if (visible) {
       var labelClass = this._props.mode === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS;
       this._props.$editor.addClass(labelClass);
+      if (this._props.mode === 'outside') {
+        this._props.$editor.addClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS);
+      }
     }
   }
   _updateEditorBeforeButtonsClass() {

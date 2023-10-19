@@ -232,7 +232,7 @@ export var Component = Class.inherit({
           actionValue: e
         };
       }
-      action = action || new Action(actionSource, extend(config, this._defaultActionConfig()));
+      action = action || new Action(actionSource, extend({}, config, this._defaultActionConfig()));
       return action.execute.call(action, extend(e, this._defaultActionArgs()));
     };
   },
@@ -241,6 +241,7 @@ export var Component = Class.inherit({
     var action;
     var eventName;
     var actionFunc;
+    config = extend({}, config);
     var result = function result() {
       if (!eventName) {
         config = config || {};

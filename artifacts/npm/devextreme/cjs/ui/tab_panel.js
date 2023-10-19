@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tab_panel.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,6 +22,7 @@ var _icon = require("../core/utils/icon");
 var _element = require("../core/element");
 var _type = require("../core/utils/type");
 var _bindable_template = require("../core/templates/bindable_template");
+var _themes = require("./themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE tabPanel
 
@@ -84,6 +85,7 @@ var TabPanel = _multi_view.default.inherit({
   },
 
   _defaultOptionsRules: function _defaultOptionsRules() {
+    var themeName = (0, _themes.current)();
     return this.callBase().concat([{
       device: function device() {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
@@ -105,13 +107,37 @@ var TabPanel = _multi_view.default.inherit({
       options: {
         animationEnabled: false
       }
+    }, {
+      device() {
+        return (0, _themes.isFluent)(themeName);
+      },
+      options: {
+        iconPosition: ICON_POSITION.top,
+        stylingMode: STYLING_MODE.secondary
+      }
+    }, {
+      device() {
+        return (0, _themes.isMaterial)(themeName);
+      },
+      options: {
+        iconPosition: ICON_POSITION.top
+      }
     }]);
   },
   _init: function _init() {
     this.callBase();
     this.$element().addClass(TABPANEL_CLASS);
     this._toggleTabPanelTabsPositionClass();
-    this.setAria('role', 'tabpanel');
+  },
+  _getElementAria() {
+    return {
+      role: 'tabpanel'
+    };
+  },
+  _getItemAria() {
+    return {
+      role: 'tabpanel'
+    };
   },
   _initMarkup: function _initMarkup() {
     this.callBase();

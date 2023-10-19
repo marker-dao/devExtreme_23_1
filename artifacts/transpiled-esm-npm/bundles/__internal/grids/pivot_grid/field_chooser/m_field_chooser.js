@@ -459,7 +459,7 @@ var FieldChooser = _m_field_chooser_base.FieldChooserBase.inherit({
     var caption = that.option("texts.".concat(area, "Fields"));
     var $fieldsContent;
     var render;
-    (0, _renderer.default)('<span>').addClass(_const.CLASSES.area.icon).addClass("dx-area-icon-".concat(area)).appendTo($fieldsHeaderContainer);
+    (0, _renderer.default)('<span>').addClass(_const.CLASSES.area.icon).addClass("dx-icon-".concat(_const.ICONS[area])).appendTo($fieldsHeaderContainer);
     (0, _renderer.default)('<span>').html('&nbsp;').appendTo($fieldsHeaderContainer);
     (0, _renderer.default)('<span>').addClass(_const.CLASSES.area.caption).text(caption).appendTo($fieldsHeaderContainer);
     var $fieldsContainer = (0, _renderer.default)(DIV).addClass(_const.CLASSES.area.fieldList).addClass(_const.CLASSES.pivotGrid.dragAction).appendTo($areaContainer);

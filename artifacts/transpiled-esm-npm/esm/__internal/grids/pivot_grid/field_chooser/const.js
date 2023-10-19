@@ -42,9 +42,14 @@ export var CLASSES = {
   widget: 'dx-widget'
 };
 export var ICONS = {
-  measure: 'measure',
+  all: 'smalliconslayout',
+  column: 'columnfield',
+  row: 'rowfield',
+  filter: 'filter',
+  data: 'formula',
+  measure: 'formula',
   hierarchy: 'hierarchy',
-  dimension: 'dimension'
+  dimension: 'detailslayout'
 };
 export var SORTABLE_CONST = {
   targets: {

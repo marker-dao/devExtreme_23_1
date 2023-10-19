@@ -17,6 +17,7 @@
 
 
 .dx-tab {
+  gap: $material-tabs-item-gap;
   padding: $material-tabs-item-padding;
   min-width: $material-tab-min-width;
   background-color: $tabs-tab-background;
@@ -62,6 +63,6 @@
   .dx-icon {
     color: $tabs-tab-icon-color;
 
-    @include dx-icon-sizing($material-base-icon-size);
+    @include dx-icon-sizing($material-tabs-icon-size);
   }
 }

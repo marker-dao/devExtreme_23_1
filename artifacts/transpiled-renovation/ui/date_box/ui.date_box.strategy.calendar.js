@@ -90,7 +90,6 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       max: this.dateBox.dateOption('max'),
       onValueChanged: this._valueChangedHandler.bind(this),
       onCellClick: this._cellClickHandler.bind(this),
-      tabIndex: null,
       disabledDates: (0, _type.isFunction)(disabledDates) ? this._injectComponent(disabledDates.bind(this.dateBox)) : disabledDates,
       onContouredChanged: this._refreshActiveDescendant.bind(this),
       skipFocusCheck: true
@@ -119,9 +118,6 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       toolbar: position[0],
       location: position[1] === 'after' ? 'before' : position[1],
       options: {
-        onInitialized: function (e) {
-          e.component.registerKeyHandler('escape', this._escapeHandler.bind(this));
-        }.bind(this),
         onClick: function onClick(args) {
           _this._widget._toTodayView(args);
         },
@@ -151,10 +147,6 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       },
       width: 'auto'
     });
-  },
-  _escapeHandler: function _escapeHandler() {
-    this.dateBox.close();
-    this.dateBox.focus();
   },
   _valueChangedHandler: function _valueChangedHandler(e) {
     var value = e.value;

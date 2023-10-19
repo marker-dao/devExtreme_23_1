@@ -9,7 +9,11 @@ exports.setLicenseCheckSkipCondition = setLicenseCheckSkipCondition;
 exports.verifyLicense = verifyLicense;
 var _errors = _interopRequireDefault(require("../../../core/errors"));
 var _version = require("../../../core/version");
-var _rsa_pkcs1_sha = require("./rsa_pkcs1_sha1");
+var _byte_utils = require("./byte_utils");
+var _key = require("./key");
+var _pkcs = require("./pkcs1");
+var _rsa_bigint = require("./rsa_bigint");
+var _sha = require("./sha1");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -58,6 +62,16 @@ var VERSION_ERROR = {
   error: 'version'
 };
 var isLicenseVerified = false;
+// verifies RSASSA-PKCS1-v1.5 signature
+function verifySignature(_ref) {
+  var text = _ref.text,
+    encodedSignature = _ref.signature;
+  return (0, _rsa_bigint.compareSignatures)({
+    key: _key.PUBLIC_KEY,
+    signature: (0, _byte_utils.base64ToBytes)(encodedSignature),
+    actual: (0, _pkcs.pad)((0, _sha.sha1)(text))
+  });
+}
 function parseLicenseKey(encodedKey) {
   if (encodedKey === undefined) {
     return GENERAL_ERROR;
@@ -66,7 +80,7 @@ function parseLicenseKey(encodedKey) {
   if (parts.length !== 2 || parts[0].length === 0 || parts[1].length === 0) {
     return GENERAL_ERROR;
   }
-  if (!(0, _rsa_pkcs1_sha.verify)({
+  if (!verifySignature({
     text: parts[0],
     signature: parts[1]
   })) {
@@ -139,12 +153,12 @@ function verifyLicense(licenseKey) {
     }
   }
 }
-/// #DEBUG
 function setLicenseCheckSkipCondition() {
   var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  /// #DEBUG
   isLicenseVerified = value;
+  /// #ENDDEBUG
 }
-/// #ENDDEBUG
 // NOTE: We need this default export
 // to allow QUnit mock the verifyLicense function
 var _default = {

@@ -90,6 +90,19 @@ var LoadPanel = Overlay.inherit({
     this.callBase();
     this.$element().addClass(LOADPANEL_CLASS);
     this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
+    this._setWrapperAria();
+  },
+  _setWrapperAria() {
+    var {
+      message
+    } = this.option();
+    var defaultLabel = isMaterialBased() ? message : null;
+    var label = message ? defaultLabel : messageLocalization.format('Loading');
+    var aria = {
+      role: 'alert',
+      label
+    };
+    this.setAria(aria, this.$wrapper());
   },
   _renderContentImpl: function _renderContentImpl() {
     this.callBase();
@@ -160,6 +173,7 @@ var LoadPanel = Overlay.inherit({
         this._cleanPreviousContent();
         this._renderLoadIndicator();
         this._renderMessage();
+        this._setWrapperAria();
         break;
       case 'showPane':
         this._togglePaneVisible();

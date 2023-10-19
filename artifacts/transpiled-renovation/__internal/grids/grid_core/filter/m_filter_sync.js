@@ -212,20 +212,22 @@ var DataControllerFilterSyncExtender = {
     return ((0, _type.isDefined)(this.option('filterValue')) || filterSyncController._skipSyncColumnOptions) && this.isFilterSyncActive();
   },
   _calculateAdditionalFilter() {
-    var that = this;
-    if (that.option('filterPanel.filterEnabled') === false) {
-      return that.callBase();
+    if (this.option('filterPanel.filterEnabled') === false) {
+      return this.callBase();
     }
-    var filters = [that.callBase()];
-    var columns = that.getController('columns').getFilteringColumns();
-    var filterValue = that.option('filterValue');
-    if (that.isFilterSyncActive()) {
-      var currentColumn = that.getController('headerFilter').getCurrentColumn();
-      if (currentColumn && filterValue) {
+    var filters = [this.callBase()];
+    var columns = this.getController('columns').getFilteringColumns();
+    var filterValue = this.option('filterValue');
+    if (this.isFilterSyncActive()) {
+      var currentColumnForHeaderFilter = this.getController('headerFilter').getCurrentColumn();
+      var currentColumnForFilterRow = this.getController('applyFilter').getCurrentColumnForFiltering();
+      var currentColumn = currentColumnForHeaderFilter || currentColumnForFilterRow;
+      var needRemoveCurrentColumnFilter = currentColumnForHeaderFilter || (0, _type.isDefined)(currentColumnForFilterRow === null || currentColumnForFilterRow === void 0 ? void 0 : currentColumnForFilterRow.filterValue);
+      if (needRemoveCurrentColumnFilter && filterValue) {
         filterValue = (0, _utils.removeFieldConditionsFromFilter)(filterValue, getColumnIdentifier(currentColumn));
       }
     }
-    var customOperations = that.getController('filterSync').getCustomFilterOperations();
+    var customOperations = this.getController('filterSync').getCustomFilterOperations();
     var calculatedFilterValue = (0, _utils.getFilterExpression)(filterValue, columns, customOperations, 'filterBuilder');
     if (calculatedFilterValue) {
       filters.push(calculatedFilterValue);

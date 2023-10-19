@@ -11,6 +11,7 @@ import { getImageContainer } from '../core/utils/icon';
 import { getPublicElement } from '../core/element';
 import { isPlainObject, isDefined } from '../core/utils/type';
 import { BindableTemplate } from '../core/templates/bindable_template';
+import { isMaterial, isFluent, current as currentTheme } from './themes';
 
 // STYLE tabPanel
 
@@ -73,6 +74,7 @@ var TabPanel = MultiView.inherit({
   },
 
   _defaultOptionsRules: function _defaultOptionsRules() {
+    var themeName = currentTheme();
     return this.callBase().concat([{
       device: function device() {
         return devices.real().deviceType === 'desktop' && !devices.isSimulator();
@@ -94,13 +96,37 @@ var TabPanel = MultiView.inherit({
       options: {
         animationEnabled: false
       }
+    }, {
+      device() {
+        return isFluent(themeName);
+      },
+      options: {
+        iconPosition: ICON_POSITION.top,
+        stylingMode: STYLING_MODE.secondary
+      }
+    }, {
+      device() {
+        return isMaterial(themeName);
+      },
+      options: {
+        iconPosition: ICON_POSITION.top
+      }
     }]);
   },
   _init: function _init() {
     this.callBase();
     this.$element().addClass(TABPANEL_CLASS);
     this._toggleTabPanelTabsPositionClass();
-    this.setAria('role', 'tabpanel');
+  },
+  _getElementAria() {
+    return {
+      role: 'tabpanel'
+    };
+  },
+  _getItemAria() {
+    return {
+      role: 'tabpanel'
+    };
   },
   _initMarkup: function _initMarkup() {
     this.callBase();

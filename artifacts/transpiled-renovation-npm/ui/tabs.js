@@ -173,6 +173,7 @@ var Tabs = _uiCollection_widget.default.inherit({
     this.callBase();
     this._templateManager.addDefaultTemplates({
       item: new _bindable_template.BindableTemplate(function ($container, data) {
+        var _data$text;
         if ((0, _type.isPlainObject)(data)) {
           this._prepareDefaultItemTemplate(data, $container);
         } else {
@@ -181,8 +182,9 @@ var Tabs = _uiCollection_widget.default.inherit({
         var $iconElement = (0, _icon.getImageContainer)(data.icon);
         $iconElement && $iconElement.prependTo($container);
         var $tabItem = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_CLASS);
-        if (data !== null && data !== void 0 && data.text || ['string', 'number'].includes(typeof data)) {
-          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, ['string', 'number'].includes(typeof data) ? data : data.text);
+        var text = (_data$text = data === null || data === void 0 ? void 0 : data.text) !== null && _data$text !== void 0 ? _data$text : data;
+        if ((0, _type.isString)(text) || (0, _type.isNumeric)(text)) {
+          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, text);
         }
         $container.wrapInner($tabItem);
       }.bind(this), ['text', 'html', 'icon'], this.option('integrationOptions.watchMethod'))

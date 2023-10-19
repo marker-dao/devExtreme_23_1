@@ -13,7 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports,
-// eslint-disable-next-line forbidden-imports/no-restricted-imports
+
 var createHandleTemplateFunc = function createHandleTemplateFunc(addWidgetPrefix) {
   return function (container, options) {
     var $container = (0, _renderer.default)(container);

@@ -247,7 +247,7 @@ var Component = _class.default.inherit({
           actionValue: e
         };
       }
-      action = action || new _action.default(actionSource, (0, _extend.extend)(config, _this3._defaultActionConfig()));
+      action = action || new _action.default(actionSource, (0, _extend.extend)({}, config, _this3._defaultActionConfig()));
       return action.execute.call(action, (0, _extend.extend)(e, _this3._defaultActionArgs()));
     };
   },
@@ -256,6 +256,7 @@ var Component = _class.default.inherit({
     var action;
     var eventName;
     var actionFunc;
+    config = (0, _extend.extend)({}, config);
     var result = function result() {
       if (!eventName) {
         config = config || {};

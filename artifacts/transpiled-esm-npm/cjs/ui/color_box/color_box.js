@@ -2,7 +2,6 @@
 
 exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
-var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 var _color = _interopRequireDefault(require("../../color"));
 var _color_view = _interopRequireDefault(require("./color_view"));
 var _extend = require("../../core/utils/extend");
@@ -59,17 +58,6 @@ var ColorBox = _ui.default.inherit({
       return true;
     };
     return (0, _extend.extend)(this.callBase(), {
-      tab: function tab(e) {
-        if (!this.option('opened')) {
-          return;
-        }
-        var $focusableElement = e.shiftKey ? this._getLastPopupElement() : this._getFirstPopupElement();
-        if ($focusableElement) {
-          _events_engine.default.trigger($focusableElement, 'focus');
-          $focusableElement.select();
-        }
-        e.preventDefault();
-      },
       enter: this._enterKeyHandler,
       leftArrow: arrowHandler,
       rightArrow: arrowHandler,
@@ -135,11 +123,6 @@ var ColorBox = _ui.default.inherit({
     this._popup.$overlayContent().addClass(COLOR_BOX_OVERLAY_CLASS);
     var $colorView = (0, _renderer.default)('<div>').appendTo(this._popup.$content());
     this._colorView = this._createComponent($colorView, _color_view.default, this._colorViewConfig());
-    this._colorView.registerKeyHandler('escape', this._escapeHandler.bind(this));
-  },
-  _escapeHandler: function _escapeHandler() {
-    this.close();
-    this.focus();
   },
   _applyNewColor: function _applyNewColor(value) {
     this.option('value', value);
@@ -281,10 +264,15 @@ var ColorBox = _ui.default.inherit({
     this.callBase(e, value);
   },
   _applyColorFromInput: function _applyColorFromInput(value) {
+    var _this$option3 = this.option(),
+      editAlphaChannel = _this$option3.editAlphaChannel;
     var newColor = new _color.default(value);
     if (newColor.colorIsInvalid) {
       this._resetInputValue();
-      value = this.option('value');
+      return this.option('value');
+    }
+    if (editAlphaChannel) {
+      return colorUtils.makeRgba(value);
     }
     return value;
   },

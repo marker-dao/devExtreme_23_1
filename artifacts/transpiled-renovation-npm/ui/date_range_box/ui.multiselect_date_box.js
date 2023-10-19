@@ -91,8 +91,8 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     _DateBox.prototype._focusInHandler.call(this, e);
     this._processValueChange(e);
   };
-  _proto._popupElementTabHandler = function _popupElementTabHandler(e) {
-    var $element = (0, _renderer.default)(e.currentTarget);
+  _proto._popupTabHandler = function _popupTabHandler(e) {
+    var $element = (0, _renderer.default)(e.target);
     if (e.shiftKey && $element.is(this._getFirstPopupElement())) {
       this._strategy.dateRangeBox.getEndDateBox().focus();
       e.preventDefault();

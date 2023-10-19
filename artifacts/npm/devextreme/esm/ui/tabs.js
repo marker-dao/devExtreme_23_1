@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tabs.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ import Button from './button';
 import { render } from './widget/utils.ink_ripple';
 import { addNamespace } from '../events/utils/index';
 import { extend } from '../core/utils/extend';
-import { isPlainObject } from '../core/utils/type';
+import { isPlainObject, isString, isNumeric } from '../core/utils/type';
 import pointerEvents from '../events/pointer';
 import { each } from '../core/utils/iterator';
 import TabsItem from './tabs/item';
@@ -179,6 +179,7 @@ var Tabs = CollectionWidget.inherit({
     this.callBase();
     this._templateManager.addDefaultTemplates({
       item: new BindableTemplate(function ($container, data) {
+        var _data$text;
         if (isPlainObject(data)) {
           this._prepareDefaultItemTemplate(data, $container);
         } else {
@@ -187,8 +188,9 @@ var Tabs = CollectionWidget.inherit({
         var $iconElement = getImageContainer(data.icon);
         $iconElement && $iconElement.prependTo($container);
         var $tabItem = $('<span>').addClass(TABS_ITEM_TEXT_CLASS);
-        if (data !== null && data !== void 0 && data.text || ['string', 'number'].includes(typeof data)) {
-          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, ['string', 'number'].includes(typeof data) ? data : data.text);
+        var text = (_data$text = data === null || data === void 0 ? void 0 : data.text) !== null && _data$text !== void 0 ? _data$text : data;
+        if (isString(text) || isNumeric(text)) {
+          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, text);
         }
         $container.wrapInner($tabItem);
       }.bind(this), ['text', 'html', 'icon'], this.option('integrationOptions.watchMethod'))

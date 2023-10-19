@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_editor.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -51,7 +51,7 @@ var DropDownEditor = _text_box.default.inherit({
         if (!this.option('opened')) {
           return;
         }
-        if (this.option('applyValueMode') === 'instantly') {
+        if (!this._popup.getFocusableElements().length) {
           this.close();
           return;
         }
@@ -496,9 +496,39 @@ var DropDownEditor = _text_box.default.inherit({
       'hidden': this._popupHiddenHandler.bind(this),
       'contentReady': this._contentReadyHandler.bind(this)
     });
+    this._attachPopupKeyHandler();
     this._contentReadyHandler();
     this._setPopupContentId(this._popup.$content());
     this._bindInnerWidgetOptions(this._popup, 'dropDownOptions');
+  },
+  _attachPopupKeyHandler() {
+    var _this4 = this;
+    _events_engine.default.on(this._popup.$overlayContent(), (0, _index.addNamespace)('keydown', this.NAME), function (e) {
+      return _this4._popupKeyHandler(e);
+    });
+  },
+  _popupKeyHandler(e) {
+    switch ((0, _index.normalizeKeyName)(e)) {
+      case 'tab':
+        this._popupTabHandler(e);
+        break;
+      case 'escape':
+        this._popupEscHandler(e);
+        break;
+    }
+  },
+  _popupTabHandler(e) {
+    var $target = (0, _renderer.default)(e.target);
+    var moveBackward = e.shiftKey && $target.is(this._getFirstPopupElement());
+    var moveForward = !e.shiftKey && $target.is(this._getLastPopupElement());
+    if (moveForward || moveBackward) {
+      _events_engine.default.trigger(this.field(), 'focus');
+      e.preventDefault();
+    }
+  },
+  _popupEscHandler() {
+    _events_engine.default.trigger(this._input(), 'focus');
+    this.close();
   },
   _setPopupContentId($popupContent) {
     this._popupContentId = 'dx-' + new _guid.default();
@@ -506,7 +536,7 @@ var DropDownEditor = _text_box.default.inherit({
   },
   _contentReadyHandler: _common.noop,
   _popupConfig: function _popupConfig() {
-    var _this4 = this;
+    var _this5 = this;
     return {
       onInitialized: this._getPopupInitializedHandler(),
       position: (0, _extend.extend)(this.option('popupPosition'), {
@@ -515,13 +545,13 @@ var DropDownEditor = _text_box.default.inherit({
       showTitle: this.option('dropDownOptions.showTitle'),
       _ignoreFunctionValueDeprecation: true,
       width: function width() {
-        return (0, _utils.getElementWidth)(_this4.$element());
+        return (0, _utils.getElementWidth)(_this5.$element());
       },
       height: 'auto',
       shading: false,
       hideOnParentScroll: true,
       hideOnOutsideClick: function hideOnOutsideClick(e) {
-        return _this4._closeOutsideDropDownHandler(e);
+        return _this5._closeOutsideDropDownHandler(e);
       },
       animation: {
         show: {
@@ -551,12 +581,12 @@ var DropDownEditor = _text_box.default.inherit({
   },
   _popupInitializedHandler: _common.noop,
   _getPopupInitializedHandler: function _getPopupInitializedHandler() {
-    var _this5 = this;
+    var _this6 = this;
     var onPopupInitialized = this.option('onPopupInitialized');
     return function (e) {
-      _this5._popupInitializedHandler(e);
+      _this6._popupInitializedHandler(e);
       if (onPopupInitialized) {
-        _this5._popupInitializedAction({
+        _this6._popupInitializedAction({
           popup: e.component
         });
       }
@@ -572,11 +602,11 @@ var DropDownEditor = _text_box.default.inherit({
     this._updatePopupWidth();
   },
   _updatePopupWidth: function _updatePopupWidth() {
-    var _this6 = this;
+    var _this7 = this;
     var popupWidth = (0, _utils.getSizeValue)(this.option('dropDownOptions.width'));
     if (popupWidth === undefined) {
       this._setPopupOption('width', function () {
-        return (0, _utils.getElementWidth)(_this6.$element());
+        return (0, _utils.getElementWidth)(_this7.$element());
       });
     }
   },
@@ -590,7 +620,7 @@ var DropDownEditor = _text_box.default.inherit({
     }
     var $popupOverlayContent = this._popup.$overlayContent();
     var isOverlayFlipped = (_e$position = e.position) === null || _e$position === void 0 ? void 0 : (_e$position$v = _e$position.v) === null || _e$position$v === void 0 ? void 0 : _e$position$v.flip;
-    var shouldIndentForLabel = labelMode !== 'hidden' && stylingMode === 'outlined';
+    var shouldIndentForLabel = labelMode !== 'hidden' && labelMode !== 'outside' && stylingMode === 'outlined';
     if (e.position) {
       $popupOverlayContent.toggleClass(DROP_DOWN_EDITOR_OVERLAY_FLIPPED, isOverlayFlipped);
     }
@@ -661,41 +691,23 @@ var DropDownEditor = _text_box.default.inherit({
     return this.option('applyValueMode') === 'useButtons' ? this._popupToolbarItemsConfig() : [];
   },
   _getFirstPopupElement: function _getFirstPopupElement() {
-    return (0, _renderer.default)(this._popup.getFocusableElements()[0]);
+    return (0, _renderer.default)(this._popup.getFocusableElements()).first();
   },
   _getLastPopupElement: function _getLastPopupElement() {
-    var elements = this._popup.getFocusableElements();
-    return (0, _renderer.default)(elements[elements.length - 1]);
-  },
-  _popupElementTabHandler: function _popupElementTabHandler(e) {
-    var $element = (0, _renderer.default)(e.currentTarget);
-    if (e.shiftKey && $element.is(this._getFirstPopupElement()) || !e.shiftKey && $element.is(this._getLastPopupElement())) {
-      _events_engine.default.trigger(this._input(), 'focus');
-      e.preventDefault();
-    }
-  },
-  _popupElementEscHandler: function _popupElementEscHandler() {
-    _events_engine.default.trigger(this._input(), 'focus');
-    this.close();
-  },
-  _popupButtonInitializedHandler: function _popupButtonInitializedHandler(e) {
-    e.component.registerKeyHandler('tab', this._popupElementTabHandler.bind(this));
-    e.component.registerKeyHandler('escape', this._popupElementEscHandler.bind(this));
+    return (0, _renderer.default)(this._popup.getFocusableElements()).last();
   },
   _popupToolbarItemsConfig: function _popupToolbarItemsConfig() {
     var buttonsConfig = [{
       shortcut: 'done',
       options: {
         onClick: this._applyButtonHandler.bind(this),
-        text: this.option('applyButtonText'),
-        onInitialized: this._popupButtonInitializedHandler.bind(this)
+        text: this.option('applyButtonText')
       }
     }, {
       shortcut: 'cancel',
       options: {
         onClick: this._cancelButtonHandler.bind(this),
-        text: this.option('cancelButtonText'),
-        onInitialized: this._popupButtonInitializedHandler.bind(this)
+        text: this.option('cancelButtonText')
       }
     }];
     return this._applyButtonsLocation(buttonsConfig);

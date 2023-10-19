@@ -85,6 +85,7 @@ $base-border-color-accessible-hover: null !default;
 $base-border-color-accessible-focused: null !default;
 $base-neutral-border-color2: null !default;
 $base-neutral-border-color3: null !default;
+$base-neutral-border-color4: rgba(209, 209, 209, 1) !default; // #d1d1d1
 
 $base-inverted-bg: null !default;
 $base-element-bg: null !default;
@@ -135,13 +136,6 @@ $base-focus-color: null !default;
 * $type color
 */
 $base-focus-bg: null !default;
-
-/**
-* $name 120. Disabled state text color
-* $type color
-*/
-$base-color-disabled: null !default;
-
 $typography-bg: null !default;
 $base-inverted-icon-color: null !default;
 $base-disabled-opacity: 0.38 !default;
@@ -245,8 +239,6 @@ $scrollview-pulldown-path: null !default;
   $base-success-selected: rgba(11, 81, 11, 1) !default; // #0B510B
 
   $scrollview-pulldown-path: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABkCAQAAABebbrxAAABD0lEQVRo3u2XvQ3CMBCFLbmjYYGsAA2wA1X2gAbEAEwB2eIKflagh6zACJAuUihASUic+M5GNH56dT7J8efTPUXKkDkzrS8LpQAEMBygcwAss2UGQADDBmLa+AMvzAAIYNhATBt/YMEMgACGDcS0wbQBEEAAAQQQwD8CEzaiL7sKqOnojTuQrh95SKkX7kqD5j+M6O6Mu1NkupQJZU64B426bjmmXIzLKe7TZiUGLmweyhTa28XWdJKpYn8pXIVub1U4T4+jUKkKbyWeWhR6Vqpwd+w+hb5U4S/ta54qkhZgVihxrxWaznZVZD2lqVDaVkVafOoKGVWRN6nZR6GMxr+qZjHl3aq4db0NLXld7wVjuu7NS9f7yAAAAABJRU5ErkJggg==") !default;
-
-  $base-color-disabled: rgba(189, 189, 189, 1) !default; // #BDBDBD
 }
 
 @if $mode == "dark" {
@@ -340,8 +332,6 @@ $scrollview-pulldown-path: null !default;
   $base-success-selected: #C9E9C9 !default; // #0B510B
 
   $scrollview-pulldown-path: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABkCAQAAABebbrxAAABD0lEQVRo3u2XvQ3CMBCFLbmjYYGsAA2wA1X2gAbEAEwB2eIKflagh6zACJAuUihASUic+M5GNH56dT7J8efTPUXKkDkzrS8LpQAEMBygcwAss2UGQADDBmLa+AMvzAAIYNhATBt/YMEMgACGDcS0wbQBEEAAAQQQwD8CEzaiL7sKqOnojTuQrh95SKkX7kqD5j+M6O6Mu1NkupQJZU64B426bjmmXIzLKe7TZiUGLmweyhTa28XWdJKpYn8pXIVub1U4T4+jUKkKbyWeWhR6Vqpwd+w+hb5U4S/ta54qkhZgVihxrxWaznZVZD2lqVDaVkVafOoKGVWRN6nZR6GMxr+qZjHl3aq4db0NLXld7wVjuu7NS9f7yAAAAABJRU5ErkJggg==") !default;
-
-  $base-color-disabled: rgba(92, 92, 92, 1) !default; // #5C5C5C
 }
 
 /**

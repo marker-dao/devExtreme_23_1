@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import $ from '../../../../core/renderer';
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports,
-// eslint-disable-next-line forbidden-imports/no-restricted-imports
 import gridCoreUtils from '../m_utils';
 import { CLASSES } from './const';
 var createHandleTemplateFunc = addWidgetPrefix => (container, options) => {

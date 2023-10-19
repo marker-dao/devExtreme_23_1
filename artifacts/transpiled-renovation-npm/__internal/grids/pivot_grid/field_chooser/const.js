@@ -50,9 +50,14 @@ var CLASSES = {
 };
 exports.CLASSES = CLASSES;
 var ICONS = {
-  measure: 'measure',
+  all: 'smalliconslayout',
+  column: 'columnfield',
+  row: 'rowfield',
+  filter: 'filter',
+  data: 'formula',
+  measure: 'formula',
   hierarchy: 'hierarchy',
-  dimension: 'dimension'
+  dimension: 'detailslayout'
 };
 exports.ICONS = ICONS;
 var SORTABLE_CONST = {

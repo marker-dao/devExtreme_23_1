@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/field_chooser/m_field_chooser.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -454,7 +454,7 @@ var FieldChooser = FieldChooserBase.inherit({
     var caption = that.option("texts.".concat(area, "Fields"));
     var $fieldsContent;
     var render;
-    $('<span>').addClass(CLASSES.area.icon).addClass("dx-area-icon-".concat(area)).appendTo($fieldsHeaderContainer);
+    $('<span>').addClass(CLASSES.area.icon).addClass("dx-icon-".concat(ICONS[area])).appendTo($fieldsHeaderContainer);
     $('<span>').html('&nbsp;').appendTo($fieldsHeaderContainer);
     $('<span>').addClass(CLASSES.area.caption).text(caption).appendTo($fieldsHeaderContainer);
     var $fieldsContainer = $(DIV).addClass(CLASSES.area.fieldList).addClass(CLASSES.pivotGrid.dragAction).appendTo($areaContainer);

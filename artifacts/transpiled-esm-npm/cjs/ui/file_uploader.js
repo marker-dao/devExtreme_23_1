@@ -152,7 +152,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       useNativeInputClick: false,
       useDragOver: true,
       nativeDropSupported: true,
-      _uploadButtonType: 'normal'
+      _uploadButtonType: 'normal',
+      _buttonStylingMode: 'contained'
     });
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
@@ -199,6 +200,13 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       },
       options: {
         _uploadButtonType: 'default'
+      }
+    }, {
+      device: function device() {
+        return (0, _themes.isFluent)();
+      },
+      options: {
+        _buttonStylingMode: 'text'
       }
     }]);
   };
@@ -544,15 +552,21 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (this.option('uploadMode') === 'useForm') {
       return null;
     }
+    var _this$option = this.option(),
+      allowCanceling = _this$option.allowCanceling,
+      readOnly = _this$option.readOnly,
+      hoverStateEnabled = _this$option.hoverStateEnabled,
+      _buttonStylingMode = _this$option._buttonStylingMode;
     file.cancelButton = this._createComponent((0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS + ' ' + FILEUPLOADER_CANCEL_BUTTON_CLASS), _button.default, {
       onClick: function onClick() {
         return _this7._removeFile(file);
       },
       icon: 'close',
-      visible: this.option('allowCanceling'),
-      disabled: this.option('readOnly'),
+      visible: allowCanceling,
+      disabled: readOnly,
       integrationOptions: {},
-      hoverStateEnabled: this.option('hoverStateEnabled')
+      hoverStateEnabled: hoverStateEnabled,
+      stylingMode: _buttonStylingMode
     });
     return (0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CONTAINER_CLASS).append(file.cancelButton.$element());
   };
@@ -561,12 +575,16 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (!file.isValid() || this.option('uploadMode') !== 'useButtons') {
       return null;
     }
+    var _this$option2 = this.option(),
+      hoverStateEnabled = _this$option2.hoverStateEnabled,
+      _buttonStylingMode = _this$option2._buttonStylingMode;
     file.uploadButton = this._createComponent((0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS + ' ' + FILEUPLOADER_UPLOAD_BUTTON_CLASS), _button.default, {
       onClick: function onClick() {
         return _this8._uploadFile(file);
       },
       icon: 'upload',
-      hoverStateEnabled: this.option('hoverStateEnabled')
+      hoverStateEnabled: hoverStateEnabled,
+      stylingMode: _buttonStylingMode
     });
     file.onLoadStart.add(function () {
       return file.uploadButton.option({
@@ -1122,6 +1140,13 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
         break;
       case '_uploadButtonType':
         this._uploadButton && this._uploadButton.option('type', value);
+        break;
+      case '_buttonStylingMode':
+        this._files.forEach(function (file) {
+          var _file$uploadButton2, _file$cancelButton3;
+          (_file$uploadButton2 = file.uploadButton) === null || _file$uploadButton2 === void 0 ? void 0 : _file$uploadButton2.option('stylingMode', value);
+          (_file$cancelButton3 = file.cancelButton) === null || _file$cancelButton3 === void 0 ? void 0 : _file$cancelButton3.option('stylingMode', value);
+        });
         break;
       case 'dialogTrigger':
         this._detachSelectFileDialogHandler(previousValue);

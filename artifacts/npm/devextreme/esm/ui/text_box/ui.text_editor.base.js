@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/text_box/ui.text_editor.base.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ import { focused } from '../widget/selectors';
 import { isDefined } from '../../core/utils/type';
 import { extend } from '../../core/utils/extend';
 import { each } from '../../core/utils/iterator';
-import { current, isMaterial, isMaterialBased } from '../themes';
+import { current, isMaterial, isFluent } from '../themes';
 import devices from '../../core/devices';
 import Editor from '../editor/editor';
 import { addNamespace, normalizeKeyName } from '../../events/utils/index';
@@ -96,18 +96,19 @@ var TextEditorBase = Editor.inherit({
     return this.callBase().concat([{
       device: function device() {
         var themeName = current();
-        return isMaterialBased(themeName);
+        return isMaterial(themeName);
       },
       options: {
-        labelMode: 'floating'
+        labelMode: 'floating',
+        stylingMode: config().editorStylingMode || 'filled'
       }
     }, {
       device: function device() {
         var themeName = current();
-        return isMaterial(themeName);
+        return isFluent(themeName);
       },
       options: {
-        stylingMode: config().editorStylingMode || 'filled'
+        labelMode: 'outside'
       }
     }]);
   },

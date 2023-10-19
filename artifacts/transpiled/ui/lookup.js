@@ -535,12 +535,14 @@ var Lookup = _ui.default.inherit({
       return 'auto';
     }
   },
+  _popupTabHandler: _common.noop,
   _renderPopup: function _renderPopup() {
     if (this.option('usePopover') && !this.option('dropDownOptions.fullScreen')) {
       if (this.option('_scrollToSelectedItemEnabled')) {
         this.callBase();
       } else {
         this._renderPopover();
+        this._attachPopupKeyHandler();
       }
     } else {
       this.callBase();
@@ -643,14 +645,10 @@ var Lookup = _ui.default.inherit({
     }];
   },
   _getCancelButtonConfig: function _getCancelButtonConfig() {
-    var _this3 = this;
     return this.option('showCancelButton') ? {
       shortcut: 'cancel',
       onClick: this._cancelButtonHandler.bind(this),
       options: {
-        onInitialized: function onInitialized(e) {
-          e.component.registerKeyHandler('escape', _this3.close.bind(_this3));
-        },
         text: this.option('cancelButtonText')
       }
     } : null;
@@ -695,7 +693,7 @@ var Lookup = _ui.default.inherit({
   },
   _renderValueChangeEvent: _common.noop,
   _renderSearch: function _renderSearch() {
-    var _this4 = this;
+    var _this3 = this;
     var isSearchEnabled = this.option('searchEnabled');
     this._toggleSearchClass(isSearchEnabled);
     if (isSearchEnabled) {
@@ -721,10 +719,10 @@ var Lookup = _ui.default.inherit({
           return isKeyboardListeningEnabled = false;
         },
         onKeyboardHandled: function onKeyboardHandled(opts) {
-          return isKeyboardListeningEnabled && _this4._list._keyboardHandler(opts);
+          return isKeyboardListeningEnabled && _this3._list._keyboardHandler(opts);
         },
         onValueChanged: function onValueChanged(e) {
-          return _this4._searchHandler(e);
+          return _this3._searchHandler(e);
         }
       };
       this._searchBox = this._createComponent($searchBox, _text_box.default, textBoxOptions);
@@ -759,7 +757,6 @@ var Lookup = _ui.default.inherit({
     this._selectListItem(e.itemData, $itemElement);
   },
   _registerSearchKeyHandlers: function _registerSearchKeyHandlers() {
-    this._searchBox.registerKeyHandler('escape', this.close.bind(this));
     this._searchBox.registerKeyHandler('enter', this._selectListItemHandler.bind(this));
     this._searchBox.registerKeyHandler('space', this._selectListItemHandler.bind(this));
     this._searchBox.registerKeyHandler('end', _common.noop);
@@ -782,13 +779,6 @@ var Lookup = _ui.default.inherit({
     this._searchBox.option('placeholder', placeholder);
   },
   _setAriaTargetForList: _common.noop,
-  _renderList: function _renderList() {
-    var _this5 = this;
-    this.callBase();
-    this._list.registerKeyHandler('escape', function () {
-      _this5.close();
-    });
-  },
   _listConfig: function _listConfig() {
     return (0, _extend.extend)(this.callBase(), {
       tabIndex: 0,
@@ -817,7 +807,7 @@ var Lookup = _ui.default.inherit({
     this._refreshSelected();
   },
   _runWithoutCloseOnScroll: function _runWithoutCloseOnScroll(callback) {
-    var _this6 = this;
+    var _this4 = this;
     // NOTE: Focus can trigger "scroll" event
 
     var _this$option = this.option(),
@@ -830,20 +820,20 @@ var Lookup = _ui.default.inherit({
       callback();
       this._hideOnParentScrollTimer = setTimeout(function () {
         // T1018037
-        _this6._popup.option('hideOnParentScroll', hideOnParentScroll);
+        _this4._popup.option('hideOnParentScroll', hideOnParentScroll);
       });
     }
   },
   _setFocusPolicy: function _setFocusPolicy() {
-    var _this7 = this;
+    var _this5 = this;
     if (!this.option('focusStateEnabled')) {
       return;
     }
     this._runWithoutCloseOnScroll(function () {
-      if (_this7.option('searchEnabled')) {
-        _this7._searchBox.focus();
+      if (_this5.option('searchEnabled')) {
+        _this5._searchBox.focus();
       } else {
-        _this7._list.focus();
+        _this5._list.focus();
       }
     });
   },
@@ -875,9 +865,9 @@ var Lookup = _ui.default.inherit({
     return this.option('searchEnabled') && this._searchBox ? this._searchBox.option('value') : '';
   },
   _renderInputValue: function _renderInputValue() {
-    var _this8 = this;
+    var _this6 = this;
     return this.callBase().always(function () {
-      _this8._refreshSelected();
+      _this6._refreshSelected();
     });
   },
   _renderPlaceholder: function _renderPlaceholder() {

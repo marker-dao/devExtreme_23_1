@@ -9,7 +9,11 @@ var __rest = this && this.__rest || function (s, e) {
 };
 import errors from '../../../core/errors';
 import { version as packageVersion } from '../../../core/version';
-import { verify } from './rsa_pkcs1_sha1';
+import { base64ToBytes } from './byte_utils';
+import { PUBLIC_KEY } from './key';
+import { pad } from './pkcs1';
+import { compareSignatures } from './rsa_bigint';
+import { sha1 } from './sha1';
 var TokenKind;
 (function (TokenKind) {
   TokenKind["corrupted"] = "corrupted";
@@ -42,6 +46,18 @@ var VERSION_ERROR = {
   error: 'version'
 };
 var isLicenseVerified = false;
+// verifies RSASSA-PKCS1-v1.5 signature
+function verifySignature(_ref) {
+  var {
+    text,
+    signature: encodedSignature
+  } = _ref;
+  return compareSignatures({
+    key: PUBLIC_KEY,
+    signature: base64ToBytes(encodedSignature),
+    actual: pad(sha1(text))
+  });
+}
 export function parseLicenseKey(encodedKey) {
   if (encodedKey === undefined) {
     return GENERAL_ERROR;
@@ -50,7 +66,7 @@ export function parseLicenseKey(encodedKey) {
   if (parts.length !== 2 || parts[0].length === 0 || parts[1].length === 0) {
     return GENERAL_ERROR;
   }
-  if (!verify({
+  if (!verifySignature({
     text: parts[0],
     signature: parts[1]
   })) {
@@ -121,7 +137,9 @@ export function verifyLicense(licenseKey) {
     }
   }
 }
-
+export function setLicenseCheckSkipCondition() {
+  var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+}
 // NOTE: We need this default export
 // to allow QUnit mock the verifyLicense function
 export default {

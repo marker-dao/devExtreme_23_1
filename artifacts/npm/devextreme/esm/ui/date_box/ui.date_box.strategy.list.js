@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_box/ui.date_box.strategy.list.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,15 +28,6 @@ var ListStrategy = DateBoxStrategy.inherit({
   NAME: 'List',
   supportedKeys: function supportedKeys() {
     return {
-      tab: function tab() {
-        var {
-          opened,
-          applyValueMode
-        } = this.option();
-        if (opened && applyValueMode === 'instantly') {
-          this.close();
-        }
-      },
       space: noop,
       home: noop,
       end: noop

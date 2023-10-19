@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/button.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -131,6 +131,7 @@ export class Button extends InfernoWrapperComponent {
     this.onInactive = this.onInactive.bind(this);
     this.onWidgetClick = this.onWidgetClick.bind(this);
     this.keyDown = this.keyDown.bind(this);
+    this.emitClickEvent = this.emitClickEvent.bind(this);
   }
   createEffects() {
     return [new InfernoEffect(this.submitEffect, [this.props.onSubmit, this.props.useSubmitBehavior]), createReRenderEffect()];
@@ -201,9 +202,12 @@ export class Button extends InfernoWrapperComponent {
     }
     if (keyName === 'space' || which === 'space' || keyName === 'enter' || which === 'enter') {
       originalEvent.preventDefault();
-      this.onWidgetClick(originalEvent);
+      this.emitClickEvent();
     }
     return undefined;
+  }
+  emitClickEvent() {
+    this.contentRef.current.click();
   }
   get aria() {
     var {
@@ -316,6 +320,7 @@ export class Button extends InfernoWrapperComponent {
       onInactive: this.onInactive,
       onWidgetClick: this.onWidgetClick,
       keyDown: this.keyDown,
+      emitClickEvent: this.emitClickEvent,
       aria: this.aria,
       cssClasses: this.cssClasses,
       iconSource: this.iconSource,

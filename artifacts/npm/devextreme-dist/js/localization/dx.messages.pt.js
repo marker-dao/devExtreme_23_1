@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.pt.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -669,7 +669,11 @@
             "dxGantt-showDependencies": "Mostrar dependências",
             "dxGantt-dialogStartDateValidation": "A data de início deve ser após {0}",
             "dxGantt-dialogEndDateValidation": "A data de término deve ser posterior a {0}",
-            "dxGallery-itemName": "Gallery item"
+            "dxGallery-itemName": "Gallery item",
+            "dxMultiView-elementAriaRoleDescription": "MultiView",
+            "dxMultiView-elementAriaLabel": "Use the arrow keys or swipe to navigate between views",
+            "dxMultiView-itemAriaRoleDescription": "View",
+            "dxMultiView-itemAriaLabel": "{0} of {1}"
         }
     });
 }));

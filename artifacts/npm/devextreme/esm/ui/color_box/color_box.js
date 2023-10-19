@@ -1,13 +1,12 @@
 /**
 * DevExtreme (esm/ui/color_box/color_box.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import $ from '../../core/renderer';
-import eventsEngine from '../../events/core/events_engine';
 import Color from '../../color';
 import ColorView from './color_view';
 import { extend } from '../../core/utils/extend';
@@ -64,17 +63,6 @@ var ColorBox = DropDownEditor.inherit({
       return true;
     };
     return extend(this.callBase(), {
-      tab: function tab(e) {
-        if (!this.option('opened')) {
-          return;
-        }
-        var $focusableElement = e.shiftKey ? this._getLastPopupElement() : this._getFirstPopupElement();
-        if ($focusableElement) {
-          eventsEngine.trigger($focusableElement, 'focus');
-          $focusableElement.select();
-        }
-        e.preventDefault();
-      },
       enter: this._enterKeyHandler,
       leftArrow: arrowHandler,
       rightArrow: arrowHandler,
@@ -140,11 +128,6 @@ var ColorBox = DropDownEditor.inherit({
     this._popup.$overlayContent().addClass(COLOR_BOX_OVERLAY_CLASS);
     var $colorView = $('<div>').appendTo(this._popup.$content());
     this._colorView = this._createComponent($colorView, ColorView, this._colorViewConfig());
-    this._colorView.registerKeyHandler('escape', this._escapeHandler.bind(this));
-  },
-  _escapeHandler: function _escapeHandler() {
-    this.close();
-    this.focus();
   },
   _applyNewColor: function _applyNewColor(value) {
     this.option('value', value);
@@ -292,10 +275,16 @@ var ColorBox = DropDownEditor.inherit({
     this.callBase(e, value);
   },
   _applyColorFromInput: function _applyColorFromInput(value) {
+    var {
+      editAlphaChannel
+    } = this.option();
     var newColor = new Color(value);
     if (newColor.colorIsInvalid) {
       this._resetInputValue();
-      value = this.option('value');
+      return this.option('value');
+    }
+    if (editAlphaChannel) {
+      return colorUtils.makeRgba(value);
     }
     return value;
   },

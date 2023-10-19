@@ -653,7 +653,11 @@ var defaultMessages = {
     "dxGantt-showDependencies": "Show Dependencies",
     "dxGantt-dialogStartDateValidation": "Start date must be after {0}",
     "dxGantt-dialogEndDateValidation": "End date must be after {0}",
-    "dxGallery-itemName": "Gallery item"
+    "dxGallery-itemName": "Gallery item",
+    "dxMultiView-elementAriaRoleDescription": "MultiView",
+    "dxMultiView-elementAriaLabel": "Use the arrow keys or swipe to navigate between views",
+    "dxMultiView-itemAriaRoleDescription": "View",
+    "dxMultiView-itemAriaLabel": "{0} of {1}"
   }
 };
 exports.defaultMessages = defaultMessages;

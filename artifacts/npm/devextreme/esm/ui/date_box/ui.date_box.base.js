@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_box/ui.date_box.base.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -305,12 +305,6 @@ var DateBox = DropDownEditor.inherit({
   _renderPopupContent: function _renderPopupContent() {
     this.callBase();
     this._strategy.renderPopupContent();
-  },
-  _getFirstPopupElement: function _getFirstPopupElement() {
-    return this._strategy.getFirstPopupElement() || this.callBase();
-  },
-  _getLastPopupElement: function _getLastPopupElement() {
-    return this._strategy.getLastPopupElement() || this.callBase();
   },
   _popupShowingHandler: function _popupShowingHandler() {
     this.callBase();

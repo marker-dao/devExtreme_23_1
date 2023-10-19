@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1085,7 +1085,7 @@ declare module DevExpress.common {
   export function isLoadResultObject<TItem>(
     res: LoadResult<TItem>
   ): res is LoadResultObject<TItem>;
-  export type LabelMode = 'static' | 'floating' | 'hidden';
+  export type LabelMode = 'static' | 'floating' | 'hidden' | 'outside';
   /**
    * [descr:LoadResult]
    */
@@ -14220,6 +14220,10 @@ declare module DevExpress.ui {
      * [descr:dxDropDownButtonOptions.text]
      */
     text?: string;
+    /**
+     * [descr:dxDropDownButtonOptions.type]
+     */
+    type?: DevExpress.common.ButtonType;
     /**
      * [descr:dxDropDownButtonOptions.useSelectMode]
      */

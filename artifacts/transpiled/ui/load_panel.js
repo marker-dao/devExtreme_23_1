@@ -93,6 +93,18 @@ var LoadPanel = _ui.default.inherit({
     this.callBase();
     this.$element().addClass(LOADPANEL_CLASS);
     this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
+    this._setWrapperAria();
+  },
+  _setWrapperAria() {
+    var _this$option = this.option(),
+      message = _this$option.message;
+    var defaultLabel = (0, _themes.isMaterialBased)() ? message : null;
+    var label = message ? defaultLabel : _message.default.format('Loading');
+    var aria = {
+      role: 'alert',
+      label
+    };
+    this.setAria(aria, this.$wrapper());
   },
   _renderContentImpl: function _renderContentImpl() {
     this.callBase();
@@ -163,6 +175,7 @@ var LoadPanel = _ui.default.inherit({
         this._cleanPreviousContent();
         this._renderLoadIndicator();
         this._renderMessage();
+        this._setWrapperAria();
         break;
       case 'showPane':
         this._togglePaneVisible();

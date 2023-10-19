@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/load_panel.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -98,6 +98,19 @@ var LoadPanel = Overlay.inherit({
     this.callBase();
     this.$element().addClass(LOADPANEL_CLASS);
     this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
+    this._setWrapperAria();
+  },
+  _setWrapperAria() {
+    var {
+      message
+    } = this.option();
+    var defaultLabel = isMaterialBased() ? message : null;
+    var label = message ? defaultLabel : messageLocalization.format('Loading');
+    var aria = {
+      role: 'alert',
+      label
+    };
+    this.setAria(aria, this.$wrapper());
   },
   _renderContentImpl: function _renderContentImpl() {
     this.callBase();
@@ -168,6 +181,7 @@ var LoadPanel = Overlay.inherit({
         this._cleanPreviousContent();
         this._renderLoadIndicator();
         this._renderMessage();
+        this._setWrapperAria();
         break;
       case 'showPane':
         this._togglePaneVisible();

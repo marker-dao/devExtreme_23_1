@@ -13,6 +13,7 @@ import registerComponent from '../core/component_registrator';
 import CollectionWidget from './collection/ui.collection_widget.live_update';
 import Swipeable from '../events/gesture/swipeable';
 import { Deferred } from '../core/utils/deferred';
+import messageLocalization from '../localization/message';
 
 // STYLE multiView
 
@@ -55,9 +56,6 @@ var MultiView = CollectionWidget.inherit({
       * @hidden
       */
 
-      _itemAttributes: {
-        role: 'tabpanel'
-      },
       loopItemFocus: false,
       selectOnFocus: true,
       selectionMode: 'single',
@@ -129,6 +127,8 @@ var MultiView = CollectionWidget.inherit({
     this.callBase();
     var selectedItemIndices = this._getSelectedItemIndices();
     this._updateItemsVisibility(selectedItemIndices[0]);
+    this._setElementAria();
+    this._setItemsAria();
   },
   _afterItemElementDeleted: function _afterItemElementDeleted($item, deletedActionArgs) {
     this.callBase($item, deletedActionArgs);
@@ -166,6 +166,40 @@ var MultiView = CollectionWidget.inherit({
       this._updateItems(selectedItemIndices[0]);
     });
   },
+  _getElementAria() {
+    return {
+      role: 'group',
+      'roledescription': messageLocalization.format('dxMultiView-elementAriaRoleDescription'),
+      label: messageLocalization.format('dxMultiView-elementAriaLabel')
+    };
+  },
+  _setElementAria() {
+    var aria = this._getElementAria();
+    this.setAria(aria, this.$element());
+  },
+  _setItemsAria() {
+    var $itemElements = this._itemElements();
+    var itemsCount = this._itemsCount();
+    $itemElements.each((itemIndex, item) => {
+      var aria = this._getItemAria({
+        itemIndex,
+        itemsCount
+      });
+      this.setAria(aria, $(item));
+    });
+  },
+  _getItemAria(_ref) {
+    var {
+      itemIndex,
+      itemsCount
+    } = _ref;
+    var aria = {
+      'role': 'group',
+      'roledescription': messageLocalization.format('dxMultiView-itemAriaRoleDescription'),
+      'label': messageLocalization.format('dxMultiView-itemAriaLabel', itemIndex + 1, itemsCount)
+    };
+    return aria;
+  },
   _updateItems: function _updateItems(selectedIndex, newIndex) {
     this._updateItemsPosition(selectedIndex, newIndex);
     this._updateItemsVisibility(selectedIndex, newIndex);
@@ -184,9 +218,9 @@ var MultiView = CollectionWidget.inherit({
       _translator.move($itemElements.eq(newIndex), positionSign * 100 + '%');
     }
   },
-  _updateItemsVisibility: function _updateItemsVisibility(selectedIndex, newIndex) {
+  _updateItemsVisibility(selectedIndex, newIndex) {
     var $itemElements = this._itemElements();
-    $itemElements.each(function (itemIndex, item) {
+    $itemElements.each((itemIndex, item) => {
       var $item = $(item);
       var isHidden = itemIndex !== selectedIndex && itemIndex !== newIndex;
       if (!isHidden) {
@@ -194,7 +228,7 @@ var MultiView = CollectionWidget.inherit({
       }
       $item.toggleClass(MULTIVIEW_ITEM_HIDDEN_CLASS, isHidden);
       this.setAria('hidden', isHidden || undefined, $item);
-    }.bind(this));
+    });
   },
   _renderSpecificItem: function _renderSpecificItem(index) {
     var $item = this._itemElements().eq(index);

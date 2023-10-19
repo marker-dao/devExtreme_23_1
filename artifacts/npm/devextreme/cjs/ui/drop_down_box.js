@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_box.js)
 * Version: 23.2.0
-* Build date: Fri Oct 06 2023
+* Build date: Wed Oct 18 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,7 +22,6 @@ var _extend = require("../core/utils/extend");
 var _utils = require("../ui/overlay/utils");
 var _component_registrator = _interopRequireDefault(require("../core/component_registrator"));
 var _index = require("../events/utils/index");
-var _short = require("../events/short");
 var _devices = _interopRequireDefault(require("../core/devices"));
 var _dom_adapter = _interopRequireDefault(require("../core/dom_adapter"));
 var _element = require("../core/element");
@@ -115,13 +114,6 @@ var DropDownBox = _ui.default.inherit({
   _shouldUseDisplayValue: function _shouldUseDisplayValue(value) {
     return this.option('valueExpr') === 'this' && (0, _type.isObject)(value);
   },
-  _popupInitializedHandler(e) {
-    var _this = this;
-    e.component.registerKeyHandler('escape', function () {
-      _this.close();
-      _this.focus();
-    });
-  },
   _sortValuesByKeysOrder(orderedKeys, values) {
     var sortedValues = values.sort(function (a, b) {
       return orderedKeys.indexOf(a.itemKey) - orderedKeys.indexOf(b.itemKey);
@@ -131,7 +123,7 @@ var DropDownBox = _ui.default.inherit({
     });
   },
   _renderInputValue: function _renderInputValue() {
-    var _this2 = this;
+    var _this = this;
     this._rejectValueLoading();
     var values = [];
     if (!this._dataSource) {
@@ -143,14 +135,14 @@ var DropDownBox = _ui.default.inherit({
     keys = Array.isArray(keys) ? keys : [keys];
     var itemLoadDeferreds = (0, _iterator.map)(keys, function (key) {
       var deferred = new _deferred.Deferred();
-      _this2._loadItem(key).always(function (item) {
-        var displayValue = _this2._displayGetter(item);
+      _this._loadItem(key).always(function (item) {
+        var displayValue = _this._displayGetter(item);
         if ((0, _type.isDefined)(displayValue)) {
           values.push({
             itemKey: key,
             itemDisplayValue: displayValue
           });
-        } else if (_this2.option('acceptCustomValue')) {
+        } else if (_this.option('acceptCustomValue')) {
           values.push({
             itemKey: key,
             itemDisplayValue: key
@@ -162,8 +154,8 @@ var DropDownBox = _ui.default.inherit({
     });
     var callBase = this.callBase.bind(this);
     return _deferred.when.apply(this, itemLoadDeferreds).always(function () {
-      var orderedValues = _this2._sortValuesByKeysOrder(keys, values);
-      _this2.option('displayValue', orderedValues);
+      var orderedValues = _this._sortValuesByKeysOrder(keys, values);
+      _this.option('displayValue', orderedValues);
       callBase(values.length && orderedValues);
     });
   },
@@ -191,28 +183,19 @@ var DropDownBox = _ui.default.inherit({
     }
     return deferred.promise();
   },
-  _popupElementTabHandler: function _popupElementTabHandler(e) {
+  _popupTabHandler: function _popupTabHandler(e) {
     if ((0, _index.normalizeKeyName)(e) !== 'tab') return;
     var $firstTabbable = this._getTabbableElements().first().get(0);
     var $lastTabbable = this._getTabbableElements().last().get(0);
-    var $target = e.originalEvent.target;
-    var moveBackward = !!($target === $firstTabbable && e.shift);
-    var moveForward = !!($target === $lastTabbable && !e.shift);
+    var $target = e.target;
+    var moveBackward = !!($target === $firstTabbable && e.shiftKey);
+    var moveForward = !!($target === $lastTabbable && !e.shiftKey);
     if (moveBackward || moveForward) {
       this.close();
       _events_engine.default.trigger(this._input(), 'focus');
       if (moveBackward) {
-        e.originalEvent.preventDefault();
+        e.preventDefault();
       }
-    }
-  },
-  _renderPopup: function _renderPopup(e) {
-    var _this3 = this;
-    this.callBase();
-    if (this.option('focusStateEnabled')) {
-      _short.keyboard.on(this.content(), null, function (e) {
-        return _this3._popupElementTabHandler(e);
-      });
     }
   },
   _renderPopupContent: function _renderPopupContent() {
@@ -267,7 +250,6 @@ var DropDownBox = _ui.default.inherit({
     };
   },
   _popupConfig: function _popupConfig() {
-    var _this4 = this;
     var _this$option = this.option(),
       focusStateEnabled = _this$option.focusStateEnabled;
     return (0, _extend.extend)(this.callBase(), {
@@ -279,9 +261,6 @@ var DropDownBox = _ui.default.inherit({
       position: (0, _extend.extend)(this.option('popupPosition'), {
         of: this.$element()
       }),
-      onKeyboardHandled: function onKeyboardHandled(opts) {
-        return _this4.option('focusStateEnabled') && _this4._popupElementTabHandler(opts);
-      },
       _ignoreFunctionValueDeprecation: true,
       maxHeight: function () {
         var _this$_popupPosition;

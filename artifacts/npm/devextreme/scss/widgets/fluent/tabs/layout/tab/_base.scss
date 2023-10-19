@@ -18,8 +18,9 @@
 
 
 .dx-tab {
+  gap: $fluent-tabs-item-gap;
   padding: $fluent-tabs-item-padding;
-  min-width: $fluent-tab-min-width;
+  min-width: 0;
   background-color: $tabs-tab-background;
   color: $tabs-tab-color;
 
@@ -69,7 +70,6 @@
     column-gap: $fluent-base-icon-margin;
     line-height: $fluent-tab-text-line-height;
     font-weight: $fluent-tab-font-weight-accent;
-    text-transform: uppercase;
     visibility: hidden;
 
     &::after {
@@ -87,7 +87,12 @@
     color: $tabs-tab-icon-color;
     visibility: visible;
 
-    @include dx-icon-sizing($fluent-base-icon-size);
+    @include dx-icon-sizing($fluent-tabs-icon-size);
+  }
+
+  .dx-tabs-item-badge {
+    min-width: $fluent-badge-min-size;
+    min-height: $fluent-badge-min-size;
   }
 }
 

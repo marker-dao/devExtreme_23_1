@@ -20,15 +20,6 @@ var ListStrategy = DateBoxStrategy.inherit({
   NAME: 'List',
   supportedKeys: function supportedKeys() {
     return {
-      tab: function tab() {
-        var {
-          opened,
-          applyValueMode
-        } = this.option();
-        if (opened && applyValueMode === 'instantly') {
-          this.close();
-        }
-      },
       space: noop,
       home: noop,
       end: noop

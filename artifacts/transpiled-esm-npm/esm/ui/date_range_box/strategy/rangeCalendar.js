@@ -1,5 +1,4 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import $ from '../../../core/renderer';
 import CalendarStrategy from '../../date_box/ui.date_box.strategy.calendar';
 import eventsEngine from '../../../events/core/events_engine';
 import { extend } from '../../../core/utils/extend';
@@ -25,13 +24,6 @@ class RangeCalendarStrategy extends CalendarStrategy {
   }
   _getPopup() {
     return super._getPopup() || this.dateRangeBox.getStartDateBox()._popup;
-  }
-  getFirstPopupElement() {
-    return $(this._getPopup().getFocusableElements()[0]);
-  }
-  getLastPopupElement() {
-    var elements = this._getPopup().getFocusableElements();
-    return $(elements[elements.length - 1]);
   }
   supportedKeys() {
     return _extends({}, super.supportedKeys(), {
@@ -63,7 +55,7 @@ class RangeCalendarStrategy extends CalendarStrategy {
         if (!this.getDateRangeBox().option('opened')) {
           return;
         }
-        if (this._isInstantlyMode()) {
+        if (!this._getPopup().getFocusableElements().length) {
           if (!e.shiftKey && this.getDateRangeBox()._isEndDateActiveElement() || e.shiftKey && this.getDateRangeBox()._isStartDateActiveElement()) {
             this.dateRangeBox.close();
           }
@@ -72,7 +64,7 @@ class RangeCalendarStrategy extends CalendarStrategy {
         if (!e.shiftKey && this.getDateRangeBox()._isStartDateActiveElement() || e.shiftKey && this.getDateRangeBox()._isEndDateActiveElement()) {
           return;
         }
-        var $focusableElement = e.shiftKey ? this.getLastPopupElement() : this.getFirstPopupElement();
+        var $focusableElement = e.shiftKey ? this.getDateRangeBox().getStartDateBox()._getLastPopupElement() : this.getDateRangeBox().getStartDateBox()._getFirstPopupElement();
         if ($focusableElement) {
           eventsEngine.trigger($focusableElement, 'focus');
           $focusableElement.select();
@@ -80,13 +72,6 @@ class RangeCalendarStrategy extends CalendarStrategy {
         e.preventDefault();
       }
     });
-  }
-  _getTodayButtonConfig() {
-    var todayButtonConfig = super._getTodayButtonConfig();
-    todayButtonConfig.options.onInitialized = e => {
-      this.dateBox._popupButtonInitializedHandler(e);
-    };
-    return todayButtonConfig;
   }
   _getWidgetOptions() {
     var {

@@ -14,7 +14,7 @@ import { getDefaultAlignment } from '../../core/utils/position';
 import DropDownButton from './ui.drop_down_button';
 import Widget from '../widget/ui.widget';
 import messageLocalization from '../../localization/message';
-import { addNamespace, isCommandKeyPressed } from '../../events/utils/index';
+import { addNamespace, isCommandKeyPressed, normalizeKeyName } from '../../events/utils/index';
 import TextBox from '../text_box';
 import { name as clickEventName } from '../../events/click';
 import devices from '../../core/devices';
@@ -39,7 +39,7 @@ var DropDownEditor = TextBox.inherit({
         if (!this.option('opened')) {
           return;
         }
-        if (this.option('applyValueMode') === 'instantly') {
+        if (!this._popup.getFocusableElements().length) {
           this.close();
           return;
         }
@@ -484,9 +484,36 @@ var DropDownEditor = TextBox.inherit({
       'hidden': this._popupHiddenHandler.bind(this),
       'contentReady': this._contentReadyHandler.bind(this)
     });
+    this._attachPopupKeyHandler();
     this._contentReadyHandler();
     this._setPopupContentId(this._popup.$content());
     this._bindInnerWidgetOptions(this._popup, 'dropDownOptions');
+  },
+  _attachPopupKeyHandler() {
+    eventsEngine.on(this._popup.$overlayContent(), addNamespace('keydown', this.NAME), e => this._popupKeyHandler(e));
+  },
+  _popupKeyHandler(e) {
+    switch (normalizeKeyName(e)) {
+      case 'tab':
+        this._popupTabHandler(e);
+        break;
+      case 'escape':
+        this._popupEscHandler(e);
+        break;
+    }
+  },
+  _popupTabHandler(e) {
+    var $target = $(e.target);
+    var moveBackward = e.shiftKey && $target.is(this._getFirstPopupElement());
+    var moveForward = !e.shiftKey && $target.is(this._getLastPopupElement());
+    if (moveForward || moveBackward) {
+      eventsEngine.trigger(this.field(), 'focus');
+      e.preventDefault();
+    }
+  },
+  _popupEscHandler() {
+    eventsEngine.trigger(this._input(), 'focus');
+    this.close();
   },
   _setPopupContentId($popupContent) {
     this._popupContentId = 'dx-' + new Guid();
@@ -570,7 +597,7 @@ var DropDownEditor = TextBox.inherit({
     }
     var $popupOverlayContent = this._popup.$overlayContent();
     var isOverlayFlipped = (_e$position = e.position) === null || _e$position === void 0 ? void 0 : (_e$position$v = _e$position.v) === null || _e$position$v === void 0 ? void 0 : _e$position$v.flip;
-    var shouldIndentForLabel = labelMode !== 'hidden' && stylingMode === 'outlined';
+    var shouldIndentForLabel = labelMode !== 'hidden' && labelMode !== 'outside' && stylingMode === 'outlined';
     if (e.position) {
       $popupOverlayContent.toggleClass(DROP_DOWN_EDITOR_OVERLAY_FLIPPED, isOverlayFlipped);
     }
@@ -645,41 +672,23 @@ var DropDownEditor = TextBox.inherit({
     return this.option('applyValueMode') === 'useButtons' ? this._popupToolbarItemsConfig() : [];
   },
   _getFirstPopupElement: function _getFirstPopupElement() {
-    return $(this._popup.getFocusableElements()[0]);
+    return $(this._popup.getFocusableElements()).first();
   },
   _getLastPopupElement: function _getLastPopupElement() {
-    var elements = this._popup.getFocusableElements();
-    return $(elements[elements.length - 1]);
-  },
-  _popupElementTabHandler: function _popupElementTabHandler(e) {
-    var $element = $(e.currentTarget);
-    if (e.shiftKey && $element.is(this._getFirstPopupElement()) || !e.shiftKey && $element.is(this._getLastPopupElement())) {
-      eventsEngine.trigger(this._input(), 'focus');
-      e.preventDefault();
-    }
-  },
-  _popupElementEscHandler: function _popupElementEscHandler() {
-    eventsEngine.trigger(this._input(), 'focus');
-    this.close();
-  },
-  _popupButtonInitializedHandler: function _popupButtonInitializedHandler(e) {
-    e.component.registerKeyHandler('tab', this._popupElementTabHandler.bind(this));
-    e.component.registerKeyHandler('escape', this._popupElementEscHandler.bind(this));
+    return $(this._popup.getFocusableElements()).last();
   },
   _popupToolbarItemsConfig: function _popupToolbarItemsConfig() {
     var buttonsConfig = [{
       shortcut: 'done',
       options: {
         onClick: this._applyButtonHandler.bind(this),
-        text: this.option('applyButtonText'),
-        onInitialized: this._popupButtonInitializedHandler.bind(this)
+        text: this.option('applyButtonText')
       }
     }, {
       shortcut: 'cancel',
       options: {
         onClick: this._cancelButtonHandler.bind(this),
-        text: this.option('cancelButtonText'),
-        onInitialized: this._popupButtonInitializedHandler.bind(this)
+        text: this.option('cancelButtonText')
       }
     }];
     return this._applyButtonsLocation(buttonsConfig);
