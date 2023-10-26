@@ -13,33 +13,32 @@ var _dom = require("../../utils/dom");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
-var VALIDATION_TARGET = 'dx-validation-target';
-var Editor = /*#__PURE__*/function (_Component) {
+const INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
+const VALIDATION_TARGET = 'dx-validation-target';
+let Editor = /*#__PURE__*/function (_Component) {
   _inheritsLoose(Editor, _Component);
   function Editor() {
     return _Component.apply(this, arguments) || this;
   }
   var _proto = Editor.prototype;
   _proto.getProps = function getProps() {
-    var _this = this;
-    var props = _Component.prototype.getProps.call(this);
-    props.onFocusIn = function () {
-      var isValidationMessageShownOnFocus = _this.option('validationMessageMode') === 'auto';
+    const props = _Component.prototype.getProps.call(this);
+    props.onFocusIn = () => {
+      const isValidationMessageShownOnFocus = this.option('validationMessageMode') === 'auto';
       if (isValidationMessageShownOnFocus) {
-        var $validationMessageWrapper = (0, _renderer.default)((0, _dom.querySelectorInSameDocument)(_this.element(), '.dx-invalid-message.dx-overlay-wrapper'));
+        const $validationMessageWrapper = (0, _renderer.default)((0, _dom.querySelectorInSameDocument)(this.element(), '.dx-invalid-message.dx-overlay-wrapper'));
         $validationMessageWrapper === null || $validationMessageWrapper === void 0 ? void 0 : $validationMessageWrapper.removeClass(INVALID_MESSAGE_AUTO);
-        var timeToWaitBeforeShow = 150;
-        if (_this.showValidationMessageTimeout) {
-          clearTimeout(_this.showValidationMessageTimeout);
+        const timeToWaitBeforeShow = 150;
+        if (this.showValidationMessageTimeout) {
+          clearTimeout(this.showValidationMessageTimeout);
         }
-        _this.showValidationMessageTimeout = setTimeout(function () {
+        this.showValidationMessageTimeout = setTimeout(() => {
           $validationMessageWrapper === null || $validationMessageWrapper === void 0 ? void 0 : $validationMessageWrapper.addClass(INVALID_MESSAGE_AUTO);
         }, timeToWaitBeforeShow);
       }
     };
-    props.saveValueChangeEvent = function (e) {
-      _this._valueChangeEventInstance = e;
+    props.saveValueChangeEvent = e => {
+      this._valueChangeEventInstance = e;
     };
     return props;
   };
@@ -77,16 +76,13 @@ var Editor = /*#__PURE__*/function (_Component) {
     });
   };
   _proto._bindInnerWidgetOptions = function _bindInnerWidgetOptions(innerWidget, optionsContainer) {
-    var _this2 = this;
-    var innerWidgetOptions = (0, _extend.extend)({}, innerWidget.option());
-    var syncOptions = function syncOptions() {
-      return _this2._silent(optionsContainer, innerWidgetOptions);
-    };
+    const innerWidgetOptions = (0, _extend.extend)({}, innerWidget.option());
+    const syncOptions = () => this._silent(optionsContainer, innerWidgetOptions);
     syncOptions();
     innerWidget.on('optionChanged', syncOptions);
   };
   _proto._raiseValidation = function _raiseValidation(value, previousValue) {
-    var areValuesEmpty = !(0, _type.isDefined)(value) && !(0, _type.isDefined)(previousValue);
+    const areValuesEmpty = !(0, _type.isDefined)(value) && !(0, _type.isDefined)(previousValue);
     if (value !== previousValue && !areValuesEmpty) {
       this.validationRequest.fire({
         value,
@@ -105,9 +101,11 @@ var Editor = /*#__PURE__*/function (_Component) {
     this._valueChangeEventInstance = undefined;
   };
   _proto._optionChanged = function _optionChanged(option) {
-    var name = option.name,
-      previousValue = option.previousValue,
-      value = option.value;
+    const {
+      name,
+      previousValue,
+      value
+    } = option;
     if (name && this._getActionConfigs()[name] !== undefined) {
       this._addAction(name);
     }
@@ -134,14 +132,15 @@ var Editor = /*#__PURE__*/function (_Component) {
     _Component.prototype._optionChanged.call(this, option);
   };
   _proto.clear = function clear() {
-    var _this$_getDefaultOpti = this._getDefaultOptions(),
-      value = _this$_getDefaultOpti.value;
+    const {
+      value
+    } = this._getDefaultOptions();
     this.option({
       value
     });
   };
   _proto.reset = function reset() {
-    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
     if (arguments.length) {
       this._initialValue = value;
     }
@@ -159,10 +158,8 @@ var Editor = /*#__PURE__*/function (_Component) {
   return Editor;
 }(_component.default);
 exports.default = Editor;
-var prevIsEditor = _editor.default.isEditor;
-var newIsEditor = function newIsEditor(instance) {
-  return prevIsEditor(instance) || instance instanceof Editor;
-};
+const prevIsEditor = _editor.default.isEditor;
+const newIsEditor = instance => prevIsEditor(instance) || instance instanceof Editor;
 Editor.isEditor = newIsEditor;
 _editor.default.isEditor = newIsEditor;
 module.exports = exports.default;

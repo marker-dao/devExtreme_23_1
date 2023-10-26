@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/ajax.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,22 +17,22 @@ var _extend = require("./extend");
 var _type = require("./type");
 var _dependency_injector = _interopRequireDefault(require("./dependency_injector"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var SUCCESS = 'success';
-var ERROR = 'error';
-var TIMEOUT = 'timeout';
-var NO_CONTENT = 'nocontent';
-var PARSER_ERROR = 'parsererror';
-var isStatusSuccess = function isStatusSuccess(status) {
+const window = (0, _window.getWindow)();
+const SUCCESS = 'success';
+const ERROR = 'error';
+const TIMEOUT = 'timeout';
+const NO_CONTENT = 'nocontent';
+const PARSER_ERROR = 'parsererror';
+const isStatusSuccess = function (status) {
   return 200 <= status && status < 300;
 };
-var hasContent = function hasContent(status) {
+const hasContent = function (status) {
   return status !== 204;
 };
-var paramsConvert = function paramsConvert(params) {
-  var result = [];
-  for (var name in params) {
-    var value = params[name];
+const paramsConvert = function (params) {
+  const result = [];
+  for (const name in params) {
+    let value = params[name];
     if (value === undefined) {
       continue;
     }
@@ -46,49 +46,49 @@ var paramsConvert = function paramsConvert(params) {
   }
   return result.join('&');
 };
-var createScript = function createScript(options) {
-  var script = _dom_adapter.default.createElement('script');
-  for (var name in options) {
+const createScript = function (options) {
+  const script = _dom_adapter.default.createElement('script');
+  for (const name in options) {
     script[name] = options[name];
   }
   return script;
 };
-var removeScript = function removeScript(scriptNode) {
+const removeScript = function (scriptNode) {
   scriptNode.parentNode.removeChild(scriptNode);
 };
-var appendToHead = function appendToHead(element) {
+const appendToHead = function (element) {
   return _dom_adapter.default.getHead().appendChild(element);
 };
-var evalScript = function evalScript(code) {
-  var script = createScript({
+const evalScript = function (code) {
+  const script = createScript({
     text: code
   });
   appendToHead(script);
   removeScript(script);
 };
-var evalCrossDomainScript = function evalCrossDomainScript(url) {
-  var script = createScript({
+const evalCrossDomainScript = function (url) {
+  const script = createScript({
     src: url
   });
   return new Promise(function (resolve, reject) {
-    var events = {
+    const events = {
       'load': resolve,
       'error': reject
     };
-    var loadHandler = function loadHandler(e) {
+    const loadHandler = function (e) {
       events[e.type]();
       removeScript(script);
     };
-    for (var event in events) {
+    for (const event in events) {
       _dom_adapter.default.listen(script, event, loadHandler);
     }
     appendToHead(script);
   });
 };
-var getAcceptHeader = function getAcceptHeader(options) {
-  var dataType = options.dataType || '*';
-  var scriptAccept = 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript';
-  var accepts = {
+const getAcceptHeader = function (options) {
+  const dataType = options.dataType || '*';
+  const scriptAccept = 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript';
+  const accepts = {
     '*': '*/*',
     text: 'text/plain',
     html: 'text/html',
@@ -100,18 +100,18 @@ var getAcceptHeader = function getAcceptHeader(options) {
   (0, _extend.extendFromObject)(accepts, options.accepts, true);
   return accepts[dataType] ? accepts[dataType] + (dataType !== '*' ? ', */*; q=0.01' : '') : accepts['*'];
 };
-var getContentTypeHeader = function getContentTypeHeader(options) {
-  var defaultContentType;
+const getContentTypeHeader = function (options) {
+  let defaultContentType;
   if (options.data && !options.upload && getMethod(options) !== 'GET') {
     defaultContentType = 'application/x-www-form-urlencoded;charset=utf-8';
   }
   return options.contentType || defaultContentType;
 };
-var getDataFromResponse = function getDataFromResponse(xhr) {
+const getDataFromResponse = function (xhr) {
   return xhr.responseType && xhr.responseType !== 'text' || typeof xhr.responseText !== 'string' ? xhr.response : xhr.responseText;
 };
-var postProcess = function postProcess(deferred, xhr, dataType) {
-  var data = getDataFromResponse(xhr);
+const postProcess = function (deferred, xhr, dataType) {
+  const data = getDataFromResponse(xhr);
   switch (dataType) {
     case 'jsonp':
       evalScript(data);
@@ -131,13 +131,13 @@ var postProcess = function postProcess(deferred, xhr, dataType) {
       deferred.resolve(data, SUCCESS, xhr);
   }
 };
-var isCrossDomain = function isCrossDomain(url) {
+const isCrossDomain = function (url) {
   if (!(0, _window.hasWindow)()) {
     return true;
   }
-  var crossDomain = false;
-  var originAnchor = _dom_adapter.default.createElement('a');
-  var urlAnchor = _dom_adapter.default.createElement('a');
+  let crossDomain = false;
+  const originAnchor = _dom_adapter.default.createElement('a');
+  const urlAnchor = _dom_adapter.default.createElement('a');
   originAnchor.href = window.location.href;
   try {
     urlAnchor.href = url;
@@ -151,26 +151,26 @@ var isCrossDomain = function isCrossDomain(url) {
   }
   return crossDomain;
 };
-var setHttpTimeout = function setHttpTimeout(timeout, xhr) {
+const setHttpTimeout = function (timeout, xhr) {
   return timeout && setTimeout(function () {
     xhr.customStatus = TIMEOUT;
     xhr.abort();
   }, timeout);
 };
-var getJsonpOptions = function getJsonpOptions(options) {
+const getJsonpOptions = function (options) {
   if (options.dataType === 'jsonp') {
-    var random = Math.random().toString().replace(/\D/g, '');
-    var callbackName = options.jsonpCallback || 'dxCallback' + Date.now() + '_' + random;
-    var callbackParameter = options.jsonp || 'callback';
+    const random = Math.random().toString().replace(/\D/g, '');
+    const callbackName = options.jsonpCallback || 'dxCallback' + Date.now() + '_' + random;
+    const callbackParameter = options.jsonp || 'callback';
     options.data = options.data || {};
     options.data[callbackParameter] = callbackName;
     return callbackName;
   }
 };
-var getRequestOptions = function getRequestOptions(options, headers) {
-  var params = options.data;
-  var paramsAlreadyString = typeof params === 'string';
-  var url = options.url || window.location.href;
+const getRequestOptions = function (options, headers) {
+  let params = options.data;
+  const paramsAlreadyString = typeof params === 'string';
+  let url = options.url || window.location.href;
   if (!paramsAlreadyString && !options.cache) {
     params = params || {};
     params['_'] = Date.now();
@@ -196,8 +196,8 @@ var getRequestOptions = function getRequestOptions(options, headers) {
 function getMethod(options) {
   return (options.method || 'GET').toUpperCase();
 }
-var getRequestHeaders = function getRequestHeaders(options) {
-  var headers = options.headers || {};
+const getRequestHeaders = function (options) {
+  const headers = options.headers || {};
   headers['Content-Type'] = headers['Content-Type'] || getContentTypeHeader(options);
   headers['Accept'] = headers['Accept'] || getAcceptHeader(options);
   if (!options.crossDomain && !headers['X-Requested-With']) {
@@ -205,34 +205,34 @@ var getRequestHeaders = function getRequestHeaders(options) {
   }
   return headers;
 };
-var sendRequest = function sendRequest(options) {
-  var xhr = _http_request.default.getXhr();
-  var d = new _deferred.Deferred();
-  var result = d.promise();
-  var async = (0, _type.isDefined)(options.async) ? options.async : true;
-  var dataType = options.dataType;
-  var timeout = options.timeout || 0;
-  var timeoutId;
+const sendRequest = function (options) {
+  const xhr = _http_request.default.getXhr();
+  const d = new _deferred.Deferred();
+  const result = d.promise();
+  const async = (0, _type.isDefined)(options.async) ? options.async : true;
+  const dataType = options.dataType;
+  const timeout = options.timeout || 0;
+  let timeoutId;
   options.crossDomain = isCrossDomain(options.url);
-  var needScriptEvaluation = dataType === 'jsonp' || dataType === 'script';
+  const needScriptEvaluation = dataType === 'jsonp' || dataType === 'script';
   if (options.cache === undefined) {
     options.cache = !needScriptEvaluation;
   }
-  var callbackName = getJsonpOptions(options);
-  var headers = getRequestHeaders(options);
-  var requestOptions = getRequestOptions(options, headers);
-  var url = requestOptions.url;
-  var parameters = requestOptions.parameters;
+  const callbackName = getJsonpOptions(options);
+  const headers = getRequestHeaders(options);
+  const requestOptions = getRequestOptions(options, headers);
+  const url = requestOptions.url;
+  const parameters = requestOptions.parameters;
   if (callbackName) {
     window[callbackName] = function (data) {
       d.resolve(data, SUCCESS, xhr);
     };
   }
   if (options.crossDomain && needScriptEvaluation) {
-    var reject = function reject() {
+    const reject = function () {
       d.reject(xhr, ERROR);
     };
-    var resolve = function resolve() {
+    const resolve = function () {
       if (dataType === 'jsonp') return;
       d.resolve(null, SUCCESS, xhr);
     };
@@ -268,14 +268,14 @@ var sendRequest = function sendRequest(options) {
     xhr.upload['onabort'] = options.upload['onabort'];
   }
   if (options.xhrFields) {
-    for (var field in options.xhrFields) {
+    for (const field in options.xhrFields) {
       xhr[field] = options.xhrFields[field];
     }
   }
   if (options.responseType === 'arraybuffer') {
     xhr.responseType = options.responseType;
   }
-  for (var name in headers) {
+  for (const name in headers) {
     if (Object.prototype.hasOwnProperty.call(headers, name) && (0, _type.isDefined)(headers[name])) {
       xhr.setRequestHeader(name, headers[name]);
     }

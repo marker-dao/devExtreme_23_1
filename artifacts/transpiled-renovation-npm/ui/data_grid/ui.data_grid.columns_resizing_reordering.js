@@ -6,7 +6,7 @@ Object.keys(_columns_resizing_reordering).forEach(function (key) {
   if (key in exports && exports[key] === _columns_resizing_reordering[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _columns_resizing_reordering[key];
     }
   });

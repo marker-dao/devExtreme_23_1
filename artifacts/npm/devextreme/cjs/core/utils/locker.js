@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/locker.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,17 +11,17 @@
 exports.default = void 0;
 var _errors = _interopRequireDefault(require("../errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var Locker = function Locker() {
-  var info = {};
-  var currentCount = function currentCount(lockName) {
+const Locker = function () {
+  const info = {};
+  const currentCount = function (lockName) {
     return info[lockName] || 0;
   };
   return {
-    obtain: function obtain(lockName) {
+    obtain: function (lockName) {
       info[lockName] = currentCount(lockName) + 1;
     },
-    release: function release(lockName) {
-      var count = currentCount(lockName);
+    release: function (lockName) {
+      const count = currentCount(lockName);
       if (count < 1) {
         throw _errors.default.Error('E0014');
       }
@@ -31,7 +31,7 @@ var Locker = function Locker() {
         info[lockName] = count - 1;
       }
     },
-    locked: function locked(lockName) {
+    locked: function (lockName) {
       return currentCount(lockName) > 0;
     }
   };

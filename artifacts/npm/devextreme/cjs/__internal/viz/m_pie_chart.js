@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/viz/m_pie_chart.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,14 +25,16 @@ var _range = require("../../viz/translators/range");
 var _translator1d = require("../../viz/translators/translator1d");
 var _m_base_chart = require("./chart_components/m_base_chart");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var states = _consts.default.states;
-var seriesSpacing = _consts.default.pieSeriesSpacing;
-var OPTIONS_FOR_REFRESH_SERIES = ['startAngle', 'innerRadius', 'segmentsDirection', 'type'];
-var NORMAL_STATE = states.normalMark;
-var HOVER_STATE = states.hoverMark;
-var SELECTED_STATE = states.selectedMark;
-var MAX_RESOLVE_ITERATION_COUNT = 5;
-var LEGEND_ACTIONS = [states.resetItem, states.applyHover, states.applySelected, states.applySelected];
+const {
+  states
+} = _consts.default;
+const seriesSpacing = _consts.default.pieSeriesSpacing;
+const OPTIONS_FOR_REFRESH_SERIES = ['startAngle', 'innerRadius', 'segmentsDirection', 'type'];
+const NORMAL_STATE = states.normalMark;
+const HOVER_STATE = states.hoverMark;
+const SELECTED_STATE = states.selectedMark;
+const MAX_RESOLVE_ITERATION_COUNT = 5;
+const LEGEND_ACTIONS = [states.resetItem, states.applyHover, states.applySelected, states.applySelected];
 function shiftInColumnFunction(box, length) {
   return {
     x: box.x,
@@ -40,8 +42,8 @@ function shiftInColumnFunction(box, length) {
   };
 }
 function dividePoints(series, points) {
-  return series.getVisiblePoints().reduce(function (r, point) {
-    var angle = (0, _utils.normalizeAngle)(point.middleAngle);
+  return series.getVisiblePoints().reduce((r, point) => {
+    const angle = (0, _utils.normalizeAngle)(point.middleAngle);
     (angle <= 90 || angle >= 270 ? r.right : r.left).push(point);
     return r;
   }, points || {
@@ -50,7 +52,7 @@ function dividePoints(series, points) {
   });
 }
 function resolveOverlappedLabels(points, shiftCallback, inverseDirection, canvas) {
-  var overlapped = false;
+  let overlapped = false;
   if (inverseDirection) {
     points.left.reverse();
     points.right.reverse();
@@ -59,11 +61,11 @@ function resolveOverlappedLabels(points, shiftCallback, inverseDirection, canvas
   return _m_base_chart.overlapping.resolveLabelOverlappingInOneDirection(points.right, canvas, false, false, shiftCallback) || overlapped;
 }
 function getLegendItemAction(points) {
-  var state = NORMAL_STATE;
-  points.forEach(function (point) {
+  let state = NORMAL_STATE;
+  points.forEach(point => {
     var _a;
-    var seriesOptions = (_a = point.series) === null || _a === void 0 ? void 0 : _a.getOptions();
-    var pointState = point.fullState;
+    const seriesOptions = (_a = point.series) === null || _a === void 0 ? void 0 : _a.getOptions();
+    let pointState = point.fullState;
     if ((seriesOptions === null || seriesOptions === void 0 ? void 0 : seriesOptions.hoverMode) === 'none') {
       pointState &= ~HOVER_STATE;
     }
@@ -86,40 +88,30 @@ function correctPercentValue(value) {
   }
   return value;
 }
-var pieSizeEqualizer = function () {
+const pieSizeEqualizer = function () {
   function equalize(group, allPies) {
-    var pies = allPies.filter(function (p) {
-      return p._isVisible() && p.getSizeGroup() === group;
-    });
-    var minRadius = Math.min.apply(null, pies.map(function (p) {
-      return p.getSizeGroupLayout().radius;
+    const pies = allPies.filter(p => p._isVisible() && p.getSizeGroup() === group);
+    const minRadius = Math.min.apply(null, pies.map(p => p.getSizeGroupLayout().radius));
+    const minPie = pies.filter(p => p.getSizeGroupLayout().radius === minRadius);
+    pies.forEach(p => p.render({
+      force: true,
+      sizeGroupLayout: minPie.length ? minPie[0].getSizeGroupLayout() : {}
     }));
-    var minPie = pies.filter(function (p) {
-      return p.getSizeGroupLayout().radius === minRadius;
-    });
-    pies.forEach(function (p) {
-      return p.render({
-        force: true,
-        sizeGroupLayout: minPie.length ? minPie[0].getSizeGroupLayout() : {}
-      });
-    });
   }
   function removeFromList(list, item) {
-    return list.filter(function (li) {
-      return li !== item;
-    });
+    return list.filter(li => li !== item);
   }
   function addToList(list, item) {
     return removeFromList(list, item).concat(item);
   }
-  var pies = [];
-  var timers = {};
+  let pies = [];
+  let timers = {};
   return {
     queue(pie) {
-      var group = pie.getSizeGroup();
+      const group = pie.getSizeGroup();
       pies = addToList(pies, pie);
       clearTimeout(timers[group]);
-      timers[group] = setTimeout(function () {
+      timers[group] = setTimeout(() => {
         equalize(group, pies);
       });
     },
@@ -131,7 +123,7 @@ var pieSizeEqualizer = function () {
     }
   };
 }();
-var dxPieChart = _m_base_chart.BaseChart.inherit({
+const dxPieChart = _m_base_chart.BaseChart.inherit({
   _themeSection: 'pie',
   _layoutManagerOptions() {
     return (0, _extend2.extend)(true, {}, this.callBase(), {
@@ -150,7 +142,9 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
   },
   _groupSeries() {
     var _a;
-    var series = this.series;
+    const {
+      series
+    } = this;
     this._groupsData = {
       groups: [{
         series,
@@ -165,7 +159,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return null;
   },
   _getValueAxis() {
-    var translator = new _translator1d.Translator1D().setCodomain(360, 0);
+    const translator = new _translator1d.Translator1D().setCodomain(360, 0);
     return {
       getTranslator() {
         return translator;
@@ -176,15 +170,15 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     };
   },
   _populateBusinessRange() {
-    this.series.map(function (series) {
-      var range = new _range.Range();
+    this.series.map(series => {
+      const range = new _range.Range();
       range.addRange(series.getRangeData().val);
       series.getValueAxis().setBusinessRange(range);
       return range;
     });
   },
   _specialProcessSeries() {
-    (0, _iterator.each)(this.series, function (_, singleSeries) {
+    (0, _iterator.each)(this.series, (_, singleSeries) => {
       singleSeries.arrangePoints();
     });
   },
@@ -196,45 +190,46 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     singleSeries.arrangePoints();
   },
   _handleSeriesDataUpdated() {
-    var maxPointCount = 0;
-    this.series.forEach(function (s) {
+    let maxPointCount = 0;
+    this.series.forEach(s => {
       maxPointCount = Math.max(s.getPointsCount(), maxPointCount);
     });
-    this.series.forEach(function (s) {
+    this.series.forEach(s => {
       s.setMaxPointsCount(maxPointCount);
     });
     this.callBase();
   },
   _getLegendOptions(item) {
-    var legendItem = this.callBase(item);
-    var legendData = legendItem.legendData;
+    const legendItem = this.callBase(item);
+    const {
+      legendData
+    } = legendItem;
     legendData.argument = item.argument;
     legendData.argumentIndex = item.argumentIndex;
     legendData.points = [item];
     return legendItem;
   },
   _getLegendTargets() {
-    var _this = this;
-    var itemsByArgument = {};
-    (this.series || []).forEach(function (series) {
-      series.getPoints().forEach(function (point) {
-        var argument = point.argument.valueOf();
-        var index = series.getPointsByArg(argument).indexOf(point);
-        var key = argument.valueOf().toString() + index;
+    const itemsByArgument = {};
+    (this.series || []).forEach(series => {
+      series.getPoints().forEach(point => {
+        const argument = point.argument.valueOf();
+        const index = series.getPointsByArg(argument).indexOf(point);
+        const key = argument.valueOf().toString() + index;
         itemsByArgument[key] = itemsByArgument[key] || [];
-        var argumentCount = itemsByArgument[key].push(point);
+        const argumentCount = itemsByArgument[key].push(point);
         point.index = itemsByArgument[key][argumentCount - 2] ? itemsByArgument[key][argumentCount - 2].index : Object.keys(itemsByArgument).length - 1;
         point.argumentIndex = index;
       });
     });
-    var items = [];
-    (0, _iterator.each)(itemsByArgument, function (_, points) {
-      points.forEach(function (point, index) {
+    const items = [];
+    (0, _iterator.each)(itemsByArgument, (_, points) => {
+      points.forEach((point, index) => {
         if (index === 0) {
-          items.push(_this._getLegendOptions(point));
+          items.push(this._getLegendOptions(point));
           return;
         }
-        var item = items[items.length - 1];
+        const item = items[items.length - 1];
         item.legendData.points.push(point);
         if (!item.visible) {
           item.visible = point.isVisible();
@@ -249,18 +244,18 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     }];
   },
   _getLayoutSeries(series, drawOptions) {
-    var layout;
-    var canvas = this._canvas;
-    var drawnLabels = false;
+    let layout;
+    const canvas = this._canvas;
+    let drawnLabels = false;
     layout = this.layoutManager.applyPieChartSeriesLayout(canvas, series, true);
-    series.forEach(function (singleSeries) {
+    series.forEach(singleSeries => {
       singleSeries.correctPosition(layout, canvas);
       drawnLabels = singleSeries.drawLabelsWOPoints() || drawnLabels;
     });
     if (drawnLabels) {
       layout = this.layoutManager.applyPieChartSeriesLayout(canvas, series, drawOptions.hideLayoutLabels);
     }
-    series.forEach(function (singleSeries) {
+    series.forEach(singleSeries => {
       singleSeries.hideLabels();
     });
     this._sizeGroupLayout = {
@@ -272,9 +267,9 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return layout;
   },
   _getLayoutSeriesForEqualPies(series, sizeGroupLayout) {
-    var canvas = this._canvas;
-    var layout = this.layoutManager.applyEqualPieChartLayout(series, sizeGroupLayout);
-    series.forEach(function (s) {
+    const canvas = this._canvas;
+    const layout = this.layoutManager.applyEqualPieChartLayout(series, sizeGroupLayout);
+    series.forEach(s => {
       s.correctPosition(layout, canvas);
       s.drawLabelsWOPoints();
     });
@@ -282,18 +277,20 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return layout;
   },
   _updateSeriesDimensions(drawOptions) {
-    var visibleSeries = this._getVisibleSeries();
-    var lengthVisibleSeries = visibleSeries.length;
-    var innerRad;
-    var delta;
-    var layout;
-    var sizeGroupLayout = drawOptions.sizeGroupLayout;
+    const visibleSeries = this._getVisibleSeries();
+    const lengthVisibleSeries = visibleSeries.length;
+    let innerRad;
+    let delta;
+    let layout;
+    const {
+      sizeGroupLayout
+    } = drawOptions;
     if (lengthVisibleSeries) {
       layout = sizeGroupLayout ? this._getLayoutSeriesForEqualPies(visibleSeries, sizeGroupLayout) : this._getLayoutSeries(visibleSeries, drawOptions);
       delta = (layout.radiusOuter - layout.radiusInner - seriesSpacing * (lengthVisibleSeries - 1)) / lengthVisibleSeries;
       innerRad = layout.radiusInner;
       this._setGeometry(layout);
-      visibleSeries.forEach(function (singleSeries) {
+      visibleSeries.forEach(singleSeries => {
         singleSeries.correctRadius({
           radiusInner: innerRad,
           radiusOuter: innerRad + delta
@@ -318,19 +315,16 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return this._innerRadius;
   },
   _getLegendCallBack() {
-    var _this2 = this;
-    var legend = this._legend;
-    var items = this._getLegendTargets().map(function (i) {
-      return i.legendData;
-    });
-    return function (target) {
-      items.forEach(function (data) {
-        var points = [];
-        var callback = legend.getActionCallback({
+    const legend = this._legend;
+    const items = this._getLegendTargets().map(i => i.legendData);
+    return target => {
+      items.forEach(data => {
+        const points = [];
+        const callback = legend.getActionCallback({
           index: data.id
         });
-        _this2.series.forEach(function (series) {
-          var seriesPoints = series.getPointsByKeys(data.argument, data.argumentIndex);
+        this.series.forEach(series => {
+          const seriesPoints = series.getPointsByKeys(data.argument, data.argumentIndex);
           points.push.apply(points, seriesPoints);
         });
         if (target && target.argument === data.argument && target.argumentIndex === data.argumentIndex) {
@@ -341,24 +335,21 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     };
   },
   _locateLabels(resolveLabelOverlapping) {
-    var iterationCount = 0;
-    var labelsWereOverlapped;
-    var wordWrapApplied;
+    let iterationCount = 0;
+    let labelsWereOverlapped;
+    let wordWrapApplied;
     do {
       wordWrapApplied = this._adjustSeriesLabels(resolveLabelOverlapping === 'shift');
       labelsWereOverlapped = this._resolveLabelOverlapping(resolveLabelOverlapping);
     } while ((labelsWereOverlapped || wordWrapApplied) && ++iterationCount < MAX_RESOLVE_ITERATION_COUNT);
   },
   _adjustSeriesLabels(moveLabelsFromCenter) {
-    return this.series.reduce(function (r, s) {
-      return s.adjustLabels(moveLabelsFromCenter) || r;
-    }, false);
+    return this.series.reduce((r, s) => s.adjustLabels(moveLabelsFromCenter) || r, false);
   },
   _applyExtraSettings: _common.noop,
   _resolveLabelOverlappingShift() {
-    var _this3 = this;
-    var inverseDirection = this.option('segmentsDirection') === 'anticlockwise';
-    var seriesByPosition = this.series.reduce(function (r, s) {
+    const inverseDirection = this.option('segmentsDirection') === 'anticlockwise';
+    const seriesByPosition = this.series.reduce((r, s) => {
       (r[s.getOptions().label.position] || r.outside).push(s);
       return r;
     }, {
@@ -366,14 +357,12 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
       columns: [],
       outside: []
     });
-    var labelsOverlapped = false;
-    var shiftFunction = function shiftFunction(box, length) {
-      return (0, _utils.getVerticallyShiftedAngularCoords)(box, -length, _this3._center);
-    };
+    let labelsOverlapped = false;
+    const shiftFunction = (box, length) => (0, _utils.getVerticallyShiftedAngularCoords)(box, -length, this._center);
     if (seriesByPosition.inside.length > 0) {
-      var pointsToResolve = seriesByPosition.inside.reduce(function (r, singleSeries) {
-        var visiblePoints = singleSeries.getVisiblePoints();
-        return visiblePoints.reduce(function (r, point) {
+      const pointsToResolve = seriesByPosition.inside.reduce((r, singleSeries) => {
+        const visiblePoints = singleSeries.getVisiblePoints();
+        return visiblePoints.reduce((r, point) => {
           r.left.push(point);
           return r;
         }, r);
@@ -383,20 +372,18 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
       });
       labelsOverlapped = resolveOverlappedLabels(pointsToResolve, shiftInColumnFunction, inverseDirection, this._canvas) || labelsOverlapped;
     }
-    labelsOverlapped = seriesByPosition.columns.reduce(function (r, singleSeries) {
-      return resolveOverlappedLabels(dividePoints(singleSeries), shiftInColumnFunction, inverseDirection, _this3._canvas) || r;
-    }, labelsOverlapped);
+    labelsOverlapped = seriesByPosition.columns.reduce((r, singleSeries) => resolveOverlappedLabels(dividePoints(singleSeries), shiftInColumnFunction, inverseDirection, this._canvas) || r, labelsOverlapped);
     if (seriesByPosition.outside.length > 0) {
-      labelsOverlapped = resolveOverlappedLabels(seriesByPosition.outside.reduce(function (r, singleSeries) {
-        return dividePoints(singleSeries, r);
-      }, null), shiftFunction, inverseDirection, this._canvas) || labelsOverlapped;
+      labelsOverlapped = resolveOverlappedLabels(seriesByPosition.outside.reduce((r, singleSeries) => dividePoints(singleSeries, r), null), shiftFunction, inverseDirection, this._canvas) || labelsOverlapped;
     }
     return labelsOverlapped;
   },
   _setGeometry(_ref) {
-    var x = _ref.centerX,
-      y = _ref.centerY,
-      radiusInner = _ref.radiusInner;
+    let {
+      centerX: x,
+      centerY: y,
+      radiusInner
+    } = _ref;
     this._center = {
       x,
       y
@@ -439,7 +426,7 @@ var dxPieChart = _m_base_chart.BaseChart.inherit({
     return this._sizeGroupLayout || {};
   }
 });
-(0, _iterator.each)(OPTIONS_FOR_REFRESH_SERIES, function (_, name) {
+(0, _iterator.each)(OPTIONS_FOR_REFRESH_SERIES, (_, name) => {
   dxPieChart.prototype._optionChangesMap[name] = 'REFRESH_SERIES_DATA_INIT';
 });
 dxPieChart.addPlugin(_center_template.plugins.pieChart);

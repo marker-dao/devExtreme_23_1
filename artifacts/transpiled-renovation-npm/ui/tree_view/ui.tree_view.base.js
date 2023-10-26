@@ -27,67 +27,66 @@ var _get_relative_offset = require("../../renovation/ui/scroll_view/utils/get_re
 var _consts = require("../../renovation/ui/scroll_view/common/consts");
 var _icon = require("../../core/utils/icon");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var WIDGET_CLASS = 'dx-treeview';
-var NODE_CLASS = "".concat(WIDGET_CLASS, "-node");
-var NODE_CONTAINER_CLASS = "".concat(NODE_CLASS, "-container");
-var NODE_LOAD_INDICATOR_CLASS = "".concat(NODE_CLASS, "-loadindicator");
-var OPENED_NODE_CONTAINER_CLASS = "".concat(NODE_CLASS, "-container-opened");
-var IS_LEAF = "".concat(NODE_CLASS, "-is-leaf");
-var ITEM_CLASS = "".concat(WIDGET_CLASS, "-item");
-var ITEM_WITH_CHECKBOX_CLASS = "".concat(ITEM_CLASS, "-with-checkbox");
-var ITEM_WITH_CUSTOM_EXPANDER_ICON_CLASS = "".concat(ITEM_CLASS, "-with-custom-expander-icon");
-var CUSTOM_EXPANDER_ICON_ITEM_CONTAINER_CLASS = "".concat(WIDGET_CLASS, "-custom-expander-icon-item-container");
-var ITEM_WITHOUT_CHECKBOX_CLASS = "".concat(ITEM_CLASS, "-without-checkbox");
-var ITEM_DATA_KEY = "".concat(ITEM_CLASS, "-data");
-var TOGGLE_ITEM_VISIBILITY_CLASS = "".concat(WIDGET_CLASS, "-toggle-item-visibility");
-var CUSTOM_COLLAPSE_ICON_CLASS = "".concat(WIDGET_CLASS, "-custom-collapse-icon");
-var CUSTOM_EXPAND_ICON_CLASS = "".concat(WIDGET_CLASS, "-custom-expand-icon");
-var LOAD_INDICATOR_CLASS = "".concat(WIDGET_CLASS, "-loadindicator");
-var LOAD_INDICATOR_WRAPPER_CLASS = "".concat(WIDGET_CLASS, "-loadindicator-wrapper");
-var TOGGLE_ITEM_VISIBILITY_OPENED_CLASS = "".concat(WIDGET_CLASS, "-toggle-item-visibility-opened");
-var SELECT_ALL_ITEM_CLASS = "".concat(WIDGET_CLASS, "-select-all-item");
-var INVISIBLE_STATE_CLASS = 'dx-state-invisible';
-var DISABLED_STATE_CLASS = 'dx-state-disabled';
-var SELECTED_ITEM_CLASS = 'dx-state-selected';
-var EXPAND_EVENT_NAMESPACE = 'dxTreeView_expand';
-var DATA_ITEM_ID = 'data-item-id';
-var ITEM_URL_CLASS = 'dx-item-url';
-var TreeViewBase = _ui.default.inherit({
-  _supportedKeys: function _supportedKeys(e) {
-    var _this = this;
-    var click = function click(e) {
-      var $itemElement = (0, _renderer.default)(_this.option('focusedElement'));
+const WIDGET_CLASS = 'dx-treeview';
+const NODE_CLASS = "".concat(WIDGET_CLASS, "-node");
+const NODE_CONTAINER_CLASS = "".concat(NODE_CLASS, "-container");
+const NODE_LOAD_INDICATOR_CLASS = "".concat(NODE_CLASS, "-loadindicator");
+const OPENED_NODE_CONTAINER_CLASS = "".concat(NODE_CLASS, "-container-opened");
+const IS_LEAF = "".concat(NODE_CLASS, "-is-leaf");
+const ITEM_CLASS = "".concat(WIDGET_CLASS, "-item");
+const ITEM_WITH_CHECKBOX_CLASS = "".concat(ITEM_CLASS, "-with-checkbox");
+const ITEM_WITH_CUSTOM_EXPANDER_ICON_CLASS = "".concat(ITEM_CLASS, "-with-custom-expander-icon");
+const CUSTOM_EXPANDER_ICON_ITEM_CONTAINER_CLASS = "".concat(WIDGET_CLASS, "-custom-expander-icon-item-container");
+const ITEM_WITHOUT_CHECKBOX_CLASS = "".concat(ITEM_CLASS, "-without-checkbox");
+const ITEM_DATA_KEY = "".concat(ITEM_CLASS, "-data");
+const TOGGLE_ITEM_VISIBILITY_CLASS = "".concat(WIDGET_CLASS, "-toggle-item-visibility");
+const CUSTOM_COLLAPSE_ICON_CLASS = "".concat(WIDGET_CLASS, "-custom-collapse-icon");
+const CUSTOM_EXPAND_ICON_CLASS = "".concat(WIDGET_CLASS, "-custom-expand-icon");
+const LOAD_INDICATOR_CLASS = "".concat(WIDGET_CLASS, "-loadindicator");
+const LOAD_INDICATOR_WRAPPER_CLASS = "".concat(WIDGET_CLASS, "-loadindicator-wrapper");
+const TOGGLE_ITEM_VISIBILITY_OPENED_CLASS = "".concat(WIDGET_CLASS, "-toggle-item-visibility-opened");
+const SELECT_ALL_ITEM_CLASS = "".concat(WIDGET_CLASS, "-select-all-item");
+const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
+const DISABLED_STATE_CLASS = 'dx-state-disabled';
+const SELECTED_ITEM_CLASS = 'dx-state-selected';
+const EXPAND_EVENT_NAMESPACE = 'dxTreeView_expand';
+const DATA_ITEM_ID = 'data-item-id';
+const ITEM_URL_CLASS = 'dx-item-url';
+const TreeViewBase = _ui.default.inherit({
+  _supportedKeys: function (e) {
+    const click = e => {
+      const $itemElement = (0, _renderer.default)(this.option('focusedElement'));
       if (!$itemElement.length) {
         return;
       }
       e.target = $itemElement;
       e.currentTarget = $itemElement;
-      _this._itemClickHandler(e, $itemElement.children('.' + ITEM_CLASS));
-      var expandEventName = _this._getEventNameByOption(_this.option('expandEvent'));
-      var expandByClick = expandEventName === (0, _index.addNamespace)(_click.name, EXPAND_EVENT_NAMESPACE);
+      this._itemClickHandler(e, $itemElement.children('.' + ITEM_CLASS));
+      const expandEventName = this._getEventNameByOption(this.option('expandEvent'));
+      const expandByClick = expandEventName === (0, _index.addNamespace)(_click.name, EXPAND_EVENT_NAMESPACE);
       if (expandByClick) {
-        _this._expandEventHandler(e);
+        this._expandEventHandler(e);
       }
     };
-    var select = function select(e) {
+    const select = e => {
       e.preventDefault();
-      var $focusedElement = (0, _renderer.default)(_this.option('focusedElement'));
-      var checkboxInstance = _this._getCheckBoxInstance($focusedElement);
+      const $focusedElement = (0, _renderer.default)(this.option('focusedElement'));
+      const checkboxInstance = this._getCheckBoxInstance($focusedElement);
       if (!checkboxInstance.option('disabled')) {
-        var currentState = checkboxInstance.option('value');
-        _this._updateItemSelection(!currentState, $focusedElement.find('.' + ITEM_CLASS).get(0), true);
+        const currentState = checkboxInstance.option('value');
+        this._updateItemSelection(!currentState, $focusedElement.find('.' + ITEM_CLASS).get(0), true);
       }
     };
-    var toggleExpandedNestedItems = function toggleExpandedNestedItems(state, e) {
+    const toggleExpandedNestedItems = function (state, e) {
       if (!this.option('expandAllEnabled')) {
         return;
       }
       e.preventDefault();
-      var $rootElement = (0, _renderer.default)(this.option('focusedElement'));
+      const $rootElement = (0, _renderer.default)(this.option('focusedElement'));
       if (!$rootElement.length) {
         return;
       }
-      var rootItem = this._getItemData($rootElement.find(".".concat(ITEM_CLASS)));
+      const rootItem = this._getItemData($rootElement.find(".".concat(ITEM_CLASS)));
       this._toggleExpandedNestedItems([rootItem], state);
     };
     return (0, _extend.extend)(this.callBase(), {
@@ -97,39 +96,39 @@ var TreeViewBase = _ui.default.inherit({
       minus: toggleExpandedNestedItems.bind(this, false)
     });
   },
-  _toggleExpandedNestedItems: function _toggleExpandedNestedItems(items, state) {
+  _toggleExpandedNestedItems: function (items, state) {
     if (!items) {
       return;
     }
-    for (var i = 0, len = items.length; i < len; i++) {
-      var item = items[i];
-      var node = this._dataAdapter.getNodeByItem(item);
+    for (let i = 0, len = items.length; i < len; i++) {
+      const item = items[i];
+      const node = this._dataAdapter.getNodeByItem(item);
       this._toggleExpandedState(node, state);
       this._toggleExpandedNestedItems(item.items, state);
     }
   },
-  _getNodeElement: function _getNodeElement(node, cache) {
-    var key = this._encodeString(node.internalFields.key);
+  _getNodeElement: function (node, cache) {
+    const key = this._encodeString(node.internalFields.key);
     if (cache) {
       if (!cache.$nodeByKey) {
         cache.$nodeByKey = {};
         this.$element().find(".".concat(NODE_CLASS)).each(function () {
-          var $node = (0, _renderer.default)(this);
-          var key = $node.attr(DATA_ITEM_ID);
+          const $node = (0, _renderer.default)(this);
+          const key = $node.attr(DATA_ITEM_ID);
           cache.$nodeByKey[key] = $node;
         });
       }
       return cache.$nodeByKey[key] || (0, _renderer.default)();
     }
-    var element = this.$element().get(0).querySelector("[".concat(DATA_ITEM_ID, "=\"").concat(key, "\"]"));
+    const element = this.$element().get(0).querySelector("[".concat(DATA_ITEM_ID, "=\"").concat(key, "\"]"));
     return (0, _renderer.default)(element);
   },
   _activeStateUnit: '.' + ITEM_CLASS,
-  _widgetClass: function _widgetClass() {
+  _widgetClass: function () {
     return WIDGET_CLASS;
   },
-  _getDefaultOptions: function _getDefaultOptions() {
-    var defaultOptions = (0, _extend.extend)(this.callBase(), {
+  _getDefaultOptions: function () {
+    const defaultOptions = (0, _extend.extend)(this.callBase(), {
       animationEnabled: true,
       dataStructure: 'tree',
       deferRendering: true,
@@ -179,9 +178,9 @@ var TreeViewBase = _ui.default.inherit({
       }
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return !_support.nativeScrolling;
       },
       options: {
@@ -192,34 +191,34 @@ var TreeViewBase = _ui.default.inherit({
   // TODO: implement these functions
   _initSelectedItems: _common.noop,
   _syncSelectionOptions: _common.asyncNoop,
-  _fireSelectionChanged: function _fireSelectionChanged() {
-    var selectionChangePromise = this._selectionChangePromise;
+  _fireSelectionChanged: function () {
+    const selectionChangePromise = this._selectionChangePromise;
     (0, _deferred.when)(selectionChangePromise).done(function () {
       this._createActionByOption('onSelectionChanged', {
         excludeValidators: ['disabled', 'readOnly']
       })();
     }.bind(this));
   },
-  _createSelectAllValueChangedAction: function _createSelectAllValueChangedAction() {
+  _createSelectAllValueChangedAction: function () {
     this._selectAllValueChangedAction = this._createActionByOption('onSelectAllValueChanged', {
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _fireSelectAllValueChanged: function _fireSelectAllValueChanged(value) {
+  _fireSelectAllValueChanged: function (value) {
     this._selectAllValueChangedAction({
       value: value
     });
   },
-  _checkBoxModeChange: function _checkBoxModeChange(value, previousValue) {
-    var searchEnabled = this.option('searchEnabled');
-    var previousSelectAllEnabled = this._selectAllEnabled(previousValue);
-    var previousItemsContainer = this._itemContainer(searchEnabled, previousSelectAllEnabled);
+  _checkBoxModeChange: function (value, previousValue) {
+    const searchEnabled = this.option('searchEnabled');
+    const previousSelectAllEnabled = this._selectAllEnabled(previousValue);
+    const previousItemsContainer = this._itemContainer(searchEnabled, previousSelectAllEnabled);
     this._detachClickEvent(previousItemsContainer);
     this._detachExpandEvent(previousItemsContainer);
     if (previousValue === 'none' || value === 'none') {
       return;
     }
-    var selectAllExists = this._$selectAllItem && this._$selectAllItem.length;
+    const selectAllExists = this._$selectAllItem && this._$selectAllItem.length;
     switch (value) {
       case 'selectAll':
         if (!selectAllExists) {
@@ -235,8 +234,8 @@ var TreeViewBase = _ui.default.inherit({
         break;
     }
   },
-  _removeSelection: function _removeSelection() {
-    var that = this;
+  _removeSelection: function () {
+    const that = this;
     (0, _iterator.each)(this._dataAdapter.getFullData(), function (_, node) {
       if (!that._hasChildren(node)) {
         return;
@@ -244,10 +243,12 @@ var TreeViewBase = _ui.default.inherit({
       that._dataAdapter.toggleSelection(node.internalFields.key, false, true);
     });
   },
-  _optionChanged: function _optionChanged(args) {
-    var name = args.name,
-      value = args.value,
-      previousValue = args.previousValue;
+  _optionChanged: function (args) {
+    const {
+      name,
+      value,
+      previousValue
+    } = args;
     switch (name) {
       case 'selectAllText':
         if (this._$selectAllItem) {
@@ -312,7 +313,7 @@ var TreeViewBase = _ui.default.inherit({
         this.callBase(args);
     }
   },
-  _initDataSource: function _initDataSource() {
+  _initDataSource: function () {
     if (this._useCustomChildrenLoader()) {
       this._loadChildrenByCustomLoader(null).done(function (newItems) {
         if (newItems && newItems.length) {
@@ -324,8 +325,8 @@ var TreeViewBase = _ui.default.inherit({
       this._isVirtualMode() && this._initVirtualMode();
     }
   },
-  _initVirtualMode: function _initVirtualMode() {
-    var filter = this._filter;
+  _initVirtualMode: function () {
+    const filter = this._filter;
     if (!filter.custom) {
       filter.custom = this._dataSource.filter();
     }
@@ -333,11 +334,11 @@ var TreeViewBase = _ui.default.inherit({
       filter.internal = [this.option('parentIdExpr'), this.option('rootValue')];
     }
   },
-  _useCustomChildrenLoader: function _useCustomChildrenLoader() {
+  _useCustomChildrenLoader: function () {
     return (0, _type.isFunction)(this.option('createChildren')) && this._isDataStructurePlain();
   },
-  _loadChildrenByCustomLoader: function _loadChildrenByCustomLoader(parentNode) {
-    var invocationResult = this.option('createChildren').call(this, parentNode);
+  _loadChildrenByCustomLoader: function (parentNode) {
+    const invocationResult = this.option('createChildren').call(this, parentNode);
     if (Array.isArray(invocationResult)) {
       return new _deferred.Deferred().resolve(invocationResult).promise();
     }
@@ -346,46 +347,46 @@ var TreeViewBase = _ui.default.inherit({
     }
     return new _deferred.Deferred().resolve([]).promise();
   },
-  _combineFilter: function _combineFilter() {
+  _combineFilter: function () {
     if (!this._filter.custom || !this._filter.custom.length) {
       return this._filter.internal;
     }
     return [this._filter.custom, this._filter.internal];
   },
-  _dataSourceLoadErrorHandler: function _dataSourceLoadErrorHandler() {
+  _dataSourceLoadErrorHandler: function () {
     this._renderEmptyMessage();
   },
-  _init: function _init() {
+  _init: function () {
     this._filter = {};
     this.callBase();
     this._initStoreChangeHandlers();
   },
-  _dataSourceChangedHandler: function _dataSourceChangedHandler(newItems) {
-    var items = this.option('items');
+  _dataSourceChangedHandler: function (newItems) {
+    const items = this.option('items');
     if (this._initialized && this._isVirtualMode() && items.length) {
       return;
     }
     this.option('items', newItems);
   },
-  _removeTreeViewLoadIndicator: function _removeTreeViewLoadIndicator() {
+  _removeTreeViewLoadIndicator: function () {
     if (!this._treeViewLoadIndicator) return;
     this._treeViewLoadIndicator.remove();
     this._treeViewLoadIndicator = null;
   },
-  _createTreeViewLoadIndicator: function _createTreeViewLoadIndicator() {
+  _createTreeViewLoadIndicator: function () {
     this._treeViewLoadIndicator = (0, _renderer.default)('<div>').addClass(LOAD_INDICATOR_CLASS);
     this._createComponent(this._treeViewLoadIndicator, _load_indicator.default, {});
     return this._treeViewLoadIndicator;
   },
-  _dataSourceLoadingChangedHandler: function _dataSourceLoadingChangedHandler(isLoading) {
-    var resultFilter;
+  _dataSourceLoadingChangedHandler: function (isLoading) {
+    let resultFilter;
     if (this._isVirtualMode()) {
       resultFilter = this._combineFilter();
       this._dataSource.filter(resultFilter);
     }
     if (isLoading && !this._dataSource.isLoaded()) {
       this.option('items', []);
-      var $wrapper = (0, _renderer.default)('<div>').addClass(LOAD_INDICATOR_WRAPPER_CLASS);
+      const $wrapper = (0, _renderer.default)('<div>').addClass(LOAD_INDICATOR_WRAPPER_CLASS);
       this._createTreeViewLoadIndicator().appendTo($wrapper);
       this.itemsContainer().append($wrapper);
       if (this._isVirtualMode() && this._dataSource.filter() !== resultFilter) {
@@ -395,69 +396,66 @@ var TreeViewBase = _ui.default.inherit({
       this._removeTreeViewLoadIndicator();
     }
   },
-  _initStoreChangeHandlers: function _initStoreChangeHandlers() {
-    var _this2 = this;
+  _initStoreChangeHandlers: function () {
     if (this.option('dataStructure') !== 'plain') {
       return;
     }
-    this._dataSource && this._dataSource.store().on('inserted', function (newItem) {
-      _this2.option().items = _this2.option('items').concat(newItem);
-      _this2._dataAdapter.addItem(newItem);
-      if (!_this2._dataAdapter.isFiltered(newItem)) {
+    this._dataSource && this._dataSource.store().on('inserted', newItem => {
+      this.option().items = this.option('items').concat(newItem);
+      this._dataAdapter.addItem(newItem);
+      if (!this._dataAdapter.isFiltered(newItem)) {
         return;
       }
-      _this2._updateLevel(_this2._parentIdGetter(newItem));
-    }).on('removed', function (removedKey) {
-      var node = _this2._dataAdapter.getNodeByKey(removedKey);
+      this._updateLevel(this._parentIdGetter(newItem));
+    }).on('removed', removedKey => {
+      const node = this._dataAdapter.getNodeByKey(removedKey);
       if ((0, _type.isDefined)(node)) {
-        _this2.option('items')[_this2._dataAdapter.getIndexByKey(node.internalFields.key)] = 0;
-        _this2._markChildrenItemsToRemove(node);
-        _this2._removeItems();
-        _this2._dataAdapter.removeItem(removedKey);
-        _this2._updateLevel(_this2._parentIdGetter(node));
+        this.option('items')[this._dataAdapter.getIndexByKey(node.internalFields.key)] = 0;
+        this._markChildrenItemsToRemove(node);
+        this._removeItems();
+        this._dataAdapter.removeItem(removedKey);
+        this._updateLevel(this._parentIdGetter(node));
       }
     });
   },
-  _markChildrenItemsToRemove: function _markChildrenItemsToRemove(node) {
-    var _this3 = this;
-    var keys = node.internalFields.childrenKeys;
-    (0, _iterator.each)(keys, function (_, key) {
-      _this3.option('items')[_this3._dataAdapter.getIndexByKey(key)] = 0;
-      _this3._markChildrenItemsToRemove(_this3._dataAdapter.getNodeByKey(key));
+  _markChildrenItemsToRemove: function (node) {
+    const keys = node.internalFields.childrenKeys;
+    (0, _iterator.each)(keys, (_, key) => {
+      this.option('items')[this._dataAdapter.getIndexByKey(key)] = 0;
+      this._markChildrenItemsToRemove(this._dataAdapter.getNodeByKey(key));
     });
   },
-  _removeItems: function _removeItems() {
-    var _this4 = this;
-    var items = (0, _extend.extend)(true, [], this.option('items'));
-    var counter = 0;
-    (0, _iterator.each)(items, function (index, item) {
+  _removeItems: function () {
+    const items = (0, _extend.extend)(true, [], this.option('items'));
+    let counter = 0;
+    (0, _iterator.each)(items, (index, item) => {
       if (!item) {
-        _this4.option('items').splice(index - counter, 1);
+        this.option('items').splice(index - counter, 1);
         counter++;
       }
     });
   },
-  _updateLevel: function _updateLevel(parentId) {
-    var $container = this._getContainerByParentKey(parentId);
+  _updateLevel: function (parentId) {
+    const $container = this._getContainerByParentKey(parentId);
     this._renderItems($container, this._dataAdapter.getChildrenNodes(parentId));
   },
-  _getOldContainer: function _getOldContainer($itemElement) {
+  _getOldContainer: function ($itemElement) {
     if ($itemElement.length) {
       return $itemElement.children(".".concat(NODE_CONTAINER_CLASS));
     }
-    var scrollable = this.getScrollable();
+    const scrollable = this.getScrollable();
     if (scrollable) {
       return (0, _renderer.default)(scrollable.content()).children();
     }
     return (0, _renderer.default)();
   },
-  _getContainerByParentKey: function _getContainerByParentKey(parentId) {
-    var node = this._dataAdapter.getNodeByKey(parentId);
-    var $itemElement = node ? this._getNodeElement(node) : [];
+  _getContainerByParentKey: function (parentId) {
+    const node = this._dataAdapter.getNodeByKey(parentId);
+    const $itemElement = node ? this._getNodeElement(node) : [];
     this._getOldContainer($itemElement).remove();
-    var $container = this._renderNodeContainer($itemElement);
+    const $container = this._renderNodeContainer($itemElement);
     if (this._isRootLevel(parentId)) {
-      var scrollable = this.getScrollable();
+      const scrollable = this.getScrollable();
       if (!scrollable) {
         this._renderScrollableContainer();
       }
@@ -465,15 +463,15 @@ var TreeViewBase = _ui.default.inherit({
     }
     return $container;
   },
-  _isRootLevel: function _isRootLevel(parentId) {
+  _isRootLevel: function (parentId) {
     return parentId === this.option('rootValue');
   },
-  _getAccessors: function _getAccessors() {
-    var accessors = this.callBase();
+  _getAccessors: function () {
+    const accessors = this.callBase();
     accessors.push('hasItems');
     return accessors;
   },
-  _getDataAdapterOptions: function _getDataAdapterOptions() {
+  _getDataAdapterOptions: function () {
     var _this$_dataSource, _this$_dataSource$loa, _this$_dataSource$loa2;
     return {
       rootValue: this.option('rootValue'),
@@ -486,14 +484,14 @@ var TreeViewBase = _ui.default.inherit({
       langParams: (_this$_dataSource = this._dataSource) === null || _this$_dataSource === void 0 ? void 0 : (_this$_dataSource$loa = _this$_dataSource.loadOptions) === null || _this$_dataSource$loa === void 0 ? void 0 : (_this$_dataSource$loa2 = _this$_dataSource$loa.call(_this$_dataSource)) === null || _this$_dataSource$loa2 === void 0 ? void 0 : _this$_dataSource$loa2.langParams
     };
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._renderScrollableContainer();
     this._renderEmptyMessage(this._dataAdapter.getRootNodes());
     this.callBase();
     this.setAria('role', 'tree');
   },
-  _renderContentImpl: function _renderContentImpl() {
-    var $nodeContainer = this._renderNodeContainer();
+  _renderContentImpl: function () {
+    const $nodeContainer = this._renderNodeContainer();
     (0, _renderer.default)(this.getScrollable().content()).append($nodeContainer);
     if (!this.option('items') || !this.option('items').length) {
       return;
@@ -505,16 +503,16 @@ var TreeViewBase = _ui.default.inherit({
       this._renderSelectAllItem($nodeContainer);
     }
   },
-  _isVirtualMode: function _isVirtualMode() {
+  _isVirtualMode: function () {
     return this.option('virtualModeEnabled') && this._isDataStructurePlain() && !!this.option('dataSource');
   },
-  _isDataStructurePlain: function _isDataStructurePlain() {
+  _isDataStructurePlain: function () {
     return this.option('dataStructure') === 'plain';
   },
-  _fireContentReadyAction: function _fireContentReadyAction() {
-    var dataSource = this.getDataSource();
-    var skipContentReadyAction = dataSource && !dataSource.isLoaded() || this._skipContentReadyAndItemExpanded;
-    var scrollable = this.getScrollable();
+  _fireContentReadyAction: function () {
+    const dataSource = this.getDataSource();
+    const skipContentReadyAction = dataSource && !dataSource.isLoaded() || this._skipContentReadyAndItemExpanded;
+    const scrollable = this.getScrollable();
     if (scrollable && (0, _window.hasWindow)()) {
       scrollable.update();
     }
@@ -525,18 +523,19 @@ var TreeViewBase = _ui.default.inherit({
       scrollable.update();
     }
   },
-  _renderScrollableContainer: function _renderScrollableContainer() {
+  _renderScrollableContainer: function () {
     this._scrollable = this._createComponent((0, _renderer.default)('<div>').appendTo(this.$element()), _ui2.default, {
       useNative: this.option('useNativeScrolling'),
       direction: this.option('scrollDirection'),
       useKeyboard: false
     });
+    this.setAria('role', 'treeitem', this._scrollable.$element());
   },
-  _renderNodeContainer: function _renderNodeContainer($parent) {
-    var $container = (0, _renderer.default)('<ul>').addClass(NODE_CONTAINER_CLASS);
+  _renderNodeContainer: function ($parent) {
+    const $container = (0, _renderer.default)('<ul>').addClass(NODE_CONTAINER_CLASS);
     this.setAria('role', 'group', $container);
     if ($parent && $parent.length) {
-      var itemData = this._getItemData($parent.children('.' + ITEM_CLASS));
+      const itemData = this._getItemData($parent.children('.' + ITEM_CLASS));
       if (this._expandedGetter(itemData)) {
         $container.addClass(OPENED_NODE_CONTAINER_CLASS);
       }
@@ -544,46 +543,46 @@ var TreeViewBase = _ui.default.inherit({
     }
     return $container;
   },
-  _createDOMElement: function _createDOMElement($nodeContainer, node) {
+  _createDOMElement: function ($nodeContainer, node) {
     var _node$internalFields, _node$internalFields$;
-    var $node = (0, _renderer.default)('<li>').addClass(NODE_CLASS).attr(DATA_ITEM_ID, this._encodeString(node.internalFields.key)).prependTo($nodeContainer);
-    var attrs = {
+    const $node = (0, _renderer.default)('<li>').addClass(NODE_CLASS).attr(DATA_ITEM_ID, this._encodeString(node.internalFields.key)).prependTo($nodeContainer);
+    const attrs = {
       'role': 'treeitem',
       'label': this._displayGetter(node.internalFields.item) || '',
       'level': this._getLevel($nodeContainer)
     };
-    var hasChildNodes = !!(node !== null && node !== void 0 && (_node$internalFields = node.internalFields) !== null && _node$internalFields !== void 0 && (_node$internalFields$ = _node$internalFields.childrenKeys) !== null && _node$internalFields$ !== void 0 && _node$internalFields$.length);
+    const hasChildNodes = !!(node !== null && node !== void 0 && (_node$internalFields = node.internalFields) !== null && _node$internalFields !== void 0 && (_node$internalFields$ = _node$internalFields.childrenKeys) !== null && _node$internalFields$ !== void 0 && _node$internalFields$.length);
     if (hasChildNodes) {
       attrs.expanded = node.internalFields.expanded || false;
     }
     this.setAria(attrs, $node);
     return $node;
   },
-  _getLevel: function _getLevel($nodeContainer) {
-    var parent = $nodeContainer.parent();
+  _getLevel: function ($nodeContainer) {
+    const parent = $nodeContainer.parent();
     return parent.hasClass('dx-scrollable-content') ? 1 : parseInt(parent.attr('aria-level')) + 1;
   },
-  _showCheckboxes: function _showCheckboxes() {
+  _showCheckboxes: function () {
     return this.option('showCheckBoxesMode') !== 'none';
   },
-  _hasCustomExpanderIcons: function _hasCustomExpanderIcons() {
+  _hasCustomExpanderIcons: function () {
     return this.option('expandIcon') || this.option('collapseIcon');
   },
-  _selectAllEnabled: function _selectAllEnabled(showCheckBoxesMode) {
-    var mode = showCheckBoxesMode !== null && showCheckBoxesMode !== void 0 ? showCheckBoxesMode : this.option('showCheckBoxesMode');
+  _selectAllEnabled: function (showCheckBoxesMode) {
+    const mode = showCheckBoxesMode !== null && showCheckBoxesMode !== void 0 ? showCheckBoxesMode : this.option('showCheckBoxesMode');
     return mode === 'selectAll' && !this._isSingleSelection();
   },
-  _renderItems: function _renderItems($nodeContainer, nodes) {
-    var length = nodes.length - 1;
-    for (var i = length; i >= 0; i--) {
+  _renderItems: function ($nodeContainer, nodes) {
+    const length = nodes.length - 1;
+    for (let i = length; i >= 0; i--) {
       this._renderItem(i, nodes[i], $nodeContainer);
     }
     this._renderedItemsCount += nodes.length;
   },
-  _renderItem: function _renderItem(nodeIndex, node, $nodeContainer) {
-    var $node = this._createDOMElement($nodeContainer, node);
-    var nodeData = node.internalFields;
-    var showCheckBox = this._showCheckboxes();
+  _renderItem: function (nodeIndex, node, $nodeContainer) {
+    const $node = this._createDOMElement($nodeContainer, node);
+    const nodeData = node.internalFields;
+    const showCheckBox = this._showCheckboxes();
     $node.addClass(showCheckBox ? ITEM_WITH_CHECKBOX_CLASS : ITEM_WITHOUT_CHECKBOX_CLASS);
     $node.toggleClass(INVISIBLE_STATE_CLASS, nodeData.item.visible === false);
     if (this._hasCustomExpanderIcons()) {
@@ -602,8 +601,7 @@ var TreeViewBase = _ui.default.inherit({
     }
   },
   _setAriaSelectionAttribute: _common.noop,
-  _renderChildren: function _renderChildren($node, node) {
-    var _this5 = this;
+  _renderChildren: function ($node, node) {
     if (!this._hasChildren(node)) {
       this._addLeafClass($node);
       return;
@@ -616,28 +614,27 @@ var TreeViewBase = _ui.default.inherit({
     if (this.option('deferRendering') && !node.internalFields.expanded) {
       return;
     }
-    this._loadSublevel(node).done(function (childNodes) {
-      _this5._renderSublevel($node, _this5._getActualNode(node), childNodes);
+    this._loadSublevel(node).done(childNodes => {
+      this._renderSublevel($node, this._getActualNode(node), childNodes);
     });
   },
-  _getActualNode: function _getActualNode(cachedNode) {
+  _getActualNode: function (cachedNode) {
     return this._dataAdapter.getNodeByKey(cachedNode.internalFields.key);
   },
-  _hasChildren: function _hasChildren(node) {
+  _hasChildren: function (node) {
     if (this._isVirtualMode() || this._useCustomChildrenLoader()) {
       return this._hasItemsGetter(node.internalFields.item) !== false;
     }
     return this.callBase(node);
   },
-  _loadSublevel: function _loadSublevel(node) {
-    var _this6 = this;
-    var deferred = new _deferred.Deferred();
-    var childrenNodes = this._getChildNodes(node);
+  _loadSublevel: function (node) {
+    const deferred = new _deferred.Deferred();
+    const childrenNodes = this._getChildNodes(node);
     if (childrenNodes.length) {
       deferred.resolve(childrenNodes);
     } else {
-      this._loadNestedItems(node).done(function (items) {
-        deferred.resolve(_this6._dataAdapter.getNodesByItems(items));
+      this._loadNestedItems(node).done(items => {
+        deferred.resolve(this._dataAdapter.getNodesByItems(items));
       });
     }
     return deferred.promise();
@@ -645,25 +642,27 @@ var TreeViewBase = _ui.default.inherit({
   _getItemExtraPropNames() {
     return ['url', 'linkAttr'];
   },
-  _addContent: function _addContent($container, itemData) {
-    var html = itemData.html,
-      url = itemData.url;
+  _addContent: function ($container, itemData) {
+    const {
+      html,
+      url
+    } = itemData;
     if (url) {
       $container.html(html);
-      var link = this._getLinkContainer(this._getIconContainer(itemData), this._getTextContainer(itemData), itemData);
+      const link = this._getLinkContainer(this._getIconContainer(itemData), this._getTextContainer(itemData), itemData);
       $container.append(link);
     } else {
       this.callBase($container, itemData);
     }
   },
-  _renderSublevel: function _renderSublevel($node, node, childNodes) {
-    var $nestedNodeContainer = this._renderNodeContainer($node, node);
-    var childNodesByChildrenKeys = childNodes.filter(function (childNode) {
+  _renderSublevel: function ($node, node, childNodes) {
+    const $nestedNodeContainer = this._renderNodeContainer($node, node);
+    const childNodesByChildrenKeys = childNodes.filter(childNode => {
       return node.internalFields.childrenKeys.indexOf(childNode.internalFields.key) !== -1;
     });
     this._renderItems($nestedNodeContainer, childNodesByChildrenKeys);
     if (childNodesByChildrenKeys.length && !node.internalFields.selected) {
-      var firstChild = childNodesByChildrenKeys[0];
+      const firstChild = childNodesByChildrenKeys[0];
       this._updateParentsState(firstChild, this._getNodeElement(firstChild));
     }
     this._normalizeIconState($node, childNodesByChildrenKeys.length);
@@ -671,8 +670,8 @@ var TreeViewBase = _ui.default.inherit({
       $nestedNodeContainer.addClass(OPENED_NODE_CONTAINER_CLASS);
     }
   },
-  _executeItemRenderAction: function _executeItemRenderAction(itemIndex, itemData, itemElement) {
-    var node = this._getNode(itemElement);
+  _executeItemRenderAction: function (itemIndex, itemData, itemElement) {
+    const node = this._getNode(itemElement);
     this._getItemRenderAction()({
       itemElement: itemElement,
       itemIndex: itemIndex,
@@ -680,29 +679,29 @@ var TreeViewBase = _ui.default.inherit({
       node: this._dataAdapter.getPublicNode(node)
     });
   },
-  _addLeafClass: function _addLeafClass($node) {
+  _addLeafClass: function ($node) {
     $node.addClass(IS_LEAF);
   },
-  _expandEventHandler: function _expandEventHandler(e) {
-    var $nodeElement = (0, _renderer.default)(e.currentTarget.parentNode);
+  _expandEventHandler: function (e) {
+    const $nodeElement = (0, _renderer.default)(e.currentTarget.parentNode);
     if (!$nodeElement.hasClass(IS_LEAF)) {
       this._toggleExpandedState(e.currentTarget, undefined, e);
     }
   },
-  _attachExpandEvent: function _attachExpandEvent() {
-    var expandedEventName = this._getEventNameByOption(this.option('expandEvent'));
-    var $itemsContainer = this._itemContainer();
+  _attachExpandEvent: function () {
+    const expandedEventName = this._getEventNameByOption(this.option('expandEvent'));
+    const $itemsContainer = this._itemContainer();
     this._detachExpandEvent($itemsContainer);
     _events_engine.default.on($itemsContainer, expandedEventName, this._itemSelector(), this._expandEventHandler.bind(this));
   },
   _detachExpandEvent(itemsContainer) {
     _events_engine.default.off(itemsContainer, ".".concat(EXPAND_EVENT_NAMESPACE), this._itemSelector());
   },
-  _getEventNameByOption: function _getEventNameByOption(name) {
-    var event = name === 'click' ? _click.name : _double_click.name;
+  _getEventNameByOption: function (name) {
+    const event = name === 'click' ? _click.name : _double_click.name;
     return (0, _index.addNamespace)(event, EXPAND_EVENT_NAMESPACE);
   },
-  _getNode: function _getNode(identifier) {
+  _getNode: function (identifier) {
     if (!(0, _type.isDefined)(identifier)) {
       return null;
     }
@@ -712,7 +711,7 @@ var TreeViewBase = _ui.default.inherit({
     if ((0, _type.isPrimitive)(identifier)) {
       return this._dataAdapter.getNodeByKey(identifier);
     }
-    var itemElement = (0, _renderer.default)(identifier).get(0);
+    const itemElement = (0, _renderer.default)(identifier).get(0);
     if (!itemElement) {
       return null;
     }
@@ -721,25 +720,25 @@ var TreeViewBase = _ui.default.inherit({
     }
     return this._dataAdapter.getNodeByItem(itemElement);
   },
-  _getNodeByElement: function _getNodeByElement(itemElement) {
-    var $node = (0, _renderer.default)(itemElement).closest('.' + NODE_CLASS);
-    var key = this._decodeString($node.attr(DATA_ITEM_ID));
+  _getNodeByElement: function (itemElement) {
+    const $node = (0, _renderer.default)(itemElement).closest('.' + NODE_CLASS);
+    const key = this._decodeString($node.attr(DATA_ITEM_ID));
     return this._dataAdapter.getNodeByKey(key);
   },
-  _toggleExpandedState: function _toggleExpandedState(itemElement, state, e) {
-    var node = this._getNode(itemElement);
+  _toggleExpandedState: function (itemElement, state, e) {
+    const node = this._getNode(itemElement);
     if (!node) {
       return new _deferred.Deferred().reject().promise();
     }
     if (node.internalFields.disabled) {
       return new _deferred.Deferred().reject().promise();
     }
-    var currentState = node.internalFields.expanded;
+    const currentState = node.internalFields.expanded;
     if (currentState === state) {
       return new _deferred.Deferred().resolve().promise();
     }
     if (this._hasChildren(node)) {
-      var $node = this._getNodeElement(node);
+      const $node = this._getNodeElement(node);
       if ($node.find(".".concat(NODE_LOAD_INDICATOR_CLASS, ":not(.").concat(INVISIBLE_STATE_CLASS, ")")).length) {
         return new _deferred.Deferred().reject().promise();
       }
@@ -754,15 +753,15 @@ var TreeViewBase = _ui.default.inherit({
     return this._updateExpandedItemsUI(node, state, e);
   },
   _nodeHasRenderedChildren($node) {
-    var $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
+    const $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
     return $nodeContainer.not(':empty').length;
   },
-  _createLoadIndicator: function _createLoadIndicator($node) {
+  _createLoadIndicator: function ($node) {
     this._createComponent((0, _renderer.default)('<div>').addClass(NODE_LOAD_INDICATOR_CLASS), _load_indicator.default, {}).$element().appendTo($node);
-    var $icon = $node.children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS, ",.").concat(CUSTOM_EXPAND_ICON_CLASS));
+    const $icon = $node.children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS, ",.").concat(CUSTOM_EXPAND_ICON_CLASS));
     $icon.hide();
   },
-  _renderExpanderIcon: function _renderExpanderIcon($node, node, $icon, iconClass) {
+  _renderExpanderIcon: function ($node, node, $icon, iconClass) {
     $icon.appendTo($node);
     $icon.addClass(iconClass);
     if (node.internalFields.disabled) {
@@ -770,8 +769,8 @@ var TreeViewBase = _ui.default.inherit({
     }
     this._renderToggleItemVisibilityIconClick($icon, node);
   },
-  _renderDefaultExpanderIcons: function _renderDefaultExpanderIcons($node, node) {
-    var $icon = (0, _renderer.default)('<div>').addClass(TOGGLE_ITEM_VISIBILITY_CLASS).appendTo($node);
+  _renderDefaultExpanderIcons: function ($node, node) {
+    const $icon = (0, _renderer.default)('<div>').addClass(TOGGLE_ITEM_VISIBILITY_CLASS).appendTo($node);
     if (node.internalFields.expanded) {
       $icon.addClass(TOGGLE_ITEM_VISIBILITY_OPENED_CLASS);
       $node.parent().addClass(OPENED_NODE_CONTAINER_CLASS);
@@ -781,52 +780,52 @@ var TreeViewBase = _ui.default.inherit({
     }
     this._renderToggleItemVisibilityIconClick($icon, node);
   },
-  _renderCustomExpanderIcons: function _renderCustomExpanderIcons($node, node) {
-    var _this$option = this.option(),
-      expandIcon = _this$option.expandIcon,
-      collapseIcon = _this$option.collapseIcon;
-    var $expandIcon = (0, _icon.getImageContainer)(expandIcon !== null && expandIcon !== void 0 ? expandIcon : collapseIcon);
-    var $collapseIcon = (0, _icon.getImageContainer)(collapseIcon !== null && collapseIcon !== void 0 ? collapseIcon : expandIcon);
+  _renderCustomExpanderIcons: function ($node, node) {
+    const {
+      expandIcon,
+      collapseIcon
+    } = this.option();
+    const $expandIcon = (0, _icon.getImageContainer)(expandIcon !== null && expandIcon !== void 0 ? expandIcon : collapseIcon);
+    const $collapseIcon = (0, _icon.getImageContainer)(collapseIcon !== null && collapseIcon !== void 0 ? collapseIcon : expandIcon);
     this._renderExpanderIcon($node, node, $expandIcon, CUSTOM_EXPAND_ICON_CLASS);
     this._renderExpanderIcon($node, node, $collapseIcon, CUSTOM_COLLAPSE_ICON_CLASS);
-    var isNodeExpanded = node.internalFields.expanded;
+    const isNodeExpanded = node.internalFields.expanded;
     if (isNodeExpanded) {
       $node.parent().addClass(OPENED_NODE_CONTAINER_CLASS);
     }
     this._toggleCustomExpanderIcons($expandIcon, $collapseIcon, isNodeExpanded);
   },
-  _renderToggleItemVisibilityIconClick: function _renderToggleItemVisibilityIconClick($icon, node) {
-    var _this7 = this;
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+  _renderToggleItemVisibilityIconClick: function ($icon, node) {
+    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
     _events_engine.default.off($icon, eventName);
-    _events_engine.default.on($icon, eventName, function (e) {
-      _this7._toggleExpandedState(node.internalFields.key, undefined, e);
+    _events_engine.default.on($icon, eventName, e => {
+      this._toggleExpandedState(node.internalFields.key, undefined, e);
     });
   },
-  _toggleCustomExpanderIcons: function _toggleCustomExpanderIcons($expandIcon, $collapseIcon, isNodeExpanded) {
+  _toggleCustomExpanderIcons: function ($expandIcon, $collapseIcon, isNodeExpanded) {
     $collapseIcon.toggle(isNodeExpanded);
     $expandIcon.toggle(!isNodeExpanded);
   },
-  _updateExpandedItemsUI: function _updateExpandedItemsUI(node, state, e) {
-    var $node = this._getNodeElement(node);
-    var isHiddenNode = !$node.length || state && $node.is(':hidden');
+  _updateExpandedItemsUI: function (node, state, e) {
+    const $node = this._getNodeElement(node);
+    const isHiddenNode = !$node.length || state && $node.is(':hidden');
     if (this.option('expandNodesRecursive') && isHiddenNode) {
-      var parentNode = this._getNode(node.internalFields.parentKey);
+      const parentNode = this._getNode(node.internalFields.parentKey);
       if (parentNode) {
         this._updateExpandedItemsUI(parentNode, state, e);
       }
     }
     if (!this._hasCustomExpanderIcons()) {
-      var $icon = $node.children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS));
+      const $icon = $node.children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS));
       $icon.toggleClass(TOGGLE_ITEM_VISIBILITY_OPENED_CLASS, state);
     } else if (this._nodeHasRenderedChildren($node)) {
-      var $childExpandIcons = $node.children(".".concat(CUSTOM_EXPAND_ICON_CLASS));
-      var $childCollapseIcons = $node.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS));
+      const $childExpandIcons = $node.children(".".concat(CUSTOM_EXPAND_ICON_CLASS));
+      const $childCollapseIcons = $node.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS));
       this._toggleCustomExpanderIcons($childExpandIcons, $childCollapseIcons, state);
     }
-    var $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
-    var nodeContainerExists = $nodeContainer.length > 0;
-    var completionCallback = new _deferred.Deferred();
+    const $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
+    const nodeContainerExists = $nodeContainer.length > 0;
+    const completionCallback = new _deferred.Deferred();
     if (!state || nodeContainerExists && !$nodeContainer.is(':empty')) {
       this._animateNodeContainer(node, state, e, completionCallback);
       return completionCallback.promise();
@@ -840,27 +839,25 @@ var TreeViewBase = _ui.default.inherit({
     this._animateNodeContainer(node, state, e, completionCallback);
     return completionCallback.promise();
   },
-  _loadNestedItemsWithUpdate: function _loadNestedItemsWithUpdate(node, state, e, completionCallback) {
-    var _this8 = this;
-    var $node = this._getNodeElement(node);
-    this._loadNestedItems(node).done(function (items) {
-      var actualNodeData = _this8._getActualNode(node);
-      _this8._renderSublevel($node, actualNodeData, _this8._dataAdapter.getNodesByItems(items));
+  _loadNestedItemsWithUpdate: function (node, state, e, completionCallback) {
+    const $node = this._getNodeElement(node);
+    this._loadNestedItems(node).done(items => {
+      const actualNodeData = this._getActualNode(node);
+      this._renderSublevel($node, actualNodeData, this._dataAdapter.getNodesByItems(items));
       if (!items || !items.length) {
         completionCallback.resolve();
         return;
       }
-      _this8._fireContentReadyAction();
-      _this8._animateNodeContainer(actualNodeData, state, e, completionCallback);
+      this._fireContentReadyAction();
+      this._animateNodeContainer(actualNodeData, state, e, completionCallback);
     });
   },
-  _loadNestedItems: function _loadNestedItems(node) {
-    var _this9 = this;
+  _loadNestedItems: function (node) {
     if (this._useCustomChildrenLoader()) {
-      var publicNode = this._dataAdapter.getPublicNode(node);
-      return this._loadChildrenByCustomLoader(publicNode).done(function (newItems) {
-        if (!_this9._areNodesExists(newItems)) {
-          _this9._appendItems(newItems);
+      const publicNode = this._dataAdapter.getPublicNode(node);
+      return this._loadChildrenByCustomLoader(publicNode).done(newItems => {
+        if (!this._areNodesExists(newItems)) {
+          this._appendItems(newItems);
         }
       });
     }
@@ -869,31 +866,31 @@ var TreeViewBase = _ui.default.inherit({
     }
     this._filter.internal = [this.option('parentIdExpr'), node.internalFields.key];
     this._dataSource.filter(this._combineFilter());
-    return this._dataSource.load().done(function (newItems) {
-      if (!_this9._areNodesExists(newItems)) {
-        _this9._appendItems(newItems);
+    return this._dataSource.load().done(newItems => {
+      if (!this._areNodesExists(newItems)) {
+        this._appendItems(newItems);
       }
     });
   },
-  _areNodesExists: function _areNodesExists(newItems, items) {
-    var keyOfRootItem = this.keyOf(newItems[0]);
-    var fullData = this._dataAdapter.getFullData();
+  _areNodesExists: function (newItems, items) {
+    const keyOfRootItem = this.keyOf(newItems[0]);
+    const fullData = this._dataAdapter.getFullData();
     return !!this._dataAdapter.getNodeByKey(keyOfRootItem, fullData);
   },
-  _appendItems: function _appendItems(newItems) {
+  _appendItems: function (newItems) {
     this.option().items = this.option('items').concat(newItems);
     this._initDataAdapter();
   },
-  _animateNodeContainer: function _animateNodeContainer(node, state, e, completionCallback) {
-    var $node = this._getNodeElement(node);
-    var $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
+  _animateNodeContainer: function (node, state, e, completionCallback) {
+    const $node = this._getNodeElement(node);
+    const $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
     if (node && completionCallback && $nodeContainer.length === 0) {
       completionCallback.resolve();
     }
 
     // NOTE: The height of node container is should be used when the container is shown (T606878)
     $nodeContainer.addClass(OPENED_NODE_CONTAINER_CLASS);
-    var nodeHeight = (0, _size.getHeight)($nodeContainer);
+    const nodeHeight = (0, _size.getHeight)($nodeContainer);
     _fx.default.stop($nodeContainer, true);
     _fx.default.animate($nodeContainer, {
       type: 'custom',
@@ -916,30 +913,30 @@ var TreeViewBase = _ui.default.inherit({
       }.bind(this)
     });
   },
-  _fireExpandedStateUpdatedEvent: function _fireExpandedStateUpdatedEvent(isExpanded, node, e) {
+  _fireExpandedStateUpdatedEvent: function (isExpanded, node, e) {
     if (!this._hasChildren(node) || this._skipContentReadyAndItemExpanded) {
       return;
     }
-    var optionName = isExpanded ? 'onItemExpanded' : 'onItemCollapsed';
+    const optionName = isExpanded ? 'onItemExpanded' : 'onItemCollapsed';
     if ((0, _type.isDefined)(e)) {
       this._itemDXEventHandler(e, optionName, {
         node: this._dataAdapter.getPublicNode(node)
       });
     } else {
-      var target = this._getNodeElement(node);
+      const target = this._getNodeElement(node);
       this._itemEventHandler(target, optionName, {
         event: e,
         node: this._dataAdapter.getPublicNode(node)
       });
     }
   },
-  _normalizeIconState: function _normalizeIconState($node, hasNewItems) {
-    var $loadIndicator = $node.find(".".concat(NODE_LOAD_INDICATOR_CLASS));
+  _normalizeIconState: function ($node, hasNewItems) {
+    const $loadIndicator = $node.find(".".concat(NODE_LOAD_INDICATOR_CLASS));
     if ($loadIndicator.length) {
       var _LoadIndicator$getIns;
       (_LoadIndicator$getIns = _load_indicator.default.getInstance($loadIndicator)) === null || _LoadIndicator$getIns === void 0 ? void 0 : _LoadIndicator$getIns.option('visible', false);
     }
-    var $toggleItem = $node.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS, ",.").concat(TOGGLE_ITEM_VISIBILITY_CLASS));
+    const $toggleItem = $node.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS, ",.").concat(TOGGLE_ITEM_VISIBILITY_CLASS));
     if (hasNewItems) {
       $toggleItem.show();
       return;
@@ -947,21 +944,21 @@ var TreeViewBase = _ui.default.inherit({
     $toggleItem.removeClass(TOGGLE_ITEM_VISIBILITY_CLASS);
     $node.addClass(IS_LEAF);
   },
-  _emptyMessageContainer: function _emptyMessageContainer() {
-    var scrollable = this.getScrollable();
+  _emptyMessageContainer: function () {
+    const scrollable = this.getScrollable();
     return scrollable ? (0, _renderer.default)(scrollable.content()) : this.callBase();
   },
-  _renderContent: function _renderContent() {
-    var items = this.option('items');
+  _renderContent: function () {
+    const items = this.option('items');
     if (items && items.length) {
       this._contentAlreadyRendered = true;
     }
     this.callBase();
   },
-  _renderSelectAllItem: function _renderSelectAllItem($container) {
+  _renderSelectAllItem: function ($container) {
     $container = $container || this.$element().find(".".concat(NODE_CONTAINER_CLASS)).first();
     this._$selectAllItem = (0, _renderer.default)('<div>').addClass(SELECT_ALL_ITEM_CLASS);
-    var value = this._dataAdapter.isAllSelected();
+    const value = this._dataAdapter.isAllSelected();
     this._createComponent(this._$selectAllItem, _check_box.default, {
       value: value,
       elementAttr: {
@@ -973,17 +970,17 @@ var TreeViewBase = _ui.default.inherit({
     this._toggleSelectedClass(this._$selectAllItem, value);
     $container.before(this._$selectAllItem);
   },
-  _onSelectAllCheckboxValueChanged: function _onSelectAllCheckboxValueChanged(args) {
+  _onSelectAllCheckboxValueChanged: function (args) {
     this._toggleSelectAll(args);
     this._fireSelectAllValueChanged(args.value);
   },
-  _toggleSelectAll: function _toggleSelectAll(args) {
+  _toggleSelectAll: function (args) {
     this._dataAdapter.toggleSelectAll(args.value);
     this._updateItemsUI();
     this._fireSelectionChanged();
   },
-  _renderCheckBox: function _renderCheckBox($node, node) {
-    var $checkbox = (0, _renderer.default)('<div>').appendTo($node);
+  _renderCheckBox: function ($node, node) {
+    const $checkbox = (0, _renderer.default)('<div>').appendTo($node);
     this._createComponent($checkbox, _check_box.default, {
       value: node.internalFields.selected,
       onValueChanged: this._changeCheckboxValue.bind(this),
@@ -994,44 +991,44 @@ var TreeViewBase = _ui.default.inherit({
       disabled: this._disabledGetter(node)
     });
   },
-  _toggleSelectedClass: function _toggleSelectedClass($node, value) {
+  _toggleSelectedClass: function ($node, value) {
     $node.toggleClass(SELECTED_ITEM_CLASS, !!value);
   },
-  _toggleNodeDisabledState: function _toggleNodeDisabledState(node, state) {
-    var $node = this._getNodeElement(node);
-    var $item = $node.find('.' + ITEM_CLASS).eq(0);
+  _toggleNodeDisabledState: function (node, state) {
+    const $node = this._getNodeElement(node);
+    const $item = $node.find('.' + ITEM_CLASS).eq(0);
     this._dataAdapter.toggleNodeDisabledState(node.internalFields.key, state);
     $item.toggleClass(DISABLED_STATE_CLASS, !!state);
     if (this._showCheckboxes()) {
-      var checkbox = this._getCheckBoxInstance($node);
+      const checkbox = this._getCheckBoxInstance($node);
       checkbox.option('disabled', !!state);
     }
   },
-  _itemOptionChanged: function _itemOptionChanged(item, property, value) {
-    var node = this._dataAdapter.getNodeByItem(item);
+  _itemOptionChanged: function (item, property, value) {
+    const node = this._dataAdapter.getNodeByItem(item);
     if (property === this.option('disabledExpr')) {
       this._toggleNodeDisabledState(node, value);
     }
   },
-  _changeCheckboxValue: function _changeCheckboxValue(e) {
-    var $node = (0, _renderer.default)(e.element).parent('.' + NODE_CLASS);
-    var $item = $node.children('.' + ITEM_CLASS);
-    var item = this._getItemData($item);
-    var node = this._getNodeByElement($item);
-    var value = e.value;
+  _changeCheckboxValue: function (e) {
+    const $node = (0, _renderer.default)(e.element).parent('.' + NODE_CLASS);
+    const $item = $node.children('.' + ITEM_CLASS);
+    const item = this._getItemData($item);
+    const node = this._getNodeByElement($item);
+    const value = e.value;
     if (node && node.internalFields.selected === value) {
       return;
     }
     this._updateItemSelection(value, item, e.event);
   },
-  _isSingleSelection: function _isSingleSelection() {
+  _isSingleSelection: function () {
     return this.option('selectionMode') === 'single';
   },
-  _isRecursiveSelection: function _isRecursiveSelection() {
+  _isRecursiveSelection: function () {
     return this.option('selectNodesRecursive') && this.option('selectionMode') !== 'single';
   },
-  _isLastSelectedBranch: function _isLastSelectedBranch(publicNode, selectedNodesKeys, deep) {
-    var keyIndex = selectedNodesKeys.indexOf(publicNode.key);
+  _isLastSelectedBranch: function (publicNode, selectedNodesKeys, deep) {
+    const keyIndex = selectedNodesKeys.indexOf(publicNode.key);
     if (keyIndex >= 0) {
       selectedNodesKeys.splice(keyIndex, 1);
     }
@@ -1045,10 +1042,10 @@ var TreeViewBase = _ui.default.inherit({
     }
     return selectedNodesKeys.length === 0;
   },
-  _isLastRequired: function _isLastRequired(node) {
-    var selectionRequired = this.option('selectionRequired');
-    var isSingleMode = this._isSingleSelection();
-    var selectedNodesKeys = this.getSelectedNodeKeys();
+  _isLastRequired: function (node) {
+    const selectionRequired = this.option('selectionRequired');
+    const isSingleMode = this._isSingleSelection();
+    const selectedNodesKeys = this.getSelectedNodeKeys();
     if (!selectionRequired) {
       return;
     }
@@ -1058,9 +1055,8 @@ var TreeViewBase = _ui.default.inherit({
       return this._isLastSelectedBranch(node.internalFields.publicNode, selectedNodesKeys.slice(), true);
     }
   },
-  _updateItemSelection: function _updateItemSelection(value, itemElement, dxEvent) {
-    var _this10 = this;
-    var node = this._getNode(itemElement);
+  _updateItemSelection: function (value, itemElement, dxEvent) {
+    const node = this._getNode(itemElement);
     if (!node || node.visible === false) {
       return false;
     }
@@ -1069,22 +1065,22 @@ var TreeViewBase = _ui.default.inherit({
     }
     if (!value && this._isLastRequired(node)) {
       if (this._showCheckboxes()) {
-        var $node = this._getNodeElement(node);
+        const $node = this._getNodeElement(node);
         this._getCheckBoxInstance($node).option('value', true);
       }
       return false;
     }
     if (value && this._isSingleSelection()) {
-      var selectedKeys = this.getSelectedNodeKeys();
-      (0, _iterator.each)(selectedKeys, function (index, key) {
-        _this10._dataAdapter.toggleSelection(key, false);
-        _this10._updateItemsUI();
-        _this10._fireItemSelectionChanged(_this10._getNode(key));
+      const selectedKeys = this.getSelectedNodeKeys();
+      (0, _iterator.each)(selectedKeys, (index, key) => {
+        this._dataAdapter.toggleSelection(key, false);
+        this._updateItemsUI();
+        this._fireItemSelectionChanged(this._getNode(key));
       });
     }
     this._dataAdapter.toggleSelection(node.internalFields.key, value);
-    var isAllSelected = this._dataAdapter.isAllSelected();
-    var needFireSelectAllChanged = this._selectAllEnabled() && this._$selectAllItem.dxCheckBox('instance').option('value') !== isAllSelected;
+    const isAllSelected = this._dataAdapter.isAllSelected();
+    const needFireSelectAllChanged = this._selectAllEnabled() && this._$selectAllItem.dxCheckBox('instance').option('value') !== isAllSelected;
     this._updateItemsUI();
     this._fireItemSelectionChanged(node, dxEvent);
     this._fireSelectionChanged();
@@ -1093,47 +1089,46 @@ var TreeViewBase = _ui.default.inherit({
     }
     return true;
   },
-  _fireItemSelectionChanged: function _fireItemSelectionChanged(node, dxEvent) {
-    var initiator = dxEvent || this._findItemElementByItem(node.internalFields.item);
-    var handler = dxEvent ? this._itemDXEventHandler : this._itemEventHandler;
+  _fireItemSelectionChanged: function (node, dxEvent) {
+    const initiator = dxEvent || this._findItemElementByItem(node.internalFields.item);
+    const handler = dxEvent ? this._itemDXEventHandler : this._itemEventHandler;
     handler.call(this, initiator, 'onItemSelectionChanged', {
       node: this._dataAdapter.getPublicNode(node),
       itemData: node.internalFields.item
     });
   },
-  _getCheckBoxInstance: function _getCheckBoxInstance($node) {
+  _getCheckBoxInstance: function ($node) {
     return $node.children('.dx-checkbox').dxCheckBox('instance');
   },
-  _updateItemsUI: function _updateItemsUI() {
-    var _this11 = this;
-    var cache = {};
-    (0, _iterator.each)(this._dataAdapter.getData(), function (_, node) {
-      var $node = _this11._getNodeElement(node, cache);
-      var nodeSelection = node.internalFields.selected;
+  _updateItemsUI: function () {
+    const cache = {};
+    (0, _iterator.each)(this._dataAdapter.getData(), (_, node) => {
+      const $node = this._getNodeElement(node, cache);
+      const nodeSelection = node.internalFields.selected;
       if (!$node.length) {
         return;
       }
-      _this11._toggleSelectedClass($node, nodeSelection);
-      _this11.setAria('selected', nodeSelection, $node);
-      if (_this11._showCheckboxes()) {
-        _this11._getCheckBoxInstance($node).option('value', nodeSelection);
+      this._toggleSelectedClass($node, nodeSelection);
+      this.setAria('selected', nodeSelection, $node);
+      if (this._showCheckboxes()) {
+        this._getCheckBoxInstance($node).option('value', nodeSelection);
       }
     });
     if (this._selectAllEnabled()) {
-      var selectAllCheckbox = this._$selectAllItem.dxCheckBox('instance');
+      const selectAllCheckbox = this._$selectAllItem.dxCheckBox('instance');
       selectAllCheckbox.option('onValueChanged', undefined);
       selectAllCheckbox.option('value', this._dataAdapter.isAllSelected());
       selectAllCheckbox.option('onValueChanged', this._onSelectAllCheckboxValueChanged.bind(this));
     }
   },
-  _updateParentsState: function _updateParentsState(node, $node) {
+  _updateParentsState: function (node, $node) {
     if (!$node) {
       return;
     }
-    var parentNode = this._dataAdapter.getNodeByKey(node.internalFields.parentKey);
-    var $parentNode = (0, _renderer.default)($node.parents('.' + NODE_CLASS)[0]);
+    const parentNode = this._dataAdapter.getNodeByKey(node.internalFields.parentKey);
+    const $parentNode = (0, _renderer.default)($node.parents('.' + NODE_CLASS)[0]);
     if (this._showCheckboxes()) {
-      var parentValue = parentNode.internalFields.selected;
+      const parentValue = parentNode.internalFields.selected;
       this._getCheckBoxInstance($parentNode).option('value', parentValue);
       this._toggleSelectedClass($parentNode, parentValue);
     }
@@ -1141,58 +1136,59 @@ var TreeViewBase = _ui.default.inherit({
       this._updateParentsState(parentNode, $parentNode);
     }
   },
-  _itemEventHandlerImpl: function _itemEventHandlerImpl(initiator, action, actionArgs) {
-    var $itemElement = (0, _renderer.default)(initiator).closest('.' + NODE_CLASS).children('.' + ITEM_CLASS);
+  _itemEventHandlerImpl: function (initiator, action, actionArgs) {
+    const $itemElement = (0, _renderer.default)(initiator).closest('.' + NODE_CLASS).children('.' + ITEM_CLASS);
     return action((0, _extend.extend)(this._extendActionArgs($itemElement), actionArgs));
   },
-  _itemContextMenuHandler: function _itemContextMenuHandler(e) {
+  _itemContextMenuHandler: function (e) {
     this._createEventHandler('onItemContextMenu', e);
   },
-  _itemHoldHandler: function _itemHoldHandler(e) {
+  _itemHoldHandler: function (e) {
     this._createEventHandler('onItemHold', e);
   },
-  _createEventHandler: function _createEventHandler(eventName, e) {
-    var node = this._getNodeByElement(e.currentTarget);
+  _createEventHandler: function (eventName, e) {
+    const node = this._getNodeByElement(e.currentTarget);
     this._itemDXEventHandler(e, eventName, {
       node: this._dataAdapter.getPublicNode(node)
     });
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return ITEM_DATA_KEY;
   },
-  _attachClickEvent: function _attachClickEvent() {
-    var _this12 = this;
-    var $itemContainer = this._itemContainer();
+  _attachClickEvent: function () {
+    const $itemContainer = this._itemContainer();
     this._detachClickEvent($itemContainer);
-    var _this$_getItemClickEv = this._getItemClickEventData(),
-      clickEventNamespace = _this$_getItemClickEv.clickEventNamespace,
-      itemSelector = _this$_getItemClickEv.itemSelector,
-      pointerDownEventNamespace = _this$_getItemClickEv.pointerDownEventNamespace,
-      nodeSelector = _this$_getItemClickEv.nodeSelector;
-    _events_engine.default.on($itemContainer, clickEventNamespace, itemSelector, function (e) {
-      _this12._itemClickHandler(e, (0, _renderer.default)(e.currentTarget));
+    const {
+      clickEventNamespace,
+      itemSelector,
+      pointerDownEventNamespace,
+      nodeSelector
+    } = this._getItemClickEventData();
+    _events_engine.default.on($itemContainer, clickEventNamespace, itemSelector, e => {
+      this._itemClickHandler(e, (0, _renderer.default)(e.currentTarget));
     });
-    _events_engine.default.on($itemContainer, pointerDownEventNamespace, nodeSelector, function (e) {
-      _this12._itemPointerDownHandler(e);
+    _events_engine.default.on($itemContainer, pointerDownEventNamespace, nodeSelector, e => {
+      this._itemPointerDownHandler(e);
     });
   },
-  _detachClickEvent: function _detachClickEvent(itemsContainer) {
-    var _this$_getItemClickEv2 = this._getItemClickEventData(),
-      clickEventNamespace = _this$_getItemClickEv2.clickEventNamespace,
-      itemSelector = _this$_getItemClickEv2.itemSelector,
-      pointerDownEventNamespace = _this$_getItemClickEv2.pointerDownEventNamespace,
-      nodeSelector = _this$_getItemClickEv2.nodeSelector;
+  _detachClickEvent: function (itemsContainer) {
+    const {
+      clickEventNamespace,
+      itemSelector,
+      pointerDownEventNamespace,
+      nodeSelector
+    } = this._getItemClickEventData();
     _events_engine.default.off(itemsContainer, clickEventNamespace, itemSelector);
     _events_engine.default.off(itemsContainer, pointerDownEventNamespace, nodeSelector);
   },
-  _getItemClickEventData: function _getItemClickEventData() {
-    var itemSelector = ".".concat(this._itemClass());
-    var nodeSelector = ".".concat(NODE_CLASS, ", .").concat(SELECT_ALL_ITEM_CLASS);
-    var clickEventNamespace = (0, _index.addNamespace)(_click.name, this.NAME);
-    var pointerDownEventNamespace = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
+  _getItemClickEventData: function () {
+    const itemSelector = ".".concat(this._itemClass());
+    const nodeSelector = ".".concat(NODE_CLASS, ", .").concat(SELECT_ALL_ITEM_CLASS);
+    const clickEventNamespace = (0, _index.addNamespace)(_click.name, this.NAME);
+    const pointerDownEventNamespace = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
     return {
       clickEventNamespace,
       itemSelector,
@@ -1200,17 +1196,17 @@ var TreeViewBase = _ui.default.inherit({
       nodeSelector
     };
   },
-  _itemClick: function _itemClick(actionArgs) {
-    var args = actionArgs.args[0];
-    var target = args.event.target[0] || args.event.target;
-    var link = target.getElementsByClassName(ITEM_URL_CLASS)[0];
+  _itemClick: function (actionArgs) {
+    const args = actionArgs.args[0];
+    const target = args.event.target[0] || args.event.target;
+    const link = target.getElementsByClassName(ITEM_URL_CLASS)[0];
     if (args.itemData.url && link) {
       link.click();
     }
   },
-  _itemClickHandler: function _itemClickHandler(e, $item) {
-    var itemData = this._getItemData($item);
-    var node = this._getNodeByElement($item);
+  _itemClickHandler: function (e, $item) {
+    const itemData = this._getItemData($item);
+    const node = this._getNodeByElement($item);
     this._itemDXEventHandler(e, 'onItemClick', {
       node: this._dataAdapter.getPublicNode(node)
     }, {
@@ -1220,81 +1216,80 @@ var TreeViewBase = _ui.default.inherit({
       this._updateItemSelection(!node.internalFields.selected, itemData, e);
     }
   },
-  _updateSelectionToFirstItem: function _updateSelectionToFirstItem($items, startIndex) {
-    var itemIndex = startIndex;
+  _updateSelectionToFirstItem: function ($items, startIndex) {
+    let itemIndex = startIndex;
     while (itemIndex >= 0) {
-      var $item = (0, _renderer.default)($items[itemIndex]);
+      const $item = (0, _renderer.default)($items[itemIndex]);
       this._updateItemSelection(true, $item.find('.' + ITEM_CLASS).get(0));
       itemIndex--;
     }
   },
-  _updateSelectionToLastItem: function _updateSelectionToLastItem($items, startIndex) {
-    var length = $items.length;
-    var itemIndex = startIndex;
+  _updateSelectionToLastItem: function ($items, startIndex) {
+    const length = $items.length;
+    let itemIndex = startIndex;
     while (itemIndex < length) {
-      var $item = (0, _renderer.default)($items[itemIndex]);
+      const $item = (0, _renderer.default)($items[itemIndex]);
       this._updateItemSelection(true, $item.find('.' + ITEM_CLASS).get(0));
       itemIndex++;
     }
   },
-  focus: function focus() {
+  focus: function () {
     if (this._selectAllEnabled()) {
       _events_engine.default.trigger(this._$selectAllItem, 'focus');
       return;
     }
     this.callBase();
   },
-  _focusInHandler: function _focusInHandler(e) {
-    var _this13 = this;
+  _focusInHandler: function (e) {
     this._updateFocusState(e, true);
-    var isSelectAllItem = (0, _renderer.default)(e.target).hasClass(SELECT_ALL_ITEM_CLASS);
+    const isSelectAllItem = (0, _renderer.default)(e.target).hasClass(SELECT_ALL_ITEM_CLASS);
     if (isSelectAllItem || this.option('focusedElement')) {
       clearTimeout(this._setFocusedItemTimeout);
-      this._setFocusedItemTimeout = setTimeout(function () {
-        var element = isSelectAllItem ? (0, _element.getPublicElement)(_this13._$selectAllItem) : (0, _renderer.default)(_this13.option('focusedElement'));
-        _this13._setFocusedItem(element);
+      this._setFocusedItemTimeout = setTimeout(() => {
+        const element = isSelectAllItem ? (0, _element.getPublicElement)(this._$selectAllItem) : (0, _renderer.default)(this.option('focusedElement'));
+        this._setFocusedItem(element);
       });
       return;
     }
-    var $activeItem = this._getActiveItem();
+    const $activeItem = this._getActiveItem();
     this.option('focusedElement', (0, _element.getPublicElement)($activeItem.closest('.' + NODE_CLASS)));
   },
-  _itemPointerDownHandler: function _itemPointerDownHandler(e) {
+  _itemPointerDownHandler: function (e) {
     if (!this.option('focusStateEnabled')) {
       return;
     }
-    var $target = (0, _renderer.default)(e.target).closest('.' + NODE_CLASS + ', .' + SELECT_ALL_ITEM_CLASS);
+    const $target = (0, _renderer.default)(e.target).closest('.' + NODE_CLASS + ', .' + SELECT_ALL_ITEM_CLASS);
     if (!$target.length) {
       return;
     }
-    var itemElement = $target.hasClass(DISABLED_STATE_CLASS) ? null : $target;
+    const itemElement = $target.hasClass(DISABLED_STATE_CLASS) ? null : $target;
     this.option('focusedElement', (0, _element.getPublicElement)(itemElement));
   },
-  _findNonDisabledNodes: function _findNonDisabledNodes($nodes) {
+  _findNonDisabledNodes: function ($nodes) {
     return $nodes.not(function () {
       return (0, _renderer.default)(this).children('.' + ITEM_CLASS).hasClass(DISABLED_STATE_CLASS);
     });
   },
-  _moveFocus: function _moveFocus(location, e) {
-    var FOCUS_UP = 'up';
-    var FOCUS_DOWN = 'down';
-    var FOCUS_FIRST = 'first';
-    var FOCUS_LAST = 'last';
-    var FOCUS_LEFT = this.option('rtlEnabled') ? 'right' : 'left';
-    var FOCUS_RIGHT = this.option('rtlEnabled') ? 'left' : 'right';
+  _moveFocus: function (location, e) {
+    const FOCUS_UP = 'up';
+    const FOCUS_DOWN = 'down';
+    const FOCUS_FIRST = 'first';
+    const FOCUS_LAST = 'last';
+    const FOCUS_LEFT = this.option('rtlEnabled') ? 'right' : 'left';
+    const FOCUS_RIGHT = this.option('rtlEnabled') ? 'left' : 'right';
     this.$element().find(".".concat(NODE_CONTAINER_CLASS)).each(function () {
       _fx.default.stop(this, true);
     });
-    var $items = this._nodeElements();
+    const $items = this._nodeElements();
     if (!$items || !$items.length) {
       return;
     }
     switch (location) {
       case FOCUS_UP:
         {
-          var $prevItem = this._prevItem($items);
+          const $prevItem = this._prevItem($items);
           this.option('focusedElement', (0, _element.getPublicElement)($prevItem));
-          var prevItemElement = this._getNodeItemElement($prevItem);
+          const prevItemElement = this._getNodeItemElement($prevItem);
           this.getScrollable().scrollToElement(prevItemElement);
           if (e.shiftKey && this._showCheckboxes()) {
             this._updateItemSelection(true, prevItemElement);
@@ -1303,9 +1298,9 @@ var TreeViewBase = _ui.default.inherit({
         }
       case FOCUS_DOWN:
         {
-          var $nextItem = this._nextItem($items);
+          const $nextItem = this._nextItem($items);
           this.option('focusedElement', (0, _element.getPublicElement)($nextItem));
-          var nextItemElement = this._getNodeItemElement($nextItem);
+          const nextItemElement = this._getNodeItemElement($nextItem);
           this.getScrollable().scrollToElement(nextItemElement);
           if (e.shiftKey && this._showCheckboxes()) {
             this._updateItemSelection(true, nextItemElement);
@@ -1314,7 +1309,7 @@ var TreeViewBase = _ui.default.inherit({
         }
       case FOCUS_FIRST:
         {
-          var $firstItem = $items.first();
+          const $firstItem = $items.first();
           if (e.shiftKey && this._showCheckboxes()) {
             this._updateSelectionToFirstItem($items, $items.index(this._prevItem($items)));
           }
@@ -1324,7 +1319,7 @@ var TreeViewBase = _ui.default.inherit({
         }
       case FOCUS_LAST:
         {
-          var $lastItem = $items.last();
+          const $lastItem = $items.last();
           if (e.shiftKey && this._showCheckboxes()) {
             this._updateSelectionToLastItem($items, $items.index(this._nextItem($items)));
           }
@@ -1347,96 +1342,94 @@ var TreeViewBase = _ui.default.inherit({
         return;
     }
   },
-  _getNodeItemElement: function _getNodeItemElement($node) {
+  _getNodeItemElement: function ($node) {
     return $node.find('.' + ITEM_CLASS).get(0);
   },
-  _nodeElements: function _nodeElements() {
+  _nodeElements: function () {
     return this.$element().find('.' + NODE_CLASS).not(':hidden');
   },
-  _expandFocusedContainer: function _expandFocusedContainer() {
-    var $focusedNode = (0, _renderer.default)(this.option('focusedElement'));
+  _expandFocusedContainer: function () {
+    const $focusedNode = (0, _renderer.default)(this.option('focusedElement'));
     if (!$focusedNode.length || $focusedNode.hasClass(IS_LEAF)) {
       return;
     }
-    var $node = $focusedNode.find(".".concat(NODE_CONTAINER_CLASS)).eq(0);
+    const $node = $focusedNode.find(".".concat(NODE_CONTAINER_CLASS)).eq(0);
     if ($node.hasClass(OPENED_NODE_CONTAINER_CLASS)) {
-      var $nextItem = this._nextItem(this._findNonDisabledNodes(this._nodeElements()));
+      const $nextItem = this._nextItem(this._findNonDisabledNodes(this._nodeElements()));
       this.option('focusedElement', (0, _element.getPublicElement)($nextItem));
       this.getScrollable().scrollToElement(this._getNodeItemElement($nextItem));
       return;
     }
-    var node = this._getNodeByElement($focusedNode.children('.' + ITEM_CLASS));
+    const node = this._getNodeByElement($focusedNode.children('.' + ITEM_CLASS));
     this._toggleExpandedState(node, true);
   },
-  _getClosestNonDisabledNode: function _getClosestNonDisabledNode($node) {
+  _getClosestNonDisabledNode: function ($node) {
     do {
       $node = $node.parent().closest('.' + NODE_CLASS);
     } while ($node.children('.dx-treeview-item.dx-state-disabled').length);
     return $node;
   },
-  _collapseFocusedContainer: function _collapseFocusedContainer() {
-    var $focusedNode = (0, _renderer.default)(this.option('focusedElement'));
+  _collapseFocusedContainer: function () {
+    const $focusedNode = (0, _renderer.default)(this.option('focusedElement'));
     if (!$focusedNode.length) {
       return;
     }
-    var nodeElement = $focusedNode.find(".".concat(NODE_CONTAINER_CLASS)).eq(0);
+    const nodeElement = $focusedNode.find(".".concat(NODE_CONTAINER_CLASS)).eq(0);
     if (!$focusedNode.hasClass(IS_LEAF) && nodeElement.hasClass(OPENED_NODE_CONTAINER_CLASS)) {
-      var node = this._getNodeByElement($focusedNode.children('.' + ITEM_CLASS));
+      const node = this._getNodeByElement($focusedNode.children('.' + ITEM_CLASS));
       this._toggleExpandedState(node, false);
     } else {
-      var collapsedNode = this._getClosestNonDisabledNode($focusedNode);
+      const collapsedNode = this._getClosestNonDisabledNode($focusedNode);
       collapsedNode.length && this.option('focusedElement', (0, _element.getPublicElement)(collapsedNode));
       this.getScrollable().scrollToElement(this._getNodeItemElement(collapsedNode));
     }
   },
-  _encodeString: function _encodeString(value) {
+  _encodeString: function (value) {
     return (0, _type.isString)(value) ? encodeURI(value) : value;
   },
-  _decodeString: function _decodeString(value) {
+  _decodeString: function (value) {
     return (0, _type.isString)(value) ? decodeURI(value) : value;
   },
-  getScrollable: function getScrollable() {
+  getScrollable: function () {
     return this._scrollable;
   },
-  updateDimensions: function updateDimensions() {
-    var _this14 = this;
-    var deferred = new _deferred.Deferred();
-    var scrollable = this.getScrollable();
+  updateDimensions: function () {
+    const deferred = new _deferred.Deferred();
+    const scrollable = this.getScrollable();
     if (scrollable) {
-      scrollable.update().done(function () {
-        deferred.resolveWith(_this14);
+      scrollable.update().done(() => {
+        deferred.resolveWith(this);
       });
     } else {
       deferred.resolveWith(this);
     }
     return deferred.promise();
   },
-  selectItem: function selectItem(itemElement) {
+  selectItem: function (itemElement) {
     return this._updateItemSelection(true, itemElement);
   },
-  unselectItem: function unselectItem(itemElement) {
+  unselectItem: function (itemElement) {
     return this._updateItemSelection(false, itemElement);
   },
-  expandItem: function expandItem(itemElement) {
+  expandItem: function (itemElement) {
     return this._toggleExpandedState(itemElement, true);
   },
-  collapseItem: function collapseItem(itemElement) {
+  collapseItem: function (itemElement) {
     return this._toggleExpandedState(itemElement, false);
   },
-  getNodes: function getNodes() {
+  getNodes: function () {
     return this._dataAdapter.getTreeNodes();
   },
-  getSelectedNodes: function getSelectedNodes() {
-    var _this15 = this;
-    return this.getSelectedNodeKeys().map(function (key) {
-      var node = _this15._dataAdapter.getNodeByKey(key);
-      return _this15._dataAdapter.getPublicNode(node);
+  getSelectedNodes: function () {
+    return this.getSelectedNodeKeys().map(key => {
+      const node = this._dataAdapter.getNodeByKey(key);
+      return this._dataAdapter.getPublicNode(node);
     });
   },
-  getSelectedNodeKeys: function getSelectedNodeKeys() {
+  getSelectedNodeKeys: function () {
     return this._dataAdapter.getSelectedNodesKeys();
   },
-  selectAll: function selectAll() {
+  selectAll: function () {
     if (this._selectAllEnabled()) {
       this._$selectAllItem.dxCheckBox('instance').option('value', true);
     } else {
@@ -1445,7 +1438,7 @@ var TreeViewBase = _ui.default.inherit({
       });
     }
   },
-  unselectAll: function unselectAll() {
+  unselectAll: function () {
     if (this._selectAllEnabled()) {
       this._$selectAllItem.dxCheckBox('instance').option('value', false);
     } else {
@@ -1454,49 +1447,45 @@ var TreeViewBase = _ui.default.inherit({
       });
     }
   },
-  _allItemsExpandedHandler: function _allItemsExpandedHandler() {
+  _allItemsExpandedHandler: function () {
     this._skipContentReadyAndItemExpanded = false;
     this._fireContentReadyAction();
   },
-  expandAll: function expandAll() {
-    var _this16 = this;
-    var nodes = this._dataAdapter.getData();
-    var expandingPromises = [];
+  expandAll: function () {
+    const nodes = this._dataAdapter.getData();
+    const expandingPromises = [];
     this._skipContentReadyAndItemExpanded = true;
 
     // NOTE: This is needed to support animation on expandAll, but stop triggering multiple contentReady/itemExpanded events.
-    nodes.forEach(function (node) {
-      return expandingPromises.push(_this16._toggleExpandedState(node.internalFields.key, true));
-    });
-    Promise.allSettled(expandingPromises).then(function () {
-      var _this16$_allItemsExpa;
-      return (_this16$_allItemsExpa = _this16._allItemsExpanded) === null || _this16$_allItemsExpa === void 0 ? void 0 : _this16$_allItemsExpa.call(_this16);
+    nodes.forEach(node => expandingPromises.push(this._toggleExpandedState(node.internalFields.key, true)));
+    Promise.allSettled(expandingPromises).then(() => {
+      var _this$_allItemsExpand;
+      return (_this$_allItemsExpand = this._allItemsExpanded) === null || _this$_allItemsExpand === void 0 ? void 0 : _this$_allItemsExpand.call(this);
     });
   },
-  collapseAll: function collapseAll() {
+  collapseAll: function () {
     (0, _iterator.each)(this._dataAdapter.getExpandedNodesKeys(), function (_, key) {
       this._toggleExpandedState(key, false);
     }.bind(this));
   },
-  scrollToItem: function scrollToItem(keyOrItemOrElement) {
-    var _this17 = this;
-    var node = this._getNode(keyOrItemOrElement);
+  scrollToItem: function (keyOrItemOrElement) {
+    const node = this._getNode(keyOrItemOrElement);
     if (!node) {
       return new _deferred.Deferred().reject().promise();
     }
-    var nodeKeysToExpand = [];
-    var parentNode = node.internalFields.publicNode.parent;
+    const nodeKeysToExpand = [];
+    let parentNode = node.internalFields.publicNode.parent;
     while (parentNode != null) {
       if (!parentNode.expanded) {
         nodeKeysToExpand.push(parentNode.key);
       }
       parentNode = parentNode.parent;
     }
-    var scrollCallback = new _deferred.Deferred();
-    this._expandNodes(nodeKeysToExpand.reverse()).always(function () {
-      var $element = _this17._getNodeElement(node);
+    const scrollCallback = new _deferred.Deferred();
+    this._expandNodes(nodeKeysToExpand.reverse()).always(() => {
+      const $element = this._getNodeElement(node);
       if ($element && $element.length) {
-        _this17.scrollToElementTopLeft($element.get(0));
+        this.scrollToElementTopLeft($element.get(0));
         scrollCallback.resolve();
       } else {
         scrollCallback.reject();
@@ -1504,18 +1493,19 @@ var TreeViewBase = _ui.default.inherit({
     });
     return scrollCallback.promise();
   },
-  scrollToElementTopLeft: function scrollToElementTopLeft(targetElement) {
-    var scrollable = this.getScrollable();
-    var _this$option2 = this.option(),
-      scrollDirection = _this$option2.scrollDirection,
-      rtlEnabled = _this$option2.rtlEnabled;
-    var targetLocation = {
+  scrollToElementTopLeft: function (targetElement) {
+    const scrollable = this.getScrollable();
+    const {
+      scrollDirection,
+      rtlEnabled
+    } = this.option();
+    const targetLocation = {
       top: 0,
       left: 0
     };
-    var relativeOffset = (0, _get_relative_offset.getRelativeOffset)(_consts.SCROLLABLE_CONTENT_CLASS, targetElement);
+    const relativeOffset = (0, _get_relative_offset.getRelativeOffset)(_consts.SCROLLABLE_CONTENT_CLASS, targetElement);
     if (scrollDirection !== _consts.DIRECTION_VERTICAL) {
-      var containerElement = (0, _renderer.default)(scrollable.container()).get(0);
+      const containerElement = (0, _renderer.default)(scrollable.container()).get(0);
       targetLocation.left = rtlEnabled ? relativeOffset.left + targetElement.offsetWidth - containerElement.clientWidth : relativeOffset.left;
     }
     if (scrollDirection !== _consts.DIRECTION_HORIZONTAL) {
@@ -1523,23 +1513,16 @@ var TreeViewBase = _ui.default.inherit({
     }
     scrollable.scrollTo(targetLocation);
   },
-  _expandNodes: function _expandNodes(keysToExpand) {
-    var _this18 = this;
+  _expandNodes: function (keysToExpand) {
     if (!keysToExpand || keysToExpand.length === 0) {
       return new _deferred.Deferred().resolve().promise();
     }
-    var resultCallback = new _deferred.Deferred();
-    var callbacksByNodes = keysToExpand.map(function (key) {
-      return _this18.expandItem(key);
-    });
-    _deferred.when.apply(_renderer.default, callbacksByNodes).done(function () {
-      return resultCallback.resolve();
-    }).fail(function () {
-      return resultCallback.reject();
-    });
+    const resultCallback = new _deferred.Deferred();
+    const callbacksByNodes = keysToExpand.map(key => this.expandItem(key));
+    _deferred.when.apply(_renderer.default, callbacksByNodes).done(() => resultCallback.resolve()).fail(() => resultCallback.reject());
     return resultCallback.promise();
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this.callBase();
     clearTimeout(this._setFocusedItemTimeout);
     this._allItemsExpandedHandler = null;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/core/event_registrator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,8 +12,8 @@ exports.default = void 0;
 var _iterator = require("../../core/utils/iterator");
 var _event_registrator_callbacks = _interopRequireDefault(require("./event_registrator_callbacks"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var registerEvent = function registerEvent(name, eventObject) {
-  var strategy = {};
+const registerEvent = function (name, eventObject) {
+  const strategy = {};
   if ('noBubble' in eventObject) {
     strategy.noBubble = eventObject.noBubble;
   }
@@ -28,7 +28,7 @@ var registerEvent = function registerEvent(name, eventObject) {
       return;
     }
     strategy[methodName] = function () {
-      var args = [].slice.call(arguments);
+      const args = [].slice.call(arguments);
       args.unshift(this);
       return eventObject[methodName].apply(eventObject, args);
     };

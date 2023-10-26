@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/pager/pager.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,8 +15,7 @@ var _resizable_container = require("./resizable_container");
 var _pager_props = require("./common/pager_props");
 var _content = require("./content");
 var _combine_classes = require("../../utils/combine_classes");
-var _excluded = ["className", "defaultPageIndex", "defaultPageSize", "displayMode", "gridCompatibility", "hasKnownLastPage", "infoText", "label", "lightModeEnabled", "maxPagesCount", "onKeyDown", "pageCount", "pageIndex", "pageIndexChange", "pageSize", "pageSizeChange", "pageSizes", "pagesCountText", "pagesNavigatorVisible", "rtlEnabled", "showInfo", "showNavigationButtons", "showPageSizes", "totalCount", "visible"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["className", "defaultPageIndex", "defaultPageSize", "displayMode", "gridCompatibility", "hasKnownLastPage", "infoText", "label", "lightModeEnabled", "maxPagesCount", "onKeyDown", "pageCount", "pageIndex", "pageIndexChange", "pageSize", "pageSizeChange", "pageSizes", "pagesCountText", "pagesNavigatorVisible", "rtlEnabled", "showInfo", "showNavigationButtons", "showPageSizes", "totalCount", "visible"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -26,16 +25,18 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var pagerProps = _ref.pagerProps,
-    restAttributes = _ref.restAttributes;
+const viewFunction = _ref => {
+  let {
+    pagerProps,
+    restAttributes
+  } = _ref;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _resizable_container.ResizableContainer, _extends({
     "contentTemplate": _content.PagerContent,
     "pagerProps": pagerProps
   }, restAttributes)));
 };
 exports.viewFunction = viewFunction;
-var Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
+let Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(Pager, _InfernoWrapperCompon);
   function Pager(props) {
     var _this;
@@ -56,8 +57,8 @@ var Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _proto.pageIndexChange = function pageIndexChange(newPageIndex) {
     if (this.props.gridCompatibility) {
       {
-        var __newValue;
-        this.setState(function (__state_argument) {
+        let __newValue;
+        this.setState(__state_argument => {
           __newValue = newPageIndex + 1;
           return {
             pageIndex: __newValue
@@ -67,21 +68,21 @@ var Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
       }
     } else {
       {
-        var _newValue;
-        this.setState(function (__state_argument) {
-          _newValue = newPageIndex;
+        let __newValue;
+        this.setState(__state_argument => {
+          __newValue = newPageIndex;
           return {
-            pageIndex: _newValue
+            pageIndex: __newValue
           };
         });
-        this.props.pageIndexChange(_newValue);
+        this.props.pageIndexChange(__newValue);
       }
     }
   };
   _proto.pageSizeChange = function pageSizeChange(newPageSize) {
     {
-      var __newValue;
-      this.setState(function (__state_argument) {
+      let __newValue;
+      this.setState(__state_argument => {
         __newValue = newPageSize;
         return {
           pageSize: __newValue
@@ -97,7 +98,7 @@ var Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         pageSize: this.props.pageSize !== undefined ? this.props.pageSize : this.state.pageSize,
@@ -113,7 +114,7 @@ var Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(Pager, [{
     key: "pageIndex",
-    get: function get() {
+    get: function () {
       if (this.props.gridCompatibility) {
         return (this.props.pageIndex !== undefined ? this.props.pageIndex : this.state.pageIndex) - 1;
       }
@@ -121,7 +122,7 @@ var Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "className",
-    get: function get() {
+    get: function () {
       if (this.props.gridCompatibility) {
         return (0, _combine_classes.combineClasses)({
           'dx-datagrid-pager': true,
@@ -132,60 +133,30 @@ var Pager = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "pagerProps",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['pagerProps'] !== undefined) {
         return this.__getterCache['pagerProps'];
       }
-      return this.__getterCache['pagerProps'] = function () {
-        return _extends({}, _extends({}, _this2.props, {
-          pageSize: _this2.props.pageSize !== undefined ? _this2.props.pageSize : _this2.state.pageSize,
-          pageIndex: _this2.props.pageIndex !== undefined ? _this2.props.pageIndex : _this2.state.pageIndex
+      return this.__getterCache['pagerProps'] = (() => {
+        return _extends({}, _extends({}, this.props, {
+          pageSize: this.props.pageSize !== undefined ? this.props.pageSize : this.state.pageSize,
+          pageIndex: this.props.pageIndex !== undefined ? this.props.pageIndex : this.state.pageIndex
         }), {
-          className: _this2.className,
-          pageIndex: _this2.pageIndex,
-          pageIndexChange: function pageIndexChange(pageIndex) {
-            return _this2.pageIndexChange(pageIndex);
-          },
-          pageSizeChange: function pageSizeChange(pageSize) {
-            return _this2.pageSizeChange(pageSize);
-          }
+          className: this.className,
+          pageIndex: this.pageIndex,
+          pageIndexChange: pageIndex => this.pageIndexChange(pageIndex),
+          pageSizeChange: pageSize => this.pageSizeChange(pageSize)
         });
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props$pageSize$ = _extends({}, this.props, {
+    get: function () {
+      const _this$props$pageSize$ = _extends({}, this.props, {
           pageSize: this.props.pageSize !== undefined ? this.props.pageSize : this.state.pageSize,
           pageIndex: this.props.pageIndex !== undefined ? this.props.pageIndex : this.state.pageIndex
         }),
-        className = _this$props$pageSize$.className,
-        defaultPageIndex = _this$props$pageSize$.defaultPageIndex,
-        defaultPageSize = _this$props$pageSize$.defaultPageSize,
-        displayMode = _this$props$pageSize$.displayMode,
-        gridCompatibility = _this$props$pageSize$.gridCompatibility,
-        hasKnownLastPage = _this$props$pageSize$.hasKnownLastPage,
-        infoText = _this$props$pageSize$.infoText,
-        label = _this$props$pageSize$.label,
-        lightModeEnabled = _this$props$pageSize$.lightModeEnabled,
-        maxPagesCount = _this$props$pageSize$.maxPagesCount,
-        onKeyDown = _this$props$pageSize$.onKeyDown,
-        pageCount = _this$props$pageSize$.pageCount,
-        pageIndex = _this$props$pageSize$.pageIndex,
-        pageIndexChange = _this$props$pageSize$.pageIndexChange,
-        pageSize = _this$props$pageSize$.pageSize,
-        pageSizeChange = _this$props$pageSize$.pageSizeChange,
-        pageSizes = _this$props$pageSize$.pageSizes,
-        pagesCountText = _this$props$pageSize$.pagesCountText,
-        pagesNavigatorVisible = _this$props$pageSize$.pagesNavigatorVisible,
-        rtlEnabled = _this$props$pageSize$.rtlEnabled,
-        showInfo = _this$props$pageSize$.showInfo,
-        showNavigationButtons = _this$props$pageSize$.showNavigationButtons,
-        showPageSizes = _this$props$pageSize$.showPageSizes,
-        totalCount = _this$props$pageSize$.totalCount,
-        visible = _this$props$pageSize$.visible,
-        restProps = _objectWithoutProperties(_this$props$pageSize$, _excluded);
+        restProps = _objectWithoutPropertiesLoose(_this$props$pageSize$, _excluded);
       return restProps;
     }
   }]);

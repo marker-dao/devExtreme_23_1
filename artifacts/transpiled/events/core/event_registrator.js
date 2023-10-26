@@ -4,8 +4,8 @@ exports.default = void 0;
 var _iterator = require("../../core/utils/iterator");
 var _event_registrator_callbacks = _interopRequireDefault(require("./event_registrator_callbacks"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var registerEvent = function registerEvent(name, eventObject) {
-  var strategy = {};
+const registerEvent = function (name, eventObject) {
+  const strategy = {};
   if ('noBubble' in eventObject) {
     strategy.noBubble = eventObject.noBubble;
   }
@@ -20,7 +20,7 @@ var registerEvent = function registerEvent(name, eventObject) {
       return;
     }
     strategy[methodName] = function () {
-      var args = [].slice.call(arguments);
+      const args = [].slice.call(arguments);
       args.unshift(this);
       return eventObject[methodName].apply(eventObject, args);
     };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/header/utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,21 +14,23 @@ var _date_navigator = require("./date_navigator");
 var _m_utils = require("../../../../__internal/scheduler/header/m_utils");
 var _devices = _interopRequireDefault(require("../../../../core/devices"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DEFAULT_ELEMENT = 'defaultElement';
-var VIEW_SWITCHER = 'viewSwitcher';
-var DATE_NAVIGATOR = 'dateNavigator';
-var formToolbarItem = function formToolbarItem(item, options) {
-  var captionText = options.captionText,
-    isNextButtonDisabled = options.isNextButtonDisabled,
-    isPreviousButtonDisabled = options.isPreviousButtonDisabled,
-    selectedView = options.selectedView,
-    setCurrentView = options.setCurrentView,
-    showCalendar = options.showCalendar,
-    updateDateByDirection = options.updateDateByDirection,
-    useDropDownViewSwitcher = options.useDropDownViewSwitcher,
-    views = options.views;
+const DEFAULT_ELEMENT = 'defaultElement';
+const VIEW_SWITCHER = 'viewSwitcher';
+const DATE_NAVIGATOR = 'dateNavigator';
+const formToolbarItem = (item, options) => {
+  const {
+    captionText,
+    isNextButtonDisabled,
+    isPreviousButtonDisabled,
+    selectedView,
+    setCurrentView,
+    showCalendar,
+    updateDateByDirection,
+    useDropDownViewSwitcher,
+    views
+  } = options;
   if (item[DEFAULT_ELEMENT]) {
-    var defaultElementType = item[DEFAULT_ELEMENT];
+    const defaultElementType = item[DEFAULT_ELEMENT];
     switch (defaultElementType) {
       case VIEW_SWITCHER:
         if (useDropDownViewSwitcher) {
@@ -44,11 +46,11 @@ var formToolbarItem = function formToolbarItem(item, options) {
   return item;
 };
 exports.formToolbarItem = formToolbarItem;
-var formatViews = function formatViews(views) {
+const formatViews = views => {
   (0, _m_utils.validateViews)(views);
-  return views.map(function (view) {
-    var text = (0, _m_utils.getViewText)(view);
-    var name = (0, _m_utils.getViewName)(view);
+  return views.map(view => {
+    const text = (0, _m_utils.getViewText)(view);
+    const name = (0, _m_utils.getViewName)(view);
     return {
       text,
       name
@@ -56,11 +58,7 @@ var formatViews = function formatViews(views) {
   });
 };
 exports.formatViews = formatViews;
-var isMonthView = function isMonthView(currentView) {
-  return (0, _m_utils.getViewType)(currentView) === 'month';
-};
+const isMonthView = currentView => (0, _m_utils.getViewType)(currentView) === 'month';
 exports.isMonthView = isMonthView;
-var isMobileLayout = function isMobileLayout() {
-  return !_devices.default.current().generic;
-};
+const isMobileLayout = () => !_devices.default.current().generic;
 exports.isMobileLayout = isMobileLayout;

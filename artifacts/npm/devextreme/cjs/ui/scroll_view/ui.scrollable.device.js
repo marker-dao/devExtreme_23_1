@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scroll_view/ui.scrollable.device.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,17 +12,17 @@ exports.deviceDependentOptions = void 0;
 var _devices = _interopRequireDefault(require("../../core/devices"));
 var _support = require("../../core/utils/support");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var deviceDependentOptions = function deviceDependentOptions() {
+const deviceDependentOptions = function () {
   return [{
-    device: function device() {
+    device: function () {
       return !_support.nativeScrolling;
     },
     options: {
       useNative: false
     }
   }, {
-    device: function device(_device) {
-      return !_devices.default.isSimulator() && _devices.default.real().deviceType === 'desktop' && _device.platform === 'generic';
+    device: function (device) {
+      return !_devices.default.isSimulator() && _devices.default.real().deviceType === 'desktop' && device.platform === 'generic';
     },
     options: {
       bounceEnabled: false,

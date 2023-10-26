@@ -8,17 +8,17 @@ var _events_engine = _interopRequireDefault(require("../../events/core/events_en
 var _type = require("./type");
 var _remove = require("../../events/remove");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var COMPONENT_NAMES_DATA_KEY = 'dxComponents';
-var ANONYMOUS_COMPONENT_DATA_KEY = 'dxPrivateComponent';
-var componentNames = new WeakMap();
-var nextAnonymousComponent = 0;
-var getName = function getName(componentClass, newName) {
+const COMPONENT_NAMES_DATA_KEY = 'dxComponents';
+const ANONYMOUS_COMPONENT_DATA_KEY = 'dxPrivateComponent';
+const componentNames = new WeakMap();
+let nextAnonymousComponent = 0;
+const getName = function (componentClass, newName) {
   if ((0, _type.isDefined)(newName)) {
     componentNames.set(componentClass, newName);
     return;
   }
   if (!componentNames.has(componentClass)) {
-    var generatedName = ANONYMOUS_COMPONENT_DATA_KEY + nextAnonymousComponent++;
+    const generatedName = ANONYMOUS_COMPONENT_DATA_KEY + nextAnonymousComponent++;
     componentNames.set(componentClass, generatedName);
     return generatedName;
   }
@@ -26,8 +26,8 @@ var getName = function getName(componentClass, newName) {
 };
 exports.name = getName;
 function attachInstanceToElement($element, componentInstance, disposeFn) {
-  var data = (0, _element_data.data)($element.get(0));
-  var name = getName(componentInstance.constructor);
+  const data = (0, _element_data.data)($element.get(0));
+  const name = getName(componentInstance.constructor);
   data[name] = componentInstance;
   if (disposeFn) {
     _events_engine.default.one($element, _remove.removeEvent, function () {
@@ -40,6 +40,6 @@ function attachInstanceToElement($element, componentInstance, disposeFn) {
   data[COMPONENT_NAMES_DATA_KEY].push(name);
 }
 function getInstanceByElement($element, componentClass) {
-  var name = getName(componentClass);
+  const name = getName(componentClass);
   return (0, _element_data.data)($element.get(0), name);
 }

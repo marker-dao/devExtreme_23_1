@@ -12,20 +12,14 @@ var _deferred = require("../core/utils/deferred");
 var _common = require("../core/utils/common");
 var _type = require("../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var abstract = _class.default.abstract;
-var queryByOptions = _store_helper.default.queryByOptions;
-var storeImpl = {};
-var Store = _class.default.inherit({
+const abstract = _class.default.abstract;
+const queryByOptions = _store_helper.default.queryByOptions;
+const storeImpl = {};
+const Store = _class.default.inherit({
   _langParams: {},
-  ctor: function ctor(options) {
-    var that = this;
+  ctor: function (options) {
+    const that = this;
     options = options || {};
     this._eventsStrategy = new _events_strategy.EventsStrategy(this);
     (0, _iterator.each)(['onLoaded', 'onLoading', 'onInserted', 'onInserting', 'onUpdated', 'onUpdating', 'onPush', 'onRemoved', 'onRemoving', 'onModified', 'onModifying'], function (_, optionName) {
@@ -38,43 +32,43 @@ var Store = _class.default.inherit({
     this._useDefaultSearch = true;
   },
   _clearCache: _common.noop,
-  _customLoadOptions: function _customLoadOptions() {
+  _customLoadOptions: function () {
     return null;
   },
-  key: function key() {
+  key: function () {
     return this._key;
   },
-  keyOf: function keyOf(obj) {
+  keyOf: function (obj) {
     if (!this._keyGetter) {
       this._keyGetter = (0, _data.compileGetter)(this.key());
     }
     return this._keyGetter(obj);
   },
-  _requireKey: function _requireKey() {
+  _requireKey: function () {
     if (!this.key()) {
       throw _errors.errors.Error('E4005');
     }
   },
-  load: function load(options) {
-    var that = this;
+  load: function (options) {
+    const that = this;
     options = options || {};
     this._eventsStrategy.fireEvent('loading', [options]);
     return this._withLock(this._loadImpl(options)).done(function (result) {
       that._eventsStrategy.fireEvent('loaded', [result, options]);
     });
   },
-  _loadImpl: function _loadImpl(options) {
+  _loadImpl: function (options) {
     if (!(0, _type.isEmptyObject)(this._langParams)) {
       options = options || {};
       options._langParams = _extends({}, this._langParams, options._langParams);
     }
     return queryByOptions(this.createQuery(options), options).enumerate();
   },
-  _withLock: function _withLock(task) {
-    var result = new _deferred.Deferred();
+  _withLock: function (task) {
+    const result = new _deferred.Deferred();
     task.done(function () {
-      var that = this;
-      var args = arguments;
+      const that = this;
+      const args = arguments;
       _utils.processRequestResultLock.promise().done(function () {
         result.resolveWith(that, args);
       });
@@ -84,18 +78,18 @@ var Store = _class.default.inherit({
     return result;
   },
   createQuery: abstract,
-  totalCount: function totalCount(options) {
+  totalCount: function (options) {
     return this._totalCountImpl(options);
   },
-  _totalCountImpl: function _totalCountImpl(options) {
+  _totalCountImpl: function (options) {
     return queryByOptions(this.createQuery(options), options, true).count();
   },
-  byKey: function byKey(key, extraOptions) {
+  byKey: function (key, extraOptions) {
     return this._addFailHandlers(this._withLock(this._byKeyImpl(key, extraOptions)));
   },
   _byKeyImpl: abstract,
-  insert: function insert(values) {
-    var that = this;
+  insert: function (values) {
+    const that = this;
     that._eventsStrategy.fireEvent('modifying');
     that._eventsStrategy.fireEvent('inserting', [values]);
     return that._addFailHandlers(that._insertImpl(values).done(function (callbackValues, callbackKey) {
@@ -104,8 +98,8 @@ var Store = _class.default.inherit({
     }));
   },
   _insertImpl: abstract,
-  update: function update(key, values) {
-    var that = this;
+  update: function (key, values) {
+    const that = this;
     that._eventsStrategy.fireEvent('modifying');
     that._eventsStrategy.fireEvent('updating', [key, values]);
     return that._addFailHandlers(that._updateImpl(key, values).done(function () {
@@ -114,24 +108,23 @@ var Store = _class.default.inherit({
     }));
   },
   _updateImpl: abstract,
-  push: function push(changes) {
-    var _this = this;
-    var beforePushArgs = {
+  push: function (changes) {
+    const beforePushArgs = {
       changes,
       waitFor: []
     };
     this._eventsStrategy.fireEvent('beforePushAggregation', [beforePushArgs]);
-    _deferred.when.apply(void 0, _toConsumableArray(beforePushArgs.waitFor)).done(function () {
-      _this._pushImpl(changes);
-      _this._eventsStrategy.fireEvent('beforePush', [{
+    (0, _deferred.when)(...beforePushArgs.waitFor).done(() => {
+      this._pushImpl(changes);
+      this._eventsStrategy.fireEvent('beforePush', [{
         changes
       }]);
-      _this._eventsStrategy.fireEvent('push', [changes]);
+      this._eventsStrategy.fireEvent('push', [changes]);
     });
   },
   _pushImpl: _common.noop,
-  remove: function remove(key) {
-    var that = this;
+  remove: function (key) {
+    const that = this;
     that._eventsStrategy.fireEvent('modifying');
     that._eventsStrategy.fireEvent('removing', [key]);
     return that._addFailHandlers(that._removeImpl(key).done(function (callbackKey) {
@@ -140,7 +133,7 @@ var Store = _class.default.inherit({
     }));
   },
   _removeImpl: abstract,
-  _addFailHandlers: function _addFailHandlers(deferred) {
+  _addFailHandlers: function (deferred) {
     return deferred.fail(this._errorHandler).fail(_errors.handleError);
   },
   on(eventName, eventHandler) {
@@ -166,7 +159,7 @@ Store.registerClass = function (type, alias) {
 };
 Store.inherit = function (inheritor) {
   return function (members, alias) {
-    var type = inheritor.apply(this, [members]);
+    const type = inheritor.apply(this, [members]);
     Store.registerClass(type, alias);
     return type;
   };

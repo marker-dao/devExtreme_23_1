@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/m_widget_base.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,15 +31,17 @@ var _ui = _interopRequireDefault(require("../../../ui/widget/ui.widget"));
 var _m_utils = _interopRequireDefault(require("../../grids/grid_core/m_utils"));
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var callModuleItemsMethod = _m_core.default.callModuleItemsMethod;
-var DATAGRID_ROW_SELECTOR = '.dx-row';
-var TREELIST_CLASS = 'dx-treelist';
+const {
+  callModuleItemsMethod
+} = _m_core.default;
+const DATAGRID_ROW_SELECTOR = '.dx-row';
+const TREELIST_CLASS = 'dx-treelist';
 _m_core.default.registerModulesOrder(['stateStoring', 'columns', 'selection', 'editorFactory', 'columnChooser', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'editing', 'grouping', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'gridView']);
-var TreeList = _ui.default.inherit({
+const TreeList = _ui.default.inherit({
   _activeStateUnit: DATAGRID_ROW_SELECTOR,
   _getDefaultOptions() {
-    var that = this;
-    var result = that.callBase();
+    const that = this;
+    const result = that.callBase();
     (0, _iterator.each)(_m_core.default.modules, function () {
       if ((0, _type.isFunction)(this.defaultOptions)) {
         (0, _extend.extend)(true, result, this.defaultOptions());
@@ -79,7 +81,7 @@ var TreeList = _ui.default.inherit({
     }]);
   },
   _init() {
-    var that = this;
+    const that = this;
     that.callBase();
     if (!this.option('_disableDeprecationWarnings')) {
       _m_utils.default.logHeaderFilterDeprecatedWarningIfNeed(this);
@@ -89,7 +91,7 @@ var TreeList = _ui.default.inherit({
   },
   _clean: _common.noop,
   _optionChanged(args) {
-    var that = this;
+    const that = this;
     callModuleItemsMethod(that, 'optionChanged', [args]);
     if (!args.handled) {
       that.callBase(args);
@@ -112,13 +114,13 @@ var TreeList = _ui.default.inherit({
     this.getView('gridView').update();
   },
   _renderContent() {
-    var that = this;
-    (0, _common.deferRender)(function () {
+    const that = this;
+    (0, _common.deferRender)(() => {
       that._renderContentImpl();
     });
   },
   _dispose() {
-    var that = this;
+    const that = this;
     that.callBase();
     callModuleItemsMethod(that, 'dispose');
   },
@@ -126,12 +128,12 @@ var TreeList = _ui.default.inherit({
     return this.getController('data').isReady();
   },
   beginUpdate() {
-    var that = this;
+    const that = this;
     that.callBase();
     callModuleItemsMethod(that, 'beginUpdate');
   },
   endUpdate() {
-    var that = this;
+    const that = this;
     callModuleItemsMethod(that, 'endUpdate');
     that.callBase();
   },

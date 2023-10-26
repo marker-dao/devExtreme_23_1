@@ -4,15 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var publisherMixin = {
+const publisherMixin = {
   notifyObserver(subject, args) {
-    var observer = this.option('observer');
+    const observer = this.option('observer');
     if (observer) {
       observer.fire(subject, args);
     }
   },
   invoke() {
-    var observer = this.option('observer');
+    const observer = this.option('observer');
     if (observer) {
       return observer.fire.apply(observer, arguments);
     }

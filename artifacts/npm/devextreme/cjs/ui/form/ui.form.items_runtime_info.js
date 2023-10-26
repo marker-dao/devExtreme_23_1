@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/form/ui.form.items_runtime_info.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,16 +14,18 @@ var _iterator = require("../../core/utils/iterator");
 var _extend = require("../../core/utils/extend");
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FormItemsRunTimeInfo = /*#__PURE__*/function () {
+let FormItemsRunTimeInfo = /*#__PURE__*/function () {
   function FormItemsRunTimeInfo() {
     this._map = {};
   }
   var _proto = FormItemsRunTimeInfo.prototype;
   _proto._findWidgetInstance = function _findWidgetInstance(condition) {
-    var result;
+    let result;
     (0, _iterator.each)(this._map, function (guid, _ref) {
-      var widgetInstance = _ref.widgetInstance,
-        item = _ref.item;
+      let {
+        widgetInstance,
+        item
+      } = _ref;
       if (condition(item)) {
         result = widgetInstance;
         return false;
@@ -32,7 +34,7 @@ var FormItemsRunTimeInfo = /*#__PURE__*/function () {
     return result;
   };
   _proto._findFieldByCondition = function _findFieldByCondition(callback, valueExpr) {
-    var result;
+    let result;
     (0, _iterator.each)(this._map, function (key, value) {
       if (callback(value)) {
         result = valueExpr === 'guid' ? key : value[valueExpr];
@@ -45,29 +47,25 @@ var FormItemsRunTimeInfo = /*#__PURE__*/function () {
     this._map = {};
   };
   _proto.removeItemsByItems = function removeItemsByItems(itemsRunTimeInfo) {
-    var _this = this;
-    (0, _iterator.each)(itemsRunTimeInfo.getItems(), function (guid) {
-      return _this.removeItemByKey(guid);
-    });
+    (0, _iterator.each)(itemsRunTimeInfo.getItems(), guid => this.removeItemByKey(guid));
   };
   _proto.removeItemByKey = function removeItemByKey(key) {
     delete this._map[key];
   };
   _proto.add = function add(options) {
-    var key = options.guid || new _guid.default();
+    const key = options.guid || new _guid.default();
     this._map[key] = options;
     return key;
   };
   _proto.addItemsOrExtendFrom = function addItemsOrExtendFrom(itemsRunTimeInfo) {
-    var _this2 = this;
-    itemsRunTimeInfo.each(function (key, itemRunTimeInfo) {
-      if (_this2._map[key]) {
+    itemsRunTimeInfo.each((key, itemRunTimeInfo) => {
+      if (this._map[key]) {
         if (itemRunTimeInfo.widgetInstance) {
-          _this2._map[key].widgetInstance = itemRunTimeInfo.widgetInstance;
+          this._map[key].widgetInstance = itemRunTimeInfo.widgetInstance;
         }
-        _this2._map[key].$itemContainer = itemRunTimeInfo.$itemContainer;
+        this._map[key].$itemContainer = itemRunTimeInfo.$itemContainer;
       } else {
-        _this2.add({
+        this.add({
           item: itemRunTimeInfo.item,
           widgetInstance: itemRunTimeInfo.widgetInstance,
           guid: key,
@@ -82,34 +80,32 @@ var FormItemsRunTimeInfo = /*#__PURE__*/function () {
     }
   };
   _proto.findWidgetInstanceByItem = function findWidgetInstanceByItem(item) {
-    return this._findWidgetInstance(function (storedItem) {
-      return storedItem === item;
-    });
+    return this._findWidgetInstance(storedItem => storedItem === item);
   };
   _proto.findGroupOrTabLayoutManagerByPath = function findGroupOrTabLayoutManagerByPath(targetPath) {
-    return this._findFieldByCondition(function (_ref2) {
-      var path = _ref2.path;
+    return this._findFieldByCondition(_ref2 => {
+      let {
+        path
+      } = _ref2;
       return path === targetPath;
     }, 'layoutManager');
   };
   _proto.findKeyByPath = function findKeyByPath(targetPath) {
-    return this._findFieldByCondition(function (_ref3) {
-      var path = _ref3.path;
+    return this._findFieldByCondition(_ref3 => {
+      let {
+        path
+      } = _ref3;
       return path === targetPath;
     }, 'guid');
   };
   _proto.findWidgetInstanceByName = function findWidgetInstanceByName(name) {
-    return this._findWidgetInstance(function (item) {
-      return name === item.name;
-    });
+    return this._findWidgetInstance(item => name === item.name);
   };
   _proto.findWidgetInstanceByDataField = function findWidgetInstanceByDataField(dataField) {
-    return this._findWidgetInstance(function (item) {
-      return dataField === ((0, _type.isString)(item) ? item : item.dataField);
-    });
+    return this._findWidgetInstance(item => dataField === ((0, _type.isString)(item) ? item : item.dataField));
   };
   _proto.findItemContainerByItem = function findItemContainerByItem(item) {
-    for (var key in this._map) {
+    for (const key in this._map) {
       if (this._map[key].item === item) {
         return this._map[key].$itemContainer;
       }
@@ -117,14 +113,18 @@ var FormItemsRunTimeInfo = /*#__PURE__*/function () {
     return null;
   };
   _proto.findItemIndexByItem = function findItemIndexByItem(targetItem) {
-    return this._findFieldByCondition(function (_ref4) {
-      var item = _ref4.item;
+    return this._findFieldByCondition(_ref4 => {
+      let {
+        item
+      } = _ref4;
       return item === targetItem;
     }, 'itemIndex');
   };
   _proto.findPreparedItemByItem = function findPreparedItemByItem(item) {
-    return this._findFieldByCondition(function (_ref5) {
-      var currentItem = _ref5.item;
+    return this._findFieldByCondition(_ref5 => {
+      let {
+        item: currentItem
+      } = _ref5;
       return currentItem === item;
     }, 'preparedItem');
   };
@@ -137,17 +137,14 @@ var FormItemsRunTimeInfo = /*#__PURE__*/function () {
     });
   };
   _proto.removeItemsByPathStartWith = function removeItemsByPathStartWith(path) {
-    var _this3 = this;
-    var keys = Object.keys(this._map);
-    var filteredKeys = keys.filter(function (key) {
-      if (_this3._map[key].path) {
-        return _this3._map[key].path.indexOf(path, 0) > -1;
+    const keys = Object.keys(this._map);
+    const filteredKeys = keys.filter(key => {
+      if (this._map[key].path) {
+        return this._map[key].path.indexOf(path, 0) > -1;
       }
       return false;
     });
-    filteredKeys.forEach(function (key) {
-      return _this3.removeItemByKey(key);
-    });
+    filteredKeys.forEach(key => this.removeItemByKey(key));
   };
   return FormItemsRunTimeInfo;
 }();

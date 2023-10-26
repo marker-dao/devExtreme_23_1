@@ -3,16 +3,16 @@
 exports.default = void 0;
 var _graph = _interopRequireDefault(require("./graph"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var validator = {
-  validate: function validate(data, incidentOccurred) {
-    var result = null;
+const validator = {
+  validate: function (data, incidentOccurred) {
+    let result = null;
     if (this._hasCycle(data)) {
       result = 'E2006';
       incidentOccurred('E2006');
     }
     return result;
   },
-  _hasCycle: function _hasCycle(data) {
+  _hasCycle: function (data) {
     return _graph.default.struct.hasCycle(data);
   }
 };

@@ -7,12 +7,12 @@ var _iterator = require("./iterator");
 var _type = require("./type");
 var _window = require("./window");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var getRootNodeHost = function getRootNodeHost(element) {
+const window = (0, _window.getWindow)();
+const getRootNodeHost = element => {
   if (!element.getRootNode) {
     return undefined;
   }
-  var host = element.getRootNode().host;
+  const host = element.getRootNode().host;
 
   // NOTE: getRootNode().host can return a string if element is detached "a" element
   if ((0, _type.isString)(host)) {
@@ -20,16 +20,16 @@ var getRootNodeHost = function getRootNodeHost(element) {
   }
   return host;
 };
-var resetActiveElement = function resetActiveElement() {
-  var activeElement = _dom_adapter.default.getActiveElement();
+const resetActiveElement = () => {
+  const activeElement = _dom_adapter.default.getActiveElement();
   if (activeElement && activeElement !== _dom_adapter.default.getBody()) {
     var _activeElement$blur;
     (_activeElement$blur = activeElement.blur) === null || _activeElement$blur === void 0 ? void 0 : _activeElement$blur.call(activeElement);
   }
 };
 exports.resetActiveElement = resetActiveElement;
-var clearSelection = function clearSelection() {
-  var selection = window.getSelection();
+const clearSelection = () => {
+  const selection = window.getSelection();
   if (!selection) return;
   if (selection.type === 'Caret') return;
   if (selection.empty) {
@@ -42,26 +42,26 @@ var clearSelection = function clearSelection() {
   }
 };
 exports.clearSelection = clearSelection;
-var closestCommonParent = function closestCommonParent(startTarget, endTarget) {
-  var $startTarget = (0, _renderer.default)(startTarget);
-  var $endTarget = (0, _renderer.default)(endTarget);
+const closestCommonParent = (startTarget, endTarget) => {
+  const $startTarget = (0, _renderer.default)(startTarget);
+  const $endTarget = (0, _renderer.default)(endTarget);
   if ($startTarget[0] === $endTarget[0]) {
     return $startTarget[0];
   }
-  var $startParents = $startTarget.parents();
-  var $endParents = $endTarget.parents();
-  var startingParent = Math.min($startParents.length, $endParents.length);
-  for (var i = -startingParent; i < 0; i++) {
+  const $startParents = $startTarget.parents();
+  const $endParents = $endTarget.parents();
+  const startingParent = Math.min($startParents.length, $endParents.length);
+  for (let i = -startingParent; i < 0; i++) {
     if ($startParents.get(i) === $endParents.get(i)) {
       return $startParents.get(i);
     }
   }
 };
 exports.closestCommonParent = closestCommonParent;
-var extractTemplateMarkup = function extractTemplateMarkup(element) {
+const extractTemplateMarkup = element => {
   element = (0, _renderer.default)(element);
-  var templateTag = element.length && element.filter(function isNotExecutableScript() {
-    var $node = (0, _renderer.default)(this);
+  const templateTag = element.length && element.filter(function isNotExecutableScript() {
+    const $node = (0, _renderer.default)(this);
     return $node.is('script[type]') && $node.attr('type').indexOf('script') < 0;
   });
   if (templateTag.length) {
@@ -72,8 +72,8 @@ var extractTemplateMarkup = function extractTemplateMarkup(element) {
   }
 };
 exports.extractTemplateMarkup = extractTemplateMarkup;
-var normalizeTemplateElement = function normalizeTemplateElement(element) {
-  var $element = (0, _type.isDefined)(element) && (element.nodeType || (0, _type.isRenderer)(element)) ? (0, _renderer.default)(element) : (0, _renderer.default)('<div>').html(element).contents();
+const normalizeTemplateElement = element => {
+  let $element = (0, _type.isDefined)(element) && (element.nodeType || (0, _type.isRenderer)(element)) ? (0, _renderer.default)(element) : (0, _renderer.default)('<div>').html(element).contents();
   if ($element.length === 1) {
     if ($element.is('script')) {
       $element = normalizeTemplateElement($element.html().trim());
@@ -84,15 +84,15 @@ var normalizeTemplateElement = function normalizeTemplateElement(element) {
   return $element;
 };
 exports.normalizeTemplateElement = normalizeTemplateElement;
-var clipboardText = function clipboardText(event, text) {
-  var clipboard = event.originalEvent && event.originalEvent.clipboardData || window.clipboardData;
+const clipboardText = (event, text) => {
+  const clipboard = event.originalEvent && event.originalEvent.clipboardData || window.clipboardData;
   if (!text) {
     return clipboard && clipboard.getData('Text');
   }
   clipboard && clipboard.setData('Text', text);
 };
 exports.clipboardText = clipboardText;
-var contains = function contains(container, element) {
+const contains = (container, element) => {
   if (!element) {
     return false;
   }
@@ -102,9 +102,9 @@ var contains = function contains(container, element) {
   return container.contains(element) || contains(container, getRootNodeHost(element));
 };
 exports.contains = contains;
-var createTextElementHiddenCopy = function createTextElementHiddenCopy(element, text, options) {
-  var elementStyles = window.getComputedStyle((0, _renderer.default)(element).get(0));
-  var includePaddings = options && options.includePaddings;
+const createTextElementHiddenCopy = (element, text, options) => {
+  const elementStyles = window.getComputedStyle((0, _renderer.default)(element).get(0));
+  const includePaddings = options && options.includePaddings;
   return (0, _renderer.default)('<div>').text(text).css({
     'fontStyle': elementStyles.fontStyle,
     'fontVariant': elementStyles.fontVariant,
@@ -124,26 +124,26 @@ var createTextElementHiddenCopy = function createTextElementHiddenCopy(element, 
   });
 };
 exports.createTextElementHiddenCopy = createTextElementHiddenCopy;
-var insertBefore = function insertBefore(element, newElement) {
+const insertBefore = (element, newElement) => {
   if (newElement) {
     _dom_adapter.default.insertElement(element.parentNode, newElement, element);
   }
   return element;
 };
 exports.insertBefore = insertBefore;
-var replaceWith = function replaceWith(element, newElement) {
+const replaceWith = (element, newElement) => {
   if (!(newElement && newElement[0])) return;
   if (newElement.is(element)) return element;
-  (0, _iterator.each)(newElement, function (_, currentElement) {
+  (0, _iterator.each)(newElement, (_, currentElement) => {
     insertBefore(element[0], currentElement);
   });
   element.remove();
   return newElement;
 };
 exports.replaceWith = replaceWith;
-var isElementInDom = function isElementInDom($element) {
-  var element = $element === null || $element === void 0 ? void 0 : $element.get(0);
-  var shadowHost = element === null || element === void 0 ? void 0 : element.getRootNode().host;
+const isElementInDom = $element => {
+  const element = $element === null || $element === void 0 ? void 0 : $element.get(0);
+  const shadowHost = element === null || element === void 0 ? void 0 : element.getRootNode().host;
   return !!(0, _renderer.default)(shadowHost || element).closest((0, _window.getWindow)().document).length;
 };
 exports.isElementInDom = isElementInDom;

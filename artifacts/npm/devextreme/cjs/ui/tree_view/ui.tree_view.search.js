@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tree_view/ui.tree_view.search.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,13 +20,13 @@ _ui.default.setEditorClass(_text_box.default);
 
 // STYLE treeView
 
-var WIDGET_CLASS = 'dx-treeview';
-var NODE_CONTAINER_CLASS = "".concat(WIDGET_CLASS, "-node-container");
-var TreeViewSearch = _uiTree_view.default.inherit(_ui.default).inherit({
-  _addWidgetPrefix: function _addWidgetPrefix(className) {
+const WIDGET_CLASS = 'dx-treeview';
+const NODE_CONTAINER_CLASS = "".concat(WIDGET_CLASS, "-node-container");
+const TreeViewSearch = _uiTree_view.default.inherit(_ui.default).inherit({
+  _addWidgetPrefix: function (className) {
     return "".concat(WIDGET_CLASS, "-").concat(className);
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'searchValue':
         if (this._showCheckboxes() && this._isRecursiveSelection()) {
@@ -49,30 +49,30 @@ var TreeViewSearch = _uiTree_view.default.inherit(_ui.default).inherit({
         this.callBase(args);
     }
   },
-  _updateDataAdapter: function _updateDataAdapter() {
+  _updateDataAdapter: function () {
     this._setOptionWithoutOptionChange('expandNodesRecursive', false);
     this._initDataAdapter();
     this._setOptionWithoutOptionChange('expandNodesRecursive', true);
   },
-  _getDataAdapterOptions: function _getDataAdapterOptions() {
+  _getDataAdapterOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       searchValue: this.option('searchValue'),
       searchMode: this.option('searchMode') || 'contains',
       searchExpr: this.option('searchExpr')
     });
   },
-  _getNodeContainer: function _getNodeContainer() {
+  _getNodeContainer: function () {
     return this.$element().find(".".concat(NODE_CONTAINER_CLASS)).first();
   },
-  _updateSearch: function _updateSearch() {
+  _updateSearch: function () {
     if (this._searchEditor) {
-      var editorOptions = this._getSearchEditorOptions();
+      const editorOptions = this._getSearchEditorOptions();
       this._searchEditor.option(editorOptions);
     }
   },
-  _repaintContainer: function _repaintContainer() {
-    var $container = this._getNodeContainer();
-    var rootNodes;
+  _repaintContainer: function () {
+    const $container = this._getNodeContainer();
+    let rootNodes;
     if ($container.length) {
       $container.empty();
       rootNodes = this._dataAdapter.getRootNodes();
@@ -81,13 +81,13 @@ var TreeViewSearch = _uiTree_view.default.inherit(_ui.default).inherit({
       this._fireContentReadyAction();
     }
   },
-  _focusTarget: function _focusTarget() {
+  _focusTarget: function () {
     return this._itemContainer(this.option('searchEnabled'));
   },
-  _cleanItemContainer: function _cleanItemContainer() {
+  _cleanItemContainer: function () {
     this.$element().empty();
   },
-  _itemContainer: function _itemContainer(isSearchMode, selectAllEnabled) {
+  _itemContainer: function (isSearchMode, selectAllEnabled) {
     var _selectAllEnabled;
     (_selectAllEnabled = selectAllEnabled) !== null && _selectAllEnabled !== void 0 ? _selectAllEnabled : selectAllEnabled = this._selectAllEnabled();
     if (selectAllEnabled) {
@@ -98,10 +98,10 @@ var TreeViewSearch = _uiTree_view.default.inherit(_ui.default).inherit({
     }
     return this.callBase();
   },
-  _addWidgetClass: function _addWidgetClass() {
+  _addWidgetClass: function () {
     this.$element().addClass(this._widgetClass());
   },
-  _clean: function _clean() {
+  _clean: function () {
     this.callBase();
     this._removeSearchBox();
   }

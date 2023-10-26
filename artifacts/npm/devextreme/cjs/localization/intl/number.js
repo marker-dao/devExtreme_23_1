@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/intl/number.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,37 +16,37 @@ var _accounting_formats = _interopRequireDefault(require("../cldr-data/accountin
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* globals Intl */
 
-var CURRENCY_STYLES = ['standard', 'accounting'];
-var MAX_FRACTION_DIGITS = 20;
-var detectCurrencySymbolRegex = /([^\s0]+)?(\s*)0*[.,]*0*(\s*)([^\s0]+)?/;
-var formattersCache = {};
-var getFormatter = function getFormatter(format) {
-  var key = _core.default.locale() + '/' + JSON.stringify(format);
+const CURRENCY_STYLES = ['standard', 'accounting'];
+const MAX_FRACTION_DIGITS = 20;
+const detectCurrencySymbolRegex = /([^\s0]+)?(\s*)0*[.,]*0*(\s*)([^\s0]+)?/;
+const formattersCache = {};
+const getFormatter = format => {
+  const key = _core.default.locale() + '/' + JSON.stringify(format);
   if (!formattersCache[key]) {
     formattersCache[key] = new Intl.NumberFormat(_core.default.locale(), format).format;
   }
   return formattersCache[key];
 };
-var getCurrencyFormatter = function getCurrencyFormatter(currency) {
+const getCurrencyFormatter = currency => {
   return new Intl.NumberFormat(_core.default.locale(), {
     style: 'currency',
     currency: currency
   });
 };
 var _default = {
-  engine: function engine() {
+  engine: function () {
     return 'intl';
   },
-  _formatNumberCore: function _formatNumberCore(value, format, formatConfig) {
+  _formatNumberCore: function (value, format, formatConfig) {
     if (format === 'exponential') {
       return this.callBase.apply(this, arguments);
     }
     return getFormatter(this._normalizeFormatConfig(format, formatConfig, value))(value);
   },
-  _normalizeFormatConfig: function _normalizeFormatConfig(format, formatConfig, value) {
-    var config;
+  _normalizeFormatConfig: function (format, formatConfig, value) {
+    let config;
     if (format === 'decimal') {
-      var fractionDigits = String(value).split('.')[1];
+      const fractionDigits = String(value).split('.')[1];
       config = {
         minimumIntegerDigits: formatConfig.precision || undefined,
         useGrouping: false,
@@ -60,15 +60,15 @@ var _default = {
       config.style = 'percent';
     } else if (format === 'currency') {
       var _formatConfig$useCurr;
-      var useAccountingStyle = (_formatConfig$useCurr = formatConfig.useCurrencyAccountingStyle) !== null && _formatConfig$useCurr !== void 0 ? _formatConfig$useCurr : (0, _config.default)().defaultUseCurrencyAccountingStyle;
+      const useAccountingStyle = (_formatConfig$useCurr = formatConfig.useCurrencyAccountingStyle) !== null && _formatConfig$useCurr !== void 0 ? _formatConfig$useCurr : (0, _config.default)().defaultUseCurrencyAccountingStyle;
       config.style = 'currency';
       config.currency = formatConfig.currency || (0, _config.default)().defaultCurrency;
       config.currencySign = CURRENCY_STYLES[+useAccountingStyle];
     }
     return config;
   },
-  _getPrecisionConfig: function _getPrecisionConfig(precision) {
-    var config;
+  _getPrecisionConfig: function (precision) {
+    let config;
     if (precision === null) {
       config = {
         minimumFractionDigits: 0,
@@ -82,49 +82,47 @@ var _default = {
     }
     return config;
   },
-  format: function format(value, _format) {
+  format: function (value, format) {
     if ('number' !== typeof value) {
       return value;
     }
-    _format = this._normalizeFormat(_format);
-    if (_format.currency === 'default') {
-      _format.currency = (0, _config.default)().defaultCurrency;
+    format = this._normalizeFormat(format);
+    if (format.currency === 'default') {
+      format.currency = (0, _config.default)().defaultCurrency;
     }
-    if (!_format || 'function' !== typeof _format && !_format.type && !_format.formatter) {
-      return getFormatter(_format)(value);
+    if (!format || 'function' !== typeof format && !format.type && !format.formatter) {
+      return getFormatter(format)(value);
     }
     return this.callBase.apply(this, arguments);
   },
-  _getCurrencySymbolInfo: function _getCurrencySymbolInfo(currency) {
-    var formatter = getCurrencyFormatter(currency);
+  _getCurrencySymbolInfo: function (currency) {
+    const formatter = getCurrencyFormatter(currency);
     return this._extractCurrencySymbolInfo(formatter.format(0));
   },
-  _extractCurrencySymbolInfo: function _extractCurrencySymbolInfo(currencyValueString) {
-    var match = detectCurrencySymbolRegex.exec(currencyValueString) || [];
-    var position = match[1] ? 'before' : 'after';
-    var symbol = match[1] || match[4] || '';
-    var delimiter = match[2] || match[3] || '';
+  _extractCurrencySymbolInfo: function (currencyValueString) {
+    const match = detectCurrencySymbolRegex.exec(currencyValueString) || [];
+    const position = match[1] ? 'before' : 'after';
+    const symbol = match[1] || match[4] || '';
+    const delimiter = match[2] || match[3] || '';
     return {
       position: position,
       symbol: symbol,
       delimiter: delimiter
     };
   },
-  getCurrencySymbol: function getCurrencySymbol(currency) {
+  getCurrencySymbol: function (currency) {
     if (!currency) {
       currency = (0, _config.default)().defaultCurrency;
     }
-    var symbolInfo = this._getCurrencySymbolInfo(currency);
+    const symbolInfo = this._getCurrencySymbolInfo(currency);
     return {
       'symbol': symbolInfo.symbol
     };
   },
-  getOpenXmlCurrencyFormat: function getOpenXmlCurrencyFormat(currency) {
-    var targetCurrency = currency || (0, _config.default)().defaultCurrency;
-    var currencySymbol = this._getCurrencySymbolInfo(targetCurrency).symbol;
-    var closestAccountingFormat = _core.default.getValueByClosestLocale(function (locale) {
-      return _accounting_formats.default[locale];
-    });
+  getOpenXmlCurrencyFormat: function (currency) {
+    const targetCurrency = currency || (0, _config.default)().defaultCurrency;
+    const currencySymbol = this._getCurrencySymbolInfo(targetCurrency).symbol;
+    const closestAccountingFormat = _core.default.getValueByClosestLocale(locale => _accounting_formats.default[locale]);
     return (0, _open_xml_currency_format.default)(currencySymbol, closestAccountingFormat);
   }
 };

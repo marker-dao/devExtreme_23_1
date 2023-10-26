@@ -12,14 +12,13 @@ var _utils = require("./utils");
 var _deferred = require("../../core/utils/deferred");
 require("./query_adapter");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ODataContext = _class.default.inherit({
+const ODataContext = _class.default.inherit({
   ctor(options) {
-    var _this = this;
     this._requestDispatcher = new _request_dispatcher.default(options);
     this._errorHandler = options.errorHandler;
-    (0, _iterator.each)(options.entities || [], function (entityAlias, entityOptions) {
-      _this[entityAlias] = new _store.default((0, _extend.extend)({}, options, {
-        url: "".concat(_this._requestDispatcher.url, "/").concat(encodeURIComponent(entityOptions.name || entityAlias))
+    (0, _iterator.each)(options.entities || [], (entityAlias, entityOptions) => {
+      this[entityAlias] = new _store.default((0, _extend.extend)({}, options, {
+        url: "".concat(this._requestDispatcher.url, "/").concat(encodeURIComponent(entityOptions.name || entityAlias))
       }, entityOptions));
     });
   },
@@ -27,12 +26,12 @@ var ODataContext = _class.default.inherit({
     return this.invoke(operationName, params, 'GET');
   },
   invoke(operationName) {
-    var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var httpMethod = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'POST';
+    let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    let httpMethod = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'POST';
     httpMethod = httpMethod.toLowerCase();
-    var d = new _deferred.Deferred();
-    var url = "".concat(this._requestDispatcher.url, "/").concat(encodeURIComponent(operationName));
-    var payload;
+    const d = new _deferred.Deferred();
+    let url = "".concat(this._requestDispatcher.url, "/").concat(encodeURIComponent(operationName));
+    let payload;
     if (this.version() === 4) {
       if (httpMethod === 'get') {
         url = (0, _utils.formatFunctionInvocationUrl)(url, (0, _utils.escapeServiceOperationParams)(params, this.version()));
@@ -42,7 +41,7 @@ var ODataContext = _class.default.inherit({
         params = null;
       }
     }
-    (0, _deferred.when)(this._requestDispatcher.sendRequest(url, httpMethod, (0, _utils.escapeServiceOperationParams)(params, this.version()), payload)).done(function (r) {
+    (0, _deferred.when)(this._requestDispatcher.sendRequest(url, httpMethod, (0, _utils.escapeServiceOperationParams)(params, this.version()), payload)).done(r => {
       if ((0, _type.isPlainObject)(r) && operationName in r) {
         r = r[operationName];
       }
@@ -51,7 +50,7 @@ var ODataContext = _class.default.inherit({
     return d.promise();
   },
   objectLink(entityAlias, key) {
-    var store = this[entityAlias];
+    const store = this[entityAlias];
     if (!store) {
       throw _errors.errors.Error('E4015', entityAlias);
     }

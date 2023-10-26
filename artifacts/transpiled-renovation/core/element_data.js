@@ -12,31 +12,31 @@ var _dom_adapter = _interopRequireDefault(require("./dom_adapter"));
 var _events_engine = _interopRequireDefault(require("../events/core/events_engine"));
 var _memorized_callbacks = _interopRequireDefault(require("./memorized_callbacks"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var dataMap = new WeakMap();
-var strategy;
-var strategyChanging = new _memorized_callbacks.default();
+const dataMap = new WeakMap();
+let strategy;
+const strategyChanging = new _memorized_callbacks.default();
 exports.strategyChanging = strategyChanging;
-var beforeCleanDataFunc = function beforeCleanDataFunc() {};
-var afterCleanDataFunc = function afterCleanDataFunc() {};
-var setDataStrategy = function setDataStrategy(value) {
+let beforeCleanDataFunc = function () {};
+let afterCleanDataFunc = function () {};
+const setDataStrategy = function (value) {
   strategyChanging.fire(value);
   strategy = value;
-  var cleanData = strategy.cleanData;
+  const cleanData = strategy.cleanData;
   strategy.cleanData = function (nodes) {
     beforeCleanDataFunc(nodes);
-    var result = cleanData.call(this, nodes);
+    const result = cleanData.call(this, nodes);
     afterCleanDataFunc(nodes);
     return result;
   };
 };
 exports.setDataStrategy = setDataStrategy;
 setDataStrategy({
-  data: function data() {
-    var element = arguments[0];
-    var key = arguments[1];
-    var value = arguments[2];
+  data: function () {
+    const element = arguments[0];
+    const key = arguments[1];
+    const value = arguments[2];
     if (!element) return;
-    var elementData = dataMap.get(element);
+    let elementData = dataMap.get(element);
     if (!elementData) {
       elementData = {};
       dataMap.set(element, elementData);
@@ -50,19 +50,19 @@ setDataStrategy({
     elementData[key] = value;
     return value;
   },
-  removeData: function removeData(element, key) {
+  removeData: function (element, key) {
     if (!element) return;
     if (key === undefined) {
       dataMap.delete(element);
     } else {
-      var elementData = dataMap.get(element);
+      const elementData = dataMap.get(element);
       if (elementData) {
         delete elementData[key];
       }
     }
   },
-  cleanData: function cleanData(elements) {
-    for (var i = 0; i < elements.length; i++) {
+  cleanData: function (elements) {
+    for (let i = 0; i < elements.length; i++) {
       _events_engine.default.off(elements[i]);
       dataMap.delete(elements[i]);
     }
@@ -90,7 +90,7 @@ function cleanDataRecursive(element, cleanSelf) {
   if (!_dom_adapter.default.isElementNode(element)) {
     return;
   }
-  var childElements = element.getElementsByTagName('*');
+  const childElements = element.getElementsByTagName('*');
   strategy.cleanData(childElements);
   if (cleanSelf) {
     strategy.cleanData([element]);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/odata/store.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,18 +19,16 @@ var _request_dispatcher = _interopRequireDefault(require("./request_dispatcher")
 var _deferred = require("../../core/utils/deferred");
 require("./query_adapter");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ANONYMOUS_KEY_NAME = '5d46402c-7899-4ea9-bd81-8b73c47c7683';
-var expandKeyType = function expandKeyType(key, keyType) {
-  return {
-    [key]: keyType
-  };
-};
-var mergeFieldTypesWithKeyType = function mergeFieldTypesWithKeyType(fieldTypes, keyType) {
-  var result = {};
-  for (var field in fieldTypes) {
+const ANONYMOUS_KEY_NAME = '5d46402c-7899-4ea9-bd81-8b73c47c7683';
+const expandKeyType = (key, keyType) => ({
+  [key]: keyType
+});
+const mergeFieldTypesWithKeyType = (fieldTypes, keyType) => {
+  const result = {};
+  for (const field in fieldTypes) {
     result[field] = fieldTypes[field];
   }
-  for (var keyName in keyType) {
+  for (const keyName in keyType) {
     if (keyName in result) {
       if (result[keyName] !== keyType[keyName]) {
         _errors.errors.log('W4001', keyName);
@@ -41,15 +39,15 @@ var mergeFieldTypesWithKeyType = function mergeFieldTypesWithKeyType(fieldTypes,
   }
   return result;
 };
-var ODataStore = _abstract_store.default.inherit({
+const ODataStore = _abstract_store.default.inherit({
   ctor(options) {
     this.callBase(options);
     this._requestDispatcher = new _request_dispatcher.default(options);
-    var key = this.key();
-    var fieldTypes = options.fieldTypes;
-    var keyType = options.keyType;
+    let key = this.key();
+    let fieldTypes = options.fieldTypes;
+    let keyType = options.keyType;
     if (keyType) {
-      var keyTypeIsString = typeof keyType === 'string';
+      const keyTypeIsString = typeof keyType === 'string';
       if (!key) {
         key = keyTypeIsString ? ANONYMOUS_KEY_NAME : Object.keys(keyType);
         this._legacyAnonymousKey = key;
@@ -70,7 +68,7 @@ var ODataStore = _abstract_store.default.inherit({
     return ['expand', 'customQueryParams'];
   },
   _byKeyImpl(key, extraOptions) {
-    var params = {};
+    const params = {};
     if (extraOptions) {
       params['$expand'] = (0, _utils.generateExpand)(this.version(), extraOptions.expand, extraOptions.select) || undefined;
       params['$select'] = (0, _utils.generateSelect)(this.version(), extraOptions.select) || undefined;
@@ -79,8 +77,8 @@ var ODataStore = _abstract_store.default.inherit({
   },
   createQuery(loadOptions) {
     var _loadOptions$urlOverr;
-    var url;
-    var queryOptions = {
+    let url;
+    const queryOptions = {
       adapter: 'odata',
       beforeSend: this._requestDispatcher.beforeSend,
       errorHandler: this._errorHandler,
@@ -99,7 +97,7 @@ var ODataStore = _abstract_store.default.inherit({
       queryOptions.filterToLower = this._requestDispatcher.filterToLower;
     }
     if (loadOptions !== null && loadOptions !== void 0 && loadOptions.customQueryParams) {
-      var params = (0, _utils.escapeServiceOperationParams)(loadOptions === null || loadOptions === void 0 ? void 0 : loadOptions.customQueryParams, this.version());
+      const params = (0, _utils.escapeServiceOperationParams)(loadOptions === null || loadOptions === void 0 ? void 0 : loadOptions.customQueryParams, this.version());
       if (this.version() === 4) {
         url = (0, _utils.formatFunctionInvocationUrl)(url, params);
       } else {
@@ -109,36 +107,29 @@ var ODataStore = _abstract_store.default.inherit({
     return (0, _query.default)(url, queryOptions);
   },
   _insertImpl(values) {
-    var _this = this;
     this._requireKey();
-    var d = new _deferred.Deferred();
-    (0, _deferred.when)(this._requestDispatcher.sendRequest(this._requestDispatcher.url, 'POST', null, values)).done(function (serverResponse) {
-      return d.resolve(serverResponse && !(0, _config.default)().useLegacyStoreResult ? serverResponse : values, _this.keyOf(serverResponse));
-    }).fail(d.reject);
+    const d = new _deferred.Deferred();
+    (0, _deferred.when)(this._requestDispatcher.sendRequest(this._requestDispatcher.url, 'POST', null, values)).done(serverResponse => d.resolve(serverResponse && !(0, _config.default)().useLegacyStoreResult ? serverResponse : values, this.keyOf(serverResponse))).fail(d.reject);
     return d.promise();
   },
   _updateImpl(key, values) {
-    var d = new _deferred.Deferred();
-    (0, _deferred.when)(this._requestDispatcher.sendRequest(this._byKeyUrl(key), this._updateMethod, null, values)).done(function (serverResponse) {
-      return (0, _config.default)().useLegacyStoreResult ? d.resolve(key, values) : d.resolve(serverResponse || values, key);
-    }).fail(d.reject);
+    const d = new _deferred.Deferred();
+    (0, _deferred.when)(this._requestDispatcher.sendRequest(this._byKeyUrl(key), this._updateMethod, null, values)).done(serverResponse => (0, _config.default)().useLegacyStoreResult ? d.resolve(key, values) : d.resolve(serverResponse || values, key)).fail(d.reject);
     return d.promise();
   },
   _removeImpl(key) {
-    var d = new _deferred.Deferred();
-    (0, _deferred.when)(this._requestDispatcher.sendRequest(this._byKeyUrl(key), 'DELETE')).done(function () {
-      return d.resolve(key);
-    }).fail(d.reject);
+    const d = new _deferred.Deferred();
+    (0, _deferred.when)(this._requestDispatcher.sendRequest(this._byKeyUrl(key), 'DELETE')).done(() => d.resolve(key)).fail(d.reject);
     return d.promise();
   },
   _convertKey(value) {
-    var result = value;
-    var fieldTypes = this._fieldTypes;
-    var key = this.key() || this._legacyAnonymousKey;
+    let result = value;
+    const fieldTypes = this._fieldTypes;
+    const key = this.key() || this._legacyAnonymousKey;
     if (Array.isArray(key)) {
       result = {};
-      for (var i = 0; i < key.length; i++) {
-        var keyName = key[i];
+      for (let i = 0; i < key.length; i++) {
+        const keyName = key[i];
         result[keyName] = (0, _utils.convertPrimitiveValue)(fieldTypes[keyName], value[keyName]);
       }
     } else if (fieldTypes[key]) {
@@ -147,8 +138,8 @@ var ODataStore = _abstract_store.default.inherit({
     return result;
   },
   _byKeyUrl(value) {
-    var baseUrl = this._requestDispatcher.url;
-    var convertedKey = this._convertKey(value);
+    const baseUrl = this._requestDispatcher.url;
+    const convertedKey = this._convertKey(value);
     return "".concat(baseUrl, "(").concat(encodeURIComponent((0, _utils.serializeKey)(convertedKey, this.version())), ")");
   },
   version() {

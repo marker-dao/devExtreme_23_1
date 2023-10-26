@@ -15,19 +15,13 @@ var _format_helper = _interopRequireDefault(require("../../../../format_helper")
 var _number = _interopRequireDefault(require("../../../../localization/number"));
 var _m_export = require("../../../grids/grid_core/m_export");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var DEFAULT_DATA_TYPE = 'string';
-var DEFAUL_COLUMN_WIDTH = 100;
-var ExportController = {
+const DEFAULT_DATA_TYPE = 'string';
+const DEFAUL_COLUMN_WIDTH = 100;
+const ExportController = {
   exportTo() {
-    var onExporting = this._createActionByOption('onExporting');
-    var eventArgs = {
+    const onExporting = this._createActionByOption('onExporting');
+    const eventArgs = {
       rtlEnabled: this.option('rtlEnabled'),
       fileName: 'PivotGrid',
       cancel: false
@@ -35,16 +29,16 @@ var ExportController = {
     (0, _type.isFunction)(onExporting) && onExporting(eventArgs);
   },
   _getLength(items) {
-    var i;
-    var itemCount = items[0].length;
-    var cellCount = 0;
+    let i;
+    const itemCount = items[0].length;
+    let cellCount = 0;
     for (i = 0; i < itemCount; i += 1) {
       cellCount += items[0][i].colspan || 1;
     }
     return cellCount;
   },
   _correctCellsInfoItemLengths(cellsInfo, expectedLength) {
-    for (var i = 0; i < cellsInfo.length; i += 1) {
+    for (let i = 0; i < cellsInfo.length; i += 1) {
       while (cellsInfo[i].length < expectedLength) {
         cellsInfo[i].push({});
       }
@@ -52,8 +46,8 @@ var ExportController = {
     return cellsInfo;
   },
   _calculateCellInfoItemLength(columnsRow) {
-    var result = 0;
-    for (var columnIndex = 0; columnIndex < columnsRow.length; columnIndex += 1) {
+    let result = 0;
+    for (let columnIndex = 0; columnIndex < columnsRow.length; columnIndex += 1) {
       result += (0, _type.isDefined)(columnsRow[columnIndex].colspan) ? columnsRow[columnIndex].colspan : 1;
     }
     return result;
@@ -67,13 +61,13 @@ var ExportController = {
     };
   },
   _getAllItems(columnsInfo, rowsInfoItems, cellsInfo) {
-    var cellIndex;
-    var rowIndex;
-    var correctedCellsInfo = cellsInfo;
-    var rowsLength = this._getLength(rowsInfoItems);
-    var headerRowsCount = columnsInfo.length;
+    let cellIndex;
+    let rowIndex;
+    let correctedCellsInfo = cellsInfo;
+    const rowsLength = this._getLength(rowsInfoItems);
+    const headerRowsCount = columnsInfo.length;
     if (columnsInfo.length > 0 && columnsInfo[0].length > 0 && cellsInfo.length > 0 && cellsInfo[0].length === 0) {
-      var cellInfoItemLength = this._calculateCellInfoItemLength(columnsInfo[0]);
+      const cellInfoItemLength = this._calculateCellInfoItemLength(columnsInfo[0]);
       if (cellInfoItemLength > 0) {
         correctedCellsInfo = this._correctCellsInfoItemLengths(cellsInfo, cellInfoItemLength);
       }
@@ -81,22 +75,16 @@ var ExportController = {
     // NOTE (T1155137): If the data area is empty - fill in empty cells
     // for the correct layout of the export table
     if (correctedCellsInfo.length === 0) {
-      var rowsCount = rowsInfoItems.length;
-      var collapsedColumnCount = columnsInfo.map(function (headerRowWithColumns) {
-        return headerRowWithColumns.filter(function (row) {
-          return !row.expanded;
-        }).length;
-      }).reduce(function (result, collapsedCount) {
-        return result + collapsedCount;
-      }, 0);
-      for (var rowIdx = 0; rowIdx < rowsCount; rowIdx += 1) {
+      const rowsCount = rowsInfoItems.length;
+      const collapsedColumnCount = columnsInfo.map(headerRowWithColumns => headerRowWithColumns.filter(row => !row.expanded).length).reduce((result, collapsedCount) => result + collapsedCount, 0);
+      for (let rowIdx = 0; rowIdx < rowsCount; rowIdx += 1) {
         correctedCellsInfo[rowIdx] = [];
-        for (var colIdx = 0; colIdx < collapsedColumnCount; colIdx += 1) {
+        for (let colIdx = 0; colIdx < collapsedColumnCount; colIdx += 1) {
           correctedCellsInfo[rowIdx][colIdx] = this._getEmptyCell();
         }
       }
     }
-    var sourceItems = columnsInfo.concat(correctedCellsInfo);
+    const sourceItems = columnsInfo.concat(correctedCellsInfo);
     for (rowIndex = 0; rowIndex < rowsInfoItems.length; rowIndex += 1) {
       for (cellIndex = rowsInfoItems[rowIndex].length - 1; cellIndex >= 0; cellIndex -= 1) {
         if (!(0, _type.isDefined)(sourceItems[rowIndex + headerRowsCount])) {
@@ -117,17 +105,17 @@ var ExportController = {
   }
 };
 exports.ExportController = ExportController;
-var DataProvider = _class.default.inherit({
+const DataProvider = _class.default.inherit({
   ctor(exportController) {
     this._exportController = exportController;
   },
   ready() {
     this._initOptions();
-    var options = this._options;
-    return (0, _deferred.when)(options.items).done(function (items) {
-      var headerSize = items[0][0].rowspan;
-      var columns = items[headerSize - 1];
-      (0, _iterator.each)(columns, function (_, column) {
+    const options = this._options;
+    return (0, _deferred.when)(options.items).done(items => {
+      const headerSize = items[0][0].rowspan;
+      const columns = items[headerSize - 1];
+      (0, _iterator.each)(columns, (_, column) => {
         column.width = DEFAUL_COLUMN_WIDTH;
       });
       options.columns = columns;
@@ -135,15 +123,15 @@ var DataProvider = _class.default.inherit({
     });
   },
   _initOptions() {
-    var exportController = this._exportController;
-    var dataController = exportController._dataController;
+    const exportController = this._exportController;
+    const dataController = exportController._dataController;
     // @ts-expect-error
-    var items = new _deferred.Deferred();
+    const items = new _deferred.Deferred();
     dataController.beginLoading();
-    setTimeout(function () {
-      var columnsInfo = (0, _extend.extend)(true, [], dataController.getColumnsInfo(true));
-      var rowsInfoItems = (0, _extend.extend)(true, [], dataController.getRowsInfo(true));
-      var cellsInfo = dataController.getCellsInfo(true);
+    setTimeout(() => {
+      const columnsInfo = (0, _extend.extend)(true, [], dataController.getColumnsInfo(true));
+      const rowsInfoItems = (0, _extend.extend)(true, [], dataController.getRowsInfo(true));
+      const cellsInfo = dataController.getCellsInfo(true);
       items.resolve(exportController._getAllItems(columnsInfo, rowsInfoItems, cellsInfo));
       dataController.endLoading();
     });
@@ -159,13 +147,15 @@ var DataProvider = _class.default.inherit({
     return this._options.columns;
   },
   getColumnsWidths() {
-    var colsArea = this._options.columnsArea;
-    var rowsArea = this._options.rowsArea;
-    var columns = this._options.columns;
-    var useDefaultWidth = !(0, _window.hasWindow)() || colsArea.option('scrolling.mode') === 'virtual' || colsArea.element().is(':hidden');
-    return useDefaultWidth ? columns.map(function () {
-      return DEFAUL_COLUMN_WIDTH;
-    }) : rowsArea.getColumnsWidth().concat(colsArea.getColumnsWidth());
+    const colsArea = this._options.columnsArea;
+    const {
+      rowsArea
+    } = this._options;
+    const {
+      columns
+    } = this._options;
+    const useDefaultWidth = !(0, _window.hasWindow)() || colsArea.option('scrolling.mode') === 'virtual' || colsArea.element().is(':hidden');
+    return useDefaultWidth ? columns.map(() => DEFAUL_COLUMN_WIDTH) : rowsArea.getColumnsWidth().concat(colsArea.getColumnsWidth());
   },
   getRowsCount() {
     return this._options.items.length;
@@ -174,8 +164,10 @@ var DataProvider = _class.default.inherit({
     return 0;
   },
   getCellMerging(rowIndex, cellIndex) {
-    var items = this._options.items;
-    var item = items[rowIndex] && items[rowIndex][cellIndex];
+    const {
+      items
+    } = this._options;
+    const item = items[rowIndex] && items[rowIndex][cellIndex];
     return item ? {
       colspan: item.colspan - 1,
       rowspan: item.rowspan - 1
@@ -191,16 +183,18 @@ var DataProvider = _class.default.inherit({
     };
   },
   getCellType(rowIndex, cellIndex) {
-    var style = this.getStyles()[this.getStyleId(rowIndex, cellIndex)];
+    const style = this.getStyles()[this.getStyleId(rowIndex, cellIndex)];
     return style && style.dataType || 'string';
   },
   getCellData(rowIndex, cellIndex, isExcelJS) {
-    var result = {};
-    var items = this._options.items;
-    var item = items[rowIndex] && items[rowIndex][cellIndex] || {};
+    const result = {};
+    const {
+      items
+    } = this._options;
+    const item = items[rowIndex] && items[rowIndex][cellIndex] || {};
     if (isExcelJS) {
       result.cellSourceData = item;
-      var areaName = this._tryGetAreaName(item, rowIndex, cellIndex);
+      const areaName = this._tryGetAreaName(item, rowIndex, cellIndex);
       if (areaName) {
         result.cellSourceData.area = areaName;
       }
@@ -251,17 +245,18 @@ var DataProvider = _class.default.inherit({
     }];
   },
   getDataFieldStyles() {
-    var _this = this;
-    var dataFields = this._options.dataFields;
-    var dataItemStyle = {
+    const {
+      dataFields
+    } = this._options;
+    const dataItemStyle = {
       alignment: this._options.rtlEnabled ? 'left' : 'right'
     };
-    var dataFieldStyles = [];
+    const dataFieldStyles = [];
     if (dataFields.length) {
-      dataFields.forEach(function (dataField) {
+      dataFields.forEach(dataField => {
         dataFieldStyles.push(_extends(_extends({}, dataItemStyle), {
           format: dataField.format,
-          dataType: _this.getCellDataType(dataField)
+          dataType: this.getCellDataType(dataField)
         }));
       });
       return dataFieldStyles;
@@ -272,7 +267,7 @@ var DataProvider = _class.default.inherit({
     if (this._styles) {
       return this._styles;
     }
-    this._styles = [].concat(_toConsumableArray(this.getHeaderStyles()), _toConsumableArray(this.getDataFieldStyles()));
+    this._styles = [...this.getHeaderStyles(), ...this.getDataFieldStyles()];
     return this._styles;
   },
   getCellDataType(field) {
@@ -293,8 +288,10 @@ var DataProvider = _class.default.inherit({
     return DEFAULT_DATA_TYPE;
   },
   getStyleId(rowIndex, cellIndex) {
-    var items = this._options.items;
-    var item = items[rowIndex] && items[rowIndex][cellIndex] || {};
+    const {
+      items
+    } = this._options;
+    const item = items[rowIndex] && items[rowIndex][cellIndex] || {};
     if (cellIndex === 0 && rowIndex === 0 || this.isColumnAreaCell(rowIndex, cellIndex)) {
       return 0;
     }
@@ -305,7 +302,7 @@ var DataProvider = _class.default.inherit({
   }
 });
 exports.DataProvider = DataProvider;
-var PivotGridExport = {
+const PivotGridExport = {
   DEFAUL_COLUMN_WIDTH
 };
 exports.PivotGridExport = PivotGridExport;

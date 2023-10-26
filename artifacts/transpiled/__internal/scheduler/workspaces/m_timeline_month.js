@@ -20,8 +20,8 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // NOTE: Renovation component import.
 // @ts-expect-error
-var TIMELINE_CLASS = 'dx-scheduler-timeline-month';
-var SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
+const TIMELINE_CLASS = 'dx-scheduler-timeline-month';
+let SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
   _inheritsLoose(SchedulerTimelineMonth, _SchedulerTimeline);
   function SchedulerTimelineMonth() {
     var _this;
@@ -50,29 +50,27 @@ var SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
     return _base.formatWeekdayAndDay;
   };
   _proto._getIntervalBetween = function _getIntervalBetween(currentDate) {
-    var firstViewDate = this.getStartViewDate();
-    var timeZoneOffset = _date.default.getTimezonesDifference(firstViewDate, currentDate);
+    const firstViewDate = this.getStartViewDate();
+    const timeZoneOffset = _date.default.getTimezonesDifference(firstViewDate, currentDate);
     return currentDate.getTime() - (firstViewDate.getTime() - this.option('startDayHour') * 3600000) - timeZoneOffset;
   };
   _proto._getViewStartByOptions = function _getViewStartByOptions() {
     return (0, _month.getViewStartByOptions)(this.option('startDate'), this.option('currentDate'), this.option('intervalCount'), _date.default.getFirstMonthDate(this.option('startDate')));
   };
   _proto.generateRenderOptions = function generateRenderOptions() {
-    var options = _SchedulerTimeline.prototype.generateRenderOptions.call(this, true);
+    const options = _SchedulerTimeline.prototype.generateRenderOptions.call(this, true);
     return _extends(_extends({}, options), {
-      getDateForHeaderText: function getDateForHeaderText(_, date) {
-        return date;
-      }
+      getDateForHeaderText: (_, date) => date
     });
   };
   _createClass(SchedulerTimelineMonth, [{
     key: "type",
-    get: function get() {
+    get: function () {
       return _m_constants.VIEWS.TIMELINE_MONTH;
     }
   }, {
     key: "renovatedHeaderPanelComponent",
-    get: function get() {
+    get: function () {
       return _layout.default;
     }
   }]);

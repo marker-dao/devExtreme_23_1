@@ -3,9 +3,9 @@
 exports.animation = void 0;
 var _fx = _interopRequireDefault(require("../../animation/fx"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ANIMATION_DURATION = 400;
-var animation = {
-  moveTo: function moveTo($element, position, completeAction) {
+const ANIMATION_DURATION = 400;
+const animation = {
+  moveTo: function ($element, position, completeAction) {
     _fx.default.animate($element, {
       type: 'slide',
       to: {
@@ -15,7 +15,7 @@ var animation = {
       complete: completeAction
     });
   },
-  complete: function complete($element) {
+  complete: function ($element) {
     _fx.default.stop($element, true);
   }
 };

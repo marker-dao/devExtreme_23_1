@@ -9,9 +9,9 @@ var _pointer = _interopRequireDefault(require("../../events/pointer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var POINTERUP_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.up, 'dxDiagramPanel');
-var PREVENT_REFOCUS_SELECTOR = '.dx-textbox';
-var DiagramPanel = /*#__PURE__*/function (_Widget) {
+const POINTERUP_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.up, 'dxDiagramPanel');
+const PREVENT_REFOCUS_SELECTOR = '.dx-textbox';
+let DiagramPanel = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(DiagramPanel, _Widget);
   function DiagramPanel() {
     return _Widget.apply(this, arguments) || this;
@@ -29,13 +29,12 @@ var DiagramPanel = /*#__PURE__*/function (_Widget) {
     return [this.$element()];
   };
   _proto._attachPointerUpEvent = function _attachPointerUpEvent() {
-    var _this = this;
-    var elements = this._getPointerUpElements();
-    elements.forEach(function (element) {
+    const elements = this._getPointerUpElements();
+    elements.forEach(element => {
       _events_engine.default.off(element, POINTERUP_EVENT_NAME);
-      _events_engine.default.on(element, POINTERUP_EVENT_NAME, function (e) {
+      _events_engine.default.on(element, POINTERUP_EVENT_NAME, e => {
         if (!(0, _renderer.default)(e.target).closest(PREVENT_REFOCUS_SELECTOR).length) {
-          _this._onPointerUpAction();
+          this._onPointerUpAction();
         }
       });
     });

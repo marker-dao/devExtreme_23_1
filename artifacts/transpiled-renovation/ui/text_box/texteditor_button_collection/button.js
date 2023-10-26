@@ -3,7 +3,7 @@
 exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TextEditorButton = /*#__PURE__*/function () {
+let TextEditorButton = /*#__PURE__*/function () {
   function TextEditorButton(name, editor, options) {
     this.instance = null;
     this.$container = null;
@@ -17,8 +17,10 @@ var TextEditorButton = /*#__PURE__*/function () {
     this.$placeMarker = (0, _renderer.default)('<div>').appendTo($container);
   };
   _proto._addToContainer = function _addToContainer($element) {
-    var $placeMarker = this.$placeMarker,
-      $container = this.$container;
+    const {
+      $placeMarker,
+      $container
+    } = this;
     $placeMarker ? $placeMarker.replaceWith($element) : $element.appendTo($container);
   };
   _proto._attachEvents = function _attachEvents( /* instance, $element */
@@ -32,8 +34,10 @@ var TextEditorButton = /*#__PURE__*/function () {
     return !!this.instance;
   };
   _proto._isVisible = function _isVisible() {
-    var editor = this.editor,
-      options = this.options;
+    const {
+      editor,
+      options
+    } = this;
     return options.visible || !editor.option('readOnly');
   };
   _proto._isDisabled = function _isDisabled() {
@@ -43,8 +47,10 @@ var TextEditorButton = /*#__PURE__*/function () {
     return this._isVisible() && !this._isRendered();
   };
   _proto.dispose = function dispose() {
-    var instance = this.instance,
-      $placeMarker = this.$placeMarker;
+    const {
+      instance,
+      $placeMarker
+    } = this;
     if (instance) {
       // TODO: instance.dispose()
       instance.dispose ? instance.dispose() : instance.remove();
@@ -53,12 +59,13 @@ var TextEditorButton = /*#__PURE__*/function () {
     $placeMarker && $placeMarker.remove();
   };
   _proto.render = function render() {
-    var $container = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.$container;
+    let $container = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.$container;
     this.$container = $container;
     if (this._isVisible()) {
-      var _this$_create = this._create(),
-        instance = _this$_create.instance,
-        $element = _this$_create.$element;
+      const {
+        instance,
+        $element
+      } = this._create();
       this.instance = instance;
       this._attachEvents(instance, $element);
     } else {

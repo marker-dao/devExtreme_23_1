@@ -14,8 +14,8 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var TIMELINE_CLASS = 'dx-scheduler-timeline-day';
-var SchedulerTimelineDay = /*#__PURE__*/function (_SchedulerTimeline) {
+const TIMELINE_CLASS = 'dx-scheduler-timeline-day';
+let SchedulerTimelineDay = /*#__PURE__*/function (_SchedulerTimeline) {
   _inheritsLoose(SchedulerTimelineDay, _SchedulerTimeline);
   function SchedulerTimelineDay() {
     return _SchedulerTimeline.apply(this, arguments) || this;
@@ -29,7 +29,7 @@ var SchedulerTimelineDay = /*#__PURE__*/function (_SchedulerTimeline) {
   };
   _createClass(SchedulerTimelineDay, [{
     key: "type",
-    get: function get() {
+    get: function () {
       return _m_constants.VIEWS.TIMELINE_DAY;
     }
   }]);

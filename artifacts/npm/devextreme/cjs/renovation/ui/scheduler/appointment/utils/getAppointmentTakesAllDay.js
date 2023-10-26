@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,20 +12,16 @@ exports.getAppointmentTakesAllDay = void 0;
 var _type = require("../../../../../core/utils/type");
 var _date = _interopRequireDefault(require("../../../../../core/utils/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var getAppointmentDurationInHours = function getAppointmentDurationInHours(startDate, endDate) {
-  return (endDate.getTime() - startDate.getTime()) / _date.default.dateToMilliseconds('hour');
-};
-var appointmentHasShortDayDuration = function appointmentHasShortDayDuration(startDate, endDate, viewStartDayHour, viewEndDayHour) {
-  var appointmentDurationInHours = getAppointmentDurationInHours(startDate, endDate);
-  var viewDurationInHours = viewEndDayHour - viewStartDayHour;
-  var startDateHours = startDate.getHours();
-  var endDateHours = endDate.getHours();
+const getAppointmentDurationInHours = (startDate, endDate) => (endDate.getTime() - startDate.getTime()) / _date.default.dateToMilliseconds('hour');
+const appointmentHasShortDayDuration = (startDate, endDate, viewStartDayHour, viewEndDayHour) => {
+  const appointmentDurationInHours = getAppointmentDurationInHours(startDate, endDate);
+  const viewDurationInHours = viewEndDayHour - viewStartDayHour;
+  const startDateHours = startDate.getHours();
+  const endDateHours = endDate.getHours();
   return appointmentDurationInHours >= viewDurationInHours && startDateHours === viewStartDayHour && endDateHours === viewEndDayHour;
 };
-var getAppointmentTakesAllDay = function getAppointmentTakesAllDay(appointmentAdapter, viewStartDayHour, viewEndDayHour, allDayPanelMode) {
-  var hasAllDay = function hasAllDay() {
-    return appointmentAdapter.allDay;
-  };
+const getAppointmentTakesAllDay = (appointmentAdapter, viewStartDayHour, viewEndDayHour, allDayPanelMode) => {
+  const hasAllDay = () => appointmentAdapter.allDay;
   switch (allDayPanelMode) {
     case 'hidden':
       return false;
@@ -37,13 +33,15 @@ var getAppointmentTakesAllDay = function getAppointmentTakesAllDay(appointmentAd
         if (hasAllDay()) {
           return true;
         }
-        var endDate = appointmentAdapter.endDate,
-          startDate = appointmentAdapter.startDate;
+        const {
+          endDate,
+          startDate
+        } = appointmentAdapter;
         if (!(0, _type.isDefined)(endDate)) {
           return false;
         }
-        var appointmentDurationInHours = getAppointmentDurationInHours(startDate, endDate);
-        var dayDuration = 24;
+        const appointmentDurationInHours = getAppointmentDurationInHours(startDate, endDate);
+        const dayDuration = 24;
         return appointmentDurationInHours >= dayDuration || appointmentHasShortDayDuration(startDate, endDate, viewStartDayHour, viewEndDayHour);
       }
   }

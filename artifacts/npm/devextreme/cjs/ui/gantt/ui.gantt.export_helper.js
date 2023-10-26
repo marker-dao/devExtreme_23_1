@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.export_helper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,10 +15,10 @@ var _type = require("../../core/utils/type");
 var _date = _interopRequireDefault(require("../../localization/date"));
 var _number = _interopRequireDefault(require("../../localization/number"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var TREELIST_EMPTY_SPACE = 'dx-treelist-empty-space';
-var TREELIST_TABLE = 'dx-treelist-table';
-var GanttExportHelper = /*#__PURE__*/function () {
+const window = (0, _window.getWindow)();
+const TREELIST_EMPTY_SPACE = 'dx-treelist-empty-space';
+const TREELIST_TABLE = 'dx-treelist-table';
+let GanttExportHelper = /*#__PURE__*/function () {
   function GanttExportHelper(gantt) {
     this._gantt = gantt;
     this._treeList = gantt._treeList;
@@ -29,8 +29,8 @@ var GanttExportHelper = /*#__PURE__*/function () {
     this._cache = {};
   };
   _proto.getTreeListTableStyle = function getTreeListTableStyle() {
-    var table = this._getTreeListTable();
-    var style = window.getComputedStyle(table);
+    const table = this._getTreeListTable();
+    const style = window.getComputedStyle(table);
     return {
       color: style.color,
       backgroundColor: style.backgroundColor,
@@ -43,17 +43,15 @@ var GanttExportHelper = /*#__PURE__*/function () {
     };
   };
   _proto.getTreeListColCount = function getTreeListColCount() {
-    var headerView = this._getHeaderView();
-    var widths = headerView.getColumnWidths().filter(function (w) {
-      return w > 0;
-    });
+    const headerView = this._getHeaderView();
+    const widths = headerView.getColumnWidths().filter(w => w > 0);
     return widths.length;
   };
   _proto.getTreeListHeaderInfo = function getTreeListHeaderInfo(colIndex) {
-    var element = this._getHeaderElement(colIndex);
+    const element = this._getHeaderElement(colIndex);
     if (!element) return null;
-    var style = window.getComputedStyle(element);
-    var styleForExport = {
+    const style = window.getComputedStyle(element);
+    const styleForExport = {
       color: style.color,
       padding: style.padding,
       paddingLeft: style.paddingLeft,
@@ -70,11 +68,11 @@ var GanttExportHelper = /*#__PURE__*/function () {
   };
   _proto.getTreeListCellInfo = function getTreeListCellInfo(key, colIndex) {
     var _cell$textContent;
-    var node = this._treeList.getNodeByKey(key);
-    var visibleRowIndex = this._treeList.getRowIndexByKey(key);
-    var cell = visibleRowIndex > -1 ? this._getDataCell(visibleRowIndex, colIndex) : null;
-    var style = cell ? window.getComputedStyle(cell) : this._getColumnCellStyle(colIndex);
-    var styleForExport = {
+    const node = this._treeList.getNodeByKey(key);
+    const visibleRowIndex = this._treeList.getRowIndexByKey(key);
+    const cell = visibleRowIndex > -1 ? this._getDataCell(visibleRowIndex, colIndex) : null;
+    const style = cell ? window.getComputedStyle(cell) : this._getColumnCellStyle(colIndex);
+    const styleForExport = {
       color: style.color,
       padding: style.padding,
       paddingLeft: style.paddingLeft,
@@ -101,19 +99,19 @@ var GanttExportHelper = /*#__PURE__*/function () {
     (_this$_cache$_columnW = (_this$_cache = this._cache)[_columnWidths = 'columnWidths']) !== null && _this$_cache$_columnW !== void 0 ? _this$_cache$_columnW : _this$_cache[_columnWidths] = {};
     if (!this._cache['columnWidths'][colIndex]) {
       var _header$clientWidth;
-      var header = this._getHeaderElement(colIndex);
+      const header = this._getHeaderElement(colIndex);
       this._cache['columnWidths'][colIndex] = (_header$clientWidth = header === null || header === void 0 ? void 0 : header.clientWidth) !== null && _header$clientWidth !== void 0 ? _header$clientWidth : 0;
     }
   };
   _proto._getColumnWidth = function _getColumnWidth(colIndex) {
     this._ensureColumnWidthCache(colIndex);
-    var widths = this._cache['columnWidths'];
+    const widths = this._cache['columnWidths'];
     return widths && widths[colIndex];
   };
   _proto._getEmptySpaceWidth = function _getEmptySpaceWidth(level) {
     if (!this._cache['emptyWidth']) {
       var _this$_cache2, _emptyWidth, _this$_cache2$_emptyW, _element$offsetWidth;
-      var element = this._getTreeListElement(TREELIST_EMPTY_SPACE);
+      const element = this._getTreeListElement(TREELIST_EMPTY_SPACE);
       (_this$_cache2$_emptyW = (_this$_cache2 = this._cache)[_emptyWidth = 'emptyWidth']) !== null && _this$_cache2$_emptyW !== void 0 ? _this$_cache2$_emptyW : _this$_cache2[_emptyWidth] = (_element$offsetWidth = element.offsetWidth) !== null && _element$offsetWidth !== void 0 ? _element$offsetWidth : 0;
     }
     return this._cache['emptyWidth'] * (level + 1);
@@ -126,7 +124,7 @@ var GanttExportHelper = /*#__PURE__*/function () {
     var _this$_cache3, _columnStyles, _this$_cache3$_column;
     (_this$_cache3$_column = (_this$_cache3 = this._cache)[_columnStyles = 'columnStyles']) !== null && _this$_cache3$_column !== void 0 ? _this$_cache3$_column : _this$_cache3[_columnStyles] = {};
     if (!this._cache['columnStyles'][colIndex]) {
-      var cell = this._getDataCell(0, colIndex);
+      const cell = this._getDataCell(0, colIndex);
       this._cache['columnStyles'][colIndex] = window.getComputedStyle(cell);
     }
   };
@@ -146,8 +144,8 @@ var GanttExportHelper = /*#__PURE__*/function () {
     return this._treeList._$element.find('.' + className).get(0);
   };
   _proto._getDataCell = function _getDataCell(rowIndex, colIndex) {
-    var treeList = this._treeList;
-    var cellElement = treeList.getCellElement(rowIndex, colIndex);
+    const treeList = this._treeList;
+    const cellElement = treeList.getCellElement(rowIndex, colIndex);
     return cellElement && cellElement.length ? cellElement[0] : cellElement;
   };
   _proto._getHeaderElement = function _getHeaderElement(index) {
@@ -157,18 +155,18 @@ var GanttExportHelper = /*#__PURE__*/function () {
     return this._treeList._views.columnHeadersView;
   };
   _proto._getDisplayText = function _getDisplayText(key, colIndex) {
-    var task = this._getTask(key);
+    const task = this._getTask(key);
     return task && this._getGridDisplayText(colIndex, task);
   };
   _proto._getGridDisplayText = function _getGridDisplayText(colIndex, data) {
-    var columns = this._treeList.getController('columns').getColumns();
-    var column = columns[colIndex];
-    var field = column === null || column === void 0 ? void 0 : column.dataField;
-    var format = column === null || column === void 0 ? void 0 : column.format;
-    var value = _uiGrid_core.default.getDisplayValue(column, data[field], data, 'data');
+    const columns = this._treeList.getController('columns').getColumns();
+    const column = columns[colIndex];
+    const field = column === null || column === void 0 ? void 0 : column.dataField;
+    const format = column === null || column === void 0 ? void 0 : column.format;
+    const value = _uiGrid_core.default.getDisplayValue(column, data[field], data, 'data');
     if ((0, _type.isDefined)(format)) {
       if ((column === null || column === void 0 ? void 0 : column.dataType) === 'date' || (column === null || column === void 0 ? void 0 : column.dataType) === 'datetime') {
-        var date = (0, _type.isDate)(value) ? value : new Date(value);
+        const date = (0, _type.isDate)(value) ? value : new Date(value);
         return _date.default.format(date, format);
       }
       if ((0, _type.isNumeric)(value)) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/selection/selection.strategy.deferred.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,7 +17,7 @@ var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
+let DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
   _inheritsLoose(DeferredStrategy, _SelectionStrategy);
   function DeferredStrategy() {
     return _SelectionStrategy.apply(this, arguments) || this;
@@ -27,12 +27,12 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     return this._loadFilteredData(this.options.selectionFilter);
   };
   _proto.getSelectedItemKeys = function getSelectedItemKeys() {
-    var d = new _deferred.Deferred();
-    var that = this;
-    var key = this.options.key();
-    var select = (0, _type.isString)(key) ? [key] : key;
+    const d = new _deferred.Deferred();
+    const that = this;
+    const key = this.options.key();
+    const select = (0, _type.isString)(key) ? [key] : key;
     this._loadFilteredData(this.options.selectionFilter, null, select).done(function (items) {
-      var keys = items.map(function (item) {
+      const keys = items.map(function (item) {
         return that.options.keyOf(item);
       });
       d.resolve(keys);
@@ -41,8 +41,8 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
   };
   _proto.selectedItemKeys = function selectedItemKeys(keys, preserve, isDeselect, isSelectAll) {
     if (isSelectAll) {
-      var filter = this.options.filter();
-      var needResetSelectionFilter = !filter || JSON.stringify(filter) === JSON.stringify(this.options.selectionFilter) && isDeselect;
+      const filter = this.options.filter();
+      const needResetSelectionFilter = !filter || JSON.stringify(filter) === JSON.stringify(this.options.selectionFilter) && isDeselect;
       if (needResetSelectionFilter) {
         this._setOption('selectionFilter', isDeselect ? [] : null);
       } else {
@@ -52,7 +52,7 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
       if (!preserve) {
         this._setOption('selectionFilter', []);
       }
-      for (var i = 0; i < keys.length; i++) {
+      for (let i = 0; i < keys.length; i++) {
         if (isDeselect) {
           this.removeSelectedItem(keys[i]);
         } else {
@@ -65,7 +65,7 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
   };
   _proto.setSelectedItems = function setSelectedItems(keys) {
     this._setOption('selectionFilter', null);
-    for (var i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i++) {
       this.addSelectedItem(keys[i]);
     }
   };
@@ -73,32 +73,32 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     return this.isItemKeySelected(itemData);
   };
   _proto.isItemKeySelected = function isItemKeySelected(itemData) {
-    var selectionFilter = this.options.selectionFilter;
+    const selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) {
       return true;
     }
     return !!(0, _query.default)([itemData]).filter(selectionFilter).toArray().length;
   };
   _proto._getKeyExpr = function _getKeyExpr() {
-    var keyField = this.options.key();
+    const keyField = this.options.key();
     if (Array.isArray(keyField) && keyField.length === 1) {
       return keyField[0];
     }
     return keyField;
   };
   _proto._normalizeKey = function _normalizeKey(key) {
-    var keyExpr = this.options.key();
+    const keyExpr = this.options.key();
     if (Array.isArray(keyExpr) && keyExpr.length === 1) {
       return key[keyExpr[0]];
     }
     return key;
   };
   _proto._getFilterByKey = function _getFilterByKey(key) {
-    var keyField = this._getKeyExpr();
-    var filter = [keyField, '=', this._normalizeKey(key)];
+    const keyField = this._getKeyExpr();
+    let filter = [keyField, '=', this._normalizeKey(key)];
     if (Array.isArray(keyField)) {
       filter = [];
-      for (var i = 0; i < keyField.length; i++) {
+      for (let i = 0; i < keyField.length; i++) {
         filter.push([keyField[i], '=', key[keyField[i]]]);
         if (i !== keyField.length - 1) {
           filter.push('and');
@@ -108,24 +108,24 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     return filter;
   };
   _proto.addSelectedItem = function addSelectedItem(key, isSelectAll, skipFilter) {
-    var filter = this._getFilterByKey(key);
+    const filter = this._getFilterByKey(key);
     this._addSelectionFilter(false, filter, isSelectAll, skipFilter);
   };
   _proto.removeSelectedItem = function removeSelectedItem(key) {
-    var filter = this._getFilterByKey(key);
+    const filter = this._getFilterByKey(key);
     this._addSelectionFilter(true, filter);
   };
   _proto.validate = function validate() {
-    var key = this.options.key;
+    const key = this.options.key;
     if (key && key() === undefined) {
       throw _ui.default.Error('E1042', 'Deferred selection');
     }
   };
   _proto._findSubFilter = function _findSubFilter(selectionFilter, filter) {
     if (!selectionFilter) return -1;
-    var filterString = JSON.stringify(filter);
-    for (var index = 0; index < selectionFilter.length; index++) {
-      var subFilter = selectionFilter[index];
+    const filterString = JSON.stringify(filter);
+    for (let index = 0; index < selectionFilter.length; index++) {
+      const subFilter = selectionFilter[index];
       if (subFilter && JSON.stringify(subFilter) === filterString) {
         return index;
       }
@@ -154,7 +154,7 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     return filter;
   };
   _proto._isOnlyNegativeFiltersLeft = function _isOnlyNegativeFiltersLeft(filters) {
-    return filters.every(function (filterItem, i) {
+    return filters.every((filterItem, i) => {
       if (i % 2 === 0) {
         return Array.isArray(filterItem) && filterItem[0] === '!';
       } else {
@@ -164,20 +164,20 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
   };
   _proto._addSelectionFilter = function _addSelectionFilter(isDeselect, filter, isSelectAll, skipFilter) {
     var _selectionFilter;
-    var that = this;
-    var currentFilter = isDeselect ? ['!', filter] : filter;
-    var currentOperation = isDeselect ? 'and' : 'or';
-    var needAddFilter = true;
-    var selectionFilter = that.options.selectionFilter || [];
+    const that = this;
+    const currentFilter = isDeselect ? ['!', filter] : filter;
+    const currentOperation = isDeselect ? 'and' : 'or';
+    let needAddFilter = true;
+    let selectionFilter = that.options.selectionFilter || [];
     selectionFilter = that._denormalizeFilter(selectionFilter);
     if ((_selectionFilter = selectionFilter) !== null && _selectionFilter !== void 0 && _selectionFilter.length && !skipFilter) {
-      var removedIndex = that._removeSameFilter(selectionFilter, filter, isDeselect, isSelectAll);
-      var filterIndex = that._removeSameFilter(selectionFilter, filter, !isDeselect);
-      var shouldCleanFilter = isDeselect && (removedIndex !== -1 || filterIndex !== -1) && this._isOnlyNegativeFiltersLeft(selectionFilter);
+      const removedIndex = that._removeSameFilter(selectionFilter, filter, isDeselect, isSelectAll);
+      const filterIndex = that._removeSameFilter(selectionFilter, filter, !isDeselect);
+      const shouldCleanFilter = isDeselect && (removedIndex !== -1 || filterIndex !== -1) && this._isOnlyNegativeFiltersLeft(selectionFilter);
       if (shouldCleanFilter) {
         selectionFilter = [];
       }
-      var isKeyOperatorsAfterRemoved = this._isKeyFilter(filter) && this._hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex);
+      const isKeyOperatorsAfterRemoved = this._isKeyFilter(filter) && this._hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex);
       needAddFilter = filter.length && !isKeyOperatorsAfterRemoved;
     }
     if (needAddFilter) {
@@ -194,7 +194,7 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     return filter;
   };
   _proto._removeFilterByIndex = function _removeFilterByIndex(filter, filterIndex, isSelectAll) {
-    var operation = filter[1];
+    const operation = filter[1];
     if (filterIndex > 0) {
       filter.splice(filterIndex - 1, 2);
     } else {
@@ -211,12 +211,12 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     if (filter.length === 2 && filter[0] === '!') {
       return this._isKeyFilter(filter[1]);
     }
-    var keyField = this._getKeyExpr();
+    const keyField = this._getKeyExpr();
     if (Array.isArray(keyField)) {
       if (filter.length !== keyField.length * 2 - 1) {
         return false;
       }
-      for (var i = 0; i < keyField.length; i++) {
+      for (let i = 0; i < keyField.length; i++) {
         if (i > 0 && filter[i * 2 - 1] !== 'and') {
           return false;
         }
@@ -230,7 +230,7 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
   };
   _proto._hasKeyFiltersOnlyStartingFromIndex = function _hasKeyFiltersOnlyStartingFromIndex(selectionFilter, filterIndex) {
     if (filterIndex >= 0) {
-      for (var i = filterIndex; i < selectionFilter.length; i++) {
+      for (let i = filterIndex; i < selectionFilter.length; i++) {
         if (typeof selectionFilter[i] !== 'string' && !this._isKeyFilter(selectionFilter[i])) {
           return false;
         }
@@ -245,21 +245,21 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
       selectionFilter.splice(0, selectionFilter.length);
       return 0;
     }
-    var filterIndex = this._findSubFilter(selectionFilter, filter);
+    const filterIndex = this._findSubFilter(selectionFilter, filter);
     if (filterIndex >= 0) {
       this._removeFilterByIndex(selectionFilter, filterIndex, isSelectAll);
       return filterIndex;
     } else {
-      for (var i = 0; i < selectionFilter.length; i++) {
+      for (let i = 0; i < selectionFilter.length; i++) {
         if (Array.isArray(selectionFilter[i]) && selectionFilter[i].length > 2) {
-          var _filterIndex = this._removeSameFilter(selectionFilter[i], filter, false, isSelectAll);
-          if (_filterIndex >= 0) {
+          const filterIndex = this._removeSameFilter(selectionFilter[i], filter, false, isSelectAll);
+          if (filterIndex >= 0) {
             if (!selectionFilter[i].length) {
               this._removeFilterByIndex(selectionFilter, i, isSelectAll);
             } else if (selectionFilter[i].length === 1) {
               selectionFilter[i] = selectionFilter[i][0];
             }
-            return _filterIndex;
+            return filterIndex;
           }
         }
       }
@@ -267,8 +267,8 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     }
   };
   _proto.getSelectAllState = function getSelectAllState() {
-    var filter = this.options.filter();
-    var selectionFilter = this.options.selectionFilter;
+    const filter = this.options.filter();
+    let selectionFilter = this.options.selectionFilter;
     if (!selectionFilter) return true;
     if (!selectionFilter.length) return false;
     if (!filter || !filter.length) return undefined;
@@ -282,9 +282,9 @@ var DeferredStrategy = /*#__PURE__*/function (_SelectionStrategy) {
     return undefined;
   };
   _proto.loadSelectedItemsWithFilter = function loadSelectedItemsWithFilter() {
-    var componentFilter = this.options.filter();
-    var selectionFilter = this.options.selectionFilter;
-    var filter = componentFilter ? [componentFilter, 'and', selectionFilter] : selectionFilter;
+    const componentFilter = this.options.filter();
+    const selectionFilter = this.options.selectionFilter;
+    const filter = componentFilter ? [componentFilter, 'and', selectionFilter] : selectionFilter;
     return this._loadFilteredData(filter);
   };
   return DeferredStrategy;

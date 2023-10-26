@@ -5,7 +5,7 @@ var _angular = _interopRequireDefault(require("angular"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line no-restricted-imports
 
-var ngModule = {};
+let ngModule = {};
 if (_angular.default) {
   ngModule = _angular.default.module('dx', []);
 }

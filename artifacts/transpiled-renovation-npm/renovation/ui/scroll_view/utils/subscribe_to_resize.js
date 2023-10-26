@@ -7,14 +7,16 @@ var _frame = require("../../../../animation/frame");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function subscribeToResize(element, handler) {
   if ((0, _window.hasWindow)() && element) {
-    var resizeAnimationFrameID = -1;
-    _resize_observer.default.observe(element, function (_ref) {
-      var target = _ref.target;
-      resizeAnimationFrameID = (0, _frame.requestAnimationFrame)(function () {
+    let resizeAnimationFrameID = -1;
+    _resize_observer.default.observe(element, _ref => {
+      let {
+        target
+      } = _ref;
+      resizeAnimationFrameID = (0, _frame.requestAnimationFrame)(() => {
         handler(target);
       });
     });
-    return function () {
+    return () => {
       (0, _frame.cancelAnimationFrame)(resizeAnimationFrameID);
       _resize_observer.default.unobserve(element);
     };

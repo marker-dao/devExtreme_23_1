@@ -9,9 +9,8 @@ var _inferno2 = require("@devextreme/runtime/inferno");
 var _resize_callbacks = _interopRequireDefault(require("../../../core/utils/resize_callbacks"));
 var _get_element_width = require("./utils/get_element_width");
 var _type = require("../../../core/utils/type");
-var _excluded = ["contentTemplate", "pagerProps"];
+const _excluded = ["contentTemplate", "pagerProps"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -21,15 +20,19 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var contentAttributes = _ref.contentAttributes,
-    infoTextRef = _ref.infoTextRef,
-    infoTextVisible = _ref.infoTextVisible,
-    isLargeDisplayMode = _ref.isLargeDisplayMode,
-    pageSizesRef = _ref.pageSizesRef,
-    pagesRef = _ref.pagesRef,
-    parentRef = _ref.parentRef,
-    Content = _ref.props.contentTemplate;
+const viewFunction = _ref => {
+  let {
+    contentAttributes,
+    infoTextRef,
+    infoTextVisible,
+    isLargeDisplayMode,
+    pageSizesRef,
+    pagesRef,
+    parentRef,
+    props: {
+      contentTemplate: Content
+    }
+  } = _ref;
   return Content(_extends({
     rootElementRef: parentRef,
     pageSizesRef: pageSizesRef,
@@ -41,28 +44,34 @@ var viewFunction = function viewFunction(_ref) {
 };
 exports.viewFunction = viewFunction;
 function calculateLargeDisplayMode(_ref2) {
-  var pageSizesWidth = _ref2.pageSizes,
-    pagesWidth = _ref2.pages,
-    parentWidth = _ref2.parent;
+  let {
+    pageSizes: pageSizesWidth,
+    pages: pagesWidth,
+    parent: parentWidth
+  } = _ref2;
   return parentWidth - (pageSizesWidth + pagesWidth) > 0;
 }
 function calculateInfoTextVisible(_ref3) {
-  var infoWidth = _ref3.info,
-    pageSizesWidth = _ref3.pageSizes,
-    pagesWidth = _ref3.pages,
-    parentWidth = _ref3.parent;
-  var minimalWidth = pageSizesWidth + pagesWidth + infoWidth;
+  let {
+    info: infoWidth,
+    pageSizes: pageSizesWidth,
+    pages: pagesWidth,
+    parent: parentWidth
+  } = _ref3;
+  const minimalWidth = pageSizesWidth + pagesWidth + infoWidth;
   return parentWidth - minimalWidth > 0;
 }
 function getElementsWidth(_ref4) {
-  var info = _ref4.info,
-    pageSizes = _ref4.pageSizes,
-    pages = _ref4.pages,
-    parent = _ref4.parent;
-  var parentWidth = (0, _get_element_width.getElementContentWidth)(parent);
-  var pageSizesWidth = (0, _get_element_width.getElementWidth)(pageSizes);
-  var infoWidth = (0, _get_element_width.getElementWidth)(info);
-  var pagesHtmlWidth = (0, _get_element_width.getElementWidth)(pages);
+  let {
+    info,
+    pageSizes,
+    pages,
+    parent
+  } = _ref4;
+  const parentWidth = (0, _get_element_width.getElementContentWidth)(parent);
+  const pageSizesWidth = (0, _get_element_width.getElementWidth)(pageSizes);
+  const infoWidth = (0, _get_element_width.getElementWidth)(info);
+  const pagesHtmlWidth = (0, _get_element_width.getElementWidth)(pages);
   return {
     parent: parentWidth,
     pageSizes: pageSizesWidth,
@@ -70,14 +79,10 @@ function getElementsWidth(_ref4) {
     pages: pagesHtmlWidth
   };
 }
-var ResizableContainerProps = {};
+const ResizableContainerProps = {};
 exports.ResizableContainerProps = ResizableContainerProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(ResizableContainer, _InfernoComponent);
   function ResizableContainer(props) {
     var _this;
@@ -107,12 +112,11 @@ var ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$2 = this._effects[1]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([this.props, this.state.infoTextVisible, this.state.isLargeDisplayMode, this.props.pagerProps, this.props.contentTemplate]);
   };
   _proto.subscribeToResize = function subscribeToResize() {
-    var _this2 = this;
-    var callback = function callback() {
-      _this2.parentWidth > 0 && _this2.updateAdaptivityProps();
+    const callback = () => {
+      this.parentWidth > 0 && this.updateAdaptivityProps();
     };
     _resize_callbacks.default.add(callback);
-    return function () {
+    return () => {
       _resize_callbacks.default.remove(callback);
     };
   };
@@ -122,8 +126,7 @@ var ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.updateAdaptivityProps = function updateAdaptivityProps() {
-    var _this3 = this;
-    var currentElementsWidth = getElementsWidth({
+    const currentElementsWidth = getElementsWidth({
       parent: this.parentRef.current,
       pageSizes: this.pageSizesRef.current,
       info: this.infoTextRef.current,
@@ -132,7 +135,7 @@ var ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
     if (this.actualInfoTextVisible !== this.state.infoTextVisible || this.actualIsLargeDisplayMode !== this.state.isLargeDisplayMode) {
       return;
     }
-    var isEmpty = !(0, _type.isDefined)(this.elementsWidth);
+    const isEmpty = !(0, _type.isDefined)(this.elementsWidth);
     if (isEmpty) {
       this.elementsWidth = {};
     }
@@ -152,19 +155,15 @@ var ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
     this.actualInfoTextVisible = calculateInfoTextVisible(_extends({}, currentElementsWidth, {
       info: this.elementsWidth.info
     }));
-    this.setState(function (__state_argument) {
-      return {
-        infoTextVisible: _this3.actualInfoTextVisible
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        isLargeDisplayMode: _this3.actualIsLargeDisplayMode
-      };
-    });
+    this.setState(__state_argument => ({
+      infoTextVisible: this.actualInfoTextVisible
+    }));
+    this.setState(__state_argument => ({
+      isLargeDisplayMode: this.actualIsLargeDisplayMode
+    }));
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         contentTemplate: getTemplate(props.contentTemplate)
@@ -183,31 +182,32 @@ var ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(ResizableContainer, [{
     key: "contentAttributes",
-    get: function get() {
-      var _this$props$pagerProp = this.props.pagerProps,
-        className = _this$props$pagerProp.className,
-        displayMode = _this$props$pagerProp.displayMode,
-        gridCompatibility = _this$props$pagerProp.gridCompatibility,
-        hasKnownLastPage = _this$props$pagerProp.hasKnownLastPage,
-        infoText = _this$props$pagerProp.infoText,
-        label = _this$props$pagerProp.label,
-        lightModeEnabled = _this$props$pagerProp.lightModeEnabled,
-        maxPagesCount = _this$props$pagerProp.maxPagesCount,
-        onKeyDown = _this$props$pagerProp.onKeyDown,
-        pageCount = _this$props$pagerProp.pageCount,
-        pageIndex = _this$props$pagerProp.pageIndex,
-        pageIndexChange = _this$props$pagerProp.pageIndexChange,
-        pageSize = _this$props$pagerProp.pageSize,
-        pageSizeChange = _this$props$pagerProp.pageSizeChange,
-        pageSizes = _this$props$pagerProp.pageSizes,
-        pagesCountText = _this$props$pagerProp.pagesCountText,
-        pagesNavigatorVisible = _this$props$pagerProp.pagesNavigatorVisible,
-        rtlEnabled = _this$props$pagerProp.rtlEnabled,
-        showInfo = _this$props$pagerProp.showInfo,
-        showNavigationButtons = _this$props$pagerProp.showNavigationButtons,
-        showPageSizes = _this$props$pagerProp.showPageSizes,
-        totalCount = _this$props$pagerProp.totalCount,
-        visible = _this$props$pagerProp.visible;
+    get: function () {
+      const {
+        className,
+        displayMode,
+        gridCompatibility,
+        hasKnownLastPage,
+        infoText,
+        label,
+        lightModeEnabled,
+        maxPagesCount,
+        onKeyDown,
+        pageCount,
+        pageIndex,
+        pageIndexChange,
+        pageSize,
+        pageSizeChange,
+        pageSizes,
+        pagesCountText,
+        pagesNavigatorVisible,
+        rtlEnabled,
+        showInfo,
+        showNavigationButtons,
+        showPageSizes,
+        totalCount,
+        visible
+      } = this.props.pagerProps;
       return _extends({}, this.restAttributes, {
         pageSize,
         pageIndex,
@@ -236,16 +236,14 @@ var ResizableContainer = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "parentWidth",
-    get: function get() {
+    get: function () {
       return this.parentRef.current ? (0, _get_element_width.getElementWidth)(this.parentRef.current) : 0;
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        contentTemplate = _this$props.contentTemplate,
-        pagerProps = _this$props.pagerProps,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/calendar/ui.calendar.single.selection.strategy.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ var _uiCalendarSelection = _interopRequireDefault(require("./ui.calendar.selecti
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var CalendarSingleSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionStr) {
+let CalendarSingleSelectionStrategy = /*#__PURE__*/function (_CalendarSelectionStr) {
   _inheritsLoose(CalendarSingleSelectionStrategy, _CalendarSelectionStr);
   function CalendarSingleSelectionStrategy(component) {
     var _this;

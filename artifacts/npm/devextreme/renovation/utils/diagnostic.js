@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/utils/diagnostic.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,16 +10,16 @@
 
 exports.DiagnosticUtils = void 0;
 var _window = require("../../core/utils/window");
-var DiagnosticUtils = {
-  resolveMap: function resolveMap() {
-    var diagnosticWindow = (0, _window.getWindow)();
+const DiagnosticUtils = {
+  resolveMap: () => {
+    const diagnosticWindow = (0, _window.getWindow)();
     if (!diagnosticWindow.dxDiagnostic) {
       diagnosticWindow.dxDiagnostic = {};
     }
     return diagnosticWindow.dxDiagnostic;
   },
-  getDiagnostic: function getDiagnostic(key) {
-    var diagnosticMap = DiagnosticUtils.resolveMap();
+  getDiagnostic: key => {
+    const diagnosticMap = DiagnosticUtils.resolveMap();
     if (!diagnosticMap[key]) {
       diagnosticMap[key] = {
         renderCount: 0
@@ -27,8 +27,8 @@ var DiagnosticUtils = {
     }
     return diagnosticMap[key];
   },
-  incrementRenderCount: function incrementRenderCount(key) {
-    var diagnostic = DiagnosticUtils.getDiagnostic(key);
+  incrementRenderCount: key => {
+    const diagnostic = DiagnosticUtils.getDiagnostic(key);
     diagnostic.renderCount += 1;
   }
 };

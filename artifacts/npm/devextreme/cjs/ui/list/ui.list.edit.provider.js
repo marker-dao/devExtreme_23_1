@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.edit.provider.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,8 +17,8 @@ var _iterator = require("../../core/utils/iterator");
 var _ui = _interopRequireDefault(require("../widget/ui.errors"));
 var _uiListEdit = require("./ui.list.edit.decorator_registry");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var editOptionsRegistry = [];
-var registerOption = function registerOption(enabledFunc, decoratorTypeFunc, decoratorSubTypeFunc) {
+const editOptionsRegistry = [];
+const registerOption = function (enabledFunc, decoratorTypeFunc, decoratorSubTypeFunc) {
   editOptionsRegistry.push({
     enabled: enabledFunc,
     decoratorType: decoratorTypeFunc,
@@ -37,10 +37,10 @@ registerOption(function () {
 registerOption(function () {
   return !this.option('menuItems').length && this.option('allowItemDeleting');
 }, function () {
-  var mode = this.option('itemDeleteMode');
+  const mode = this.option('itemDeleteMode');
   return mode === 'toggle' || mode === 'slideButton' || mode === 'swipe' || mode === 'static' ? 'delete' : 'menu';
 }, function () {
-  var mode = this.option('itemDeleteMode');
+  let mode = this.option('itemDeleteMode');
   if (mode === 'slideItem') {
     mode = 'slide';
   }
@@ -60,73 +60,73 @@ registerOption(function () {
 }, function () {
   return 'default';
 });
-var LIST_ITEM_BEFORE_BAG_CLASS = 'dx-list-item-before-bag';
-var LIST_ITEM_AFTER_BAG_CLASS = 'dx-list-item-after-bag';
-var DECORATOR_BEFORE_BAG_CREATE_METHOD = 'beforeBag';
-var DECORATOR_AFTER_BAG_CREATE_METHOD = 'afterBag';
-var DECORATOR_MODIFY_ELEMENT_METHOD = 'modifyElement';
-var DECORATOR_AFTER_RENDER_METHOD = 'afterRender';
-var DECORATOR_GET_EXCLUDED_SELECTORS_METHOD = 'getExcludedSelectors';
-var EditProvider = _class.default.inherit({
-  ctor: function ctor(list) {
+const LIST_ITEM_BEFORE_BAG_CLASS = 'dx-list-item-before-bag';
+const LIST_ITEM_AFTER_BAG_CLASS = 'dx-list-item-after-bag';
+const DECORATOR_BEFORE_BAG_CREATE_METHOD = 'beforeBag';
+const DECORATOR_AFTER_BAG_CREATE_METHOD = 'afterBag';
+const DECORATOR_MODIFY_ELEMENT_METHOD = 'modifyElement';
+const DECORATOR_AFTER_RENDER_METHOD = 'afterRender';
+const DECORATOR_GET_EXCLUDED_SELECTORS_METHOD = 'getExcludedSelectors';
+const EditProvider = _class.default.inherit({
+  ctor: function (list) {
     this._list = list;
     this._fetchRequiredDecorators();
   },
-  dispose: function dispose() {
+  dispose: function () {
     if (this._decorators && this._decorators.length) {
       (0, _iterator.each)(this._decorators, function (_, decorator) {
         decorator.dispose();
       });
     }
   },
-  _fetchRequiredDecorators: function _fetchRequiredDecorators() {
+  _fetchRequiredDecorators: function () {
     this._decorators = [];
     (0, _iterator.each)(editOptionsRegistry, function (_, option) {
-      var optionEnabled = option.enabled.call(this._list);
+      const optionEnabled = option.enabled.call(this._list);
       if (optionEnabled) {
-        var decoratorType = option.decoratorType.call(this._list);
-        var decoratorSubType = option.decoratorSubType.call(this._list);
-        var decorator = this._createDecorator(decoratorType, decoratorSubType);
+        const decoratorType = option.decoratorType.call(this._list);
+        const decoratorSubType = option.decoratorSubType.call(this._list);
+        const decorator = this._createDecorator(decoratorType, decoratorSubType);
         this._decorators.push(decorator);
       }
     }.bind(this));
   },
-  _createDecorator: function _createDecorator(type, subType) {
-    var decoratorClass = this._findDecorator(type, subType);
+  _createDecorator: function (type, subType) {
+    const decoratorClass = this._findDecorator(type, subType);
     return new decoratorClass(this._list);
   },
-  _findDecorator: function _findDecorator(type, subType) {
+  _findDecorator: function (type, subType) {
     var _registry$type;
-    var foundDecorator = (_registry$type = _uiListEdit.registry[type]) === null || _registry$type === void 0 ? void 0 : _registry$type[subType];
+    const foundDecorator = (_registry$type = _uiListEdit.registry[type]) === null || _registry$type === void 0 ? void 0 : _registry$type[subType];
     if (!foundDecorator) {
       throw _ui.default.Error('E1012', type, subType);
     }
     return foundDecorator;
   },
-  modifyItemElement: function modifyItemElement(args) {
-    var $itemElement = (0, _renderer.default)(args.itemElement);
-    var config = {
+  modifyItemElement: function (args) {
+    const $itemElement = (0, _renderer.default)(args.itemElement);
+    const config = {
       $itemElement: $itemElement
     };
     this._prependBeforeBags($itemElement, config);
     this._appendAfterBags($itemElement, config);
     this._applyDecorators(DECORATOR_MODIFY_ELEMENT_METHOD, config);
   },
-  afterItemsRendered: function afterItemsRendered() {
+  afterItemsRendered: function () {
     this._applyDecorators(DECORATOR_AFTER_RENDER_METHOD);
   },
-  _prependBeforeBags: function _prependBeforeBags($itemElement, config) {
-    var $beforeBags = this._collectDecoratorsMarkup(DECORATOR_BEFORE_BAG_CREATE_METHOD, config, LIST_ITEM_BEFORE_BAG_CLASS);
+  _prependBeforeBags: function ($itemElement, config) {
+    const $beforeBags = this._collectDecoratorsMarkup(DECORATOR_BEFORE_BAG_CREATE_METHOD, config, LIST_ITEM_BEFORE_BAG_CLASS);
     $itemElement.prepend($beforeBags);
   },
-  _appendAfterBags: function _appendAfterBags($itemElement, config) {
-    var $afterBags = this._collectDecoratorsMarkup(DECORATOR_AFTER_BAG_CREATE_METHOD, config, LIST_ITEM_AFTER_BAG_CLASS);
+  _appendAfterBags: function ($itemElement, config) {
+    const $afterBags = this._collectDecoratorsMarkup(DECORATOR_AFTER_BAG_CREATE_METHOD, config, LIST_ITEM_AFTER_BAG_CLASS);
     $itemElement.append($afterBags);
   },
-  _collectDecoratorsMarkup: function _collectDecoratorsMarkup(method, config, containerClass) {
-    var $collector = (0, _renderer.default)('<div>');
+  _collectDecoratorsMarkup: function (method, config, containerClass) {
+    const $collector = (0, _renderer.default)('<div>');
     (0, _iterator.each)(this._decorators, function () {
-      var $container = (0, _renderer.default)('<div>').addClass(containerClass);
+      const $container = (0, _renderer.default)('<div>').addClass(containerClass);
       this[method]((0, _extend.extend)({
         $container: $container
       }, config));
@@ -136,32 +136,32 @@ var EditProvider = _class.default.inherit({
     });
     return $collector.children();
   },
-  _applyDecorators: function _applyDecorators(method, config) {
+  _applyDecorators: function (method, config) {
     (0, _iterator.each)(this._decorators, function () {
       this[method](config);
     });
   },
-  _handlerExists: function _handlerExists(name) {
+  _handlerExists: function (name) {
     if (!this._decorators) {
       return false;
     }
-    var decorators = this._decorators;
-    var length = decorators.length;
-    for (var i = 0; i < length; i++) {
+    const decorators = this._decorators;
+    const length = decorators.length;
+    for (let i = 0; i < length; i++) {
       if (decorators[i][name] !== _common.noop) {
         return true;
       }
     }
     return false;
   },
-  _eventHandler: function _eventHandler(name, $itemElement, e) {
+  _eventHandler: function (name, $itemElement, e) {
     if (!this._decorators) {
       return false;
     }
-    var response = false;
-    var decorators = this._decorators;
-    var length = decorators.length;
-    for (var i = 0; i < length; i++) {
+    let response = false;
+    const decorators = this._decorators;
+    const length = decorators.length;
+    for (let i = 0; i < length; i++) {
       response = decorators[i][name]($itemElement, e);
       if (response) {
         break;
@@ -169,23 +169,23 @@ var EditProvider = _class.default.inherit({
     }
     return response;
   },
-  handleClick: function handleClick($itemElement, e) {
+  handleClick: function ($itemElement, e) {
     return this._eventHandler('handleClick', $itemElement, e);
   },
-  handleKeyboardEvents: function handleKeyboardEvents(currentFocusedIndex, moveFocusUp) {
+  handleKeyboardEvents: function (currentFocusedIndex, moveFocusUp) {
     return this._eventHandler('handleKeyboardEvents', currentFocusedIndex, moveFocusUp);
   },
-  handleEnterPressing: function handleEnterPressing(e) {
+  handleEnterPressing: function (e) {
     return this._eventHandler('handleEnterPressing', e);
   },
-  contextMenuHandlerExists: function contextMenuHandlerExists() {
+  contextMenuHandlerExists: function () {
     return this._handlerExists('handleContextMenu');
   },
-  handleContextMenu: function handleContextMenu($itemElement, e) {
+  handleContextMenu: function ($itemElement, e) {
     return this._eventHandler('handleContextMenu', $itemElement, e);
   },
-  getExcludedItemSelectors: function getExcludedItemSelectors() {
-    var excludedSelectors = [];
+  getExcludedItemSelectors: function () {
+    const excludedSelectors = [];
     this._applyDecorators(DECORATOR_GET_EXCLUDED_SELECTORS_METHOD, excludedSelectors);
     return excludedSelectors.join(',');
   }

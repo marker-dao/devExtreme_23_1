@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.all.d.ts)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1897,7 +1897,7 @@ declare module DevExpress.common.charts {
     /**
      * [descr:BaseLegend.font]
      */
-    font?: DevExpress.viz.Font;
+    font?: Font;
     /**
      * [descr:BaseLegend.horizontalAlignment]
      */
@@ -1965,7 +1965,7 @@ declare module DevExpress.common.charts {
           /**
            * [descr:BaseLegend.title.font]
            */
-          font?: DevExpress.viz.Font;
+          font?: Font;
           /**
            * [descr:BaseLegend.title.horizontalAlignment]
            */
@@ -2003,7 +2003,7 @@ declare module DevExpress.common.charts {
                 /**
                  * [descr:BaseLegend.title.subtitle.font]
                  */
-                font?: DevExpress.viz.Font;
+                font?: Font;
                 /**
                  * [descr:BaseLegend.title.subtitle.offset]
                  */
@@ -2086,6 +2086,31 @@ declare module DevExpress.common.charts {
   export type ChartsLabelOverlap = 'hide' | 'none' | 'stack';
   export type DashStyle = 'dash' | 'dot' | 'longDash' | 'solid';
   export type DiscreteAxisDivisionMode = 'betweenLabels' | 'crossLabels';
+  /**
+   * [descr:Font]
+   */
+  export type Font = {
+    /**
+     * [descr:Font.color]
+     */
+    color?: string;
+    /**
+     * [descr:Font.family]
+     */
+    family?: string;
+    /**
+     * [descr:Font.opacity]
+     */
+    opacity?: number;
+    /**
+     * [descr:Font.size]
+     */
+    size?: string | number;
+    /**
+     * [descr:Font.weight]
+     */
+    weight?: number;
+  };
   /**
    * [descr:GradientColor]
    */
@@ -2231,7 +2256,7 @@ declare module DevExpress.common.charts {
     /**
      * [descr:dxChartSeriesTypes.CommonSeries.label.font]
      */
-    font?: DevExpress.viz.Font;
+    font?: Font;
     /**
      * [descr:dxChartSeriesTypes.CommonSeries.label.format]
      */
@@ -8161,10 +8186,11 @@ declare module DevExpress.ui {
   /**
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export const DateRangeBoxBase: new (
-    element: DevExpress.core.UserDefinedElement,
-    options?: DevExpress.ui.dxDateRangeBox.Properties
-  ) => Omit<DateBoxBase<DevExpress.ui.dxDateRangeBox.Properties>, 'field'>;
+  export const DateRangeBoxBase: Omit<typeof DateBoxBase, 'new' | 'prototype'> &
+    (new (
+      element: DevExpress.core.UserDefinedElement,
+      options?: DevExpress.ui.dxDateRangeBox.Properties
+    ) => Omit<DateBoxBase<DevExpress.ui.dxDateRangeBox.Properties>, 'field'>);
   /**
    * [descr:DraggableBase]
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
@@ -30943,7 +30969,7 @@ declare module DevExpress.viz {
     /**
      * [descr:BaseGaugeOptions.scale.label.font]
      */
-    font?: Font;
+    font?: DevExpress.common.charts.Font;
     /**
      * [descr:BaseGaugeOptions.scale.label.format]
      */
@@ -31407,7 +31433,7 @@ declare module DevExpress.viz {
     /**
      * [descr:BaseWidgetAnnotationConfig.font]
      */
-    font?: Font;
+    font?: DevExpress.common.charts.Font;
     /**
      * [descr:BaseWidgetAnnotationConfig.height]
      */
@@ -31562,7 +31588,7 @@ declare module DevExpress.viz {
     /**
      * [descr:BaseWidgetOptions.loadingIndicator.font]
      */
-    font?: Font;
+    font?: DevExpress.common.charts.Font;
     /**
      * [descr:BaseWidgetOptions.loadingIndicator.show]
      */
@@ -31703,7 +31729,7 @@ declare module DevExpress.viz {
     /**
      * [descr:BaseWidgetOptions.title.font]
      */
-    font?: Font;
+    font?: DevExpress.common.charts.Font;
     /**
      * [descr:BaseWidgetOptions.title.horizontalAlignment]
      */
@@ -31743,7 +31769,7 @@ declare module DevExpress.viz {
           /**
            * [descr:BaseWidgetOptions.title.subtitle.font]
            */
-          font?: Font;
+          font?: DevExpress.common.charts.Font;
           /**
            * [descr:BaseWidgetOptions.title.subtitle.offset]
            */
@@ -31832,7 +31858,7 @@ declare module DevExpress.viz {
     /**
      * [descr:BaseWidgetOptions.tooltip.font]
      */
-    font?: Font;
+    font?: DevExpress.common.charts.Font;
     /**
      * [descr:BaseWidgetOptions.tooltip.format]
      */
@@ -32084,7 +32110,7 @@ declare module DevExpress.viz {
       /**
        * [descr:CommonIndicator.text.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:CommonIndicator.text.format]
        */
@@ -32342,7 +32368,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxBarGaugeOptions.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxBarGaugeOptions.label.format]
        */
@@ -33050,7 +33076,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxChartOptions.commonAxisSettings.constantLineStyle.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxChartOptions.commonAxisSettings.constantLineStyle.label.position]
        */
@@ -33084,7 +33110,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxChartOptions.commonAxisSettings.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxChartOptions.commonAxisSettings.label.indentFromAxis]
        */
@@ -33144,7 +33170,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxChartOptions.commonAxisSettings.stripStyle.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxChartOptions.commonAxisSettings.stripStyle.label.horizontalAlignment]
        */
@@ -33165,7 +33191,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxChartOptions.commonAxisSettings.title.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxChartOptions.commonAxisSettings.title.margin]
        */
@@ -33957,7 +33983,7 @@ declare module DevExpress.viz {
               /**
                * [descr:dxChartOptions.crosshair.horizontalLine.label.font]
                */
-              font?: Font;
+              font?: DevExpress.common.charts.Font;
               /**
                * [descr:dxChartOptions.crosshair.horizontalLine.label.format]
                */
@@ -34000,7 +34026,7 @@ declare module DevExpress.viz {
         /**
          * [descr:dxChartOptions.crosshair.label.font]
          */
-        font?: Font;
+        font?: DevExpress.common.charts.Font;
         /**
          * [descr:dxChartOptions.crosshair.label.format]
          */
@@ -34046,7 +34072,7 @@ declare module DevExpress.viz {
               /**
                * [descr:dxChartOptions.crosshair.verticalLine.label.font]
                */
-              font?: Font;
+              font?: DevExpress.common.charts.Font;
               /**
                * [descr:dxChartOptions.crosshair.verticalLine.label.format]
                */
@@ -36558,7 +36584,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxFunnelOptions.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxFunnelOptions.label.format]
        */
@@ -37283,7 +37309,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxPieChartSeriesTypes.CommonPieChartSeries.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxPieChartSeriesTypes.CommonPieChartSeries.label.format]
        */
@@ -37764,7 +37790,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxPolarChartOptions.commonAxisSettings.constantLineStyle.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxPolarChartOptions.commonAxisSettings.constantLineStyle.label.visible]
        */
@@ -37777,7 +37803,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxPolarChartOptions.commonAxisSettings.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxPolarChartOptions.commonAxisSettings.label.indentFromAxis]
        */
@@ -37832,7 +37858,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxPolarChartOptions.commonAxisSettings.stripStyle.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
     };
     /**
      * [descr:dxPolarChartCommonAxisSettingsTick]
@@ -38908,7 +38934,7 @@ declare module DevExpress.viz {
     /**
      * [descr:dxPolarChartSeriesTypes.CommonPolarChartSeries.label.font]
      */
-    font?: Font;
+    font?: DevExpress.common.charts.Font;
     /**
      * [descr:dxPolarChartSeriesTypes.CommonPolarChartSeries.label.format]
      */
@@ -39491,7 +39517,7 @@ declare module DevExpress.viz {
         /**
          * [descr:dxRangeSelectorOptions.scale.label.font]
          */
-        font?: Font;
+        font?: DevExpress.common.charts.Font;
         /**
          * [descr:dxRangeSelectorOptions.scale.label.format]
          */
@@ -39705,7 +39731,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxRangeSelectorOptions.sliderMarker.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxRangeSelectorOptions.sliderMarker.format]
        */
@@ -40035,7 +40061,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxSankeyOptions.label.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxSankeyOptions.label.horizontalOffset]
        */
@@ -40826,7 +40852,7 @@ declare module DevExpress.viz {
         /**
          * [descr:dxTreeMapOptions.group.label.font]
          */
-        font?: Font;
+        font?: DevExpress.common.charts.Font;
         /**
          * [descr:dxTreeMapOptions.group.label.textOverflow]
          */
@@ -40985,7 +41011,7 @@ declare module DevExpress.viz {
         /**
          * [descr:dxTreeMapOptions.tile.label.font]
          */
-        font?: Font;
+        font?: DevExpress.common.charts.Font;
         /**
          * [descr:dxTreeMapOptions.tile.label.textOverflow]
          */
@@ -41176,7 +41202,7 @@ declare module DevExpress.viz {
       /**
        * [descr:dxVectorMapOptions.legends.font]
        */
-      font?: Font;
+      font?: DevExpress.common.charts.Font;
       /**
        * [descr:dxVectorMapOptions.legends.markerColor]
        */
@@ -41471,7 +41497,7 @@ declare module DevExpress.viz {
             /**
              * [descr:dxVectorMapOptions.layers.label.font]
              */
-            font?: Font;
+            font?: DevExpress.common.charts.Font;
           };
           /**
            * [descr:dxVectorMapOptions.layers.maxSize]
@@ -41551,7 +41577,11 @@ declare module DevExpress.viz {
           hoveredBorderColor?: string;
           hoveredBorderWidth?: number;
           hoveredColor?: string;
-          label?: { dataField?: string; enabled?: boolean; font?: Font };
+          label?: {
+            dataField?: string;
+            enabled?: boolean;
+            font?: DevExpress.common.charts.Font;
+          };
           maxSize?: number;
           minSize?: number;
           name?: string;
@@ -41697,32 +41727,12 @@ declare module DevExpress.viz {
       svgToCanvas?: Function;
     }
   ): void;
+
   /**
-   * [descr:Font]
+   * @deprecated Use Font from common/charts instead
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export interface Font {
-    /**
-     * [descr:Font.color]
-     */
-    color?: string;
-    /**
-     * [descr:Font.family]
-     */
-    family?: string;
-    /**
-     * [descr:Font.opacity]
-     */
-    opacity?: number;
-    /**
-     * [descr:Font.size]
-     */
-    size?: string | number;
-    /**
-     * [descr:Font.weight]
-     */
-    weight?: number;
-  }
+  export type Font = DevExpress.common.charts.Font;
   /**
    * @deprecated Use LegendItem instead
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.

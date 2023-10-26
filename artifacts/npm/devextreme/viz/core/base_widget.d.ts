@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/core/base_widget.d.ts)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,6 +40,7 @@ import {
     TextOverflow,
     Theme,
     WordWrap,
+    Font as CommonFont,
 } from '../../common/charts';
 
 /**
@@ -285,9 +286,10 @@ export interface BaseWidgetLoadingIndicator {
     /**
      * @docid BaseWidgetOptions.loadingIndicator.font
      * @default '#767676' &prop(color)
+     * @type Font
      * @public
      */
-    font?: Font;
+    font?: CommonFont;
     /**
      * @docid BaseWidgetOptions.loadingIndicator.show
      * @default false
@@ -364,9 +366,10 @@ export interface BaseWidgetTitle {
      * @default 28 &prop(size)
      * @default 200 &prop(weight)
      * @default "'Segoe UI Light', 'Helvetica Neue Light', 'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana, sans-serif" &prop(family)
+     * @type Font
      * @public
      */
-    font?: Font;
+    font?: CommonFont;
     /**
      * @docid BaseWidgetOptions.title.horizontalAlignment
      * @default 'center'
@@ -417,8 +420,9 @@ export interface BaseWidgetTitle {
        * @default 16 &prop(size)
        * @default 200 &prop(weight)
        * @default "'Segoe UI Light', 'Helvetica Neue Light', 'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana, sans-serif" &prop(family)
+       * @type Font
        */
-      font?: Font;
+      font?: CommonFont;
       /**
        * @docid BaseWidgetOptions.title.subtitle.offset
        * @default 0
@@ -524,6 +528,7 @@ export interface BaseWidgetTooltip {
      * @docid BaseWidgetOptions.tooltip.cornerRadius
      * @default 0
      * @default 4 &for(Material)
+     * @default 4 &for(Fluent)
      * @public
      */
     cornerRadius?: number;
@@ -536,9 +541,10 @@ export interface BaseWidgetTooltip {
     /**
      * @docid BaseWidgetOptions.tooltip.font
      * @default '#232323' &prop(color)
+     * @type Font
      * @public
      */
-    font?: Font;
+    font?: CommonFont;
     /**
      * @docid BaseWidgetOptions.tooltip.format
      * @default undefined
@@ -668,44 +674,6 @@ export default class BaseWidget<TProperties> extends DOMComponent<TProperties> {
  * @docid
  * @type object
  * @namespace DevExpress.viz
- * @hidden
- */
-export interface Font {
-    /**
-     * @docid
-     * @public
-     */
-    color?: string;
-    /**
-     * @docid
-     * @default "'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana, sans-serif"
-     * @public
-     */
-    family?: string;
-    /**
-     * @docid
-     * @default 1
-     * @public
-     */
-    opacity?: number;
-    /**
-     * @docid
-     * @default 12
-     * @public
-     */
-    size?: string | number;
-    /**
-     * @docid
-     * @default 400
-     * @public
-     */
-    weight?: number;
-}
-
-/**
- * @docid
- * @type object
- * @namespace DevExpress.viz
  */
 export interface BaseWidgetAnnotationConfig {
     /**
@@ -740,6 +708,7 @@ export interface BaseWidgetAnnotationConfig {
        * @docid
        * @default 0
        * @default 4 &for(Material)
+       * @default 4 &for(Fluent)
        */
       cornerRadius?: number;
       /**
@@ -783,9 +752,10 @@ export interface BaseWidgetAnnotationConfig {
     /**
      * @docid
      * @default '#333333' &prop(color)
+     * @type Font
      * @public
      */
-    font?: Font;
+    font?: CommonFont;
     /**
      * @docid
      * @default undefined
@@ -923,3 +893,13 @@ export interface BaseWidgetAnnotationConfig {
      */
     y?: number;
 }
+
+// #region deprecated in 23.1
+
+/**
+ * @namespace DevExpress.viz
+ * @deprecated Use Font from common/charts instead
+ */
+export type Font = CommonFont;
+
+// #endregion

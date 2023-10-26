@@ -7,28 +7,27 @@ var _shadow_dom = require("./utils/shadow_dom");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* global document */
 
-var ELEMENT_NODE = 1;
-var TEXT_NODE = 3;
-var DOCUMENT_NODE = 9;
-var DOCUMENT_FRAGMENT_NODE = 11;
-var nativeDOMAdapterStrategy = {
+const ELEMENT_NODE = 1;
+const TEXT_NODE = 3;
+const DOCUMENT_NODE = 9;
+const DOCUMENT_FRAGMENT_NODE = 11;
+const nativeDOMAdapterStrategy = {
   querySelectorAll(element, selector) {
     return element.querySelectorAll(selector);
   },
   elementMatches(element, selector) {
-    var _this = this;
-    var matches = element.matches || element.matchesSelector || element.mozMatchesSelector || element.msMatchesSelector || element.oMatchesSelector || element.webkitMatchesSelector || function (selector) {
-      var doc = element.document || element.ownerDocument;
+    const matches = element.matches || element.matchesSelector || element.mozMatchesSelector || element.msMatchesSelector || element.oMatchesSelector || element.webkitMatchesSelector || (selector => {
+      const doc = element.document || element.ownerDocument;
       if (!doc) {
         return false;
       }
-      var items = _this.querySelectorAll(doc, selector);
-      for (var i = 0; i < items.length; i++) {
+      const items = this.querySelectorAll(doc, selector);
+      for (let i = 0; i < items.length; i++) {
         if (items[i] === element) {
           return true;
         }
       }
-    };
+    });
     return matches.call(element, selector);
   },
   createElement(tagName, context) {
@@ -63,7 +62,7 @@ var nativeDOMAdapterStrategy = {
     return element && element.nodeType === DOCUMENT_FRAGMENT_NODE;
   },
   removeElement(element) {
-    var parentNode = element && element.parentNode;
+    const parentNode = element && element.parentNode;
     if (parentNode) {
       parentNode.removeChild(element);
     }
@@ -111,7 +110,7 @@ var nativeDOMAdapterStrategy = {
     return this._document;
   },
   getActiveElement(element) {
-    var activeElementHolder = this.getRootNode(element);
+    const activeElementHolder = this.getRootNode(element);
     return activeElementHolder.activeElement;
   },
   getRootNode(element) {
@@ -147,12 +146,12 @@ var nativeDOMAdapterStrategy = {
       return _common.noop;
     }
     element.addEventListener(event, callback, options);
-    return function () {
+    return () => {
       element.removeEventListener(event, callback);
     };
   },
   elementsFromPoint(x, y, element) {
-    var activeElementHolder = this.getRootNode(element);
+    const activeElementHolder = this.getRootNode(element);
     if (activeElementHolder.host) {
       return (0, _shadow_dom.getShadowElementsFromPoint)(x, y, activeElementHolder);
     }

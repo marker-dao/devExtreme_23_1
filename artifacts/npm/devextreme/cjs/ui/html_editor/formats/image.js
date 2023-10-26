@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/formats/image.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,19 +14,19 @@ var _type = require("../../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ExtImage = {};
+let ExtImage = {};
 if (_devextremeQuill.default) {
-  var Image = _devextremeQuill.default.import('formats/image');
+  const Image = _devextremeQuill.default.import('formats/image');
   ExtImage = /*#__PURE__*/function (_Image) {
     _inheritsLoose(ExtImage, _Image);
     function ExtImage() {
       return _Image.apply(this, arguments) || this;
     }
     ExtImage.create = function create(data) {
-      var SRC = data && data.src || data;
-      var node = _Image.create.call(this, SRC);
+      const SRC = data && data.src || data;
+      const node = _Image.create.call(this, SRC);
       if ((0, _type.isObject)(data)) {
-        var setAttribute = function setAttribute(attr, value) {
+        const setAttribute = (attr, value) => {
           data[attr] && node.setAttribute(attr, value);
         };
         setAttribute('alt', data.alt);
@@ -36,14 +36,14 @@ if (_devextremeQuill.default) {
       return node;
     };
     ExtImage.formats = function formats(domNode) {
-      var formats = _Image.formats.call(this, domNode);
+      const formats = _Image.formats.call(this, domNode);
       formats['imageSrc'] = domNode.getAttribute('src');
       return formats;
     };
     var _proto = ExtImage.prototype;
     _proto.formats = function formats() {
-      var formats = _Image.prototype.formats.call(this);
-      var floatValue = this.domNode.style['float'];
+      const formats = _Image.prototype.formats.call(this);
+      const floatValue = this.domNode.style['float'];
       if (floatValue) {
         formats['float'] = floatValue;
       }

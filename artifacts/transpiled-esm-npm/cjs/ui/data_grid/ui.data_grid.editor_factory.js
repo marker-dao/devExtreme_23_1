@@ -6,7 +6,7 @@ Object.keys(_editor_factory).forEach(function (key) {
   if (key in exports && exports[key] === _editor_factory[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _editor_factory[key];
     }
   });

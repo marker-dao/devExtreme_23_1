@@ -2,9 +2,9 @@
 
 exports.default = void 0;
 /* eslint-disable import/no-commonjs */
-var PARENT_LOCALE_SEPARATOR = '-';
-var _default = function _default(parentLocales, locale) {
-  var parentLocale = parentLocales[locale];
+const PARENT_LOCALE_SEPARATOR = '-';
+var _default = (parentLocales, locale) => {
+  const parentLocale = parentLocales[locale];
   if (parentLocale) {
     return parentLocale !== 'root' && parentLocale;
   }

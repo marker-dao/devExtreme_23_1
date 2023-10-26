@@ -6,22 +6,22 @@ var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 var _index = require("../../events/utils/index");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var abstract = _class.default.abstract;
-var Provider = _class.default.inherit({
-  _defaultRouteWeight: function _defaultRouteWeight() {
+const abstract = _class.default.abstract;
+const Provider = _class.default.inherit({
+  _defaultRouteWeight: function () {
     return 5;
   },
-  _defaultRouteOpacity: function _defaultRouteOpacity() {
+  _defaultRouteOpacity: function () {
     return 0.5;
   },
-  _defaultRouteColor: function _defaultRouteColor() {
+  _defaultRouteColor: function () {
     return '#0000FF';
   },
-  ctor: function ctor(map, $container) {
+  ctor: function (map, $container) {
     this._mapWidget = map;
     this._$container = $container;
   },
-  render: function render(markerOptions, routeOptions) {
+  render: function (markerOptions, routeOptions) {
     return this._renderImpl().then(function () {
       return Promise.all([this._applyFunctionIfNeeded('addMarkers', markerOptions), this._applyFunctionIfNeeded('addRoutes', routeOptions)]).then(function () {
         return true;
@@ -35,7 +35,7 @@ var Provider = _class.default.inherit({
   updateCenter: abstract,
   updateZoom: abstract,
   updateControls: abstract,
-  updateMarkers: function updateMarkers(markerOptionsToRemove, markerOptionsToAdd) {
+  updateMarkers: function (markerOptionsToRemove, markerOptionsToAdd) {
     return new Promise(function (resolve) {
       return this._applyFunctionIfNeeded('removeMarkers', markerOptionsToRemove).then(function (removeValue) {
         this._applyFunctionIfNeeded('addMarkers', markerOptionsToAdd).then(function (addValue) {
@@ -47,7 +47,7 @@ var Provider = _class.default.inherit({
   addMarkers: abstract,
   removeMarkers: abstract,
   adjustViewport: abstract,
-  updateRoutes: function updateRoutes(routeOptionsToRemove, routeOptionsToAdd) {
+  updateRoutes: function (routeOptionsToRemove, routeOptionsToAdd) {
     return new Promise(function (resolve) {
       return this._applyFunctionIfNeeded('removeRoutes', routeOptionsToRemove).then(function (removeValue) {
         this._applyFunctionIfNeeded('addRoutes', routeOptionsToAdd).then(function (addValue) {
@@ -59,34 +59,34 @@ var Provider = _class.default.inherit({
   addRoutes: abstract,
   removeRoutes: abstract,
   clean: abstract,
-  map: function map() {
+  map: function () {
     return this._map;
   },
-  isEventsCanceled: function isEventsCanceled() {
+  isEventsCanceled: function () {
     return false;
   },
-  _option: function _option(name, value) {
+  _option: function (name, value) {
     if (value === undefined) {
       return this._mapWidget.option(name);
     }
     this._mapWidget.setOptionSilent(name, value);
   },
-  _keyOption: function _keyOption(providerName) {
-    var key = this._option('apiKey');
+  _keyOption: function (providerName) {
+    const key = this._option('apiKey');
     return key[providerName] === undefined ? key : key[providerName];
   },
-  _parseTooltipOptions: function _parseTooltipOptions(option) {
+  _parseTooltipOptions: function (option) {
     return {
       text: option.text || option,
       visible: option.isShown || false
     };
   },
-  _getLatLng: function _getLatLng(location) {
+  _getLatLng: function (location) {
     if (typeof location === 'string') {
-      var coords = (0, _iterator.map)(location.split(','), function (item) {
+      const coords = (0, _iterator.map)(location.split(','), function (item) {
         return item.trim();
       });
-      var numericRegex = /^[-+]?[0-9]*\.?[0-9]*$/;
+      const numericRegex = /^[-+]?[0-9]*\.?[0-9]*$/;
       if (coords.length === 2 && coords[0].match(numericRegex) && coords[1].match(numericRegex)) {
         return {
           lat: parseFloat(coords[0]),
@@ -103,34 +103,34 @@ var Provider = _class.default.inherit({
     }
     return null;
   },
-  _areBoundsSet: function _areBoundsSet() {
+  _areBoundsSet: function () {
     return this._option('bounds.northEast') && this._option('bounds.southWest');
   },
-  _addEventNamespace: function _addEventNamespace(name) {
+  _addEventNamespace: function (name) {
     return (0, _index.addNamespace)(name, this._mapWidget.NAME);
   },
-  _applyFunctionIfNeeded: function _applyFunctionIfNeeded(fnName, array) {
+  _applyFunctionIfNeeded: function (fnName, array) {
     if (!array.length) {
       return Promise.resolve();
     }
     return this[fnName](array);
   },
-  _fireAction: function _fireAction(name, actionArguments) {
+  _fireAction: function (name, actionArguments) {
     this._mapWidget._createActionByOption(name)(actionArguments);
   },
-  _fireClickAction: function _fireClickAction(actionArguments) {
+  _fireClickAction: function (actionArguments) {
     this._fireAction('onClick', actionArguments);
   },
-  _fireMarkerAddedAction: function _fireMarkerAddedAction(actionArguments) {
+  _fireMarkerAddedAction: function (actionArguments) {
     this._fireAction('onMarkerAdded', actionArguments);
   },
-  _fireMarkerRemovedAction: function _fireMarkerRemovedAction(actionArguments) {
+  _fireMarkerRemovedAction: function (actionArguments) {
     this._fireAction('onMarkerRemoved', actionArguments);
   },
-  _fireRouteAddedAction: function _fireRouteAddedAction(actionArguments) {
+  _fireRouteAddedAction: function (actionArguments) {
     this._fireAction('onRouteAdded', actionArguments);
   },
-  _fireRouteRemovedAction: function _fireRouteRemovedAction(actionArguments) {
+  _fireRouteRemovedAction: function (actionArguments) {
     this._fireAction('onRouteRemoved', actionArguments);
   }
 });

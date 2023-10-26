@@ -9,25 +9,17 @@ var _type = require("../utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var watchChanges = function () {
-  var globalWatch = function globalWatch(data, watchMethod, callback) {
-    return watchMethod(function () {
-      return data;
-    }, callback);
-  };
-  var fieldsWatch = function fieldsWatch(data, watchMethod, fields, fieldsMap, callback) {
-    var resolvedData = {};
-    var missedFields = fields.slice();
-    var watchHandlers = fields.map(function (name) {
-      var fieldGetter = fieldsMap[name];
-      return watchMethod(fieldGetter ? function () {
-        return fieldGetter(data);
-      } : function () {
-        return data[name];
-      }, function (value) {
+const watchChanges = function () {
+  const globalWatch = (data, watchMethod, callback) => watchMethod(() => data, callback);
+  const fieldsWatch = function (data, watchMethod, fields, fieldsMap, callback) {
+    const resolvedData = {};
+    const missedFields = fields.slice();
+    const watchHandlers = fields.map(function (name) {
+      const fieldGetter = fieldsMap[name];
+      return watchMethod(fieldGetter ? () => fieldGetter(data) : () => data[name], function (value) {
         resolvedData[name] = value;
         if (missedFields.length) {
-          var index = missedFields.indexOf(name);
+          const index = missedFields.indexOf(name);
           if (index >= 0) {
             missedFields.splice(index, 1);
           }
@@ -38,14 +30,12 @@ var watchChanges = function () {
       });
     });
     return function () {
-      watchHandlers.forEach(function (dispose) {
-        return dispose();
-      });
+      watchHandlers.forEach(dispose => dispose());
     };
   };
   return function (rawData, watchMethod, fields, fieldsMap, callback) {
-    var fieldsDispose;
-    var globalDispose = globalWatch(rawData, watchMethod, function (dataWithRawFields) {
+    let fieldsDispose;
+    const globalDispose = globalWatch(rawData, watchMethod, function (dataWithRawFields) {
       fieldsDispose && fieldsDispose();
       if ((0, _type.isPrimitive)(dataWithRawFields)) {
         callback(dataWithRawFields);
@@ -59,7 +49,7 @@ var watchChanges = function () {
     };
   };
 }();
-var BindableTemplate = /*#__PURE__*/function (_TemplateBase) {
+let BindableTemplate = /*#__PURE__*/function (_TemplateBase) {
   _inheritsLoose(BindableTemplate, _TemplateBase);
   function BindableTemplate(render, fields, watchMethod, fieldsMap) {
     var _this;
@@ -72,11 +62,10 @@ var BindableTemplate = /*#__PURE__*/function (_TemplateBase) {
   }
   var _proto = BindableTemplate.prototype;
   _proto._renderCore = function _renderCore(options) {
-    var _this2 = this;
-    var $container = (0, _renderer.default)(options.container);
-    var dispose = watchChanges(options.model, this._watchMethod, this._fields, this._fieldsMap, function (data) {
+    const $container = (0, _renderer.default)(options.container);
+    const dispose = watchChanges(options.model, this._watchMethod, this._fields, this._fieldsMap, data => {
       $container.empty();
-      _this2._render($container, data, options.model);
+      this._render($container, data, options.model);
     });
     _events_engine.default.on($container, _remove.removeEvent, dispose);
     return $container.contents();

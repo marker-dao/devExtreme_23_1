@@ -2,13 +2,13 @@
 
 Object.defineProperty(exports, "registerGradient", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _m_charts.registerGradient;
   }
 });
 Object.defineProperty(exports, "registerPattern", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _m_charts.registerPattern;
   }
 });

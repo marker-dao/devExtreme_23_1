@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/editor_factory/m_editor_factory.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,45 +29,45 @@ var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var EDITOR_INLINE_BLOCK = 'dx-editor-inline-block';
-var CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
-var CELL_MODIFIED_CLASS = 'dx-cell-modified';
-var CELL_INVALID_CLASS = 'invalid';
-var FOCUSED_CELL_MODIFIED_CLASS = 'dx-focused-cell-modified';
-var FOCUSED_CELL_INVALID_CLASS = 'dx-focused-cell-invalid';
-var FOCUS_OVERLAY_CLASS = 'focus-overlay';
-var CONTENT_CLASS = 'content';
-var FOCUSED_ELEMENT_CLASS = 'dx-focused';
-var ROW_CLASS = 'dx-row';
-var MODULE_NAMESPACE = 'dxDataGridEditorFactory';
-var UPDATE_FOCUS_EVENTS = (0, _index.addNamespace)([_pointer.default.down, 'focusin', _click.name].join(' '), MODULE_NAMESPACE);
-var DX_HIDDEN = 'dx-hidden';
-var ViewControllerWithMixin = _m_modules.default.ViewController.inherit(_ui.default);
-var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
+const EDITOR_INLINE_BLOCK = 'dx-editor-inline-block';
+const CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
+const CELL_MODIFIED_CLASS = 'dx-cell-modified';
+const CELL_INVALID_CLASS = 'invalid';
+const FOCUSED_CELL_MODIFIED_CLASS = 'dx-focused-cell-modified';
+const FOCUSED_CELL_INVALID_CLASS = 'dx-focused-cell-invalid';
+const FOCUS_OVERLAY_CLASS = 'focus-overlay';
+const CONTENT_CLASS = 'content';
+const FOCUSED_ELEMENT_CLASS = 'dx-focused';
+const ROW_CLASS = 'dx-row';
+const MODULE_NAMESPACE = 'dxDataGridEditorFactory';
+const UPDATE_FOCUS_EVENTS = (0, _index.addNamespace)([_pointer.default.down, 'focusin', _click.name].join(' '), MODULE_NAMESPACE);
+const DX_HIDDEN = 'dx-hidden';
+const ViewControllerWithMixin = _m_modules.default.ViewController.inherit(_ui.default);
+let EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
   _inheritsLoose(EditorFactory, _ViewControllerWithMi);
   function EditorFactory() {
     return _ViewControllerWithMi.apply(this, arguments) || this;
   }
   var _proto = EditorFactory.prototype;
   _proto._getFocusedElement = function _getFocusedElement($dataGridElement) {
-    var rowSelector = this.option('focusedRowEnabled') ? 'tr[tabindex]:focus' : 'tr[tabindex]:not(.dx-data-row):focus';
-    var focusedElementSelector = "td[tabindex]:focus, ".concat(rowSelector, ", input:focus, textarea:focus, .dx-lookup-field:focus, .dx-checkbox:focus, .dx-switch:focus, .dx-dropdownbutton .dx-buttongroup:focus, .dx-adaptive-item-text:focus");
+    const rowSelector = this.option('focusedRowEnabled') ? 'tr[tabindex]:focus' : 'tr[tabindex]:not(.dx-data-row):focus';
+    const focusedElementSelector = "td[tabindex]:focus, ".concat(rowSelector, ", input:focus, textarea:focus, .dx-lookup-field:focus, .dx-checkbox:focus, .dx-switch:focus, .dx-dropdownbutton .dx-buttongroup:focus, .dx-adaptive-item-text:focus");
     // T181706
-    var $focusedElement = $dataGridElement.find(focusedElementSelector);
+    const $focusedElement = $dataGridElement.find(focusedElementSelector);
     return this.elementIsInsideGrid($focusedElement) && $focusedElement;
   };
   _proto._getFocusCellSelector = function _getFocusCellSelector() {
     return '.dx-row > td';
   };
   _proto._updateFocusCore = function _updateFocusCore() {
-    var $dataGridElement = this.component && this.component.$element();
+    const $dataGridElement = this.component && this.component.$element();
     if ($dataGridElement) {
       // this selector is specific to IE
-      var $focus = this._getFocusedElement($dataGridElement);
+      let $focus = this._getFocusedElement($dataGridElement);
       if ($focus && $focus.length) {
-        var isHideBorder;
+        let isHideBorder;
         if (!$focus.hasClass(CELL_FOCUS_DISABLED_CLASS) && !$focus.hasClass(ROW_CLASS)) {
-          var $focusCell = $focus.closest("".concat(this._getFocusCellSelector(), ", .").concat(CELL_FOCUS_DISABLED_CLASS));
+          const $focusCell = $focus.closest("".concat(this._getFocusCellSelector(), ", .").concat(CELL_FOCUS_DISABLED_CLASS));
           if ($focusCell.get(0) !== $focus.get(0)) {
             isHideBorder = this._needHideBorder($focusCell);
             $focus = $focusCell;
@@ -85,11 +85,11 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
     return $element.hasClass(EDITOR_INLINE_BLOCK);
   };
   _proto._updateFocus = function _updateFocus(e) {
-    var that = this;
-    var isFocusOverlay = e && e.event && (0, _renderer.default)(e.event.target).hasClass(that.addWidgetPrefix(FOCUS_OVERLAY_CLASS));
+    const that = this;
+    const isFocusOverlay = e && e.event && (0, _renderer.default)(e.event.target).hasClass(that.addWidgetPrefix(FOCUS_OVERLAY_CLASS));
     that._isFocusOverlay = that._isFocusOverlay || isFocusOverlay;
     clearTimeout(that._updateFocusTimeoutID);
-    that._updateFocusTimeoutID = setTimeout(function () {
+    that._updateFocusTimeoutID = setTimeout(() => {
       delete that._updateFocusTimeoutID;
       if (!that._isFocusOverlay) {
         that._updateFocusCore();
@@ -100,7 +100,7 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
   _proto._updateFocusOverlaySize = function _updateFocusOverlaySize($element, position) {
     $element.hide();
     // @ts-expect-error
-    var location = _position.default.calculate($element, (0, _extend.extend)({
+    const location = _position.default.calculate($element, (0, _extend.extend)({
       collision: 'fit'
     }, position));
     if (location.h.oversize > 0) {
@@ -115,7 +115,7 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
     return ['focused'];
   };
   _proto.focus = function focus($element, isHideBorder) {
-    var that = this;
+    const that = this;
     if ($element === undefined) {
       return that._$focusedElement;
     }
@@ -127,7 +127,7 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
       }
       that._$focusedElement = $element;
       clearTimeout(that._focusTimeoutID);
-      that._focusTimeoutID = setTimeout(function () {
+      that._focusTimeoutID = setTimeout(() => {
         delete that._focusTimeoutID;
         that.renderFocusOverlay($element, isHideBorder);
         $element.addClass(FOCUSED_ELEMENT_CLASS);
@@ -136,11 +136,11 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
     }
   };
   _proto.refocus = function refocus() {
-    var $focus = this.focus();
+    const $focus = this.focus();
     this.focus($focus);
   };
   _proto.renderFocusOverlay = function renderFocusOverlay($element, isHideBorder) {
-    var that = this;
+    const that = this;
     if (!_m_utils.default.isElementInCurrentGrid(this, $element)) {
       return;
     }
@@ -151,15 +151,15 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
       that._$focusOverlay.addClass(DX_HIDDEN);
     } else if ($element.length) {
       // align "right bottom" for Mozilla
-      var align = _browser.default.mozilla ? 'right bottom' : 'left top';
-      var $content = $element.closest(".".concat(that.addWidgetPrefix(CONTENT_CLASS)));
-      var elemCoord = (0, _position2.getBoundingRect)($element.get(0));
-      var isFocusedCellInvalid = $element.hasClass(this.addWidgetPrefix(CELL_INVALID_CLASS));
-      var isFocusedCellModified = $element.hasClass(CELL_MODIFIED_CLASS) && !isFocusedCellInvalid;
+      const align = _browser.default.mozilla ? 'right bottom' : 'left top';
+      const $content = $element.closest(".".concat(that.addWidgetPrefix(CONTENT_CLASS)));
+      const elemCoord = (0, _position2.getBoundingRect)($element.get(0));
+      const isFocusedCellInvalid = $element.hasClass(this.addWidgetPrefix(CELL_INVALID_CLASS));
+      const isFocusedCellModified = $element.hasClass(CELL_MODIFIED_CLASS) && !isFocusedCellInvalid;
       that._$focusOverlay.removeClass(DX_HIDDEN).toggleClass(FOCUSED_CELL_INVALID_CLASS, isFocusedCellInvalid).toggleClass(FOCUSED_CELL_MODIFIED_CLASS, isFocusedCellModified).appendTo($content);
       (0, _size.setOuterHeight)(that._$focusOverlay, elemCoord.bottom - elemCoord.top + 1);
       (0, _size.setOuterWidth)(that._$focusOverlay, elemCoord.right - elemCoord.left + 1);
-      var focusOverlayPosition = {
+      const focusOverlayPosition = {
         precise: true,
         my: align,
         at: align,
@@ -173,7 +173,7 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
     }
   };
   _proto.resize = function resize() {
-    var $focusedElement = this._$focusedElement;
+    const $focusedElement = this._$focusedElement;
     if ($focusedElement) {
       this.focus($focusedElement);
     }
@@ -199,9 +199,9 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
   };
   _proto._getContainerRoot = function _getContainerRoot() {
     var _a;
-    var $container = (_a = this.component) === null || _a === void 0 ? void 0 : _a.$element();
+    const $container = (_a = this.component) === null || _a === void 0 ? void 0 : _a.$element();
     // @ts-expect-error
-    var root = _dom_adapter.default.getRootNode($container === null || $container === void 0 ? void 0 : $container.get(0));
+    const root = _dom_adapter.default.getRootNode($container === null || $container === void 0 ? void 0 : $container.get(0));
     // @ts-expect-error
     // NOTE: this condition is for the 'Row - Redundant validation messages should not be rendered in a detail grid when focused row is enabled (T950174)'
     // testcafe test. The detail grid is created inside document_fragment_node but it is not shadow dom
@@ -212,11 +212,11 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
     return root;
   };
   _proto._attachContainerEventHandlers = function _attachContainerEventHandlers() {
-    var that = this;
-    var $container = that.component && that.component.$element();
+    const that = this;
+    const $container = that.component && that.component.$element();
     if ($container) {
       // T179518
-      _events_engine.default.on($container, (0, _index.addNamespace)('keydown', MODULE_NAMESPACE), function (e) {
+      _events_engine.default.on($container, (0, _index.addNamespace)('keydown', MODULE_NAMESPACE), e => {
         if ((0, _index.normalizeKeyName)(e) === 'tab') {
           that._updateFocusHandler(e);
         }
@@ -231,7 +231,7 @@ var EditorFactory = /*#__PURE__*/function (_ViewControllerWithMi) {
   return EditorFactory;
 }(ViewControllerWithMixin);
 exports.EditorFactory = EditorFactory;
-var editorFactoryModule = {
+const editorFactoryModule = {
   defaultOptions() {
     return {};
   },

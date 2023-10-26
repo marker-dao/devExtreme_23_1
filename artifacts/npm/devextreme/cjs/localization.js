@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@
 
 Object.defineProperty(exports, "date", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _date.default;
   }
 });
@@ -18,13 +18,13 @@ exports.disableIntl = disableIntl;
 exports.locale = exports.loadMessages = exports.formatNumber = exports.formatMessage = exports.formatDate = void 0;
 Object.defineProperty(exports, "message", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _message.default;
   }
 });
 Object.defineProperty(exports, "number", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _number.default;
   }
 });
@@ -39,19 +39,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @name localization
  */
 
-var locale = _core.default.locale.bind(_core.default);
+const locale = _core.default.locale.bind(_core.default);
 exports.locale = locale;
-var loadMessages = _message.default.load.bind(_message.default);
+const loadMessages = _message.default.load.bind(_message.default);
 exports.loadMessages = loadMessages;
-var formatMessage = _message.default.format.bind(_message.default);
+const formatMessage = _message.default.format.bind(_message.default);
 exports.formatMessage = formatMessage;
-var formatNumber = _number.default.format.bind(_number.default);
+const formatNumber = _number.default.format.bind(_number.default);
 exports.formatNumber = formatNumber;
-var parseNumber = _number.default.parse.bind(_number.default);
+const parseNumber = _number.default.parse.bind(_number.default);
 exports.parseNumber = parseNumber;
-var formatDate = _date.default.format.bind(_date.default);
+const formatDate = _date.default.format.bind(_date.default);
 exports.formatDate = formatDate;
-var parseDate = _date.default.parse.bind(_date.default);
+const parseDate = _date.default.parse.bind(_date.default);
 exports.parseDate = parseDate;
 function disableIntl() {
   if (_number.default.engine() === 'intl') {

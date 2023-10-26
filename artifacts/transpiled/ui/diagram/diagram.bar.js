@@ -2,10 +2,11 @@
 
 exports.default = void 0;
 var _diagram = require("./diagram.importer");
-var DiagramBar = /*#__PURE__*/function () {
+let DiagramBar = /*#__PURE__*/function () {
   function DiagramBar(owner) {
-    var _getDiagram = (0, _diagram.getDiagram)(),
-      EventDispatcher = _getDiagram.EventDispatcher;
+    const {
+      EventDispatcher
+    } = (0, _diagram.getDiagram)();
     this.onChanged = new EventDispatcher(); // IBar.onChanged: EventDispatcher<IBarListener>
     this._owner = owner;
   }
@@ -32,13 +33,12 @@ var DiagramBar = /*#__PURE__*/function () {
     return true;
   };
   _proto._getKeys = function _getKeys(items) {
-    var _this = this;
-    var keys = items.reduce(function (commands, item) {
+    const keys = items.reduce((commands, item) => {
       if (item.command !== undefined) {
         commands.push(item.command);
       }
       if (item.items) {
-        commands = commands.concat(_this._getKeys(item.items));
+        commands = commands.concat(this._getKeys(item.items));
       }
       return commands;
     }, []);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/knockout/component_registrator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,28 +27,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-restricted-imports
 
 if (_knockout.default) {
-  var LOCKS_DATA_KEY = 'dxKoLocks';
-  var CREATED_WITH_KO_DATA_KEY = 'dxKoCreation';
-  var editorsBindingHandlers = [];
-  var registerComponentKoBinding = function registerComponentKoBinding(componentName, componentClass) {
+  const LOCKS_DATA_KEY = 'dxKoLocks';
+  const CREATED_WITH_KO_DATA_KEY = 'dxKoCreation';
+  const editorsBindingHandlers = [];
+  const registerComponentKoBinding = function (componentName, componentClass) {
     if (_editor.default.isEditor(componentClass.prototype)) {
       editorsBindingHandlers.push(componentName);
     }
     _knockout.default.bindingHandlers[componentName] = {
-      init: function init(domNode, valueAccessor) {
-        var $element = (0, _renderer.default)(domNode);
-        var optionChangedCallbacks = (0, _callbacks.default)();
-        var optionsByReference = {};
-        var component;
-        var knockoutConfig = (0, _config.default)().knockout;
-        var isBindingPropertyPredicateName = knockoutConfig && knockoutConfig.isBindingPropertyPredicateName;
-        var isBindingPropertyPredicate;
-        var ctorOptions = {
-          onInitializing: function onInitializing(options) {
-            var _this = this;
+      init: function (domNode, valueAccessor) {
+        const $element = (0, _renderer.default)(domNode);
+        const optionChangedCallbacks = (0, _callbacks.default)();
+        let optionsByReference = {};
+        let component;
+        const knockoutConfig = (0, _config.default)().knockout;
+        const isBindingPropertyPredicateName = knockoutConfig && knockoutConfig.isBindingPropertyPredicateName;
+        let isBindingPropertyPredicate;
+        let ctorOptions = {
+          onInitializing: function (options) {
             optionsByReference = this._getOptionsByReference();
-            _knockout.default.computed(function () {
-              var model = _knockout.default.unwrap(valueAccessor());
+            _knockout.default.computed(() => {
+              const model = _knockout.default.unwrap(valueAccessor());
               if (component) {
                 component.beginUpdate();
               }
@@ -58,20 +57,20 @@ if (_knockout.default) {
                 component.endUpdate();
               } else {
                 var _model$onInitializing;
-                model === null || model === void 0 ? void 0 : (_model$onInitializing = model.onInitializing) === null || _model$onInitializing === void 0 ? void 0 : _model$onInitializing.call(_this, options);
+                model === null || model === void 0 ? void 0 : (_model$onInitializing = model.onInitializing) === null || _model$onInitializing === void 0 ? void 0 : _model$onInitializing.call(this, options);
               }
             }, null, {
               disposeWhenNodeIsRemoved: domNode
             });
             component = this;
           },
-          modelByElement: function modelByElement($element) {
+          modelByElement: function ($element) {
             if ($element.length) {
-              var node = (0, _utils.getClosestNodeWithContext)($element.get(0));
+              const node = (0, _utils.getClosestNodeWithContext)($element.get(0));
               return _knockout.default.dataFor(node);
             }
           },
-          nestedComponentOptions: function nestedComponentOptions(component) {
+          nestedComponentOptions: function (component) {
             return {
               modelByElement: component.option('modelByElement'),
               nestedComponentOptions: component.option('nestedComponentOptions')
@@ -79,11 +78,11 @@ if (_knockout.default) {
           },
           _optionChangedCallbacks: optionChangedCallbacks,
           integrationOptions: {
-            watchMethod: function watchMethod(fn, callback, options) {
+            watchMethod: function (fn, callback, options) {
               options = options || {};
-              var skipCallback = options.skipImmediate;
-              var watcher = _knockout.default.computed(function () {
-                var newValue = _knockout.default.unwrap(fn());
+              let skipCallback = options.skipImmediate;
+              const watcher = _knockout.default.computed(function () {
+                const newValue = _knockout.default.unwrap(fn());
                 if (!skipCallback) {
                   callback(newValue);
                 }
@@ -95,26 +94,26 @@ if (_knockout.default) {
             },
             templates: {
               'dx-polymorph-widget': {
-                render: function render(options) {
-                  var widgetName = _knockout.default.utils.unwrapObservable(options.model.widget);
+                render: function (options) {
+                  const widgetName = _knockout.default.utils.unwrapObservable(options.model.widget);
                   if (!widgetName) {
                     return;
                   }
-                  var markup = (0, _renderer.default)('<div>').attr('data-bind', widgetName + ': options').get(0);
+                  const markup = (0, _renderer.default)('<div>').attr('data-bind', widgetName + ': options').get(0);
                   (0, _renderer.default)(options.container).append(markup);
                   _knockout.default.applyBindings(options.model, markup);
                 }
               }
             },
-            createTemplate: function createTemplate(element) {
+            createTemplate: function (element) {
               return new _template.KoTemplate(element);
             }
           }
         };
-        var optionNameToModelMap = {};
-        var applyModelValueToOption = function applyModelValueToOption(optionName, modelValue, unwrap) {
-          var locks = $element.data(LOCKS_DATA_KEY);
-          var optionValue = unwrap ? _knockout.default.unwrap(modelValue) : modelValue;
+        const optionNameToModelMap = {};
+        const applyModelValueToOption = function (optionName, modelValue, unwrap) {
+          const locks = $element.data(LOCKS_DATA_KEY);
+          const optionValue = unwrap ? _knockout.default.unwrap(modelValue) : modelValue;
           if (_knockout.default.isWriteableObservable(modelValue)) {
             optionNameToModelMap[optionName] = modelValue;
           }
@@ -136,14 +135,14 @@ if (_knockout.default) {
             ctorOptions[optionName] = optionValue;
           }
         };
-        var handleOptionChanged = function handleOptionChanged(args) {
-          var optionName = args.fullName;
-          var optionValue = args.value;
+        const handleOptionChanged = function (args) {
+          const optionName = args.fullName;
+          const optionValue = args.value;
           if (!(optionName in optionNameToModelMap)) {
             return;
           }
-          var $element = this._$element;
-          var locks = $element.data(LOCKS_DATA_KEY);
+          const $element = this._$element;
+          const locks = $element.data(LOCKS_DATA_KEY);
           if (locks.locked(optionName)) {
             return;
           }
@@ -154,20 +153,20 @@ if (_knockout.default) {
             locks.release(optionName);
           }
         };
-        var createComponent = function createComponent() {
+        const createComponent = function () {
           optionChangedCallbacks.add(handleOptionChanged);
           $element.data(CREATED_WITH_KO_DATA_KEY, true).data(LOCKS_DATA_KEY, new _locker.default());
           new componentClass($element, ctorOptions);
           ctorOptions = null;
         };
-        var unwrapModelValue = function unwrapModelValue(currentModel, propertyName, propertyPath) {
+        const unwrapModelValue = function (currentModel, propertyName, propertyPath) {
           if (propertyPath === isBindingPropertyPredicateName) {
             return;
           }
           if (!isBindingPropertyPredicate || isBindingPropertyPredicate(propertyPath, propertyName, currentModel)) {
-            var unwrappedPropertyValue;
+            let unwrappedPropertyValue;
             _knockout.default.computed(function () {
-              var propertyValue = currentModel[propertyName];
+              const propertyValue = currentModel[propertyName];
               applyModelValueToOption(propertyPath, propertyValue, true);
               unwrappedPropertyValue = _knockout.default.unwrap(propertyValue);
             }, null, {
@@ -183,7 +182,7 @@ if (_knockout.default) {
           }
         };
         function unwrapModel(model, propertyPath) {
-          for (var propertyName in model) {
+          for (const propertyName in model) {
             if (Object.prototype.hasOwnProperty.call(model, propertyName)) {
               unwrapModelValue(model, propertyName, propertyPath ? [propertyPath, propertyName].join('.') : propertyName);
             }

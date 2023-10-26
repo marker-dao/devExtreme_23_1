@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popover/ui.popover.full.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ var _extend = require("../../core/utils/extend");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var PopoverFull = /*#__PURE__*/function (_Popover) {
+let PopoverFull = /*#__PURE__*/function (_Popover) {
   _inheritsLoose(PopoverFull, _Popover);
   function PopoverFull() {
     return _Popover.apply(this, arguments) || this;

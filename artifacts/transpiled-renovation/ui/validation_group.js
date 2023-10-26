@@ -10,10 +10,10 @@ var _validator = _interopRequireDefault(require("./validator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var VALIDATION_ENGINE_CLASS = 'dx-validationgroup';
-var VALIDATOR_CLASS = 'dx-validator';
-var VALIDATION_SUMMARY_CLASS = 'dx-validationsummary';
-var ValidationGroup = /*#__PURE__*/function (_DOMComponent) {
+const VALIDATION_ENGINE_CLASS = 'dx-validationgroup';
+const VALIDATOR_CLASS = 'dx-validator';
+const VALIDATION_SUMMARY_CLASS = 'dx-validationsummary';
+let ValidationGroup = /*#__PURE__*/function (_DOMComponent) {
   _inheritsLoose(ValidationGroup, _DOMComponent);
   function ValidationGroup() {
     return _DOMComponent.apply(this, arguments) || this;
@@ -48,7 +48,7 @@ var ValidationGroup = /*#__PURE__*/function (_DOMComponent) {
     _validation_engine.default.addGroup(this);
   };
   _proto._initMarkup = function _initMarkup() {
-    var $element = this.$element();
+    const $element = this.$element();
     $element.addClass(VALIDATION_ENGINE_CLASS);
     $element.find(".".concat(VALIDATOR_CLASS)).each(function (_, validatorContainer) {
       _validator.default.getInstance((0, _renderer.default)(validatorContainer))._initGroupRegistration();

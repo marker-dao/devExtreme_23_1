@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/svg_creator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,12 +18,12 @@ var _iterator = require("../core/utils/iterator");
 var _svg = require("../core/utils/svg");
 var _deferred = require("../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var svgCreator = {
+const window = (0, _window.getWindow)();
+const svgCreator = {
   _markup: '',
   _imageArray: {},
   _imageDeferreds: [],
-  _getBinaryFile: function _getBinaryFile(src, callback) {
+  _getBinaryFile: function (src, callback) {
     _ajax.default.sendRequest({
       url: src,
       method: 'GET',
@@ -32,10 +32,10 @@ var svgCreator = {
       callback(false);
     });
   },
-  _loadImages: function _loadImages() {
-    var that = this;
+  _loadImages: function () {
+    const that = this;
     (0, _iterator.each)(that._imageArray, function (src) {
-      var deferred = new _deferred.Deferred();
+      const deferred = new _deferred.Deferred();
       that._imageDeferreds.push(deferred);
       that._getBinaryFile(src, function (response) {
         if (!response) {
@@ -43,10 +43,10 @@ var svgCreator = {
           deferred.resolve();
           return;
         }
-        var i;
-        var binary = '';
-        var bytes = new Uint8Array(response);
-        var length = bytes.byteLength;
+        let i;
+        let binary = '';
+        const bytes = new Uint8Array(response);
+        const length = bytes.byteLength;
         for (i = 0; i < length; i++) {
           binary += String.fromCharCode(bytes[i]);
         }
@@ -55,9 +55,9 @@ var svgCreator = {
       });
     });
   },
-  _parseImages: function _parseImages(element) {
-    var href;
-    var that = this;
+  _parseImages: function (element) {
+    let href;
+    const that = this;
     if (element.tagName === 'image') {
       href = (0, _renderer.default)(element).attr('href') || (0, _renderer.default)(element).attr('xlink:href');
       if (!that._imageArray[href]) {
@@ -68,33 +68,33 @@ var svgCreator = {
       that._parseImages(element);
     });
   },
-  _prepareImages: function _prepareImages(svgElem) {
+  _prepareImages: function (svgElem) {
     this._parseImages(svgElem);
     this._loadImages();
     return _deferred.when.apply(_renderer.default, this._imageDeferreds);
   },
-  getData: function getData(data, options) {
-    var markup;
-    var that = this;
-    var xmlVersion = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
-    var svgElem = (0, _svg.getSvgElement)(data);
-    var $svgObject = (0, _renderer.default)(svgElem);
+  getData: function (data, options) {
+    let markup;
+    const that = this;
+    const xmlVersion = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
+    const svgElem = (0, _svg.getSvgElement)(data);
+    const $svgObject = (0, _renderer.default)(svgElem);
     $svgObject.find("[".concat(_svg.HIDDEN_FOR_EXPORT, "]")).remove();
     markup = xmlVersion + (0, _svg.getSvgMarkup)($svgObject.get(0), options.backgroundColor);
-    return that._prepareImages(svgElem).then(function () {
+    return that._prepareImages(svgElem).then(() => {
       (0, _iterator.each)(that._imageArray, function (href, dataURI) {
-        var regexpString = "href=['|\"]".concat(href, "['|\"]");
+        const regexpString = "href=['|\"]".concat(href, "['|\"]");
         markup = markup.replace(new RegExp(regexpString, 'gi'), "href=\"".concat(dataURI, "\""));
       });
       return (0, _type.isFunction)(window.Blob) ? that._getBlob(markup) : that._getBase64(markup);
     });
   },
-  _getBlob: function _getBlob(markup) {
+  _getBlob: function (markup) {
     return new window.Blob([markup], {
       type: 'image/svg+xml'
     });
   },
-  _getBase64: function _getBase64(markup) {
+  _getBase64: function (markup) {
     return window.btoa(markup);
   }
 };

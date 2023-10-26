@@ -4,7 +4,7 @@ var _extend = require("../../../core/utils/extend");
 var _m_validating = require("../../grids/grid_core/validating/m_validating");
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EditingControllerExtender = (0, _extend.extend)({}, _m_validating.validatingModule.extenders.controllers.editing);
+const EditingControllerExtender = (0, _extend.extend)({}, _m_validating.validatingModule.extenders.controllers.editing);
 delete EditingControllerExtender.processItems;
 delete EditingControllerExtender.processDataItem;
 _m_core.default.registerModule('validating', {

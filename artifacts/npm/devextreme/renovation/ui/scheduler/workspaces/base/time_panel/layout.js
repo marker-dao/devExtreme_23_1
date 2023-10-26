@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/workspaces/base/time_panel/layout.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,8 +16,7 @@ var _cell = require("./cell");
 var _cell2 = require("../cell");
 var _table = require("../table");
 var _title = require("../date_table/all_day_panel/title");
-var _excluded = ["groupOrientation", "tableRef", "timeCellTemplate", "timePanelData"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["groupOrientation", "tableRef", "timeCellTemplate", "timePanelData"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -26,38 +25,45 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var bottomVirtualRowHeight = _ref.bottomVirtualRowHeight,
-    _ref$props = _ref.props,
-    tableRef = _ref$props.tableRef,
-    timeCellTemplate = _ref$props.timeCellTemplate,
-    timePanelData = _ref$props.timePanelData,
-    restAttributes = _ref.restAttributes,
-    topVirtualRowHeight = _ref.topVirtualRowHeight;
+const viewFunction = _ref => {
+  let {
+    bottomVirtualRowHeight,
+    props: {
+      tableRef,
+      timeCellTemplate,
+      timePanelData
+    },
+    restAttributes,
+    topVirtualRowHeight
+  } = _ref;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _table.Table, _extends({}, restAttributes, {
     "topVirtualRowHeight": topVirtualRowHeight,
     "bottomVirtualRowHeight": bottomVirtualRowHeight,
     "virtualCellsCount": 1,
     "className": "dx-scheduler-time-panel",
     "tableRef": tableRef,
-    children: timePanelData.groupedData.map(function (_ref2) {
-      var dateTable = _ref2.dateTable,
-        groupIndex = _ref2.groupIndex,
-        isGroupedAllDayPanel = _ref2.isGroupedAllDayPanel,
-        fragmentKey = _ref2.key;
+    children: timePanelData.groupedData.map(_ref2 => {
+      let {
+        dateTable,
+        groupIndex,
+        isGroupedAllDayPanel,
+        key: fragmentKey
+      } = _ref2;
       return (0, _inferno.createFragment)([isGroupedAllDayPanel && (0, _inferno.createComponentVNode)(2, _row.Row, {
         children: (0, _inferno.createComponentVNode)(2, _cell2.CellBase, {
           "className": "dx-scheduler-time-panel-title-cell",
           children: (0, _inferno.createComponentVNode)(2, _title.AllDayPanelTitle)
         })
-      }), dateTable.map(function (cell) {
-        var groups = cell.groups,
-          cellIndex = cell.index,
-          isFirstGroupCell = cell.isFirstGroupCell,
-          isLastGroupCell = cell.isLastGroupCell,
-          key = cell.key,
-          startDate = cell.startDate,
-          text = cell.text;
+      }), dateTable.map(cell => {
+        const {
+          groups,
+          index: cellIndex,
+          isFirstGroupCell,
+          isLastGroupCell,
+          key,
+          startDate,
+          text
+        } = cell;
         return (0, _inferno.createComponentVNode)(2, _row.Row, {
           "className": "dx-scheduler-time-panel-row",
           children: (0, _inferno.createComponentVNode)(2, _cell.TimePanelCell, {
@@ -76,7 +82,7 @@ var viewFunction = function viewFunction(_ref) {
   })));
 };
 exports.viewFunction = viewFunction;
-var TimePanelLayoutProps = {
+const TimePanelLayoutProps = {
   timePanelData: Object.freeze({
     groupedData: [],
     leftVirtualCellCount: 0,
@@ -86,12 +92,8 @@ var TimePanelLayoutProps = {
   })
 };
 exports.TimePanelLayoutProps = TimePanelLayoutProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var TimePanelTableLayout = /*#__PURE__*/function (_InfernoWrapperCompon) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let TimePanelTableLayout = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(TimePanelTableLayout, _InfernoWrapperCompon);
   function TimePanelTableLayout(props) {
     var _this;
@@ -104,7 +106,7 @@ var TimePanelTableLayout = /*#__PURE__*/function (_InfernoWrapperCompon) {
     return [(0, _inferno2.createReRenderEffect)()];
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         timeCellTemplate: getTemplate(props.timeCellTemplate)
@@ -116,25 +118,21 @@ var TimePanelTableLayout = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(TimePanelTableLayout, [{
     key: "topVirtualRowHeight",
-    get: function get() {
+    get: function () {
       var _this$props$timePanel;
       return (_this$props$timePanel = this.props.timePanelData.topVirtualRowHeight) !== null && _this$props$timePanel !== void 0 ? _this$props$timePanel : 0;
     }
   }, {
     key: "bottomVirtualRowHeight",
-    get: function get() {
+    get: function () {
       var _this$props$timePanel2;
       return (_this$props$timePanel2 = this.props.timePanelData.bottomVirtualRowHeight) !== null && _this$props$timePanel2 !== void 0 ? _this$props$timePanel2 : 0;
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        groupOrientation = _this$props.groupOrientation,
-        tableRef = _this$props.tableRef,
-        timeCellTemplate = _this$props.timeCellTemplate,
-        timePanelData = _this$props.timePanelData,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

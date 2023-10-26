@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/click.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,21 +21,21 @@ var _pointer = _interopRequireDefault(require("./pointer"));
 var _emitter = _interopRequireDefault(require("./core/emitter"));
 var _emitter_registrator = _interopRequireDefault(require("./core/emitter_registrator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var CLICK_EVENT_NAME = 'dxclick';
+const CLICK_EVENT_NAME = 'dxclick';
 exports.name = CLICK_EVENT_NAME;
-var misc = {
+const misc = {
   requestAnimationFrame: _frame.requestAnimationFrame,
   cancelAnimationFrame: _frame.cancelAnimationFrame
 };
-var prevented = null;
-var lastFiredEvent = null;
-var onNodeRemove = function onNodeRemove() {
+let prevented = null;
+let lastFiredEvent = null;
+const onNodeRemove = () => {
   lastFiredEvent = null;
 };
-var clickHandler = function clickHandler(e) {
-  var originalEvent = e.originalEvent;
-  var eventAlreadyFired = lastFiredEvent === originalEvent || originalEvent && originalEvent.DXCLICK_FIRED;
-  var leftButton = !e.which || e.which === 1;
+const clickHandler = function (e) {
+  const originalEvent = e.originalEvent;
+  const eventAlreadyFired = lastFiredEvent === originalEvent || originalEvent && originalEvent.DXCLICK_FIRED;
+  const leftButton = !e.which || e.which === 1;
   if (leftButton && !prevented && !eventAlreadyFired) {
     if (originalEvent) {
       originalEvent.DXCLICK_FIRED = true;
@@ -49,47 +49,47 @@ var clickHandler = function clickHandler(e) {
     });
   }
 };
-var ClickEmitter = _emitter.default.inherit({
-  ctor: function ctor(element) {
+const ClickEmitter = _emitter.default.inherit({
+  ctor: function (element) {
     this.callBase(element);
     _events_engine.default.on(this.getElement(), 'click', clickHandler);
   },
-  start: function start(e) {
+  start: function (e) {
     prevented = null;
   },
-  cancel: function cancel() {
+  cancel: function () {
     prevented = true;
   },
-  dispose: function dispose() {
+  dispose: function () {
     _events_engine.default.off(this.getElement(), 'click', clickHandler);
   }
 });
 
 // NOTE: fixes native click blur on slow devices
 (function () {
-  var desktopDevice = _devices.default.real().generic;
+  const desktopDevice = _devices.default.real().generic;
   if (!desktopDevice) {
-    var startTarget = null;
-    var blurPrevented = false;
-    var isInput = function isInput(element) {
+    let startTarget = null;
+    let blurPrevented = false;
+    const isInput = function (element) {
       return (0, _renderer.default)(element).is('input, textarea, select, button ,:focus, :focus *');
     };
-    var pointerDownHandler = function pointerDownHandler(e) {
+    const pointerDownHandler = function (e) {
       startTarget = e.target;
       blurPrevented = e.isDefaultPrevented();
     };
-    var _clickHandler = function _clickHandler(e) {
-      var $target = (0, _renderer.default)(e.target);
+    const clickHandler = function (e) {
+      const $target = (0, _renderer.default)(e.target);
       if (!blurPrevented && startTarget && !$target.is(startTarget) && !(0, _renderer.default)(startTarget).is('label') && isInput($target)) {
         (0, _dom.resetActiveElement)();
       }
       startTarget = null;
       blurPrevented = false;
     };
-    var NATIVE_CLICK_FIXER_NAMESPACE = 'NATIVE_CLICK_FIXER';
-    var document = _dom_adapter.default.getDocument();
+    const NATIVE_CLICK_FIXER_NAMESPACE = 'NATIVE_CLICK_FIXER';
+    const document = _dom_adapter.default.getDocument();
     _events_engine.default.subscribeGlobal(document, (0, _index.addNamespace)(_pointer.default.down, NATIVE_CLICK_FIXER_NAMESPACE), pointerDownHandler);
-    _events_engine.default.subscribeGlobal(document, (0, _index.addNamespace)('click', NATIVE_CLICK_FIXER_NAMESPACE), _clickHandler);
+    _events_engine.default.subscribeGlobal(document, (0, _index.addNamespace)('click', NATIVE_CLICK_FIXER_NAMESPACE), clickHandler);
   }
 })();
 

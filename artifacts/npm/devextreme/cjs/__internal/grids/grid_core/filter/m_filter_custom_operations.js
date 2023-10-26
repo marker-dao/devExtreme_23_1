@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/filter/m_filter_custom_operations.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,16 +22,16 @@ var _utils = require("../../../../ui/filter_builder/utils");
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function baseOperation(grid) {
-  var calculateFilterExpression = function calculateFilterExpression(filterValue, field, fields) {
-    var result = [];
-    var lastIndex = filterValue.length - 1;
-    filterValue && filterValue.forEach(function (value, index) {
+  const calculateFilterExpression = function (filterValue, field, fields) {
+    const result = [];
+    const lastIndex = filterValue.length - 1;
+    filterValue && filterValue.forEach((value, index) => {
       if ((0, _utils.isCondition)(value) || (0, _utils.isGroup)(value)) {
-        var filterExpression = (0, _utils.getFilterExpression)(value, fields, [], 'headerFilter');
+        const filterExpression = (0, _utils.getFilterExpression)(value, fields, [], 'headerFilter');
         result.push(filterExpression);
       } else {
-        var _filterExpression = (0, _utils.getFilterExpression)([field.dataField, '=', value], fields, [], 'headerFilter');
-        result.push(_filterExpression);
+        const filterExpression = (0, _utils.getFilterExpression)([field.dataField, '=', value], fields, [], 'headerFilter');
+        result.push(filterExpression);
       }
       index !== lastIndex && result.push('or');
     });
@@ -40,47 +40,50 @@ function baseOperation(grid) {
     }
     return result;
   };
-  var getFullText = function getFullText(itemText, parentText) {
+  const getFullText = function (itemText, parentText) {
     return parentText ? "".concat(parentText, "/").concat(itemText) : itemText;
   };
-  var getSelectedItemsTexts = function getSelectedItemsTexts(items, parentText) {
-    var result = [];
-    items.forEach(function (item) {
+  const getSelectedItemsTexts = function (items, parentText) {
+    let result = [];
+    items.forEach(item => {
       if (item.items) {
-        var selectedItemsTexts = getSelectedItemsTexts(item.items, getFullText(item.text, parentText));
+        const selectedItemsTexts = getSelectedItemsTexts(item.items, getFullText(item.text, parentText));
         result = result.concat(selectedItemsTexts);
       }
       item.selected && result.push(getFullText(item.text, parentText));
     });
     return result;
   };
-  var headerFilterController = grid && grid.getController('headerFilter');
-  var customizeText = function customizeText(fieldInfo, options) {
+  const headerFilterController = grid && grid.getController('headerFilter');
+  const customizeText = function (fieldInfo, options) {
     options = options || {};
-    var value = fieldInfo.value;
-    var column = grid.columnOption(fieldInfo.field.dataField);
-    var headerFilter = column && column.headerFilter;
-    var lookup = column && column.lookup;
-    var values = options.values || [value];
+    const {
+      value
+    } = fieldInfo;
+    let column = grid.columnOption(fieldInfo.field.dataField);
+    const headerFilter = column && column.headerFilter;
+    const lookup = column && column.lookup;
+    const values = options.values || [value];
     if (headerFilter && headerFilter.dataSource || lookup && lookup.dataSource) {
       // @ts-expect-error
-      var result = new _deferred.Deferred();
+      const result = new _deferred.Deferred();
       // @ts-expect-error
-      var itemsDeferred = options.items || new _deferred.Deferred();
+      const itemsDeferred = options.items || new _deferred.Deferred();
       if (!options.items) {
         column = (0, _extend.extend)({}, column, {
           filterType: 'include',
           filterValues: values
         });
-        var dataSourceOptions = headerFilterController.getDataSource(column);
+        const dataSourceOptions = headerFilterController.getDataSource(column);
         dataSourceOptions.paginate = false;
-        var dataSource = new _data_source.DataSource(dataSourceOptions);
-        var key = dataSource.store().key();
+        const dataSource = new _data_source.DataSource(dataSourceOptions);
+        const key = dataSource.store().key();
         if (key) {
-          var _options = options,
-            _values = _options.values;
-          if (_values && _values.length > 1) {
-            var filter = _values.reduce(function (result, value) {
+          const {
+            values
+          } = options;
+          if (values && values.length > 1) {
+            const filter = values.reduce((result, value) => {
               if (result.length) {
                 result.push('or');
               }
@@ -97,23 +100,23 @@ function baseOperation(grid) {
         options.items = itemsDeferred;
         dataSource.load().done(itemsDeferred.resolve);
       }
-      itemsDeferred.done(function (items) {
-        var index = values.indexOf(fieldInfo.value);
+      itemsDeferred.done(items => {
+        const index = values.indexOf(fieldInfo.value);
         result.resolve(getSelectedItemsTexts(items, null)[index]);
       });
       return result;
     }
-    var text = headerFilterController.getHeaderItemText(value, column, 0, grid.option('headerFilter'));
+    const text = headerFilterController.getHeaderItemText(value, column, 0, grid.option('headerFilter'));
     return text;
   };
   return {
     dataTypes: ['string', 'date', 'datetime', 'number', 'boolean', 'object'],
     calculateFilterExpression,
     editorTemplate(conditionInfo, container) {
-      var div = (0, _renderer.default)('<div>').addClass('dx-filterbuilder-item-value-text').appendTo(container);
-      var column = (0, _extend.extend)(true, {}, grid.columnOption(conditionInfo.field.dataField));
+      const div = (0, _renderer.default)('<div>').addClass('dx-filterbuilder-item-value-text').appendTo(container);
+      const column = (0, _extend.extend)(true, {}, grid.columnOption(conditionInfo.field.dataField));
       (0, _utils.renderValueText)(div, conditionInfo.text && conditionInfo.text.split('|'));
-      var setValue = function setValue(value) {
+      const setValue = function (value) {
         conditionInfo.setValue(value);
       };
       column.filterType = 'include';
@@ -144,10 +147,10 @@ function anyOf(grid) {
   });
 }
 function noneOf(grid) {
-  var baseOp = baseOperation(grid);
+  const baseOp = baseOperation(grid);
   return (0, _extend.extend)({}, baseOp, {
     calculateFilterExpression(filterValue, field, fields) {
-      var baseFilter = baseOp.calculateFilterExpression(filterValue, field, fields);
+      const baseFilter = baseOp.calculateFilterExpression(filterValue, field, fields);
       if (!baseFilter || baseFilter.length === 0) return null;
       return baseFilter[0] === '!' ? baseFilter : ['!', baseFilter];
     },

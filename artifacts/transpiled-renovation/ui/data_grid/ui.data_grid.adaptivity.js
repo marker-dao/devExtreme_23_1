@@ -6,7 +6,7 @@ Object.keys(_adaptivity).forEach(function (key) {
   if (key in exports && exports[key] === _adaptivity[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _adaptivity[key];
     }
   });

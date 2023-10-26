@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/variable_wrapper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,19 +13,19 @@ var _console = require("./console");
 var _dependency_injector = _interopRequireDefault(require("./dependency_injector"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var _default = (0, _dependency_injector.default)({
-  isWrapped: function isWrapped() {
+  isWrapped: function () {
     return false;
   },
-  isWritableWrapped: function isWritableWrapped() {
+  isWritableWrapped: function () {
     return false;
   },
-  wrap: function wrap(value) {
+  wrap: function (value) {
     return value;
   },
-  unwrap: function unwrap(value) {
+  unwrap: function (value) {
     return value;
   },
-  assign: function assign() {
+  assign: function () {
     _console.logger.error('Method \'assign\' should not be used for not wrapped variables. Use \'isWrapped\' method for ensuring.');
   }
 });

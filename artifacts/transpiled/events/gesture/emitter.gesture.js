@@ -14,24 +14,24 @@ var _type = require("../../core/utils/type");
 var _index = require("../utils/index");
 var _emitter = _interopRequireDefault(require("../core/emitter"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ready = _ready_callbacks.default.add;
-var abs = Math.abs;
-var SLEEP = 0;
-var INITED = 1;
-var STARTED = 2;
-var TOUCH_BOUNDARY = 10;
-var IMMEDIATE_TOUCH_BOUNDARY = 0;
-var IMMEDIATE_TIMEOUT = 180;
-var supportPointerEvents = function supportPointerEvents() {
+const ready = _ready_callbacks.default.add;
+const abs = Math.abs;
+const SLEEP = 0;
+const INITED = 1;
+const STARTED = 2;
+let TOUCH_BOUNDARY = 10;
+const IMMEDIATE_TOUCH_BOUNDARY = 0;
+const IMMEDIATE_TIMEOUT = 180;
+const supportPointerEvents = function () {
   return (0, _style.styleProp)('pointer-events');
 };
-var setGestureCover = (0, _call_once.default)(function () {
-  var GESTURE_COVER_CLASS = 'dx-gesture-cover';
-  var isDesktop = _devices.default.real().deviceType === 'desktop';
+const setGestureCover = (0, _call_once.default)(function () {
+  const GESTURE_COVER_CLASS = 'dx-gesture-cover';
+  const isDesktop = _devices.default.real().deviceType === 'desktop';
   if (!supportPointerEvents() || !isDesktop) {
     return _common.noop;
   }
-  var $cover = (0, _renderer.default)('<div>').addClass(GESTURE_COVER_CLASS).css('pointerEvents', 'none');
+  const $cover = (0, _renderer.default)('<div>').addClass(GESTURE_COVER_CLASS).css('pointerEvents', 'none');
   _events_engine.default.subscribeGlobal($cover, 'dxmousewheel', function (e) {
     e.preventDefault();
   });
@@ -43,28 +43,28 @@ var setGestureCover = (0, _call_once.default)(function () {
     toggle && $cover.css('cursor', cursor);
   };
 });
-var gestureCover = function gestureCover(toggle, cursor) {
-  var gestureCoverStrategy = setGestureCover();
+const gestureCover = function (toggle, cursor) {
+  const gestureCoverStrategy = setGestureCover();
   gestureCoverStrategy(toggle, cursor);
 };
-var GestureEmitter = _emitter.default.inherit({
+const GestureEmitter = _emitter.default.inherit({
   gesture: true,
-  configure: function configure(data) {
+  configure: function (data) {
     this.getElement().css('msTouchAction', data.immediate ? 'pinch-zoom' : '');
     this.callBase(data);
   },
-  allowInterruptionByMouseWheel: function allowInterruptionByMouseWheel() {
+  allowInterruptionByMouseWheel: function () {
     return this._stage !== STARTED;
   },
-  getDirection: function getDirection() {
+  getDirection: function () {
     return this.direction;
   },
-  _cancel: function _cancel() {
+  _cancel: function () {
     this.callBase.apply(this, arguments);
     this._toggleGestureCover(false);
     this._stage = SLEEP;
   },
-  start: function start(e) {
+  start: function (e) {
     if (e._needSkipEvent || (0, _index.needSkipEvent)(e)) {
       this._cancel(e);
       return;
@@ -75,7 +75,7 @@ var GestureEmitter = _emitter.default.inherit({
     this._init(e);
     this._setupImmediateTimer();
   },
-  _setupImmediateTimer: function _setupImmediateTimer() {
+  _setupImmediateTimer: function () {
     var _this$immediateTimeou;
     clearTimeout(this._immediateTimer);
     this._immediateAccepted = false;
@@ -90,7 +90,7 @@ var GestureEmitter = _emitter.default.inherit({
       this._immediateAccepted = true;
     }.bind(this), (_this$immediateTimeou = this.immediateTimeout) !== null && _this$immediateTimeou !== void 0 ? _this$immediateTimeou : IMMEDIATE_TIMEOUT);
   },
-  move: function move(e) {
+  move: function (e) {
     if (this._stage === INITED && this._directionConfirmed(e)) {
       this._stage = STARTED;
       this._resetActiveElement();
@@ -109,52 +109,52 @@ var GestureEmitter = _emitter.default.inherit({
       this._move(e);
     }
   },
-  _directionConfirmed: function _directionConfirmed(e) {
-    var touchBoundary = this._getTouchBoundary(e);
-    var delta = (0, _index.eventDelta)(this._startEventData, (0, _index.eventData)(e));
-    var deltaX = abs(delta.x);
-    var deltaY = abs(delta.y);
-    var horizontalMove = this._validateMove(touchBoundary, deltaX, deltaY);
-    var verticalMove = this._validateMove(touchBoundary, deltaY, deltaX);
-    var direction = this.getDirection(e);
-    var bothAccepted = direction === 'both' && (horizontalMove || verticalMove);
-    var horizontalAccepted = direction === 'horizontal' && horizontalMove;
-    var verticalAccepted = direction === 'vertical' && verticalMove;
+  _directionConfirmed: function (e) {
+    const touchBoundary = this._getTouchBoundary(e);
+    const delta = (0, _index.eventDelta)(this._startEventData, (0, _index.eventData)(e));
+    const deltaX = abs(delta.x);
+    const deltaY = abs(delta.y);
+    const horizontalMove = this._validateMove(touchBoundary, deltaX, deltaY);
+    const verticalMove = this._validateMove(touchBoundary, deltaY, deltaX);
+    const direction = this.getDirection(e);
+    const bothAccepted = direction === 'both' && (horizontalMove || verticalMove);
+    const horizontalAccepted = direction === 'horizontal' && horizontalMove;
+    const verticalAccepted = direction === 'vertical' && verticalMove;
     return bothAccepted || horizontalAccepted || verticalAccepted || this._immediateAccepted;
   },
-  _validateMove: function _validateMove(touchBoundary, mainAxis, crossAxis) {
+  _validateMove: function (touchBoundary, mainAxis, crossAxis) {
     return mainAxis && mainAxis >= touchBoundary && (this.immediate ? mainAxis >= crossAxis : true);
   },
-  _getTouchBoundary: function _getTouchBoundary(e) {
+  _getTouchBoundary: function (e) {
     return this.immediate || (0, _index.isDxMouseWheelEvent)(e) ? IMMEDIATE_TOUCH_BOUNDARY : TOUCH_BOUNDARY;
   },
-  _adjustStartEvent: function _adjustStartEvent(e) {
-    var touchBoundary = this._getTouchBoundary(e);
-    var delta = (0, _index.eventDelta)(this._startEventData, (0, _index.eventData)(e));
+  _adjustStartEvent: function (e) {
+    const touchBoundary = this._getTouchBoundary(e);
+    const delta = (0, _index.eventDelta)(this._startEventData, (0, _index.eventData)(e));
     this._startEvent.pageX += (0, _math.sign)(delta.x) * touchBoundary;
     this._startEvent.pageY += (0, _math.sign)(delta.y) * touchBoundary;
   },
-  _resetActiveElement: function _resetActiveElement() {
+  _resetActiveElement: function () {
     if (_devices.default.real().platform === 'ios' && this.getElement().find(':focus').length) {
       (0, _dom.resetActiveElement)();
     }
   },
-  _toggleGestureCover: function _toggleGestureCover(toggle) {
+  _toggleGestureCover: function (toggle) {
     this._toggleGestureCoverImpl(toggle);
   },
-  _toggleGestureCoverImpl: function _toggleGestureCoverImpl(toggle) {
-    var isStarted = this._stage === STARTED;
+  _toggleGestureCoverImpl: function (toggle) {
+    const isStarted = this._stage === STARTED;
     if (isStarted) {
       gestureCover(toggle, this.getElement().css('cursor'));
     }
   },
-  _clearSelection: function _clearSelection(e) {
+  _clearSelection: function (e) {
     if ((0, _index.isDxMouseWheelEvent)(e) || (0, _index.isTouchEvent)(e)) {
       return;
     }
     (0, _dom.clearSelection)();
   },
-  end: function end(e) {
+  end: function (e) {
     this._toggleGestureCover(false);
     if (this._stage === STARTED) {
       this._end(e);
@@ -163,7 +163,7 @@ var GestureEmitter = _emitter.default.inherit({
     }
     this._stage = SLEEP;
   },
-  dispose: function dispose() {
+  dispose: function () {
     clearTimeout(this._immediateTimer);
     this.callBase.apply(this, arguments);
     this._toggleGestureCover(false);

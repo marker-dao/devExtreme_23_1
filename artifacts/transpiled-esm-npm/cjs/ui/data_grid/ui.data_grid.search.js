@@ -6,7 +6,7 @@ Object.keys(_search).forEach(function (key) {
   if (key in exports && exports[key] === _search[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _search[key];
     }
   });

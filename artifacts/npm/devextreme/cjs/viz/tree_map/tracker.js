@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/tracker.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,36 +16,36 @@ require("./api");
 require("./hover");
 require("./tooltip");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DATA_KEY_BASE = '__treemap_data_';
-var dataKeyModifier = 0;
-var proto = _tree_map.default.prototype;
+const DATA_KEY_BASE = '__treemap_data_';
+let dataKeyModifier = 0;
+const proto = _tree_map.default.prototype;
 proto._eventsMap.onClick = {
   name: 'click'
 };
-var getDataKey = function getDataKey() {
-  var dataKey = DATA_KEY_BASE + dataKeyModifier++;
+const getDataKey = function () {
+  const dataKey = DATA_KEY_BASE + dataKeyModifier++;
   return dataKey;
 };
 (0, _helpers.expand)(proto, '_initCore', function () {
-  var that = this;
-  var dataKey = getDataKey();
-  var getProxy = function getProxy(index) {
+  const that = this;
+  const dataKey = getDataKey();
+  const getProxy = function (index) {
     return that._nodes[index].proxy;
   };
   that._tracker = new _tracker.Tracker({
     widget: that,
     root: that._renderer.root,
-    getNode: function getNode(id) {
-      var proxy = getProxy(id);
-      var interactWithGroup = (0, _utils.parseScalar)(that._getOption('interactWithGroup', true));
+    getNode: function (id) {
+      const proxy = getProxy(id);
+      const interactWithGroup = (0, _utils.parseScalar)(that._getOption('interactWithGroup', true));
       return interactWithGroup && proxy.isLeaf() && proxy.getParent().isActive() ? proxy.getParent() : proxy;
     },
-    getData: function getData(e) {
-      var target = e.target;
+    getData: function (e) {
+      const target = e.target;
       return (target.tagName === 'tspan' ? target.parentNode : target)[dataKey];
     },
     getProxy: getProxy,
-    click: function click(e) {
+    click: function (e) {
       that._eventTrigger('click', e);
     }
   });

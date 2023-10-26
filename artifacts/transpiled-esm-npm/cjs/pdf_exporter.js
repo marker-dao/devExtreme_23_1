@@ -2,19 +2,19 @@
 
 Object.defineProperty(exports, "exportDataGrid", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _export_data_grid.exportDataGrid;
   }
 });
 Object.defineProperty(exports, "exportDataGridWithAutoTable", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _export_data_grid2.exportDataGrid;
   }
 });
 Object.defineProperty(exports, "exportGantt", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _export_gantt.exportGantt;
   }
 });

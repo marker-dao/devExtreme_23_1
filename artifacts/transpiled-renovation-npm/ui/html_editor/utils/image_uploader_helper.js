@@ -15,34 +15,33 @@ var _type = require("../../../core/utils/type");
 var _button_group = _interopRequireDefault(require("../../button_group"));
 var _file_uploader = _interopRequireDefault(require("../../file_uploader"));
 var _text_box = _interopRequireDefault(require("../../text_box"));
-var _excluded = ["imageSrc", "src"];
+const _excluded = ["imageSrc", "src"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-var isMobile = _devices.default.current().deviceType === 'phone';
-var DIALOG_IMAGE_CAPTION = 'dxHtmlEditor-dialogImageCaption';
-var DIALOG_UPDATE_IMAGE_CAPTION = 'dxHtmlEditor-dialogUpdateImageCaption';
-var DIALOG_IMAGE_FIELD_URL = 'dxHtmlEditor-dialogImageUrlField';
-var DIALOG_IMAGE_FIELD_ALT = 'dxHtmlEditor-dialogImageAltField';
-var DIALOG_IMAGE_FIELD_WIDTH = 'dxHtmlEditor-dialogImageWidthField';
-var DIALOG_IMAGE_FIELD_HEIGHT = 'dxHtmlEditor-dialogImageHeightField';
-var DIALOG_IMAGE_ADD_BUTTON = 'dxHtmlEditor-dialogImageAddButton';
-var DIALOG_IMAGE_UPDATE_BUTTON = 'dxHtmlEditor-dialogImageUpdateButton';
-var DIALOG_IMAGE_SPECIFY_URL = 'dxHtmlEditor-dialogImageSpecifyUrl';
-var DIALOG_IMAGE_SELECT_FILE = 'dxHtmlEditor-dialogImageSelectFile';
-var DIALOG_IMAGE_KEEP_ASPECT_RATIO = 'dxHtmlEditor-dialogImageKeepAspectRatio';
-var DIALOG_IMAGE_ENCODE_TO_BASE64 = 'dxHtmlEditor-dialogImageEncodeToBase64';
-var DIALOG_IMAGE_POPUP_CLASS = 'dx-htmleditor-add-image-popup';
-var DIALOG_IMAGE_POPUP_WITH_TABS_CLASS = 'dx-htmleditor-add-image-popup-with-tabs';
-var DIALOG_IMAGE_FIX_RATIO_CONTAINER = 'dx-fix-ratio-container';
-var FORM_DIALOG_CLASS = 'dx-formdialog';
-var USER_ACTION = 'user';
-var SILENT_ACTION = 'silent';
-var FILE_UPLOADER_NAME = 'dx-htmleditor-image';
-var ImageUploader = /*#__PURE__*/function () {
+const isMobile = _devices.default.current().deviceType === 'phone';
+const DIALOG_IMAGE_CAPTION = 'dxHtmlEditor-dialogImageCaption';
+const DIALOG_UPDATE_IMAGE_CAPTION = 'dxHtmlEditor-dialogUpdateImageCaption';
+const DIALOG_IMAGE_FIELD_URL = 'dxHtmlEditor-dialogImageUrlField';
+const DIALOG_IMAGE_FIELD_ALT = 'dxHtmlEditor-dialogImageAltField';
+const DIALOG_IMAGE_FIELD_WIDTH = 'dxHtmlEditor-dialogImageWidthField';
+const DIALOG_IMAGE_FIELD_HEIGHT = 'dxHtmlEditor-dialogImageHeightField';
+const DIALOG_IMAGE_ADD_BUTTON = 'dxHtmlEditor-dialogImageAddButton';
+const DIALOG_IMAGE_UPDATE_BUTTON = 'dxHtmlEditor-dialogImageUpdateButton';
+const DIALOG_IMAGE_SPECIFY_URL = 'dxHtmlEditor-dialogImageSpecifyUrl';
+const DIALOG_IMAGE_SELECT_FILE = 'dxHtmlEditor-dialogImageSelectFile';
+const DIALOG_IMAGE_KEEP_ASPECT_RATIO = 'dxHtmlEditor-dialogImageKeepAspectRatio';
+const DIALOG_IMAGE_ENCODE_TO_BASE64 = 'dxHtmlEditor-dialogImageEncodeToBase64';
+const DIALOG_IMAGE_POPUP_CLASS = 'dx-htmleditor-add-image-popup';
+const DIALOG_IMAGE_POPUP_WITH_TABS_CLASS = 'dx-htmleditor-add-image-popup-with-tabs';
+const DIALOG_IMAGE_FIX_RATIO_CONTAINER = 'dx-fix-ratio-container';
+const FORM_DIALOG_CLASS = 'dx-formdialog';
+const USER_ACTION = 'user';
+const SILENT_ACTION = 'silent';
+const FILE_UPLOADER_NAME = 'dx-htmleditor-image';
+let ImageUploader = /*#__PURE__*/function () {
   function ImageUploader(module, config) {
     this.module = module;
     this.config = config !== null && config !== void 0 ? config : {};
@@ -51,32 +50,29 @@ var ImageUploader = /*#__PURE__*/function () {
   }
   var _proto = ImageUploader.prototype;
   _proto.render = function render() {
-    var _this = this;
     if (this.editorInstance._formDialog) {
-      this.editorInstance._formDialog.beforeAddButtonAction = function () {
-        return _this.getCurrentTab().upload();
-      };
+      this.editorInstance._formDialog.beforeAddButtonAction = () => this.getCurrentTab().upload();
     }
     this.tabPanelIndex = 0;
     this.formData = this.getFormData();
     this.isUpdating = this.isImageUpdating();
     this.tabsModel = this.createTabsModel(this.config.tabs);
     this.tabs = this.createTabs(this.formData);
-    var formConfig = this.getFormConfig();
+    const formConfig = this.getFormConfig();
     this.updatePopupConfig();
     this.updateAddButtonState();
-    this.editorInstance.showFormDialog(formConfig).done(function (formData, event) {
-      _this.tabs[_this.getActiveTabIndex()].strategy.pasteImage(formData, event);
-    }).always(function () {
-      _this.resetDialogPopupOptions();
-      _this.quill.focus();
+    this.editorInstance.showFormDialog(formConfig).done((formData, event) => {
+      this.tabs[this.getActiveTabIndex()].strategy.pasteImage(formData, event);
+    }).always(() => {
+      this.resetDialogPopupOptions();
+      this.quill.focus();
     });
   };
   _proto.getCurrentTab = function getCurrentTab() {
     return this.tabs[this.tabPanelIndex];
   };
   _proto.updateAddButtonState = function updateAddButtonState() {
-    var isDisabled = this.getCurrentTab().isDisableButton();
+    const isDisabled = this.getCurrentTab().isDisableButton();
     this.setAddButtonDisabled(isDisabled);
   };
   _proto.setAddButtonDisabled = function setAddButtonDisabled(value) {
@@ -91,45 +87,38 @@ var ImageUploader = /*#__PURE__*/function () {
     return this.getUpdateDialogFormData(this.quill.getFormat());
   };
   _proto.getUpdateDialogFormData = function getUpdateDialogFormData(formData) {
-    var imageSrc = formData.imageSrc,
-      src = formData.src,
-      props = _objectWithoutProperties(formData, _excluded);
+    const {
+        imageSrc,
+        src
+      } = formData,
+      props = _objectWithoutPropertiesLoose(formData, _excluded);
     return _extends({
       src: imageSrc !== null && imageSrc !== void 0 ? imageSrc : src
     }, props);
   };
   _proto.createUrlTab = function createUrlTab(formData) {
-    var _this2 = this;
     return new UrlTab(this.module, {
       config: this.config,
       formData,
       isUpdating: this.isUpdating
-    }, function () {
-      return _this2.updateAddButtonState();
-    });
+    }, () => this.updateAddButtonState());
   };
   _proto.createFileTab = function createFileTab() {
-    var _this3 = this;
     return new FileTab(this.module, {
       config: this.config
-    }, function () {
-      return _this3.updateAddButtonState();
-    });
+    }, () => this.updateAddButtonState());
   };
   _proto.createTabsModel = function createTabsModel() {
-    var model = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    let model = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     if (model.length === 0 || this.isUpdating) {
       return ['url'];
     }
-    return model.map(function (tab) {
-      return typeof tab === 'object' ? tab.name : tab;
-    });
+    return model.map(tab => typeof tab === 'object' ? tab.name : tab);
   };
   _proto.createTabs = function createTabs(formData) {
-    var _this4 = this;
-    return this.tabsModel.map(function (tabName) {
-      var isUrlTab = tabName === 'url';
-      return isUrlTab ? _this4.createUrlTab(formData) : _this4.createFileTab();
+    return this.tabsModel.map(tabName => {
+      const isUrlTab = tabName === 'url';
+      return isUrlTab ? this.createUrlTab(formData) : this.createFileTab();
     });
   };
   _proto.isImageUpdating = function isImageUpdating() {
@@ -137,12 +126,12 @@ var ImageUploader = /*#__PURE__*/function () {
     return Object.prototype.hasOwnProperty.call((_this$module$quill$ge = this.module.quill.getFormat()) !== null && _this$module$quill$ge !== void 0 ? _this$module$quill$ge : {}, 'imageSrc');
   };
   _proto.updatePopupConfig = function updatePopupConfig() {
-    var wrapperClasses = "".concat(DIALOG_IMAGE_POPUP_CLASS, " ").concat(FORM_DIALOG_CLASS);
+    let wrapperClasses = "".concat(DIALOG_IMAGE_POPUP_CLASS, " ").concat(FORM_DIALOG_CLASS);
     if (this.useTabbedItems()) {
       wrapperClasses += " ".concat(DIALOG_IMAGE_POPUP_WITH_TABS_CLASS);
     }
-    var titleKey = this.isUpdating ? DIALOG_UPDATE_IMAGE_CAPTION : DIALOG_IMAGE_CAPTION;
-    var addButtonTextKey = this.isUpdating ? DIALOG_IMAGE_UPDATE_BUTTON : DIALOG_IMAGE_ADD_BUTTON;
+    const titleKey = this.isUpdating ? DIALOG_UPDATE_IMAGE_CAPTION : DIALOG_IMAGE_CAPTION;
+    const addButtonTextKey = this.isUpdating ? DIALOG_IMAGE_UPDATE_BUTTON : DIALOG_IMAGE_ADD_BUTTON;
     this.editorInstance.formDialogOption({
       title: _message.default.format(titleKey),
       'toolbarItems[0].options.text': _message.default.format(addButtonTextKey),
@@ -177,9 +166,8 @@ var ImageUploader = /*#__PURE__*/function () {
     };
   };
   _proto.getItemsConfig = function getItemsConfig() {
-    var _this5 = this;
     if (this.useTabbedItems()) {
-      var tabsConfig = (0, _iterator.map)(this.tabs, function (tabController) {
+      const tabsConfig = (0, _iterator.map)(this.tabs, tabController => {
         return {
           title: tabController.getTabName(),
           colCount: 11,
@@ -189,9 +177,9 @@ var ImageUploader = /*#__PURE__*/function () {
       return [{
         itemType: 'tabbed',
         tabPanelOptions: {
-          onSelectionChanged: function onSelectionChanged(e) {
-            _this5.tabPanelIndex = e.component.option('selectedIndex');
-            _this5.updateAddButtonState();
+          onSelectionChanged: e => {
+            this.tabPanelIndex = e.component.option('selectedIndex');
+            this.updateAddButtonState();
           }
         },
         tabs: tabsConfig
@@ -202,11 +190,13 @@ var ImageUploader = /*#__PURE__*/function () {
   return ImageUploader;
 }();
 exports.ImageUploader = ImageUploader;
-var BaseTab = /*#__PURE__*/function () {
+let BaseTab = /*#__PURE__*/function () {
   function BaseTab(module, _ref, onFileSelected) {
-    var config = _ref.config,
-      formData = _ref.formData,
-      isUpdating = _ref.isUpdating;
+    let {
+      config,
+      formData,
+      isUpdating
+    } = _ref;
     this.module = module;
     this.config = config;
     this.formData = formData;
@@ -229,7 +219,7 @@ var BaseTab = /*#__PURE__*/function () {
   };
   return BaseTab;
 }();
-var UrlTab = /*#__PURE__*/function (_BaseTab) {
+let UrlTab = /*#__PURE__*/function (_BaseTab) {
   _inheritsLoose(UrlTab, _BaseTab);
   function UrlTab() {
     return _BaseTab.apply(this, arguments) || this;
@@ -240,7 +230,7 @@ var UrlTab = /*#__PURE__*/function (_BaseTab) {
   };
   return UrlTab;
 }(BaseTab);
-var FileTab = /*#__PURE__*/function (_BaseTab2) {
+let FileTab = /*#__PURE__*/function (_BaseTab2) {
   _inheritsLoose(FileTab, _BaseTab2);
   function FileTab() {
     return _BaseTab2.apply(this, arguments) || this;
@@ -257,7 +247,7 @@ var FileTab = /*#__PURE__*/function (_BaseTab2) {
   };
   return FileTab;
 }(BaseTab);
-var BaseStrategy = /*#__PURE__*/function () {
+let BaseStrategy = /*#__PURE__*/function () {
   function BaseStrategy(module, config) {
     this.module = module;
     this.config = config;
@@ -267,7 +257,7 @@ var BaseStrategy = /*#__PURE__*/function () {
   }
   var _proto5 = BaseStrategy.prototype;
   _proto5.getQuillSelection = function getQuillSelection() {
-    var selection = this.quill.getSelection();
+    const selection = this.quill.getSelection();
     return selection !== null && selection !== void 0 ? selection : {
       index: this.quill.getLength(),
       length: 0
@@ -280,13 +270,13 @@ var BaseStrategy = /*#__PURE__*/function () {
   _proto5.upload = function upload() {};
   return BaseStrategy;
 }();
-var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
+let AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
   _inheritsLoose(AddUrlStrategy, _BaseStrategy);
   function AddUrlStrategy(module, config, onFileSelected) {
-    var _this6;
-    _this6 = _BaseStrategy.call(this, module, config, onFileSelected) || this;
-    _this6.shouldKeepAspectRatio = true;
-    return _this6;
+    var _this;
+    _this = _BaseStrategy.call(this, module, config, onFileSelected) || this;
+    _this.shouldKeepAspectRatio = true;
+    return _this;
   }
   var _proto6 = AddUrlStrategy.prototype;
   _proto6.pasteImage = function pasteImage(formData, event) {
@@ -294,11 +284,13 @@ var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
     urlUpload(this.quill, this.selection.index, formData);
   };
   _proto6.keepAspectRatio = function keepAspectRatio(data, _ref2) {
-    var dependentEditor = _ref2.dependentEditor,
-      e = _ref2.e;
-    var newValue = parseInt(e.value);
-    var previousValue = parseInt(e.previousValue);
-    var previousDependentEditorValue = parseInt(dependentEditor.option('value'));
+    let {
+      dependentEditor,
+      e
+    } = _ref2;
+    const newValue = parseInt(e.value);
+    const previousValue = parseInt(e.previousValue);
+    const previousDependentEditorValue = parseInt(dependentEditor.option('value'));
     data.component.updateData(data.dataField, newValue);
     if (this.shouldKeepAspectRatio && previousDependentEditorValue && previousValue && !this.preventRecalculating) {
       this.preventRecalculating = true;
@@ -307,24 +299,22 @@ var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
     this.preventRecalculating = false;
   };
   _proto6.createKeepAspectRatioEditor = function createKeepAspectRatioEditor($container, data, dependentEditorDataField) {
-    var _this7 = this;
     return this.editorInstance._createComponent($container, _text_box.default, (0, _extend.extend)(true, data.editorOptions, {
       value: data.component.option('formData')[data.dataField],
       onEnterKey: data.component.option('onEditorEnterKey').bind(this.editorInstance._formDialog, data),
-      onValueChanged: function onValueChanged(e) {
-        _this7.keepAspectRatio(data, {
-          dependentEditor: _this7[dependentEditorDataField + 'Editor'],
+      onValueChanged: e => {
+        this.keepAspectRatio(data, {
+          dependentEditor: this[dependentEditorDataField + 'Editor'],
           e
         });
       }
     }));
   };
   _proto6.upload = function upload() {
-    var result = this.editorInstance._formDialog._form.validate();
+    const result = this.editorInstance._formDialog._form.validate();
     return result.isValid;
   };
   _proto6.getItemsConfig = function getItemsConfig() {
-    var _this8 = this;
     return [{
       dataField: 'src',
       colSpan: 11,
@@ -343,12 +333,12 @@ var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
       label: {
         text: _message.default.format(DIALOG_IMAGE_FIELD_WIDTH)
       },
-      template: function template(data) {
-        var $content = (0, _renderer.default)('<div>').addClass(DIALOG_IMAGE_FIX_RATIO_CONTAINER);
-        var $widthEditor = (0, _renderer.default)('<div>').appendTo($content);
-        _this8.widthEditor = _this8.createKeepAspectRatioEditor($widthEditor, data, 'height');
-        var $ratioEditor = (0, _renderer.default)('<div>').appendTo($content);
-        _this8.editorInstance._createComponent($ratioEditor, _button_group.default, {
+      template: data => {
+        const $content = (0, _renderer.default)('<div>').addClass(DIALOG_IMAGE_FIX_RATIO_CONTAINER);
+        const $widthEditor = (0, _renderer.default)('<div>').appendTo($content);
+        this.widthEditor = this.createKeepAspectRatioEditor($widthEditor, data, 'height');
+        const $ratioEditor = (0, _renderer.default)('<div>').appendTo($content);
+        this.editorInstance._createComponent($ratioEditor, _button_group.default, {
           items: [{
             icon: 'imgarlock',
             value: 'keepRatio'
@@ -359,8 +349,8 @@ var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
           stylingMode: 'outlined',
           selectionMode: 'multiple',
           selectedItemKeys: ['keepRatio'],
-          onSelectionChanged: function onSelectionChanged(e) {
-            _this8.shouldKeepAspectRatio = !!e.component.option('selectedItems').length;
+          onSelectionChanged: e => {
+            this.shouldKeepAspectRatio = !!e.component.option('selectedItems').length;
           }
         });
         return $content;
@@ -371,9 +361,9 @@ var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
       label: {
         text: _message.default.format(DIALOG_IMAGE_FIELD_HEIGHT)
       },
-      template: function template(data) {
-        var $content = (0, _renderer.default)('<div>');
-        _this8.heightEditor = _this8.createKeepAspectRatioEditor($content, data, 'width');
+      template: data => {
+        const $content = (0, _renderer.default)('<div>');
+        this.heightEditor = this.createKeepAspectRatioEditor($content, data, 'width');
         return $content;
       }
     }, {
@@ -386,19 +376,20 @@ var AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
   };
   return AddUrlStrategy;
 }(BaseStrategy);
-var UpdateUrlStrategy = /*#__PURE__*/function (_AddUrlStrategy) {
+let UpdateUrlStrategy = /*#__PURE__*/function (_AddUrlStrategy) {
   _inheritsLoose(UpdateUrlStrategy, _AddUrlStrategy);
   function UpdateUrlStrategy(module, config, formData, onFileSelected) {
-    var _this9;
-    _this9 = _AddUrlStrategy.call(this, module, config, onFileSelected) || this;
-    _this9.formData = formData;
-    _this9.modifyFormData();
-    return _this9;
+    var _this2;
+    _this2 = _AddUrlStrategy.call(this, module, config, onFileSelected) || this;
+    _this2.formData = formData;
+    _this2.modifyFormData();
+    return _this2;
   }
   var _proto7 = UpdateUrlStrategy.prototype;
   _proto7.modifyFormData = function modifyFormData() {
-    var _this$quill$getFormat = this.quill.getFormat(this.selection.index - 1, 1),
-      imageSrc = _this$quill$getFormat.imageSrc;
+    const {
+      imageSrc
+    } = this.quill.getFormat(this.selection.index - 1, 1);
     if (!imageSrc || this.selection.index === 0) {
       this.selection = {
         index: this.selection.index + 1,
@@ -406,7 +397,7 @@ var UpdateUrlStrategy = /*#__PURE__*/function (_AddUrlStrategy) {
       };
       this.quill.setSelection(this.selection.index, this.selection.length, SILENT_ACTION);
     }
-    var imgElement = this.quill.getLeaf(this.selection.index)[0].domNode;
+    const imgElement = this.quill.getLeaf(this.selection.index)[0].domNode;
     if (imgElement) {
       var _this$formData$width, _this$formData$height;
       this.formData.width = (_this$formData$width = this.formData.width) !== null && _this$formData$width !== void 0 ? _this$formData$width : (0, _size.getWidth)((0, _renderer.default)(imgElement));
@@ -420,7 +411,7 @@ var UpdateUrlStrategy = /*#__PURE__*/function (_AddUrlStrategy) {
   };
   _proto7.embedFormatIndex = function embedFormatIndex() {
     var _this$selection;
-    var selection = (_this$selection = this.selection) !== null && _this$selection !== void 0 ? _this$selection : this.quill.getSelection();
+    const selection = (_this$selection = this.selection) !== null && _this$selection !== void 0 ? _this$selection : this.quill.getSelection();
     if (selection) {
       if (selection.length) {
         return selection.index;
@@ -433,16 +424,16 @@ var UpdateUrlStrategy = /*#__PURE__*/function (_AddUrlStrategy) {
   };
   return UpdateUrlStrategy;
 }(AddUrlStrategy);
-var FileStrategy = /*#__PURE__*/function (_BaseStrategy2) {
+let FileStrategy = /*#__PURE__*/function (_BaseStrategy2) {
   _inheritsLoose(FileStrategy, _BaseStrategy2);
   function FileStrategy(module, config, onFileSelected) {
-    var _this10;
-    _this10 = _BaseStrategy2.call(this, module, config, onFileSelected) || this;
-    _this10.useBase64 = !(0, _type.isDefined)(_this10.config.fileUploadMode) || _this10.config.fileUploadMode === 'base64';
-    _this10.isValidInternal = false;
-    _this10.onFileSelected = onFileSelected;
-    _this10.data = null;
-    return _this10;
+    var _this3;
+    _this3 = _BaseStrategy2.call(this, module, config, onFileSelected) || this;
+    _this3.useBase64 = !(0, _type.isDefined)(_this3.config.fileUploadMode) || _this3.config.fileUploadMode === 'base64';
+    _this3.isValidInternal = false;
+    _this3.onFileSelected = onFileSelected;
+    _this3.data = null;
+    return _this3;
   }
   var _proto8 = FileStrategy.prototype;
   _proto8.upload = function upload() {
@@ -471,31 +462,25 @@ var FileStrategy = /*#__PURE__*/function (_BaseStrategy2) {
     return this.config.fileUploadMode === 'both';
   };
   _proto8.validate = function validate(e) {
-    var fileUploader = e.component;
-    this.isValidInternal = !fileUploader._files.some(function (file) {
-      return !file.isValid();
-    });
+    const fileUploader = e.component;
+    this.isValidInternal = !fileUploader._files.some(file => !file.isValid());
     if (fileUploader._files.length === 0) {
       this.isValidInternal = false;
     }
   };
   _proto8.getFileUploaderOptions = function getFileUploaderOptions() {
-    var _this11 = this;
-    var fileUploaderOptions = {
+    const fileUploaderOptions = {
       uploadUrl: this.config.uploadUrl,
-      onValueChanged: function onValueChanged(data) {
-        _this11.validate(data);
-        _this11.data = data;
-        _this11.onFileSelected();
+      onValueChanged: data => {
+        this.validate(data);
+        this.data = data;
+        this.onFileSelected();
       },
-      onUploaded: function onUploaded(e) {
-        return _this11.onUploaded(e);
-      }
+      onUploaded: e => this.onUploaded(e)
     };
     return (0, _extend.extend)({}, getFileUploaderBaseOptions(), fileUploaderOptions, this.config.fileUploaderOptions);
   };
   _proto8.getItemsConfig = function getItemsConfig() {
-    var _this12 = this;
     return [{
       itemType: 'simple',
       dataField: 'files',
@@ -503,9 +488,9 @@ var FileStrategy = /*#__PURE__*/function (_BaseStrategy2) {
       label: {
         visible: false
       },
-      template: function template() {
-        var $content = (0, _renderer.default)('<div>');
-        _this12.module.editorInstance._createComponent($content, _file_uploader.default, _this12.getFileUploaderOptions());
+      template: () => {
+        const $content = (0, _renderer.default)('<div>');
+        this.module.editorInstance._createComponent($content, _file_uploader.default, this.getFileUploaderOptions());
         return $content;
       }
     }, {
@@ -519,9 +504,9 @@ var FileStrategy = /*#__PURE__*/function (_BaseStrategy2) {
         value: this.useBase64,
         visible: this.isBase64Editable(),
         text: _message.default.format(DIALOG_IMAGE_ENCODE_TO_BASE64),
-        onValueChanged: function onValueChanged(e) {
-          if (_this12.isBase64Editable()) {
-            _this12.useBase64 = e.value;
+        onValueChanged: e => {
+          if (this.isBase64Editable()) {
+            this.useBase64 = e.value;
           }
         }
       }
@@ -546,7 +531,7 @@ function urlUpload(quill, index, attributes) {
 }
 function serverUpload(url, fileName, quill, pasteIndex) {
   if (url) {
-    var imageUrl = correctSlashesInUrl(url) + fileName;
+    const imageUrl = correctSlashesInUrl(url) + fileName;
     urlUpload(quill, pasteIndex, {
       src: imageUrl
     });

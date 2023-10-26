@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/language_codes.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 exports.getLanguageId = getLanguageId;
 var _core = _interopRequireDefault(require("./core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var LANGUAGE_CODES = {
+const LANGUAGE_CODES = {
   'ar': 1,
   'bg': 2,
   'ca': 3,

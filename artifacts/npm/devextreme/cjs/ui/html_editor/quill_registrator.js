@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/quill_registrator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,13 +26,13 @@ var _imageUpload = _interopRequireDefault(require("./modules/imageUpload"));
 var _imageCursor = _interopRequireDefault(require("./modules/imageCursor"));
 var _mentions = _interopRequireDefault(require("./modules/mentions"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var QuillRegistrator = /*#__PURE__*/function () {
+let QuillRegistrator = /*#__PURE__*/function () {
   function QuillRegistrator() {
     if (QuillRegistrator.initialized) {
       return;
     }
-    var quill = this.getQuill();
-    var DirectionStyle = quill.import('attributors/style/direction');
+    const quill = this.getQuill();
+    const DirectionStyle = quill.import('attributors/style/direction');
     quill.register({
       'formats/align': _align.default,
       'formats/direction': DirectionStyle,
@@ -56,16 +56,16 @@ var QuillRegistrator = /*#__PURE__*/function () {
   }
   var _proto = QuillRegistrator.prototype;
   _proto.createEditor = function createEditor(container, config) {
-    var quill = this.getQuill();
+    const quill = this.getQuill();
     return new quill(container, config);
   };
   _proto.registerModules = function registerModules(modulesConfig) {
-    var isModule = RegExp('modules/*');
-    var quill = this.getQuill();
-    var isRegisteredModule = function isRegisteredModule(modulePath) {
+    const isModule = RegExp('modules/*');
+    const quill = this.getQuill();
+    const isRegisteredModule = modulePath => {
       return !!quill.imports[modulePath];
     };
-    for (var modulePath in modulesConfig) {
+    for (const modulePath in modulesConfig) {
       if (isModule.test(modulePath) && !isRegisteredModule(modulePath)) {
         this._customModules.push(modulePath.slice(8));
       }

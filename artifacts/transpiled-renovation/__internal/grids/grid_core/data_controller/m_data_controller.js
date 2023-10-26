@@ -20,11 +20,11 @@ var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable @typescript-eslint/method-signature-style */
-var changePaging = function changePaging(that, optionName, value) {
-  var dataSource = that._dataSource;
+const changePaging = function (that, optionName, value) {
+  const dataSource = that._dataSource;
   if (dataSource) {
     if (value !== undefined) {
-      var oldValue = that._getPagingOptionValue(optionName);
+      const oldValue = that._getPagingOptionValue(optionName);
       if (oldValue !== value) {
         if (optionName === 'pageSize') {
           dataSource.pageIndex(0);
@@ -33,9 +33,9 @@ var changePaging = function changePaging(that, optionName, value) {
         that._skipProcessingPagingChange = true;
         that.option("paging.".concat(optionName), value);
         that._skipProcessingPagingChange = false;
-        var pageIndex = dataSource.pageIndex();
+        const pageIndex = dataSource.pageIndex();
         that._isPaging = optionName === 'pageIndex';
-        return dataSource[optionName === 'pageIndex' ? 'load' : 'reload']().done(function () {
+        return dataSource[optionName === 'pageIndex' ? 'load' : 'reload']().done(() => {
           that._isPaging = false;
           that.pageChanged.fire(pageIndex);
         });
@@ -46,23 +46,22 @@ var changePaging = function changePaging(that, optionName, value) {
   }
   return 0;
 };
-var ControllerWithDataMixin = _m_modules.default.Controller.inherit(_data_helper.default);
-var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
+const ControllerWithDataMixin = _m_modules.default.Controller.inherit(_data_helper.default);
+let DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
   _inheritsLoose(DataController, _ControllerWithDataMi);
   function DataController() {
     return _ControllerWithDataMi.apply(this, arguments) || this;
   }
   var _proto = DataController.prototype;
   _proto.init = function init() {
-    var _this = this;
-    var that = this;
+    const that = this;
     that._items = [];
     that._cachedProcessedItems = null;
     that._columnsController = this.getController('columns');
     that._isPaging = false;
     that._currentOperationTypes = null;
-    that._dataChangedHandler = function (e) {
-      that._currentOperationTypes = _this._dataSource.operationTypes();
+    that._dataChangedHandler = e => {
+      that._currentOperationTypes = this._dataSource.operationTypes();
       that._handleDataChanged(e);
       that._currentOperationTypes = null;
     };
@@ -78,11 +77,9 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     that._repaintChangesOnly = undefined;
     that._changes = [];
     that.createAction('onDataErrorOccurred');
-    that.dataErrorOccurred.add(function (error) {
-      return that.executeAction('onDataErrorOccurred', {
-        error
-      });
-    });
+    that.dataErrorOccurred.add(error => that.executeAction('onDataErrorOccurred', {
+      error
+    }));
     that._refreshDataSource();
   };
   _proto._getPagingOptionValue = function _getPagingOptionValue(optionName) {
@@ -109,9 +106,9 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
   };
   _proto._handleDataSourceChange = function _handleDataSourceChange(args) {
     if (args.value === args.previousValue || this.option('columns') && Array.isArray(args.value) && Array.isArray(args.previousValue)) {
-      var isValueChanged = args.value !== args.previousValue;
+      const isValueChanged = args.value !== args.previousValue;
       if (isValueChanged) {
-        var store = this.store();
+        const store = this.store();
         if (store) {
           store._array = args.value;
         }
@@ -129,10 +126,9 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return true;
   };
   _proto.optionChanged = function optionChanged(args) {
-    var _this2 = this;
-    var that = this;
-    var dataSource;
-    var changedPagingOptions;
+    const that = this;
+    let dataSource;
+    let changedPagingOptions;
     function handled() {
       args.handled = true;
     }
@@ -159,10 +155,10 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
         if (dataSource) {
           changedPagingOptions = that._setPagingOptions(dataSource);
           if (changedPagingOptions) {
-            var pageIndex = dataSource.pageIndex();
+            const pageIndex = dataSource.pageIndex();
             this._isPaging = changedPagingOptions.isPageIndexChanged;
-            dataSource.load().done(function () {
-              _this2._isPaging = false;
+            dataSource.load().done(() => {
+              this._isPaging = false;
               that.pageChanged.fire(pageIndex);
             });
           }
@@ -196,15 +192,15 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     if (!this._dataSource) {
       return filter;
     }
-    var combinedFilter = filter !== null && filter !== void 0 ? filter : this._dataSource.filter();
-    var isColumnsTypesDefined = this._columnsController.isDataSourceApplied() || this._columnsController.isAllDataTypesDefined();
+    let combined = filter !== null && filter !== void 0 ? filter : this._dataSource.filter();
+    const isColumnsTypesDefined = this._columnsController.isDataSourceApplied() || this._columnsController.isAllDataTypesDefined();
     if (isColumnsTypesDefined) {
-      var additionalFilter = this._calculateAdditionalFilter();
-      combinedFilter = additionalFilter ? _m_utils.default.combineFilters([additionalFilter, combinedFilter]) : combinedFilter;
+      const additionalFilter = this._calculateAdditionalFilter();
+      combined = additionalFilter ? _m_utils.default.combineFilters([additionalFilter, combined]) : combined;
     }
-    var isRemoteFiltering = this._dataSource.remoteOperations().filtering || returnDataField;
-    combinedFilter = this._columnsController.updateFilter(combinedFilter, isRemoteFiltering);
-    return combinedFilter;
+    const isRemoteFiltering = this._dataSource.remoteOperations().filtering || returnDataField;
+    combined = this._columnsController.updateFilter(combined, isRemoteFiltering);
+    return combined;
   };
   _proto.waitReady = function waitReady() {
     if (this._updateLockCount) {
@@ -215,12 +211,10 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return (0, _deferred.when)();
   };
   _proto._endUpdateCore = function _endUpdateCore() {
-    var changes = this._changes;
+    const changes = this._changes;
     if (changes.length) {
       this._changes = [];
-      var repaintChangesOnly = changes.every(function (change) {
-        return change.repaintChangesOnly;
-      });
+      const repaintChangesOnly = changes.every(change => change.repaintChangesOnly);
       this.updateItems(changes.length === 1 ? changes[0] : {
         repaintChangesOnly
       });
@@ -234,9 +228,11 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
   ;
   _proto._handleCustomizeStoreLoadOptions = function _handleCustomizeStoreLoadOptions(e) {
     var _a;
-    var columnsController = this._columnsController;
-    var dataSource = this._dataSource;
-    var storeLoadOptions = e.storeLoadOptions;
+    const columnsController = this._columnsController;
+    const dataSource = this._dataSource;
+    const {
+      storeLoadOptions
+    } = e;
     if (e.isCustomLoading && !storeLoadOptions.isLoadingAll) {
       return;
     }
@@ -260,14 +256,18 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     e.group = columnsController.getGroupDataSourceParameters(!dataSource.remoteOperations().grouping);
   };
   _proto._handleColumnsChanged = function _handleColumnsChanged(e) {
-    var that = this;
-    var changeTypes = e.changeTypes;
-    var optionNames = e.optionNames;
-    var filterValue;
-    var filterValues;
-    var filterApplied;
+    const that = this;
+    const {
+      changeTypes
+    } = e;
+    const {
+      optionNames
+    } = e;
+    let filterValue;
+    let filterValues;
+    let filterApplied;
     // B255430
-    var updateItemsHandler = function updateItemsHandler(change) {
+    const updateItemsHandler = function (change) {
       var _a;
       that._columnsController.columnsChanged.remove(updateItemsHandler);
       that.updateItems({
@@ -295,7 +295,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
         that._columnsController.columnsChanged.add(updateItemsHandler);
       }
       if ((0, _type.isDefined)(optionNames.visible)) {
-        var column = that._columnsController.columnOption(e.columnIndex);
+        const column = that._columnsController.columnOption(e.columnIndex);
         if (column && ((0, _type.isDefined)(column.filterValue) || (0, _type.isDefined)(column.filterValues))) {
           that._applyFilter();
           filterApplied = true;
@@ -307,14 +307,14 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     }
   };
   _proto._handleDataChanged = function _handleDataChanged(e) {
-    var that = this;
-    var dataSource = that._dataSource;
-    var columnsController = that._columnsController;
-    var isAsyncDataSourceApplying = false;
+    const that = this;
+    const dataSource = that._dataSource;
+    const columnsController = that._columnsController;
+    let isAsyncDataSourceApplying = false;
     this._useSortingGroupingFromColumns = false;
     if (dataSource && !that._isDataSourceApplying) {
       that._isDataSourceApplying = true;
-      (0, _deferred.when)(that._columnsController.applyDataSource(dataSource)).done(function () {
+      (0, _deferred.when)(that._columnsController.applyDataSource(dataSource)).done(() => {
         if (that._isLoading) {
           that._handleLoadingChanged(false);
         }
@@ -322,11 +322,11 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
           e.isDelayed = false;
         }
         that._isDataSourceApplying = false;
-        var hasAdditionalFilter = function hasAdditionalFilter() {
-          var additionalFilter = that._calculateAdditionalFilter();
+        const hasAdditionalFilter = () => {
+          const additionalFilter = that._calculateAdditionalFilter();
           return additionalFilter && additionalFilter.length;
         };
-        var needApplyFilter = that._needApplyFilter;
+        const needApplyFilter = that._needApplyFilter;
         that._needApplyFilter = false;
         if (needApplyFilter && !that._isAllDataTypesDefined && hasAdditionalFilter()) {
           _ui.default.log('W1005', that.component.NAME);
@@ -334,7 +334,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
         } else {
           that.updateItems(e, true);
         }
-      }).fail(function () {
+      }).fail(() => {
         that._isDataSourceApplying = false;
       });
       if (that._isDataSourceApplying) {
@@ -364,17 +364,17 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     this.dataErrorOccurred.fire(_ui.default.Error.apply(_ui.default, args));
   };
   _proto._setPagingOptions = function _setPagingOptions(dataSource) {
-    var pageIndex = this.option('paging.pageIndex');
-    var pageSize = this.option('paging.pageSize');
-    var pagingEnabled = this.option('paging.enabled');
-    var scrollingMode = this.option('scrolling.mode');
-    var appendMode = scrollingMode === 'infinite';
-    var virtualMode = scrollingMode === 'virtual';
+    const pageIndex = this.option('paging.pageIndex');
+    const pageSize = this.option('paging.pageSize');
+    const pagingEnabled = this.option('paging.enabled');
+    const scrollingMode = this.option('scrolling.mode');
+    const appendMode = scrollingMode === 'infinite';
+    const virtualMode = scrollingMode === 'virtual';
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    var paginate = pagingEnabled || virtualMode || appendMode;
-    var isPaginateChanged = false;
-    var isPageSizeChanged = false;
-    var isPageIndexChanged = false;
+    const paginate = pagingEnabled || virtualMode || appendMode;
+    let isPaginateChanged = false;
+    let isPageSizeChanged = false;
+    let isPageIndexChanged = false;
     dataSource.requireTotalCount(!appendMode);
     if (pagingEnabled !== undefined && dataSource.paginate() !== paginate) {
       dataSource.paginate(paginate);
@@ -398,7 +398,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return false;
   };
   _proto._getSpecificDataSourceOption = function _getSpecificDataSourceOption() {
-    var dataSource = this.option('dataSource');
+    const dataSource = this.option('dataSource');
     if (Array.isArray(dataSource)) {
       return {
         store: {
@@ -411,14 +411,14 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return dataSource;
   };
   _proto._initDataSource = function _initDataSource() {
-    var that = this;
-    var oldDataSource = this._dataSource;
+    const that = this;
+    const oldDataSource = this._dataSource;
     _ControllerWithDataMi.prototype._initDataSource.call(this);
-    var dataSource = that._dataSource;
+    const dataSource = that._dataSource;
     that._useSortingGroupingFromColumns = true;
     that._cachedProcessedItems = null;
     if (dataSource) {
-      var changedPagingOptions = that._setPagingOptions(dataSource);
+      const changedPagingOptions = that._setPagingOptions(dataSource);
       this._isPaging = changedPagingOptions === null || changedPagingOptions === void 0 ? void 0 : changedPagingOptions.isPageIndexChanged;
       that.setDataSource(dataSource);
     } else if (oldDataSource) {
@@ -426,11 +426,11 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     }
   };
   _proto._loadDataSource = function _loadDataSource() {
-    var that = this;
-    var dataSource = that._dataSource;
+    const that = this;
+    const dataSource = that._dataSource;
     // @ts-expect-error
-    var result = new _deferred.Deferred();
-    (0, _deferred.when)(this._columnsController.refresh(true)).always(function () {
+    const result = new _deferred.Deferred();
+    (0, _deferred.when)(this._columnsController.refresh(true)).always(() => {
       if (dataSource) {
         dataSource.load().done(function () {
           that._isPaging = false;
@@ -449,22 +449,24 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return 0;
   };
   _proto.getDataIndex = function getDataIndex(change) {
-    var visibleItems = this._items;
-    var lastVisibleItem = change.changeType === 'append' && visibleItems.length > 0 ? visibleItems[visibleItems.length - 1] : null;
+    const visibleItems = this._items;
+    const lastVisibleItem = change.changeType === 'append' && visibleItems.length > 0 ? visibleItems[visibleItems.length - 1] : null;
     return (0, _type.isDefined)(lastVisibleItem === null || lastVisibleItem === void 0 ? void 0 : lastVisibleItem.dataIndex) ? lastVisibleItem.dataIndex + 1 : 0;
   };
   _proto._processItems = function _processItems(items, change) {
-    var that = this;
-    var rowIndexDelta = that.getRowIndexDelta();
-    var changeType = change.changeType;
-    var visibleColumns = that._columnsController.getVisibleColumns(null, changeType === 'loadingAll');
-    var dataIndex = this.getDataIndex(change);
-    var options = {
+    const that = this;
+    const rowIndexDelta = that.getRowIndexDelta();
+    const {
+      changeType
+    } = change;
+    const visibleColumns = that._columnsController.getVisibleColumns(null, changeType === 'loadingAll');
+    const dataIndex = this.getDataIndex(change);
+    const options = {
       visibleColumns,
       dataIndex
     };
-    var result = [];
-    (0, _iterator.each)(items, function (index, item) {
+    const result = [];
+    (0, _iterator.each)(items, (index, item) => {
       if ((0, _type.isDefined)(item)) {
         // @ts-expect-error
         options.rowIndex = index - rowIndexDelta;
@@ -494,10 +496,10 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return dataItem;
   };
   _proto.generateDataValues = function generateDataValues(data, columns, isModified) {
-    var values = [];
-    var value;
-    for (var i = 0; i < columns.length; i++) {
-      var column = columns[i];
+    const values = [];
+    let value;
+    for (let i = 0; i < columns.length; i++) {
+      const column = columns[i];
       value = isModified ? undefined : null;
       if (!column.command) {
         if (column.calculateCellValue) {
@@ -511,7 +513,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return values;
   };
   _proto._applyChange = function _applyChange(change) {
-    var that = this;
+    const that = this;
     if (change.changeType === 'update') {
       that._applyChangeUpdate(change);
     } else if (that.items().length && change.repaintChangesOnly && change.changeType === 'refresh') {
@@ -524,13 +526,11 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     this._items = change.items.slice(0);
   };
   _proto._getRowIndices = function _getRowIndices(change) {
-    var rowIndices = change.rowIndices.slice(0);
-    var rowIndexDelta = this.getRowIndexDelta();
-    rowIndices.sort(function (a, b) {
-      return a - b;
-    });
-    for (var i = 0; i < rowIndices.length; i++) {
-      var correctedRowIndex = rowIndices[i];
+    const rowIndices = change.rowIndices.slice(0);
+    const rowIndexDelta = this.getRowIndexDelta();
+    rowIndices.sort((a, b) => a - b);
+    for (let i = 0; i < rowIndices.length; i++) {
+      let correctedRowIndex = rowIndices[i];
       if (change.allowInvisibleRowIndices) {
         correctedRowIndex += rowIndexDelta;
       }
@@ -542,35 +542,37 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return rowIndices;
   };
   _proto._applyChangeUpdate = function _applyChangeUpdate(change) {
-    var that = this;
-    var items = change.items;
-    var rowIndices = that._getRowIndices(change);
-    var rowIndexDelta = that.getRowIndexDelta();
-    var repaintChangesOnly = that.option('repaintChangesOnly');
-    var prevIndex = -1;
-    var rowIndexCorrection = 0;
-    var changeType;
+    const that = this;
+    const {
+      items
+    } = change;
+    const rowIndices = that._getRowIndices(change);
+    const rowIndexDelta = that.getRowIndexDelta();
+    const repaintChangesOnly = that.option('repaintChangesOnly');
+    let prevIndex = -1;
+    let rowIndexCorrection = 0;
+    let changeType;
     change.items = [];
     change.rowIndices = [];
     change.columnIndices = [];
     change.changeTypes = [];
-    var equalItems = function equalItems(item1, item2, strict) {
-      var result = item1 && item2 && (0, _common.equalByValue)(item1.key, item2.key);
+    const equalItems = function (item1, item2, strict) {
+      let result = item1 && item2 && (0, _common.equalByValue)(item1.key, item2.key);
       if (result && strict) {
         result = item1.rowType === item2.rowType && (item2.rowType !== 'detail' || item1.isEditing === item2.isEditing);
       }
       return result;
     };
-    (0, _iterator.each)(rowIndices, function (index, rowIndex) {
-      var columnIndices;
+    (0, _iterator.each)(rowIndices, (index, rowIndex) => {
+      let columnIndices;
       rowIndex += rowIndexCorrection + rowIndexDelta;
       if (prevIndex === rowIndex) return;
       prevIndex = rowIndex;
-      var oldItem = that._items[rowIndex];
-      var oldNextItem = that._items[rowIndex + 1];
-      var newItem = items[rowIndex];
-      var newNextItem = items[rowIndex + 1];
-      var strict = equalItems(oldItem, oldNextItem) || equalItems(newItem, newNextItem);
+      const oldItem = that._items[rowIndex];
+      const oldNextItem = that._items[rowIndex + 1];
+      const newItem = items[rowIndex];
+      const newNextItem = items[rowIndex + 1];
+      const strict = equalItems(oldItem, oldNextItem) || equalItems(newItem, newNextItem);
       if (newItem) {
         newItem.rowIndex = rowIndex;
         change.items.push(newItem);
@@ -620,12 +622,12 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return false;
   };
   _proto._getChangedColumnIndices = function _getChangedColumnIndices(oldItem, newItem, visibleRowIndex, isLiveUpdate) {
-    var columnIndices;
+    let columnIndices;
     if (oldItem.rowType === newItem.rowType) {
       if (newItem.rowType !== 'group' && newItem.rowType !== 'groupFooter') {
         columnIndices = [];
         if (newItem.rowType !== 'detail') {
-          for (var columnIndex = 0; columnIndex < oldItem.values.length; columnIndex++) {
+          for (let columnIndex = 0; columnIndex < oldItem.values.length; columnIndex++) {
             if (this._isCellChanged(oldItem, newItem, visibleRowIndex, columnIndex, isLiveUpdate)) {
               columnIndices.push(columnIndex);
             }
@@ -633,24 +635,22 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
         }
       }
       if (newItem.rowType === 'group' && newItem.isExpanded === oldItem.isExpanded && oldItem.cells) {
-        columnIndices = oldItem.cells.map(function (cell, index) {
+        columnIndices = oldItem.cells.map((cell, index) => {
           var _a;
           return ((_a = cell.column) === null || _a === void 0 ? void 0 : _a.type) !== 'groupExpand' ? index : -1;
-        }).filter(function (index) {
-          return index >= 0;
-        });
+        }).filter(index => index >= 0);
       }
     }
     return columnIndices;
   };
   _proto._partialUpdateRow = function _partialUpdateRow(oldItem, newItem, visibleRowIndex, isLiveUpdate) {
-    var changedColumnIndices = this._getChangedColumnIndices(oldItem, newItem, visibleRowIndex, isLiveUpdate);
+    let changedColumnIndices = this._getChangedColumnIndices(oldItem, newItem, visibleRowIndex, isLiveUpdate);
     if ((changedColumnIndices === null || changedColumnIndices === void 0 ? void 0 : changedColumnIndices.length) && this.option('dataRowTemplate')) {
       changedColumnIndices = undefined;
     }
     if (changedColumnIndices) {
-      oldItem.cells && oldItem.cells.forEach(function (cell, columnIndex) {
-        var isCellChanged = changedColumnIndices.indexOf(columnIndex) >= 0;
+      oldItem.cells && oldItem.cells.forEach((cell, columnIndex) => {
+        const isCellChanged = changedColumnIndices.indexOf(columnIndex) >= 0;
         if (!isCellChanged && cell && cell.update) {
           cell.update(newItem);
         }
@@ -670,16 +670,14 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     if (JSON.stringify(item1.values) !== JSON.stringify(item2.values)) {
       return false;
     }
-    var compareFields = ['modified', 'isNewRow', 'removed', 'isEditing'];
-    if (compareFields.some(function (field) {
-      return item1[field] !== item2[field];
-    })) {
+    const compareFields = ['modified', 'isNewRow', 'removed', 'isEditing'];
+    if (compareFields.some(field => item1[field] !== item2[field])) {
       return false;
     }
     if (item1.rowType === 'group' || item1.rowType === 'groupFooter') {
-      var expandedMatch = item1.isExpanded === item2.isExpanded;
-      var summaryCellsMatch = JSON.stringify(item1.summaryCells) === JSON.stringify(item2.summaryCells);
-      var continuationMatch = ((_a = item1.data) === null || _a === void 0 ? void 0 : _a.isContinuation) === ((_b = item2.data) === null || _b === void 0 ? void 0 : _b.isContinuation) && ((_c = item1.data) === null || _c === void 0 ? void 0 : _c.isContinuationOnNextPage) === ((_d = item2.data) === null || _d === void 0 ? void 0 : _d.isContinuationOnNextPage);
+      const expandedMatch = item1.isExpanded === item2.isExpanded;
+      const summaryCellsMatch = JSON.stringify(item1.summaryCells) === JSON.stringify(item2.summaryCells);
+      const continuationMatch = ((_a = item1.data) === null || _a === void 0 ? void 0 : _a.isContinuation) === ((_b = item2.data) === null || _b === void 0 ? void 0 : _b.isContinuation) && ((_c = item1.data) === null || _c === void 0 ? void 0 : _c.isContinuationOnNextPage) === ((_d = item2.data) === null || _d === void 0 ? void 0 : _d.isContinuationOnNextPage);
       if (!expandedMatch || !summaryCellsMatch || !continuationMatch) {
         return false;
       }
@@ -687,27 +685,26 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return true;
   };
   _proto._applyChangesOnly = function _applyChangesOnly(change) {
-    var _this3 = this;
     var _a;
-    var rowIndices = [];
-    var columnIndices = [];
-    var changeTypes = [];
-    var items = [];
-    var newIndexByKey = {};
-    var isLiveUpdate = (_a = change === null || change === void 0 ? void 0 : change.isLiveUpdate) !== null && _a !== void 0 ? _a : true;
+    const rowIndices = [];
+    const columnIndices = [];
+    const changeTypes = [];
+    const items = [];
+    const newIndexByKey = {};
+    const isLiveUpdate = (_a = change === null || change === void 0 ? void 0 : change.isLiveUpdate) !== null && _a !== void 0 ? _a : true;
     function getRowKey(row) {
       if (row) {
         return "".concat(row.rowType, ",").concat(JSON.stringify(row.key));
       }
       return undefined;
     }
-    var isItemEquals = function isItemEquals(item1, item2) {
-      if (!_this3._isItemEquals(item1, item2)) {
+    const isItemEquals = (item1, item2) => {
+      if (!this._isItemEquals(item1, item2)) {
         return false;
       }
       if (item1.cells) {
         item1.update && item1.update(item2);
-        item1.cells.forEach(function (cell) {
+        item1.cells.forEach(cell => {
           if (cell && cell.update) {
             cell.update(item2, true);
           }
@@ -715,26 +712,30 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
       }
       return true;
     };
-    var currentItems = this._items;
-    var oldItems = currentItems.slice();
-    change.items.forEach(function (item, index) {
-      var key = getRowKey(item);
+    const currentItems = this._items;
+    const oldItems = currentItems.slice();
+    change.items.forEach((item, index) => {
+      const key = getRowKey(item);
       newIndexByKey[key] = index;
       item.rowIndex = index;
     });
-    var result = (0, _array_compare.findChanges)(oldItems, change.items, getRowKey, isItemEquals);
+    const result = (0, _array_compare.findChanges)(oldItems, change.items, getRowKey, isItemEquals);
     if (!result) {
       this._applyChangeFull(change);
       return;
     }
-    result.forEach(function (change) {
+    result.forEach(change => {
       switch (change.type) {
         case 'update':
           {
-            var index = change.index;
-            var newItem = change.data;
-            var oldItem = change.oldItem;
-            var changedColumnIndices = _this3._partialUpdateRow(oldItem, newItem, index, isLiveUpdate);
+            const {
+              index
+            } = change;
+            const newItem = change.data;
+            const {
+              oldItem
+            } = change;
+            const changedColumnIndices = this._partialUpdateRow(oldItem, newItem, index, isLiveUpdate);
             rowIndices.push(index);
             changeTypes.push('update');
             items.push(newItem);
@@ -769,12 +770,12 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     if (oldItems.length) {
       change.isLiveUpdate = true;
     }
-    this._correctRowIndices(function (rowIndex) {
-      var oldRowIndexOffset = _this3._rowIndexOffset || 0;
-      var rowIndexOffset = _this3.getRowIndexOffset();
-      var oldItem = oldItems[rowIndex - oldRowIndexOffset];
-      var key = getRowKey(oldItem);
-      var newVisibleRowIndex = newIndexByKey[key];
+    this._correctRowIndices(rowIndex => {
+      const oldRowIndexOffset = this._rowIndexOffset || 0;
+      const rowIndexOffset = this.getRowIndexOffset();
+      const oldItem = oldItems[rowIndex - oldRowIndexOffset];
+      const key = getRowKey(oldItem);
+      const newVisibleRowIndex = newIndexByKey[key];
       return newVisibleRowIndex >= 0 ? newVisibleRowIndex + rowIndexOffset - rowIndex : 0;
     });
   }
@@ -787,12 +788,12 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return items;
   };
   _proto._updateItemsCore = function _updateItemsCore(change) {
-    var items;
-    var dataSource = this._dataSource;
-    var changeType = change.changeType || 'refresh';
+    let items;
+    const dataSource = this._dataSource;
+    const changeType = change.changeType || 'refresh';
     change.changeType = changeType;
     if (dataSource) {
-      var cachedProcessedItems = this._cachedProcessedItems;
+      const cachedProcessedItems = this._cachedProcessedItems;
       if (change.useProcessedItemsCache && cachedProcessedItems) {
         items = cachedProcessedItems;
       } else {
@@ -803,16 +804,16 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
       }
       items = this._afterProcessItems(items, change);
       change.items = items;
-      var oldItems = this._items.length === items.length && this._items;
+      const oldItems = this._items.length === items.length && this._items;
       this._applyChange(change);
-      var rowIndexDelta = this.getRowIndexDelta();
-      (0, _iterator.each)(this._items, function (index, item) {
+      const rowIndexDelta = this.getRowIndexDelta();
+      (0, _iterator.each)(this._items, (index, item) => {
         var _a;
         item.rowIndex = index - rowIndexDelta;
         if (oldItems) {
           item.cells = (_a = oldItems[index].cells) !== null && _a !== void 0 ? _a : [];
         }
-        var newItem = items[index];
+        const newItem = items[index];
         if (newItem) {
           item.loadIndex = newItem.loadIndex;
         }
@@ -823,15 +824,15 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     }
   };
   _proto._handleChanging = function _handleChanging(e) {
-    var that = this;
-    var rows = that.getVisibleRows();
-    var dataSource = that.dataSource();
+    const that = this;
+    const rows = that.getVisibleRows();
+    const dataSource = that.dataSource();
     if (dataSource) {
-      e.changes.forEach(function (change) {
+      e.changes.forEach(change => {
         if (change.type === 'insert' && change.index >= 0) {
-          var dataIndex = 0;
-          for (var i = 0; i < change.index; i++) {
-            var row = rows[i];
+          let dataIndex = 0;
+          for (let i = 0; i < change.index; i++) {
+            const row = rows[i];
             if (row && (row.rowType === 'data' || row.rowType === 'group')) {
               dataIndex++;
             }
@@ -844,14 +845,14 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
   _proto.updateItems = function updateItems(change, isDataChanged) {
     var _a;
     change = change || {};
-    var that = this;
+    const that = this;
     if (that._repaintChangesOnly !== undefined) {
       change.repaintChangesOnly = (_a = change.repaintChangesOnly) !== null && _a !== void 0 ? _a : that._repaintChangesOnly;
       change.needUpdateDimensions = change.needUpdateDimensions || that._needUpdateDimensions;
     } else if (change.changes) {
       change.repaintChangesOnly = that.option('repaintChangesOnly');
     } else if (isDataChanged) {
-      var operationTypes = that.dataSource().operationTypes();
+      const operationTypes = that.dataSource().operationTypes();
       change.repaintChangesOnly = operationTypes && !operationTypes.grouping && !operationTypes.filtering && that.option('repaintChangesOnly');
       change.isDataChanged = true;
       if (operationTypes && (operationTypes.reload || operationTypes.paging || operationTypes.groupExpanding)) {
@@ -867,17 +868,16 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     that._fireChanged(change);
   };
   _proto.loadingOperationTypes = function loadingOperationTypes() {
-    var dataSource = this.dataSource();
+    const dataSource = this.dataSource();
     return dataSource && dataSource.loadingOperationTypes() || {};
   };
   _proto._fireChanged = function _fireChanged(change) {
-    var _this4 = this;
     if (this._currentOperationTypes) {
       change.operationTypes = this._currentOperationTypes;
       this._currentOperationTypes = null;
     }
-    (0, _common.deferRender)(function () {
-      _this4.changed.fire(change);
+    (0, _common.deferRender)(() => {
+      this.changed.fire(change);
     });
   };
   _proto.isLoading = function isLoading() {
@@ -890,14 +890,13 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return null;
   };
   _proto._applyFilter = function _applyFilter() {
-    var _this5 = this;
-    var dataSource = this._dataSource;
+    const dataSource = this._dataSource;
     if (dataSource) {
       dataSource.pageIndex(0);
       this._isFilterApplying = true;
-      return this.reload().done(function () {
-        if (_this5._isFilterApplying) {
-          _this5.pageChanged.fire();
+      return this.reload().done(() => {
+        if (this._isFilterApplying) {
+          this.pageChanged.fire();
         }
       });
     }
@@ -906,8 +905,8 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     this._isFilterApplying = false;
   };
   _proto.filter = function filter(filterExpr) {
-    var dataSource = this._dataSource;
-    var filter = dataSource && dataSource.filter();
+    const dataSource = this._dataSource;
+    const filter = dataSource && dataSource.filter();
     if (arguments.length === 0) {
       return filter;
     }
@@ -921,11 +920,11 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     this._applyFilter();
   };
   _proto.clearFilter = function clearFilter(filterName) {
-    var that = this;
-    var columnsController = that._columnsController;
-    var clearColumnOption = function clearColumnOption(optionName) {
-      var columnCount = columnsController.columnCount();
-      for (var index = 0; index < columnCount; index++) {
+    const that = this;
+    const columnsController = that._columnsController;
+    const clearColumnOption = function (optionName) {
+      const columnCount = columnsController.columnCount();
+      for (let index = 0; index < columnCount; index++) {
         columnsController.columnOption(index, optionName, undefined);
       }
     };
@@ -957,8 +956,8 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     that.component.endUpdate();
   };
   _proto._fireDataSourceChanged = function _fireDataSourceChanged() {
-    var that = this;
-    var changedHandler = function changedHandler() {
+    const that = this;
+    const changedHandler = function () {
       that.changed.remove(changedHandler);
       that.dataSourceChanged.fire();
     };
@@ -966,13 +965,13 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
   };
   _proto._getDataSourceAdapter = function _getDataSourceAdapter() {};
   _proto._createDataSourceAdapterCore = function _createDataSourceAdapterCore(dataSource, remoteOperations) {
-    var dataSourceAdapterProvider = this._getDataSourceAdapter();
-    var dataSourceAdapter = dataSourceAdapterProvider.create(this.component);
+    const dataSourceAdapterProvider = this._getDataSourceAdapter();
+    const dataSourceAdapter = dataSourceAdapterProvider.create(this.component);
     dataSourceAdapter.init(dataSource, remoteOperations);
     return dataSourceAdapter;
   };
   _proto.isLocalStore = function isLocalStore() {
-    var store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.store();
+    let store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.store();
     return store instanceof _array_store.default;
   };
   _proto.isCustomStore = function isCustomStore(store) {
@@ -980,9 +979,9 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return store instanceof _custom_store.default;
   };
   _proto._createDataSourceAdapter = function _createDataSourceAdapter(dataSource) {
-    var remoteOperations = this.option('remoteOperations');
-    var store = dataSource.store();
-    var enabledRemoteOperations = {
+    let remoteOperations = this.option('remoteOperations');
+    const store = dataSource.store();
+    const enabledRemoteOperations = {
       filtering: true,
       sorting: true,
       paging: true,
@@ -1006,8 +1005,8 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return this._createDataSourceAdapterCore(dataSource, remoteOperations);
   };
   _proto.setDataSource = function setDataSource(dataSource) {
-    var that = this;
-    var oldDataSource = that._dataSource;
+    const that = this;
+    const oldDataSource = that._dataSource;
     if (!dataSource && oldDataSource) {
       oldDataSource.cancelAll();
       oldDataSource.changed.remove(that._dataChangedHandler);
@@ -1050,18 +1049,18 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return this._dataSource;
   };
   _proto.store = function store() {
-    var dataSource = this._dataSource;
+    const dataSource = this._dataSource;
     return dataSource && dataSource.store();
   };
   _proto.loadAll = function loadAll(data) {
-    var skipFilter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var that = this;
+    let skipFilter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    const that = this;
     // @ts-expect-error
-    var d = new _deferred.Deferred();
-    var dataSource = that._dataSource;
+    const d = new _deferred.Deferred();
+    const dataSource = that._dataSource;
     if (dataSource) {
       if (data) {
-        var options = {
+        const options = {
           data,
           isCustomLoading: true,
           storeLoadOptions: {
@@ -1074,7 +1073,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
           }
         };
         dataSource._handleDataLoaded(options);
-        (0, _deferred.when)(options.data).done(function (data) {
+        (0, _deferred.when)(options.data).done(data => {
           var _a;
           data = that._beforeProcessItems(data);
           d.resolve(that._processItems(data, {
@@ -1082,11 +1081,11 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
           }), (_a = options.extra) === null || _a === void 0 ? void 0 : _a.summary);
         }).fail(d.reject);
       } else if (!dataSource.isLoading()) {
-        var loadOptions = (0, _extend.extend)({}, dataSource.loadOptions(), {
+        const loadOptions = (0, _extend.extend)({}, dataSource.loadOptions(), {
           isLoadingAll: true,
           requireTotalCount: false
         });
-        dataSource.load(loadOptions).done(function (items, extra) {
+        dataSource.load(loadOptions).done((items, extra) => {
           items = that._beforeProcessItems(items);
           items = that._processItems(items, {
             changeType: 'loadingAll'
@@ -1102,7 +1101,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return d;
   };
   _proto.getKeyByRowIndex = function getKeyByRowIndex(rowIndex, byLoaded) {
-    var item = this.items(byLoaded)[rowIndex];
+    const item = this.items(byLoaded)[rowIndex];
     if (item) {
       return item.key;
     }
@@ -1111,15 +1110,15 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return _m_utils.default.getIndexByKey(key, this.items(byLoaded));
   };
   _proto.keyOf = function keyOf(data) {
-    var store = this.store();
+    const store = this.store();
     if (store) {
       return store.keyOf(data);
     }
   };
   _proto.byKey = function byKey(key) {
-    var store = this.store();
-    var rowIndex = this.getRowIndexByKey(key);
-    var result;
+    const store = this.store();
+    const rowIndex = this.getRowIndexByKey(key);
+    let result;
     if (!store) return;
     if (rowIndex >= 0) {
       // @ts-expect-error
@@ -1128,7 +1127,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return result || store.byKey(key);
   };
   _proto.key = function key() {
-    var store = this.store();
+    const store = this.store();
     if (store) {
       return store.key();
     }
@@ -1139,17 +1138,17 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return 0;
   };
   _proto.getDataByKeys = function getDataByKeys(rowKeys) {
-    var that = this;
+    const that = this;
     // @ts-expect-error
-    var result = new _deferred.Deferred();
-    var deferreds = [];
-    var data = [];
-    (0, _iterator.each)(rowKeys, function (index, key) {
-      deferreds.push(that.byKey(key).done(function (keyData) {
+    const result = new _deferred.Deferred();
+    const deferreds = [];
+    const data = [];
+    (0, _iterator.each)(rowKeys, (index, key) => {
+      deferreds.push(that.byKey(key).done(keyData => {
         data[index] = keyData;
       }));
     });
-    _deferred.when.apply(_renderer.default, deferreds).always(function () {
+    _deferred.when.apply(_renderer.default, deferreds).always(() => {
       result.resolve(data);
     });
     return result;
@@ -1183,19 +1182,20 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
         reload: true
       };
     }
-    var that = this;
-    var dataSource = that.getDataSource();
-    var _options = options,
-      changesOnly = _options.changesOnly;
+    const that = this;
+    const dataSource = that.getDataSource();
+    const {
+      changesOnly
+    } = options;
     // @ts-expect-error
-    var d = new _deferred.Deferred();
-    var customizeLoadResult = function customizeLoadResult() {
+    const d = new _deferred.Deferred();
+    const customizeLoadResult = function () {
       that._repaintChangesOnly = !!changesOnly;
     };
-    (0, _deferred.when)(!options.lookup || that._columnsController.refresh()).always(function () {
+    (0, _deferred.when)(!options.lookup || that._columnsController.refresh()).always(() => {
       if (options.load || options.reload) {
         dataSource && dataSource.on('customizeLoadResult', customizeLoadResult);
-        (0, _deferred.when)(that.reload(options.reload, changesOnly)).always(function () {
+        (0, _deferred.when)(that.reload(options.reload, changesOnly)).always(() => {
           dataSource && dataSource.off('customizeLoadResult', customizeLoadResult);
           that._repaintChangesOnly = undefined;
         }).done(d.resolve).fail(d.reject);
@@ -1242,8 +1242,8 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return this._dataSource && this._dataSource.getCachedStoreData();
   };
   _proto.isLastPageLoaded = function isLastPageLoaded() {
-    var pageIndex = this.pageIndex();
-    var pageCount = this.pageCount();
+    const pageIndex = this.pageIndex();
+    const pageCount = this.pageCount();
     return pageIndex === pageCount - 1;
   };
   _proto.load = function load() {
@@ -1257,9 +1257,8 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
     return (_a = this._dataSource) === null || _a === void 0 ? void 0 : _a.reload(_reload, changesOnly);
   };
   _proto.push = function push() {
-    var _a2;
     var _a;
-    return (_a = this._dataSource) === null || _a === void 0 ? void 0 : (_a2 = _a).push.apply(_a2, arguments);
+    return (_a = this._dataSource) === null || _a === void 0 ? void 0 : _a.push(...arguments);
   };
   _proto.itemsCount = function itemsCount() {
     var _a;
@@ -1284,7 +1283,7 @@ var DataController = /*#__PURE__*/function (_ControllerWithDataMi) {
   return DataController;
 }(ControllerWithDataMixin);
 exports.DataController = DataController;
-var dataControllerModule = {
+const dataControllerModule = {
   defaultOptions() {
     return {
       loadingTimeout: 0,

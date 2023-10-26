@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,18 +10,18 @@
 
 exports.toFixed = toFixed;
 var _math = require("../core/utils/math");
-var DECIMAL_BASE = 10;
+const DECIMAL_BASE = 10;
 function roundByAbs(value) {
-  var valueSign = (0, _math.sign)(value);
+  const valueSign = (0, _math.sign)(value);
   return valueSign * Math.round(Math.abs(value));
 }
 function adjustValue(value, precision) {
-  var precisionMultiplier = Math.pow(DECIMAL_BASE, precision);
-  var intermediateValue = (0, _math.multiplyInExponentialForm)(value, precision);
+  const precisionMultiplier = Math.pow(DECIMAL_BASE, precision);
+  const intermediateValue = (0, _math.multiplyInExponentialForm)(value, precision);
   return roundByAbs(intermediateValue) / precisionMultiplier;
 }
 function toFixed(value, precision) {
-  var valuePrecision = precision || 0;
-  var adjustedValue = valuePrecision > 0 ? adjustValue.apply(void 0, arguments) : value;
+  const valuePrecision = precision || 0;
+  const adjustedValue = valuePrecision > 0 ? adjustValue(...arguments) : value;
   return adjustedValue.toFixed(valuePrecision);
 }

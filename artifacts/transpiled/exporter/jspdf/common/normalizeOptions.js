@@ -21,9 +21,11 @@ function normalizeBoundaryValue(value) {
   };
 }
 function normalizeRowsInfo(rowsInfo) {
-  rowsInfo.forEach(function (row) {
-    row.cells.forEach(function (_ref) {
-      var pdfCell = _ref.pdfCell;
+  rowsInfo.forEach(row => {
+    row.cells.forEach(_ref => {
+      let {
+        pdfCell
+      } = _ref;
       pdfCell.padding = normalizeBoundaryValue(pdfCell.padding);
     });
   });

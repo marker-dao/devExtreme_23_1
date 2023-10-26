@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment_tooltip/utils/get_current_appointment.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,11 +9,13 @@
 "use strict";
 
 exports.default = void 0;
-var _default = function _default(appointmentItem) {
+var _default = appointmentItem => {
   var _ref, _settings$targetedApp;
-  var currentData = appointmentItem.currentData,
-    data = appointmentItem.data,
-    settings = appointmentItem.settings;
+  const {
+    currentData,
+    data,
+    settings
+  } = appointmentItem;
   return (_ref = (_settings$targetedApp = settings === null || settings === void 0 ? void 0 : settings.targetedAppointmentData) !== null && _settings$targetedApp !== void 0 ? _settings$targetedApp : currentData) !== null && _ref !== void 0 ? _ref : data;
 };
 exports.default = _default;

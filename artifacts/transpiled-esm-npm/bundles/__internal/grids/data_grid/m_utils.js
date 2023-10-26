@@ -10,9 +10,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @ts-expect-error
 
 function createGroupFilter(path, storeLoadOptions) {
-  var groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group);
-  var filter = [];
-  for (var i = 0; i < path.length; i++) {
+  const groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group);
+  const filter = [];
+  for (let i = 0; i < path.length; i++) {
     filter.push([groups[i].selector, '=', path[i]]);
   }
   if (storeLoadOptions.filter) {

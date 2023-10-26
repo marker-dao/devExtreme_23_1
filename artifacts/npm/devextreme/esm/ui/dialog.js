@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/ui/dialog.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { getHeight, getWidth } from '../core/utils/size';
 import $ from '../core/renderer';
 import Action from '../core/action';
@@ -20,6 +21,7 @@ import { extend } from '../core/utils/extend';
 import { getWindow } from '../core/utils/window';
 import eventsEngine from '../events/core/events_engine';
 import { value as getViewport } from '../core/utils/view_port';
+import { isFluent } from './themes';
 import messageLocalization from '../localization/message';
 import errors from './widget/ui.errors';
 import Popup from './popup/ui.popup';
@@ -44,6 +46,24 @@ var DX_DIALOG_MESSAGE_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-message");
 var DX_DIALOG_BUTTONS_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-buttons");
 var DX_DIALOG_BUTTON_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-button");
 var DX_BUTTON_CLASSNAME = 'dx-button';
+var getApplyButtonConfig = () => {
+  if (isFluent()) {
+    return {
+      stylingMode: 'contained',
+      type: 'default'
+    };
+  }
+  return {};
+};
+var getCancelButtonConfig = () => {
+  if (isFluent()) {
+    return {
+      stylingMode: 'contoutlinedained',
+      type: 'default'
+    };
+  }
+  return {};
+};
 export var custom = function custom(options) {
   var _options$title;
   var deferred = new Deferred();
@@ -74,6 +94,8 @@ export var custom = function custom(options) {
       })
     });
   });
+
+  // eslint-disable-next-line no-var
   var popupInstance = new Popup($element, extend({
     title: (_options$title = options.title) !== null && _options$title !== void 0 ? _options$title : '',
     showTitle: ensureDefined(options.showTitle, true),
@@ -167,6 +189,7 @@ export var alert = function alert(messageHtml) {
     title,
     messageHtml,
     showTitle,
+    buttons: [_extends({}, DEFAULT_BUTTON, getApplyButtonConfig())],
     dragEnabled: showTitle
   };
   return custom(options).show();
@@ -178,17 +201,17 @@ export var confirm = function confirm(messageHtml) {
     title,
     messageHtml,
     showTitle,
-    buttons: [{
+    buttons: [_extends({
       text: messageLocalization.format('Yes'),
       onClick: function onClick() {
         return true;
       }
-    }, {
+    }, getApplyButtonConfig()), _extends({
       text: messageLocalization.format('No'),
       onClick: function onClick() {
         return false;
       }
-    }],
+    }, getCancelButtonConfig())],
     dragEnabled: showTitle
   };
   return custom(options).show();

@@ -18,40 +18,32 @@ var _image_uploader_helper = require("./image_uploader_helper");
 var _window = require("../../../core/utils/window");
 var _quill_importer = require("../quill_importer");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-var MIN_HEIGHT = 400;
-var BORDER_STYLES = ['none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'];
-var USER_ACTION = 'user';
-var SILENT_ACTION = 'silent';
-var DIALOG_COLOR_CAPTION = 'dxHtmlEditor-dialogColorCaption';
-var DIALOG_BACKGROUND_CAPTION = 'dxHtmlEditor-dialogBackgroundCaption';
-var DIALOG_LINK_CAPTION = 'dxHtmlEditor-dialogLinkCaption';
-var DIALOG_TABLE_CAPTION = 'dxHtmlEditor-dialogInsertTableCaption';
-var DIALOG_LINK_FIELD_URL = 'dxHtmlEditor-dialogLinkUrlField';
-var DIALOG_LINK_FIELD_TEXT = 'dxHtmlEditor-dialogLinkTextField';
-var DIALOG_LINK_FIELD_TARGET = 'dxHtmlEditor-dialogLinkTargetField';
-var DIALOG_LINK_FIELD_TARGET_CLASS = 'dx-formdialog-field-target';
-var DIALOG_TABLE_FIELD_COLUMNS = 'dxHtmlEditor-dialogInsertTableRowsField';
-var DIALOG_TABLE_FIELD_ROWS = 'dxHtmlEditor-dialogInsertTableColumnsField';
-var ICON_MAP = {
+const MIN_HEIGHT = 400;
+const BORDER_STYLES = ['none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'];
+const USER_ACTION = 'user';
+const SILENT_ACTION = 'silent';
+const DIALOG_COLOR_CAPTION = 'dxHtmlEditor-dialogColorCaption';
+const DIALOG_BACKGROUND_CAPTION = 'dxHtmlEditor-dialogBackgroundCaption';
+const DIALOG_LINK_CAPTION = 'dxHtmlEditor-dialogLinkCaption';
+const DIALOG_TABLE_CAPTION = 'dxHtmlEditor-dialogInsertTableCaption';
+const DIALOG_LINK_FIELD_URL = 'dxHtmlEditor-dialogLinkUrlField';
+const DIALOG_LINK_FIELD_TEXT = 'dxHtmlEditor-dialogLinkTextField';
+const DIALOG_LINK_FIELD_TARGET = 'dxHtmlEditor-dialogLinkTargetField';
+const DIALOG_LINK_FIELD_TARGET_CLASS = 'dx-formdialog-field-target';
+const DIALOG_TABLE_FIELD_COLUMNS = 'dxHtmlEditor-dialogInsertTableRowsField';
+const DIALOG_TABLE_FIELD_ROWS = 'dxHtmlEditor-dialogInsertTableColumnsField';
+const ICON_MAP = {
   insertHeaderRow: 'header',
   clear: 'clearformat'
 };
 exports.ICON_MAP = ICON_MAP;
 function getFormatHandlers(module) {
   return {
-    clear: function clear(_ref) {
-      var event = _ref.event;
-      var range = module.quill.getSelection();
+    clear: _ref => {
+      let {
+        event
+      } = _ref;
+      const range = module.quill.getSelection();
       if (range) {
         var _getToolbarModule;
         module.saveValueChangeEvent(event);
@@ -70,22 +62,30 @@ function getFormatHandlers(module) {
     alignRight: prepareShortcutHandler(module, 'align', 'right'),
     alignJustify: prepareShortcutHandler(module, 'align', 'justify'),
     codeBlock: getDefaultClickHandler(module, 'code-block'),
-    undo: function undo(_ref2) {
-      var event = _ref2.event;
+    undo: _ref2 => {
+      let {
+        event
+      } = _ref2;
       module.saveValueChangeEvent(event);
       module.quill.history.undo();
     },
-    redo: function redo(_ref3) {
-      var event = _ref3.event;
+    redo: _ref3 => {
+      let {
+        event
+      } = _ref3;
       module.saveValueChangeEvent(event);
       module.quill.history.redo();
     },
-    increaseIndent: function increaseIndent(_ref4) {
-      var event = _ref4.event;
+    increaseIndent: _ref4 => {
+      let {
+        event
+      } = _ref4;
       applyFormat(module, ['indent', '+1', USER_ACTION], event);
     },
-    decreaseIndent: function decreaseIndent(_ref5) {
-      var event = _ref5.event;
+    decreaseIndent: _ref5 => {
+      let {
+        event
+      } = _ref5;
       applyFormat(module, ['indent', '-1', USER_ACTION], event);
     },
     superscript: prepareShortcutHandler(module, 'script', 'super'),
@@ -104,11 +104,13 @@ function getFormatHandlers(module) {
   };
 }
 function resetFormDialogOptions(editorInstance, _ref6) {
-  var contentTemplate = _ref6.contentTemplate,
-    title = _ref6.title,
-    minHeight = _ref6.minHeight,
-    minWidth = _ref6.minWidth,
-    maxWidth = _ref6.maxWidth;
+  let {
+    contentTemplate,
+    title,
+    minHeight,
+    minWidth,
+    maxWidth
+  } = _ref6;
   editorInstance.formDialogOption({
     contentTemplate,
     title,
@@ -118,40 +120,38 @@ function resetFormDialogOptions(editorInstance, _ref6) {
   });
 }
 function prepareShowFormProperties(module, type) {
-  return function ($element) {
+  return $element => {
     var _$element, _module$quill$getModu;
     if (!((_$element = $element) !== null && _$element !== void 0 && _$element.length)) {
       $element = (0, _renderer.default)(getTargetTableNode(module, type));
     }
-    var _ref7 = (_module$quill$getModu = module.quill.getModule('table').getTable()) !== null && _module$quill$getModu !== void 0 ? _module$quill$getModu : [],
-      _ref8 = _slicedToArray(_ref7, 2),
-      tableBlot = _ref8[0],
-      rowBlot = _ref8[1];
-    var formats = module.quill.getFormat(module.editorInstance.getSelection(true));
-    var tablePropertiesFormConfig = getFormConfigConstructor(type)(module, {
+    const [tableBlot, rowBlot] = (_module$quill$getModu = module.quill.getModule('table').getTable()) !== null && _module$quill$getModu !== void 0 ? _module$quill$getModu : [];
+    const formats = module.quill.getFormat(module.editorInstance.getSelection(true));
+    const tablePropertiesFormConfig = getFormConfigConstructor(type)(module, {
       $element,
       formats,
       tableBlot,
       rowBlot
     });
-    var _module$editorInstanc = module.editorInstance._formDialog._popup.option(),
-      contentTemplate = _module$editorInstanc.contentTemplate,
-      title = _module$editorInstanc.title,
-      minHeight = _module$editorInstanc.minHeight,
-      minWidth = _module$editorInstanc.minWidth,
-      maxWidth = _module$editorInstanc.maxWidth;
-    var savedOptions = {
+    const {
+      contentTemplate,
+      title,
+      minHeight,
+      minWidth,
+      maxWidth
+    } = module.editorInstance._formDialog._popup.option();
+    const savedOptions = {
       contentTemplate,
       title,
       minHeight,
       minWidth,
       maxWidth
     };
-    var formInstance;
+    let formInstance;
     module.editorInstance.formDialogOption({
-      'contentTemplate': function contentTemplate(container) {
-        var $content = (0, _renderer.default)('<div>').appendTo(container);
-        var $form = (0, _renderer.default)('<div>').appendTo($content);
+      'contentTemplate': container => {
+        const $content = (0, _renderer.default)('<div>').appendTo(container);
+        const $form = (0, _renderer.default)('<div>').appendTo($content);
         module.editorInstance._createComponent($form, _form.default, tablePropertiesFormConfig.formOptions);
         module.editorInstance._createComponent($content, _scroll_view.default, {});
         formInstance = $form.dxForm('instance');
@@ -162,50 +162,43 @@ function prepareShowFormProperties(module, type) {
       minWidth: Math.min(800, (0, _size.getWidth)((0, _window.getWindow)()) * 0.9 - 1),
       maxWidth: (0, _size.getWidth)((0, _window.getWindow)()) * 0.9
     });
-    var promise = module.editorInstance.showFormDialog();
-    promise.done(function (formData, event) {
+    const promise = module.editorInstance.showFormDialog();
+    promise.done((formData, event) => {
       module.saveValueChangeEvent(event);
       tablePropertiesFormConfig.applyHandler(formInstance);
       resetFormDialogOptions(module.editorInstance, savedOptions);
     });
-    promise.fail(function () {
+    promise.fail(() => {
       module.quill.focus();
       resetFormDialogOptions(module.editorInstance, savedOptions);
     });
   };
 }
 function applyFormat(module, formatArgs, event) {
-  var _module$quill;
   module.saveValueChangeEvent(event);
-  (_module$quill = module.quill).format.apply(_module$quill, _toConsumableArray(formatArgs));
+  module.quill.format(...formatArgs);
 }
 function getTargetTableNode(module, partName) {
-  var currentSelectionParts = module.quill.getModule('table').getTable();
+  const currentSelectionParts = module.quill.getModule('table').getTable();
   return partName === 'table' ? currentSelectionParts[0].domNode : currentSelectionParts[2].domNode;
 }
 function getLinkRange(module, range) {
-  var Quill = (0, _quill_importer.getQuill)();
-  var LinkBlot = Quill.import('formats/link');
-  var link;
-  var linkOffset;
-  var _module$quill$scroll$ = module.quill.scroll.descendant(LinkBlot, range.index);
-  var _module$quill$scroll$2 = _slicedToArray(_module$quill$scroll$, 2);
-  link = _module$quill$scroll$2[0];
-  linkOffset = _module$quill$scroll$2[1];
+  const Quill = (0, _quill_importer.getQuill)();
+  const LinkBlot = Quill.import('formats/link');
+  let link;
+  let linkOffset;
+  [link, linkOffset] = module.quill.scroll.descendant(LinkBlot, range.index);
   if (!link && range.length === 0) {
     // NOTE:
     // See T1157840
     // When a mouse pointer is placed on the link's right border, the quill.scroll.descendant method does not return information about the link.
     // In this case, we receive a necessary information from the previous index.
-    var _module$quill$scroll$3 = module.quill.scroll.descendant(LinkBlot, range.index - 1);
-    var _module$quill$scroll$4 = _slicedToArray(_module$quill$scroll$3, 2);
-    link = _module$quill$scroll$4[0];
-    linkOffset = _module$quill$scroll$4[1];
+    [link, linkOffset] = module.quill.scroll.descendant(LinkBlot, range.index - 1);
     if (link) {
       linkOffset += 1;
     }
   }
-  var result = !link ? null : {
+  const result = !link ? null : {
     index: range.index - linkOffset,
     length: link.length()
   };
@@ -215,38 +208,39 @@ function getColorFromFormat(value) {
   return Array.isArray(value) ? value[0] : value;
 }
 function prepareLinkHandler(module) {
-  return function () {
+  return () => {
     var _selection;
     module.quill.focus();
-    var selection = module.quill.getSelection();
-    var formats = selection ? module.quill.getFormat() : {};
-    var isCursorAtLink = formats.link !== undefined && ((_selection = selection) === null || _selection === void 0 ? void 0 : _selection.length) === 0;
-    var href = formats.link || '';
+    let selection = module.quill.getSelection();
+    const formats = selection ? module.quill.getFormat() : {};
+    const isCursorAtLink = formats.link !== undefined && ((_selection = selection) === null || _selection === void 0 ? void 0 : _selection.length) === 0;
+    let href = formats.link || '';
     if (isCursorAtLink) {
-      var linkRange = getLinkRange(module, selection);
+      const linkRange = getLinkRange(module, selection);
       if (linkRange) {
         selection = linkRange;
       } else {
         href = '';
       }
     }
-    var selectionHasEmbedContent = (0, _table_helper.hasEmbedContent)(module, selection);
-    var formData = {
+    const selectionHasEmbedContent = (0, _table_helper.hasEmbedContent)(module, selection);
+    const formData = {
       href,
       text: selection && !selectionHasEmbedContent ? module.quill.getText(selection) : '',
       target: Object.prototype.hasOwnProperty.call(formats, 'target') ? !!formats.target : true
     };
     module.editorInstance.formDialogOption('title', _message.default.format(DIALOG_LINK_CAPTION));
-    var promise = module.editorInstance.showFormDialog({
+    const promise = module.editorInstance.showFormDialog({
       formData: formData,
       items: getLinkFormItems(selectionHasEmbedContent)
     });
-    promise.done(function (formData, event) {
+    promise.done((formData, event) => {
       if (selection && !selectionHasEmbedContent) {
-        var text = formData.text || formData.href;
-        var _selection2 = selection,
-          index = _selection2.index,
-          length = _selection2.length;
+        const text = formData.text || formData.href;
+        const {
+          index,
+          length
+        } = selection;
         formData.text = undefined;
         module.saveValueChangeEvent(event);
         length && module.quill.deleteText(index, length, SILENT_ACTION);
@@ -257,14 +251,14 @@ function prepareLinkHandler(module) {
         applyFormat(module, ['link', formData, USER_ACTION], event);
       }
     });
-    promise.fail(function () {
+    promise.fail(() => {
       module.quill.focus();
     });
   };
 }
 function prepareImageHandler(module, imageUploadOption) {
-  var imageUploader = new _image_uploader_helper.ImageUploader(module, imageUploadOption);
-  return function () {
+  const imageUploader = new _image_uploader_helper.ImageUploader(module, imageUploadOption);
+  return () => {
     imageUploader.render();
   };
 }
@@ -293,11 +287,11 @@ function getLinkFormItems(selectionHasEmbedContent) {
   }];
 }
 function prepareColorClickHandler(module, name) {
-  return function () {
-    var formData = module.quill.getFormat();
-    var caption = name === 'color' ? DIALOG_COLOR_CAPTION : DIALOG_BACKGROUND_CAPTION;
+  return () => {
+    const formData = module.quill.getFormat();
+    const caption = name === 'color' ? DIALOG_COLOR_CAPTION : DIALOG_BACKGROUND_CAPTION;
     module.editorInstance.formDialogOption('title', _message.default.format(caption));
-    var promise = module.editorInstance.showFormDialog({
+    const promise = module.editorInstance.showFormDialog({
       formData: formData,
       items: [{
         dataField: name,
@@ -310,20 +304,22 @@ function prepareColorClickHandler(module, name) {
         }
       }]
     });
-    promise.done(function (formData, event) {
+    promise.done((formData, event) => {
       applyFormat(module, [name, formData[name], USER_ACTION], event);
     });
-    promise.fail(function () {
+    promise.fail(() => {
       module.quill.focus();
     });
   };
 }
 function prepareShortcutHandler(module, name, shortcutValue) {
-  return function (_ref9) {
+  return _ref7 => {
     var _getToolbarModule2;
-    var event = _ref9.event;
-    var formats = module.quill.getFormat();
-    var value = formats[name] === shortcutValue ? false : shortcutValue;
+    let {
+      event
+    } = _ref7;
+    const formats = module.quill.getFormat();
+    const value = formats[name] === shortcutValue ? false : shortcutValue;
     applyFormat(module, [name, value, USER_ACTION], event);
     (_getToolbarModule2 = getToolbarModule(module)) === null || _getToolbarModule2 === void 0 ? void 0 : _getToolbarModule2.updateFormatWidgets(true);
   };
@@ -332,12 +328,14 @@ function getToolbarModule(module) {
   return module._updateFormatWidget ? module : module.quill.getModule('toolbar');
 }
 function getDefaultClickHandler(module, name) {
-  return function (_ref10) {
+  return _ref8 => {
     var _getToolbarModule3;
-    var event = _ref10.event;
-    var formats = module.quill.getFormat();
-    var value = formats[name];
-    var newValue = !((0, _type.isBoolean)(value) ? value : (0, _type.isDefined)(value));
+    let {
+      event
+    } = _ref8;
+    const formats = module.quill.getFormat();
+    const value = formats[name];
+    const newValue = !((0, _type.isBoolean)(value) ? value : (0, _type.isDefined)(value));
     applyFormat(module, [name, newValue, USER_ACTION], event);
     (_getToolbarModule3 = getToolbarModule(module)) === null || _getToolbarModule3 === void 0 ? void 0 : _getToolbarModule3._updateFormatWidget(name, newValue, formats);
   };
@@ -364,12 +362,10 @@ function insertTableFormItems() {
   }];
 }
 function prepareInsertTableHandler(module) {
-  return function () {
-    var formats = module.quill.getFormat();
-    var isTableFocused = module._tableFormats.some(function (format) {
-      return Object.prototype.hasOwnProperty.call(formats, format);
-    });
-    var formData = {
+  return () => {
+    const formats = module.quill.getFormat();
+    const isTableFocused = module._tableFormats.some(format => Object.prototype.hasOwnProperty.call(formats, format));
+    const formData = {
       rows: 1,
       columns: 1
     };
@@ -378,38 +374,42 @@ function prepareInsertTableHandler(module) {
       return;
     }
     module.editorInstance.formDialogOption('title', _message.default.format(DIALOG_TABLE_CAPTION));
-    var promise = module.editorInstance.showFormDialog({
+    const promise = module.editorInstance.showFormDialog({
       formData,
       items: insertTableFormItems()
     });
-    promise.done(function (formData, event) {
+    promise.done((formData, event) => {
       module.quill.focus();
-      var table = module.quill.getModule('table');
+      const table = module.quill.getModule('table');
       if (table) {
         module.saveValueChangeEvent(event);
-        var columns = formData.columns,
-          rows = formData.rows;
+        const {
+          columns,
+          rows
+        } = formData;
         table.insertTable(columns, rows);
       }
-    }).always(function () {
+    }).always(() => {
       module.quill.focus();
     });
   };
 }
-function getTablePropertiesFormConfig(module, _ref11) {
-  var $element = _ref11.$element,
-    formats = _ref11.formats,
-    tableBlot = _ref11.tableBlot;
-  var window = (0, _window.getWindow)();
-  var alignmentEditorInstance;
-  var borderColorEditorInstance;
-  var backgroundColorEditorInstance;
-  var $table = $element;
-  var editorInstance = module.editorInstance;
-  var startTableWidth = parseInt(formats.tableWidth) || (0, _size.getOuterWidth)($table);
-  var tableStyles = window.getComputedStyle($table.get(0));
-  var startTextAlign = tableStyles.textAlign === 'start' ? 'left' : tableStyles.textAlign;
-  var formOptions = {
+function getTablePropertiesFormConfig(module, _ref9) {
+  let {
+    $element,
+    formats,
+    tableBlot
+  } = _ref9;
+  const window = (0, _window.getWindow)();
+  let alignmentEditorInstance;
+  let borderColorEditorInstance;
+  let backgroundColorEditorInstance;
+  const $table = $element;
+  const editorInstance = module.editorInstance;
+  const startTableWidth = parseInt(formats.tableWidth) || (0, _size.getOuterWidth)($table);
+  const tableStyles = window.getComputedStyle($table.get(0));
+  const startTextAlign = tableStyles.textAlign === 'start' ? 'left' : tableStyles.textAlign;
+  const formOptions = {
     colCount: 2,
     formData: {
       width: startTableWidth,
@@ -452,12 +452,12 @@ function getTablePropertiesFormConfig(module, _ref11) {
           text: _message.default.format('dxHtmlEditor-borderColor')
         },
         colSpan: 2,
-        template: function template(e) {
-          var $content = (0, _renderer.default)('<div>');
+        template: e => {
+          const $content = (0, _renderer.default)('<div>');
           editorInstance._createComponent($content, _color_box.default, {
             editAlphaChannel: true,
             value: e.component.option('formData').borderColor,
-            onInitialized: function onInitialized(e) {
+            onInitialized: e => {
               borderColorEditorInstance = e.component;
             }
           });
@@ -499,12 +499,12 @@ function getTablePropertiesFormConfig(module, _ref11) {
         label: {
           text: _message.default.format('dxHtmlEditor-borderColor')
         },
-        template: function template(e) {
-          var $content = (0, _renderer.default)('<div>');
+        template: e => {
+          const $content = (0, _renderer.default)('<div>');
           editorInstance._createComponent($content, _color_box.default, {
             editAlphaChannel: true,
             value: e.component.option('formData').backgroundColor,
-            onInitialized: function onInitialized(e) {
+            onInitialized: e => {
               backgroundColorEditorInstance = e.component;
             }
           });
@@ -519,8 +519,8 @@ function getTablePropertiesFormConfig(module, _ref11) {
         label: {
           text: _message.default.format('dxHtmlEditor-horizontal')
         },
-        template: function template() {
-          var $content = (0, _renderer.default)('<div>');
+        template: () => {
+          const $content = (0, _renderer.default)('<div>');
           editorInstance._createComponent($content, _button_group.default, {
             items: [{
               value: 'left',
@@ -537,7 +537,7 @@ function getTablePropertiesFormConfig(module, _ref11) {
             }],
             keyExpr: 'value',
             selectedItemKeys: [startTextAlign],
-            onInitialized: function onInitialized(e) {
+            onInitialized: e => {
               alignmentEditorInstance = e.component;
             }
           });
@@ -549,10 +549,10 @@ function getTablePropertiesFormConfig(module, _ref11) {
     labelLocation: 'top',
     minColWidth: 400
   };
-  var applyHandler = function applyHandler(formInstance) {
-    var formData = formInstance.option('formData');
-    var newWidth = formData.width === startTableWidth ? undefined : formData.width;
-    var newHeight = formData.height;
+  const applyHandler = formInstance => {
+    const formData = formInstance.option('formData');
+    const newWidth = formData.width === startTableWidth ? undefined : formData.width;
+    const newHeight = formData.height;
     applyTableDimensionChanges(module, {
       $table,
       newHeight,
@@ -570,22 +570,24 @@ function getTablePropertiesFormConfig(module, _ref11) {
     applyHandler
   };
 }
-function getCellPropertiesFormConfig(module, _ref12) {
-  var $element = _ref12.$element,
-    formats = _ref12.formats,
-    tableBlot = _ref12.tableBlot,
-    rowBlot = _ref12.rowBlot;
-  var window = (0, _window.getWindow)();
-  var alignmentEditorInstance;
-  var verticalAlignmentEditorInstance;
-  var borderColorEditorInstance;
-  var backgroundColorEditorInstance;
-  var $cell = $element;
-  var startCellWidth = (0, _type.isDefined)(formats.cellWidth) ? parseInt(formats.cellWidth) : (0, _size.getOuterWidth)($cell);
-  var editorInstance = module.editorInstance;
-  var cellStyles = window.getComputedStyle($cell.get(0));
-  var startTextAlign = cellStyles.textAlign === 'start' ? 'left' : cellStyles.textAlign;
-  var formOptions = {
+function getCellPropertiesFormConfig(module, _ref10) {
+  let {
+    $element,
+    formats,
+    tableBlot,
+    rowBlot
+  } = _ref10;
+  const window = (0, _window.getWindow)();
+  let alignmentEditorInstance;
+  let verticalAlignmentEditorInstance;
+  let borderColorEditorInstance;
+  let backgroundColorEditorInstance;
+  const $cell = $element;
+  const startCellWidth = (0, _type.isDefined)(formats.cellWidth) ? parseInt(formats.cellWidth) : (0, _size.getOuterWidth)($cell);
+  const editorInstance = module.editorInstance;
+  const cellStyles = window.getComputedStyle($cell.get(0));
+  const startTextAlign = cellStyles.textAlign === 'start' ? 'left' : cellStyles.textAlign;
+  const formOptions = {
     colCount: 2,
     formData: {
       width: startCellWidth,
@@ -630,12 +632,12 @@ function getCellPropertiesFormConfig(module, _ref12) {
         label: {
           text: _message.default.format('dxHtmlEditor-borderColor')
         },
-        template: function template(e) {
-          var $content = (0, _renderer.default)('<div>');
+        template: e => {
+          const $content = (0, _renderer.default)('<div>');
           editorInstance._createComponent($content, _color_box.default, {
             editAlphaChannel: true,
             value: e.component.option('formData').borderColor,
-            onInitialized: function onInitialized(e) {
+            onInitialized: e => {
               borderColorEditorInstance = e.component;
             }
           });
@@ -693,12 +695,12 @@ function getCellPropertiesFormConfig(module, _ref12) {
         label: {
           text: _message.default.format('dxHtmlEditor-borderColor')
         },
-        template: function template(e) {
-          var $content = (0, _renderer.default)('<div>');
+        template: e => {
+          const $content = (0, _renderer.default)('<div>');
           editorInstance._createComponent($content, _color_box.default, {
             editAlphaChannel: true,
             value: e.component.option('formData').backgroundColor,
-            onInitialized: function onInitialized(e) {
+            onInitialized: e => {
               backgroundColorEditorInstance = e.component;
             }
           });
@@ -714,8 +716,8 @@ function getCellPropertiesFormConfig(module, _ref12) {
         label: {
           text: _message.default.format('dxHtmlEditor-horizontal')
         },
-        template: function template() {
-          var $content = (0, _renderer.default)('<div>');
+        template: () => {
+          const $content = (0, _renderer.default)('<div>');
           editorInstance._createComponent($content, _button_group.default, {
             items: [{
               value: 'left',
@@ -732,7 +734,7 @@ function getCellPropertiesFormConfig(module, _ref12) {
             }],
             keyExpr: 'value',
             selectedItemKeys: [startTextAlign],
-            onInitialized: function onInitialized(e) {
+            onInitialized: e => {
               alignmentEditorInstance = e.component;
             }
           });
@@ -743,8 +745,8 @@ function getCellPropertiesFormConfig(module, _ref12) {
         label: {
           text: _message.default.format('dxHtmlEditor-vertical')
         },
-        template: function template() {
-          var $content = (0, _renderer.default)('<div>');
+        template: () => {
+          const $content = (0, _renderer.default)('<div>');
           editorInstance._createComponent($content, _button_group.default, {
             items: [{
               value: 'top',
@@ -758,7 +760,7 @@ function getCellPropertiesFormConfig(module, _ref12) {
             }],
             keyExpr: 'value',
             selectedItemKeys: [cellStyles.verticalAlign],
-            onInitialized: function onInitialized(e) {
+            onInitialized: e => {
               verticalAlignmentEditorInstance = e.component;
             }
           });
@@ -770,10 +772,10 @@ function getCellPropertiesFormConfig(module, _ref12) {
     labelLocation: 'top',
     minColWidth: 400
   };
-  var applyHandler = function applyHandler(formInstance) {
-    var formData = formInstance.option('formData');
-    var newWidth = formData.width === parseInt(startCellWidth) ? undefined : formData.width;
-    var newHeight = formData.height;
+  const applyHandler = formInstance => {
+    const formData = formInstance.option('formData');
+    const newWidth = formData.width === parseInt(startCellWidth) ? undefined : formData.width;
+    const newHeight = formData.height;
     applyCellDimensionChanges(module, {
       $cell,
       newHeight,
@@ -800,25 +802,27 @@ function getCellPropertiesFormConfig(module, _ref12) {
 function getFormConfigConstructor(type) {
   return type === 'cell' ? getCellPropertiesFormConfig : getTablePropertiesFormConfig;
 }
-function applyTableDimensionChanges(module, _ref13) {
-  var $table = _ref13.$table,
-    newHeight = _ref13.newHeight,
-    newWidth = _ref13.newWidth,
-    tableBlot = _ref13.tableBlot;
+function applyTableDimensionChanges(module, _ref11) {
+  let {
+    $table,
+    newHeight,
+    newWidth,
+    tableBlot
+  } = _ref11;
   if ((0, _type.isDefined)(newWidth)) {
-    var autoWidthColumns = (0, _table_helper.getAutoSizedElements)($table);
+    const autoWidthColumns = (0, _table_helper.getAutoSizedElements)($table);
     if (autoWidthColumns.length > 0) {
       module.editorInstance.format('tableWidth', newWidth + 'px');
     } else {
-      var $columns = (0, _table_helper.getColumnElements)($table);
-      var oldTableWidth = (0, _size.getOuterWidth)($table);
+      const $columns = (0, _table_helper.getColumnElements)($table);
+      const oldTableWidth = (0, _size.getOuterWidth)($table);
       (0, _table_helper.unfixTableWidth)($table, {
         tableBlot
       });
-      (0, _iterator.each)($columns, function (i, element) {
-        var $element = (0, _renderer.default)(element);
-        var newElementWidth = newWidth / oldTableWidth * (0, _size.getOuterWidth)($element);
-        var $lineElements = (0, _table_helper.getLineElements)($table, $element.index(), 'horizontal');
+      (0, _iterator.each)($columns, (i, element) => {
+        const $element = (0, _renderer.default)(element);
+        const newElementWidth = newWidth / oldTableWidth * (0, _size.getOuterWidth)($element);
+        const $lineElements = (0, _table_helper.getLineElements)($table, $element.index(), 'horizontal');
         (0, _table_helper.setLineElementsFormat)(module, {
           elements: $lineElements,
           property: 'width',
@@ -827,16 +831,16 @@ function applyTableDimensionChanges(module, _ref13) {
       });
     }
   }
-  var autoHeightRows = (0, _table_helper.getAutoSizedElements)($table, 'vertical');
+  const autoHeightRows = (0, _table_helper.getAutoSizedElements)($table, 'vertical');
   if ((autoHeightRows === null || autoHeightRows === void 0 ? void 0 : autoHeightRows.length) > 0) {
     tableBlot.format('tableHeight', newHeight + 'px');
   } else {
-    var $rows = (0, _table_helper.getRowElements)($table);
-    var oldTableHeight = (0, _size.getOuterHeight)($table);
-    (0, _iterator.each)($rows, function (i, element) {
-      var $element = (0, _renderer.default)(element);
-      var newElementHeight = newHeight / oldTableHeight * (0, _size.getOuterHeight)($element);
-      var $lineElements = (0, _table_helper.getLineElements)($table, i, 'vertical');
+    const $rows = (0, _table_helper.getRowElements)($table);
+    const oldTableHeight = (0, _size.getOuterHeight)($table);
+    (0, _iterator.each)($rows, (i, element) => {
+      const $element = (0, _renderer.default)(element);
+      const newElementHeight = newHeight / oldTableHeight * (0, _size.getOuterHeight)($element);
+      const $lineElements = (0, _table_helper.getLineElements)($table, i, 'vertical');
       (0, _table_helper.setLineElementsFormat)(module, {
         elements: $lineElements,
         property: 'height',
@@ -845,18 +849,20 @@ function applyTableDimensionChanges(module, _ref13) {
     });
   }
 }
-function applyCellDimensionChanges(module, _ref14) {
-  var $cell = _ref14.$cell,
-    newHeight = _ref14.newHeight,
-    newWidth = _ref14.newWidth,
-    tableBlot = _ref14.tableBlot,
-    rowBlot = _ref14.rowBlot;
-  var $table = (0, _renderer.default)($cell.closest('table'));
+function applyCellDimensionChanges(module, _ref12) {
+  let {
+    $cell,
+    newHeight,
+    newWidth,
+    tableBlot,
+    rowBlot
+  } = _ref12;
+  const $table = (0, _renderer.default)($cell.closest('table'));
   if ((0, _type.isDefined)(newWidth)) {
-    var index = (0, _renderer.default)($cell).index();
-    var $verticalCells = (0, _table_helper.getLineElements)($table, index);
-    var widthDiff = newWidth - (0, _size.getOuterWidth)($cell);
-    var tableWidth = (0, _size.getOuterWidth)($table);
+    const index = (0, _renderer.default)($cell).index();
+    let $verticalCells = (0, _table_helper.getLineElements)($table, index);
+    const widthDiff = newWidth - (0, _size.getOuterWidth)($cell);
+    const tableWidth = (0, _size.getOuterWidth)($table);
     if (newWidth > tableWidth) {
       (0, _table_helper.unfixTableWidth)($table, {
         tableBlot
@@ -867,25 +873,25 @@ function applyCellDimensionChanges(module, _ref14) {
       property: 'width',
       value: newWidth
     });
-    var $nextColumnCell = $cell.next();
-    var shouldUpdateNearestColumnWidth = (0, _table_helper.getAutoSizedElements)($table).length === 0;
+    const $nextColumnCell = $cell.next();
+    const shouldUpdateNearestColumnWidth = (0, _table_helper.getAutoSizedElements)($table).length === 0;
     if (shouldUpdateNearestColumnWidth) {
       (0, _table_helper.unfixTableWidth)($table, {
         tableBlot
       });
       if ($nextColumnCell.length === 1) {
         $verticalCells = (0, _table_helper.getLineElements)($table, index + 1);
-        var nextColumnWidth = (0, _size.getOuterWidth)($verticalCells.eq(0)) - widthDiff;
+        const nextColumnWidth = (0, _size.getOuterWidth)($verticalCells.eq(0)) - widthDiff;
         (0, _table_helper.setLineElementsFormat)(module, {
           elements: $verticalCells,
           property: 'width',
           value: Math.max(nextColumnWidth, 0)
         });
       } else {
-        var $prevColumnCell = $cell.prev();
+        const $prevColumnCell = $cell.prev();
         if ($prevColumnCell.length === 1) {
           $verticalCells = (0, _table_helper.getLineElements)($table, index - 1);
-          var prevColumnWidth = (0, _size.getOuterWidth)($verticalCells.eq(0)) - widthDiff;
+          const prevColumnWidth = (0, _size.getOuterWidth)($verticalCells.eq(0)) - widthDiff;
           (0, _table_helper.setLineElementsFormat)(module, {
             elements: $verticalCells,
             property: 'width',
@@ -895,10 +901,10 @@ function applyCellDimensionChanges(module, _ref14) {
       }
     }
   }
-  rowBlot.children.forEach(function (rowCell) {
+  rowBlot.children.forEach(rowCell => {
     rowCell.format('cellHeight', newHeight + 'px');
   });
-  var autoHeightRows = (0, _table_helper.getAutoSizedElements)($table, 'vertical');
+  const autoHeightRows = (0, _table_helper.getAutoSizedElements)($table, 'vertical');
   if (autoHeightRows.length === 0) {
     $table.css('height', 'auto');
   }

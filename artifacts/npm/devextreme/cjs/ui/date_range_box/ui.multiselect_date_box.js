@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/ui.multiselect_date_box.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,16 +16,10 @@ var _utils = require("../../events/utils");
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 var _uiDate_range = require("./ui.date_range.utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var START_DATEBOX_CLASS = 'dx-start-datebox';
-var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
+const START_DATEBOX_CLASS = 'dx-start-datebox';
+let MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
   _inheritsLoose(MultiselectDateBox, _DateBox);
   function MultiselectDateBox() {
     return _DateBox.apply(this, arguments) || this;
@@ -39,16 +33,17 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     this._renderInputClickEvent();
   };
   _proto._renderInputClickEvent = function _renderInputClickEvent() {
-    var _this = this;
-    var clickEventName = (0, _utils.addNamespace)('dxclick', this.NAME);
+    const clickEventName = (0, _utils.addNamespace)('dxclick', this.NAME);
     _events_engine.default.off(this._input(), clickEventName);
-    _events_engine.default.on(this._input(), clickEventName, function (e) {
-      _this._processValueChange(e);
+    _events_engine.default.on(this._input(), clickEventName, e => {
+      this._processValueChange(e);
     });
   };
   _proto._applyButtonHandler = function _applyButtonHandler(_ref) {
-    var event = _ref.event;
-    var value = this._strategy.getValue();
+    let {
+      event
+    } = _ref;
+    const value = this._strategy.getValue();
     this._strategy.dateRangeBox.updateValue(value, event);
     this.close();
     this.option('focusStateEnabled') && this.focus();
@@ -60,8 +55,9 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     _DateBox.prototype._openHandler.call(this, e);
   };
   _proto._renderOpenedState = function _renderOpenedState() {
-    var _this$option = this.option(),
-      opened = _this$option.opened;
+    const {
+      opened
+    } = this.option();
     this._getDateRangeBox().option('opened', opened);
     if (this._isStartDateBox()) {
       if (opened) {
@@ -81,7 +77,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
   _proto._renderPopup = function _renderPopup() {
     _DateBox.prototype._renderPopup.call(this);
     if (this._isStartDateBox()) {
-      var dateRangeBox = this._strategy.dateRangeBox;
+      const dateRangeBox = this._strategy.dateRangeBox;
       dateRangeBox._bindInnerWidgetOptions(this._popup, 'dropDownOptions');
     }
   };
@@ -100,7 +96,7 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     this._processValueChange(e);
   };
   _proto._popupTabHandler = function _popupTabHandler(e) {
-    var $element = (0, _renderer.default)(e.target);
+    const $element = (0, _renderer.default)(e.target);
     if (e.shiftKey && $element.is(this._getFirstPopupElement())) {
       this._strategy.dateRangeBox.getEndDateBox().focus();
       e.preventDefault();
@@ -111,11 +107,10 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     }
   };
   _proto._processValueChange = function _processValueChange(e) {
-    var target = e.target;
-    var _this$_strategy$dateR3 = this._strategy.dateRangeBox.field(),
-      _this$_strategy$dateR4 = _slicedToArray(_this$_strategy$dateR3, 2),
-      startDateInput = _this$_strategy$dateR4[0],
-      endDateInput = _this$_strategy$dateR4[1];
+    const {
+      target
+    } = e;
+    const [startDateInput, endDateInput] = this._strategy.dateRangeBox.field();
     if ((0, _renderer.default)(target).is(startDateInput)) {
       this._strategy.dateRangeBox.option('_currentSelection', 'startDate');
     }
@@ -125,10 +120,10 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     if (!this._strategy.dateRangeBox.getStartDateBox()._strategy._widget) {
       return;
     }
-    var calendar = this._strategy.dateRangeBox.getStartDateBox()._strategy._widget;
-    var value = calendar.option('value');
-    var startDate = (0, _uiDate_range.getDeserializedDate)(value[0]);
-    var endDate = (0, _uiDate_range.getDeserializedDate)(value[1]);
+    const calendar = this._strategy.dateRangeBox.getStartDateBox()._strategy._widget;
+    const value = calendar.option('value');
+    const startDate = (0, _uiDate_range.getDeserializedDate)(value[0]);
+    const endDate = (0, _uiDate_range.getDeserializedDate)(value[1]);
     if ((0, _renderer.default)(target).is(startDateInput)) {
       if (startDate) {
         calendar._skipNavigate = true;
@@ -172,15 +167,15 @@ var MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     this._applyInternalValidation(value);
   };
   _proto._isTargetOutOfComponent = function _isTargetOutOfComponent(target) {
-    var $dateRangeBox = this._strategy.dateRangeBox.$element();
-    var isTargetOutOfDateRangeBox = (0, _renderer.default)(target).closest($dateRangeBox).length === 0;
+    const $dateRangeBox = this._strategy.dateRangeBox.$element();
+    const isTargetOutOfDateRangeBox = (0, _renderer.default)(target).closest($dateRangeBox).length === 0;
     return _DateBox.prototype._isTargetOutOfComponent.call(this, target) && isTargetOutOfDateRangeBox;
   };
   _proto._optionChanged = function _optionChanged(args) {
     switch (args.name) {
       case 'isValid':
         {
-          var isValid = this._strategy.dateRangeBox.option('isValid');
+          const isValid = this._strategy.dateRangeBox.option('isValid');
           if (this._skipIsValidOptionChange || isValid === args.value) {
             _DateBox.prototype._optionChanged.call(this, args);
             return;

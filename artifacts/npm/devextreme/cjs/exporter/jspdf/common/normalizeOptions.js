@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/jspdf/common/normalizeOptions.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,9 +29,11 @@ function normalizeBoundaryValue(value) {
   };
 }
 function normalizeRowsInfo(rowsInfo) {
-  rowsInfo.forEach(function (row) {
-    row.cells.forEach(function (_ref) {
-      var pdfCell = _ref.pdfCell;
+  rowsInfo.forEach(row => {
+    row.cells.forEach(_ref => {
+      let {
+        pdfCell
+      } = _ref;
       pdfCell.padding = normalizeBoundaryValue(pdfCell.padding);
     });
   });

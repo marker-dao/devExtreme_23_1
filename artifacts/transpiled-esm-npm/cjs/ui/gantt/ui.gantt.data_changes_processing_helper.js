@@ -1,7 +1,7 @@
 "use strict";
 
 exports.GanttDataChangesProcessingHelper = void 0;
-var GanttDataChangesProcessingHelper = /*#__PURE__*/function () {
+let GanttDataChangesProcessingHelper = /*#__PURE__*/function () {
   function GanttDataChangesProcessingHelper() {
     this._waitingForGanttViewReady = false;
     this._waitingForTreeListReady = false;
@@ -29,9 +29,7 @@ var GanttDataChangesProcessingHelper = /*#__PURE__*/function () {
   };
   _proto.executeActionsIfPossible = function executeActionsIfPossible() {
     if (this._canExecuteActions()) {
-      this._completionActions.forEach(function (act) {
-        return act();
-      });
+      this._completionActions.forEach(act => act());
       this._completionActions = [];
     }
   };

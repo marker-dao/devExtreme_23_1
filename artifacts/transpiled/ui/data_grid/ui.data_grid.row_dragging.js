@@ -6,7 +6,7 @@ Object.keys(_row_dragging).forEach(function (key) {
   if (key in exports && exports[key] === _row_dragging[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _row_dragging[key];
     }
   });

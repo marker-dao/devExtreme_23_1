@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/knockout/components.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,24 +15,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 if (_knockout.default) {
   _knockout.default.bindingHandlers.dxControlsDescendantBindings = {
-    init: function init(_, valueAccessor) {
+    init: function (_, valueAccessor) {
       return {
         controlsDescendantBindings: _knockout.default.unwrap(valueAccessor())
       };
     }
   };
   _knockout.default.bindingHandlers.dxIcon = {
-    init: function init(element, valueAccessor) {
-      var options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
-      var iconElement = (0, _icon.getImageContainer)(options);
+    init: function (element, valueAccessor) {
+      const options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
+      const iconElement = (0, _icon.getImageContainer)(options);
       _knockout.default.virtualElements.emptyNode(element);
       if (iconElement) {
         _knockout.default.virtualElements.prepend(element, iconElement.get(0));
       }
     },
-    update: function update(element, valueAccessor) {
-      var options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
-      var iconElement = (0, _icon.getImageContainer)(options);
+    update: function (element, valueAccessor) {
+      const options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
+      const iconElement = (0, _icon.getImageContainer)(options);
       _knockout.default.virtualElements.emptyNode(element);
       if (iconElement) {
         _knockout.default.virtualElements.prepend(element, iconElement.get(0));

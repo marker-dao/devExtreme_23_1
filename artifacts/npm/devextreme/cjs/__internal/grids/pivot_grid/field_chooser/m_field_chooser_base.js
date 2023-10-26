@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/field_chooser/m_field_chooser_base.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,31 +34,31 @@ var _const = require("./const");
 var _dom = require("./dom");
 var _utils = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var Sortable = _m_sortable.default.Sortable;
-var DIV = '<div>';
-var HeaderFilterView = _m_header_filter_core.HeaderFilterView.inherit({
+const {
+  Sortable
+} = _m_sortable.default;
+const DIV = '<div>';
+const HeaderFilterView = _m_header_filter_core.HeaderFilterView.inherit({
   _getSearchExpr(options, headerFilterOptions) {
     options.useDefaultSearchExpr = true;
     return this.callBase(options, headerFilterOptions);
   }
 });
-var processItems = function processItems(groupItems, field) {
-  var filterValues = [];
-  var isTree = !!field.groupName;
-  var isExcludeFilterType = field.filterType === 'exclude';
+const processItems = function (groupItems, field) {
+  const filterValues = [];
+  const isTree = !!field.groupName;
+  const isExcludeFilterType = field.filterType === 'exclude';
   if (field.filterValues) {
-    (0, _iterator.each)(field.filterValues, function (_, filterValue) {
+    (0, _iterator.each)(field.filterValues, (_, filterValue) => {
       filterValues.push(Array.isArray(filterValue) ? filterValue.join('/') : filterValue && filterValue.valueOf());
     });
   }
-  (0, _m_widget_utils.foreachTree)(groupItems, function (items) {
-    var item = items[0];
-    var path = (0, _m_widget_utils.createPath)(items);
-    var preparedFilterValueByText = isTree ? (0, _iterator.map)(items, function (item) {
-      return item.text;
-    }).reverse().join('/') : item.text;
+  (0, _m_widget_utils.foreachTree)(groupItems, items => {
+    const item = items[0];
+    const path = (0, _m_widget_utils.createPath)(items);
+    const preparedFilterValueByText = isTree ? (0, _iterator.map)(items, item => item.text).reverse().join('/') : item.text;
     item.value = isTree ? path.slice(0) : item.key || item.value;
-    var preparedFilterValue = isTree ? path.join('/') : item.value && item.value.valueOf();
+    const preparedFilterValue = isTree ? path.join('/') : item.value && item.value.valueOf();
     if (item.children) {
       item.items = item.children;
       item.children = null;
@@ -67,7 +67,7 @@ var processItems = function processItems(groupItems, field) {
   });
 };
 function getMainGroupField(dataSource, sourceField) {
-  var field = sourceField;
+  let field = sourceField;
   if ((0, _type.isDefined)(sourceField.groupIndex)) {
     field = dataSource.getAreaFields(sourceField.area, true)[sourceField.areaIndex];
   }
@@ -77,7 +77,7 @@ function getStringState(state) {
   state = state || {};
   return JSON.stringify([state.fields, state.columnExpandedPaths, state.rowExpandedPaths]);
 }
-var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inherit(_m_sorting_mixin.default).inherit(_m_header_filter_core.headerFilterMixin).inherit({
+const FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inherit(_m_sorting_mixin.default).inherit(_m_header_filter_core.headerFilterMixin).inherit({
   _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       allowFieldDragging: true,
@@ -112,7 +112,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     _m_utils.default.logHeaderFilterDeprecatedWarningIfNeed(this);
   },
   _refreshDataSource() {
-    var dataSource = this.option('dataSource');
+    const dataSource = this.option('dataSource');
     if (dataSource && dataSource.fields && dataSource.load /* instanceof DX.ui.dxPivotGrid.DataSource */) {
       this._dataSource = dataSource;
     }
@@ -145,10 +145,10 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     }
   },
   renderField(field, showColumnLines) {
-    var that = this;
-    var $fieldContent = (0, _renderer.default)(DIV).addClass(_const.CLASSES.area.fieldContent).text(field.caption || field.dataField);
-    var $fieldElement = (0, _renderer.default)(DIV).addClass(_const.CLASSES.area.field).addClass(_const.CLASSES.area.box).data('field', field).append($fieldContent);
-    var mainGroupField = getMainGroupField(that._dataSource, field);
+    const that = this;
+    const $fieldContent = (0, _renderer.default)(DIV).addClass(_const.CLASSES.area.fieldContent).text(field.caption || field.dataField);
+    const $fieldElement = (0, _renderer.default)(DIV).addClass(_const.CLASSES.area.field).addClass(_const.CLASSES.area.box).data('field', field).append($fieldContent);
+    const mainGroupField = getMainGroupField(that._dataSource, field);
     if (field.area !== 'data') {
       if (field.allowSorting) {
         that._applyColumnState({
@@ -185,17 +185,17 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     this._headerFilterView.render(this.$element());
   },
   renderSortable() {
-    var that = this;
+    const that = this;
     that._createComponent(that.$element(), Sortable, (0, _extend.extend)({
       allowDragging: that.option('allowFieldDragging'),
       itemSelector: ".".concat(_const.CLASSES.area.field),
       itemContainerSelector: ".".concat(_const.CLASSES.area.fieldContainer),
       groupSelector: ".".concat(_const.CLASSES.area.fieldList),
       groupFilter() {
-        var dataSource = that._dataSource;
-        var $sortable = (0, _renderer.default)(this).closest('.dx-sortable-old');
-        var pivotGrid = $sortable.data('dxPivotGrid');
-        var pivotGridFieldChooser = $sortable.data('dxPivotGridFieldChooser');
+        const dataSource = that._dataSource;
+        const $sortable = (0, _renderer.default)(this).closest('.dx-sortable-old');
+        const pivotGrid = $sortable.data('dxPivotGrid');
+        const pivotGridFieldChooser = $sortable.data('dxPivotGridFieldChooser');
         if (pivotGrid) {
           return pivotGrid.getDataSource() === dataSource;
         }
@@ -206,8 +206,10 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
       },
       itemRender: _dom.dragAndDropItemRender,
       onDragging(e) {
-        var field = e.sourceElement.data('field');
-        var targetGroup = e.targetGroup;
+        const field = e.sourceElement.data('field');
+        const {
+          targetGroup
+        } = e;
         e.cancel = false;
         if (field.isMeasure === true) {
           if (targetGroup === 'column' || targetGroup === 'row' || targetGroup === 'filter') {
@@ -219,24 +221,22 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
       },
       useIndicator: true,
       onChanged(e) {
-        var field = e.sourceElement.data('field');
+        const field = e.sourceElement.data('field');
         e.removeSourceElement = !!e.sourceGroup;
         that._adjustSortableOnChangedArgs(e);
         if (field) {
-          var targetIndex = e.targetIndex;
-          var mainGroupField;
-          var invisibleFieldsIndexOffset = 0;
-          that._processDemandState(function (dataSource) {
-            var fields = dataSource.getAreaFields(field.area, true);
+          const {
+            targetIndex
+          } = e;
+          let mainGroupField;
+          let invisibleFieldsIndexOffset = 0;
+          that._processDemandState(dataSource => {
+            const fields = dataSource.getAreaFields(field.area, true);
             mainGroupField = getMainGroupField(dataSource, field);
-            var visibleFields = fields.filter(function (f) {
-              return f.visible !== false;
-            });
-            var fieldBeforeTarget = visibleFields[targetIndex - 1];
+            const visibleFields = fields.filter(f => f.visible !== false);
+            const fieldBeforeTarget = visibleFields[targetIndex - 1];
             if (fieldBeforeTarget) {
-              invisibleFieldsIndexOffset = fields.filter(function (f) {
-                return f.visible === false && f.areaIndex <= fieldBeforeTarget.areaIndex;
-              }).length;
+              invisibleFieldsIndexOffset = fields.filter(f => f.visible === false && f.areaIndex <= fieldBeforeTarget.areaIndex).length;
             }
           });
           that._applyChanges([mainGroupField], {
@@ -248,14 +248,14 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     }, that._getSortableOptions()));
   },
   _processDemandState(func) {
-    var that = this;
-    var isInstantlyMode = that.option('applyChangesMode') === 'instantly';
-    var dataSource = that._dataSource;
+    const that = this;
+    const isInstantlyMode = that.option('applyChangesMode') === 'instantly';
+    const dataSource = that._dataSource;
     if (isInstantlyMode) {
       func(dataSource, isInstantlyMode);
     } else {
-      var currentState = dataSource.state();
-      var pivotGridState = that.option('state');
+      const currentState = dataSource.state();
+      const pivotGridState = that.option('state');
       if (pivotGridState) {
         dataSource.state(pivotGridState, true);
       }
@@ -264,10 +264,12 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     }
   },
   _applyChanges(fields, props) {
-    var that = this;
-    that._processDemandState(function (dataSource, isInstantlyMode) {
-      fields.forEach(function (_ref) {
-        var index = _ref.index;
+    const that = this;
+    that._processDemandState((dataSource, isInstantlyMode) => {
+      fields.forEach(_ref => {
+        let {
+          index
+        } = _ref;
         dataSource.field(index, props);
       });
       if (isInstantlyMode) {
@@ -278,7 +280,7 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     });
   },
   _applyLocalSortChanges(fieldIdx, sortOrder) {
-    this._processDemandState(function (dataSource) {
+    this._processDemandState(dataSource => {
       dataSource.field(fieldIdx, {
         sortOrder
       });
@@ -296,14 +298,14 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
     };
   },
   subscribeToEvents(element) {
-    var that = this;
-    var func = function func(e) {
-      var field = (0, _renderer.default)(e.currentTarget).data('field');
-      var mainGroupField = (0, _extend.extend)(true, {}, getMainGroupField(that._dataSource, field));
-      var isHeaderFilter = (0, _renderer.default)(e.target).hasClass(_const.CLASSES.headerFilter);
-      var dataSource = that._dataSource;
-      var type = mainGroupField.groupName ? 'tree' : 'list';
-      var paginate = dataSource.paginate() && type === 'list';
+    const that = this;
+    const func = function (e) {
+      const field = (0, _renderer.default)(e.currentTarget).data('field');
+      const mainGroupField = (0, _extend.extend)(true, {}, getMainGroupField(that._dataSource, field));
+      const isHeaderFilter = (0, _renderer.default)(e.target).hasClass(_const.CLASSES.headerFilter);
+      const dataSource = that._dataSource;
+      const type = mainGroupField.groupName ? 'tree' : 'list';
+      const paginate = dataSource.paginate() && type === 'list';
       if (isHeaderFilter) {
         that._headerFilterView.showHeaderFilterMenu((0, _renderer.default)(e.currentTarget), (0, _extend.extend)(mainGroupField, {
           type,
@@ -312,15 +314,17 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
             useDefaultSearch: !paginate,
             // paginate: false,
             load(options) {
-              var userData = options.userData;
+              const {
+                userData
+              } = options;
               if (userData.store) {
                 return userData.store.load(options);
               }
               // @ts-expect-error
-              var d = new _deferred.Deferred();
-              dataSource.getFieldValues(mainGroupField.index, that.option('headerFilter.showRelevantValues'), paginate ? options : undefined).done(function (data) {
-                var emptyValue = that.option('headerFilter.texts.emptyValue');
-                data.forEach(function (element) {
+              const d = new _deferred.Deferred();
+              dataSource.getFieldValues(mainGroupField.index, that.option('headerFilter.showRelevantValues'), paginate ? options : undefined).done(data => {
+                const emptyValue = that.option('headerFilter.texts.emptyValue');
+                data.forEach(element => {
                   if (!element.text) {
                     element.text = emptyValue;
                   }
@@ -347,8 +351,8 @@ var FieldChooserBase = _ui.default.inherit(_m_column_state_mixin.default).inheri
           }
         }));
       } else if (field.allowSorting && field.area !== 'data') {
-        var isRemoteSort = that.option('remoteSort');
-        var sortOrder = (0, _utils.reverseSortOrder)(field.sortOrder);
+        const isRemoteSort = that.option('remoteSort');
+        const sortOrder = (0, _utils.reverseSortOrder)(field.sortOrder);
         if (isRemoteSort) {
           that._applyChanges([field], {
             sortOrder

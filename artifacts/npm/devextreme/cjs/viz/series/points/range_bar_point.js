@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/series/points/range_bar_point.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,20 +14,20 @@ var _extend2 = require("../../../core/utils/extend");
 var _bar_point = _interopRequireDefault(require("./bar_point"));
 var _range_symbol_point = _interopRequireDefault(require("./range_symbol_point"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _extend = _extend2.extend;
+const _extend = _extend2.extend;
 var _default = _extend({}, _bar_point.default, {
   deleteLabel: _range_symbol_point.default.deleteLabel,
   _getFormatObject: _range_symbol_point.default._getFormatObject,
-  clearVisibility: function clearVisibility() {
-    var graphic = this.graphic;
+  clearVisibility: function () {
+    const graphic = this.graphic;
     if (graphic && graphic.attr('visibility')) {
       graphic.attr({
         visibility: null
       });
     }
   },
-  setInvisibility: function setInvisibility() {
-    var graphic = this.graphic;
+  setInvisibility: function () {
+    const graphic = this.graphic;
     if (graphic && graphic.attr('visibility') !== 'hidden') {
       graphic.attr({
         visibility: 'hidden'
@@ -36,11 +36,11 @@ var _default = _extend({}, _bar_point.default, {
     this._topLabel.draw(false);
     this._bottomLabel.draw(false);
   },
-  getTooltipParams: function getTooltipParams(location) {
-    var that = this;
-    var edgeLocation = location === 'edge';
-    var x;
-    var y;
+  getTooltipParams: function (location) {
+    const that = this;
+    const edgeLocation = location === 'edge';
+    let x;
+    let y;
     if (that._options.rotated) {
       x = edgeLocation ? that.x + that.width : that.x + that.width / 2;
       y = that.y + that.height / 2;
@@ -54,9 +54,9 @@ var _default = _extend({}, _bar_point.default, {
       offset: 0
     };
   },
-  _translate: function _translate() {
-    var that = this;
-    var barMethods = _bar_point.default;
+  _translate: function () {
+    const that = this;
+    const barMethods = _bar_point.default;
     barMethods._translate.call(that);
     if (that._options.rotated) {
       that.width = that.width || 1;

@@ -23,21 +23,21 @@ var _child_default_template = require("../../core/templates/child_default_templa
 var _deferred = require("../../core/utils/deferred");
 var _grouped_data_converter_mixin = _interopRequireDefault(require("../shared/grouped_data_converter_mixin"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var LIST_ITEM_SELECTOR = '.dx-list-item';
-var LIST_ITEM_DATA_KEY = 'dxListItemData';
-var DROPDOWNLIST_POPUP_WRAPPER_CLASS = 'dx-dropdownlist-popup-wrapper';
-var SEARCH_EVENT = 'input';
-var SEARCH_MODES = ['startswith', 'contains', 'endwith', 'notcontains'];
-var useCompositionEvents = _devices.default.real().platform !== 'android';
-var DropDownList = _ui.default.inherit({
-  _supportedKeys: function _supportedKeys() {
-    var parent = this.callBase();
+const window = (0, _window.getWindow)();
+const LIST_ITEM_SELECTOR = '.dx-list-item';
+const LIST_ITEM_DATA_KEY = 'dxListItemData';
+const DROPDOWNLIST_POPUP_WRAPPER_CLASS = 'dx-dropdownlist-popup-wrapper';
+const SEARCH_EVENT = 'input';
+const SEARCH_MODES = ['startswith', 'contains', 'endwith', 'notcontains'];
+const useCompositionEvents = _devices.default.real().platform !== 'android';
+const DropDownList = _ui.default.inherit({
+  _supportedKeys: function () {
+    const parent = this.callBase();
     return (0, _extend.extend)({}, parent, {
-      tab: function tab(e) {
+      tab: function (e) {
         if (this._allowSelectItemByTab()) {
           this._saveValueChangeEvent(e);
-          var $focusedItem = (0, _renderer.default)(this._list.option('focusedElement'));
+          const $focusedItem = (0, _renderer.default)(this._list.option('focusedElement'));
           $focusedItem.length && this._setSelectedElement($focusedItem);
         }
         parent.tab.apply(this, arguments);
@@ -47,17 +47,17 @@ var DropDownList = _ui.default.inherit({
       end: _common.noop
     });
   },
-  _allowSelectItemByTab: function _allowSelectItemByTab() {
+  _allowSelectItemByTab: function () {
     return this.option('opened') && this.option('applyValueMode') === 'instantly';
   },
-  _setSelectedElement: function _setSelectedElement($element) {
-    var value = this._valueGetter(this._list._getItemData($element));
+  _setSelectedElement: function ($element) {
+    const value = this._valueGetter(this._list._getItemData($element));
     this._setValue(value);
   },
-  _setValue: function _setValue(value) {
+  _setValue: function (value) {
     this.option('value', value);
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), (0, _extend.extend)(_ui3.default._dataExpressionDefaultOptions(), {
       displayValue: undefined,
       searchEnabled: false,
@@ -98,7 +98,7 @@ var DropDownList = _ui.default.inherit({
     }));
   },
 
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
       device: {
         platform: 'ios'
@@ -119,7 +119,7 @@ var DropDownList = _ui.default.inherit({
       }
     }]);
   },
-  _setOptionsByReference: function _setOptionsByReference() {
+  _setOptionsByReference: function () {
     this.callBase();
     (0, _extend.extend)(this._optionsByReference, {
       value: true,
@@ -127,7 +127,7 @@ var DropDownList = _ui.default.inherit({
       displayValue: true
     });
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._initDataExpressions();
     this._initActions();
@@ -136,48 +136,48 @@ var DropDownList = _ui.default.inherit({
     this._clearSelectedItem();
     this._initItems();
   },
-  _setListFocusedElementOptionChange: function _setListFocusedElementOptionChange() {
+  _setListFocusedElementOptionChange: function () {
     this._list._updateParentActiveDescendant = this._updateActiveDescendant.bind(this);
   },
-  _initItems: function _initItems() {
-    var items = this.option().items;
+  _initItems: function () {
+    const items = this.option().items;
     if (items && !items.length && this._dataSource) {
       this.option().items = this._dataSource.items();
     }
   },
-  _initActions: function _initActions() {
+  _initActions: function () {
     this._initContentReadyAction();
     this._initSelectionChangedAction();
     this._initItemClickAction();
   },
-  _initContentReadyAction: function _initContentReadyAction() {
+  _initContentReadyAction: function () {
     this._contentReadyAction = this._createActionByOption('onContentReady', {
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _initSelectionChangedAction: function _initSelectionChangedAction() {
+  _initSelectionChangedAction: function () {
     this._selectionChangedAction = this._createActionByOption('onSelectionChanged', {
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _initItemClickAction: function _initItemClickAction() {
+  _initItemClickAction: function () {
     this._itemClickAction = this._createActionByOption('onItemClick');
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this.callBase();
     this._templateManager.addDefaultTemplates({
       item: new _child_default_template.ChildDefaultTemplate('item')
     });
   },
-  _isEditable: function _isEditable() {
+  _isEditable: function () {
     return this.callBase() || this.option('searchEnabled');
   },
-  _saveFocusOnWidget: function _saveFocusOnWidget(e) {
+  _saveFocusOnWidget: function (e) {
     if (this._list && this._list.initialOption('focusStateEnabled')) {
       this._focusInput();
     }
   },
-  _fitIntoRange: function _fitIntoRange(value, start, end) {
+  _fitIntoRange: function (value, start, end) {
     if (value > end) {
       return start;
     }
@@ -186,20 +186,20 @@ var DropDownList = _ui.default.inherit({
     }
     return value;
   },
-  _items: function _items() {
-    var items = this._getPlainItems(!this._list && this._dataSource.items());
-    var availableItems = new _query.default(items).filter('disabled', '<>', true).toArray();
+  _items: function () {
+    const items = this._getPlainItems(!this._list && this._dataSource.items());
+    const availableItems = new _query.default(items).filter('disabled', '<>', true).toArray();
     return availableItems;
   },
-  _calcNextItem: function _calcNextItem(step) {
-    var items = this._items();
-    var nextIndex = this._fitIntoRange(this._getSelectedIndex() + step, 0, items.length - 1);
+  _calcNextItem: function (step) {
+    const items = this._items();
+    const nextIndex = this._fitIntoRange(this._getSelectedIndex() + step, 0, items.length - 1);
     return items[nextIndex];
   },
-  _getSelectedIndex: function _getSelectedIndex() {
-    var items = this._items();
-    var selectedItem = this.option('selectedItem');
-    var result = -1;
+  _getSelectedIndex: function () {
+    const items = this._items();
+    const selectedItem = this.option('selectedItem');
+    let result = -1;
     (0, _iterator.each)(items, function (index, item) {
       if (this._isValueEquals(item, selectedItem)) {
         result = index;
@@ -208,19 +208,19 @@ var DropDownList = _ui.default.inherit({
     }.bind(this));
     return result;
   },
-  _createPopup: function _createPopup() {
+  _createPopup: function () {
     this.callBase();
     this._updateCustomBoundaryContainer();
     this._popup.$wrapper().addClass(this._popupWrapperClass());
-    var $popupContent = this._popup.$content();
+    const $popupContent = this._popup.$content();
     _events_engine.default.off($popupContent, 'mouseup');
     _events_engine.default.on($popupContent, 'mouseup', this._saveFocusOnWidget.bind(this));
   },
-  _updateCustomBoundaryContainer: function _updateCustomBoundaryContainer() {
-    var customContainer = this.option('dropDownOptions.container');
-    var $container = customContainer && (0, _renderer.default)(customContainer);
+  _updateCustomBoundaryContainer: function () {
+    const customContainer = this.option('dropDownOptions.container');
+    const $container = customContainer && (0, _renderer.default)(customContainer);
     if ($container && $container.length && !(0, _type.isWindow)($container.get(0))) {
-      var $containerWithParents = [].slice.call($container.parents());
+      const $containerWithParents = [].slice.call($container.parents());
       $containerWithParents.unshift($container.get(0));
       (0, _iterator.each)($containerWithParents, function (i, parent) {
         if (parent === (0, _renderer.default)('body').get(0)) {
@@ -232,20 +232,20 @@ var DropDownList = _ui.default.inherit({
       }.bind(this));
     }
   },
-  _popupWrapperClass: function _popupWrapperClass() {
+  _popupWrapperClass: function () {
     return DROPDOWNLIST_POPUP_WRAPPER_CLASS;
   },
-  _renderInputValue: function _renderInputValue() {
-    var value = this._getCurrentValue();
+  _renderInputValue: function () {
+    const value = this._getCurrentValue();
     this._rejectValueLoading();
     return this._loadInputValue(value, this._setSelectedItem.bind(this)).always(this.callBase.bind(this, value));
   },
-  _loadInputValue: function _loadInputValue(value, callback) {
+  _loadInputValue: function (value, callback) {
     return this._loadItem(value).always(callback);
   },
-  _getItemFromPlain: function _getItemFromPlain(value, cache) {
-    var plainItems;
-    var selectedItem;
+  _getItemFromPlain: function (value, cache) {
+    let plainItems;
+    let selectedItem;
     if (cache && typeof value !== 'object') {
       if (!cache.itemByValue) {
         cache.itemByValue = {};
@@ -264,14 +264,14 @@ var DropDownList = _ui.default.inherit({
     }
     return selectedItem;
   },
-  _loadItem: function _loadItem(value, cache) {
-    var selectedItem = this._getItemFromPlain(value, cache);
+  _loadItem: function (value, cache) {
+    const selectedItem = this._getItemFromPlain(value, cache);
     return selectedItem !== undefined ? new _deferred.Deferred().resolve(selectedItem).promise() : this._loadValue(value);
   },
-  _getPlainItems: function _getPlainItems(items) {
-    var plainItems = [];
+  _getPlainItems: function (items) {
+    let plainItems = [];
     items = items || this.option('items') || this._dataSource.items() || [];
-    for (var i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
       if (items[i] && items[i].items) {
         plainItems = plainItems.concat(items[i].items);
       } else {
@@ -282,28 +282,28 @@ var DropDownList = _ui.default.inherit({
   },
   _updateActiveDescendant($target) {
     var _this$_list;
-    var opened = this.option('opened');
-    var listFocusedItemId = (_this$_list = this._list) === null || _this$_list === void 0 ? void 0 : _this$_list.getFocusedItemId();
-    var isElementOnDom = (0, _renderer.default)("#".concat(listFocusedItemId)).length > 0;
-    var activedescendant = opened && isElementOnDom && listFocusedItemId;
+    const opened = this.option('opened');
+    const listFocusedItemId = (_this$_list = this._list) === null || _this$_list === void 0 ? void 0 : _this$_list.getFocusedItemId();
+    const isElementOnDom = (0, _renderer.default)("#".concat(listFocusedItemId)).length > 0;
+    const activedescendant = opened && isElementOnDom && listFocusedItemId;
     this.setAria({
       'activedescendant': activedescendant || null
     }, $target);
   },
-  _setSelectedItem: function _setSelectedItem(item) {
-    var displayValue = this._displayValue(item);
+  _setSelectedItem: function (item) {
+    const displayValue = this._displayValue(item);
     this.option('selectedItem', (0, _common.ensureDefined)(item, null));
     this.option('displayValue', displayValue);
   },
-  _displayValue: function _displayValue(item) {
+  _displayValue: function (item) {
     return this._displayGetter(item);
   },
-  _refreshSelected: function _refreshSelected() {
-    var cache = {};
+  _refreshSelected: function () {
+    const cache = {};
     this._listItemElements().each(function (_, itemElement) {
-      var $itemElement = (0, _renderer.default)(itemElement);
-      var itemValue = this._valueGetter($itemElement.data(LIST_ITEM_DATA_KEY));
-      var isItemSelected = this._isSelectedValue(itemValue, cache);
+      const $itemElement = (0, _renderer.default)(itemElement);
+      const itemValue = this._valueGetter($itemElement.data(LIST_ITEM_DATA_KEY));
+      const isItemSelected = this._isSelectedValue(itemValue, cache);
       if (isItemSelected) {
         this._list.selectItem($itemElement);
       } else {
@@ -311,30 +311,30 @@ var DropDownList = _ui.default.inherit({
       }
     }.bind(this));
   },
-  _popupShownHandler: function _popupShownHandler() {
+  _popupShownHandler: function () {
     this.callBase();
     this._setFocusPolicy();
   },
-  _setFocusPolicy: function _setFocusPolicy() {
+  _setFocusPolicy: function () {
     if (!this.option('focusStateEnabled') || !this._list) {
       return;
     }
     this._list.option('focusedElement', null);
   },
-  _isSelectedValue: function _isSelectedValue(value) {
+  _isSelectedValue: function (value) {
     return this._isValueEquals(value, this.option('value'));
   },
-  _validateSearchMode: function _validateSearchMode() {
-    var searchMode = this.option('searchMode');
-    var normalizedSearchMode = searchMode.toLowerCase();
+  _validateSearchMode: function () {
+    const searchMode = this.option('searchMode');
+    const normalizedSearchMode = searchMode.toLowerCase();
     if (!SEARCH_MODES.includes(normalizedSearchMode)) {
       throw _ui2.default.Error('E1019', searchMode);
     }
   },
-  _clearSelectedItem: function _clearSelectedItem() {
+  _clearSelectedItem: function () {
     this.option('selectedItem', null);
   },
-  _processDataSourceChanging: function _processDataSourceChanging() {
+  _processDataSourceChanging: function () {
     this._initDataController();
     this._setListOption('_dataController', this._dataController);
     this._setListDataSource();
@@ -345,76 +345,74 @@ var DropDownList = _ui.default.inherit({
       this._clearSelectedItem();
     }.bind(this));
   },
-  _isCustomValueAllowed: function _isCustomValueAllowed() {
+  _isCustomValueAllowed: function () {
     return this.option('displayCustomValue');
   },
-  clear: function clear() {
+  clear: function () {
     this.callBase();
     this._clearFilter();
     this._clearSelectedItem();
   },
-  _listItemElements: function _listItemElements() {
+  _listItemElements: function () {
     return this._$list ? this._$list.find(LIST_ITEM_SELECTOR) : (0, _renderer.default)();
   },
-  _popupConfig: function _popupConfig() {
+  _popupConfig: function () {
     return (0, _extend.extend)(this.callBase(), {
       templatesRenderAsynchronously: false,
       autoResizeEnabled: false,
       maxHeight: this._getMaxHeight.bind(this)
     });
   },
-  _renderPopupContent: function _renderPopupContent() {
+  _renderPopupContent: function () {
     this.callBase();
     this._renderList();
   },
   _getKeyboardListeners() {
-    var canListHaveFocus = this._canListHaveFocus();
+    const canListHaveFocus = this._canListHaveFocus();
     return this.callBase().concat([!canListHaveFocus && this._list]);
   },
-  _renderList: function _renderList() {
+  _renderList: function () {
     this._listId = 'dx-' + new _guid.default()._value;
-    var $list = (0, _renderer.default)('<div>').attr('id', this._listId).appendTo(this._popup.$content());
+    const $list = (0, _renderer.default)('<div>').attr('id', this._listId).appendTo(this._popup.$content());
     this._$list = $list;
     this._list = this._createComponent($list, _list_light.default, this._listConfig());
     this._refreshList();
     this._renderPreventBlurOnListClick();
     this._setListFocusedElementOptionChange();
   },
-  _renderPreventBlurOnListClick: function _renderPreventBlurOnListClick() {
-    var eventName = (0, _index.addNamespace)('mousedown', 'dxDropDownList');
+  _renderPreventBlurOnListClick: function () {
+    const eventName = (0, _index.addNamespace)('mousedown', 'dxDropDownList');
     _events_engine.default.off(this._$list, eventName);
-    _events_engine.default.on(this._$list, eventName, function (e) {
-      return e.preventDefault();
-    });
+    _events_engine.default.on(this._$list, eventName, e => e.preventDefault());
   },
   _getControlsAria() {
     return this._list && this._listId;
   },
-  _renderOpenedState: function _renderOpenedState() {
+  _renderOpenedState: function () {
     this.callBase();
     this._list && this._updateActiveDescendant();
     this.setAria('owns', this._popup && this._popupContentId);
   },
-  _setDefaultAria: function _setDefaultAria() {
+  _setDefaultAria: function () {
     this.setAria({
       'haspopup': 'listbox',
       'autocomplete': 'list'
     });
   },
-  _refreshList: function _refreshList() {
+  _refreshList: function () {
     if (this._list && this._shouldRefreshDataSource()) {
       this._setListDataSource();
     }
   },
-  _shouldRefreshDataSource: function _shouldRefreshDataSource() {
-    var dataSourceProvided = !!this._list.option('dataSource');
+  _shouldRefreshDataSource: function () {
+    const dataSourceProvided = !!this._list.option('dataSource');
     return dataSourceProvided !== this._needPassDataSourceToList();
   },
-  _isDesktopDevice: function _isDesktopDevice() {
+  _isDesktopDevice: function () {
     return _devices.default.real().deviceType === 'desktop';
   },
-  _listConfig: function _listConfig() {
-    var options = {
+  _listConfig: function () {
+    const options = {
       selectionMode: 'single',
       _templates: this.option('_templates'),
       templateProvider: this.option('templateProvider'),
@@ -440,24 +438,22 @@ var DropDownList = _ui.default.inherit({
     }
     return options;
   },
-  _canListHaveFocus: function _canListHaveFocus() {
-    return false;
-  },
-  _getDataSource: function _getDataSource() {
+  _canListHaveFocus: () => false,
+  _getDataSource: function () {
     return this._needPassDataSourceToList() ? this._dataSource : null;
   },
-  _dataSourceOptions: function _dataSourceOptions() {
+  _dataSourceOptions: function () {
     return {
       paginate: false
     };
   },
-  _getGroupedOption: function _getGroupedOption() {
+  _getGroupedOption: function () {
     return this.option('grouped');
   },
-  _dataSourceFromUrlLoadMode: function _dataSourceFromUrlLoadMode() {
+  _dataSourceFromUrlLoadMode: function () {
     return 'raw';
   },
-  _listContentReadyHandler: function _listContentReadyHandler() {
+  _listContentReadyHandler: function () {
     this._list = this._list || this._$list.dxList('instance');
     if (!this.option('deferRendering')) {
       this._refreshSelected();
@@ -466,15 +462,15 @@ var DropDownList = _ui.default.inherit({
     this._updateListDimensions();
     this._contentReadyAction();
   },
-  _setListOption: function _setListOption(optionName, value) {
+  _setListOption: function (optionName, value) {
     this._setWidgetOption('_list', arguments);
   },
-  _listItemClickAction: function _listItemClickAction(e) {
+  _listItemClickAction: function (e) {
     this._listItemClickHandler(e);
     this._itemClickAction(e);
   },
   _listItemClickHandler: _common.noop,
-  _setListDataSource: function _setListDataSource() {
+  _setListDataSource: function () {
     if (!this._list) {
       return;
     }
@@ -483,59 +479,58 @@ var DropDownList = _ui.default.inherit({
       this._setListOption('items', []);
     }
   },
-  _needPassDataSourceToList: function _needPassDataSourceToList() {
+  _needPassDataSourceToList: function () {
     return this.option('showDataBeforeSearch') || this._isMinSearchLengthExceeded();
   },
-  _isMinSearchLengthExceeded: function _isMinSearchLengthExceeded() {
+  _isMinSearchLengthExceeded: function () {
     return this._searchValue().toString().length >= this.option('minSearchLength');
   },
-  _needClearFilter: function _needClearFilter() {
+  _needClearFilter: function () {
     return this._canKeepDataSource() ? false : this._needPassDataSourceToList();
   },
-  _canKeepDataSource: function _canKeepDataSource() {
-    var isMinSearchLengthExceeded = this._isMinSearchLengthExceeded();
+  _canKeepDataSource: function () {
+    const isMinSearchLengthExceeded = this._isMinSearchLengthExceeded();
     return this._dataController.isLoaded() && this.option('showDataBeforeSearch') && this.option('minSearchLength') && !isMinSearchLengthExceeded && !this._isLastMinSearchLengthExceeded;
   },
-  _searchValue: function _searchValue() {
+  _searchValue: function () {
     return this._input().val() || '';
   },
-  _getSearchEvent: function _getSearchEvent() {
+  _getSearchEvent: function () {
     return (0, _index.addNamespace)(SEARCH_EVENT, this.NAME + 'Search');
   },
-  _getCompositionStartEvent: function _getCompositionStartEvent() {
+  _getCompositionStartEvent: function () {
     return (0, _index.addNamespace)('compositionstart', this.NAME + 'CompositionStart');
   },
-  _getCompositionEndEvent: function _getCompositionEndEvent() {
+  _getCompositionEndEvent: function () {
     return (0, _index.addNamespace)('compositionend', this.NAME + 'CompositionEnd');
   },
-  _getSetFocusPolicyEvent: function _getSetFocusPolicyEvent() {
+  _getSetFocusPolicyEvent: function () {
     return (0, _index.addNamespace)('input', this.NAME + 'FocusPolicy');
   },
-  _renderEvents: function _renderEvents() {
-    var _this = this;
+  _renderEvents: function () {
     this.callBase();
-    _events_engine.default.on(this._input(), this._getSetFocusPolicyEvent(), function () {
-      _this._setFocusPolicy();
+    _events_engine.default.on(this._input(), this._getSetFocusPolicyEvent(), () => {
+      this._setFocusPolicy();
     });
     if (this._shouldRenderSearchEvent()) {
-      _events_engine.default.on(this._input(), this._getSearchEvent(), function (e) {
-        _this._searchHandler(e);
+      _events_engine.default.on(this._input(), this._getSearchEvent(), e => {
+        this._searchHandler(e);
       });
       if (useCompositionEvents) {
-        _events_engine.default.on(this._input(), this._getCompositionStartEvent(), function () {
-          _this._isTextCompositionInProgress(true);
+        _events_engine.default.on(this._input(), this._getCompositionStartEvent(), () => {
+          this._isTextCompositionInProgress(true);
         });
-        _events_engine.default.on(this._input(), this._getCompositionEndEvent(), function (e) {
-          _this._isTextCompositionInProgress(undefined);
-          _this._searchHandler(e, _this._searchValue());
+        _events_engine.default.on(this._input(), this._getCompositionEndEvent(), e => {
+          this._isTextCompositionInProgress(undefined);
+          this._searchHandler(e, this._searchValue());
         });
       }
     }
   },
-  _shouldRenderSearchEvent: function _shouldRenderSearchEvent() {
+  _shouldRenderSearchEvent: function () {
     return this.option('searchEnabled');
   },
-  _refreshEvents: function _refreshEvents() {
+  _refreshEvents: function () {
     _events_engine.default.off(this._input(), this._getSearchEvent());
     _events_engine.default.off(this._input(), this._getSetFocusPolicyEvent());
     if (useCompositionEvents) {
@@ -544,15 +539,14 @@ var DropDownList = _ui.default.inherit({
     }
     this.callBase();
   },
-  _isTextCompositionInProgress: function _isTextCompositionInProgress(value) {
+  _isTextCompositionInProgress: function (value) {
     if (arguments.length) {
       this._isTextComposition = value;
     } else {
       return this._isTextComposition;
     }
   },
-  _searchHandler: function _searchHandler(e, searchValue) {
-    var _this2 = this;
+  _searchHandler: function (e, searchValue) {
     if (this._isTextCompositionInProgress()) {
       return;
     }
@@ -560,52 +554,52 @@ var DropDownList = _ui.default.inherit({
       this._searchCanceled();
       return;
     }
-    var searchTimeout = this.option('searchTimeout');
+    const searchTimeout = this.option('searchTimeout');
     if (searchTimeout) {
       this._clearSearchTimer();
-      this._searchTimer = setTimeout(function () {
-        _this2._searchDataSource(searchValue);
+      this._searchTimer = setTimeout(() => {
+        this._searchDataSource(searchValue);
       }, searchTimeout);
     } else {
       this._searchDataSource(searchValue);
     }
   },
-  _searchCanceled: function _searchCanceled() {
+  _searchCanceled: function () {
     this._clearSearchTimer();
     if (this._needClearFilter()) {
       this._filterDataSource(null);
     }
     this._refreshList();
   },
-  _searchDataSource: function _searchDataSource() {
-    var searchValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._searchValue();
+  _searchDataSource: function () {
+    let searchValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._searchValue();
     this._filterDataSource(searchValue);
   },
-  _filterDataSource: function _filterDataSource(searchValue) {
+  _filterDataSource: function (searchValue) {
     this._clearSearchTimer();
-    var dataController = this._dataController;
+    const dataController = this._dataController;
     dataController.searchExpr(this.option('searchExpr') || this._displayGetterExpr());
     dataController.searchOperation(this.option('searchMode'));
     dataController.searchValue(searchValue);
     dataController.load().done(this._dataSourceFiltered.bind(this, searchValue));
   },
-  _clearFilter: function _clearFilter() {
-    var dataController = this._dataController;
+  _clearFilter: function () {
+    const dataController = this._dataController;
     dataController.searchValue() && dataController.searchValue(null);
   },
-  _dataSourceFiltered: function _dataSourceFiltered() {
+  _dataSourceFiltered: function () {
     this._isLastMinSearchLengthExceeded = this._isMinSearchLengthExceeded();
     this._refreshList();
     this._refreshPopupVisibility();
   },
-  _shouldOpenPopup: function _shouldOpenPopup() {
+  _shouldOpenPopup: function () {
     return this._hasItemsToShow();
   },
-  _refreshPopupVisibility: function _refreshPopupVisibility() {
+  _refreshPopupVisibility: function () {
     if (this.option('readOnly') || !this._searchValue()) {
       return;
     }
-    var shouldOpenPopup = this._shouldOpenPopup();
+    const shouldOpenPopup = this._shouldOpenPopup();
     if (shouldOpenPopup && !this._isFocused()) {
       return;
     }
@@ -615,40 +609,40 @@ var DropDownList = _ui.default.inherit({
       this._updateListDimensions();
     }
   },
-  _dataSourceChangedHandler: function _dataSourceChangedHandler(newItems) {
+  _dataSourceChangedHandler: function (newItems) {
     if (this._dataController.pageIndex() === 0) {
       this.option().items = newItems;
     } else {
       this.option().items = this.option().items.concat(newItems);
     }
   },
-  _hasItemsToShow: function _hasItemsToShow() {
-    var dataController = this._dataController;
-    var resultItems = dataController.items() || [];
-    var resultAmount = resultItems.length;
-    var isMinSearchLengthExceeded = this._needPassDataSourceToList();
+  _hasItemsToShow: function () {
+    const dataController = this._dataController;
+    const resultItems = dataController.items() || [];
+    const resultAmount = resultItems.length;
+    const isMinSearchLengthExceeded = this._needPassDataSourceToList();
     return !!(isMinSearchLengthExceeded && resultAmount);
   },
-  _clearSearchTimer: function _clearSearchTimer() {
+  _clearSearchTimer: function () {
     clearTimeout(this._searchTimer);
     delete this._searchTimer;
   },
-  _popupShowingHandler: function _popupShowingHandler() {
+  _popupShowingHandler: function () {
     this._updatePopupWidth();
     this._updateListDimensions();
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     this.callBase();
     this._updateListDimensions();
   },
-  _needPopupRepaint: function _needPopupRepaint() {
-    var dataController = this._dataController;
-    var currentPageIndex = dataController.pageIndex();
-    var needRepaint = (0, _type.isDefined)(this._pageIndex) && currentPageIndex <= this._pageIndex || dataController.isLastPage() && !this._list._scrollViewIsFull();
+  _needPopupRepaint: function () {
+    const dataController = this._dataController;
+    const currentPageIndex = dataController.pageIndex();
+    const needRepaint = (0, _type.isDefined)(this._pageIndex) && currentPageIndex <= this._pageIndex || dataController.isLastPage() && !this._list._scrollViewIsFull();
     this._pageIndex = currentPageIndex;
     return needRepaint;
   },
-  _updateListDimensions: function _updateListDimensions() {
+  _updateListDimensions: function () {
     if (!this._popup) {
       return;
     }
@@ -657,38 +651,38 @@ var DropDownList = _ui.default.inherit({
     }
     this._list && this._list.updateDimensions();
   },
-  _getMaxHeight: function _getMaxHeight() {
-    var $element = this.$element();
-    var $customBoundaryContainer = this._$customBoundaryContainer;
-    var offsetTop = $element.offset().top - ($customBoundaryContainer ? $customBoundaryContainer.offset().top : 0);
-    var windowHeight = (0, _size.getOuterHeight)(window);
-    var containerHeight = $customBoundaryContainer ? Math.min((0, _size.getOuterHeight)($customBoundaryContainer), windowHeight) : windowHeight;
-    var maxHeight = Math.max(offsetTop, containerHeight - offsetTop - (0, _size.getOuterHeight)($element));
+  _getMaxHeight: function () {
+    const $element = this.$element();
+    const $customBoundaryContainer = this._$customBoundaryContainer;
+    const offsetTop = $element.offset().top - ($customBoundaryContainer ? $customBoundaryContainer.offset().top : 0);
+    const windowHeight = (0, _size.getOuterHeight)(window);
+    const containerHeight = $customBoundaryContainer ? Math.min((0, _size.getOuterHeight)($customBoundaryContainer), windowHeight) : windowHeight;
+    const maxHeight = Math.max(offsetTop, containerHeight - offsetTop - (0, _size.getOuterHeight)($element));
     return Math.min(containerHeight * 0.5, maxHeight);
   },
-  _clean: function _clean() {
+  _clean: function () {
     if (this._list) {
       delete this._list;
     }
     delete this._isLastMinSearchLengthExceeded;
     this.callBase();
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._clearSearchTimer();
     this.callBase();
   },
-  _setCollectionWidgetOption: function _setCollectionWidgetOption() {
+  _setCollectionWidgetOption: function () {
     this._setListOption.apply(this, arguments);
   },
-  _setSubmitValue: function _setSubmitValue() {
-    var value = this.option('value');
-    var submitValue = this._shouldUseDisplayValue(value) ? this._displayGetter(value) : value;
+  _setSubmitValue: function () {
+    const value = this.option('value');
+    const submitValue = this._shouldUseDisplayValue(value) ? this._displayGetter(value) : value;
     this._getSubmitElement().val(submitValue);
   },
-  _shouldUseDisplayValue: function _shouldUseDisplayValue(value) {
+  _shouldUseDisplayValue: function (value) {
     return this.option('valueExpr') === 'this' && (0, _type.isObject)(value);
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     this._dataExpressionOptionChanged(args);
     switch (args.name) {
       case 'hoverStateEnabled':

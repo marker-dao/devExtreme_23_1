@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/utils/filtering/local.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,8 +10,8 @@
 
 exports.getFilterStrategy = void 0;
 var _m_appointment_filter = require("../../../../../__internal/scheduler/appointments/data_provider/m_appointment_filter");
-var getFilterStrategy = function getFilterStrategy(resources, startDayHour, endDayHour, cellDurationInMinutes, showAllDayPanel, supportAllDayRow, firstDayOfWeek, viewType, dateRange, groupCount, loadedResources, isVirtualScrolling, timeZoneCalculator, dataAccessors, viewDataProvider) {
-  var filterOptions = {
+const getFilterStrategy = (resources, startDayHour, endDayHour, cellDurationInMinutes, showAllDayPanel, supportAllDayRow, firstDayOfWeek, viewType, dateRange, groupCount, loadedResources, isVirtualScrolling, timeZoneCalculator, dataAccessors, viewDataProvider) => {
+  const filterOptions = {
     resources,
     startDayHour,
     endDayHour,

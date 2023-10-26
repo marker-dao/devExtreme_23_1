@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/chart_components/multi_axes_synchronizer.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,14 +14,14 @@ var _type = require("../../core/utils/type");
 var _iterator = require("../../core/utils/iterator");
 var _utils = require("../core/utils");
 var _math2 = require("../../core/utils/math");
-var _math = Math;
-var _floor = _math.floor;
-var _max = _math.max;
-var _abs = _math.abs;
+const _math = Math;
+const _floor = _math.floor;
+const _max = _math.max;
+const _abs = _math.abs;
 function getValueAxesPerPanes(valueAxes) {
-  var result = {};
-  valueAxes.forEach(function (axis) {
-    var pane = axis.pane;
+  const result = {};
+  valueAxes.forEach(axis => {
+    const pane = axis.pane;
     if (!result[pane]) {
       result[pane] = [];
     }
@@ -29,44 +29,40 @@ function getValueAxesPerPanes(valueAxes) {
   });
   return result;
 }
-var linearConverter = function linearConverter(br) {
-  return {
-    transform: function transform(v, b) {
-      return (0, _math2.adjust)((0, _utils.getLogExt)(v, b, br.allowNegatives, br.linearThreshold));
-    },
-    getTicks: function getTicks(interval, tickValues, base) {
-      var ticks = [];
-      var tick = this.transform(tickValues[0], base);
-      while (ticks.length < tickValues.length) {
-        ticks.push(tick);
-        tick = (0, _math2.adjust)(tick + interval);
-      }
-      return ticks;
+const linearConverter = br => ({
+  transform: function (v, b) {
+    return (0, _math2.adjust)((0, _utils.getLogExt)(v, b, br.allowNegatives, br.linearThreshold));
+  },
+  getTicks: function (interval, tickValues, base) {
+    const ticks = [];
+    let tick = this.transform(tickValues[0], base);
+    while (ticks.length < tickValues.length) {
+      ticks.push(tick);
+      tick = (0, _math2.adjust)(tick + interval);
     }
-  };
-};
-var logConverter = function logConverter(br) {
-  return {
-    transform: function transform(v, b) {
-      return (0, _math2.adjust)((0, _utils.raiseToExt)(v, b, br.allowNegatives, br.linearThreshold));
-    },
-    getTicks: function getTicks(interval, tickValues, base) {
-      var ticks = [];
-      var tick;
-      for (var i = 0; i < tickValues.length; i += 1) {
-        tick = this.transform(tickValues[i], base);
-        ticks.push(tick);
-      }
-      return ticks;
+    return ticks;
+  }
+});
+const logConverter = br => ({
+  transform: function (v, b) {
+    return (0, _math2.adjust)((0, _utils.raiseToExt)(v, b, br.allowNegatives, br.linearThreshold));
+  },
+  getTicks: function (interval, tickValues, base) {
+    const ticks = [];
+    let tick;
+    for (let i = 0; i < tickValues.length; i += 1) {
+      tick = this.transform(tickValues[i], base);
+      ticks.push(tick);
     }
-  };
-};
+    return ticks;
+  }
+});
 function convertAxisInfo(axisInfo, converter) {
   if (!axisInfo.isLogarithmic) {
     return;
   }
-  var base = axisInfo.logarithmicBase;
-  var tickValues = axisInfo.tickValues;
+  const base = axisInfo.logarithmicBase;
+  const tickValues = axisInfo.tickValues;
   axisInfo.minValue = converter.transform(axisInfo.minValue, base);
   axisInfo.oldMinValue = converter.transform(axisInfo.oldMinValue, base);
   axisInfo.maxValue = converter.transform(axisInfo.maxValue, base);
@@ -75,27 +71,27 @@ function convertAxisInfo(axisInfo, converter) {
   if (axisInfo.tickInterval < 1) {
     axisInfo.tickInterval = 1;
   }
-  var ticks = converter.getTicks(axisInfo.tickInterval, tickValues, base);
+  const ticks = converter.getTicks(axisInfo.tickInterval, tickValues, base);
   ticks.tickInterval = axisInfo.tickInterval;
   axisInfo.tickValues = ticks;
 }
 function populateAxesInfo(axes) {
   return axes.reduce(function (result, axis) {
-    var ticksValues = axis.getTicksValues();
-    var majorTicks = ticksValues.majorTicksValues;
-    var options = axis.getOptions();
-    var businessRange = axis.getTranslator().getBusinessRange();
-    var visibleArea = axis.getVisibleArea();
-    var axisInfo;
-    var tickInterval = axis._tickInterval;
-    var synchronizedValue = options.synchronizedValue;
-    var action = axis.getViewport().action;
+    const ticksValues = axis.getTicksValues();
+    const majorTicks = ticksValues.majorTicksValues;
+    const options = axis.getOptions();
+    const businessRange = axis.getTranslator().getBusinessRange();
+    const visibleArea = axis.getVisibleArea();
+    let axisInfo;
+    let tickInterval = axis._tickInterval;
+    const synchronizedValue = options.synchronizedValue;
+    const action = axis.getViewport().action;
     if (majorTicks && majorTicks.length > 0 && (0, _type.isNumeric)(majorTicks[0]) && options.type !== 'discrete' && !businessRange.isEmpty() && !(businessRange.breaks && businessRange.breaks.length) && action !== 'zoom' && action !== 'pan') {
       axis.applyMargins();
-      var startValue = axis.getTranslator().from(visibleArea[0]);
-      var endValue = axis.getTranslator().from(visibleArea[1]);
-      var minValue = startValue < endValue ? startValue : endValue;
-      var maxValue = startValue < endValue ? endValue : startValue;
+      const startValue = axis.getTranslator().from(visibleArea[0]);
+      const endValue = axis.getTranslator().from(visibleArea[1]);
+      let minValue = startValue < endValue ? startValue : endValue;
+      let maxValue = startValue < endValue ? endValue : startValue;
       if (minValue === maxValue && (0, _type.isDefined)(synchronizedValue)) {
         tickInterval = _abs(majorTicks[0] - synchronizedValue) || 1;
         minValue = majorTicks[0] - tickInterval;
@@ -123,16 +119,16 @@ function populateAxesInfo(axes) {
   }, []);
 }
 function updateTickValues(axesInfo) {
-  var maxTicksCount = axesInfo.reduce(function (max, axisInfo) {
+  const maxTicksCount = axesInfo.reduce((max, axisInfo) => {
     return _max(max, axisInfo.tickValues.length);
   }, 0);
-  axesInfo.forEach(function (axisInfo) {
-    var ticksMultiplier;
-    var ticksCount;
-    var additionalStartTicksCount = 0;
-    var synchronizedValue = axisInfo.synchronizedValue;
-    var tickValues = axisInfo.tickValues;
-    var tickInterval = axisInfo.tickInterval;
+  axesInfo.forEach(axisInfo => {
+    let ticksMultiplier;
+    let ticksCount;
+    let additionalStartTicksCount = 0;
+    const synchronizedValue = axisInfo.synchronizedValue;
+    const tickValues = axisInfo.tickValues;
+    const tickInterval = axisInfo.tickInterval;
     if ((0, _type.isDefined)(synchronizedValue)) {
       axisInfo.baseTickValue = axisInfo.invertedBaseTickValue = synchronizedValue;
       axisInfo.tickValues = [axisInfo.baseTickValue];
@@ -160,7 +156,7 @@ function getAxisRange(axisInfo) {
 }
 
 function getMainAxisInfo(axesInfo) {
-  for (var i = 0; i < axesInfo.length; i++) {
+  for (let i = 0; i < axesInfo.length; i++) {
     if (!axesInfo[i].stubData) {
       return axesInfo[i];
     }
@@ -168,13 +164,13 @@ function getMainAxisInfo(axesInfo) {
   return null;
 }
 function correctMinMaxValues(axesInfo) {
-  var mainAxisInfo = getMainAxisInfo(axesInfo);
-  var mainAxisInfoTickInterval = mainAxisInfo.tickInterval;
-  axesInfo.forEach(function (axisInfo) {
-    var scale;
-    var move;
-    var mainAxisBaseValueOffset;
-    var valueFromAxisInfo;
+  const mainAxisInfo = getMainAxisInfo(axesInfo);
+  const mainAxisInfoTickInterval = mainAxisInfo.tickInterval;
+  axesInfo.forEach(axisInfo => {
+    let scale;
+    let move;
+    let mainAxisBaseValueOffset;
+    let valueFromAxisInfo;
     if (axisInfo !== mainAxisInfo) {
       if (mainAxisInfoTickInterval && axisInfo.tickInterval) {
         if (axisInfo.stubData && (0, _type.isDefined)(axisInfo.synchronizedValue)) {
@@ -197,12 +193,12 @@ function correctMinMaxValues(axesInfo) {
   });
 }
 function calculatePaddings(axesInfo) {
-  var minPadding;
-  var maxPadding;
-  var startPadding = 0;
-  var endPadding = 0;
-  axesInfo.forEach(function (axisInfo) {
-    var inverted = axisInfo.inverted;
+  let minPadding;
+  let maxPadding;
+  let startPadding = 0;
+  let endPadding = 0;
+  axesInfo.forEach(axisInfo => {
+    const inverted = axisInfo.inverted;
     minPadding = axisInfo.minValue > axisInfo.oldMinValue ? (axisInfo.minValue - axisInfo.oldMinValue) / getAxisRange(axisInfo) : 0;
     maxPadding = axisInfo.maxValue < axisInfo.oldMaxValue ? (axisInfo.oldMaxValue - axisInfo.maxValue) / getAxisRange(axisInfo) : 0;
     startPadding = _max(startPadding, inverted ? maxPadding : minPadding);
@@ -214,24 +210,24 @@ function calculatePaddings(axesInfo) {
   };
 }
 function correctMinMaxValuesByPaddings(axesInfo, paddings) {
-  axesInfo.forEach(function (info) {
-    var range = getAxisRange(info);
-    var inverted = info.inverted;
+  axesInfo.forEach(info => {
+    const range = getAxisRange(info);
+    const inverted = info.inverted;
     info.minValue = (0, _math2.adjust)(info.minValue - paddings[inverted ? 'end' : 'start'] * range);
     info.maxValue = (0, _math2.adjust)(info.maxValue + paddings[inverted ? 'start' : 'end'] * range);
   });
 }
 function updateTickValuesIfSynchronizedValueUsed(axesInfo) {
-  var hasSynchronizedValue = false;
-  axesInfo.forEach(function (info) {
+  let hasSynchronizedValue = false;
+  axesInfo.forEach(info => {
     hasSynchronizedValue = hasSynchronizedValue || (0, _type.isDefined)(info.synchronizedValue);
   });
-  axesInfo.forEach(function (info) {
-    var tickInterval = info.tickInterval;
-    var tickValues = info.tickValues;
-    var maxValue = info.maxValue;
-    var minValue = info.minValue;
-    var tick;
+  axesInfo.forEach(info => {
+    const tickInterval = info.tickInterval;
+    const tickValues = info.tickValues;
+    const maxValue = info.maxValue;
+    const minValue = info.minValue;
+    let tick;
     if (hasSynchronizedValue && tickInterval) {
       while ((tick = (0, _math2.adjust)(tickValues[0] - tickInterval)) >= minValue) {
         tickValues.unshift(tick);
@@ -250,9 +246,9 @@ function updateTickValuesIfSynchronizedValueUsed(axesInfo) {
   });
 }
 function applyMinMaxValues(axesInfo) {
-  axesInfo.forEach(function (info) {
-    var axis = info.axis;
-    var range = axis.getTranslator().getBusinessRange();
+  axesInfo.forEach(info => {
+    const axis = info.axis;
+    const range = axis.getTranslator().getBusinessRange();
     if (range.min === range.minVisible) {
       range.min = info.minValue;
     }
@@ -275,9 +271,9 @@ function applyMinMaxValues(axesInfo) {
   });
 }
 function correctAfterSynchronize(axesInfo) {
-  var invalidAxisInfo = [];
-  var correctValue;
-  axesInfo.forEach(function (info) {
+  const invalidAxisInfo = [];
+  let correctValue;
+  axesInfo.forEach(info => {
     if (info.oldMaxValue - info.oldMinValue === 0) {
       invalidAxisInfo.push(info);
     } else {
@@ -289,9 +285,9 @@ function correctAfterSynchronize(axesInfo) {
   if (!(0, _type.isDefined)(correctValue)) {
     return;
   }
-  invalidAxisInfo.forEach(function (info) {
-    var firstTick = info.tickValues[0];
-    var correctedTick = firstTick * correctValue;
+  invalidAxisInfo.forEach(info => {
+    const firstTick = info.tickValues[0];
+    const correctedTick = firstTick * correctValue;
     if (firstTick > 0) {
       info.maxValue = correctedTick;
       info.minValue = 0;
@@ -306,12 +302,12 @@ function updateMinorTicks(axesInfo) {
     if (!axisInfo.minorTickInterval) {
       return;
     }
-    var ticks = [];
-    var interval = axisInfo.minorTickInterval;
-    var tickCount = axisInfo.tickInterval / interval - 1;
-    for (var i = 1; i < axisInfo.tickValues.length; i++) {
-      var tick = axisInfo.tickValues[i - 1];
-      for (var j = 0; j < tickCount; j++) {
+    const ticks = [];
+    const interval = axisInfo.minorTickInterval;
+    const tickCount = axisInfo.tickInterval / interval - 1;
+    for (let i = 1; i < axisInfo.tickValues.length; i++) {
+      let tick = axisInfo.tickValues[i - 1];
+      for (let j = 0; j < tickCount; j++) {
         tick += interval;
         ticks.push(tick);
       }
@@ -320,11 +316,12 @@ function updateMinorTicks(axesInfo) {
   });
 }
 function correctPaddings(axesInfo, paddings) {
-  return axesInfo.reduce(function (prev, info) {
-    var inverted = info.inverted;
-    var _info$axis$getCorrect = info.axis.getCorrectedValuesToZero(info.minValue, info.maxValue),
-      start = _info$axis$getCorrect.start,
-      end = _info$axis$getCorrect.end;
+  return axesInfo.reduce((prev, info) => {
+    const inverted = info.inverted;
+    const {
+      start,
+      end
+    } = info.axis.getCorrectedValuesToZero(info.minValue, info.maxValue);
     if ((0, _type.isDefined)(start) || (0, _type.isDefined)(end)) {
       return inverted ? {
         start: prev.start,
@@ -337,11 +334,11 @@ function correctPaddings(axesInfo, paddings) {
     return prev;
   }, paddings);
 }
-var multiAxesSynchronizer = {
-  synchronize: function synchronize(valueAxes) {
+const multiAxesSynchronizer = {
+  synchronize: function (valueAxes) {
     (0, _iterator.each)(getValueAxesPerPanes(valueAxes), function (_, axes) {
-      var axesInfo;
-      var paddings;
+      let axesInfo;
+      let paddings;
       if (axes.length > 1) {
         axesInfo = populateAxesInfo(axes);
         if (axesInfo.length < 2 || !getMainAxisInfo(axesInfo)) return;
@@ -353,7 +350,7 @@ var multiAxesSynchronizer = {
         correctAfterSynchronize(axesInfo);
         updateTickValuesIfSynchronizedValueUsed(axesInfo);
         updateMinorTicks(axesInfo);
-        axesInfo.forEach(function (info) {
+        axesInfo.forEach(info => {
           convertAxisInfo(info, logConverter(info.axis.getTranslator().getBusinessRange()));
         });
         applyMinMaxValues(axesInfo);

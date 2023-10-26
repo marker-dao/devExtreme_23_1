@@ -8,12 +8,12 @@ var _extend = require("../../core/utils/extend");
 var _ui = _interopRequireDefault(require("../popover/ui.popover"));
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TOOLTIP_CLASS = 'dx-tooltip';
-var TOOLTIP_WRAPPER_CLASS = 'dx-tooltip-wrapper';
+const TOOLTIP_CLASS = 'dx-tooltip';
+const TOOLTIP_WRAPPER_CLASS = 'dx-tooltip-wrapper';
 // STYLE tooltip
 
-var Tooltip = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const Tooltip = _ui.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       /**
       * @name dxTooltipOptions.toolbarItems
@@ -57,23 +57,23 @@ var Tooltip = _ui.default.inherit({
       propagateOutsideClick: true
     });
   },
-  _render: function _render() {
+  _render: function () {
     this.$element().addClass(TOOLTIP_CLASS);
     this.$wrapper().addClass(TOOLTIP_WRAPPER_CLASS);
     this.callBase();
   },
-  _renderContent: function _renderContent() {
+  _renderContent: function () {
     this.callBase();
     this._toggleAriaAttributes();
   },
-  _toggleAriaDescription: function _toggleAriaDescription(showing) {
-    var $target = (0, _renderer.default)(this.option('target'));
-    var label = showing ? this._contentId : undefined;
+  _toggleAriaDescription: function (showing) {
+    const $target = (0, _renderer.default)(this.option('target'));
+    const label = showing ? this._contentId : undefined;
     if (!(0, _type.isWindow)($target.get(0))) {
       this.setAria('describedby', label, $target);
     }
   },
-  _toggleAriaAttributes: function _toggleAriaAttributes() {
+  _toggleAriaAttributes: function () {
     this._contentId = "dx-".concat(new _guid.default());
     this.$overlayContent().attr({
       'id': this._contentId

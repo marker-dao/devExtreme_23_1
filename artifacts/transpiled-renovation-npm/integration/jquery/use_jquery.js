@@ -6,7 +6,7 @@ var _config = _interopRequireDefault(require("../../core/config"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line no-restricted-imports
 
-var useJQuery = (0, _config.default)().useJQuery;
+const useJQuery = (0, _config.default)().useJQuery;
 if (_jquery.default && useJQuery !== false) {
   (0, _config.default)({
     useJQuery: true

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/toast.d.ts)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -130,6 +130,7 @@ export interface dxToastOptions extends dxOverlayOptions<dxToast> {
      * @docid
      * @default 2000
      * @default 4000 &for(Material)
+     * @default 4000 &for(Fluent)
      * @public
      */
     displayTime?: number;
@@ -150,6 +151,7 @@ export interface dxToastOptions extends dxOverlayOptions<dxToast> {
     /**
      * @docid
      * @default 568 &for(Material)
+     * @default 568 &for(Fluent)
      * @public
      */
     maxWidth?: number | string | (() => number | string);
@@ -162,6 +164,7 @@ export interface dxToastOptions extends dxOverlayOptions<dxToast> {
     /**
      * @docid
      * @default 344 &for(Material)
+     * @default 344 &for(Fluent)
      * @public
      */
     minWidth?: number | string | (() => number | string);

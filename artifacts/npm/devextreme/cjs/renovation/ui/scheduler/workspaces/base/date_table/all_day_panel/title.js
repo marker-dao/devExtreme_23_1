@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/workspaces/base/date_table/all_day_panel/title.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,13 +21,11 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var viewFunction = function viewFunction(viewModel) {
-  return (0, _inferno.createVNode)(1, "div", "dx-scheduler-all-day-title", viewModel.text, 0);
-};
+const viewFunction = viewModel => (0, _inferno.createVNode)(1, "div", "dx-scheduler-all-day-title", viewModel.text, 0);
 exports.viewFunction = viewFunction;
-var AllDayPanelTitleProps = {};
+const AllDayPanelTitleProps = {};
 exports.AllDayPanelTitleProps = AllDayPanelTitleProps;
-var AllDayPanelTitle = /*#__PURE__*/function (_InfernoWrapperCompon) {
+let AllDayPanelTitle = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(AllDayPanelTitle, _InfernoWrapperCompon);
   function AllDayPanelTitle(props) {
     var _this;
@@ -40,7 +38,7 @@ var AllDayPanelTitle = /*#__PURE__*/function (_InfernoWrapperCompon) {
     return [(0, _inferno2.createReRenderEffect)()];
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       text: this.text,
@@ -49,13 +47,14 @@ var AllDayPanelTitle = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(AllDayPanelTitle, [{
     key: "text",
-    get: function get() {
+    get: function () {
       return _message.default.format('dxScheduler-allDay');
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var restProps = _extends({}, (_objectDestructuringEmpty(this.props), this.props));
+    get: function () {
+      const _this$props = this.props,
+        restProps = _extends({}, (_objectDestructuringEmpty(_this$props), _this$props));
       return restProps;
     }
   }]);

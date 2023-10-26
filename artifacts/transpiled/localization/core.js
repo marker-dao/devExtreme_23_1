@@ -5,21 +5,21 @@ var _dependency_injector = _interopRequireDefault(require("../core/utils/depende
 var _parent_locales = _interopRequireDefault(require("./cldr-data/parent_locales"));
 var _parentLocale = _interopRequireDefault(require("./parentLocale"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DEFAULT_LOCALE = 'en';
+const DEFAULT_LOCALE = 'en';
 var _default = (0, _dependency_injector.default)({
-  locale: function () {
-    var currentLocale = DEFAULT_LOCALE;
-    return function (locale) {
+  locale: (() => {
+    let currentLocale = DEFAULT_LOCALE;
+    return locale => {
       if (!locale) {
         return currentLocale;
       }
       currentLocale = locale;
     };
-  }(),
-  getValueByClosestLocale: function getValueByClosestLocale(getter) {
-    var locale = this.locale();
-    var value = getter(locale);
-    var isRootLocale;
+  })(),
+  getValueByClosestLocale: function (getter) {
+    let locale = this.locale();
+    let value = getter(locale);
+    let isRootLocale;
     while (!value && !isRootLocale) {
       locale = (0, _parentLocale.default)(_parent_locales.default, locale);
       if (locale) {

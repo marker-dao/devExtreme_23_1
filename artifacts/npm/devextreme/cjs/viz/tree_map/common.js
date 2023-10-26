@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/common.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ exports.buildRectAppearance = buildRectAppearance;
 exports.buildTextAppearance = buildTextAppearance;
 var _utils = require("../core/utils");
 function buildRectAppearance(option) {
-  var border = option.border || {};
+  const border = option.border || {};
   return {
     fill: option.color,
     opacity: option.opacity,

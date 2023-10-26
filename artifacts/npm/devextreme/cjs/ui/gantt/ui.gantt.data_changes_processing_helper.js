@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.data_changes_processing_helper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 "use strict";
 
 exports.GanttDataChangesProcessingHelper = void 0;
-var GanttDataChangesProcessingHelper = /*#__PURE__*/function () {
+let GanttDataChangesProcessingHelper = /*#__PURE__*/function () {
   function GanttDataChangesProcessingHelper() {
     this._waitingForGanttViewReady = false;
     this._waitingForTreeListReady = false;
@@ -37,9 +37,7 @@ var GanttDataChangesProcessingHelper = /*#__PURE__*/function () {
   };
   _proto.executeActionsIfPossible = function executeActionsIfPossible() {
     if (this._canExecuteActions()) {
-      this._completionActions.forEach(function (act) {
-        return act();
-      });
+      this._completionActions.forEach(act => act());
       this._completionActions = [];
     }
   };

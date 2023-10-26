@@ -16,26 +16,26 @@ require("../../popup");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DROP_DOWN_MENU_CLASS = 'dx-dropdownmenu';
-var DROP_DOWN_MENU_POPUP_CLASS = 'dx-dropdownmenu-popup';
-var DROP_DOWN_MENU_POPUP_WRAPPER_CLASS = 'dx-dropdownmenu-popup-wrapper';
-var DROP_DOWN_MENU_LIST_CLASS = 'dx-dropdownmenu-list';
-var DROP_DOWN_MENU_BUTTON_CLASS = 'dx-dropdownmenu-button';
-var POPUP_BOUNDARY_VERTICAL_OFFSET = 10;
-var POPUP_VERTICAL_OFFSET = 3;
-var DropDownMenu = /*#__PURE__*/function (_Widget) {
+const DROP_DOWN_MENU_CLASS = 'dx-dropdownmenu';
+const DROP_DOWN_MENU_POPUP_CLASS = 'dx-dropdownmenu-popup';
+const DROP_DOWN_MENU_POPUP_WRAPPER_CLASS = 'dx-dropdownmenu-popup-wrapper';
+const DROP_DOWN_MENU_LIST_CLASS = 'dx-dropdownmenu-list';
+const DROP_DOWN_MENU_BUTTON_CLASS = 'dx-dropdownmenu-button';
+const POPUP_BOUNDARY_VERTICAL_OFFSET = 10;
+const POPUP_VERTICAL_OFFSET = 3;
+let DropDownMenu = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(DropDownMenu, _Widget);
   function DropDownMenu() {
     return _Widget.apply(this, arguments) || this;
   }
   var _proto = DropDownMenu.prototype;
   _proto._supportedKeys = function _supportedKeys() {
-    var extension = {};
+    let extension = {};
     if (!this.option('opened') || !this._list.option('focusedElement')) {
       extension = this._button._supportedKeys();
     }
     return (0, _extend.extend)(_Widget.prototype._supportedKeys.call(this), extension, {
-      tab: function tab() {
+      tab: function () {
         this._popup && this._popup.hide();
       }
     });
@@ -69,14 +69,14 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _Widget.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterialBased)();
       },
       options: {
@@ -148,8 +148,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     delete this._popup;
   };
   _proto._renderButton = function _renderButton() {
-    var _this = this;
-    var $button = this.$element().addClass(DROP_DOWN_MENU_BUTTON_CLASS);
+    const $button = this.$element().addClass(DROP_DOWN_MENU_BUTTON_CLASS);
     this._button = this._createComponent($button, _button.default, {
       icon: 'overflow',
       template: 'content',
@@ -157,9 +156,9 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
       useInkRipple: this.option('useInkRipple'),
       hoverStateEnabled: false,
       focusStateEnabled: false,
-      onClick: function onClick(e) {
-        _this.option('opened', !_this.option('opened'));
-        _this._buttonClickAction(e);
+      onClick: e => {
+        this.option('opened', !this.option('opened'));
+        this._buttonClickAction(e);
       }
     });
   };
@@ -167,7 +166,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     this._button._toggleActiveState($element, value, e);
   };
   _proto._toggleMenuVisibility = function _toggleMenuVisibility(opened) {
-    var state = opened !== null && opened !== void 0 ? opened : !this._popup.option('visible');
+    const state = opened !== null && opened !== void 0 ? opened : !this._popup.option('visible');
     if (opened) {
       this._renderPopup();
     }
@@ -175,28 +174,26 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     this.setAria('expanded', state);
   };
   _proto._renderPopup = function _renderPopup() {
-    var _this2 = this;
     if (this._$popup) {
       return;
     }
     this._$popup = (0, _renderer.default)('<div>').appendTo(this.$element());
-    var _this$option = this.option(),
-      rtlEnabled = _this$option.rtlEnabled,
-      container = _this$option.container,
-      animation = _this$option.animation;
+    const {
+      rtlEnabled,
+      container,
+      animation
+    } = this.option();
     this._popup = this._createComponent(this._$popup, 'dxPopup', {
       onInitialized(_ref) {
-        var component = _ref.component;
+        let {
+          component
+        } = _ref;
         component.$wrapper().addClass(DROP_DOWN_MENU_POPUP_WRAPPER_CLASS).addClass(DROP_DOWN_MENU_POPUP_CLASS);
       },
       deferRendering: false,
-      contentTemplate: function contentTemplate(contentElement) {
-        return _this2._renderList(contentElement);
-      },
+      contentTemplate: contentElement => this._renderList(contentElement),
       _ignoreFunctionValueDeprecation: true,
-      maxHeight: function maxHeight() {
-        return _this2._getMaxHeight();
-      },
+      maxHeight: () => this._getMaxHeight(),
       position: {
         my: "top ".concat(rtlEnabled ? 'left' : 'right'),
         at: "bottom ".concat(rtlEnabled ? 'left' : 'right'),
@@ -207,20 +204,20 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
         of: this.$element()
       },
       animation,
-      onOptionChanged: function onOptionChanged(_ref2) {
-        var name = _ref2.name,
-          value = _ref2.value;
+      onOptionChanged: _ref2 => {
+        let {
+          name,
+          value
+        } = _ref2;
         if (name === 'visible') {
-          _this2.option('opened', value);
+          this.option('opened', value);
         }
       },
       container,
       autoResizeEnabled: false,
       height: 'auto',
       width: 'auto',
-      hideOnOutsideClick: function hideOnOutsideClick(e) {
-        return _this2._closeOutsideDropDownHandler(e);
-      },
+      hideOnOutsideClick: e => this._closeOutsideDropDownHandler(e),
       hideOnParentScroll: true,
       shading: false,
       dragEnabled: false,
@@ -230,19 +227,18 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._getMaxHeight = function _getMaxHeight() {
-    var $element = this.$element();
-    var offsetTop = $element.offset().top;
-    var windowHeight = (0, _size.getOuterHeight)((0, _window.getWindow)());
-    var maxHeight = Math.max(offsetTop, windowHeight - offsetTop - (0, _size.getOuterHeight)($element));
+    const $element = this.$element();
+    const offsetTop = $element.offset().top;
+    const windowHeight = (0, _size.getOuterHeight)((0, _window.getWindow)());
+    const maxHeight = Math.max(offsetTop, windowHeight - offsetTop - (0, _size.getOuterHeight)($element));
     return Math.min(windowHeight, maxHeight - POPUP_VERTICAL_OFFSET - POPUP_BOUNDARY_VERTICAL_OFFSET);
   };
   _proto._closeOutsideDropDownHandler = function _closeOutsideDropDownHandler(e) {
-    var isOutsideClick = !(0, _renderer.default)(e.target).closest(this.$element()).length;
+    const isOutsideClick = !(0, _renderer.default)(e.target).closest(this.$element()).length;
     return isOutsideClick;
   };
   _proto._renderList = function _renderList(contentElement) {
-    var _this3 = this;
-    var $content = (0, _renderer.default)(contentElement);
+    const $content = (0, _renderer.default)(contentElement);
     $content.addClass(DROP_DOWN_MENU_LIST_CLASS);
     this._list = this._createComponent($content, _uiToolbarMenu.default, {
       dataSource: this._getListDataSource(),
@@ -250,11 +246,11 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
       indicateLoading: false,
       noDataText: '',
       itemTemplate: this.option('itemTemplate'),
-      onItemClick: function onItemClick(e) {
-        if (_this3.option('closeOnClick')) {
-          _this3.option('opened', false);
+      onItemClick: e => {
+        if (this.option('closeOnClick')) {
+          this.option('opened', false);
         }
-        _this3._itemClickAction(e);
+        this._itemClickAction(e);
       },
       tabIndex: -1,
       focusStateEnabled: false,
@@ -271,8 +267,8 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     (0, _uiToolbar.toggleItemFocusableElementTabIndex)(this._list, item);
   };
   _proto._getListDataSource = function _getListDataSource() {
-    var _this$option2;
-    return (_this$option2 = this.option('dataSource')) !== null && _this$option2 !== void 0 ? _this$option2 : this.option('items');
+    var _this$option;
+    return (_this$option = this.option('dataSource')) !== null && _this$option !== void 0 ? _this$option : this.option('items');
   };
   _proto._setListDataSource = function _setListDataSource() {
     var _this$_list2;
@@ -288,8 +284,10 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
   };
   _proto._optionChanged = function _optionChanged(args) {
     var _this$_list3, _this$_list4, _this$_list5;
-    var name = args.name,
-      value = args.value;
+    const {
+      name,
+      value
+    } = args;
     switch (name) {
       case 'items':
       case 'dataSource':
@@ -340,10 +338,7 @@ var DropDownMenu = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._updateFocusableItemsTabIndex = function _updateFocusableItemsTabIndex() {
-    var _this4 = this;
-    this.option('items').forEach(function (item) {
-      return (0, _uiToolbar.toggleItemFocusableElementTabIndex)(_this4._list, item);
-    });
+    this.option('items').forEach(item => (0, _uiToolbar.toggleItemFocusableElementTabIndex)(this._list, item));
   };
   return DropDownMenu;
 }(_ui.default);

@@ -8,29 +8,29 @@ var _store_helper = _interopRequireDefault(require("../../data/store_helper"));
 var _query = _interopRequireDefault(require("../../data/query"));
 var _uiCollection_widgetEditStrategy = _interopRequireDefault(require("../collection/ui.collection_widget.edit.strategy.plain"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var LIST_ITEM_CLASS = 'dx-list-item';
-var LIST_GROUP_CLASS = 'dx-list-group';
-var SELECTION_SHIFT = 20;
-var SELECTION_MASK = (1 << SELECTION_SHIFT) - 1;
-var combineIndex = function combineIndex(indices) {
+const LIST_ITEM_CLASS = 'dx-list-item';
+const LIST_GROUP_CLASS = 'dx-list-group';
+const SELECTION_SHIFT = 20;
+const SELECTION_MASK = (1 << SELECTION_SHIFT) - 1;
+const combineIndex = function (indices) {
   return (indices.group << SELECTION_SHIFT) + indices.item;
 };
-var splitIndex = function splitIndex(combinedIndex) {
+const splitIndex = function (combinedIndex) {
   return {
     group: combinedIndex >> SELECTION_SHIFT,
     item: combinedIndex & SELECTION_MASK
   };
 };
-var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
-  _groupElements: function _groupElements() {
+const GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
+  _groupElements: function () {
     return this._collectionWidget._itemContainer().find('.' + LIST_GROUP_CLASS);
   },
-  _groupItemElements: function _groupItemElements($group) {
+  _groupItemElements: function ($group) {
     return $group.find('.' + LIST_ITEM_CLASS);
   },
-  getIndexByItemData: function getIndexByItemData(itemData) {
-    var groups = this._collectionWidget.option('items');
-    var index = false;
+  getIndexByItemData: function (itemData) {
+    const groups = this._collectionWidget.option('items');
+    let index = false;
     if (!itemData) return false;
     if (itemData.items && itemData.items.length) {
       itemData = itemData.items[0];
@@ -53,17 +53,17 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
     });
     return index;
   },
-  getItemDataByIndex: function getItemDataByIndex(index) {
-    var items = this._collectionWidget.option('items');
+  getItemDataByIndex: function (index) {
+    const items = this._collectionWidget.option('items');
     if ((0, _type.isNumeric)(index)) {
       return this.itemsGetter()[index];
     }
     return index && items[index.group] && items[index.group].items[index.item] || null;
   },
-  itemsGetter: function itemsGetter() {
-    var resultItems = [];
-    var items = this._collectionWidget.option('items');
-    for (var i = 0; i < items.length; i++) {
+  itemsGetter: function () {
+    let resultItems = [];
+    const items = this._collectionWidget.option('items');
+    for (let i = 0; i < items.length; i++) {
       if (items[i] && items[i].items) {
         resultItems = resultItems.concat(items[i].items);
       } else {
@@ -72,14 +72,14 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
     }
     return resultItems;
   },
-  deleteItemAtIndex: function deleteItemAtIndex(index) {
-    var indices = splitIndex(index);
-    var itemGroup = this._collectionWidget.option('items')[indices.group].items;
+  deleteItemAtIndex: function (index) {
+    const indices = splitIndex(index);
+    const itemGroup = this._collectionWidget.option('items')[indices.group].items;
     itemGroup.splice(indices.item, 1);
   },
-  getKeysByItems: function getKeysByItems(items) {
-    var plainItems = [];
-    var i;
+  getKeysByItems: function (items) {
+    let plainItems = [];
+    let i;
     for (i = 0; i < items.length; i++) {
       if (items[i] && items[i].items) {
         plainItems = plainItems.concat(items[i].items);
@@ -87,20 +87,20 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
         plainItems.push(items[i]);
       }
     }
-    var result = [];
+    const result = [];
     for (i = 0; i < plainItems.length; i++) {
       result.push(this._collectionWidget.keyOf(plainItems[i]));
     }
     return result;
   },
-  getIndexByKey: function getIndexByKey(key, items) {
-    var groups = items || this._collectionWidget.option('items');
-    var index = -1;
-    var that = this;
+  getIndexByKey: function (key, items) {
+    const groups = items || this._collectionWidget.option('items');
+    let index = -1;
+    const that = this;
     (0, _iterator.each)(groups, function (groupIndex, group) {
       if (!group.items) return;
       (0, _iterator.each)(group.items, function (itemIndex, item) {
-        var itemKey = that._collectionWidget.keyOf(item);
+        const itemKey = that._collectionWidget.keyOf(item);
         if (that._equalKeys(itemKey, key)) {
           index = {
             group: groupIndex,
@@ -115,9 +115,9 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
     });
     return index;
   },
-  _getGroups: function _getGroups(items) {
-    var dataController = this._collectionWidget._dataController;
-    var group = dataController.group();
+  _getGroups: function (items) {
+    const dataController = this._collectionWidget._dataController;
+    const group = dataController.group();
     if (group) {
       return _store_helper.default.queryByOptions((0, _query.default)(items), {
         group: group
@@ -125,14 +125,13 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
     }
     return this._collectionWidget.option('items');
   },
-  getItemsByKeys: function getItemsByKeys(keys, items) {
-    var _this = this;
-    var result = [];
-    var groups = this._getGroups(items);
-    var groupItemByKeyMap = {};
-    var getItemMeta = function getItemMeta(key) {
-      var index = _this.getIndexByKey(key, groups);
-      var group = index && groups[index.group];
+  getItemsByKeys: function (keys, items) {
+    const result = [];
+    const groups = this._getGroups(items);
+    const groupItemByKeyMap = {};
+    const getItemMeta = key => {
+      const index = this.getIndexByKey(key, groups);
+      const group = index && groups[index.group];
       if (!group) return;
       return {
         groupKey: group.key,
@@ -140,11 +139,11 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
       };
     };
     (0, _iterator.each)(keys, function (_, key) {
-      var itemMeta = getItemMeta(key);
+      const itemMeta = getItemMeta(key);
       if (!itemMeta) return;
-      var groupKey = itemMeta.groupKey;
-      var item = itemMeta.item;
-      var selectedGroup = groupItemByKeyMap[groupKey];
+      const groupKey = itemMeta.groupKey;
+      const item = itemMeta.item;
+      let selectedGroup = groupItemByKeyMap[groupKey];
       if (!selectedGroup) {
         selectedGroup = {
           key: groupKey,
@@ -157,22 +156,22 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
     });
     return result;
   },
-  moveItemAtIndexToIndex: function moveItemAtIndexToIndex(movingIndex, destinationIndex) {
-    var items = this._collectionWidget.option('items');
-    var movingIndices = splitIndex(movingIndex);
-    var destinationIndices = splitIndex(destinationIndex);
-    var movingItemGroup = items[movingIndices.group].items;
-    var destinationItemGroup = items[destinationIndices.group].items;
-    var movedItemData = movingItemGroup[movingIndices.item];
+  moveItemAtIndexToIndex: function (movingIndex, destinationIndex) {
+    const items = this._collectionWidget.option('items');
+    const movingIndices = splitIndex(movingIndex);
+    const destinationIndices = splitIndex(destinationIndex);
+    const movingItemGroup = items[movingIndices.group].items;
+    const destinationItemGroup = items[destinationIndices.group].items;
+    const movedItemData = movingItemGroup[movingIndices.item];
     movingItemGroup.splice(movingIndices.item, 1);
     destinationItemGroup.splice(destinationIndices.item, 0, movedItemData);
   },
-  _isItemIndex: function _isItemIndex(index) {
+  _isItemIndex: function (index) {
     return index && (0, _type.isNumeric)(index.group) && (0, _type.isNumeric)(index.item);
   },
-  _getNormalizedItemIndex: function _getNormalizedItemIndex(itemElement) {
-    var $item = (0, _renderer.default)(itemElement);
-    var $group = $item.closest('.' + LIST_GROUP_CLASS);
+  _getNormalizedItemIndex: function (itemElement) {
+    const $item = (0, _renderer.default)(itemElement);
+    const $group = $item.closest('.' + LIST_GROUP_CLASS);
     if (!$group.length) {
       return -1;
     }
@@ -181,18 +180,18 @@ var GroupedEditStrategy = _uiCollection_widgetEditStrategy.default.inherit({
       item: this._groupItemElements($group).index($item)
     });
   },
-  _normalizeItemIndex: function _normalizeItemIndex(index) {
+  _normalizeItemIndex: function (index) {
     return combineIndex(index);
   },
-  _denormalizeItemIndex: function _denormalizeItemIndex(index) {
+  _denormalizeItemIndex: function (index) {
     return splitIndex(index);
   },
-  _getItemByNormalizedIndex: function _getItemByNormalizedIndex(index) {
-    var indices = splitIndex(index);
-    var $group = this._groupElements().eq(indices.group);
+  _getItemByNormalizedIndex: function (index) {
+    const indices = splitIndex(index);
+    const $group = this._groupElements().eq(indices.group);
     return this._groupItemElements($group).eq(indices.item);
   },
-  _itemsFromSameParent: function _itemsFromSameParent(firstIndex, secondIndex) {
+  _itemsFromSameParent: function (firstIndex, secondIndex) {
     return splitIndex(firstIndex).group === splitIndex(secondIndex).group;
   }
 });

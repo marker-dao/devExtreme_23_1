@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/viz/common/tooltip.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,9 +22,8 @@ var _tooltip_utils = require("./tooltip_utils");
 var _utils2 = require("../../../viz/core/utils");
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _utils3 = require("./utils");
-var _excluded = ["argumentFormat", "arrowLength", "arrowWidth", "border", "className", "color", "container", "contentTemplate", "cornerRadius", "customizeTooltip", "data", "enabled", "eventData", "font", "format", "interactive", "location", "offset", "onTooltipHidden", "onTooltipShown", "opacity", "paddingLeftRight", "paddingTopBottom", "rootWidget", "rtl", "shadow", "shared", "visible", "x", "y", "zIndex"];
+const _excluded = ["argumentFormat", "arrowLength", "arrowWidth", "border", "className", "color", "container", "contentTemplate", "cornerRadius", "customizeTooltip", "data", "enabled", "eventData", "font", "format", "interactive", "location", "offset", "onTooltipHidden", "onTooltipShown", "opacity", "paddingLeftRight", "paddingTopBottom", "rootWidget", "rtl", "shadow", "shared", "visible", "x", "y", "zIndex"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -34,7 +33,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var DEFAULT_CANVAS = {
+const DEFAULT_CANVAS = {
   left: 0,
   top: 0,
   right: 0,
@@ -42,69 +41,72 @@ var DEFAULT_CANVAS = {
   width: 0,
   height: 0
 };
-var DEFAULT_FONT = {
+const DEFAULT_FONT = {
   color: '#232323',
   family: 'Segoe UI',
   opacity: 1,
   size: 12,
   weight: 400
 };
-var DEFAULT_SHADOW = {
+const DEFAULT_SHADOW = {
   blur: 2,
   color: '#000',
   offsetX: 0,
   offsetY: 4,
   opacity: 0.4
 };
-var DEFAULT_BORDER = {
+const DEFAULT_BORDER = {
   color: '#d3d3d3',
   width: 1,
   dashStyle: 'solid',
   visible: true
 };
-var DEFAULT_SIZE = {
+const DEFAULT_SIZE = {
   x: 0,
   y: 0,
   width: 0,
   height: 0
 };
-var viewFunction = function viewFunction(_ref) {
-  var border = _ref.border,
-    cloudRef = _ref.cloudRef,
-    cloudSize = _ref.cloudSize,
-    container = _ref.container,
-    correctedCoordinates = _ref.correctedCoordinates,
-    cssClassName = _ref.cssClassName,
-    customizedOptions = _ref.customizedOptions,
-    filterId = _ref.filterId,
-    htmlRef = _ref.htmlRef,
-    isEmptyContainer = _ref.isEmptyContainer,
-    pointerEvents = _ref.pointerEvents,
-    _ref$props = _ref.props,
-    arrowWidth = _ref$props.arrowWidth,
-    TooltipTemplate = _ref$props.contentTemplate,
-    cornerRadius = _ref$props.cornerRadius,
-    data = _ref$props.data,
-    font = _ref$props.font,
-    interactive = _ref$props.interactive,
-    opacity = _ref$props.opacity,
-    rtl = _ref$props.rtl,
-    shadow = _ref$props.shadow,
-    visible = _ref$props.visible,
-    zIndex = _ref$props.zIndex,
-    textRef = _ref.textRef,
-    textSize = _ref.textSize,
-    textSizeWithPaddings = _ref.textSizeWithPaddings,
-    textSvgElementStyles = _ref.textSvgElementStyles;
+const viewFunction = _ref => {
+  let {
+    border,
+    cloudRef,
+    cloudSize,
+    container,
+    correctedCoordinates,
+    cssClassName,
+    customizedOptions,
+    filterId,
+    htmlRef,
+    isEmptyContainer,
+    pointerEvents,
+    props: {
+      arrowWidth,
+      contentTemplate: TooltipTemplate,
+      cornerRadius,
+      data,
+      font,
+      interactive,
+      opacity,
+      rtl,
+      shadow,
+      visible,
+      zIndex
+    },
+    textRef,
+    textSize,
+    textSizeWithPaddings,
+    textSvgElementStyles
+  } = _ref;
   if (!visible || !correctedCoordinates || (0, _tooltip_utils.isTextEmpty)(customizedOptions) || isEmptyContainer) {
     return (0, _inferno.createVNode)(1, "div");
   }
-  var angle = (0, _tooltip_utils.getCloudAngle)(textSizeWithPaddings, correctedCoordinates);
-  var d = (0, _tooltip_utils.getCloudPoints)(textSizeWithPaddings, correctedCoordinates, angle, {
+  const angle = (0, _tooltip_utils.getCloudAngle)(textSizeWithPaddings, correctedCoordinates);
+  const d = (0, _tooltip_utils.getCloudPoints)(textSizeWithPaddings, correctedCoordinates, angle, {
     cornerRadius,
     arrowWidth
   }, true);
-  var styles = interactive ? {
+  let styles = interactive ? {
     msUserSelect: 'text',
     MozUserSelect: 'auto',
     WebkitUserSelect: 'auto'
@@ -177,7 +179,7 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var TooltipProps = {
+const TooltipProps = {
   color: '#fff',
   border: DEFAULT_BORDER,
   data: Object.freeze({}),
@@ -199,12 +201,8 @@ var TooltipProps = {
   rtl: false
 };
 exports.TooltipProps = TooltipProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let Tooltip = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(Tooltip, _InfernoComponent);
   function Tooltip(props) {
     var _this;
@@ -245,36 +243,33 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$5 = this._effects[4]) === null || _this$_effects$5 === void 0 ? void 0 : _this$_effects$5.update([this.props.container, (_this$props$rootWidge2 = this.props.rootWidget) === null || _this$props$rootWidge2 === void 0 ? void 0 : _this$props$rootWidge2.current]);
   };
   _proto.setHtmlText = function setHtmlText() {
-    var htmlText = this.customizedOptions.html;
+    const htmlText = this.customizedOptions.html;
     if (htmlText && this.htmlRef.current && this.props.visible) {
       this.htmlRef.current.innerHTML = htmlText;
     }
   };
   _proto.calculateSize = function calculateSize() {
-    var contentSize = this.calculateContentSize();
-    var cloudSize = this.calculateCloudSize();
+    const contentSize = this.calculateContentSize();
+    const cloudSize = this.calculateCloudSize();
     if ((0, _utils3.isUpdatedFlatObject)(this.state.textSize, contentSize)) {
-      this.setState(function (__state_argument) {
-        return {
-          textSize: contentSize
-        };
-      });
+      this.setState(__state_argument => ({
+        textSize: contentSize
+      }));
     }
     if ((0, _utils3.isUpdatedFlatObject)(this.state.cloudSize, cloudSize)) {
-      this.setState(function (__state_argument) {
-        return {
-          cloudSize: cloudSize
-        };
-      });
+      this.setState(__state_argument => ({
+        cloudSize: cloudSize
+      }));
     }
   };
   _proto.eventsEffect = function eventsEffect() {
-    var _this$props = this.props,
-      eventData = _this$props.eventData,
-      onTooltipHidden = _this$props.onTooltipHidden,
-      onTooltipShown = _this$props.onTooltipShown,
-      visible = _this$props.visible;
-    var isEqual = function isEqual(object1, object2) {
+    const {
+      eventData,
+      onTooltipHidden,
+      onTooltipShown,
+      visible
+    } = this.props;
+    const isEqual = (object1, object2) => {
       if (!object1) {
         return false;
       }
@@ -283,43 +278,34 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
     if (visible && this.correctedCoordinates && !isEqual(this.state.currentEventData, eventData)) {
       this.state.currentEventData && (onTooltipHidden === null || onTooltipHidden === void 0 ? void 0 : onTooltipHidden(this.state.currentEventData));
       onTooltipShown === null || onTooltipShown === void 0 ? void 0 : onTooltipShown(eventData);
-      this.setState(function (__state_argument) {
-        return {
-          currentEventData: eventData
-        };
-      });
+      this.setState(__state_argument => ({
+        currentEventData: eventData
+      }));
     }
     if (!visible && this.state.currentEventData) {
       onTooltipHidden === null || onTooltipHidden === void 0 ? void 0 : onTooltipHidden(this.state.currentEventData);
-      this.setState(function (__state_argument) {
-        return {
-          currentEventData: undefined
-        };
-      });
+      this.setState(__state_argument => ({
+        currentEventData: undefined
+      }));
     }
   };
   _proto.checkContainer = function checkContainer() {
     if (this.htmlRef.current && this.props.visible) {
-      var htmlTextSize = this.htmlRef.current.getBoundingClientRect();
+      const htmlTextSize = this.htmlRef.current.getBoundingClientRect();
       if (!htmlTextSize.width && !htmlTextSize.height) {
-        this.setState(function (__state_argument) {
-          return {
-            isEmptyContainer: true
-          };
-        });
+        this.setState(__state_argument => ({
+          isEmptyContainer: true
+        }));
       }
     }
   };
   _proto.setCanvas = function setCanvas() {
-    var _this2 = this;
-    this.setState(function (__state_argument) {
-      return {
-        canvas: (0, _tooltip_utils.getCanvas)(_this2.container)
-      };
-    });
+    this.setState(__state_argument => ({
+      canvas: (0, _tooltip_utils.getCanvas)(this.container)
+    }));
   };
   _proto.calculateContentSize = function calculateContentSize() {
-    var size = DEFAULT_SIZE;
+    let size = DEFAULT_SIZE;
     if (this.props.visible) {
       if (this.textRef.current) {
         size = this.textRef.current.getBBox();
@@ -330,14 +316,15 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
     return size;
   };
   _proto.calculateCloudSize = function calculateCloudSize() {
-    var cloudSize = DEFAULT_SIZE;
+    let cloudSize = DEFAULT_SIZE;
     if ((0, _type.isDefined)(this.props.x) && (0, _type.isDefined)(this.props.y) && this.props.visible && this.cloudRef.current) {
-      var size = this.cloudRef.current.getBBox();
-      var _this$margins = this.margins,
-        bm = _this$margins.bm,
-        lm = _this$margins.lm,
-        rm = _this$margins.rm,
-        tm = _this$margins.tm;
+      const size = this.cloudRef.current.getBBox();
+      const {
+        bm,
+        lm,
+        rm,
+        tm
+      } = this.margins;
       cloudSize = {
         x: Math.floor(size.x - lm),
         y: Math.floor(size.y - tm),
@@ -366,7 +353,7 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         contentTemplate: getTemplate(props.contentTemplate)
@@ -397,17 +384,18 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(Tooltip, [{
     key: "textSvgElementStyles",
-    get: function get() {
+    get: function () {
       return _extends({}, this.fontStyles, {
         pointerEvents: this.pointerEvents
       });
     }
   }, {
     key: "textSizeWithPaddings",
-    get: function get() {
-      var _this$props2 = this.props,
-        paddingLeftRight = _this$props2.paddingLeftRight,
-        paddingTopBottom = _this$props2.paddingTopBottom;
+    get: function () {
+      const {
+        paddingLeftRight,
+        paddingTopBottom
+      } = this.props;
       return {
         width: this.state.textSize.width + paddingLeftRight * 2,
         height: this.state.textSize.height + paddingTopBottom * 2
@@ -415,13 +403,14 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "border",
-    get: function get() {
-      var _this3 = this;
+    get: function () {
       if (this.__getterCache['border'] !== undefined) {
         return this.__getterCache['border'];
       }
-      return this.__getterCache['border'] = function () {
-        var border = _this3.props.border;
+      return this.__getterCache['border'] = (() => {
+        const {
+          border
+        } = this.props;
         if (border.visible) {
           return {
             stroke: border.color,
@@ -431,17 +420,17 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
           };
         }
         return {};
-      }();
+      })();
     }
   }, {
     key: "container",
-    get: function get() {
-      var propsContainer = this.props.container;
+    get: function () {
+      const propsContainer = this.props.container;
       if (propsContainer) {
         if (typeof propsContainer === 'string') {
           var _this$props$rootWidge3;
-          var tmp = (_this$props$rootWidge3 = this.props.rootWidget) === null || _this$props$rootWidge3 === void 0 ? void 0 : _this$props$rootWidge3.current;
-          var node = tmp === null || tmp === void 0 ? void 0 : tmp.closest(propsContainer);
+          const tmp = (_this$props$rootWidge3 = this.props.rootWidget) === null || _this$props$rootWidge3 === void 0 ? void 0 : _this$props$rootWidge3.current;
+          let node = tmp === null || tmp === void 0 ? void 0 : tmp.closest(propsContainer);
           if (!node) {
             node = _dom_adapter.default.getDocument().querySelector(propsContainer);
           }
@@ -456,62 +445,71 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "customizedOptions",
-    get: function get() {
-      var _this4 = this;
+    get: function () {
       if (this.__getterCache['customizedOptions'] !== undefined) {
         return this.__getterCache['customizedOptions'];
       }
-      return this.__getterCache['customizedOptions'] = function () {
-        var _this4$props = _this4.props,
-          border = _this4$props.border,
-          color = _this4$props.color,
-          customizeTooltip = _this4$props.customizeTooltip,
-          data = _this4$props.data,
-          font = _this4$props.font;
+      return this.__getterCache['customizedOptions'] = (() => {
+        const {
+          border,
+          color,
+          customizeTooltip,
+          data,
+          font
+        } = this.props;
         return (0, _tooltip_utils.prepareData)(data, color, border, font, customizeTooltip);
-      }();
+      })();
     }
   }, {
     key: "margins",
-    get: function get() {
-      var _this5 = this;
+    get: function () {
       if (this.__getterCache['margins'] !== undefined) {
         return this.__getterCache['margins'];
       }
-      return this.__getterCache['margins'] = function () {
-        var max = Math.max;
-        var shadow = _this5.props.shadow;
-        var xOff = shadow.offsetX;
-        var yOff = shadow.offsetY;
-        var blur = shadow.blur * 2 + 1;
+      return this.__getterCache['margins'] = (() => {
+        const {
+          max
+        } = Math;
+        const {
+          shadow
+        } = this.props;
+        const xOff = shadow.offsetX;
+        const yOff = shadow.offsetY;
+        const blur = shadow.blur * 2 + 1;
         return {
           lm: max(blur - xOff, 0),
           rm: max(blur + xOff, 0),
           tm: max(blur - yOff, 0),
           bm: max(blur + yOff, 0)
         };
-      }();
+      })();
     }
   }, {
     key: "pointerEvents",
-    get: function get() {
-      var interactive = this.props.interactive;
+    get: function () {
+      const {
+        interactive
+      } = this.props;
       return interactive ? 'auto' : 'none';
     }
   }, {
     key: "cssClassName",
-    get: function get() {
-      var className = this.props.className;
-      var classesMap = {
+    get: function () {
+      const {
+        className
+      } = this.props;
+      const classesMap = {
         [String(className)]: !!className
       };
       return (0, _combine_classes.combineClasses)(classesMap);
     }
   }, {
     key: "fontStyles",
-    get: function get() {
-      var font = this.props.font;
-      var result = {};
+    get: function () {
+      const {
+        font
+      } = this.props;
+      const result = {};
       font.family !== undefined && (result.fontFamily = font.family);
       font.size !== undefined && (result.fontSize = String(font.size));
       font.weight !== undefined && (result.fontWeight = String(font.weight));
@@ -521,63 +519,32 @@ var Tooltip = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "correctedCoordinates",
-    get: function get() {
-      var _this6 = this;
+    get: function () {
       if (this.__getterCache['correctedCoordinates'] !== undefined) {
         return this.__getterCache['correctedCoordinates'];
       }
-      return this.__getterCache['correctedCoordinates'] = function () {
-        var _this6$props = _this6.props,
-          arrowLength = _this6$props.arrowLength,
-          offset = _this6$props.offset,
-          x = _this6$props.x,
-          y = _this6$props.y;
+      return this.__getterCache['correctedCoordinates'] = (() => {
+        const {
+          arrowLength,
+          offset,
+          x,
+          y
+        } = this.props;
         return (0, _tooltip_utils.recalculateCoordinates)({
-          canvas: _this6.state.canvas,
+          canvas: this.state.canvas,
           anchorX: x,
           anchorY: y,
-          size: _this6.textSizeWithPaddings,
+          size: this.textSizeWithPaddings,
           offset,
           arrowLength
         });
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props3 = this.props,
-        argumentFormat = _this$props3.argumentFormat,
-        arrowLength = _this$props3.arrowLength,
-        arrowWidth = _this$props3.arrowWidth,
-        border = _this$props3.border,
-        className = _this$props3.className,
-        color = _this$props3.color,
-        container = _this$props3.container,
-        contentTemplate = _this$props3.contentTemplate,
-        cornerRadius = _this$props3.cornerRadius,
-        customizeTooltip = _this$props3.customizeTooltip,
-        data = _this$props3.data,
-        enabled = _this$props3.enabled,
-        eventData = _this$props3.eventData,
-        font = _this$props3.font,
-        format = _this$props3.format,
-        interactive = _this$props3.interactive,
-        location = _this$props3.location,
-        offset = _this$props3.offset,
-        onTooltipHidden = _this$props3.onTooltipHidden,
-        onTooltipShown = _this$props3.onTooltipShown,
-        opacity = _this$props3.opacity,
-        paddingLeftRight = _this$props3.paddingLeftRight,
-        paddingTopBottom = _this$props3.paddingTopBottom,
-        rootWidget = _this$props3.rootWidget,
-        rtl = _this$props3.rtl,
-        shadow = _this$props3.shadow,
-        shared = _this$props3.shared,
-        visible = _this$props3.visible,
-        x = _this$props3.x,
-        y = _this$props3.y,
-        zIndex = _this$props3.zIndex,
-        restProps = _objectWithoutProperties(_this$props3, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

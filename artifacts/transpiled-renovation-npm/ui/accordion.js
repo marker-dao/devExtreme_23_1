@@ -20,23 +20,23 @@ var _deferred = require("../core/utils/deferred");
 var _bindable_template = require("../core/templates/bindable_template");
 var _icon = require("../core/utils/icon");
 var _themes = require("./themes");
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE accordion
 
-var ACCORDION_CLASS = 'dx-accordion';
-var ACCORDION_WRAPPER_CLASS = 'dx-accordion-wrapper';
-var ACCORDION_ITEM_CLASS = 'dx-accordion-item';
-var ACCORDION_ITEM_OPENED_CLASS = 'dx-accordion-item-opened';
-var ACCORDION_ITEM_CLOSED_CLASS = 'dx-accordion-item-closed';
-var ACCORDION_ITEM_TITLE_CLASS = 'dx-accordion-item-title';
-var ACCORDION_ITEM_BODY_CLASS = 'dx-accordion-item-body';
-var ACCORDION_ITEM_TITLE_CAPTION_CLASS = 'dx-accordion-item-title-caption';
-var ACCORDION_ITEM_DATA_KEY = 'dxAccordionItemData';
-var Accordion = _uiCollection_widget.default.inherit({
+const ACCORDION_CLASS = 'dx-accordion';
+const ACCORDION_WRAPPER_CLASS = 'dx-accordion-wrapper';
+const ACCORDION_ITEM_CLASS = 'dx-accordion-item';
+const ACCORDION_ITEM_OPENED_CLASS = 'dx-accordion-item-opened';
+const ACCORDION_ITEM_CLOSED_CLASS = 'dx-accordion-item-closed';
+const ACCORDION_ITEM_TITLE_CLASS = 'dx-accordion-item-title';
+const ACCORDION_ITEM_BODY_CLASS = 'dx-accordion-item-body';
+const ACCORDION_ITEM_TITLE_CAPTION_CLASS = 'dx-accordion-item-title-caption';
+const ACCORDION_ITEM_DATA_KEY = 'dxAccordionItemData';
+const Accordion = _uiCollection_widget.default.inherit({
   _activeStateUnit: '.' + ACCORDION_ITEM_CLASS,
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       hoverStateEnabled: true,
       height: undefined,
@@ -55,16 +55,16 @@ var Accordion = _uiCollection_widget.default.inherit({
       _animationEasing: 'ease'
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterialBased)();
       },
       options: {
@@ -73,24 +73,24 @@ var Accordion = _uiCollection_widget.default.inherit({
       }
     }]);
   },
-  _itemElements: function _itemElements() {
+  _itemElements: function () {
     return this._itemContainer().children(this._itemSelector());
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this.option('selectionRequired', !this.option('collapsible'));
     this.option('selectionMode', this.option('multiple') ? 'multiple' : 'single');
-    var $element = this.$element();
+    const $element = this.$element();
     $element.addClass(ACCORDION_CLASS);
     this._$container = (0, _renderer.default)('<div>').addClass(ACCORDION_WRAPPER_CLASS);
     $element.append(this._$container);
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this.callBase();
     this._templateManager.addDefaultTemplates({
       title: new _bindable_template.BindableTemplate(function ($container, data) {
         if ((0, _type.isPlainObject)(data)) {
-          var $iconElement = (0, _icon.getImageContainer)(data.icon);
+          const $iconElement = (0, _icon.getImageContainer)(data.icon);
           if ($iconElement) {
             $container.append($iconElement);
           }
@@ -106,8 +106,7 @@ var Accordion = _uiCollection_widget.default.inherit({
       }, ['title', 'icon'], this.option('integrationOptions.watchMethod'))
     });
   },
-  _initMarkup: function _initMarkup() {
-    var _this = this;
+  _initMarkup: function () {
     this._deferredItems = [];
     this._deferredTemplateItems = [];
     this.callBase();
@@ -115,61 +114,60 @@ var Accordion = _uiCollection_widget.default.inherit({
       'role': 'tablist',
       'multiselectable': this.option('multiple')
     });
-    (0, _common.deferRender)(function () {
-      var selectedItemIndices = _this._getSelectedItemIndices();
-      _this._renderSelection(selectedItemIndices, []);
+    (0, _common.deferRender)(() => {
+      const selectedItemIndices = this._getSelectedItemIndices();
+      this._renderSelection(selectedItemIndices, []);
     });
   },
-  _render: function _render() {
-    var _this2 = this;
+  _render: function () {
     this.callBase();
-    _deferred.when.apply(this, this._deferredTemplateItems).done(function () {
-      _this2._updateItemHeights(true);
+    _deferred.when.apply(this, this._deferredTemplateItems).done(() => {
+      this._updateItemHeights(true);
     });
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return ACCORDION_ITEM_DATA_KEY;
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return ACCORDION_ITEM_CLASS;
   },
-  _itemContainer: function _itemContainer() {
+  _itemContainer: function () {
     return this._$container;
   },
-  _itemTitles: function _itemTitles() {
+  _itemTitles: function () {
     return this._itemElements().find('.' + ACCORDION_ITEM_TITLE_CLASS);
   },
-  _itemContents: function _itemContents() {
+  _itemContents: function () {
     return this._itemElements().find('.' + ACCORDION_ITEM_BODY_CLASS);
   },
-  _getItemData: function _getItemData(target) {
+  _getItemData: function (target) {
     return (0, _renderer.default)(target).parent().data(this._itemDataKey()) || this.callBase.apply(this, arguments);
   },
-  _executeItemRenderAction: function _executeItemRenderAction(itemData) {
+  _executeItemRenderAction: function (itemData) {
     if (itemData.type) {
       return;
     }
     this.callBase.apply(this, arguments);
   },
-  _itemSelectHandler: function _itemSelectHandler(e) {
+  _itemSelectHandler: function (e) {
     if ((0, _renderer.default)(e.target).closest(this._itemContents()).length) {
       return;
     }
     this.callBase.apply(this, arguments);
   },
-  _afterItemElementDeleted: function _afterItemElementDeleted($item, deletedActionArgs) {
+  _afterItemElementDeleted: function ($item, deletedActionArgs) {
     this._deferredItems.splice(deletedActionArgs.itemIndex, 1);
     this.callBase.apply(this, arguments);
   },
-  _renderItemContent: function _renderItemContent(args) {
+  _renderItemContent: function (args) {
     this._deferredTemplateItems[args.index] = new _deferred.Deferred();
-    var itemTitle = this.callBase((0, _extend.extend)({}, args, {
+    const itemTitle = this.callBase((0, _extend.extend)({}, args, {
       contentClass: ACCORDION_ITEM_TITLE_CLASS,
       templateProperty: 'titleTemplate',
       defaultTemplateName: this.option('itemTitleTemplate')
     }));
     this._attachItemTitleClickAction(itemTitle);
-    var deferred = new _deferred.Deferred();
+    const deferred = new _deferred.Deferred();
     if ((0, _type.isDefined)(this._deferredItems[args.index])) {
       this._deferredItems[args.index] = deferred;
     } else {
@@ -183,44 +181,42 @@ var Accordion = _uiCollection_widget.default.inherit({
       container: (0, _element.getPublicElement)((0, _renderer.default)('<div>').appendTo((0, _renderer.default)(itemTitle).parent()))
     })));
   },
-  _onItemTemplateRendered: function _onItemTemplateRendered(_, renderArgs) {
-    var _this3 = this;
-    return function () {
-      var item = _this3._deferredTemplateItems[renderArgs.index];
+  _onItemTemplateRendered: function (_, renderArgs) {
+    return () => {
+      const item = this._deferredTemplateItems[renderArgs.index];
       item && item.resolve();
     };
   },
-  _attachItemTitleClickAction: function _attachItemTitleClickAction(itemTitle) {
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+  _attachItemTitleClickAction: function (itemTitle) {
+    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
     _events_engine.default.off(itemTitle, eventName);
     _events_engine.default.on(itemTitle, eventName, this._itemTitleClickHandler.bind(this));
   },
-  _itemTitleClickHandler: function _itemTitleClickHandler(e) {
+  _itemTitleClickHandler: function (e) {
     this._itemDXEventHandler(e, 'onItemTitleClick');
   },
-  _renderSelection: function _renderSelection(addedSelection, removedSelection) {
+  _renderSelection: function (addedSelection, removedSelection) {
     this._itemElements().addClass(ACCORDION_ITEM_CLOSED_CLASS);
     this.setAria('hidden', true, this._itemContents());
     this._updateItems(addedSelection, removedSelection);
   },
-  _updateSelection: function _updateSelection(addedSelection, removedSelection) {
+  _updateSelection: function (addedSelection, removedSelection) {
     this._updateItems(addedSelection, removedSelection);
     this._updateItemHeightsWrapper(false);
   },
-  _updateItems: function _updateItems(addedSelection, removedSelection) {
-    var _this4 = this;
-    var $items = this._itemElements();
-    iteratorUtils.each(addedSelection, function (_, index) {
-      _this4._deferredItems[index].resolve();
-      var $item = $items.eq(index).addClass(ACCORDION_ITEM_OPENED_CLASS).removeClass(ACCORDION_ITEM_CLOSED_CLASS);
-      _this4.setAria('hidden', false, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
+  _updateItems: function (addedSelection, removedSelection) {
+    const $items = this._itemElements();
+    iteratorUtils.each(addedSelection, (_, index) => {
+      this._deferredItems[index].resolve();
+      const $item = $items.eq(index).addClass(ACCORDION_ITEM_OPENED_CLASS).removeClass(ACCORDION_ITEM_CLOSED_CLASS);
+      this.setAria('hidden', false, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
     });
-    iteratorUtils.each(removedSelection, function (_, index) {
-      var $item = $items.eq(index).removeClass(ACCORDION_ITEM_OPENED_CLASS);
-      _this4.setAria('hidden', true, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
+    iteratorUtils.each(removedSelection, (_, index) => {
+      const $item = $items.eq(index).removeClass(ACCORDION_ITEM_OPENED_CLASS);
+      this.setAria('hidden', true, $item.find('.' + ACCORDION_ITEM_BODY_CLASS));
     });
   },
-  _updateItemHeightsWrapper: function _updateItemHeightsWrapper(skipAnimation) {
+  _updateItemHeightsWrapper: function (skipAnimation) {
     // Note: require for proper animation in angularjs (T520346)
     if (this.option('templatesRenderAsynchronously')) {
       this._animationTimer = setTimeout(function () {
@@ -230,10 +226,10 @@ var Accordion = _uiCollection_widget.default.inherit({
       this._updateItemHeights(skipAnimation);
     }
   },
-  _updateItemHeights: function _updateItemHeights(skipAnimation) {
-    var that = this;
-    var deferredAnimate = that._deferredAnimate;
-    var itemHeight = this._splitFreeSpace(this._calculateFreeSpace());
+  _updateItemHeights: function (skipAnimation) {
+    const that = this;
+    const deferredAnimate = that._deferredAnimate;
+    const itemHeight = this._splitFreeSpace(this._calculateFreeSpace());
     clearTimeout(this._animationTimer);
     return _deferred.when.apply(_renderer.default, [].slice.call(this._itemElements()).map(function (item) {
       return that._updateItemHeight((0, _renderer.default)(item), itemHeight, skipAnimation);
@@ -243,13 +239,13 @@ var Accordion = _uiCollection_widget.default.inherit({
       }
     });
   },
-  _updateItemHeight: function _updateItemHeight($item, itemHeight, skipAnimation) {
-    var $title = $item.children('.' + ACCORDION_ITEM_TITLE_CLASS);
+  _updateItemHeight: function ($item, itemHeight, skipAnimation) {
+    const $title = $item.children('.' + ACCORDION_ITEM_TITLE_CLASS);
     if (_fx.default.isAnimating($item)) {
       _fx.default.stop($item);
     }
-    var startItemHeight = (0, _size.getOuterHeight)($item);
-    var finalItemHeight;
+    const startItemHeight = (0, _size.getOuterHeight)($item);
+    let finalItemHeight;
     if ($item.hasClass(ACCORDION_ITEM_OPENED_CLASS)) {
       finalItemHeight = itemHeight + (0, _size.getOuterHeight)($title);
       if (!finalItemHeight) {
@@ -261,8 +257,8 @@ var Accordion = _uiCollection_widget.default.inherit({
     }
     return this._animateItem($item, startItemHeight, finalItemHeight, skipAnimation, !!itemHeight);
   },
-  _animateItem: function _animateItem($element, startHeight, endHeight, skipAnimation, fixedHeight) {
-    var d;
+  _animateItem: function ($element, startHeight, endHeight, skipAnimation, fixedHeight) {
+    let d;
     if (skipAnimation || startHeight === endHeight) {
       $element.css('height', endHeight);
       d = new _deferred.Deferred().resolve();
@@ -286,47 +282,47 @@ var Accordion = _uiCollection_widget.default.inherit({
       $element.not('.' + ACCORDION_ITEM_OPENED_CLASS).addClass(ACCORDION_ITEM_CLOSED_CLASS);
     });
   },
-  _splitFreeSpace: function _splitFreeSpace(freeSpace) {
+  _splitFreeSpace: function (freeSpace) {
     if (!freeSpace) {
       return freeSpace;
     }
     return freeSpace / this.option('selectedItems').length;
   },
-  _calculateFreeSpace: function _calculateFreeSpace() {
-    var height = this.option('height');
+  _calculateFreeSpace: function () {
+    const height = this.option('height');
     if (height === undefined || height === 'auto') {
       return;
     }
-    var $titles = this._itemTitles();
-    var itemsHeight = 0;
+    const $titles = this._itemTitles();
+    let itemsHeight = 0;
     iteratorUtils.each($titles, function (_, title) {
       itemsHeight += (0, _size.getOuterHeight)(title);
     });
     return (0, _size.getHeight)(this.$element()) - itemsHeight;
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this._dimensionChanged();
     }
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     this._updateItemHeights(true);
   },
-  _clean: function _clean() {
-    this._deferredTemplateItems.forEach(function (item) {
+  _clean: function () {
+    this._deferredTemplateItems.forEach(item => {
       item.reject();
     });
     this._deferredTemplateItems = [];
     clearTimeout(this._animationTimer);
     this.callBase();
   },
-  _tryParseItemPropertyName: function _tryParseItemPropertyName(fullName) {
-    var matches = fullName.match(/.*\.(.*)/);
+  _tryParseItemPropertyName: function (fullName) {
+    const matches = fullName.match(/.*\.(.*)/);
     if ((0, _type.isDefined)(matches) && matches.length >= 1) {
       return matches[1];
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'items':
         this.callBase(args);
@@ -360,17 +356,17 @@ var Accordion = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  expandItem: function expandItem(index) {
+  expandItem: function (index) {
     this._deferredAnimate = new _deferred.Deferred();
     this.selectItem(index);
     return this._deferredAnimate.promise();
   },
-  collapseItem: function collapseItem(index) {
+  collapseItem: function (index) {
     this._deferredAnimate = new _deferred.Deferred();
     this.unselectItem(index);
     return this._deferredAnimate.promise();
   },
-  updateDimensions: function updateDimensions() {
+  updateDimensions: function () {
     return this._updateItemHeights(false);
   }
 });

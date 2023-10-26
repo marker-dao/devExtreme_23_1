@@ -1,5 +1,5 @@
 "use strict";
 
 exports.LabelProps = void 0;
-var LabelProps = {};
+const LabelProps = {};
 exports.LabelProps = LabelProps;

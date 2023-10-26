@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scroll_view/strategy/native.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,9 +32,8 @@ var _native_strategy_props = require("../common/native_strategy_props");
 var _get_allowed_direction = require("../utils/get_allowed_direction");
 var _get_scroll_top_max = require("../utils/get_scroll_top_max");
 var _subscribe_to_resize = require("../utils/subscribe_to_resize");
-var _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onPullDown", "onReachBottom", "onScroll", "onUpdated", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "showScrollbar", "useSimulatedScrollbar", "visible", "width"];
+const _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onPullDown", "onReachBottom", "onScroll", "onUpdated", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "showScrollbar", "useSimulatedScrollbar", "visible", "width"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -44,57 +43,60 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(viewModel) {
-  var bottomPocketRef = viewModel.bottomPocketRef,
-    containerClientHeight = viewModel.containerClientHeight,
-    containerClientWidth = viewModel.containerClientWidth,
-    containerRef = viewModel.containerRef,
-    contentHeight = viewModel.contentHeight,
-    contentRef = viewModel.contentRef,
-    contentStyles = viewModel.contentStyles,
-    contentTranslateTop = viewModel.contentTranslateTop,
-    contentWidth = viewModel.contentWidth,
-    cssClasses = viewModel.cssClasses,
-    direction = viewModel.direction,
-    hScrollLocation = viewModel.hScrollLocation,
-    hScrollOffsetMax = viewModel.hScrollOffsetMax,
-    hScrollbarRef = viewModel.hScrollbarRef,
-    isLoadPanelVisible = viewModel.isLoadPanelVisible,
-    _viewModel$props = viewModel.props,
-    aria = _viewModel$props.aria,
-    children = _viewModel$props.children,
-    disabled = _viewModel$props.disabled,
-    forceGeneratePockets = _viewModel$props.forceGeneratePockets,
-    height = _viewModel$props.height,
-    LoadPanelTemplate = _viewModel$props.loadPanelTemplate,
-    needRenderScrollbars = _viewModel$props.needRenderScrollbars,
-    needScrollViewContentWrapper = _viewModel$props.needScrollViewContentWrapper,
-    pullDownEnabled = _viewModel$props.pullDownEnabled,
-    pulledDownText = _viewModel$props.pulledDownText,
-    pullingDownText = _viewModel$props.pullingDownText,
-    reachBottomEnabled = _viewModel$props.reachBottomEnabled,
-    reachBottomText = _viewModel$props.reachBottomText,
-    refreshStrategy = _viewModel$props.refreshStrategy,
-    refreshingText = _viewModel$props.refreshingText,
-    rtlEnabled = _viewModel$props.rtlEnabled,
-    showScrollbar = _viewModel$props.showScrollbar,
-    useSimulatedScrollbar = _viewModel$props.useSimulatedScrollbar,
-    visible = _viewModel$props.visible,
-    width = _viewModel$props.width,
-    pullDownIconAngle = viewModel.pullDownIconAngle,
-    pullDownOpacity = viewModel.pullDownOpacity,
-    pullDownTranslateTop = viewModel.pullDownTranslateTop,
-    restAttributes = viewModel.restAttributes,
-    scrollViewContentRef = viewModel.scrollViewContentRef,
-    scrollableRef = viewModel.scrollableRef,
-    scrolling = viewModel.scrolling,
-    topPocketHeight = viewModel.topPocketHeight,
-    topPocketRef = viewModel.topPocketRef,
-    topPocketState = viewModel.topPocketState,
-    vScrollLocation = viewModel.vScrollLocation,
-    vScrollOffsetMax = viewModel.vScrollOffsetMax,
-    vScrollbarRef = viewModel.vScrollbarRef,
-    wrapperRef = viewModel.wrapperRef;
+const viewFunction = viewModel => {
+  const {
+    bottomPocketRef,
+    containerClientHeight,
+    containerClientWidth,
+    containerRef,
+    contentHeight,
+    contentRef,
+    contentStyles,
+    contentTranslateTop,
+    contentWidth,
+    cssClasses,
+    direction,
+    hScrollLocation,
+    hScrollOffsetMax,
+    hScrollbarRef,
+    isLoadPanelVisible,
+    props: {
+      aria,
+      children,
+      disabled,
+      forceGeneratePockets,
+      height,
+      loadPanelTemplate: LoadPanelTemplate,
+      needRenderScrollbars,
+      needScrollViewContentWrapper,
+      pullDownEnabled,
+      pulledDownText,
+      pullingDownText,
+      reachBottomEnabled,
+      reachBottomText,
+      refreshStrategy,
+      refreshingText,
+      rtlEnabled,
+      showScrollbar,
+      useSimulatedScrollbar,
+      visible,
+      width
+    },
+    pullDownIconAngle,
+    pullDownOpacity,
+    pullDownTranslateTop,
+    restAttributes,
+    scrollViewContentRef,
+    scrollableRef,
+    scrolling,
+    topPocketHeight,
+    topPocketRef,
+    topPocketState,
+    vScrollLocation,
+    vScrollOffsetMax,
+    vScrollbarRef,
+    wrapperRef
+  } = viewModel;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, _extends({
     "rootElementRef": scrollableRef,
     "aria": aria,
@@ -149,12 +151,8 @@ var viewFunction = function viewFunction(viewModel) {
   })));
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(ScrollableNative, _InfernoComponent);
   function ScrollableNative(props) {
     var _this;
@@ -276,15 +274,11 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$7 = this._effects[7]) === null || _this$_effects$7 === void 0 ? void 0 : _this$_effects$7.update([this.props.forceGeneratePockets, this.props.refreshStrategy, this.state.topPocketState, this.state.topPocketHeight, this.props.onPullDown]);
   };
   _proto.disposeReleaseTimer = function disposeReleaseTimer() {
-    var _this2 = this;
-    return function () {
-      return _this2.clearReleaseTimer();
-    };
+    return () => this.clearReleaseTimer();
   };
   _proto.scrollEffect = function scrollEffect() {
-    var _this3 = this;
-    return (0, _subscribe_to_event.subscribeToScrollEvent)(this.containerRef.current, function (event) {
-      _this3.handleScroll(event);
+    return (0, _subscribe_to_event.subscribeToScrollEvent)(this.containerRef.current, event => {
+      this.handleScroll(event);
     });
   };
   _proto.effectDisabledState = function effectDisabledState() {
@@ -301,49 +295,40 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     this.containerRef.current[this.fullScrollInactiveProp] = 0;
   };
   _proto.initEffect = function initEffect() {
-    var _this4 = this;
-    return (0, _subscribe_to_event.subscribeToScrollInitEvent)(this.wrapperRef.current, function (event) {
-      _this4.handleInit(event);
+    return (0, _subscribe_to_event.subscribeToScrollInitEvent)(this.wrapperRef.current, event => {
+      this.handleInit(event);
     }, this.getInitEventData());
   };
   _proto.moveEffect = function moveEffect() {
-    var _this5 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollMoveEvent)(this.wrapperRef.current, function (event) {
-      _this5.handleMove(event);
+    return (0, _subscribe_to_event.subscribeToDXScrollMoveEvent)(this.wrapperRef.current, event => {
+      this.handleMove(event);
     });
   };
   _proto.endEffect = function endEffect() {
-    var _this6 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollEndEvent)(this.wrapperRef.current, function () {
-      _this6.handleEnd();
+    return (0, _subscribe_to_event.subscribeToDXScrollEndEvent)(this.wrapperRef.current, () => {
+      this.handleEnd();
     });
   };
   _proto.stopEffect = function stopEffect() {
-    var _this7 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollStopEvent)(this.wrapperRef.current, function () {
-      _this7.handleStop();
+    return (0, _subscribe_to_event.subscribeToDXScrollStopEvent)(this.wrapperRef.current, () => {
+      this.handleStop();
     });
   };
   _proto.disposeRefreshTimer = function disposeRefreshTimer() {
-    var _this8 = this;
-    return function () {
-      return _this8.clearRefreshTimer();
-    };
+    return () => this.clearRefreshTimer();
   };
   _proto.updateDimensions = function updateDimensions() {
     this.updateElementDimensions();
   };
   _proto.subscribeContainerToResize = function subscribeContainerToResize() {
-    var _this9 = this;
-    return (0, _subscribe_to_resize.subscribeToResize)(this.containerRef.current, function (element) {
-      _this9.setContainerDimensions(element);
+    return (0, _subscribe_to_resize.subscribeToResize)(this.containerRef.current, element => {
+      this.setContainerDimensions(element);
     });
   };
   _proto.subscribeContentToResize = function subscribeContentToResize() {
-    var _this10 = this;
-    return (0, _subscribe_to_resize.subscribeToResize)(this.content(), function (element) {
-      _this10.setContentHeight(element);
-      _this10.setContentWidth(element);
+    return (0, _subscribe_to_resize.subscribeToResize)(this.content(), element => {
+      this.setContentHeight(element);
+      this.setContentWidth(element);
     });
   };
   _proto.clearReleaseTimer = function clearReleaseTimer() {
@@ -360,44 +345,34 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
   };
   _proto.startLoading = function startLoading() {
     if (this.loadingIndicatorEnabled && (0, _is_element_visible.isElementVisible)(this.scrollableRef.current)) {
-      this.setState(function (__state_argument) {
-        return {
-          isLoadPanelVisible: true
-        };
-      });
+      this.setState(__state_argument => ({
+        isLoadPanelVisible: true
+      }));
     }
     this.lock();
   };
   _proto.finishLoading = function finishLoading() {
-    this.setState(function (__state_argument) {
-      return {
-        isLoadPanelVisible: false
-      };
-    });
+    this.setState(__state_argument => ({
+      isLoadPanelVisible: false
+    }));
     this.unlock();
   };
   _proto.setPocketState = function setPocketState(newState) {
-    this.setState(function (__state_argument) {
-      return {
-        topPocketState: newState
-      };
-    });
+    this.setState(__state_argument => ({
+      topPocketState: newState
+    }));
   };
   _proto.handleScroll = function handleScroll(event) {
     var _this$props$onScroll, _this$props2;
     this.eventForUserAction = event;
     if (this.props.useSimulatedScrollbar) {
-      this.setState(function (__state_argument) {
-        return {
-          scrolling: true
-        };
-      });
+      this.setState(__state_argument => ({
+        scrolling: true
+      }));
       this.syncScrollbarsWithContent();
-      this.setState(function (__state_argument) {
-        return {
-          scrolling: false
-        };
-      });
+      this.setState(__state_argument => ({
+        scrolling: false
+      }));
     }
     (_this$props$onScroll = (_this$props2 = this.props).onScroll) === null || _this$props$onScroll === void 0 ? void 0 : _this$props$onScroll.call(_this$props2, this.getEventArgs());
     this.handlePocketState();
@@ -407,8 +382,10 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
       if (this.state.topPocketState === _consts.TopPocketState.STATE_REFRESHING) {
         return;
       }
-      var scrollTop = this.containerRef.current.scrollTop;
-      var scrollDelta = this.locationTop + scrollTop;
+      const {
+        scrollTop
+      } = this.containerRef.current;
+      const scrollDelta = this.locationTop + scrollTop;
       this.locationTop = -scrollTop;
       if (this.isSwipeDownStrategy && scrollDelta > 0 && this.isReachBottom()) {
         this.onReachBottom();
@@ -451,7 +428,7 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     this.releaseState();
   };
   _proto.getEventArgs = function getEventArgs() {
-    var scrollOffset = this.scrollOffset();
+    const scrollOffset = this.scrollOffset();
     return _extends({
       event: this.eventForUserAction,
       scrollOffset
@@ -471,87 +448,68 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     this.setContainerDimensions(this.containerRef.current);
   };
   _proto.setContainerDimensions = function setContainerDimensions(containerEl) {
-    this.setState(function (__state_argument) {
-      return {
-        containerClientWidth: containerEl.clientWidth
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        containerClientHeight: containerEl.clientHeight
-      };
-    });
+    this.setState(__state_argument => ({
+      containerClientWidth: containerEl.clientWidth
+    }));
+    this.setState(__state_argument => ({
+      containerClientHeight: containerEl.clientHeight
+    }));
   };
   _proto.setContentHeight = function setContentHeight(contentEl) {
-    var _this11 = this;
-    this.setState(function (__state_argument) {
-      return {
-        contentClientHeight: contentEl.clientHeight
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        contentScrollHeight: contentEl.scrollHeight
-      };
-    });
+    this.setState(__state_argument => ({
+      contentClientHeight: contentEl.clientHeight
+    }));
+    this.setState(__state_argument => ({
+      contentScrollHeight: contentEl.scrollHeight
+    }));
     if (this.props.forceGeneratePockets) {
-      this.setState(function (__state_argument) {
-        var _this11$topPocketRef;
+      this.setState(__state_argument => {
+        var _this$topPocketRef;
         return {
-          topPocketHeight: ((_this11$topPocketRef = _this11.topPocketRef) === null || _this11$topPocketRef === void 0 ? void 0 : _this11$topPocketRef.current.clientHeight) || 0
+          topPocketHeight: ((_this$topPocketRef = this.topPocketRef) === null || _this$topPocketRef === void 0 ? void 0 : _this$topPocketRef.current.clientHeight) || 0
         };
       });
-      this.setState(function (__state_argument) {
-        var _this11$bottomPocketR;
+      this.setState(__state_argument => {
+        var _this$bottomPocketRef;
         return {
-          bottomPocketHeight: ((_this11$bottomPocketR = _this11.bottomPocketRef) === null || _this11$bottomPocketR === void 0 ? void 0 : _this11$bottomPocketR.current.clientHeight) || 0
+          bottomPocketHeight: ((_this$bottomPocketRef = this.bottomPocketRef) === null || _this$bottomPocketRef === void 0 ? void 0 : _this$bottomPocketRef.current.clientHeight) || 0
         };
       });
     }
   };
   _proto.setContentWidth = function setContentWidth(contentEl) {
-    this.setState(function (__state_argument) {
-      return {
-        contentClientWidth: contentEl.clientWidth
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        contentScrollWidth: contentEl.scrollWidth
-      };
-    });
+    this.setState(__state_argument => ({
+      contentClientWidth: contentEl.clientWidth
+    }));
+    this.setState(__state_argument => ({
+      contentScrollWidth: contentEl.scrollWidth
+    }));
   };
   _proto.syncScrollbarsWithContent = function syncScrollbarsWithContent() {
-    var _this$scrollOffset = this.scrollOffset(),
-      left = _this$scrollOffset.left,
-      top = _this$scrollOffset.top;
-    this.setState(function (__state_argument) {
-      return {
-        hScrollLocation: -left
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        vScrollLocation: -top
-      };
-    });
+    const {
+      left,
+      top
+    } = this.scrollOffset();
+    this.setState(__state_argument => ({
+      hScrollLocation: -left
+    }));
+    this.setState(__state_argument => ({
+      vScrollLocation: -top
+    }));
   };
   _proto.getInitEventData = function getInitEventData() {
-    var _this12 = this;
     return {
-      getDirection: function getDirection() {
-        return _this12.tryGetAllowedDirection();
-      },
-      validate: function validate(event) {
-        return _this12.validate(event);
-      },
+      getDirection: () => this.tryGetAllowedDirection(),
+      validate: event => this.validate(event),
       isNative: true,
       scrollTarget: this.containerRef.current
     };
   };
   _proto.handleInit = function handleInit(event) {
     if (this.props.forceGeneratePockets && this.isSwipeDownStrategy) {
-      var scrollTop = this.containerRef.current.scrollTop;
+      const {
+        scrollTop
+      } = this.containerRef.current;
       if (this.state.topPocketState === _consts.TopPocketState.STATE_RELEASED && scrollTop === 0) {
         this.initPageY = event.originalEvent.pageY;
         this.setPocketState(_consts.TopPocketState.STATE_TOUCHED);
@@ -605,16 +563,13 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.pullDownComplete = function pullDownComplete() {
-    var _this13 = this;
     if (this.state.topPocketState === _consts.TopPocketState.STATE_READY) {
-      this.setState(function (__state_argument) {
-        return {
-          contentTranslateTop: _this13.state.topPocketHeight
-        };
-      });
+      this.setState(__state_argument => ({
+        contentTranslateTop: this.state.topPocketHeight
+      }));
       this.clearRefreshTimer();
-      this.refreshTimer = setTimeout(function () {
-        _this13.pullDownRefreshing();
+      this.refreshTimer = setTimeout(() => {
+        this.pullDownRefreshing();
       }, 400);
     }
   };
@@ -623,39 +578,30 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     this.refreshTimer = undefined;
   };
   _proto.pullDownRefreshing = function pullDownRefreshing() {
-    var _this14 = this;
     if (this.state.topPocketState === _consts.TopPocketState.STATE_REFRESHING) {
       return;
     }
     this.setPocketState(_consts.TopPocketState.STATE_REFRESHING);
     if (this.isSwipeDownStrategy) {
-      this.setState(function (__state_argument) {
-        return {
-          pullDownTranslateTop: _this14.getPullDownHeight()
-        };
-      });
+      this.setState(__state_argument => ({
+        pullDownTranslateTop: this.getPullDownHeight()
+      }));
     }
     this.onPullDown();
   };
   _proto.movePullDown = function movePullDown() {
-    var pullDownHeight = this.getPullDownHeight();
-    var top = Math.min(pullDownHeight * 3, this.deltaY + this.getPullDownStartPosition());
-    var angle = 180 * top / pullDownHeight / 3;
-    this.setState(function (__state_argument) {
-      return {
-        pullDownOpacity: 1
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        pullDownTranslateTop: top
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        pullDownIconAngle: angle
-      };
-    });
+    const pullDownHeight = this.getPullDownHeight();
+    const top = Math.min(pullDownHeight * 3, this.deltaY + this.getPullDownStartPosition());
+    const angle = 180 * top / pullDownHeight / 3;
+    this.setState(__state_argument => ({
+      pullDownOpacity: 1
+    }));
+    this.setState(__state_argument => ({
+      pullDownTranslateTop: top
+    }));
+    this.setState(__state_argument => ({
+      pullDownIconAngle: angle
+    }));
   };
   _proto.getPullDownHeight = function getPullDownHeight() {
     return Math.round(this.scrollableRef.current.offsetHeight * 0.05);
@@ -670,40 +616,45 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
   };
   _proto.releaseState = function releaseState() {
     this.setPocketState(_consts.TopPocketState.STATE_RELEASED);
-    this.setState(function (__state_argument) {
-      return {
-        pullDownOpacity: 0
-      };
-    });
+    this.setState(__state_argument => ({
+      pullDownOpacity: 0
+    }));
   };
   _proto.isSwipeDown = function isSwipeDown() {
     return this.pullDownEnabled && this.state.topPocketState === _consts.TopPocketState.STATE_PULLED && this.deltaY >= this.getPullDownHeight() - this.getPullDownStartPosition();
   };
   _proto.pulledDown = function pulledDown() {
-    var scrollTop = this.containerRef.current.scrollTop;
+    const {
+      scrollTop
+    } = this.containerRef.current;
     return this.pullDownEnabled && scrollTop <= -this.state.topPocketHeight;
   };
   _proto.isReachBottom = function isReachBottom() {
-    var scrollTop = this.containerRef.current.scrollTop;
+    const {
+      scrollTop
+    } = this.containerRef.current;
     return this.props.reachBottomEnabled && Math.round(-scrollTop - this.vScrollOffsetMax) <= 1;
   };
   _proto.tryGetAllowedDirection = function tryGetAllowedDirection() {
-    var containerEl = this.containerRef.current;
+    const containerEl = this.containerRef.current;
     return (0, _get_allowed_direction.allowedDirection)(this.props.direction, (0, _get_scroll_top_max.getScrollTopMax)(containerEl), (0, _get_scroll_left_max.getScrollLeftMax)(containerEl), false);
   };
   _proto.isLocked = function isLocked() {
     return this.locked;
   };
   _proto.isScrollingOutOfBound = function isScrollingOutOfBound(event) {
-    var delta = event.delta,
-      shiftKey = event.shiftKey;
-    var _this$containerRef$cu = this.containerRef.current,
-      clientHeight = _this$containerRef$cu.clientHeight,
-      clientWidth = _this$containerRef$cu.clientWidth,
-      scrollHeight = _this$containerRef$cu.scrollHeight,
-      scrollLeft = _this$containerRef$cu.scrollLeft,
-      scrollTop = _this$containerRef$cu.scrollTop,
-      scrollWidth = _this$containerRef$cu.scrollWidth;
+    const {
+      delta,
+      shiftKey
+    } = event;
+    const {
+      clientHeight,
+      clientWidth,
+      scrollHeight,
+      scrollLeft,
+      scrollTop,
+      scrollWidth
+    } = this.containerRef.current;
     if (delta > 0) {
       return shiftKey ? !scrollLeft : !scrollTop;
     }
@@ -724,23 +675,20 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     this.onPullDown();
   };
   _proto.release = function release() {
-    var _this15 = this;
     this.clearReleaseTimer();
     if (this.isPullDownStrategy) {
       if (this.state.topPocketState === _consts.TopPocketState.STATE_LOADING) {
         this.setPocketState(_consts.TopPocketState.STATE_RELEASED);
       }
     }
-    this.releaseTimer = setTimeout(function () {
-      if (_this15.isPullDownStrategy) {
-        _this15.setState(function (__state_argument) {
-          return {
-            contentTranslateTop: 0
-          };
-        });
+    this.releaseTimer = setTimeout(() => {
+      if (this.isPullDownStrategy) {
+        this.setState(__state_argument => ({
+          contentTranslateTop: 0
+        }));
       }
-      _this15.stateReleased();
-      _this15.onRelease();
+      this.stateReleased();
+      this.onRelease();
     }, this.isSwipeDownStrategy ? 800 : 400);
   };
   _proto.scrollHeight = function scrollHeight() {
@@ -759,8 +707,8 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     return this.containerRef.current.scrollTop;
   };
   _proto.scrollLeft = function scrollLeft() {
-    var containerEl = this.containerRef.current;
-    var scrollLeftMax = (0, _get_scroll_left_max.getScrollLeftMax)(containerEl);
+    const containerEl = this.containerRef.current;
+    const scrollLeftMax = (0, _get_scroll_left_max.getScrollLeftMax)(containerEl);
     return (0, _normalize_offset_left.normalizeOffsetLeft)(containerEl.scrollLeft, scrollLeftMax, !!this.props.rtlEnabled);
   };
   _proto.clientHeight = function clientHeight() {
@@ -786,7 +734,7 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     this.onUpdated();
   };
   _proto.scrollByLocation = function scrollByLocation(location) {
-    var containerEl = this.containerRef.current;
+    const containerEl = this.containerRef.current;
     if (this.direction.isVertical) {
       containerEl.scrollTop += location.top;
     }
@@ -804,7 +752,7 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         loadPanelTemplate: getTemplate(props.loadPanelTemplate)
@@ -890,28 +838,29 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(ScrollableNative, [{
     key: "fullScrollInactiveProp",
-    get: function get() {
+    get: function () {
       return this.props.direction === _consts.DIRECTION_HORIZONTAL ? 'scrollTop' : 'scrollLeft';
     }
   }, {
     key: "isSwipeDownStrategy",
-    get: function get() {
+    get: function () {
       return this.props.refreshStrategy === 'swipeDown';
     }
   }, {
     key: "isPullDownStrategy",
-    get: function get() {
+    get: function () {
       return this.props.refreshStrategy === 'pullDown';
     }
   }, {
     key: "cssClasses",
-    get: function get() {
-      var _this$props5 = this.props,
-        classes = _this$props5.classes,
-        direction = _this$props5.direction,
-        disabled = _this$props5.disabled,
-        showScrollbar = _this$props5.showScrollbar;
-      var classesMap = {
+    get: function () {
+      const {
+        classes,
+        direction,
+        disabled,
+        showScrollbar
+      } = this.props;
+      const classesMap = {
         ["dx-scrollable dx-scrollable-native dx-scrollable-native-".concat(_devices.default.real().platform)]: true,
         ["dx-scrollable-".concat(direction)]: true,
         [_consts.SCROLLABLE_DISABLED_CLASS]: !!disabled,
@@ -923,92 +872,61 @@ var ScrollableNative = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "direction",
-    get: function get() {
-      var _this16 = this;
+    get: function () {
       if (this.__getterCache['direction'] !== undefined) {
         return this.__getterCache['direction'];
       }
-      return this.__getterCache['direction'] = function () {
-        return new _scroll_direction.ScrollDirection(_this16.props.direction);
-      }();
+      return this.__getterCache['direction'] = (() => {
+        return new _scroll_direction.ScrollDirection(this.props.direction);
+      })();
     }
   }, {
     key: "pullDownEnabled",
-    get: function get() {
+    get: function () {
       return this.props.pullDownEnabled && _devices.default.real().platform !== 'generic';
     }
   }, {
     key: "contentStyles",
-    get: function get() {
-      var _this17 = this;
+    get: function () {
       if (this.__getterCache['contentStyles'] !== undefined) {
         return this.__getterCache['contentStyles'];
       }
-      return this.__getterCache['contentStyles'] = function () {
-        if (_this17.props.forceGeneratePockets && _this17.isPullDownStrategy) {
+      return this.__getterCache['contentStyles'] = (() => {
+        if (this.props.forceGeneratePockets && this.isPullDownStrategy) {
           return {
-            transform: "translate(0px, ".concat(_this17.state.contentTranslateTop, "px)")
+            transform: "translate(0px, ".concat(this.state.contentTranslateTop, "px)")
           };
         }
         return undefined;
-      }();
+      })();
     }
   }, {
     key: "contentHeight",
-    get: function get() {
+    get: function () {
       var _this$contentRef;
       return (0, _get_element_style.getElementOverflowY)((_this$contentRef = this.contentRef) === null || _this$contentRef === void 0 ? void 0 : _this$contentRef.current) === 'hidden' ? this.state.contentClientHeight : Math.max(this.state.contentScrollHeight, this.state.contentClientHeight);
     }
   }, {
     key: "contentWidth",
-    get: function get() {
+    get: function () {
       var _this$contentRef2;
       return (0, _get_element_style.getElementOverflowX)((_this$contentRef2 = this.contentRef) === null || _this$contentRef2 === void 0 ? void 0 : _this$contentRef2.current) === 'hidden' ? this.state.contentClientWidth : Math.max(this.state.contentScrollWidth, this.state.contentClientWidth);
     }
   }, {
     key: "hScrollOffsetMax",
-    get: function get() {
+    get: function () {
       return -Math.max(this.contentWidth - this.state.containerClientWidth, 0);
     }
   }, {
     key: "vScrollOffsetMax",
-    get: function get() {
+    get: function () {
       return -Math.max(this.contentHeight - this.state.containerClientHeight, 0);
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props6 = this.props,
-        addWidgetClass = _this$props6.addWidgetClass,
-        aria = _this$props6.aria,
-        bounceEnabled = _this$props6.bounceEnabled,
-        children = _this$props6.children,
-        classes = _this$props6.classes,
-        direction = _this$props6.direction,
-        disabled = _this$props6.disabled,
-        forceGeneratePockets = _this$props6.forceGeneratePockets,
-        height = _this$props6.height,
-        loadPanelTemplate = _this$props6.loadPanelTemplate,
-        needRenderScrollbars = _this$props6.needRenderScrollbars,
-        needScrollViewContentWrapper = _this$props6.needScrollViewContentWrapper,
-        onPullDown = _this$props6.onPullDown,
-        onReachBottom = _this$props6.onReachBottom,
-        onScroll = _this$props6.onScroll,
-        onUpdated = _this$props6.onUpdated,
-        pullDownEnabled = _this$props6.pullDownEnabled,
-        pulledDownText = _this$props6.pulledDownText,
-        pullingDownText = _this$props6.pullingDownText,
-        reachBottomEnabled = _this$props6.reachBottomEnabled,
-        reachBottomText = _this$props6.reachBottomText,
-        refreshStrategy = _this$props6.refreshStrategy,
-        refreshingText = _this$props6.refreshingText,
-        rtlEnabled = _this$props6.rtlEnabled,
-        scrollByContent = _this$props6.scrollByContent,
-        showScrollbar = _this$props6.showScrollbar,
-        useSimulatedScrollbar = _this$props6.useSimulatedScrollbar,
-        visible = _this$props6.visible,
-        width = _this$props6.width,
-        restProps = _objectWithoutProperties(_this$props6, _excluded);
+    get: function () {
+      const _this$props5 = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props5, _excluded);
       return restProps;
     }
   }]);

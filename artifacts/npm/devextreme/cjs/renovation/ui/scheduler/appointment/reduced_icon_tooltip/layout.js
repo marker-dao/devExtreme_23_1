@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment/reduced_icon_tooltip/layout.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,8 +13,7 @@ var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
 var _tooltip = require("../../../overlays/tooltip");
 var _utils = require("../utils");
-var _excluded = ["endDate", "target", "visible"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["endDate", "target", "visible"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -23,14 +22,17 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var wrapperAttr = {
+const wrapperAttr = {
   class: 'dx-scheduler-reduced-icon-tooltip'
 };
-var viewFunction = function viewFunction(_ref) {
-  var _ref$props = _ref.props,
-    target = _ref$props.target,
-    visible = _ref$props.visible,
-    text = _ref.text;
+const viewFunction = _ref => {
+  let {
+    props: {
+      target,
+      visible
+    },
+    text
+  } = _ref;
   return (0, _inferno.createComponentVNode)(2, _tooltip.Tooltip, {
     "visible": visible,
     "target": target,
@@ -39,11 +41,11 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var ReducedIconTooltipProps = {
+const ReducedIconTooltipProps = {
   visible: false
 };
 exports.ReducedIconTooltipProps = ReducedIconTooltipProps;
-var ReducedIconTooltip = /*#__PURE__*/function (_BaseInfernoComponent) {
+let ReducedIconTooltip = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(ReducedIconTooltip, _BaseInfernoComponent);
   function ReducedIconTooltip(props) {
     var _this;
@@ -53,7 +55,7 @@ var ReducedIconTooltip = /*#__PURE__*/function (_BaseInfernoComponent) {
   }
   var _proto = ReducedIconTooltip.prototype;
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       text: this.text,
@@ -62,17 +64,14 @@ var ReducedIconTooltip = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(ReducedIconTooltip, [{
     key: "text",
-    get: function get() {
+    get: function () {
       return (0, _utils.getReducedIconTooltipText)(this.props.endDate);
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        endDate = _this$props.endDate,
-        target = _this$props.target,
-        visible = _this$props.visible,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

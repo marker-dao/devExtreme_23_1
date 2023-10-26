@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/dependency_injector.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,11 +15,11 @@ var _iterator = require("./iterator");
 var _class = _interopRequireDefault(require("../class"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _default(object) {
-  var BaseClass = _class.default.inherit(object);
-  var InjectedClass = BaseClass;
-  var instance = new InjectedClass(object);
-  var initialFields = {};
-  var injectFields = function injectFields(injectionObject, initial) {
+  const BaseClass = _class.default.inherit(object);
+  let InjectedClass = BaseClass;
+  let instance = new InjectedClass(object);
+  const initialFields = {};
+  const injectFields = function (injectionObject, initial) {
     (0, _iterator.each)(injectionObject, function (key) {
       if ((0, _type.isFunction)(instance[key])) {
         if (initial || !object[key]) {

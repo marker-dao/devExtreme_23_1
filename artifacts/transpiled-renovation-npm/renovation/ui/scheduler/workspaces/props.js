@@ -5,8 +5,8 @@ var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _base_props = require("../../common/base_props");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var DEFAULT_GROUPS = [];
-var WorkSpaceProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors(Object.defineProperties({
+const DEFAULT_GROUPS = [];
+const WorkSpaceProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors(Object.defineProperties({
   intervalCount: 1,
   groups: DEFAULT_GROUPS,
   groupByDate: false,
@@ -30,7 +30,7 @@ var WorkSpaceProps = Object.create(Object.prototype, _extends(Object.getOwnPrope
   allDayPanelMode: 'all'
 }, {
   indicatorUpdateInterval: {
-    get: function get() {
+    get: function () {
       return 5 * _date.default.dateToMilliseconds('minute');
     },
     configurable: true,
@@ -38,135 +38,135 @@ var WorkSpaceProps = Object.create(Object.prototype, _extends(Object.getOwnPrope
   }
 }))));
 exports.WorkSpaceProps = WorkSpaceProps;
-var CurrentViewConfigType = Object.defineProperties({}, {
+const CurrentViewConfigType = Object.defineProperties({}, {
   intervalCount: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.intervalCount;
     },
     configurable: true,
     enumerable: true
   },
   groupByDate: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.groupByDate;
     },
     configurable: true,
     enumerable: true
   },
   crossScrollingEnabled: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.crossScrollingEnabled;
     },
     configurable: true,
     enumerable: true
   },
   startDayHour: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.startDayHour;
     },
     configurable: true,
     enumerable: true
   },
   endDayHour: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.endDayHour;
     },
     configurable: true,
     enumerable: true
   },
   firstDayOfWeek: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.firstDayOfWeek;
     },
     configurable: true,
     enumerable: true
   },
   hoursInterval: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.hoursInterval;
     },
     configurable: true,
     enumerable: true
   },
   showAllDayPanel: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.showAllDayPanel;
     },
     configurable: true,
     enumerable: true
   },
   allDayPanelExpanded: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.allDayPanelExpanded;
     },
     configurable: true,
     enumerable: true
   },
   allowMultipleCellSelection: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.allowMultipleCellSelection;
     },
     configurable: true,
     enumerable: true
   },
   indicatorUpdateInterval: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.indicatorUpdateInterval;
     },
     configurable: true,
     enumerable: true
   },
   shadeUntilCurrentTime: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.shadeUntilCurrentTime;
     },
     configurable: true,
     enumerable: true
   },
   scrolling: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.scrolling;
     },
     configurable: true,
     enumerable: true
   },
   cellDuration: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.cellDuration;
     },
     configurable: true,
     enumerable: true
   },
   showCurrentTimeIndicator: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.showCurrentTimeIndicator;
     },
     configurable: true,
     enumerable: true
   },
   type: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.type;
     },
     configurable: true,
     enumerable: true
   },
   allDayPanelMode: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.allDayPanelMode;
     },
     configurable: true,
     enumerable: true
   },
   focusStateEnabled: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.focusStateEnabled;
     },
     configurable: true,
     enumerable: true
   },
   tabIndex: {
-    get: function get() {
+    get: function () {
       return WorkSpaceProps.tabIndex;
     },
     configurable: true,

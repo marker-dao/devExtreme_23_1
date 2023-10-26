@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/date.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,9 +22,9 @@ var _core = _interopRequireDefault(require("./core"));
 var _number = _interopRequireDefault(require("./number"));
 var _date4 = _interopRequireDefault(require("./intl/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DEFAULT_DAY_OF_WEEK_INDEX = 0;
-var hasIntl = typeof Intl !== 'undefined';
-var FORMATS_TO_PATTERN_MAP = {
+const DEFAULT_DAY_OF_WEEK_INDEX = 0;
+const hasIntl = typeof Intl !== 'undefined';
+const FORMATS_TO_PATTERN_MAP = {
   'shortdate': 'M/d/y',
   'shorttime': 'h:mm a',
   'longdate': 'EEEE, MMMM d, y',
@@ -46,7 +46,7 @@ var FORMATS_TO_PATTERN_MAP = {
   'millisecond': 'SSS',
   'datetime-local': 'yyyy-MM-ddTHH\':\'mm\':\'ss'
 };
-var possiblePartPatterns = {
+const possiblePartPatterns = {
   year: ['y', 'yy', 'yyyy'],
   day: ['d', 'dd'],
   month: ['M', 'MM', 'MMM', 'MMMM'],
@@ -55,27 +55,27 @@ var possiblePartPatterns = {
   seconds: ['s', 'ss'],
   milliseconds: ['S', 'SS', 'SSS']
 };
-var dateLocalization = (0, _dependency_injector.default)({
-  engine: function engine() {
+const dateLocalization = (0, _dependency_injector.default)({
+  engine: function () {
     return 'base';
   },
-  _getPatternByFormat: function _getPatternByFormat(format) {
+  _getPatternByFormat: function (format) {
     return FORMATS_TO_PATTERN_MAP[format.toLowerCase()];
   },
-  _expandPattern: function _expandPattern(pattern) {
+  _expandPattern: function (pattern) {
     return this._getPatternByFormat(pattern) || pattern;
   },
-  formatUsesMonthName: function formatUsesMonthName(format) {
+  formatUsesMonthName: function (format) {
     return this._expandPattern(format).indexOf('MMMM') !== -1;
   },
-  formatUsesDayName: function formatUsesDayName(format) {
+  formatUsesDayName: function (format) {
     return this._expandPattern(format).indexOf('EEEE') !== -1;
   },
-  getFormatParts: function getFormatParts(format) {
-    var pattern = this._getPatternByFormat(format) || format;
-    var result = [];
-    (0, _iterator.each)(pattern.split(/\W+/), function (_, formatPart) {
-      (0, _iterator.each)(possiblePartPatterns, function (partName, possiblePatterns) {
+  getFormatParts: function (format) {
+    const pattern = this._getPatternByFormat(format) || format;
+    const result = [];
+    (0, _iterator.each)(pattern.split(/\W+/), (_, formatPart) => {
+      (0, _iterator.each)(possiblePartPatterns, (partName, possiblePatterns) => {
         if (possiblePatterns.includes(formatPart)) {
           result.push(partName);
         }
@@ -83,49 +83,49 @@ var dateLocalization = (0, _dependency_injector.default)({
     });
     return result;
   },
-  getMonthNames: function getMonthNames(format) {
+  getMonthNames: function (format) {
     return _default_date_names.default.getMonthNames(format);
   },
-  getDayNames: function getDayNames(format) {
+  getDayNames: function (format) {
     return _default_date_names.default.getDayNames(format);
   },
-  getQuarterNames: function getQuarterNames(format) {
+  getQuarterNames: function (format) {
     return _default_date_names.default.getQuarterNames(format);
   },
-  getPeriodNames: function getPeriodNames(format) {
+  getPeriodNames: function (format) {
     return _default_date_names.default.getPeriodNames(format);
   },
-  getTimeSeparator: function getTimeSeparator() {
+  getTimeSeparator: function () {
     return ':';
   },
-  is24HourFormat: function is24HourFormat(format) {
-    var amTime = new Date(2017, 0, 20, 11, 0, 0, 0);
-    var pmTime = new Date(2017, 0, 20, 23, 0, 0, 0);
-    var amTimeFormatted = this.format(amTime, format);
-    var pmTimeFormatted = this.format(pmTime, format);
-    for (var i = 0; i < amTimeFormatted.length; i++) {
+  is24HourFormat: function (format) {
+    const amTime = new Date(2017, 0, 20, 11, 0, 0, 0);
+    const pmTime = new Date(2017, 0, 20, 23, 0, 0, 0);
+    const amTimeFormatted = this.format(amTime, format);
+    const pmTimeFormatted = this.format(pmTime, format);
+    for (let i = 0; i < amTimeFormatted.length; i++) {
       if (amTimeFormatted[i] !== pmTimeFormatted[i]) {
         return !isNaN(parseInt(amTimeFormatted[i]));
       }
     }
   },
-  format: function format(date, _format) {
+  format: function (date, format) {
     if (!date) {
       return;
     }
-    if (!_format) {
+    if (!format) {
       return date;
     }
-    var formatter;
-    if (typeof _format === 'function') {
-      formatter = _format;
-    } else if (_format.formatter) {
-      formatter = _format.formatter;
+    let formatter;
+    if (typeof format === 'function') {
+      formatter = format;
+    } else if (format.formatter) {
+      formatter = format.formatter;
     } else {
-      _format = _format.type || _format;
-      if ((0, _type.isString)(_format)) {
-        _format = FORMATS_TO_PATTERN_MAP[_format.toLowerCase()] || _format;
-        return _number.default.convertDigits((0, _date.getFormatter)(_format, this)(date));
+      format = format.type || format;
+      if ((0, _type.isString)(format)) {
+        format = FORMATS_TO_PATTERN_MAP[format.toLowerCase()] || format;
+        return _number.default.convertDigits((0, _date.getFormatter)(format, this)(date));
       }
     }
     if (!formatter) {
@@ -134,10 +134,10 @@ var dateLocalization = (0, _dependency_injector.default)({
     }
     return formatter(date);
   },
-  parse: function parse(text, format) {
-    var that = this;
-    var ldmlFormat;
-    var formatter;
+  parse: function (text, format) {
+    const that = this;
+    let ldmlFormat;
+    let formatter;
     if (!text) {
       return;
     }
@@ -150,8 +150,8 @@ var dateLocalization = (0, _dependency_injector.default)({
     if (typeof format === 'string' && !FORMATS_TO_PATTERN_MAP[format.toLowerCase()]) {
       ldmlFormat = format;
     } else {
-      formatter = function formatter(value) {
-        var text = that.format(value, format);
+      formatter = value => {
+        const text = that.format(value, format);
         return _number.default.convertDigits(text, true);
       };
       try {
@@ -163,16 +163,14 @@ var dateLocalization = (0, _dependency_injector.default)({
       return (0, _date3.getParser)(ldmlFormat, this)(text);
     }
     _errors.default.log('W0012');
-    var result = new Date(text);
+    const result = new Date(text);
     if (!result || isNaN(result.getTime())) {
       return;
     }
     return result;
   },
-  firstDayOfWeekIndex: function firstDayOfWeekIndex() {
-    var index = _core.default.getValueByClosestLocale(function (locale) {
-      return _first_day_of_week_data.default[locale];
-    });
+  firstDayOfWeekIndex: function () {
+    const index = _core.default.getValueByClosestLocale(locale => _first_day_of_week_data.default[locale]);
     return index === undefined ? DEFAULT_DAY_OF_WEEK_INDEX : index;
   }
 });

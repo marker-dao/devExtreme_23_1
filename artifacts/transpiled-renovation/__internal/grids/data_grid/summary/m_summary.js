@@ -22,46 +22,50 @@ var _m_data_source_adapter = _interopRequireDefault(require("../m_data_source_ad
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // @ts-expect-error
 
-var DATAGRID_TOTAL_FOOTER_CLASS = 'dx-datagrid-total-footer';
-var DATAGRID_SUMMARY_ITEM_CLASS = 'dx-datagrid-summary-item';
-var DATAGRID_TEXT_CONTENT_CLASS = 'dx-datagrid-text-content';
-var DATAGRID_GROUP_FOOTER_CLASS = 'dx-datagrid-group-footer';
-var DATAGRID_GROUP_TEXT_CONTENT_CLASS = 'dx-datagrid-group-text-content';
-var DATAGRID_NOWRAP_CLASS = 'dx-datagrid-nowrap';
-var DATAGRID_FOOTER_ROW_CLASS = 'dx-footer-row';
-var DATAGRID_CELL_DISABLED = 'dx-cell-focus-disabled';
-var DATAGRID_GROUP_FOOTER_ROW_TYPE = 'groupFooter';
-var DATAGRID_TOTAL_FOOTER_ROW_TYPE = 'totalFooter';
-var renderSummaryCell = function renderSummaryCell(cell, options) {
-  var $cell = (0, _renderer.default)(cell);
-  var column = options.column;
-  var summaryItems = options.summaryItems;
-  var $summaryItems = [];
+const DATAGRID_TOTAL_FOOTER_CLASS = 'dx-datagrid-total-footer';
+const DATAGRID_SUMMARY_ITEM_CLASS = 'dx-datagrid-summary-item';
+const DATAGRID_TEXT_CONTENT_CLASS = 'dx-datagrid-text-content';
+const DATAGRID_GROUP_FOOTER_CLASS = 'dx-datagrid-group-footer';
+const DATAGRID_GROUP_TEXT_CONTENT_CLASS = 'dx-datagrid-group-text-content';
+const DATAGRID_NOWRAP_CLASS = 'dx-datagrid-nowrap';
+const DATAGRID_FOOTER_ROW_CLASS = 'dx-footer-row';
+const DATAGRID_CELL_DISABLED = 'dx-cell-focus-disabled';
+const DATAGRID_GROUP_FOOTER_ROW_TYPE = 'groupFooter';
+const DATAGRID_TOTAL_FOOTER_ROW_TYPE = 'totalFooter';
+const renderSummaryCell = function (cell, options) {
+  const $cell = (0, _renderer.default)(cell);
+  const {
+    column
+  } = options;
+  const {
+    summaryItems
+  } = options;
+  const $summaryItems = [];
   if (!column.command && summaryItems) {
-    for (var i = 0; i < summaryItems.length; i++) {
-      var summaryItem = summaryItems[i];
-      var text = _m_core.default.getSummaryText(summaryItem, options.summaryTexts);
+    for (let i = 0; i < summaryItems.length; i++) {
+      const summaryItem = summaryItems[i];
+      const text = _m_core.default.getSummaryText(summaryItem, options.summaryTexts);
       $summaryItems.push((0, _renderer.default)('<div>').css('textAlign', summaryItem.alignment || column.alignment).addClass(DATAGRID_SUMMARY_ITEM_CLASS).addClass(DATAGRID_TEXT_CONTENT_CLASS).addClass(summaryItem.cssClass).toggleClass(DATAGRID_GROUP_TEXT_CONTENT_CLASS, options.rowType === 'group').text(text).attr('aria-label', "".concat(column.caption, " ").concat(text)));
     }
     $cell.append($summaryItems);
   }
 };
 exports.renderSummaryCell = renderSummaryCell;
-var getSummaryCellOptions = function getSummaryCellOptions(that, options) {
-  var summaryTexts = that.option('summary.texts') || {};
+const getSummaryCellOptions = function (that, options) {
+  const summaryTexts = that.option('summary.texts') || {};
   return {
     totalItem: options.row,
     summaryItems: options.row.summaryCells[options.columnIndex],
     summaryTexts
   };
 };
-var getGroupAggregates = function getGroupAggregates(data) {
+const getGroupAggregates = function (data) {
   return data.summary || data.aggregates || [];
 };
-var recalculateWhileEditing = function recalculateWhileEditing(that) {
+const recalculateWhileEditing = function (that) {
   return that.option('summary.recalculateWhileEditing');
 };
-var FooterView = _m_columns_view.ColumnsView.inherit(function () {
+const FooterView = _m_columns_view.ColumnsView.inherit(function () {
   return {
     _getRows() {
       return this._dataController.footerItems();
@@ -74,8 +78,8 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
       this.callBase.apply(this, arguments);
     },
     _renderCore(change) {
-      var needUpdateScrollLeft = false;
-      var totalItem = this._dataController.footerItems()[0];
+      let needUpdateScrollLeft = false;
+      const totalItem = this._dataController.footerItems()[0];
       if (!change || !change.columnIndices) {
         this.element().empty().addClass(DATAGRID_TOTAL_FOOTER_CLASS).toggleClass(DATAGRID_NOWRAP_CLASS, !this.option('wordWrapEnabled'));
         needUpdateScrollLeft = true;
@@ -88,29 +92,32 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
       }
     },
     _updateContent($newTable, change) {
-      var _this = this;
       if (change && change.changeType === 'update' && change.columnIndices) {
-        return this.waitAsyncTemplates().done(function () {
-          var $row = _this.getTableElement().find('.dx-row');
-          var $newRow = $newTable.find('.dx-row');
-          _this._updateCells($row, $newRow, change.columnIndices[0]);
+        return this.waitAsyncTemplates().done(() => {
+          const $row = this.getTableElement().find('.dx-row');
+          const $newRow = $newTable.find('.dx-row');
+          this._updateCells($row, $newRow, change.columnIndices[0]);
         });
       }
       return this.callBase.apply(this, arguments);
     },
     _rowClick(e) {
-      var item = this._dataController.footerItems()[e.rowIndex] || {};
+      const item = this._dataController.footerItems()[e.rowIndex] || {};
       this.executeAction('onRowClick', (0, _extend.extend)({}, e, item));
     },
     _columnOptionChanged(e) {
-      var optionNames = e.optionNames;
+      const {
+        optionNames
+      } = e;
       if (e.changeTypes.grouping) return;
       if (optionNames.width || optionNames.visibleWidth) {
         this.callBase(e);
       }
     },
     _handleDataChanged(e) {
-      var changeType = e.changeType;
+      const {
+        changeType
+      } = e;
       if (e.changeType === 'update' && e.repaintChangesOnly) {
         if (!e.totalColumnIndices) {
           this.render();
@@ -125,7 +132,7 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
       }
     },
     _createRow(row) {
-      var $row = this.callBase.apply(this, arguments);
+      const $row = this.callBase.apply(this, arguments);
       if (row.rowType === DATAGRID_TOTAL_FOOTER_ROW_TYPE) {
         $row.addClass(DATAGRID_FOOTER_ROW_CLASS);
         $row.addClass(DATAGRID_CELL_DISABLED);
@@ -142,10 +149,10 @@ var FooterView = _m_columns_view.ColumnsView.inherit(function () {
   };
 }());
 exports.FooterView = FooterView;
-var SummaryDataSourceAdapterExtender = function () {
+const SummaryDataSourceAdapterExtender = function () {
   function forEachGroup(groups, groupCount, callback, path) {
     path = path || [];
-    for (var i = 0; i < groups.length; i++) {
+    for (let i = 0; i < groups.length; i++) {
       path.push(groups[i].key);
       if (groupCount === 1) {
         callback(path, groups[i].items);
@@ -181,15 +188,15 @@ var SummaryDataSourceAdapterExtender = function () {
       return this._totalAggregates;
     },
     isLastLevelGroupItemsPagingLocal() {
-      var summary = this.summary();
-      var sortByGroupsInfo = summary && summary.sortByGroups();
+      const summary = this.summary();
+      const sortByGroupsInfo = summary && summary.sortByGroups();
       return sortByGroupsInfo && sortByGroupsInfo.length;
     },
     sortLastLevelGroupItems(items, groups, paths) {
-      var groupedItems = _store_helper.default.multiLevelGroup((0, _query.default)(items), groups).toArray();
-      var result = [];
-      paths.forEach(function (path) {
-        forEachGroup(groupedItems, groups.length, function (itemsPath, items) {
+      const groupedItems = _store_helper.default.multiLevelGroup((0, _query.default)(items), groups).toArray();
+      let result = [];
+      paths.forEach(path => {
+        forEachGroup(groupedItems, groups.length, (itemsPath, items) => {
           if (path.toString() === itemsPath.toString()) {
             result = result.concat(items);
           }
@@ -199,27 +206,23 @@ var SummaryDataSourceAdapterExtender = function () {
     }
   };
 }();
-var SummaryDataSourceAdapterClientExtender = function () {
-  var applyAddedData = function applyAddedData(data, insertedData, groupLevel) {
+const SummaryDataSourceAdapterClientExtender = function () {
+  const applyAddedData = function (data, insertedData, groupLevel) {
     if (groupLevel) {
-      return applyAddedData(data, insertedData.map(function (item) {
-        return {
-          items: [item]
-        };
-      }, groupLevel - 1));
+      return applyAddedData(data, insertedData.map(item => ({
+        items: [item]
+      }), groupLevel - 1));
     }
     return data.concat(insertedData);
   };
-  var applyRemovedData = function applyRemovedData(data, removedData, groupLevel) {
+  const applyRemovedData = function (data, removedData, groupLevel) {
     if (groupLevel) {
-      return data.map(function (data) {
-        var updatedData = {};
-        var updatedItems = applyRemovedData(data.items || [], removedData, groupLevel - 1);
+      return data.map(data => {
+        const updatedData = {};
+        const updatedItems = applyRemovedData(data.items || [], removedData, groupLevel - 1);
         Object.defineProperty(updatedData, 'aggregates', {
-          get: function get() {
-            return data.aggregates;
-          },
-          set: function set(value) {
+          get: () => data.aggregates,
+          set: value => {
             data.aggregates = value;
           }
         });
@@ -228,20 +231,18 @@ var SummaryDataSourceAdapterClientExtender = function () {
         });
       });
     }
-    return data.filter(function (data) {
-      return removedData.indexOf(data) < 0;
-    });
+    return data.filter(data => removedData.indexOf(data) < 0);
   };
-  var calculateAggregates = function calculateAggregates(that, summary, data, groupLevel) {
-    var calculator;
+  const calculateAggregates = function (that, summary, data, groupLevel) {
+    let calculator;
     if (recalculateWhileEditing(that)) {
-      var editingController = that.getController('editing');
+      const editingController = that.getController('editing');
       if (editingController) {
-        var insertedData = editingController.getInsertedData();
+        const insertedData = editingController.getInsertedData();
         if (insertedData.length) {
           data = applyAddedData(data, insertedData, groupLevel);
         }
-        var removedData = editingController.getRemovedData();
+        const removedData = editingController.getRemovedData();
         if (removedData.length) {
           data = applyRemovedData(data, removedData, groupLevel);
         }
@@ -258,11 +259,11 @@ var SummaryDataSourceAdapterClientExtender = function () {
     }
     return calculator ? calculator.totalAggregates() : [];
   };
-  var sortGroupsBySummaryCore = function sortGroupsBySummaryCore(items, groups, sortByGroups) {
+  const sortGroupsBySummaryCore = function (items, groups, sortByGroups) {
     if (!items || !groups.length) return items;
-    var group = groups[0];
-    var sorts = sortByGroups[0];
-    var query;
+    const group = groups[0];
+    const sorts = sortByGroups[0];
+    let query;
     if (group && sorts && sorts.length) {
       query = (0, _query.default)(items);
       (0, _iterator.each)(sorts, function (index) {
@@ -272,7 +273,7 @@ var SummaryDataSourceAdapterClientExtender = function () {
           query = query.thenBy(this.selector, this.desc);
         }
       });
-      query.enumerate().done(function (sortedItems) {
+      query.enumerate().done(sortedItems => {
         items = sortedItems;
       });
     }
@@ -285,8 +286,8 @@ var SummaryDataSourceAdapterClientExtender = function () {
     }
     return items;
   };
-  var sortGroupsBySummary = function sortGroupsBySummary(data, group, summary) {
-    var sortByGroups = summary && summary.sortByGroups && summary.sortByGroups();
+  const sortGroupsBySummary = function (data, group, summary) {
+    const sortByGroups = summary && summary.sortByGroups && summary.sortByGroups();
     if (sortByGroups && sortByGroups.length) {
       return sortGroupsBySummaryCore(data, group, sortByGroups);
     }
@@ -294,7 +295,7 @@ var SummaryDataSourceAdapterClientExtender = function () {
   };
   return {
     _customizeRemoteOperations(options) {
-      var summary = this.summary();
+      const summary = this.summary();
       if (summary) {
         if (options.remoteOperations.summary) {
           if (!options.isCustomLoading || options.storeLoadOptions.isLoadingAll) {
@@ -312,17 +313,17 @@ var SummaryDataSourceAdapterClientExtender = function () {
         }
       }
       this.callBase.apply(this, arguments);
-      var cachedExtra = options.cachedData.extra;
+      const cachedExtra = options.cachedData.extra;
       if (cachedExtra && cachedExtra.summary && !options.isCustomLoading) {
         options.storeLoadOptions.totalSummary = undefined;
       }
     },
     _handleDataLoadedCore(options) {
       var _a, _b;
-      var that = this;
-      var groups = (0, _utils.normalizeSortingInfo)(options.storeLoadOptions.group || options.loadOptions.group || []);
-      var remoteOperations = options.remoteOperations || {};
-      var summary = that.summaryGetter()(remoteOperations);
+      const that = this;
+      const groups = (0, _utils.normalizeSortingInfo)(options.storeLoadOptions.group || options.loadOptions.group || []);
+      const remoteOperations = options.remoteOperations || {};
+      const summary = that.summaryGetter()(remoteOperations);
       if (!options.isCustomLoading || options.storeLoadOptions.isLoadingAll) {
         if (remoteOperations.summary) {
           if (!remoteOperations.paging && groups.length && summary) {
@@ -334,12 +335,10 @@ var SummaryDataSourceAdapterClientExtender = function () {
             options.data = sortGroupsBySummary(options.data, groups, summary);
           }
         } else if (!remoteOperations.paging && summary) {
-          var operationTypes = options.operationTypes || {};
-          var hasOperations = Object.keys(operationTypes).some(function (type) {
-            return operationTypes[type];
-          });
+          const operationTypes = options.operationTypes || {};
+          const hasOperations = Object.keys(operationTypes).some(type => operationTypes[type]);
           if (!hasOperations || !((_b = (_a = options.cachedData) === null || _a === void 0 ? void 0 : _a.extra) === null || _b === void 0 ? void 0 : _b.summary) || groups.length && summary.groupAggregates.length) {
-            var totalAggregates = calculateAggregates(that, summary, options.data, groups.length);
+            const totalAggregates = calculateAggregates(that, summary, options.data, groups.length);
             options.extra = (0, _type.isPlainObject)(options.extra) ? options.extra : {};
             options.extra.summary = totalAggregates;
             if (options.cachedData) {
@@ -393,10 +392,10 @@ _m_core.default.registerModule('summary', {
             return column && (!(0, _type.isDefined)(column.groupIndex) || column.showWhenGrouped);
           },
           _isGroupFooterVisible() {
-            var groupItems = this.option('summary.groupItems') || [];
-            for (var i = 0; i < groupItems.length; i++) {
-              var groupItem = groupItems[i];
-              var column = this._columnsController.columnOption(groupItem.showInColumn || groupItem.column);
+            const groupItems = this.option('summary.groupItems') || [];
+            for (let i = 0; i < groupItems.length; i++) {
+              const groupItem = groupItems[i];
+              const column = this._columnsController.columnOption(groupItem.showInColumn || groupItem.column);
               if (groupItem.showInGroupFooter && this._isDataColumn(column)) {
                 return true;
               }
@@ -404,8 +403,8 @@ _m_core.default.registerModule('summary', {
             return false;
           },
           _processGroupItems(items, groupCount, options) {
-            var data = options && options.data;
-            var result = this.callBase.apply(this, arguments);
+            const data = options && options.data;
+            const result = this.callBase.apply(this, arguments);
             if (options) {
               if (options.isGroupFooterVisible === undefined) {
                 options.isGroupFooterVisible = this._isGroupFooterVisible();
@@ -423,15 +422,15 @@ _m_core.default.registerModule('summary', {
             return result;
           },
           _processGroupItem(groupItem, options) {
-            var that = this;
+            const that = this;
             if (!options.summaryGroupItems) {
               options.summaryGroupItems = that.option('summary.groupItems') || [];
             }
             if (groupItem.rowType === 'group') {
-              var groupColumnIndex = -1;
-              var afterGroupColumnIndex = -1;
+              let groupColumnIndex = -1;
+              let afterGroupColumnIndex = -1;
               (0, _iterator.each)(options.visibleColumns, function (visibleIndex) {
-                var prevColumn = options.visibleColumns[visibleIndex - 1];
+                const prevColumn = options.visibleColumns[visibleIndex - 1];
                 if (groupItem.groupIndex === this.groupIndex) {
                   groupColumnIndex = this.index;
                 }
@@ -439,7 +438,7 @@ _m_core.default.registerModule('summary', {
                   afterGroupColumnIndex = this.index;
                 }
               });
-              groupItem.summaryCells = this._calculateSummaryCells(options.summaryGroupItems, getGroupAggregates(groupItem.data), options.visibleColumns, function (summaryItem, column) {
+              groupItem.summaryCells = this._calculateSummaryCells(options.summaryGroupItems, getGroupAggregates(groupItem.data), options.visibleColumns, (summaryItem, column) => {
                 if (summaryItem.showInGroupFooter) {
                   return -1;
                 }
@@ -450,27 +449,25 @@ _m_core.default.registerModule('summary', {
               }, true);
             }
             if (groupItem.rowType === DATAGRID_GROUP_FOOTER_ROW_TYPE) {
-              groupItem.summaryCells = this._calculateSummaryCells(options.summaryGroupItems, getGroupAggregates(groupItem.data), options.visibleColumns, function (summaryItem, column) {
-                return summaryItem.showInGroupFooter && that._isDataColumn(column) ? column.index : -1;
-              });
+              groupItem.summaryCells = this._calculateSummaryCells(options.summaryGroupItems, getGroupAggregates(groupItem.data), options.visibleColumns, (summaryItem, column) => summaryItem.showInGroupFooter && that._isDataColumn(column) ? column.index : -1);
             }
             return groupItem;
           },
           _calculateSummaryCells(summaryItems, aggregates, visibleColumns, calculateTargetColumnIndex, isGroupRow) {
-            var that = this;
-            var summaryCells = [];
-            var summaryCellsByColumns = {};
-            (0, _iterator.each)(summaryItems, function (summaryIndex, summaryItem) {
-              var column = that._columnsController.columnOption(summaryItem.column);
-              var showInColumn = summaryItem.showInColumn && that._columnsController.columnOption(summaryItem.showInColumn) || column;
-              var columnIndex = calculateTargetColumnIndex(summaryItem, showInColumn);
+            const that = this;
+            const summaryCells = [];
+            const summaryCellsByColumns = {};
+            (0, _iterator.each)(summaryItems, (summaryIndex, summaryItem) => {
+              const column = that._columnsController.columnOption(summaryItem.column);
+              const showInColumn = summaryItem.showInColumn && that._columnsController.columnOption(summaryItem.showInColumn) || column;
+              const columnIndex = calculateTargetColumnIndex(summaryItem, showInColumn);
               if (columnIndex >= 0) {
                 if (!summaryCellsByColumns[columnIndex]) {
                   summaryCellsByColumns[columnIndex] = [];
                 }
-                var aggregate = aggregates[summaryIndex];
+                const aggregate = aggregates[summaryIndex];
                 if (aggregate === aggregate) {
-                  var valueFormat;
+                  let valueFormat;
                   if ((0, _type.isDefined)(summaryItem.valueFormat)) {
                     valueFormat = summaryItem.valueFormat;
                   } else if (summaryItem.summaryType !== 'count') {
@@ -485,41 +482,37 @@ _m_core.default.registerModule('summary', {
               }
             });
             if (!(0, _type.isEmptyObject)(summaryCellsByColumns)) {
-              visibleColumns.forEach(function (column, visibleIndex) {
-                var prevColumn = visibleColumns[visibleIndex - 1];
-                var columnIndex = isGroupRow && ((prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.command) === 'expand' || column.command === 'expand') ? prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.index : column.index;
+              visibleColumns.forEach((column, visibleIndex) => {
+                const prevColumn = visibleColumns[visibleIndex - 1];
+                const columnIndex = isGroupRow && ((prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.command) === 'expand' || column.command === 'expand') ? prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.index : column.index;
                 summaryCells.push(summaryCellsByColumns[columnIndex] || []);
               });
             }
             return summaryCells;
           },
           _getSummaryCells(summaryTotalItems, totalAggregates) {
-            var that = this;
-            var columnsController = that._columnsController;
-            return that._calculateSummaryCells(summaryTotalItems, totalAggregates, columnsController.getVisibleColumns(), function (summaryItem, column) {
-              return that._isDataColumn(column) ? column.index : -1;
-            });
+            const that = this;
+            const columnsController = that._columnsController;
+            return that._calculateSummaryCells(summaryTotalItems, totalAggregates, columnsController.getVisibleColumns(), (summaryItem, column) => that._isDataColumn(column) ? column.index : -1);
           },
           _updateItemsCore(change) {
-            var that = this;
-            var summaryCells;
-            var dataSource = that._dataSource;
-            var footerItems = that._footerItems;
-            var oldSummaryCells = footerItems && footerItems[0] && footerItems[0].summaryCells;
-            var summaryTotalItems = that.option('summary.totalItems');
+            const that = this;
+            let summaryCells;
+            const dataSource = that._dataSource;
+            const footerItems = that._footerItems;
+            const oldSummaryCells = footerItems && footerItems[0] && footerItems[0].summaryCells;
+            const summaryTotalItems = that.option('summary.totalItems');
             that._footerItems = [];
             if (dataSource && summaryTotalItems && summaryTotalItems.length) {
-              var totalAggregates = dataSource.totalAggregates();
+              const totalAggregates = dataSource.totalAggregates();
               summaryCells = that._getSummaryCells(summaryTotalItems, totalAggregates);
               if (change && change.repaintChangesOnly && oldSummaryCells) {
-                change.totalColumnIndices = summaryCells.map(function (summaryCell, index) {
+                change.totalColumnIndices = summaryCells.map((summaryCell, index) => {
                   if (JSON.stringify(summaryCell) !== JSON.stringify(oldSummaryCells[index])) {
                     return index;
                   }
                   return -1;
-                }).filter(function (index) {
-                  return index >= 0;
-                });
+                }).filter(index => index >= 0);
               }
               if (summaryCells.length) {
                 that._footerItems.push({
@@ -531,9 +524,9 @@ _m_core.default.registerModule('summary', {
             that.callBase(change);
           },
           _prepareUnsavedDataSelector(selector) {
-            var that = this;
+            const that = this;
             if (recalculateWhileEditing(that)) {
-              var editingController = that.getController('editing');
+              const editingController = that.getController('editing');
               if (editingController) {
                 return function (data) {
                   data = editingController.getUpdatedData(data);
@@ -547,35 +540,35 @@ _m_core.default.registerModule('summary', {
             selector = this._prepareUnsavedDataSelector(selector);
             if (aggregator === 'avg' || aggregator === 'sum') {
               return function (data) {
-                var value = selector(data);
+                const value = selector(data);
                 return (0, _type.isDefined)(value) ? Number(value) : value;
               };
             }
             return selector;
           },
           _getAggregates(summaryItems, remoteOperations) {
-            var that = this;
-            var columnsController = that.getController('columns');
-            var calculateCustomSummary = that.option('summary.calculateCustomSummary');
-            var commonSkipEmptyValues = that.option('summary.skipEmptyValues');
-            return (0, _iterator.map)(summaryItems || [], function (summaryItem) {
-              var column = columnsController.columnOption(summaryItem.column);
-              var calculateCellValue = column && column.calculateCellValue ? column.calculateCellValue.bind(column) : (0, _data.compileGetter)(column ? column.dataField : summaryItem.column);
-              var aggregator = summaryItem.summaryType || 'count';
-              var skipEmptyValues = (0, _type.isDefined)(summaryItem.skipEmptyValues) ? summaryItem.skipEmptyValues : commonSkipEmptyValues;
+            const that = this;
+            const columnsController = that.getController('columns');
+            let calculateCustomSummary = that.option('summary.calculateCustomSummary');
+            const commonSkipEmptyValues = that.option('summary.skipEmptyValues');
+            return (0, _iterator.map)(summaryItems || [], summaryItem => {
+              const column = columnsController.columnOption(summaryItem.column);
+              const calculateCellValue = column && column.calculateCellValue ? column.calculateCellValue.bind(column) : (0, _data.compileGetter)(column ? column.dataField : summaryItem.column);
+              let aggregator = summaryItem.summaryType || 'count';
+              const skipEmptyValues = (0, _type.isDefined)(summaryItem.skipEmptyValues) ? summaryItem.skipEmptyValues : commonSkipEmptyValues;
               if (remoteOperations) {
                 return {
                   selector: summaryItem.column,
                   summaryType: aggregator
                 };
               }
-              var selector = that._prepareAggregateSelector(calculateCellValue, aggregator);
+              const selector = that._prepareAggregateSelector(calculateCellValue, aggregator);
               if (aggregator === 'custom') {
                 if (!calculateCustomSummary) {
                   _ui.default.log('E1026');
-                  calculateCustomSummary = function calculateCustomSummary() {};
+                  calculateCustomSummary = function () {};
                 }
-                var options = {
+                const options = {
                   component: that.component,
                   name: summaryItem.name
                 };
@@ -615,7 +608,9 @@ _m_core.default.registerModule('summary', {
           },
           _addSortInfo(sortByGroups, groupColumn, selector, sortOrder) {
             if (groupColumn) {
-              var groupIndex = groupColumn.groupIndex;
+              const {
+                groupIndex
+              } = groupColumn;
               sortOrder = sortOrder || groupColumn.sortOrder;
               if ((0, _type.isDefined)(groupIndex)) {
                 sortByGroups[groupIndex] = sortByGroups[groupIndex] || [];
@@ -627,10 +622,14 @@ _m_core.default.registerModule('summary', {
             }
           },
           _findSummaryItem(summaryItems, name) {
-            var summaryItemIndex = -1;
-            var getFullName = function getFullName(summaryItem) {
-              var summaryType = summaryItem.summaryType;
-              var column = summaryItem.column;
+            let summaryItemIndex = -1;
+            const getFullName = function (summaryItem) {
+              const {
+                summaryType
+              } = summaryItem;
+              const {
+                column
+              } = summaryItem;
               return summaryType && column && "".concat(summaryType, "_").concat(column);
             };
             if ((0, _type.isDefined)(name)) {
@@ -645,24 +644,28 @@ _m_core.default.registerModule('summary', {
             return summaryItemIndex;
           },
           _getSummarySortByGroups(sortByGroupSummaryInfo, groupSummaryItems) {
-            var that = this;
-            var columnsController = that._columnsController;
-            var groupColumns = columnsController.getGroupColumns();
-            var sortByGroups = [];
+            const that = this;
+            const columnsController = that._columnsController;
+            const groupColumns = columnsController.getGroupColumns();
+            const sortByGroups = [];
             if (!groupSummaryItems || !groupSummaryItems.length) return;
             (0, _iterator.each)(sortByGroupSummaryInfo || [], function () {
-              var sortOrder = this.sortOrder;
-              var groupColumn = this.groupColumn;
-              var summaryItemIndex = that._findSummaryItem(groupSummaryItems, this.summaryItem);
+              const {
+                sortOrder
+              } = this;
+              let {
+                groupColumn
+              } = this;
+              const summaryItemIndex = that._findSummaryItem(groupSummaryItems, this.summaryItem);
               if (summaryItemIndex < 0) return;
-              var selector = function selector(data) {
+              const selector = function (data) {
                 return getGroupAggregates(data)[summaryItemIndex];
               };
               if ((0, _type.isDefined)(groupColumn)) {
                 groupColumn = columnsController.columnOption(groupColumn);
                 that._addSortInfo(sortByGroups, groupColumn, selector, sortOrder);
               } else {
-                (0, _iterator.each)(groupColumns, function (groupIndex, groupColumn) {
+                (0, _iterator.each)(groupColumns, (groupIndex, groupColumn) => {
                   that._addSortInfo(sortByGroups, groupColumn, selector, sortOrder);
                 });
               }
@@ -670,21 +673,19 @@ _m_core.default.registerModule('summary', {
             return sortByGroups;
           },
           _createDataSourceAdapterCore(dataSource, remoteOperations) {
-            var that = this;
-            var dataSourceAdapter = this.callBase(dataSource, remoteOperations);
-            dataSourceAdapter.summaryGetter(function (currentRemoteOperations) {
-              return that._getSummaryOptions(currentRemoteOperations || remoteOperations);
-            });
+            const that = this;
+            const dataSourceAdapter = this.callBase(dataSource, remoteOperations);
+            dataSourceAdapter.summaryGetter(currentRemoteOperations => that._getSummaryOptions(currentRemoteOperations || remoteOperations));
             return dataSourceAdapter;
           },
           _getSummaryOptions(remoteOperations) {
-            var that = this;
-            var groupSummaryItems = that.option('summary.groupItems');
-            var totalSummaryItems = that.option('summary.totalItems');
-            var sortByGroupSummaryInfo = that.option('sortByGroupSummaryInfo');
-            var groupAggregates = that._getAggregates(groupSummaryItems, remoteOperations && remoteOperations.grouping && remoteOperations.summary);
-            var totalAggregates = that._getAggregates(totalSummaryItems, remoteOperations && remoteOperations.summary);
-            var sortByGroups = function sortByGroups() {
+            const that = this;
+            const groupSummaryItems = that.option('summary.groupItems');
+            const totalSummaryItems = that.option('summary.totalItems');
+            const sortByGroupSummaryInfo = that.option('sortByGroupSummaryInfo');
+            const groupAggregates = that._getAggregates(groupSummaryItems, remoteOperations && remoteOperations.grouping && remoteOperations.summary);
+            const totalAggregates = that._getAggregates(totalSummaryItems, remoteOperations && remoteOperations.summary);
+            const sortByGroups = function () {
               return that._getSummarySortByGroups(sortByGroupSummaryInfo, groupSummaryItems);
             };
             if (groupAggregates.length || totalAggregates.length) {
@@ -697,13 +698,13 @@ _m_core.default.registerModule('summary', {
             return undefined;
           },
           publicMethods() {
-            var methods = this.callBase();
+            const methods = this.callBase();
             methods.push('getTotalSummaryValue');
             return methods;
           },
           getTotalSummaryValue(summaryItemName) {
-            var summaryItemIndex = this._findSummaryItem(this.option('summary.totalItems'), summaryItemName);
-            var aggregates = this._dataSource.totalAggregates();
+            const summaryItemIndex = this._findSummaryItem(this.option('summary.totalItems'), summaryItemName);
+            const aggregates = this._dataSource.totalAggregates();
             if (aggregates.length && summaryItemIndex > -1) {
               return aggregates[summaryItemIndex];
             }
@@ -734,19 +735,19 @@ _m_core.default.registerModule('summary', {
             }
           },
           _addChange(params) {
-            var result = this.callBase.apply(this, arguments);
+            const result = this.callBase.apply(this, arguments);
             if (params.type) {
               this._refreshSummary();
             }
             return result;
           },
           _removeChange() {
-            var result = this.callBase.apply(this, arguments);
+            const result = this.callBase.apply(this, arguments);
             this._refreshSummary();
             return result;
           },
           cancelEditData() {
-            var result = this.callBase.apply(this, arguments);
+            const result = this.callBase.apply(this, arguments);
             this._refreshSummary();
             return result;
           }
@@ -757,7 +758,7 @@ _m_core.default.registerModule('summary', {
       rowsView: function () {
         return {
           _createRow(row) {
-            var $row = this.callBase.apply(this, arguments);
+            const $row = this.callBase.apply(this, arguments);
             row && $row.addClass(row.rowType === DATAGRID_GROUP_FOOTER_ROW_TYPE ? DATAGRID_GROUP_FOOTER_CLASS : '');
             return $row;
           },
@@ -771,24 +772,24 @@ _m_core.default.registerModule('summary', {
             return !(0, _type.isDefined)(options.columns[columnIndex].groupIndex) && options.row.summaryCells[columnIndex].length;
           },
           _getAlignByColumnCellCount(groupCellColSpan, options) {
-            var alignByColumnCellCount = 0;
-            for (var i = 1; i < groupCellColSpan; i++) {
-              var columnIndex = options.row.summaryCells.length - i;
+            let alignByColumnCellCount = 0;
+            for (let i = 1; i < groupCellColSpan; i++) {
+              const columnIndex = options.row.summaryCells.length - i;
               alignByColumnCellCount = this._hasAlignByColumnSummaryItems(columnIndex, options) ? i : alignByColumnCellCount;
             }
             return alignByColumnCellCount;
           },
           _renderGroupSummaryCells($row, options) {
-            var $groupCell = $row.children().last();
-            var groupCellColSpan = Number($groupCell.attr('colSpan')) || 1;
-            var alignByColumnCellCount = this._getAlignByColumnCellCount(groupCellColSpan, options);
+            const $groupCell = $row.children().last();
+            const groupCellColSpan = Number($groupCell.attr('colSpan')) || 1;
+            const alignByColumnCellCount = this._getAlignByColumnCellCount(groupCellColSpan, options);
             this._renderGroupSummaryCellsCore($groupCell, options, groupCellColSpan, alignByColumnCellCount);
           },
           _renderGroupSummaryCellsCore($groupCell, options, groupCellColSpan, alignByColumnCellCount) {
             if (alignByColumnCellCount > 0) {
               $groupCell.attr('colSpan', groupCellColSpan - alignByColumnCellCount);
-              for (var i = 0; i < alignByColumnCellCount; i++) {
-                var columnIndex = options.columns.length - alignByColumnCellCount + i;
+              for (let i = 0; i < alignByColumnCellCount; i++) {
+                const columnIndex = options.columns.length - alignByColumnCellCount + i;
                 this._renderCell($groupCell.parent(), (0, _extend.extend)({
                   column: options.columns[columnIndex],
                   columnIndex: this._getSummaryCellIndex(columnIndex, options.columns)
@@ -806,8 +807,8 @@ _m_core.default.registerModule('summary', {
             return this.callBase(options);
           },
           _getCellOptions(options) {
-            var that = this;
-            var parameters = that.callBase(options);
+            const that = this;
+            const parameters = that.callBase(options);
             if (options.row.summaryCells) {
               return (0, _extend.extend)(parameters, getSummaryCellOptions(that, options));
             }

@@ -14,18 +14,18 @@ var _extend = require("../core/utils/extend");
 var _color = _interopRequireDefault(require("../color"));
 var _type = require("../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _floor = Math.floor;
-var _ceil = Math.ceil;
-var _isArray = Array.isArray;
-var HIGHLIGHTING_STEP = 50;
-var DEFAULT_PALETTE = 'material';
-var officePalette = {
+const _floor = Math.floor;
+const _ceil = Math.ceil;
+const _isArray = Array.isArray;
+const HIGHLIGHTING_STEP = 50;
+const DEFAULT_PALETTE = 'material';
+const officePalette = {
   simpleSet: ['#5f8b95', '#ba4d51', '#af8a53', '#955f71', '#859666', '#7e688c'],
   indicatingSet: ['#a3b97c', '#e1b676', '#ec7f83'],
   gradientSet: ['#5f8b95', '#ba4d51'],
   accentColor: '#ba4d51'
 };
-var palettes = {
+const palettes = {
   [DEFAULT_PALETTE]: {
     simpleSet: ['#1db2f5', '#f5564a', '#97c95c', '#ffc720', '#eb3573', '#a63db8'],
     indicatingSet: ['#97c95c', '#ffc720', '#f5564a'],
@@ -113,7 +113,7 @@ var palettes = {
     accentColor: '#3cbab2'
   }
 };
-var currentPaletteName;
+let currentPaletteName;
 function currentPalette(name) {
   if (name === undefined) {
     return currentPaletteName || DEFAULT_PALETTE;
@@ -123,7 +123,7 @@ function currentPalette(name) {
   }
 }
 function generateColors(palette, count) {
-  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
     keepLastColorInEnd: false
   };
   options.type = options.baseColorSet;
@@ -133,8 +133,8 @@ function generateColors(palette, count) {
 function getPalette(palette, parameters) {
   parameters = parameters || {};
   palette = palette || (currentPaletteName === undefined ? parameters.themeDefault : currentPalette());
-  var result;
-  var type = parameters.type;
+  let result;
+  const type = parameters.type;
   if (_isArray(palette)) {
     return palette.slice(0);
   } else {
@@ -148,8 +148,8 @@ function getPalette(palette, parameters) {
   return type ? result[type].slice(0) : result;
 }
 function registerPalette(name, palette) {
-  var item = {};
-  var paletteName;
+  const item = {};
+  let paletteName;
   if (_isArray(palette)) {
     item.simpleSet = palette.slice(0);
   } else if (palette) {
@@ -173,9 +173,9 @@ function getAccentColor(palette, themeDefault) {
   return palette.accentColor || palette[0];
 }
 function RingBuf(buf) {
-  var ind = 0;
+  let ind = 0;
   this.next = function () {
-    var res = buf[ind++];
+    const res = buf[ind++];
     if (ind === buf.length) {
       this.reset();
     }
@@ -186,44 +186,44 @@ function RingBuf(buf) {
   };
 }
 function getAlternateColorsStrategy(palette, parameters) {
-  var stepHighlight = parameters.useHighlight ? HIGHLIGHTING_STEP : 0;
-  var paletteSteps = new RingBuf([0, stepHighlight, -stepHighlight]);
-  var currentPalette = [];
-  function _reset() {
-    var step = paletteSteps.next();
+  const stepHighlight = parameters.useHighlight ? HIGHLIGHTING_STEP : 0;
+  const paletteSteps = new RingBuf([0, stepHighlight, -stepHighlight]);
+  let currentPalette = [];
+  function reset() {
+    const step = paletteSteps.next();
     currentPalette = step ? getAlteredPalette(palette, step) : palette.slice(0);
   }
   return {
-    getColor: function getColor(index) {
-      var color = currentPalette[index % palette.length];
+    getColor: function (index) {
+      const color = currentPalette[index % palette.length];
       if (index % palette.length === palette.length - 1) {
-        _reset();
+        reset();
       }
       return color;
     },
-    generateColors: function generateColors(count) {
-      var colors = [];
+    generateColors: function (count) {
+      const colors = [];
       count = count || parameters.count;
-      for (var i = 0; i < count; i++) {
+      for (let i = 0; i < count; i++) {
         colors.push(this.getColor(i));
       }
       return colors;
     },
-    reset: function reset() {
+    reset: function () {
       paletteSteps.reset();
-      _reset();
+      reset();
     }
   };
 }
 function getExtrapolateColorsStrategy(palette, parameters) {
   function convertColor(color, cycleIndex, cycleCount) {
-    var hsl = new _color.default(color).hsl;
-    var l = hsl.l / 100;
-    var diapason = cycleCount - 1 / cycleCount;
-    var minL = l - diapason * 0.5;
-    var maxL = l + diapason * 0.5;
-    var cycleMiddle = (cycleCount - 1) / 2;
-    var cycleDiff = cycleIndex - cycleMiddle;
+    const hsl = new _color.default(color).hsl;
+    let l = hsl.l / 100;
+    const diapason = cycleCount - 1 / cycleCount;
+    let minL = l - diapason * 0.5;
+    let maxL = l + diapason * 0.5;
+    const cycleMiddle = (cycleCount - 1) / 2;
+    const cycleDiff = cycleIndex - cycleMiddle;
     if (minL < Math.min(0.5, l * 0.9)) {
       minL = Math.min(0.5, l * 0.9);
     }
@@ -239,33 +239,33 @@ function getExtrapolateColorsStrategy(palette, parameters) {
     return _color.default.prototype.fromHSL(hsl).toHex();
   }
   return {
-    getColor: function getColor(index, count) {
-      var paletteCount = palette.length;
-      var cycles = _floor((count - 1) / paletteCount + 1);
-      var color = palette[index % paletteCount];
+    getColor: function (index, count) {
+      const paletteCount = palette.length;
+      const cycles = _floor((count - 1) / paletteCount + 1);
+      const color = palette[index % paletteCount];
       if (cycles > 1) {
         return convertColor(color, _floor(index / paletteCount), cycles);
       }
       return color;
     },
-    generateColors: function generateColors(count) {
-      var colors = [];
+    generateColors: function (count) {
+      const colors = [];
       count = count || parameters.count;
-      for (var i = 0; i < count; i++) colors.push(this.getColor(i, count));
+      for (let i = 0; i < count; i++) colors.push(this.getColor(i, count));
       return colors;
     },
-    reset: function reset() {}
+    reset: function () {}
   };
 }
 function getColorMixer(palette, parameters) {
-  var paletteCount = palette.length;
-  var extendedPalette = [];
+  const paletteCount = palette.length;
+  let extendedPalette = [];
   function distributeColors(count, colorsCount, startIndex, distribution) {
-    var groupSize = Math.floor(count / colorsCount);
-    var extraItems = count - colorsCount * groupSize;
-    var i = startIndex;
-    var middleIndex;
-    var size;
+    const groupSize = Math.floor(count / colorsCount);
+    let extraItems = count - colorsCount * groupSize;
+    let i = startIndex;
+    let middleIndex;
+    let size;
     while (i < startIndex + count) {
       size = groupSize;
       if (extraItems > 0) {
@@ -282,9 +282,9 @@ function getColorMixer(palette, parameters) {
   }
   function getColorAndDistance(arr, startIndex, count) {
     startIndex = (count + startIndex) % count;
-    var distance = 0;
-    for (var i = startIndex; i < count * 2; i += 1) {
-      var index = (count + i) % count;
+    let distance = 0;
+    for (let i = startIndex; i < count * 2; i += 1) {
+      const index = (count + i) % count;
       if (arr[index]) {
         return [arr[index], distance];
       }
@@ -292,17 +292,17 @@ function getColorMixer(palette, parameters) {
     }
   }
   function blendColors(paletteWithEmptyColors, paletteLength) {
-    for (var i = 0; i < paletteLength; i++) {
-      var color = paletteWithEmptyColors[i];
+    for (let i = 0; i < paletteLength; i++) {
+      const color = paletteWithEmptyColors[i];
       if (!color) {
-        var color1 = paletteWithEmptyColors[i - 1];
+        let color1 = paletteWithEmptyColors[i - 1];
         if (!color1) {
           continue;
         } else {
-          var c2 = getColorAndDistance(paletteWithEmptyColors, i, paletteLength);
-          var color2 = new _color.default(c2[0]);
+          const c2 = getColorAndDistance(paletteWithEmptyColors, i, paletteLength);
+          const color2 = new _color.default(c2[0]);
           color1 = new _color.default(color1);
-          for (var j = 0; j < c2[1]; j++, i++) {
+          for (let j = 0; j < c2[1]; j++, i++) {
             paletteWithEmptyColors[i] = color1.blend(color2, (j + 1) / (c2[1] + 1)).toHex();
           }
         }
@@ -314,16 +314,16 @@ function getColorMixer(palette, parameters) {
     if (count <= paletteCount) {
       return palette;
     }
-    var result = [];
-    var colorInGroups = paletteCount - 2;
-    var currentColorIndex = 0;
-    var cleanColorIndices = [];
+    let result = [];
+    const colorInGroups = paletteCount - 2;
+    let currentColorIndex = 0;
+    let cleanColorIndices = [];
     if (parameters.keepLastColorInEnd) {
       cleanColorIndices = distributeColors(count - 2, colorInGroups, 1, [0, count - 1]);
     } else {
       cleanColorIndices = distributeColors(count - 1, paletteCount - 1, 1, [0]);
     }
-    for (var i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
       if (cleanColorIndices.indexOf(i) > -1) {
         result[i] = palette[currentColorIndex++];
       }
@@ -332,18 +332,18 @@ function getColorMixer(palette, parameters) {
     return result;
   }
   return {
-    getColor: function getColor(index, count) {
+    getColor: function (index, count) {
       count = count || parameters.count || paletteCount;
       if (extendedPalette.length !== count) {
         extendedPalette = extendPalette(count);
       }
       return extendedPalette[index % count];
     },
-    generateColors: function generateColors(count, repeat) {
+    generateColors: function (count, repeat) {
       count = count || parameters.count || paletteCount;
       if (repeat && count > paletteCount) {
-        var colors = extendPalette(paletteCount);
-        for (var i = 0; i < count - paletteCount; i++) {
+        const colors = extendPalette(paletteCount);
+        for (let i = 0; i < count - paletteCount; i++) {
           colors.push(colors[i]);
         }
         return colors;
@@ -351,11 +351,11 @@ function getColorMixer(palette, parameters) {
         return paletteCount > 0 ? extendPalette(count).slice(0, count) : [];
       }
     },
-    reset: function reset() {}
+    reset: function () {}
   };
 }
 function createPalette(palette, parameters, themeDefaultPalette) {
-  var paletteObj = {
+  const paletteObj = {
     dispose() {
       this._extensionStrategy = null;
     },
@@ -372,8 +372,8 @@ function createPalette(palette, parameters, themeDefaultPalette) {
     }
   };
   parameters = parameters || {};
-  var extensionMode = (parameters.extensionMode || '').toLowerCase();
-  var colors = getPalette(palette, {
+  const extensionMode = (parameters.extensionMode || '').toLowerCase();
+  const colors = getPalette(palette, {
     type: parameters.type || 'simpleSet',
     themeDefault: themeDefaultPalette
   });
@@ -388,17 +388,17 @@ function createPalette(palette, parameters, themeDefaultPalette) {
   return paletteObj;
 }
 function getAlteredPalette(originalPalette, step) {
-  var palette = [];
-  var i;
-  var ii = originalPalette.length;
+  const palette = [];
+  let i;
+  const ii = originalPalette.length;
   for (i = 0; i < ii; ++i) {
     palette.push(getNewColor(originalPalette[i], step));
   }
   return palette;
 }
 function getNewColor(currentColor, step) {
-  var newColor = new _color.default(currentColor).alter(step);
-  var lightness = getLightness(newColor);
+  let newColor = new _color.default(currentColor).alter(step);
+  const lightness = getLightness(newColor);
   if (lightness > 200 || lightness < 55) {
     newColor = new _color.default(currentColor).alter(-step / 2);
   }
@@ -408,26 +408,26 @@ function getLightness(color) {
   return color.r * 0.3 + color.g * 0.59 + color.b * 0.11;
 }
 function getDiscretePalette(source, size, themeDefaultPalette) {
-  var palette = size > 0 ? createDiscreteColors(getPalette(source, {
+  const palette = size > 0 ? createDiscreteColors(getPalette(source, {
     type: 'gradientSet',
     themeDefault: themeDefaultPalette
   }), size) : [];
   return {
-    getColor: function getColor(index) {
+    getColor: function (index) {
       return palette[index] || null;
     }
   };
 }
 function createDiscreteColors(source, count) {
-  var colorCount = count - 1;
-  var sourceCount = source.length - 1;
-  var colors = [];
-  var gradient = [];
-  var i;
+  const colorCount = count - 1;
+  const sourceCount = source.length - 1;
+  const colors = [];
+  const gradient = [];
+  let i;
   function addColor(pos) {
-    var k = sourceCount * pos;
-    var kl = _floor(k);
-    var kr = _ceil(k);
+    const k = sourceCount * pos;
+    const kl = _floor(k);
+    const kr = _ceil(k);
     gradient.push(colors[kl].blend(colors[kr], k - kl).toHex());
   }
   for (i = 0; i <= sourceCount; ++i) {
@@ -444,20 +444,20 @@ function createDiscreteColors(source, count) {
 }
 function getGradientPalette(source, themeDefaultPalette) {
   // TODO: Looks like some new set is going to be added
-  var palette = getPalette(source, {
+  const palette = getPalette(source, {
     type: 'gradientSet',
     themeDefault: themeDefaultPalette
   });
-  var color1 = new _color.default(palette[0]);
-  var color2 = new _color.default(palette[1]);
+  const color1 = new _color.default(palette[0]);
+  const color2 = new _color.default(palette[1]);
   return {
-    getColor: function getColor(ratio) {
+    getColor: function (ratio) {
       return 0 <= ratio && ratio <= 1 ? color1.blend(color2, ratio).toHex() : null;
     }
   };
 }
 
 ///#DEBUG
-var _DEBUG_palettes = palettes;
+const _DEBUG_palettes = palettes;
 ///#ENDDEBUG
 exports._DEBUG_palettes = _DEBUG_palettes;

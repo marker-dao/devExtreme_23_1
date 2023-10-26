@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/common/ink_ripple.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,8 +12,7 @@ exports.viewFunction = exports.InkRippleProps = exports.InkRipple = void 0;
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
 var _utils = require("../../../ui/widget/utils.ink_ripple");
-var _excluded = ["config"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["config"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -23,15 +22,13 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(model) {
-  return (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", "dx-inkripple", null, 1, _extends({}, model.restAttributes)));
-};
+const viewFunction = model => (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", "dx-inkripple", null, 1, _extends({}, model.restAttributes)));
 exports.viewFunction = viewFunction;
-var InkRippleProps = {
+const InkRippleProps = {
   config: Object.freeze({})
 };
 exports.InkRippleProps = InkRippleProps;
-var InkRipple = /*#__PURE__*/function (_BaseInfernoComponent) {
+let InkRipple = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(InkRipple, _BaseInfernoComponent);
   function InkRipple(props) {
     var _this;
@@ -55,7 +52,7 @@ var InkRipple = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       getConfig: this.getConfig,
@@ -64,22 +61,22 @@ var InkRipple = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(InkRipple, [{
     key: "getConfig",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['getConfig'] !== undefined) {
         return this.__getterCache['getConfig'];
       }
-      return this.__getterCache['getConfig'] = function () {
-        var config = _this2.props.config;
+      return this.__getterCache['getConfig'] = (() => {
+        const {
+          config
+        } = this.props;
         return (0, _utils.initConfig)(config);
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        config = _this$props.config,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

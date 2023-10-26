@@ -14,19 +14,19 @@ var _utils = require("./utils");
 var _format_helper = _interopRequireDefault(require("../../format_helper"));
 var _plaque = require("./plaque");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var format = _format_helper.default.format;
-var mathCeil = Math.ceil;
-var mathMax = Math.max;
-var mathMin = Math.min;
-var window = (0, _window.getWindow)();
-var DEFAULT_HTML_GROUP_WIDTH = 3000;
+const format = _format_helper.default.format;
+const mathCeil = Math.ceil;
+const mathMax = Math.max;
+const mathMin = Math.min;
+const window = (0, _window.getWindow)();
+const DEFAULT_HTML_GROUP_WIDTH = 3000;
 function hideElement($element) {
   $element.css({
     left: '-9999px'
   }).detach();
 }
 function getSpecialFormatOptions(options, specialFormat) {
-  var result = options;
+  let result = options;
   switch (specialFormat) {
     case 'argument':
       result = {
@@ -54,12 +54,10 @@ function createTextHtml() {
   });
 }
 function removeElements(elements) {
-  elements.forEach(function (el) {
-    return el.remove();
-  });
+  elements.forEach(el => el.remove());
 }
-var Tooltip = function Tooltip(params) {
-  var that = this;
+let Tooltip = function (params) {
+  const that = this;
   that._eventTrigger = params.eventTrigger;
   that._widgetRoot = params.widgetRoot;
   that._widget = params.widget;
@@ -71,11 +69,11 @@ var Tooltip = function Tooltip(params) {
     'pointerEvents': 'none'
   }) // T265557, T447623
   .addClass(params.cssClass);
-  var renderer = that._renderer = new _renderer2.Renderer({
+  const renderer = that._renderer = new _renderer2.Renderer({
     pathModified: params.pathModified,
     container: that._wrapper[0]
   });
-  var root = renderer.root;
+  const root = renderer.root;
   root.attr({
     'pointer-events': 'none'
   });
@@ -95,27 +93,26 @@ var Tooltip = function Tooltip(params) {
 exports.Tooltip = Tooltip;
 Tooltip.prototype = {
   constructor: Tooltip,
-  dispose: function dispose() {
+  dispose: function () {
     this._wrapper.remove();
     this._renderer.dispose();
     this._options = this._widgetRoot = null;
   },
-  _getContainer: function _getContainer() {
-    var options = this._options;
-    var container = (0, _renderer.default)(this._widgetRoot).closest(options.container);
+  _getContainer: function () {
+    const options = this._options;
+    let container = (0, _renderer.default)(this._widgetRoot).closest(options.container);
     if (container.length === 0) {
       container = (0, _renderer.default)(options.container);
     }
     return (container.length ? container : (0, _renderer.default)('body')).get(0);
   },
   setTemplate(contentTemplate) {
-    var that = this;
+    const that = this;
     that._template = contentTemplate ? that._widget._getTemplate(contentTemplate) : null;
   },
-  setOptions: function setOptions(options) {
-    var _this = this;
+  setOptions: function (options) {
     options = options || {};
-    var that = this;
+    const that = this;
     that._options = options;
     that._textFontStyles = (0, _utils.patchFontOptions)(options.font);
     that._textFontStyles.color = that._textFontStyles.fill;
@@ -123,29 +120,30 @@ Tooltip.prototype = {
       'zIndex': options.zIndex
     });
     that._customizeTooltip = options.customizeTooltip;
-    var textGroupHtml = that._textGroupHtml;
+    const textGroupHtml = that._textGroupHtml;
     if (this.plaque) {
       this.plaque.clear();
     }
     this.setTemplate(options.contentTemplate);
-    var pointerEvents = options.interactive ? 'auto' : 'none';
+    const pointerEvents = options.interactive ? 'auto' : 'none';
     if (options.interactive) {
       this._renderer.root.css({
         '-moz-user-select': 'auto',
         '-webkit-user-select': 'auto'
       });
     }
-    var drawTooltip = function drawTooltip(_ref) {
-      var group = _ref.group,
-        onRender = _ref.onRender,
-        eventData = _ref.eventData,
-        isMoving = _ref.isMoving,
-        _ref$templateCallback = _ref.templateCallback,
-        templateCallback = _ref$templateCallback === void 0 ? function () {} : _ref$templateCallback;
-      var state = that._state;
+    const drawTooltip = _ref => {
+      let {
+        group,
+        onRender,
+        eventData,
+        isMoving,
+        templateCallback = () => {}
+      } = _ref;
+      const state = that._state;
       if (!isMoving) {
-        var template = that._template;
-        var useTemplate = template && !state.formatObject.skipTemplate;
+        const template = that._template;
+        const useTemplate = template && !state.formatObject.skipTemplate;
         if (state.html || useTemplate) {
           textGroupHtml.css({
             color: state.textColor,
@@ -153,18 +151,18 @@ Tooltip.prototype = {
             'pointerEvents': pointerEvents
           });
           if (useTemplate) {
-            var htmlContainers = that._textHtmlContainers;
-            var containerToTemplateRender = createTextHtml().appendTo(that._textGroupHtml);
+            const htmlContainers = that._textHtmlContainers;
+            const containerToTemplateRender = createTextHtml().appendTo(that._textGroupHtml);
             htmlContainers.push(containerToTemplateRender);
             template.render({
               model: state.formatObject,
               container: containerToTemplateRender,
-              onRendered: function onRendered() {
+              onRendered: () => {
                 removeElements(htmlContainers.splice(0, htmlContainers.length - 1));
                 that._textHtml = (0, _dom.replaceWith)(that._textHtml, containerToTemplateRender);
                 state.html = that._textHtml.html();
                 if ((0, _size.getWidth)(that._textHtml) === 0 && (0, _size.getHeight)(that._textHtml) === 0) {
-                  _this.plaque.clear();
+                  this.plaque.clear();
                   templateCallback(false);
                   return;
                 }
@@ -219,10 +217,10 @@ Tooltip.prototype = {
       arrowWidth: 20,
       shadow: that._options.shadow,
       cornerRadius: that._options.cornerRadius
-    }, that, that._renderer.root, drawTooltip, true, function (tooltip, g) {
-      var state = tooltip._state;
+    }, that, that._renderer.root, drawTooltip, true, (tooltip, g) => {
+      const state = tooltip._state;
       if (state.html) {
-        var bBox = window.getComputedStyle(that._textHtml.get(0));
+        let bBox = window.getComputedStyle(that._textHtml.get(0));
         bBox = {
           x: 0,
           y: 0,
@@ -232,8 +230,8 @@ Tooltip.prototype = {
         return bBox;
       }
       return g.getBBox();
-    }, function (tooltip, g, x, y) {
-      var state = tooltip._state;
+    }, (tooltip, g, x, y) => {
+      const state = tooltip._state;
       if (state.html) {
         that._textGroupHtml.css({
           left: x,
@@ -245,35 +243,35 @@ Tooltip.prototype = {
     });
     return that;
   },
-  _riseEvents: function _riseEvents(eventData) {
+  _riseEvents: function (eventData) {
     // trigger event
     // The *onTooltipHidden* is triggered outside the *hide* method because of the cases when *show* is called to determine if tooltip will be visible or not (when target is changed) -
     // *hide* can neither be called before that *show* - because if tooltip is determined to hide it requires some timeout before actually hiding
     // nor after that *show* - because it is either too early to hide (because of timeout) or wrong (because tooltip has already been shown for new target)
     // It is only inside the *show* where it is known weather *onTooltipHidden* is required or not
     // This functionality can be simplified when we get rid of timeouts for tooltip
-    var that = this;
+    const that = this;
     that._eventData && that._eventTrigger('tooltipHidden', that._eventData);
     that._eventData = eventData;
     that._eventTrigger('tooltipShown', that._eventData);
   },
-  setRendererOptions: function setRendererOptions(options) {
+  setRendererOptions: function (options) {
     this._renderer.setOptions(options);
     this._textGroupHtml.css({
       direction: options.rtl ? 'rtl' : 'ltr'
     });
     return this;
   },
-  update: function update(options) {
-    var that = this;
+  update: function (options) {
+    const that = this;
     that.setOptions(options);
 
     // The following is because after update (on widget refresh) tooltip must be hidden
     hideElement(that._wrapper);
 
     // text area
-    var normalizedCSS = {};
-    for (var name in that._textFontStyles) {
+    const normalizedCSS = {};
+    for (const name in that._textFontStyles) {
       normalizedCSS[(0, _inflector.camelize)(name)] = that._textFontStyles[name];
     }
     that._textGroupHtml.css(normalizedCSS);
@@ -281,10 +279,10 @@ Tooltip.prototype = {
     that._eventData = null;
     return that;
   },
-  _prepare: function _prepare(formatObject, state) {
-    var customizeTooltip = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this._customizeTooltip;
-    var options = this._options;
-    var customize = {};
+  _prepare: function (formatObject, state) {
+    let customizeTooltip = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this._customizeTooltip;
+    const options = this._options;
+    let customize = {};
     if ((0, _type.isFunction)(customizeTooltip)) {
       customize = customizeTooltip.call(formatObject, formatObject);
       customize = (0, _type.isPlainObject)(customize) ? customize : {};
@@ -303,8 +301,8 @@ Tooltip.prototype = {
     state.textColor = customize.fontColor || (this._textFontStyles || {}).color;
     return !!state.text || !!state.html || !!this._template;
   },
-  show: function show(formatObject, params, eventData, customizeTooltip, templateCallback) {
-    var that = this;
+  show: function (formatObject, params, eventData, customizeTooltip, templateCallback) {
+    const that = this;
     if (that._options.forceEvents) {
       // for Blazor charts
       eventData.x = params.x;
@@ -312,7 +310,7 @@ Tooltip.prototype = {
       that._riseEvents(eventData);
       return true;
     }
-    var state = {
+    const state = {
       formatObject,
       eventData,
       templateCallback
@@ -323,7 +321,7 @@ Tooltip.prototype = {
     that._state = state;
     that._wrapper.appendTo(that._getContainer());
     that._clear();
-    var parameters = (0, _extend.extend)({}, that._options, {
+    const parameters = (0, _extend.extend)({}, that._options, {
       canvas: that._getCanvas()
     }, state, {
       x: params.x,
@@ -332,15 +330,15 @@ Tooltip.prototype = {
     });
     return this.plaque.clear().draw(parameters);
   },
-  isCursorOnTooltip: function isCursorOnTooltip(x, y) {
+  isCursorOnTooltip: function (x, y) {
     if (this._options.interactive) {
-      var box = this.plaque.getBBox();
+      const box = this.plaque.getBBox();
       return x > box.x && x < box.x + box.width && y > box.y && y < box.y + box.height;
     }
     return false;
   },
-  hide: function hide(isPointerOut) {
-    var that = this;
+  hide: function (isPointerOut) {
+    const that = this;
     hideElement(that._wrapper);
     // trigger event
     if (that._eventData) {
@@ -354,7 +352,7 @@ Tooltip.prototype = {
   _clear() {
     this._textHtml.empty();
   },
-  move: function move(x, y, offset) {
+  move: function (x, y, offset) {
     this.plaque.draw({
       x,
       y,
@@ -363,18 +361,18 @@ Tooltip.prototype = {
       isMoving: true
     });
   },
-  _moveWrapper: function _moveWrapper() {
-    var that = this;
-    var plaqueBBox = this.plaque.getBBox();
+  _moveWrapper: function () {
+    const that = this;
+    const plaqueBBox = this.plaque.getBBox();
     that._renderer.resize(plaqueBBox.width, plaqueBBox.height);
 
     // move wrapper
-    var offset = that._wrapper.css({
+    const offset = that._wrapper.css({
       left: 0,
       top: 0
     }).offset();
-    var left = plaqueBBox.x;
-    var top = plaqueBBox.y;
+    const left = plaqueBBox.x;
+    const top = plaqueBBox.y;
     that._wrapper.css({
       left: left - offset.left,
       top: top - offset.top
@@ -390,31 +388,31 @@ Tooltip.prototype = {
       });
     }
   },
-  formatValue: function formatValue(value, _specialFormat) {
-    var options = _specialFormat ? getSpecialFormatOptions(this._options, _specialFormat) : this._options;
+  formatValue: function (value, _specialFormat) {
+    const options = _specialFormat ? getSpecialFormatOptions(this._options, _specialFormat) : this._options;
     return format(value, options.format);
   },
   getOptions() {
     return this._options;
   },
-  getLocation: function getLocation() {
+  getLocation: function () {
     return (0, _utils.normalizeEnum)(this._options.location);
   },
-  isEnabled: function isEnabled() {
+  isEnabled: function () {
     return !!this._options.enabled || !!this._options.forceEvents; // for Blazor charts
   },
 
-  isShared: function isShared() {
+  isShared: function () {
     return !!this._options.shared;
   },
-  _getCanvas: function _getCanvas() {
-    var container = this._getContainer();
-    var containerBox = container.getBoundingClientRect();
-    var html = _dom_adapter.default.getDocumentElement();
-    var document = _dom_adapter.default.getDocument();
-    var left = window.pageXOffset || html.scrollLeft || 0;
-    var top = window.pageYOffset || html.scrollTop || 0;
-    var box = {
+  _getCanvas: function () {
+    const container = this._getContainer();
+    const containerBox = container.getBoundingClientRect();
+    const html = _dom_adapter.default.getDocumentElement();
+    const document = _dom_adapter.default.getDocument();
+    let left = window.pageXOffset || html.scrollLeft || 0;
+    let top = window.pageYOffset || html.scrollTop || 0;
+    const box = {
       left: left,
       top: top,
       width: mathMax(html.clientWidth, document.body.clientWidth) + left,
@@ -433,17 +431,17 @@ Tooltip.prototype = {
     return box;
   }
 };
-var plugin = {
+const plugin = {
   name: 'tooltip',
-  init: function init() {
+  init: function () {
     this._initTooltip();
   },
-  dispose: function dispose() {
+  dispose: function () {
     this._disposeTooltip();
   },
   members: {
     // The method exists only to be overridden in sparklines.
-    _initTooltip: function _initTooltip() {
+    _initTooltip: function () {
       // "exports" is used for testing purposes.
       this._tooltip = new Tooltip({
         cssClass: this._rootClassPrefix + '-tooltip',
@@ -454,16 +452,16 @@ var plugin = {
       });
     },
     // The method exists only to be overridden in sparklines.
-    _disposeTooltip: function _disposeTooltip() {
+    _disposeTooltip: function () {
       this._tooltip.dispose();
       this._tooltip = null;
     },
     // The method exists only to be overridden in sparklines.
-    _setTooltipRendererOptions: function _setTooltipRendererOptions() {
+    _setTooltipRendererOptions: function () {
       this._tooltip.setRendererOptions(this._getRendererOptions());
     },
     // The method exists only to be overridden in sparklines and gauges.
-    _setTooltipOptions: function _setTooltipOptions() {
+    _setTooltipOptions: function () {
       this._tooltip.update(this._getOption('tooltip'));
     }
   },
@@ -472,8 +470,8 @@ var plugin = {
       this._tooltip && this._tooltip.hide();
     }
   },
-  customize: function customize(constructor) {
-    var proto = constructor.prototype;
+  customize: function (constructor) {
+    const proto = constructor.prototype;
     proto._eventsMap.onTooltipShown = {
       name: 'tooltipShown'
     };
@@ -482,7 +480,7 @@ var plugin = {
     };
     constructor.addChange({
       code: 'TOOLTIP_RENDERER',
-      handler: function handler() {
+      handler: function () {
         this._setTooltipRendererOptions();
       },
       isThemeDependent: true,
@@ -490,7 +488,7 @@ var plugin = {
     });
     constructor.addChange({
       code: 'TOOLTIP',
-      handler: function handler() {
+      handler: function () {
         this._setTooltipOptions();
       },
       isThemeDependent: true,

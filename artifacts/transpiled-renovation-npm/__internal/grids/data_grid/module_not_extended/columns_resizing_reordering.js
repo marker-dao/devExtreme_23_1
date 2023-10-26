@@ -7,16 +7,16 @@ exports.TrackerView = exports.TablePositionViewController = exports.DraggingHead
 var _m_columns_resizing_reordering = require("../../../grids/grid_core/columns_resizing_reordering/m_columns_resizing_reordering");
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DraggingHeaderView = _m_columns_resizing_reordering.columnsResizingReorderingModule.views.draggingHeaderView;
+const DraggingHeaderView = _m_columns_resizing_reordering.columnsResizingReorderingModule.views.draggingHeaderView;
 exports.DraggingHeaderView = DraggingHeaderView;
-var DraggingHeaderViewController = _m_columns_resizing_reordering.columnsResizingReorderingModule.controllers.draggingHeader;
+const DraggingHeaderViewController = _m_columns_resizing_reordering.columnsResizingReorderingModule.controllers.draggingHeader;
 exports.DraggingHeaderViewController = DraggingHeaderViewController;
-var ColumnsSeparatorView = _m_columns_resizing_reordering.columnsResizingReorderingModule.views.columnsSeparatorView;
+const ColumnsSeparatorView = _m_columns_resizing_reordering.columnsResizingReorderingModule.views.columnsSeparatorView;
 exports.ColumnsSeparatorView = ColumnsSeparatorView;
-var TablePositionViewController = _m_columns_resizing_reordering.columnsResizingReorderingModule.controllers.tablePosition;
+const TablePositionViewController = _m_columns_resizing_reordering.columnsResizingReorderingModule.controllers.tablePosition;
 exports.TablePositionViewController = TablePositionViewController;
-var ColumnsResizerViewController = _m_columns_resizing_reordering.columnsResizingReorderingModule.controllers.columnsResizer;
+const ColumnsResizerViewController = _m_columns_resizing_reordering.columnsResizingReorderingModule.controllers.columnsResizer;
 exports.ColumnsResizerViewController = ColumnsResizerViewController;
-var TrackerView = _m_columns_resizing_reordering.columnsResizingReorderingModule.views.trackerView;
+const TrackerView = _m_columns_resizing_reordering.columnsResizingReorderingModule.views.trackerView;
 exports.TrackerView = TrackerView;
 _m_core.default.registerModule('columnsResizingReordering', _m_columns_resizing_reordering.columnsResizingReorderingModule);

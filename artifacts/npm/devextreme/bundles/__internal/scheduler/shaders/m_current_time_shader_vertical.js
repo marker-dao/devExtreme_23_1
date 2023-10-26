@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/shaders/m_current_time_shader_vertical.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,24 +18,24 @@ var _m_current_time_shader = _interopRequireDefault(require("./m_current_time_sh
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DATE_TIME_SHADER_ALL_DAY_CLASS = 'dx-scheduler-date-time-shader-all-day';
-var DATE_TIME_SHADER_TOP_CLASS = 'dx-scheduler-date-time-shader-top';
-var DATE_TIME_SHADER_BOTTOM_CLASS = 'dx-scheduler-date-time-shader-bottom';
-var VerticalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
+const DATE_TIME_SHADER_ALL_DAY_CLASS = 'dx-scheduler-date-time-shader-all-day';
+const DATE_TIME_SHADER_TOP_CLASS = 'dx-scheduler-date-time-shader-top';
+const DATE_TIME_SHADER_BOTTOM_CLASS = 'dx-scheduler-date-time-shader-bottom';
+let VerticalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
   _inheritsLoose(VerticalCurrentTimeShader, _CurrentTimeShader);
   function VerticalCurrentTimeShader() {
     return _CurrentTimeShader.apply(this, arguments) || this;
   }
   var _proto = VerticalCurrentTimeShader.prototype;
   _proto.renderShader = function renderShader() {
-    var shaderHeight = this._getShaderHeight();
-    var maxHeight = this._getShaderMaxHeight();
-    var isSolidShader = shaderHeight > maxHeight;
+    let shaderHeight = this._getShaderHeight();
+    const maxHeight = this._getShaderMaxHeight();
+    const isSolidShader = shaderHeight > maxHeight;
     if (shaderHeight > maxHeight) {
       shaderHeight = maxHeight;
     }
     (0, _size.setHeight)(this._$shader, shaderHeight);
-    var groupCount = this._workSpace._getGroupCount() || 1;
+    const groupCount = this._workSpace._getGroupCount() || 1;
     if (this._workSpace.isGroupedByDate()) {
       this._renderGroupedByDateShaderParts(groupCount, shaderHeight, maxHeight, isSolidShader);
     } else {
@@ -43,16 +43,16 @@ var VerticalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
     }
   };
   _proto._renderShaderParts = function _renderShaderParts(groupCount, shaderHeight, maxHeight, isSolidShader) {
-    for (var i = 0; i < groupCount; i++) {
-      var shaderWidth = this._getShaderWidth(i);
+    for (let i = 0; i < groupCount; i++) {
+      const shaderWidth = this._getShaderWidth(i);
       this._renderTopShader(this._$shader, shaderHeight, shaderWidth, i);
       !isSolidShader && this._renderBottomShader(this._$shader, maxHeight, shaderHeight, shaderWidth, i);
       this._renderAllDayShader(shaderWidth, i);
     }
   };
   _proto._renderGroupedByDateShaderParts = function _renderGroupedByDateShaderParts(groupCount, shaderHeight, maxHeight, isSolidShader) {
-    var shaderWidth = this._getShaderWidth(0);
-    var bottomShaderWidth = shaderWidth - this._workSpace.getCellWidth();
+    const shaderWidth = this._getShaderWidth(0);
+    let bottomShaderWidth = shaderWidth - this._workSpace.getCellWidth();
     if (shaderHeight < 0) {
       shaderHeight = 0;
       bottomShaderWidth = shaderWidth;
@@ -75,8 +75,8 @@ var VerticalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
   };
   _proto._renderBottomShader = function _renderBottomShader($shader, maxHeight, height, width, i) {
     this._$bottomShader = (0, _renderer.default)('<div>').addClass(DATE_TIME_SHADER_BOTTOM_CLASS);
-    var shaderWidth = height < 0 ? width : width - this._workSpace.getCellWidth();
-    var shaderHeight = height < 0 ? maxHeight : maxHeight - height;
+    const shaderWidth = height < 0 ? width : width - this._workSpace.getCellWidth();
+    const shaderHeight = height < 0 ? maxHeight : maxHeight - height;
     (0, _size.setWidth)(this._$bottomShader, shaderWidth);
     (0, _size.setHeight)(this._$bottomShader, shaderHeight);
     this._$bottomShader.css('left', this._getShaderOffset(i, width - this._workSpace.getCellWidth()));

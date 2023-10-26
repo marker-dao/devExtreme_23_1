@@ -1,5 +1,5 @@
 "use strict";
 
 exports.SimpleItem = void 0;
-var SimpleItem = {};
+const SimpleItem = {};
 exports.SimpleItem = SimpleItem;

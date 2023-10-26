@@ -2,8 +2,8 @@
 
 exports.getFilterStrategy = void 0;
 var _m_appointment_filter = require("../../../../../__internal/scheduler/appointments/data_provider/m_appointment_filter");
-var getFilterStrategy = function getFilterStrategy(resources, startDayHour, endDayHour, cellDurationInMinutes, showAllDayPanel, supportAllDayRow, firstDayOfWeek, viewType, dateRange, groupCount, loadedResources, isVirtualScrolling, timeZoneCalculator, dataAccessors, viewDataProvider) {
-  var filterOptions = {
+const getFilterStrategy = (resources, startDayHour, endDayHour, cellDurationInMinutes, showAllDayPanel, supportAllDayRow, firstDayOfWeek, viewType, dateRange, groupCount, loadedResources, isVirtualScrolling, timeZoneCalculator, dataAccessors, viewDataProvider) => {
+  const filterOptions = {
     resources,
     startDayHour,
     endDayHour,

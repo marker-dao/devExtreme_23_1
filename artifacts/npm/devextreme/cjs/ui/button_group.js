@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/button_group.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,32 +20,31 @@ var _bindable_template = require("../core/templates/bindable_template");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE buttonGroup
 
-var BUTTON_GROUP_CLASS = 'dx-buttongroup';
-var BUTTON_GROUP_WRAPPER_CLASS = BUTTON_GROUP_CLASS + '-wrapper';
-var BUTTON_GROUP_ITEM_CLASS = BUTTON_GROUP_CLASS + '-item';
-var BUTTON_GROUP_FIRST_ITEM_CLASS = BUTTON_GROUP_CLASS + '-first-item';
-var BUTTON_GROUP_LAST_ITEM_CLASS = BUTTON_GROUP_CLASS + '-last-item';
-var BUTTON_GROUP_ITEM_HAS_WIDTH = BUTTON_GROUP_ITEM_CLASS + '-has-width';
-var SHAPE_STANDARD_CLASS = 'dx-shape-standard';
-var BUTTON_GROUP_STYLING_MODE_CLASS = {
+const BUTTON_GROUP_CLASS = 'dx-buttongroup';
+const BUTTON_GROUP_WRAPPER_CLASS = BUTTON_GROUP_CLASS + '-wrapper';
+const BUTTON_GROUP_ITEM_CLASS = BUTTON_GROUP_CLASS + '-item';
+const BUTTON_GROUP_FIRST_ITEM_CLASS = BUTTON_GROUP_CLASS + '-first-item';
+const BUTTON_GROUP_LAST_ITEM_CLASS = BUTTON_GROUP_CLASS + '-last-item';
+const BUTTON_GROUP_ITEM_HAS_WIDTH = BUTTON_GROUP_ITEM_CLASS + '-has-width';
+const SHAPE_STANDARD_CLASS = 'dx-shape-standard';
+const BUTTON_GROUP_STYLING_MODE_CLASS = {
   contained: 'dx-buttongroup-mode-contained',
   outlined: 'dx-buttongroup-mode-outlined',
   text: 'dx-buttongroup-mode-text'
 };
-var ButtonCollection = _uiCollection_widget.default.inherit({
+const ButtonCollection = _uiCollection_widget.default.inherit({
   _initTemplates() {
-    var _this = this;
     this.callBase();
     /**
      * @name dxButtonGroupItem.html
      * @hidden
      */
     this._templateManager.addDefaultTemplates({
-      item: new _bindable_template.BindableTemplate(function ($container, data, model) {
-        _this._prepareItemStyles($container);
-        var template = _this.option('buttonTemplate');
-        _this._createComponent($container, _button.default, (0, _extend.extend)({}, model, data, _this._getBasicButtonOptions(), {
-          _templateData: _this._hasCustomTemplate(template) ? model : {},
+      item: new _bindable_template.BindableTemplate(($container, data, model) => {
+        this._prepareItemStyles($container);
+        const template = this.option('buttonTemplate');
+        this._createComponent($container, _button.default, (0, _extend.extend)({}, model, data, this._getBasicButtonOptions(), {
+          _templateData: this._hasCustomTemplate(template) ? model : {},
           template: model.template || template
         }));
       }, ['text', 'type', 'icon', 'disabled', 'visible', 'hint'], this.option('integrationOptions.watchMethod'))
@@ -72,9 +71,9 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
     return 'dx-item-selected dx-state-selected';
   },
   _prepareItemStyles($item) {
-    var itemIndex = $item.data('dxItemIndex');
+    const itemIndex = $item.data('dxItemIndex');
     itemIndex === 0 && $item.addClass(BUTTON_GROUP_FIRST_ITEM_CLASS);
-    var items = this.option('items');
+    const items = this.option('items');
     items && itemIndex === items.length - 1 && $item.addClass(BUTTON_GROUP_LAST_ITEM_CLASS);
     $item.addClass(SHAPE_STANDARD_CLASS);
   },
@@ -82,10 +81,10 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
     args.container = (0, _renderer.default)(args.container).parent();
     return this.callBase(args);
   },
-  _setAriaSelectionAttribute: function _setAriaSelectionAttribute($target, value) {
+  _setAriaSelectionAttribute: function ($target, value) {
     this.setAria('pressed', value, $target);
   },
-  _renderItemContentByNode: function _renderItemContentByNode(args, $node) {
+  _renderItemContentByNode: function (args, $node) {
     args.container = (0, _renderer.default)(args.container.children().first());
     return this.callBase(args, $node);
   },
@@ -102,14 +101,14 @@ var ButtonCollection = _uiCollection_widget.default.inherit({
   _itemClass() {
     return BUTTON_GROUP_ITEM_CLASS;
   },
-  _itemSelectHandler: function _itemSelectHandler(e) {
+  _itemSelectHandler: function (e) {
     if (this.option('selectionMode') === 'single' && this.isItemSelected(e.currentTarget)) {
       return;
     }
     this.callBase(e);
   }
 });
-var ButtonGroup = _ui.default.inherit({
+const ButtonGroup = _ui.default.inherit({
   _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       hoverStateEnabled: true,
@@ -142,14 +141,15 @@ var ButtonGroup = _ui.default.inherit({
   },
   _renderStylingMode() {
     var _BUTTON_GROUP_STYLING;
-    var _this$option = this.option(),
-      stylingMode = _this$option.stylingMode;
-    for (var key in BUTTON_GROUP_STYLING_MODE_CLASS) {
+    const {
+      stylingMode
+    } = this.option();
+    for (const key in BUTTON_GROUP_STYLING_MODE_CLASS) {
       this.$element().removeClass(BUTTON_GROUP_STYLING_MODE_CLASS[key]);
     }
     this.$element().addClass((_BUTTON_GROUP_STYLING = BUTTON_GROUP_STYLING_MODE_CLASS[stylingMode]) !== null && _BUTTON_GROUP_STYLING !== void 0 ? _BUTTON_GROUP_STYLING : BUTTON_GROUP_STYLING_MODE_CLASS.contained);
   },
-  _fireSelectionChangeEvent: function _fireSelectionChangeEvent(addedItems, removedItems) {
+  _fireSelectionChangeEvent: function (addedItems, removedItems) {
     this._createActionByOption('onSelectionChanged', {
       excludeValidators: ['disabled', 'readOnly']
     })({
@@ -158,10 +158,9 @@ var ButtonGroup = _ui.default.inherit({
     });
   },
   _renderButtons() {
-    var _this2 = this;
-    var $buttons = (0, _renderer.default)('<div>').addClass(BUTTON_GROUP_WRAPPER_CLASS).appendTo(this.$element());
-    var selectedItems = this.option('selectedItems');
-    var options = {
+    const $buttons = (0, _renderer.default)('<div>').addClass(BUTTON_GROUP_WRAPPER_CLASS).appendTo(this.$element());
+    const selectedItems = this.option('selectedItems');
+    const options = {
       selectionMode: this.option('selectionMode'),
       items: this.option('items'),
       keyExpr: this.option('keyExpr'),
@@ -176,16 +175,16 @@ var ButtonGroup = _ui.default.inherit({
       tabIndex: this.option('tabIndex'),
       noDataText: '',
       selectionRequired: false,
-      onItemRendered: function onItemRendered(e) {
-        var width = _this2.option('width');
+      onItemRendered: e => {
+        const width = this.option('width');
         (0, _type.isDefined)(width) && (0, _renderer.default)(e.itemElement).addClass(BUTTON_GROUP_ITEM_HAS_WIDTH);
       },
-      onSelectionChanged: function onSelectionChanged(e) {
-        _this2._syncSelectionOptions();
-        _this2._fireSelectionChangeEvent(e.addedItems, e.removedItems);
+      onSelectionChanged: e => {
+        this._syncSelectionOptions();
+        this._fireSelectionChangeEvent(e.addedItems, e.removedItems);
       },
-      onItemClick: function onItemClick(e) {
-        _this2._itemClickAction(e);
+      onItemClick: e => {
+        this._itemClickAction(e);
       }
     };
     if ((0, _type.isDefined)(selectedItems) && selectedItems.length) {

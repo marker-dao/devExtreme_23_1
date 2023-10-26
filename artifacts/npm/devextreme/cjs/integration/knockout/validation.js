@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/knockout/validation.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,13 +20,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-restricted-imports
 
 if (_knockout.default) {
-  var VALIDATION_STATUS_VALID = 'valid';
-  var VALIDATION_STATUS_PENDING = 'pending';
-  var koDxValidator = _class.default.inherit({
+  const VALIDATION_STATUS_VALID = 'valid';
+  const VALIDATION_STATUS_PENDING = 'pending';
+  const koDxValidator = _class.default.inherit({
     ctor(target, _ref) {
-      var _this = this;
-      var name = _ref.name,
-        validationRules = _ref.validationRules;
+      let {
+        name,
+        validationRules
+      } = _ref;
       this.target = target;
       this.name = name;
       this.isValid = _knockout.default.observable(true);
@@ -34,9 +35,9 @@ if (_knockout.default) {
       this.validationErrors = _knockout.default.observable();
       this.validationStatus = _knockout.default.observable(VALIDATION_STATUS_VALID);
       this._eventsStrategy = new _events_strategy.EventsStrategy(this);
-      this.validationRules = (0, _iterator.map)(validationRules, function (rule, index) {
+      this.validationRules = (0, _iterator.map)(validationRules, (rule, index) => {
         return (0, _extend.extend)({}, rule, {
-          validator: _this,
+          validator: this,
           index: index
         });
       });
@@ -47,12 +48,12 @@ if (_knockout.default) {
     },
     _updateValidationResult(result) {
       if (!this._validationInfo.result || this._validationInfo.result.id !== result.id) {
-        var complete = this._validationInfo.deferred && this._validationInfo.result.complete;
+        const complete = this._validationInfo.deferred && this._validationInfo.result.complete;
         this._validationInfo.result = (0, _extend.extend)({}, result, {
           complete
         });
       } else {
-        for (var prop in result) {
+        for (const prop in result) {
           if (prop !== 'id' && prop !== 'complete') {
             this._validationInfo.result[prop] = result[prop];
           }
@@ -60,25 +61,24 @@ if (_knockout.default) {
       }
     },
     validate() {
-      var _this2 = this;
-      var currentResult = this._validationInfo && this._validationInfo.result;
-      var value = this.target();
+      const currentResult = this._validationInfo && this._validationInfo.result;
+      const value = this.target();
       if (currentResult && currentResult.status === VALIDATION_STATUS_PENDING && currentResult.value === value) {
         return (0, _extend.extend)({}, currentResult);
       }
-      var result = _validation_engine.default.validate(value, this.validationRules, this.name);
+      const result = _validation_engine.default.validate(value, this.validationRules, this.name);
       result.id = new _guid.default().toString();
       this._applyValidationResult(result);
-      result.complete && result.complete.then(function (res) {
-        if (res.id === _this2._validationInfo.result.id) {
-          _this2._applyValidationResult(res);
+      result.complete && result.complete.then(res => {
+        if (res.id === this._validationInfo.result.id) {
+          this._applyValidationResult(res);
         }
       });
       return (0, _extend.extend)({}, this._validationInfo.result);
     },
     reset() {
       this.target(null);
-      var result = {
+      const result = {
         id: null,
         isValid: true,
         brokenRule: null,

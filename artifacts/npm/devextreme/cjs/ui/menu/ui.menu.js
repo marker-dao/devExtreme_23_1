@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/menu/ui.menu.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,35 +32,35 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 // STYLE menu
 
-var DX_MENU_CLASS = 'dx-menu';
-var DX_MENU_VERTICAL_CLASS = DX_MENU_CLASS + '-vertical';
-var DX_MENU_HORIZONTAL_CLASS = DX_MENU_CLASS + '-horizontal';
-var DX_MENU_ITEM_CLASS = DX_MENU_CLASS + '-item';
-var DX_MENU_ITEMS_CONTAINER_CLASS = DX_MENU_CLASS + '-items-container';
-var DX_MENU_ITEM_EXPANDED_CLASS = DX_MENU_ITEM_CLASS + '-expanded';
-var DX_CONTEXT_MENU_CLASS = 'dx-context-menu';
-var DX_CONTEXT_MENU_CONTAINER_BORDER_CLASS = DX_CONTEXT_MENU_CLASS + '-container-border';
-var DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS = 'dx-context-menu-content-delimiter';
-var DX_SUBMENU_CLASS = 'dx-submenu';
-var DX_STATE_DISABLED_CLASS = 'dx-state-disabled';
-var DX_STATE_HOVER_CLASS = 'dx-state-hover';
-var DX_STATE_ACTIVE_CLASS = 'dx-state-active';
-var DX_ADAPTIVE_MODE_CLASS = DX_MENU_CLASS + '-adaptive-mode';
-var DX_ADAPTIVE_HAMBURGER_BUTTON_CLASS = DX_MENU_CLASS + '-hamburger-button';
-var DX_ADAPTIVE_MODE_OVERLAY_WRAPPER_CLASS = DX_ADAPTIVE_MODE_CLASS + '-overlay-wrapper';
-var FOCUS_UP = 'up';
-var FOCUS_DOWN = 'down';
-var FOCUS_LEFT = 'left';
-var FOCUS_RIGHT = 'right';
-var SHOW_SUBMENU_OPERATION = 'showSubmenu';
-var NEXTITEM_OPERATION = 'nextItem';
-var PREVITEM_OPERATION = 'prevItem';
-var DEFAULT_DELAY = {
+const DX_MENU_CLASS = 'dx-menu';
+const DX_MENU_VERTICAL_CLASS = DX_MENU_CLASS + '-vertical';
+const DX_MENU_HORIZONTAL_CLASS = DX_MENU_CLASS + '-horizontal';
+const DX_MENU_ITEM_CLASS = DX_MENU_CLASS + '-item';
+const DX_MENU_ITEMS_CONTAINER_CLASS = DX_MENU_CLASS + '-items-container';
+const DX_MENU_ITEM_EXPANDED_CLASS = DX_MENU_ITEM_CLASS + '-expanded';
+const DX_CONTEXT_MENU_CLASS = 'dx-context-menu';
+const DX_CONTEXT_MENU_CONTAINER_BORDER_CLASS = DX_CONTEXT_MENU_CLASS + '-container-border';
+const DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS = 'dx-context-menu-content-delimiter';
+const DX_SUBMENU_CLASS = 'dx-submenu';
+const DX_STATE_DISABLED_CLASS = 'dx-state-disabled';
+const DX_STATE_HOVER_CLASS = 'dx-state-hover';
+const DX_STATE_ACTIVE_CLASS = 'dx-state-active';
+const DX_ADAPTIVE_MODE_CLASS = DX_MENU_CLASS + '-adaptive-mode';
+const DX_ADAPTIVE_HAMBURGER_BUTTON_CLASS = DX_MENU_CLASS + '-hamburger-button';
+const DX_ADAPTIVE_MODE_OVERLAY_WRAPPER_CLASS = DX_ADAPTIVE_MODE_CLASS + '-overlay-wrapper';
+const FOCUS_UP = 'up';
+const FOCUS_DOWN = 'down';
+const FOCUS_LEFT = 'left';
+const FOCUS_RIGHT = 'right';
+const SHOW_SUBMENU_OPERATION = 'showSubmenu';
+const NEXTITEM_OPERATION = 'nextItem';
+const PREVITEM_OPERATION = 'prevItem';
+const DEFAULT_DELAY = {
   'show': 50,
   'hide': 300
 };
-var ACTIONS = ['onSubmenuShowing', 'onSubmenuShown', 'onSubmenuHiding', 'onSubmenuHidden', 'onItemContextMenu', 'onItemClick', 'onSelectionChanged', 'onItemRendered'];
-var Menu = /*#__PURE__*/function (_MenuBase) {
+const ACTIONS = ['onSubmenuShowing', 'onSubmenuShown', 'onSubmenuHiding', 'onSubmenuHidden', 'onItemContextMenu', 'onItemClick', 'onSelectionChanged', 'onItemRendered'];
+let Menu = /*#__PURE__*/function (_MenuBase) {
   _inheritsLoose(Menu, _MenuBase);
   function Menu() {
     return _MenuBase.apply(this, arguments) || this;
@@ -109,14 +109,14 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     });
   };
   _proto._itemElements = function _itemElements() {
-    var rootMenuElements = _MenuBase.prototype._itemElements.call(this);
-    var submenuElements = this._submenuItemElements();
+    const rootMenuElements = _MenuBase.prototype._itemElements.call(this);
+    const submenuElements = this._submenuItemElements();
     return rootMenuElements.add(submenuElements);
   };
   _proto._submenuItemElements = function _submenuItemElements() {
-    var elements = [];
-    var itemSelector = ".".concat(DX_MENU_ITEM_CLASS);
-    var currentSubmenu = this._submenus.length && this._submenus[0];
+    let elements = [];
+    const itemSelector = ".".concat(DX_MENU_ITEM_CLASS);
+    const currentSubmenu = this._submenus.length && this._submenus[0];
     if (currentSubmenu && currentSubmenu.itemsContainer()) {
       elements = currentSubmenu.itemsContainer().find(itemSelector);
     }
@@ -129,13 +129,13 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     return this.option('orientation') === 'horizontal';
   };
   _proto._moveFocus = function _moveFocus(location) {
-    var $items = this._getAvailableItems();
-    var isMenuHorizontal = this._isMenuHorizontal();
-    var $activeItem = this._getActiveItem(true);
-    var argument;
-    var operation;
-    var navigationAction;
-    var $newTarget;
+    const $items = this._getAvailableItems();
+    const isMenuHorizontal = this._isMenuHorizontal();
+    const $activeItem = this._getActiveItem(true);
+    let argument;
+    let operation;
+    let navigationAction;
+    let $newTarget;
     switch (location) {
       case FOCUS_UP:
         operation = isMenuHorizontal ? SHOW_SUBMENU_OPERATION : this._getItemsNavigationOperation(PREVITEM_OPERATION);
@@ -169,14 +169,14 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     }
   };
   _proto._getItemsNavigationOperation = function _getItemsNavigationOperation(operation) {
-    var navOperation = operation;
+    let navOperation = operation;
     if (this.option('rtlEnabled')) {
       navOperation = operation === PREVITEM_OPERATION ? NEXTITEM_OPERATION : PREVITEM_OPERATION;
     }
     return navOperation;
   };
   _proto._getKeyboardNavigationAction = function _getKeyboardNavigationAction(operation, argument) {
-    var action = _common.noop;
+    let action = _common.noop;
     switch (operation) {
       case SHOW_SUBMENU_OPERATION:
         if (!argument.hasClass(DX_STATE_DISABLED_CLASS)) {
@@ -208,14 +208,14 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     return this.option('adaptivityEnabled') && this.option('orientation') === 'horizontal';
   };
   _proto._updateItemsWidthCache = function _updateItemsWidthCache() {
-    var $menuItems = this.$element().find('ul').first().children('li').children(".".concat(DX_MENU_ITEM_CLASS));
+    const $menuItems = this.$element().find('ul').first().children('li').children(".".concat(DX_MENU_ITEM_CLASS));
     this._menuItemsWidth = this._getSummaryItemsSize('width', $menuItems, true);
   };
   _proto._dimensionChanged = function _dimensionChanged() {
     if (!this._isAdaptivityEnabled()) {
       return;
     }
-    var containerWidth = (0, _size.getOuterWidth)(this.$element());
+    const containerWidth = (0, _size.getOuterWidth)(this.$element());
     this._toggleAdaptiveMode(this._menuItemsWidth > containerWidth);
   };
   _proto._init = function _init() {
@@ -223,10 +223,9 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     this._submenus = [];
   };
   _proto._initActions = function _initActions() {
-    var _this = this;
     this._actions = {};
-    (0, _iterator.each)(ACTIONS, function (index, action) {
-      _this._actions[action] = _this._createActionByOption(action);
+    (0, _iterator.each)(ACTIONS, (index, action) => {
+      this._actions[action] = this._createActionByOption(action);
     });
   };
   _proto._initMarkup = function _initMarkup() {
@@ -259,8 +258,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     this._hamburger && this._hamburger.$element().toggleClass(DX_STATE_ACTIVE_CLASS, state);
   };
   _proto._toggleAdaptiveMode = function _toggleAdaptiveMode(state) {
-    var $menuItemsContainer = this.$element().find(".".concat(DX_MENU_HORIZONTAL_CLASS));
-    var $adaptiveElements = this.$element().find(".".concat(DX_ADAPTIVE_MODE_CLASS));
+    const $menuItemsContainer = this.$element().find(".".concat(DX_MENU_HORIZONTAL_CLASS));
+    const $adaptiveElements = this.$element().find(".".concat(DX_ADAPTIVE_MODE_CLASS));
     if (state) {
       this._hideVisibleSubmenu();
     } else {
@@ -288,20 +287,19 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     }
   };
   _proto._getAdaptiveOverlayOptions = function _getAdaptiveOverlayOptions() {
-    var _this2 = this;
-    var rtl = this.option('rtlEnabled');
-    var position = rtl ? 'right' : 'left';
+    const rtl = this.option('rtlEnabled');
+    const position = rtl ? 'right' : 'left';
     return {
       _ignoreFunctionValueDeprecation: true,
-      maxHeight: function maxHeight() {
-        return (0, _utils.getElementMaxHeightByWindow)(_this2.$element());
+      maxHeight: () => {
+        return (0, _utils.getElementMaxHeightByWindow)(this.$element());
       },
       deferRendering: false,
       shading: false,
       animation: false,
       hideOnParentScroll: true,
-      onHidden: function onHidden() {
-        _this2._toggleHamburgerActiveState(false);
+      onHidden: () => {
+        this._toggleHamburgerActiveState(false);
       },
       height: 'auto',
       hideOnOutsideClick(e) {
@@ -316,29 +314,28 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     };
   };
   _proto._getTreeViewOptions = function _getTreeViewOptions() {
-    var _this3 = this;
-    var menuOptions = {};
-    var optionsToTransfer = ['rtlEnabled', 'width', 'accessKey', 'activeStateEnabled', 'animation', 'dataSource', 'disabled', 'displayExpr', 'displayExpr', 'focusStateEnabled', 'hint', 'hoverStateEnabled', 'itemsExpr', 'items', 'itemTemplate', 'selectedExpr', 'selectionMode', 'tabIndex', 'visible'];
-    (0, _iterator.each)(optionsToTransfer, function (_, option) {
-      menuOptions[option] = _this3.option(option);
+    const menuOptions = {};
+    const optionsToTransfer = ['rtlEnabled', 'width', 'accessKey', 'activeStateEnabled', 'animation', 'dataSource', 'disabled', 'displayExpr', 'displayExpr', 'focusStateEnabled', 'hint', 'hoverStateEnabled', 'itemsExpr', 'items', 'itemTemplate', 'selectedExpr', 'selectionMode', 'tabIndex', 'visible'];
+    (0, _iterator.each)(optionsToTransfer, (_, option) => {
+      menuOptions[option] = this.option(option);
     });
-    var actionsToTransfer = ['onItemContextMenu', 'onSelectionChanged', 'onItemRendered'];
-    (0, _iterator.each)(actionsToTransfer, function (_, actionName) {
-      menuOptions[actionName] = function (e) {
-        _this3._actions[actionName](e);
+    const actionsToTransfer = ['onItemContextMenu', 'onSelectionChanged', 'onItemRendered'];
+    (0, _iterator.each)(actionsToTransfer, (_, actionName) => {
+      menuOptions[actionName] = e => {
+        this._actions[actionName](e);
       };
     });
     return (0, _extend.extend)(menuOptions, {
       dataSource: this.getDataSource(),
       animationEnabled: !!this.option('animation'),
       onItemClick: this._treeviewItemClickHandler.bind(this),
-      onItemExpanded: function onItemExpanded(e) {
-        _this3._overlay.repaint();
-        _this3._actions['onSubmenuShown'](e);
+      onItemExpanded: e => {
+        this._overlay.repaint();
+        this._actions['onSubmenuShown'](e);
       },
-      onItemCollapsed: function onItemCollapsed(e) {
-        _this3._overlay.repaint();
-        _this3._actions['onSubmenuHidden'](e);
+      onItemCollapsed: e => {
+        this._overlay.repaint();
+        this._actions['onSubmenuHidden'](e);
       },
       selectNodesRecursive: false,
       selectByClick: this.option('selectByClick'),
@@ -348,7 +345,7 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
   _proto._initAdaptivity = function _initAdaptivity() {
     if (!this._isAdaptivityEnabled()) return;
     this._$adaptiveContainer = (0, _renderer.default)('<div>').addClass(DX_ADAPTIVE_MODE_CLASS);
-    var $hamburger = this._renderHamburgerButton();
+    const $hamburger = this._renderHamburgerButton();
     this._treeView = this._createComponent((0, _renderer.default)('<div>'), _tree_view.default, this._getTreeViewOptions());
     this._overlay = this._createComponent((0, _renderer.default)('<div>'), _ui2.default, this._getAdaptiveOverlayOptions());
     this._overlay.$content().append(this._treeView.$element()).addClass(DX_ADAPTIVE_MODE_CLASS).addClass(this.option('cssClass'));
@@ -360,7 +357,7 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     this._dimensionChanged();
   };
   _proto._getDelay = function _getDelay(delayType) {
-    var delay = this.option('showFirstSubmenuMode').delay;
+    const delay = this.option('showFirstSubmenuMode').delay;
     if (!(0, _type.isDefined)(delay)) {
       return DEFAULT_DELAY[delayType];
     } else {
@@ -371,12 +368,12 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     return _MenuBase.prototype._keyboardHandler.call(this, e, !!this._visibleSubmenu);
   };
   _proto._renderContainer = function _renderContainer() {
-    var $wrapper = (0, _renderer.default)('<div>');
+    const $wrapper = (0, _renderer.default)('<div>');
     $wrapper.appendTo(this.$element()).addClass(this._isMenuHorizontal() ? DX_MENU_HORIZONTAL_CLASS : DX_MENU_VERTICAL_CLASS);
     return _MenuBase.prototype._renderContainer.call(this, $wrapper);
   };
   _proto._renderSubmenuItems = function _renderSubmenuItems(node, $itemFrame) {
-    var submenu = this._createSubmenu(node, $itemFrame);
+    const submenu = this._createSubmenu(node, $itemFrame);
     this._submenus.push(submenu);
     this._renderBorderElement($itemFrame);
     return submenu;
@@ -385,9 +382,9 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     return _MenuBase.prototype._getKeyboardListeners.call(this).concat(this._visibleSubmenu);
   };
   _proto._createSubmenu = function _createSubmenu(node, $rootItem) {
-    var $submenuContainer = (0, _renderer.default)('<div>').addClass(DX_CONTEXT_MENU_CLASS).appendTo($rootItem);
-    var items = this._getChildNodes(node);
-    var subMenu = this._createComponent($submenuContainer, _ui3.default, (0, _extend.extend)(this._getSubmenuOptions(), {
+    const $submenuContainer = (0, _renderer.default)('<div>').addClass(DX_CONTEXT_MENU_CLASS).appendTo($rootItem);
+    const items = this._getChildNodes(node);
+    const subMenu = this._createComponent($submenuContainer, _ui3.default, (0, _extend.extend)(this._getSubmenuOptions(), {
       _dataAdapter: this._dataAdapter,
       _parentKey: node.internalFields.key,
       items: items,
@@ -398,9 +395,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     return subMenu;
   };
   _proto._getSubmenuOptions = function _getSubmenuOptions() {
-    var _this4 = this;
-    var $submenuTarget = (0, _renderer.default)('<div>');
-    var isMenuHorizontal = this._isMenuHorizontal();
+    const $submenuTarget = (0, _renderer.default)('<div>');
+    const isMenuHorizontal = this._isMenuHorizontal();
     return {
       itemTemplate: this.option('itemTemplate'),
       target: $submenuTarget,
@@ -417,11 +413,11 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
       disabledExpr: this.option('disabledExpr'),
       selectedExpr: this.option('selectedExpr'),
       itemsExpr: this.option('itemsExpr'),
-      onFocusedItemChanged: function onFocusedItemChanged(e) {
+      onFocusedItemChanged: e => {
         if (!e.component.option('visible')) {
           return;
         }
-        _this4.option('focusedElement', e.component.option('focusedElement'));
+        this.option('focusedElement', e.component.option('focusedElement'));
       },
       onSelectionChanged: this._nestedItemOnSelectionChangedHandler.bind(this),
       onItemClick: this._nestedItemOnItemClickHandler.bind(this),
@@ -436,14 +432,14 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     if (!this._isDesktopDevice()) {
       return 'onClick';
     }
-    var optionValue = this.option('showFirstSubmenuMode');
+    const optionValue = this.option('showFirstSubmenuMode');
     return (0, _type.isObject)(optionValue) ? optionValue.name : optionValue;
   };
   _proto._moveMainMenuFocus = function _moveMainMenuFocus(direction) {
-    var $items = this._getAvailableItems();
-    var itemCount = $items.length;
-    var $currentItem = $items.filter(".".concat(DX_MENU_ITEM_EXPANDED_CLASS)).eq(0);
-    var itemIndex = $items.index($currentItem);
+    const $items = this._getAvailableItems();
+    const itemCount = $items.length;
+    const $currentItem = $items.filter(".".concat(DX_MENU_ITEM_EXPANDED_CLASS)).eq(0);
+    let itemIndex = $items.index($currentItem);
     this._hideSubmenu(this._visibleSubmenu);
     itemIndex += direction === PREVITEM_OPERATION ? -1 : 1;
     if (itemIndex >= itemCount) {
@@ -451,28 +447,27 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     } else if (itemIndex < 0) {
       itemIndex = itemCount - 1;
     }
-    var $newItem = $items.eq(itemIndex);
+    const $newItem = $items.eq(itemIndex);
     this.option('focusedElement', (0, _element.getPublicElement)($newItem));
   };
   _proto._nestedItemOnSelectionChangedHandler = function _nestedItemOnSelectionChangedHandler(args) {
-    var selectedItem = args.addedItems.length && args.addedItems[0];
-    var submenu = _ui3.default.getInstance(args.element);
-    var onSelectionChanged = this._actions['onSelectionChanged'];
+    const selectedItem = args.addedItems.length && args.addedItems[0];
+    const submenu = _ui3.default.getInstance(args.element);
+    const onSelectionChanged = this._actions['onSelectionChanged'];
     onSelectionChanged(args);
     selectedItem && this._clearSelectionInSubmenus(selectedItem[0], submenu);
     this._clearRootSelection();
     this._setOptionWithoutOptionChange('selectedItem', selectedItem);
   };
   _proto._clearSelectionInSubmenus = function _clearSelectionInSubmenus(item, targetSubmenu) {
-    var _this5 = this;
-    var cleanAllSubmenus = !arguments.length;
-    (0, _iterator.each)(this._submenus, function (index, submenu) {
-      var $submenu = submenu._itemContainer();
-      var isOtherItem = !$submenu.is(targetSubmenu && targetSubmenu._itemContainer());
-      var $selectedItem = $submenu.find(".".concat(_this5._selectedItemClass()));
+    const cleanAllSubmenus = !arguments.length;
+    (0, _iterator.each)(this._submenus, (index, submenu) => {
+      const $submenu = submenu._itemContainer();
+      const isOtherItem = !$submenu.is(targetSubmenu && targetSubmenu._itemContainer());
+      const $selectedItem = $submenu.find(".".concat(this._selectedItemClass()));
       if (isOtherItem && $selectedItem.length || cleanAllSubmenus) {
-        $selectedItem.removeClass(_this5._selectedItemClass());
-        var selectedItemData = _this5._getItemData($selectedItem);
+        $selectedItem.removeClass(this._selectedItemClass());
+        const selectedItemData = this._getItemData($selectedItem);
         if (selectedItemData) {
           selectedItemData.selected = false;
         }
@@ -481,9 +476,9 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     });
   };
   _proto._clearRootSelection = function _clearRootSelection() {
-    var $prevSelectedItem = this.$element().find(".".concat(DX_MENU_ITEMS_CONTAINER_CLASS)).first().children().children().filter(".".concat(this._selectedItemClass()));
+    const $prevSelectedItem = this.$element().find(".".concat(DX_MENU_ITEMS_CONTAINER_CLASS)).first().children().children().filter(".".concat(this._selectedItemClass()));
     if ($prevSelectedItem.length) {
-      var prevSelectedItemData = this._getItemData($prevSelectedItem);
+      const prevSelectedItemData = this._getItemData($prevSelectedItem);
       prevSelectedItemData.selected = false;
       $prevSelectedItem.removeClass(this._selectedItemClass());
     }
@@ -495,23 +490,22 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     this._actions['onItemRendered'](e);
   };
   _proto._attachSubmenuHandlers = function _attachSubmenuHandlers($rootItem, submenu) {
-    var _this6 = this;
-    var $submenuOverlayContent = submenu.getOverlayContent();
-    var submenus = $submenuOverlayContent.find(".".concat(DX_SUBMENU_CLASS));
-    var submenuMouseLeaveName = (0, _index.addNamespace)(_hover.end, this.NAME + '_submenu');
+    const $submenuOverlayContent = submenu.getOverlayContent();
+    const submenus = $submenuOverlayContent.find(".".concat(DX_SUBMENU_CLASS));
+    const submenuMouseLeaveName = (0, _index.addNamespace)(_hover.end, this.NAME + '_submenu');
     submenu.option({
       onShowing: this._submenuOnShowingHandler.bind(this, $rootItem, submenu),
       onShown: this._submenuOnShownHandler.bind(this, $rootItem, submenu),
       onHiding: this._submenuOnHidingHandler.bind(this, $rootItem, submenu),
       onHidden: this._submenuOnHiddenHandler.bind(this, $rootItem, submenu)
     });
-    (0, _iterator.each)(submenus, function (index, submenu) {
+    (0, _iterator.each)(submenus, (index, submenu) => {
       _events_engine.default.off(submenu, submenuMouseLeaveName);
-      _events_engine.default.on(submenu, submenuMouseLeaveName, null, _this6._submenuMouseLeaveHandler.bind(_this6, $rootItem));
+      _events_engine.default.on(submenu, submenuMouseLeaveName, null, this._submenuMouseLeaveHandler.bind(this, $rootItem));
     });
   };
   _proto._submenuOnShowingHandler = function _submenuOnShowingHandler($rootItem, submenu) {
-    var $border = $rootItem.children(".".concat(DX_CONTEXT_MENU_CONTAINER_BORDER_CLASS));
+    const $border = $rootItem.children(".".concat(DX_CONTEXT_MENU_CONTAINER_BORDER_CLASS));
     this._actions.onSubmenuShowing({
       rootItem: (0, _element.getPublicElement)($rootItem),
       submenu: submenu
@@ -526,8 +520,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     });
   };
   _proto._submenuOnHidingHandler = function _submenuOnHidingHandler($rootItem, submenu, eventArgs) {
-    var $border = $rootItem.children(".".concat(DX_CONTEXT_MENU_CONTAINER_BORDER_CLASS));
-    var args = eventArgs;
+    const $border = $rootItem.children(".".concat(DX_CONTEXT_MENU_CONTAINER_BORDER_CLASS));
+    const args = eventArgs;
     args.rootItem = (0, _element.getPublicElement)($rootItem);
     args.submenu = submenu;
     this._actions.onSubmenuHiding(args);
@@ -545,8 +539,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     });
   };
   _proto._submenuMouseLeaveHandler = function _submenuMouseLeaveHandler($rootItem, eventArgs) {
-    var target = (0, _renderer.default)(eventArgs.relatedTarget).parents(".".concat(DX_CONTEXT_MENU_CLASS))[0];
-    var contextMenu = this._getSubmenuByRootElement($rootItem).getOverlayContent()[0];
+    const target = (0, _renderer.default)(eventArgs.relatedTarget).parents(".".concat(DX_CONTEXT_MENU_CLASS))[0];
+    const contextMenu = this._getSubmenuByRootElement($rootItem).getOverlayContent()[0];
     if (this.option('hideSubmenuOnMouseLeave') && target !== contextMenu) {
       this._clearTimeouts();
       setTimeout(this._hideSubmenuAfterTimeout.bind(this), this._getDelay('hide'));
@@ -556,9 +550,9 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     if (!this._visibleSubmenu) {
       return;
     }
-    var isRootItemHovered = (0, _renderer.default)(this._visibleSubmenu.$element().context).hasClass(DX_STATE_HOVER_CLASS);
-    var isSubmenuItemHovered = this._visibleSubmenu.getOverlayContent().find(".".concat(DX_STATE_HOVER_CLASS)).length;
-    var hoveredElementFromSubMenu = this._visibleSubmenu.getOverlayContent().get(0).querySelector(':hover');
+    const isRootItemHovered = (0, _renderer.default)(this._visibleSubmenu.$element().context).hasClass(DX_STATE_HOVER_CLASS);
+    const isSubmenuItemHovered = this._visibleSubmenu.getOverlayContent().find(".".concat(DX_STATE_HOVER_CLASS)).length;
+    const hoveredElementFromSubMenu = this._visibleSubmenu.getOverlayContent().get(0).querySelector(':hover');
     if (!hoveredElementFromSubMenu && !isSubmenuItemHovered && !isRootItemHovered) {
       this._visibleSubmenu.hide();
     }
@@ -567,14 +561,14 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     if (!$rootItem) {
       return false;
     }
-    var $submenu = $rootItem.children(".".concat(DX_CONTEXT_MENU_CLASS));
+    const $submenu = $rootItem.children(".".concat(DX_CONTEXT_MENU_CLASS));
     return $submenu.length && _ui3.default.getInstance($submenu);
   };
   _proto.getSubmenuPosition = function getSubmenuPosition($rootItem) {
-    var isHorizontalMenu = this._isMenuHorizontal();
-    var submenuDirection = this.option('submenuDirection').toLowerCase();
-    var rtlEnabled = this.option('rtlEnabled');
-    var submenuPosition = {
+    const isHorizontalMenu = this._isMenuHorizontal();
+    const submenuDirection = this.option('submenuDirection').toLowerCase();
+    const rtlEnabled = this.option('rtlEnabled');
+    const submenuPosition = {
       collision: 'flip',
       of: $rootItem,
       precise: true
@@ -604,8 +598,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     (0, _renderer.default)('<div>').appendTo($item).addClass(DX_CONTEXT_MENU_CONTAINER_BORDER_CLASS).hide();
   };
   _proto._itemPointerDownHandler = function _itemPointerDownHandler(e) {
-    var $target = (0, _renderer.default)(e.target);
-    var $closestItem = $target.closest(this._itemElements());
+    const $target = (0, _renderer.default)(e.target);
+    const $closestItem = $target.closest(this._itemElements());
     if ($closestItem.hasClass('dx-menu-item-has-submenu')) {
       this.option('focusedElement', null);
       return;
@@ -613,10 +607,10 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     _MenuBase.prototype._itemPointerDownHandler.call(this, e);
   };
   _proto._hoverStartHandler = function _hoverStartHandler(e) {
-    var mouseMoveEventName = (0, _index.addNamespace)(_pointer.default.move, this.NAME);
-    var $item = this._getItemElementByEventArgs(e);
-    var node = this._dataAdapter.getNodeByItem(this._getItemData($item));
-    var isSelectionActive = (0, _type.isDefined)(e.buttons) && e.buttons === 1 || !(0, _type.isDefined)(e.buttons) && e.which === 1;
+    const mouseMoveEventName = (0, _index.addNamespace)(_pointer.default.move, this.NAME);
+    const $item = this._getItemElementByEventArgs(e);
+    const node = this._dataAdapter.getNodeByItem(this._getItemData($item));
+    const isSelectionActive = (0, _type.isDefined)(e.buttons) && e.buttons === 1 || !(0, _type.isDefined)(e.buttons) && e.which === 1;
     if (this._isItemDisabled($item)) {
       return;
     }
@@ -626,7 +620,7 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
       return;
     }
     if (this._getShowFirstSubmenuMode() === 'onHover' && !isSelectionActive) {
-      var submenu = this._getSubmenuByElement($item);
+      const submenu = this._getSubmenuByElement($item);
       this._clearTimeouts();
       if (!submenu.isOverlayVisible()) {
         _events_engine.default.on($item, mouseMoveEventName, this._itemMouseMoveHandler.bind(this));
@@ -635,9 +629,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     }
   };
   _proto._hoverEndHandler = function _hoverEndHandler(eventArg) {
-    var _this7 = this;
-    var $item = this._getItemElementByEventArgs(eventArg);
-    var relatedTarget = (0, _renderer.default)(eventArg.relatedTarget);
+    const $item = this._getItemElementByEventArgs(eventArg);
+    const relatedTarget = (0, _renderer.default)(eventArg.relatedTarget);
     _MenuBase.prototype._hoverEndHandler.call(this, eventArg);
     this._clearTimeouts();
     if (this._isItemDisabled($item)) {
@@ -647,8 +640,8 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
       return;
     }
     if (this.option('hideSubmenuOnMouseLeave') && !relatedTarget.hasClass(DX_MENU_ITEMS_CONTAINER_CLASS)) {
-      this._hideSubmenuTimer = setTimeout(function () {
-        _this7._hideSubmenuAfterTimeout();
+      this._hideSubmenuTimer = setTimeout(() => {
+        this._hideSubmenuAfterTimeout();
       }, this._getDelay('hide'));
     }
   };
@@ -660,7 +653,7 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     return true;
   };
   _proto._showSubmenu = function _showSubmenu($itemElement) {
-    var submenu = this._getSubmenuByElement($itemElement);
+    const submenu = this._getSubmenuByElement($itemElement);
     if (this._visibleSubmenu !== submenu) {
       this._hideVisibleSubmenu();
     }
@@ -681,20 +674,19 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     this._hoveredRootItem = null;
   };
   _proto._itemMouseMoveHandler = function _itemMouseMoveHandler(e) {
-    var _this8 = this;
     // todo: replace mousemove with hover event
     if (e.pointers && e.pointers.length) {
       return;
     }
-    var $item = (0, _renderer.default)(e.currentTarget);
+    const $item = (0, _renderer.default)(e.currentTarget);
     if (!(0, _type.isDefined)(this._showSubmenuTimer)) {
       return;
     }
     this._clearTimeouts();
-    this._showSubmenuTimer = setTimeout(function () {
-      var submenu = _this8._getSubmenuByElement($item);
+    this._showSubmenuTimer = setTimeout(() => {
+      const submenu = this._getSubmenuByElement($item);
       if (submenu && !submenu.isOverlayVisible()) {
-        _this8._showSubmenu($item);
+        this._showSubmenu($item);
       }
     }, this._getDelay('show'));
   };
@@ -703,22 +695,22 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     clearTimeout(this._showSubmenuTimer);
   };
   _proto._getSubmenuByElement = function _getSubmenuByElement($itemElement, itemData) {
-    var submenu = this._getSubmenuByRootElement($itemElement);
+    const submenu = this._getSubmenuByRootElement($itemElement);
     if (submenu) {
       return submenu;
     } else {
       itemData = itemData || this._getItemData($itemElement);
-      var node = this._dataAdapter.getNodeByItem(itemData);
+      const node = this._dataAdapter.getNodeByItem(itemData);
       return this._hasChildren(node) && this._renderSubmenuItems(node, $itemElement);
     }
   };
   _proto._updateSubmenuVisibilityOnClick = function _updateSubmenuVisibilityOnClick(actionArgs) {
-    var args = actionArgs.args.length && actionArgs.args[0];
+    const args = actionArgs.args.length && actionArgs.args[0];
     if (!args || this._disabledGetter(args.itemData)) {
       return;
     }
-    var $itemElement = (0, _renderer.default)(args.itemElement);
-    var currentSubmenu = this._getSubmenuByElement($itemElement, args.itemData);
+    const $itemElement = (0, _renderer.default)(args.itemElement);
+    const currentSubmenu = this._getSubmenuByElement($itemElement, args.itemData);
     this._updateSelectedItemOnClick(actionArgs);
     if (this._visibleSubmenu) {
       if (this._visibleSubmenu === currentSubmenu) {
@@ -778,7 +770,7 @@ var Menu = /*#__PURE__*/function (_MenuBase) {
     }
   };
   _proto._changeSubmenusOption = function _changeSubmenusOption(name, value) {
-    (0, _iterator.each)(this._submenus, function (index, submenu) {
+    (0, _iterator.each)(this._submenus, (index, submenu) => {
       submenu.option(name, value);
     });
   };

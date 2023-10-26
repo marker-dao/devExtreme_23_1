@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/button.j.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,28 +19,28 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var Button = /*#__PURE__*/function (_BaseComponent) {
+let Button = /*#__PURE__*/function (_BaseComponent) {
   _inheritsLoose(Button, _BaseComponent);
   function Button() {
     return _BaseComponent.apply(this, arguments) || this;
   }
   var _proto = Button.prototype;
   _proto.getProps = function getProps() {
-    var props = _BaseComponent.prototype.getProps.call(this);
+    const props = _BaseComponent.prototype.getProps.call(this);
     props.onKeyDown = this._wrapKeyDownHandler(props.onKeyDown);
     return props;
   };
   _proto.focus = function focus() {
     var _this$viewRef;
-    return (_this$viewRef = this.viewRef) === null || _this$viewRef === void 0 ? void 0 : _this$viewRef.focus.apply(_this$viewRef, arguments);
+    return (_this$viewRef = this.viewRef) === null || _this$viewRef === void 0 ? void 0 : _this$viewRef.focus(...arguments);
   };
   _proto.activate = function activate() {
     var _this$viewRef2;
-    return (_this$viewRef2 = this.viewRef) === null || _this$viewRef2 === void 0 ? void 0 : _this$viewRef2.activate.apply(_this$viewRef2, arguments);
+    return (_this$viewRef2 = this.viewRef) === null || _this$viewRef2 === void 0 ? void 0 : _this$viewRef2.activate(...arguments);
   };
   _proto.deactivate = function deactivate() {
     var _this$viewRef3;
-    return (_this$viewRef3 = this.viewRef) === null || _this$viewRef3 === void 0 ? void 0 : _this$viewRef3.deactivate.apply(_this$viewRef3, arguments);
+    return (_this$viewRef3 = this.viewRef) === null || _this$viewRef3 === void 0 ? void 0 : _this$viewRef3.deactivate(...arguments);
   };
   _proto._getActionConfigs = function _getActionConfigs() {
     return {
@@ -52,7 +52,7 @@ var Button = /*#__PURE__*/function (_BaseComponent) {
   };
   _createClass(Button, [{
     key: "_propsInfo",
-    get: function get() {
+    get: function () {
       return {
         twoWay: [],
         allowNull: [],
@@ -63,7 +63,7 @@ var Button = /*#__PURE__*/function (_BaseComponent) {
     }
   }, {
     key: "_viewComponent",
-    get: function get() {
+    get: function () {
       return _button2.Button;
     }
   }]);

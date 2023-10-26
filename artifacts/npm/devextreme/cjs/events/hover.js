@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/hover.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,31 +17,31 @@ var _event_registrator = _interopRequireDefault(require("./core/event_registrato
 var _index = require("./utils/index");
 var _pointer = _interopRequireDefault(require("./pointer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var HOVERSTART_NAMESPACE = 'dxHoverStart';
-var HOVERSTART = 'dxhoverstart';
+const HOVERSTART_NAMESPACE = 'dxHoverStart';
+const HOVERSTART = 'dxhoverstart';
 exports.start = HOVERSTART;
-var POINTERENTER_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.enter, HOVERSTART_NAMESPACE);
-var HOVEREND_NAMESPACE = 'dxHoverEnd';
-var HOVEREND = 'dxhoverend';
+const POINTERENTER_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.enter, HOVERSTART_NAMESPACE);
+const HOVEREND_NAMESPACE = 'dxHoverEnd';
+const HOVEREND = 'dxhoverend';
 exports.end = HOVEREND;
-var POINTERLEAVE_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.leave, HOVEREND_NAMESPACE);
-var Hover = _class.default.inherit({
+const POINTERLEAVE_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.leave, HOVEREND_NAMESPACE);
+const Hover = _class.default.inherit({
   noBubble: true,
-  ctor: function ctor() {
+  ctor: function () {
     this._handlerArrayKeyPath = this._eventNamespace + '_HandlerStore';
   },
-  setup: function setup(element) {
+  setup: function (element) {
     (0, _element_data.data)(element, this._handlerArrayKeyPath, {});
   },
-  add: function add(element, handleObj) {
-    var that = this;
-    var handler = function handler(e) {
+  add: function (element, handleObj) {
+    const that = this;
+    const handler = function (e) {
       that._handler(e);
     };
     _events_engine.default.on(element, this._originalEventName, handleObj.selector, handler);
     (0, _element_data.data)(element, this._handlerArrayKeyPath)[handleObj.guid] = handler;
   },
-  _handler: function _handler(e) {
+  _handler: function (e) {
     if ((0, _index.isTouchEvent)(e) || _devices.default.isSimulator()) {
       return;
     }
@@ -51,30 +51,30 @@ var Hover = _class.default.inherit({
       delegateTarget: e.delegateTarget
     });
   },
-  remove: function remove(element, handleObj) {
-    var handler = (0, _element_data.data)(element, this._handlerArrayKeyPath)[handleObj.guid];
+  remove: function (element, handleObj) {
+    const handler = (0, _element_data.data)(element, this._handlerArrayKeyPath)[handleObj.guid];
     _events_engine.default.off(element, this._originalEventName, handleObj.selector, handler);
   },
-  teardown: function teardown(element) {
+  teardown: function (element) {
     (0, _element_data.removeData)(element, this._handlerArrayKeyPath);
   }
 });
-var HoverStart = Hover.inherit({
-  ctor: function ctor() {
+const HoverStart = Hover.inherit({
+  ctor: function () {
     this._eventNamespace = HOVERSTART_NAMESPACE;
     this._eventName = HOVERSTART;
     this._originalEventName = POINTERENTER_NAMESPACED_EVENT_NAME;
     this.callBase();
   },
-  _handler: function _handler(e) {
-    var pointers = e.pointers || [];
+  _handler: function (e) {
+    const pointers = e.pointers || [];
     if (!pointers.length) {
       this.callBase(e);
     }
   }
 });
-var HoverEnd = Hover.inherit({
-  ctor: function ctor() {
+const HoverEnd = Hover.inherit({
+  ctor: function () {
     this._eventNamespace = HOVEREND_NAMESPACE;
     this._eventName = HOVEREND;
     this._originalEventName = POINTERLEAVE_NAMESPACED_EVENT_NAME;

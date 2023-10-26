@@ -12,14 +12,14 @@ var _emitter = require("../../events/core/emitter.feedback");
 var _hold = _interopRequireDefault(require("../../events/hold"));
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SPIN_CLASS = 'dx-numberbox-spin';
-var SPIN_BUTTON_CLASS = 'dx-numberbox-spin-button';
-var SPIN_HOLD_DELAY = 100;
-var NUMBER_BOX = 'dxNumberBox';
-var POINTERUP_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.up, NUMBER_BOX);
-var POINTERCANCEL_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.cancel, NUMBER_BOX);
-var SpinButton = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const SPIN_CLASS = 'dx-numberbox-spin';
+const SPIN_BUTTON_CLASS = 'dx-numberbox-spin-button';
+const SPIN_HOLD_DELAY = 100;
+const NUMBER_BOX = 'dxNumberBox';
+const POINTERUP_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.up, NUMBER_BOX);
+const POINTERCANCEL_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.cancel, NUMBER_BOX);
+const SpinButton = _ui.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       direction: 'up',
       onChange: null,
@@ -27,21 +27,21 @@ var SpinButton = _ui.default.inherit({
       hoverStateEnabled: true
     });
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
-    var direction = SPIN_CLASS + '-' + this.option('direction');
+    const direction = SPIN_CLASS + '-' + this.option('direction');
     this.$element().addClass(SPIN_BUTTON_CLASS).addClass(direction);
     this._spinIcon = (0, _renderer.default)('<div>').addClass(direction + '-icon').appendTo(this.$element());
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
-    var eventName = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
-    var $element = this.$element();
+    const eventName = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
+    const $element = this.$element();
     _events_engine.default.off($element, eventName);
     _events_engine.default.on($element, eventName, this._spinDownHandler.bind(this));
     this._spinChangeHandler = this._createActionByOption('onChange');
   },
-  _spinDownHandler: function _spinDownHandler(e) {
+  _spinDownHandler: function (e) {
     e.preventDefault();
     this._clearTimer();
     _events_engine.default.on(this.$element(), _hold.default.name, function () {
@@ -54,20 +54,20 @@ var SpinButton = _ui.default.inherit({
         event: e
       });
     }.bind(this));
-    var document = _dom_adapter.default.getDocument();
+    const document = _dom_adapter.default.getDocument();
     _events_engine.default.on(document, POINTERUP_EVENT_NAME, this._clearTimer.bind(this));
     _events_engine.default.on(document, POINTERCANCEL_EVENT_NAME, this._clearTimer.bind(this));
     this._spinChangeHandler({
       event: e
     });
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._clearTimer();
     this.callBase();
   },
-  _clearTimer: function _clearTimer() {
+  _clearTimer: function () {
     _events_engine.default.off(this.$element(), _hold.default.name);
-    var document = _dom_adapter.default.getDocument();
+    const document = _dom_adapter.default.getDocument();
     _events_engine.default.off(document, POINTERUP_EVENT_NAME);
     _events_engine.default.off(document, POINTERCANCEL_EVENT_NAME);
     if (this._feedBackDeferred) {
@@ -77,7 +77,7 @@ var SpinButton = _ui.default.inherit({
       clearInterval(this._holdTimer);
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'onChange':
       case 'direction':

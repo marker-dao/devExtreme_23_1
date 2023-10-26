@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/m_loading.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,11 +18,11 @@ var _deferred = require("../../core/utils/deferred");
 var _view_port = require("../../core/utils/view_port");
 var _load_panel = _interopRequireDefault(require("../../ui/load_panel"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var loading = null;
-var createLoadPanel = function createLoadPanel(options) {
+let loading = null;
+const createLoadPanel = function (options) {
   return new _load_panel.default((0, _renderer.default)('<div>').appendTo(options && options.container || (0, _view_port.value)()), options);
 };
-var removeLoadPanel = function removeLoadPanel() {
+const removeLoadPanel = function () {
   if (!loading) {
     return;
   }

@@ -5,13 +5,13 @@ var _button = _interopRequireDefault(require("../button"));
 var _uiListEdit = require("./ui.list.edit.decorator_registry");
 var _uiListEdit2 = _interopRequireDefault(require("./ui.list.edit.decorator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var STATIC_DELETE_BUTTON_CONTAINER_CLASS = 'dx-list-static-delete-button-container';
-var STATIC_DELETE_BUTTON_CLASS = 'dx-list-static-delete-button';
+const STATIC_DELETE_BUTTON_CONTAINER_CLASS = 'dx-list-static-delete-button-container';
+const STATIC_DELETE_BUTTON_CLASS = 'dx-list-static-delete-button';
 (0, _uiListEdit.register)('delete', 'static', _uiListEdit2.default.inherit({
-  afterBag: function afterBag(config) {
-    var $itemElement = config.$itemElement;
-    var $container = config.$container;
-    var $button = (0, _renderer.default)('<div>').addClass(STATIC_DELETE_BUTTON_CLASS);
+  afterBag: function (config) {
+    const $itemElement = config.$itemElement;
+    const $container = config.$container;
+    const $button = (0, _renderer.default)('<div>').addClass(STATIC_DELETE_BUTTON_CLASS);
     this._list._createComponent($button, _button.default, {
       icon: 'remove',
       onClick: function (args) {
@@ -22,7 +22,7 @@ var STATIC_DELETE_BUTTON_CLASS = 'dx-list-static-delete-button';
     });
     $container.addClass(STATIC_DELETE_BUTTON_CONTAINER_CLASS).append($button);
   },
-  _deleteItem: function _deleteItem($itemElement) {
+  _deleteItem: function ($itemElement) {
     if ($itemElement.is('.dx-state-disabled, .dx-state-disabled *')) {
       return;
     }

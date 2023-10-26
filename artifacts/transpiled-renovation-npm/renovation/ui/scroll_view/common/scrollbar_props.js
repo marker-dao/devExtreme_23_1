@@ -1,7 +1,7 @@
 "use strict";
 
 exports.ScrollbarProps = void 0;
-var ScrollbarProps = {
+const ScrollbarProps = {
   direction: 'vertical',
   containerSize: 0,
   contentSize: 0,

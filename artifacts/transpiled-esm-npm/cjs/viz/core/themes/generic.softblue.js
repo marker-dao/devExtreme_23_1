@@ -1,12 +1,12 @@
 "use strict";
 
 exports.default = void 0;
-var ACCENT_COLOR = '#7ab8eb';
-var BACKGROUND_COLOR = '#fff';
-var TITLE_COLOR = '#333';
-var SUBTITLE_COLOR = '#99a1a8';
-var TEXT_COLOR = '#707070';
-var BORDER_COLOR = '#e8eaeb';
+const ACCENT_COLOR = '#7ab8eb';
+const BACKGROUND_COLOR = '#fff';
+const TITLE_COLOR = '#333';
+const SUBTITLE_COLOR = '#99a1a8';
+const TEXT_COLOR = '#707070';
+const BORDER_COLOR = '#e8eaeb';
 var _default = [{
   theme: {
     name: 'generic.softblue',

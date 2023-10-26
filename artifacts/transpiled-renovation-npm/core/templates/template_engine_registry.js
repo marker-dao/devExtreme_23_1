@@ -6,8 +6,8 @@ exports.setTemplateEngine = setTemplateEngine;
 var _type = require("../utils/type");
 var _errors = _interopRequireDefault(require("../errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var templateEngines = {};
-var currentTemplateEngine;
+const templateEngines = {};
+let currentTemplateEngine;
 function registerTemplateEngine(name, templateEngine) {
   templateEngines[name] = templateEngine;
 }

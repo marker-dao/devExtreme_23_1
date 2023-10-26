@@ -1,7 +1,7 @@
 "use strict";
 
 exports.VIEWS = exports.TIMELINE_VIEWS = void 0;
-var VIEWS = {
+const VIEWS = {
   DAY: 'day',
   WEEK: 'week',
   WORK_WEEK: 'workWeek',
@@ -13,7 +13,7 @@ var VIEWS = {
   AGENDA: 'agenda'
 };
 exports.VIEWS = VIEWS;
-var TIMELINE_VIEWS = {
+const TIMELINE_VIEWS = {
   timelineDay: true,
   timelineWeek: true,
   timelineWorkWeek: true,

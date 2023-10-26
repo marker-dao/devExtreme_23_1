@@ -9,15 +9,15 @@ var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var CALENDAR_NAVIGATOR_CLASS = 'dx-calendar-navigator';
-var CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS = 'dx-calendar-navigator-previous-month';
-var CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS = 'dx-calendar-navigator-next-month';
-var CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS = 'dx-calendar-navigator-previous-view';
-var CALENDAR_NAVIGATOR_NEXT_VIEW_CLASS = 'dx-calendar-navigator-next-view';
-var CALENDAR_NAVIGATOR_DISABLED_LINK_CLASS = 'dx-calendar-disabled-navigator-link';
-var CALENDAR_NAVIGATOR_CAPTION_BUTTON_CLASS = 'dx-calendar-caption-button';
-var BUTTON_TEXT_CLASS = 'dx-button-text';
-var Navigator = /*#__PURE__*/function (_Widget) {
+const CALENDAR_NAVIGATOR_CLASS = 'dx-calendar-navigator';
+const CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS = 'dx-calendar-navigator-previous-month';
+const CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS = 'dx-calendar-navigator-next-month';
+const CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS = 'dx-calendar-navigator-previous-view';
+const CALENDAR_NAVIGATOR_NEXT_VIEW_CLASS = 'dx-calendar-navigator-next-view';
+const CALENDAR_NAVIGATOR_DISABLED_LINK_CLASS = 'dx-calendar-disabled-navigator-link';
+const CALENDAR_NAVIGATOR_CAPTION_BUTTON_CLASS = 'dx-calendar-caption-button';
+const BUTTON_TEXT_CLASS = 'dx-button-text';
+let Navigator = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(Navigator, _Widget);
   function Navigator() {
     return _Widget.apply(this, arguments) || this;
@@ -34,7 +34,7 @@ var Navigator = /*#__PURE__*/function (_Widget) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _Widget.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterial)();
       },
       options: {
@@ -42,7 +42,7 @@ var Navigator = /*#__PURE__*/function (_Widget) {
         stylingMode: 'text'
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isFluent)();
       },
       options: {
@@ -66,18 +66,18 @@ var Navigator = /*#__PURE__*/function (_Widget) {
     this._renderCaption();
   };
   _proto._renderButtons = function _renderButtons() {
-    var _this = this;
-    var _this$option = this.option(),
-      rtlEnabled = _this$option.rtlEnabled,
-      type = _this$option.type,
-      stylingMode = _this$option.stylingMode,
-      focusStateEnabled = _this$option.focusStateEnabled;
-    var direction = 1;
+    const {
+      rtlEnabled,
+      type,
+      stylingMode,
+      focusStateEnabled
+    } = this.option();
+    const direction = 1;
     this._prevButton = this._createComponent((0, _renderer.default)('<div>'), _button.default, {
       focusStateEnabled,
       icon: rtlEnabled ? 'chevronright' : 'chevronleft',
-      onClick: function onClick(e) {
-        _this._clickAction({
+      onClick: e => {
+        this._clickAction({
           direction: -direction,
           event: e
         });
@@ -86,12 +86,12 @@ var Navigator = /*#__PURE__*/function (_Widget) {
       stylingMode,
       integrationOptions: {}
     });
-    var $prevButton = this._prevButton.$element().addClass(CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS);
+    const $prevButton = this._prevButton.$element().addClass(CALENDAR_NAVIGATOR_PREVIOUS_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS);
     this._nextButton = this._createComponent((0, _renderer.default)('<div>'), _button.default, {
       focusStateEnabled,
       icon: rtlEnabled ? 'chevronleft' : 'chevronright',
-      onClick: function onClick(e) {
-        _this._clickAction({
+      onClick: e => {
+        this._clickAction({
           direction: direction,
           event: e
         });
@@ -100,36 +100,37 @@ var Navigator = /*#__PURE__*/function (_Widget) {
       stylingMode,
       integrationOptions: {}
     });
-    var $nextButton = this._nextButton.$element().addClass(CALENDAR_NAVIGATOR_NEXT_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS);
+    const $nextButton = this._nextButton.$element().addClass(CALENDAR_NAVIGATOR_NEXT_VIEW_CLASS).addClass(CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS);
     this._caption = this._createComponent((0, _renderer.default)('<div>').addClass(CALENDAR_NAVIGATOR_CAPTION_BUTTON_CLASS), _button.default, {
       focusStateEnabled,
-      onClick: function onClick(e) {
-        _this._captionClickAction({
+      onClick: e => {
+        this._captionClickAction({
           event: e
         });
       },
       type,
       stylingMode,
-      template: function template(_, content) {
-        var _this$option2 = _this.option(),
-          text = _this$option2.text;
-        var captionSeparator = ' - ';
-        var viewCaptionTexts = text.split(captionSeparator);
-        viewCaptionTexts.forEach(function (captionText) {
+      template: (_, content) => {
+        const {
+          text
+        } = this.option();
+        const captionSeparator = ' - ';
+        const viewCaptionTexts = text.split(captionSeparator);
+        viewCaptionTexts.forEach(captionText => {
           (0, _renderer.default)(content).append((0, _renderer.default)('<span>').addClass(BUTTON_TEXT_CLASS).text(captionText));
         });
       },
       integrationOptions: {}
     });
-    var $caption = this._caption.$element();
+    const $caption = this._caption.$element();
     this.$element().append($prevButton, $caption, $nextButton);
   };
   _proto._renderCaption = function _renderCaption() {
     this._caption.option('text', this.option('text'));
   };
   _proto.toggleButton = function toggleButton(buttonPrefix, value) {
-    var buttonName = '_' + buttonPrefix + 'Button';
-    var button = this[buttonName];
+    const buttonName = '_' + buttonPrefix + 'Button';
+    const button = this[buttonName];
     if (button) {
       button.option('disabled', value);
       button.$element().toggleClass(CALENDAR_NAVIGATOR_DISABLED_LINK_CLASS, value);

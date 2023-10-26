@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/transform.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,18 +15,18 @@ var _index = require("./utils/index");
 var _emitter = _interopRequireDefault(require("./core/emitter"));
 var _emitter_registrator = _interopRequireDefault(require("./core/emitter_registrator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var DX_PREFIX = 'dx';
-var TRANSFORM = 'transform';
-var TRANSLATE = 'translate';
-var PINCH = 'pinch';
-var ROTATE = 'rotate';
-var START_POSTFIX = 'start';
-var UPDATE_POSTFIX = '';
-var END_POSTFIX = 'end';
-var eventAliases = [];
-var addAlias = function addAlias(eventName, eventArgs) {
+const DX_PREFIX = 'dx';
+const TRANSFORM = 'transform';
+const TRANSLATE = 'translate';
+const PINCH = 'pinch';
+const ROTATE = 'rotate';
+const START_POSTFIX = 'start';
+const UPDATE_POSTFIX = '';
+const END_POSTFIX = 'end';
+const eventAliases = [];
+const addAlias = function (eventName, eventArgs) {
   eventAliases.push({
     name: eventName,
     args: eventArgs
@@ -52,7 +52,7 @@ addAlias(ROTATE, {
   rotation: true,
   deltaRotation: true
 });
-var getVector = function getVector(first, second) {
+const getVector = function (first, second) {
   return {
     x: second.pageX - first.pageX,
     y: -second.pageY + first.pageY,
@@ -60,54 +60,54 @@ var getVector = function getVector(first, second) {
     centerY: (second.pageY + first.pageY) * 0.5
   };
 };
-var getEventVector = function getEventVector(e) {
-  var pointers = e.pointers;
+const getEventVector = function (e) {
+  const pointers = e.pointers;
   return getVector(pointers[0], pointers[1]);
 };
-var getDistance = function getDistance(vector) {
+const getDistance = function (vector) {
   return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
 };
-var getScale = function getScale(firstVector, secondVector) {
+const getScale = function (firstVector, secondVector) {
   return getDistance(firstVector) / getDistance(secondVector);
 };
-var getRotation = function getRotation(firstVector, secondVector) {
-  var scalarProduct = firstVector.x * secondVector.x + firstVector.y * secondVector.y;
-  var distanceProduct = getDistance(firstVector) * getDistance(secondVector);
+const getRotation = function (firstVector, secondVector) {
+  const scalarProduct = firstVector.x * secondVector.x + firstVector.y * secondVector.y;
+  const distanceProduct = getDistance(firstVector) * getDistance(secondVector);
   if (distanceProduct === 0) {
     return 0;
   }
-  var sign = (0, _math.sign)(firstVector.x * secondVector.y - secondVector.x * firstVector.y);
-  var angle = Math.acos((0, _math.fitIntoRange)(scalarProduct / distanceProduct, -1, 1));
+  const sign = (0, _math.sign)(firstVector.x * secondVector.y - secondVector.x * firstVector.y);
+  const angle = Math.acos((0, _math.fitIntoRange)(scalarProduct / distanceProduct, -1, 1));
   return sign * angle;
 };
-var getTranslation = function getTranslation(firstVector, secondVector) {
+const getTranslation = function (firstVector, secondVector) {
   return {
     x: firstVector.centerX - secondVector.centerX,
     y: firstVector.centerY - secondVector.centerY
   };
 };
-var TransformEmitter = _emitter.default.inherit({
-  validatePointers: function validatePointers(e) {
+const TransformEmitter = _emitter.default.inherit({
+  validatePointers: function (e) {
     return (0, _index.hasTouches)(e) > 1;
   },
-  start: function start(e) {
+  start: function (e) {
     this._accept(e);
-    var startVector = getEventVector(e);
+    const startVector = getEventVector(e);
     this._startVector = startVector;
     this._prevVector = startVector;
     this._fireEventAliases(START_POSTFIX, e);
   },
-  move: function move(e) {
-    var currentVector = getEventVector(e);
-    var eventArgs = this._getEventArgs(currentVector);
+  move: function (e) {
+    const currentVector = getEventVector(e);
+    const eventArgs = this._getEventArgs(currentVector);
     this._fireEventAliases(UPDATE_POSTFIX, e, eventArgs);
     this._prevVector = currentVector;
   },
-  end: function end(e) {
-    var eventArgs = this._getEventArgs(this._prevVector);
+  end: function (e) {
+    const eventArgs = this._getEventArgs(this._prevVector);
     this._fireEventAliases(END_POSTFIX, e, eventArgs);
   },
-  _getEventArgs: function _getEventArgs(vector) {
+  _getEventArgs: function (vector) {
     return {
       scale: getScale(vector, this._startVector),
       deltaScale: getScale(vector, this._prevVector),
@@ -117,10 +117,10 @@ var TransformEmitter = _emitter.default.inherit({
       deltaTranslation: getTranslation(vector, this._prevVector)
     };
   },
-  _fireEventAliases: function _fireEventAliases(eventPostfix, originalEvent, eventArgs) {
+  _fireEventAliases: function (eventPostfix, originalEvent, eventArgs) {
     eventArgs = eventArgs || {};
     iteratorUtils.each(eventAliases, function (_, eventAlias) {
-      var args = {};
+      const args = {};
       iteratorUtils.each(eventAlias.args, function (name) {
         if (name in eventArgs) {
           args[name] = eventArgs[name];
@@ -243,8 +243,8 @@ var TransformEmitter = _emitter.default.inherit({
   * @module events/transform
 */
 
-var eventNames = eventAliases.reduce(function (result, eventAlias) {
-  [START_POSTFIX, UPDATE_POSTFIX, END_POSTFIX].forEach(function (eventPostfix) {
+const eventNames = eventAliases.reduce((result, eventAlias) => {
+  [START_POSTFIX, UPDATE_POSTFIX, END_POSTFIX].forEach(eventPostfix => {
     result.push(DX_PREFIX + eventAlias.name + eventPostfix);
   });
   return result;
@@ -253,26 +253,28 @@ var eventNames = eventAliases.reduce(function (result, eventAlias) {
   emitter: TransformEmitter,
   events: eventNames
 });
-var exportNames = {};
+const exportNames = {};
 iteratorUtils.each(eventNames, function (_, eventName) {
   exportNames[eventName.substring(DX_PREFIX.length)] = eventName;
 });
 /* eslint-disable spellcheck/spell-checker */
-var transformstart = exportNames.transformstart,
-  transform = exportNames.transform,
-  transformend = exportNames.transformend,
-  translatestart = exportNames.translatestart,
-  translate = exportNames.translate,
-  translateend = exportNames.translateend,
-  zoomstart = exportNames.zoomstart,
-  zoom = exportNames.zoom,
-  zoomend = exportNames.zoomend,
-  pinchstart = exportNames.pinchstart,
-  pinch = exportNames.pinch,
-  pinchend = exportNames.pinchend,
-  rotatestart = exportNames.rotatestart,
-  rotate = exportNames.rotate,
-  rotateend = exportNames.rotateend;
+const {
+  transformstart,
+  transform,
+  transformend,
+  translatestart,
+  translate,
+  translateend,
+  zoomstart,
+  zoom,
+  zoomend,
+  pinchstart,
+  pinch,
+  pinchend,
+  rotatestart,
+  rotate,
+  rotateend
+} = exportNames;
 exports.rotateend = rotateend;
 exports.rotate = rotate;
 exports.rotatestart = rotatestart;

@@ -8,7 +8,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 if (_angular.default) {
   _action.default.registerExecutor({
     'ngExpression': {
-      execute: function execute(e) {
+      execute: function (e) {
         if (typeof e.action === 'string') {
           e.context.$eval(e.action);
         }

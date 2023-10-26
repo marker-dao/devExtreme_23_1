@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment_edit_form/edit_form/editors/dateEditor.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,8 +16,7 @@ var _inferno2 = require("@devextreme/runtime/inferno");
 var _date_box = require("../../../../editors/drop_down_editors/date_box");
 var _utils = require("../../utils");
 var _utils2 = require("../../../../../../core/options/utils");
-var _excluded = ["disabled", "firstDayOfWeek", "isAllDay", "value", "valueChange"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["disabled", "firstDayOfWeek", "isAllDay", "value", "valueChange"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -27,12 +26,16 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var viewFunction = function viewFunction(_ref) {
-  var calendarOptions = _ref.calendarOptions,
-    date = _ref.date,
-    disabled = _ref.props.disabled,
-    type = _ref.type,
-    updateDate = _ref.updateDate;
+const viewFunction = _ref => {
+  let {
+    calendarOptions,
+    date,
+    props: {
+      disabled
+    },
+    type,
+    updateDate
+  } = _ref;
   return (0, _inferno.createComponentVNode)(2, _date_box.DateBox, {
     "width": "100%",
     "useMaskBehavior": true,
@@ -44,9 +47,9 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var DateEditorProps = {};
+const DateEditorProps = {};
 exports.DateEditorProps = DateEditorProps;
-var DateEditor = /*#__PURE__*/function (_InfernoComponent) {
+let DateEditor = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(DateEditor, _InfernoComponent);
   function DateEditor(props) {
     var _this;
@@ -64,22 +67,16 @@ var DateEditor = /*#__PURE__*/function (_InfernoComponent) {
     return [new _inferno2.InfernoEffect(this.initDate, [])];
   };
   _proto.initDate = function initDate() {
-    var _this2 = this;
     if (!this.state.date) {
-      this.setState(function (__state_argument) {
-        return {
-          date: _this2.props.value
-        };
-      });
+      this.setState(__state_argument => ({
+        date: this.props.value
+      }));
     }
   };
   _proto.updateDate = function updateDate(date) {
-    var _this3 = this;
-    this.setState(function (__state_argument) {
-      return {
-        date: _this3.props.valueChange(date)
-      };
-    });
+    this.setState(__state_argument => ({
+      date: this.props.valueChange(date)
+    }));
   };
   _proto.componentWillUpdate = function componentWillUpdate(nextProps, nextState, context) {
     _InfernoComponent.prototype.componentWillUpdate.call(this);
@@ -88,7 +85,7 @@ var DateEditor = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       date: this.state.date,
@@ -100,32 +97,26 @@ var DateEditor = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(DateEditor, [{
     key: "calendarOptions",
-    get: function get() {
-      var _this4 = this;
+    get: function () {
       if (this.__getterCache['calendarOptions'] !== undefined) {
         return this.__getterCache['calendarOptions'];
       }
-      return this.__getterCache['calendarOptions'] = function () {
+      return this.__getterCache['calendarOptions'] = (() => {
         return {
-          firstDayOfWeek: (0, _utils.getFirstDayOfWeek)(_this4.props.firstDayOfWeek)
+          firstDayOfWeek: (0, _utils.getFirstDayOfWeek)(this.props.firstDayOfWeek)
         };
-      }();
+      })();
     }
   }, {
     key: "type",
-    get: function get() {
+    get: function () {
       return this.props.isAllDay ? 'date' : 'datetime';
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        disabled = _this$props.disabled,
-        firstDayOfWeek = _this$props.firstDayOfWeek,
-        isAllDay = _this$props.isAllDay,
-        value = _this$props.value,
-        valueChange = _this$props.valueChange,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);
@@ -133,7 +124,7 @@ var DateEditor = /*#__PURE__*/function (_InfernoComponent) {
 }(_inferno2.InfernoComponent);
 exports.DateEditor = DateEditor;
 DateEditor.defaultProps = DateEditorProps;
-var __defaultOptionRules = [];
+const __defaultOptionRules = [];
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
   DateEditor.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(DateEditor.defaultProps), Object.getOwnPropertyDescriptors((0, _utils2.convertRulesToOptions)(__defaultOptionRules))));

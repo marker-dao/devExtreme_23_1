@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/defer_rendering.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,21 +27,21 @@ var _position = require("../core/utils/position");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE deferRendering
 
-var window = (0, _window.getWindow)();
-var WIDGET_CLASS = 'dx-widget';
-var DEFER_RENDERING_CLASS = 'dx-deferrendering';
-var PENDING_RENDERING_CLASS = 'dx-pending-rendering';
-var PENDING_RENDERING_MANUAL_CLASS = 'dx-pending-rendering-manual';
-var PENDING_RENDERING_ACTIVE_CLASS = 'dx-pending-rendering-active';
-var VISIBLE_WHILE_PENDING_RENDERING_CLASS = 'dx-visible-while-pending-rendering';
-var INVISIBLE_WHILE_PENDING_RENDERING_CLASS = 'dx-invisible-while-pending-rendering';
-var LOADINDICATOR_CONTAINER_CLASS = 'dx-loadindicator-container';
-var DEFER_RENDERING_LOADINDICATOR_CONTAINER_CLASS = 'dx-deferrendering-loadindicator-container';
-var DEFER_DEFER_RENDERING_LOAD_INDICATOR = 'dx-deferrendering-load-indicator';
-var ANONYMOUS_TEMPLATE_NAME = 'content';
-var ACTIONS = ['onRendered', 'onShown'];
-var DeferRendering = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const window = (0, _window.getWindow)();
+const WIDGET_CLASS = 'dx-widget';
+const DEFER_RENDERING_CLASS = 'dx-deferrendering';
+const PENDING_RENDERING_CLASS = 'dx-pending-rendering';
+const PENDING_RENDERING_MANUAL_CLASS = 'dx-pending-rendering-manual';
+const PENDING_RENDERING_ACTIVE_CLASS = 'dx-pending-rendering-active';
+const VISIBLE_WHILE_PENDING_RENDERING_CLASS = 'dx-visible-while-pending-rendering';
+const INVISIBLE_WHILE_PENDING_RENDERING_CLASS = 'dx-invisible-while-pending-rendering';
+const LOADINDICATOR_CONTAINER_CLASS = 'dx-loadindicator-container';
+const DEFER_RENDERING_LOADINDICATOR_CONTAINER_CLASS = 'dx-deferrendering-loadindicator-container';
+const DEFER_DEFER_RENDERING_LOAD_INDICATOR = 'dx-deferrendering-load-indicator';
+const ANONYMOUS_TEMPLATE_NAME = 'content';
+const ACTIONS = ['onRendered', 'onShown'];
+const DeferRendering = _ui.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       showLoadIndicator: false,
       renderWhen: undefined,
@@ -51,10 +51,10 @@ var DeferRendering = _ui.default.inherit({
       onShown: null
     });
   },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+  _getAnonymousTemplateName: function () {
     return ANONYMOUS_TEMPLATE_NAME;
   },
-  _init: function _init() {
+  _init: function () {
     this.transitionExecutor = new _transition_executor.TransitionExecutor();
     this._initElement();
     this._initRender();
@@ -62,14 +62,14 @@ var DeferRendering = _ui.default.inherit({
     this._initActions();
     this.callBase();
   },
-  _initElement: function _initElement() {
+  _initElement: function () {
     this.$element().addClass(DEFER_RENDERING_CLASS);
   },
-  _initRender: function _initRender() {
-    var that = this;
-    var $element = this.$element();
-    var renderWhen = this.option('renderWhen');
-    var doRender = function doRender() {
+  _initRender: function () {
+    const that = this;
+    const $element = this.$element();
+    const renderWhen = this.option('renderWhen');
+    const doRender = () => {
       return that._renderDeferredContent();
     };
     if ((0, _type.isPromise)(renderWhen)) {
@@ -81,36 +81,35 @@ var DeferRendering = _ui.default.inherit({
       }
     }
   },
-  _initActions: function _initActions() {
-    var _this = this;
+  _initActions: function () {
     this._actions = {};
-    (0, _iterator.each)(ACTIONS, function (_, action) {
-      _this._actions[action] = _this._createActionByOption(action) || _common.noop;
+    (0, _iterator.each)(ACTIONS, (_, action) => {
+      this._actions[action] = this._createActionByOption(action) || _common.noop;
     });
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     if (!this._initContent) {
       this._initContent = this._renderContent;
-      this._renderContent = function () {};
+      this._renderContent = () => {};
     }
     this._initContent();
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl: function () {
     this.$element().removeClass(WIDGET_CLASS);
     this.$element().append(this._$initialContent);
     this._setLoadingState();
   },
-  _renderDeferredContent: function _renderDeferredContent() {
-    var that = this;
-    var $element = this.$element();
-    var result = new _deferred.Deferred();
+  _renderDeferredContent: function () {
+    const that = this;
+    const $element = this.$element();
+    const result = new _deferred.Deferred();
     $element.removeClass(PENDING_RENDERING_MANUAL_CLASS);
     $element.addClass(PENDING_RENDERING_ACTIVE_CLASS);
     this._abortRenderTask();
-    this._renderTask = (0, _common.executeAsync)(function () {
-      that._renderImpl().done(function () {
-        var shownArgs = {
+    this._renderTask = (0, _common.executeAsync)(() => {
+      that._renderImpl().done(() => {
+        const shownArgs = {
           element: $element
         };
         that._actions.onShown([shownArgs]);
@@ -121,16 +120,16 @@ var DeferRendering = _ui.default.inherit({
     });
     return result.promise();
   },
-  _isElementInViewport: function _isElementInViewport(element) {
-    var rect = (0, _position.getBoundingRect)(element);
+  _isElementInViewport: function (element) {
+    const rect = (0, _position.getBoundingRect)(element);
     return rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || _dom_adapter.default.getDocumentElement().clientHeight) && rect.left <= (window.innerWidth || _dom_adapter.default.getDocumentElement().clientWidth);
   },
-  _animate: function _animate() {
-    var that = this;
-    var $element = this.$element();
-    var animation = (0, _window.hasWindow)() && this.option('animation');
-    var staggerItemSelector = this.option('staggerItemSelector');
-    var animatePromise;
+  _animate: function () {
+    const that = this;
+    const $element = this.$element();
+    const animation = (0, _window.hasWindow)() && this.option('animation');
+    const staggerItemSelector = this.option('staggerItemSelector');
+    let animatePromise;
     that.transitionExecutor.stop();
     if (animation) {
       if (staggerItemSelector) {
@@ -148,12 +147,12 @@ var DeferRendering = _ui.default.inherit({
     }
     return animatePromise;
   },
-  _renderImpl: function _renderImpl() {
-    var $element = this.$element();
-    var renderedArgs = {
+  _renderImpl: function () {
+    const $element = this.$element();
+    const renderedArgs = {
       element: $element
     };
-    var contentTemplate = this._getTemplate(this._templateManager.anonymousTemplateName);
+    const contentTemplate = this._getTemplate(this._templateManager.anonymousTemplateName);
     if (contentTemplate) {
       contentTemplate.render({
         container: $element.empty(),
@@ -166,9 +165,9 @@ var DeferRendering = _ui.default.inherit({
     this._isRendered = true;
     return this._animate();
   },
-  _setLoadingState: function _setLoadingState() {
-    var $element = this.$element();
-    var hasCustomLoadIndicator = !!$element.find('.' + VISIBLE_WHILE_PENDING_RENDERING_CLASS).length;
+  _setLoadingState: function () {
+    const $element = this.$element();
+    const hasCustomLoadIndicator = !!$element.find('.' + VISIBLE_WHILE_PENDING_RENDERING_CLASS).length;
     $element.addClass(PENDING_RENDERING_CLASS);
     if (!hasCustomLoadIndicator) {
       $element.children().addClass(INVISIBLE_WHILE_PENDING_RENDERING_CLASS);
@@ -177,14 +176,14 @@ var DeferRendering = _ui.default.inherit({
       this._showLoadIndicator($element);
     }
   },
-  _showLoadIndicator: function _showLoadIndicator($container) {
+  _showLoadIndicator: function ($container) {
     this._$loadIndicator = new _load_indicator.default((0, _renderer.default)('<div>'), {
       visible: true
     }).$element().addClass(DEFER_DEFER_RENDERING_LOAD_INDICATOR);
     (0, _renderer.default)('<div>').addClass(LOADINDICATOR_CONTAINER_CLASS).addClass(DEFER_RENDERING_LOADINDICATOR_CONTAINER_CLASS).append(this._$loadIndicator).appendTo($container);
   },
-  _setRenderedState: function _setRenderedState() {
-    var $element = this.$element();
+  _setRenderedState: function () {
+    const $element = this.$element();
     if (this._$loadIndicator) {
       this._$loadIndicator.remove();
     }
@@ -192,9 +191,9 @@ var DeferRendering = _ui.default.inherit({
     $element.removeClass(PENDING_RENDERING_ACTIVE_CLASS);
     (0, _visibility_change.triggerShownEvent)($element.children());
   },
-  _optionChanged: function _optionChanged(args) {
-    var value = args.value;
-    var previousValue = args.previousValue;
+  _optionChanged: function (args) {
+    const value = args.value;
+    const previousValue = args.previousValue;
     switch (args.name) {
       case 'renderWhen':
         if (previousValue === false && value === true) {
@@ -212,8 +211,8 @@ var DeferRendering = _ui.default.inherit({
         this.callBase(args);
     }
   },
-  _renderOrAnimate: function _renderOrAnimate() {
-    var result;
+  _renderOrAnimate: function () {
+    let result;
     if (this._isRendered) {
       this._setRenderedState();
       result = this._animate();
@@ -222,16 +221,16 @@ var DeferRendering = _ui.default.inherit({
     }
     return result;
   },
-  renderContent: function renderContent() {
+  renderContent: function () {
     return this._renderOrAnimate();
   },
-  _abortRenderTask: function _abortRenderTask() {
+  _abortRenderTask: function () {
     if (this._renderTask) {
       this._renderTask.abort();
       this._renderTask = undefined;
     }
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this.transitionExecutor.stop(true);
     this._abortRenderTask();
     this._actions = undefined;

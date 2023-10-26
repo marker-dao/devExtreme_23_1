@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/dropImage.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,14 +20,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DropImageModule = _base.default;
+let DropImageModule = _base.default;
 if (_devextremeQuill.default) {
   DropImageModule = /*#__PURE__*/function (_BaseModule) {
     _inheritsLoose(DropImageModule, _BaseModule);
     function DropImageModule(quill, options) {
       var _this;
       _this = _BaseModule.call(this, quill, options) || this;
-      var widgetName = _this.editorInstance.NAME;
+      const widgetName = _this.editorInstance.NAME;
       _events_engine.default.on(_this.quill.root, (0, _index.addNamespace)('drop', widgetName), _this._dropHandler.bind(_assertThisInitialized(_this)));
       _events_engine.default.on(_this.quill.root, (0, _index.addNamespace)('paste', widgetName), _this._pasteHandler.bind(_assertThisInitialized(_this)));
       return _this;
@@ -35,8 +35,8 @@ if (_devextremeQuill.default) {
     var _proto = DropImageModule.prototype;
     _proto._dropHandler = function _dropHandler(e) {
       var _dataTransfer$files;
-      var dataTransfer = e.originalEvent.dataTransfer;
-      var hasFiles = dataTransfer === null || dataTransfer === void 0 ? void 0 : (_dataTransfer$files = dataTransfer.files) === null || _dataTransfer$files === void 0 ? void 0 : _dataTransfer$files.length;
+      const dataTransfer = e.originalEvent.dataTransfer;
+      const hasFiles = dataTransfer === null || dataTransfer === void 0 ? void 0 : (_dataTransfer$files = dataTransfer.files) === null || _dataTransfer$files === void 0 ? void 0 : _dataTransfer$files.length;
       this.saveValueChangeEvent(e);
       e.preventDefault();
       if (hasFiles) {
@@ -44,54 +44,58 @@ if (_devextremeQuill.default) {
       }
     };
     _proto._pasteHandler = function _pasteHandler(e) {
-      var _clipboardData$items,
-        _this2 = this;
-      var clipboardData = e.originalEvent.clipboardData;
+      var _clipboardData$items;
+      const {
+        clipboardData
+      } = e.originalEvent;
       this.saveValueChangeEvent(e);
       if (!clipboardData) {
         return;
       }
-      var hasDataItems = (_clipboardData$items = clipboardData.items) === null || _clipboardData$items === void 0 ? void 0 : _clipboardData$items.length;
-      var isHtmlData = clipboardData.getData('text/html');
+      const hasDataItems = (_clipboardData$items = clipboardData.items) === null || _clipboardData$items === void 0 ? void 0 : _clipboardData$items.length;
+      const isHtmlData = clipboardData.getData('text/html');
       if (!isHtmlData && hasDataItems) {
-        this._getImage(clipboardData.items, function (imageData) {
-          if (_this2._isBrowserSupportImagePaste(_browser.default)) {
+        this._getImage(clipboardData.items, imageData => {
+          if (this._isBrowserSupportImagePaste(_browser.default)) {
             return;
           }
-          _this2._addImage(imageData);
+          this._addImage(imageData);
         });
       }
     };
     _proto._isBrowserSupportImagePaste = function _isBrowserSupportImagePaste(_ref) {
-      var mozilla = _ref.mozilla,
-        chrome = _ref.chrome,
-        version = _ref.version;
+      let {
+        mozilla,
+        chrome,
+        version
+      } = _ref;
       return mozilla || chrome && version > 82; // T894297
     };
     _proto._isImage = function _isImage(file) {
       return !!file.type.match(/^image\/(a?png|bmp|gif|p?jpe?g|svg|vnd\.microsoft\.icon|webp)/i);
     };
     _proto._getImage = function _getImage(files, callback) {
-      var _this3 = this;
-      var window = (0, _window.getWindow)();
-      (0, _iterator.each)(files, function (index, file) {
-        if (!_this3._isImage(file)) {
+      const window = (0, _window.getWindow)();
+      (0, _iterator.each)(files, (index, file) => {
+        if (!this._isImage(file)) {
           return;
         }
-        var reader = new window.FileReader();
-        reader.onload = function (_ref2) {
-          var target = _ref2.target;
+        const reader = new window.FileReader();
+        reader.onload = _ref2 => {
+          let {
+            target
+          } = _ref2;
           callback(target.result);
         };
-        var readableFile = file.getAsFile ? file.getAsFile() : file;
+        const readableFile = file.getAsFile ? file.getAsFile() : file;
         if (readableFile instanceof window.Blob) {
           reader.readAsDataURL(readableFile);
         }
       });
     };
     _proto._addImage = function _addImage(data) {
-      var selection = this.quill.getSelection();
-      var pasteIndex = selection ? selection.index : this.quill.getLength();
+      const selection = this.quill.getSelection();
+      const pasteIndex = selection ? selection.index : this.quill.getLength();
       this.quill.insertEmbed(pasteIndex, 'extendedImage', data, 'user');
     };
     return DropImageModule;

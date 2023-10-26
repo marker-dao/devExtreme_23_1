@@ -6,7 +6,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var ScrollDirection = /*#__PURE__*/function () {
+let ScrollDirection = /*#__PURE__*/function () {
   function ScrollDirection(direction) {
     this.DIRECTION_HORIZONTAL = 'horizontal';
     this.DIRECTION_VERTICAL = 'vertical';
@@ -15,17 +15,17 @@ var ScrollDirection = /*#__PURE__*/function () {
   }
   _createClass(ScrollDirection, [{
     key: "isHorizontal",
-    get: function get() {
+    get: function () {
       return this.direction === _consts.DIRECTION_HORIZONTAL || this.direction === _consts.DIRECTION_BOTH;
     }
   }, {
     key: "isVertical",
-    get: function get() {
+    get: function () {
       return this.direction === _consts.DIRECTION_VERTICAL || this.direction === _consts.DIRECTION_BOTH;
     }
   }, {
     key: "isBoth",
-    get: function get() {
+    get: function () {
       return this.direction === _consts.DIRECTION_BOTH;
     }
   }]);

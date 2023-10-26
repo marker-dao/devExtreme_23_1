@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/switch.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,25 +27,25 @@ var _deferred = require("../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE switch
 
-var SWITCH_CLASS = 'dx-switch';
-var SWITCH_WRAPPER_CLASS = SWITCH_CLASS + '-wrapper';
-var SWITCH_CONTAINER_CLASS = SWITCH_CLASS + '-container';
-var SWITCH_INNER_CLASS = SWITCH_CLASS + '-inner';
-var SWITCH_HANDLE_CLASS = SWITCH_CLASS + '-handle';
-var SWITCH_ON_VALUE_CLASS = SWITCH_CLASS + '-on-value';
-var SWITCH_ON_CLASS = SWITCH_CLASS + '-on';
-var SWITCH_OFF_CLASS = SWITCH_CLASS + '-off';
-var SWITCH_ANIMATION_DURATION = 100;
-var Switch = _editor.default.inherit({
-  _supportedKeys: function _supportedKeys() {
-    var isRTL = this.option('rtlEnabled');
-    var click = function click(e) {
+const SWITCH_CLASS = 'dx-switch';
+const SWITCH_WRAPPER_CLASS = SWITCH_CLASS + '-wrapper';
+const SWITCH_CONTAINER_CLASS = SWITCH_CLASS + '-container';
+const SWITCH_INNER_CLASS = SWITCH_CLASS + '-inner';
+const SWITCH_HANDLE_CLASS = SWITCH_CLASS + '-handle';
+const SWITCH_ON_VALUE_CLASS = SWITCH_CLASS + '-on-value';
+const SWITCH_ON_CLASS = SWITCH_CLASS + '-on';
+const SWITCH_OFF_CLASS = SWITCH_CLASS + '-off';
+const SWITCH_ANIMATION_DURATION = 100;
+const Switch = _editor.default.inherit({
+  _supportedKeys: function () {
+    const isRTL = this.option('rtlEnabled');
+    const click = function (e) {
       e.preventDefault();
       this._clickAction({
         event: e
       });
     };
-    var move = function move(value, e) {
+    const move = function (value, e) {
       e.preventDefault();
       e.stopPropagation();
       this._saveValueChangeEvent(e);
@@ -58,10 +58,10 @@ var Switch = _editor.default.inherit({
       rightArrow: move.bind(this, isRTL ? false : true)
     });
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return false;
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
@@ -70,9 +70,9 @@ var Switch = _editor.default.inherit({
       value: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
@@ -82,7 +82,7 @@ var Switch = _editor.default.inherit({
   },
   _feedbackHideTimeout: 0,
   _animating: false,
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._renderContainers();
     this.$element().addClass(SWITCH_CLASS).append(this._$switchWrapper);
     this._renderSubmitElement();
@@ -94,35 +94,35 @@ var Switch = _editor.default.inherit({
     this._renderLabels();
     this._renderValue();
   },
-  _getInnerOffset: function _getInnerOffset(value, offset) {
-    var ratio = (offset - this._offsetDirection() * Number(!value)) / 2;
+  _getInnerOffset: function (value, offset) {
+    const ratio = (offset - this._offsetDirection() * Number(!value)) / 2;
     return 100 * ratio + '%';
   },
-  _getHandleOffset: function _getHandleOffset(value, offset) {
+  _getHandleOffset: function (value, offset) {
     if (this.option('rtlEnabled')) {
       value = !value;
     }
     if (value) {
-      var calcValue = -100 + 100 * -offset;
+      const calcValue = -100 + 100 * -offset;
       return calcValue + '%';
     } else {
       return 100 * -offset + '%';
     }
   },
-  _renderSwitchInner: function _renderSwitchInner() {
+  _renderSwitchInner: function () {
     this._$switchInner = (0, _renderer.default)('<div>').addClass(SWITCH_INNER_CLASS).appendTo(this._$switchContainer);
     this._$handle = (0, _renderer.default)('<div>').addClass(SWITCH_HANDLE_CLASS).appendTo(this._$switchInner);
   },
-  _renderLabels: function _renderLabels() {
+  _renderLabels: function () {
     this._$labelOn = (0, _renderer.default)('<div>').addClass(SWITCH_ON_CLASS).prependTo(this._$switchInner);
     this._$labelOff = (0, _renderer.default)('<div>').addClass(SWITCH_OFF_CLASS).appendTo(this._$switchInner);
     this._setLabelsText();
   },
-  _renderContainers: function _renderContainers() {
+  _renderContainers: function () {
     this._$switchContainer = (0, _renderer.default)('<div>').addClass(SWITCH_CONTAINER_CLASS);
     this._$switchWrapper = (0, _renderer.default)('<div>').addClass(SWITCH_WRAPPER_CLASS).append(this._$switchContainer);
   },
-  _renderSwipeable: function _renderSwipeable() {
+  _renderSwipeable: function () {
     this._createComponent(this.$element(), _swipeable.default, {
       elastic: false,
       immediate: true,
@@ -132,33 +132,33 @@ var Switch = _editor.default.inherit({
       itemSizeFunc: this._getItemSizeFunc.bind(this)
     });
   },
-  _getItemSizeFunc: function _getItemSizeFunc() {
+  _getItemSizeFunc: function () {
     return (0, _size.getOuterWidth)(this._$switchContainer, true) - (0, _position.getBoundingRect)(this._$handle.get(0)).width;
   },
-  _renderSubmitElement: function _renderSubmitElement() {
+  _renderSubmitElement: function () {
     this._$submitElement = (0, _renderer.default)('<input>').attr('type', 'hidden').appendTo(this.$element());
   },
-  _getSubmitElement: function _getSubmitElement() {
+  _getSubmitElement: function () {
     return this._$submitElement;
   },
-  _offsetDirection: function _offsetDirection() {
+  _offsetDirection: function () {
     return this.option('rtlEnabled') ? -1 : 1;
   },
-  _renderPosition: function _renderPosition(state, swipeOffset) {
-    var innerOffset = this._getInnerOffset(state, swipeOffset);
-    var handleOffset = this._getHandleOffset(state, swipeOffset);
+  _renderPosition: function (state, swipeOffset) {
+    const innerOffset = this._getInnerOffset(state, swipeOffset);
+    const handleOffset = this._getHandleOffset(state, swipeOffset);
     this._$switchInner.css('transform', ' translateX(' + innerOffset + ')');
     this._$handle.css('transform', ' translateX(' + handleOffset + ')');
   },
-  _validateValue: function _validateValue() {
-    var check = this.option('value');
+  _validateValue: function () {
+    const check = this.option('value');
     if (typeof check !== 'boolean') {
       this._options.silent('value', !!check);
     }
   },
-  _renderClick: function _renderClick() {
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
-    var $element = this.$element();
+  _renderClick: function () {
+    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+    const $element = this.$element();
     this._clickAction = this._createAction(this._clickHandler.bind(this));
     _events_engine.default.off($element, eventName);
     _events_engine.default.on($element, eventName, function (e) {
@@ -167,30 +167,30 @@ var Switch = _editor.default.inherit({
       });
     }.bind(this));
   },
-  _clickHandler: function _clickHandler(args) {
-    var e = args.event;
+  _clickHandler: function (args) {
+    const e = args.event;
     this._saveValueChangeEvent(e);
     if (this._animating || this._swiping) {
       return;
     }
     this._animateValue(!this.option('value'));
   },
-  _animateValue: function _animateValue(value) {
-    var startValue = this.option('value');
-    var endValue = value;
+  _animateValue: function (value) {
+    const startValue = this.option('value');
+    const endValue = value;
     if (startValue === endValue) {
       return;
     }
     this._animating = true;
-    var fromInnerOffset = this._getInnerOffset(startValue, 0);
-    var toInnerOffset = this._getInnerOffset(endValue, 0);
-    var fromHandleOffset = this._getHandleOffset(startValue, 0);
-    var toHandleOffset = this._getHandleOffset(endValue, 0);
-    var that = this;
-    var fromInnerConfig = {};
-    var toInnerConfig = {};
-    var fromHandleConfig = {};
-    var toHandlerConfig = {};
+    const fromInnerOffset = this._getInnerOffset(startValue, 0);
+    const toInnerOffset = this._getInnerOffset(endValue, 0);
+    const fromHandleOffset = this._getHandleOffset(startValue, 0);
+    const toHandleOffset = this._getHandleOffset(endValue, 0);
+    const that = this;
+    const fromInnerConfig = {};
+    const toInnerConfig = {};
+    const fromHandleConfig = {};
+    const toHandlerConfig = {};
     fromInnerConfig['transform'] = ' translateX(' + fromInnerOffset + ')';
     toInnerConfig['transform'] = ' translateX(' + toInnerOffset + ')';
     fromHandleConfig['transform'] = ' translateX(' + fromHandleOffset + ')';
@@ -205,17 +205,17 @@ var Switch = _editor.default.inherit({
       from: fromInnerConfig,
       to: toInnerConfig,
       duration: SWITCH_ANIMATION_DURATION,
-      complete: function complete() {
+      complete: function () {
         that._animating = false;
         that.option('value', endValue);
       }
     });
   },
-  _swipeStartHandler: function _swipeStartHandler(e) {
-    var state = this.option('value');
-    var rtlEnabled = this.option('rtlEnabled');
-    var maxOffOffset = rtlEnabled ? 0 : 1;
-    var maxOnOffset = rtlEnabled ? 1 : 0;
+  _swipeStartHandler: function (e) {
+    const state = this.option('value');
+    const rtlEnabled = this.option('rtlEnabled');
+    const maxOffOffset = rtlEnabled ? 0 : 1;
+    const maxOnOffset = rtlEnabled ? 1 : 0;
     e.event.maxLeftOffset = state ? maxOffOffset : maxOnOffset;
     e.event.maxRightOffset = state ? maxOnOffset : maxOffOffset;
     this._swiping = true;
@@ -223,16 +223,16 @@ var Switch = _editor.default.inherit({
     (0, _emitter.lock)(this._feedbackDeferred);
     this._toggleActiveState(this.$element(), this.option('activeStateEnabled'));
   },
-  _swipeUpdateHandler: function _swipeUpdateHandler(e) {
+  _swipeUpdateHandler: function (e) {
     this._renderPosition(this.option('value'), e.event.offset);
   },
-  _swipeEndHandler: function _swipeEndHandler(e) {
-    var that = this;
-    var offsetDirection = this._offsetDirection();
-    var toInnerConfig = {};
-    var toHandleConfig = {};
-    var innerOffset = this._getInnerOffset(that.option('value'), e.event.targetOffset);
-    var handleOffset = this._getHandleOffset(that.option('value'), e.event.targetOffset);
+  _swipeEndHandler: function (e) {
+    const that = this;
+    const offsetDirection = this._offsetDirection();
+    const toInnerConfig = {};
+    const toHandleConfig = {};
+    const innerOffset = this._getInnerOffset(that.option('value'), e.event.targetOffset);
+    const handleOffset = this._getHandleOffset(that.option('value'), e.event.targetOffset);
     toInnerConfig['transform'] = ' translateX(' + innerOffset + ')';
     toHandleConfig['transform'] = ' translateX(' + handleOffset + ')';
     _fx.default.animate(this._$handle, {
@@ -242,9 +242,9 @@ var Switch = _editor.default.inherit({
     _fx.default.animate(this._$switchInner, {
       to: toInnerConfig,
       duration: SWITCH_ANIMATION_DURATION,
-      complete: function complete() {
+      complete: function () {
         that._swiping = false;
-        var pos = that.option('value') + offsetDirection * e.event.targetOffset;
+        const pos = that.option('value') + offsetDirection * e.event.targetOffset;
         that._saveValueChangeEvent(e.event);
         that.option('value', Boolean(pos));
         that._feedbackDeferred.resolve();
@@ -252,9 +252,9 @@ var Switch = _editor.default.inherit({
       }
     });
   },
-  _renderValue: function _renderValue() {
+  _renderValue: function () {
     this._validateValue();
-    var val = this.option('value');
+    const val = this.option('value');
     this._renderPosition(val, 0);
     this.$element().toggleClass(SWITCH_ON_VALUE_CLASS, val);
     this._getSubmitElement().val(val);
@@ -263,16 +263,16 @@ var Switch = _editor.default.inherit({
       'label': val ? this.option('switchedOnText') : this.option('switchedOffText')
     });
   },
-  _setLabelsText: function _setLabelsText() {
+  _setLabelsText: function () {
     this._$labelOn && this._$labelOn.text(this.option('switchedOnText'));
     this._$labelOff && this._$labelOff.text(this.option('switchedOffText'));
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this.repaint();
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'width':
         delete this._marginBound;

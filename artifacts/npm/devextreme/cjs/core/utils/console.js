@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/console.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,21 +13,21 @@ var _type = require("./type");
 /* global console */
 /* eslint no-console: off */
 
-var noop = function noop() {};
-var getConsoleMethod = function getConsoleMethod(method) {
+const noop = function () {};
+const getConsoleMethod = function (method) {
   if (typeof console === 'undefined' || !(0, _type.isFunction)(console[method])) {
     return noop;
   }
   return console[method].bind(console);
 };
-var logger = {
+const logger = {
   log: getConsoleMethod('log'),
   info: getConsoleMethod('info'),
   warn: getConsoleMethod('warn'),
   error: getConsoleMethod('error')
 };
 exports.logger = logger;
-var debug = function () {
+const debug = function () {
   function assert(condition, message) {
     if (!condition) {
       throw new Error(message);

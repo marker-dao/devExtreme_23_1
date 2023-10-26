@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/component_wrapper/common/template_wrapper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,12 +18,11 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _element = require("../../../core/element");
 var _type = require("../../../core/utils/type");
-var _excluded = ["isEqual"];
+const _excluded = ["isEqual"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function isDxElementWrapper(element) {
@@ -31,13 +30,15 @@ function isDxElementWrapper(element) {
 }
 function buildTemplateArgs(model, template) {
   var _model$data;
-  var args = {
+  const args = {
     template,
     model: _extends({}, model)
   };
-  var _ref = (_model$data = model.data) !== null && _model$data !== void 0 ? _model$data : {},
-    isEqual = _ref.isEqual,
-    data = _objectWithoutProperties(_ref, _excluded);
+  const _ref = (_model$data = model.data) !== null && _model$data !== void 0 ? _model$data : {},
+    {
+      isEqual
+    } = _ref,
+    data = _objectWithoutPropertiesLoose(_ref, _excluded);
   if (isEqual) {
     args.model.data = data;
     args.isEqual = isEqual;
@@ -46,19 +47,20 @@ function buildTemplateArgs(model, template) {
 }
 function renderTemplateContent(props, container) {
   var _props$model;
-  var _ref2 = (_props$model = props.model) !== null && _props$model !== void 0 ? _props$model : {
-      data: {}
-    },
-    data = _ref2.data,
-    index = _ref2.index;
+  const {
+    data,
+    index
+  } = (_props$model = props.model) !== null && _props$model !== void 0 ? _props$model : {
+    data: {}
+  };
   if (data) {
-    Object.keys(data).forEach(function (name) {
+    Object.keys(data).forEach(name => {
       if (data[name] && _dom_adapter.default.isNode(data[name])) {
         data[name] = (0, _element.getPublicElement)((0, _renderer.default)(data[name]));
       }
     });
   }
-  var rendered = props.template.render(_extends({
+  const rendered = props.template.render(_extends({
     container,
     transclude: props.transclude
   }, {
@@ -74,16 +76,14 @@ function renderTemplateContent(props, container) {
   return isDxElementWrapper(rendered) ? rendered.toArray() : [(0, _renderer.default)(rendered).get(0)];
 }
 function removeDifferentElements(oldChildren, newChildren) {
-  newChildren.forEach(function (newElement) {
-    var hasOldChild = !!oldChildren.find(function (oldElement) {
-      return newElement === oldElement;
-    });
+  newChildren.forEach(newElement => {
+    const hasOldChild = !!oldChildren.find(oldElement => newElement === oldElement);
     if (!hasOldChild && newElement.parentNode) {
       newElement.parentNode.removeChild(newElement);
     }
   });
 }
-var TemplateWrapper = /*#__PURE__*/function (_InfernoComponent) {
+let TemplateWrapper = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(TemplateWrapper, _InfernoComponent);
   function TemplateWrapper(props) {
     var _this;
@@ -93,39 +93,46 @@ var TemplateWrapper = /*#__PURE__*/function (_InfernoComponent) {
   }
   var _proto = TemplateWrapper.prototype;
   _proto.renderTemplate = function renderTemplate() {
-    var node = (0, _inferno2.findDOMfromVNode)(this.$LI, true);
+    const node = (0, _inferno2.findDOMfromVNode)(this.$LI, true);
     if (!(node !== null && node !== void 0 && node.parentNode)) {
-      return function () {};
+      return () => {};
     }
-    var container = node.parentNode;
-    var $container = (0, _renderer.default)(container);
-    var $oldContainerContent = $container.contents().toArray();
-    var content = renderTemplateContent(this.props, (0, _element.getPublicElement)($container));
+    const container = node.parentNode;
+    const $container = (0, _renderer.default)(container);
+    const $oldContainerContent = $container.contents().toArray();
+    const content = renderTemplateContent(this.props, (0, _element.getPublicElement)($container));
     (0, _dom.replaceWith)((0, _renderer.default)(node), (0, _renderer.default)(content));
-    return function () {
-      var $actualContainerContent = (0, _renderer.default)(container).contents().toArray();
+    return () => {
+      const $actualContainerContent = (0, _renderer.default)(container).contents().toArray();
       removeDifferentElements($oldContainerContent, $actualContainerContent);
       container.appendChild(node);
     };
   };
   _proto.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-    var _this$props = this.props,
-      model = _this$props.model,
-      template = _this$props.template;
-    var isEqual = nextProps.isEqual,
-      nextModel = nextProps.model,
-      nextTemplate = nextProps.template;
-    var equalityComparer = isEqual !== null && isEqual !== void 0 ? isEqual : _shallow_equals.shallowEquals;
+    const {
+      model,
+      template
+    } = this.props;
+    const {
+      isEqual,
+      model: nextModel,
+      template: nextTemplate
+    } = nextProps;
+    const equalityComparer = isEqual !== null && isEqual !== void 0 ? isEqual : _shallow_equals.shallowEquals;
     if (template !== nextTemplate) {
       return true;
     }
     if (!(0, _type.isDefined)(model) || !(0, _type.isDefined)(nextModel)) {
       return model !== nextModel;
     }
-    var data = model.data,
-      index = model.index;
-    var nextData = nextModel.data,
-      nextIndex = nextModel.index;
+    const {
+      data,
+      index
+    } = model;
+    const {
+      data: nextData,
+      index: nextIndex
+    } = nextModel;
     if (index !== nextIndex) {
       return true;
     }

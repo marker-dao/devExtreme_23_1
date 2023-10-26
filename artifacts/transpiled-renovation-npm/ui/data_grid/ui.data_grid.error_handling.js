@@ -6,7 +6,7 @@ Object.keys(_error_handling).forEach(function (key) {
   if (key in exports && exports[key] === _error_handling[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _error_handling[key];
     }
   });

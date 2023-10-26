@@ -8,17 +8,17 @@ var _line_series = require("./line_series");
 var _utils = require("../core/utils");
 // there are area, steparea, stackedarea, fullstackedarea, splinearea
 
-var chartLineSeries = _line_series.chart.line;
-var polarLineSeries = _line_series.polar.line;
-var _extend = _extend2.extend;
-var calculateBezierPoints = _line_series.chart['spline']._calculateBezierPoints;
-var chart = {};
+const chartLineSeries = _line_series.chart.line;
+const polarLineSeries = _line_series.polar.line;
+const _extend = _extend2.extend;
+const calculateBezierPoints = _line_series.chart['spline']._calculateBezierPoints;
+const chart = {};
 exports.chart = chart;
-var polar = {};
+const polar = {};
 exports.polar = polar;
-var baseAreaMethods = {
+const baseAreaMethods = {
   _createBorderElement: chartLineSeries._createMainElement,
-  _createLegendState: function _createLegendState(styleOptions, defaultColor) {
+  _createLegendState: function (styleOptions, defaultColor) {
     return {
       fill: (0, _utils.extractColor)(styleOptions.color) || defaultColor,
       opacity: styleOptions.opacity,
@@ -26,30 +26,30 @@ var baseAreaMethods = {
       filter: styleOptions.highlight
     };
   },
-  _getColorId: function _getColorId(options) {
+  _getColorId: function (options) {
     var _options$color;
     return (_options$color = options.color) === null || _options$color === void 0 ? void 0 : _options$color.fillId;
   },
-  getValueRangeInitialValue: function getValueRangeInitialValue() {
+  getValueRangeInitialValue: function () {
     if (this.valueAxisType !== 'logarithmic' && this.valueType !== 'datetime' && this.showZero !== false) {
       return 0;
     } else {
       return _scatter_series.chart.getValueRangeInitialValue.call(this);
     }
   },
-  _getDefaultSegment: function _getDefaultSegment(segment) {
-    var defaultSegment = chartLineSeries._getDefaultSegment(segment);
+  _getDefaultSegment: function (segment) {
+    const defaultSegment = chartLineSeries._getDefaultSegment(segment);
     defaultSegment.area = defaultSegment.line.concat(defaultSegment.line.slice().reverse());
     return defaultSegment;
   },
-  _updateElement: function _updateElement(element, segment, animate, complete) {
-    var lineParams = {
+  _updateElement: function (element, segment, animate, complete) {
+    const lineParams = {
       points: segment.line
     };
-    var areaParams = {
+    const areaParams = {
       points: segment.area
     };
-    var borderElement = element.line;
+    const borderElement = element.line;
     if (animate) {
       borderElement && borderElement.animate(lineParams);
       element.area.animate(areaParams, {}, complete);
@@ -58,11 +58,11 @@ var baseAreaMethods = {
       element.area.attr(areaParams);
     }
   },
-  _removeElement: function _removeElement(element) {
+  _removeElement: function (element) {
     element.line && element.line.remove();
     element.area.remove();
   },
-  _drawElement: function _drawElement(segment) {
+  _drawElement: function (segment) {
     return {
       line: this._bordersGroup && this._createBorderElement(segment.line, {
         'stroke-width': this._styles.normal.border['stroke-width']
@@ -70,8 +70,8 @@ var baseAreaMethods = {
       area: this._createMainElement(segment.area).append(this._elementsGroup)
     };
   },
-  _applyStyle: function _applyStyle(style) {
-    var that = this;
+  _applyStyle: function (style) {
+    const that = this;
     that._elementsGroup && that._elementsGroup.smartAttr(style.elements);
     that._bordersGroup && that._bordersGroup.attr(style.border);
     (that._graphics || []).forEach(function (graphic) {
@@ -80,10 +80,10 @@ var baseAreaMethods = {
       }).sharp();
     });
   },
-  _parseStyle: function _parseStyle(options, defaultColor, defaultBorderColor) {
+  _parseStyle: function (options, defaultColor, defaultBorderColor) {
     var _options$highlight;
-    var borderOptions = options.border || {};
-    var borderStyle = chartLineSeries._parseLineOptions(borderOptions, defaultBorderColor);
+    const borderOptions = options.border || {};
+    const borderStyle = chartLineSeries._parseLineOptions(borderOptions, defaultBorderColor);
     borderStyle.stroke = borderOptions.visible && borderStyle['stroke-width'] ? borderStyle.stroke : 'none';
     borderStyle['stroke-width'] = borderStyle['stroke-width'] || 1;
     return {
@@ -97,19 +97,19 @@ var baseAreaMethods = {
       }
     };
   },
-  _areBordersVisible: function _areBordersVisible() {
-    var options = this._options;
+  _areBordersVisible: function () {
+    const options = this._options;
     return options.border.visible || options.hoverStyle.border.visible || options.selectionStyle.border.visible;
   },
-  _createMainElement: function _createMainElement(points, settings) {
+  _createMainElement: function (points, settings) {
     return this._renderer.path(points, 'area').attr(settings);
   },
-  _getTrackerSettings: function _getTrackerSettings(segment) {
+  _getTrackerSettings: function (segment) {
     return {
       'stroke-width': segment.singlePointSegment ? this._defaultTrackerWidth : 0
     };
   },
-  _getMainPointsFromSegment: function _getMainPointsFromSegment(segment) {
+  _getMainPointsFromSegment: function (segment) {
     return segment.area;
   }
 };
@@ -120,20 +120,20 @@ function createAreaPoints(points) {
     return pt.getCoords(true);
   }));
 }
-var areaSeries = chart['area'] = _extend({}, chartLineSeries, baseAreaMethods, {
+const areaSeries = chart['area'] = _extend({}, chartLineSeries, baseAreaMethods, {
   _prepareSegment(points, rotated) {
-    var that = this;
-    var processedPoints = that._processSinglePointsAreaSegment(points, rotated);
-    var areaPoints = createAreaPoints(processedPoints);
-    var argAxis = that.getArgumentAxis();
+    const that = this;
+    const processedPoints = that._processSinglePointsAreaSegment(points, rotated);
+    const areaPoints = createAreaPoints(processedPoints);
+    const argAxis = that.getArgumentAxis();
     if (argAxis.getAxisPosition) {
-      var argAxisPosition = argAxis.getAxisPosition();
-      var axisOptions = argAxis.getOptions();
-      var edgeOffset = (!rotated ? -1 : 1) * Math.round(axisOptions.width / 2);
+      const argAxisPosition = argAxis.getAxisPosition();
+      const axisOptions = argAxis.getOptions();
+      const edgeOffset = (!rotated ? -1 : 1) * Math.round(axisOptions.width / 2);
       if (axisOptions.visible) {
-        areaPoints.forEach(function (p, i) {
+        areaPoints.forEach((p, i) => {
           if (p) {
-            var index = points.length === 1 ? 0 : i < points.length ? i : areaPoints.length - 1 - i;
+            const index = points.length === 1 ? 0 : i < points.length ? i : areaPoints.length - 1 - i;
             rotated && p.x === points[index].defaultX && p.x === argAxisPosition - argAxis.getAxisShift() && (p.x += edgeOffset);
             !rotated && p.y === points[index].defaultY && p.y === argAxisPosition - argAxis.getAxisShift() && (p.y += edgeOffset);
           }
@@ -146,10 +146,10 @@ var areaSeries = chart['area'] = _extend({}, chartLineSeries, baseAreaMethods, {
       singlePointSegment: processedPoints !== points
     };
   },
-  _processSinglePointsAreaSegment: function _processSinglePointsAreaSegment(points, rotated) {
+  _processSinglePointsAreaSegment: function (points, rotated) {
     if (points && points.length === 1) {
-      var p = points[0];
-      var p1 = (0, _object.clone)(p);
+      const p = points[0];
+      const p1 = (0, _object.clone)(p);
       p1[rotated ? 'y' : 'x'] += 1;
       p1.argument = null;
       return [p, p1];
@@ -158,26 +158,26 @@ var areaSeries = chart['area'] = _extend({}, chartLineSeries, baseAreaMethods, {
   }
 });
 polar['area'] = _extend({}, polarLineSeries, baseAreaMethods, {
-  _prepareSegment: function _prepareSegment(points, rotated, lastSegment) {
+  _prepareSegment: function (points, rotated, lastSegment) {
     lastSegment && polarLineSeries._closeSegment.call(this, points);
     return areaSeries._prepareSegment.call(this, points);
   },
-  _processSinglePointsAreaSegment: function _processSinglePointsAreaSegment(points) {
+  _processSinglePointsAreaSegment: function (points) {
     return _line_series.polar.line._prepareSegment.call(this, points).line;
   }
 });
 chart['steparea'] = _extend({}, areaSeries, {
-  _prepareSegment: function _prepareSegment(points, rotated) {
-    var stepLineSeries = _line_series.chart['stepline'];
+  _prepareSegment: function (points, rotated) {
+    const stepLineSeries = _line_series.chart['stepline'];
     points = areaSeries._processSinglePointsAreaSegment(points, rotated);
     return areaSeries._prepareSegment.call(this, stepLineSeries._calculateStepLinePoints.call(this, points), rotated);
   },
   getSeriesPairCoord: _line_series.chart['stepline'].getSeriesPairCoord
 });
 chart['splinearea'] = _extend({}, areaSeries, {
-  _areaPointsToSplineAreaPoints: function _areaPointsToSplineAreaPoints(areaPoints) {
-    var previousMiddlePoint = areaPoints[areaPoints.length / 2 - 1];
-    var middlePoint = areaPoints[areaPoints.length / 2];
+  _areaPointsToSplineAreaPoints: function (areaPoints) {
+    const previousMiddlePoint = areaPoints[areaPoints.length / 2 - 1];
+    const middlePoint = areaPoints[areaPoints.length / 2];
     areaPoints.splice(areaPoints.length / 2, 0, {
       x: previousMiddlePoint.x,
       y: previousMiddlePoint.y
@@ -186,19 +186,19 @@ chart['splinearea'] = _extend({}, areaSeries, {
       y: middlePoint.y
     });
   },
-  _prepareSegment: function _prepareSegment(points, rotated) {
-    var processedPoints = areaSeries._processSinglePointsAreaSegment(points, rotated);
-    var areaSegment = areaSeries._prepareSegment.call(this, calculateBezierPoints(processedPoints, rotated));
+  _prepareSegment: function (points, rotated) {
+    const processedPoints = areaSeries._processSinglePointsAreaSegment(points, rotated);
+    const areaSegment = areaSeries._prepareSegment.call(this, calculateBezierPoints(processedPoints, rotated));
     this._areaPointsToSplineAreaPoints(areaSegment.area);
     areaSegment.singlePointSegment = processedPoints !== points;
     return areaSegment;
   },
-  _getDefaultSegment: function _getDefaultSegment(segment) {
-    var areaDefaultSegment = areaSeries._getDefaultSegment(segment);
+  _getDefaultSegment: function (segment) {
+    const areaDefaultSegment = areaSeries._getDefaultSegment(segment);
     this._areaPointsToSplineAreaPoints(areaDefaultSegment.area);
     return areaDefaultSegment;
   },
-  _createMainElement: function _createMainElement(points, settings) {
+  _createMainElement: function (points, settings) {
     return this._renderer.path(points, 'bezierarea').attr(settings);
   },
   _createBorderElement: _line_series.chart['spline']._createMainElement,

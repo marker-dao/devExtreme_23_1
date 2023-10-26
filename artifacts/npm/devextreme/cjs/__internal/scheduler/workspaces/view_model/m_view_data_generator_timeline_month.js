@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_view_data_generator_timeline_month.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,8 +20,8 @@ var _m_view_data_generator = require("./m_view_data_generator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DAY_IN_MILLISECONDS = _date.default.dateToMilliseconds('day');
-var ViewDataGeneratorTimelineMonth = /*#__PURE__*/function (_ViewDataGenerator) {
+const DAY_IN_MILLISECONDS = _date.default.dateToMilliseconds('day');
+let ViewDataGeneratorTimelineMonth = /*#__PURE__*/function (_ViewDataGenerator) {
   _inheritsLoose(ViewDataGeneratorTimelineMonth, _ViewDataGenerator);
   function ViewDataGeneratorTimelineMonth() {
     return _ViewDataGenerator.apply(this, arguments) || this;
@@ -40,10 +40,12 @@ var ViewDataGeneratorTimelineMonth = /*#__PURE__*/function (_ViewDataGenerator) 
     return (0, _timeline_month.calculateStartViewDate)(options.currentDate, options.startDayHour, options.startDate, options.intervalCount);
   };
   _proto.getCellCount = function getCellCount(options) {
-    var intervalCount = options.intervalCount,
-      currentDate = options.currentDate;
-    var cellCount = 0;
-    for (var i = 1; i <= intervalCount; i++) {
+    const {
+      intervalCount,
+      currentDate
+    } = options;
+    let cellCount = 0;
+    for (let i = 1; i <= intervalCount; i++) {
       cellCount += new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 0).getDate();
     }
     return cellCount;

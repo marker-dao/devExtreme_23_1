@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.mask.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,95 +24,94 @@ var _number = _interopRequireDefault(require("../../localization/number"));
 var _devices = _interopRequireDefault(require("../../core/devices"));
 var _browser = _interopRequireDefault(require("../../core/utils/browser"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var MASK_EVENT_NAMESPACE = 'dateBoxMask';
-var FORWARD = 1;
-var BACKWARD = -1;
-var DateBoxMask = _uiDate_box.default.inherit({
+const MASK_EVENT_NAMESPACE = 'dateBoxMask';
+const FORWARD = 1;
+const BACKWARD = -1;
+const DateBoxMask = _uiDate_box.default.inherit({
   _supportedKeys(e) {
-    var _this = this;
-    var originalHandlers = this.callBase(e);
-    var callOriginalHandler = function callOriginalHandler(e) {
-      var originalHandler = originalHandlers[(0, _index.normalizeKeyName)(e)];
-      return originalHandler && originalHandler.apply(_this, [e]);
+    const originalHandlers = this.callBase(e);
+    const callOriginalHandler = e => {
+      const originalHandler = originalHandlers[(0, _index.normalizeKeyName)(e)];
+      return originalHandler && originalHandler.apply(this, [e]);
     };
-    var applyHandler = function applyHandler(e, maskHandler) {
-      if (_this._shouldUseOriginalHandler(e)) {
-        return callOriginalHandler.apply(_this, [e]);
+    const applyHandler = (e, maskHandler) => {
+      if (this._shouldUseOriginalHandler(e)) {
+        return callOriginalHandler.apply(this, [e]);
       } else {
-        return maskHandler.apply(_this, [e]);
+        return maskHandler.apply(this, [e]);
       }
     };
     return (0, _extend.extend)({}, originalHandlers, {
-      del: function del(e) {
-        return applyHandler(e, function (event) {
-          _this._revertPart(FORWARD);
-          _this._isAllSelected() || event.preventDefault();
+      del: e => {
+        return applyHandler(e, event => {
+          this._revertPart(FORWARD);
+          this._isAllSelected() || event.preventDefault();
         });
       },
-      backspace: function backspace(e) {
-        return applyHandler(e, function (event) {
-          _this._revertPart(BACKWARD);
-          _this._isAllSelected() || event.preventDefault();
+      backspace: e => {
+        return applyHandler(e, event => {
+          this._revertPart(BACKWARD);
+          this._isAllSelected() || event.preventDefault();
         });
       },
-      home: function home(e) {
-        return applyHandler(e, function (event) {
-          _this._selectFirstPart();
+      home: e => {
+        return applyHandler(e, event => {
+          this._selectFirstPart();
           event.preventDefault();
         });
       },
-      end: function end(e) {
-        return applyHandler(e, function (event) {
-          _this._selectLastPart();
+      end: e => {
+        return applyHandler(e, event => {
+          this._selectLastPart();
           event.preventDefault();
         });
       },
-      escape: function escape(e) {
-        return applyHandler(e, function (event) {
-          _this._revertChanges(event);
+      escape: e => {
+        return applyHandler(e, event => {
+          this._revertChanges(event);
         });
       },
-      enter: function enter(e) {
-        return applyHandler(e, function () {
-          _this._enterHandler();
+      enter: e => {
+        return applyHandler(e, () => {
+          this._enterHandler();
         });
       },
-      leftArrow: function leftArrow(e) {
-        return applyHandler(e, function (event) {
-          _this._selectNextPart(BACKWARD);
+      leftArrow: e => {
+        return applyHandler(e, event => {
+          this._selectNextPart(BACKWARD);
           event.preventDefault();
         });
       },
-      rightArrow: function rightArrow(e) {
-        return applyHandler(e, function (event) {
-          _this._selectNextPart(FORWARD);
+      rightArrow: e => {
+        return applyHandler(e, event => {
+          this._selectNextPart(FORWARD);
           event.preventDefault();
         });
       },
-      upArrow: function upArrow(e) {
-        return applyHandler(e, function (event) {
-          _this._upDownArrowHandler(FORWARD);
+      upArrow: e => {
+        return applyHandler(e, event => {
+          this._upDownArrowHandler(FORWARD);
           event.preventDefault();
         });
       },
-      downArrow: function downArrow(e) {
-        return applyHandler(e, function (event) {
-          _this._upDownArrowHandler(BACKWARD);
+      downArrow: e => {
+        return applyHandler(e, event => {
+          this._upDownArrowHandler(BACKWARD);
           event.preventDefault();
         });
       }
     });
   },
   _shouldUseOriginalHandler(e) {
-    var keysToHandleByMask = ['backspace', 'del'];
-    var isNotDeletingInCalendar = this.option('opened') && e && keysToHandleByMask.indexOf((0, _index.normalizeKeyName)(e)) === -1;
+    const keysToHandleByMask = ['backspace', 'del'];
+    const isNotDeletingInCalendar = this.option('opened') && e && keysToHandleByMask.indexOf((0, _index.normalizeKeyName)(e)) === -1;
     return !this._useMaskBehavior() || isNotDeletingInCalendar || e && e.altKey;
   },
   _upDownArrowHandler(step) {
     this._setNewDateIfEmpty();
-    var originalValue = this._getActivePartValue(this._initialMaskValue);
-    var currentValue = this._getActivePartValue();
-    var delta = currentValue - originalValue;
+    const originalValue = this._getActivePartValue(this._initialMaskValue);
+    const currentValue = this._getActivePartValue();
+    const delta = currentValue - originalValue;
     this._loadMaskValue(this._initialMaskValue);
     this._partIncrease(delta + step, true);
   },
@@ -123,38 +122,39 @@ var DateBoxMask = _uiDate_box.default.inherit({
     });
   },
   _isSingleCharKey(_ref) {
-    var originalEvent = _ref.originalEvent,
-      alt = _ref.alt;
-    var key = originalEvent.data || originalEvent.key;
+    let {
+      originalEvent,
+      alt
+    } = _ref;
+    const key = originalEvent.data || originalEvent.key;
     return typeof key === 'string' && key.length === 1 && !alt && !(0, _index.isCommandKeyPressed)(originalEvent);
   },
   _isSingleDigitKey(e) {
     var _e$originalEvent;
-    var data = (_e$originalEvent = e.originalEvent) === null || _e$originalEvent === void 0 ? void 0 : _e$originalEvent.data;
+    const data = (_e$originalEvent = e.originalEvent) === null || _e$originalEvent === void 0 ? void 0 : _e$originalEvent.data;
     return (data === null || data === void 0 ? void 0 : data.length) === 1 && parseInt(data, 10);
   },
-  _useBeforeInputEvent: function _useBeforeInputEvent() {
+  _useBeforeInputEvent: function () {
     return _devices.default.real().android;
   },
   _keyInputHandler(e, key) {
-    var oldInputValue = this._input().val();
+    const oldInputValue = this._input().val();
     this._processInputKey(key);
     e.preventDefault();
-    var isValueChanged = oldInputValue !== this._input().val();
+    const isValueChanged = oldInputValue !== this._input().val();
     isValueChanged && _events_engine.default.trigger(this._input(), 'input');
   },
   _keyboardHandler(e) {
-    var _this2 = this;
-    var key = e.originalEvent.key;
-    var result = this.callBase(e);
+    let key = e.originalEvent.key;
+    const result = this.callBase(e);
     if (!this._useMaskBehavior() || this._useBeforeInputEvent()) {
       return result;
     }
     if (_browser.default.chrome && e.key === 'Process' && e.code.indexOf('Digit') === 0) {
       key = e.code.replace('Digit', '');
       this._processInputKey(key);
-      this._maskInputHandler = function () {
-        _this2._renderSelectedPart();
+      this._maskInputHandler = () => {
+        this._renderSelectedPart();
       };
     } else if (this._isSingleCharKey(e)) {
       this._keyInputHandler(e.originalEvent, key);
@@ -162,32 +162,35 @@ var DateBoxMask = _uiDate_box.default.inherit({
     return result;
   },
   _maskBeforeInputHandler(e) {
-    var _this3 = this;
     this._maskInputHandler = null;
-    var inputType = e.originalEvent.inputType;
+    const {
+      inputType
+    } = e.originalEvent;
     if (inputType === 'insertCompositionText') {
-      this._maskInputHandler = function () {
-        _this3._renderSelectedPart();
+      this._maskInputHandler = () => {
+        this._renderSelectedPart();
       };
     }
-    var isBackwardDeletion = inputType === 'deleteContentBackward';
-    var isForwardDeletion = inputType === 'deleteContentForward';
+    const isBackwardDeletion = inputType === 'deleteContentBackward';
+    const isForwardDeletion = inputType === 'deleteContentForward';
     if (isBackwardDeletion || isForwardDeletion) {
-      var direction = isBackwardDeletion ? BACKWARD : FORWARD;
-      this._maskInputHandler = function () {
-        _this3._revertPart();
-        _this3._selectNextPart(direction);
+      const direction = isBackwardDeletion ? BACKWARD : FORWARD;
+      this._maskInputHandler = () => {
+        this._revertPart();
+        this._selectNextPart(direction);
       };
     }
     if (!this._useMaskBehavior() || !this._isSingleCharKey(e)) {
       return;
     }
-    var key = e.originalEvent.data;
+    const key = e.originalEvent.data;
     this._keyInputHandler(e, key);
     return true;
   },
   _keyPressHandler(e) {
-    var event = e.originalEvent;
+    const {
+      originalEvent: event
+    } = e;
     if ((event === null || event === void 0 ? void 0 : event.inputType) === 'insertCompositionText' && this._isSingleDigitKey(e)) {
       this._processInputKey(event.data);
       this._renderDisplayText(this._getDisplayedText(this._maskValue));
@@ -211,15 +214,15 @@ var DateBoxMask = _uiDate_box.default.inherit({
     }
   },
   _isAllSelected() {
-    var caret = this._caret();
+    const caret = this._caret();
     return caret.end - caret.start === this.option('text').length;
   },
   _getFormatPattern() {
     if (this._formatPattern) {
       return this._formatPattern;
     }
-    var format = this._strategy.getDisplayFormat(this.option('displayFormat'));
-    var isLDMLPattern = (0, _type.isString)(format) && !_date.default._getPatternByFormat(format);
+    const format = this._strategy.getDisplayFormat(this.option('displayFormat'));
+    const isLDMLPattern = (0, _type.isString)(format) && !_date.default._getPatternByFormat(format);
     if (isLDMLPattern) {
       this._formatPattern = format;
     } else {
@@ -231,25 +234,26 @@ var DateBoxMask = _uiDate_box.default.inherit({
   },
   _setNewDateIfEmpty() {
     if (!this._maskValue) {
-      var value = this.option('type') === 'time' ? new Date(null) : new Date();
+      const value = this.option('type') === 'time' ? new Date(null) : new Date();
       this._maskValue = value;
       this._initialMaskValue = value;
       this._renderDateParts();
     }
   },
   _partLimitsReached(max) {
-    var maxLimitLength = String(max).length;
-    var formatLength = this._getActivePartProp('pattern').length;
-    var isShortFormat = formatLength === 1;
-    var maxSearchLength = isShortFormat ? maxLimitLength : Math.min(formatLength, maxLimitLength);
-    var isLengthExceeded = this._searchValue.length === maxSearchLength;
-    var isValueOverflowed = parseInt(this._searchValue + '0') > max;
+    const maxLimitLength = String(max).length;
+    const formatLength = this._getActivePartProp('pattern').length;
+    const isShortFormat = formatLength === 1;
+    const maxSearchLength = isShortFormat ? maxLimitLength : Math.min(formatLength, maxLimitLength);
+    const isLengthExceeded = this._searchValue.length === maxSearchLength;
+    const isValueOverflowed = parseInt(this._searchValue + '0') > max;
     return isLengthExceeded || isValueOverflowed;
   },
   _searchNumber(char) {
-    var _this$_getActivePartL = this._getActivePartLimits(),
-      max = _this$_getActivePartL.max;
-    var maxLimitLength = String(max).length;
+    const {
+      max
+    } = this._getActivePartLimits();
+    const maxLimitLength = String(max).length;
     this._searchValue = (this._searchValue + char).substr(-maxLimitLength);
     if (isNaN(this._searchValue)) {
       this._searchValue = char;
@@ -263,10 +267,10 @@ var DateBoxMask = _uiDate_box.default.inherit({
     if (!isNaN(parseInt(this._getActivePartProp('text')))) {
       return;
     }
-    var limits = this._getActivePartProp('limits')(this._maskValue);
-    var startString = this._searchValue + char.toLowerCase();
-    var endLimit = limits.max - limits.min;
-    for (var i = 0; i <= endLimit; i++) {
+    const limits = this._getActivePartProp('limits')(this._maskValue);
+    const startString = this._searchValue + char.toLowerCase();
+    const endLimit = limits.max - limits.min;
+    for (let i = 0; i <= endLimit; i++) {
       this._loadMaskValue(this._initialMaskValue);
       this._partIncrease(i + 1);
       if (this._getActivePartProp('text').toLowerCase().indexOf(startString) === 0) {
@@ -283,9 +287,9 @@ var DateBoxMask = _uiDate_box.default.inherit({
   _clearSearchValue() {
     this._searchValue = '';
   },
-  _revertPart: function _revertPart(direction) {
+  _revertPart: function (direction) {
     if (!this._isAllSelected()) {
-      var actual = this._getActivePartValue(this.option('emptyDateValue'));
+      const actual = this._getActivePartValue(this.option('emptyDateValue'));
       this._setActivePartValue(actual);
       this._selectNextPart(direction);
     }
@@ -296,11 +300,11 @@ var DateBoxMask = _uiDate_box.default.inherit({
   },
   _prepareRegExpInfo() {
     this._regExpInfo = (0, _date2.getRegExpInfo)(this._getFormatPattern(), _date.default);
-    var regexp = this._regExpInfo.regexp;
-    var source = regexp.source;
-    var flags = regexp.flags;
-    var quantifierRegexp = new RegExp(/(\{[0-9]+,?[0-9]*\})/);
-    var convertedSource = source.split(quantifierRegexp).map(function (sourcePart) {
+    const regexp = this._regExpInfo.regexp;
+    const source = regexp.source;
+    const flags = regexp.flags;
+    const quantifierRegexp = new RegExp(/(\{[0-9]+,?[0-9]*\})/);
+    const convertedSource = source.split(quantifierRegexp).map(sourcePart => {
       return quantifierRegexp.test(sourcePart) ? sourcePart : _number.default.convertDigits(sourcePart, false);
     }).join('');
     this._regExpInfo.regexp = new RegExp(convertedSource, flags);
@@ -325,7 +329,7 @@ var DateBoxMask = _uiDate_box.default.inherit({
     if (!this._useMaskBehavior()) {
       return;
     }
-    var text = this.option('text') || this._getDisplayedText(this._maskValue);
+    const text = this.option('text') || this._getDisplayedText(this._maskValue);
     if (text) {
       this._dateParts = (0, _uiDate_boxMask.renderDateParts)(text, this._regExpInfo);
       if (!this._input().is(':hidden')) {
@@ -337,11 +341,10 @@ var DateBoxMask = _uiDate_box.default.inherit({
     _events_engine.default.off(this._input(), '.' + MASK_EVENT_NAMESPACE);
   },
   _attachMaskEvents() {
-    var _this4 = this;
     _events_engine.default.on(this._input(), (0, _index.addNamespace)('dxclick', MASK_EVENT_NAMESPACE), this._maskClickHandler.bind(this));
     _events_engine.default.on(this._input(), (0, _index.addNamespace)('paste', MASK_EVENT_NAMESPACE), this._maskPasteHandler.bind(this));
-    _events_engine.default.on(this._input(), (0, _index.addNamespace)('drop', MASK_EVENT_NAMESPACE), function () {
-      _this4._renderSelectedPart();
+    _events_engine.default.on(this._input(), (0, _index.addNamespace)('drop', MASK_EVENT_NAMESPACE), () => {
+      this._renderSelectedPart();
     });
     _events_engine.default.on(this._input(), (0, _index.addNamespace)('compositionend', MASK_EVENT_NAMESPACE), this._maskCompositionEndHandler.bind(this));
     if (this._useBeforeInputEvent()) {
@@ -370,16 +373,16 @@ var DateBoxMask = _uiDate_box.default.inherit({
     }
   },
   _selectNextPart() {
-    var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    let step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     if (!this.option('text') || this._disposed) {
       return;
     }
     if (step) {
       this._initialMaskValue = new Date(this._maskValue);
     }
-    var index = (0, _math.fitIntoRange)(this._activePartIndex + step, 0, this._dateParts.length - 1);
+    let index = (0, _math.fitIntoRange)(this._activePartIndex + step, 0, this._dateParts.length - 1);
     if (this._dateParts[index].isStub) {
-      var isBoundaryIndex = index === 0 && step < 0 || index === this._dateParts.length - 1 && step > 0;
+      const isBoundaryIndex = index === 0 && step < 0 || index === this._dateParts.length - 1 && step > 0;
       if (!isBoundaryIndex) {
         this._selectNextPart(step >= 0 ? step + 1 : step - 1);
         return;
@@ -399,24 +402,24 @@ var DateBoxMask = _uiDate_box.default.inherit({
     }
   },
   _getActivePartLimits(lockOtherParts) {
-    var limitFunction = this._getActivePartProp('limits');
+    const limitFunction = this._getActivePartProp('limits');
     return limitFunction(this._maskValue, lockOtherParts && this._getRealLimitsPattern());
   },
   _getActivePartValue(dateValue) {
     dateValue = dateValue || this._maskValue;
-    var getter = this._getActivePartProp('getter');
+    const getter = this._getActivePartProp('getter');
     return (0, _type.isFunction)(getter) ? getter(dateValue) : dateValue[getter]();
   },
   _addLeadingZeroes(value) {
-    var zeroes = this._searchValue.match(/^0+/);
-    var limits = this._getActivePartLimits();
-    var maxLimitLength = String(limits.max).length;
+    const zeroes = this._searchValue.match(/^0+/);
+    const limits = this._getActivePartLimits();
+    const maxLimitLength = String(limits.max).length;
     return ((zeroes && zeroes[0] || '') + String(value)).substr(-maxLimitLength);
   },
   _setActivePartValue(value, dateValue) {
     dateValue = dateValue || this._maskValue;
-    var setter = this._getActivePartProp('setter');
-    var limits = this._getActivePartLimits();
+    const setter = this._getActivePartProp('setter');
+    const limits = this._getActivePartLimits();
     value = (0, _math.inRange)(value, limits.min, limits.max) ? value : value % 10;
     value = this._addLeadingZeroes((0, _math.fitIntoRange)(value, limits.min, limits.max));
     (0, _type.isFunction)(setter) ? setter(dateValue, value) : dateValue[setter](value);
@@ -430,12 +433,12 @@ var DateBoxMask = _uiDate_box.default.inherit({
     return this._dateParts[this._activePartIndex][property];
   },
   _loadMaskValue() {
-    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.dateOption('value');
+    let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.dateOption('value');
     this._maskValue = value && new Date(value);
     this._initialMaskValue = value && new Date(value);
   },
   _saveMaskValue() {
-    var value = this._maskValue && new Date(this._maskValue);
+    const value = this._maskValue && new Date(this._maskValue);
     if (value && this.option('type') === 'date') {
       value.setHours(0, 0, 0, 0);
     }
@@ -455,16 +458,17 @@ var DateBoxMask = _uiDate_box.default.inherit({
   },
   _partIncrease(step, lockOtherParts) {
     this._setNewDateIfEmpty();
-    var _this$_getActivePartL2 = this._getActivePartLimits(lockOtherParts),
-      max = _this$_getActivePartL2.max,
-      min = _this$_getActivePartL2.min;
-    var limitDelta = max - min;
+    const {
+      max,
+      min
+    } = this._getActivePartLimits(lockOtherParts);
+    let limitDelta = max - min;
 
     // take AM\PM into account
     if (limitDelta === 1) {
       limitDelta++;
     }
-    var newValue = step + this._getActivePartValue();
+    let newValue = step + this._getActivePartValue();
     if (newValue > max) {
       newValue = this._applyLimits(newValue, {
         limitBase: min,
@@ -481,10 +485,12 @@ var DateBoxMask = _uiDate_box.default.inherit({
     this._setActivePartValue(newValue);
   },
   _applyLimits(newValue, _ref2) {
-    var limitBase = _ref2.limitBase,
-      limitClosest = _ref2.limitClosest,
-      limitDelta = _ref2.limitDelta;
-    var delta = (newValue - limitClosest) % limitDelta;
+    let {
+      limitBase,
+      limitClosest,
+      limitDelta
+    } = _ref2;
+    const delta = (newValue - limitClosest) % limitDelta;
     return delta ? limitBase + delta - 1 * (0, _math.sign)(delta) : limitClosest;
   },
   _maskClickHandler() {
@@ -501,16 +507,15 @@ var DateBoxMask = _uiDate_box.default.inherit({
     }
   },
   _maskCompositionEndHandler(e) {
-    var _this5 = this;
     this._input().val(this._getDisplayedText(this._maskValue));
     this._selectNextPart();
-    this._maskInputHandler = function () {
-      _this5._renderSelectedPart();
+    this._maskInputHandler = () => {
+      this._renderSelectedPart();
     };
   },
   _maskPasteHandler(e) {
-    var newText = this._replaceSelectedText(this.option('text'), this._caret(), (0, _dom.clipboardText)(e));
-    var date = _date.default.parse(newText, this._getFormatPattern());
+    const newText = this._replaceSelectedText(this.option('text'), this._caret(), (0, _dom.clipboardText)(e));
+    const date = _date.default.parse(newText, this._getFormatPattern());
     if (date && this._isDateValid(date)) {
       this._maskValue = date;
       this._renderDisplayText(this._getDisplayedText(this._maskValue));
@@ -523,7 +528,7 @@ var DateBoxMask = _uiDate_box.default.inherit({
     return (0, _type.isDate)(date) && !isNaN(date);
   },
   _isValueDirty() {
-    var value = this.dateOption('value');
+    const value = this.dateOption('value');
     return (this._maskValue && this._maskValue.getTime()) !== (value && value.getTime());
   },
   _fireChangeEvent() {
@@ -537,7 +542,7 @@ var DateBoxMask = _uiDate_box.default.inherit({
     this._selectNextPart(FORWARD);
   },
   _focusOutHandler(e) {
-    var shouldFireChangeEvent = this._useMaskBehavior() && !e.isDefaultPrevented();
+    const shouldFireChangeEvent = this._useMaskBehavior() && !e.isDefaultPrevented();
     if (shouldFireChangeEvent) {
       this._fireChangeEvent();
       this.callBase(e);
@@ -547,7 +552,7 @@ var DateBoxMask = _uiDate_box.default.inherit({
     }
   },
   _valueChangeEventHandler(e) {
-    var text = this.option('text');
+    const text = this.option('text');
     if (this._useMaskBehavior()) {
       this._saveValueChangeEvent(e);
       if (!text) {

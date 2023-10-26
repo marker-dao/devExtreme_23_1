@@ -10,16 +10,18 @@ var _type = require("../../../core/utils/type");
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _window = require("../../../core/utils/window");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var PI = Math.PI,
-  asin = Math.asin,
-  ceil = Math.ceil,
-  cos = Math.cos,
-  floor = Math.floor,
-  max = Math.max,
-  min = Math.min,
-  round = Math.round,
-  sin = Math.sin;
-var buildPath = function buildPath() {
+const {
+  PI,
+  asin,
+  ceil,
+  cos,
+  floor,
+  max,
+  min,
+  round,
+  sin
+} = Math;
+const buildPath = function () {
   for (var _len = arguments.length, points = new Array(_len), _key = 0; _key < _len; _key++) {
     points[_key] = arguments[_key];
   }
@@ -32,8 +34,10 @@ function getAbsoluteArc(cornerRadius, x, y) {
   return "A ".concat(cornerRadius, " ").concat(cornerRadius, " 0 0 1 ").concat(x, " ").concat(y);
 }
 function rotateSize(_ref, angle) {
-  var height = _ref.height,
-    width = _ref.width;
+  let {
+    height,
+    width
+  } = _ref;
   if (angle % 90 === 0 && angle % 180 !== 0) {
     return {
       width: height,
@@ -46,40 +50,47 @@ function rotateSize(_ref, angle) {
   };
 }
 function rotateX(_ref2, angle) {
-  var anchorX = _ref2.anchorX,
-    anchorY = _ref2.anchorY,
-    x = _ref2.x,
-    y = _ref2.y;
+  let {
+    anchorX,
+    anchorY,
+    x,
+    y
+  } = _ref2;
   return (anchorX - x) * round(cos(angle)) + (anchorY - y) * round(sin(angle)) + x;
 }
 function rotateY(_ref3, angle) {
-  var anchorX = _ref3.anchorX,
-    anchorY = _ref3.anchorY,
-    x = _ref3.x,
-    y = _ref3.y;
+  let {
+    anchorX,
+    anchorY,
+    x,
+    y
+  } = _ref3;
   return -(anchorX - x) * round(sin(angle)) + (anchorY - y) * round(cos(angle)) + y;
 }
 function getCloudPoints(size, coordinates, rotationAngle, options, bounded) {
-  var x = coordinates.x,
-    y = coordinates.y;
-  var radRotationAngle = rotationAngle * PI / 180;
-  var _rotateSize = rotateSize(size, rotationAngle),
-    height = _rotateSize.height,
-    width = _rotateSize.width;
-  var anchorX = rotateX(coordinates, radRotationAngle);
-  var anchorY = rotateY(coordinates, radRotationAngle);
-  var halfArrowWidth = options.arrowWidth / 2;
-  var halfWidth = width / 2;
-  var halfHeight = height / 2;
-  var xr = Math.ceil(x + halfWidth);
-  var xl = Math.floor(x - halfWidth);
-  var yt = Math.floor(y - halfHeight);
-  var yb = Math.ceil(y + halfHeight);
-  var leftTopCorner = [xl, yt];
-  var rightTopCorner = [xr, yt];
-  var rightBottomCorner = [xr, yb];
-  var leftBottomCorner = [xl, yb];
-  var getCoordinate = function getCoordinate(cur, side1, side2) {
+  const {
+    x,
+    y
+  } = coordinates;
+  const radRotationAngle = rotationAngle * PI / 180;
+  const {
+    height,
+    width
+  } = rotateSize(size, rotationAngle);
+  const anchorX = rotateX(coordinates, radRotationAngle);
+  const anchorY = rotateY(coordinates, radRotationAngle);
+  const halfArrowWidth = options.arrowWidth / 2;
+  const halfWidth = width / 2;
+  const halfHeight = height / 2;
+  const xr = Math.ceil(x + halfWidth);
+  const xl = Math.floor(x - halfWidth);
+  const yt = Math.floor(y - halfHeight);
+  const yb = Math.ceil(y + halfHeight);
+  const leftTopCorner = [xl, yt];
+  const rightTopCorner = [xr, yt];
+  const rightBottomCorner = [xr, yb];
+  const leftBottomCorner = [xl, yb];
+  const getCoordinate = (cur, side1, side2) => {
     if (cur <= side1) {
       return side1;
     }
@@ -88,14 +99,14 @@ function getCloudPoints(size, coordinates, rotationAngle, options, bounded) {
     }
     return cur;
   };
-  var arrowX = getCoordinate(anchorX, xl, xr);
-  var arrowY = getCoordinate(anchorY, yt, yb);
-  var arrowBaseBottom = min(arrowY + halfArrowWidth, yb);
-  var arrowBaseTop = max(arrowY - halfArrowWidth, yt);
-  var arrowBaseLeft = max(arrowX - halfArrowWidth, xl);
-  var cornerRadius = Math.min(halfWidth, halfHeight, options.cornerRadius);
-  var points = '';
-  var arrowArc = '';
+  const arrowX = getCoordinate(anchorX, xl, xr);
+  const arrowY = getCoordinate(anchorY, yt, yb);
+  const arrowBaseBottom = min(arrowY + halfArrowWidth, yb);
+  const arrowBaseTop = max(arrowY - halfArrowWidth, yt);
+  const arrowBaseLeft = max(arrowX - halfArrowWidth, xl);
+  const cornerRadius = Math.min(halfWidth, halfHeight, options.cornerRadius);
+  let points = '';
+  let arrowArc = '';
   leftTopCorner[1] += cornerRadius;
   rightTopCorner[0] -= cornerRadius;
   rightBottomCorner[1] -= cornerRadius;
@@ -103,11 +114,11 @@ function getCloudPoints(size, coordinates, rotationAngle, options, bounded) {
   if (!bounded || xl <= anchorX && anchorX <= xr && yt <= anchorY && anchorY <= yb) {
     points = buildPath(leftTopCorner, getArc(cornerRadius, 1, -1), 'L', rightTopCorner, getArc(cornerRadius, 1, 1), 'L', rightBottomCorner, getArc(cornerRadius, -1, 1), 'L', leftBottomCorner, getArc(cornerRadius, -1, -1));
   } else if (anchorX > xr && anchorY < yt) {
-    var arrowAngle = options.arrowWidth / cornerRadius || 0;
-    var angle = PI / 4 + arrowAngle / 2;
-    var endAngle = PI / 4 - arrowAngle / 2;
-    var arrowEndPointX = rightTopCorner[0] + cos(endAngle) * cornerRadius;
-    var arrowEndPointY = rightTopCorner[1] + (1 - sin(endAngle)) * cornerRadius;
+    const arrowAngle = options.arrowWidth / cornerRadius || 0;
+    const angle = PI / 4 + arrowAngle / 2;
+    const endAngle = PI / 4 - arrowAngle / 2;
+    const arrowEndPointX = rightTopCorner[0] + cos(endAngle) * cornerRadius;
+    const arrowEndPointY = rightTopCorner[1] + (1 - sin(endAngle)) * cornerRadius;
     if (Math.abs(angle) > PI / 2) {
       arrowArc = buildPath('L', [arrowBaseLeft, yt, anchorX, anchorY, xr, arrowBaseBottom]);
     } else {
@@ -118,42 +129,42 @@ function getCloudPoints(size, coordinates, rotationAngle, options, bounded) {
     if (arrowBaseTop >= rightTopCorner[1] + cornerRadius && arrowBaseBottom <= rightBottomCorner[1]) {
       arrowArc = buildPath(getArc(cornerRadius, 1, 1), 'L', [xr, arrowBaseTop, anchorX, anchorY, xr, arrowBaseBottom], 'L', rightBottomCorner, getArc(cornerRadius, -1, 1));
     } else if (arrowBaseTop < rightTopCorner[1] + cornerRadius && arrowBaseBottom >= rightTopCorner[1] + cornerRadius && arrowBaseBottom <= rightBottomCorner[1]) {
-      var arrowWidthRest = rightTopCorner[1] + cornerRadius - arrowBaseTop;
-      var _angle = arrowWidthRest / cornerRadius;
-      var arrowBaseTopX = rightTopCorner[0] + cos(_angle) * cornerRadius;
-      var arrowBaseTopY = rightTopCorner[1] + (1 - sin(_angle)) * cornerRadius;
-      arrowArc = buildPath(getArc(cornerRadius, cos(_angle), 1 - sin(_angle)), 'L', [arrowBaseTopX, arrowBaseTopY, anchorX, anchorY, xr, arrowBaseBottom], 'L', rightBottomCorner, getArc(cornerRadius, -1, 1));
+      const arrowWidthRest = rightTopCorner[1] + cornerRadius - arrowBaseTop;
+      const angle = arrowWidthRest / cornerRadius;
+      const arrowBaseTopX = rightTopCorner[0] + cos(angle) * cornerRadius;
+      const arrowBaseTopY = rightTopCorner[1] + (1 - sin(angle)) * cornerRadius;
+      arrowArc = buildPath(getArc(cornerRadius, cos(angle), 1 - sin(angle)), 'L', [arrowBaseTopX, arrowBaseTopY, anchorX, anchorY, xr, arrowBaseBottom], 'L', rightBottomCorner, getArc(cornerRadius, -1, 1));
     } else if (arrowBaseTop < rightTopCorner[1] + cornerRadius && arrowBaseBottom < rightTopCorner[1] + cornerRadius) {
-      var _arrowWidthRest = rightTopCorner[1] + cornerRadius - arrowBaseTop;
-      var _arrowAngle = _arrowWidthRest / cornerRadius;
-      var _angle2 = _arrowAngle;
-      var _arrowBaseTopX = rightTopCorner[0] + cos(_angle2) * cornerRadius;
-      var _arrowBaseTopY = rightTopCorner[1] + (1 - sin(_angle2)) * cornerRadius;
-      var bottomAngle = Math.sin((rightTopCorner[1] + cornerRadius - arrowBaseBottom) / cornerRadius);
-      var arrowBaseBottomX = rightTopCorner[0] + cornerRadius * cos(bottomAngle);
-      var arrowBaseBottomY = rightTopCorner[1] + cornerRadius * (1 - sin(bottomAngle));
-      arrowArc = buildPath(getArc(cornerRadius, cos(_angle2), 1 - sin(_angle2)), 'L', [_arrowBaseTopX, _arrowBaseTopY, anchorX, anchorY, arrowBaseBottomX, arrowBaseBottomY], getAbsoluteArc(cornerRadius, rightTopCorner[0] + cornerRadius, rightTopCorner[1] + cornerRadius), 'L', rightBottomCorner, getArc(cornerRadius, -1, 1));
+      const arrowWidthRest = rightTopCorner[1] + cornerRadius - arrowBaseTop;
+      const arrowAngle = arrowWidthRest / cornerRadius;
+      const angle = arrowAngle;
+      const arrowBaseTopX = rightTopCorner[0] + cos(angle) * cornerRadius;
+      const arrowBaseTopY = rightTopCorner[1] + (1 - sin(angle)) * cornerRadius;
+      const bottomAngle = Math.sin((rightTopCorner[1] + cornerRadius - arrowBaseBottom) / cornerRadius);
+      const arrowBaseBottomX = rightTopCorner[0] + cornerRadius * cos(bottomAngle);
+      const arrowBaseBottomY = rightTopCorner[1] + cornerRadius * (1 - sin(bottomAngle));
+      arrowArc = buildPath(getArc(cornerRadius, cos(angle), 1 - sin(angle)), 'L', [arrowBaseTopX, arrowBaseTopY, anchorX, anchorY, arrowBaseBottomX, arrowBaseBottomY], getAbsoluteArc(cornerRadius, rightTopCorner[0] + cornerRadius, rightTopCorner[1] + cornerRadius), 'L', rightBottomCorner, getArc(cornerRadius, -1, 1));
     } else if (arrowBaseTop <= rightTopCorner[1] + cornerRadius && arrowBaseBottom >= rightBottomCorner[1]) {
-      var topAngle = asin((rightTopCorner[1] + cornerRadius - arrowBaseTop) / cornerRadius);
-      var _arrowBaseTopX2 = rightTopCorner[0] + cornerRadius * cos(topAngle);
-      var _arrowBaseTopY2 = rightTopCorner[1] + cornerRadius * (1 - sin(topAngle));
-      var _bottomAngle = asin((arrowBaseBottom - rightBottomCorner[1]) / cornerRadius);
-      var _arrowBaseBottomX = rightBottomCorner[0] + cornerRadius * (cos(_bottomAngle) - 1);
-      var _arrowBaseBottomY = rightBottomCorner[1] + cornerRadius * sin(_bottomAngle);
-      arrowArc = buildPath(getArc(cornerRadius, cos(topAngle), 1 - sin(topAngle)), 'L', [_arrowBaseTopX2, _arrowBaseTopY2, anchorX, anchorY, _arrowBaseBottomX, _arrowBaseBottomY], getAbsoluteArc(cornerRadius, rightBottomCorner[0] - cornerRadius, rightBottomCorner[1] + cornerRadius));
+      const topAngle = asin((rightTopCorner[1] + cornerRadius - arrowBaseTop) / cornerRadius);
+      const arrowBaseTopX = rightTopCorner[0] + cornerRadius * cos(topAngle);
+      const arrowBaseTopY = rightTopCorner[1] + cornerRadius * (1 - sin(topAngle));
+      const bottomAngle = asin((arrowBaseBottom - rightBottomCorner[1]) / cornerRadius);
+      const arrowBaseBottomX = rightBottomCorner[0] + cornerRadius * (cos(bottomAngle) - 1);
+      const arrowBaseBottomY = rightBottomCorner[1] + cornerRadius * sin(bottomAngle);
+      arrowArc = buildPath(getArc(cornerRadius, cos(topAngle), 1 - sin(topAngle)), 'L', [arrowBaseTopX, arrowBaseTopY, anchorX, anchorY, arrowBaseBottomX, arrowBaseBottomY], getAbsoluteArc(cornerRadius, rightBottomCorner[0] - cornerRadius, rightBottomCorner[1] + cornerRadius));
     } else if (arrowBaseTop > rightTopCorner[1] + cornerRadius && arrowBaseTop <= rightBottomCorner[1] && arrowBaseBottom > rightBottomCorner[1]) {
-      var _bottomAngle2 = asin((arrowBaseBottom - rightBottomCorner[1]) / cornerRadius);
-      var _arrowBaseBottomX2 = rightBottomCorner[0] + cornerRadius * (cos(_bottomAngle2) - 1);
-      var _arrowBaseBottomY2 = rightBottomCorner[1] + cornerRadius * sin(_bottomAngle2);
-      arrowArc = buildPath(getArc(cornerRadius, 1, 1), 'L', [xr, arrowBaseTop, anchorX, anchorY, _arrowBaseBottomX2, _arrowBaseBottomY2], getAbsoluteArc(cornerRadius, rightBottomCorner[0] - cornerRadius, rightBottomCorner[1] + cornerRadius));
+      const bottomAngle = asin((arrowBaseBottom - rightBottomCorner[1]) / cornerRadius);
+      const arrowBaseBottomX = rightBottomCorner[0] + cornerRadius * (cos(bottomAngle) - 1);
+      const arrowBaseBottomY = rightBottomCorner[1] + cornerRadius * sin(bottomAngle);
+      arrowArc = buildPath(getArc(cornerRadius, 1, 1), 'L', [xr, arrowBaseTop, anchorX, anchorY, arrowBaseBottomX, arrowBaseBottomY], getAbsoluteArc(cornerRadius, rightBottomCorner[0] - cornerRadius, rightBottomCorner[1] + cornerRadius));
     } else if (arrowBaseTop > rightTopCorner[1] + cornerRadius && arrowBaseBottom > rightBottomCorner[1]) {
-      var _bottomAngle3 = asin((arrowBaseBottom - rightBottomCorner[1]) / cornerRadius);
-      var _arrowBaseBottomX3 = rightBottomCorner[0] + cornerRadius * (cos(_bottomAngle3) - 1);
-      var _arrowBaseBottomY3 = rightBottomCorner[1] + cornerRadius * sin(_bottomAngle3);
-      var _topAngle = asin((arrowBaseTop - rightBottomCorner[1]) / cornerRadius);
-      var _arrowBaseTopX3 = rightBottomCorner[0] + cornerRadius * (cos(_topAngle) - 1);
-      var _arrowBaseTopY3 = rightBottomCorner[1] + cornerRadius * sin(_topAngle);
-      arrowArc = buildPath(getArc(cornerRadius, 1, 1), 'L', rightBottomCorner, getArc(cornerRadius, cos(_topAngle) - 1, sin(_topAngle)), 'L', [_arrowBaseTopX3, _arrowBaseTopY3, anchorX, anchorY, _arrowBaseBottomX3, _arrowBaseBottomY3], getAbsoluteArc(cornerRadius, rightBottomCorner[0] - cornerRadius, rightBottomCorner[1] + cornerRadius));
+      const bottomAngle = asin((arrowBaseBottom - rightBottomCorner[1]) / cornerRadius);
+      const arrowBaseBottomX = rightBottomCorner[0] + cornerRadius * (cos(bottomAngle) - 1);
+      const arrowBaseBottomY = rightBottomCorner[1] + cornerRadius * sin(bottomAngle);
+      const topAngle = asin((arrowBaseTop - rightBottomCorner[1]) / cornerRadius);
+      const arrowBaseTopX = rightBottomCorner[0] + cornerRadius * (cos(topAngle) - 1);
+      const arrowBaseTopY = rightBottomCorner[1] + cornerRadius * sin(topAngle);
+      arrowArc = buildPath(getArc(cornerRadius, 1, 1), 'L', rightBottomCorner, getArc(cornerRadius, cos(topAngle) - 1, sin(topAngle)), 'L', [arrowBaseTopX, arrowBaseTopY, anchorX, anchorY, arrowBaseBottomX, arrowBaseBottomY], getAbsoluteArc(cornerRadius, rightBottomCorner[0] - cornerRadius, rightBottomCorner[1] + cornerRadius));
     }
     points = buildPath(leftTopCorner, getArc(cornerRadius, 1, -1), 'L', rightTopCorner, arrowArc, 'L', leftBottomCorner, getArc(cornerRadius, -1, -1));
   }
@@ -161,12 +172,12 @@ function getCloudPoints(size, coordinates, rotationAngle, options, bounded) {
 }
 function getCanvas(container) {
   var _ref4, _getWindow, _ref5, _getWindow2;
-  var containerBox = container.getBoundingClientRect();
-  var html = _dom_adapter.default.getDocumentElement();
-  var body = _dom_adapter.default.getBody();
-  var left = (_ref4 = Number((_getWindow = (0, _window.getWindow)()) === null || _getWindow === void 0 ? void 0 : _getWindow.pageXOffset) || html.scrollLeft) !== null && _ref4 !== void 0 ? _ref4 : 0;
-  var top = (_ref5 = Number((_getWindow2 = (0, _window.getWindow)()) === null || _getWindow2 === void 0 ? void 0 : _getWindow2.pageYOffset) || html.scrollTop) !== null && _ref5 !== void 0 ? _ref5 : 0;
-  var box = {
+  const containerBox = container.getBoundingClientRect();
+  const html = _dom_adapter.default.getDocumentElement();
+  const body = _dom_adapter.default.getBody();
+  let left = (_ref4 = Number((_getWindow = (0, _window.getWindow)()) === null || _getWindow === void 0 ? void 0 : _getWindow.pageXOffset) || html.scrollLeft) !== null && _ref4 !== void 0 ? _ref4 : 0;
+  let top = (_ref5 = Number((_getWindow2 = (0, _window.getWindow)()) === null || _getWindow2 === void 0 ? void 0 : _getWindow2.pageYOffset) || html.scrollTop) !== null && _ref5 !== void 0 ? _ref5 : 0;
+  const box = {
     left,
     top,
     width: max(body.clientWidth, html.clientWidth) + left,
@@ -185,13 +196,15 @@ function getCanvas(container) {
   return box;
 }
 function recalculateCoordinates(_ref6) {
-  var anchorX = _ref6.anchorX,
-    anchorY = _ref6.anchorY,
-    arrowLength = _ref6.arrowLength,
-    canvas = _ref6.canvas,
-    offset = _ref6.offset,
-    size = _ref6.size;
-  var bounds = {
+  let {
+    anchorX,
+    anchorY,
+    arrowLength,
+    canvas,
+    offset,
+    size
+  } = _ref6;
+  const bounds = {
     xl: canvas.left,
     xr: canvas.width - canvas.right,
     width: canvas.width - canvas.right - canvas.left,
@@ -202,17 +215,17 @@ function recalculateCoordinates(_ref6) {
   if (anchorX < bounds.xl || bounds.xr < anchorX || anchorY < bounds.yt || bounds.yb < anchorY) {
     return false;
   }
-  var x = Number.NaN;
-  var y = Number.NaN;
-  var correctedAnchorY = anchorY;
+  let x = Number.NaN;
+  let y = Number.NaN;
+  let correctedAnchorY = anchorY;
   if (bounds.width < size.width) {
     x = round(bounds.xl + bounds.width / 2);
   } else {
     x = min(max(anchorX, ceil(bounds.xl + size.width / 2)), floor(bounds.xr - size.width / 2));
   }
-  var halfHeightWithArrow = arrowLength + size.height / 2 + offset;
-  var yTop = anchorY - halfHeightWithArrow;
-  var yBottom = anchorY + halfHeightWithArrow;
+  const halfHeightWithArrow = arrowLength + size.height / 2 + offset;
+  const yTop = anchorY - halfHeightWithArrow;
+  const yBottom = anchorY + halfHeightWithArrow;
   if (bounds.height < size.height + arrowLength) {
     y = round(bounds.yt + size.height / 2);
   } else if (yTop - size.height / 2 < bounds.yt) {
@@ -234,19 +247,23 @@ function recalculateCoordinates(_ref6) {
   };
 }
 function getCloudAngle(_ref7, _ref8) {
-  var height = _ref7.height,
-    width = _ref7.width;
-  var anchorX = _ref8.anchorX,
-    anchorY = _ref8.anchorY,
-    x = _ref8.x,
-    y = _ref8.y;
-  var halfWidth = width / 2;
-  var halfHeight = height / 2;
-  var xr = Math.ceil(x + halfWidth);
-  var xl = Math.floor(x - halfWidth);
-  var yt = Math.floor(y - halfHeight);
-  var yb = Math.ceil(y + halfHeight);
-  var angle = 0;
+  let {
+    height,
+    width
+  } = _ref7;
+  let {
+    anchorX,
+    anchorY,
+    x,
+    y
+  } = _ref8;
+  const halfWidth = width / 2;
+  const halfHeight = height / 2;
+  const xr = Math.ceil(x + halfWidth);
+  const xl = Math.floor(x - halfWidth);
+  const yt = Math.floor(y - halfHeight);
+  const yb = Math.ceil(y + halfHeight);
+  let angle = 0;
   if (anchorX < xl && anchorY < yt || anchorX >= xl && anchorX <= xr && anchorY < yt) {
     angle = 270;
   }
@@ -260,7 +277,7 @@ function getCloudAngle(_ref7, _ref8) {
 }
 function prepareData(data, color, border, font, customizeTooltip) {
   var _customize$color, _customize$borderColo, _customize$fontColor;
-  var customize = {};
+  let customize = {};
   if ((0, _type.isFunction)(customizeTooltip)) {
     customize = customizeTooltip.call(data, data);
     customize = (0, _type.isPlainObject)(customize) ? customize : {};
@@ -281,7 +298,9 @@ function prepareData(data, color, border, font, customizeTooltip) {
   return customize;
 }
 function isTextEmpty(_ref9) {
-  var html = _ref9.html,
-    text = _ref9.text;
+  let {
+    html,
+    text
+  } = _ref9;
   return text === null || text === '' || html === '' || html === null;
 }

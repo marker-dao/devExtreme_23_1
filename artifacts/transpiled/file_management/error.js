@@ -1,7 +1,7 @@
 "use strict";
 
 exports.default = void 0;
-var FileSystemError = function FileSystemError(errorCode, fileSystemItem, errorText) {
+let FileSystemError = function FileSystemError(errorCode, fileSystemItem, errorText) {
   this.errorCode = errorCode;
   this.fileSystemItem = fileSystemItem;
   this.errorText = errorText;

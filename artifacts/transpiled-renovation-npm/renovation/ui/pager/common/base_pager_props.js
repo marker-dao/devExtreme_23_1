@@ -3,7 +3,7 @@
 exports.BasePagerProps = void 0;
 var _message = _interopRequireDefault(require("../../../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var BasePagerProps = Object.defineProperties({
+const BasePagerProps = Object.defineProperties({
   gridCompatibility: true,
   showInfo: false,
   displayMode: 'adaptive',
@@ -18,7 +18,7 @@ var BasePagerProps = Object.defineProperties({
   totalCount: 0
 }, {
   label: {
-    get: function get() {
+    get: function () {
       return _message.default.format('dxPager-ariaLabel');
     },
     configurable: true,

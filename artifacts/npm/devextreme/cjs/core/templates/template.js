@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/templates/template.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,15 +17,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 (0, _template_engine_registry.registerTemplateEngine)('default', {
-  compile: function compile(element) {
-    return (0, _dom.normalizeTemplateElement)(element);
-  },
-  render: function render(template, model, index) {
-    return template.clone();
-  }
+  compile: element => (0, _dom.normalizeTemplateElement)(element),
+  render: (template, model, index) => template.clone()
 });
 (0, _template_engine_registry.setTemplateEngine)('default');
-var Template = /*#__PURE__*/function (_TemplateBase) {
+let Template = /*#__PURE__*/function (_TemplateBase) {
   _inheritsLoose(Template, _TemplateBase);
   function Template(element) {
     var _this;
@@ -35,7 +31,7 @@ var Template = /*#__PURE__*/function (_TemplateBase) {
   }
   var _proto = Template.prototype;
   _proto._renderCore = function _renderCore(options) {
-    var transclude = options.transclude;
+    const transclude = options.transclude;
     if (!transclude && !this._compiledTemplate) {
       this._compiledTemplate = (0, _template_engine_registry.getCurrentTemplateEngine)().compile(this._element);
     }

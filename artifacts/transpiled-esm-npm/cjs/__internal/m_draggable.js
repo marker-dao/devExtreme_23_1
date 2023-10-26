@@ -30,32 +30,30 @@ var _animator = _interopRequireDefault(require("../ui/scroll_view/animator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } // @ts-expect-error
 // @ts-expect-error
-var window = (0, _window.getWindow)();
-var KEYDOWN_EVENT = 'keydown';
-var DRAGGABLE = 'dxDraggable';
-var DRAGSTART_EVENT_NAME = (0, _index.addNamespace)(_drag.start, DRAGGABLE);
-var DRAG_EVENT_NAME = (0, _index.addNamespace)(_drag.move, DRAGGABLE);
-var DRAGEND_EVENT_NAME = (0, _index.addNamespace)(_drag.end, DRAGGABLE);
-var DRAG_ENTER_EVENT_NAME = (0, _index.addNamespace)(_drag.enter, DRAGGABLE);
-var DRAGEND_LEAVE_EVENT_NAME = (0, _index.addNamespace)(_drag.leave, DRAGGABLE);
-var POINTERDOWN_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.down, DRAGGABLE);
-var KEYDOWN_EVENT_NAME = (0, _index.addNamespace)(KEYDOWN_EVENT, DRAGGABLE);
-var CLONE_CLASS = 'clone';
-var targetDraggable;
-var sourceDraggable;
-var ANONYMOUS_TEMPLATE_NAME = 'content';
-var getMousePosition = function getMousePosition(event) {
-  return {
-    // @ts-expect-error
-    x: event.pageX - (0, _renderer.default)(window).scrollLeft(),
-    // @ts-expect-error
-    y: event.pageY - (0, _renderer.default)(window).scrollTop()
-  };
-};
-var GESTURE_COVER_CLASS = 'dx-gesture-cover';
-var OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
-var OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
-var ScrollHelper = /*#__PURE__*/function () {
+const window = (0, _window.getWindow)();
+const KEYDOWN_EVENT = 'keydown';
+const DRAGGABLE = 'dxDraggable';
+const DRAGSTART_EVENT_NAME = (0, _index.addNamespace)(_drag.start, DRAGGABLE);
+const DRAG_EVENT_NAME = (0, _index.addNamespace)(_drag.move, DRAGGABLE);
+const DRAGEND_EVENT_NAME = (0, _index.addNamespace)(_drag.end, DRAGGABLE);
+const DRAG_ENTER_EVENT_NAME = (0, _index.addNamespace)(_drag.enter, DRAGGABLE);
+const DRAGEND_LEAVE_EVENT_NAME = (0, _index.addNamespace)(_drag.leave, DRAGGABLE);
+const POINTERDOWN_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.down, DRAGGABLE);
+const KEYDOWN_EVENT_NAME = (0, _index.addNamespace)(KEYDOWN_EVENT, DRAGGABLE);
+const CLONE_CLASS = 'clone';
+let targetDraggable;
+let sourceDraggable;
+const ANONYMOUS_TEMPLATE_NAME = 'content';
+const getMousePosition = event => ({
+  // @ts-expect-error
+  x: event.pageX - (0, _renderer.default)(window).scrollLeft(),
+  // @ts-expect-error
+  y: event.pageY - (0, _renderer.default)(window).scrollTop()
+});
+const GESTURE_COVER_CLASS = 'dx-gesture-cover';
+const OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
+const OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
+let ScrollHelper = /*#__PURE__*/function () {
   function ScrollHelper(orientation, component) {
     this._$scrollableAtPointer = null;
     this._preventScroll = true;
@@ -84,16 +82,15 @@ var ScrollHelper = /*#__PURE__*/function () {
   }
   var _proto = ScrollHelper.prototype;
   _proto.updateScrollable = function updateScrollable(elements, mousePosition) {
-    var _this = this;
-    var isScrollableFound = false;
-    elements.some(function (element) {
-      var $element = (0, _renderer.default)(element);
-      var isTargetOverOverlayWrapper = $element.hasClass(OVERLAY_WRAPPER_CLASS);
-      var isTargetOverOverlayContent = $element.hasClass(OVERLAY_CONTENT_CLASS);
+    let isScrollableFound = false;
+    elements.some(element => {
+      const $element = (0, _renderer.default)(element);
+      const isTargetOverOverlayWrapper = $element.hasClass(OVERLAY_WRAPPER_CLASS);
+      const isTargetOverOverlayContent = $element.hasClass(OVERLAY_CONTENT_CLASS);
       if (isTargetOverOverlayWrapper || isTargetOverOverlayContent) {
         return true;
       }
-      isScrollableFound = _this._trySetScrollable(element, mousePosition);
+      isScrollableFound = this._trySetScrollable(element, mousePosition);
       return isScrollableFound;
     });
     if (!isScrollableFound) {
@@ -108,11 +105,11 @@ var ScrollHelper = /*#__PURE__*/function () {
     return ($element.css(this._overFlowAttr) === 'auto' || $element.hasClass('dx-scrollable-container')) && $element.prop(this._scrollSizeProp) > Math.ceil(this._sizeAttr === 'width' ? (0, _size.getWidth)($element) : (0, _size.getHeight)($element));
   };
   _proto._trySetScrollable = function _trySetScrollable(element, mousePosition) {
-    var that = this;
-    var $element = (0, _renderer.default)(element);
-    var distanceToBorders;
-    var sensitivity = that._component.option('scrollSensitivity');
-    var isScrollable = that.isScrollable($element);
+    const that = this;
+    const $element = (0, _renderer.default)(element);
+    let distanceToBorders;
+    const sensitivity = that._component.option('scrollSensitivity');
+    let isScrollable = that.isScrollable($element);
     if (isScrollable) {
       distanceToBorders = that._calculateDistanceToBorders($element, mousePosition);
       if (sensitivity > distanceToBorders[that._limitProps.start]) {
@@ -133,8 +130,8 @@ var ScrollHelper = /*#__PURE__*/function () {
     return isScrollable;
   };
   _proto._calculateDistanceToBorders = function _calculateDistanceToBorders($area, mousePosition) {
-    var area = $area.get(0);
-    var areaBoundingRect;
+    const area = $area.get(0);
+    let areaBoundingRect;
     if (area) {
       areaBoundingRect = (0, _position2.getBoundingRect)(area);
       return {
@@ -147,28 +144,28 @@ var ScrollHelper = /*#__PURE__*/function () {
     return {};
   };
   _proto._calculateScrollSpeed = function _calculateScrollSpeed(distance) {
-    var component = this._component;
-    var sensitivity = component.option('scrollSensitivity');
-    var maxSpeed = component.option('scrollSpeed');
-    return Math.ceil(Math.pow((sensitivity - distance) / sensitivity, 2) * maxSpeed);
+    const component = this._component;
+    const sensitivity = component.option('scrollSensitivity');
+    const maxSpeed = component.option('scrollSpeed');
+    return Math.ceil(((sensitivity - distance) / sensitivity) ** 2 * maxSpeed);
   };
   _proto.scrollByStep = function scrollByStep() {
-    var that = this;
+    const that = this;
     if (that._$scrollableAtPointer && that._scrollSpeed) {
       if (that._$scrollableAtPointer.hasClass('dx-scrollable-container')) {
-        var $scrollable = that._$scrollableAtPointer.closest('.dx-scrollable');
-        var scrollableInstance = $scrollable.data('dxScrollable') || $scrollable.data('dxScrollView');
+        const $scrollable = that._$scrollableAtPointer.closest('.dx-scrollable');
+        const scrollableInstance = $scrollable.data('dxScrollable') || $scrollable.data('dxScrollView');
         if (scrollableInstance) {
-          var nextScrollPosition = scrollableInstance.scrollOffset()[that._limitProps.start] + that._scrollSpeed;
+          const nextScrollPosition = scrollableInstance.scrollOffset()[that._limitProps.start] + that._scrollSpeed;
           scrollableInstance.scrollTo({
             [that._limitProps.start]: nextScrollPosition
           });
         }
       } else {
-        var _nextScrollPosition = that._$scrollableAtPointer[that._scrollValue]() + that._scrollSpeed;
-        that._$scrollableAtPointer[that._scrollValue](_nextScrollPosition);
+        const nextScrollPosition = that._$scrollableAtPointer[that._scrollValue]() + that._scrollSpeed;
+        that._$scrollableAtPointer[that._scrollValue](nextScrollPosition);
       }
-      var dragMoveArgs = that._component._dragMoveArgs;
+      const dragMoveArgs = that._component._dragMoveArgs;
       if (dragMoveArgs) {
         that._component._dragMoveHandler(dragMoveArgs);
       }
@@ -183,34 +180,34 @@ var ScrollHelper = /*#__PURE__*/function () {
     if (!$scrollable) {
       return false;
     }
-    var scrollableSize = (0, _position2.getBoundingRect)($scrollable.get(0));
-    var start = scrollableSize[this._limitProps.start];
-    var size = scrollableSize[this._sizeAttr];
-    var mousePosition = getMousePosition(event);
-    var location = this._sizeAttr === 'width' ? mousePosition.x : mousePosition.y;
+    const scrollableSize = (0, _position2.getBoundingRect)($scrollable.get(0));
+    const start = scrollableSize[this._limitProps.start];
+    const size = scrollableSize[this._sizeAttr];
+    const mousePosition = getMousePosition(event);
+    const location = this._sizeAttr === 'width' ? mousePosition.x : mousePosition.y;
     return location < start || location > start + size;
   };
   return ScrollHelper;
 }();
-var ScrollAnimator = _animator.default.inherit({
+const ScrollAnimator = _animator.default.inherit({
   ctor(strategy) {
     this.callBase();
     this._strategy = strategy;
   },
   _step() {
-    var horizontalScrollHelper = this._strategy._horizontalScrollHelper;
-    var verticalScrollHelper = this._strategy._verticalScrollHelper;
+    const horizontalScrollHelper = this._strategy._horizontalScrollHelper;
+    const verticalScrollHelper = this._strategy._verticalScrollHelper;
     horizontalScrollHelper && horizontalScrollHelper.scrollByStep();
     verticalScrollHelper && verticalScrollHelper.scrollByStep();
   }
 });
-var Draggable = _dom_component.default.inherit({
+const Draggable = _dom_component.default.inherit({
   reset: _common.noop,
   dragMove: _common.noop,
   dragEnter: _common.noop,
   dragLeave: _common.noop,
   dragEnd(sourceEvent) {
-    var sourceDraggable = this._getSourceDraggable();
+    const sourceDraggable = this._getSourceDraggable();
     sourceDraggable._fireRemoveEvent(sourceEvent);
     return (0, _deferred.Deferred)().resolve();
   },
@@ -269,9 +266,7 @@ var Draggable = _dom_component.default.inherit({
         v: offset.y
       };
     }
-    offset = (0, _common.splitPair)(offset).map(function (value) {
-      return parseFloat(value);
-    });
+    offset = (0, _common.splitPair)(offset).map(value => parseFloat(value));
     return {
       left: offset[0],
       top: offset.length === 1 ? offset[0] : offset[1]
@@ -284,18 +279,20 @@ var Draggable = _dom_component.default.inherit({
     return this._normalizeCursorOffset(offset);
   },
   _calculateElementOffset(options) {
-    var elementOffset;
-    var dragElementOffset;
-    var event = options.event;
-    var $element = (0, _renderer.default)(options.itemElement);
-    var $dragElement = (0, _renderer.default)(options.dragElement);
-    var isCloned = this._dragElementIsCloned();
-    var cursorOffset = this.option('cursorOffset');
-    var normalizedCursorOffset = {
+    let elementOffset;
+    let dragElementOffset;
+    const {
+      event
+    } = options;
+    const $element = (0, _renderer.default)(options.itemElement);
+    const $dragElement = (0, _renderer.default)(options.dragElement);
+    const isCloned = this._dragElementIsCloned();
+    const cursorOffset = this.option('cursorOffset');
+    let normalizedCursorOffset = {
       left: 0,
       top: 0
     };
-    var currentLocate = this._initialLocate = (0, _translator.locate)($dragElement);
+    const currentLocate = this._initialLocate = (0, _translator.locate)($dragElement);
     if (isCloned || options.initialOffset || cursorOffset) {
       elementOffset = options.initialOffset || $element.offset();
       if (cursorOffset) {
@@ -314,8 +311,8 @@ var Draggable = _dom_component.default.inherit({
     return elementOffset;
   },
   _initPosition(options) {
-    var $dragElement = (0, _renderer.default)(options.dragElement);
-    var elementOffset = this._calculateElementOffset(options);
+    const $dragElement = (0, _renderer.default)(options.dragElement);
+    const elementOffset = this._calculateElementOffset(options);
     if (elementOffset) {
       this._move(elementOffset, $dragElement);
     }
@@ -330,33 +327,32 @@ var Draggable = _dom_component.default.inherit({
     this._scrollAnimator.stop();
   },
   _addWidgetPrefix(className) {
-    var componentName = this.NAME;
+    const componentName = this.NAME;
     return (0, _inflector.dasherize)(componentName) + (className ? "-".concat(className) : '');
   },
   _getItemsSelector() {
     return this.option('filter') || '';
   },
   _$content() {
-    var $element = this.$element();
-    var $wrapper = $element.children('.dx-template-wrapper');
+    const $element = this.$element();
+    const $wrapper = $element.children('.dx-template-wrapper');
     return $wrapper.length ? $wrapper : $element;
   },
   _attachEventHandlers() {
-    var _this2 = this;
     if (this.option('disabled')) {
       return;
     }
-    var $element = this._$content();
-    var itemsSelector = this._getItemsSelector();
-    var allowMoveByClick = this.option('allowMoveByClick');
-    var data = {
+    let $element = this._$content();
+    let itemsSelector = this._getItemsSelector();
+    const allowMoveByClick = this.option('allowMoveByClick');
+    const data = {
       direction: this.option('dragDirection'),
       immediate: this.option('immediate'),
-      checkDropTarget: function checkDropTarget($target, event) {
-        var targetGroup = _this2.option('group');
-        var sourceGroup = _this2._getSourceDraggable().option('group');
-        var $scrollable = _this2._getScrollable($target);
-        if (_this2._verticalScrollHelper.isOutsideScrollable($scrollable, event) || _this2._horizontalScrollHelper.isOutsideScrollable($scrollable, event)) {
+      checkDropTarget: ($target, event) => {
+        const targetGroup = this.option('group');
+        const sourceGroup = this._getSourceDraggable().option('group');
+        const $scrollable = this._getScrollable($target);
+        if (this._verticalScrollHelper.isOutsideScrollable($scrollable, event) || this._horizontalScrollHelper.isOutsideScrollable($scrollable, event)) {
           return false;
         }
         return sourceGroup && sourceGroup === targetGroup;
@@ -392,10 +388,10 @@ var Draggable = _dom_component.default.inherit({
     };
   },
   _createDragElement($element) {
-    var result = $element;
-    var clone = this.option('clone');
-    var $container = this._getContainer();
-    var template = this.option('dragTemplate');
+    let result = $element;
+    const clone = this.option('clone');
+    const $container = this._getContainer();
+    let template = this.option('dragTemplate');
     if (template) {
       template = this._getTemplate(template);
       result = (0, _renderer.default)('<div>').appendTo($container);
@@ -431,18 +427,18 @@ var Draggable = _dom_component.default.inherit({
     (0, _translator.move)($element || this._$dragElement, position);
   },
   _getDraggableElement(e) {
-    var $sourceElement = this._getSourceElement();
+    const $sourceElement = this._getSourceElement();
     if ($sourceElement) {
       return $sourceElement;
     }
-    var allowMoveByClick = this.option('allowMoveByClick');
+    const allowMoveByClick = this.option('allowMoveByClick');
     if (allowMoveByClick) {
       return this.$element();
     }
-    var $target = (0, _renderer.default)(e && e.target);
-    var itemsSelector = this._getItemsSelector();
+    let $target = (0, _renderer.default)(e && e.target);
+    const itemsSelector = this._getItemsSelector();
     if (itemsSelector[0] === '>') {
-      var $items = this._$content().find(itemsSelector);
+      const $items = this._$content().find(itemsSelector);
       if (!$items.is($target)) {
         $target = $target.closest($items);
       }
@@ -450,16 +446,16 @@ var Draggable = _dom_component.default.inherit({
     return $target;
   },
   _getSourceElement() {
-    var draggable = this._getSourceDraggable();
+    const draggable = this._getSourceDraggable();
     return draggable._$sourceElement;
   },
   _pointerDownHandler(e) {
     if ((0, _index.needSkipEvent)(e)) {
       return;
     }
-    var position = {};
-    var $element = this.$element();
-    var dragDirection = this.option('dragDirection');
+    const position = {};
+    const $element = this.$element();
+    const dragDirection = this.option('dragDirection');
     if (dragDirection === 'horizontal' || dragDirection === 'both') {
       position.left = e.pageX - $element.offset().left + (0, _translator.locate)($element).left - (0, _size.getWidth)($element) / 2;
     }
@@ -470,8 +466,8 @@ var Draggable = _dom_component.default.inherit({
     this._getAction('onDragMove')(this._getEventArgs(e));
   },
   _isValidElement(event, $element) {
-    var handle = this.option('handle');
-    var $target = (0, _renderer.default)(event.originalEvent && event.originalEvent.target);
+    const handle = this.option('handle');
+    const $target = (0, _renderer.default)(event.originalEvent && event.originalEvent.target);
     if (handle && !$target.closest(handle).length) {
       return false;
     }
@@ -481,7 +477,7 @@ var Draggable = _dom_component.default.inherit({
     return !$element.is('.dx-state-disabled, .dx-state-disabled *');
   },
   _dragStartHandler(e) {
-    var $element = this._getDraggableElement(e);
+    const $element = this._getDraggableElement(e);
     this.dragInProgress = true;
     if (!this._isValidElement(e, $element)) {
       e.cancel = true;
@@ -490,7 +486,7 @@ var Draggable = _dom_component.default.inherit({
     if (this._$sourceElement) {
       return;
     }
-    var dragStartArgs = this._getDragStartArgs(e, $element);
+    const dragStartArgs = this._getDragStartArgs(e, $element);
     this._getAction('onDragStart')(dragStartArgs);
     if (dragStartArgs.cancel) {
       e.cancel = true;
@@ -499,17 +495,17 @@ var Draggable = _dom_component.default.inherit({
     this.option('itemData', dragStartArgs.itemData);
     this._setSourceDraggable();
     this._$sourceElement = $element;
-    var initialOffset = $element.offset();
+    let initialOffset = $element.offset();
     if (!this._hasClonedDraggable() && this.option('autoScroll')) {
       this._initScrollTop = this._getScrollableScrollTop();
       this._initScrollLeft = this._getScrollableScrollLeft();
       initialOffset = this._getDraggableElementOffset(initialOffset.left, initialOffset.top);
     }
-    var $dragElement = this._$dragElement = this._createDragElement($element);
+    const $dragElement = this._$dragElement = this._createDragElement($element);
     this._toggleDraggingClass(true);
     this._toggleDragSourceClass(true);
     this._setGestureCoverCursor($dragElement.children());
-    var isFixedPosition = $dragElement.css('position') === 'fixed';
+    const isFixedPosition = $dragElement.css('position') === 'fixed';
     this._initPosition((0, _extend.extend)({}, dragStartArgs, {
       dragElement: $dragElement.get(0),
       initialOffset: isFixedPosition && initialOffset
@@ -517,14 +513,14 @@ var Draggable = _dom_component.default.inherit({
     this._getAction('onDraggableElementShown')(_extends(_extends({}, dragStartArgs), {
       dragElement: $dragElement
     }));
-    var $area = this._getArea();
-    var areaOffset = this._getAreaOffset($area);
-    var boundOffset = this._getBoundOffset();
-    var areaWidth = (0, _size.getOuterWidth)($area);
-    var areaHeight = (0, _size.getOuterHeight)($area);
-    var elementWidth = (0, _size.getWidth)($dragElement);
-    var elementHeight = (0, _size.getHeight)($dragElement);
-    var startOffset = {
+    const $area = this._getArea();
+    const areaOffset = this._getAreaOffset($area);
+    const boundOffset = this._getBoundOffset();
+    const areaWidth = (0, _size.getOuterWidth)($area);
+    const areaHeight = (0, _size.getOuterHeight)($area);
+    const elementWidth = (0, _size.getWidth)($dragElement);
+    const elementHeight = (0, _size.getHeight)($dragElement);
+    const startOffset = {
       left: $dragElement.offset().left - areaOffset.left,
       top: $dragElement.offset().top - areaOffset.top
     };
@@ -539,7 +535,7 @@ var Draggable = _dom_component.default.inherit({
     }
   },
   _getAreaOffset($area) {
-    var offset = $area && _position.default.offset($area);
+    const offset = $area && _position.default.offset($area);
     return offset || {
       left: 0,
       top: 0
@@ -549,28 +545,28 @@ var Draggable = _dom_component.default.inherit({
     this._$dragElement && this._$dragElement.toggleClass(this._addWidgetPrefix('dragging'), value);
   },
   _toggleDragSourceClass(value, $element) {
-    var $sourceElement = $element || this._$sourceElement;
+    const $sourceElement = $element || this._$sourceElement;
     $sourceElement && $sourceElement.toggleClass(this._addWidgetPrefix('source'), value);
   },
   _setGestureCoverCursor($element) {
     (0, _renderer.default)(".".concat(GESTURE_COVER_CLASS)).css('cursor', $element.css('cursor'));
   },
   _getBoundOffset() {
-    var boundOffset = this.option('boundOffset');
+    let boundOffset = this.option('boundOffset');
     if ((0, _type.isFunction)(boundOffset)) {
       boundOffset = boundOffset.call(this);
     }
     return (0, _string.quadToObject)(boundOffset);
   },
   _getArea() {
-    var area = this.option('boundary');
+    let area = this.option('boundary');
     if ((0, _type.isFunction)(area)) {
       area = area.call(this);
     }
     return (0, _renderer.default)(area);
   },
   _getContainer() {
-    var container = this.option('container');
+    let container = this.option('container');
     if (container === undefined) {
       container = (0, _view_port.value)();
     }
@@ -578,13 +574,13 @@ var Draggable = _dom_component.default.inherit({
   },
   _getDraggableElementOffset(initialOffsetX, initialOffsetY) {
     var _a, _b, _c, _d;
-    var initScrollTop = this._initScrollTop;
-    var initScrollLeft = this._initScrollLeft;
-    var scrollTop = this._getScrollableScrollTop();
-    var scrollLeft = this._getScrollableScrollLeft();
-    var elementPosition = (0, _renderer.default)(this.element()).css('position');
-    var isFixedPosition = elementPosition === 'fixed';
-    var result = {
+    const initScrollTop = this._initScrollTop;
+    const initScrollLeft = this._initScrollLeft;
+    const scrollTop = this._getScrollableScrollTop();
+    const scrollLeft = this._getScrollableScrollLeft();
+    const elementPosition = (0, _renderer.default)(this.element()).css('position');
+    const isFixedPosition = elementPosition === 'fixed';
+    const result = {
       left: ((_b = (_a = this._startPosition) === null || _a === void 0 ? void 0 : _a.left) !== null && _b !== void 0 ? _b : 0) + initialOffsetX,
       top: ((_d = (_c = this._startPosition) === null || _c === void 0 ? void 0 : _c.top) !== null && _d !== void 0 ? _d : 0) + initialOffsetY
     };
@@ -605,32 +601,31 @@ var Draggable = _dom_component.default.inherit({
       e.cancel = true;
       return;
     }
-    var offset = this._getDraggableElementOffset(e.offset.x, e.offset.y);
+    const offset = this._getDraggableElementOffset(e.offset.x, e.offset.y);
     this._move(offset);
     this._updateScrollable(e);
-    var eventArgs = this._getEventArgs(e);
+    const eventArgs = this._getEventArgs(e);
     this._getAction('onDragMove')(eventArgs);
     if (eventArgs.cancel === true) {
       return;
     }
-    var targetDraggable = this._getTargetDraggable();
+    const targetDraggable = this._getTargetDraggable();
     targetDraggable.dragMove(e, scrollBy);
   },
   _updateScrollable(e) {
-    var that = this;
+    const that = this;
     if (that.option('autoScroll')) {
-      var mousePosition = getMousePosition(e);
-      var allObjects = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.$element().get(0));
+      const mousePosition = getMousePosition(e);
+      const allObjects = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.$element().get(0));
       that._verticalScrollHelper.updateScrollable(allObjects, mousePosition);
       that._horizontalScrollHelper.updateScrollable(allObjects, mousePosition);
     }
   },
   _getScrollable($element) {
-    var _this3 = this;
-    var $scrollable;
-    $element.parents().toArray().some(function (parent) {
-      var $parent = (0, _renderer.default)(parent);
-      if (_this3._horizontalScrollHelper.isScrollable($parent) || _this3._verticalScrollHelper.isScrollable($parent)) {
+    let $scrollable;
+    $element.parents().toArray().some(parent => {
+      const $parent = (0, _renderer.default)(parent);
+      if (this._horizontalScrollHelper.isScrollable($parent) || this._verticalScrollHelper.isScrollable($parent)) {
         $scrollable = $parent;
         return true;
       }
@@ -647,8 +642,8 @@ var Draggable = _dom_component.default.inherit({
     return (_b = (_a = this._getScrollable((0, _renderer.default)(this.element()))) === null || _a === void 0 ? void 0 : _a.scrollLeft()) !== null && _b !== void 0 ? _b : 0;
   },
   _defaultActionArgs() {
-    var args = this.callBase.apply(this, arguments);
-    var component = this.option('component');
+    const args = this.callBase.apply(this, arguments);
+    const component = this.option('component');
     if (component) {
       args.component = component;
       args.element = component.element();
@@ -656,8 +651,8 @@ var Draggable = _dom_component.default.inherit({
     return args;
   },
   _getEventArgs(e) {
-    var sourceDraggable = this._getSourceDraggable();
-    var targetDraggable = this._getTargetDraggable();
+    const sourceDraggable = this._getSourceDraggable();
+    const targetDraggable = this._getTargetDraggable();
     return {
       event: e,
       itemData: sourceDraggable.option('itemData'),
@@ -669,7 +664,7 @@ var Draggable = _dom_component.default.inherit({
     };
   },
   _getDragStartArgs(e, $itemElement) {
-    var args = this._getEventArgs(e);
+    const args = this._getEventArgs(e);
     return {
       event: args.event,
       itemData: args.itemData,
@@ -681,19 +676,18 @@ var Draggable = _dom_component.default.inherit({
     !this._dragElementIsCloned() && this._move(this._initialLocate, this._$sourceElement);
   },
   _dragEndHandler(e) {
-    var _this4 = this;
-    var d = (0, _deferred.Deferred)();
-    var dragEndEventArgs = this._getEventArgs(e);
-    var dropEventArgs = this._getEventArgs(e);
-    var targetDraggable = this._getTargetDraggable();
-    var needRevertPosition = true;
+    const d = (0, _deferred.Deferred)();
+    const dragEndEventArgs = this._getEventArgs(e);
+    const dropEventArgs = this._getEventArgs(e);
+    const targetDraggable = this._getTargetDraggable();
+    let needRevertPosition = true;
     this.dragInProgress = false;
     try {
       this._getAction('onDragEnd')(dragEndEventArgs);
     } finally {
-      (0, _deferred.when)((0, _deferred.fromPromise)(dragEndEventArgs.cancel)).done(function (cancel) {
+      (0, _deferred.when)((0, _deferred.fromPromise)(dragEndEventArgs.cancel)).done(cancel => {
         if (!cancel) {
-          if (targetDraggable !== _this4) {
+          if (targetDraggable !== this) {
             targetDraggable._getAction('onDrop')(dropEventArgs);
           }
           if (!dropEventArgs.cancel) {
@@ -707,35 +701,34 @@ var Draggable = _dom_component.default.inherit({
       })
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       .fail(d.resolve);
-      d.done(function () {
+      d.done(() => {
         if (needRevertPosition) {
-          _this4._revertItemToInitialPosition();
+          this._revertItemToInitialPosition();
         }
-        _this4._resetDragOptions(targetDraggable);
+        this._resetDragOptions(targetDraggable);
       });
     }
   },
   _isTargetOverAnotherDraggable(e) {
-    var _this5 = this;
-    var sourceDraggable = this._getSourceDraggable();
+    const sourceDraggable = this._getSourceDraggable();
     if (this === sourceDraggable) {
       return false;
     }
-    var $dragElement = sourceDraggable._$dragElement;
-    var $sourceDraggableElement = sourceDraggable.$element();
-    var $targetDraggableElement = this.$element();
-    var mousePosition = getMousePosition(e);
-    var elements = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.element());
-    var firstWidgetElement = elements.filter(function (element) {
-      var $element = (0, _renderer.default)(element);
-      if ($element.hasClass(_this5._addWidgetPrefix())) {
+    const $dragElement = sourceDraggable._$dragElement;
+    const $sourceDraggableElement = sourceDraggable.$element();
+    const $targetDraggableElement = this.$element();
+    const mousePosition = getMousePosition(e);
+    const elements = _dom_adapter.default.elementsFromPoint(mousePosition.x, mousePosition.y, this.element());
+    const firstWidgetElement = elements.filter(element => {
+      const $element = (0, _renderer.default)(element);
+      if ($element.hasClass(this._addWidgetPrefix())) {
         return !$element.closest($dragElement).length;
       }
       return false;
     })[0];
-    var $sourceElement = this._getSourceElement();
-    var isTargetOverItself = firstWidgetElement === $sourceDraggableElement.get(0);
-    var isTargetOverNestedDraggable = (0, _renderer.default)(firstWidgetElement).closest($sourceElement).length;
+    const $sourceElement = this._getSourceElement();
+    const isTargetOverItself = firstWidgetElement === $sourceDraggableElement.get(0);
+    const isTargetOverNestedDraggable = (0, _renderer.default)(firstWidgetElement).closest($sourceElement).length;
     return !firstWidgetElement || firstWidgetElement === $targetDraggableElement.get(0) && !isTargetOverItself && !isTargetOverNestedDraggable;
   },
   _dragEnterHandler(e) {
@@ -743,7 +736,7 @@ var Draggable = _dom_component.default.inherit({
     if (this._isTargetOverAnotherDraggable(e)) {
       this._setTargetDraggable();
     }
-    var sourceDraggable = this._getSourceDraggable();
+    const sourceDraggable = this._getSourceDraggable();
     sourceDraggable.dragEnter(e);
   },
   _dragLeaveHandler(e) {
@@ -752,7 +745,7 @@ var Draggable = _dom_component.default.inherit({
     if (this !== this._getSourceDraggable()) {
       this.reset();
     }
-    var sourceDraggable = this._getSourceDraggable();
+    const sourceDraggable = this._getSourceDraggable();
     sourceDraggable.dragLeave(e);
   },
   _keydownHandler(e) {
@@ -761,11 +754,11 @@ var Draggable = _dom_component.default.inherit({
     }
   },
   _keydownEscapeHandler(e) {
-    var $sourceElement = this._getSourceElement();
+    const $sourceElement = this._getSourceElement();
     if (!$sourceElement) {
       return;
     }
-    var dragCancelEventArgs = this._getEventArgs(e);
+    const dragCancelEventArgs = this._getEventArgs(e);
     this._getAction('onDragCancel')(dragCancelEventArgs);
     if (dragCancelEventArgs.cancel) {
       return;
@@ -774,7 +767,7 @@ var Draggable = _dom_component.default.inherit({
     sourceDraggable === null || sourceDraggable === void 0 ? void 0 : sourceDraggable._toggleDraggingClass(false);
     this._detachEventHandlers();
     this._revertItemToInitialPosition();
-    var targetDraggable = this._getTargetDraggable();
+    const targetDraggable = this._getTargetDraggable();
     this._resetDragOptions(targetDraggable);
     this._attachEventHandlers();
   },
@@ -794,8 +787,8 @@ var Draggable = _dom_component.default.inherit({
   _render() {
     this.callBase();
     this.$element().addClass(this._addWidgetPrefix());
-    var transclude = this._templateManager.anonymousTemplateName === this.option('contentTemplate');
-    var template = this._getTemplateByOption('contentTemplate');
+    const transclude = this._templateManager.anonymousTemplateName === this.option('contentTemplate');
+    const template = this._getTemplateByOption('contentTemplate');
     if (template) {
       (0, _renderer.default)(template.render({
         container: this.element(),
@@ -804,7 +797,9 @@ var Draggable = _dom_component.default.inherit({
     }
   },
   _optionChanged(args) {
-    var name = args.name;
+    const {
+      name
+    } = args;
     switch (name) {
       case 'onDragStart':
       case 'onDragMove':
@@ -857,8 +852,8 @@ var Draggable = _dom_component.default.inherit({
     return sourceDraggable || this;
   },
   _setTargetDraggable() {
-    var currentGroup = this.option('group');
-    var sourceDraggable = this._getSourceDraggable();
+    const currentGroup = this.option('group');
+    const sourceDraggable = this._getSourceDraggable();
     if (currentGroup && currentGroup === sourceDraggable.option('group')) {
       targetDraggable = this;
     }
@@ -893,11 +888,11 @@ var Draggable = _dom_component.default.inherit({
     this._stopAnimator();
   },
   _fireDragEnterEvent(sourceEvent) {
-    var args = this._getEventArgs(sourceEvent);
+    const args = this._getEventArgs(sourceEvent);
     this._getAction('onDragEnter')(args);
   },
   _fireDragLeaveEvent(sourceEvent) {
-    var args = this._getEventArgs(sourceEvent);
+    const args = this._getEventArgs(sourceEvent);
     this._getAction('onDragLeave')(args);
   }
 });

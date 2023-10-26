@@ -9,17 +9,17 @@ var _index = require("../utils/index");
 var _extend = require("../../core/utils/extend");
 var _public_component = require("../../core/utils/public_component");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DX_SWIPEABLE = 'dxSwipeable';
-var SWIPEABLE_CLASS = 'dx-swipeable';
-var ACTION_TO_EVENT_MAP = {
+const DX_SWIPEABLE = 'dxSwipeable';
+const SWIPEABLE_CLASS = 'dx-swipeable';
+const ACTION_TO_EVENT_MAP = {
   'onStart': _swipe.start,
   'onUpdated': _swipe.swipe,
   'onEnd': _swipe.end,
   'onCancel': 'dxswipecancel'
 };
-var IMMEDIATE_TIMEOUT = 180;
-var Swipeable = _dom_component.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const IMMEDIATE_TIMEOUT = 180;
+const Swipeable = _dom_component.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       elastic: true,
       immediate: false,
@@ -32,20 +32,20 @@ var Swipeable = _dom_component.default.inherit({
       onCancel: null
     });
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this.$element().addClass(SWIPEABLE_CLASS);
     this._attachEventHandlers();
   },
-  _attachEventHandlers: function _attachEventHandlers() {
+  _attachEventHandlers: function () {
     this._detachEventHandlers();
     if (this.option('disabled')) {
       return;
     }
-    var NAME = this.NAME;
+    const NAME = this.NAME;
     this._createEventData();
     (0, _iterator.each)(ACTION_TO_EVENT_MAP, function (actionName, eventName) {
-      var action = this._createActionByOption(actionName, {
+      const action = this._createActionByOption(actionName, {
         context: this
       });
       eventName = (0, _index.addNamespace)(eventName, NAME);
@@ -56,7 +56,7 @@ var Swipeable = _dom_component.default.inherit({
       });
     }.bind(this));
   },
-  _createEventData: function _createEventData() {
+  _createEventData: function () {
     this._eventData = {
       elastic: this.option('elastic'),
       itemSizeFunc: this.option('itemSizeFunc'),
@@ -65,10 +65,10 @@ var Swipeable = _dom_component.default.inherit({
       immediateTimeout: this.option('immediateTimeout')
     };
   },
-  _detachEventHandlers: function _detachEventHandlers() {
+  _detachEventHandlers: function () {
     _events_engine.default.off(this.$element(), '.' + DX_SWIPEABLE);
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'disabled':
       case 'onStart':
@@ -88,7 +88,7 @@ var Swipeable = _dom_component.default.inherit({
         this.callBase(args);
     }
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return false;
   }
 });

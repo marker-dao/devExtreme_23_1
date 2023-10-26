@@ -4,13 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.RollingStock = void 0;
-var RollingStock = /*#__PURE__*/function () {
+let RollingStock = /*#__PURE__*/function () {
   function RollingStock(label, isRotated, shiftFunction) {
-    var bBox = label.getBoundingRect();
-    var x = bBox.x;
-    var y = bBox.y;
-    var endX = bBox.x + bBox.width;
-    var endY = bBox.y + bBox.height;
+    const bBox = label.getBoundingRect();
+    const {
+      x
+    } = bBox;
+    const {
+      y
+    } = bBox;
+    const endX = bBox.x + bBox.width;
+    const endY = bBox.y + bBox.height;
     this.labels = [label];
     this.shiftFunction = shiftFunction;
     this.bBox = {
@@ -24,7 +28,7 @@ var RollingStock = /*#__PURE__*/function () {
   }
   var _proto = RollingStock.prototype;
   _proto.toChain = function toChain(nextRollingStock) {
-    var nextRollingStockBBox = nextRollingStock.getBoundingRect();
+    const nextRollingStockBBox = nextRollingStock.getBoundingRect();
     nextRollingStock.shift(nextRollingStockBBox.start - this.bBox.end);
     this.changeBoxWidth(nextRollingStockBBox.width);
     this.labels = this.labels.concat(nextRollingStock.labels);
@@ -33,10 +37,9 @@ var RollingStock = /*#__PURE__*/function () {
     return this.bBox;
   };
   _proto.shift = function shift(shiftLength) {
-    var _this = this;
-    this.labels.forEach(function (label) {
-      var bBox = label.getBoundingRect();
-      var coords = _this.shiftFunction(bBox, shiftLength);
+    this.labels.forEach(label => {
+      const bBox = label.getBoundingRect();
+      const coords = this.shiftFunction(bBox, shiftLength);
       if (!label.hideInsideLabel(coords)) {
         label.shift(coords.x, coords.y);
       }

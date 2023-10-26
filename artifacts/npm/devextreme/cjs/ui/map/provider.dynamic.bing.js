@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/map/provider.dynamic.bing.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,35 +20,35 @@ var _color = _interopRequireDefault(require("../../color"));
 var _ajax = _interopRequireDefault(require("../../core/utils/ajax"));
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
+const window = (0, _window.getWindow)();
 /* global Microsoft */
-var BING_MAP_READY = '_bingScriptReady';
-var BING_URL_V8 = 'https://www.bing.com/api/maps/mapcontrol?callback=' + BING_MAP_READY;
-var INFOBOX_V_OFFSET_V8 = 13;
-var MIN_LOCATION_RECT_LENGTH = 0.0000000000000001;
-var msMapsLoaded = function msMapsLoaded() {
+const BING_MAP_READY = '_bingScriptReady';
+let BING_URL_V8 = 'https://www.bing.com/api/maps/mapcontrol?callback=' + BING_MAP_READY;
+const INFOBOX_V_OFFSET_V8 = 13;
+const MIN_LOCATION_RECT_LENGTH = 0.0000000000000001;
+const msMapsLoaded = function () {
   return window.Microsoft && window.Microsoft.Maps;
 };
-var msMapsLoader;
-var BingProvider = _provider.default.inherit({
-  _mapType: function _mapType(type) {
-    var mapTypes = {
+let msMapsLoader;
+const BingProvider = _provider.default.inherit({
+  _mapType: function (type) {
+    const mapTypes = {
       roadmap: Microsoft.Maps.MapTypeId.road,
       hybrid: Microsoft.Maps.MapTypeId.aerial,
       satellite: Microsoft.Maps.MapTypeId.aerial
     };
     return mapTypes[type] || mapTypes.road;
   },
-  _movementMode: function _movementMode(type) {
-    var movementTypes = {
+  _movementMode: function (type) {
+    const movementTypes = {
       driving: Microsoft.Maps.Directions.RouteMode.driving,
       walking: Microsoft.Maps.Directions.RouteMode.walking
     };
     return movementTypes[type] || movementTypes.driving;
   },
-  _resolveLocation: function _resolveLocation(location) {
+  _resolveLocation: function (location) {
     return new Promise(function (resolve) {
-      var latLng = this._getLatLng(location);
+      const latLng = this._getLatLng(location);
       if (latLng) {
         resolve(new Microsoft.Maps.Location(latLng.lat, latLng.lng));
       } else {
@@ -59,20 +59,20 @@ var BingProvider = _provider.default.inherit({
     }.bind(this));
   },
   _geocodedLocations: {},
-  _geocodeLocationImpl: function _geocodeLocationImpl(location) {
+  _geocodeLocationImpl: function (location) {
     return new Promise(function (resolve) {
       if (!(0, _type.isDefined)(location)) {
         resolve(new Microsoft.Maps.Location(0, 0));
         return;
       }
-      var searchManager = new Microsoft.Maps.Search.SearchManager(this._map);
-      var searchRequest = {
+      const searchManager = new Microsoft.Maps.Search.SearchManager(this._map);
+      const searchRequest = {
         where: location,
         count: 1,
-        callback: function callback(searchResponse) {
-          var result = searchResponse.results[0];
+        callback: function (searchResponse) {
+          const result = searchResponse.results[0];
           if (result) {
-            var boundsBox = searchResponse.results[0].location;
+            const boundsBox = searchResponse.results[0].location;
             resolve(new Microsoft.Maps.Location(boundsBox.latitude, boundsBox.longitude));
           } else {
             resolve(new Microsoft.Maps.Location(0, 0));
@@ -82,15 +82,15 @@ var BingProvider = _provider.default.inherit({
       searchManager.geocode(searchRequest);
     }.bind(this));
   },
-  _normalizeLocation: function _normalizeLocation(location) {
+  _normalizeLocation: function (location) {
     return {
       lat: location.latitude,
       lng: location.longitude
     };
   },
-  _normalizeLocationRect: function _normalizeLocationRect(locationRect) {
-    var northWest = this._normalizeLocation(locationRect.getNorthwest());
-    var southEast = this._normalizeLocation(locationRect.getSoutheast());
+  _normalizeLocationRect: function (locationRect) {
+    const northWest = this._normalizeLocation(locationRect.getNorthwest());
+    const southEast = this._normalizeLocation(locationRect.getSoutheast());
     return {
       northEast: {
         lat: northWest.lat,
@@ -102,7 +102,7 @@ var BingProvider = _provider.default.inherit({
       }
     };
   },
-  _loadImpl: function _loadImpl() {
+  _loadImpl: function () {
     return new Promise(function (resolve) {
       if (msMapsLoaded()) {
         resolve();
@@ -130,7 +130,7 @@ var BingProvider = _provider.default.inherit({
       })]);
     });
   },
-  _loadMapScript: function _loadMapScript() {
+  _loadMapScript: function () {
     return new Promise(function (resolve) {
       window[BING_MAP_READY] = resolve;
       _ajax.default.sendRequest({
@@ -145,12 +145,12 @@ var BingProvider = _provider.default.inherit({
       }
     });
   },
-  _init: function _init() {
+  _init: function () {
     this._createMap();
     return Promise.resolve();
   },
-  _createMap: function _createMap() {
-    var controls = this._option('controls');
+  _createMap: function () {
+    const controls = this._option('controls');
     this._map = new Microsoft.Maps.Map(this._$container[0], {
       credentials: this._keyOption('bing'),
       zoom: this._option('zoom'),
@@ -159,37 +159,37 @@ var BingProvider = _provider.default.inherit({
       showScalebar: controls
     });
   },
-  _attachHandlers: function _attachHandlers() {
+  _attachHandlers: function () {
     this._providerViewChangeHandler = Microsoft.Maps.Events.addHandler(this._map, 'viewchange', this._viewChangeHandler.bind(this));
     this._providerClickHandler = Microsoft.Maps.Events.addHandler(this._map, 'click', this._clickActionHandler.bind(this));
   },
-  _viewChangeHandler: function _viewChangeHandler() {
-    var bounds = this._map.getBounds();
+  _viewChangeHandler: function () {
+    const bounds = this._map.getBounds();
     this._option('bounds', this._normalizeLocationRect(bounds));
-    var center = this._map.getCenter();
+    const center = this._map.getCenter();
     this._option('center', this._normalizeLocation(center));
     if (!this._preventZoomChangeEvent) {
       this._option('zoom', this._map.getZoom());
     }
   },
-  _clickActionHandler: function _clickActionHandler(e) {
+  _clickActionHandler: function (e) {
     if (e.targetType === 'map') {
       this._fireClickAction({
         location: this._normalizeLocation(e.location)
       });
     }
   },
-  updateDimensions: function updateDimensions() {
-    var $container = this._$container;
+  updateDimensions: function () {
+    const $container = this._$container;
     this._map.setOptions({
       width: (0, _size.getWidth)($container),
       height: (0, _size.getHeight)($container)
     });
     return Promise.resolve();
   },
-  updateMapType: function updateMapType() {
-    var type = this._option('type');
-    var labelOverlay = Microsoft.Maps.LabelOverlay;
+  updateMapType: function () {
+    const type = this._option('type');
+    const labelOverlay = Microsoft.Maps.LabelOverlay;
     this._map.setView({
       animate: false,
       mapTypeId: this._mapType(type),
@@ -197,16 +197,16 @@ var BingProvider = _provider.default.inherit({
     });
     return Promise.resolve();
   },
-  updateBounds: function updateBounds() {
+  updateBounds: function () {
     return Promise.all([this._resolveLocation(this._option('bounds.northEast')), this._resolveLocation(this._option('bounds.southWest'))]).then(function (result) {
-      var bounds = new Microsoft.Maps.LocationRect.fromLocations(result[0], result[1]);
+      const bounds = new Microsoft.Maps.LocationRect.fromLocations(result[0], result[1]);
       this._map.setView({
         animate: false,
         bounds: bounds
       });
     }.bind(this));
   },
-  updateCenter: function updateCenter() {
+  updateCenter: function () {
     return this._resolveLocation(this._option('center')).then(function (center) {
       this._map.setView({
         animate: false,
@@ -214,20 +214,20 @@ var BingProvider = _provider.default.inherit({
       });
     }.bind(this));
   },
-  updateZoom: function updateZoom() {
+  updateZoom: function () {
     this._map.setView({
       animate: false,
       zoom: this._option('zoom')
     });
     return Promise.resolve();
   },
-  updateControls: function updateControls() {
+  updateControls: function () {
     this.clean();
     return this.render.apply(this, arguments);
   },
-  _renderMarker: function _renderMarker(options) {
+  _renderMarker: function (options) {
     return this._resolveLocation(options.location).then(function (location) {
-      var pushpinOptions = {
+      const pushpinOptions = {
         icon: options.iconSrc || this._option('markerIconSrc')
       };
       if (options.html) {
@@ -236,18 +236,18 @@ var BingProvider = _provider.default.inherit({
           width: null,
           height: null
         });
-        var htmlOffset = options.htmlOffset;
+        const htmlOffset = options.htmlOffset;
         if (htmlOffset) {
           pushpinOptions.anchor = new Microsoft.Maps.Point(-htmlOffset.left, -htmlOffset.top);
         }
       }
-      var pushpin = new Microsoft.Maps.Pushpin(location, pushpinOptions);
+      const pushpin = new Microsoft.Maps.Pushpin(location, pushpinOptions);
       this._map.entities.push(pushpin);
-      var infobox = this._renderTooltip(location, options.tooltip);
-      var handler;
+      const infobox = this._renderTooltip(location, options.tooltip);
+      let handler;
       if (options.onClick || options.tooltip) {
-        var markerClickAction = this._mapWidget._createAction(options.onClick || _common.noop);
-        var markerNormalizedLocation = this._normalizeLocation(location);
+        const markerClickAction = this._mapWidget._createAction(options.onClick || _common.noop);
+        const markerNormalizedLocation = this._normalizeLocation(location);
         handler = Microsoft.Maps.Events.addHandler(pushpin, 'click', function () {
           markerClickAction({
             location: markerNormalizedLocation
@@ -267,12 +267,12 @@ var BingProvider = _provider.default.inherit({
       };
     }.bind(this));
   },
-  _renderTooltip: function _renderTooltip(location, options) {
+  _renderTooltip: function (location, options) {
     if (!options) {
       return;
     }
     options = this._parseTooltipOptions(options);
-    var infobox = new Microsoft.Maps.Infobox(location, {
+    const infobox = new Microsoft.Maps.Infobox(location, {
       description: options.text,
       offset: new Microsoft.Maps.Point(0, INFOBOX_V_OFFSET_V8),
       visible: options.visible
@@ -280,7 +280,7 @@ var BingProvider = _provider.default.inherit({
     infobox.setMap(this._map);
     return infobox;
   },
-  _destroyMarker: function _destroyMarker(marker) {
+  _destroyMarker: function (marker) {
     this._map.entities.remove(marker.marker);
     if (marker.infobox) {
       marker.infobox.setMap(null);
@@ -289,14 +289,14 @@ var BingProvider = _provider.default.inherit({
       Microsoft.Maps.Events.removeHandler(marker.handler);
     }
   },
-  _renderRoute: function _renderRoute(options) {
+  _renderRoute: function (options) {
     return Promise.all((0, _iterator.map)(options.locations, function (point) {
       return this._resolveLocation(point);
     }.bind(this))).then(function (locations) {
       return new Promise(function (resolve) {
-        var direction = new Microsoft.Maps.Directions.DirectionsManager(this._map);
-        var color = new _color.default(options.color || this._defaultRouteColor()).toHex();
-        var routeColor = new Microsoft.Maps.Color.fromHex(color);
+        const direction = new Microsoft.Maps.Directions.DirectionsManager(this._map);
+        const color = new _color.default(options.color || this._defaultRouteColor()).toHex();
+        const routeColor = new Microsoft.Maps.Color.fromHex(color);
         routeColor.a = (options.opacity || this._defaultRouteOpacity()) * 255;
         direction.setRenderOptions({
           autoUpdateMapView: false,
@@ -318,17 +318,17 @@ var BingProvider = _provider.default.inherit({
           routeDraggable: false
         });
         (0, _iterator.each)(locations, function (_, location) {
-          var waypoint = new Microsoft.Maps.Directions.Waypoint({
+          const waypoint = new Microsoft.Maps.Directions.Waypoint({
             location: location
           });
           direction.addWaypoint(waypoint);
         });
-        var directionHandlers = [];
+        const directionHandlers = [];
         directionHandlers.push(Microsoft.Maps.Events.addHandler(direction, 'directionsUpdated', function (args) {
           while (directionHandlers.length) {
             Microsoft.Maps.Events.removeHandler(directionHandlers.pop());
           }
-          var routeSummary = args.routeSummary[0];
+          const routeSummary = args.routeSummary[0];
           resolve({
             instance: direction,
             northEast: routeSummary.northEast,
@@ -339,7 +339,7 @@ var BingProvider = _provider.default.inherit({
           while (directionHandlers.length) {
             Microsoft.Maps.Events.removeHandler(directionHandlers.pop());
           }
-          var status = 'RouteResponseCode: ' + args.responseCode + ' - ' + args.message;
+          const status = 'RouteResponseCode: ' + args.responseCode + ' - ' + args.message;
           _ui.default.log('W1006', status);
           resolve({
             instance: direction
@@ -349,15 +349,15 @@ var BingProvider = _provider.default.inherit({
       }.bind(this));
     }.bind(this));
   },
-  _destroyRoute: function _destroyRoute(routeObject) {
+  _destroyRoute: function (routeObject) {
     routeObject.instance.dispose();
   },
-  _fitBounds: function _fitBounds() {
+  _fitBounds: function () {
     this._updateBounds();
     if (this._bounds && this._option('autoAdjust')) {
-      var zoomBeforeFitting = this._map.getZoom();
+      const zoomBeforeFitting = this._map.getZoom();
       this._preventZoomChangeEvent = true;
-      var bounds = this._bounds.clone();
+      const bounds = this._bounds.clone();
       bounds.height = bounds.height * 1.1;
       bounds.width = bounds.width * 1.1;
       this._map.setView({
@@ -365,7 +365,7 @@ var BingProvider = _provider.default.inherit({
         bounds: bounds,
         zoom: zoomBeforeFitting
       });
-      var zoomAfterFitting = this._map.getZoom();
+      const zoomAfterFitting = this._map.getZoom();
       if (zoomBeforeFitting < zoomAfterFitting) {
         this._map.setView({
           animate: false,
@@ -378,14 +378,14 @@ var BingProvider = _provider.default.inherit({
     }
     return Promise.resolve();
   },
-  _extendBounds: function _extendBounds(location) {
+  _extendBounds: function (location) {
     if (this._bounds) {
       this._bounds = new Microsoft.Maps.LocationRect.fromLocations(this._bounds.getNorthwest(), this._bounds.getSoutheast(), location);
     } else {
       this._bounds = new Microsoft.Maps.LocationRect(location, MIN_LOCATION_RECT_LENGTH, MIN_LOCATION_RECT_LENGTH);
     }
   },
-  clean: function clean() {
+  clean: function () {
     if (this._map) {
       Microsoft.Maps.Events.removeHandler(this._providerViewChangeHandler);
       Microsoft.Maps.Events.removeHandler(this._providerClickHandler);

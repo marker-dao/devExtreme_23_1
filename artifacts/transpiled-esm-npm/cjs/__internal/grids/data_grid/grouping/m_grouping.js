@@ -20,26 +20,26 @@ var _m_grouping_expanded = require("./m_grouping_expanded");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* eslint-disable @typescript-eslint/method-signature-style */
 
-var DATAGRID_GROUP_PANEL_CLASS = 'dx-datagrid-group-panel';
-var DATAGRID_GROUP_PANEL_MESSAGE_CLASS = 'dx-group-panel-message';
-var DATAGRID_GROUP_PANEL_ITEM_CLASS = 'dx-group-panel-item';
-var DATAGRID_GROUP_PANEL_LABEL_CLASS = 'dx-toolbar-label';
-var DATAGRID_GROUP_PANEL_CONTAINER_CLASS = 'dx-toolbar-item';
-var DATAGRID_EXPAND_CLASS = 'dx-datagrid-expand';
-var DATAGRID_GROUP_ROW_CLASS = 'dx-group-row';
-var HEADER_FILTER_CLASS_SELECTOR = '.dx-header-filter';
-var GroupingDataSourceAdapterExtender = function () {
+const DATAGRID_GROUP_PANEL_CLASS = 'dx-datagrid-group-panel';
+const DATAGRID_GROUP_PANEL_MESSAGE_CLASS = 'dx-group-panel-message';
+const DATAGRID_GROUP_PANEL_ITEM_CLASS = 'dx-group-panel-item';
+const DATAGRID_GROUP_PANEL_LABEL_CLASS = 'dx-toolbar-label';
+const DATAGRID_GROUP_PANEL_CONTAINER_CLASS = 'dx-toolbar-item';
+const DATAGRID_EXPAND_CLASS = 'dx-datagrid-expand';
+const DATAGRID_GROUP_ROW_CLASS = 'dx-group-row';
+const HEADER_FILTER_CLASS_SELECTOR = '.dx-header-filter';
+const GroupingDataSourceAdapterExtender = function () {
   return {
     init() {
       this.callBase.apply(this, arguments);
       this._initGroupingHelper();
     },
     _initGroupingHelper(options) {
-      var grouping = this._grouping;
-      var isAutoExpandAll = this.option('grouping.autoExpandAll');
-      var isFocusedRowEnabled = this.option('focusedRowEnabled');
-      var remoteOperations = options ? options.remoteOperations : this.remoteOperations();
-      var isODataRemoteOperations = remoteOperations.filtering && remoteOperations.sorting && remoteOperations.paging;
+      const grouping = this._grouping;
+      const isAutoExpandAll = this.option('grouping.autoExpandAll');
+      const isFocusedRowEnabled = this.option('focusedRowEnabled');
+      const remoteOperations = options ? options.remoteOperations : this.remoteOperations();
+      const isODataRemoteOperations = remoteOperations.filtering && remoteOperations.sorting && remoteOperations.paging;
       if (isODataRemoteOperations && !remoteOperations.grouping && (isAutoExpandAll || !isFocusedRowEnabled)) {
         if (!grouping || grouping instanceof _m_grouping_collapsed.GroupingHelper) {
           this._grouping = new _m_grouping_expanded.GroupingHelper(this);
@@ -49,8 +49,8 @@ var GroupingDataSourceAdapterExtender = function () {
       }
     },
     totalItemsCount() {
-      var that = this;
-      var totalCount = that.callBase();
+      const that = this;
+      const totalCount = that.callBase();
       return totalCount > 0 && that._dataSource.group() && that._dataSource.requireTotalCount() ? totalCount + that._grouping.totalCountCorrection() : totalCount;
     },
     itemsCount() {
@@ -63,7 +63,7 @@ var GroupingDataSourceAdapterExtender = function () {
       return this._grouping.isGroupItemCountable(item);
     },
     isRowExpanded(key) {
-      var groupInfo = this._grouping.findGroupInfo(key);
+      const groupInfo = this._grouping.findGroupInfo(key);
       return groupInfo ? groupInfo.isExpanded : !this._grouping.allowCollapseAll();
     },
     collapseAll(groupIndex) {
@@ -73,12 +73,12 @@ var GroupingDataSourceAdapterExtender = function () {
       return this._collapseExpandAll(groupIndex, true);
     },
     _collapseExpandAll(groupIndex, isExpand) {
-      var that = this;
-      var dataSource = that._dataSource;
-      var group = dataSource.group();
-      var groups = _m_core.default.normalizeSortingInfo(group || []);
+      const that = this;
+      const dataSource = that._dataSource;
+      const group = dataSource.group();
+      const groups = _m_core.default.normalizeSortingInfo(group || []);
       if (groups.length) {
-        for (var i = 0; i < groups.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
           if (groupIndex === undefined || groupIndex === i) {
             groups[i].isExpanded = isExpand;
           } else if (group && group[i]) {
@@ -86,7 +86,7 @@ var GroupingDataSourceAdapterExtender = function () {
           }
         }
         dataSource.group(groups);
-        that._grouping.foreachGroups(function (groupInfo, parents) {
+        that._grouping.foreachGroups((groupInfo, parents) => {
           if (groupIndex === undefined || groupIndex === parents.length - 1) {
             groupInfo.isExpanded = isExpand;
           }
@@ -100,14 +100,14 @@ var GroupingDataSourceAdapterExtender = function () {
       return this._grouping.refresh.apply(this._grouping, arguments);
     },
     changeRowExpand(path) {
-      var that = this;
-      var dataSource = that._dataSource;
+      const that = this;
+      const dataSource = that._dataSource;
       if (dataSource.group()) {
         dataSource.beginLoading();
         if (that._lastLoadOptions) {
           that._lastLoadOptions.groupExpand = true;
         }
-        return that._changeRowExpandCore(path).always(function () {
+        return that._changeRowExpandCore(path).always(() => {
           dataSource.endLoading();
         });
       }
@@ -118,7 +118,7 @@ var GroupingDataSourceAdapterExtender = function () {
     // @ts-expect-error
     _hasGroupLevelsExpandState(group, isExpanded) {
       if (group && Array.isArray(group)) {
-        for (var i = 0; i < group.length; i++) {
+        for (let i = 0; i < group.length; i++) {
           if (group[i].isExpanded === isExpanded) {
             return true;
           }
@@ -126,7 +126,9 @@ var GroupingDataSourceAdapterExtender = function () {
       }
     },
     _customizeRemoteOperations(options, operationTypes) {
-      var remoteOperations = options.remoteOperations;
+      const {
+        remoteOperations
+      } = options;
       if (options.storeLoadOptions.group) {
         if (remoteOperations.grouping && !options.isCustomLoading) {
           if (!remoteOperations.groupPaging || this._hasGroupLevelsExpandState(options.storeLoadOptions.group, true)) {
@@ -155,10 +157,10 @@ var GroupingDataSourceAdapterExtender = function () {
   };
 }();
 _m_data_source_adapter.default.extend(GroupingDataSourceAdapterExtender);
-var GroupingDataControllerExtender = function () {
+const GroupingDataControllerExtender = function () {
   return {
     init() {
-      var that = this;
+      const that = this;
       that.callBase();
       that.createAction('onRowExpanding');
       that.createAction('onRowExpanded');
@@ -166,7 +168,7 @@ var GroupingDataControllerExtender = function () {
       that.createAction('onRowCollapsed');
     },
     _beforeProcessItems(items) {
-      var groupColumns = this._columnsController.getGroupColumns();
+      const groupColumns = this._columnsController.getGroupColumns();
       items = this.callBase(items);
       if (items.length && groupColumns.length) {
         items = this._processGroupItems(items, groupColumns.length);
@@ -186,11 +188,11 @@ var GroupingDataControllerExtender = function () {
       return item;
     },
     _processGroupItems(items, groupsCount, options) {
-      var that = this;
-      var groupedColumns = that._columnsController.getGroupColumns();
-      var column = groupedColumns[groupedColumns.length - groupsCount];
+      const that = this;
+      const groupedColumns = that._columnsController.getGroupColumns();
+      const column = groupedColumns[groupedColumns.length - groupsCount];
       if (!options) {
-        var scrollingMode = that.option('scrolling.mode');
+        const scrollingMode = that.option('scrolling.mode');
         options = {
           collectContinuationItems: scrollingMode !== 'virtual' && scrollingMode !== 'infinite',
           resultItems: [],
@@ -198,8 +200,9 @@ var GroupingDataControllerExtender = function () {
           values: []
         };
       }
-      var _options = options,
-        resultItems = _options.resultItems;
+      const {
+        resultItems
+      } = options;
       if (options.data) {
         if (options.collectContinuationItems || !options.data.isContinuation) {
           resultItems.push({
@@ -216,8 +219,8 @@ var GroupingDataControllerExtender = function () {
         if (groupsCount === 0) {
           resultItems.push.apply(resultItems, items);
         } else {
-          for (var i = 0; i < items.length; i++) {
-            var item = items[i];
+          for (let i = 0; i < items.length; i++) {
+            const item = items[i];
             if (item && 'items' in item) {
               options.data = item;
               options.path.push(item.key);
@@ -238,29 +241,29 @@ var GroupingDataControllerExtender = function () {
       return this.callBase().concat(['collapseAll', 'expandAll', 'isRowExpanded', 'expandRow', 'collapseRow']);
     },
     collapseAll(groupIndex) {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       if (dataSource && dataSource.collapseAll(groupIndex)) {
         dataSource.pageIndex(0);
         dataSource.reload();
       }
     },
     expandAll(groupIndex) {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       if (dataSource && dataSource.expandAll(groupIndex)) {
         dataSource.pageIndex(0);
         dataSource.reload();
       }
     },
     changeRowExpand(key) {
-      var that = this;
-      var expanded = that.isRowExpanded(key);
-      var args = {
+      const that = this;
+      const expanded = that.isRowExpanded(key);
+      const args = {
         key,
         expanded
       };
       that.executeAction(expanded ? 'onRowCollapsing' : 'onRowExpanding', args);
       if (!args.cancel) {
-        return (0, _deferred.when)(that._changeRowExpandCore(key)).done(function () {
+        return (0, _deferred.when)(that._changeRowExpandCore(key)).done(() => {
           args.expanded = !expanded;
           that.executeAction(expanded ? 'onRowCollapsed' : 'onRowExpanded', args);
         });
@@ -269,21 +272,21 @@ var GroupingDataControllerExtender = function () {
       return new _deferred.Deferred().resolve();
     },
     _changeRowExpandCore(key) {
-      var that = this;
-      var dataSource = this._dataSource;
+      const that = this;
+      const dataSource = this._dataSource;
       // @ts-expect-error
-      var d = new _deferred.Deferred();
+      const d = new _deferred.Deferred();
       if (!dataSource) {
         d.resolve();
       } else {
-        (0, _deferred.when)(dataSource.changeRowExpand(key)).done(function () {
+        (0, _deferred.when)(dataSource.changeRowExpand(key)).done(() => {
           that.load().done(d.resolve).fail(d.reject);
         }).fail(d.reject);
       }
       return d;
     },
     isRowExpanded(key) {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       return dataSource && dataSource.isRowExpanded(key);
     },
     expandRow(key) {
@@ -308,13 +311,13 @@ var GroupingDataControllerExtender = function () {
     }
   };
 }();
-var onGroupingMenuItemClick = function onGroupingMenuItemClick(column, params) {
-  var columnsController = this._columnsController;
+const onGroupingMenuItemClick = function (column, params) {
+  const columnsController = this._columnsController;
   // eslint-disable-next-line default-case
   switch (params.itemData.value) {
     case 'group':
       {
-        var groups = columnsController._dataSource.group() || [];
+        const groups = columnsController._dataSource.group() || [];
         columnsController.columnOption(column.dataField, 'groupIndex', groups.length);
         break;
       }
@@ -326,35 +329,34 @@ var onGroupingMenuItemClick = function onGroupingMenuItemClick(column, params) {
       break;
   }
 };
-var isGroupPanelVisible = function isGroupPanelVisible(groupPanelOptions) {
-  var visible = groupPanelOptions === null || groupPanelOptions === void 0 ? void 0 : groupPanelOptions.visible;
+const isGroupPanelVisible = groupPanelOptions => {
+  const visible = groupPanelOptions === null || groupPanelOptions === void 0 ? void 0 : groupPanelOptions.visible;
   return visible === 'auto' ? _devices.default.current().deviceType === 'desktop' : !!visible;
 };
-var allowDragging = function allowDragging(groupPanelOptions, column) {
-  var isVisible = isGroupPanelVisible(groupPanelOptions);
-  var canDrag = (groupPanelOptions === null || groupPanelOptions === void 0 ? void 0 : groupPanelOptions.allowColumnDragging) && column.allowGrouping;
+const allowDragging = (groupPanelOptions, column) => {
+  const isVisible = isGroupPanelVisible(groupPanelOptions);
+  const canDrag = (groupPanelOptions === null || groupPanelOptions === void 0 ? void 0 : groupPanelOptions.allowColumnDragging) && column.allowGrouping;
   return isVisible && !!canDrag;
 };
-var GroupingHeaderPanelExtender = function () {
+const GroupingHeaderPanelExtender = function () {
   return {
     _getToolbarItems() {
-      var items = this.callBase();
+      const items = this.callBase();
       return this._appendGroupingItem(items);
     },
     _appendGroupingItem(items) {
-      var _this = this;
       if (this._isGroupPanelVisible()) {
-        var isRendered = false;
-        var toolbarItem = {
-          template: function template() {
-            var $groupPanel = (0, _renderer.default)('<div>').addClass(DATAGRID_GROUP_PANEL_CLASS);
-            _this._updateGroupPanelContent($groupPanel);
-            (0, _m_accessibility.registerKeyboardAction)('groupPanel', _this, $groupPanel, undefined, _this._handleActionKeyDown.bind(_this));
+        let isRendered = false;
+        const toolbarItem = {
+          template: () => {
+            const $groupPanel = (0, _renderer.default)('<div>').addClass(DATAGRID_GROUP_PANEL_CLASS);
+            this._updateGroupPanelContent($groupPanel);
+            (0, _m_accessibility.registerKeyboardAction)('groupPanel', this, $groupPanel, undefined, this._handleActionKeyDown.bind(this));
             return $groupPanel;
           },
           name: 'groupPanel',
-          onItemRendered: function onItemRendered() {
-            isRendered && _this.renderCompleted.fire();
+          onItemRendered: () => {
+            isRendered && this.renderCompleted.fire();
             isRendered = true;
           },
           location: 'before',
@@ -367,11 +369,13 @@ var GroupingHeaderPanelExtender = function () {
       return items;
     },
     _handleActionKeyDown(args) {
-      var event = args.event;
-      var $target = (0, _renderer.default)(event.target);
-      var groupColumnIndex = $target.closest(".".concat(DATAGRID_GROUP_PANEL_ITEM_CLASS)).index();
-      var column = this._columnsController.getGroupColumns()[groupColumnIndex];
-      var columnIndex = column && column.index;
+      const {
+        event
+      } = args;
+      const $target = (0, _renderer.default)(event.target);
+      const groupColumnIndex = $target.closest(".".concat(DATAGRID_GROUP_PANEL_ITEM_CLASS)).index();
+      const column = this._columnsController.getGroupColumns()[groupColumnIndex];
+      const columnIndex = column && column.index;
       if ($target.is(HEADER_FILTER_CLASS_SELECTOR)) {
         this.getController('headerFilter').showHeaderFilterMenu(columnIndex, true);
       } else {
@@ -383,22 +387,22 @@ var GroupingHeaderPanelExtender = function () {
       return isGroupPanelVisible(this.option('groupPanel'));
     },
     _renderGroupPanelItems($groupPanel, groupColumns) {
-      var that = this;
+      const that = this;
       $groupPanel.empty();
-      (0, _iterator.each)(groupColumns, function (index, groupColumn) {
+      (0, _iterator.each)(groupColumns, (index, groupColumn) => {
         that._createGroupPanelItem($groupPanel, groupColumn);
       });
       (0, _accessibility.restoreFocus)(this);
     },
     _createGroupPanelItem($rootElement, groupColumn) {
-      var $groupPanelItem = (0, _renderer.default)('<div>').addClass(groupColumn.cssClass).addClass(DATAGRID_GROUP_PANEL_ITEM_CLASS).data('columnData', groupColumn).appendTo($rootElement).text(groupColumn.caption);
+      const $groupPanelItem = (0, _renderer.default)('<div>').addClass(groupColumn.cssClass).addClass(DATAGRID_GROUP_PANEL_ITEM_CLASS).data('columnData', groupColumn).appendTo($rootElement).text(groupColumn.caption);
       (0, _accessibility.setTabIndex)(this, $groupPanelItem);
       return $groupPanelItem;
     },
     _columnOptionChanged(e) {
       if (!this._requireReady && !_m_core.default.checkChanges(e.optionNames, ['width', 'visibleWidth'])) {
-        var $toolbarElement = this.element();
-        var $groupPanel = $toolbarElement && $toolbarElement.find(".".concat(DATAGRID_GROUP_PANEL_CLASS));
+        const $toolbarElement = this.element();
+        const $groupPanel = $toolbarElement && $toolbarElement.find(".".concat(DATAGRID_GROUP_PANEL_CLASS));
         if ($groupPanel && $groupPanel.length) {
           this._updateGroupPanelContent($groupPanel);
           this.updateToolbarDimensions();
@@ -408,9 +412,9 @@ var GroupingHeaderPanelExtender = function () {
       this.callBase();
     },
     _updateGroupPanelContent($groupPanel) {
-      var that = this;
-      var groupColumns = that.getController('columns').getGroupColumns();
-      var groupPanelOptions = that.option('groupPanel');
+      const that = this;
+      const groupColumns = that.getController('columns').getGroupColumns();
+      const groupPanelOptions = that.option('groupPanel');
       that._renderGroupPanelItems($groupPanel, groupColumns);
       if (groupPanelOptions.allowColumnDragging && !groupColumns.length) {
         (0, _renderer.default)('<div>').addClass(DATAGRID_GROUP_PANEL_MESSAGE_CLASS).text(groupPanelOptions.emptyPanelText).appendTo($groupPanel);
@@ -419,21 +423,21 @@ var GroupingHeaderPanelExtender = function () {
       }
     },
     allowDragging(column) {
-      var groupPanelOptions = this.option('groupPanel');
+      const groupPanelOptions = this.option('groupPanel');
       return allowDragging(groupPanelOptions, column);
     },
     getColumnElements() {
-      var $element = this.element();
+      const $element = this.element();
       return $element && $element.find(".".concat(DATAGRID_GROUP_PANEL_ITEM_CLASS));
     },
     getColumns() {
       return this.getController('columns').getGroupColumns();
     },
     getBoundingRect() {
-      var that = this;
-      var $element = that.element();
+      const that = this;
+      const $element = that.element();
       if ($element && $element.find(".".concat(DATAGRID_GROUP_PANEL_CLASS)).length) {
-        var offset = $element.offset();
+        const offset = $element.offset();
         return {
           top: offset.top,
           bottom: offset.top + (0, _size.getHeight)($element)
@@ -445,20 +449,22 @@ var GroupingHeaderPanelExtender = function () {
       return 'group';
     },
     getContextMenuItems(options) {
-      var that = this;
-      var contextMenuEnabled = that.option('grouping.contextMenuEnabled');
-      var $groupedColumnElement = (0, _renderer.default)(options.targetElement).closest(".".concat(DATAGRID_GROUP_PANEL_ITEM_CLASS));
-      var items;
+      const that = this;
+      const contextMenuEnabled = that.option('grouping.contextMenuEnabled');
+      const $groupedColumnElement = (0, _renderer.default)(options.targetElement).closest(".".concat(DATAGRID_GROUP_PANEL_ITEM_CLASS));
+      let items;
       if ($groupedColumnElement.length) {
         options.column = $groupedColumnElement.data('columnData');
       }
       if (contextMenuEnabled && options.column) {
-        var column = options.column;
-        var isGroupingAllowed = (0, _type.isDefined)(column.allowGrouping) ? column.allowGrouping : true;
+        const {
+          column
+        } = options;
+        const isGroupingAllowed = (0, _type.isDefined)(column.allowGrouping) ? column.allowGrouping : true;
         if (isGroupingAllowed) {
-          var isColumnGrouped = (0, _type.isDefined)(column.groupIndex) && column.groupIndex > -1;
-          var groupingTexts = that.option('grouping.texts');
-          var onItemClick = onGroupingMenuItemClick.bind(that, column);
+          const isColumnGrouped = (0, _type.isDefined)(column.groupIndex) && column.groupIndex > -1;
+          const groupingTexts = that.option('grouping.texts');
+          const onItemClick = onGroupingMenuItemClick.bind(that, column);
           items = [{
             text: groupingTexts.ungroup,
             value: 'ungroup',
@@ -490,18 +496,18 @@ var GroupingHeaderPanelExtender = function () {
   };
 }();
 exports.GroupingHeaderPanelExtender = GroupingHeaderPanelExtender;
-var GroupingRowsViewExtender = function () {
+const GroupingRowsViewExtender = function () {
   return {
     getContextMenuItems(options) {
-      var that = this;
-      var contextMenuEnabled = that.option('grouping.contextMenuEnabled');
-      var items;
+      const that = this;
+      const contextMenuEnabled = that.option('grouping.contextMenuEnabled');
+      let items;
       if (contextMenuEnabled && options.row && options.row.rowType === 'group') {
-        var columnsController = that._columnsController;
-        var column = columnsController.columnOption("groupIndex:".concat(options.row.groupIndex));
+        const columnsController = that._columnsController;
+        const column = columnsController.columnOption("groupIndex:".concat(options.row.groupIndex));
         if (column && column.allowGrouping) {
-          var groupingTexts = that.option('grouping.texts');
-          var onItemClick = onGroupingMenuItemClick.bind(that, column);
+          const groupingTexts = that.option('grouping.texts');
+          const onItemClick = onGroupingMenuItemClick.bind(that, column);
           items = [];
           items.push({
             text: groupingTexts.ungroup,
@@ -517,20 +523,20 @@ var GroupingRowsViewExtender = function () {
       return items;
     },
     _rowClick(e) {
-      var that = this;
-      var expandMode = that.option('grouping.expandMode');
-      var scrollingMode = that.option('scrolling.mode');
-      var isGroupRowStateChanged = scrollingMode !== 'infinite' && expandMode === 'rowClick' && (0, _renderer.default)(e.event.target).closest(".".concat(DATAGRID_GROUP_ROW_CLASS)).length;
-      var isExpandButtonClicked = (0, _renderer.default)(e.event.target).closest(".".concat(DATAGRID_EXPAND_CLASS)).length;
+      const that = this;
+      const expandMode = that.option('grouping.expandMode');
+      const scrollingMode = that.option('scrolling.mode');
+      const isGroupRowStateChanged = scrollingMode !== 'infinite' && expandMode === 'rowClick' && (0, _renderer.default)(e.event.target).closest(".".concat(DATAGRID_GROUP_ROW_CLASS)).length;
+      const isExpandButtonClicked = (0, _renderer.default)(e.event.target).closest(".".concat(DATAGRID_EXPAND_CLASS)).length;
       if (isGroupRowStateChanged || isExpandButtonClicked) {
         that._changeGroupRowState(e);
       }
       that.callBase(e);
     },
     _changeGroupRowState(e) {
-      var dataController = this.getController('data');
-      var row = dataController.items()[e.rowIndex];
-      var allowCollapsing = this._columnsController.columnOption("groupIndex:".concat(row.groupIndex), 'allowCollapsing');
+      const dataController = this.getController('data');
+      const row = dataController.items()[e.rowIndex];
+      const allowCollapsing = this._columnsController.columnOption("groupIndex:".concat(row.groupIndex), 'allowCollapsing');
       if (row.rowType === 'data' || row.rowType === 'group' && allowCollapsing !== false) {
         dataController.changeRowExpand(row.key, true);
         e.event.preventDefault();
@@ -539,18 +545,20 @@ var GroupingRowsViewExtender = function () {
     }
   };
 }();
-var columnHeadersViewExtender = function () {
+const columnHeadersViewExtender = function () {
   return {
     getContextMenuItems(options) {
-      var that = this;
-      var contextMenuEnabled = that.option('grouping.contextMenuEnabled');
-      var items = that.callBase(options);
+      const that = this;
+      const contextMenuEnabled = that.option('grouping.contextMenuEnabled');
+      let items = that.callBase(options);
       if (contextMenuEnabled && options.row && (options.row.rowType === 'header' || options.row.rowType === 'detailAdaptive')) {
-        var column = options.column;
+        const {
+          column
+        } = options;
         if (!column.command && (!(0, _type.isDefined)(column.allowGrouping) || column.allowGrouping)) {
-          var groupingTexts = that.option('grouping.texts');
-          var isColumnGrouped = (0, _type.isDefined)(column.groupIndex) && column.groupIndex > -1;
-          var onItemClick = onGroupingMenuItemClick.bind(that, column);
+          const groupingTexts = that.option('grouping.texts');
+          const isColumnGrouped = (0, _type.isDefined)(column.groupIndex) && column.groupIndex > -1;
+          const onItemClick = onGroupingMenuItemClick.bind(that, column);
           items = items || [];
           items.push({
             text: groupingTexts.groupByThisColumn,
@@ -577,7 +585,7 @@ var columnHeadersViewExtender = function () {
       return items;
     },
     allowDragging(column) {
-      var groupPanelOptions = this.option('groupPanel');
+      const groupPanelOptions = this.option('groupPanel');
       return allowDragging(groupPanelOptions, column) || this.callBase(column);
     }
   };
@@ -610,7 +618,7 @@ _m_core.default.registerModule('grouping', {
       data: GroupingDataControllerExtender,
       columns: {
         _getExpandColumnOptions() {
-          var options = this.callBase.apply(this, arguments);
+          const options = this.callBase.apply(this, arguments);
           options.cellTemplate = _m_core.default.getExpandCellTemplate();
           return options;
         }

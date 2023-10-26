@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/m_time_zone_calculator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,5 +13,5 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TimeZoneCalculator = void 0;
 var _utils = require("../../renovation/ui/scheduler/timeZoneCalculator/utils");
-var TimeZoneCalculator = _utils.TimeZoneCalculator;
+const TimeZoneCalculator = _utils.TimeZoneCalculator;
 exports.TimeZoneCalculator = TimeZoneCalculator;

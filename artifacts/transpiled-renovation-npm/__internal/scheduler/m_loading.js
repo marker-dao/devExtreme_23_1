@@ -10,11 +10,11 @@ var _deferred = require("../../core/utils/deferred");
 var _view_port = require("../../core/utils/view_port");
 var _load_panel = _interopRequireDefault(require("../../ui/load_panel"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var loading = null;
-var createLoadPanel = function createLoadPanel(options) {
+let loading = null;
+const createLoadPanel = function (options) {
   return new _load_panel.default((0, _renderer.default)('<div>').appendTo(options && options.container || (0, _view_port.value)()), options);
 };
-var removeLoadPanel = function removeLoadPanel() {
+const removeLoadPanel = function () {
   if (!loading) {
     return;
   }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/tableContextMenu.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,10 +26,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var MODULE_NAMESPACE = 'dxHtmlEditorTableContextMenu';
-var CONTEXT_MENU_EVENT = (0, _index.addNamespace)('dxcontextmenu', MODULE_NAMESPACE);
-var TableContextMenuModule = _base.default;
-var localize = function localize(name) {
+const MODULE_NAMESPACE = 'dxHtmlEditorTableContextMenu';
+const CONTEXT_MENU_EVENT = (0, _index.addNamespace)('dxcontextmenu', MODULE_NAMESPACE);
+let TableContextMenuModule = _base.default;
+const localize = name => {
   return _message.default.format("dxHtmlEditor-".concat((0, _inflector.camelize)(name)));
 };
 if (_devextremeQuill.default) {
@@ -62,13 +62,13 @@ if (_devextremeQuill.default) {
       _events_engine.default.off(this.editorInstance._getContent(), CONTEXT_MENU_EVENT);
     };
     _proto._createContextMenu = function _createContextMenu(items) {
-      var $container = (0, _renderer.default)('<div>').appendTo(this.editorInstance.$element());
-      var menuConfig = this._getMenuConfig(items);
+      const $container = (0, _renderer.default)('<div>').appendTo(this.editorInstance.$element());
+      const menuConfig = this._getMenuConfig(items);
       return this.editorInstance._createComponent($container, _context_menu.default, menuConfig);
     };
     _proto.showPropertiesForm = function showPropertiesForm() {
-      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'cell';
-      var $element = (0, _renderer.default)(this._targetElement).closest(type === 'cell' ? 'th, td' : 'table');
+      let type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'cell';
+      const $element = (0, _renderer.default)(this._targetElement).closest(type === 'cell' ? 'th, td' : 'table');
       this._contextMenu.hide();
       this._formatHandlers["".concat(type, "Properties")]($element);
       this._targetElement = null;
@@ -78,8 +78,8 @@ if (_devextremeQuill.default) {
     };
     _proto._handleObjectItem = function _handleObjectItem(item) {
       if (item.name && this._isAcceptableItem(item.widget, 'dxButton')) {
-        var defaultButtonItemConfig = this._prepareMenuItemConfig(item.name);
-        var buttonItemConfig = (0, _extend.extend)(true, defaultButtonItemConfig, item);
+        const defaultButtonItemConfig = this._prepareMenuItemConfig(item.name);
+        const buttonItemConfig = (0, _extend.extend)(true, defaultButtonItemConfig, item);
         return buttonItemConfig;
       } else if (item.items) {
         item.items = this._prepareMenuItems(item.items);
@@ -90,8 +90,8 @@ if (_devextremeQuill.default) {
     };
     _proto._prepareMenuItemConfig = function _prepareMenuItemConfig(name) {
       var _ICON_MAP$name, _this$_formatHandlers;
-      var iconName = (_ICON_MAP$name = _toolbar_helper.ICON_MAP[name]) !== null && _ICON_MAP$name !== void 0 ? _ICON_MAP$name : name;
-      var buttonText = (0, _inflector.titleize)(name);
+      const iconName = (_ICON_MAP$name = _toolbar_helper.ICON_MAP[name]) !== null && _ICON_MAP$name !== void 0 ? _ICON_MAP$name : name;
+      const buttonText = (0, _inflector.titleize)(name);
       return {
         text: localize(buttonText),
         icon: iconName.toLowerCase(),
@@ -99,14 +99,13 @@ if (_devextremeQuill.default) {
       };
     };
     _proto._prepareMenuItems = function _prepareMenuItems(items) {
-      var _this2 = this;
-      var resultItems = [];
-      (0, _iterator.each)(items, function (_, item) {
-        var newItem;
+      const resultItems = [];
+      (0, _iterator.each)(items, (_, item) => {
+        let newItem;
         if ((0, _type.isObject)(item)) {
-          newItem = _this2._handleObjectItem(item);
+          newItem = this._handleObjectItem(item);
         } else if ((0, _type.isString)(item)) {
-          newItem = _this2._prepareMenuItemConfig(item);
+          newItem = this._prepareMenuItemConfig(item);
         }
         if (newItem) {
           resultItems.push(newItem);
@@ -115,8 +114,7 @@ if (_devextremeQuill.default) {
       return resultItems;
     };
     _proto._getMenuConfig = function _getMenuConfig(items) {
-      var _this3 = this;
-      var defaultItems = [{
+      const defaultItems = [{
         text: localize('insert'),
         items: ['insertHeaderRow', 'insertRowAbove', 'insertRowBelow', (0, _extend.extend)(this._prepareMenuItemConfig('insertColumnLeft'), {
           beginGroup: true
@@ -125,15 +123,15 @@ if (_devextremeQuill.default) {
         text: localize('delete'),
         items: ['deleteColumn', 'deleteRow', 'deleteTable']
       }, (0, _extend.extend)(this._prepareMenuItemConfig('cellProperties'), {
-        onClick: function onClick(e) {
-          _this3.showPropertiesForm('cell');
+        onClick: e => {
+          this.showPropertiesForm('cell');
         }
       }), (0, _extend.extend)(this._prepareMenuItemConfig('tableProperties'), {
-        onClick: function onClick(e) {
-          _this3.showPropertiesForm('table');
+        onClick: e => {
+          this.showPropertiesForm('table');
         }
       })];
-      var customItems = this._prepareMenuItems(items !== null && items !== void 0 && items.length ? items : defaultItems);
+      const customItems = this._prepareMenuItems(items !== null && items !== void 0 && items.length ? items : defaultItems);
       return {
         target: this._quillContainer,
         showEvent: null,
@@ -142,18 +140,17 @@ if (_devextremeQuill.default) {
       };
     };
     _proto._prepareContextMenuHandler = function _prepareContextMenuHandler() {
-      var _this4 = this;
-      return function (event) {
-        if (_this4._isTableTarget(event.target)) {
-          _this4._targetElement = event.target;
-          _this4._setContextMenuPosition(event);
-          _this4._contextMenu.show();
+      return event => {
+        if (this._isTableTarget(event.target)) {
+          this._targetElement = event.target;
+          this._setContextMenuPosition(event);
+          this._contextMenu.show();
           event.preventDefault();
         }
       };
     };
     _proto._setContextMenuPosition = function _setContextMenuPosition(event) {
-      var startPosition = this._quillContainer.get(0).getBoundingClientRect();
+      const startPosition = this._quillContainer.get(0).getBoundingClientRect();
       this._contextMenu.option({
         position: {
           my: 'left top',
@@ -187,9 +184,8 @@ if (_devextremeQuill.default) {
       }
     };
     _proto.prepareCleanCallback = function prepareCleanCallback() {
-      var _this5 = this;
-      return function () {
-        _this5.clean();
+      return () => {
+        this.clean();
       };
     };
     return TableContextMenuModule;

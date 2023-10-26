@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/ui.date_range_box.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,38 +31,28 @@ var _index2 = require("../../events/utils/index");
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DATERANGEBOX_CLASS = 'dx-daterangebox';
-var TEXTEDITOR_LABEL_STATIC_CLASS = 'dx-texteditor-with-label';
-var TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
-var TEXTEDITOR_LABEL_FLOATING_CLASS = 'dx-texteditor-with-floating-label';
-var START_DATEBOX_CLASS = 'dx-start-datebox';
-var END_DATEBOX_CLASS = 'dx-end-datebox';
-var DATERANGEBOX_SEPARATOR_CLASS = 'dx-daterangebox-separator';
-var DROP_DOWN_EDITOR_BUTTON_ICON = 'dx-dropdowneditor-icon';
-var INVALID_BADGE_CLASS = 'dx-show-invalid-badge';
-var READONLY_STATE_CLASS = 'dx-state-readonly';
-var TEXTEDITOR_CLASS = 'dx-texteditor';
-var TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
-var TEXTEDITOR_EMPTY_INPUT_CLASS = 'dx-texteditor-empty';
-var DROP_DOWN_EDITOR_CLASS = 'dx-dropdowneditor';
-var DROP_DOWN_EDITOR_ACTIVE_CLASS = 'dx-dropdowneditor-active';
-var SEPARATOR_ICON_NAME = 'to';
-var EVENTS_LIST = ['KeyDown', 'KeyUp', 'Change', 'Cut', 'Copy', 'Paste', 'Input', 'EnterKey'];
+const DATERANGEBOX_CLASS = 'dx-daterangebox';
+const TEXTEDITOR_LABEL_STATIC_CLASS = 'dx-texteditor-with-label';
+const TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
+const TEXTEDITOR_LABEL_FLOATING_CLASS = 'dx-texteditor-with-floating-label';
+const START_DATEBOX_CLASS = 'dx-start-datebox';
+const END_DATEBOX_CLASS = 'dx-end-datebox';
+const DATERANGEBOX_SEPARATOR_CLASS = 'dx-daterangebox-separator';
+const DROP_DOWN_EDITOR_BUTTON_ICON = 'dx-dropdowneditor-icon';
+const INVALID_BADGE_CLASS = 'dx-show-invalid-badge';
+const READONLY_STATE_CLASS = 'dx-state-readonly';
+const TEXTEDITOR_CLASS = 'dx-texteditor';
+const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
+const TEXTEDITOR_EMPTY_INPUT_CLASS = 'dx-texteditor-empty';
+const DROP_DOWN_EDITOR_CLASS = 'dx-dropdowneditor';
+const DROP_DOWN_EDITOR_ACTIVE_CLASS = 'dx-dropdowneditor-active';
+const SEPARATOR_ICON_NAME = 'to';
+const EVENTS_LIST = ['KeyDown', 'KeyUp', 'Change', 'Cut', 'Copy', 'Paste', 'Input', 'EnterKey'];
 
 // STYLE dateRangeBox
-var DateRangeBox = /*#__PURE__*/function (_Editor) {
+let DateRangeBox = /*#__PURE__*/function (_Editor) {
   _inheritsLoose(DateRangeBox, _Editor);
   function DateRangeBox() {
     return _Editor.apply(this, arguments) || this;
@@ -142,8 +132,8 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _Editor.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
-        var themeName = (0, _themes.current)();
+      device: function () {
+        const themeName = (0, _themes.current)();
         return (0, _themes.isMaterial)(themeName);
       },
       options: {
@@ -151,17 +141,17 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
         stylingMode: (0, _config.default)().editorStylingMode || 'filled'
       }
     }, {
-      device: function device() {
-        var themeName = (0, _themes.current)();
+      device: function () {
+        const themeName = (0, _themes.current)();
         return (0, _themes.isFluent)(themeName);
       },
       options: {
         labelMode: 'outside'
       }
     }, {
-      device: function device() {
-        var realDevice = _devices.default.real();
-        var platform = realDevice.platform;
+      device: function () {
+        const realDevice = _devices.default.real();
+        const platform = realDevice.platform;
         return platform === 'ios' || platform === 'android';
       },
       options: {
@@ -171,27 +161,24 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   };
   _proto._initOptions = function _initOptions(options) {
     _Editor.prototype._initOptions.call(this, options);
-    var _this$initialOption = this.initialOption(),
-      initialValue = _this$initialOption.value;
-    var _this$option = this.option(),
-      value = _this$option.value,
-      startDate = _this$option.startDate,
-      endDate = _this$option.endDate;
+    const {
+      value: initialValue
+    } = this.initialOption();
+    let {
+      value,
+      startDate,
+      endDate
+    } = this.option();
     if (value[0] && value[1] && (0, _uiDate_range.getDeserializedDate)(value[0]) > (0, _uiDate_range.getDeserializedDate)(value[1])) {
       value = [value[1], value[0]];
     }
     if (startDate && endDate && (0, _uiDate_range.getDeserializedDate)(startDate) > (0, _uiDate_range.getDeserializedDate)(endDate)) {
-      var _ref = [endDate, startDate];
-      startDate = _ref[0];
-      endDate = _ref[1];
+      [startDate, endDate] = [endDate, startDate];
     }
     if ((0, _uiDate_range.isSameDateArrays)(initialValue, value)) {
       value = [startDate, endDate];
     } else {
-      var _value = value;
-      var _value2 = _slicedToArray(_value, 2);
-      startDate = _value2[0];
-      endDate = _value2[1];
+      [startDate, endDate] = value;
     }
     this.option({
       startDate,
@@ -227,7 +214,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     });
   };
   _proto._raiseAction = function _raiseAction(eventName, event) {
-    var action = this["_".concat((0, _inflector.camelize)(eventName), "Action")];
+    const action = this["_".concat((0, _inflector.camelize)(eventName), "Action")];
     if (!action) {
       this._createEventAction(eventName);
     }
@@ -238,7 +225,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   _proto._initTemplates = function _initTemplates() {
     this._templateManager.addDefaultTemplates({
       dropDownButton: new _function_template.FunctionTemplate(function (options) {
-        var $icon = (0, _renderer.default)('<div>').addClass(DROP_DOWN_EDITOR_BUTTON_ICON);
+        const $icon = (0, _renderer.default)('<div>').addClass(DROP_DOWN_EDITOR_BUTTON_ICON);
         (0, _renderer.default)(options.container).append($icon);
       })
     });
@@ -271,12 +258,12 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     this.$element().removeClass(INVALID_BADGE_CLASS);
   };
   _proto._renderEmptinessEvent = function _renderEmptinessEvent() {
-    var eventName = (0, _index2.addNamespace)('input blur', this.NAME);
+    const eventName = (0, _index2.addNamespace)('input blur', this.NAME);
     _events_engine.default.off(this._focusTarget(), eventName);
     _events_engine.default.on(this._focusTarget(), eventName, this._toggleEmptinessState.bind(this));
   };
   _proto._toggleEmptinessState = function _toggleEmptinessState() {
-    var isEmpty = this.getStartDateBox().$element().hasClass(TEXTEDITOR_EMPTY_INPUT_CLASS) && this.getEndDateBox().$element().hasClass(TEXTEDITOR_EMPTY_INPUT_CLASS);
+    const isEmpty = this.getStartDateBox().$element().hasClass(TEXTEDITOR_EMPTY_INPUT_CLASS) && this.getEndDateBox().$element().hasClass(TEXTEDITOR_EMPTY_INPUT_CLASS);
     this.$element().toggleClass(TEXTEDITOR_EMPTY_INPUT_CLASS, isEmpty);
   };
   _proto._attachKeyboardEvents = function _attachKeyboardEvents() {
@@ -285,22 +272,25 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     }
   };
   _proto._toggleReadOnlyState = function _toggleReadOnlyState() {
-    var _this$option2 = this.option(),
-      readOnly = _this$option2.readOnly;
+    const {
+      readOnly
+    } = this.option();
     this.$element().toggleClass(READONLY_STATE_CLASS, !!readOnly);
     // TODO: should we add area readonly here?
   };
   _proto._toggleDropDownEditorActiveClass = function _toggleDropDownEditorActiveClass() {
-    var _this$option3 = this.option(),
-      opened = _this$option3.opened;
+    const {
+      opened
+    } = this.option();
     this.$element().toggleClass(DROP_DOWN_EDITOR_ACTIVE_CLASS, opened);
   };
   _proto._toggleEditorLabelClass = function _toggleEditorLabelClass() {
-    var _this$option4 = this.option(),
-      startDateLabel = _this$option4.startDateLabel,
-      endDateLabel = _this$option4.endDateLabel,
-      labelMode = _this$option4.labelMode;
-    var isLabelVisible = (!!startDateLabel || !!endDateLabel) && labelMode !== 'hidden';
+    const {
+      startDateLabel,
+      endDateLabel,
+      labelMode
+    } = this.option();
+    const isLabelVisible = (!!startDateLabel || !!endDateLabel) && labelMode !== 'hidden';
     this.$element().removeClass(TEXTEDITOR_LABEL_FLOATING_CLASS).removeClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS).removeClass(TEXTEDITOR_LABEL_STATIC_CLASS);
     if (isLabelVisible) {
       this.$element().addClass(labelMode === 'floating' ? TEXTEDITOR_LABEL_FLOATING_CLASS : TEXTEDITOR_LABEL_STATIC_CLASS);
@@ -320,18 +310,17 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     this._endDateBox.NAME = '_EndDateBox';
   };
   _proto._renderSeparator = function _renderSeparator() {
-    var $icon = (0, _icon.getImageContainer)(SEPARATOR_ICON_NAME);
+    const $icon = (0, _icon.getImageContainer)(SEPARATOR_ICON_NAME);
     this._$separator = (0, _renderer.default)('<div>').addClass(DATERANGEBOX_SEPARATOR_CLASS).prependTo(this.$element());
     this._renderPreventBlurOnSeparatorClick();
     $icon.appendTo(this._$separator);
   };
   _proto._renderPreventBlurOnSeparatorClick = function _renderPreventBlurOnSeparatorClick() {
-    var _this = this;
-    var eventName = (0, _index2.addNamespace)('mousedown', this.NAME);
+    const eventName = (0, _index2.addNamespace)('mousedown', this.NAME);
     _events_engine.default.off(this._$separator, eventName);
-    _events_engine.default.on(this._$separator, eventName, function (e) {
-      if (!_this._hasActiveElement()) {
-        _this.focus();
+    _events_engine.default.on(this._$separator, eventName, e => {
+      if (!this._hasActiveElement()) {
+        this.focus();
       }
       e.preventDefault();
     });
@@ -340,8 +329,9 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     this._buttonCollection = new _index.default(this, this._getDefaultButtons());
     this._$beforeButtonsContainer = null;
     this._$afterButtonsContainer = null;
-    var _this$option5 = this.option(),
-      buttons = _this$option5.buttons;
+    const {
+      buttons
+    } = this.option();
     this._$beforeButtonsContainer = this._buttonCollection.renderBeforeButtons(buttons, this.$element());
     this._$afterButtonsContainer = this._buttonCollection.renderAfterButtons(buttons, this.$element());
   };
@@ -355,8 +345,9 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     return true;
   };
   _proto._toggleOpenState = function _toggleOpenState() {
-    var _this$option6 = this.option(),
-      opened = _this$option6.opened;
+    const {
+      opened
+    } = this.option();
     if (!opened) {
       this.getStartDateBox()._focusInput();
     }
@@ -387,33 +378,33 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     _Editor.prototype._focusOutHandler.call(this, event);
   };
   _proto._shouldSkipFocusEvent = function _shouldSkipFocusEvent(event) {
-    var target = event.target,
-      relatedTarget = event.relatedTarget;
+    const {
+      target,
+      relatedTarget
+    } = event;
     return (0, _renderer.default)(target).is(this.startDateField()) && (0, _renderer.default)(relatedTarget).is(this.endDateField()) || (0, _renderer.default)(target).is(this.endDateField()) && (0, _renderer.default)(relatedTarget).is(this.startDateField());
   };
   _proto._getPickerType = function _getPickerType() {
-    var _this$option7 = this.option(),
-      pickerType = _this$option7.pickerType;
+    const {
+      pickerType
+    } = this.option();
     return ['calendar', 'native'].includes(pickerType) ? pickerType : 'calendar';
   };
   _proto._getRestErrors = function _getRestErrors(allErrors, partialErrors) {
-    return allErrors.filter(function (error) {
-      return !partialErrors.some(function (prevError) {
-        return error.message === prevError.message;
-      });
+    return allErrors.filter(error => {
+      return !partialErrors.some(prevError => error.message === prevError.message);
     });
   };
   _proto._syncValidationErrors = function _syncValidationErrors(optionName, newPartialErrors, previousPartialErrors) {
     newPartialErrors || (newPartialErrors = []);
     previousPartialErrors || (previousPartialErrors = []);
-    var allErrors = this.option(optionName) || [];
-    var otherErrors = this._getRestErrors(allErrors, previousPartialErrors);
-    this.option(optionName, [].concat(_toConsumableArray(otherErrors), _toConsumableArray(newPartialErrors)));
+    const allErrors = this.option(optionName) || [];
+    const otherErrors = this._getRestErrors(allErrors, previousPartialErrors);
+    this.option(optionName, [...otherErrors, ...newPartialErrors]);
   };
   _proto._getDateBoxConfig = function _getDateBoxConfig() {
-    var _this2 = this;
-    var options = this.option();
-    var dateBoxConfig = {
+    const options = this.option();
+    const dateBoxConfig = {
       acceptCustomValue: options.acceptCustomValue,
       activeStateEnabled: options.activeStateEnabled,
       applyValueMode: options.applyValueMode,
@@ -452,31 +443,32 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
       _dateRangeBoxInstance: this,
       _showValidationMessage: false
     };
-    (0, _iterator.each)(EVENTS_LIST, function (_, eventName) {
-      var optionName = "on".concat(eventName);
-      if (_this2.hasActionSubscription(optionName)) {
-        dateBoxConfig[optionName] = function (e) {
-          _this2._raiseAction(eventName, e.event);
+    (0, _iterator.each)(EVENTS_LIST, (_, eventName) => {
+      const optionName = "on".concat(eventName);
+      if (this.hasActionSubscription(optionName)) {
+        dateBoxConfig[optionName] = e => {
+          this._raiseAction(eventName, e.event);
         };
       }
     });
     return dateBoxConfig;
   };
-  _proto._hideOnOutsideClickHandler = function _hideOnOutsideClickHandler(_ref2) {
-    var target = _ref2.target;
+  _proto._hideOnOutsideClickHandler = function _hideOnOutsideClickHandler(_ref) {
+    let {
+      target
+    } = _ref;
     // TODO: extract this common code part with ddeditor to avoid duplication
-    var $target = (0, _renderer.default)(target);
-    var dropDownButton = this.getButton('dropDown');
-    var $dropDownButton = dropDownButton && dropDownButton.$element();
-    var isInputClicked = !!$target.closest(this.$element()).length;
-    var isDropDownButtonClicked = !!$target.closest($dropDownButton).length;
-    var isOutsideClick = !isInputClicked && !isDropDownButtonClicked;
+    const $target = (0, _renderer.default)(target);
+    const dropDownButton = this.getButton('dropDown');
+    const $dropDownButton = dropDownButton && dropDownButton.$element();
+    const isInputClicked = !!$target.closest(this.$element()).length;
+    const isDropDownButtonClicked = !!$target.closest($dropDownButton).length;
+    const isOutsideClick = !isInputClicked && !isDropDownButtonClicked;
     return isOutsideClick;
   };
   _proto._getStartDateBoxConfig = function _getStartDateBoxConfig() {
-    var _options$dropDownOpti,
-      _this3 = this;
-    var options = this.option();
+    var _options$dropDownOpti;
+    const options = this.option();
     return _extends({}, this._getDateBoxConfig(), {
       applyButtonText: options.applyButtonText,
       calendarOptions: options.calendarOptions,
@@ -487,35 +479,37 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
       dropDownOptions: _extends({
         showTitle: false,
         title: '',
-        hideOnOutsideClick: function hideOnOutsideClick(e) {
-          return _this3._hideOnOutsideClickHandler(e);
-        },
+        hideOnOutsideClick: e => this._hideOnOutsideClickHandler(e),
         hideOnParentScroll: false,
         preventScrollEvents: false
       }, options.dropDownOptions),
       invalidDateMessage: options.invalidStartDateMessage,
-      onValueChanged: function onValueChanged(_ref3) {
-        var value = _ref3.value,
-          event = _ref3.event;
-        var newValue = [value, _this3.option('value')[1]];
-        _this3.updateValue(newValue, event);
+      onValueChanged: _ref2 => {
+        let {
+          value,
+          event
+        } = _ref2;
+        const newValue = [value, this.option('value')[1]];
+        this.updateValue(newValue, event);
       },
       opened: options.opened,
-      onOpened: function onOpened() {
-        _this3._raiseOpenAction();
+      onOpened: () => {
+        this._raiseOpenAction();
       },
-      onClosed: function onClosed() {
-        _this3._raiseCloseAction();
+      onClosed: () => {
+        this._raiseCloseAction();
       },
-      onOptionChanged: function onOptionChanged(args) {
-        var name = args.name,
-          value = args.value,
-          previousValue = args.previousValue;
+      onOptionChanged: args => {
+        const {
+          name,
+          value,
+          previousValue
+        } = args;
         if (name === 'text') {
-          _this3.option('startDateText', value);
+          this.option('startDateText', value);
         }
         if (name === 'validationErrors') {
-          _this3._syncValidationErrors('_internalValidationErrors', value, previousValue);
+          this._syncValidationErrors('_internalValidationErrors', value, previousValue);
         }
       },
       todayButtonText: options.todayButtonText,
@@ -530,26 +524,29 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     });
   };
   _proto._getEndDateBoxConfig = function _getEndDateBoxConfig() {
-    var _this4 = this;
-    var options = this.option();
+    const options = this.option();
     return _extends({}, this._getDateBoxConfig(), {
       invalidDateMessage: options.invalidEndDateMessage,
       dateOutOfRangeMessage: options.endDateOutOfRangeMessage,
-      onValueChanged: function onValueChanged(_ref4) {
-        var value = _ref4.value,
-          event = _ref4.event;
-        var newValue = [_this4.option('value')[0], value];
-        _this4.updateValue(newValue, event);
+      onValueChanged: _ref3 => {
+        let {
+          value,
+          event
+        } = _ref3;
+        const newValue = [this.option('value')[0], value];
+        this.updateValue(newValue, event);
       },
-      onOptionChanged: function onOptionChanged(args) {
-        var name = args.name,
-          value = args.value,
-          previousValue = args.previousValue;
+      onOptionChanged: args => {
+        const {
+          name,
+          value,
+          previousValue
+        } = args;
         if (name === 'text') {
-          _this4.option('endDateText', value);
+          this.option('endDateText', value);
         }
         if (name === 'validationErrors') {
-          _this4._syncValidationErrors('_internalValidationErrors', value, previousValue);
+          this._syncValidationErrors('_internalValidationErrors', value, previousValue);
         }
       },
       opened: options.opened,
@@ -564,17 +561,16 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     });
   };
   _proto._getValidationMessagePosition = function _getValidationMessagePosition() {
-    var _this$option8 = this.option(),
-      validationMessagePosition = _this$option8.validationMessagePosition;
+    const {
+      validationMessagePosition
+    } = this.option();
     if (validationMessagePosition === 'auto') {
       return this.option('opened') ? 'top' : 'bottom';
     }
     return validationMessagePosition;
   };
-  _proto._getSerializedDates = function _getSerializedDates(_ref5) {
-    var _ref6 = _slicedToArray(_ref5, 2),
-      startDate = _ref6[0],
-      endDate = _ref6[1];
+  _proto._getSerializedDates = function _getSerializedDates(_ref4) {
+    let [startDate, endDate] = _ref4;
     return [this.getStartDateBox()._serializeDate((0, _uiDate_range.getDeserializedDate)(startDate)), this.getStartDateBox()._serializeDate((0, _uiDate_range.getDeserializedDate)(endDate))];
   };
   _proto.updateValue = function updateValue(newValue, event) {
@@ -586,13 +582,11 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     }
   };
   _proto._updateDateBoxesValue = function _updateDateBoxesValue(newValue) {
-    var startDateBox = this.getStartDateBox();
-    var endDateBox = this.getEndDateBox();
-    var _newValue = _slicedToArray(newValue, 2),
-      newStartDate = _newValue[0],
-      newEndDate = _newValue[1];
-    var oldStartDate = startDateBox.option('value');
-    var oldEndDate = endDateBox.option('value');
+    const startDateBox = this.getStartDateBox();
+    const endDateBox = this.getEndDateBox();
+    const [newStartDate, newEndDate] = newValue;
+    const oldStartDate = startDateBox.option('value');
+    const oldEndDate = endDateBox.option('value');
     if (!(0, _uiDate_range.isSameDates)(newStartDate, oldStartDate)) {
       startDateBox.option('value', newStartDate);
     }
@@ -601,9 +595,10 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     }
   };
   _proto._renderAccessKey = function _renderAccessKey() {
-    var $startDateInput = (0, _renderer.default)(this.field()[0]);
-    var _this$option9 = this.option(),
-      accessKey = _this$option9.accessKey;
+    const $startDateInput = (0, _renderer.default)(this.field()[0]);
+    const {
+      accessKey
+    } = this.option();
     $startDateInput.attr('accesskey', accessKey);
   };
   _proto._focusTarget = function _focusTarget() {
@@ -637,13 +632,14 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     return this._popupContentId;
   };
   _proto._setAriaAttributes = function _setAriaAttributes() {
-    var _this$option10 = this.option(),
-      opened = _this$option10.opened;
-    var arias = {
+    const {
+      opened
+    } = this.option();
+    const arias = {
       'expanded': opened,
       'controls': this._popupContentIdentifier()
     };
-    var ariaOwns = opened ? this._popupContentIdentifier() : undefined;
+    const ariaOwns = opened ? this._popupContentIdentifier() : undefined;
     this.setAria(arias);
     this.setAria('owns', ariaOwns, this.$element());
   };
@@ -670,10 +666,12 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
     _Editor.prototype._clean.call(this);
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name,
-      fullName = args.fullName,
-      value = args.value,
-      previousValue = args.previousValue;
+    const {
+      name,
+      fullName,
+      value,
+      previousValue
+    } = args;
     switch (name) {
       case 'acceptCustomValue':
       case 'dateSerializationFormat':
@@ -718,7 +716,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
         break;
       case 'pickerType':
         {
-          var pickerType = this._getPickerType();
+          const pickerType = this._getPickerType();
           this.getStartDateBox().option(name, pickerType);
           this.getEndDateBox().option(name, pickerType);
           break;
@@ -841,7 +839,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
       case '_internalValidationErrors':
         {
           this._syncValidationErrors('validationErrors', value, previousValue);
-          var validationErrors = this.option('validationErrors');
+          const validationErrors = this.option('validationErrors');
           this.option('isValid', !(validationErrors !== null && validationErrors !== void 0 && validationErrors.length));
           break;
         }
@@ -849,7 +847,7 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
         {
           this.getStartDateBox().option(name, value);
           this.getEndDateBox().option(name, value);
-          var isValid = value && !this.option('_internalValidationErrors').length;
+          const isValid = value && !this.option('_internalValidationErrors').length;
           if (this._shouldSkipIsValidChange || isValid === value) {
             _Editor.prototype._optionChanged.call(this, args);
             return;
@@ -861,11 +859,11 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
         }
       case 'validationErrors':
         {
-          var internalValidationErrors = this.option('_internalValidationErrors') || [];
-          var allErrors = value || [];
-          var externalErrors = this._getRestErrors(allErrors, internalValidationErrors);
-          var errors = [].concat(_toConsumableArray(externalErrors), _toConsumableArray(internalValidationErrors));
-          var newValue = errors.length ? errors : null;
+          const internalValidationErrors = this.option('_internalValidationErrors') || [];
+          const allErrors = value || [];
+          const externalErrors = this._getRestErrors(allErrors, internalValidationErrors);
+          const errors = [...externalErrors, ...internalValidationErrors];
+          const newValue = errors.length ? errors : null;
           this._options.silent('validationErrors', newValue);
           _Editor.prototype._optionChanged.call(this, _extends({}, args, {
             value: newValue
@@ -874,18 +872,18 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
         }
       case 'value':
         {
-          var _newValue2 = (0, _uiDate_range.sortDatesArray)(value);
-          if (!(0, _uiDate_range.isSameDateArrays)(_newValue2, previousValue)) {
-            var isDirty = !(0, _uiDate_range.isSameDateArrays)(_newValue2, this._initialValue);
+          const newValue = (0, _uiDate_range.sortDatesArray)(value);
+          if (!(0, _uiDate_range.isSameDateArrays)(newValue, previousValue)) {
+            const isDirty = !(0, _uiDate_range.isSameDateArrays)(newValue, this._initialValue);
             this.option('isDirty', isDirty);
-            this._setOptionWithoutOptionChange('value', _newValue2);
-            this._setOptionWithoutOptionChange('startDate', _newValue2[0]);
-            this._setOptionWithoutOptionChange('endDate', _newValue2[1]);
-            this._applyCustomValidation(_newValue2);
-            this._updateDateBoxesValue(_newValue2);
+            this._setOptionWithoutOptionChange('value', newValue);
+            this._setOptionWithoutOptionChange('startDate', newValue[0]);
+            this._setOptionWithoutOptionChange('endDate', newValue[1]);
+            this._applyCustomValidation(newValue);
+            this._updateDateBoxesValue(newValue);
             this.getStartDateBox()._strategy.renderValue();
             this._toggleEmptinessState();
-            this._raiseValueChangeAction(_newValue2, previousValue);
+            this._raiseValueChangeAction(newValue, previousValue);
             this._saveValueChangeEvent(undefined);
           }
           break;
@@ -929,8 +927,8 @@ var DateRangeBox = /*#__PURE__*/function (_Editor) {
   };
   _proto.reset = function reset() {
     _Editor.prototype.reset.call(this);
-    var startDateBox = this.getStartDateBox();
-    var endDateBox = this.getEndDateBox();
+    const startDateBox = this.getStartDateBox();
+    const endDateBox = this.getEndDateBox();
     startDateBox.reset();
     endDateBox.reset();
     startDateBox._updateInternalValidationState(true);

@@ -11,9 +11,9 @@ var _window = require("../../../core/utils/window");
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _themes = require("../../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DIALOG_CLASS = 'dx-formdialog';
-var FORM_CLASS = 'dx-formdialog-form';
-var FormDialog = /*#__PURE__*/function () {
+const DIALOG_CLASS = 'dx-formdialog';
+const FORM_CLASS = 'dx-formdialog-form';
+let FormDialog = /*#__PURE__*/function () {
   function FormDialog(editorInstance, popupConfig) {
     this._editorInstance = editorInstance;
     this._popupUserConfig = popupConfig;
@@ -22,19 +22,20 @@ var FormDialog = /*#__PURE__*/function () {
   }
   var _proto = FormDialog.prototype;
   _proto._renderPopup = function _renderPopup() {
-    var editorInstance = this._editorInstance;
-    var $container = (0, _renderer.default)('<div>').addClass(DIALOG_CLASS).appendTo(editorInstance.$element());
-    var popupConfig = this._getPopupConfig();
+    const editorInstance = this._editorInstance;
+    const $container = (0, _renderer.default)('<div>').addClass(DIALOG_CLASS).appendTo(editorInstance.$element());
+    const popupConfig = this._getPopupConfig();
     return editorInstance._createComponent($container, _popup.default, popupConfig);
   };
   _proto._attachOptionChangedHandler = function _attachOptionChangedHandler() {
-    var _this$_popup,
-      _this = this;
-    (_this$_popup = this._popup) === null || _this$_popup === void 0 ? void 0 : _this$_popup.on('optionChanged', function (_ref) {
-      var name = _ref.name,
-        value = _ref.value;
+    var _this$_popup;
+    (_this$_popup = this._popup) === null || _this$_popup === void 0 ? void 0 : _this$_popup.on('optionChanged', _ref => {
+      let {
+        name,
+        value
+      } = _ref;
       if (name === 'title') {
-        _this._updateFormLabel(value);
+        this._updateFormLabel(value);
       }
     });
   };
@@ -45,35 +46,30 @@ var FormDialog = /*#__PURE__*/function () {
     e.component.registerKeyHandler('escape', this._escKeyHandler.bind(this));
   };
   _proto._isSmallScreen = function _isSmallScreen() {
-    var screenFactor = (0, _window.hasWindow)() ? (0, _window.getCurrentScreenFactor)() : null;
+    const screenFactor = (0, _window.hasWindow)() ? (0, _window.getCurrentScreenFactor)() : null;
     return _devices.default.real().deviceType === 'phone' || screenFactor === 'xs';
   };
   _proto._getPopupConfig = function _getPopupConfig() {
-    var _this2 = this;
     return (0, _extend.extend)({
-      onInitialized: function onInitialized(e) {
-        _this2._popup = e.component;
-        _this2._popup.on('hiding', function () {
-          return _this2.onHiding();
-        });
-        _this2._popup.on('shown', function () {
-          _this2._form.focus();
+      onInitialized: e => {
+        this._popup = e.component;
+        this._popup.on('hiding', () => this.onHiding());
+        this._popup.on('shown', () => {
+          this._form.focus();
         });
       },
       deferRendering: false,
       focusStateEnabled: false,
       showCloseButton: false,
       fullScreen: this._isSmallScreen(),
-      contentTemplate: function contentTemplate(contentElem) {
-        var $formContainer = (0, _renderer.default)('<div>').appendTo(contentElem);
-        _this2._renderForm($formContainer, {
-          onEditorEnterKey: function onEditorEnterKey(e) {
-            return _this2.callAddButtonAction(e.event);
-          },
-          customizeItem: function customizeItem(item) {
+      contentTemplate: contentElem => {
+        const $formContainer = (0, _renderer.default)('<div>').appendTo(contentElem);
+        this._renderForm($formContainer, {
+          onEditorEnterKey: e => this.callAddButtonAction(e.event),
+          customizeItem: item => {
             if (item.itemType === 'simple') {
               item.editorOptions = (0, _extend.extend)(true, {}, item.editorOptions, {
-                onInitialized: _this2._addEscapeHandler.bind(_this2)
+                onInitialized: this._addEscapeHandler.bind(this)
               });
             }
           }
@@ -86,9 +82,7 @@ var FormDialog = /*#__PURE__*/function () {
         options: {
           onInitialized: this._addEscapeHandler.bind(this),
           text: _message.default.format('OK'),
-          onClick: function onClick(e) {
-            return _this2.callAddButtonAction(e.event);
-          }
+          onClick: e => this.callAddButtonAction(e.event)
         }
       }, {
         toolbar: 'bottom',
@@ -97,8 +91,8 @@ var FormDialog = /*#__PURE__*/function () {
         options: {
           onInitialized: this._addEscapeHandler.bind(this),
           text: _message.default.format('Cancel'),
-          onClick: function onClick() {
-            _this2._popup.hide();
+          onClick: () => {
+            this._popup.hide();
           }
         }
       }],
@@ -122,7 +116,7 @@ var FormDialog = /*#__PURE__*/function () {
   };
   _proto._updateFormLabel = function _updateFormLabel(text) {
     var _this$_form;
-    var label = text !== null && text !== void 0 ? text : this.popupOption('title');
+    const label = text !== null && text !== void 0 ? text : this.popupOption('title');
     (_this$_form = this._form) === null || _this$_form === void 0 ? void 0 : _this$_form.$element().attr('aria-label', label);
   };
   _proto._getDefaultFormOptions = function _getDefaultFormOptions() {
@@ -140,7 +134,7 @@ var FormDialog = /*#__PURE__*/function () {
       return;
     }
     this.deferred = new _deferred.Deferred();
-    var formConfig = (0, _extend.extend)(this._getDefaultFormOptions(), formUserConfig);
+    const formConfig = (0, _extend.extend)(this._getDefaultFormOptions(), formUserConfig);
     this._form.option(formConfig);
     this._popup.show();
     return this.deferred.promise();

@@ -6,7 +6,7 @@ Object.keys(_sorting).forEach(function (key) {
   if (key in exports && exports[key] === _sorting[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _sorting[key];
     }
   });

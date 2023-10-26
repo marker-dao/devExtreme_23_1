@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/m_utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,9 +18,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @ts-expect-error
 
 function createGroupFilter(path, storeLoadOptions) {
-  var groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group);
-  var filter = [];
-  for (var i = 0; i < path.length; i++) {
+  const groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group);
+  const filter = [];
+  for (let i = 0; i < path.length; i++) {
     filter.push([groups[i].selector, '=', path[i]]);
   }
   if (storeLoadOptions.filter) {

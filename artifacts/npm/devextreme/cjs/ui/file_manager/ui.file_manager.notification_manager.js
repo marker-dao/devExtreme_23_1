@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.notification_manager.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,23 +21,25 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_PROGRESS_BOX_CLASS = 'dx-filemanager-progress-box';
-var FILE_MANAGER_PROGRESS_BOX_ERROR_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-error");
-var FILE_MANAGER_PROGRESS_BOX_IMAGE_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-image");
-var FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-wrapper");
-var FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-common");
-var MANAGER_ID_NAME = '__operationInfoManager';
+const FILE_MANAGER_PROGRESS_BOX_CLASS = 'dx-filemanager-progress-box';
+const FILE_MANAGER_PROGRESS_BOX_ERROR_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-error");
+const FILE_MANAGER_PROGRESS_BOX_IMAGE_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-image");
+const FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-wrapper");
+const FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-common");
+const MANAGER_ID_NAME = '__operationInfoManager';
 exports.MANAGER_ID_NAME = MANAGER_ID_NAME;
-var ACTION_PROGRESS_STATUS = {
+const ACTION_PROGRESS_STATUS = {
   default: 'default',
   progress: 'progress',
   error: 'error',
   success: 'success'
 };
-var NotificationManagerBase = /*#__PURE__*/function () {
+let NotificationManagerBase = /*#__PURE__*/function () {
   function NotificationManagerBase(_ref) {
-    var onActionProgressStatusChanged = _ref.onActionProgressStatusChanged,
-      isActual = _ref.isActual;
+    let {
+      onActionProgressStatusChanged,
+      isActual
+    } = _ref;
     this._id = new _guid.default().toString();
     this._isActual = isActual || false;
     this._actionProgressStatus = ACTION_PROGRESS_STATUS.default;
@@ -51,7 +53,7 @@ var NotificationManagerBase = /*#__PURE__*/function () {
     return this._isActual;
   };
   _proto.createErrorDetailsProgressBox = function createErrorDetailsProgressBox($container, item, errorText) {
-    var detailsItem = this._createDetailsItem($container, item);
+    const detailsItem = this._createDetailsItem($container, item);
     this.renderError(detailsItem.$wrapper, errorText);
   };
   _proto.renderError = function renderError($container, errorText) {
@@ -61,7 +63,7 @@ var NotificationManagerBase = /*#__PURE__*/function () {
     return this._actionProgressStatus === ACTION_PROGRESS_STATUS.default;
   };
   _proto._createDetailsItem = function _createDetailsItem($container, item) {
-    var $detailsItem = (0, _renderer.default)('<div>').appendTo($container);
+    const $detailsItem = (0, _renderer.default)('<div>').appendTo($container);
     return this._createProgressBox($detailsItem, {
       commonText: item.commonText,
       imageUrl: item.imageUrl
@@ -72,8 +74,8 @@ var NotificationManagerBase = /*#__PURE__*/function () {
     if (options.imageUrl) {
       (0, _icon.getImageContainer)(options.imageUrl).addClass(FILE_MANAGER_PROGRESS_BOX_IMAGE_CLASS).appendTo($container);
     }
-    var $wrapper = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS).appendTo($container);
-    var $commonText = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS).text(options.commonText).appendTo($wrapper);
+    const $wrapper = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS).appendTo($container);
+    const $commonText = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS).text(options.commonText).appendTo($wrapper);
     return {
       $commonText,
       $element: $container,
@@ -82,7 +84,7 @@ var NotificationManagerBase = /*#__PURE__*/function () {
   };
   return NotificationManagerBase;
 }();
-var NotificationManagerStub = /*#__PURE__*/function (_NotificationManagerB) {
+let NotificationManagerStub = /*#__PURE__*/function (_NotificationManagerB) {
   _inheritsLoose(NotificationManagerStub, _NotificationManagerB);
   function NotificationManagerStub() {
     return _NotificationManagerB.apply(this, arguments) || this;
@@ -122,21 +124,21 @@ var NotificationManagerStub = /*#__PURE__*/function (_NotificationManagerB) {
   };
   _createClass(NotificationManagerStub, [{
     key: "_operationInProgressCount",
-    get: function get() {
+    get: function () {
       return 0;
     },
-    set: function set(value) {}
+    set: function (value) {}
   }, {
     key: "_failedOperationCount",
-    get: function get() {
+    get: function () {
       return 0;
     },
-    set: function set(value) {}
+    set: function (value) {}
   }]);
   return NotificationManagerStub;
 }(NotificationManagerBase);
 exports.NotificationManagerStub = NotificationManagerStub;
-var NotificationManager = /*#__PURE__*/function (_NotificationManagerB2) {
+let NotificationManager = /*#__PURE__*/function (_NotificationManagerB2) {
   _inheritsLoose(NotificationManager, _NotificationManagerB2);
   function NotificationManager(options) {
     var _this;
@@ -148,7 +150,7 @@ var NotificationManager = /*#__PURE__*/function (_NotificationManagerB2) {
   var _proto3 = NotificationManager.prototype;
   _proto3.addOperation = function addOperation(processingMessage, allowCancel, allowProgressAutoUpdate) {
     this._operationInProgressCount++;
-    var operationInfo = this._progressPanel.addOperation(processingMessage, allowCancel, allowProgressAutoUpdate);
+    const operationInfo = this._progressPanel.addOperation(processingMessage, allowCancel, allowProgressAutoUpdate);
     operationInfo[MANAGER_ID_NAME] = this._id;
     this._updateActionProgress(processingMessage, ACTION_PROGRESS_STATUS.progress);
     return operationInfo;
@@ -187,14 +189,15 @@ var NotificationManager = /*#__PURE__*/function (_NotificationManagerB2) {
     return true;
   };
   _proto3.ensureProgressPanelCreated = function ensureProgressPanelCreated(container, options) {
-    var _this2 = this;
     if (!this._progressPanel) {
-      var $progressPanelElement = (0, _renderer.default)('<div>').appendTo(container);
-      var ProgressPanelClass = this._getProgressPanelComponent();
+      const $progressPanelElement = (0, _renderer.default)('<div>').appendTo(container);
+      const ProgressPanelClass = this._getProgressPanelComponent();
       this._progressPanel = new ProgressPanelClass($progressPanelElement, (0, _extend.extend)({}, options, {
-        onOperationClosed: function onOperationClosed(_ref2) {
-          var info = _ref2.info;
-          return _this2._onProgressPanelOperationClosed(info);
+        onOperationClosed: _ref2 => {
+          let {
+            info
+          } = _ref2;
+          return this._onProgressPanelOperationClosed(info);
         }
       }));
     } else {
@@ -220,12 +223,12 @@ var NotificationManager = /*#__PURE__*/function (_NotificationManagerB2) {
   };
   _proto3.updateActionProgressStatus = function updateActionProgressStatus(operationInfo) {
     if (operationInfo) {
-      var status = this._failedOperationCount === 0 ? ACTION_PROGRESS_STATUS.success : ACTION_PROGRESS_STATUS.error;
+      const status = this._failedOperationCount === 0 ? ACTION_PROGRESS_STATUS.success : ACTION_PROGRESS_STATUS.error;
       this._updateActionProgress('', status);
     }
   };
   _proto3._notifyError = function _notifyError(errorInfo) {
-    var status = this.hasNoOperations() ? ACTION_PROGRESS_STATUS.default : ACTION_PROGRESS_STATUS.error;
+    const status = this.hasNoOperations() ? ACTION_PROGRESS_STATUS.default : ACTION_PROGRESS_STATUS.error;
     this._updateActionProgress(errorInfo.commonErrorText, status);
   };
   _proto3._updateActionProgress = function _updateActionProgress(message, status) {
@@ -237,18 +240,18 @@ var NotificationManager = /*#__PURE__*/function (_NotificationManagerB2) {
   };
   _createClass(NotificationManager, [{
     key: "_operationInProgressCount",
-    get: function get() {
+    get: function () {
       return this._operationInProgressCountInternal;
     },
-    set: function set(value) {
+    set: function (value) {
       this._operationInProgressCountInternal = value;
     }
   }, {
     key: "_failedOperationCount",
-    get: function get() {
+    get: function () {
       return this._failedOperationCountInternal;
     },
-    set: function set(value) {
+    set: function (value) {
       this._failedOperationCountInternal = value;
     }
   }]);

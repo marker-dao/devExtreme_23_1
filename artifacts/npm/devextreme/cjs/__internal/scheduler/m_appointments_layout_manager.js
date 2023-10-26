@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/m_appointments_layout_manager.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,7 +23,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var AppointmentLayoutManager = /*#__PURE__*/function () {
+let AppointmentLayoutManager = /*#__PURE__*/function () {
   function AppointmentLayoutManager(instance) {
     this.instance = instance;
     this.appointmentViewModel = new _m_view_model_generator.AppointmentViewModelGenerator();
@@ -41,19 +41,24 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
     return undefined;
   };
   _proto._getRenderingStrategyOptions = function _getRenderingStrategyOptions() {
-    var workspace = this.instance.getWorkSpace();
-    var _this$instance$getWor = this.instance.getWorkSpace(),
-      virtualScrollingDispatcher = _this$instance$getWor.virtualScrollingDispatcher;
-    var cellCountInsideLeftVirtualCell = virtualScrollingDispatcher.cellCountInsideLeftVirtualCell,
-      cellCountInsideTopVirtualRow = virtualScrollingDispatcher.cellCountInsideTopVirtualRow;
-    var groupCount = (0, _m_utils.getGroupCount)(this.instance.option('loadedResources'));
-    var DOMMetaData = workspace.getDOMElementsMetaData();
-    var allDayHeight = (0, _m_position_helper.getAllDayHeight)(workspace.option('showAllDayPanel'), workspace._isVerticalGroupedWorkSpace(), DOMMetaData);
-    var rowCount = workspace._getRowCount();
-    var positionHelper = workspace.positionHelper,
-      viewDataProvider = workspace.viewDataProvider;
-    var visibleDayDuration = viewDataProvider.getVisibleDayDuration(workspace.option('startDayHour'), workspace.option('endDayHour'), workspace.option('hoursInterval'));
-    var cellDuration = (0, _base.getCellDuration)(workspace.type, workspace.option('startDayHour'), workspace.option('endDayHour'), workspace.option('hoursInterval'));
+    const workspace = this.instance.getWorkSpace();
+    const {
+      virtualScrollingDispatcher
+    } = this.instance.getWorkSpace();
+    const {
+      cellCountInsideLeftVirtualCell,
+      cellCountInsideTopVirtualRow
+    } = virtualScrollingDispatcher;
+    const groupCount = (0, _m_utils.getGroupCount)(this.instance.option('loadedResources'));
+    const DOMMetaData = workspace.getDOMElementsMetaData();
+    const allDayHeight = (0, _m_position_helper.getAllDayHeight)(workspace.option('showAllDayPanel'), workspace._isVerticalGroupedWorkSpace(), DOMMetaData);
+    const rowCount = workspace._getRowCount();
+    const {
+      positionHelper,
+      viewDataProvider
+    } = workspace;
+    const visibleDayDuration = viewDataProvider.getVisibleDayDuration(workspace.option('startDayHour'), workspace.option('endDayHour'), workspace.option('hoursInterval'));
+    const cellDuration = (0, _base.getCellDuration)(workspace.type, workspace.option('startDayHour'), workspace.option('endDayHour'), workspace.option('hoursInterval'));
     return {
       resources: this.instance.option('resources'),
       loadedResources: this.instance.option('loadedResources'),
@@ -114,19 +119,20 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
     };
   };
   _proto.createAppointmentsMap = function createAppointmentsMap(items) {
-    var renderingStrategyOptions = this._getRenderingStrategyOptions();
-    var _this$appointmentView = this.appointmentViewModel.generate(items, renderingStrategyOptions),
-      viewModel = _this$appointmentView.viewModel,
-      positionMap = _this$appointmentView.positionMap;
+    const renderingStrategyOptions = this._getRenderingStrategyOptions();
+    const {
+      viewModel,
+      positionMap
+    } = this.appointmentViewModel.generate(items, renderingStrategyOptions);
     this._positionMap = positionMap; // TODO get rid of this after remove old render
     return viewModel;
   };
   _proto._isDataChanged = function _isDataChanged(data) {
-    var appointmentDataProvider = this.instance.appointmentDataProvider;
-    var updatedData = appointmentDataProvider.getUpdatedAppointment();
-    return updatedData === data || appointmentDataProvider.getUpdatedAppointmentKeys().some(function (item) {
-      return data[item.key] === item.value;
-    });
+    const {
+      appointmentDataProvider
+    } = this.instance;
+    const updatedData = appointmentDataProvider.getUpdatedAppointment();
+    return updatedData === data || appointmentDataProvider.getUpdatedAppointmentKeys().some(item => data[item.key] === item.value);
   };
   _proto._isAppointmentShouldAppear = function _isAppointmentShouldAppear(currentAppointment, sourceAppointment) {
     return currentAppointment.needRepaint && sourceAppointment.needRemove;
@@ -135,14 +141,14 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
     if (settings.length !== sourceSetting.length) {
       return true;
     }
-    var createSettingsToCompare = function createSettingsToCompare(settings, index) {
-      var currentSetting = settings[index];
-      var leftVirtualCellCount = currentSetting.leftVirtualCellCount || 0;
-      var topVirtualCellCount = currentSetting.topVirtualCellCount || 0;
-      var columnIndex = currentSetting.columnIndex + leftVirtualCellCount;
-      var rowIndex = currentSetting.rowIndex + topVirtualCellCount;
-      var hMax = currentSetting.reduced ? currentSetting.hMax : undefined;
-      var vMax = currentSetting.reduced ? currentSetting.vMax : undefined;
+    const createSettingsToCompare = (settings, index) => {
+      const currentSetting = settings[index];
+      const leftVirtualCellCount = currentSetting.leftVirtualCellCount || 0;
+      const topVirtualCellCount = currentSetting.topVirtualCellCount || 0;
+      const columnIndex = currentSetting.columnIndex + leftVirtualCellCount;
+      const rowIndex = currentSetting.rowIndex + topVirtualCellCount;
+      const hMax = currentSetting.reduced ? currentSetting.hMax : undefined;
+      const vMax = currentSetting.reduced ? currentSetting.vMax : undefined;
       return _extends(_extends({}, currentSetting), {
         columnIndex,
         rowIndex,
@@ -156,9 +162,9 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
         info: {}
       });
     };
-    for (var i = 0; i < settings.length; i++) {
-      var newSettings = createSettingsToCompare(settings, i);
-      var oldSettings = createSettingsToCompare(sourceSetting, i);
+    for (let i = 0; i < settings.length; i++) {
+      const newSettings = createSettingsToCompare(settings, i);
+      const oldSettings = createSettingsToCompare(sourceSetting, i);
       if (oldSettings) {
         // exclude sortedIndex property for comparison in commonUtils.equalByValue
         oldSettings.sortedIndex = newSettings.sortedIndex;
@@ -170,8 +176,8 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
     return false;
   };
   _proto._getAssociatedSourceAppointment = function _getAssociatedSourceAppointment(currentAppointment, sourceAppointments) {
-    for (var i = 0; i < sourceAppointments.length; i++) {
-      var item = sourceAppointments[i];
+    for (let i = 0; i < sourceAppointments.length; i++) {
+      const item = sourceAppointments[i];
       if (item.itemData === currentAppointment.itemData) {
         return item;
       }
@@ -179,10 +185,10 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
     return null;
   };
   _proto._getDeletedAppointments = function _getDeletedAppointments(currentAppointments, sourceAppointments) {
-    var result = [];
-    for (var i = 0; i < sourceAppointments.length; i++) {
-      var sourceAppointment = sourceAppointments[i];
-      var currentAppointment = this._getAssociatedSourceAppointment(sourceAppointment, currentAppointments);
+    const result = [];
+    for (let i = 0; i < sourceAppointments.length; i++) {
+      const sourceAppointment = sourceAppointments[i];
+      const currentAppointment = this._getAssociatedSourceAppointment(sourceAppointment, currentAppointments);
       if (!currentAppointment) {
         sourceAppointment.needRemove = true;
         result.push(sourceAppointment);
@@ -191,32 +197,31 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
     return result;
   };
   _proto.getRepaintedAppointments = function getRepaintedAppointments(currentAppointments, sourceAppointments) {
-    var _this = this;
     if (sourceAppointments.length === 0 || this.appointmentRenderingStrategyName === 'agenda') {
       return currentAppointments;
     }
-    currentAppointments.forEach(function (appointment) {
-      var sourceAppointment = _this._getAssociatedSourceAppointment(appointment, sourceAppointments);
+    currentAppointments.forEach(appointment => {
+      const sourceAppointment = this._getAssociatedSourceAppointment(appointment, sourceAppointments);
       if (sourceAppointment) {
-        var isDataChanged = _this._isDataChanged(appointment.itemData);
-        var isSettingChanged = _this._isSettingChanged(appointment.settings, sourceAppointment.settings);
-        var isAppointmentShouldAppear = _this._isAppointmentShouldAppear(appointment, sourceAppointment);
+        const isDataChanged = this._isDataChanged(appointment.itemData);
+        const isSettingChanged = this._isSettingChanged(appointment.settings, sourceAppointment.settings);
+        const isAppointmentShouldAppear = this._isAppointmentShouldAppear(appointment, sourceAppointment);
         appointment.needRepaint = isDataChanged || isSettingChanged || isAppointmentShouldAppear;
       }
     });
     return currentAppointments.concat(this._getDeletedAppointments(currentAppointments, sourceAppointments));
   };
   _proto.getRenderingStrategyInstance = function getRenderingStrategyInstance() {
-    var renderingStrategy = this.appointmentViewModel.getRenderingStrategy();
+    const renderingStrategy = this.appointmentViewModel.getRenderingStrategy();
     if (!renderingStrategy) {
-      var options = this._getRenderingStrategyOptions();
+      const options = this._getRenderingStrategyOptions();
       this.appointmentViewModel.initRenderingStrategy(options);
     }
     return this.appointmentViewModel.getRenderingStrategy();
   };
   _createClass(AppointmentLayoutManager, [{
     key: "appointmentRenderingStrategyName",
-    get: function get() {
+    get: function () {
       return (0, _utils.getAppointmentRenderingStrategyName)(this.instance.currentViewType);
     }
   }]);

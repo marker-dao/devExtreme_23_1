@@ -22,17 +22,17 @@ var _generic7 = _interopRequireDefault(require("./core/themes/generic.greenmist"
 var _generic8 = _interopRequireDefault(require("./core/themes/generic.softblue"));
 var _material = _interopRequireDefault(require("./core/themes/material"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var themes = {};
-var themesMapping = {};
-var themesSchemeMapping = {};
-var _extend = _extend2.extend;
-var _each = _iterator.each;
-var currentThemeName = null;
-var defaultTheme;
-var nextCacheUid = 0;
-var widgetsCache = {};
+const themes = {};
+const themesMapping = {};
+const themesSchemeMapping = {};
+const _extend = _extend2.extend;
+const _each = _iterator.each;
+let currentThemeName = null;
+let defaultTheme;
+let nextCacheUid = 0;
+const widgetsCache = {};
 function getTheme(themeName) {
-  var name = (0, _utils.normalizeEnum)(themeName);
+  const name = (0, _utils.normalizeEnum)(themeName);
   return themes[name] || themes[themesMapping[name] || currentTheme()];
 }
 function findThemeNameByName(name, scheme) {
@@ -45,24 +45,24 @@ function currentTheme(themeName, colorScheme) {
   if (!arguments.length) {
     return currentThemeName || findThemeNameByName((0, _themes.current)()) || defaultTheme;
   }
-  var scheme = (0, _utils.normalizeEnum)(colorScheme);
+  const scheme = (0, _utils.normalizeEnum)(colorScheme);
   currentThemeName = (themeName && themeName.platform ? findThemeNameByPlatform((0, _utils.normalizeEnum)(themeName.platform), themeName.version, scheme) : findThemeNameByName((0, _utils.normalizeEnum)(themeName), scheme)) || currentThemeName;
   // For chaining only
   return this;
 }
 function getThemeInfo(themeName, splitter) {
-  var k = themeName.indexOf(splitter);
+  const k = themeName.indexOf(splitter);
   return k > 0 ? {
     name: themeName.substring(0, k),
     scheme: themeName.substring(k + 1)
   } : null;
 }
 function registerThemeName(themeName, targetThemeName) {
-  var themeInfo = getThemeInfo(themeName, '.') || {
+  const themeInfo = getThemeInfo(themeName, '.') || {
     name: themeName
   };
-  var name = themeInfo.name;
-  var scheme = themeInfo.scheme;
+  const name = themeInfo.name;
+  const scheme = themeInfo.scheme;
   if (scheme) {
     themesMapping[name] = themesMapping[name] || targetThemeName;
     themesMapping[name + '.' + scheme] = targetThemeName;
@@ -71,7 +71,7 @@ function registerThemeName(themeName, targetThemeName) {
   }
 }
 function registerTheme(theme, baseThemeName) {
-  var themeName = (0, _utils.normalizeEnum)(theme && theme.name);
+  const themeName = (0, _utils.normalizeEnum)(theme && theme.name);
   if (themeName) {
     theme.isDefault && (defaultTheme = themeName);
     registerThemeName(themeName, themeName);
@@ -82,13 +82,13 @@ function registerThemeSchemeAlias(from, to) {
   themesSchemeMapping[from] = to;
 }
 function mergeScalar(target, field, source, sourceValue) {
-  var _value = source ? source[field] : sourceValue;
+  const _value = source ? source[field] : sourceValue;
   if (_value !== undefined && target[field] === undefined) {
     target[field] = _value;
   }
 }
 function mergeObject(target, field, source, sourceValue) {
-  var _value = source ? source[field] : sourceValue;
+  const _value = source ? source[field] : sourceValue;
   if (_value !== undefined) {
     target[field] = _extend(true, {}, _value, target[field]);
   }
@@ -221,8 +221,8 @@ function patchTheme(theme) {
   return theme;
 }
 function patchAxes(theme) {
-  var commonAxisSettings = theme['chart:common:axis'];
-  var colorFieldName = 'color';
+  const commonAxisSettings = theme['chart:common:axis'];
+  const colorFieldName = 'color';
   _each([commonAxisSettings.grid, commonAxisSettings.minorGrid], function (_, obj) {
     mergeScalar(obj, colorFieldName, null, theme.gridColor);
   });
@@ -236,7 +236,7 @@ function patchAxes(theme) {
   mergeScalar(theme.rangeSelector.scale.label.font, colorFieldName, null, theme.axisColor);
 }
 function patchMapLayers(theme) {
-  var map = theme.map;
+  const map = theme.map;
   _each(['area', 'line', 'marker'], function (_, section) {
     mergeObject(map, 'layer:' + section, null, map.layer);
   });
@@ -245,7 +245,7 @@ function patchMapLayers(theme) {
   });
 }
 function addCacheItem(target) {
-  var cacheUid = ++nextCacheUid;
+  const cacheUid = ++nextCacheUid;
   target._cache = cacheUid;
   widgetsCache[cacheUid] = target;
 }
@@ -262,7 +262,7 @@ function refreshTheme() {
 
 // register themes
 if ((0, _type.isEmptyObject)(themes) && (0, _type.isEmptyObject)(themesMapping) && !defaultTheme) {
-  [].concat(_generic.default, _generic2.default, _generic3.default, _generic4.default, _generic5.default, _generic6.default, _generic7.default, _generic8.default, _material.default).forEach(function (t) {
+  [].concat(_generic.default, _generic2.default, _generic3.default, _generic4.default, _generic5.default, _generic6.default, _generic7.default, _generic8.default, _material.default).forEach(t => {
     registerTheme(t.theme, t.baseThemeName);
   });
 }

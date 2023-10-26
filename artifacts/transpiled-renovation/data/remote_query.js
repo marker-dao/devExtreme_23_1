@@ -8,24 +8,24 @@ var _type = require("../core/utils/type");
 var _deferred = require("../core/utils/deferred");
 var _array_query = _interopRequireDefault(require("./array_query"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var remoteQueryImpl = function remoteQueryImpl(url, queryOptions, tasks) {
+const remoteQueryImpl = function (url, queryOptions, tasks) {
   tasks = tasks || [];
   queryOptions = queryOptions || {};
-  var createTask = function createTask(name, args) {
+  const createTask = function (name, args) {
     return {
       name: name,
       args: args
     };
   };
-  var exec = function exec(executorTask) {
-    var d = new _deferred.Deferred();
-    var _adapterFactory;
-    var _adapter;
-    var _taskQueue;
-    var _currentTask;
-    var _mergedSortArgs;
-    var rejectWithNotify = function rejectWithNotify(error) {
-      var handler = queryOptions.errorHandler;
+  const exec = function (executorTask) {
+    const d = new _deferred.Deferred();
+    let _adapterFactory;
+    let _adapter;
+    let _taskQueue;
+    let _currentTask;
+    let _mergedSortArgs;
+    const rejectWithNotify = function (error) {
+      const handler = queryOptions.errorHandler;
       if (handler) {
         handler(error);
       }
@@ -47,8 +47,8 @@ var remoteQueryImpl = function remoteQueryImpl(url, queryOptions, tasks) {
       return false;
     }
     function unmergeSortTasks() {
-      var head = _taskQueue[0];
-      var unmergedTasks = [];
+      const head = _taskQueue[0];
+      const unmergedTasks = [];
       if (head && head.name === 'multiSort') {
         _taskQueue.shift();
         (0, _iterator.each)(head.args[0], function () {
@@ -64,7 +64,7 @@ var remoteQueryImpl = function remoteQueryImpl(url, queryOptions, tasks) {
       }
       _adapter = _adapterFactory(queryOptions);
       _taskQueue = [].concat(tasks).concat(executorTask);
-      var optimize = _adapter.optimize;
+      const optimize = _adapter.optimize;
       if (optimize) optimize(_taskQueue);
       while (_taskQueue.length) {
         _currentTask = _taskQueue[0];
@@ -87,7 +87,7 @@ var remoteQueryImpl = function remoteQueryImpl(url, queryOptions, tasks) {
         if (!_taskQueue.length) {
           d.resolve(result, extra);
         } else {
-          var clientChain = (0, _array_query.default)(result, {
+          let clientChain = (0, _array_query.default)(result, {
             errorHandler: queryOptions.errorHandler
           });
           (0, _iterator.each)(_taskQueue, function () {
@@ -101,15 +101,15 @@ var remoteQueryImpl = function remoteQueryImpl(url, queryOptions, tasks) {
     }
     return d.promise();
   };
-  var query = {};
+  const query = {};
   (0, _iterator.each)(['sortBy', 'thenBy', 'filter', 'slice', 'select', 'groupBy'], function () {
-    var name = String(this);
+    const name = String(this);
     query[name] = function () {
       return remoteQueryImpl(url, queryOptions, tasks.concat(createTask(name, arguments)));
     };
   });
   (0, _iterator.each)(['count', 'min', 'max', 'sum', 'avg', 'aggregate', 'enumerate'], function () {
-    var name = String(this);
+    const name = String(this);
     query[name] = function () {
       return exec.call(this, createTask(name, arguments));
     };

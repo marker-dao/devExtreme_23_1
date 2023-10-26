@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/viz/m_chart.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -416,7 +416,7 @@ function updateMarkersInfo(points, overloadedSeries) {
           isContinuousSeries = isContinuousSeries && j !== i + 1;
           break;
         } else {
-          var distance = _isDefined(nextX) && _isDefined(nextY) && Math.sqrt(Math.pow(curPoint.x - nextX, 2) + Math.pow(curPoint.y - nextY, 2));
+          var distance = _isDefined(nextX) && _isDefined(nextY) && Math.sqrt((curPoint.x - nextX) ** 2 + (curPoint.y - nextY) ** 2);
           if (distance && distance < size) {
             overloadedSeries[curPoint.seriesIndex][nextPoint.seriesIndex] += 1;
             overloadedSeries[curPoint.seriesIndex].total += 1;
@@ -716,7 +716,7 @@ var dxChart = AdvancedChart.inherit({
     }
     var viewportDistance = businessRange.axisType === DISCRETE ? getCategoriesInfo(businessRange.categories, min, max).categories.length : Math.abs(max - min);
     var precision = getPrecision(viewportDistance);
-    precision = precision > 1 ? Math.pow(10, precision - 2) : 1;
+    precision = precision > 1 ? 10 ** (precision - 2) : 1;
     var zoomChanged = Math.round((this._zoomLength - viewportDistance) * precision) / precision !== 0;
     this._zoomLength = viewportDistance;
     return zoomChanged;

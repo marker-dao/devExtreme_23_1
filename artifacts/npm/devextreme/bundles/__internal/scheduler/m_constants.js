@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/m_constants.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,15 +12,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.VIEWS = exports.LIST_ITEM_DATA_KEY = exports.LIST_ITEM_CLASS = exports.HORIZONTAL_GROUP_ORIENTATION = exports.APPOINTMENT_SETTINGS_KEY = void 0;
-var LIST_ITEM_DATA_KEY = 'dxListItemData';
+const LIST_ITEM_DATA_KEY = 'dxListItemData';
 exports.LIST_ITEM_DATA_KEY = LIST_ITEM_DATA_KEY;
-var LIST_ITEM_CLASS = 'dx-list-item';
+const LIST_ITEM_CLASS = 'dx-list-item';
 exports.LIST_ITEM_CLASS = LIST_ITEM_CLASS;
-var APPOINTMENT_SETTINGS_KEY = 'dxAppointmentSettings';
+const APPOINTMENT_SETTINGS_KEY = 'dxAppointmentSettings';
 exports.APPOINTMENT_SETTINGS_KEY = APPOINTMENT_SETTINGS_KEY;
-var HORIZONTAL_GROUP_ORIENTATION = 'horizontal';
+const HORIZONTAL_GROUP_ORIENTATION = 'horizontal';
 exports.HORIZONTAL_GROUP_ORIENTATION = HORIZONTAL_GROUP_ORIENTATION;
-var VIEWS = {
+const VIEWS = {
   DAY: 'day',
   WEEK: 'week',
   WORK_WEEK: 'workWeek',

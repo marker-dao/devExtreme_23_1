@@ -9,9 +9,8 @@ var _utils = require("./utils");
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
 var _appointments_context = require("../../appointments_context");
 var _utils2 = require("../utils");
-var _excluded = ["groups", "overflowIndicatorTemplate", "viewModel"];
+const _excluded = ["groups", "overflowIndicatorTemplate", "viewModel"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -21,12 +20,16 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var classes = _ref.classes,
-    data = _ref.data,
-    OverflowIndicatorTemplate = _ref.props.overflowIndicatorTemplate,
-    styles = _ref.styles,
-    text = _ref.text;
+const viewFunction = _ref => {
+  let {
+    classes,
+    data,
+    props: {
+      overflowIndicatorTemplate: OverflowIndicatorTemplate
+    },
+    styles,
+    text
+  } = _ref;
   return (0, _inferno.createComponentVNode)(2, _button.Button, {
     "style": (0, _inferno2.normalizeStyles)(styles),
     "className": classes,
@@ -38,14 +41,10 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var OverflowIndicatorProps = {};
+const OverflowIndicatorProps = {};
 exports.OverflowIndicatorProps = OverflowIndicatorProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var OverflowIndicator = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let OverflowIndicator = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(OverflowIndicator, _InfernoComponent);
   function OverflowIndicator(props) {
     var _this;
@@ -65,20 +64,18 @@ var OverflowIndicator = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.groups, this.props.viewModel, this.appointmentsContextValue]);
   };
   _proto.updateStylesEffect = function updateStylesEffect() {
-    var _this2 = this;
-    var _this$props = this.props,
-      groups = _this$props.groups,
-      viewModel = _this$props.viewModel;
-    (0, _utils.getIndicatorColor)(this.appointmentsContextValue, viewModel, groups).then(function (color) {
-      _this2.setState(function (__state_argument) {
-        return {
-          color: color
-        };
-      });
+    const {
+      groups,
+      viewModel
+    } = this.props;
+    (0, _utils.getIndicatorColor)(this.appointmentsContextValue, viewModel, groups).then(color => {
+      this.setState(__state_argument => ({
+        color: color
+      }));
     });
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         overflowIndicatorTemplate: getTemplate(props.overflowIndicatorTemplate)
@@ -95,7 +92,7 @@ var OverflowIndicator = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(OverflowIndicator, [{
     key: "appointmentsContextValue",
-    get: function get() {
+    get: function () {
       if (this.context[_appointments_context.AppointmentsContext.id]) {
         return this.context[_appointments_context.AppointmentsContext.id];
       }
@@ -103,7 +100,7 @@ var OverflowIndicator = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "data",
-    get: function get() {
+    get: function () {
       return {
         appointmentCount: this.props.viewModel.items.settings.length,
         isCompact: this.props.viewModel.isCompact
@@ -111,28 +108,32 @@ var OverflowIndicator = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "text",
-    get: function get() {
-      var isCompact = this.props.viewModel.isCompact;
-      var appointmentCount = this.data.appointmentCount;
+    get: function () {
+      const {
+        isCompact
+      } = this.props.viewModel;
+      const {
+        appointmentCount
+      } = this.data;
       if (isCompact) {
         return "".concat(appointmentCount);
       }
-      var formatter = _message.default.getFormatter('dxScheduler-moreAppointments');
+      const formatter = _message.default.getFormatter('dxScheduler-moreAppointments');
       return formatter(appointmentCount);
     }
   }, {
     key: "appointmentStyles",
-    get: function get() {
+    get: function () {
       return (0, _utils.getOverflowIndicatorStyles)(this.props.viewModel);
     }
   }, {
     key: "styles",
-    get: function get() {
+    get: function () {
       return (0, _utils2.mergeStylesWithColor)(this.state.color, this.appointmentStyles);
     }
   }, {
     key: "classes",
-    get: function get() {
+    get: function () {
       return (0, _combine_classes.combineClasses)({
         'dx-scheduler-appointment-collector': true,
         'dx-scheduler-appointment-collector-compact': this.data.isCompact
@@ -140,12 +141,9 @@ var OverflowIndicator = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props2 = this.props,
-        groups = _this$props2.groups,
-        overflowIndicatorTemplate = _this$props2.overflowIndicatorTemplate,
-        viewModel = _this$props2.viewModel,
-        restProps = _objectWithoutProperties(_this$props2, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

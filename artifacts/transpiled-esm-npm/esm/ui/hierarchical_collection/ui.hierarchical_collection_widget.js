@@ -80,7 +80,15 @@ var HierarchicalCollectionWidget = CollectionWidget.inherit({
     })).append(iconContainer).append(textContainer);
   },
   _getIconContainer: function _getIconContainer(itemData) {
-    return itemData.icon ? getImageContainer(itemData.icon) : undefined;
+    if (!itemData.icon) {
+      return undefined;
+    }
+    var $imageContainer = getImageContainer(itemData.icon);
+    if ($imageContainer.is('img')) {
+      var _itemData$text;
+      $imageContainer.attr('alt', (_itemData$text = itemData.text) !== null && _itemData$text !== void 0 ? _itemData$text : "".concat(this.NAME, " item icon"));
+    }
+    return $imageContainer;
   },
   _getTextContainer: function _getTextContainer(itemData) {
     return $('<span>').text(itemData.text);

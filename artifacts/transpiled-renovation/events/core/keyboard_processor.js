@@ -6,11 +6,11 @@ var _events_engine = _interopRequireDefault(require("../../events/core/events_en
 var _class = _interopRequireDefault(require("../../core/class"));
 var _index = require("../../events/utils/index");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var COMPOSITION_START_EVENT = 'compositionstart';
-var COMPOSITION_END_EVENT = 'compositionend';
-var KEYDOWN_EVENT = 'keydown';
-var NAMESPACE = 'KeyboardProcessor';
-var createKeyDownOptions = function createKeyDownOptions(e) {
+const COMPOSITION_START_EVENT = 'compositionstart';
+const COMPOSITION_END_EVENT = 'compositionend';
+const KEYDOWN_EVENT = 'keydown';
+const NAMESPACE = 'KeyboardProcessor';
+const createKeyDownOptions = e => {
   return {
     keyName: (0, _index.normalizeKeyName)(e),
     key: e.key,
@@ -24,12 +24,11 @@ var createKeyDownOptions = function createKeyDownOptions(e) {
     originalEvent: e
   };
 };
-var KeyboardProcessor = _class.default.inherit({
+const KeyboardProcessor = _class.default.inherit({
   _keydown: (0, _index.addNamespace)(KEYDOWN_EVENT, NAMESPACE),
   _compositionStart: (0, _index.addNamespace)(COMPOSITION_START_EVENT, NAMESPACE),
   _compositionEnd: (0, _index.addNamespace)(COMPOSITION_END_EVENT, NAMESPACE),
-  ctor: function ctor(options) {
-    var _this = this;
+  ctor: function (options) {
     options = options || {};
     if (options.element) {
       this._element = (0, _renderer.default)(options.element);
@@ -39,13 +38,13 @@ var KeyboardProcessor = _class.default.inherit({
     }
     this._handler = options.handler;
     if (this._element) {
-      this._processFunction = function (e) {
-        var focusTargets = (0, _renderer.default)(_this._focusTarget).toArray();
-        var isNotFocusTarget = _this._focusTarget && _this._focusTarget !== e.target && !focusTargets.includes(e.target);
-        var shouldSkipProcessing = _this._isComposingJustFinished && e.which === 229 || _this._isComposing || isNotFocusTarget;
-        _this._isComposingJustFinished = false;
+      this._processFunction = e => {
+        const focusTargets = (0, _renderer.default)(this._focusTarget).toArray();
+        const isNotFocusTarget = this._focusTarget && this._focusTarget !== e.target && !focusTargets.includes(e.target);
+        const shouldSkipProcessing = this._isComposingJustFinished && e.which === 229 || this._isComposing || isNotFocusTarget;
+        this._isComposingJustFinished = false;
         if (!shouldSkipProcessing) {
-          _this.process(e);
+          this.process(e);
         }
       };
       this._toggleProcessingWithContext = this.toggleProcessing.bind(this);
@@ -54,7 +53,7 @@ var KeyboardProcessor = _class.default.inherit({
       _events_engine.default.on(this._element, this._compositionEnd, this._toggleProcessingWithContext);
     }
   },
-  dispose: function dispose() {
+  dispose: function () {
     if (this._element) {
       _events_engine.default.off(this._element, this._keydown, this._processFunction);
       _events_engine.default.off(this._element, this._compositionStart, this._toggleProcessingWithContext);
@@ -63,11 +62,13 @@ var KeyboardProcessor = _class.default.inherit({
     this._element = undefined;
     this._handler = undefined;
   },
-  process: function process(e) {
+  process: function (e) {
     this._handler(createKeyDownOptions(e));
   },
-  toggleProcessing: function toggleProcessing(_ref) {
-    var type = _ref.type;
+  toggleProcessing: function (_ref) {
+    let {
+      type
+    } = _ref;
     this._isComposing = type === COMPOSITION_START_EVENT;
     this._isComposingJustFinished = !this._isComposing;
   }

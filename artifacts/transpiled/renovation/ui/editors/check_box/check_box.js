@@ -11,9 +11,8 @@ var _combine_classes = require("../../../utils/combine_classes");
 var _check_box_icon = require("./check_box_icon");
 var _widget = require("../../common/widget");
 var _utils = require("../../../../core/options/utils");
-var _excluded = ["accessKey", "activeStateEnabled", "aria", "className", "defaultValue", "disabled", "enableThreeStateBehavior", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "iconSize", "inputAttr", "isDirty", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "saveValueChangeEvent", "tabIndex", "text", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
+const _excluded = ["accessKey", "activeStateEnabled", "aria", "className", "defaultValue", "disabled", "enableThreeStateBehavior", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "iconSize", "inputAttr", "isDirty", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "saveValueChangeEvent", "tabIndex", "text", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -23,12 +22,14 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var getCssClasses = function getCssClasses(model) {
-  var text = model.text,
-    value = model.value;
-  var checked = value;
-  var indeterminate = checked === null;
-  var classesMap = {
+const getCssClasses = model => {
+  const {
+    text,
+    value
+  } = model;
+  const checked = value;
+  const indeterminate = checked === null;
+  const classesMap = {
     'dx-checkbox': true,
     'dx-checkbox-checked': checked === true,
     'dx-checkbox-has-text': !!text,
@@ -36,38 +37,41 @@ var getCssClasses = function getCssClasses(model) {
   };
   return (0, _combine_classes.combineClasses)(classesMap);
 };
-var viewFunction = function viewFunction(viewModel) {
-  var aria = viewModel.aria,
-    classes = viewModel.cssClasses,
-    editorRef = viewModel.editorRef,
-    onKeyDown = viewModel.keyDown,
-    onClick = viewModel.onWidgetClick,
-    _viewModel$props = viewModel.props,
-    accessKey = _viewModel$props.accessKey,
-    activeStateEnabled = _viewModel$props.activeStateEnabled,
-    className = _viewModel$props.className,
-    disabled = _viewModel$props.disabled,
-    focusStateEnabled = _viewModel$props.focusStateEnabled,
-    height = _viewModel$props.height,
-    hint = _viewModel$props.hint,
-    hoverStateEnabled = _viewModel$props.hoverStateEnabled,
-    iconSize = _viewModel$props.iconSize,
-    isValid = _viewModel$props.isValid,
-    name = _viewModel$props.name,
-    onFocusIn = _viewModel$props.onFocusIn,
-    readOnly = _viewModel$props.readOnly,
-    rtlEnabled = _viewModel$props.rtlEnabled,
-    tabIndex = _viewModel$props.tabIndex,
-    text = _viewModel$props.text,
-    validationError = _viewModel$props.validationError,
-    validationErrors = _viewModel$props.validationErrors,
-    validationMessageMode = _viewModel$props.validationMessageMode,
-    validationMessagePosition = _viewModel$props.validationMessagePosition,
-    validationStatus = _viewModel$props.validationStatus,
-    value = _viewModel$props.value,
-    visible = _viewModel$props.visible,
-    width = _viewModel$props.width,
-    restAttributes = viewModel.restAttributes;
+const viewFunction = viewModel => {
+  const {
+    aria,
+    cssClasses: classes,
+    editorRef,
+    keyDown: onKeyDown,
+    onWidgetClick: onClick,
+    props: {
+      accessKey,
+      activeStateEnabled,
+      className,
+      disabled,
+      focusStateEnabled,
+      height,
+      hint,
+      hoverStateEnabled,
+      iconSize,
+      isValid,
+      name,
+      onFocusIn,
+      readOnly,
+      rtlEnabled,
+      tabIndex,
+      text,
+      validationError,
+      validationErrors,
+      validationMessageMode,
+      validationMessagePosition,
+      validationStatus,
+      value,
+      visible,
+      width
+    },
+    restAttributes
+  } = viewModel;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _editor.Editor, _extends({
     "aria": aria,
     "classes": classes,
@@ -106,16 +110,16 @@ var viewFunction = function viewFunction(viewModel) {
   }), null, editorRef));
 };
 exports.viewFunction = viewFunction;
-var CheckBoxProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_editor.EditorProps), Object.getOwnPropertyDescriptors(Object.defineProperties({
+const CheckBoxProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_editor.EditorProps), Object.getOwnPropertyDescriptors(Object.defineProperties({
   text: '',
   enableThreeStateBehavior: false,
   activeStateEnabled: true,
   hoverStateEnabled: true,
   defaultValue: false,
-  valueChange: function valueChange() {}
+  valueChange: () => {}
 }, {
   focusStateEnabled: {
-    get: function get() {
+    get: function () {
       return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
     },
     configurable: true,
@@ -123,156 +127,156 @@ var CheckBoxProps = Object.create(Object.prototype, _extends(Object.getOwnProper
   }
 }))));
 exports.CheckBoxProps = CheckBoxProps;
-var CheckBoxPropsType = Object.defineProperties({}, {
+const CheckBoxPropsType = Object.defineProperties({}, {
   text: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.text;
     },
     configurable: true,
     enumerable: true
   },
   enableThreeStateBehavior: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.enableThreeStateBehavior;
     },
     configurable: true,
     enumerable: true
   },
   activeStateEnabled: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.activeStateEnabled;
     },
     configurable: true,
     enumerable: true
   },
   hoverStateEnabled: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.hoverStateEnabled;
     },
     configurable: true,
     enumerable: true
   },
   focusStateEnabled: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.focusStateEnabled;
     },
     configurable: true,
     enumerable: true
   },
   defaultValue: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.defaultValue;
     },
     configurable: true,
     enumerable: true
   },
   valueChange: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.valueChange;
     },
     configurable: true,
     enumerable: true
   },
   readOnly: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.readOnly;
     },
     configurable: true,
     enumerable: true
   },
   name: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.name;
     },
     configurable: true,
     enumerable: true
   },
   validationError: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.validationError;
     },
     configurable: true,
     enumerable: true
   },
   validationErrors: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.validationErrors;
     },
     configurable: true,
     enumerable: true
   },
   validationMessageMode: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.validationMessageMode;
     },
     configurable: true,
     enumerable: true
   },
   validationMessagePosition: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.validationMessagePosition;
     },
     configurable: true,
     enumerable: true
   },
   validationStatus: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.validationStatus;
     },
     configurable: true,
     enumerable: true
   },
   isValid: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.isValid;
     },
     configurable: true,
     enumerable: true
   },
   isDirty: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.isDirty;
     },
     configurable: true,
     enumerable: true
   },
   inputAttr: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.inputAttr;
     },
     configurable: true,
     enumerable: true
   },
   className: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.className;
     },
     configurable: true,
     enumerable: true
   },
   disabled: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.disabled;
     },
     configurable: true,
     enumerable: true
   },
   tabIndex: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.tabIndex;
     },
     configurable: true,
     enumerable: true
   },
   visible: {
-    get: function get() {
+    get: function () {
       return CheckBoxProps.visible;
     },
     configurable: true,
     enumerable: true
   },
   aria: {
-    get: function get() {
+    get: function () {
       return _widget.WidgetProps.aria;
     },
     configurable: true,
@@ -280,7 +284,7 @@ var CheckBoxPropsType = Object.defineProperties({}, {
   }
 });
 exports.CheckBoxPropsType = CheckBoxPropsType;
-var CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
+let CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(CheckBox, _InfernoWrapperCompon);
   function CheckBox(props) {
     var _this;
@@ -300,18 +304,18 @@ var CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
     return [(0, _inferno2.createReRenderEffect)()];
   };
   _proto.onWidgetClick = function onWidgetClick(event) {
-    var _this2 = this;
-    var _this$props = this.props,
-      enableThreeStateBehavior = _this$props.enableThreeStateBehavior,
-      readOnly = _this$props.readOnly,
-      saveValueChangeEvent = _this$props.saveValueChangeEvent;
+    const {
+      enableThreeStateBehavior,
+      readOnly,
+      saveValueChangeEvent
+    } = this.props;
     if (!readOnly) {
       saveValueChangeEvent === null || saveValueChangeEvent === void 0 ? void 0 : saveValueChangeEvent(event);
       if (enableThreeStateBehavior) {
         {
-          var __newValue;
-          this.setState(function (__state_argument) {
-            __newValue = (_this2.props.value !== undefined ? _this2.props.value : __state_argument.value) === null || (!(_this2.props.value !== undefined ? _this2.props.value : __state_argument.value) ? null : false);
+          let __newValue;
+          this.setState(__state_argument => {
+            __newValue = (this.props.value !== undefined ? this.props.value : __state_argument.value) === null || (!(this.props.value !== undefined ? this.props.value : __state_argument.value) ? null : false);
             return {
               value: __newValue
             };
@@ -320,25 +324,29 @@ var CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
         }
       } else {
         {
-          var _newValue;
-          this.setState(function (__state_argument) {
+          let __newValue;
+          this.setState(__state_argument => {
             var _ref;
-            _newValue = !((_ref = _this2.props.value !== undefined ? _this2.props.value : __state_argument.value) !== null && _ref !== void 0 ? _ref : false);
+            __newValue = !((_ref = this.props.value !== undefined ? this.props.value : __state_argument.value) !== null && _ref !== void 0 ? _ref : false);
             return {
-              value: _newValue
+              value: __newValue
             };
           });
-          this.props.valueChange(_newValue);
+          this.props.valueChange(__newValue);
         }
       }
     }
   };
   _proto.keyDown = function keyDown(e) {
-    var onKeyDown = this.props.onKeyDown;
-    var keyName = e.keyName,
-      originalEvent = e.originalEvent,
-      which = e.which;
-    var result = onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(e);
+    const {
+      onKeyDown
+    } = this.props;
+    const {
+      keyName,
+      originalEvent,
+      which
+    } = e;
+    const result = onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(e);
     if (result !== null && result !== void 0 && result.cancel) {
       return result;
     }
@@ -355,7 +363,7 @@ var CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
     this.editorRef.current.blur();
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         value: this.props.value !== undefined ? this.props.value : this.state.value
@@ -370,17 +378,17 @@ var CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(CheckBox, [{
     key: "cssClasses",
-    get: function get() {
+    get: function () {
       return getCssClasses(_extends({}, this.props, {
         value: this.props.value !== undefined ? this.props.value : this.state.value
       }));
     }
   }, {
     key: "aria",
-    get: function get() {
-      var checked = (this.props.value !== undefined ? this.props.value : this.state.value) === true;
-      var indeterminate = (this.props.value !== undefined ? this.props.value : this.state.value) === null;
-      var result = {
+    get: function () {
+      const checked = (this.props.value !== undefined ? this.props.value : this.state.value) === true;
+      const indeterminate = (this.props.value !== undefined ? this.props.value : this.state.value) === null;
+      const result = {
         role: 'checkbox',
         checked: indeterminate ? 'mixed' : "".concat(checked)
       };
@@ -388,44 +396,11 @@ var CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props$value = _extends({}, this.props, {
+    get: function () {
+      const _this$props$value = _extends({}, this.props, {
           value: this.props.value !== undefined ? this.props.value : this.state.value
         }),
-        accessKey = _this$props$value.accessKey,
-        activeStateEnabled = _this$props$value.activeStateEnabled,
-        aria = _this$props$value.aria,
-        className = _this$props$value.className,
-        defaultValue = _this$props$value.defaultValue,
-        disabled = _this$props$value.disabled,
-        enableThreeStateBehavior = _this$props$value.enableThreeStateBehavior,
-        focusStateEnabled = _this$props$value.focusStateEnabled,
-        height = _this$props$value.height,
-        hint = _this$props$value.hint,
-        hoverStateEnabled = _this$props$value.hoverStateEnabled,
-        iconSize = _this$props$value.iconSize,
-        inputAttr = _this$props$value.inputAttr,
-        isDirty = _this$props$value.isDirty,
-        isValid = _this$props$value.isValid,
-        name = _this$props$value.name,
-        onClick = _this$props$value.onClick,
-        onFocusIn = _this$props$value.onFocusIn,
-        onKeyDown = _this$props$value.onKeyDown,
-        readOnly = _this$props$value.readOnly,
-        rtlEnabled = _this$props$value.rtlEnabled,
-        saveValueChangeEvent = _this$props$value.saveValueChangeEvent,
-        tabIndex = _this$props$value.tabIndex,
-        text = _this$props$value.text,
-        validationError = _this$props$value.validationError,
-        validationErrors = _this$props$value.validationErrors,
-        validationMessageMode = _this$props$value.validationMessageMode,
-        validationMessagePosition = _this$props$value.validationMessagePosition,
-        validationStatus = _this$props$value.validationStatus,
-        value = _this$props$value.value,
-        valueChange = _this$props$value.valueChange,
-        visible = _this$props$value.visible,
-        width = _this$props$value.width,
-        restProps = _objectWithoutProperties(_this$props$value, _excluded);
+        restProps = _objectWithoutPropertiesLoose(_this$props$value, _excluded);
       return restProps;
     }
   }]);
@@ -433,18 +408,16 @@ var CheckBox = /*#__PURE__*/function (_InfernoWrapperCompon) {
 }(_inferno2.InfernoWrapperComponent);
 exports.CheckBox = CheckBox;
 function __processTwoWayProps(defaultProps) {
-  var twoWayProps = ['value'];
-  return Object.keys(defaultProps).reduce(function (props, propName) {
-    var propValue = defaultProps[propName];
-    var defaultPropName = twoWayProps.some(function (p) {
-      return p === propName;
-    }) ? 'default' + propName.charAt(0).toUpperCase() + propName.slice(1) : propName;
+  const twoWayProps = ['value'];
+  return Object.keys(defaultProps).reduce((props, propName) => {
+    const propValue = defaultProps[propName];
+    const defaultPropName = twoWayProps.some(p => p === propName) ? 'default' + propName.charAt(0).toUpperCase() + propName.slice(1) : propName;
     props[defaultPropName] = propValue;
     return props;
   }, {});
 }
 CheckBox.defaultProps = CheckBoxPropsType;
-var __defaultOptionRules = [];
+const __defaultOptionRules = [];
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
   CheckBox.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(CheckBox.defaultProps), Object.getOwnPropertyDescriptors(__processTwoWayProps((0, _utils.convertRulesToOptions)(__defaultOptionRules)))));

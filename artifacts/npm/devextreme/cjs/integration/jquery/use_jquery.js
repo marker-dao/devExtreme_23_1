@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/jquery/use_jquery.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ var _config = _interopRequireDefault(require("../../core/config"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line no-restricted-imports
 
-var useJQuery = (0, _config.default)().useJQuery;
+const useJQuery = (0, _config.default)().useJQuery;
 if (_jquery.default && useJQuery !== false) {
   (0, _config.default)({
     useJQuery: true

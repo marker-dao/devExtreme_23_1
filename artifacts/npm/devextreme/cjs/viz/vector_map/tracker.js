@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/vector_map/tracker.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,36 +17,36 @@ var _index = require("../../events/utils/index");
 var _wheel = require("../../events/core/wheel");
 var _utils = require("../core/utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var navigator = (0, _window.getNavigator)();
-var _math = Math;
-var _abs = _math.abs;
-var _sqrt = _math.sqrt;
-var _round = _math.round;
-var _addNamespace = _index.addNamespace;
-var _NAME = 'dxVectorMap';
-var EVENT_START = 'start';
-var EVENT_MOVE = 'move';
-var EVENT_END = 'end';
-var EVENT_ZOOM = 'zoom';
-var EVENT_HOVER_ON = 'hover-on';
-var EVENT_HOVER_OFF = 'hover-off';
-var EVENT_CLICK = 'click';
-var EVENT_FOCUS_ON = 'focus-on';
-var EVENT_FOCUS_MOVE = 'focus-move';
-var EVENT_FOCUS_OFF = 'focus-off';
-var CLICK_TIME_THRESHOLD = 500;
-var CLICK_COORD_THRESHOLD_MOUSE = 5;
-var CLICK_COORD_THRESHOLD_TOUCH = 20;
-var DRAG_COORD_THRESHOLD_MOUSE = 5;
-var DRAG_COORD_THRESHOLD_TOUCH = 10;
-var FOCUS_OFF_DELAY = 100;
-var WHEEL_COOLDOWN = 50;
-var WHEEL_DIRECTION_COOLDOWN = 300;
-var EVENTS;
-var Focus;
+const navigator = (0, _window.getNavigator)();
+const _math = Math;
+const _abs = _math.abs;
+const _sqrt = _math.sqrt;
+const _round = _math.round;
+const _addNamespace = _index.addNamespace;
+const _NAME = 'dxVectorMap';
+const EVENT_START = 'start';
+const EVENT_MOVE = 'move';
+const EVENT_END = 'end';
+const EVENT_ZOOM = 'zoom';
+const EVENT_HOVER_ON = 'hover-on';
+const EVENT_HOVER_OFF = 'hover-off';
+const EVENT_CLICK = 'click';
+const EVENT_FOCUS_ON = 'focus-on';
+const EVENT_FOCUS_MOVE = 'focus-move';
+const EVENT_FOCUS_OFF = 'focus-off';
+const CLICK_TIME_THRESHOLD = 500;
+const CLICK_COORD_THRESHOLD_MOUSE = 5;
+const CLICK_COORD_THRESHOLD_TOUCH = 20;
+const DRAG_COORD_THRESHOLD_MOUSE = 5;
+const DRAG_COORD_THRESHOLD_TOUCH = 10;
+const FOCUS_OFF_DELAY = 100;
+const WHEEL_COOLDOWN = 50;
+const WHEEL_DIRECTION_COOLDOWN = 300;
+let EVENTS;
+let Focus;
 setupEvents();
 function Tracker(parameters) {
-  var that = this;
+  const that = this;
   that._root = parameters.root;
   that._createEventHandlers(parameters.dataKey);
   that._createProjectionHandlers(parameters.projection);
@@ -58,19 +58,19 @@ function Tracker(parameters) {
 }
 Tracker.prototype = {
   constructor: Tracker,
-  dispose: function dispose() {
-    var that = this;
+  dispose: function () {
+    const that = this;
     that._detachHandlers();
     that._disposeEvents();
     that._focus.dispose();
     that._root = that._focus = that._docHandlers = that._rootHandlers = null;
   },
   _eventNames: [EVENT_START, EVENT_MOVE, EVENT_END, EVENT_ZOOM, EVENT_CLICK, EVENT_HOVER_ON, EVENT_HOVER_OFF, EVENT_FOCUS_ON, EVENT_FOCUS_OFF, EVENT_FOCUS_MOVE],
-  _startClick: function _startClick(event, data) {
+  _startClick: function (event, data) {
     if (!data) {
       return;
     }
-    var coords = getEventCoords(event);
+    const coords = getEventCoords(event);
     this._clickState = {
       x: coords.x,
       y: coords.y,
@@ -78,10 +78,10 @@ Tracker.prototype = {
       time: Date.now()
     };
   },
-  _endClick: function _endClick(event, data) {
-    var state = this._clickState;
-    var threshold;
-    var coords;
+  _endClick: function (event, data) {
+    const state = this._clickState;
+    let threshold;
+    let coords;
     if (!state) {
       return;
     }
@@ -99,12 +99,12 @@ Tracker.prototype = {
     }
     this._clickState = null;
   },
-  _startDrag: function _startDrag(event, data) {
+  _startDrag: function (event, data) {
     if (!data) {
       return;
     }
-    var coords = getEventCoords(event);
-    var state = this._dragState = {
+    const coords = getEventCoords(event);
+    const state = this._dragState = {
       x: coords.x,
       y: coords.y,
       data: data
@@ -115,13 +115,13 @@ Tracker.prototype = {
       data: state.data
     });
   },
-  _moveDrag: function _moveDrag(event, data) {
-    var state = this._dragState;
+  _moveDrag: function (event, data) {
+    const state = this._dragState;
     if (!state) {
       return;
     }
-    var coords = getEventCoords(event);
-    var threshold = isTouchEvent(event) ? DRAG_COORD_THRESHOLD_TOUCH : DRAG_COORD_THRESHOLD_MOUSE;
+    const coords = getEventCoords(event);
+    const threshold = isTouchEvent(event) ? DRAG_COORD_THRESHOLD_TOUCH : DRAG_COORD_THRESHOLD_MOUSE;
     if (state.active || _abs(coords.x - state.x) > threshold || _abs(coords.y - state.y) > threshold) {
       state.x = coords.x;
       state.y = coords.y;
@@ -134,8 +134,8 @@ Tracker.prototype = {
       });
     }
   },
-  _endDrag: function _endDrag() {
-    var state = this._dragState;
+  _endDrag: function () {
+    const state = this._dragState;
     if (!state) {
       return;
     }
@@ -146,13 +146,13 @@ Tracker.prototype = {
       data: state.data
     });
   },
-  _wheelZoom: function _wheelZoom(event, data) {
+  _wheelZoom: function (event, data) {
     if (!data) {
       return;
     }
-    var that = this;
-    var lock = that._wheelLock;
-    var time = Date.now();
+    const that = this;
+    const lock = that._wheelLock;
+    const time = Date.now();
     if (time - lock.time <= WHEEL_COOLDOWN) {
       return;
     }
@@ -161,11 +161,11 @@ Tracker.prototype = {
       lock.dir = 0;
     }
     // T107589, T136650
-    var delta = adjustWheelDelta(event.delta / 120 || 0, lock);
+    const delta = adjustWheelDelta(event.delta / 120 || 0, lock);
     if (delta === 0) {
       return;
     }
-    var coords = getEventCoords(event);
+    const coords = getEventCoords(event);
     that._fire(EVENT_ZOOM, {
       delta: delta,
       x: coords.x,
@@ -173,13 +173,13 @@ Tracker.prototype = {
     });
     lock.time = lock.dirTime = time;
   },
-  _startZoom: function _startZoom(event, data) {
+  _startZoom: function (event, data) {
     if (!isTouchEvent(event) || !data) {
       return;
     }
-    var state = this._zoomState = this._zoomState || {};
-    var coords;
-    var pointer2;
+    const state = this._zoomState = this._zoomState || {};
+    let coords;
+    let pointer2;
     if (state.pointer1 && state.pointer2) {
       return;
     }
@@ -203,9 +203,9 @@ Tracker.prototype = {
       }
     }
   },
-  _moveZoom: function _moveZoom(event) {
-    var state = this._zoomState;
-    var coords;
+  _moveZoom: function (event) {
+    const state = this._zoomState;
+    let coords;
     if (!state || !isTouchEvent(event)) {
       return;
     }
@@ -224,10 +224,10 @@ Tracker.prototype = {
       }
     }
   },
-  _endZoom: function _endZoom(event) {
-    var state = this._zoomState;
-    var startDistance;
-    var currentDistance;
+  _endZoom: function (event) {
+    const state = this._zoomState;
+    let startDistance;
+    let currentDistance;
     if (!state || !isTouchEvent(event)) {
       return;
     }
@@ -242,14 +242,14 @@ Tracker.prototype = {
     }
     this._zoomState = null;
   },
-  _startHover: function _startHover(event, data) {
+  _startHover: function (event, data) {
     this._doHover(event, data, true);
   },
-  _moveHover: function _moveHover(event, data) {
+  _moveHover: function (event, data) {
     this._doHover(event, data, false);
   },
-  _doHover: function _doHover(event, data, isTouch) {
-    var that = this;
+  _doHover: function (event, data, isTouch) {
+    const that = this;
     if (that._dragState && that._dragState.active || that._zoomState && that._zoomState.ready) {
       that._cancelHover();
       return;
@@ -268,8 +268,8 @@ Tracker.prototype = {
     }
     that._hoverTarget = event.target;
   },
-  _cancelHover: function _cancelHover() {
-    var state = this._hoverState;
+  _cancelHover: function () {
+    const state = this._hoverState;
     this._hoverState = this._hoverTarget = null;
     if (state) {
       this._fire(EVENT_HOVER_OFF, {
@@ -277,14 +277,14 @@ Tracker.prototype = {
       });
     }
   },
-  _startFocus: function _startFocus(event, data) {
+  _startFocus: function (event, data) {
     this._doFocus(event, data, true);
   },
-  _moveFocus: function _moveFocus(event, data) {
+  _moveFocus: function (event, data) {
     this._doFocus(event, data, false);
   },
-  _doFocus: function _doFocus(event, data, isTouch) {
-    var that = this;
+  _doFocus: function (event, data, isTouch) {
+    const that = this;
     if (that._dragState && that._dragState.active || that._zoomState && that._zoomState.ready) {
       that._cancelFocus();
       return;
@@ -295,16 +295,16 @@ Tracker.prototype = {
     that._focus.turnOff();
     data && that._focus.turnOn(data, getEventCoords(event));
   },
-  _cancelFocus: function _cancelFocus() {
+  _cancelFocus: function () {
     this._focus.cancel();
   },
-  _createEventHandlers: function _createEventHandlers(DATA_KEY) {
-    var that = this;
+  _createEventHandlers: function (DATA_KEY) {
+    const that = this;
     that._docHandlers = {};
     that._rootHandlers = {};
     that._docHandlers[EVENTS.start] = function (event) {
-      var isTouch = isTouchEvent(event);
-      var data = getData(event);
+      const isTouch = isTouchEvent(event);
+      const data = getData(event);
       if (isTouch && !that._isTouchEnabled) {
         return;
       }
@@ -318,8 +318,8 @@ Tracker.prototype = {
       that._startFocus(event, data);
     };
     that._docHandlers[EVENTS.move] = function (event) {
-      var isTouch = isTouchEvent(event);
-      var data = getData(event);
+      const isTouch = isTouchEvent(event);
+      const data = getData(event);
       if (isTouch && !that._isTouchEnabled) {
         return;
       }
@@ -329,8 +329,8 @@ Tracker.prototype = {
       that._moveFocus(event, data);
     };
     that._docHandlers[EVENTS.end] = function (event) {
-      var isTouch = isTouchEvent(event);
-      var data = getData(event);
+      const isTouch = isTouchEvent(event);
+      const data = getData(event);
       if (isTouch && !that._isTouchEnabled) {
         return;
       }
@@ -343,7 +343,7 @@ Tracker.prototype = {
       if (!that._isWheelEnabled) {
         return;
       }
-      var data = getData(event);
+      const data = getData(event);
       if (data) {
         event.preventDefault();
         event.stopPropagation(); // T249548
@@ -357,12 +357,12 @@ Tracker.prototype = {
     // Actually it is responsibility of the text element wrapper to handle "data" to its span elements (if there are any).
     // Now to avoid not so necessary complication of renderer text-span issue is handled on the side of the tracker.
     function getData(event) {
-      var target = event.target;
+      const target = event.target;
       return (target.tagName === 'tspan' ? target.parentNode : target)[DATA_KEY];
     }
   },
-  _createProjectionHandlers: function _createProjectionHandlers(projection) {
-    var that = this;
+  _createProjectionHandlers: function (projection) {
+    const that = this;
     projection.on({
       'center': handler,
       'zoom': handler
@@ -372,23 +372,23 @@ Tracker.prototype = {
       that._cancelFocus();
     }
   },
-  reset: function reset() {
-    var that = this;
+  reset: function () {
+    const that = this;
     that._clickState = null;
     that._endDrag();
     that._cancelHover();
     that._cancelFocus();
   },
-  setOptions: function setOptions(options) {
-    var that = this;
+  setOptions: function (options) {
+    const that = this;
     that.reset();
     that._detachHandlers();
     that._isTouchEnabled = !!(0, _utils.parseScalar)(options.touchEnabled, true);
     that._isWheelEnabled = !!(0, _utils.parseScalar)(options.wheelEnabled, true);
     that._attachHandlers();
   },
-  _detachHandlers: function _detachHandlers() {
-    var that = this;
+  _detachHandlers: function () {
+    const that = this;
     if (that._isTouchEnabled) {
       that._root.css({
         'touch-action': '',
@@ -398,8 +398,8 @@ Tracker.prototype = {
     _events_engine.default.off(_dom_adapter.default.getDocument(), that._docHandlers);
     that._root.off(that._rootHandlers);
   },
-  _attachHandlers: function _attachHandlers() {
-    var that = this;
+  _attachHandlers: function () {
+    const that = this;
     if (that._isTouchEnabled) {
       that._root.css({
         'touch-action': 'none',
@@ -414,14 +414,14 @@ Tracker.prototype = {
     that._root.on(that._rootHandlers);
   }
 };
-Focus = function Focus(fire) {
-  var that = this;
-  var _activeData = null;
-  var _data = null;
-  var _disabled = false;
-  var _offTimer = null;
-  var _x;
-  var _y;
+Focus = function (fire) {
+  let that = this;
+  let _activeData = null;
+  let _data = null;
+  let _disabled = false;
+  let _offTimer = null;
+  let _x;
+  let _y;
   that.dispose = function () {
     clearTimeout(_offTimer);
     that.turnOn = that.turnOff = that.cancel = that.dispose = that = fire = _activeData = _data = _offTimer = null;
@@ -496,14 +496,14 @@ function getDistance(x1, y1, x2, y2) {
   return _sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 function isTouchEvent(event) {
-  var type = event.originalEvent.type;
-  var pointerType = event.originalEvent.pointerType;
+  const type = event.originalEvent.type;
+  const pointerType = event.originalEvent.pointerType;
   return /^touch/.test(type) || /^MSPointer/.test(type) && pointerType !== 4 || /^pointer/.test(type) && pointerType !== 'mouse';
 }
 function selectItem(flags, items) {
-  var i = 0;
-  var ii = flags.length;
-  var item;
+  let i = 0;
+  const ii = flags.length;
+  let item;
   for (; i < ii; ++i) {
     if (flags[i]) {
       item = items[i];
@@ -513,7 +513,7 @@ function selectItem(flags, items) {
   return _addNamespace(item || items[i], _NAME);
 }
 function setupEvents() {
-  var flags = [navigator.pointerEnabled, navigator.msPointerEnabled, (0, _window.hasProperty)('ontouchstart')];
+  let flags = [navigator.pointerEnabled, navigator.msPointerEnabled, (0, _window.hasProperty)('ontouchstart')];
   EVENTS = {
     start: selectItem(flags, ['pointerdown', 'MSPointerDown', 'touchstart mousedown', 'mousedown']),
     move: selectItem(flags, ['pointermove', 'MSPointerMove', 'touchmove mousemove', 'mousemove']),
@@ -522,8 +522,8 @@ function setupEvents() {
   };
 }
 function getEventCoords(event) {
-  var originalEvent = event.originalEvent;
-  var touch = originalEvent.touches && originalEvent.touches[0] || {};
+  const originalEvent = event.originalEvent;
+  const touch = originalEvent.touches && originalEvent.touches[0] || {};
   return {
     x: touch.pageX || originalEvent.pageX || event.pageX,
     y: touch.pageY || originalEvent.pageY || event.pageY
@@ -533,7 +533,7 @@ function getPointerId(event) {
   return event.originalEvent.pointerId;
 }
 function getMultitouchEventCoords(event, pointerId) {
-  var originalEvent = event.originalEvent;
+  let originalEvent = event.originalEvent;
   if (originalEvent.pointerId !== undefined) {
     originalEvent = originalEvent.pointerId === pointerId ? originalEvent : null;
   } else {
@@ -548,8 +548,8 @@ function adjustWheelDelta(delta, lock) {
   if (delta === 0) {
     return 0;
   }
-  var _delta = _abs(delta);
-  var sign = _round(delta / _delta);
+  let _delta = _abs(delta);
+  const sign = _round(delta / _delta);
   if (lock.dir && sign !== lock.dir) {
     return 0;
   }

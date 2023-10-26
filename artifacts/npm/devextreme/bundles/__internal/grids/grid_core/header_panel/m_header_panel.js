@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/header_panel/m_header_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,11 +23,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var HEADER_PANEL_CLASS = 'header-panel';
-var TOOLBAR_BUTTON_CLASS = 'toolbar-button';
-var TOOLBAR_ARIA_LABEL = '-ariaToolbar';
-var DEFAULT_TOOLBAR_ITEM_NAMES = ['addRowButton', 'applyFilterButton', 'columnChooserButton', 'exportButton', 'groupPanel', 'revertButton', 'saveButton', 'searchPanel'];
-var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
+const HEADER_PANEL_CLASS = 'header-panel';
+const TOOLBAR_BUTTON_CLASS = 'toolbar-button';
+const TOOLBAR_ARIA_LABEL = '-ariaToolbar';
+const DEFAULT_TOOLBAR_ITEM_NAMES = ['addRowButton', 'applyFilterButton', 'columnChooserButton', 'exportButton', 'groupPanel', 'revertButton', 'saveButton', 'searchPanel'];
+let HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
   _inheritsLoose(HeaderPanel, _ColumnsView);
   function HeaderPanel() {
     return _ColumnsView.apply(this, arguments) || this;
@@ -40,54 +40,54 @@ var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
     return (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS));
   };
   _proto._getToolbarButtonClass = function _getToolbarButtonClass(specificClass) {
-    var secondClass = specificClass ? " ".concat(specificClass) : '';
+    const secondClass = specificClass ? " ".concat(specificClass) : '';
     return this.addWidgetPrefix(TOOLBAR_BUTTON_CLASS) + secondClass;
   };
   _proto._getToolbarOptions = function _getToolbarOptions() {
-    var userToolbarOptions = this.option('toolbar');
-    var options = {
+    const userToolbarOptions = this.option('toolbar');
+    const options = {
       toolbarOptions: {
         items: this._getToolbarItems(),
         visible: userToolbarOptions === null || userToolbarOptions === void 0 ? void 0 : userToolbarOptions.visible,
         disabled: userToolbarOptions === null || userToolbarOptions === void 0 ? void 0 : userToolbarOptions.disabled,
         onItemRendered(e) {
-          var itemRenderedCallback = e.itemData.onItemRendered;
+          const itemRenderedCallback = e.itemData.onItemRendered;
           if (itemRenderedCallback) {
             itemRenderedCallback(e);
           }
         }
       }
     };
-    var userItems = userToolbarOptions === null || userToolbarOptions === void 0 ? void 0 : userToolbarOptions.items;
+    const userItems = userToolbarOptions === null || userToolbarOptions === void 0 ? void 0 : userToolbarOptions.items;
     options.toolbarOptions.items = this._normalizeToolbarItems(options.toolbarOptions.items, userItems);
     this.executeAction('onToolbarPreparing', options);
     if (options.toolbarOptions && !(0, _type.isDefined)(options.toolbarOptions.visible)) {
-      var toolbarItems = options.toolbarOptions.items;
+      const toolbarItems = options.toolbarOptions.items;
       options.toolbarOptions.visible = !!(toolbarItems === null || toolbarItems === void 0 ? void 0 : toolbarItems.length);
     }
     return options.toolbarOptions;
   };
   _proto._normalizeToolbarItems = function _normalizeToolbarItems(defaultItems, userItems) {
-    defaultItems.forEach(function (button) {
+    defaultItems.forEach(button => {
       if (!DEFAULT_TOOLBAR_ITEM_NAMES.includes(button.name)) {
         throw new Error("Default toolbar item '".concat(button.name, "' is not added to DEFAULT_TOOLBAR_ITEM_NAMES"));
       }
     });
-    var defaultProps = {
+    const defaultProps = {
       location: 'after'
     };
-    var isArray = Array.isArray(userItems);
+    const isArray = Array.isArray(userItems);
     if (!(0, _type.isDefined)(userItems)) {
       return defaultItems;
     }
     if (!isArray) {
       userItems = [userItems];
     }
-    var defaultButtonsByNames = {};
-    defaultItems.forEach(function (button) {
+    const defaultButtonsByNames = {};
+    defaultItems.forEach(button => {
       defaultButtonsByNames[button.name] = button;
     });
-    var normalizedItems = userItems.map(function (button) {
+    const normalizedItems = userItems.map(button => {
       if ((0, _type.isString)(button)) {
         button = {
           name: button
@@ -108,10 +108,10 @@ var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
   };
   _proto._renderCore = function _renderCore() {
     if (!this._toolbar) {
-      var $headerPanel = this.element();
+      const $headerPanel = this.element();
       $headerPanel.addClass(this.addWidgetPrefix(HEADER_PANEL_CLASS));
-      var label = _message.default.format(this.component.NAME + TOOLBAR_ARIA_LABEL);
-      var $toolbar = (0, _renderer.default)('<div>').attr('aria-label', label).appendTo($headerPanel);
+      const label = _message.default.format(this.component.NAME + TOOLBAR_ARIA_LABEL);
+      const $toolbar = (0, _renderer.default)('<div>').attr('aria-label', label).appendTo($headerPanel);
       this._toolbar = this._createComponent($toolbar, _toolbar.default, this._toolbarOptions);
     } else {
       this._toolbar.option(this._toolbarOptions);
@@ -125,10 +125,8 @@ var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
   };
   _proto._isDisabledDefinedByUser = function _isDisabledDefinedByUser(name) {
     var _a;
-    var userItems = (_a = this.option('toolbar')) === null || _a === void 0 ? void 0 : _a.items;
-    var userItem = userItems === null || userItems === void 0 ? void 0 : userItems.find(function (item) {
-      return (item === null || item === void 0 ? void 0 : item.name) === name;
-    });
+    const userItems = (_a = this.option('toolbar')) === null || _a === void 0 ? void 0 : _a.items;
+    const userItem = userItems === null || userItems === void 0 ? void 0 : userItems.find(item => (item === null || item === void 0 ? void 0 : item.name) === name);
     return (0, _type.isDefined)(userItem === null || userItem === void 0 ? void 0 : userItem.disabled);
   };
   _proto.init = function init() {
@@ -143,19 +141,17 @@ var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
   };
   _proto.setToolbarItemDisabled = function setToolbarItemDisabled(name, disabled) {
     var _a;
-    var toolbar = this._toolbar;
-    var isDefinedByUser = this._isDisabledDefinedByUser(name);
+    const toolbar = this._toolbar;
+    const isDefinedByUser = this._isDisabledDefinedByUser(name);
     if (!toolbar || isDefinedByUser) {
       return;
     }
-    var items = (_a = toolbar.option('items')) !== null && _a !== void 0 ? _a : [];
-    var itemIndex = items.findIndex(function (item) {
-      return item.name === name;
-    });
+    const items = (_a = toolbar.option('items')) !== null && _a !== void 0 ? _a : [];
+    const itemIndex = items.findIndex(item => item.name === name);
     if (itemIndex < 0) {
       return;
     }
-    var item = toolbar.option("items[".concat(itemIndex, "]"));
+    const item = toolbar.option("items[".concat(itemIndex, "]"));
     toolbar.option("items[".concat(itemIndex, "].disabled"), disabled);
     if (item.options) {
       toolbar.option("items[".concat(itemIndex, "].options.disabled"), disabled);
@@ -179,20 +175,20 @@ var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
     if (args.name === 'toolbar') {
       args.handled = true;
       if (this._toolbar) {
-        var parts = (0, _data.getPathParts)(args.fullName);
-        var optionName = args.fullName.replace(/^toolbar\./, '');
+        const parts = (0, _data.getPathParts)(args.fullName);
+        const optionName = args.fullName.replace(/^toolbar\./, '');
         if (parts.length === 1) {
           // `toolbar` case
-          var toolbarOptions = this._getToolbarOptions();
+          const toolbarOptions = this._getToolbarOptions();
           this._toolbar.option(toolbarOptions);
         } else if (parts[1] === 'items') {
           if (parts.length === 2) {
             // `toolbar.items` case
-            var _toolbarOptions = this._getToolbarOptions();
-            this._toolbar.option('items', _toolbarOptions.items);
+            const toolbarOptions = this._getToolbarOptions();
+            this._toolbar.option('items', toolbarOptions.items);
           } else if (parts.length === 3) {
             // `toolbar.items[i]` case
-            var normalizedItem = this._normalizeToolbarItems(this._getToolbarItems(), args.value);
+            const normalizedItem = this._normalizeToolbarItems(this._getToolbarItems(), args.value);
             this._toolbar.option(optionName, normalizedItem);
           } else if (parts.length >= 4) {
             // `toolbar.items[i].prop` case
@@ -213,7 +209,7 @@ var HeaderPanel = /*#__PURE__*/function (_ColumnsView) {
   _proto.hasGroupedColumns = function hasGroupedColumns() {};
   return HeaderPanel;
 }(_m_columns_view.ColumnsView);
-var headerPanelModule = {
+const headerPanelModule = {
   defaultOptions() {
     return {};
   },

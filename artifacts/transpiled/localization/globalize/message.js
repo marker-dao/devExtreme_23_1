@@ -11,28 +11,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-restricted-imports, import/no-unresolved
 
 if (_globalize.default && _globalize.default.formatMessage) {
-  var DEFAULT_LOCALE = 'en';
-  var originalLoadMessages = _globalize.default.loadMessages;
-  _globalize.default.loadMessages = function (messages) {
+  const DEFAULT_LOCALE = 'en';
+  const originalLoadMessages = _globalize.default.loadMessages;
+  _globalize.default.loadMessages = messages => {
     _message.default.load(messages);
   };
-  var globalizeMessageLocalization = {
-    engine: function engine() {
+  const globalizeMessageLocalization = {
+    engine: function () {
       return 'globalize';
     },
-    ctor: function ctor() {
+    ctor: function () {
       this.load(this._dictionary);
     },
-    load: function load(messages) {
+    load: function (messages) {
       this.callBase(messages);
       originalLoadMessages(messages);
     },
-    getMessagesByLocales: function getMessagesByLocales() {
+    getMessagesByLocales: function () {
       return _globalize.default.cldr.get('globalize-messages');
     },
-    getFormatter: function getFormatter(key, locale) {
-      var currentLocale = locale || _core2.default.locale();
-      var formatter = this._getFormatterBase(key, locale);
+    getFormatter: function (key, locale) {
+      const currentLocale = locale || _core2.default.locale();
+      let formatter = this._getFormatterBase(key, locale);
       if (!formatter) {
         formatter = this._formatterByGlobalize(key, locale);
       }
@@ -41,21 +41,21 @@ if (_globalize.default && _globalize.default.formatMessage) {
       }
       return formatter;
     },
-    _formatterByGlobalize: function _formatterByGlobalize(key, locale) {
-      var currentGlobalize = !locale || locale === _core2.default.locale() ? _globalize.default : new _globalize.default(locale);
-      var result;
+    _formatterByGlobalize: function (key, locale) {
+      const currentGlobalize = !locale || locale === _core2.default.locale() ? _globalize.default : new _globalize.default(locale);
+      let result;
       if (this._messageLoaded(key, locale)) {
         result = currentGlobalize.messageFormatter(key);
       }
       return result;
     },
-    _messageLoaded: function _messageLoaded(key, locale) {
-      var currentCldr = locale ? new _globalize.default(locale).cldr : _globalize.default.locale();
-      var value = currentCldr.get(['globalize-messages/{bundle}', key]);
+    _messageLoaded: function (key, locale) {
+      const currentCldr = locale ? new _globalize.default(locale).cldr : _globalize.default.locale();
+      const value = currentCldr.get(['globalize-messages/{bundle}', key]);
       return !!value;
     },
-    _loadSingle: function _loadSingle(key, value, locale) {
-      var data = {};
+    _loadSingle: function (key, value, locale) {
+      const data = {};
       data[locale] = {};
       data[locale][key] = value;
       this.load(data);

@@ -9,10 +9,10 @@ var _iterator = require("../core/utils/iterator");
 var _validation_engine = _interopRequireDefault(require("./validation_engine"));
 var _uiCollection_widget = _interopRequireDefault(require("./collection/ui.collection_widget.edit"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var VALIDATION_SUMMARY_CLASS = 'dx-validationsummary';
-var ITEM_CLASS = VALIDATION_SUMMARY_CLASS + '-item';
-var ITEM_DATA_KEY = VALIDATION_SUMMARY_CLASS + '-item-data';
-var ValidationSummary = _uiCollection_widget.default.inherit({
+const VALIDATION_SUMMARY_CLASS = 'dx-validationsummary';
+const ITEM_CLASS = VALIDATION_SUMMARY_CLASS + '-item';
+const ITEM_DATA_KEY = VALIDATION_SUMMARY_CLASS + '-item-data';
+const ValidationSummary = _uiCollection_widget.default.inherit({
   _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       /**
@@ -141,9 +141,9 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
     this._initGroupRegistration();
   },
   _initGroupRegistration() {
-    var $element = this.$element();
-    var group = this.option('validationGroup') || _validation_engine.default.findGroup($element, this._modelByElement($element));
-    var groupConfig = _validation_engine.default.addGroup(group);
+    const $element = this.$element();
+    const group = this.option('validationGroup') || _validation_engine.default.findGroup($element, this._modelByElement($element));
+    const groupConfig = _validation_engine.default.addGroup(group);
     this._unsubscribeGroup();
     this._groupWasInit = true;
     this._validationGroup = group;
@@ -151,13 +151,13 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
     groupConfig.on('validated', this.groupSubscription);
   },
   _unsubscribeGroup() {
-    var groupConfig = _validation_engine.default.getGroupConfig(this._validationGroup);
+    const groupConfig = _validation_engine.default.getGroupConfig(this._validationGroup);
     groupConfig && groupConfig.off('validated', this.groupSubscription);
   },
   _getOrderedItems(validators, items) {
-    var orderedItems = [];
+    let orderedItems = [];
     (0, _iterator.each)(validators, function (_, validator) {
-      var foundItems = (0, _common.grep)(items, function (item) {
+      const foundItems = (0, _common.grep)(items, function (item) {
         if (item.validator === validator) {
           return true;
         }
@@ -169,8 +169,7 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
     return orderedItems;
   },
   _groupValidationHandler(params) {
-    var _this = this;
-    var items = this._getOrderedItems(params.validators, (0, _iterator.map)(params.brokenRules, function (rule) {
+    const items = this._getOrderedItems(params.validators, (0, _iterator.map)(params.brokenRules, function (rule) {
       return {
         text: rule.message,
         validator: rule.validator,
@@ -178,38 +177,40 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
       };
     }));
     this.validators = params.validators;
-    (0, _iterator.each)(this.validators, function (_, validator) {
-      if (validator._validationSummary !== _this) {
-        var handler = _this._itemValidationHandler.bind(_this);
-        var disposingHandler = function disposingHandler() {
+    (0, _iterator.each)(this.validators, (_, validator) => {
+      if (validator._validationSummary !== this) {
+        let handler = this._itemValidationHandler.bind(this);
+        const disposingHandler = function () {
           validator.off('validated', handler);
           validator._validationSummary = null;
           handler = null;
         };
         validator.on('validated', handler);
         validator.on('disposing', disposingHandler);
-        validator._validationSummary = _this;
+        validator._validationSummary = this;
       }
     });
     this.option('items', items);
   },
   _itemValidationHandler(_ref) {
-    var isValid = _ref.isValid,
-      validator = _ref.validator,
-      brokenRules = _ref.brokenRules;
-    var items = this.option('items');
-    var itemsChanged = false;
-    var itemIndex = 0;
-    var _loop = function _loop() {
-      var item = items[itemIndex];
+    let {
+      isValid,
+      validator,
+      brokenRules
+    } = _ref;
+    let items = this.option('items');
+    let itemsChanged = false;
+    let itemIndex = 0;
+    while (itemIndex < items.length) {
+      const item = items[itemIndex];
       if (item.validator === validator) {
-        var foundRule = (0, _common.grep)(brokenRules || [], function (rule) {
+        const foundRule = (0, _common.grep)(brokenRules || [], function (rule) {
           return rule.index === item.index;
         })[0];
         if (isValid || !foundRule) {
           items.splice(itemIndex, 1);
           itemsChanged = true;
-          return 1; // continue
+          continue;
         }
         if (foundRule.message !== item.text) {
           item.text = foundRule.message;
@@ -217,12 +218,9 @@ var ValidationSummary = _uiCollection_widget.default.inherit({
         }
       }
       itemIndex++;
-    };
-    while (itemIndex < items.length) {
-      if (_loop()) continue;
     }
     (0, _iterator.each)(brokenRules, function (_, rule) {
-      var foundItem = (0, _common.grep)(items, function (item) {
+      const foundItem = (0, _common.grep)(items, function (item) {
         return item.validator === validator && item.index === rule.index;
       })[0];
       if (!foundItem) {

@@ -7,8 +7,8 @@ var _data_helper = _interopRequireDefault(require("../../data_helper"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ItemsOptionBase = _component.Component.inherit({}).include(_data_helper.default);
-var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
+const ItemsOptionBase = _component.Component.inherit({}).include(_data_helper.default);
+let ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
   _inheritsLoose(ItemsOption, _ItemsOptionBase);
   function ItemsOption(diagramWidget) {
     var _this;
@@ -20,17 +20,11 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
   var _proto = ItemsOption.prototype;
   _proto._dataSourceChangedHandler = function _dataSourceChangedHandler(newItems, e) {
     this._resetCache();
-    this._items = newItems.map(function (item) {
-      return (0, _extend.extend)(true, {}, item);
-    });
+    this._items = newItems.map(item => (0, _extend.extend)(true, {}, item));
     this._dataSourceItems = newItems.slice();
     if (e && e.changes) {
-      var internalChanges = e.changes.filter(function (change) {
-        return change.internalChange;
-      });
-      var externalChanges = e.changes.filter(function (change) {
-        return !change.internalChange;
-      });
+      const internalChanges = e.changes.filter(change => change.internalChange);
+      const externalChanges = e.changes.filter(change => !change.internalChange);
       if (internalChanges.length) {
         this._reloadContentByChanges(internalChanges, false);
       }
@@ -49,7 +43,7 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     }
   };
   _proto._prepareData = function _prepareData(dataObj) {
-    for (var key in dataObj) {
+    for (const key in dataObj) {
       if (!Object.prototype.hasOwnProperty.call(dataObj, key)) continue;
       if (dataObj[key] === undefined) {
         dataObj[key] = null;
@@ -58,10 +52,9 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     return dataObj;
   };
   _proto.insert = function insert(data, callback, errorCallback) {
-    var _this2 = this;
     this._resetCache();
-    var store = this._getStore();
-    store.insert(this._prepareData(data)).done(function (data, key) {
+    const store = this._getStore();
+    store.insert(this._prepareData(data)).done((data, key) => {
       store.push([{
         type: 'insert',
         key,
@@ -71,18 +64,18 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
       if (callback) {
         callback(data);
       }
-      _this2._resetCache();
-    }).fail(function (error) {
+      this._resetCache();
+    }).fail(error => {
       if (errorCallback) {
         errorCallback(error);
       }
-      _this2._resetCache();
+      this._resetCache();
     });
   };
   _proto.update = function update(key, data, callback, errorCallback) {
-    var store = this._getStore();
-    var storeKey = this._getStoreKey(store, key, data);
-    store.update(storeKey, this._prepareData(data)).done(function (data, key) {
+    const store = this._getStore();
+    const storeKey = this._getStoreKey(store, key, data);
+    store.update(storeKey, this._prepareData(data)).done((data, key) => {
       store.push([{
         type: 'update',
         key,
@@ -92,18 +85,17 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
       if (callback) {
         callback(key, data);
       }
-    }).fail(function (error) {
+    }).fail(error => {
       if (errorCallback) {
         errorCallback(error);
       }
     });
   };
   _proto.remove = function remove(key, data, callback, errorCallback) {
-    var _this3 = this;
     this._resetCache();
-    var store = this._getStore();
-    var storeKey = this._getStoreKey(store, key, data);
-    store.remove(storeKey).done(function (key) {
+    const store = this._getStore();
+    const storeKey = this._getStoreKey(store, key, data);
+    store.remove(storeKey).done(key => {
       store.push([{
         type: 'remove',
         key,
@@ -112,12 +104,12 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
       if (callback) {
         callback(key);
       }
-      _this3._resetCache();
-    }).fail(function (error) {
+      this._resetCache();
+    }).fail(error => {
       if (errorCallback) {
         errorCallback(error);
       }
-      _this3._resetCache();
+      this._resetCache();
     });
   };
   _proto.findItem = function findItem(itemKey) {
@@ -133,29 +125,26 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     return !!this._items;
   };
   _proto._reloadContentByChanges = function _reloadContentByChanges(changes, isExternalChanges) {
-    var _this4 = this;
-    changes = changes.map(function (change) {
-      return (0, _extend.extend)(change, {
-        internalKey: _this4._getInternalKey(change.key)
-      });
-    });
+    changes = changes.map(change => (0, _extend.extend)(change, {
+      internalKey: this._getInternalKey(change.key)
+    }));
     this._diagramWidget._reloadContentByChanges(changes, isExternalChanges);
   };
   _proto._getItemByKey = function _getItemByKey(key) {
     this._ensureCache();
-    var cache = this._cache;
-    var index = this._getIndexByKey(key);
+    const cache = this._cache;
+    const index = this._getIndexByKey(key);
     return cache.items[index];
   };
   _proto._getIndexByKey = function _getIndexByKey(key) {
     this._ensureCache();
-    var cache = this._cache;
+    const cache = this._cache;
     if (typeof key === 'object') {
-      for (var i = 0, length = cache.keys.length; i < length; i++) {
+      for (let i = 0, length = cache.keys.length; i < length; i++) {
         if (cache.keys[i] === key) return i;
       }
     } else {
-      var keySet = cache.keySet || cache.keys.reduce(function (accumulator, key, index) {
+      const keySet = cache.keySet || cache.keys.reduce((accumulator, key, index) => {
         accumulator[key] = index;
         return accumulator;
       }, {});
@@ -167,7 +156,7 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     return -1;
   };
   _proto._ensureCache = function _ensureCache() {
-    var cache = this._cache;
+    const cache = this._cache;
     if (!cache.keys) {
       cache.keys = [];
       cache.items = [];
@@ -175,26 +164,21 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     }
   };
   _proto._fillCache = function _fillCache(cache, items) {
-    var _this5 = this;
     if (!items || !items.length) return;
-    var keyExpr = this._getKeyExpr();
+    const keyExpr = this._getKeyExpr();
     if (keyExpr) {
-      items.forEach(function (item) {
+      items.forEach(item => {
         cache.keys.push(keyExpr(item));
         cache.items.push(item);
       });
     }
-    var itemsExpr = this._getItemsExpr();
+    const itemsExpr = this._getItemsExpr();
     if (itemsExpr) {
-      items.forEach(function (item) {
-        return _this5._fillCache(cache, itemsExpr(item));
-      });
+      items.forEach(item => this._fillCache(cache, itemsExpr(item)));
     }
-    var containerChildrenExpr = this._getContainerChildrenExpr();
+    const containerChildrenExpr = this._getContainerChildrenExpr();
     if (containerChildrenExpr) {
-      items.forEach(function (item) {
-        return _this5._fillCache(cache, containerChildrenExpr(item));
-      });
+      items.forEach(item => this._fillCache(cache, containerChildrenExpr(item)));
     }
   };
   _proto._getKeyExpr = function _getKeyExpr() {
@@ -215,10 +199,10 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
     return this._dataSource && this._dataSource.store();
   };
   _proto._getStoreKey = function _getStoreKey(store, internalKey, data) {
-    var storeKey = store.keyOf(data);
+    let storeKey = store.keyOf(data);
     if (storeKey === data) {
-      var keyExpr = this._getKeyExpr();
-      this._dataSourceItems.forEach(function (item) {
+      const keyExpr = this._getKeyExpr();
+      this._dataSourceItems.forEach(item => {
         if (keyExpr(item) === internalKey) storeKey = item;
       });
     }
@@ -226,7 +210,7 @@ var ItemsOption = /*#__PURE__*/function (_ItemsOptionBase) {
   };
   _proto._getInternalKey = function _getInternalKey(storeKey) {
     if (typeof storeKey === 'object') {
-      var keyExpr = this._getKeyExpr();
+      const keyExpr = this._getKeyExpr();
       return keyExpr(storeKey);
     }
     return storeKey;

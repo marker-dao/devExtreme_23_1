@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_view_data_generator_week.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ var _week = require("../../../../renovation/ui/scheduler/view_model/to_test/view
 var _m_view_data_generator = require("./m_view_data_generator");
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ViewDataGeneratorWeek = /*#__PURE__*/function (_ViewDataGenerator) {
+let ViewDataGeneratorWeek = /*#__PURE__*/function (_ViewDataGenerator) {
   _inheritsLoose(ViewDataGeneratorWeek, _ViewDataGenerator);
   function ViewDataGeneratorWeek() {
     var _this;

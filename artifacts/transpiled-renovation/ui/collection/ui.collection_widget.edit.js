@@ -16,25 +16,19 @@ var _utils = require("../../data/data_source/utils");
 var _selection = _interopRequireDefault(require("../selection/selection"));
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-var ITEM_DELETING_DATA_KEY = 'dxItemDeleting';
-var NOT_EXISTING_INDEX = -1;
-var indexExists = function indexExists(index) {
+const ITEM_DELETING_DATA_KEY = 'dxItemDeleting';
+const NOT_EXISTING_INDEX = -1;
+const indexExists = function (index) {
   return index !== NOT_EXISTING_INDEX;
 };
-var CollectionWidget = _uiCollection_widget.default.inherit({
-  _setOptionsByReference: function _setOptionsByReference() {
+const CollectionWidget = _uiCollection_widget.default.inherit({
+  _setOptionsByReference: function () {
     this.callBase();
     (0, _extend.extend)(this._optionsByReference, {
       selectedItem: true
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       /**
       * @name CollectionWidgetOptions.selectionMode
@@ -112,46 +106,46 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
       onItemDeleted: null
     });
   },
-  ctor: function ctor(element, options) {
+  ctor: function (element, options) {
     this._userOptions = options || {};
     this.callBase(element, options);
   },
-  _init: function _init() {
+  _init: function () {
     this._initEditStrategy();
     this.callBase();
     this._initKeyGetter();
     this._initSelectionModule();
   },
-  _initKeyGetter: function _initKeyGetter() {
+  _initKeyGetter: function () {
     this._keyGetter = (0, _data.compileGetter)(this.option('keyExpr'));
   },
-  _getKeysByItems: function _getKeysByItems(selectedItems) {
+  _getKeysByItems: function (selectedItems) {
     return this._editStrategy.getKeysByItems(selectedItems);
   },
-  _getItemsByKeys: function _getItemsByKeys(selectedItemKeys, selectedItems) {
+  _getItemsByKeys: function (selectedItemKeys, selectedItems) {
     return this._editStrategy.getItemsByKeys(selectedItemKeys, selectedItems);
   },
-  _getKeyByIndex: function _getKeyByIndex(index) {
+  _getKeyByIndex: function (index) {
     return this._editStrategy.getKeyByIndex(index);
   },
-  _getIndexByKey: function _getIndexByKey(key) {
+  _getIndexByKey: function (key) {
     return this._editStrategy.getIndexByKey(key);
   },
-  _getIndexByItemData: function _getIndexByItemData(itemData) {
+  _getIndexByItemData: function (itemData) {
     return this._editStrategy.getIndexByItemData(itemData);
   },
-  _isKeySpecified: function _isKeySpecified() {
+  _isKeySpecified: function () {
     return !!this._dataController.key();
   },
-  _getCombinedFilter: function _getCombinedFilter() {
+  _getCombinedFilter: function () {
     return this._dataController.filter();
   },
-  key: function key() {
+  key: function () {
     if (this.option('keyExpr')) return this.option('keyExpr');
     return this._dataController.key();
   },
-  keyOf: function keyOf(item) {
-    var key = item;
+  keyOf: function (item) {
+    let key = item;
     if (this.option('keyExpr')) {
       key = this._keyGetter(item);
     } else if (this._dataController.store()) {
@@ -159,34 +153,34 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }
     return key;
   },
-  _nullValueSelectionSupported: function _nullValueSelectionSupported() {
+  _nullValueSelectionSupported: function () {
     return false;
   },
-  _initSelectionModule: function _initSelectionModule() {
-    var that = this;
-    var itemsGetter = that._editStrategy.itemsGetter;
+  _initSelectionModule: function () {
+    const that = this;
+    const itemsGetter = that._editStrategy.itemsGetter;
     this._selection = new _selection.default({
       allowNullValue: this._nullValueSelectionSupported(),
       mode: this.option('selectionMode'),
       maxFilterLengthInRequest: this.option('maxFilterLengthInRequest'),
       equalByReference: !this._isKeySpecified(),
-      onSelectionChanged: function onSelectionChanged(args) {
+      onSelectionChanged: function (args) {
         if (args.addedItemKeys.length || args.removedItemKeys.length) {
           that.option('selectedItems', that._getItemsByKeys(args.selectedItemKeys, args.selectedItems));
           that._updateSelectedItems(args);
         }
       },
       filter: that._getCombinedFilter.bind(that),
-      totalCount: function totalCount() {
-        var items = that.option('items');
-        var totalCount = that._dataController.totalCount();
+      totalCount: function () {
+        const items = that.option('items');
+        const totalCount = that._dataController.totalCount();
         return totalCount >= 0 ? totalCount : that._getItemsCount(items);
       },
       key: that.key.bind(that),
       keyOf: that.keyOf.bind(that),
-      load: function load(options) {
+      load: function (options) {
         var _dataController$loadO;
-        var dataController = that._dataController;
+        const dataController = that._dataController;
         options.customQueryParams = (_dataController$loadO = dataController.loadOptions()) === null || _dataController$loadO === void 0 ? void 0 : _dataController$loadO.customQueryParams;
         options.userData = dataController.userData();
         if (dataController.store()) {
@@ -194,36 +188,35 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
             if (that._disposed) {
               return;
             }
-            var items = (0, _utils.normalizeLoadResult)(loadResult).data;
+            const items = (0, _utils.normalizeLoadResult)(loadResult).data;
             dataController.applyMapFunction(items);
           });
         } else {
           return new _deferred.Deferred().resolve(this.plainItems());
         }
       },
-      dataFields: function dataFields() {
+      dataFields: function () {
         return that._dataController.select();
       },
       plainItems: itemsGetter.bind(that._editStrategy)
     });
   },
-  _getItemsCount: function _getItemsCount(items) {
-    var _this = this;
-    return items.reduce(function (itemsCount, item) {
-      return itemsCount += item.items ? _this._getItemsCount(item.items) : 1;
+  _getItemsCount: function (items) {
+    return items.reduce((itemsCount, item) => {
+      return itemsCount += item.items ? this._getItemsCount(item.items) : 1;
     }, 0);
   },
-  _initEditStrategy: function _initEditStrategy() {
-    var Strategy = _uiCollection_widgetEditStrategy.default;
+  _initEditStrategy: function () {
+    const Strategy = _uiCollection_widgetEditStrategy.default;
     this._editStrategy = new Strategy(this);
   },
-  _getSelectedItemIndices: function _getSelectedItemIndices(keys) {
-    var that = this;
-    var indices = [];
+  _getSelectedItemIndices: function (keys) {
+    const that = this;
+    const indices = [];
     keys = keys || this._selection.getSelectedItemKeys();
     that._editStrategy.beginCache();
     (0, _iterator.each)(keys, function (_, key) {
-      var selectedIndex = that._getIndexByKey(key);
+      const selectedIndex = that._getIndexByKey(key);
       if (indexExists(selectedIndex)) {
         indices.push(selectedIndex);
       }
@@ -231,31 +224,28 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     that._editStrategy.endCache();
     return indices;
   },
-  _initMarkup: function _initMarkup() {
-    var _this2 = this;
+  _initMarkup: function () {
     this._rendering = true;
     if (!this._dataController.isLoading()) {
-      this._syncSelectionOptions().done(function () {
-        return _this2._normalizeSelectedItems();
-      });
+      this._syncSelectionOptions().done(() => this._normalizeSelectedItems());
     }
     this.callBase();
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._rendering = false;
   },
-  _fireContentReadyAction: function _fireContentReadyAction() {
+  _fireContentReadyAction: function () {
     this._rendering = false;
     this._rendered = true;
     this.callBase.apply(this, arguments);
   },
-  _syncSelectionOptions: function _syncSelectionOptions(byOption) {
+  _syncSelectionOptions: function (byOption) {
     byOption = byOption || this._chooseSelectOption();
-    var selectedItem;
-    var selectedIndex;
-    var selectedItemKeys;
-    var selectedItems;
+    let selectedItem;
+    let selectedIndex;
+    let selectedItemKeys;
+    let selectedItems;
     switch (byOption) {
       case 'selectedIndex':
         selectedItem = this._editStrategy.getItemDataByIndex(this.option('selectedIndex'));
@@ -298,7 +288,7 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
       case 'selectedItemKeys':
         selectedItemKeys = this.option('selectedItemKeys');
         if (this.option('selectionRequired')) {
-          var selectedItemIndex = this._getIndexByKey(selectedItemKeys[0]);
+          const selectedItemIndex = this._getIndexByKey(selectedItemKeys[0]);
           if (!indexExists(selectedItemIndex)) {
             return this._syncSelectionOptions('selectedIndex');
           }
@@ -307,11 +297,11 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }
     return new _deferred.Deferred().resolve().promise();
   },
-  _chooseSelectOption: function _chooseSelectOption() {
-    var optionName = 'selectedIndex';
-    var isOptionDefined = function (optionName) {
-      var optionValue = this.option(optionName);
-      var length = (0, _type.isDefined)(optionValue) && optionValue.length;
+  _chooseSelectOption: function () {
+    let optionName = 'selectedIndex';
+    const isOptionDefined = function (optionName) {
+      const optionValue = this.option(optionName);
+      const length = (0, _type.isDefined)(optionValue) && optionValue.length;
       return length || optionName in this._userOptions;
     }.bind(this);
     if (isOptionDefined('selectedItems')) {
@@ -323,26 +313,26 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }
     return optionName;
   },
-  _compareKeys: function _compareKeys(oldKeys, newKeys) {
+  _compareKeys: function (oldKeys, newKeys) {
     if (oldKeys.length !== newKeys.length) {
       return false;
     }
-    for (var i = 0; i < newKeys.length; i++) {
+    for (let i = 0; i < newKeys.length; i++) {
       if (oldKeys[i] !== newKeys[i]) {
         return false;
       }
     }
     return true;
   },
-  _normalizeSelectedItems: function _normalizeSelectedItems() {
+  _normalizeSelectedItems: function () {
     if (this.option('selectionMode') === 'none') {
       this._setOptionWithoutOptionChange('selectedItems', []);
       this._syncSelectionOptions('selectedItems');
     } else if (this.option('selectionMode') === 'single') {
-      var newSelection = this.option('selectedItems');
+      const newSelection = this.option('selectedItems');
       if (newSelection.length > 1 || !newSelection.length && this.option('selectionRequired') && this.option('items') && this.option('items').length) {
-        var currentSelection = this._selection.getSelectedItems();
-        var normalizedSelection = newSelection[0] === undefined ? currentSelection[0] : newSelection[0];
+        const currentSelection = this._selection.getSelectedItems();
+        let normalizedSelection = newSelection[0] === undefined ? currentSelection[0] : newSelection[0];
         if (normalizedSelection === undefined) {
           normalizedSelection = this._editStrategy.itemsGetter()[0];
         }
@@ -356,19 +346,17 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
         this._selection.setSelection(this._getKeysByItems(newSelection));
       }
     } else {
-      var newKeys = this._getKeysByItems(this.option('selectedItems'));
-      var oldKeys = this._selection.getSelectedItemKeys();
+      const newKeys = this._getKeysByItems(this.option('selectedItems'));
+      const oldKeys = this._selection.getSelectedItemKeys();
       if (!this._compareKeys(oldKeys, newKeys)) {
         this._selection.setSelection(newKeys);
       }
     }
     return new _deferred.Deferred().resolve().promise();
   },
-  _itemClickHandler: function _itemClickHandler(e) {
-    var _arguments = arguments,
-      _this3 = this;
-    var itemSelectPromise = new _deferred.Deferred().resolve();
-    var callBase = this.callBase;
+  _itemClickHandler: function (e) {
+    let itemSelectPromise = new _deferred.Deferred().resolve();
+    const callBase = this.callBase;
     this._createAction(function (e) {
       var _this$_itemSelectHand;
       itemSelectPromise = (_this$_itemSelectHand = this._itemSelectHandler(e.event)) !== null && _this$_itemSelectHand !== void 0 ? _this$_itemSelectHand : itemSelectPromise;
@@ -378,17 +366,17 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
       itemElement: (0, _renderer.default)(e.currentTarget),
       event: e
     });
-    itemSelectPromise.always(function () {
-      callBase.apply(_this3, _arguments);
+    itemSelectPromise.always(() => {
+      callBase.apply(this, arguments);
     });
   },
-  _itemSelectHandler: function _itemSelectHandler(e) {
+  _itemSelectHandler: function (e) {
     var _itemSelectPromise;
-    var itemSelectPromise;
+    let itemSelectPromise;
     if (!this.option('selectByClick')) {
       return;
     }
-    var $itemElement = e.currentTarget;
+    const $itemElement = e.currentTarget;
     if (this.isItemSelected($itemElement)) {
       this.unselectItem(e.currentTarget);
     } else {
@@ -396,39 +384,39 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }
     return (_itemSelectPromise = itemSelectPromise) === null || _itemSelectPromise === void 0 ? void 0 : _itemSelectPromise.promise();
   },
-  _selectedItemElement: function _selectedItemElement(index) {
+  _selectedItemElement: function (index) {
     return this._itemElements().eq(index);
   },
-  _postprocessRenderItem: function _postprocessRenderItem(args) {
+  _postprocessRenderItem: function (args) {
     if (this.option('selectionMode') !== 'none') {
-      var $itemElement = (0, _renderer.default)(args.itemElement);
-      var normalizedItemIndex = this._editStrategy.getNormalizedIndex($itemElement);
-      var isItemSelected = this._isItemSelected(normalizedItemIndex);
+      const $itemElement = (0, _renderer.default)(args.itemElement);
+      const normalizedItemIndex = this._editStrategy.getNormalizedIndex($itemElement);
+      const isItemSelected = this._isItemSelected(normalizedItemIndex);
       this._processSelectableItem($itemElement, isItemSelected);
     }
   },
-  _processSelectableItem: function _processSelectableItem($itemElement, isSelected) {
+  _processSelectableItem: function ($itemElement, isSelected) {
     $itemElement.toggleClass(this._selectedItemClass(), isSelected);
     this._setAriaSelectionAttribute($itemElement, String(isSelected));
   },
-  _updateSelectedItems: function _updateSelectedItems(args) {
-    var that = this;
-    var addedItemKeys = args.addedItemKeys;
-    var removedItemKeys = args.removedItemKeys;
+  _updateSelectedItems: function (args) {
+    const that = this;
+    const addedItemKeys = args.addedItemKeys;
+    const removedItemKeys = args.removedItemKeys;
     if (that._rendered && (addedItemKeys.length || removedItemKeys.length)) {
-      var selectionChangePromise = that._selectionChangePromise;
+      const selectionChangePromise = that._selectionChangePromise;
       if (!that._rendering) {
-        var addedSelection = [];
-        var normalizedIndex;
-        var removedSelection = [];
+        const addedSelection = [];
+        let normalizedIndex;
+        const removedSelection = [];
         that._editStrategy.beginCache();
-        for (var i = 0; i < addedItemKeys.length; i++) {
+        for (let i = 0; i < addedItemKeys.length; i++) {
           normalizedIndex = that._getIndexByKey(addedItemKeys[i]);
           addedSelection.push(normalizedIndex);
           that._addSelection(normalizedIndex);
         }
-        for (var _i = 0; _i < removedItemKeys.length; _i++) {
-          normalizedIndex = that._getIndexByKey(removedItemKeys[_i]);
+        for (let i = 0; i < removedItemKeys.length; i++) {
+          normalizedIndex = that._getIndexByKey(removedItemKeys[i]);
           removedSelection.push(normalizedIndex);
           that._removeSelection(normalizedIndex);
         }
@@ -440,7 +428,7 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
       });
     }
   },
-  _fireSelectionChangeEvent: function _fireSelectionChangeEvent(addedItems, removedItems) {
+  _fireSelectionChangeEvent: function (addedItems, removedItems) {
     this._createActionByOption('onSelectionChanged', {
       excludeValidators: ['disabled', 'readOnly']
     })({
@@ -449,31 +437,30 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     });
   },
   _updateSelection: _common.noop,
-  _setAriaSelectionAttribute: function _setAriaSelectionAttribute($target, value) {
+  _setAriaSelectionAttribute: function ($target, value) {
     this.setAria('selected', value, $target);
   },
-  _removeSelection: function _removeSelection(normalizedIndex) {
-    var $itemElement = this._editStrategy.getItemElement(normalizedIndex);
+  _removeSelection: function (normalizedIndex) {
+    const $itemElement = this._editStrategy.getItemElement(normalizedIndex);
     if (indexExists(normalizedIndex)) {
       this._processSelectableItem($itemElement, false);
       _events_engine.default.triggerHandler($itemElement, 'stateChanged', false);
     }
   },
-  _addSelection: function _addSelection(normalizedIndex) {
-    var $itemElement = this._editStrategy.getItemElement(normalizedIndex);
+  _addSelection: function (normalizedIndex) {
+    const $itemElement = this._editStrategy.getItemElement(normalizedIndex);
     if (indexExists(normalizedIndex)) {
       this._processSelectableItem($itemElement, true);
       _events_engine.default.triggerHandler($itemElement, 'stateChanged', true);
     }
   },
-  _isItemSelected: function _isItemSelected(index) {
-    var key = this._getKeyByIndex(index);
+  _isItemSelected: function (index) {
+    const key = this._getKeyByIndex(index);
     return this._selection.isItemSelected(key, {
       checkPending: true
     });
   },
-  _optionChanged: function _optionChanged(args) {
-    var _this4 = this;
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'selectionMode':
         this._invalidate();
@@ -488,9 +475,7 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
       case 'selectedItem':
       case 'selectedItems':
       case 'selectedItemKeys':
-        this._syncSelectionOptions(args.name).done(function () {
-          return _this4._normalizeSelectedItems();
-        });
+        this._syncSelectionOptions(args.name).done(() => this._normalizeSelectedItems());
         break;
       case 'keyExpr':
         this._initKeyGetter();
@@ -509,27 +494,27 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  _clearSelectedItems: function _clearSelectedItems() {
+  _clearSelectedItems: function () {
     this._setOptionWithoutOptionChange('selectedItems', []);
     this._syncSelectionOptions('selectedItems');
   },
-  _waitDeletingPrepare: function _waitDeletingPrepare($itemElement) {
+  _waitDeletingPrepare: function ($itemElement) {
     if ($itemElement.data(ITEM_DELETING_DATA_KEY)) {
       return new _deferred.Deferred().resolve().promise();
     }
     $itemElement.data(ITEM_DELETING_DATA_KEY, true);
-    var deferred = new _deferred.Deferred();
-    var deletingActionArgs = {
+    const deferred = new _deferred.Deferred();
+    const deletingActionArgs = {
       cancel: false
     };
-    var deletePromise = this._itemEventHandler($itemElement, 'onItemDeleting', deletingActionArgs, {
+    const deletePromise = this._itemEventHandler($itemElement, 'onItemDeleting', deletingActionArgs, {
       excludeValidators: ['disabled', 'readOnly']
     });
     (0, _deferred.when)(deletePromise).always(function (value) {
-      var deletePromiseExists = !deletePromise;
-      var deletePromiseResolved = !deletePromiseExists && deletePromise.state() === 'resolved';
-      var argumentsSpecified = !!arguments.length;
-      var shouldDelete = deletePromiseExists || deletePromiseResolved && !argumentsSpecified || deletePromiseResolved && value;
+      const deletePromiseExists = !deletePromise;
+      const deletePromiseResolved = !deletePromiseExists && deletePromise.state() === 'resolved';
+      const argumentsSpecified = !!arguments.length;
+      const shouldDelete = deletePromiseExists || deletePromiseResolved && !argumentsSpecified || deletePromiseResolved && value;
       (0, _deferred.when)((0, _deferred.fromPromise)(deletingActionArgs.cancel)).always(function () {
         $itemElement.data(ITEM_DELETING_DATA_KEY, false);
       }).done(function (cancel) {
@@ -538,11 +523,11 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }.bind(this));
     return deferred.promise();
   },
-  _deleteItemFromDS: function _deleteItemFromDS($item) {
-    var dataController = this._dataController;
-    var deferred = new _deferred.Deferred();
-    var disabledState = this.option('disabled');
-    var dataStore = dataController.store();
+  _deleteItemFromDS: function ($item) {
+    const dataController = this._dataController;
+    const deferred = new _deferred.Deferred();
+    const disabledState = this.option('disabled');
+    const dataStore = dataController.store();
     if (!dataStore) {
       return new _deferred.Deferred().resolve().promise();
     }
@@ -564,8 +549,8 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }.bind(this));
     return deferred;
   },
-  _tryRefreshLastPage: function _tryRefreshLastPage() {
-    var deferred = new _deferred.Deferred();
+  _tryRefreshLastPage: function () {
+    const deferred = new _deferred.Deferred();
     if (this._isLastPage() || this.option('grouped')) {
       deferred.resolve();
     } else {
@@ -575,22 +560,22 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }
     return deferred.promise();
   },
-  _refreshLastPage: function _refreshLastPage() {
+  _refreshLastPage: function () {
     this._expectLastItemLoading();
     return this._dataController.load();
   },
-  _updateSelectionAfterDelete: function _updateSelectionAfterDelete(index) {
-    var key = this._getKeyByIndex(index);
+  _updateSelectionAfterDelete: function (index) {
+    const key = this._getKeyByIndex(index);
     this._selection.deselect([key]);
   },
-  _updateIndicesAfterIndex: function _updateIndicesAfterIndex(index) {
-    var itemElements = this._itemElements();
-    for (var i = index + 1; i < itemElements.length; i++) {
+  _updateIndicesAfterIndex: function (index) {
+    const itemElements = this._itemElements();
+    for (let i = index + 1; i < itemElements.length; i++) {
       (0, _renderer.default)(itemElements[i]).data(this._itemIndexKey(), i - 1);
     }
   },
-  _simulateOptionChange: function _simulateOptionChange(optionName) {
-    var optionValue = this.option(optionName);
+  _simulateOptionChange: function (optionName) {
+    const optionValue = this.option(optionName);
     if (optionValue instanceof _data_source.DataSource) {
       return;
     }
@@ -607,7 +592,7 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
   * @return boolean
   * @hidden
   */
-  isItemSelected: function isItemSelected(itemElement) {
+  isItemSelected: function (itemElement) {
     return this._isItemSelected(this._editStrategy.getNormalizedIndex(itemElement));
   },
   /**
@@ -616,21 +601,21 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
   * @param1 itemElement:Element
   * @hidden
   */
-  selectItem: function selectItem(itemElement) {
+  selectItem: function (itemElement) {
     if (this.option('selectionMode') === 'none') return;
-    var itemIndex = this._editStrategy.getNormalizedIndex(itemElement);
+    const itemIndex = this._editStrategy.getNormalizedIndex(itemElement);
     if (!indexExists(itemIndex)) {
       return;
     }
-    var key = this._getKeyByIndex(itemIndex);
+    const key = this._getKeyByIndex(itemIndex);
     if (this._selection.isItemSelected(key)) {
       return;
     }
     if (this.option('selectionMode') === 'single') {
       return this._selection.setSelection([key]);
     } else {
-      var selectedItemKeys = this.option('selectedItemKeys') || [];
-      return this._selection.setSelection([].concat(_toConsumableArray(selectedItemKeys), [key]), [key]);
+      const selectedItemKeys = this.option('selectedItemKeys') || [];
+      return this._selection.setSelection([...selectedItemKeys, key], [key]);
     }
   },
   /**
@@ -639,16 +624,16 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
   * @param1 itemElement:Element
   * @hidden
   */
-  unselectItem: function unselectItem(itemElement) {
-    var itemIndex = this._editStrategy.getNormalizedIndex(itemElement);
+  unselectItem: function (itemElement) {
+    const itemIndex = this._editStrategy.getNormalizedIndex(itemElement);
     if (!indexExists(itemIndex)) {
       return;
     }
-    var selectedItemKeys = this._selection.getSelectedItemKeys();
+    const selectedItemKeys = this._selection.getSelectedItemKeys();
     if (this.option('selectionRequired') && selectedItemKeys.length <= 1) {
       return;
     }
-    var key = this._getKeyByIndex(itemIndex);
+    const key = this._getKeyByIndex(itemIndex);
     if (!this._selection.isItemSelected(key, {
       checkPending: true
     })) {
@@ -656,16 +641,16 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
     }
     this._selection.deselect([key]);
   },
-  _deleteItemElementByIndex: function _deleteItemElementByIndex(index) {
+  _deleteItemElementByIndex: function (index) {
     this._updateSelectionAfterDelete(index);
     this._updateIndicesAfterIndex(index);
     this._editStrategy.deleteItemAtIndex(index);
   },
-  _afterItemElementDeleted: function _afterItemElementDeleted($item, deletedActionArgs) {
-    var changingOption = this._dataController.getDataSource() ? 'dataSource' : 'items';
+  _afterItemElementDeleted: function ($item, deletedActionArgs) {
+    const changingOption = this._dataController.getDataSource() ? 'dataSource' : 'items';
     this._simulateOptionChange(changingOption);
     this._itemEventHandler($item, 'onItemDeleted', deletedActionArgs, {
-      beforeExecute: function beforeExecute() {
+      beforeExecute: function () {
         $item.remove();
       },
       excludeValidators: ['disabled', 'readOnly']
@@ -679,16 +664,16 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
   * @return Promise<void>
   * @hidden
   */
-  deleteItem: function deleteItem(itemElement) {
-    var that = this;
-    var deferred = new _deferred.Deferred();
-    var $item = this._editStrategy.getItemElement(itemElement);
-    var index = this._editStrategy.getNormalizedIndex(itemElement);
-    var itemResponseWaitClass = this._itemResponseWaitClass();
+  deleteItem: function (itemElement) {
+    const that = this;
+    const deferred = new _deferred.Deferred();
+    const $item = this._editStrategy.getItemElement(itemElement);
+    const index = this._editStrategy.getNormalizedIndex(itemElement);
+    const itemResponseWaitClass = this._itemResponseWaitClass();
     if (indexExists(index)) {
       this._waitDeletingPrepare($item).done(function () {
         $item.addClass(itemResponseWaitClass);
-        var deletedActionArgs = that._extendActionArgs($item);
+        const deletedActionArgs = that._extendActionArgs($item);
         that._deleteItemFromDS($item).done(function () {
           that._deleteItemElementByIndex(index);
           that._afterItemElementDeleted($item, deletedActionArgs);
@@ -715,16 +700,16 @@ var CollectionWidget = _uiCollection_widget.default.inherit({
   * @return Promise<void>
   * @hidden
   */
-  reorderItem: function reorderItem(itemElement, toItemElement) {
-    var deferred = new _deferred.Deferred();
-    var that = this;
-    var strategy = this._editStrategy;
-    var $movingItem = strategy.getItemElement(itemElement);
-    var $destinationItem = strategy.getItemElement(toItemElement);
-    var movingIndex = strategy.getNormalizedIndex(itemElement);
-    var destinationIndex = strategy.getNormalizedIndex(toItemElement);
-    var changingOption = this._dataController.getDataSource() ? 'dataSource' : 'items';
-    var canMoveItems = indexExists(movingIndex) && indexExists(destinationIndex) && movingIndex !== destinationIndex;
+  reorderItem: function (itemElement, toItemElement) {
+    const deferred = new _deferred.Deferred();
+    const that = this;
+    const strategy = this._editStrategy;
+    const $movingItem = strategy.getItemElement(itemElement);
+    const $destinationItem = strategy.getItemElement(toItemElement);
+    const movingIndex = strategy.getNormalizedIndex(itemElement);
+    const destinationIndex = strategy.getNormalizedIndex(toItemElement);
+    const changingOption = this._dataController.getDataSource() ? 'dataSource' : 'items';
+    const canMoveItems = indexExists(movingIndex) && indexExists(destinationIndex) && movingIndex !== destinationIndex;
     if (canMoveItems) {
       deferred.resolveWith(this);
     } else {

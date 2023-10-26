@@ -5,13 +5,13 @@ var _node = _interopRequireDefault(require("./node"));
 var _common = require("../../core/utils/common");
 var _extend2 = require("../../core/utils/extend");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var proto = _tree_map.default.prototype;
-var nodeProto = _node.default.prototype;
-var handlers = proto._handlers;
-var _calculateState = handlers.calculateState;
-var _buildState = nodeProto._buildState;
+const proto = _tree_map.default.prototype;
+const nodeProto = _node.default.prototype;
+const handlers = proto._handlers;
+const _calculateState = handlers.calculateState;
+const _buildState = nodeProto._buildState;
 handlers.calculateState = function (options) {
-  var states = {
+  const states = {
     0: _calculateState(options)
   };
   handlers.calculateAdditionalStates(states, options);
@@ -24,7 +24,7 @@ nodeProto.statesMap = {
 };
 nodeProto.additionalStates = [];
 nodeProto._buildState = function (state, extra) {
-  var states = {
+  const states = {
     0: _buildState(state[0], extra)
   };
   if (this.additionalStates.length) {
@@ -44,8 +44,8 @@ nodeProto.setState = function (code, state) {
   this.ctx.change(['TILES']);
 };
 function buildAdditionalStates(states, base, source, list) {
-  var i;
-  var ii = list.length;
+  let i;
+  const ii = list.length;
   for (i = 0; i < ii; ++i) {
     states[list[i]] = (0, _extend2.extend)({}, base, source[list[i]]);
   }

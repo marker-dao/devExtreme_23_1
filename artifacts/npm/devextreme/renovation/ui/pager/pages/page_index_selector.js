@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/pager/pages/page_index_selector.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,9 +17,8 @@ var _small = require("./small");
 var _pager_props = require("../common/pager_props");
 var _config_context = require("../../../common/config_context");
 var _message = _interopRequireDefault(require("../../../../localization/message"));
-var _excluded = ["hasKnownLastPage", "isLargeDisplayMode", "maxPagesCount", "pageCount", "pageIndex", "pageIndexChange", "pagesCountText", "showNavigationButtons", "totalCount"];
+const _excluded = ["hasKnownLastPage", "isLargeDisplayMode", "maxPagesCount", "pageCount", "pageIndex", "pageIndexChange", "pagesCountText", "showNavigationButtons", "totalCount"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -29,39 +28,38 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var PAGER_NAVIGATE_BUTTON = 'dx-navigate-button';
-var PAGER_PREV_BUTTON_CLASS = 'dx-prev-button';
-var PAGER_NEXT_BUTTON_CLASS = 'dx-next-button';
-var PAGER_BUTTON_DISABLE_CLASS = 'dx-button-disable';
+const PAGER_NAVIGATE_BUTTON = 'dx-navigate-button';
+const PAGER_PREV_BUTTON_CLASS = 'dx-prev-button';
+const PAGER_NEXT_BUTTON_CLASS = 'dx-next-button';
+const PAGER_BUTTON_DISABLE_CLASS = 'dx-button-disable';
 exports.PAGER_BUTTON_DISABLE_CLASS = PAGER_BUTTON_DISABLE_CLASS;
-var getNextButtonLabel = function getNextButtonLabel() {
-  return _message.default.getFormatter('dxPager-nextPage')();
-};
-var getPrevButtonLabel = function getPrevButtonLabel() {
-  return _message.default.getFormatter('dxPager-prevPage')();
-};
-var classNames = {
+const getNextButtonLabel = () => _message.default.getFormatter('dxPager-nextPage')();
+const getPrevButtonLabel = () => _message.default.getFormatter('dxPager-prevPage')();
+const classNames = {
   nextEnabledClass: "".concat(PAGER_NAVIGATE_BUTTON, " ").concat(PAGER_NEXT_BUTTON_CLASS),
   prevEnabledClass: "".concat(PAGER_NAVIGATE_BUTTON, " ").concat(PAGER_PREV_BUTTON_CLASS),
   nextDisabledClass: "".concat(PAGER_BUTTON_DISABLE_CLASS, " ").concat(PAGER_NAVIGATE_BUTTON, " ").concat(PAGER_NEXT_BUTTON_CLASS),
   prevDisabledClass: "".concat(PAGER_BUTTON_DISABLE_CLASS, " ").concat(PAGER_NAVIGATE_BUTTON, " ").concat(PAGER_PREV_BUTTON_CLASS)
 };
-var reverseDirections = {
+const reverseDirections = {
   next: 'prev',
   prev: 'next'
 };
-var viewFunction = function viewFunction(_ref) {
-  var nextButtonProps = _ref.nextButtonProps,
-    pageIndexChange = _ref.pageIndexChange,
-    prevButtonProps = _ref.prevButtonProps,
-    _ref$props = _ref.props,
-    isLargeDisplayMode = _ref$props.isLargeDisplayMode,
-    maxPagesCount = _ref$props.maxPagesCount,
-    pageCount = _ref$props.pageCount,
-    pageIndex = _ref$props.pageIndex,
-    pagesCountText = _ref$props.pagesCountText,
-    renderNextButton = _ref.renderNextButton,
-    renderPrevButton = _ref.renderPrevButton;
+const viewFunction = _ref => {
+  let {
+    nextButtonProps,
+    pageIndexChange,
+    prevButtonProps,
+    props: {
+      isLargeDisplayMode,
+      maxPagesCount,
+      pageCount,
+      pageIndex,
+      pagesCountText
+    },
+    renderNextButton,
+    renderPrevButton
+  } = _ref;
   return (0, _inferno.createFragment)([renderPrevButton && (0, _inferno.createComponentVNode)(2, _light_button.LightButton, {
     "label": getPrevButtonLabel(),
     "className": prevButtonProps.className,
@@ -88,62 +86,62 @@ exports.viewFunction = viewFunction;
 function getIncrement(direction) {
   return direction === 'next' ? +1 : -1;
 }
-var PageIndexSelectorProps = {
+const PageIndexSelectorProps = {
   isLargeDisplayMode: true
 };
 exports.PageIndexSelectorProps = PageIndexSelectorProps;
-var PageIndexSelectorPropsType = Object.defineProperties({}, {
+const PageIndexSelectorPropsType = Object.defineProperties({}, {
   pageIndex: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.pageIndex;
     },
     configurable: true,
     enumerable: true
   },
   maxPagesCount: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.maxPagesCount;
     },
     configurable: true,
     enumerable: true
   },
   pageCount: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.pageCount;
     },
     configurable: true,
     enumerable: true
   },
   hasKnownLastPage: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.hasKnownLastPage;
     },
     configurable: true,
     enumerable: true
   },
   showNavigationButtons: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.showNavigationButtons;
     },
     configurable: true,
     enumerable: true
   },
   totalCount: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.totalCount;
     },
     configurable: true,
     enumerable: true
   },
   isLargeDisplayMode: {
-    get: function get() {
+    get: function () {
       return PageIndexSelectorProps.isLargeDisplayMode;
     },
     configurable: true,
     enumerable: true
   }
 });
-var PageIndexSelector = /*#__PURE__*/function (_BaseInfernoComponent) {
+let PageIndexSelector = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(PageIndexSelector, _BaseInfernoComponent);
   function PageIndexSelector(props) {
     var _this;
@@ -165,17 +163,14 @@ var PageIndexSelector = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   };
   _proto.getButtonProps = function getButtonProps(direction) {
-    var _this$config,
-      _this2 = this;
-    var rtlAwareDirection = (_this$config = this.config) !== null && _this$config !== void 0 && _this$config.rtlEnabled ? reverseDirections[direction] : direction;
-    var canNavigate = this.canNavigateTo(rtlAwareDirection);
-    var className = classNames["".concat(direction).concat(canNavigate ? 'Enabled' : 'Disabled', "Class")];
+    var _this$config;
+    const rtlAwareDirection = (_this$config = this.config) !== null && _this$config !== void 0 && _this$config.rtlEnabled ? reverseDirections[direction] : direction;
+    const canNavigate = this.canNavigateTo(rtlAwareDirection);
+    const className = classNames["".concat(direction).concat(canNavigate ? 'Enabled' : 'Disabled', "Class")];
     return {
       className,
       tabIndex: canNavigate ? 0 : -1,
-      navigate: function navigate() {
-        return _this2.navigateToPage(rtlAwareDirection);
-      }
+      navigate: () => this.navigateToPage(rtlAwareDirection)
     };
   };
   _proto.canNavigateToPage = function canNavigateToPage(pageIndex) {
@@ -202,7 +197,7 @@ var PageIndexSelector = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       config: this.config,
@@ -216,7 +211,7 @@ var PageIndexSelector = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(PageIndexSelector, [{
     key: "config",
-    get: function get() {
+    get: function () {
       if (this.context[_config_context.ConfigContext.id]) {
         return this.context[_config_context.ConfigContext.id];
       }
@@ -224,53 +219,43 @@ var PageIndexSelector = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   }, {
     key: "renderPrevButton",
-    get: function get() {
-      var _this$props = this.props,
-        isLargeDisplayMode = _this$props.isLargeDisplayMode,
-        showNavigationButtons = _this$props.showNavigationButtons;
+    get: function () {
+      const {
+        isLargeDisplayMode,
+        showNavigationButtons
+      } = this.props;
       return !isLargeDisplayMode || showNavigationButtons;
     }
   }, {
     key: "renderNextButton",
-    get: function get() {
+    get: function () {
       return this.renderPrevButton || !this.props.hasKnownLastPage;
     }
   }, {
     key: "prevButtonProps",
-    get: function get() {
-      var _this3 = this;
+    get: function () {
       if (this.__getterCache['prevButtonProps'] !== undefined) {
         return this.__getterCache['prevButtonProps'];
       }
-      return this.__getterCache['prevButtonProps'] = function () {
-        return _this3.getButtonProps('prev');
-      }();
+      return this.__getterCache['prevButtonProps'] = (() => {
+        return this.getButtonProps('prev');
+      })();
     }
   }, {
     key: "nextButtonProps",
-    get: function get() {
-      var _this4 = this;
+    get: function () {
       if (this.__getterCache['nextButtonProps'] !== undefined) {
         return this.__getterCache['nextButtonProps'];
       }
-      return this.__getterCache['nextButtonProps'] = function () {
-        return _this4.getButtonProps('next');
-      }();
+      return this.__getterCache['nextButtonProps'] = (() => {
+        return this.getButtonProps('next');
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props2 = this.props,
-        hasKnownLastPage = _this$props2.hasKnownLastPage,
-        isLargeDisplayMode = _this$props2.isLargeDisplayMode,
-        maxPagesCount = _this$props2.maxPagesCount,
-        pageCount = _this$props2.pageCount,
-        pageIndex = _this$props2.pageIndex,
-        pageIndexChange = _this$props2.pageIndexChange,
-        pagesCountText = _this$props2.pagesCountText,
-        showNavigationButtons = _this$props2.showNavigationButtons,
-        totalCount = _this$props2.totalCount,
-        restProps = _objectWithoutProperties(_this$props2, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.context_menu.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,8 +23,8 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILEMANAGER_CONTEXT_MEMU_CLASS = 'dx-filemanager-context-menu';
-var DEFAULT_CONTEXT_MENU_ITEMS = {
+const FILEMANAGER_CONTEXT_MEMU_CLASS = 'dx-filemanager-context-menu';
+const DEFAULT_CONTEXT_MENU_ITEMS = {
   create: {},
   upload: {},
   download: {},
@@ -36,41 +36,33 @@ var DEFAULT_CONTEXT_MENU_ITEMS = {
     beginGroup: true
   }
 };
-var DEFAULT_ITEM_ALLOWED_PROPERTIES = ['beginGroup', 'closeMenuOnClick', 'disabled', 'icon', 'selectable', 'selected', 'text', 'visible'];
-var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
+const DEFAULT_ITEM_ALLOWED_PROPERTIES = ['beginGroup', 'closeMenuOnClick', 'disabled', 'icon', 'selectable', 'selected', 'text', 'visible'];
+let FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerContextMenu, _Widget);
   function FileManagerContextMenu() {
     return _Widget.apply(this, arguments) || this;
   }
   var _proto = FileManagerContextMenu.prototype;
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     this._initActions();
     this._isVisible = false;
-    var $menu = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const $menu = (0, _renderer.default)('<div>').appendTo(this.$element());
     this._contextMenu = this._createComponent($menu, _ui2.default, {
       cssClass: FILEMANAGER_CONTEXT_MEMU_CLASS,
       showEvent: '',
-      onItemClick: function onItemClick(args) {
-        return _this._onContextMenuItemClick(args.itemData.name, args);
-      },
-      onShowing: function onShowing(e) {
-        return _this._onContextMenuShowing(e);
-      },
-      onShown: function onShown() {
-        return _this._onContextMenuShown();
-      },
-      onHidden: function onHidden() {
-        return _this._onContextMenuHidden();
-      }
+      onItemClick: args => this._onContextMenuItemClick(args.itemData.name, args),
+      onShowing: e => this._onContextMenuShowing(e),
+      onShown: () => this._onContextMenuShown(),
+      onHidden: () => this._onContextMenuHidden()
     });
     _Widget.prototype._initMarkup.call(this);
   };
   _proto.showAt = function showAt(fileItems, element, event, target) {
-    var itemData = target.itemData,
-      itemElement = target.itemElement,
-      _target$isActionButto = target.isActionButton,
-      isActionButton = _target$isActionButto === void 0 ? false : _target$isActionButto;
+    const {
+      itemData,
+      itemElement,
+      isActionButton = false
+    } = target;
     if (this._isVisible) {
       this._onContextMenuHidden();
     }
@@ -81,7 +73,7 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
       event,
       isActionButton
     };
-    var position = {
+    const position = {
       of: element,
       at: 'top left',
       my: 'top left',
@@ -101,15 +93,14 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
     this._contextMenu.show();
   };
   _proto.createContextMenuItems = function createContextMenuItems(fileItems, contextMenuItems, targetFileItem) {
-    var _this2 = this;
     this._targetFileItems = fileItems;
     this._targetFileItem = (0, _type.isDefined)(targetFileItem) ? targetFileItem : fileItems === null || fileItems === void 0 ? void 0 : fileItems[0];
-    var result = [];
-    var itemArray = contextMenuItems || this.option('items');
-    itemArray.forEach(function (srcItem) {
-      var commandName = (0, _type.isString)(srcItem) ? srcItem : srcItem.name;
-      var item = _this2._configureItemByCommandName(commandName, srcItem, fileItems, _this2._targetFileItem);
-      if (_this2._isContextMenuItemAvailable(item, fileItems)) {
+    const result = [];
+    const itemArray = contextMenuItems || this.option('items');
+    itemArray.forEach(srcItem => {
+      const commandName = (0, _type.isString)(srcItem) ? srcItem : srcItem.name;
+      const item = this._configureItemByCommandName(commandName, srcItem, fileItems, this._targetFileItem);
+      if (this._isContextMenuItemAvailable(item, fileItems)) {
         result.push(item);
       }
     });
@@ -132,7 +123,7 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
   };
   _proto._configureItemByCommandName = function _configureItemByCommandName(commandName, item, fileItems, targetFileItem) {
     if (!this._isDefaultItem(commandName)) {
-      var res = (0, _extend.extend)(true, {}, item);
+      const res = (0, _extend.extend)(true, {}, item);
       res.originalItemData = item;
       this._addItemClickHandler(commandName, res);
       if (Array.isArray(item.items)) {
@@ -140,8 +131,8 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
       }
       return res;
     }
-    var result = this._createMenuItemByCommandName(commandName);
-    var defaultConfig = DEFAULT_CONTEXT_MENU_ITEMS[commandName];
+    const result = this._createMenuItemByCommandName(commandName);
+    const defaultConfig = DEFAULT_CONTEXT_MENU_ITEMS[commandName];
     (0, _extend.extend)(result, defaultConfig);
     result.originalItemData = item;
     (0, _uiFile_manager.extendAttributes)(result, item, DEFAULT_ITEM_ALLOWED_PROPERTIES);
@@ -156,10 +147,11 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
     return result;
   };
   _proto._createMenuItemByCommandName = function _createMenuItemByCommandName(commandName) {
-    var _this$_commandManager = this._commandManager.getCommandByName(commandName),
-      text = _this$_commandManager.text,
-      icon = _this$_commandManager.icon;
-    var menuItem = {
+    const {
+      text,
+      icon
+    } = this._commandManager.getCommandByName(commandName);
+    const menuItem = {
       name: commandName,
       text,
       icon
@@ -168,20 +160,17 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
     return menuItem;
   };
   _proto._addItemClickHandler = function _addItemClickHandler(commandName, contextMenuItem) {
-    var _this3 = this;
-    contextMenuItem.onItemClick = function (args) {
-      return _this3._onContextMenuItemClick(commandName, args);
-    };
+    contextMenuItem.onItemClick = args => this._onContextMenuItemClick(commandName, args);
   };
   _proto._onContextMenuItemClick = function _onContextMenuItemClick(commandName, args) {
     var _this$_targetFileItem;
-    var changedArgs = (0, _extend.extend)(true, {}, args);
+    const changedArgs = (0, _extend.extend)(true, {}, args);
     changedArgs.itemData = args.itemData.originalItemData;
     changedArgs.fileSystemItem = (_this$_targetFileItem = this._targetFileItem) === null || _this$_targetFileItem === void 0 ? void 0 : _this$_targetFileItem.fileItem;
     changedArgs.viewArea = this.option('viewArea');
     this._actions.onItemClick(changedArgs);
     if (this._isDefaultItem(commandName)) {
-      var targetFileItems = this._isIsolatedCreationItemCommand(commandName) ? null : this._targetFileItems;
+      const targetFileItems = this._isIsolatedCreationItemCommand(commandName) ? null : this._targetFileItems;
       this._commandManager.executeCommand(commandName, targetFileItems);
     }
   };
@@ -202,13 +191,13 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
     });
     this._actions.onContextMenuShowing(e);
     if (!e.cancel) {
-      var items = this.createContextMenuItems(this._menuShowingContext.fileItems, null, this._menuShowingContext.fileSystemItem);
+      const items = this.createContextMenuItems(this._menuShowingContext.fileItems, null, this._menuShowingContext.fileSystemItem);
       this._contextMenu.option('dataSource', items);
     }
   };
   _proto.tryUpdateVisibleContextMenu = function tryUpdateVisibleContextMenu() {
     if (this._isVisible) {
-      var items = this.createContextMenuItems(this._targetFileItems);
+      const items = this.createContextMenuItems(this._targetFileItems);
       this._contextMenu.option('dataSource', items);
     }
   };
@@ -234,7 +223,7 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'commandManager':
         this.repaint();
@@ -253,7 +242,7 @@ var FileManagerContextMenu = /*#__PURE__*/function (_Widget) {
   };
   _createClass(FileManagerContextMenu, [{
     key: "_commandManager",
-    get: function get() {
+    get: function () {
       return this.option('commandManager');
     }
   }]);

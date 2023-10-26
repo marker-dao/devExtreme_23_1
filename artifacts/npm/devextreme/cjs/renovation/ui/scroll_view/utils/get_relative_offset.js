@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scroll_view/utils/get_relative_offset.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,16 +10,16 @@
 
 exports.getRelativeOffset = getRelativeOffset;
 function getRelativeOffset(targetElementClass, sourceElement) {
-  var offset = {
+  const offset = {
     left: 0,
     top: 0
   };
-  var element = sourceElement;
+  let element = sourceElement;
   while ((_element = element) !== null && _element !== void 0 && _element.offsetParent && !element.classList.contains(targetElementClass)) {
     var _element;
-    var parentElement = element.offsetParent;
-    var elementRect = element.getBoundingClientRect();
-    var parentElementRect = parentElement.getBoundingClientRect();
+    const parentElement = element.offsetParent;
+    const elementRect = element.getBoundingClientRect();
+    const parentElementRect = parentElement.getBoundingClientRect();
     offset.left += elementRect.left - parentElementRect.left;
     offset.top += elementRect.top - parentElementRect.top;
     element = element.offsetParent;

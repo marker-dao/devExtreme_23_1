@@ -10,20 +10,20 @@ var _editor = _interopRequireDefault(require("../editor/editor"));
 var _index = require("../../events/utils/index");
 var _click = require("../../events/click");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var RADIO_BUTTON_CLASS = 'dx-radiobutton';
-var RADIO_BUTTON_ICON_CLASS = 'dx-radiobutton-icon';
-var RADIO_BUTTON_ICON_DOT_CLASS = 'dx-radiobutton-icon-dot';
-var RADIO_BUTTON_CHECKED_CLASS = 'dx-radiobutton-checked';
-var RADIO_BUTTON_ICON_CHECKED_CLASS = 'dx-radiobutton-icon-checked';
+const RADIO_BUTTON_CLASS = 'dx-radiobutton';
+const RADIO_BUTTON_ICON_CLASS = 'dx-radiobutton-icon';
+const RADIO_BUTTON_ICON_DOT_CLASS = 'dx-radiobutton-icon-dot';
+const RADIO_BUTTON_CHECKED_CLASS = 'dx-radiobutton-checked';
+const RADIO_BUTTON_ICON_CHECKED_CLASS = 'dx-radiobutton-icon-checked';
 
 /**
 * @name dxRadioButton
 * @inherits CollectionWidget
 * @hidden
 */
-var RadioButton = _editor.default.inherit({
-  _supportedKeys: function _supportedKeys() {
-    var click = function click(e) {
+const RadioButton = _editor.default.inherit({
+  _supportedKeys: function () {
+    const click = function (e) {
       e.preventDefault();
       this._clickAction({
         event: e
@@ -33,19 +33,19 @@ var RadioButton = _editor.default.inherit({
       space: click
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
       value: false
     });
   },
-  _canValueBeChangedByClick: function _canValueBeChangedByClick() {
+  _canValueBeChangedByClick: function () {
     return true;
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
@@ -53,28 +53,28 @@ var RadioButton = _editor.default.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this.$element().addClass(RADIO_BUTTON_CLASS);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this._renderIcon();
     this._renderCheckedState(this.option('value'));
     this._renderClick();
     this.setAria('role', 'radio');
   },
-  _renderIcon: function _renderIcon() {
+  _renderIcon: function () {
     this._$icon = (0, _renderer.default)('<div>').addClass(RADIO_BUTTON_ICON_CLASS);
     (0, _renderer.default)('<div>').addClass(RADIO_BUTTON_ICON_DOT_CLASS).appendTo(this._$icon);
     this.$element().append(this._$icon);
   },
-  _renderCheckedState: function _renderCheckedState(checked) {
+  _renderCheckedState: function (checked) {
     this.$element().toggleClass(RADIO_BUTTON_CHECKED_CLASS, checked).find('.' + RADIO_BUTTON_ICON_CLASS).toggleClass(RADIO_BUTTON_ICON_CHECKED_CLASS, checked);
     this.setAria('checked', checked);
   },
-  _renderClick: function _renderClick() {
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+  _renderClick: function () {
+    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
     this._clickAction = this._createAction(function (args) {
       this._clickHandler(args.event);
     }.bind(this));
@@ -85,11 +85,11 @@ var RadioButton = _editor.default.inherit({
       });
     }.bind(this));
   },
-  _clickHandler: function _clickHandler(e) {
+  _clickHandler: function (e) {
     this._saveValueChangeEvent(e);
     this.option('value', true);
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'value':
         this._renderCheckedState(args.value);

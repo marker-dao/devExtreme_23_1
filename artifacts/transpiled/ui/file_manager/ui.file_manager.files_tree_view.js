@@ -12,72 +12,47 @@ var _deferred = require("../../core/utils/deferred");
 var _window = require("../../core/utils/window");
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_DIRS_TREE_CLASS = 'dx-filemanager-dirs-tree';
-var FILE_MANAGER_DIRS_TREE_FOCUSED_ITEM_CLASS = 'dx-filemanager-focused-item';
-var FILE_MANAGER_DIRS_TREE_ITEM_TEXT_CLASS = 'dx-filemanager-dirs-tree-item-text';
-var TREE_VIEW_ITEM_CLASS = 'dx-treeview-item';
-var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
+const FILE_MANAGER_DIRS_TREE_CLASS = 'dx-filemanager-dirs-tree';
+const FILE_MANAGER_DIRS_TREE_FOCUSED_ITEM_CLASS = 'dx-filemanager-focused-item';
+const FILE_MANAGER_DIRS_TREE_ITEM_TEXT_CLASS = 'dx-filemanager-dirs-tree-item-text';
+const TREE_VIEW_ITEM_CLASS = 'dx-treeview-item';
+let FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerFilesTreeView, _Widget);
   function FileManagerFilesTreeView() {
     return _Widget.apply(this, arguments) || this;
   }
   var _proto = FileManagerFilesTreeView.prototype;
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     this._initActions();
     this._getCurrentDirectory = this.option('getCurrentDirectory');
     this._createFileActionsButton = _common.noop;
     this._storeExpandedState = this.option('storeExpandedState') || false;
-    var $treeView = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_DIRS_TREE_CLASS).appendTo(this.$element());
-    var treeViewOptions = {
+    const $treeView = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_DIRS_TREE_CLASS).appendTo(this.$element());
+    const treeViewOptions = {
       dataStructure: 'plain',
       rootValue: '',
       createChildren: this._onFilesTreeViewCreateSubDirectories.bind(this),
       itemTemplate: this._createFilesTreeViewItemTemplate.bind(this),
       keyExpr: 'getInternalKey',
       parentIdExpr: 'parentDirectory.getInternalKey',
-      displayExpr: function displayExpr(itemInfo) {
-        return itemInfo.getDisplayName();
-      },
+      displayExpr: itemInfo => itemInfo.getDisplayName(),
       hasItemsExpr: 'fileItem.hasSubDirectories',
-      onItemClick: function onItemClick(e) {
-        return _this._actions.onDirectoryClick(e);
-      },
-      onItemExpanded: function onItemExpanded(e) {
-        return _this._onFilesTreeViewItemExpanded(e);
-      },
-      onItemCollapsed: function onItemCollapsed(e) {
-        return _this._onFilesTreeViewItemCollapsed(e);
-      },
-      onItemRendered: function onItemRendered(e) {
-        return _this._onFilesTreeViewItemRendered(e);
-      },
-      onContentReady: function onContentReady() {
-        return _this._actions.onFilesTreeViewContentReady();
-      }
+      onItemClick: e => this._actions.onDirectoryClick(e),
+      onItemExpanded: e => this._onFilesTreeViewItemExpanded(e),
+      onItemCollapsed: e => this._onFilesTreeViewItemCollapsed(e),
+      onItemRendered: e => this._onFilesTreeViewItemRendered(e),
+      onContentReady: () => this._actions.onFilesTreeViewContentReady()
     };
     if (this._contextMenu) {
-      this._contextMenu.option('onContextMenuHidden', function () {
-        return _this._onContextMenuHidden();
-      });
-      treeViewOptions.onItemContextMenu = function (e) {
-        return _this._onFilesTreeViewItemContextMenu(e);
-      };
-      this._createFileActionsButton = function (element, options) {
-        return _this._createComponent(element, _uiFile_manager.default, options);
-      };
+      this._contextMenu.option('onContextMenuHidden', () => this._onContextMenuHidden());
+      treeViewOptions.onItemContextMenu = e => this._onFilesTreeViewItemContextMenu(e);
+      this._createFileActionsButton = (element, options) => this._createComponent(element, _uiFile_manager.default, options);
     }
     this._filesTreeView = this._createComponent($treeView, _uiTree_view.default, treeViewOptions);
   };
@@ -89,70 +64,77 @@ var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
   };
   _proto._render = function _render() {
     _Widget.prototype._render.call(this);
-    var that = this;
-    setTimeout(function () {
+    const that = this;
+    setTimeout(() => {
       that._updateFocusedElement();
     });
   };
   _proto._onFilesTreeViewCreateSubDirectories = function _onFilesTreeViewCreateSubDirectories(rootItem) {
-    var getDirectories = this.option('getDirectories');
-    var directoryInfo = rootItem && rootItem.itemData || null;
+    const getDirectories = this.option('getDirectories');
+    const directoryInfo = rootItem && rootItem.itemData || null;
     return getDirectories && getDirectories(directoryInfo, true);
   };
   _proto._onFilesTreeViewItemRendered = function _onFilesTreeViewItemRendered(_ref) {
-    var itemData = _ref.itemData;
-    var currentDirectory = this._getCurrentDirectory();
+    let {
+      itemData
+    } = _ref;
+    const currentDirectory = this._getCurrentDirectory();
     if (currentDirectory && currentDirectory.fileItem.equals(itemData.fileItem)) {
       this._updateFocusedElement();
       this._restoreScrollTopPosition();
     }
   };
   _proto._onFilesTreeViewItemExpanded = function _onFilesTreeViewItemExpanded(_ref2) {
-    var itemData = _ref2.itemData;
+    let {
+      itemData
+    } = _ref2;
     if (this._storeExpandedState) {
       itemData.expanded = true;
     }
   };
   _proto._onFilesTreeViewItemCollapsed = function _onFilesTreeViewItemCollapsed(_ref3) {
-    var itemData = _ref3.itemData;
+    let {
+      itemData
+    } = _ref3;
     if (this._storeExpandedState) {
       itemData.expanded = false;
     }
   };
   _proto._createFilesTreeViewItemTemplate = function _createFilesTreeViewItemTemplate(itemData, itemIndex, itemElement) {
-    var _this2 = this;
-    var $itemElement = (0, _renderer.default)(itemElement);
-    var $itemWrapper = $itemElement.closest(this._filesTreeViewItemSelector);
+    const $itemElement = (0, _renderer.default)(itemElement);
+    const $itemWrapper = $itemElement.closest(this._filesTreeViewItemSelector);
     $itemWrapper.data('item', itemData);
-    var $image = (0, _icon.getImageContainer)(itemData.icon);
-    var $text = (0, _renderer.default)('<span>').text(itemData.getDisplayName()).addClass(FILE_MANAGER_DIRS_TREE_ITEM_TEXT_CLASS);
-    var $button = (0, _renderer.default)('<div>');
+    const $image = (0, _icon.getImageContainer)(itemData.icon);
+    const $text = (0, _renderer.default)('<span>').text(itemData.getDisplayName()).addClass(FILE_MANAGER_DIRS_TREE_ITEM_TEXT_CLASS);
+    const $button = (0, _renderer.default)('<div>');
     $itemElement.append($image, $text, $button);
     this._createFileActionsButton($button, {
-      onClick: function onClick(e) {
-        return _this2._onFileItemActionButtonClick(e);
-      }
+      onClick: e => this._onFileItemActionButtonClick(e)
     });
   };
   _proto._onFilesTreeViewItemContextMenu = function _onFilesTreeViewItemContextMenu(_ref4) {
-    var itemElement = _ref4.itemElement,
-      event = _ref4.event;
+    let {
+      itemElement,
+      event
+    } = _ref4;
     event.preventDefault();
     event.stopPropagation();
-    var itemData = (0, _renderer.default)(itemElement).data('item');
+    const itemData = (0, _renderer.default)(itemElement).data('item');
     this._contextMenu.showAt([itemData], itemElement, event, {
       itemData,
       itemElement
     });
   };
   _proto._onFileItemActionButtonClick = function _onFileItemActionButtonClick(_ref5) {
-    var component = _ref5.component,
-      element = _ref5.element,
-      event = _ref5.event;
+    let {
+      component,
+      element,
+      event
+    } = _ref5;
     event.stopPropagation();
-    var itemElement = component.$element().closest(this._filesTreeViewItemSelector);
-    var itemData = itemElement.data('item');
-    var target = {
+    const itemElement = component.$element().closest(this._filesTreeViewItemSelector);
+    const itemData = itemElement.data('item');
+    const target = {
       itemData,
       itemElement,
       isActionButton: true
@@ -167,14 +149,12 @@ var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto.toggleNodeDisabledState = function toggleNodeDisabledState(key, state) {
-    var node = this._getNodeByKey(key);
+    const node = this._getNodeByKey(key);
     if (!node) {
       return;
     }
-    var items = this._filesTreeView.option('items');
-    var itemIndex = items.map(function (item) {
-      return item.getInternalKey();
-    }).indexOf(node.getInternalKey());
+    const items = this._filesTreeView.option('items');
+    const itemIndex = items.map(item => item.getInternalKey()).indexOf(node.getInternalKey());
     if (itemIndex !== -1) {
       this._filesTreeView.option("items[".concat(itemIndex, "].disabled"), state);
     }
@@ -186,17 +166,14 @@ var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
     this._scrollTopPosition = this._filesTreeView.getScrollable().scrollTop();
   };
   _proto._restoreScrollTopPosition = function _restoreScrollTopPosition() {
-    var _this3 = this;
     if (!(0, _window.hasWindow)() || !(0, _type.isNumeric)(this._scrollTopPosition)) {
       return;
     }
-    setTimeout(function () {
-      return _this3._filesTreeView.getScrollable().scrollTo(_this3._scrollTopPosition);
-    });
+    setTimeout(() => this._filesTreeView.getScrollable().scrollTo(this._scrollTopPosition));
   };
   _proto._updateFocusedElement = function _updateFocusedElement() {
-    var directoryInfo = this._getCurrentDirectory();
-    var $element = this._getItemElementByKey(directoryInfo === null || directoryInfo === void 0 ? void 0 : directoryInfo.getInternalKey());
+    const directoryInfo = this._getCurrentDirectory();
+    const $element = this._getItemElementByKey(directoryInfo === null || directoryInfo === void 0 ? void 0 : directoryInfo.getInternalKey());
     if (this._$focusedElement) {
       this._$focusedElement.toggleClass(FILE_MANAGER_DIRS_TREE_FOCUSED_ITEM_CLASS, false);
     }
@@ -210,21 +187,21 @@ var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
   _proto._getPublicNode = function _getPublicNode(key) {
     var _this$_filesTreeView2;
     // eslint-disable-next-line no-unsafe-optional-chaining
-    var nodesQueue = _toConsumableArray((_this$_filesTreeView2 = this._filesTreeView) === null || _this$_filesTreeView2 === void 0 ? void 0 : _this$_filesTreeView2.getNodes());
+    const nodesQueue = [...((_this$_filesTreeView2 = this._filesTreeView) === null || _this$_filesTreeView2 === void 0 ? void 0 : _this$_filesTreeView2.getNodes())];
     while (nodesQueue.length) {
-      var node = nodesQueue.shift();
+      const node = nodesQueue.shift();
       if (node.itemData.getInternalKey() === key) {
         return node;
       } else if (node.children.length) {
-        nodesQueue.push.apply(nodesQueue, _toConsumableArray(node.children));
+        nodesQueue.push(...node.children);
       }
     }
     return undefined;
   };
   _proto._getItemElementByKey = function _getItemElementByKey(key) {
-    var node = this._getNodeByKey(key);
+    const node = this._getNodeByKey(key);
     if (node) {
-      var $node = this._filesTreeView._getNodeElement(node);
+      const $node = this._filesTreeView._getNodeElement(node);
       if ($node) {
         return $node.children(this._filesTreeViewItemSelector);
       }
@@ -242,7 +219,7 @@ var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'storeExpandedState':
         this._storeExpandedState = this.option(name);
@@ -265,15 +242,15 @@ var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto.toggleDirectoryExpandedState = function toggleDirectoryExpandedState(directoryInfo, state) {
-    var deferred = new _deferred.Deferred();
-    var treeViewNode = this._getPublicNode(directoryInfo === null || directoryInfo === void 0 ? void 0 : directoryInfo.getInternalKey());
+    const deferred = new _deferred.Deferred();
+    const treeViewNode = this._getPublicNode(directoryInfo === null || directoryInfo === void 0 ? void 0 : directoryInfo.getInternalKey());
     if (!treeViewNode) {
       return deferred.reject().promise();
     }
     if (treeViewNode.expanded === state || treeViewNode.itemsLoaded && !treeViewNode.itemData.fileItem.hasSubDirectories) {
       return deferred.resolve().promise();
     }
-    var action = state ? 'expandItem' : 'collapseItem';
+    const action = state ? 'expandItem' : 'collapseItem';
     return this._filesTreeView[action](directoryInfo.getInternalKey());
   };
   _proto.refresh = function refresh() {
@@ -292,29 +269,26 @@ var FileManagerFilesTreeView = /*#__PURE__*/function (_Widget) {
     return this.toggleDirectoryExpandedStateRecursive(this._getCurrentDirectory().parentDirectory, true);
   };
   _proto.toggleDirectoryExpandedStateRecursive = function toggleDirectoryExpandedStateRecursive(directoryInfo, state) {
-    var dirLine = [];
-    for (var dirInfo = directoryInfo; dirInfo; dirInfo = dirInfo.parentDirectory) {
+    const dirLine = [];
+    for (let dirInfo = directoryInfo; dirInfo; dirInfo = dirInfo.parentDirectory) {
       dirLine.unshift(dirInfo);
     }
     return this.toggleDirectoryLineExpandedState(dirLine, state);
   };
   _proto.toggleDirectoryLineExpandedState = function toggleDirectoryLineExpandedState(dirLine, state) {
-    var _this4 = this;
     if (!dirLine.length) {
       return new _deferred.Deferred().resolve().promise();
     }
-    return this.toggleDirectoryExpandedState(dirLine.shift(), state).then(function () {
-      return _this4.toggleDirectoryLineExpandedState(dirLine, state);
-    });
+    return this.toggleDirectoryExpandedState(dirLine.shift(), state).then(() => this.toggleDirectoryLineExpandedState(dirLine, state));
   };
   _createClass(FileManagerFilesTreeView, [{
     key: "_filesTreeViewItemSelector",
-    get: function get() {
+    get: function () {
       return ".".concat(TREE_VIEW_ITEM_CLASS);
     }
   }, {
     key: "_contextMenu",
-    get: function get() {
+    get: function () {
       return this.option('contextMenu');
     }
   }]);

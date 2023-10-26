@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/validation/default_adapter.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,16 +11,13 @@
 exports.default = void 0;
 var _class = _interopRequireDefault(require("../../core/class"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DefaultAdapter = _class.default.inherit({
+const DefaultAdapter = _class.default.inherit({
   ctor(editor, validator) {
-    var _this = this;
     this.editor = editor;
     this.validator = validator;
     this.validationRequestsCallbacks = [];
-    var handler = function handler(args) {
-      _this.validationRequestsCallbacks.forEach(function (item) {
-        return item(args);
-      });
+    const handler = args => {
+      this.validationRequestsCallbacks.forEach(item => item(args));
     };
     editor.validationRequest.add(handler);
     editor.on('disposing', function () {

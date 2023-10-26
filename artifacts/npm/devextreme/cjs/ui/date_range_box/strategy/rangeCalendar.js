@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/strategy/rangeCalendar.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,7 +18,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
+let RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
   _inheritsLoose(RangeCalendarStrategy, _CalendarStrategy);
   function RangeCalendarStrategy(dateBox) {
     var _this;
@@ -44,46 +44,45 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     return _CalendarStrategy.prototype._getPopup.call(this) || this.dateRangeBox.getStartDateBox()._popup;
   };
   _proto.supportedKeys = function supportedKeys() {
-    var _this2 = this;
     return _extends({}, _CalendarStrategy.prototype.supportedKeys.call(this), {
-      rightArrow: function rightArrow() {
-        if (_this2.dateRangeBox.option('opened')) {
+      rightArrow: () => {
+        if (this.dateRangeBox.option('opened')) {
           return true;
         }
       },
-      leftArrow: function leftArrow() {
-        if (_this2.dateRangeBox.option('opened')) {
+      leftArrow: () => {
+        if (this.dateRangeBox.option('opened')) {
           return true;
         }
       },
-      enter: function enter(e) {
-        if (_this2.dateRangeBox.option('opened')) {
-          var dateBoxValue = _this2.dateBox.dateOption('value');
-          _this2.dateBox._valueChangeEventHandler(e);
-          var newDateBoxValue = _this2.dateBox.dateOption('value');
-          var dateBoxValueChanged = !(0, _uiDate_range.isSameDates)(dateBoxValue, newDateBoxValue);
+      enter: e => {
+        if (this.dateRangeBox.option('opened')) {
+          const dateBoxValue = this.dateBox.dateOption('value');
+          this.dateBox._valueChangeEventHandler(e);
+          const newDateBoxValue = this.dateBox.dateOption('value');
+          const dateBoxValueChanged = !(0, _uiDate_range.isSameDates)(dateBoxValue, newDateBoxValue);
           if (dateBoxValueChanged) {
-            _this2.dateRangeBox.getStartDateBox()._strategy._widget.option('value', _this2.dateRangeBox.option('value'));
+            this.dateRangeBox.getStartDateBox()._strategy._widget.option('value', this.dateRangeBox.option('value'));
           } else {
-            _this2.dateRangeBox.getStartDateBox()._strategy._widget._enterKeyHandler(e);
+            this.dateRangeBox.getStartDateBox()._strategy._widget._enterKeyHandler(e);
           }
           return false;
         }
       },
-      tab: function tab(e) {
-        if (!_this2.getDateRangeBox().option('opened')) {
+      tab: e => {
+        if (!this.getDateRangeBox().option('opened')) {
           return;
         }
-        if (!_this2._getPopup().getFocusableElements().length) {
-          if (!e.shiftKey && _this2.getDateRangeBox()._isEndDateActiveElement() || e.shiftKey && _this2.getDateRangeBox()._isStartDateActiveElement()) {
-            _this2.dateRangeBox.close();
+        if (!this._getPopup().getFocusableElements().length) {
+          if (!e.shiftKey && this.getDateRangeBox()._isEndDateActiveElement() || e.shiftKey && this.getDateRangeBox()._isStartDateActiveElement()) {
+            this.dateRangeBox.close();
           }
           return;
         }
-        if (!e.shiftKey && _this2.getDateRangeBox()._isStartDateActiveElement() || e.shiftKey && _this2.getDateRangeBox()._isEndDateActiveElement()) {
+        if (!e.shiftKey && this.getDateRangeBox()._isStartDateActiveElement() || e.shiftKey && this.getDateRangeBox()._isEndDateActiveElement()) {
           return;
         }
-        var $focusableElement = e.shiftKey ? _this2.getDateRangeBox().getStartDateBox()._getLastPopupElement() : _this2.getDateRangeBox().getStartDateBox()._getFirstPopupElement();
+        const $focusableElement = e.shiftKey ? this.getDateRangeBox().getStartDateBox()._getLastPopupElement() : this.getDateRangeBox().getStartDateBox()._getFirstPopupElement();
         if ($focusableElement) {
           _events_engine.default.trigger($focusableElement, 'focus');
           $focusableElement.select();
@@ -93,10 +92,13 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     });
   };
   _proto._getWidgetOptions = function _getWidgetOptions() {
-    var _this$dateRangeBox$op = this.dateRangeBox.option(),
-      disabledDatesValue = _this$dateRangeBox$op.disabledDates,
-      value = _this$dateRangeBox$op.value,
-      multiView = _this$dateRangeBox$op.multiView;
+    const {
+      disabledDates: disabledDatesValue,
+      value,
+      multiView
+    } = this.dateRangeBox.option();
+
+    // eslint-disable-next-line no-var
     var disabledDates = (0, _type.isFunction)(disabledDatesValue) ? this._injectComponent(disabledDatesValue) : disabledDates;
     return (0, _extend.extend)(_CalendarStrategy.prototype._getWidgetOptions.call(this), {
       disabledDates,
@@ -111,12 +113,9 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     this.dateRangeBox.setAria('activedescendant', e.actionValue);
   };
   _proto._injectComponent = function _injectComponent(func) {
-    var _this3 = this;
-    return function (params) {
-      return func((0, _extend.extend)(params, {
-        component: _this3.dateRangeBox
-      }));
-    };
+    return params => func((0, _extend.extend)(params, {
+      component: this.dateRangeBox
+    }));
   };
   _proto.getKeyboardListener = function getKeyboardListener() {
     return this.dateRangeBox.getStartDateBox() ? this.dateRangeBox.getStartDateBox()._strategy._widget : this._widget;
@@ -125,8 +124,9 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     return this._widget.option('value');
   };
   _proto._updateValue = function _updateValue() {
-    var _this$dateRangeBox$op2 = this.dateRangeBox.option(),
-      value = _this$dateRangeBox$op2.value;
+    const {
+      value
+    } = this.dateRangeBox.option();
     if (!this._widget) {
       return;
     }
@@ -137,9 +137,11 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     return this.dateRangeBox.option('applyValueMode') === 'instantly';
   };
   _proto._valueChangedHandler = function _valueChangedHandler(_ref) {
-    var value = _ref.value,
-      previousValue = _ref.previousValue,
-      event = _ref.event;
+    let {
+      value,
+      previousValue,
+      event
+    } = _ref;
     if ((0, _uiDate_range.isSameDateArrays)(value, previousValue) && !this._widget._valueSelected) {
       this._shouldPreventFocusChange = false;
       return;
@@ -178,7 +180,7 @@ var RangeCalendarStrategy = /*#__PURE__*/function (_CalendarStrategy) {
     this._shouldPreventFocusChange = false;
   };
   _proto._moveFocusToNextInput = function _moveFocusToNextInput() {
-    var targetDateBox = this._getCalendarCurrentSelection() === 'startDate' ? this.getDateRangeBox().getEndDateBox() : this.getDateRangeBox().getStartDateBox();
+    const targetDateBox = this._getCalendarCurrentSelection() === 'startDate' ? this.getDateRangeBox().getEndDateBox() : this.getDateRangeBox().getStartDateBox();
     targetDateBox.focus();
     _events_engine.default.trigger(targetDateBox.field(), 'dxclick');
   };

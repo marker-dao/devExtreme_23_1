@@ -12,21 +12,15 @@ var _devices = _interopRequireDefault(require("../../core/devices"));
 var _custom_store = _interopRequireDefault(require("../../data/custom_store"));
 var _ui = _interopRequireDefault(require("../widget/ui.widget"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_FILES_VIEW_CLASS = 'dx-filemanager-files-view';
-var FILE_MANAGER_ITEM_LIST_ITEM_OPEN_EVENT_NAMESPACE = 'dxFileManager_open';
-var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
+const FILE_MANAGER_FILES_VIEW_CLASS = 'dx-filemanager-files-view';
+const FILE_MANAGER_ITEM_LIST_ITEM_OPEN_EVENT_NAMESPACE = 'dxFileManager_open';
+let FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerItemListBase, _Widget);
   function FileManagerItemListBase() {
     return _Widget.apply(this, arguments) || this;
@@ -41,7 +35,7 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
   _proto._initMarkup = function _initMarkup() {
     this._needResetScrollPosition = false;
     this.$element().addClass(FILE_MANAGER_FILES_VIEW_CLASS);
-    var dblClickEventName = (0, _index.addNamespace)(_double_click.name, FILE_MANAGER_ITEM_LIST_ITEM_OPEN_EVENT_NAMESPACE);
+    const dblClickEventName = (0, _index.addNamespace)(_double_click.name, FILE_MANAGER_ITEM_LIST_ITEM_OPEN_EVENT_NAMESPACE);
     _events_engine.default.on(this.$element(), dblClickEventName, this._getItemSelector(), this._onItemDblClick.bind(this));
     _Widget.prototype._initMarkup.call(this);
   };
@@ -71,7 +65,7 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'selectionMode':
       case 'contextMenu':
@@ -100,22 +94,21 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._getItems = function _getItems() {
-    var _this = this;
-    return this._getItemsInternal().done(function (itemInfos) {
-      _this._itemCount = itemInfos.length;
-      if (_this._itemCount === 0) {
-        _this._resetFocus();
+    return this._getItemsInternal().done(itemInfos => {
+      this._itemCount = itemInfos.length;
+      if (this._itemCount === 0) {
+        this._resetFocus();
       }
-      var parentDirectoryItem = _this._findParentDirectoryItem(itemInfos);
-      _this._hasParentDirectoryItem = !!parentDirectoryItem;
-      _this._parentDirectoryItemKey = parentDirectoryItem ? parentDirectoryItem.fileItem.key : null;
-    }).always(function () {
-      _this._onDataLoaded();
+      const parentDirectoryItem = this._findParentDirectoryItem(itemInfos);
+      this._hasParentDirectoryItem = !!parentDirectoryItem;
+      this._parentDirectoryItemKey = parentDirectoryItem ? parentDirectoryItem.fileItem.key : null;
+    }).always(() => {
+      this._onDataLoaded();
     });
   };
   _proto._getItemsInternal = function _getItemsInternal() {
-    var itemsGetter = this.option('getItems');
-    var itemsResult = itemsGetter ? itemsGetter() : [];
+    const itemsGetter = this.option('getItems');
+    const itemsResult = itemsGetter ? itemsGetter() : [];
     return (0, _deferred.when)(itemsResult);
   };
   _proto._raiseOnError = function _raiseOnError(error) {
@@ -152,22 +145,21 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._tryRaiseSelectionChanged = function _tryRaiseSelectionChanged(_ref) {
-    var _this2 = this;
-    var selectedItemInfos = _ref.selectedItemInfos,
-      selectedItems = _ref.selectedItems,
-      selectedItemKeys = _ref.selectedItemKeys,
-      currentSelectedItemKeys = _ref.currentSelectedItemKeys,
-      currentDeselectedItemKeys = _ref.currentDeselectedItemKeys;
-    var parentDirectoryItem = this._findParentDirectoryItem(this.getSelectedItems());
+    let {
+      selectedItemInfos,
+      selectedItems,
+      selectedItemKeys,
+      currentSelectedItemKeys,
+      currentDeselectedItemKeys
+    } = _ref;
+    const parentDirectoryItem = this._findParentDirectoryItem(this.getSelectedItems());
     if (parentDirectoryItem) {
       this._deselectItem(parentDirectoryItem);
     }
-    var raiseEvent = !this._hasParentDirectoryItem;
+    let raiseEvent = !this._hasParentDirectoryItem;
     raiseEvent = raiseEvent || this._hasValidKeys(currentSelectedItemKeys) || this._hasValidKeys(currentDeselectedItemKeys);
     if (raiseEvent) {
-      selectedItemInfos = this._filterOutItemByPredicate(selectedItemInfos, function (item) {
-        return item.fileItem.key === _this2._parentDirectoryItemKey;
-      });
+      selectedItemInfos = this._filterOutItemByPredicate(selectedItemInfos, item => item.fileItem.key === this._parentDirectoryItemKey);
       selectedItems = this._filterOutParentDirectory(selectedItems);
       selectedItemKeys = this._filterOutParentDirectoryKey(selectedItemKeys, true);
       currentSelectedItemKeys = this._filterOutParentDirectoryKey(currentSelectedItemKeys, true);
@@ -193,27 +185,27 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
   };
   _proto._resetFocus = function _resetFocus() {};
   _proto._resetScrollTopPosition = function _resetScrollTopPosition() {
-    var _this3 = this;
     if (!(0, _window.hasWindow)()) {
       return;
     }
-    setTimeout(function () {
-      var _this3$_getScrollable;
-      return (_this3$_getScrollable = _this3._getScrollable()) === null || _this3$_getScrollable === void 0 ? void 0 : _this3$_getScrollable.scrollTo(0);
+    setTimeout(() => {
+      var _this$_getScrollable;
+      return (_this$_getScrollable = this._getScrollable()) === null || _this$_getScrollable === void 0 ? void 0 : _this$_getScrollable.scrollTo(0);
     });
   };
   _proto._getScrollable = function _getScrollable() {};
   _proto._getItemThumbnail = function _getItemThumbnail(fileInfo) {
-    var itemThumbnailGetter = this.option('getItemThumbnail');
+    const itemThumbnailGetter = this.option('getItemThumbnail');
     return itemThumbnailGetter ? itemThumbnailGetter(fileInfo) : {
       thumbnail: ''
     };
   };
   _proto._getItemThumbnailContainer = function _getItemThumbnailContainer(fileInfo) {
-    var _this$_getItemThumbna = this._getItemThumbnail(fileInfo),
-      thumbnail = _this$_getItemThumbna.thumbnail,
-      cssClass = _this$_getItemThumbna.cssClass;
-    var $itemThumbnail = (0, _icon.getImageContainer)(thumbnail).addClass(this._getItemThumbnailCssClass());
+    const {
+      thumbnail,
+      cssClass
+    } = this._getItemThumbnail(fileInfo);
+    const $itemThumbnail = (0, _icon.getImageContainer)(thumbnail).addClass(this._getItemThumbnailCssClass());
     if (cssClass) {
       $itemThumbnail.addClass(cssClass);
     }
@@ -231,8 +223,8 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     this._contextMenu.showAt(items, element, event, target);
   };
   _proto._findParentDirectoryItem = function _findParentDirectoryItem(itemInfos) {
-    for (var i = 0; i < itemInfos.length; i++) {
-      var itemInfo = itemInfos[i];
+    for (let i = 0; i < itemInfos.length; i++) {
+      const itemInfo = itemInfos[i];
       if (this._isParentDirectoryItem(itemInfo)) {
         return itemInfo;
       }
@@ -240,7 +232,7 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     return null;
   };
   _proto._getFileItemsForContextMenu = function _getFileItemsForContextMenu(fileItem) {
-    var result = this.getSelectedItems();
+    const result = this.getSelectedItems();
     if (this._isParentDirectoryItem(fileItem)) {
       result.push(fileItem);
     }
@@ -253,21 +245,15 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     return keys.length > 1 || keys.length === 1 && keys[0] !== this._parentDirectoryItemKey;
   };
   _proto._filterOutParentDirectory = function _filterOutParentDirectory(array, createNewArray) {
-    var _this4 = this;
-    return this._filterOutItemByPredicate(array, function (item) {
-      return item.key === _this4._parentDirectoryItemKey;
-    }, createNewArray);
+    return this._filterOutItemByPredicate(array, item => item.key === this._parentDirectoryItemKey, createNewArray);
   };
   _proto._filterOutParentDirectoryKey = function _filterOutParentDirectoryKey(array, createNewArray) {
-    var _this5 = this;
-    return this._filterOutItemByPredicate(array, function (key) {
-      return key === _this5._parentDirectoryItemKey;
-    }, createNewArray);
+    return this._filterOutItemByPredicate(array, key => key === this._parentDirectoryItemKey, createNewArray);
   };
   _proto._filterOutItemByPredicate = function _filterOutItemByPredicate(array, predicate, createNewArray) {
-    var result = array;
-    var index = -1;
-    for (var i = 0; i < array.length; i++) {
+    let result = array;
+    let index = -1;
+    for (let i = 0; i < array.length; i++) {
       if (predicate(array[i])) {
         index = i;
         break;
@@ -275,7 +261,7 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
     }
     if (index !== -1) {
       if (createNewArray) {
-        result = _toConsumableArray(array);
+        result = [...array];
       }
       result.splice(index, 1);
     }
@@ -301,7 +287,7 @@ var FileManagerItemListBase = /*#__PURE__*/function (_Widget) {
   _proto.refresh = function refresh(options, operation) {};
   _createClass(FileManagerItemListBase, [{
     key: "_contextMenu",
-    get: function get() {
+    get: function () {
       return this.option('contextMenu');
     }
   }]);

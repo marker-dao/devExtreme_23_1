@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/gantt.d.ts)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1619,6 +1619,7 @@ export interface dxGanttHeaderFilter {
     /**
      * @docid
      * @default 315 &for(Material)
+     * @default 315 &for(Fluent)
      * @default 325
      */
     height?: number;

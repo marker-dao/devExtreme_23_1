@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.edit.decorator.swipe.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,16 +17,16 @@ var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 (0, _uiListEdit.register)('delete', 'swipe', _uiListEdit2.default.inherit({
   _shouldHandleSwipe: true,
-  _renderItemPosition: function _renderItemPosition($itemElement, offset, animate) {
-    var deferred = new _deferred.Deferred();
-    var itemOffset = offset * this._itemElementWidth;
+  _renderItemPosition: function ($itemElement, offset, animate) {
+    const deferred = new _deferred.Deferred();
+    const itemOffset = offset * this._itemElementWidth;
     if (animate) {
       _fx.default.animate($itemElement, {
         to: {
           left: itemOffset
         },
         type: 'slide',
-        complete: function complete() {
+        complete: function () {
           deferred.resolve($itemElement, offset);
         }
       });
@@ -38,16 +38,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     }
     return deferred.promise();
   },
-  _swipeStartHandler: function _swipeStartHandler($itemElement) {
+  _swipeStartHandler: function ($itemElement) {
     this._itemElementWidth = (0, _size.getWidth)($itemElement);
     return true;
   },
-  _swipeUpdateHandler: function _swipeUpdateHandler($itemElement, args) {
+  _swipeUpdateHandler: function ($itemElement, args) {
     this._renderItemPosition($itemElement, args.offset);
     return true;
   },
-  _swipeEndHandler: function _swipeEndHandler($itemElement, args) {
-    var offset = args.targetOffset;
+  _swipeEndHandler: function ($itemElement, args) {
+    const offset = args.targetOffset;
     this._renderItemPosition($itemElement, offset, true).done(function ($itemElement, offset) {
       if (Math.abs(offset)) {
         this._list.deleteItem($itemElement).fail(function () {

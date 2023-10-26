@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/m_expression_utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,14 +13,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ExpressionUtils = void 0;
 var _type = require("../../core/utils/type");
-var ExpressionUtils = {
-  getField: function getField(dataAccessors, field, obj) {
+const ExpressionUtils = {
+  getField: (dataAccessors, field, obj) => {
     if (!(0, _type.isDefined)(dataAccessors.getter[field])) {
       return;
     }
     return dataAccessors.getter[field](obj);
   },
-  setField: function setField(dataAccessors, field, obj, value) {
+  setField: (dataAccessors, field, obj, value) => {
     if (!(0, _type.isDefined)(dataAccessors.setter[field])) {
       return;
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/load_indicator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,18 +19,18 @@ var _devices = _interopRequireDefault(require("../core/devices"));
 var _component_registrator = _interopRequireDefault(require("../core/component_registrator"));
 var _ui = _interopRequireDefault(require("./widget/ui.widget"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var navigator = (0, _window.getNavigator)();
+const navigator = (0, _window.getNavigator)();
 // STYLE loadIndicator
 
-var LOADINDICATOR_CLASS = 'dx-loadindicator';
-var LOADINDICATOR_WRAPPER_CLASS = 'dx-loadindicator-wrapper';
-var LOADINDICATOR_CONTENT_CLASS = 'dx-loadindicator-content';
-var LOADINDICATOR_ICON_CLASS = 'dx-loadindicator-icon';
-var LOADINDICATOR_SEGMENT_CLASS = 'dx-loadindicator-segment';
-var LOADINDICATOR_SEGMENT_INNER_CLASS = 'dx-loadindicator-segment-inner';
-var LOADINDICATOR_IMAGE_CLASS = 'dx-loadindicator-image';
-var LoadIndicator = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const LOADINDICATOR_CLASS = 'dx-loadindicator';
+const LOADINDICATOR_WRAPPER_CLASS = 'dx-loadindicator-wrapper';
+const LOADINDICATOR_CONTENT_CLASS = 'dx-loadindicator-content';
+const LOADINDICATOR_ICON_CLASS = 'dx-loadindicator-icon';
+const LOADINDICATOR_SEGMENT_CLASS = 'dx-loadindicator-segment';
+const LOADINDICATOR_SEGMENT_INNER_CLASS = 'dx-loadindicator-segment-inner';
+const LOADINDICATOR_IMAGE_CLASS = 'dx-loadindicator-image';
+const LoadIndicator = _ui.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       indicatorSrc: '',
       /**
@@ -68,19 +68,19 @@ var LoadIndicator = _ui.default.inherit({
       _animatingSegmentInner: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
-    var themeName = (0, _themes.current)();
+  _defaultOptionsRules: function () {
+    const themeName = (0, _themes.current)();
     return this.callBase().concat([{
-      device: function device() {
-        var realDevice = _devices.default.real();
-        var obsoleteAndroid = realDevice.platform === 'android' && !/chrome/i.test(navigator.userAgent);
+      device: function () {
+        const realDevice = _devices.default.real();
+        const obsoleteAndroid = realDevice.platform === 'android' && !/chrome/i.test(navigator.userAgent);
         return obsoleteAndroid;
       },
       options: {
         viaImage: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterialBased)(themeName);
       },
       options: {
@@ -88,7 +88,7 @@ var LoadIndicator = _ui.default.inherit({
         _animatingSegmentInner: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isGeneric)(themeName);
       },
       options: {
@@ -96,31 +96,32 @@ var LoadIndicator = _ui.default.inherit({
       }
     }]);
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return false;
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this.$element().addClass(LOADINDICATOR_CLASS);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this._renderWrapper();
     this._renderIndicatorContent();
     this._renderMarkup();
   },
-  _renderWrapper: function _renderWrapper() {
+  _renderWrapper: function () {
     this._$wrapper = (0, _renderer.default)('<div>').addClass(LOADINDICATOR_WRAPPER_CLASS);
     this.$element().append(this._$wrapper);
   },
-  _renderIndicatorContent: function _renderIndicatorContent() {
+  _renderIndicatorContent: function () {
     this._$content = (0, _renderer.default)('<div>').addClass(LOADINDICATOR_CONTENT_CLASS);
     this._$wrapper.append(this._$content);
   },
-  _renderMarkup: function _renderMarkup() {
-    var _this$option = this.option(),
-      viaImage = _this$option.viaImage,
-      indicatorSrc = _this$option.indicatorSrc;
+  _renderMarkup: function () {
+    const {
+      viaImage,
+      indicatorSrc
+    } = this.option();
     if ((0, _support.animation)() && !viaImage && !indicatorSrc) {
       // B236922
       this._renderMarkupForAnimation();
@@ -128,23 +129,24 @@ var LoadIndicator = _ui.default.inherit({
       this._renderMarkupForImage();
     }
   },
-  _renderMarkupForAnimation: function _renderMarkupForAnimation() {
-    var animatingSegmentInner = this.option('_animatingSegmentInner');
+  _renderMarkupForAnimation: function () {
+    const animatingSegmentInner = this.option('_animatingSegmentInner');
     this._$indicator = (0, _renderer.default)('<div>').addClass(LOADINDICATOR_ICON_CLASS);
     this._$content.append(this._$indicator);
 
     // Indicator markup
-    for (var i = this.option('_animatingSegmentCount'); i >= 0; --i) {
-      var $segment = (0, _renderer.default)('<div>').addClass(LOADINDICATOR_SEGMENT_CLASS).addClass(LOADINDICATOR_SEGMENT_CLASS + i);
+    for (let i = this.option('_animatingSegmentCount'); i >= 0; --i) {
+      const $segment = (0, _renderer.default)('<div>').addClass(LOADINDICATOR_SEGMENT_CLASS).addClass(LOADINDICATOR_SEGMENT_CLASS + i);
       if (animatingSegmentInner) {
         $segment.append((0, _renderer.default)('<div>').addClass(LOADINDICATOR_SEGMENT_INNER_CLASS));
       }
       this._$indicator.append($segment);
     }
   },
-  _renderMarkupForImage: function _renderMarkupForImage() {
-    var _this$option2 = this.option(),
-      indicatorSrc = _this$option2.indicatorSrc;
+  _renderMarkupForImage: function () {
+    const {
+      indicatorSrc
+    } = this.option();
     if (indicatorSrc) {
       this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
       this._$wrapper.css('backgroundImage', 'url(' + indicatorSrc + ')');
@@ -152,20 +154,20 @@ var LoadIndicator = _ui.default.inherit({
       this._renderMarkupForAnimation();
     }
   },
-  _renderDimensions: function _renderDimensions() {
+  _renderDimensions: function () {
     this.callBase();
     this._updateContentSizeForAnimation();
   },
-  _updateContentSizeForAnimation: function _updateContentSizeForAnimation() {
+  _updateContentSizeForAnimation: function () {
     if (!this._$indicator) {
       return;
     }
-    var width = this.option('width');
-    var height = this.option('height');
+    let width = this.option('width');
+    let height = this.option('height');
     if (width || height) {
       width = (0, _size.getWidth)(this.$element());
       height = (0, _size.getHeight)(this.$element());
-      var minDimension = Math.min(height, width);
+      const minDimension = Math.min(height, width);
       this._$wrapper.css({
         height: minDimension,
         width: minDimension,
@@ -173,22 +175,22 @@ var LoadIndicator = _ui.default.inherit({
       });
     }
   },
-  _clean: function _clean() {
+  _clean: function () {
     this.callBase();
     this._removeMarkupForAnimation();
     this._removeMarkupForImage();
   },
-  _removeMarkupForAnimation: function _removeMarkupForAnimation() {
+  _removeMarkupForAnimation: function () {
     if (!this._$indicator) {
       return;
     }
     this._$indicator.remove();
     delete this._$indicator;
   },
-  _removeMarkupForImage: function _removeMarkupForImage() {
+  _removeMarkupForImage: function () {
     this._$wrapper.css('backgroundImage', 'none');
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case '_animatingSegmentCount':
       case '_animatingSegmentInner':

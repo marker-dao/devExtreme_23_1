@@ -15,30 +15,19 @@ var _type = require("../../../core/utils/type");
 var _data_source = require("../../../data/data_source/data_source");
 var _utils = require("../../../data/data_source/utils");
 var _hasResourceValue = require("../../../renovation/ui/scheduler/resources/hasResourceValue");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+var _themes = require("../../../ui/themes");
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var getValueExpr = function getValueExpr(resource) {
-  return resource.valueExpr || 'id';
-};
+const getValueExpr = resource => resource.valueExpr || 'id';
 exports.getValueExpr = getValueExpr;
-var getDisplayExpr = function getDisplayExpr(resource) {
-  return resource.displayExpr || 'text';
-};
+const getDisplayExpr = resource => resource.displayExpr || 'text';
 exports.getDisplayExpr = getDisplayExpr;
-var getFieldExpr = function getFieldExpr(resource) {
-  return resource.fieldExpr || resource.field;
-};
+const getFieldExpr = resource => resource.fieldExpr || resource.field;
 exports.getFieldExpr = getFieldExpr;
-var getWrappedDataSource = function getWrappedDataSource(dataSource) {
+const getWrappedDataSource = dataSource => {
   if (dataSource instanceof _data_source.DataSource) {
     return dataSource;
   }
-  var result = _extends(_extends({}, (0, _utils.normalizeDataSourceOptions)(dataSource)), {
+  const result = _extends(_extends({}, (0, _utils.normalizeDataSourceOptions)(dataSource)), {
     pageSize: 0
   });
   if (!Array.isArray(dataSource)) {
@@ -47,14 +36,14 @@ var getWrappedDataSource = function getWrappedDataSource(dataSource) {
   return new _data_source.DataSource(result);
 };
 exports.getWrappedDataSource = getWrappedDataSource;
-var createResourcesTree = function createResourcesTree(groups) {
-  var leafIndex = 0;
-  var make = function make(group, groupIndex, result, parent) {
+const createResourcesTree = groups => {
+  let leafIndex = 0;
+  const make = (group, groupIndex, result, parent) => {
     var _a;
     result = result || [];
-    for (var itemIndex = 0; itemIndex < group.items.length; itemIndex++) {
-      var currentGroupItem = group.items[itemIndex];
-      var resultItem = {
+    for (let itemIndex = 0; itemIndex < group.items.length; itemIndex++) {
+      const currentGroupItem = group.items[itemIndex];
+      const resultItem = {
         name: group.name,
         value: currentGroupItem.id,
         title: currentGroupItem.text,
@@ -62,7 +51,7 @@ var createResourcesTree = function createResourcesTree(groups) {
         children: [],
         parent: parent || null
       };
-      var nextGroupIndex = groupIndex + 1;
+      const nextGroupIndex = groupIndex + 1;
       if (groups[nextGroupIndex]) {
         make(groups[nextGroupIndex], nextGroupIndex, resultItem.children, resultItem);
       }
@@ -77,20 +66,20 @@ var createResourcesTree = function createResourcesTree(groups) {
   return make(groups[0], 0);
 };
 exports.createResourcesTree = createResourcesTree;
-var getPathToLeaf = function getPathToLeaf(leafIndex, groups) {
-  var tree = createResourcesTree(groups);
-  var findLeafByIndex = function findLeafByIndex(data, index) {
-    for (var i = 0; i < data.length; i++) {
+const getPathToLeaf = (leafIndex, groups) => {
+  const tree = createResourcesTree(groups);
+  const findLeafByIndex = (data, index) => {
+    for (let i = 0; i < data.length; i++) {
       if (data[i].leafIndex === index) {
         return data[i];
       }
-      var _leaf = findLeafByIndex(data[i].children, index);
-      if (_leaf) {
-        return _leaf;
+      const leaf = findLeafByIndex(data[i].children, index);
+      if (leaf) {
+        return leaf;
       }
     }
   };
-  var makeBranch = function makeBranch(leaf, result) {
+  const makeBranch = (leaf, result) => {
     result = result || [];
     result.push(leaf.value);
     if (leaf.parent) {
@@ -98,19 +87,19 @@ var getPathToLeaf = function getPathToLeaf(leafIndex, groups) {
     }
     return result;
   };
-  var leaf = findLeafByIndex(tree, leafIndex);
+  const leaf = findLeafByIndex(tree, leafIndex);
   return makeBranch(leaf).reverse();
 };
 // TODO rework
 exports.getPathToLeaf = getPathToLeaf;
-var getCellGroups = function getCellGroups(groupIndex, groups) {
-  var result = [];
+const getCellGroups = (groupIndex, groups) => {
+  const result = [];
   if (getGroupCount(groups)) {
     if (groupIndex < 0) {
       return;
     }
-    var path = getPathToLeaf(groupIndex, groups);
-    for (var i = 0; i < groups.length; i++) {
+    const path = getPathToLeaf(groupIndex, groups);
+    for (let i = 0; i < groups.length; i++) {
       result.push({
         name: groups[i].name,
         id: path[i]
@@ -120,9 +109,9 @@ var getCellGroups = function getCellGroups(groupIndex, groups) {
   return result;
 };
 exports.getCellGroups = getCellGroups;
-var getGroupCount = function getGroupCount(groups) {
-  var result = 0;
-  for (var i = 0, len = groups.length; i < len; i++) {
+const getGroupCount = groups => {
+  let result = 0;
+  for (let i = 0, len = groups.length; i < len; i++) {
     if (!i) {
       result = groups[i].items.length;
     } else {
@@ -132,27 +121,27 @@ var getGroupCount = function getGroupCount(groups) {
   return result;
 };
 exports.getGroupCount = getGroupCount;
-var getGroupsObjectFromGroupsArray = function getGroupsObjectFromGroupsArray(groupsArray) {
-  return groupsArray.reduce(function (currentGroups, _ref) {
-    var name = _ref.name,
-      id = _ref.id;
-    return _extends(_extends({}, currentGroups), {
-      [name]: id
-    });
-  }, {});
-};
+const getGroupsObjectFromGroupsArray = groupsArray => groupsArray.reduce((currentGroups, _ref) => {
+  let {
+    name,
+    id
+  } = _ref;
+  return _extends(_extends({}, currentGroups), {
+    [name]: id
+  });
+}, {});
 exports.getGroupsObjectFromGroupsArray = getGroupsObjectFromGroupsArray;
-var getAllGroups = function getAllGroups(groups) {
-  var groupCount = getGroupCount(groups);
-  return _toConsumableArray(new Array(groupCount)).map(function (_, groupIndex) {
-    var groupsArray = getCellGroups(groupIndex, groups);
+const getAllGroups = groups => {
+  const groupCount = getGroupCount(groups);
+  return [...new Array(groupCount)].map((_, groupIndex) => {
+    const groupsArray = getCellGroups(groupIndex, groups);
     return getGroupsObjectFromGroupsArray(groupsArray);
   });
 };
 exports.getAllGroups = getAllGroups;
-var getResourceByField = function getResourceByField(fieldName, loadedResources) {
-  for (var i = 0; i < loadedResources.length; i++) {
-    var resource = loadedResources[i];
+const getResourceByField = (fieldName, loadedResources) => {
+  for (let i = 0; i < loadedResources.length; i++) {
+    const resource = loadedResources[i];
     if (resource.name === fieldName) {
       return resource.data;
     }
@@ -160,70 +149,61 @@ var getResourceByField = function getResourceByField(fieldName, loadedResources)
   return [];
 };
 exports.getResourceByField = getResourceByField;
-var createResourceEditorModel = function createResourceEditorModel(resources, loadedResources) {
-  return resources.map(function (resource) {
-    var dataField = getFieldExpr(resource);
-    var dataSource = getResourceByField(dataField, loadedResources);
-    return {
-      editorOptions: {
-        dataSource: dataSource.length ? dataSource : getWrappedDataSource(resource.dataSource),
-        displayExpr: getDisplayExpr(resource),
-        valueExpr: getValueExpr(resource)
-      },
-      dataField,
-      editorType: resource.allowMultiple ? 'dxTagBox' : 'dxSelectBox',
-      label: {
-        text: resource.label || dataField
-      }
-    };
-  });
-};
+const createResourceEditorModel = (resources, loadedResources) => resources.map(resource => {
+  const dataField = getFieldExpr(resource);
+  const dataSource = getResourceByField(dataField, loadedResources);
+  return {
+    editorOptions: {
+      dataSource: dataSource.length ? dataSource : getWrappedDataSource(resource.dataSource),
+      displayExpr: getDisplayExpr(resource),
+      valueExpr: getValueExpr(resource),
+      stylingMode: (0, _themes.isFluent)((0, _themes.current)()) ? 'filled' : 'outlined'
+    },
+    dataField,
+    editorType: resource.allowMultiple ? 'dxTagBox' : 'dxSelectBox',
+    label: {
+      text: resource.label || dataField
+    }
+  };
+});
 exports.createResourceEditorModel = createResourceEditorModel;
-var isResourceMultiple = function isResourceMultiple(resources, resourceField) {
-  var resource = resources.find(function (resource) {
-    var field = getFieldExpr(resource);
+const isResourceMultiple = (resources, resourceField) => {
+  const resource = resources.find(resource => {
+    const field = getFieldExpr(resource);
     return field === resourceField;
   });
   return !!(resource === null || resource === void 0 ? void 0 : resource.allowMultiple);
 };
 exports.isResourceMultiple = isResourceMultiple;
-var filterResources = function filterResources(resources, fields) {
-  return resources.filter(function (resource) {
-    var field = getFieldExpr(resource);
-    return fields.indexOf(field) > -1;
-  });
-};
+const filterResources = (resources, fields) => resources.filter(resource => {
+  const field = getFieldExpr(resource);
+  return fields.indexOf(field) > -1;
+});
 exports.filterResources = filterResources;
-var getPaintedResources = function getPaintedResources(resources, groups) {
-  var newGroups = groups || [];
-  var result = resources.find(function (resource) {
-    return resource.useColorAsDefault;
-  });
+const getPaintedResources = (resources, groups) => {
+  const newGroups = groups || [];
+  const result = resources.find(resource => resource.useColorAsDefault);
   if (result) {
     return result;
   }
-  var newResources = newGroups.length ? filterResources(resources, newGroups) : resources;
+  const newResources = newGroups.length ? filterResources(resources, newGroups) : resources;
   return newResources[newResources.length - 1];
 };
 exports.getPaintedResources = getPaintedResources;
-var getOrLoadResourceItem = function getOrLoadResourceItem(resources, resourceLoaderMap, field, value) {
+const getOrLoadResourceItem = (resources, resourceLoaderMap, field, value) => {
   // @ts-expect-error
-  var result = new _deferred.Deferred();
-  resources.filter(function (resource) {
-    return getFieldExpr(resource) === field && (0, _type.isDefined)(resource.dataSource);
-  }).forEach(function (resource) {
-    var wrappedDataSource = getWrappedDataSource(resource.dataSource);
-    var valueExpr = getValueExpr(resource);
+  const result = new _deferred.Deferred();
+  resources.filter(resource => getFieldExpr(resource) === field && (0, _type.isDefined)(resource.dataSource)).forEach(resource => {
+    const wrappedDataSource = getWrappedDataSource(resource.dataSource);
+    const valueExpr = getValueExpr(resource);
     if (!resourceLoaderMap.has(field)) {
       resourceLoaderMap.set(field, wrappedDataSource.load());
     }
-    resourceLoaderMap.get(field).done(function (data) {
-      var getter = (0, _data.compileGetter)(valueExpr);
-      var filteredData = data.filter(function (resource) {
-        return (0, _common.equalByValue)(getter(resource), value);
-      });
+    resourceLoaderMap.get(field).done(data => {
+      const getter = (0, _data.compileGetter)(valueExpr);
+      const filteredData = data.filter(resource => (0, _common.equalByValue)(getter(resource), value));
       result.resolve(filteredData[0]);
-    }).fail(function () {
+    }).fail(() => {
       resourceLoaderMap.delete(field);
       result.reject();
     });
@@ -231,29 +211,29 @@ var getOrLoadResourceItem = function getOrLoadResourceItem(resources, resourceLo
   return result.promise();
 };
 exports.getOrLoadResourceItem = getOrLoadResourceItem;
-var getDataAccessors = function getDataAccessors(dataAccessors, fieldName, type) {
-  var actions = dataAccessors[type];
+const getDataAccessors = (dataAccessors, fieldName, type) => {
+  const actions = dataAccessors[type];
   return actions[fieldName];
 };
 exports.getDataAccessors = getDataAccessors;
-var groupAppointmentsByResources = function groupAppointmentsByResources(config, appointments) {
-  var groups = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-  var result = {
+const groupAppointmentsByResources = function (config, appointments) {
+  let groups = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  let result = {
     0: appointments
   };
   if (groups.length && config.loadedResources.length) {
     result = groupAppointmentsByResourcesCore(config, appointments, config.loadedResources);
   }
-  var totalResourceCount = 0;
-  config.loadedResources.forEach(function (resource, index) {
+  let totalResourceCount = 0;
+  config.loadedResources.forEach((resource, index) => {
     if (!index) {
       totalResourceCount = resource.items.length;
     } else {
       totalResourceCount *= resource.items.length;
     }
   });
-  for (var index = 0; index < totalResourceCount; index++) {
-    var key = index.toString();
+  for (let index = 0; index < totalResourceCount; index++) {
+    const key = index.toString();
     if (result[key]) {
       continue;
     }
@@ -262,14 +242,12 @@ var groupAppointmentsByResources = function groupAppointmentsByResources(config,
   return result;
 };
 exports.groupAppointmentsByResources = groupAppointmentsByResources;
-var groupAppointmentsByResourcesCore = function groupAppointmentsByResourcesCore(config, appointments, resources) {
-  var tree = createResourcesTree(resources);
-  var result = {};
-  appointments.forEach(function (appointment) {
-    var treeLeaves = getResourceTreeLeaves(function (field, action) {
-      return getDataAccessors(config.dataAccessors, field, action);
-    }, tree, appointment);
-    for (var i = 0; i < treeLeaves.length; i++) {
+const groupAppointmentsByResourcesCore = (config, appointments, resources) => {
+  const tree = createResourcesTree(resources);
+  const result = {};
+  appointments.forEach(appointment => {
+    const treeLeaves = getResourceTreeLeaves((field, action) => getDataAccessors(config.dataAccessors, field, action), tree, appointment);
+    for (let i = 0; i < treeLeaves.length; i++) {
       if (!result[treeLeaves[i]]) {
         result[treeLeaves[i]] = [];
       }
@@ -280,9 +258,9 @@ var groupAppointmentsByResourcesCore = function groupAppointmentsByResourcesCore
   return result;
 };
 exports.groupAppointmentsByResourcesCore = groupAppointmentsByResourcesCore;
-var getResourceTreeLeaves = function getResourceTreeLeaves(getDataAccessors, tree, rawAppointment, result) {
+const getResourceTreeLeaves = (getDataAccessors, tree, rawAppointment, result) => {
   result = result || [];
-  for (var i = 0; i < tree.length; i++) {
+  for (let i = 0; i < tree.length; i++) {
     if (!hasGroupItem(getDataAccessors, rawAppointment, tree[i].name, tree[i].value)) {
       continue;
     }
@@ -296,27 +274,27 @@ var getResourceTreeLeaves = function getResourceTreeLeaves(getDataAccessors, tre
   return result;
 };
 exports.getResourceTreeLeaves = getResourceTreeLeaves;
-var hasGroupItem = function hasGroupItem(getDataAccessors, rawAppointment, groupName, itemValue) {
-  var resourceValue = getDataAccessors(groupName, 'getter')(rawAppointment);
+const hasGroupItem = (getDataAccessors, rawAppointment, groupName, itemValue) => {
+  const resourceValue = getDataAccessors(groupName, 'getter')(rawAppointment);
   return (0, _hasResourceValue.hasResourceValue)((0, _array.wrapToArray)(resourceValue), itemValue);
 };
-var createReducedResourcesTree = function createReducedResourcesTree(loadedResources, getDataAccessors, appointments) {
-  var tree = createResourcesTree(loadedResources);
+const createReducedResourcesTree = (loadedResources, getDataAccessors, appointments) => {
+  const tree = createResourcesTree(loadedResources);
   return reduceResourcesTree(getDataAccessors, tree, appointments);
 };
 exports.createReducedResourcesTree = createReducedResourcesTree;
-var reduceResourcesTree = function reduceResourcesTree(getDataAccessors, tree, existingAppointments, _result) {
+const reduceResourcesTree = (getDataAccessors, tree, existingAppointments, _result) => {
   _result = _result ? _result.children : [];
-  tree.forEach(function (node, index) {
-    var ok = false;
-    var resourceName = node.name;
-    var resourceValue = node.value;
-    var resourceTitle = node.title;
-    var resourceData = node.data;
-    var resourceGetter = getDataAccessors(resourceName, 'getter');
-    existingAppointments.forEach(function (appointment) {
+  tree.forEach((node, index) => {
+    let ok = false;
+    const resourceName = node.name;
+    const resourceValue = node.value;
+    const resourceTitle = node.title;
+    const resourceData = node.data;
+    const resourceGetter = getDataAccessors(resourceName, 'getter');
+    existingAppointments.forEach(appointment => {
       if (!ok) {
-        var resourceFromAppointment = resourceGetter(appointment);
+        const resourceFromAppointment = resourceGetter(appointment);
         if (Array.isArray(resourceFromAppointment)) {
           if (resourceFromAppointment.includes(resourceValue)) {
             _result.push({
@@ -347,47 +325,41 @@ var reduceResourcesTree = function reduceResourcesTree(getDataAccessors, tree, e
   return _result;
 };
 exports.reduceResourcesTree = reduceResourcesTree;
-var getResourcesDataByGroups = function getResourcesDataByGroups(loadedResources, resources, groups) {
+const getResourcesDataByGroups = (loadedResources, resources, groups) => {
   if (!groups || !groups.length) {
     return loadedResources;
   }
-  var fieldNames = {};
-  var currentResourcesData = [];
-  groups.forEach(function (group) {
-    (0, _iterator.each)(group, function (name, value) {
+  const fieldNames = {};
+  const currentResourcesData = [];
+  groups.forEach(group => {
+    (0, _iterator.each)(group, (name, value) => {
       fieldNames[name] = value;
     });
   });
-  var resourceData = loadedResources.filter(function (_ref2) {
-    var name = _ref2.name;
+  const resourceData = loadedResources.filter(_ref2 => {
+    let {
+      name
+    } = _ref2;
     return (0, _type.isDefined)(fieldNames[name]);
   });
-  resourceData.forEach(function (data) {
-    return currentResourcesData.push((0, _extend.extend)({}, data));
-  });
-  currentResourcesData.forEach(function (currentResource) {
-    var items = currentResource.items,
-      data = currentResource.data,
-      resourceName = currentResource.name;
-    var resource = filterResources(resources, [resourceName])[0] || {};
-    var valueExpr = getValueExpr(resource);
-    var filteredItems = [];
-    var filteredData = [];
-    groups.filter(function (group) {
-      return (0, _type.isDefined)(group[resourceName]);
-    }).forEach(function (group) {
-      (0, _iterator.each)(group, function (name, value) {
-        if (!filteredItems.filter(function (item) {
-          return item.id === value && item[valueExpr] === name;
-        }).length) {
-          var currentItems = items.filter(function (item) {
-            return item.id === value;
-          });
-          var currentData = data.filter(function (item) {
-            return item[valueExpr] === value;
-          });
-          filteredItems.push.apply(filteredItems, _toConsumableArray(currentItems));
-          filteredData.push.apply(filteredData, _toConsumableArray(currentData));
+  resourceData.forEach(data => currentResourcesData.push((0, _extend.extend)({}, data)));
+  currentResourcesData.forEach(currentResource => {
+    const {
+      items,
+      data,
+      name: resourceName
+    } = currentResource;
+    const resource = filterResources(resources, [resourceName])[0] || {};
+    const valueExpr = getValueExpr(resource);
+    const filteredItems = [];
+    const filteredData = [];
+    groups.filter(group => (0, _type.isDefined)(group[resourceName])).forEach(group => {
+      (0, _iterator.each)(group, (name, value) => {
+        if (!filteredItems.filter(item => item.id === value && item[valueExpr] === name).length) {
+          const currentItems = items.filter(item => item.id === value);
+          const currentData = data.filter(item => item[valueExpr] === value);
+          filteredItems.push(...currentItems);
+          filteredData.push(...currentData);
         }
       });
     });
@@ -397,46 +369,46 @@ var getResourcesDataByGroups = function getResourcesDataByGroups(loadedResources
   return currentResourcesData;
 };
 exports.getResourcesDataByGroups = getResourcesDataByGroups;
-var setResourceToAppointment = function setResourceToAppointment(resources, dataAccessors, appointment, groups) {
-  var resourcesSetter = dataAccessors.setter;
+const setResourceToAppointment = (resources, dataAccessors, appointment, groups) => {
+  const resourcesSetter = dataAccessors.setter;
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  for (var name in groups) {
-    var resourceData = groups[name];
-    var value = isResourceMultiple(resources, name) ? (0, _array.wrapToArray)(resourceData) : resourceData;
+  for (const name in groups) {
+    const resourceData = groups[name];
+    const value = isResourceMultiple(resources, name) ? (0, _array.wrapToArray)(resourceData) : resourceData;
     resourcesSetter[name](appointment, value);
   }
 };
 exports.setResourceToAppointment = setResourceToAppointment;
-var getResourceColor = function getResourceColor(resources, resourceLoaderMap, field, value) {
+const getResourceColor = (resources, resourceLoaderMap, field, value) => {
   // @ts-expect-error
-  var result = new _deferred.Deferred();
-  var resource = filterResources(resources, [field])[0] || {};
-  var colorExpr = resource.colorExpr || 'color';
-  var colorGetter = (0, _data.compileGetter)(colorExpr);
-  getOrLoadResourceItem(resources, resourceLoaderMap, field, value).done(function (resource) {
-    return result.resolve(colorGetter(resource));
-  }).fail(function () {
-    return result.reject();
-  });
+  const result = new _deferred.Deferred();
+  const resource = filterResources(resources, [field])[0] || {};
+  const colorExpr = resource.colorExpr || 'color';
+  const colorGetter = (0, _data.compileGetter)(colorExpr);
+  getOrLoadResourceItem(resources, resourceLoaderMap, field, value).done(resource => result.resolve(colorGetter(resource))).fail(() => result.reject());
   return result.promise();
 };
 exports.getResourceColor = getResourceColor;
-var getAppointmentColor = function getAppointmentColor(resourceConfig, appointmentConfig) {
-  var resources = resourceConfig.resources,
-    dataAccessors = resourceConfig.dataAccessors,
-    loadedResources = resourceConfig.loadedResources,
-    resourceLoaderMap = resourceConfig.resourceLoaderMap;
-  var groupIndex = appointmentConfig.groupIndex,
-    groups = appointmentConfig.groups,
-    itemData = appointmentConfig.itemData;
-  var paintedResources = getPaintedResources(resources || [], groups);
+const getAppointmentColor = (resourceConfig, appointmentConfig) => {
+  const {
+    resources,
+    dataAccessors,
+    loadedResources,
+    resourceLoaderMap
+  } = resourceConfig;
+  const {
+    groupIndex,
+    groups,
+    itemData
+  } = appointmentConfig;
+  const paintedResources = getPaintedResources(resources || [], groups);
   if (paintedResources) {
-    var field = getFieldExpr(paintedResources);
-    var cellGroups = getCellGroups(groupIndex, loadedResources);
-    var resourcesDataAccessors = getDataAccessors(dataAccessors, field, 'getter');
-    var resourceValues = (0, _array.wrapToArray)(resourcesDataAccessors(itemData));
-    var groupId = resourceValues[0];
-    for (var i = 0; i < cellGroups.length; i++) {
+    const field = getFieldExpr(paintedResources);
+    const cellGroups = getCellGroups(groupIndex, loadedResources);
+    const resourcesDataAccessors = getDataAccessors(dataAccessors, field, 'getter');
+    const resourceValues = (0, _array.wrapToArray)(resourcesDataAccessors(itemData));
+    let groupId = resourceValues[0];
+    for (let i = 0; i < cellGroups.length; i++) {
       if (cellGroups[i].name === field) {
         groupId = cellGroups[i].id;
         break;
@@ -448,25 +420,25 @@ var getAppointmentColor = function getAppointmentColor(resourceConfig, appointme
   return new _deferred.Deferred().resolve().promise();
 };
 exports.getAppointmentColor = getAppointmentColor;
-var createExpressions = function createExpressions() {
-  var resources = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var result = {
+const createExpressions = function () {
+  let resources = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  const result = {
     getter: {},
     setter: {}
   };
-  resources.forEach(function (resource) {
-    var field = getFieldExpr(resource);
+  resources.forEach(resource => {
+    const field = getFieldExpr(resource);
     result.getter[field] = (0, _data.compileGetter)(field);
     result.setter[field] = (0, _data.compileSetter)(field);
   });
   return result;
 };
 exports.createExpressions = createExpressions;
-var getTransformedResourceData = function getTransformedResourceData(resource, data) {
-  var valueGetter = (0, _data.compileGetter)(getValueExpr(resource));
-  var displayGetter = (0, _data.compileGetter)(getDisplayExpr(resource));
-  return data.map(function (item) {
-    var result = {
+const getTransformedResourceData = (resource, data) => {
+  const valueGetter = (0, _data.compileGetter)(getValueExpr(resource));
+  const displayGetter = (0, _data.compileGetter)(getDisplayExpr(resource));
+  return data.map(item => {
+    const result = {
       id: valueGetter(item),
       text: displayGetter(item)
     };
@@ -477,30 +449,28 @@ var getTransformedResourceData = function getTransformedResourceData(resource, d
     return result;
   });
 };
-var loadResources = function loadResources(groups, resources, resourceLoaderMap) {
+const loadResources = (groups, resources, resourceLoaderMap) => {
   // @ts-expect-error
-  var result = new _deferred.Deferred();
-  var deferreds = [];
-  var newGroups = groups || [];
-  var newResources = resources || [];
-  var loadedResources = [];
-  filterResources(newResources, newGroups).forEach(function (resource) {
+  const result = new _deferred.Deferred();
+  const deferreds = [];
+  const newGroups = groups || [];
+  const newResources = resources || [];
+  let loadedResources = [];
+  filterResources(newResources, newGroups).forEach(resource => {
     // @ts-expect-error
-    var deferred = new _deferred.Deferred();
-    var name = getFieldExpr(resource);
+    const deferred = new _deferred.Deferred();
+    const name = getFieldExpr(resource);
     deferreds.push(deferred);
-    var dataSourcePromise = getWrappedDataSource(resource.dataSource).load();
+    const dataSourcePromise = getWrappedDataSource(resource.dataSource).load();
     resourceLoaderMap.set(name, dataSourcePromise);
-    dataSourcePromise.done(function (data) {
-      var items = getTransformedResourceData(resource, data);
+    dataSourcePromise.done(data => {
+      const items = getTransformedResourceData(resource, data);
       deferred.resolve({
         name,
         items,
         data
       });
-    }).fail(function () {
-      return deferred.reject();
-    });
+    }).fail(() => deferred.reject());
   });
   if (!deferreds.length) {
     return result.resolve(loadedResources);
@@ -509,24 +479,20 @@ var loadResources = function loadResources(groups, resources, resourceLoaderMap)
     for (var _len = arguments.length, resources = new Array(_len), _key = 0; _key < _len; _key++) {
       resources[_key] = arguments[_key];
     }
-    var hasEmpty = resources.some(function (r) {
-      return r.items.length === 0;
-    });
+    const hasEmpty = resources.some(r => r.items.length === 0);
     loadedResources = hasEmpty ? [] : resources;
     result.resolve(loadedResources);
-  }).fail(function () {
-    return result.reject();
-  });
+  }).fail(() => result.reject());
   return result.promise();
 };
 exports.loadResources = loadResources;
-var getNormalizedResources = function getNormalizedResources(rawAppointment, dataAccessors, resources) {
-  var result = {};
-  (0, _iterator.each)(dataAccessors.resources.getter, function (fieldName) {
-    var value = dataAccessors.resources.getter[fieldName](rawAppointment);
+const getNormalizedResources = (rawAppointment, dataAccessors, resources) => {
+  const result = {};
+  (0, _iterator.each)(dataAccessors.resources.getter, fieldName => {
+    const value = dataAccessors.resources.getter[fieldName](rawAppointment);
     if ((0, _type.isDefined)(value)) {
-      var isMultiple = isResourceMultiple(resources, fieldName);
-      var resourceValue = isMultiple ? (0, _array.wrapToArray)(value) : value;
+      const isMultiple = isResourceMultiple(resources, fieldName);
+      const resourceValue = isMultiple ? (0, _array.wrapToArray)(value) : value;
       result[fieldName] = resourceValue;
     }
   });

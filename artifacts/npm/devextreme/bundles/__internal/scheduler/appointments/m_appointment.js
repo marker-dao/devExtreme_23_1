@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/m_appointment.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,11 +35,11 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable max-classes-per-file */
-var DEFAULT_HORIZONTAL_HANDLES = 'left right';
-var DEFAULT_VERTICAL_HANDLES = 'top bottom';
-var REDUCED_APPOINTMENT_POINTERENTER_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.enter, 'dxSchedulerAppointment');
-var REDUCED_APPOINTMENT_POINTERLEAVE_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.leave, 'dxSchedulerAppointment');
-var Appointment = /*#__PURE__*/function (_DOMComponent) {
+const DEFAULT_HORIZONTAL_HANDLES = 'left right';
+const DEFAULT_VERTICAL_HANDLES = 'top bottom';
+const REDUCED_APPOINTMENT_POINTERENTER_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.enter, 'dxSchedulerAppointment');
+const REDUCED_APPOINTMENT_POINTERLEAVE_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.leave, 'dxSchedulerAppointment');
+let Appointment = /*#__PURE__*/function (_DOMComponent) {
   _inheritsLoose(Appointment, _DOMComponent);
   function Appointment() {
     return _DOMComponent.apply(this, arguments) || this;
@@ -71,7 +71,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     });
   };
   _proto.notifyObserver = function notifyObserver(subject, args) {
-    var observer = this.option('observer');
+    const observer = this.option('observer');
     if (observer) {
       observer.fire(subject, args);
     }
@@ -79,7 +79,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ;
   _proto.invoke = function invoke(funcName) {
-    var observer = this.option('observer');
+    const observer = this.option('observer');
     if (observer) {
       return observer.fire.apply(observer, arguments);
     }
@@ -109,13 +109,13 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     }
   };
   _proto._getHorizontalResizingRule = function _getHorizontalResizingRule() {
-    var reducedHandles = {
+    const reducedHandles = {
       head: this.option('rtlEnabled') ? 'right' : 'left',
       body: '',
       tail: this.option('rtlEnabled') ? 'left' : 'right'
     };
-    var getResizableStep = this.option('getResizableStep');
-    var step = getResizableStep ? getResizableStep() : 0;
+    const getResizableStep = this.option('getResizableStep');
+    const step = getResizableStep ? getResizableStep() : 0;
     return {
       handles: this.option('reduced') ? reducedHandles[this.option('reduced')] : DEFAULT_HORIZONTAL_HANDLES,
       minHeight: 0,
@@ -125,7 +125,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     };
   };
   _proto._getVerticalResizingRule = function _getVerticalResizingRule() {
-    var height = Math.round(this.invoke('getCellHeight'));
+    const height = Math.round(this.invoke('getCellHeight'));
     return {
       handles: DEFAULT_VERTICAL_HANDLES,
       minWidth: 0,
@@ -144,7 +144,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     this._renderDragSourceClass();
     this._renderDirection();
     this.$element().data('dxAppointmentStartDate', this.option('startDate'));
-    var text = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'text', this.rawAppointment);
+    const text = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'text', this.rawAppointment);
     this.$element().attr('title', text);
     this.$element().attr('role', 'button');
     this._renderRecurrenceClass();
@@ -152,23 +152,22 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     this._setResourceColor();
   };
   _proto._setResourceColor = function _setResourceColor() {
-    var _this = this;
-    var appointmentConfig = {
+    const appointmentConfig = {
       itemData: this.rawAppointment,
       groupIndex: this.option('groupIndex'),
       groups: this.option('groups')
     };
-    var deferredColor = this.option('getAppointmentColor')(appointmentConfig);
-    deferredColor.done(function (color) {
+    const deferredColor = this.option('getAppointmentColor')(appointmentConfig);
+    deferredColor.done(color => {
       if (color) {
-        _this.coloredElement.css('backgroundColor', color);
-        _this.coloredElement.addClass(_m_classes.APPOINTMENT_HAS_RESOURCE_COLOR_CLASS);
+        this.coloredElement.css('backgroundColor', color);
+        this.coloredElement.addClass(_m_classes.APPOINTMENT_HAS_RESOURCE_COLOR_CLASS);
       }
     });
   };
   _proto._renderAppointmentGeometry = function _renderAppointmentGeometry() {
-    var geometry = this.option('geometry');
-    var $element = this.$element();
+    const geometry = this.option('geometry');
+    const $element = this.$element();
     (0, _translator.move)($element, {
       top: geometry.top,
       left: geometry.left
@@ -179,13 +178,13 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     });
   };
   _proto._renderEmptyClass = function _renderEmptyClass() {
-    var geometry = this.option('geometry');
+    const geometry = this.option('geometry');
     if (geometry.empty || this.option('isCompact')) {
       this.$element().addClass(_m_classes.EMPTY_APPOINTMENT_CLASS);
     }
   };
   _proto._renderReducedAppointment = function _renderReducedAppointment() {
-    var reducedPart = this.option('reduced');
+    const reducedPart = this.option('reduced');
     if (!reducedPart) {
       return;
     }
@@ -193,13 +192,13 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     this._renderAppointmentReducedIcon();
   };
   _proto._renderAppointmentReducedIcon = function _renderAppointmentReducedIcon() {
-    var $icon = (0, _renderer.default)('<div>').addClass(_m_classes.REDUCED_APPOINTMENT_ICON).appendTo(this.$element());
-    var endDate = this._getEndDate();
-    var tooltipLabel = _message.default.format('dxScheduler-editorLabelEndDate');
-    var tooltipText = [tooltipLabel, ': ', _date.default.format(endDate, 'monthAndDay'), ', ', _date.default.format(endDate, 'year')].join('');
+    const $icon = (0, _renderer.default)('<div>').addClass(_m_classes.REDUCED_APPOINTMENT_ICON).appendTo(this.$element());
+    const endDate = this._getEndDate();
+    const tooltipLabel = _message.default.format('dxScheduler-editorLabelEndDate');
+    const tooltipText = [tooltipLabel, ': ', _date.default.format(endDate, 'monthAndDay'), ', ', _date.default.format(endDate, 'year')].join('');
     // @ts-expect-error
     _events_engine.default.off($icon, REDUCED_APPOINTMENT_POINTERENTER_EVENT_NAME);
-    _events_engine.default.on($icon, REDUCED_APPOINTMENT_POINTERENTER_EVENT_NAME, function () {
+    _events_engine.default.on($icon, REDUCED_APPOINTMENT_POINTERENTER_EVENT_NAME, () => {
       (0, _ui.show)({
         target: $icon,
         content: tooltipText
@@ -207,12 +206,12 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     });
     // @ts-expect-error
     _events_engine.default.off($icon, REDUCED_APPOINTMENT_POINTERLEAVE_EVENT_NAME);
-    _events_engine.default.on($icon, REDUCED_APPOINTMENT_POINTERLEAVE_EVENT_NAME, function () {
+    _events_engine.default.on($icon, REDUCED_APPOINTMENT_POINTERLEAVE_EVENT_NAME, () => {
       (0, _ui.hide)();
     });
   };
   _proto._getEndDate = function _getEndDate() {
-    var result = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'endDate', this.rawAppointment);
+    const result = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'endDate', this.rawAppointment);
     if (result) {
       return new Date(result);
     }
@@ -225,7 +224,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     this.$element().toggleClass(_m_classes.APPOINTMENT_DRAG_SOURCE_CLASS, !!this.option('isDragSource'));
   };
   _proto._renderRecurrenceClass = function _renderRecurrenceClass() {
-    var rule = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceRule', this.rawAppointment);
+    const rule = _m_expression_utils.ExpressionUtils.getField(this.option('dataAccessors'), 'recurrenceRule', this.rawAppointment);
     if ((0, _m_recurrence.getRecurrenceProcessor)().isValidRecurrenceRule(rule)) {
       this.$element().addClass(_m_classes.RECURRENCE_APPOINTMENT_CLASS);
     }
@@ -234,7 +233,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
     this.$element().addClass(_m_classes.DIRECTION_APPOINTMENT_CLASSES[this.option('direction')]);
   };
   _proto._createResizingConfig = function _createResizingConfig() {
-    var config = this.option('direction') === 'vertical' ? this._getVerticalResizingRule() : this._getHorizontalResizingRule();
+    const config = this.option('direction') === 'vertical' ? this._getVerticalResizingRule() : this._getHorizontalResizingRule();
     if (!this.invoke('isGroupedByDate')) {
       config.stepPrecision = 'strict';
     }
@@ -251,12 +250,12 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
   };
   _createClass(Appointment, [{
     key: "coloredElement",
-    get: function get() {
+    get: function () {
       return this.$element();
     }
   }, {
     key: "rawAppointment",
-    get: function get() {
+    get: function () {
       return this.option('data');
     }
   }]);
@@ -264,7 +263,7 @@ var Appointment = /*#__PURE__*/function (_DOMComponent) {
 }(_dom_component.default);
 exports.Appointment = Appointment;
 (0, _component_registrator.default)('dxSchedulerAppointment', Appointment);
-var AgendaAppointment = /*#__PURE__*/function (_Appointment) {
+let AgendaAppointment = /*#__PURE__*/function (_Appointment) {
   _inheritsLoose(AgendaAppointment, _Appointment);
   function AgendaAppointment() {
     return _Appointment.apply(this, arguments) || this;
@@ -277,25 +276,24 @@ var AgendaAppointment = /*#__PURE__*/function (_Appointment) {
     });
   };
   _proto2._renderResourceList = function _renderResourceList(container, list) {
-    list.forEach(function (item) {
-      var itemContainer = (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST_ITEM).appendTo(container);
+    list.forEach(item => {
+      const itemContainer = (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST_ITEM).appendTo(container);
       (0, _renderer.default)('<div>').text("".concat(item.label, ":")).appendTo(itemContainer);
       (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST_ITEM_VALUE).text(item.values.join(', ')).appendTo(itemContainer);
     });
   };
   _proto2._render = function _render() {
-    var _this2 = this;
     _Appointment.prototype._render.call(this);
-    var createPlainResourceListAsync = this.option('createPlainResourceListAsync');
-    createPlainResourceListAsync(this.rawAppointment).done(function (list) {
-      var parent = _this2.$element().find(".".concat(_m_classes.APPOINTMENT_CONTENT_CLASSES.APPOINTMENT_CONTENT_DETAILS));
-      var container = (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST).appendTo(parent);
-      _this2._renderResourceList(container, list);
+    const createPlainResourceListAsync = this.option('createPlainResourceListAsync');
+    createPlainResourceListAsync(this.rawAppointment).done(list => {
+      const parent = this.$element().find(".".concat(_m_classes.APPOINTMENT_CONTENT_CLASSES.APPOINTMENT_CONTENT_DETAILS));
+      const container = (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST).appendTo(parent);
+      this._renderResourceList(container, list);
     });
   };
   _createClass(AgendaAppointment, [{
     key: "coloredElement",
-    get: function get() {
+    get: function () {
       return this.$element().find(".".concat(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_MARKER));
     }
   }]);

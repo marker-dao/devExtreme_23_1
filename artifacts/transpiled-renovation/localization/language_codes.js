@@ -3,7 +3,7 @@
 exports.getLanguageId = getLanguageId;
 var _core = _interopRequireDefault(require("./core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var LANGUAGE_CODES = {
+const LANGUAGE_CODES = {
   'ar': 1,
   'bg': 2,
   'ca': 3,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.editing.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,19 +21,13 @@ var _uiFile_manager = _interopRequireDefault(require("./ui.file_manager.dialog_m
 var _uiFile_manager2 = _interopRequireDefault(require("./ui.file_manager.file_uploader"));
 var _uiFile_manager3 = require("./ui.file_manager.messages");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
+let FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerEditingControl, _Widget);
   function FileManagerEditingControl() {
     return _Widget.apply(this, arguments) || this;
@@ -61,24 +55,27 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
       onDialogClosed: this._onDialogClosed.bind(this)
     });
     this._fileUploader = this._createFileUploader();
-    var notificationControl = this.option('notificationControl');
+    const notificationControl = this.option('notificationControl');
     if (notificationControl) {
       this._initNotificationControl(notificationControl);
     }
     this._createMetadataMap();
   };
   _proto._initNotificationControl = function _initNotificationControl(notificationControl) {
-    var _this = this;
     this._notificationControl = notificationControl;
     this._notificationControl.option({
-      onOperationCanceled: function onOperationCanceled(_ref) {
-        var info = _ref.info;
-        return _this._onCancelUploadSession(info);
+      onOperationCanceled: _ref => {
+        let {
+          info
+        } = _ref;
+        return this._onCancelUploadSession(info);
       },
-      onOperationItemCanceled: function onOperationItemCanceled(_ref2) {
-        var item = _ref2.item,
-          itemIndex = _ref2.itemIndex;
-        return _this._onCancelFileUpload(item, itemIndex);
+      onOperationItemCanceled: _ref2 => {
+        let {
+          item,
+          itemIndex
+        } = _ref2;
+        return this._onCancelFileUpload(item, itemIndex);
       }
     });
   };
@@ -86,20 +83,13 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     return _uiFile_manager2.default;
   };
   _proto._createFileUploader = function _createFileUploader() {
-    var _this2 = this;
-    var $fileUploader = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const $fileUploader = (0, _renderer.default)('<div>').appendTo(this.$element());
     return this._createComponent($fileUploader, this._getFileUploaderComponent(), {
       getController: this._getFileUploaderController.bind(this),
       dropZonePlaceholderContainer: this.option('uploadDropZonePlaceholderContainer'),
-      onUploadSessionStarted: function onUploadSessionStarted(e) {
-        return _this2._onUploadSessionStarted(e);
-      },
-      onUploadProgress: function onUploadProgress(e) {
-        return _this2._onUploadProgress(e);
-      },
-      onUploadFinished: function onUploadFinished(e) {
-        return _this2._onUploadFinished(e);
-      }
+      onUploadSessionStarted: e => this._onUploadSessionStarted(e),
+      onUploadProgress: e => this._onUploadProgress(e),
+      onUploadFinished: e => this._onUploadFinished(e)
     });
   };
   _proto.setUploaderDropZone = function setUploaderDropZone($element) {
@@ -109,25 +99,17 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     this._fileUploader.option('splitterElement', element);
   };
   _proto._getFileUploaderController = function _getFileUploaderController() {
-    var _this3 = this;
-    var uploadDirectory = this.uploadDirectoryInfo.fileItem;
+    const uploadDirectory = this.uploadDirectoryInfo.fileItem;
     return {
       chunkSize: this._controller.getFileUploadChunkSize(),
-      uploadFileChunk: function uploadFileChunk(fileData, chunksInfo) {
-        return _this3._controller.uploadFileChunk(fileData, chunksInfo, uploadDirectory);
-      },
-      abortFileUpload: function abortFileUpload(fileData, chunksInfo) {
-        return _this3._controller.abortFileUpload(fileData, chunksInfo, uploadDirectory);
-      }
+      uploadFileChunk: (fileData, chunksInfo) => this._controller.uploadFileChunk(fileData, chunksInfo, uploadDirectory),
+      abortFileUpload: (fileData, chunksInfo) => this._controller.abortFileUpload(fileData, chunksInfo, uploadDirectory)
     };
   };
   _proto._createMetadataMap = function _createMetadataMap() {
-    var _this4 = this;
     this._metadataMap = {
       create: {
-        action: function action(arg) {
-          return _this4._tryCreate(arg);
-        },
+        action: arg => this._tryCreate(arg),
         affectsAllItems: true,
         singleItemProcessingMessage: _message.default.format('dxFileManager-editingCreateSingleItemProcessingMessage'),
         singleItemSuccessMessage: _message.default.format('dxFileManager-editingCreateSingleItemSuccessMessage'),
@@ -135,18 +117,14 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
         commonErrorMessage: _message.default.format('dxFileManager-editingCreateCommonErrorMessage')
       },
       rename: {
-        action: function action(arg) {
-          return _this4._tryRename(arg);
-        },
+        action: arg => this._tryRename(arg),
         singleItemProcessingMessage: _message.default.format('dxFileManager-editingRenameSingleItemProcessingMessage'),
         singleItemSuccessMessage: _message.default.format('dxFileManager-editingRenameSingleItemSuccessMessage'),
         singleItemErrorMessage: _message.default.format('dxFileManager-editingRenameSingleItemErrorMessage'),
         commonErrorMessage: _message.default.format('dxFileManager-editingRenameCommonErrorMessage')
       },
       delete: {
-        action: function action(arg) {
-          return _this4._tryDelete(arg);
-        },
+        action: arg => this._tryDelete(arg),
         singleItemProcessingMessage: _message.default.format('dxFileManager-editingDeleteSingleItemProcessingMessage'),
         multipleItemsProcessingMessage: _message.default.format('dxFileManager-editingDeleteMultipleItemsProcessingMessage'),
         singleItemSuccessMessage: _message.default.format('dxFileManager-editingDeleteSingleItemSuccessMessage'),
@@ -156,9 +134,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
         commonErrorMessage: _message.default.format('dxFileManager-editingDeleteCommonErrorMessage')
       },
       move: {
-        action: function action(arg) {
-          return _this4._tryMove(arg);
-        },
+        action: arg => this._tryMove(arg),
         singleItemProcessingMessage: _message.default.format('dxFileManager-editingMoveSingleItemProcessingMessage'),
         multipleItemsProcessingMessage: _message.default.format('dxFileManager-editingMoveMultipleItemsProcessingMessage'),
         singleItemSuccessMessage: _message.default.format('dxFileManager-editingMoveSingleItemSuccessMessage'),
@@ -168,9 +144,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
         commonErrorMessage: _message.default.format('dxFileManager-editingMoveCommonErrorMessage')
       },
       copy: {
-        action: function action(arg) {
-          return _this4._tryCopy(arg);
-        },
+        action: arg => this._tryCopy(arg),
         singleItemProcessingMessage: _message.default.format('dxFileManager-editingCopySingleItemProcessingMessage'),
         multipleItemsProcessingMessage: _message.default.format('dxFileManager-editingCopyMultipleItemsProcessingMessage'),
         singleItemSuccessMessage: _message.default.format('dxFileManager-editingCopySingleItemSuccessMessage'),
@@ -180,9 +154,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
         commonErrorMessage: _message.default.format('dxFileManager-editingCopyCommonErrorMessage')
       },
       upload: {
-        action: function action(arg) {
-          return _this4._tryUpload(arg);
-        },
+        action: arg => this._tryUpload(arg),
         allowCancel: true,
         allowItemProgress: true,
         singleItemProcessingMessage: _message.default.format('dxFileManager-editingUploadSingleItemProcessingMessage'),
@@ -194,18 +166,14 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
         canceledMessage: _message.default.format('dxFileManager-editingUploadCanceledMessage')
       },
       download: {
-        action: function action(arg) {
-          return _this4._download(arg);
-        },
+        action: arg => this._download(arg),
         singleItemProcessingMessage: '',
         multipleItemsProcessingMessage: '',
         singleItemErrorMessage: _message.default.format('dxFileManager-editingDownloadSingleItemErrorMessage'),
         multipleItemsErrorMessage: _message.default.format('dxFileManager-editingDownloadMultipleItemsErrorMessage')
       },
       getItemContent: {
-        action: function action(arg) {
-          return _this4._getItemContent(arg);
-        }
+        action: arg => this._getItemContent(arg)
       },
       getItems: {
         singleItemProcessingMessage: '',
@@ -215,19 +183,16 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     };
   };
   _proto.getCommandActions = function getCommandActions() {
-    var _this5 = this;
-    var result = {};
-    (0, _iterator.each)(this._metadataMap, function (name) {
-      if (Object.prototype.hasOwnProperty.call(_this5._metadataMap, name)) {
-        result[name] = function (arg) {
-          return _this5._executeAction(name, arg);
-        };
+    const result = {};
+    (0, _iterator.each)(this._metadataMap, name => {
+      if (Object.prototype.hasOwnProperty.call(this._metadataMap, name)) {
+        result[name] = arg => this._executeAction(name, arg);
       }
     });
     return result;
   };
   _proto._executeAction = function _executeAction(actionName, arg) {
-    var actionMetadata = this._metadataMap[actionName];
+    const actionMetadata = this._metadataMap[actionName];
     return actionMetadata ? actionMetadata.action(arg) : null;
   };
   _proto._onCancelUploadSession = function _onCancelUploadSession(info) {
@@ -237,28 +202,38 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     this._fileUploader.cancelFileUpload(item.info.uploadSessionId, itemIndex);
   };
   _proto._onUploadProgress = function _onUploadProgress(_ref3) {
-    var sessionId = _ref3.sessionId,
-      fileIndex = _ref3.fileIndex,
-      commonValue = _ref3.commonValue,
-      fileValue = _ref3.fileValue;
-    var operationInfo = this._uploadOperationInfoMap[sessionId].operationInfo;
+    let {
+      sessionId,
+      fileIndex,
+      commonValue,
+      fileValue
+    } = _ref3;
+    const {
+      operationInfo
+    } = this._uploadOperationInfoMap[sessionId];
     this._notificationControl.updateOperationItemProgress(operationInfo, fileIndex, fileValue * 100, commonValue * 100);
   };
   _proto._onUploadFinished = function _onUploadFinished(_ref4) {
-    var sessionId = _ref4.sessionId,
-      commonValue = _ref4.commonValue;
-    var operationInfo = this._uploadOperationInfoMap[sessionId].operationInfo;
+    let {
+      sessionId,
+      commonValue
+    } = _ref4;
+    const {
+      operationInfo
+    } = this._uploadOperationInfoMap[sessionId];
     this._notificationControl.finishOperation(operationInfo, commonValue * 100);
     this._scheduleUploadSessionDisposal(sessionId, 'uploader');
   };
   _proto._onUploadSessionStarted = function _onUploadSessionStarted(_ref5) {
-    var sessionInfo = _ref5.sessionInfo;
+    let {
+      sessionInfo
+    } = _ref5;
     this._controller.processUploadSession(sessionInfo, this.uploadDirectoryInfo);
   };
   _proto._onEditActionStarting = function _onEditActionStarting(actionInfo) {
-    var actionMetadata = this._metadataMap[actionInfo.name];
-    var context = new FileManagerActionContext(actionMetadata, actionInfo.itemInfos, actionInfo.directory);
-    var operationInfo = this._notificationControl.addOperation(context.processingMessage, actionMetadata.allowCancel, !actionMetadata.allowItemProgress);
+    const actionMetadata = this._metadataMap[actionInfo.name];
+    const context = new FileManagerActionContext(actionMetadata, actionInfo.itemInfos, actionInfo.directory);
+    const operationInfo = this._notificationControl.addOperation(context.processingMessage, actionMetadata.allowCancel, !actionMetadata.allowItemProgress);
     (0, _extend.extend)(actionInfo.customData, {
       context,
       operationInfo
@@ -266,7 +241,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     switch (actionInfo.name) {
       case 'upload':
         {
-          var sessionId = actionInfo.customData.sessionInfo.sessionId;
+          const sessionId = actionInfo.customData.sessionInfo.sessionId;
           operationInfo.uploadSessionId = sessionId;
           this._uploadOperationInfoMap[sessionId] = {
             operationInfo
@@ -281,43 +256,45 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._onEditActionResultAcquired = function _onEditActionResultAcquired(actionInfo) {
-    var _this6 = this;
-    var _actionInfo$customDat = actionInfo.customData,
-      context = _actionInfo$customDat.context,
-      operationInfo = _actionInfo$customDat.operationInfo;
+    const {
+      context,
+      operationInfo
+    } = actionInfo.customData;
     context.singleRequest = actionInfo.singleRequest;
-    var details = context.itemInfos.map(function (itemInfo) {
-      return _this6._getItemProgressDisplayInfo(itemInfo);
-    });
+    const details = context.itemInfos.map(itemInfo => this._getItemProgressDisplayInfo(itemInfo));
     this._notificationControl.addOperationDetails(operationInfo, details, context.actionMetadata.allowCancel);
   };
   _proto._onEditActionError = function _onEditActionError(actionInfo, errorInfo) {
-    var _actionInfo$customDat2 = actionInfo.customData,
-      context = _actionInfo$customDat2.context,
-      operationInfo = _actionInfo$customDat2.operationInfo;
+    const {
+      context,
+      operationInfo
+    } = actionInfo.customData;
     context.singleRequest = actionInfo.singleRequest;
     this._handleActionError(operationInfo, context, errorInfo);
     this._completeAction(operationInfo, context);
   };
   _proto._onEditActionItemError = function _onEditActionItemError(actionInfo, errorInfo) {
-    var _actionInfo$customDat3 = actionInfo.customData,
-      context = _actionInfo$customDat3.context,
-      operationInfo = _actionInfo$customDat3.operationInfo;
+    const {
+      context,
+      operationInfo
+    } = actionInfo.customData;
     this._handleActionError(operationInfo, context, errorInfo);
   };
   _proto._onCompleteEditActionItem = function _onCompleteEditActionItem(actionInfo, info) {
-    var _actionInfo$customDat4 = actionInfo.customData,
-      context = _actionInfo$customDat4.context,
-      operationInfo = _actionInfo$customDat4.operationInfo;
+    const {
+      context,
+      operationInfo
+    } = actionInfo.customData;
     if (!info.result || !info.result.canceled) {
       context.completeOperationItem(info.index);
       this._notificationControl.completeOperationItem(operationInfo, info.index, context.commonProgress);
     }
   };
   _proto._onCompleteEditAction = function _onCompleteEditAction(actionInfo) {
-    var _actionInfo$customDat5 = actionInfo.customData,
-      context = _actionInfo$customDat5.context,
-      operationInfo = _actionInfo$customDat5.operationInfo;
+    const {
+      context,
+      operationInfo
+    } = actionInfo.customData;
     this._completeAction(operationInfo, context);
     if (actionInfo.name === 'upload') {
       this._scheduleUploadSessionDisposal(actionInfo.customData.sessionInfo.sessionId, 'controller');
@@ -331,60 +308,61 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._tryCreate = function _tryCreate(parentDirectories) {
-    var _this7 = this;
-    var parentDirectoryInfo = parentDirectories && parentDirectories[0] || this._getCurrentDirectory();
-    var newDirName = _message.default.format('dxFileManager-newDirectoryName');
-    return this._showDialog(this._dialogManager.getCreateItemDialog(), newDirName).then(function (_ref6) {
-      var name = _ref6.name;
-      return _this7._controller.createDirectory(parentDirectoryInfo, name);
+    const parentDirectoryInfo = parentDirectories && parentDirectories[0] || this._getCurrentDirectory();
+    const newDirName = _message.default.format('dxFileManager-newDirectoryName');
+    return this._showDialog(this._dialogManager.getCreateItemDialog(), newDirName).then(_ref6 => {
+      let {
+        name
+      } = _ref6;
+      return this._controller.createDirectory(parentDirectoryInfo, name);
     });
   };
   _proto._tryRename = function _tryRename(itemInfos) {
-    var _this8 = this;
-    var itemInfo = itemInfos && itemInfos[0] || this._model.getMultipleSelectedItems()[0];
+    const itemInfo = itemInfos && itemInfos[0] || this._model.getMultipleSelectedItems()[0];
     if (!itemInfo) {
       return new _deferred.Deferred().reject().promise();
     }
-    return this._showDialog(this._dialogManager.getRenameItemDialog(), itemInfo.fileItem.name).then(function (_ref7) {
-      var name = _ref7.name;
-      return _this8._controller.renameItem(itemInfo, name);
+    return this._showDialog(this._dialogManager.getRenameItemDialog(), itemInfo.fileItem.name).then(_ref7 => {
+      let {
+        name
+      } = _ref7;
+      return this._controller.renameItem(itemInfo, name);
     });
   };
   _proto._tryDelete = function _tryDelete(itemInfos) {
-    var _this9 = this;
     itemInfos = itemInfos || this._model.getMultipleSelectedItems();
     if (itemInfos.length === 0) {
       return new _deferred.Deferred().reject().promise();
     }
-    var itemName = itemInfos[0].fileItem.name;
-    var itemCount = itemInfos.length;
+    const itemName = itemInfos[0].fileItem.name;
+    const itemCount = itemInfos.length;
     return this._showDialog(this._dialogManager.getDeleteItemDialog(), {
       itemName,
       itemCount
-    }).then(function () {
-      return _this9._controller.deleteItems(itemInfos);
-    });
+    }).then(() => this._controller.deleteItems(itemInfos));
   };
   _proto._tryMove = function _tryMove(itemInfos) {
-    var _this10 = this;
     itemInfos = itemInfos || this._model.getMultipleSelectedItems();
     if (itemInfos.length === 0) {
       return new _deferred.Deferred().reject().promise();
     }
-    return this._showDialog(this._dialogManager.getMoveDialog(itemInfos)).then(function (_ref8) {
-      var folder = _ref8.folder;
-      return _this10._controller.moveItems(itemInfos, folder);
+    return this._showDialog(this._dialogManager.getMoveDialog(itemInfos)).then(_ref8 => {
+      let {
+        folder
+      } = _ref8;
+      return this._controller.moveItems(itemInfos, folder);
     });
   };
   _proto._tryCopy = function _tryCopy(itemInfos) {
-    var _this11 = this;
     itemInfos = itemInfos || this._model.getMultipleSelectedItems();
     if (itemInfos.length === 0) {
       return new _deferred.Deferred().reject().promise();
     }
-    return this._showDialog(this._dialogManager.getCopyDialog(itemInfos)).then(function (_ref9) {
-      var folder = _ref9.folder;
-      return _this11._controller.copyItems(itemInfos, folder);
+    return this._showDialog(this._dialogManager.getCopyDialog(itemInfos)).then(_ref9 => {
+      let {
+        folder
+      } = _ref9;
+      return this._controller.copyItems(itemInfos, folder);
     });
   };
   _proto._tryUpload = function _tryUpload(destinationFolder) {
@@ -417,26 +395,26 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._handleSingleRequestActionError = function _handleSingleRequestActionError(operationInfo, context, errorInfo) {
-    var itemInfo = context.getItemForSingleRequestError();
-    var itemName = context.getItemName(errorInfo.errorCode);
-    var errorText = this._getErrorText(errorInfo, itemInfo, itemName);
+    const itemInfo = context.getItemForSingleRequestError();
+    const itemName = context.getItemName(errorInfo.errorCode);
+    const errorText = this._getErrorText(errorInfo, itemInfo, itemName);
     context.processSingleRequestError(errorText);
-    var operationErrorInfo = this._getOperationErrorInfo(context);
+    const operationErrorInfo = this._getOperationErrorInfo(context);
     this._notificationControl.completeSingleOperationWithError(operationInfo, operationErrorInfo);
     if (context.multipleItems) {
       this._raiseOnSuccess(context.onlyFiles);
     }
   };
   _proto._handleMultipleRequestActionError = function _handleMultipleRequestActionError(operationInfo, context, errorInfo) {
-    var itemInfo = context.getItemForMultipleRequestError(errorInfo.index);
-    var itemName = context.getItemName(errorInfo.errorCode, errorInfo.index);
-    var errorText = this._getErrorText(errorInfo, itemInfo, itemName);
+    const itemInfo = context.getItemForMultipleRequestError(errorInfo.index);
+    const itemName = context.getItemName(errorInfo.errorCode, errorInfo.index);
+    const errorText = this._getErrorText(errorInfo, itemInfo, itemName);
     context.processMultipleRequestError(errorInfo.index, errorText);
-    var operationErrorInfo = this._getOperationErrorInfo(context);
+    const operationErrorInfo = this._getOperationErrorInfo(context);
     this._notificationControl.addOperationDetailsError(operationInfo, operationErrorInfo);
   };
   _proto._getOperationErrorInfo = function _getOperationErrorInfo(context) {
-    var detailError = context.errorState.currentDetailError;
+    const detailError = context.errorState.currentDetailError;
     return {
       commonErrorText: context.errorState.commonErrorText,
       item: detailError.itemInfo ? this._getItemProgressDisplayInfo(detailError.itemInfo) : null,
@@ -445,8 +423,8 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     };
   };
   _proto._getErrorText = function _getErrorText(errorInfo, itemInfo, itemName) {
-    var errorText = errorInfo.errorText || _uiFile_manager3.FileManagerMessages.get(errorInfo.errorCode, itemName);
-    var errorArgs = {
+    const errorText = errorInfo.errorText || _uiFile_manager3.FileManagerMessages.get(errorInfo.errorCode, itemName);
+    const errorArgs = {
       fileSystemItem: itemInfo === null || itemInfo === void 0 ? void 0 : itemInfo.fileItem,
       errorCode: errorInfo.errorCode,
       errorText
@@ -466,7 +444,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     return this._dialogDeferred.promise();
   };
   _proto._onDialogClosed = function _onDialogClosed(e) {
-    var result = e.dialogResult;
+    const result = e.dialogResult;
     if (result) {
       this._dialogDeferred.resolve(result);
     } else {
@@ -477,11 +455,11 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     this._dialogManager.updateDialogRtl(value);
   };
   _proto._getItemThumbnail = function _getItemThumbnail(item) {
-    var itemThumbnailGetter = this.option('getItemThumbnail');
+    const itemThumbnailGetter = this.option('getItemThumbnail');
     if (!itemThumbnailGetter) {
       return null;
     }
-    var info = itemThumbnailGetter(item);
+    const info = itemThumbnailGetter(item);
     return info ? info.thumbnail : null;
   };
   _proto._initActions = function _initActions() {
@@ -502,7 +480,7 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'model':
         this.repaint();
@@ -536,22 +514,18 @@ var FileManagerEditingControl = /*#__PURE__*/function (_Widget) {
   };
   _createClass(FileManagerEditingControl, [{
     key: "uploadDirectoryInfo",
-    get: function get() {
+    get: function () {
       return this._uploadDirectoryInfo || this._getCurrentDirectory();
     }
   }]);
   return FileManagerEditingControl;
 }(_ui.default);
-var FileManagerActionContext = /*#__PURE__*/function () {
+let FileManagerActionContext = /*#__PURE__*/function () {
   function FileManagerActionContext(actionMetadata, itemInfos, directoryInfo) {
     this._actionMetadata = actionMetadata;
     this._itemInfos = itemInfos;
-    this._onlyFiles = !this._actionMetadata.affectsAllItems && this._itemInfos.every(function (info) {
-      return !info.fileItem.isDirectory;
-    });
-    this._items = this._itemInfos.map(function (itemInfo) {
-      return itemInfo.fileItem;
-    });
+    this._onlyFiles = !this._actionMetadata.affectsAllItems && this._itemInfos.every(info => !info.fileItem.isDirectory);
+    this._items = this._itemInfos.map(itemInfo => itemInfo.fileItem);
     this._multipleItems = this._items.length > 1;
     this._location = directoryInfo.getDisplayName();
     this._singleRequest = true;
@@ -565,9 +539,9 @@ var FileManagerActionContext = /*#__PURE__*/function () {
   var _proto2 = FileManagerActionContext.prototype;
   _proto2.completeOperationItem = function completeOperationItem(itemIndex) {
     if (this._singleRequest) {
-      this._completedItems = _toConsumableArray(this._items);
+      this._completedItems = [...this._items];
     } else {
-      var item = this._items[itemIndex];
+      const item = this._items[itemIndex];
       this._completedItems.push(item);
     }
     if (!this._actionMetadata.allowItemProgress) {
@@ -577,14 +551,14 @@ var FileManagerActionContext = /*#__PURE__*/function () {
   _proto2.processSingleRequestError = function processSingleRequestError(errorText) {
     this._errorState.failedCount = 1;
     this._errorState.commonErrorText = this._multipleItems ? this._actionMetadata.commonErrorMessage : this._actionMetadata.singleItemErrorMessage;
-    var itemIndex = this._multipleItems ? -1 : 1;
-    var itemInfo = this.getItemForSingleRequestError();
+    const itemIndex = this._multipleItems ? -1 : 1;
+    const itemInfo = this.getItemForSingleRequestError();
     this._setCurrentDetailError(itemIndex, itemInfo, errorText);
   };
   _proto2.processMultipleRequestError = function processMultipleRequestError(itemIndex, errorText) {
     this._errorState.failedCount++;
     this._errorState.commonErrorText = this._errorState.failedCount > 1 ? (0, _string.format)(this._actionMetadata.multipleItemsErrorMessage, this._errorState.failedCount) : this._actionMetadata.singleItemErrorMessage;
-    var itemInfo = this.getItemForMultipleRequestError(itemIndex);
+    const itemInfo = this.getItemForMultipleRequestError(itemIndex);
     this._setCurrentDetailError(itemIndex, itemInfo, errorText);
   };
   _proto2.hasModifiedItems = function hasModifiedItems() {
@@ -597,8 +571,8 @@ var FileManagerActionContext = /*#__PURE__*/function () {
     return this._itemInfos[itemIndex];
   };
   _proto2.getItemName = function getItemName(errorCode, itemIndex) {
-    var itemInfo = this.singleRequest ? this.getItemForSingleRequestError() : this.getItemForMultipleRequestError(itemIndex);
-    var result = itemInfo === null || itemInfo === void 0 ? void 0 : itemInfo.fileItem.name;
+    const itemInfo = this.singleRequest ? this.getItemForSingleRequestError() : this.getItemForMultipleRequestError(itemIndex);
+    let result = itemInfo === null || itemInfo === void 0 ? void 0 : itemInfo.fileItem.name;
     if (this.itemNewName && this._isItemExistsErrorCode(errorCode)) {
       result = this.itemNewName;
     }
@@ -619,53 +593,53 @@ var FileManagerActionContext = /*#__PURE__*/function () {
   };
   _createClass(FileManagerActionContext, [{
     key: "actionMetadata",
-    get: function get() {
+    get: function () {
       return this._actionMetadata;
     }
   }, {
     key: "itemInfos",
-    get: function get() {
+    get: function () {
       return this._itemInfos;
     }
   }, {
     key: "itemNewName",
-    get: function get() {
+    get: function () {
       return this._itemNewName;
     },
-    set: function set(value) {
+    set: function (value) {
       this._itemNewName = value;
     }
   }, {
     key: "errorState",
-    get: function get() {
+    get: function () {
       return this._errorState;
     }
   }, {
     key: "singleRequest",
-    get: function get() {
+    get: function () {
       return this._singleRequest;
     },
-    set: function set(value) {
+    set: function (value) {
       this._singleRequest = value;
     }
   }, {
     key: "multipleItems",
-    get: function get() {
+    get: function () {
       return this._multipleItems;
     }
   }, {
     key: "onlyFiles",
-    get: function get() {
+    get: function () {
       return this._onlyFiles;
     }
   }, {
     key: "processingMessage",
-    get: function get() {
+    get: function () {
       return this._multipleItems ? (0, _string.format)(this._actionMetadata.multipleItemsProcessingMessage, this._items.length, this._location) : (0, _string.format)(this._actionMetadata.singleItemProcessingMessage, this._location);
     }
   }, {
     key: "successMessage",
-    get: function get() {
+    get: function () {
       if (this._hasCompletedItems()) {
         return this._multipleItems ? (0, _string.format)(this._actionMetadata.multipleItemsSuccessMessage, this._completedItems.length, this._location) : (0, _string.format)(this._actionMetadata.singleItemSuccessMessage, this._location);
       } else {
@@ -674,22 +648,22 @@ var FileManagerActionContext = /*#__PURE__*/function () {
     }
   }, {
     key: "completionMessage",
-    get: function get() {
+    get: function () {
       return this.success ? this.successMessage : this.errorState.commonErrorText;
     }
   }, {
     key: "statusText",
-    get: function get() {
+    get: function () {
       return this.success && !this._hasCompletedItems() ? this._actionMetadata.canceledMessage : undefined;
     }
   }, {
     key: "commonProgress",
-    get: function get() {
+    get: function () {
       return this._commonProgress;
     }
   }, {
     key: "success",
-    get: function get() {
+    get: function () {
       return !this._errorState.failedCount;
     }
   }]);

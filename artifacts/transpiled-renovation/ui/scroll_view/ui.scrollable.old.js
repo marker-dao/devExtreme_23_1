@@ -22,18 +22,18 @@ var _uiScrollable3 = require("./ui.scrollable.device");
 var _deferred = require("../../core/utils/deferred");
 var _get_element_location_internal = require("../../renovation/ui/scroll_view/utils/get_element_location_internal");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SCROLLABLE = 'dxScrollable';
-var SCROLLABLE_STRATEGY = 'dxScrollableStrategy';
-var SCROLLABLE_CLASS = 'dx-scrollable';
-var SCROLLABLE_DISABLED_CLASS = 'dx-scrollable-disabled';
-var SCROLLABLE_CONTAINER_CLASS = 'dx-scrollable-container';
-var SCROLLABLE_WRAPPER_CLASS = 'dx-scrollable-wrapper';
-var SCROLLABLE_CONTENT_CLASS = 'dx-scrollable-content';
-var VERTICAL = 'vertical';
-var HORIZONTAL = 'horizontal';
-var BOTH = 'both';
-var Scrollable = _dom_component.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const SCROLLABLE = 'dxScrollable';
+const SCROLLABLE_STRATEGY = 'dxScrollableStrategy';
+const SCROLLABLE_CLASS = 'dx-scrollable';
+const SCROLLABLE_DISABLED_CLASS = 'dx-scrollable-disabled';
+const SCROLLABLE_CONTAINER_CLASS = 'dx-scrollable-container';
+const SCROLLABLE_WRAPPER_CLASS = 'dx-scrollable-wrapper';
+const SCROLLABLE_CONTENT_CLASS = 'dx-scrollable-content';
+const VERTICAL = 'vertical';
+const HORIZONTAL = 'horizontal';
+const BOTH = 'both';
+const Scrollable = _dom_component.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       disabled: false,
       onScroll: null,
@@ -53,9 +53,9 @@ var Scrollable = _dom_component.default.inherit({
       updateManually: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat((0, _uiScrollable3.deviceDependentOptions)(), [{
-      device: function device() {
+      device: function () {
         return _support.nativeScrolling && _devices.default.real().platform === 'android' && !_browser.default.mozilla;
       },
       options: {
@@ -63,23 +63,23 @@ var Scrollable = _dom_component.default.inherit({
       }
     }]);
   },
-  _initOptions: function _initOptions(options) {
+  _initOptions: function (options) {
     this.callBase(options);
     if (!('useSimulatedScrollbar' in options)) {
       this._setUseSimulatedScrollbar();
     }
   },
-  _setUseSimulatedScrollbar: function _setUseSimulatedScrollbar() {
+  _setUseSimulatedScrollbar: function () {
     if (!this.initialOption('useSimulatedScrollbar')) {
       this.option('useSimulatedScrollbar', !this.option('useNative'));
     }
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._initScrollableMarkup();
     this._locked = false;
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this.update();
       this._updateRtlPosition();
@@ -89,24 +89,24 @@ var Scrollable = _dom_component.default.inherit({
       this._savedScrollOffset = this.scrollOffset();
     }
   },
-  _initScrollableMarkup: function _initScrollableMarkup() {
-    var $element = this.$element().addClass(SCROLLABLE_CLASS);
-    var $container = this._$container = (0, _renderer.default)('<div>').addClass(SCROLLABLE_CONTAINER_CLASS);
-    var $wrapper = this._$wrapper = (0, _renderer.default)('<div>').addClass(SCROLLABLE_WRAPPER_CLASS);
-    var $content = this._$content = (0, _renderer.default)('<div>').addClass(SCROLLABLE_CONTENT_CLASS);
+  _initScrollableMarkup: function () {
+    const $element = this.$element().addClass(SCROLLABLE_CLASS);
+    const $container = this._$container = (0, _renderer.default)('<div>').addClass(SCROLLABLE_CONTAINER_CLASS);
+    const $wrapper = this._$wrapper = (0, _renderer.default)('<div>').addClass(SCROLLABLE_WRAPPER_CLASS);
+    const $content = this._$content = (0, _renderer.default)('<div>').addClass(SCROLLABLE_CONTENT_CLASS);
     $content.append($element.contents()).appendTo($container);
     $container.appendTo($wrapper);
     $wrapper.appendTo($element);
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     this.update();
     this._updateRtlPosition();
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this._renderDirection();
   },
-  _render: function _render() {
+  _render: function () {
     this._renderStrategy();
     this._attachEventHandlers();
     this._renderDisabledState();
@@ -115,23 +115,24 @@ var Scrollable = _dom_component.default.inherit({
     this.callBase();
     this._updateRtlPosition(true);
   },
-  _updateRtlPosition: function _updateRtlPosition(needInitializeRtlConfig) {
+  _updateRtlPosition: function (needInitializeRtlConfig) {
     this._strategy.updateRtlPosition(needInitializeRtlConfig);
   },
-  _getMaxOffset: function _getMaxOffset() {
-    var _$$get = (0, _renderer.default)(this.container()).get(0),
-      scrollWidth = _$$get.scrollWidth,
-      clientWidth = _$$get.clientWidth,
-      scrollHeight = _$$get.scrollHeight,
-      clientHeight = _$$get.clientHeight;
+  _getMaxOffset: function () {
+    const {
+      scrollWidth,
+      clientWidth,
+      scrollHeight,
+      clientHeight
+    } = (0, _renderer.default)(this.container()).get(0);
     return {
       left: scrollWidth - clientWidth,
       top: scrollHeight - clientHeight
     };
   },
-  _attachEventHandlers: function _attachEventHandlers() {
-    var strategy = this._strategy;
-    var initEventData = {
+  _attachEventHandlers: function () {
+    const strategy = this._strategy;
+    const initEventData = {
       getDirection: strategy.getDirection.bind(strategy),
       validate: this._validate.bind(this),
       isNative: this.option('useNative'),
@@ -147,7 +148,7 @@ var Scrollable = _dom_component.default.inherit({
     _events_engine.default.off(this._$container, '.' + SCROLLABLE);
     _events_engine.default.on(this._$container, (0, _index.addNamespace)('scroll', SCROLLABLE), strategy.handleScroll.bind(strategy));
   },
-  _validate: function _validate(e) {
+  _validate: function (e) {
     if (this._isLocked()) {
       return false;
     }
@@ -163,11 +164,11 @@ var Scrollable = _dom_component.default.inherit({
   _prepareDirections(value) {
     this._strategy._prepareDirections(value);
   },
-  _initHandler: function _initHandler() {
-    var strategy = this._strategy;
+  _initHandler: function () {
+    const strategy = this._strategy;
     strategy.handleInit.apply(strategy, arguments);
   },
-  _renderDisabledState: function _renderDisabledState() {
+  _renderDisabledState: function () {
     this.$element().toggleClass(SCROLLABLE_DISABLED_CLASS, this.option('disabled'));
     if (this.option('disabled')) {
       this._lock();
@@ -175,24 +176,24 @@ var Scrollable = _dom_component.default.inherit({
       this._unlock();
     }
   },
-  _renderDirection: function _renderDirection() {
+  _renderDirection: function () {
     this.$element().removeClass('dx-scrollable-' + HORIZONTAL).removeClass('dx-scrollable-' + VERTICAL).removeClass('dx-scrollable-' + BOTH).addClass('dx-scrollable-' + this.option('direction'));
   },
-  _renderStrategy: function _renderStrategy() {
+  _renderStrategy: function () {
     this._createStrategy();
     this._strategy.render();
     this.$element().data(SCROLLABLE_STRATEGY, this._strategy);
   },
-  _createStrategy: function _createStrategy() {
+  _createStrategy: function () {
     this._strategy = this.option('useNative') ? new _uiScrollable2.default(this) : new _uiScrollable.SimulatedStrategy(this);
   },
-  _createActions: function _createActions() {
+  _createActions: function () {
     this._strategy && this._strategy.createActions();
   },
-  _clean: function _clean() {
+  _clean: function () {
     this._strategy && this._strategy.dispose();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'onStart':
       case 'onEnd':
@@ -232,17 +233,17 @@ var Scrollable = _dom_component.default.inherit({
         this.callBase(args);
     }
   },
-  _resetInactiveDirection: function _resetInactiveDirection() {
-    var inactiveProp = this._getInactiveProp();
+  _resetInactiveDirection: function () {
+    const inactiveProp = this._getInactiveProp();
     if (!inactiveProp || !(0, _window.hasWindow)()) {
       return;
     }
-    var scrollOffset = this.scrollOffset();
+    const scrollOffset = this.scrollOffset();
     scrollOffset[inactiveProp] = 0;
     this.scrollTo(scrollOffset);
   },
-  _getInactiveProp: function _getInactiveProp() {
-    var direction = this.option('direction');
+  _getInactiveProp: function () {
+    const direction = this.option('direction');
     if (direction === VERTICAL) {
       return 'left';
     }
@@ -250,38 +251,38 @@ var Scrollable = _dom_component.default.inherit({
       return 'top';
     }
   },
-  _location: function _location() {
+  _location: function () {
     return this._strategy.location();
   },
-  _normalizeLocation: function _normalizeLocation(location) {
+  _normalizeLocation: function (location) {
     if ((0, _type.isPlainObject)(location)) {
-      var left = (0, _common.ensureDefined)(location.left, location.x);
-      var top = (0, _common.ensureDefined)(location.top, location.y);
+      const left = (0, _common.ensureDefined)(location.left, location.x);
+      const top = (0, _common.ensureDefined)(location.top, location.y);
       return {
         left: (0, _type.isDefined)(left) ? -left : undefined,
         top: (0, _type.isDefined)(top) ? -top : undefined
       };
     } else {
-      var direction = this.option('direction');
+      const direction = this.option('direction');
       return {
         left: direction !== VERTICAL ? -location : undefined,
         top: direction !== HORIZONTAL ? -location : undefined
       };
     }
   },
-  _isLocked: function _isLocked() {
+  _isLocked: function () {
     return this._locked;
   },
-  _lock: function _lock() {
+  _lock: function () {
     this._locked = true;
   },
-  _unlock: function _unlock() {
+  _unlock: function () {
     if (!this.option('disabled')) {
       this._locked = false;
     }
   },
-  _isDirection: function _isDirection(direction) {
-    var current = this.option('direction');
+  _isDirection: function (direction) {
+    const current = this.option('direction');
     if (direction === VERTICAL) {
       return current !== HORIZONTAL;
     }
@@ -290,8 +291,8 @@ var Scrollable = _dom_component.default.inherit({
     }
     return current === direction;
   },
-  _updateAllowedDirection: function _updateAllowedDirection() {
-    var allowedDirections = this._strategy._allowedDirections();
+  _updateAllowedDirection: function () {
+    const allowedDirections = this._strategy._allowedDirections();
     if (this._isDirection(BOTH) && allowedDirections.vertical && allowedDirections.horizontal) {
       this._allowedDirectionValue = BOTH;
     } else if (this._isDirection(HORIZONTAL) && allowedDirections.horizontal) {
@@ -302,46 +303,47 @@ var Scrollable = _dom_component.default.inherit({
       this._allowedDirectionValue = null;
     }
   },
-  _allowedDirection: function _allowedDirection() {
+  _allowedDirection: function () {
     return this._allowedDirectionValue;
   },
-  $content: function $content() {
+  $content: function () {
     return this._$content;
   },
-  content: function content() {
+  content: function () {
     return (0, _element.getPublicElement)(this._$content);
   },
-  container: function container() {
+  container: function () {
     return (0, _element.getPublicElement)(this._$container);
   },
-  scrollOffset: function scrollOffset() {
+  scrollOffset: function () {
     return this._strategy._getScrollOffset();
   },
-  _isRtlNativeStrategy: function _isRtlNativeStrategy() {
-    var _this$option = this.option(),
-      useNative = _this$option.useNative,
-      rtlEnabled = _this$option.rtlEnabled;
+  _isRtlNativeStrategy: function () {
+    const {
+      useNative,
+      rtlEnabled
+    } = this.option();
     return useNative && rtlEnabled;
   },
-  scrollTop: function scrollTop() {
+  scrollTop: function () {
     return this.scrollOffset().top;
   },
-  scrollLeft: function scrollLeft() {
+  scrollLeft: function () {
     return this.scrollOffset().left;
   },
-  clientHeight: function clientHeight() {
+  clientHeight: function () {
     return (0, _size.getHeight)(this._$container);
   },
-  scrollHeight: function scrollHeight() {
+  scrollHeight: function () {
     return (0, _size.getOuterHeight)(this.$content());
   },
-  clientWidth: function clientWidth() {
+  clientWidth: function () {
     return (0, _size.getWidth)(this._$container);
   },
-  scrollWidth: function scrollWidth() {
+  scrollWidth: function () {
     return (0, _size.getOuterWidth)(this.$content());
   },
-  update: function update() {
+  update: function () {
     if (!this._strategy) {
       return;
     }
@@ -349,7 +351,7 @@ var Scrollable = _dom_component.default.inherit({
       this._updateAllowedDirection();
     }.bind(this));
   },
-  scrollBy: function scrollBy(distance) {
+  scrollBy: function (distance) {
     distance = this._normalizeLocation(distance);
     if (!distance.top && !distance.left) {
       return;
@@ -357,10 +359,10 @@ var Scrollable = _dom_component.default.inherit({
     this._updateIfNeed();
     this._strategy.scrollBy(distance);
   },
-  scrollTo: function scrollTo(targetLocation) {
+  scrollTo: function (targetLocation) {
     targetLocation = this._normalizeLocation(targetLocation);
     this._updateIfNeed();
-    var location = this._location();
+    let location = this._location();
     if (!this.option('useNative')) {
       targetLocation = this._strategy._applyScaleRatio(targetLocation);
       location = this._strategy._applyScaleRatio(location);
@@ -368,7 +370,7 @@ var Scrollable = _dom_component.default.inherit({
     if (this._isRtlNativeStrategy()) {
       location.left = location.left - this._getMaxOffset().left;
     }
-    var distance = this._normalizeLocation({
+    const distance = this._normalizeLocation({
       left: location.left - (0, _common.ensureDefined)(targetLocation.left, location.left),
       top: location.top - (0, _common.ensureDefined)(targetLocation.top, location.top)
     });
@@ -377,18 +379,18 @@ var Scrollable = _dom_component.default.inherit({
     }
     this._strategy.scrollBy(distance);
   },
-  scrollToElement: function scrollToElement(element, offset) {
-    var $element = (0, _renderer.default)(element);
-    var elementInsideContent = this.$content().find(element).length;
-    var elementIsInsideContent = $element.parents('.' + SCROLLABLE_CLASS).length - $element.parents('.' + SCROLLABLE_CONTENT_CLASS).length === 0;
+  scrollToElement: function (element, offset) {
+    const $element = (0, _renderer.default)(element);
+    const elementInsideContent = this.$content().find(element).length;
+    const elementIsInsideContent = $element.parents('.' + SCROLLABLE_CLASS).length - $element.parents('.' + SCROLLABLE_CONTENT_CLASS).length === 0;
     if (!elementInsideContent || !elementIsInsideContent) {
       return;
     }
-    var scrollPosition = {
+    const scrollPosition = {
       top: 0,
       left: 0
     };
-    var direction = this.option('direction');
+    const direction = this.option('direction');
     if (direction !== VERTICAL) {
       scrollPosition.left = this.getScrollElementPosition($element, HORIZONTAL, offset);
     }
@@ -397,19 +399,19 @@ var Scrollable = _dom_component.default.inherit({
     }
     this.scrollTo(scrollPosition);
   },
-  getScrollElementPosition: function getScrollElementPosition($element, direction, offset) {
-    var scrollOffset = this.scrollOffset();
+  getScrollElementPosition: function ($element, direction, offset) {
+    const scrollOffset = this.scrollOffset();
     return (0, _get_element_location_internal.getElementLocationInternal)($element.get(0), direction, (0, _renderer.default)(this.container()).get(0), scrollOffset, offset);
   },
-  _updateIfNeed: function _updateIfNeed() {
+  _updateIfNeed: function () {
     if (!this.option('updateManually')) {
       this.update();
     }
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return false;
   },
-  isRenovated: function isRenovated() {
+  isRenovated: function () {
     return !!Scrollable.IS_RENOVATED_WIDGET;
   }
 });

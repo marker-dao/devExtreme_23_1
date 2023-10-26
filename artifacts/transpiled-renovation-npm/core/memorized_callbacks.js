@@ -4,16 +4,14 @@ exports.default = void 0;
 var _iterator = require("../core/utils/iterator");
 var _callbacks = _interopRequireDefault(require("./utils/callbacks"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var MemorizedCallbacks = /*#__PURE__*/function () {
+let MemorizedCallbacks = /*#__PURE__*/function () {
   function MemorizedCallbacks() {
     this.memory = [];
     this.callbacks = (0, _callbacks.default)();
   }
   var _proto = MemorizedCallbacks.prototype;
   _proto.add = function add(fn) {
-    (0, _iterator.each)(this.memory, function (_, item) {
-      return fn.apply(fn, item);
-    });
+    (0, _iterator.each)(this.memory, (_, item) => fn.apply(fn, item));
     this.callbacks.add(fn);
   };
   _proto.remove = function remove(fn) {

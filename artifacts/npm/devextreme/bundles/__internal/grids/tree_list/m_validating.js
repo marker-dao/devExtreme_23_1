@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/m_validating.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ var _extend = require("../../../core/utils/extend");
 var _m_validating = require("../../grids/grid_core/validating/m_validating");
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EditingControllerExtender = (0, _extend.extend)({}, _m_validating.validatingModule.extenders.controllers.editing);
+const EditingControllerExtender = (0, _extend.extend)({}, _m_validating.validatingModule.extenders.controllers.editing);
 delete EditingControllerExtender.processItems;
 delete EditingControllerExtender.processDataItem;
 _m_core.default.registerModule('validating', {

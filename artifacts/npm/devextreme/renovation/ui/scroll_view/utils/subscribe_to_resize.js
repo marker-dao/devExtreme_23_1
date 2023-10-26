@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scroll_view/utils/subscribe_to_resize.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,14 +15,16 @@ var _frame = require("../../../../animation/frame");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function subscribeToResize(element, handler) {
   if ((0, _window.hasWindow)() && element) {
-    var resizeAnimationFrameID = -1;
-    _resize_observer.default.observe(element, function (_ref) {
-      var target = _ref.target;
-      resizeAnimationFrameID = (0, _frame.requestAnimationFrame)(function () {
+    let resizeAnimationFrameID = -1;
+    _resize_observer.default.observe(element, _ref => {
+      let {
+        target
+      } = _ref;
+      resizeAnimationFrameID = (0, _frame.requestAnimationFrame)(() => {
         handler(target);
       });
     });
-    return function () {
+    return () => {
       (0, _frame.cancelAnimationFrame)(resizeAnimationFrameID);
       _resize_observer.default.unobserve(element);
     };

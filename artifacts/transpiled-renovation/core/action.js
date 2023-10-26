@@ -6,7 +6,7 @@ var _window = require("./utils/window");
 var _type = require("./utils/type");
 var _iterator = require("./utils/iterator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var Action = /*#__PURE__*/function () {
+let Action = /*#__PURE__*/function () {
   function Action(action, config) {
     config = config || {};
     this._action = action;
@@ -15,16 +15,16 @@ var Action = /*#__PURE__*/function () {
     this._afterExecute = config.afterExecute;
     this._component = config.component;
     this._validatingTargetName = config.validatingTargetName;
-    var excludeValidators = this._excludeValidators = {};
+    const excludeValidators = this._excludeValidators = {};
     if (config.excludeValidators) {
-      for (var i = 0; i < config.excludeValidators.length; i++) {
+      for (let i = 0; i < config.excludeValidators.length; i++) {
         excludeValidators[config.excludeValidators[i]] = true;
       }
     }
   }
   var _proto = Action.prototype;
   _proto.execute = function execute() {
-    var e = {
+    const e = {
       action: this._action,
       args: Array.prototype.slice.call(arguments),
       context: this._context,
@@ -33,9 +33,9 @@ var Action = /*#__PURE__*/function () {
       cancel: false,
       handled: false
     };
-    var beforeExecute = this._beforeExecute;
-    var afterExecute = this._afterExecute;
-    var argsBag = e.args[0] || {};
+    const beforeExecute = this._beforeExecute;
+    const afterExecute = this._afterExecute;
+    const argsBag = e.args[0] || {};
     if (!this._validateAction(e)) {
       return;
     }
@@ -43,7 +43,7 @@ var Action = /*#__PURE__*/function () {
     if (e.cancel) {
       return;
     }
-    var result = this._executeAction(e);
+    const result = this._executeAction(e);
     if (argsBag.cancel) {
       return;
     }
@@ -51,12 +51,14 @@ var Action = /*#__PURE__*/function () {
     return result;
   };
   _proto._validateAction = function _validateAction(e) {
-    var excludeValidators = this._excludeValidators;
-    var executors = Action.executors;
-    for (var name in executors) {
+    const excludeValidators = this._excludeValidators;
+    const {
+      executors
+    } = Action;
+    for (const name in executors) {
       if (!excludeValidators[name]) {
         var _executor$validate;
-        var executor = executors[name];
+        const executor = executors[name];
         (_executor$validate = executor.validate) === null || _executor$validate === void 0 ? void 0 : _executor$validate.call(executor, e);
         if (e.cancel) {
           return false;
@@ -66,11 +68,13 @@ var Action = /*#__PURE__*/function () {
     return true;
   };
   _proto._executeAction = function _executeAction(e) {
-    var result;
-    var executors = Action.executors;
-    for (var name in executors) {
+    let result;
+    const {
+      executors
+    } = Action;
+    for (const name in executors) {
       var _executor$execute;
-      var executor = executors[name];
+      const executor = executors[name];
       (_executor$execute = executor.execute) === null || _executor$execute === void 0 ? void 0 : _executor$execute.call(executor, e);
       if (e.handled) {
         result = e.result;
@@ -98,31 +102,25 @@ var Action = /*#__PURE__*/function () {
 }();
 exports.default = Action;
 Action.executors = {};
-var createValidatorByTargetElement = function createValidatorByTargetElement(condition) {
-  return function (e) {
-    if (!e.args.length) {
-      return;
-    }
-    var args = e.args[0];
-    var element = args[e.validatingTargetName] || args.element;
-    if (element && condition((0, _renderer.default)(element))) {
-      e.cancel = true;
-    }
-  };
+const createValidatorByTargetElement = condition => e => {
+  if (!e.args.length) {
+    return;
+  }
+  const args = e.args[0];
+  const element = args[e.validatingTargetName] || args.element;
+  if (element && condition((0, _renderer.default)(element))) {
+    e.cancel = true;
+  }
 };
 Action.registerExecutor({
   'disabled': {
-    validate: createValidatorByTargetElement(function ($target) {
-      return $target.is('.dx-state-disabled, .dx-state-disabled *');
-    })
+    validate: createValidatorByTargetElement($target => $target.is('.dx-state-disabled, .dx-state-disabled *'))
   },
   'readOnly': {
-    validate: createValidatorByTargetElement(function ($target) {
-      return $target.is('.dx-state-readonly, .dx-state-readonly *:not(.dx-state-independent)');
-    })
+    validate: createValidatorByTargetElement($target => $target.is('.dx-state-readonly, .dx-state-readonly *:not(.dx-state-independent)'))
   },
   'undefined': {
-    execute: function execute(e) {
+    execute: e => {
       if (!e.action) {
         e.result = undefined;
         e.handled = true;
@@ -130,7 +128,7 @@ Action.registerExecutor({
     }
   },
   'func': {
-    execute: function execute(e) {
+    execute: e => {
       if ((0, _type.isFunction)(e.action)) {
         e.result = e.action.call(e.context, e.args[0]);
         e.handled = true;

@@ -11,15 +11,15 @@ var _fx = _interopRequireDefault(require("../fx"));
 var _presets = require("../presets/presets");
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var directionPostfixes = {
+const directionPostfixes = {
   forward: ' dx-forward',
   backward: ' dx-backward',
   none: ' dx-no-direction',
   undefined: ' dx-no-direction'
 };
-var DX_ANIMATING_CLASS = 'dx-animating';
-var TransitionExecutor = _class.default.inherit({
-  ctor: function ctor() {
+const DX_ANIMATING_CLASS = 'dx-animating';
+const TransitionExecutor = _class.default.inherit({
+  ctor: function () {
     this._accumulatedDelays = {
       enter: 0,
       leave: 0
@@ -27,15 +27,15 @@ var TransitionExecutor = _class.default.inherit({
     this._animations = [];
     this.reset();
   },
-  _createAnimations: function _createAnimations($elements, initialConfig, configModifier, type) {
+  _createAnimations: function ($elements, initialConfig, configModifier, type) {
     $elements = (0, _renderer.default)($elements);
-    var that = this;
-    var result = [];
+    const that = this;
+    const result = [];
     configModifier = configModifier || {};
-    var animationConfig = this._prepareElementAnimationConfig(initialConfig, configModifier, type);
+    const animationConfig = this._prepareElementAnimationConfig(initialConfig, configModifier, type);
     if (animationConfig) {
       $elements.each(function () {
-        var animation = that._createAnimation((0, _renderer.default)(this), animationConfig, configModifier);
+        const animation = that._createAnimation((0, _renderer.default)(this), animationConfig, configModifier);
         if (animation) {
           animation.element.addClass(DX_ANIMATING_CLASS);
           animation.setup();
@@ -45,10 +45,10 @@ var TransitionExecutor = _class.default.inherit({
     }
     return result;
   },
-  _prepareElementAnimationConfig: function _prepareElementAnimationConfig(config, configModifier, type) {
-    var result;
+  _prepareElementAnimationConfig: function (config, configModifier, type) {
+    let result;
     if (typeof config === 'string') {
-      var presetName = config;
+      const presetName = config;
       config = _presets.presets.getPreset(presetName);
     }
     if (!config) {
@@ -61,8 +61,8 @@ var TransitionExecutor = _class.default.inherit({
         cleanupWhen: this._completePromise
       }, config, configModifier);
       if (!result.type || result.type === 'css') {
-        var cssClass = 'dx-' + type;
-        var extraCssClasses = (result.extraCssClasses ? ' ' + result.extraCssClasses : '') + directionPostfixes[result.direction];
+        const cssClass = 'dx-' + type;
+        const extraCssClasses = (result.extraCssClasses ? ' ' + result.extraCssClasses : '') + directionPostfixes[result.direction];
         result.type = 'css';
         result.from = (result.from || cssClass) + extraCssClasses;
         result.to = result.to || cssClass + '-active';
@@ -76,8 +76,8 @@ var TransitionExecutor = _class.default.inherit({
     }
     return result;
   },
-  _createAnimation: function _createAnimation($element, animationConfig, configModifier) {
-    var result;
+  _createAnimation: function ($element, animationConfig, configModifier) {
+    let result;
     if ((0, _type.isPlainObject)(animationConfig)) {
       result = _fx.default.createAnimation($element, animationConfig);
     } else if ((0, _type.isFunction)(animationConfig)) {
@@ -85,49 +85,49 @@ var TransitionExecutor = _class.default.inherit({
     }
     return result;
   },
-  _startAnimations: function _startAnimations() {
-    var animations = this._animations;
-    for (var i = 0; i < animations.length; i++) {
+  _startAnimations: function () {
+    const animations = this._animations;
+    for (let i = 0; i < animations.length; i++) {
       animations[i].start();
     }
   },
-  _stopAnimations: function _stopAnimations(jumpToEnd) {
-    var animations = this._animations;
-    for (var i = 0; i < animations.length; i++) {
+  _stopAnimations: function (jumpToEnd) {
+    const animations = this._animations;
+    for (let i = 0; i < animations.length; i++) {
       animations[i].stop(jumpToEnd);
     }
   },
-  _clearAnimations: function _clearAnimations() {
-    var animations = this._animations;
-    for (var i = 0; i < animations.length; i++) {
+  _clearAnimations: function () {
+    const animations = this._animations;
+    for (let i = 0; i < animations.length; i++) {
       animations[i].element.removeClass(DX_ANIMATING_CLASS);
     }
     this._animations.length = 0;
   },
-  reset: function reset() {
+  reset: function () {
     this._accumulatedDelays.enter = 0;
     this._accumulatedDelays.leave = 0;
     this._clearAnimations();
     this._completeDeferred = new _deferred.Deferred();
     this._completePromise = this._completeDeferred.promise();
   },
-  enter: function enter($elements, animationConfig, configModifier) {
-    var animations = this._createAnimations($elements, animationConfig, configModifier, 'enter');
+  enter: function ($elements, animationConfig, configModifier) {
+    const animations = this._createAnimations($elements, animationConfig, configModifier, 'enter');
     this._animations.push.apply(this._animations, animations);
   },
-  leave: function leave($elements, animationConfig, configModifier) {
-    var animations = this._createAnimations($elements, animationConfig, configModifier, 'leave');
+  leave: function ($elements, animationConfig, configModifier) {
+    const animations = this._createAnimations($elements, animationConfig, configModifier, 'leave');
     this._animations.push.apply(this._animations, animations);
   },
-  start: function start() {
-    var that = this;
-    var result;
+  start: function () {
+    const that = this;
+    let result;
     if (!this._animations.length) {
       that.reset();
       result = new _deferred.Deferred().resolve().promise();
     } else {
-      var animationDeferreds = (0, _iterator.map)(this._animations, function (animation) {
-        var result = new _deferred.Deferred();
+      const animationDeferreds = (0, _iterator.map)(this._animations, function (animation) {
+        const result = new _deferred.Deferred();
         animation.deferred.always(function () {
           result.resolve();
         });
@@ -143,7 +143,7 @@ var TransitionExecutor = _class.default.inherit({
     }
     return result;
   },
-  stop: function stop(jumpToEnd) {
+  stop: function (jumpToEnd) {
     this._stopAnimations(jumpToEnd);
   }
 });

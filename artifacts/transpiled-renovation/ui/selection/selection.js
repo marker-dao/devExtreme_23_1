@@ -8,7 +8,7 @@ var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var Selection = /*#__PURE__*/function () {
+let Selection = /*#__PURE__*/function () {
   function Selection(options) {
     this.options = (0, _extend.extend)(this._getDefaultOptions(), options, {
       selectedItemKeys: options.selectedKeys || []
@@ -31,22 +31,22 @@ var Selection = /*#__PURE__*/function () {
       maxFilterLengthInRequest: 0,
       onSelectionChanged: _common.noop,
       key: _common.noop,
-      keyOf: function keyOf(item) {
+      keyOf: function (item) {
         return item;
       },
-      load: function load() {
+      load: function () {
         return new _deferred.Deferred().resolve([]);
       },
-      totalCount: function totalCount() {
+      totalCount: function () {
         return -1;
       },
-      isSelectableItem: function isSelectableItem() {
+      isSelectableItem: function () {
         return true;
       },
-      isItemSelected: function isItemSelected() {
+      isItemSelected: function () {
         return false;
       },
-      getItemData: function getItemData(item) {
+      getItemData: function (item) {
         return item;
       },
       dataFields: _common.noop,
@@ -66,7 +66,7 @@ var Selection = /*#__PURE__*/function () {
     if (value === undefined) {
       return this.options.selectionFilter;
     }
-    var filterIsChanged = this.options.selectionFilter !== value && JSON.stringify(this.options.selectionFilter) !== JSON.stringify(value);
+    const filterIsChanged = this.options.selectionFilter !== value && JSON.stringify(this.options.selectionFilter) !== JSON.stringify(value);
     this.options.selectionFilter = value;
     filterIsChanged && this.onSelectionChanged();
   };
@@ -81,7 +81,7 @@ var Selection = /*#__PURE__*/function () {
   };
   _proto.selectedItemKeys = function selectedItemKeys(keys, preserve, isDeselect, isSelectAll, updatedKeys) {
     var _keys;
-    var that = this;
+    const that = this;
     keys = (_keys = keys) !== null && _keys !== void 0 ? _keys : [];
     keys = Array.isArray(keys) ? keys : [keys];
     that.validate();
@@ -103,22 +103,16 @@ var Selection = /*#__PURE__*/function () {
     this._selectionStrategy.onSelectionChanged();
   };
   _proto.changeItemSelection = function changeItemSelection(itemIndex, keys, setFocusOnly) {
-    var _this$options$allowLo,
-      _this$options,
-      _this = this;
-    var isSelectedItemsChanged;
-    var items = this.options.plainItems();
-    var item = items[itemIndex];
-    var deferred;
-    var allowLoadByRange = (_this$options$allowLo = (_this$options = this.options).allowLoadByRange) === null || _this$options$allowLo === void 0 ? void 0 : _this$options$allowLo.call(_this$options);
-    var indexOffset;
-    var focusedItemNotInLoadedRange = false;
-    var shiftFocusedItemNotInLoadedRange = false;
-    var itemIsNotInLoadedRange = function itemIsNotInLoadedRange(index) {
-      return index >= 0 && !items.filter(function (it) {
-        return it.loadIndex === index;
-      }).length;
-    };
+    var _this$options$allowLo, _this$options;
+    let isSelectedItemsChanged;
+    const items = this.options.plainItems();
+    const item = items[itemIndex];
+    let deferred;
+    const allowLoadByRange = (_this$options$allowLo = (_this$options = this.options).allowLoadByRange) === null || _this$options$allowLo === void 0 ? void 0 : _this$options$allowLo.call(_this$options);
+    let indexOffset;
+    let focusedItemNotInLoadedRange = false;
+    let shiftFocusedItemNotInLoadedRange = false;
+    const itemIsNotInLoadedRange = index => index >= 0 && !items.filter(it => it.loadIndex === index).length;
     if (allowLoadByRange && (0, _type.isDefined)(item)) {
       indexOffset = item.loadIndex - itemIndex;
       itemIndex = item.loadIndex;
@@ -130,8 +124,8 @@ var Selection = /*#__PURE__*/function () {
     if (!this.isSelectable() || !this.isDataItem(item)) {
       return false;
     }
-    var itemData = this.options.getItemData(item);
-    var itemKey = this.options.keyOf(itemData);
+    const itemData = this.options.getItemData(item);
+    const itemKey = this.options.keyOf(itemData);
     keys = keys || {};
     if (keys.shift && this.options.mode === 'multiple' && this._focusedItemIndex >= 0) {
       if (focusedItemNotInLoadedRange || shiftFocusedItemNotInLoadedRange) {
@@ -145,7 +139,7 @@ var Selection = /*#__PURE__*/function () {
     } else if (keys.control) {
       this._resetItemSelectionWhenShiftKeyPressed();
       if (!setFocusOnly) {
-        var isSelected = this._selectionStrategy.isItemDataSelected(itemData);
+        const isSelected = this._selectionStrategy.isItemDataSelected(itemData);
         if (this.options.mode === 'single') {
           this.clearSelectedItems();
         }
@@ -158,16 +152,16 @@ var Selection = /*#__PURE__*/function () {
       isSelectedItemsChanged = true;
     } else {
       this._resetItemSelectionWhenShiftKeyPressed();
-      var isKeysEqual = this._selectionStrategy.equalKeys(this.options.selectedItemKeys[0], itemKey);
+      const isKeysEqual = this._selectionStrategy.equalKeys(this.options.selectedItemKeys[0], itemKey);
       if (this.options.selectedItemKeys.length !== 1 || !isKeysEqual) {
         this._setSelectedItems([itemKey], [itemData]);
         isSelectedItemsChanged = true;
       }
     }
     if (isSelectedItemsChanged) {
-      (0, _deferred.when)(deferred).done(function () {
-        _this._focusedItemIndex = itemIndex;
-        !setFocusOnly && _this.onSelectionChanged();
+      (0, _deferred.when)(deferred).done(() => {
+        this._focusedItemIndex = itemIndex;
+        !setFocusOnly && this.onSelectionChanged();
       });
       return true;
     }
@@ -193,33 +187,32 @@ var Selection = /*#__PURE__*/function () {
     this._focusedItemIndex = -1;
   };
   _proto.changeItemSelectionWhenShiftKeyInVirtualPaging = function changeItemSelectionWhenShiftKeyInVirtualPaging(loadIndex) {
-    var _this2 = this;
-    var loadOptions = this.options.getLoadOptions(loadIndex, this._focusedItemIndex, this._shiftFocusedItemIndex);
-    var deferred = new _deferred.Deferred();
-    var indexOffset = loadOptions.skip;
-    this.options.load(loadOptions).done(function (items) {
-      _this2.changeItemSelectionWhenShiftKeyPressed(loadIndex, items, indexOffset);
+    const loadOptions = this.options.getLoadOptions(loadIndex, this._focusedItemIndex, this._shiftFocusedItemIndex);
+    const deferred = new _deferred.Deferred();
+    const indexOffset = loadOptions.skip;
+    this.options.load(loadOptions).done(items => {
+      this.changeItemSelectionWhenShiftKeyPressed(loadIndex, items, indexOffset);
       deferred.resolve();
     });
     return deferred.promise();
   };
   _proto.changeItemSelectionWhenShiftKeyPressed = function changeItemSelectionWhenShiftKeyPressed(itemIndex, items, indexOffset) {
-    var isSelectedItemsChanged = false;
-    var itemIndexStep;
-    var indexOffsetDefined = (0, _type.isDefined)(indexOffset);
-    var index = indexOffsetDefined ? this._focusedItemIndex - indexOffset : this._focusedItemIndex;
-    var keyOf = this.options.keyOf;
-    var focusedItem = items[index];
-    var focusedData = this.options.getItemData(focusedItem);
-    var focusedKey = keyOf(focusedData);
-    var isFocusedItemSelected = focusedItem && this.isItemDataSelected(focusedData);
+    let isSelectedItemsChanged = false;
+    let itemIndexStep;
+    const indexOffsetDefined = (0, _type.isDefined)(indexOffset);
+    let index = indexOffsetDefined ? this._focusedItemIndex - indexOffset : this._focusedItemIndex;
+    const keyOf = this.options.keyOf;
+    const focusedItem = items[index];
+    const focusedData = this.options.getItemData(focusedItem);
+    const focusedKey = keyOf(focusedData);
+    const isFocusedItemSelected = focusedItem && this.isItemDataSelected(focusedData);
     if (!(0, _type.isDefined)(this._shiftFocusedItemIndex)) {
       this._shiftFocusedItemIndex = this._focusedItemIndex;
     }
-    var data;
-    var itemKey;
-    var startIndex;
-    var endIndex;
+    let data;
+    let itemKey;
+    let startIndex;
+    let endIndex;
     if (this._shiftFocusedItemIndex !== this._focusedItemIndex) {
       itemIndexStep = this._focusedItemIndex < this._shiftFocusedItemIndex ? 1 : -1;
       startIndex = indexOffsetDefined ? this._focusedItemIndex - indexOffset : this._focusedItemIndex;
@@ -271,13 +264,13 @@ var Selection = /*#__PURE__*/function () {
     }
   };
   _proto._onePageSelectAll = function _onePageSelectAll(isDeselect) {
-    var items = this._selectionStrategy.getSelectableItems(this.options.plainItems());
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
+    const items = this._selectionStrategy.getSelectableItems(this.options.plainItems());
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
       if (this.isDataItem(item)) {
-        var itemData = this.options.getItemData(item);
-        var itemKey = this.options.keyOf(itemData);
-        var isSelected = this.isItemSelected(itemKey);
+        const itemData = this.options.getItemData(item);
+        const itemKey = this.options.keyOf(itemData);
+        const isSelected = this.isItemSelected(itemKey);
         if (!isSelected && !isDeselect) {
           this._addSelectedItem(itemData, itemKey);
         }

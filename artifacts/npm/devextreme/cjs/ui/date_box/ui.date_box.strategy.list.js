@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.strategy.list.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,57 +22,57 @@ var _date = _interopRequireDefault(require("../../localization/date"));
 var _date_serialization = _interopRequireDefault(require("../../core/utils/date_serialization"));
 var _utils = require("../drop_down_editor/utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var DATE_FORMAT = 'date';
-var BOUNDARY_VALUES = {
+const window = (0, _window.getWindow)();
+const DATE_FORMAT = 'date';
+const BOUNDARY_VALUES = {
   'min': new Date(0, 0, 0, 0, 0),
   'max': new Date(0, 0, 0, 23, 59)
 };
-var ListStrategy = _uiDate_box.default.inherit({
+const ListStrategy = _uiDate_box.default.inherit({
   NAME: 'List',
-  supportedKeys: function supportedKeys() {
+  supportedKeys: function () {
     return {
       space: _common.noop,
       home: _common.noop,
       end: _common.noop
     };
   },
-  getDefaultOptions: function getDefaultOptions() {
+  getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       applyValueMode: 'instantly'
     });
   },
-  getDisplayFormat: function getDisplayFormat(displayFormat) {
+  getDisplayFormat: function (displayFormat) {
     return displayFormat || 'shorttime';
   },
-  popupConfig: function popupConfig(_popupConfig) {
-    return _popupConfig;
+  popupConfig: function (popupConfig) {
+    return popupConfig;
   },
-  getValue: function getValue() {
-    var selectedIndex = this._widget.option('selectedIndex');
+  getValue: function () {
+    const selectedIndex = this._widget.option('selectedIndex');
     if (selectedIndex === -1) {
       return this.dateBox.option('value');
     }
-    var itemData = this._widgetItems[selectedIndex];
+    const itemData = this._widgetItems[selectedIndex];
     return this._getDateByItemData(itemData);
   },
-  useCurrentDateByDefault: function useCurrentDateByDefault() {
+  useCurrentDateByDefault: function () {
     return true;
   },
-  getDefaultDate: function getDefaultDate() {
+  getDefaultDate: function () {
     return new Date(null);
   },
-  popupShowingHandler: function popupShowingHandler() {
+  popupShowingHandler: function () {
     this.dateBox._dimensionChanged();
   },
-  _renderWidget: function _renderWidget() {
+  _renderWidget: function () {
     this.callBase();
     this._refreshItems();
   },
-  _getWidgetName: function _getWidgetName() {
+  _getWidgetName: function () {
     return _list_light.default;
   },
-  _getWidgetOptions: function _getWidgetOptions() {
+  _getWidgetOptions: function () {
     return {
       itemTemplate: this._timeListItemTemplate.bind(this),
       onItemClick: this._listItemClickHandler.bind(this),
@@ -81,15 +81,15 @@ var ListStrategy = _uiDate_box.default.inherit({
       selectionMode: 'single'
     };
   },
-  _refreshActiveDescendant: function _refreshActiveDescendant(e) {
+  _refreshActiveDescendant: function (e) {
     this.dateBox.setAria('activedescendant', '');
     this.dateBox.setAria('activedescendant', e.actionValue);
   },
-  _refreshItems: function _refreshItems() {
+  _refreshItems: function () {
     this._widgetItems = this._getTimeListItems();
     this._widget.option('items', this._widgetItems);
   },
-  renderOpenedState: function renderOpenedState() {
+  renderOpenedState: function () {
     if (!this._widget) {
       return;
     }
@@ -101,11 +101,11 @@ var ListStrategy = _uiDate_box.default.inherit({
       this._scrollToSelectedItem();
     }
   },
-  dispose: function dispose() {
+  dispose: function () {
     this.callBase();
     clearTimeout(this._asyncScrollTimeout);
   },
-  _updateValue: function _updateValue() {
+  _updateValue: function () {
     if (!this._widget) {
       return;
     }
@@ -113,21 +113,21 @@ var ListStrategy = _uiDate_box.default.inherit({
     this._setSelectedItemsByValue();
     this._scrollToSelectedItem();
   },
-  _setSelectedItemsByValue: function _setSelectedItemsByValue() {
-    var value = this.dateBoxValue();
-    var dateIndex = this._getDateIndex(value);
+  _setSelectedItemsByValue: function () {
+    const value = this.dateBoxValue();
+    const dateIndex = this._getDateIndex(value);
     if (dateIndex === -1) {
       this._widget.option('selectedItems', []);
     } else {
       this._widget.option('selectedIndex', dateIndex);
     }
   },
-  _scrollToSelectedItem: function _scrollToSelectedItem() {
+  _scrollToSelectedItem: function () {
     this._widget.scrollToItem(this._widget.option('selectedIndex'));
   },
-  _getDateIndex: function _getDateIndex(date) {
-    var result = -1;
-    for (var i = 0, n = this._widgetItems.length; i < n; i++) {
+  _getDateIndex: function (date) {
+    let result = -1;
+    for (let i = 0, n = this._widgetItems.length; i < n; i++) {
       if (this._areDatesEqual(date, this._widgetItems[i])) {
         result = i;
         break;
@@ -135,15 +135,15 @@ var ListStrategy = _uiDate_box.default.inherit({
     }
     return result;
   },
-  _areDatesEqual: function _areDatesEqual(first, second) {
+  _areDatesEqual: function (first, second) {
     return (0, _type.isDate)(first) && (0, _type.isDate)(second) && first.getHours() === second.getHours() && first.getMinutes() === second.getMinutes();
   },
-  _getTimeListItems: function _getTimeListItems() {
-    var min = this.dateBox.dateOption('min') || this._getBoundaryDate('min');
-    var max = this.dateBox.dateOption('max') || this._getBoundaryDate('max');
-    var value = this.dateBox.dateOption('value') || null;
-    var delta = max - min;
-    var minutes = min.getMinutes() % this.dateBox.option('interval');
+  _getTimeListItems: function () {
+    let min = this.dateBox.dateOption('min') || this._getBoundaryDate('min');
+    const max = this.dateBox.dateOption('max') || this._getBoundaryDate('max');
+    const value = this.dateBox.dateOption('value') || null;
+    let delta = max - min;
+    const minutes = min.getMinutes() % this.dateBox.option('interval');
     if (delta < 0) {
       return [];
     }
@@ -160,40 +160,40 @@ var ListStrategy = _uiDate_box.default.inherit({
     }
     return this._getRangeItems(min, new Date(min), delta);
   },
-  _getRangeItems: function _getRangeItems(startValue, currentValue, rangeDuration) {
-    var rangeItems = [];
-    var interval = this.dateBox.option('interval');
+  _getRangeItems: function (startValue, currentValue, rangeDuration) {
+    const rangeItems = [];
+    const interval = this.dateBox.option('interval');
     while (currentValue - startValue <= rangeDuration) {
       rangeItems.push(new Date(currentValue));
       currentValue.setMinutes(currentValue.getMinutes() + interval);
     }
     return rangeItems;
   },
-  _getBoundaryDate: function _getBoundaryDate(boundary) {
-    var boundaryValue = BOUNDARY_VALUES[boundary];
-    var currentValue = new Date((0, _common.ensureDefined)(this.dateBox.dateOption('value'), 0));
+  _getBoundaryDate: function (boundary) {
+    const boundaryValue = BOUNDARY_VALUES[boundary];
+    const currentValue = new Date((0, _common.ensureDefined)(this.dateBox.dateOption('value'), 0));
     return new Date(currentValue.getFullYear(), currentValue.getMonth(), currentValue.getDate(), boundaryValue.getHours(), boundaryValue.getMinutes());
   },
-  _timeListItemTemplate: function _timeListItemTemplate(itemData) {
-    var displayFormat = this.dateBox.option('displayFormat');
+  _timeListItemTemplate: function (itemData) {
+    const displayFormat = this.dateBox.option('displayFormat');
     return _date.default.format(itemData, this.getDisplayFormat(displayFormat));
   },
-  _listItemClickHandler: function _listItemClickHandler(e) {
+  _listItemClickHandler: function (e) {
     if (this.dateBox.option('applyValueMode') === 'useButtons') {
       return;
     }
-    var date = this._getDateByItemData(e.itemData);
+    const date = this._getDateByItemData(e.itemData);
     this.dateBox.option('opened', false);
     this.dateBoxValue(date, e.event);
   },
-  _getDateByItemData: function _getDateByItemData(itemData) {
-    var date = this.dateBox.option('value');
-    var hours = itemData.getHours();
-    var minutes = itemData.getMinutes();
-    var seconds = itemData.getSeconds();
-    var year = itemData.getFullYear();
-    var month = itemData.getMonth();
-    var day = itemData.getDate();
+  _getDateByItemData: function (itemData) {
+    let date = this.dateBox.option('value');
+    const hours = itemData.getHours();
+    const minutes = itemData.getMinutes();
+    const seconds = itemData.getSeconds();
+    const year = itemData.getFullYear();
+    const month = itemData.getMonth();
+    const day = itemData.getDate();
     if (date) {
       if (this.dateBox.option('dateSerializationFormat')) {
         date = _date_serialization.default.deserializeDate(date);
@@ -211,21 +211,21 @@ var ListStrategy = _uiDate_box.default.inherit({
     }
     return date;
   },
-  getKeyboardListener: function getKeyboardListener() {
+  getKeyboardListener: function () {
     return this._widget;
   },
-  _updatePopupHeight: function _updatePopupHeight() {
-    var dropDownOptionsHeight = (0, _utils.getSizeValue)(this.dateBox.option('dropDownOptions.height'));
+  _updatePopupHeight: function () {
+    const dropDownOptionsHeight = (0, _utils.getSizeValue)(this.dateBox.option('dropDownOptions.height'));
     if (dropDownOptionsHeight === undefined || dropDownOptionsHeight === 'auto') {
       this.dateBox._setPopupOption('height', 'auto');
-      var popupHeight = (0, _size.getOuterHeight)(this._widget.$element());
-      var maxHeight = (0, _size.getHeight)(window) * 0.45;
+      const popupHeight = (0, _size.getOuterHeight)(this._widget.$element());
+      const maxHeight = (0, _size.getHeight)(window) * 0.45;
       this.dateBox._setPopupOption('height', Math.min(popupHeight, maxHeight));
     }
     this.dateBox._timeList && this.dateBox._timeList.updateDimensions();
   },
-  getParsedText: function getParsedText(text, format) {
-    var value = this.callBase(text, format);
+  getParsedText: function (text, format) {
+    let value = this.callBase(text, format);
     if (value) {
       value = _ui.default.mergeDates(value, new Date(null), DATE_FORMAT);
     }

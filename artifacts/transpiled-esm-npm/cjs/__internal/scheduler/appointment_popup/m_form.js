@@ -18,64 +18,57 @@ var _data_source = _interopRequireDefault(require("../../../data/data_source"));
 var _message = _interopRequireDefault(require("../../../localization/message"));
 var _semaphore = require("../../../renovation/ui/scheduler/utils/semaphore/semaphore");
 var _form = _interopRequireDefault(require("../../../ui/form"));
+var _themes = require("../../../ui/themes");
 var _m_appointment_adapter = require("../m_appointment_adapter");
 var _m_utils_timezones_data = _interopRequireDefault(require("../timezones/m_utils_timezones_data"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
-var APPOINTMENT_FORM_GROUP_NAMES = {
+const SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
+const APPOINTMENT_FORM_GROUP_NAMES = {
   Main: 'mainGroup',
   Recurrence: 'recurrenceGroup'
 };
 exports.APPOINTMENT_FORM_GROUP_NAMES = APPOINTMENT_FORM_GROUP_NAMES;
-var getDateWithStartHour = function getDateWithStartHour(date, startDayHour) {
-  return new Date(new Date(date).setHours(startDayHour));
-};
-var validateAppointmentFormDate = function validateAppointmentFormDate(editor, value, previousValue) {
-  var isCurrentDateCorrect = value === null || !!value;
-  var isPreviousDateCorrect = previousValue === null || !!previousValue;
+const getStylingModeFunc = () => (0, _themes.isFluent)((0, _themes.current)()) ? 'filled' : undefined;
+const getStartDateWithStartHour = (startDate, startDayHour) => new Date(new Date(startDate).setHours(startDayHour));
+const validateAppointmentFormDate = (editor, value, previousValue) => {
+  const isCurrentDateCorrect = value === null || !!value;
+  const isPreviousDateCorrect = previousValue === null || !!previousValue;
   if (!isCurrentDateCorrect && isPreviousDateCorrect) {
     editor.option('value', previousValue);
   }
 };
-var updateRecurrenceItemVisibility = function updateRecurrenceItemVisibility(recurrenceRuleExpr, value, form) {
+const updateRecurrenceItemVisibility = (recurrenceRuleExpr, value, form) => {
   var _a;
   form.itemOption(APPOINTMENT_FORM_GROUP_NAMES.Recurrence, 'visible', value);
   !value && form.updateData(recurrenceRuleExpr, '');
   (_a = form.getEditor(recurrenceRuleExpr)) === null || _a === void 0 ? void 0 : _a.changeValueByVisibility(value);
 };
-var createDateBoxEditor = function createDateBoxEditor(dataField, colSpan, firstDayOfWeek, label, onValueChanged) {
-  return {
-    editorType: 'dxDateBox',
-    dataField,
-    colSpan,
-    label: {
-      text: _message.default.format(label)
+const createDateBoxEditor = (dataField, colSpan, firstDayOfWeek, label, onValueChanged) => ({
+  editorType: 'dxDateBox',
+  dataField,
+  colSpan,
+  label: {
+    text: _message.default.format(label)
+  },
+  validationRules: [{
+    type: 'required'
+  }],
+  editorOptions: {
+    stylingMode: getStylingModeFunc(),
+    width: '100%',
+    calendarOptions: {
+      firstDayOfWeek
     },
-    validationRules: [{
-      type: 'required'
-    }],
-    editorOptions: {
-      width: '100%',
-      calendarOptions: {
-        firstDayOfWeek
-      },
-      onValueChanged,
-      useMaskBehavior: true
-    }
-  };
-};
-var AppointmentForm = /*#__PURE__*/function () {
+    onValueChanged,
+    useMaskBehavior: true
+  }
+});
+let AppointmentForm = /*#__PURE__*/function () {
   function AppointmentForm(scheduler) {
     this.scheduler = scheduler;
     this.form = null;
@@ -83,16 +76,17 @@ var AppointmentForm = /*#__PURE__*/function () {
   }
   var _proto = AppointmentForm.prototype;
   _proto.create = function create(triggerResize, changeSize, formData) {
-    var _this = this;
-    var _this$scheduler$getEd = this.scheduler.getEditingConfig(),
-      allowTimeZoneEditing = _this$scheduler$getEd.allowTimeZoneEditing;
-    var _this$scheduler$getDa = this.scheduler.getDataAccessors(),
-      expr = _this$scheduler$getDa.expr;
-    var recurrenceEditorVisibility = !!formData[expr.recurrenceRuleExpr]; // TODO
-    var colSpan = recurrenceEditorVisibility ? 1 : 2;
-    var mainItems = [].concat(_toConsumableArray(this._createMainItems(expr, triggerResize, changeSize, allowTimeZoneEditing)), _toConsumableArray(this.scheduler.createResourceEditorModel()));
+    const {
+      allowTimeZoneEditing
+    } = this.scheduler.getEditingConfig();
+    const {
+      expr
+    } = this.scheduler.getDataAccessors();
+    const recurrenceEditorVisibility = !!formData[expr.recurrenceRuleExpr]; // TODO
+    const colSpan = recurrenceEditorVisibility ? 1 : 2;
+    const mainItems = [...this._createMainItems(expr, triggerResize, changeSize, allowTimeZoneEditing), ...this.scheduler.createResourceEditorModel()];
     changeSize(recurrenceEditorVisibility);
-    var items = [{
+    const items = [{
       itemType: 'group',
       name: APPOINTMENT_FORM_GROUP_NAMES.Main,
       colCountByScreen: {
@@ -108,7 +102,7 @@ var AppointmentForm = /*#__PURE__*/function () {
       colSpan,
       items: this._createRecurrenceEditor(expr)
     }];
-    var element = (0, _renderer.default)('<div>');
+    const element = (0, _renderer.default)('<div>');
     this.scheduler.createComponent(element, _form.default, {
       items,
       showValidationSummary: true,
@@ -121,31 +115,25 @@ var AppointmentForm = /*#__PURE__*/function () {
       formData,
       showColonAfterLabel: false,
       labelLocation: 'top',
-      onInitialized: function onInitialized(e) {
-        _this.form = e.component;
+      onInitialized: e => {
+        this.form = e.component;
       },
-      customizeItem: function customizeItem(e) {
-        if (_this.form && e.itemType === 'group') {
-          var dataExprs = _this.scheduler.getDataAccessors().expr;
-          var startDate = new Date(_this.formData[dataExprs.startDateExpr]);
-          var endDate = new Date(_this.formData[dataExprs.endDateExpr]);
-          var startTimeZoneEditor = e.items.find(function (i) {
-            return i.dataField === dataExprs.startDateTimeZoneExpr;
-          });
-          var endTimeZoneEditor = e.items.find(function (i) {
-            return i.dataField === dataExprs.endDateTimeZoneExpr;
-          });
+      customizeItem: e => {
+        if (this.form && e.itemType === 'group') {
+          const dataExprs = this.scheduler.getDataAccessors().expr;
+          const startDate = new Date(this.formData[dataExprs.startDateExpr]);
+          const endDate = new Date(this.formData[dataExprs.endDateExpr]);
+          const startTimeZoneEditor = e.items.find(i => i.dataField === dataExprs.startDateTimeZoneExpr);
+          const endTimeZoneEditor = e.items.find(i => i.dataField === dataExprs.endDateTimeZoneExpr);
           if (startTimeZoneEditor) {
-            startTimeZoneEditor.editorOptions.dataSource = _this.createTimeZoneDataSource(startDate);
+            startTimeZoneEditor.editorOptions.dataSource = this.createTimeZoneDataSource(startDate);
           }
           if (endTimeZoneEditor) {
-            endTimeZoneEditor.editorOptions.dataSource = _this.createTimeZoneDataSource(endDate);
+            endTimeZoneEditor.editorOptions.dataSource = this.createTimeZoneDataSource(endDate);
           }
         }
       },
-      screenByWidth: function screenByWidth(width) {
-        return width < SCREEN_SIZE_OF_SINGLE_COLUMN || _devices.default.current().deviceType !== 'desktop' ? 'xs' : 'lg';
-      }
+      screenByWidth: width => width < SCREEN_SIZE_OF_SINGLE_COLUMN || _devices.default.current().deviceType !== 'desktop' ? 'xs' : 'lg'
     });
   };
   _proto.createTimeZoneDataSource = function createTimeZoneDataSource(date) {
@@ -160,19 +148,18 @@ var AppointmentForm = /*#__PURE__*/function () {
   };
   _proto._dateBoxValueChanged = function _dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
     validateAppointmentFormDate(args.component, args.value, args.previousValue);
-    var value = _date_serialization.default.deserializeDate(args.value);
-    var previousValue = _date_serialization.default.deserializeDate(args.previousValue);
-    var dateEditor = this.form.getEditor(dateExpr);
-    var dateValue = _date_serialization.default.deserializeDate(dateEditor.option('value'));
+    const value = _date_serialization.default.deserializeDate(args.value);
+    const previousValue = _date_serialization.default.deserializeDate(args.previousValue);
+    const dateEditor = this.form.getEditor(dateExpr);
+    const dateValue = _date_serialization.default.deserializeDate(dateEditor.option('value'));
     if (this.semaphore.isFree() && dateValue && value && isNeedCorrect(dateValue, value)) {
-      var duration = previousValue ? dateValue.getTime() - previousValue.getTime() : 0;
+      const duration = previousValue ? dateValue.getTime() - previousValue.getTime() : 0;
       dateEditor.option('value', new Date(value.getTime() + duration));
     }
   };
   _proto._createTimezoneEditor = function _createTimezoneEditor(timeZoneExpr, secondTimeZoneExpr, visibleIndex, colSpan, isMainTimeZone) {
-    var _this2 = this;
-    var visible = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
-    var noTzTitle = _message.default.format('dxScheduler-noTimezoneTitle');
+    let visible = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
+    const noTzTitle = _message.default.format('dxScheduler-noTimezoneTitle');
     return {
       dataField: timeZoneExpr,
       editorType: 'dxSelectBox',
@@ -186,9 +173,11 @@ var AppointmentForm = /*#__PURE__*/function () {
         valueExpr: 'id',
         placeholder: noTzTitle,
         searchEnabled: true,
-        onValueChanged: function onValueChanged(args) {
-          var form = _this2.form;
-          var secondTimezoneEditor = form.getEditor(secondTimeZoneExpr);
+        onValueChanged: args => {
+          const {
+            form
+          } = this;
+          const secondTimezoneEditor = form.getEditor(secondTimeZoneExpr);
           if (isMainTimeZone) {
             secondTimezoneEditor.option('value', args.value);
           }
@@ -198,35 +187,32 @@ var AppointmentForm = /*#__PURE__*/function () {
     };
   };
   _proto._createDateBoxItems = function _createDateBoxItems(dataExprs, allowTimeZoneEditing) {
-    var _this3 = this;
-    var colSpan = allowTimeZoneEditing ? 2 : 1;
-    var firstDayOfWeek = this.scheduler.getFirstDayOfWeek();
-    return [createDateBoxEditor(dataExprs.startDateExpr, colSpan, firstDayOfWeek, 'dxScheduler-editorLabelStartDate', function (args) {
-      _this3._dateBoxValueChanged(args, dataExprs.endDateExpr, function (endValue, startValue) {
-        return endValue < startValue;
-      });
-    }), this._createTimezoneEditor(dataExprs.startDateTimeZoneExpr, dataExprs.endDateTimeZoneExpr, 1, colSpan, true, allowTimeZoneEditing), createDateBoxEditor(dataExprs.endDateExpr, colSpan, firstDayOfWeek, 'dxScheduler-editorLabelEndDate', function (args) {
-      _this3._dateBoxValueChanged(args, dataExprs.startDateExpr, function (startValue, endValue) {
-        return endValue < startValue;
-      });
+    const colSpan = allowTimeZoneEditing ? 2 : 1;
+    const firstDayOfWeek = this.scheduler.getFirstDayOfWeek();
+    return [createDateBoxEditor(dataExprs.startDateExpr, colSpan, firstDayOfWeek, 'dxScheduler-editorLabelStartDate', args => {
+      this._dateBoxValueChanged(args, dataExprs.endDateExpr, (endValue, startValue) => endValue < startValue);
+    }), this._createTimezoneEditor(dataExprs.startDateTimeZoneExpr, dataExprs.endDateTimeZoneExpr, 1, colSpan, true, allowTimeZoneEditing), createDateBoxEditor(dataExprs.endDateExpr, colSpan, firstDayOfWeek, 'dxScheduler-editorLabelEndDate', args => {
+      this._dateBoxValueChanged(args, dataExprs.startDateExpr, (startValue, endValue) => endValue < startValue);
     }), this._createTimezoneEditor(dataExprs.endDateTimeZoneExpr, dataExprs.startDateTimeZoneExpr, 3, colSpan, false, allowTimeZoneEditing)];
   };
   _proto._changeFormItemDateType = function _changeFormItemDateType(itemPath, isAllDay) {
-    var itemEditorOptions = this.form.itemOption(itemPath).editorOptions;
-    var type = isAllDay ? 'date' : 'datetime';
-    var newEditorOption = _extends(_extends({}, itemEditorOptions), {
+    const itemEditorOptions = this.form.itemOption(itemPath).editorOptions;
+    const type = isAllDay ? 'date' : 'datetime';
+    const newEditorOption = _extends(_extends({}, itemEditorOptions), {
       type
     });
     this.form.itemOption(itemPath, 'editorOptions', newEditorOption);
   };
   _proto._createMainItems = function _createMainItems(dataExprs, triggerResize, changeSize, allowTimeZoneEditing) {
-    var _this4 = this;
     return [{
       dataField: dataExprs.textExpr,
       editorType: 'dxTextBox',
       colSpan: 2,
       label: {
         text: _message.default.format('dxScheduler-editorLabelTitle')
+      },
+      editorOptions: {
+        stylingMode: getStylingModeFunc()
       }
     }, {
       itemType: 'group',
@@ -252,30 +238,29 @@ var AppointmentForm = /*#__PURE__*/function () {
           location: 'right'
         },
         editorOptions: {
-          onValueChanged: function onValueChanged(args) {
-            var value = args.value;
-            var startDateEditor = _this4.form.getEditor(dataExprs.startDateExpr);
-            var endDateEditor = _this4.form.getEditor(dataExprs.endDateExpr);
-            var startDate = _date_serialization.default.deserializeDate(startDateEditor.option('value'));
-            var endDate = _date_serialization.default.deserializeDate(endDateEditor.option('value'));
-            if (_this4.semaphore.isFree() && startDate) {
+          onValueChanged: args => {
+            const {
+              value
+            } = args;
+            const startDateEditor = this.form.getEditor(dataExprs.startDateExpr);
+            const endDateEditor = this.form.getEditor(dataExprs.endDateExpr);
+            const startDate = _date_serialization.default.deserializeDate(startDateEditor.option('value'));
+            if (this.semaphore.isFree() && startDate) {
               if (value) {
-                var allDayStartDate = _date.default.trimTime(startDate);
-                var allDayEndDate = _date.default.trimTime(endDate);
+                const allDayStartDate = _date.default.trimTime(startDate);
                 startDateEditor.option('value', new Date(allDayStartDate));
-                endDateEditor.option('value', new Date(allDayEndDate));
+                endDateEditor.option('value', new Date(allDayStartDate));
               } else {
-                var startDateWithStartHour = getDateWithStartHour(startDate, _this4.scheduler.getStartDayHour());
-                var endDateWithStartHour = getDateWithStartHour(endDate, _this4.scheduler.getStartDayHour());
-                var calculatedEndDate = _this4.scheduler.getCalculatedEndDate(endDateWithStartHour);
+                const startDateWithStartHour = getStartDateWithStartHour(startDate, this.scheduler.getStartDayHour());
+                const endDate = this.scheduler.getCalculatedEndDate(startDateWithStartHour);
                 startDateEditor.option('value', startDateWithStartHour);
-                endDateEditor.option('value', calculatedEndDate);
+                endDateEditor.option('value', endDate);
               }
             }
-            var startDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(dataExprs.startDateExpr);
-            var endDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(dataExprs.endDateExpr);
-            _this4._changeFormItemDateType(startDateItemPath, value);
-            _this4._changeFormItemDateType(endDateItemPath, value);
+            const startDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(dataExprs.startDateExpr);
+            const endDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(dataExprs.endDateExpr);
+            this._changeFormItemDateType(startDateItemPath, value);
+            this._changeFormItemDateType(endDateItemPath, value);
           }
         }
       }, {
@@ -288,9 +273,11 @@ var AppointmentForm = /*#__PURE__*/function () {
           location: 'right'
         },
         editorOptions: {
-          onValueChanged: function onValueChanged(args) {
-            var form = _this4.form;
-            var colSpan = args.value ? 1 : 2;
+          onValueChanged: args => {
+            const {
+              form
+            } = this;
+            const colSpan = args.value ? 1 : 2;
             form.itemOption(APPOINTMENT_FORM_GROUP_NAMES.Main, 'colSpan', colSpan);
             form.itemOption(APPOINTMENT_FORM_GROUP_NAMES.Recurrence, 'colSpan', colSpan);
             updateRecurrenceItemVisibility(dataExprs.recurrenceRuleExpr, args.value, form);
@@ -308,6 +295,9 @@ var AppointmentForm = /*#__PURE__*/function () {
       colSpan: 2,
       label: {
         text: _message.default.format('dxScheduler-editorLabelDescription')
+      },
+      editorOptions: {
+        stylingMode: getStylingModeFunc()
       }
     }, {
       itemType: 'empty',
@@ -315,16 +305,13 @@ var AppointmentForm = /*#__PURE__*/function () {
     }];
   };
   _proto._createRecurrenceEditor = function _createRecurrenceEditor(dataExprs) {
-    var _this5 = this;
     return [{
       dataField: dataExprs.recurrenceRuleExpr,
       editorType: 'dxRecurrenceEditor',
       editorOptions: {
         firstDayOfWeek: this.scheduler.getFirstDayOfWeek(),
         timeZoneCalculator: this.scheduler.getTimeZoneCalculator(),
-        getStartDateTimeZone: function getStartDateTimeZone() {
-          return _this5._createAppointmentAdapter(_this5.formData).startDateTimeZone;
-        }
+        getStartDateTimeZone: () => this._createAppointmentAdapter(this.formData).startDateTimeZone
       },
       label: {
         text: ' ',
@@ -333,34 +320,35 @@ var AppointmentForm = /*#__PURE__*/function () {
     }];
   };
   _proto.setEditorsType = function setEditorsType(allDay) {
-    var _this$scheduler$getDa2 = this.scheduler.getDataAccessors().expr,
-      startDateExpr = _this$scheduler$getDa2.startDateExpr,
-      endDateExpr = _this$scheduler$getDa2.endDateExpr;
-    var startDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(startDateExpr);
-    var endDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(endDateExpr);
-    var startDateFormItem = this.form.itemOption(startDateItemPath);
-    var endDateFormItem = this.form.itemOption(endDateItemPath);
+    const {
+      startDateExpr,
+      endDateExpr
+    } = this.scheduler.getDataAccessors().expr;
+    const startDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(startDateExpr);
+    const endDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(endDateExpr);
+    const startDateFormItem = this.form.itemOption(startDateItemPath);
+    const endDateFormItem = this.form.itemOption(endDateItemPath);
     if (startDateFormItem && endDateFormItem) {
-      var startDateEditorOptions = startDateFormItem.editorOptions;
-      var endDateEditorOptions = endDateFormItem.editorOptions;
+      const startDateEditorOptions = startDateFormItem.editorOptions;
+      const endDateEditorOptions = endDateFormItem.editorOptions;
       startDateEditorOptions.type = endDateEditorOptions.type = allDay ? 'date' : 'datetime';
       this.form.itemOption(startDateItemPath, 'editorOptions', startDateEditorOptions);
       this.form.itemOption(endDateItemPath, 'editorOptions', endDateEditorOptions);
     }
   };
   _proto.updateRecurrenceEditorStartDate = function updateRecurrenceEditorStartDate(date, expression) {
-    var options = {
+    const options = {
       startDate: date
     };
     this.setEditorOptions(expression, 'Recurrence', options);
   };
   _proto.setEditorOptions = function setEditorOptions(name, groupName, options) {
-    var editorPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES[groupName], ".").concat(name);
-    var editor = this.form.itemOption(editorPath);
+    const editorPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES[groupName], ".").concat(name);
+    const editor = this.form.itemOption(editorPath);
     editor && this.form.itemOption(editorPath, 'editorOptions', (0, _extend.extend)({}, editor.editorOptions, options));
   };
   _proto.setTimeZoneEditorDataSource = function setTimeZoneEditorDataSource(date, path) {
-    var dataSource = this.createTimeZoneDataSource(date);
+    const dataSource = this.createTimeZoneDataSource(date);
     this.setEditorOptions(path, 'Main', {
       dataSource
     });
@@ -368,10 +356,10 @@ var AppointmentForm = /*#__PURE__*/function () {
   _proto.updateFormData = function updateFormData(formData) {
     this.semaphore.take();
     this.form.option('formData', formData);
-    var dataExprs = this.scheduler.getDataAccessors().expr;
-    var allDay = formData[dataExprs.allDayExpr];
-    var startDate = new Date(formData[dataExprs.startDateExpr]);
-    var endDate = new Date(formData[dataExprs.endDateExpr]);
+    const dataExprs = this.scheduler.getDataAccessors().expr;
+    const allDay = formData[dataExprs.allDayExpr];
+    const startDate = new Date(formData[dataExprs.startDateExpr]);
+    const endDate = new Date(formData[dataExprs.endDateExpr]);
     this.setTimeZoneEditorDataSource(startDate, dataExprs.startDateTimeZoneExpr);
     this.setTimeZoneEditorDataSource(endDate, dataExprs.endDateTimeZoneExpr);
     this.updateRecurrenceEditorStartDate(startDate, dataExprs.recurrenceRuleExpr);
@@ -380,23 +368,25 @@ var AppointmentForm = /*#__PURE__*/function () {
   };
   _createClass(AppointmentForm, [{
     key: "dxForm",
-    get: function get() {
+    get: function () {
       return this.form;
     }
   }, {
     key: "readOnly",
-    set: function set(value) {
+    set: function (value) {
       this.form.option('readOnly', value);
-      var recurrenceRuleExpr = this.scheduler.getDataAccessors().expr.recurrenceRuleExpr;
-      var recurrenceEditor = this.form.getEditor(recurrenceRuleExpr);
+      const {
+        recurrenceRuleExpr
+      } = this.scheduler.getDataAccessors().expr;
+      const recurrenceEditor = this.form.getEditor(recurrenceRuleExpr);
       recurrenceEditor === null || recurrenceEditor === void 0 ? void 0 : recurrenceEditor.option('readOnly', value);
     }
   }, {
     key: "formData",
-    get: function get() {
+    get: function () {
       return this.form.option('formData');
     },
-    set: function set(value) {
+    set: function (value) {
       this.form.option('formData', value);
     }
   }]);

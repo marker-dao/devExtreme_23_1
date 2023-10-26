@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/widget/ui.widget.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,7 +29,7 @@ function setAttribute(name, value, target) {
   value = (0, _type.isDefined)(value) ? value.toString() : null;
   target.attr(name, value);
 }
-var Widget = _dom_component.default.inherit({
+const Widget = _dom_component.default.inherit({
   _feedbackHideTimeout: 400,
   _feedbackShowTimeout: 30,
   _supportedKeys() {
@@ -79,12 +79,12 @@ var Widget = _dom_component.default.inherit({
       useResizeObserver: true
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
-        var device = _devices.default.real();
-        var platform = device.platform;
-        var version = device.version;
+      device: function () {
+        const device = _devices.default.real();
+        const platform = device.platform;
+        const version = device.version;
         return platform === 'ios' && (0, _version.compare)(version, '13.3') <= 0;
       },
       options: {
@@ -96,16 +96,13 @@ var Widget = _dom_component.default.inherit({
     this.callBase();
     this._initContentReadyAction();
   },
-  _innerWidgetOptionChanged: function _innerWidgetOptionChanged(innerWidget, args) {
-    var options = Widget.getOptionsFromContainer(args);
+  _innerWidgetOptionChanged: function (innerWidget, args) {
+    const options = Widget.getOptionsFromContainer(args);
     innerWidget && innerWidget.option(options);
     this._options.cache(args.name, options);
   },
   _bindInnerWidgetOptions(innerWidget, optionsContainer) {
-    var _this = this;
-    var syncOptions = function syncOptions() {
-      return _this._options.silent(optionsContainer, (0, _extend.extend)({}, innerWidget.option()));
-    };
+    const syncOptions = () => this._options.silent(optionsContainer, (0, _extend.extend)({}, innerWidget.option()));
     syncOptions();
     innerWidget.on('optionChanged', syncOptions);
   },
@@ -118,9 +115,10 @@ var Widget = _dom_component.default.inherit({
     });
   },
   _initMarkup() {
-    var _this$option = this.option(),
-      disabled = _this$option.disabled,
-      visible = _this$option.visible;
+    const {
+      disabled,
+      visible
+    } = this.option();
     this.$element().addClass('dx-widget');
     this._toggleDisabledState(disabled);
     this._toggleVisibility(visible);
@@ -137,17 +135,13 @@ var Widget = _dom_component.default.inherit({
     this._toggleIndependentState();
   },
   _renderHint() {
-    var _this$option2 = this.option(),
-      hint = _this$option2.hint;
+    const {
+      hint
+    } = this.option();
     this.$element().attr('title', hint || null);
   },
   _renderContent() {
-    var _this2 = this;
-    (0, _common.deferRender)(function () {
-      return !_this2._disposed ? _this2._renderContentImpl() : void 0;
-    }).done(function () {
-      return !_this2._disposed ? _this2._fireContentReadyAction() : void 0;
-    });
+    (0, _common.deferRender)(() => !this._disposed ? this._renderContentImpl() : void 0).done(() => !this._disposed ? this._fireContentReadyAction() : void 0);
   },
   _renderContentImpl: _common.noop,
   _fireContentReadyAction: (0, _common.deferRenderer)(function () {
@@ -179,15 +173,17 @@ var Widget = _dom_component.default.inherit({
     }
   },
   _renderAccessKey() {
-    var $el = this._focusTarget();
-    var _this$option3 = this.option(),
-      accessKey = _this$option3.accessKey;
+    const $el = this._focusTarget();
+    const {
+      accessKey
+    } = this.option();
     $el.attr('accesskey', accessKey);
   },
   _isFocusable() {
-    var _this$option4 = this.option(),
-      focusStateEnabled = _this$option4.focusStateEnabled,
-      disabled = _this$option4.disabled;
+    const {
+      focusStateEnabled,
+      disabled
+    } = this.option();
     return focusStateEnabled && !disabled;
   },
   _eventBindingTarget() {
@@ -196,23 +192,24 @@ var Widget = _dom_component.default.inherit({
   _focusTarget() {
     return this._getActiveElement();
   },
-  _isFocusTarget: function _isFocusTarget(element) {
-    var focusTargets = (0, _renderer.default)(this._focusTarget()).toArray();
+  _isFocusTarget: function (element) {
+    const focusTargets = (0, _renderer.default)(this._focusTarget()).toArray();
     return focusTargets.includes(element);
   },
   _findActiveTarget($element) {
     return $element.find(this._activeStateUnit).not('.dx-state-disabled');
   },
   _getActiveElement() {
-    var activeElement = this._eventBindingTarget();
+    const activeElement = this._eventBindingTarget();
     if (this._activeStateUnit) {
       return this._findActiveTarget(activeElement);
     }
     return activeElement;
   },
   _renderFocusTarget() {
-    var _this$option5 = this.option(),
-      tabIndex = _this$option5.tabIndex;
+    const {
+      tabIndex
+    } = this.option();
     this._focusTarget().attr('tabIndex', tabIndex);
   },
   _keyboardEventBindingTarget() {
@@ -226,12 +223,9 @@ var Widget = _dom_component.default.inherit({
     return this._focusTarget();
   },
   _focusInHandler(event) {
-    var _this3 = this;
     if (!event.isDefaultPrevented()) {
       this._createActionByOption('onFocusIn', {
-        beforeExecute: function beforeExecute() {
-          return _this3._updateFocusState(event, true);
-        },
+        beforeExecute: () => this._updateFocusState(event, true),
         excludeValidators: ['readOnly']
       })({
         event
@@ -239,12 +233,9 @@ var Widget = _dom_component.default.inherit({
     }
   },
   _focusOutHandler(event) {
-    var _this4 = this;
     if (!event.isDefaultPrevented()) {
       this._createActionByOption('onFocusOut', {
-        beforeExecute: function beforeExecute() {
-          return _this4._updateFocusState(event, false);
-        },
+        beforeExecute: () => this._updateFocusState(event, false),
         excludeValidators: ['readOnly', 'disabled']
       })({
         event
@@ -252,17 +243,19 @@ var Widget = _dom_component.default.inherit({
     }
   },
   _updateFocusState(_ref, isFocused) {
-    var target = _ref.target;
+    let {
+      target
+    } = _ref;
     if (this._isFocusTarget(target)) {
       this._toggleFocusClass(isFocused, (0, _renderer.default)(target));
     }
   },
   _toggleFocusClass(isFocused, $element) {
-    var $focusTarget = $element && $element.length ? $element : this._focusTarget();
+    const $focusTarget = $element && $element.length ? $element : this._focusTarget();
     $focusTarget.toggleClass('dx-state-focused', isFocused);
   },
   _hasFocusClass(element) {
-    var $focusTarget = (0, _renderer.default)(element || this._focusTarget());
+    const $focusTarget = (0, _renderer.default)(element || this._focusTarget());
     return $focusTarget.hasClass('dx-state-focused');
   },
   _isFocused() {
@@ -272,41 +265,40 @@ var Widget = _dom_component.default.inherit({
     return [];
   },
   _attachKeyboardEvents() {
-    var _this5 = this;
     this._detachKeyboardEvents();
-    var _this$option6 = this.option(),
-      focusStateEnabled = _this$option6.focusStateEnabled,
-      onKeyboardHandled = _this$option6.onKeyboardHandled;
-    var hasChildListeners = this._getKeyboardListeners().length;
-    var hasKeyboardEventHandler = !!onKeyboardHandled;
-    var shouldAttach = focusStateEnabled || hasChildListeners || hasKeyboardEventHandler;
+    const {
+      focusStateEnabled,
+      onKeyboardHandled
+    } = this.option();
+    const hasChildListeners = this._getKeyboardListeners().length;
+    const hasKeyboardEventHandler = !!onKeyboardHandled;
+    const shouldAttach = focusStateEnabled || hasChildListeners || hasKeyboardEventHandler;
     if (shouldAttach) {
-      this._keyboardListenerId = _short.keyboard.on(this._keyboardEventBindingTarget(), this._focusTarget(), function (opts) {
-        return _this5._keyboardHandler(opts);
-      });
+      this._keyboardListenerId = _short.keyboard.on(this._keyboardEventBindingTarget(), this._focusTarget(), opts => this._keyboardHandler(opts));
     }
   },
   _keyboardHandler(options, onlyChildProcessing) {
     if (!onlyChildProcessing) {
-      var originalEvent = options.originalEvent,
-        keyName = options.keyName,
-        which = options.which;
-      var keys = this._supportedKeys(originalEvent);
-      var func = keys[keyName] || keys[which];
+      const {
+        originalEvent,
+        keyName,
+        which
+      } = options;
+      const keys = this._supportedKeys(originalEvent);
+      const func = keys[keyName] || keys[which];
       if (func !== undefined) {
-        var handler = func.bind(this);
-        var result = handler(originalEvent, options);
+        const handler = func.bind(this);
+        const result = handler(originalEvent, options);
         if (!result) {
           return false;
         }
       }
     }
-    var keyboardListeners = this._getKeyboardListeners();
-    var _this$option7 = this.option(),
-      onKeyboardHandled = _this$option7.onKeyboardHandled;
-    keyboardListeners.forEach(function (listener) {
-      return listener && listener._keyboardHandler(options);
-    });
+    const keyboardListeners = this._getKeyboardListeners();
+    const {
+      onKeyboardHandled
+    } = this.option();
+    keyboardListeners.forEach(listener => listener && listener._keyboardHandler(options));
     onKeyboardHandled && onKeyboardHandled(options);
     return true;
   },
@@ -315,7 +307,7 @@ var Widget = _dom_component.default.inherit({
     this._renderFocusState();
   },
   _cleanFocusState() {
-    var $element = this._focusTarget();
+    const $element = this._focusTarget();
     $element.removeAttr('tabIndex');
     this._toggleFocusClass(false);
     this._detachFocusEvents();
@@ -326,27 +318,29 @@ var Widget = _dom_component.default.inherit({
     this._keyboardListenerId = null;
   },
   _attachHoverEvents() {
-    var _this6 = this;
-    var _this$option8 = this.option(),
-      hoverStateEnabled = _this$option8.hoverStateEnabled;
-    var selector = this._activeStateUnit;
-    var namespace = 'UIFeedback';
-    var $el = this._eventBindingTarget();
+    const {
+      hoverStateEnabled
+    } = this.option();
+    const selector = this._activeStateUnit;
+    const namespace = 'UIFeedback';
+    const $el = this._eventBindingTarget();
     _short.hover.off($el, {
       selector,
       namespace
     });
     if (hoverStateEnabled) {
-      _short.hover.on($el, new _action.default(function (_ref2) {
-        var event = _ref2.event,
-          element = _ref2.element;
-        _this6._hoverStartHandler(event);
-        _this6.option('hoveredElement', (0, _renderer.default)(element));
+      _short.hover.on($el, new _action.default(_ref2 => {
+        let {
+          event,
+          element
+        } = _ref2;
+        this._hoverStartHandler(event);
+        this.option('hoveredElement', (0, _renderer.default)(element));
       }, {
         excludeValidators: ['readOnly']
-      }), function (event) {
-        _this6.option('hoveredElement', null);
-        _this6._hoverEndHandler(event);
+      }), event => {
+        this.option('hoveredElement', null);
+        this._hoverEndHandler(event);
       }, {
         selector,
         namespace
@@ -354,25 +348,29 @@ var Widget = _dom_component.default.inherit({
     }
   },
   _attachFeedbackEvents() {
-    var _this7 = this;
-    var _this$option9 = this.option(),
-      activeStateEnabled = _this$option9.activeStateEnabled;
-    var selector = this._activeStateUnit;
-    var namespace = 'UIFeedback';
-    var $el = this._eventBindingTarget();
+    const {
+      activeStateEnabled
+    } = this.option();
+    const selector = this._activeStateUnit;
+    const namespace = 'UIFeedback';
+    const $el = this._eventBindingTarget();
     _short.active.off($el, {
       namespace,
       selector
     });
     if (activeStateEnabled) {
-      _short.active.on($el, new _action.default(function (_ref3) {
-        var event = _ref3.event,
-          element = _ref3.element;
-        return _this7._toggleActiveState((0, _renderer.default)(element), true, event);
-      }), new _action.default(function (_ref4) {
-        var event = _ref4.event,
-          element = _ref4.element;
-        return _this7._toggleActiveState((0, _renderer.default)(element), false, event);
+      _short.active.on($el, new _action.default(_ref3 => {
+        let {
+          event,
+          element
+        } = _ref3;
+        return this._toggleActiveState((0, _renderer.default)(element), true, event);
+      }), new _action.default(_ref4 => {
+        let {
+          event,
+          element
+        } = _ref4;
+        return this._toggleActiveState((0, _renderer.default)(element), false, event);
       }, {
         excludeValidators: ['disabled', 'readOnly']
       }), {
@@ -384,23 +382,16 @@ var Widget = _dom_component.default.inherit({
     }
   },
   _detachFocusEvents() {
-    var $el = this._focusEventTarget();
+    const $el = this._focusEventTarget();
     _short.focus.off($el, {
       namespace: "".concat(this.NAME, "Focus")
     });
   },
   _attachFocusEvents() {
-    var _this8 = this;
-    var $el = this._focusEventTarget();
-    _short.focus.on($el, function (e) {
-      return _this8._focusInHandler(e);
-    }, function (e) {
-      return _this8._focusOutHandler(e);
-    }, {
+    const $el = this._focusEventTarget();
+    _short.focus.on($el, e => this._focusInHandler(e), e => this._focusOutHandler(e), {
       namespace: "".concat(this.NAME, "Focus"),
-      isFocusable: function isFocusable(index, el) {
-        return (0, _renderer.default)(el).is(_selectors.focusable);
-      }
+      isFocusable: (index, el) => (0, _renderer.default)(el).is(_selectors.focusable)
     });
   },
   _hoverStartHandler: _common.noop,
@@ -410,21 +401,22 @@ var Widget = _dom_component.default.inherit({
     $element.toggleClass('dx-state-active', value);
   },
   _updatedHover() {
-    var hoveredElement = this._options.silent('hoveredElement');
+    const hoveredElement = this._options.silent('hoveredElement');
     this._hover(hoveredElement, hoveredElement);
   },
   _findHoverTarget($el) {
     return $el && $el.closest(this._activeStateUnit || this._eventBindingTarget());
   },
   _hover($el, $previous) {
-    var _this$option10 = this.option(),
-      hoverStateEnabled = _this$option10.hoverStateEnabled,
-      disabled = _this$option10.disabled,
-      isActive = _this$option10.isActive;
+    const {
+      hoverStateEnabled,
+      disabled,
+      isActive
+    } = this.option();
     $previous = this._findHoverTarget($previous);
     $previous && $previous.toggleClass('dx-state-hover', false);
     if ($el && hoverStateEnabled && !disabled && !isActive) {
-      var newHoveredElement = this._findHoverTarget($el);
+      const newHoveredElement = this._findHoverTarget($el);
       newHoveredElement && newHoveredElement.toggleClass('dx-state-hover', true);
     }
   },
@@ -436,28 +428,27 @@ var Widget = _dom_component.default.inherit({
     this.$element().toggleClass('dx-state-independent', this.option('ignoreParentReadOnly'));
   },
   _setWidgetOption(widgetName, args) {
-    var _this9 = this;
     if (!this[widgetName]) {
       return;
     }
     if ((0, _type.isPlainObject)(args[0])) {
-      (0, _iterator.each)(args[0], function (option, value) {
-        return _this9._setWidgetOption(widgetName, [option, value]);
-      });
+      (0, _iterator.each)(args[0], (option, value) => this._setWidgetOption(widgetName, [option, value]));
       return;
     }
-    var optionName = args[0];
-    var value = args[1];
+    const optionName = args[0];
+    let value = args[1];
     if (args.length === 1) {
       value = this.option(optionName);
     }
-    var widgetOptionMap = this["".concat(widgetName, "OptionMap")];
+    const widgetOptionMap = this["".concat(widgetName, "OptionMap")];
     this[widgetName].option(widgetOptionMap ? widgetOptionMap(optionName) : optionName, value);
   },
   _optionChanged(args) {
-    var name = args.name,
-      value = args.value,
-      previousValue = args.previousValue;
+    const {
+      name,
+      value,
+      previousValue
+    } = args;
     switch (name) {
       case 'disabled':
         this._toggleDisabledState(value);
@@ -512,8 +503,9 @@ var Widget = _dom_component.default.inherit({
     }
   },
   _isVisible() {
-    var _this$option11 = this.option(),
-      visible = _this$option11.visible;
+    const {
+      visible
+    } = this.option();
     return this.callBase() && visible;
   },
   beginUpdate() {
@@ -536,10 +528,8 @@ var Widget = _dom_component.default.inherit({
     if (!(0, _type.isPlainObject)(arguments.length <= 0 ? undefined : arguments[0])) {
       setAttribute(arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1], (arguments.length <= 2 ? undefined : arguments[2]) || this._getAriaTarget());
     } else {
-      var target = (arguments.length <= 1 ? undefined : arguments[1]) || this._getAriaTarget();
-      (0, _iterator.each)(arguments.length <= 0 ? undefined : arguments[0], function (name, value) {
-        return setAttribute(name, value, target);
-      });
+      const target = (arguments.length <= 1 ? undefined : arguments[1]) || this._getAriaTarget();
+      (0, _iterator.each)(arguments.length <= 0 ? undefined : arguments[0], (name, value) => setAttribute(name, value, target));
     }
   },
   isReady() {
@@ -552,23 +542,23 @@ var Widget = _dom_component.default.inherit({
     _short.focus.trigger(this._focusTarget());
   },
   registerKeyHandler(key, handler) {
-    var currentKeys = this._supportedKeys();
-    this._supportedKeys = function () {
-      return (0, _extend.extend)(currentKeys, {
-        [key]: handler
-      });
-    };
+    const currentKeys = this._supportedKeys();
+    this._supportedKeys = () => (0, _extend.extend)(currentKeys, {
+      [key]: handler
+    });
   }
 });
-Widget.getOptionsFromContainer = function (_ref5) {
-  var name = _ref5.name,
-    fullName = _ref5.fullName,
-    value = _ref5.value;
-  var options = {};
+Widget.getOptionsFromContainer = _ref5 => {
+  let {
+    name,
+    fullName,
+    value
+  } = _ref5;
+  let options = {};
   if (name === fullName) {
     options = value;
   } else {
-    var option = fullName.split('.').pop();
+    const option = fullName.split('.').pop();
     options[option] = value;
   }
   return options;

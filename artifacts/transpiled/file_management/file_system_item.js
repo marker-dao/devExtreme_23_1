@@ -3,27 +3,23 @@
 exports.default = void 0;
 var _type = require("../core/utils/type");
 var _utils = require("./utils");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-var FileSystemItem = /*#__PURE__*/function () {
+let FileSystemItem = /*#__PURE__*/function () {
   function FileSystemItem() {
-    var ctor = (0, _type.isString)(arguments[0]) ? this._publicCtor : this._internalCtor;
+    const ctor = (0, _type.isString)(arguments[0]) ? this._publicCtor : this._internalCtor;
     ctor.apply(this, arguments);
   }
   var _proto = FileSystemItem.prototype;
   _proto._internalCtor = function _internalCtor(pathInfo, name, isDirectory, key) {
     this.name = name || '';
-    this.pathInfo = pathInfo && _toConsumableArray(pathInfo) || [];
+    this.pathInfo = pathInfo && [...pathInfo] || [];
     this.parentPath = this._getPathByPathInfo(this.pathInfo);
     this.relativeName = (0, _utils.pathCombine)(this.parentPath, name);
     this.key = key || this._getPathByPathInfo(this.getFullPathInfo(), true);
     this.path = (0, _utils.pathCombine)(this.parentPath, name);
-    this.pathKeys = this.pathInfo.map(function (_ref) {
-      var key = _ref.key;
+    this.pathKeys = this.pathInfo.map(_ref => {
+      let {
+        key
+      } = _ref;
       return key;
     });
     if (!this.isRoot()) {
@@ -34,11 +30,11 @@ var FileSystemItem = /*#__PURE__*/function () {
   _proto._publicCtor = function _publicCtor(path, isDirectory, pathKeys) {
     this.path = path || '';
     this.pathKeys = pathKeys || [];
-    var pathInfo = [];
-    var parts = (0, _utils.getPathParts)(path, true);
-    for (var i = 0; i < parts.length - 1; i++) {
-      var part = parts[i];
-      var pathInfoPart = {
+    const pathInfo = [];
+    const parts = (0, _utils.getPathParts)(path, true);
+    for (let i = 0; i < parts.length - 1; i++) {
+      const part = parts[i];
+      const pathInfoPart = {
         key: this.pathKeys[i] || part,
         name: (0, _utils.getName)(part)
       };
@@ -59,7 +55,7 @@ var FileSystemItem = /*#__PURE__*/function () {
     this.tooltipText = '';
   };
   _proto.getFullPathInfo = function getFullPathInfo() {
-    var pathInfo = _toConsumableArray(this.pathInfo);
+    const pathInfo = [...this.pathInfo];
     if (!this.isRoot()) {
       pathInfo.push({
         key: this.key,
@@ -78,7 +74,7 @@ var FileSystemItem = /*#__PURE__*/function () {
     return item && this.key === item.key;
   };
   _proto.createClone = function createClone() {
-    var result = new FileSystemItem(this.pathInfo, this.name, this.isDirectory, this.key);
+    const result = new FileSystemItem(this.pathInfo, this.name, this.isDirectory, this.key);
     result.key = this.key;
     result.size = this.size;
     result.dateModified = this.dateModified;
@@ -89,9 +85,7 @@ var FileSystemItem = /*#__PURE__*/function () {
     return result;
   };
   _proto._getPathByPathInfo = function _getPathByPathInfo(pathInfo, escape) {
-    return pathInfo.map(function (info) {
-      return escape ? (0, _utils.getEscapedFileName)(info.name) : info.name;
-    }).join(_utils.PATH_SEPARATOR);
+    return pathInfo.map(info => escape ? (0, _utils.getEscapedFileName)(info.name) : info.name).join(_utils.PATH_SEPARATOR);
   };
   return FileSystemItem;
 }();

@@ -11,14 +11,14 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var MonthDateTableLayout = /*#__PURE__*/function (_DateTable) {
+let MonthDateTableLayout = /*#__PURE__*/function (_DateTable) {
   _inheritsLoose(MonthDateTableLayout, _DateTable);
   function MonthDateTableLayout() {
     return _DateTable.apply(this, arguments) || this;
   }
   _createClass(MonthDateTableLayout, [{
     key: "_propsInfo",
-    get: function get() {
+    get: function () {
       return {
         twoWay: [],
         allowNull: [],
@@ -29,7 +29,7 @@ var MonthDateTableLayout = /*#__PURE__*/function (_DateTable) {
     }
   }, {
     key: "_viewComponent",
-    get: function get() {
+    get: function () {
       return _layout.MonthDateTableLayout;
     }
   }]);

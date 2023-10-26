@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_recurrence_editor.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,6 +22,7 @@ import DateBox from '../../ui/date_box';
 import Editor from '../../ui/editor/editor';
 import Form from '../../ui/form';
 import NumberBox from '../../ui/number_box';
+import { current, isFluent } from '../../ui/themes';
 import { getRecurrenceProcessor } from './m_recurrence';
 var RECURRENCE_EDITOR = 'dx-recurrence-editor';
 var LABEL_POSTFIX = '-label';
@@ -77,6 +78,7 @@ var repeatEndTypes = [{
   type: 'count'
 }];
 var days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+var getStylingModeFunc = () => isFluent(current()) ? 'filled' : undefined;
 class RecurrenceRule {
   constructor(rule) {
     this._recurrenceProcessor = getRecurrenceProcessor();
@@ -200,6 +202,7 @@ class RecurrenceEditor extends Editor {
       editorType: 'dxSelectBox',
       cssClass: FREQUENCY_EDITOR,
       editorOptions: {
+        stylingMode: getStylingModeFunc(),
         items: frequencies,
         value: freq,
         field: 'freq',
@@ -229,6 +232,7 @@ class RecurrenceEditor extends Editor {
         dataField: 'interval',
         editorType: 'dxNumberBox',
         editorOptions: {
+          stylingMode: getStylingModeFunc(),
           format: '#',
           width: recurrentEditorNumberBoxWidth,
           min: 1,
@@ -310,6 +314,7 @@ class RecurrenceEditor extends Editor {
       dataField: 'bymonth',
       editorType: 'dxSelectBox',
       editorOptions: {
+        stylingMode: getStylingModeFunc(),
         field: 'bymonth',
         items: months,
         value: this._monthOfYearByRules(),
@@ -332,6 +337,7 @@ class RecurrenceEditor extends Editor {
       dataField: 'bymonthday',
       editorType: 'dxNumberBox',
       editorOptions: {
+        stylingMode: getStylingModeFunc(),
         min: 1,
         max: 31,
         format: '#',
@@ -487,6 +493,7 @@ class RecurrenceEditor extends Editor {
     this._$repeatCountEditor = $('<div>').addClass(REPEAT_COUNT_EDITOR).appendTo($editorWrapper);
     $('<div>').text(messageLocalization.format('dxScheduler-recurrenceRepeatCount')).addClass(REPEAT_END_EDITOR + LABEL_POSTFIX).appendTo($editorWrapper);
     this._repeatCountEditor = this._createComponent(this._$repeatCountEditor, NumberBox, {
+      stylingMode: getStylingModeFunc(),
       field: 'count',
       format: '#',
       width: recurrentEditorNumberBoxWidth,
@@ -519,6 +526,7 @@ class RecurrenceEditor extends Editor {
     $('<div>').text(messageLocalization.format('dxScheduler-recurrenceOn')).addClass(REPEAT_END_EDITOR + LABEL_POSTFIX).appendTo($editorWrapper);
     this._$repeatDateEditor = $('<div>').addClass(REPEAT_UNTIL_DATE_EDITOR).appendTo($editorWrapper);
     this._repeatUntilDate = this._createComponent(this._$repeatDateEditor, DateBox, {
+      stylingMode: getStylingModeFunc(),
       field: 'until',
       value: repeatUntil,
       type: 'date',

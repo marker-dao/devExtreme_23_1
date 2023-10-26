@@ -1,88 +1,88 @@
 "use strict";
 
 exports.ModelChangesListener = void 0;
-var GANTT_TASKS = 'tasks';
-var GANTT_DEPENDENCIES = 'dependencies';
-var GANTT_RESOURCES = 'resources';
-var GANTT_RESOURCE_ASSIGNMENTS = 'resourceAssignments';
-var ModelChangesListener = {
+const GANTT_TASKS = 'tasks';
+const GANTT_DEPENDENCIES = 'dependencies';
+const GANTT_RESOURCES = 'resources';
+const GANTT_RESOURCE_ASSIGNMENTS = 'resourceAssignments';
+const ModelChangesListener = {
   create(gantt) {
     return {
       // IModelChangesListener
-      NotifyTaskCreated: function NotifyTaskCreated(task, callback, errorCallback) {
+      NotifyTaskCreated: (task, callback, errorCallback) => {
         gantt._onRecordInserted(GANTT_TASKS, task, callback);
       },
-      NotifyTaskRemoved: function NotifyTaskRemoved(taskId, errorCallback, task) {
+      NotifyTaskRemoved: (taskId, errorCallback, task) => {
         gantt._onRecordRemoved(GANTT_TASKS, taskId, task);
       },
-      NotifyTaskUpdated: function NotifyTaskUpdated(taskId, newValues, errorCallback) {
+      NotifyTaskUpdated: (taskId, newValues, errorCallback) => {
         gantt._onRecordUpdated(GANTT_TASKS, taskId, newValues);
       },
-      NotifyParentTaskUpdated: function NotifyParentTaskUpdated(task, errorCallback) {
+      NotifyParentTaskUpdated: (task, errorCallback) => {
         gantt._onParentTaskUpdated(task);
       },
-      NotifyDependencyInserted: function NotifyDependencyInserted(dependency, callback, errorCallback) {
+      NotifyDependencyInserted: (dependency, callback, errorCallback) => {
         gantt._onRecordInserted(GANTT_DEPENDENCIES, dependency, callback);
       },
-      NotifyDependencyRemoved: function NotifyDependencyRemoved(dependencyId, errorCallback, dependency) {
+      NotifyDependencyRemoved: (dependencyId, errorCallback, dependency) => {
         gantt._onRecordRemoved(GANTT_DEPENDENCIES, dependencyId, dependency);
       },
-      NotifyResourceCreated: function NotifyResourceCreated(resource, callback, errorCallback) {
+      NotifyResourceCreated: (resource, callback, errorCallback) => {
         gantt._onRecordInserted(GANTT_RESOURCES, resource, callback);
       },
-      NotifyResourceRemoved: function NotifyResourceRemoved(resourceId, errorCallback, resource) {
+      NotifyResourceRemoved: (resourceId, errorCallback, resource) => {
         gantt._onRecordRemoved(GANTT_RESOURCES, resourceId, resource);
       },
-      NotifyResourceAssigned: function NotifyResourceAssigned(assignment, callback, errorCallback) {
+      NotifyResourceAssigned: (assignment, callback, errorCallback) => {
         gantt._onRecordInserted(GANTT_RESOURCE_ASSIGNMENTS, assignment, callback);
       },
-      NotifyResourceUnassigned: function NotifyResourceUnassigned(assignmentId, errorCallback, assignment) {
+      NotifyResourceUnassigned: (assignmentId, errorCallback, assignment) => {
         gantt._onRecordRemoved(GANTT_RESOURCE_ASSIGNMENTS, assignmentId, assignment);
       },
-      NotifyParentDataRecalculated: function NotifyParentDataRecalculated(data) {
+      NotifyParentDataRecalculated: data => {
         gantt._onParentTasksRecalculated(data);
       },
-      NotifyTaskCreating: function NotifyTaskCreating(args) {
+      NotifyTaskCreating: args => {
         gantt._actionsManager.raiseInsertingAction(GANTT_TASKS, args);
       },
-      NotifyTaskRemoving: function NotifyTaskRemoving(args) {
+      NotifyTaskRemoving: args => {
         gantt._actionsManager.raiseDeletingAction(GANTT_TASKS, args);
       },
-      NotifyTaskUpdating: function NotifyTaskUpdating(args) {
+      NotifyTaskUpdating: args => {
         gantt._actionsManager.raiseUpdatingAction(GANTT_TASKS, args);
       },
-      NotifyTaskMoving: function NotifyTaskMoving(args) {
+      NotifyTaskMoving: args => {
         gantt._actionsManager.raiseUpdatingAction(GANTT_TASKS, args, gantt._actionsManager.getTaskMovingAction());
       },
-      NotifyTaskEditDialogShowing: function NotifyTaskEditDialogShowing(args) {
+      NotifyTaskEditDialogShowing: args => {
         gantt._actionsManager.raiseTaskEditDialogShowingAction(args);
       },
-      NotifyResourceManagerDialogShowing: function NotifyResourceManagerDialogShowing(args) {
+      NotifyResourceManagerDialogShowing: args => {
         gantt._actionsManager.raiseResourceManagerDialogShowingAction(args);
       },
-      NotifyDependencyInserting: function NotifyDependencyInserting(args) {
+      NotifyDependencyInserting: args => {
         gantt._actionsManager.raiseInsertingAction(GANTT_DEPENDENCIES, args);
       },
-      NotifyDependencyRemoving: function NotifyDependencyRemoving(args) {
+      NotifyDependencyRemoving: args => {
         gantt._actionsManager.raiseDeletingAction(GANTT_DEPENDENCIES, args);
       },
-      NotifyResourceCreating: function NotifyResourceCreating(args) {
+      NotifyResourceCreating: args => {
         gantt._actionsManager.raiseInsertingAction(GANTT_RESOURCES, args);
       },
-      NotifyResourceRemoving: function NotifyResourceRemoving(args) {
+      NotifyResourceRemoving: args => {
         gantt._actionsManager.raiseDeletingAction(GANTT_RESOURCES, args);
       },
-      NotifyResourceAssigning: function NotifyResourceAssigning(args) {
+      NotifyResourceAssigning: args => {
         gantt._actionsManager.raiseInsertingAction(GANTT_RESOURCE_ASSIGNMENTS, args);
       },
       // eslint-disable-next-line spellcheck/spell-checker
-      NotifyResourceUnassigning: function NotifyResourceUnassigning(args) {
+      NotifyResourceUnassigning: args => {
         gantt._actionsManager.raiseDeletingAction(GANTT_RESOURCE_ASSIGNMENTS, args);
       },
-      NotifyScaleCellPrepared: function NotifyScaleCellPrepared(args) {
+      NotifyScaleCellPrepared: args => {
         gantt._actionsManager.raiseScaleCellPreparedAction(args);
       },
-      NotifyGanttViewUpdated: function NotifyGanttViewUpdated() {
+      NotifyGanttViewUpdated: () => {
         gantt._onGanttViewCoreUpdated();
       }
     };

@@ -1,7 +1,7 @@
 "use strict";
 
 var _tiling = require("./tiling");
-var sliceAndDiceAlgorithm = (0, _tiling.getAlgorithm)('sliceanddice');
+const sliceAndDiceAlgorithm = (0, _tiling.getAlgorithm)('sliceanddice');
 function rotatedSliceAndDice(data) {
   data.isRotated = !data.isRotated;
   return sliceAndDiceAlgorithm.call(this, data);

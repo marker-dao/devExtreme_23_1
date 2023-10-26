@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/color_box/color_box.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,32 +18,32 @@ var _ui = _interopRequireDefault(require("../drop_down_editor/ui.drop_down_edito
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE colorBox
 
-var COLOR_BOX_CLASS = 'dx-colorbox';
-var COLOR_BOX_INPUT_CLASS = COLOR_BOX_CLASS + '-input';
-var COLOR_BOX_INPUT_CONTAINER_CLASS = COLOR_BOX_INPUT_CLASS + '-container';
-var COLOR_BOX_COLOR_RESULT_PREVIEW_CLASS = COLOR_BOX_CLASS + '-color-result-preview';
-var COLOR_BOX_COLOR_IS_NOT_DEFINED = COLOR_BOX_CLASS + '-color-is-not-defined';
-var COLOR_BOX_OVERLAY_CLASS = COLOR_BOX_CLASS + '-overlay';
-var COLOR_BOX_CONTAINER_CELL_CLASS = 'dx-colorview-container-cell';
-var COLOR_BOX_BUTTON_CELL_CLASS = 'dx-colorview-button-cell';
-var COLOR_BOX_BUTTONS_CONTAINER_CLASS = 'dx-colorview-buttons-container';
-var COLOR_BOX_APPLY_BUTTON_CLASS = 'dx-colorview-apply-button';
-var COLOR_BOX_CANCEL_BUTTON_CLASS = 'dx-colorview-cancel-button';
-var colorEditorPrototype = _color_view.default.prototype;
-var colorUtils = {
+const COLOR_BOX_CLASS = 'dx-colorbox';
+const COLOR_BOX_INPUT_CLASS = COLOR_BOX_CLASS + '-input';
+const COLOR_BOX_INPUT_CONTAINER_CLASS = COLOR_BOX_INPUT_CLASS + '-container';
+const COLOR_BOX_COLOR_RESULT_PREVIEW_CLASS = COLOR_BOX_CLASS + '-color-result-preview';
+const COLOR_BOX_COLOR_IS_NOT_DEFINED = COLOR_BOX_CLASS + '-color-is-not-defined';
+const COLOR_BOX_OVERLAY_CLASS = COLOR_BOX_CLASS + '-overlay';
+const COLOR_BOX_CONTAINER_CELL_CLASS = 'dx-colorview-container-cell';
+const COLOR_BOX_BUTTON_CELL_CLASS = 'dx-colorview-button-cell';
+const COLOR_BOX_BUTTONS_CONTAINER_CLASS = 'dx-colorview-buttons-container';
+const COLOR_BOX_APPLY_BUTTON_CLASS = 'dx-colorview-apply-button';
+const COLOR_BOX_CANCEL_BUTTON_CLASS = 'dx-colorview-cancel-button';
+const colorEditorPrototype = _color_view.default.prototype;
+const colorUtils = {
   makeTransparentBackground: colorEditorPrototype._makeTransparentBackground.bind(colorEditorPrototype),
   makeRgba: colorEditorPrototype._makeRgba.bind(colorEditorPrototype)
 };
-var ColorBox = _ui.default.inherit({
-  _supportedKeys: function _supportedKeys() {
-    var arrowHandler = function arrowHandler(e) {
+const ColorBox = _ui.default.inherit({
+  _supportedKeys: function () {
+    const arrowHandler = function (e) {
       e.stopPropagation();
       if (this.option('opened')) {
         e.preventDefault();
         return true;
       }
     };
-    var upArrowHandler = function upArrowHandler(e) {
+    const upArrowHandler = function (e) {
       if (!this.option('opened')) {
         e.preventDefault();
         return false;
@@ -54,7 +54,7 @@ var ColorBox = _ui.default.inherit({
       }
       return true;
     };
-    var downArrowHandler = function downArrowHandler(e) {
+    const downArrowHandler = function (e) {
       if (!this.option('opened') && !e.altKey) {
         e.preventDefault();
         return false;
@@ -73,7 +73,7 @@ var ColorBox = _ui.default.inherit({
       downArrow: downArrowHandler
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       editAlphaChannel: false,
       /**
@@ -104,35 +104,35 @@ var ColorBox = _ui.default.inherit({
     });
   },
 
-  _popupHidingHandler: function _popupHidingHandler() {
+  _popupHidingHandler: function () {
     this.callBase();
     if (this.option('applyValueMode') === 'useButtons') {
       this._updateColorViewValue(this.option('value'));
     }
   },
-  _popupConfig: function _popupConfig() {
+  _popupConfig: function () {
     return (0, _extend.extend)(this.callBase(), {
       width: ''
     });
   },
-  _contentReadyHandler: function _contentReadyHandler() {
+  _contentReadyHandler: function () {
     this._createColorView();
     this._addPopupBottomClasses();
   },
-  _addPopupBottomClasses: function _addPopupBottomClasses() {
-    var $popupBottom = this._popup.bottomToolbar();
+  _addPopupBottomClasses: function () {
+    const $popupBottom = this._popup.bottomToolbar();
     if ($popupBottom) {
       $popupBottom.addClass(COLOR_BOX_CONTAINER_CELL_CLASS).addClass(COLOR_BOX_BUTTON_CELL_CLASS).find('.dx-toolbar-items-container').addClass(COLOR_BOX_BUTTONS_CONTAINER_CLASS);
       $popupBottom.find('.dx-popup-done').addClass(COLOR_BOX_APPLY_BUTTON_CLASS);
       $popupBottom.find('.dx-popup-cancel').addClass(COLOR_BOX_CANCEL_BUTTON_CLASS);
     }
   },
-  _createColorView: function _createColorView() {
+  _createColorView: function () {
     this._popup.$overlayContent().addClass(COLOR_BOX_OVERLAY_CLASS);
-    var $colorView = (0, _renderer.default)('<div>').appendTo(this._popup.$content());
+    const $colorView = (0, _renderer.default)('<div>').appendTo(this._popup.$content());
     this._colorView = this._createComponent($colorView, _color_view.default, this._colorViewConfig());
   },
-  _applyNewColor: function _applyNewColor(value) {
+  _applyNewColor: function (value) {
     this.option('value', value);
     if (value) {
       colorUtils.makeTransparentBackground(this._$colorResultPreview, value);
@@ -142,8 +142,8 @@ var ColorBox = _ui.default.inherit({
       this._colorViewEnterKeyPressed = false;
     }
   },
-  _colorViewConfig: function _colorViewConfig() {
-    var that = this;
+  _colorViewConfig: function () {
+    const that = this;
     return {
       value: that.option('value'),
       matchValue: that.option('value'),
@@ -152,8 +152,10 @@ var ColorBox = _ui.default.inherit({
       focusStateEnabled: that.option('focusStateEnabled'),
       stylingMode: this.option('stylingMode'),
       target: this._input(),
-      onEnterKeyPressed: function onEnterKeyPressed(_ref) {
-        var event = _ref.event;
+      onEnterKeyPressed: function (_ref) {
+        let {
+          event
+        } = _ref;
         that._colorViewEnterKeyPressed = true;
         if (that._colorView.option('value') !== that.option('value')) {
           that._saveValueChangeEvent(event);
@@ -161,14 +163,16 @@ var ColorBox = _ui.default.inherit({
           that.close();
         }
       },
-      onValueChanged: function onValueChanged(_ref2) {
-        var event = _ref2.event,
-          value = _ref2.value,
-          previousValue = _ref2.previousValue;
-        var instantlyMode = that.option('applyValueMode') === 'instantly';
-        var isOldValue = colorUtils.makeRgba(value) === previousValue;
-        var changesApplied = instantlyMode || that._colorViewEnterKeyPressed;
-        var valueCleared = that._shouldSaveEmptyValue;
+      onValueChanged: function (_ref2) {
+        let {
+          event,
+          value,
+          previousValue
+        } = _ref2;
+        const instantlyMode = that.option('applyValueMode') === 'instantly';
+        const isOldValue = colorUtils.makeRgba(value) === previousValue;
+        const changesApplied = instantlyMode || that._colorViewEnterKeyPressed;
+        const valueCleared = that._shouldSaveEmptyValue;
         if (isOldValue || !changesApplied || valueCleared) {
           return;
         }
@@ -179,14 +183,15 @@ var ColorBox = _ui.default.inherit({
       }
     };
   },
-  _enterKeyHandler: function _enterKeyHandler(e) {
-    var newValue = this._input().val();
-    var _this$option = this.option(),
-      value = _this$option.value,
-      editAlphaChannel = _this$option.editAlphaChannel;
-    var oldValue = value && editAlphaChannel ? colorUtils.makeRgba(value) : value;
+  _enterKeyHandler: function (e) {
+    const newValue = this._input().val();
+    const {
+      value,
+      editAlphaChannel
+    } = this.option();
+    const oldValue = value && editAlphaChannel ? colorUtils.makeRgba(value) : value;
     if (!newValue) return false;
-    var color = new _color.default(newValue);
+    const color = new _color.default(newValue);
     if (color.colorIsInvalid) {
       this._input().val(oldValue);
       return;
@@ -197,7 +202,7 @@ var ColorBox = _ui.default.inherit({
       this.option('value', this.option('editAlphaChannel') ? colorUtils.makeRgba(newValue) : newValue);
     }
     if (this._colorView) {
-      var colorViewValue = this._colorView.option('value');
+      const colorViewValue = this._colorView.option('value');
       if (value !== colorViewValue) {
         this._saveValueChangeEvent(e);
         this.option('value', colorViewValue);
@@ -206,31 +211,31 @@ var ColorBox = _ui.default.inherit({
     this.close();
     return false;
   },
-  _applyButtonHandler: function _applyButtonHandler(e) {
+  _applyButtonHandler: function (e) {
     this._saveValueChangeEvent(e.event);
     this._applyNewColor(this._colorView.option('value'));
     this.callBase();
   },
-  _cancelButtonHandler: function _cancelButtonHandler() {
+  _cancelButtonHandler: function () {
     this._resetInputValue();
     this.callBase();
   },
   _getKeyboardListeners() {
     return this.callBase().concat([this._colorView]);
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.$element().addClass(COLOR_BOX_CLASS);
     this.callBase();
   },
-  _renderInput: function _renderInput() {
+  _renderInput: function () {
     this.callBase();
     this._input().addClass(COLOR_BOX_INPUT_CLASS);
     this._renderColorPreview();
   },
-  _renderColorPreview: function _renderColorPreview() {
+  _renderColorPreview: function () {
     this.$element().wrapInner((0, _renderer.default)('<div>').addClass(COLOR_BOX_INPUT_CONTAINER_CLASS));
     this._$colorBoxInputContainer = this.$element().children().eq(0);
     this._$colorResultPreview = (0, _renderer.default)('<div>').addClass(COLOR_BOX_COLOR_RESULT_PREVIEW_CLASS).appendTo(this._$textEditorInputContainer);
@@ -240,22 +245,23 @@ var ColorBox = _ui.default.inherit({
       colorUtils.makeTransparentBackground(this._$colorResultPreview, this.option('value'));
     }
   },
-  _renderValue: function _renderValue() {
-    var _this$option2 = this.option(),
-      value = _this$option2.value,
-      editAlphaChannel = _this$option2.editAlphaChannel;
-    var shouldConvertToColor = value && editAlphaChannel;
-    var text = shouldConvertToColor ? colorUtils.makeRgba(value) : value;
+  _renderValue: function () {
+    const {
+      value,
+      editAlphaChannel
+    } = this.option();
+    const shouldConvertToColor = value && editAlphaChannel;
+    const text = shouldConvertToColor ? colorUtils.makeRgba(value) : value;
     this.option('text', text);
     return this.callBase();
   },
-  _resetInputValue: function _resetInputValue() {
-    var $input = this._input();
-    var value = this.option('value');
+  _resetInputValue: function () {
+    const $input = this._input();
+    const value = this.option('value');
     $input.val(value);
     this._updateColorViewValue(value);
   },
-  _updateColorViewValue: function _updateColorViewValue(value) {
+  _updateColorViewValue: function (value) {
     if (this._colorView) {
       this._colorView.option({
         'value': value,
@@ -263,18 +269,19 @@ var ColorBox = _ui.default.inherit({
       });
     }
   },
-  _valueChangeEventHandler: function _valueChangeEventHandler(e) {
-    var value = this._input().val();
+  _valueChangeEventHandler: function (e) {
+    let value = this._input().val();
     if (value) {
       value = this._applyColorFromInput(value);
       this._updateColorViewValue(value);
     }
     this.callBase(e, value);
   },
-  _applyColorFromInput: function _applyColorFromInput(value) {
-    var _this$option3 = this.option(),
-      editAlphaChannel = _this$option3.editAlphaChannel;
-    var newColor = new _color.default(value);
+  _applyColorFromInput: function (value) {
+    const {
+      editAlphaChannel
+    } = this.option();
+    const newColor = new _color.default(value);
     if (newColor.colorIsInvalid) {
       this._resetInputValue();
       return this.option('value');
@@ -284,13 +291,13 @@ var ColorBox = _ui.default.inherit({
     }
     return value;
   },
-  _clean: function _clean() {
+  _clean: function () {
     this.callBase();
     delete this._shouldSaveEmptyValue;
   },
-  _optionChanged: function _optionChanged(args) {
-    var value = args.value;
-    var name = args.name;
+  _optionChanged: function (args) {
+    const value = args.value;
+    const name = args.name;
     switch (name) {
       case 'value':
         this._$colorBoxInputContainer.toggleClass(COLOR_BOX_COLOR_IS_NOT_DEFINED, !value);

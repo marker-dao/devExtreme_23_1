@@ -4,7 +4,7 @@ exports.buildRectAppearance = buildRectAppearance;
 exports.buildTextAppearance = buildTextAppearance;
 var _utils = require("../core/utils");
 function buildRectAppearance(option) {
-  var border = option.border || {};
+  const border = option.border || {};
   return {
     fill: option.color,
     opacity: option.opacity,

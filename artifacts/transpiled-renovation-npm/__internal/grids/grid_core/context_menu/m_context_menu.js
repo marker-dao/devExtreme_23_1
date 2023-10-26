@@ -11,15 +11,15 @@ var _iterator = require("../../../../core/utils/iterator");
 var _context_menu = _interopRequireDefault(require("../../../../ui/context_menu"));
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var CONTEXT_MENU = 'dx-context-menu';
-var viewName = {
+const CONTEXT_MENU = 'dx-context-menu';
+const viewName = {
   columnHeadersView: 'header',
   rowsView: 'content',
   footerView: 'footer',
   headerPanel: 'headerPanel'
 };
-var VIEW_NAMES = ['columnHeadersView', 'rowsView', 'footerView', 'headerPanel'];
-var ContextMenuController = _m_modules.default.ViewController.inherit({
+const VIEW_NAMES = ['columnHeadersView', 'rowsView', 'footerView', 'headerPanel'];
+const ContextMenuController = _m_modules.default.ViewController.inherit({
   init() {
     this.createAction('onContextMenuPreparing');
   },
@@ -27,23 +27,23 @@ var ContextMenuController = _m_modules.default.ViewController.inherit({
     if (!dxEvent) {
       return false;
     }
-    var that = this;
-    var $targetElement = (0, _renderer.default)(dxEvent.target);
-    var $element;
-    var $targetRowElement;
-    var $targetCellElement;
-    var menuItems;
+    const that = this;
+    const $targetElement = (0, _renderer.default)(dxEvent.target);
+    let $element;
+    let $targetRowElement;
+    let $targetCellElement;
+    let menuItems;
     (0, _iterator.each)(VIEW_NAMES, function () {
       var _a, _b;
-      var view = that.getView(this);
+      const view = that.getView(this);
       $element = view && view.element();
       if ($element && ($element.is($targetElement) || $element.find($targetElement).length)) {
         $targetCellElement = $targetElement.closest('.dx-row > td, .dx-row > tr');
         $targetRowElement = $targetCellElement.parent();
-        var rowIndex = view.getRowIndex($targetRowElement);
-        var columnIndex = $targetCellElement[0] && $targetCellElement[0].cellIndex;
-        var rowOptions = $targetRowElement.data('options');
-        var options = {
+        const rowIndex = view.getRowIndex($targetRowElement);
+        const columnIndex = $targetCellElement[0] && $targetCellElement[0].cellIndex;
+        const rowOptions = $targetRowElement.data('options');
+        const options = {
           event: dxEvent,
           targetElement: (0, _element.getPublicElement)($targetElement),
           target: viewName[this],
@@ -66,16 +66,18 @@ var ContextMenuController = _m_modules.default.ViewController.inherit({
   },
   _contextMenuPrepared: _common.noop
 });
-var ContextMenuView = _m_modules.default.View.inherit({
+const ContextMenuView = _m_modules.default.View.inherit({
   _renderCore() {
-    var that = this;
-    var $element = that.element().addClass(CONTEXT_MENU);
+    const that = this;
+    const $element = that.element().addClass(CONTEXT_MENU);
     this.setAria('role', 'presentation', $element);
     this._createComponent($element, _context_menu.default, {
       onPositioning(actionArgs) {
-        var event = actionArgs.event;
-        var contextMenuInstance = actionArgs.component;
-        var items = that.getController('contextMenu').getContextMenuItems(event);
+        const {
+          event
+        } = actionArgs;
+        const contextMenuInstance = actionArgs.component;
+        const items = that.getController('contextMenu').getContextMenuItems(event);
         if (items) {
           contextMenuInstance.option('items', items);
           event.stopPropagation();
@@ -91,7 +93,7 @@ var ContextMenuView = _m_modules.default.View.inherit({
     });
   }
 });
-var contextMenuModule = {
+const contextMenuModule = {
   defaultOptions() {
     return {
       onContextMenuPreparing: null

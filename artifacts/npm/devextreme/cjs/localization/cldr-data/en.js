@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/cldr-data/en.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 exports.enCldr = void 0;
 /* eslint-disable node/no-unsupported-features/es-syntax */
 // !!! AUTO-GENERATED FILE, DO NOT EDIT
-var enCldr = {
+const enCldr = {
   "main": {
     "en": {
       "identity": {

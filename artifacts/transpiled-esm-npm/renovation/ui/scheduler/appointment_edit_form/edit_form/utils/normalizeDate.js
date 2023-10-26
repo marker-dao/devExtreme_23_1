@@ -3,31 +3,21 @@
 exports.normalizeNewStartDate = exports.normalizeNewEndDate = void 0;
 var _date_serialization = _interopRequireDefault(require("../../../../../../core/utils/date_serialization"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var validateAppointmentFormDate = function validateAppointmentFormDate(date) {
-  return date === null || !!date && !!new Date(date).getDate();
-};
-var normalizeNewDate = function normalizeNewDate(newDate, currentDate, currentOppositeDate, needCorrect) {
+const validateAppointmentFormDate = date => date === null || !!date && !!new Date(date).getDate();
+const normalizeNewDate = (newDate, currentDate, currentOppositeDate, needCorrect) => {
   if (!validateAppointmentFormDate(newDate)) {
     return currentDate;
   }
-  var normalizedDate = _date_serialization.default.deserializeDate(newDate);
-  var normalizedOppositeDate = _date_serialization.default.deserializeDate(currentOppositeDate);
-  var result = normalizedDate;
+  const normalizedDate = _date_serialization.default.deserializeDate(newDate);
+  const normalizedOppositeDate = _date_serialization.default.deserializeDate(currentOppositeDate);
+  let result = normalizedDate;
   if (normalizedOppositeDate && normalizedDate && needCorrect(normalizedOppositeDate, normalizedDate)) {
-    var duration = normalizedOppositeDate.getTime() - normalizedDate.getTime();
+    const duration = normalizedOppositeDate.getTime() - normalizedDate.getTime();
     result = new Date(normalizedDate.getTime() + duration);
   }
   return result;
 };
-var normalizeNewStartDate = function normalizeNewStartDate(newStartDate, currentStartDate, currentEndDate) {
-  return normalizeNewDate(newStartDate, currentStartDate, currentEndDate, function (endDate, startDate) {
-    return endDate < startDate;
-  });
-};
+const normalizeNewStartDate = (newStartDate, currentStartDate, currentEndDate) => normalizeNewDate(newStartDate, currentStartDate, currentEndDate, (endDate, startDate) => endDate < startDate);
 exports.normalizeNewStartDate = normalizeNewStartDate;
-var normalizeNewEndDate = function normalizeNewEndDate(newEndDate, currentStartDate, currentEndDate) {
-  return normalizeNewDate(newEndDate, currentEndDate, currentStartDate, function (startDate, endDate) {
-    return endDate < startDate;
-  });
-};
+const normalizeNewEndDate = (newEndDate, currentStartDate, currentEndDate) => normalizeNewDate(newEndDate, currentEndDate, currentStartDate, (startDate, endDate) => endDate < startDate);
 exports.normalizeNewEndDate = normalizeNewEndDate;

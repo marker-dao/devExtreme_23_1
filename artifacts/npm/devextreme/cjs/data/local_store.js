@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/local_store.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,17 +16,17 @@ var _class = _interopRequireDefault(require("../core/class"));
 var _errors = require("./errors");
 var _array_store = _interopRequireDefault(require("./array_store"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var abstract = _class.default.abstract;
-var LocalStoreBackend = _class.default.inherit({
-  ctor: function ctor(store, storeOptions) {
+const window = (0, _window.getWindow)();
+const abstract = _class.default.abstract;
+const LocalStoreBackend = _class.default.inherit({
+  ctor: function (store, storeOptions) {
     this._store = store;
     this._dirty = !!storeOptions.data;
     this.save();
-    var immediate = this._immediate = storeOptions.immediate;
-    var flushInterval = Math.max(100, storeOptions.flushInterval || 10 * 1000);
+    const immediate = this._immediate = storeOptions.immediate;
+    const flushInterval = Math.max(100, storeOptions.flushInterval || 10 * 1000);
     if (!immediate) {
-      var saveProxy = this.save.bind(this);
+      const saveProxy = this.save.bind(this);
       setInterval(saveProxy, flushInterval);
       _events_engine.default.on(window, 'beforeunload', saveProxy);
       if (window.cordova) {
@@ -34,17 +34,17 @@ var LocalStoreBackend = _class.default.inherit({
       }
     }
   },
-  notifyChanged: function notifyChanged() {
+  notifyChanged: function () {
     this._dirty = true;
     if (this._immediate) {
       this.save();
     }
   },
-  load: function load() {
+  load: function () {
     this._store._array = this._loadImpl();
     this._dirty = false;
   },
-  save: function save() {
+  save: function () {
     if (!this._dirty) {
       return;
     }
@@ -54,23 +54,23 @@ var LocalStoreBackend = _class.default.inherit({
   _loadImpl: abstract,
   _saveImpl: abstract
 });
-var DomLocalStoreBackend = LocalStoreBackend.inherit({
-  ctor: function ctor(store, storeOptions) {
-    var name = storeOptions.name;
+const DomLocalStoreBackend = LocalStoreBackend.inherit({
+  ctor: function (store, storeOptions) {
+    const name = storeOptions.name;
     if (!name) {
       throw _errors.errors.Error('E4013');
     }
     this._key = 'dx-data-localStore-' + name;
     this.callBase(store, storeOptions);
   },
-  _loadImpl: function _loadImpl() {
-    var raw = window.localStorage.getItem(this._key);
+  _loadImpl: function () {
+    const raw = window.localStorage.getItem(this._key);
     if (raw) {
       return JSON.parse(raw);
     }
     return [];
   },
-  _saveImpl: function _saveImpl(array) {
+  _saveImpl: function (array) {
     if (!array.length) {
       window.localStorage.removeItem(this._key);
     } else {
@@ -78,11 +78,11 @@ var DomLocalStoreBackend = LocalStoreBackend.inherit({
     }
   }
 });
-var localStoreBackends = {
+const localStoreBackends = {
   'dom': DomLocalStoreBackend
 };
-var LocalStore = _array_store.default.inherit({
-  ctor: function ctor(options) {
+const LocalStore = _array_store.default.inherit({
+  ctor: function (options) {
     if (typeof options === 'string') {
       options = {
         name: options
@@ -97,20 +97,20 @@ var LocalStore = _array_store.default.inherit({
   _clearCache() {
     this._backend.load();
   },
-  clear: function clear() {
+  clear: function () {
     this.callBase();
     this._backend.notifyChanged();
   },
-  _insertImpl: function _insertImpl(values) {
-    var b = this._backend;
+  _insertImpl: function (values) {
+    const b = this._backend;
     return this.callBase(values).done(b.notifyChanged.bind(b));
   },
-  _updateImpl: function _updateImpl(key, values) {
-    var b = this._backend;
+  _updateImpl: function (key, values) {
+    const b = this._backend;
     return this.callBase(key, values).done(b.notifyChanged.bind(b));
   },
-  _removeImpl: function _removeImpl(key) {
-    var b = this._backend;
+  _removeImpl: function (key) {
+    const b = this._backend;
     return this.callBase(key).done(b.notifyChanged.bind(b));
   }
 }, 'local');

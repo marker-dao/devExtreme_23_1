@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/range_selector/range_view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,21 +11,21 @@
 exports.RangeView = RangeView;
 // TODO: Move it inside the "SeriesDataSource"
 function drawSeriesView(root, seriesDataSource, canvas, isAnimationEnabled) {
-  var seriesList = seriesDataSource.getSeries();
+  const seriesList = seriesDataSource.getSeries();
   if (!seriesList.length) {
     return;
   }
-  var valueAxis = seriesList[0].getValueAxis();
+  const valueAxis = seriesList[0].getValueAxis();
   valueAxis.updateCanvas({
     top: canvas.top,
     bottom: 0,
     height: canvas.height + canvas.top
   });
   seriesDataSource.adjustSeriesDimensions();
-  var valueRange = seriesDataSource.getBoundRange().val;
+  const valueRange = seriesDataSource.getBoundRange().val;
   valueRange.sortCategories(valueAxis.getCategoriesSorter());
   valueAxis.setBusinessRange(valueRange);
-  seriesList.forEach(function (series) {
+  seriesList.forEach(series => {
     series._extGroups.seriesGroup = series._extGroups.labelsGroup = root;
     series.draw(isAnimationEnabled);
   });
@@ -42,11 +42,11 @@ function RangeView(params) {
 }
 RangeView.prototype = {
   constructor: RangeView,
-  update: function update(backgroundOption, backgroundTheme, canvas, isCompactMode, isAnimationEnabled, seriesDataSource) {
-    var renderer = this._params.renderer;
-    var root = this._params.root;
-    var canvasWidth = canvas.width - canvas.left;
-    var seriesGroup;
+  update: function (backgroundOption, backgroundTheme, canvas, isCompactMode, isAnimationEnabled, seriesDataSource) {
+    const renderer = this._params.renderer;
+    const root = this._params.root;
+    const canvasWidth = canvas.width - canvas.left;
+    let seriesGroup;
     backgroundOption = backgroundOption || {};
     root.clear();
     this._clipRect.attr({

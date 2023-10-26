@@ -6,13 +6,14 @@ var _diagram2 = require("./diagram.importer");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
+let DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
   _inheritsLoose(DiagramOptionsUpdateBar, _DiagramBar);
   function DiagramOptionsUpdateBar(owner) {
     var _this;
     _this = _DiagramBar.call(this, owner) || this;
-    var _getDiagram = (0, _diagram2.getDiagram)(),
-      DiagramCommand = _getDiagram.DiagramCommand;
+    const {
+      DiagramCommand
+    } = (0, _diagram2.getDiagram)();
     _this.commandOptions = {};
     _this.commandOptions[DiagramCommand.Fullscreen] = 'fullScreen';
     _this.commandOptions[DiagramCommand.ZoomLevel] = function (value) {
@@ -23,8 +24,9 @@ var DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
       }
     };
     _this.commandOptions[DiagramCommand.SwitchAutoZoom] = function (value) {
-      var _getDiagram2 = (0, _diagram2.getDiagram)(),
-        AutoZoomMode = _getDiagram2.AutoZoomMode;
+      const {
+        AutoZoomMode
+      } = (0, _diagram2.getDiagram)();
       switch (value) {
         case AutoZoomMode.FitContent:
           this._setOption('autoZoomMode', 'fitContent');
@@ -49,7 +51,7 @@ var DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
     };
     _this.commandOptions[DiagramCommand.ViewUnits] = 'viewUnits';
     _this.commandOptions[DiagramCommand.PageSize] = function (value) {
-      var pageSize = this._getOption('pageSize');
+      const pageSize = this._getOption('pageSize');
       if (pageSize === undefined || pageSize.width !== value.width || pageSize.height !== value.height) {
         this._setOption('pageSize', value);
       }
@@ -58,8 +60,9 @@ var DiagramOptionsUpdateBar = /*#__PURE__*/function (_DiagramBar) {
       this._setOption('pageOrientation', value ? 'landscape' : 'portrait');
     };
     _this.commandOptions[DiagramCommand.ViewUnits] = function (value) {
-      var _getDiagram3 = (0, _diagram2.getDiagram)(),
-        DiagramUnit = _getDiagram3.DiagramUnit;
+      const {
+        DiagramUnit
+      } = (0, _diagram2.getDiagram)();
       switch (value) {
         case DiagramUnit.In:
           this._setOption('viewUnits', 'in');

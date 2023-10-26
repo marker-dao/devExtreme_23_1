@@ -3,8 +3,8 @@
 exports.default = void 0;
 var _tiling = require("./tiling");
 function sliceAndDice(data) {
-  var items = data.items;
-  var sidesData = (0, _tiling.buildSidesData)(data.rect, data.directions, data.isRotated ? 1 : 0);
+  const items = data.items;
+  const sidesData = (0, _tiling.buildSidesData)(data.rect, data.directions, data.isRotated ? 1 : 0);
   (0, _tiling.calculateRectangles)(items, 0, data.rect, sidesData, {
     sum: data.sum,
     count: items.length,

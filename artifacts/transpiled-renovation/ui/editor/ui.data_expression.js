@@ -11,8 +11,8 @@ var _data_source = require("../../data/data_source/data_source");
 var _array_store = _interopRequireDefault(require("../../data/array_store"));
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
-  _dataExpressionDefaultOptions: function _dataExpressionDefaultOptions() {
+const DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
+  _dataExpressionDefaultOptions: function () {
     return {
       items: [],
       dataSource: null,
@@ -22,14 +22,14 @@ var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
       displayExpr: undefined
     };
   },
-  _initDataExpressions: function _initDataExpressions() {
+  _initDataExpressions: function () {
     this._compileValueGetter();
     this._compileDisplayGetter();
     this._initDynamicTemplates();
     this._initDataSource();
     this._itemsToDataSource();
   },
-  _itemsToDataSource: function _itemsToDataSource() {
+  _itemsToDataSource: function () {
     if (!this.option('dataSource')) {
       // TODO: try this.option("dataSource", new ...)
       this._dataSource = new _data_source.DataSource({
@@ -39,20 +39,20 @@ var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
       this._initDataController();
     }
   },
-  _compileDisplayGetter: function _compileDisplayGetter() {
+  _compileDisplayGetter: function () {
     this._displayGetter = (0, _data.compileGetter)(this._displayGetterExpr());
   },
-  _displayGetterExpr: function _displayGetterExpr() {
+  _displayGetterExpr: function () {
     return this.option('displayExpr');
   },
-  _compileValueGetter: function _compileValueGetter() {
+  _compileValueGetter: function () {
     this._valueGetter = (0, _data.compileGetter)(this._valueGetterExpr());
   },
-  _valueGetterExpr: function _valueGetterExpr() {
+  _valueGetterExpr: function () {
     return this.option('valueExpr') || 'this';
   },
-  _loadValue: function _loadValue(value) {
-    var deferred = new _deferred.Deferred();
+  _loadValue: function (value) {
+    const deferred = new _deferred.Deferred();
     value = this._unwrappedValue(value);
     if (!(0, _type.isDefined)(value)) {
       return deferred.reject().promise();
@@ -65,16 +65,16 @@ var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
     this._loadValueDeferred = deferred;
     return deferred.promise();
   },
-  _rejectValueLoading: function _rejectValueLoading() {
+  _rejectValueLoading: function () {
     var _this$_loadValueDefer;
     (_this$_loadValueDefer = this._loadValueDeferred) === null || _this$_loadValueDefer === void 0 ? void 0 : _this$_loadValueDefer.reject({
       shouldSkipCallback: true
     });
   },
-  _getCurrentValue: function _getCurrentValue() {
+  _getCurrentValue: function () {
     return this.option('value');
   },
-  _unwrappedValue: function _unwrappedValue(value) {
+  _unwrappedValue: function (value) {
     var _value;
     value = (_value = value) !== null && _value !== void 0 ? _value : this._getCurrentValue();
     if (value && this._dataSource && this._valueGetterExpr() === 'this') {
@@ -82,11 +82,11 @@ var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
     }
     return _variable_wrapper.default.unwrap(value);
   },
-  _getItemKey: function _getItemKey(value) {
-    var key = this._dataSource.key();
+  _getItemKey: function (value) {
+    const key = this._dataSource.key();
     if (Array.isArray(key)) {
-      var result = {};
-      for (var i = 0, n = key.length; i < n; i++) {
+      const result = {};
+      for (let i = 0, n = key.length; i < n; i++) {
         result[key[i]] = value[key[i]];
       }
       return result;
@@ -96,9 +96,9 @@ var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
     }
     return value;
   },
-  _isValueEquals: function _isValueEquals(value1, value2) {
-    var dataSourceKey = this._dataSource && this._dataSource.key();
-    var result = this._compareValues(value1, value2);
+  _isValueEquals: function (value1, value2) {
+    const dataSourceKey = this._dataSource && this._dataSource.key();
+    let result = this._compareValues(value1, value2);
     if (!result && dataSourceKey && (0, _type.isDefined)(value1) && (0, _type.isDefined)(value2)) {
       if (Array.isArray(dataSourceKey)) {
         result = this._compareByCompositeKey(value1, value2, dataSourceKey);
@@ -108,38 +108,38 @@ var DataExpressionMixin = (0, _extend.extend)({}, _data_helper.default, {
     }
     return result;
   },
-  _compareByCompositeKey: function _compareByCompositeKey(value1, value2, key) {
-    var isObject = _type.isObject;
+  _compareByCompositeKey: function (value1, value2, key) {
+    const isObject = _type.isObject;
     if (!isObject(value1) || !isObject(value2)) {
       return false;
     }
-    for (var i = 0, n = key.length; i < n; i++) {
+    for (let i = 0, n = key.length; i < n; i++) {
       if (value1[key[i]] !== value2[key[i]]) {
         return false;
       }
     }
     return true;
   },
-  _compareByKey: function _compareByKey(value1, value2, key) {
-    var unwrapObservable = _variable_wrapper.default.unwrap;
-    var valueKey1 = (0, _common.ensureDefined)(unwrapObservable(value1[key]), value1);
-    var valueKey2 = (0, _common.ensureDefined)(unwrapObservable(value2[key]), value2);
+  _compareByKey: function (value1, value2, key) {
+    const unwrapObservable = _variable_wrapper.default.unwrap;
+    const valueKey1 = (0, _common.ensureDefined)(unwrapObservable(value1[key]), value1);
+    const valueKey2 = (0, _common.ensureDefined)(unwrapObservable(value2[key]), value2);
     return this._compareValues(valueKey1, valueKey2);
   },
-  _compareValues: function _compareValues(value1, value2) {
+  _compareValues: function (value1, value2) {
     return (0, _data.toComparable)(value1, true) === (0, _data.toComparable)(value2, true);
   },
   _initDynamicTemplates: _common.noop,
-  _setCollectionWidgetItemTemplate: function _setCollectionWidgetItemTemplate() {
+  _setCollectionWidgetItemTemplate: function () {
     this._initDynamicTemplates();
     this._setCollectionWidgetOption('itemTemplate', this.option('itemTemplate'));
   },
-  _getCollectionKeyExpr: function _getCollectionKeyExpr() {
-    var valueExpr = this.option('valueExpr');
-    var isValueExprField = (0, _type.isString)(valueExpr) && valueExpr !== 'this' || (0, _type.isFunction)(valueExpr);
+  _getCollectionKeyExpr: function () {
+    const valueExpr = this.option('valueExpr');
+    const isValueExprField = (0, _type.isString)(valueExpr) && valueExpr !== 'this' || (0, _type.isFunction)(valueExpr);
     return isValueExprField ? valueExpr : null;
   },
-  _dataExpressionOptionChanged: function _dataExpressionOptionChanged(args) {
+  _dataExpressionOptionChanged: function (args) {
     switch (args.name) {
       case 'items':
         this._itemsToDataSource();

@@ -6,7 +6,7 @@ Object.keys(_keyboard_navigation).forEach(function (key) {
   if (key in exports && exports[key] === _keyboard_navigation[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _keyboard_navigation[key];
     }
   });

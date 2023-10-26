@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/shadow_dom.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,23 +10,23 @@
 
 exports.addShadowDomStyles = addShadowDomStyles;
 exports.getShadowElementsFromPoint = getShadowElementsFromPoint;
-var DX_RULE_PREFIX = 'dx-';
-var ownerDocumentStyleSheet = null;
+const DX_RULE_PREFIX = 'dx-';
+let ownerDocumentStyleSheet = null;
 function createConstructedStyleSheet(rootNode) {
   try {
     // eslint-disable-next-line no-undef
     return new CSSStyleSheet();
   } catch (err) {
-    var styleElement = rootNode.ownerDocument.createElement('style');
+    const styleElement = rootNode.ownerDocument.createElement('style');
     rootNode.appendChild(styleElement);
     return styleElement.sheet;
   }
 }
 function processRules(targetStyleSheet, styleSheets, needApplyAllStyles) {
-  for (var i = 0; i < styleSheets.length; i++) {
-    var sheet = styleSheets[i];
+  for (let i = 0; i < styleSheets.length; i++) {
+    const sheet = styleSheets[i];
     try {
-      for (var j = 0; j < sheet.cssRules.length; j++) {
+      for (let j = 0; j < sheet.cssRules.length; j++) {
         insertRule(targetStyleSheet, sheet.cssRules[j], needApplyAllStyles);
       }
     } catch (err) {
@@ -36,15 +36,15 @@ function processRules(targetStyleSheet, styleSheets, needApplyAllStyles) {
 }
 function insertRule(targetStyleSheet, rule, needApplyAllStyles) {
   var _rule$selectorText, _rule$cssRules, _rule$cssRules$, _rule$cssRules$$selec, _rule$name, _rule$style;
-  var isDxRule = needApplyAllStyles || ((_rule$selectorText = rule.selectorText) === null || _rule$selectorText === void 0 ? void 0 : _rule$selectorText.includes(DX_RULE_PREFIX)) || ((_rule$cssRules = rule.cssRules) === null || _rule$cssRules === void 0 ? void 0 : (_rule$cssRules$ = _rule$cssRules[0]) === null || _rule$cssRules$ === void 0 ? void 0 : (_rule$cssRules$$selec = _rule$cssRules$.selectorText) === null || _rule$cssRules$$selec === void 0 ? void 0 : _rule$cssRules$$selec.includes(DX_RULE_PREFIX)) || ((_rule$name = rule.name) === null || _rule$name === void 0 ? void 0 : _rule$name.startsWith(DX_RULE_PREFIX)) || ((_rule$style = rule.style) === null || _rule$style === void 0 ? void 0 : _rule$style.fontFamily) === 'DXIcons';
+  const isDxRule = needApplyAllStyles || ((_rule$selectorText = rule.selectorText) === null || _rule$selectorText === void 0 ? void 0 : _rule$selectorText.includes(DX_RULE_PREFIX)) || ((_rule$cssRules = rule.cssRules) === null || _rule$cssRules === void 0 ? void 0 : (_rule$cssRules$ = _rule$cssRules[0]) === null || _rule$cssRules$ === void 0 ? void 0 : (_rule$cssRules$$selec = _rule$cssRules$.selectorText) === null || _rule$cssRules$$selec === void 0 ? void 0 : _rule$cssRules$$selec.includes(DX_RULE_PREFIX)) || ((_rule$name = rule.name) === null || _rule$name === void 0 ? void 0 : _rule$name.startsWith(DX_RULE_PREFIX)) || ((_rule$style = rule.style) === null || _rule$style === void 0 ? void 0 : _rule$style.fontFamily) === 'DXIcons';
   if (isDxRule) {
     targetStyleSheet.insertRule(rule.cssText, targetStyleSheet.cssRules.length);
   }
 }
 function addShadowDomStyles($element) {
   var _el$getRootNode;
-  var el = $element.get(0);
-  var root = (_el$getRootNode = el.getRootNode) === null || _el$getRootNode === void 0 ? void 0 : _el$getRootNode.call(el);
+  const el = $element.get(0);
+  const root = (_el$getRootNode = el.getRootNode) === null || _el$getRootNode === void 0 ? void 0 : _el$getRootNode.call(el);
   if (!(root !== null && root !== void 0 && root.host)) {
     return;
   }
@@ -52,17 +52,17 @@ function addShadowDomStyles($element) {
     ownerDocumentStyleSheet = createConstructedStyleSheet(root);
     processRules(ownerDocumentStyleSheet, el.ownerDocument.styleSheets, false);
   }
-  var currentShadowDomStyleSheet = createConstructedStyleSheet(root);
+  const currentShadowDomStyleSheet = createConstructedStyleSheet(root);
   processRules(currentShadowDomStyleSheet, root.styleSheets, true);
   root.adoptedStyleSheets = [ownerDocumentStyleSheet, currentShadowDomStyleSheet];
 }
 function isPositionInElementRectangle(element, x, y) {
-  var rect = element.getBoundingClientRect();
+  const rect = element.getBoundingClientRect();
   return rect && x >= rect.left && x < rect.right && y >= rect.top && y < rect.bottom;
 }
 function createQueue() {
-  var shiftIndex = 0;
-  var items = [];
+  let shiftIndex = 0;
+  const items = [];
   return Object.defineProperties({
     push(item) {
       items.push(item);
@@ -74,14 +74,14 @@ function createQueue() {
     }
   }, {
     length: {
-      get: function get() {
+      get: function () {
         return items.length - shiftIndex;
       },
       configurable: true,
       enumerable: true
     },
     items: {
-      get: function get() {
+      get: function () {
         return items;
       },
       configurable: true,
@@ -90,11 +90,11 @@ function createQueue() {
   });
 }
 function getShadowElementsFromPoint(x, y, root) {
-  var elementQueue = createQueue().push(root);
+  const elementQueue = createQueue().push(root);
   while (elementQueue.length) {
-    var el = elementQueue.shift();
-    for (var i = 0; i < el.childNodes.length; i++) {
-      var childNode = el.childNodes[i];
+    const el = elementQueue.shift();
+    for (let i = 0; i < el.childNodes.length; i++) {
+      const childNode = el.childNodes[i];
 
       // eslint-disable-next-line no-undef
       if (childNode.nodeType === Node.ELEMENT_NODE && isPositionInElementRectangle(childNode, x, y) &&
@@ -104,7 +104,7 @@ function getShadowElementsFromPoint(x, y, root) {
       }
     }
   }
-  var result = elementQueue.items.reverse();
+  const result = elementQueue.items.reverse();
   result.pop();
   return result;
 }

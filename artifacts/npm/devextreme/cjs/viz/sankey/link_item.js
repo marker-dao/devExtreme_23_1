@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/sankey/link_item.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,15 +11,15 @@
 exports.default = void 0;
 var _constants = require("./constants");
 var _type = require("../../core/utils/type");
-var states = ['normal', 'adjacentNodeHover', 'hover'];
+const states = ['normal', 'adjacentNodeHover', 'hover'];
 function compileAttrs(color, itemOptions, itemBaseOptions, gradient) {
-  var border = itemOptions.border;
-  var baseBorder = itemBaseOptions.border;
-  var borderVisible = (0, _type.isDefined)(border.visible) ? border.visible : baseBorder.visible;
-  var borderWidth = (0, _type.isDefined)(border.width) ? border.width : baseBorder.width;
-  var borderOpacity = (0, _type.isDefined)(border.opacity) ? border.opacity : (0, _type.isDefined)(baseBorder.opacity) ? baseBorder.opacity : 1;
-  var opacity = (0, _type.isDefined)(itemOptions.opacity) ? itemOptions.opacity : (0, _type.isDefined)(itemBaseOptions.opacity) ? itemBaseOptions.opacity : 1;
-  var fill = itemOptions.color || color;
+  const border = itemOptions.border;
+  const baseBorder = itemBaseOptions.border;
+  const borderVisible = (0, _type.isDefined)(border.visible) ? border.visible : baseBorder.visible;
+  const borderWidth = (0, _type.isDefined)(border.width) ? border.width : baseBorder.width;
+  const borderOpacity = (0, _type.isDefined)(border.opacity) ? border.opacity : (0, _type.isDefined)(baseBorder.opacity) ? baseBorder.opacity : 1;
+  const opacity = (0, _type.isDefined)(itemOptions.opacity) ? itemOptions.opacity : (0, _type.isDefined)(itemBaseOptions.opacity) ? itemBaseOptions.opacity : 1;
+  let fill = itemOptions.color || color;
   if (itemBaseOptions.colorMode === _constants.COLOR_MODE_TARGET || itemBaseOptions.colorMode === _constants.COLOR_MODE_SOURCE) {
     fill = color;
   } else if (itemBaseOptions.colorMode === _constants.COLOR_MODE_GRADIENT && gradient && (0, _type.isDefined)(gradient.id)) {
@@ -35,8 +35,8 @@ function compileAttrs(color, itemOptions, itemBaseOptions, gradient) {
   };
 }
 function Link(widget, params) {
-  var that = this;
-  var widgetOffset = widget._renderer.getRootOffset();
+  const that = this;
+  const widgetOffset = widget._renderer.getRootOffset();
   that.code = 0;
   that.widget = widget;
   that.color = params.color;
@@ -68,16 +68,16 @@ function Link(widget, params) {
   };
 }
 Link.prototype = {
-  getState: function getState() {
+  getState: function () {
     return states[this.code];
   },
-  isHovered: function isHovered() {
+  isHovered: function () {
     return this.code === 2;
   },
-  isAdjacentNodeHovered: function isAdjacentNodeHovered() {
+  isAdjacentNodeHovered: function () {
     return this.code === 1;
   },
-  setState: function setState(code, state) {
+  setState: function (code, state) {
     if (state) {
       this.code = code;
     } else {
@@ -86,10 +86,10 @@ Link.prototype = {
     }
     this.widget._applyLinksAppearance();
   },
-  setHover: function setHover() {
+  setHover: function () {
     this.hover(true);
   },
-  hover: function hover(state) {
+  hover: function (state) {
     if (!this.widget._getOption('hoverEnabled', true) || state === this.isHovered()) {
       return;
     }
@@ -101,7 +101,7 @@ Link.prototype = {
     });
     this.widget._resume();
   },
-  adjacentNodeHover: function adjacentNodeHover(state) {
+  adjacentNodeHover: function (state) {
     if (!this.widget._getOption('hoverEnabled', true) || state === this.isAdjacentNodeHovered()) {
       return;
     }
@@ -109,10 +109,10 @@ Link.prototype = {
     this.setState(1, state);
     this.widget._resume();
   },
-  setAdjacentNodeHover: function setAdjacentNodeHover() {
+  setAdjacentNodeHover: function () {
     this.adjacentNodeHover(true);
   },
-  showTooltip: function showTooltip(coords) {
+  showTooltip: function (coords) {
     this.widget._getOption('hoverEnabled', true) && this.widget._tooltip && this.widget._tooltip.show({
       type: 'link',
       info: {
@@ -125,7 +125,7 @@ Link.prototype = {
       y: coords[1]
     } : this.coords);
   },
-  hideTooltip: function hideTooltip() {
+  hideTooltip: function () {
     this.widget._tooltip && this.widget._tooltip.hide();
   }
 };

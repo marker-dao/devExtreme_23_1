@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/load_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,20 +21,20 @@ var _themes = require("./themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE loadPanel
 
-var LOADPANEL_CLASS = 'dx-loadpanel';
-var LOADPANEL_WRAPPER_CLASS = 'dx-loadpanel-wrapper';
-var LOADPANEL_INDICATOR_CLASS = 'dx-loadpanel-indicator';
-var LOADPANEL_MESSAGE_CLASS = 'dx-loadpanel-message';
-var LOADPANEL_CONTENT_CLASS = 'dx-loadpanel-content';
-var LOADPANEL_CONTENT_WRAPPER_CLASS = 'dx-loadpanel-content-wrapper';
-var LOADPANEL_PANE_HIDDEN_CLASS = 'dx-loadpanel-pane-hidden';
-var LoadPanel = _ui.default.inherit({
-  _supportedKeys: function _supportedKeys() {
+const LOADPANEL_CLASS = 'dx-loadpanel';
+const LOADPANEL_WRAPPER_CLASS = 'dx-loadpanel-wrapper';
+const LOADPANEL_INDICATOR_CLASS = 'dx-loadpanel-indicator';
+const LOADPANEL_MESSAGE_CLASS = 'dx-loadpanel-message';
+const LOADPANEL_CONTENT_CLASS = 'dx-loadpanel-content';
+const LOADPANEL_CONTENT_WRAPPER_CLASS = 'dx-loadpanel-content-wrapper';
+const LOADPANEL_PANE_HIDDEN_CLASS = 'dx-loadpanel-pane-hidden';
+const LoadPanel = _ui.default.inherit({
+  _supportedKeys: function () {
     return (0, _extend.extend)(this.callBase(), {
       escape: _common.noop
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       message: _message.default.format('Loading'),
       width: 222,
@@ -73,7 +73,7 @@ var LoadPanel = _ui.default.inherit({
     });
   },
 
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
       device: {
         platform: 'generic'
@@ -82,7 +82,7 @@ var LoadPanel = _ui.default.inherit({
         shadingColor: 'transparent'
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterialBased)();
       },
       options: {
@@ -94,27 +94,28 @@ var LoadPanel = _ui.default.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase.apply(this, arguments);
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this.$element().addClass(LOADPANEL_CLASS);
     this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
     this._setWrapperAria();
   },
   _setWrapperAria() {
-    var _this$option = this.option(),
-      message = _this$option.message;
-    var defaultLabel = (0, _themes.isMaterialBased)() ? message : null;
-    var label = message ? defaultLabel : _message.default.format('Loading');
-    var aria = {
+    const {
+      message
+    } = this.option();
+    const defaultLabel = (0, _themes.isMaterialBased)() ? message : null;
+    const label = message ? defaultLabel : _message.default.format('Loading');
+    const aria = {
       role: 'alert',
       label
     };
     this.setAria(aria, this.$wrapper());
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl: function () {
     this.callBase();
     this.$content().addClass(LOADPANEL_CONTENT_CLASS);
     this._$loadPanelContentWrapper = (0, _renderer.default)('<div>').addClass(LOADPANEL_CONTENT_WRAPPER_CLASS);
@@ -124,13 +125,13 @@ var LoadPanel = _ui.default.inherit({
     this._renderLoadIndicator();
     this._renderMessage();
   },
-  _show: function _show() {
-    var delay = this.option('delay');
+  _show: function () {
+    const delay = this.option('delay');
     if (!delay) {
       return this.callBase();
     }
-    var deferred = new _deferred.Deferred();
-    var callBase = this.callBase.bind(this);
+    const deferred = new _deferred.Deferred();
+    const callBase = this.callBase.bind(this);
     this._clearShowTimeout();
     this._showTimeout = setTimeout(function () {
       callBase().done(function () {
@@ -139,23 +140,23 @@ var LoadPanel = _ui.default.inherit({
     }, delay);
     return deferred.promise();
   },
-  _hide: function _hide() {
+  _hide: function () {
     this._clearShowTimeout();
     return this.callBase();
   },
-  _clearShowTimeout: function _clearShowTimeout() {
+  _clearShowTimeout: function () {
     clearTimeout(this._showTimeout);
   },
-  _renderMessage: function _renderMessage() {
+  _renderMessage: function () {
     if (!this._$loadPanelContentWrapper) {
       return;
     }
-    var message = this.option('message');
+    const message = this.option('message');
     if (!message) return;
-    var $message = (0, _renderer.default)('<div>').addClass(LOADPANEL_MESSAGE_CLASS).text(message);
+    const $message = (0, _renderer.default)('<div>').addClass(LOADPANEL_MESSAGE_CLASS).text(message);
     this._$loadPanelContentWrapper.append($message);
   },
-  _renderLoadIndicator: function _renderLoadIndicator() {
+  _renderLoadIndicator: function () {
     if (!this._$loadPanelContentWrapper || !this.option('showIndicator')) {
       return;
     }
@@ -166,15 +167,15 @@ var LoadPanel = _ui.default.inherit({
       indicatorSrc: this.option('indicatorSrc')
     });
   },
-  _cleanPreviousContent: function _cleanPreviousContent() {
+  _cleanPreviousContent: function () {
     this.$content().find('.' + LOADPANEL_MESSAGE_CLASS).remove();
     this.$content().find('.' + LOADPANEL_INDICATOR_CLASS).remove();
     delete this._$indicator;
   },
-  _togglePaneVisible: function _togglePaneVisible() {
+  _togglePaneVisible: function () {
     this.$content().toggleClass(LOADPANEL_PANE_HIDDEN_CLASS, !this.option('showPane'));
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'delay':
         break;
@@ -195,7 +196,7 @@ var LoadPanel = _ui.default.inherit({
         this.callBase(args);
     }
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._clearShowTimeout();
     this.callBase();
   }

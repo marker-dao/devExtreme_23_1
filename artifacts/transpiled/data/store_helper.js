@@ -19,9 +19,9 @@ function multiLevelGroup(query, groupInfo) {
   return query;
 }
 function arrangeSortingInfo(groupInfo, sortInfo) {
-  var filteredGroup = [];
+  const filteredGroup = [];
   (0, _iterator.each)(groupInfo, function (_, group) {
-    var collision = (0, _common.grep)(sortInfo, function (sort) {
+    const collision = (0, _common.grep)(sortInfo, function (sort) {
       return group.selector === sort.selector;
     });
     if (collision.length < 1) {
@@ -33,7 +33,7 @@ function arrangeSortingInfo(groupInfo, sortInfo) {
 function queryByOptions(query, options, isCountQuery) {
   var _options;
   options = options || {};
-  var filter = options.filter;
+  const filter = options.filter;
   if ((_options = options) !== null && _options !== void 0 && _options.langParams) {
     var _query$setLangParams, _query;
     (_query$setLangParams = (_query = query).setLangParams) === null || _query$setLangParams === void 0 ? void 0 : _query$setLangParams.call(_query, options.langParams);
@@ -44,11 +44,11 @@ function queryByOptions(query, options, isCountQuery) {
   if (isCountQuery) {
     return query;
   }
-  var sort = options.sort;
-  var select = options.select;
-  var group = options.group;
-  var skip = options.skip;
-  var take = options.take;
+  let sort = options.sort;
+  const select = options.select;
+  let group = options.group;
+  const skip = options.skip;
+  const take = options.take;
   if (group) {
     group = (0, _utils.normalizeSortingInfo)(group);
     group.keepInitialKeyOrder = !!options.group.keepInitialKeyOrder;

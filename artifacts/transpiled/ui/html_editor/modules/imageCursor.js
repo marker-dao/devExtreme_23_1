@@ -9,9 +9,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var MODULE_NAMESPACE = 'dxHtmlEditorImageCursor';
-var clickEvent = (0, _index.addNamespace)('dxclick', MODULE_NAMESPACE);
-var ImageCursorModule = _base.default;
+const MODULE_NAMESPACE = 'dxHtmlEditorImageCursor';
+const clickEvent = (0, _index.addNamespace)('dxclick', MODULE_NAMESPACE);
+let ImageCursorModule = _base.default;
 if (_devextremeQuill.default) {
   ImageCursorModule = /*#__PURE__*/function (_BaseModule) {
     _inheritsLoose(ImageCursorModule, _BaseModule);
@@ -41,9 +41,9 @@ if (_devextremeQuill.default) {
       return targetElement.tagName.toUpperCase() === 'IMG';
     };
     _proto._adjustSelection = function _adjustSelection(e) {
-      var blot = this.quill.scroll.find(e.target);
+      const blot = this.quill.scroll.find(e.target);
       if (blot) {
-        var index = blot.offset(this.quill.scroll);
+        const index = blot.offset(this.quill.scroll);
         this.quill.setSelection(index + 1, 0);
       } else {
         this.quill.setSelection(0, 0);

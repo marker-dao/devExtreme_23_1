@@ -1,17 +1,17 @@
 "use strict";
 
 exports.default = void 0;
-var EditDecoratorMenuHelperMixin = {
-  _menuEnabled: function _menuEnabled() {
+const EditDecoratorMenuHelperMixin = {
+  _menuEnabled: function () {
     return !!this._menuItems().length;
   },
-  _menuItems: function _menuItems() {
+  _menuItems: function () {
     return this._list.option('menuItems');
   },
-  _deleteEnabled: function _deleteEnabled() {
+  _deleteEnabled: function () {
     return this._list.option('allowItemDeleting');
   },
-  _fireMenuAction: function _fireMenuAction($itemElement, action) {
+  _fireMenuAction: function ($itemElement, action) {
     this._list._itemEventHandlerByHandler($itemElement, action, {}, {
       excludeValidators: ['disabled', 'readOnly']
     });

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drawer/ui.drawer.rendering.strategy.push.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,19 +16,19 @@ var _translator = require("../../animation/translator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var PushStrategy = /*#__PURE__*/function (_DrawerStrategy) {
+let PushStrategy = /*#__PURE__*/function (_DrawerStrategy) {
   _inheritsLoose(PushStrategy, _DrawerStrategy);
   function PushStrategy() {
     return _DrawerStrategy.apply(this, arguments) || this;
   }
   var _proto = PushStrategy.prototype;
   _proto._internalRenderPosition = function _internalRenderPosition(changePositionUsingFxAnimation, whenAnimationCompleted) {
-    var drawer = this.getDrawerInstance();
-    var openedPanelSize = this._getPanelSize(true);
-    var contentPosition = this._getPanelSize(drawer.option('opened')) * drawer._getPositionCorrection();
+    const drawer = this.getDrawerInstance();
+    const openedPanelSize = this._getPanelSize(true);
+    const contentPosition = this._getPanelSize(drawer.option('opened')) * drawer._getPositionCorrection();
     (0, _renderer.default)(drawer.content()).css(drawer.isHorizontalDirection() ? 'width' : 'height', openedPanelSize);
     if (drawer.getMinSize()) {
-      var paddingCssPropertyName = 'padding';
+      let paddingCssPropertyName = 'padding';
       switch (drawer.calcTargetPosition()) {
         case 'left':
           paddingCssPropertyName += 'Right';
@@ -53,7 +53,7 @@ var PushStrategy = /*#__PURE__*/function (_DrawerStrategy) {
         position: contentPosition,
         direction: drawer.calcTargetPosition(),
         duration: drawer.option('animationDuration'),
-        complete: function complete() {
+        complete: () => {
           whenAnimationCompleted.resolve();
         }
       });

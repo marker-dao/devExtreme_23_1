@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/draggable/container.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,9 +14,8 @@ var _inferno2 = require("@devextreme/runtime/inferno");
 var _drag = require("../../../events/drag");
 var _events_engine = _interopRequireDefault(require("../../../events/core/events_engine"));
 var _combine_classes = require("../../utils/combine_classes");
-var _excluded = ["children", "className", "data", "disabled", "onDragEnd", "onDragMove", "onDragStart"];
+const _excluded = ["children", "className", "data", "disabled", "onDragEnd", "onDragMove", "onDragStart"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -26,19 +25,23 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var cssClasses = _ref.cssClasses,
-    children = _ref.props.children,
-    restAttributes = _ref.restAttributes,
-    widgetRef = _ref.widgetRef;
+const viewFunction = _ref => {
+  let {
+    cssClasses,
+    props: {
+      children
+    },
+    restAttributes,
+    widgetRef
+  } = _ref;
   return (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", cssClasses, children, 0, _extends({}, restAttributes), null, widgetRef));
 };
 exports.viewFunction = viewFunction;
-var DraggableContainerProps = {
+const DraggableContainerProps = {
   className: ''
 };
 exports.DraggableContainerProps = DraggableContainerProps;
-var DraggableContainer = /*#__PURE__*/function (_InfernoComponent) {
+let DraggableContainer = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(DraggableContainer, _InfernoComponent);
   function DraggableContainer(props) {
     var _this;
@@ -63,42 +66,43 @@ var DraggableContainer = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.disabled, this.props.data, this.props.onDragStart, this.props.onDragMove, this.props.onDragEnd]);
   };
   _proto.dragEffect = function dragEffect() {
-    var _this2 = this;
     if (this.props.disabled) {
       return undefined;
     }
     _events_engine.default.on(this.widgetRef.current, _drag.start, this.dragStartHandler);
     _events_engine.default.on(this.widgetRef.current, _drag.move, this.dragMoveHandler);
     _events_engine.default.on(this.widgetRef.current, _drag.end, this.dragEndHandler);
-    return function () {
-      _events_engine.default.off(_this2.widgetRef.current, _drag.start, _this2.dragStartHandler);
-      _events_engine.default.off(_this2.widgetRef.current, _drag.move, _this2.dragMoveHandler);
-      _events_engine.default.off(_this2.widgetRef.current, _drag.end, _this2.dragEndHandler);
+    return () => {
+      _events_engine.default.off(this.widgetRef.current, _drag.start, this.dragStartHandler);
+      _events_engine.default.off(this.widgetRef.current, _drag.move, this.dragMoveHandler);
+      _events_engine.default.off(this.widgetRef.current, _drag.end, this.dragEndHandler);
     };
   };
   _proto.dragStartHandler = function dragStartHandler(event) {
-    this.setState(function (__state_argument) {
-      return {
-        isDragging: true
-      };
-    });
-    var dragStartArgs = this.getEventArgs(event);
-    var onDragStart = this.props.onDragStart;
+    this.setState(__state_argument => ({
+      isDragging: true
+    }));
+    const dragStartArgs = this.getEventArgs(event);
+    const {
+      onDragStart
+    } = this.props;
     onDragStart === null || onDragStart === void 0 ? void 0 : onDragStart(dragStartArgs);
   };
   _proto.dragMoveHandler = function dragMoveHandler(event) {
-    var dragMoveArgs = this.getEventArgs(event);
-    var onDragMove = this.props.onDragMove;
+    const dragMoveArgs = this.getEventArgs(event);
+    const {
+      onDragMove
+    } = this.props;
     onDragMove === null || onDragMove === void 0 ? void 0 : onDragMove(dragMoveArgs);
   };
   _proto.dragEndHandler = function dragEndHandler(event) {
-    this.setState(function (__state_argument) {
-      return {
-        isDragging: false
-      };
-    });
-    var dragEndArgs = this.getEventArgs(event);
-    var onDragEnd = this.props.onDragEnd;
+    this.setState(__state_argument => ({
+      isDragging: false
+    }));
+    const dragEndArgs = this.getEventArgs(event);
+    const {
+      onDragEnd
+    } = this.props;
     onDragEnd === null || onDragEnd === void 0 ? void 0 : onDragEnd(dragEndArgs);
   };
   _proto.getEventArgs = function getEventArgs(e) {
@@ -109,7 +113,7 @@ var DraggableContainer = /*#__PURE__*/function (_InfernoComponent) {
     };
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       isDragging: this.state.isDragging,
@@ -124,11 +128,12 @@ var DraggableContainer = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(DraggableContainer, [{
     key: "cssClasses",
-    get: function get() {
-      var _this$props = this.props,
-        className = _this$props.className,
-        disabled = _this$props.disabled;
-      var classesMap = {
+    get: function () {
+      const {
+        className,
+        disabled
+      } = this.props;
+      const classesMap = {
         [className]: !!className,
         'dx-draggable': true,
         'dx-draggable-dragging': this.state.isDragging,
@@ -138,16 +143,9 @@ var DraggableContainer = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props2 = this.props,
-        children = _this$props2.children,
-        className = _this$props2.className,
-        data = _this$props2.data,
-        disabled = _this$props2.disabled,
-        onDragEnd = _this$props2.onDragEnd,
-        onDragMove = _this$props2.onDragMove,
-        onDragStart = _this$props2.onDragStart,
-        restProps = _objectWithoutProperties(_this$props2, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

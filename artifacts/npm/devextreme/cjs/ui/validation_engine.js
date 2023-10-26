@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/validation_engine.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,16 +22,16 @@ var _deferred = require("../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var EMAIL_VALIDATION_REGEX = /^[\d\w.+_-]+@[\d\w._-]+\.[\w]+$/i;
+const EMAIL_VALIDATION_REGEX = /^[\d\w.+_-]+@[\d\w._-]+\.[\w]+$/i;
 
 // STYLE validation
 
-var STATUS = {
+const STATUS = {
   valid: 'valid',
   invalid: 'invalid',
   pending: 'pending'
 };
-var BaseRuleValidator = /*#__PURE__*/function () {
+let BaseRuleValidator = /*#__PURE__*/function () {
   function BaseRuleValidator() {
     this.NAME = 'base';
   }
@@ -46,12 +46,11 @@ var BaseRuleValidator = /*#__PURE__*/function () {
     return !rulesValidators.required.validate(value, {});
   };
   _proto.validate = function validate(value, rule) {
-    var _this = this;
-    var valueArray = Array.isArray(value) ? value : [value];
-    var result = true;
+    const valueArray = Array.isArray(value) ? value : [value];
+    let result = true;
     if (valueArray.length) {
-      valueArray.every(function (itemValue) {
-        result = _this._validate(itemValue, rule);
+      valueArray.every(itemValue => {
+        result = this._validate(itemValue, rule);
         return result;
       });
     } else {
@@ -61,13 +60,13 @@ var BaseRuleValidator = /*#__PURE__*/function () {
   };
   return BaseRuleValidator;
 }();
-var RequiredRuleValidator = /*#__PURE__*/function (_BaseRuleValidator) {
+let RequiredRuleValidator = /*#__PURE__*/function (_BaseRuleValidator) {
   _inheritsLoose(RequiredRuleValidator, _BaseRuleValidator);
   function RequiredRuleValidator() {
-    var _this2;
-    _this2 = _BaseRuleValidator.call(this) || this;
-    _this2.NAME = 'required';
-    return _this2;
+    var _this;
+    _this = _BaseRuleValidator.call(this) || this;
+    _this.NAME = 'required';
+    return _this;
   }
   var _proto2 = RequiredRuleValidator.prototype;
   _proto2._validate = function _validate(value, rule) {
@@ -83,13 +82,13 @@ var RequiredRuleValidator = /*#__PURE__*/function (_BaseRuleValidator) {
   };
   return RequiredRuleValidator;
 }(BaseRuleValidator);
-var NumericRuleValidator = /*#__PURE__*/function (_BaseRuleValidator2) {
+let NumericRuleValidator = /*#__PURE__*/function (_BaseRuleValidator2) {
   _inheritsLoose(NumericRuleValidator, _BaseRuleValidator2);
   function NumericRuleValidator() {
-    var _this3;
-    _this3 = _BaseRuleValidator2.call(this) || this;
-    _this3.NAME = 'numeric';
-    return _this3;
+    var _this2;
+    _this2 = _BaseRuleValidator2.call(this) || this;
+    _this2.NAME = 'numeric';
+    return _this2;
   }
   var _proto3 = NumericRuleValidator.prototype;
   _proto3._validate = function _validate(value, rule) {
@@ -104,24 +103,24 @@ var NumericRuleValidator = /*#__PURE__*/function (_BaseRuleValidator2) {
   };
   return NumericRuleValidator;
 }(BaseRuleValidator);
-var RangeRuleValidator = /*#__PURE__*/function (_BaseRuleValidator3) {
+let RangeRuleValidator = /*#__PURE__*/function (_BaseRuleValidator3) {
   _inheritsLoose(RangeRuleValidator, _BaseRuleValidator3);
   function RangeRuleValidator() {
-    var _this4;
-    _this4 = _BaseRuleValidator3.call(this) || this;
-    _this4.NAME = 'range';
-    return _this4;
+    var _this3;
+    _this3 = _BaseRuleValidator3.call(this) || this;
+    _this3.NAME = 'range';
+    return _this3;
   }
   var _proto4 = RangeRuleValidator.prototype;
   _proto4._validate = function _validate(value, rule) {
     if (rule.ignoreEmptyValue !== false && this._isValueEmpty(value)) {
       return true;
     }
-    var validNumber = rulesValidators['numeric'].validate(value, rule);
-    var validValue = (0, _type.isDefined)(value) && value !== '';
-    var number = validNumber ? parseFloat(value) : validValue && value.valueOf();
-    var min = rule.min;
-    var max = rule.max;
+    const validNumber = rulesValidators['numeric'].validate(value, rule);
+    const validValue = (0, _type.isDefined)(value) && value !== '';
+    const number = validNumber ? parseFloat(value) : validValue && value.valueOf();
+    const min = rule.min;
+    const max = rule.max;
     if (!(validNumber || (0, _type.isDate)(value)) && !validValue) {
       return false;
     }
@@ -140,13 +139,13 @@ var RangeRuleValidator = /*#__PURE__*/function (_BaseRuleValidator3) {
   };
   return RangeRuleValidator;
 }(BaseRuleValidator);
-var StringLengthRuleValidator = /*#__PURE__*/function (_BaseRuleValidator4) {
+let StringLengthRuleValidator = /*#__PURE__*/function (_BaseRuleValidator4) {
   _inheritsLoose(StringLengthRuleValidator, _BaseRuleValidator4);
   function StringLengthRuleValidator() {
-    var _this5;
-    _this5 = _BaseRuleValidator4.call(this) || this;
-    _this5.NAME = 'stringLength';
-    return _this5;
+    var _this4;
+    _this4 = _BaseRuleValidator4.call(this) || this;
+    _this4.NAME = 'stringLength';
+    return _this4;
   }
   var _proto5 = StringLengthRuleValidator.prototype;
   _proto5._validate = function _validate(value, rule) {
@@ -162,23 +161,23 @@ var StringLengthRuleValidator = /*#__PURE__*/function (_BaseRuleValidator4) {
   };
   return StringLengthRuleValidator;
 }(BaseRuleValidator);
-var CustomRuleValidator = /*#__PURE__*/function (_BaseRuleValidator5) {
+let CustomRuleValidator = /*#__PURE__*/function (_BaseRuleValidator5) {
   _inheritsLoose(CustomRuleValidator, _BaseRuleValidator5);
   function CustomRuleValidator() {
-    var _this6;
-    _this6 = _BaseRuleValidator5.call(this) || this;
-    _this6.NAME = 'custom';
-    return _this6;
+    var _this5;
+    _this5 = _BaseRuleValidator5.call(this) || this;
+    _this5.NAME = 'custom';
+    return _this5;
   }
   var _proto6 = CustomRuleValidator.prototype;
   _proto6.validate = function validate(value, rule) {
     if (rule.ignoreEmptyValue && this._isValueEmpty(value)) {
       return true;
     }
-    var validator = rule.validator;
-    var dataGetter = validator && (0, _type.isFunction)(validator.option) && validator.option('dataGetter');
-    var extraParams = (0, _type.isFunction)(dataGetter) && dataGetter();
-    var params = {
+    const validator = rule.validator;
+    const dataGetter = validator && (0, _type.isFunction)(validator.option) && validator.option('dataGetter');
+    const extraParams = (0, _type.isFunction)(dataGetter) && dataGetter();
+    const params = {
       value: value,
       validator: validator,
       rule: rule
@@ -190,13 +189,13 @@ var CustomRuleValidator = /*#__PURE__*/function (_BaseRuleValidator5) {
   };
   return CustomRuleValidator;
 }(BaseRuleValidator);
-var AsyncRuleValidator = /*#__PURE__*/function (_CustomRuleValidator) {
+let AsyncRuleValidator = /*#__PURE__*/function (_CustomRuleValidator) {
   _inheritsLoose(AsyncRuleValidator, _CustomRuleValidator);
   function AsyncRuleValidator() {
-    var _this7;
-    _this7 = _CustomRuleValidator.call(this) || this;
-    _this7.NAME = 'async';
-    return _this7;
+    var _this6;
+    _this6 = _CustomRuleValidator.call(this) || this;
+    _this6.NAME = 'async';
+    return _this6;
   }
   var _proto7 = AsyncRuleValidator.prototype;
   _proto7.validate = function validate(value, rule) {
@@ -208,10 +207,10 @@ var AsyncRuleValidator = /*#__PURE__*/function (_CustomRuleValidator) {
     if (rule.ignoreEmptyValue && this._isValueEmpty(value)) {
       return true;
     }
-    var validator = rule.validator;
-    var dataGetter = validator && (0, _type.isFunction)(validator.option) && validator.option('dataGetter');
-    var extraParams = (0, _type.isFunction)(dataGetter) && dataGetter();
-    var params = {
+    const validator = rule.validator;
+    const dataGetter = validator && (0, _type.isFunction)(validator.option) && validator.option('dataGetter');
+    const extraParams = (0, _type.isFunction)(dataGetter) && dataGetter();
+    const params = {
       value: value,
       validator: validator,
       rule: rule
@@ -219,18 +218,18 @@ var AsyncRuleValidator = /*#__PURE__*/function (_CustomRuleValidator) {
     if (extraParams) {
       (0, _extend.extend)(params, extraParams);
     }
-    var callbackResult = rule.validationCallback(params);
+    const callbackResult = rule.validationCallback(params);
     if (!(0, _type.isPromise)(callbackResult)) {
       throw _errors.default.Error('E0103');
     }
     return this._getWrappedPromise((0, _deferred.fromPromise)(callbackResult).promise());
   };
   _proto7._getWrappedPromise = function _getWrappedPromise(promise) {
-    var deferred = new _deferred.Deferred();
+    const deferred = new _deferred.Deferred();
     promise.then(function (res) {
       deferred.resolve(res);
     }, function (err) {
-      var res = {
+      const res = {
         isValid: false
       };
       if ((0, _type.isDefined)(err)) {
@@ -246,13 +245,13 @@ var AsyncRuleValidator = /*#__PURE__*/function (_CustomRuleValidator) {
   };
   return AsyncRuleValidator;
 }(CustomRuleValidator);
-var CompareRuleValidator = /*#__PURE__*/function (_BaseRuleValidator6) {
+let CompareRuleValidator = /*#__PURE__*/function (_BaseRuleValidator6) {
   _inheritsLoose(CompareRuleValidator, _BaseRuleValidator6);
   function CompareRuleValidator() {
-    var _this8;
-    _this8 = _BaseRuleValidator6.call(this) || this;
-    _this8.NAME = 'compare';
-    return _this8;
+    var _this7;
+    _this7 = _BaseRuleValidator6.call(this) || this;
+    _this7.NAME = 'compare';
+    return _this7;
   }
   var _proto8 = CompareRuleValidator.prototype;
   _proto8._validate = function _validate(value, rule) {
@@ -265,8 +264,8 @@ var CompareRuleValidator = /*#__PURE__*/function (_BaseRuleValidator6) {
     (0, _extend.extend)(rule, {
       reevaluate: true
     });
-    var otherValue = rule.comparisonTarget();
-    var type = rule.comparisonType || '==';
+    const otherValue = rule.comparisonTarget();
+    const type = rule.comparisonType || '==';
     switch (type) {
       case '==':
         return value == otherValue;
@@ -290,20 +289,20 @@ var CompareRuleValidator = /*#__PURE__*/function (_BaseRuleValidator6) {
   };
   return CompareRuleValidator;
 }(BaseRuleValidator);
-var PatternRuleValidator = /*#__PURE__*/function (_BaseRuleValidator7) {
+let PatternRuleValidator = /*#__PURE__*/function (_BaseRuleValidator7) {
   _inheritsLoose(PatternRuleValidator, _BaseRuleValidator7);
   function PatternRuleValidator() {
-    var _this9;
-    _this9 = _BaseRuleValidator7.call(this) || this;
-    _this9.NAME = 'pattern';
-    return _this9;
+    var _this8;
+    _this8 = _BaseRuleValidator7.call(this) || this;
+    _this8.NAME = 'pattern';
+    return _this8;
   }
   var _proto9 = PatternRuleValidator.prototype;
   _proto9._validate = function _validate(value, rule) {
     if (rule.ignoreEmptyValue !== false && this._isValueEmpty(value)) {
       return true;
     }
-    var pattern = rule.pattern;
+    let pattern = rule.pattern;
     if ((0, _type.isString)(pattern)) {
       pattern = new RegExp(pattern);
     }
@@ -311,13 +310,13 @@ var PatternRuleValidator = /*#__PURE__*/function (_BaseRuleValidator7) {
   };
   return PatternRuleValidator;
 }(BaseRuleValidator);
-var EmailRuleValidator = /*#__PURE__*/function (_BaseRuleValidator8) {
+let EmailRuleValidator = /*#__PURE__*/function (_BaseRuleValidator8) {
   _inheritsLoose(EmailRuleValidator, _BaseRuleValidator8);
   function EmailRuleValidator() {
-    var _this10;
-    _this10 = _BaseRuleValidator8.call(this) || this;
-    _this10.NAME = 'email';
-    return _this10;
+    var _this9;
+    _this9 = _BaseRuleValidator8.call(this) || this;
+    _this9.NAME = 'email';
+    return _this9;
   }
   var _proto10 = EmailRuleValidator.prototype;
   _proto10._validate = function _validate(value, rule) {
@@ -330,7 +329,7 @@ var EmailRuleValidator = /*#__PURE__*/function (_BaseRuleValidator8) {
   };
   return EmailRuleValidator;
 }(BaseRuleValidator);
-var rulesValidators = {
+const rulesValidators = {
   'required': new RequiredRuleValidator(),
   'numeric': new NumericRuleValidator(),
   'range': new RangeRuleValidator(),
@@ -341,7 +340,7 @@ var rulesValidators = {
   'pattern': new PatternRuleValidator(),
   'email': new EmailRuleValidator()
 };
-var GroupConfig = _class.default.inherit({
+const GroupConfig = _class.default.inherit({
   ctor(group) {
     this.group = group;
     this.validators = [];
@@ -351,8 +350,7 @@ var GroupConfig = _class.default.inherit({
     this._eventsStrategy = new _events_strategy.EventsStrategy(this);
   },
   validate() {
-    var _this11 = this;
-    var result = {
+    const result = {
       isValid: true,
       brokenRules: [],
       validators: [],
@@ -362,17 +360,17 @@ var GroupConfig = _class.default.inherit({
     this._unsubscribeFromAllChangeEvents();
     this._pendingValidators = [];
     this._resetValidationInfo();
-    (0, _iterator.each)(this.validators, function (_, validator) {
-      var validatorResult = validator.validate();
+    (0, _iterator.each)(this.validators, (_, validator) => {
+      const validatorResult = validator.validate();
       result.isValid = result.isValid && validatorResult.isValid;
       if (validatorResult.brokenRules) {
         result.brokenRules = result.brokenRules.concat(validatorResult.brokenRules);
       }
       result.validators.push(validator);
       if (validatorResult.status === STATUS.pending) {
-        _this11._addPendingValidator(validator);
+        this._addPendingValidator(validator);
       }
-      _this11._subscribeToChangeEvents(validator);
+      this._subscribeToChangeEvents(validator);
     });
     if (this._pendingValidators.length) {
       result.status = STATUS.pending;
@@ -393,9 +391,8 @@ var GroupConfig = _class.default.inherit({
     validator.off('validated', this._onValidatorStatusChanged);
   },
   _unsubscribeFromAllChangeEvents() {
-    var _this12 = this;
-    (0, _iterator.each)(this.validators, function (_, validator) {
-      _this12._unsubscribeFromChangeEvents(validator);
+    (0, _iterator.each)(this.validators, (_, validator) => {
+      this._unsubscribeFromChangeEvents(validator);
     });
   },
   _updateValidationInfo(result) {
@@ -409,7 +406,7 @@ var GroupConfig = _class.default.inherit({
     }
   },
   _addPendingValidator(validator) {
-    var foundValidator = (0, _common.grep)(this._pendingValidators, function (val) {
+    const foundValidator = (0, _common.grep)(this._pendingValidators, function (val) {
       return val === validator;
     })[0];
     if (!foundValidator) {
@@ -417,15 +414,15 @@ var GroupConfig = _class.default.inherit({
     }
   },
   _removePendingValidator(validator) {
-    var index = this._pendingValidators.indexOf(validator);
+    const index = this._pendingValidators.indexOf(validator);
     if (index >= 0) {
       this._pendingValidators.splice(index, 1);
     }
   },
   _orderBrokenRules(brokenRules) {
-    var orderedRules = [];
+    let orderedRules = [];
     (0, _iterator.each)(this.validators, function (_, validator) {
-      var foundRules = (0, _common.grep)(brokenRules, function (rule) {
+      const foundRules = (0, _common.grep)(brokenRules, function (rule) {
         return rule.validator === validator;
       });
       if (foundRules.length) {
@@ -438,8 +435,8 @@ var GroupConfig = _class.default.inherit({
     if (!this._validationInfo.result) {
       return;
     }
-    var brokenRules = this._validationInfo.result.brokenRules;
-    var rules = (0, _common.grep)(brokenRules, function (rule) {
+    let brokenRules = this._validationInfo.result.brokenRules;
+    const rules = (0, _common.grep)(brokenRules, function (rule) {
       return rule.validator !== result.validator;
     });
     if (result.brokenRules) {
@@ -464,13 +461,13 @@ var GroupConfig = _class.default.inherit({
       }
       this._validationInfo.result.status = this._validationInfo.result.brokenRules.length === 0 ? STATUS.valid : STATUS.invalid;
       this._validationInfo.result.isValid = this._validationInfo.result.status === STATUS.valid;
-      var res = (0, _extend.extend)({}, this._validationInfo.result, {
+      const res = (0, _extend.extend)({}, this._validationInfo.result, {
         complete: null
       });
-      var deferred = this._validationInfo.deferred;
+      const deferred = this._validationInfo.deferred;
       this._validationInfo.deferred = null;
       this._raiseValidatedEvent(res);
-      deferred && setTimeout(function () {
+      deferred && setTimeout(() => {
         deferred.resolve(res);
       });
     }
@@ -490,7 +487,7 @@ var GroupConfig = _class.default.inherit({
     }
   },
   removeRegisteredValidator(validator) {
-    var index = this.validators.indexOf(validator);
+    const index = this.validators.indexOf(validator);
     if (index > -1) {
       this.validators.splice(index, 1);
       this._synchronizeValidationInfo();
@@ -521,10 +518,10 @@ var GroupConfig = _class.default.inherit({
     return this;
   }
 });
-var ValidationEngine = {
+const ValidationEngine = {
   groups: [],
   getGroupConfig(group) {
-    var result = (0, _common.grep)(this.groups, function (config) {
+    const result = (0, _common.grep)(this.groups, function (config) {
       return config.group === group;
     });
     if (result.length) {
@@ -533,13 +530,13 @@ var ValidationEngine = {
   },
   findGroup($element, model) {
     var _$element$data, _$element$data$dxComp;
-    var hasValidationGroup = (_$element$data = $element.data()) === null || _$element$data === void 0 ? void 0 : (_$element$data$dxComp = _$element$data.dxComponents) === null || _$element$data$dxComp === void 0 ? void 0 : _$element$data$dxComp.includes('dxValidationGroup');
-    var validationGroup = hasValidationGroup && $element.dxValidationGroup('instance');
+    const hasValidationGroup = (_$element$data = $element.data()) === null || _$element$data === void 0 ? void 0 : (_$element$data$dxComp = _$element$data.dxComponents) === null || _$element$data$dxComp === void 0 ? void 0 : _$element$data$dxComp.includes('dxValidationGroup');
+    const validationGroup = hasValidationGroup && $element.dxValidationGroup('instance');
     if (validationGroup) {
       return validationGroup;
     }
     // try to find out if this control is child of validation group
-    var $dxGroup = $element.parents('.dx-validationgroup').first();
+    const $dxGroup = $element.parents('.dx-validationgroup').first();
     if ($dxGroup.length) {
       return $dxGroup.dxValidationGroup('instance');
     }
@@ -552,7 +549,7 @@ var ValidationEngine = {
     this.addGroup();
   },
   addGroup(group) {
-    var config = this.getGroupConfig(group);
+    let config = this.getGroupConfig(group);
     if (!config) {
       config = new GroupConfig(group);
       this.groups.push(config);
@@ -560,17 +557,19 @@ var ValidationEngine = {
     return config;
   },
   removeGroup(group) {
-    var config = this.getGroupConfig(group);
-    var index = this.groups.indexOf(config);
+    const config = this.getGroupConfig(group);
+    const index = this.groups.indexOf(config);
     if (index > -1) {
       this.groups.splice(index, 1);
     }
     return config;
   },
   _setDefaultMessage(info) {
-    var rule = info.rule,
-      validator = info.validator,
-      name = info.name;
+    const {
+      rule,
+      validator,
+      name
+    } = info;
     if (!(0, _type.isDefined)(rule.message)) {
       if (validator.defaultFormattedMessage && (0, _type.isDefined)(name)) {
         rule.message = validator.defaultFormattedMessage(name);
@@ -580,8 +579,10 @@ var ValidationEngine = {
     }
   },
   _addBrokenRule(info) {
-    var result = info.result,
-      rule = info.rule;
+    const {
+      result,
+      rule
+    } = info;
     if (!result.brokenRule) {
       result.brokenRule = rule;
     }
@@ -591,9 +592,8 @@ var ValidationEngine = {
     result.brokenRules.push(rule);
   },
   validate(value, rules, name) {
-    var _rules$,
-      _this13 = this;
-    var result = {
+    var _rules$;
+    let result = {
       name: name,
       value: value,
       brokenRule: null,
@@ -604,16 +604,16 @@ var ValidationEngine = {
       status: STATUS.valid,
       complete: null
     };
-    var validator = rules === null || rules === void 0 ? void 0 : (_rules$ = rules[0]) === null || _rules$ === void 0 ? void 0 : _rules$.validator;
-    var asyncRuleItems = [];
-    (0, _iterator.each)(rules || [], function (_, rule) {
-      var ruleValidator = rulesValidators[rule.type];
-      var ruleValidationResult;
+    const validator = rules === null || rules === void 0 ? void 0 : (_rules$ = rules[0]) === null || _rules$ === void 0 ? void 0 : _rules$.validator;
+    const asyncRuleItems = [];
+    (0, _iterator.each)(rules || [], (_, rule) => {
+      const ruleValidator = rulesValidators[rule.type];
+      let ruleValidationResult;
       if (ruleValidator) {
         if ((0, _type.isDefined)(rule.isValid) && rule.value === value && !rule.reevaluate) {
           if (!rule.isValid) {
             result.isValid = false;
-            _this13._addBrokenRule({
+            this._addBrokenRule({
               result,
               rule
             });
@@ -633,12 +633,12 @@ var ValidationEngine = {
         rule.isValid = ruleValidationResult;
         if (!ruleValidationResult) {
           result.isValid = false;
-          _this13._setDefaultMessage({
+          this._setDefaultMessage({
             rule,
             validator: ruleValidator,
             name
           });
-          _this13._addBrokenRule({
+          this._addBrokenRule({
             result,
             rule
           });
@@ -667,25 +667,26 @@ var ValidationEngine = {
     if (!validator) {
       return;
     }
-    var groupConfig = ValidationEngine.getGroupConfig(validator._validationGroup);
+    const groupConfig = ValidationEngine.getGroupConfig(validator._validationGroup);
     groupConfig._updateBrokenRules.call(groupConfig, {
       validator,
       brokenRules: (_result$brokenRules = result.brokenRules) !== null && _result$brokenRules !== void 0 ? _result$brokenRules : []
     });
   },
   _validateAsyncRules(_ref) {
-    var _this14 = this;
-    var result = _ref.result,
-      value = _ref.value,
-      items = _ref.items,
-      name = _ref.name;
-    var asyncResults = [];
-    (0, _iterator.each)(items, function (_, item) {
-      var validateResult = item.ruleValidator.validate(value, item.rule);
+    let {
+      result,
+      value,
+      items,
+      name
+    } = _ref;
+    const asyncResults = [];
+    (0, _iterator.each)(items, (_, item) => {
+      const validateResult = item.ruleValidator.validate(value, item.rule);
       if (!(0, _type.isPromise)(validateResult)) {
-        _this14._updateRuleConfig({
+        this._updateRuleConfig({
           rule: item.rule,
-          ruleResult: _this14._getPatchedRuleResult(validateResult),
+          ruleResult: this._getPatchedRuleResult(validateResult),
           validator: item.ruleValidator,
           name
         });
@@ -694,9 +695,9 @@ var ValidationEngine = {
           result.pendingRules = [];
         }
         result.pendingRules.push(item.rule);
-        var asyncResult = validateResult.then(function (res) {
-          var ruleResult = _this14._getPatchedRuleResult(res);
-          _this14._updateRuleConfig({
+        const asyncResult = validateResult.then(res => {
+          const ruleResult = this._getPatchedRuleResult(res);
+          this._updateRuleConfig({
             rule: item.rule,
             ruleResult,
             validator: item.ruleValidator,
@@ -708,8 +709,8 @@ var ValidationEngine = {
       }
     });
     if (asyncResults.length) {
-      result.complete = Promise.all(asyncResults).then(function (values) {
-        return _this14._getAsyncRulesResult({
+      result.complete = Promise.all(asyncResults).then(values => {
+        return this._getAsyncRulesResult({
           result,
           values
         });
@@ -718,10 +719,12 @@ var ValidationEngine = {
     return result;
   },
   _updateRuleConfig(_ref2) {
-    var rule = _ref2.rule,
-      ruleResult = _ref2.ruleResult,
-      validator = _ref2.validator,
-      name = _ref2.name;
+    let {
+      rule,
+      ruleResult,
+      validator,
+      name
+    } = _ref2;
     rule.isValid = ruleResult.isValid;
     if (!ruleResult.isValid) {
       if ((0, _type.isDefined)(ruleResult.message) && (0, _type.isString)(ruleResult.message) && ruleResult.message.length) {
@@ -736,8 +739,8 @@ var ValidationEngine = {
     }
   },
   _getPatchedRuleResult(ruleResult) {
-    var result;
-    var isValid = true;
+    let result;
+    const isValid = true;
     if ((0, _type.isObject)(ruleResult)) {
       result = (0, _extend.extend)({}, ruleResult);
       if (!(0, _type.isDefined)(result.isValid)) {
@@ -751,14 +754,15 @@ var ValidationEngine = {
     return result;
   },
   _getAsyncRulesResult(_ref3) {
-    var _this15 = this;
-    var values = _ref3.values,
-      result = _ref3.result;
-    (0, _iterator.each)(values, function (index, val) {
+    let {
+      values,
+      result
+    } = _ref3;
+    (0, _iterator.each)(values, (index, val) => {
       if (val.isValid === false) {
         result.isValid = val.isValid;
-        var rule = result.pendingRules[index];
-        _this15._addBrokenRule({
+        const rule = result.pendingRules[index];
+        this._addBrokenRule({
           result,
           rule
         });
@@ -770,32 +774,31 @@ var ValidationEngine = {
     return result;
   },
   registerValidatorInGroup(group, validator) {
-    var groupConfig = ValidationEngine.addGroup(group);
+    const groupConfig = ValidationEngine.addGroup(group);
     groupConfig.registerValidator.call(groupConfig, validator);
   },
   _shouldRemoveGroup(group, validatorsInGroup) {
-    var isDefaultGroup = group === undefined;
-    var isValidationGroupInstance = group && group.NAME === 'dxValidationGroup';
+    const isDefaultGroup = group === undefined;
+    const isValidationGroupInstance = group && group.NAME === 'dxValidationGroup';
     return !isDefaultGroup && !isValidationGroupInstance && !validatorsInGroup.length;
   },
   removeRegisteredValidator(group, validator) {
-    var config = ValidationEngine.getGroupConfig(group);
+    const config = ValidationEngine.getGroupConfig(group);
     if (config) {
       config.removeRegisteredValidator.call(config, validator);
-      var validatorsInGroup = config.validators;
+      const validatorsInGroup = config.validators;
       if (this._shouldRemoveGroup(group, validatorsInGroup)) {
         this.removeGroup(group);
       }
     }
   },
   initValidationOptions(options) {
-    var _this16 = this;
-    var initedOptions = {};
+    const initedOptions = {};
     if (options) {
-      var syncOptions = ['isValid', 'validationStatus', 'validationError', 'validationErrors'];
-      syncOptions.forEach(function (prop) {
+      const syncOptions = ['isValid', 'validationStatus', 'validationError', 'validationErrors'];
+      syncOptions.forEach(prop => {
         if (prop in options) {
-          (0, _extend.extend)(initedOptions, _this16.synchronizeValidationOptions({
+          (0, _extend.extend)(initedOptions, this.synchronizeValidationOptions({
             name: prop,
             value: options[prop]
           }, options));
@@ -805,20 +808,24 @@ var ValidationEngine = {
     return initedOptions;
   },
   synchronizeValidationOptions(_ref4, options) {
-    var name = _ref4.name,
-      value = _ref4.value;
+    let {
+      name,
+      value
+    } = _ref4;
     switch (name) {
       case 'validationStatus':
         {
-          var isValid = value === STATUS.valid || value === STATUS.pending;
+          const isValid = value === STATUS.valid || value === STATUS.pending;
           return options.isValid !== isValid ? {
             isValid
           } : {};
         }
       case 'isValid':
         {
-          var validationStatus = options.validationStatus;
-          var newStatus = validationStatus;
+          const {
+            validationStatus
+          } = options;
+          let newStatus = validationStatus;
           if (value && validationStatus === STATUS.invalid) {
             newStatus = STATUS.valid;
           } else if (!value && validationStatus !== STATUS.invalid) {
@@ -830,14 +837,16 @@ var ValidationEngine = {
         }
       case 'validationErrors':
         {
-          var validationError = !value || !value.length ? null : value[0];
+          const validationError = !value || !value.length ? null : value[0];
           return options.validationError !== validationError ? {
             validationError
           } : {};
         }
       case 'validationError':
         {
-          var validationErrors = options.validationErrors;
+          const {
+            validationErrors
+          } = options;
           if (!value && validationErrors) {
             return {
               validationErrors: null
@@ -857,14 +866,14 @@ var ValidationEngine = {
     return {};
   },
   validateGroup(group) {
-    var groupConfig = ValidationEngine.getGroupConfig(group);
+    const groupConfig = ValidationEngine.getGroupConfig(group);
     if (!groupConfig) {
       throw _errors.default.Error('E0110');
     }
     return groupConfig.validate();
   },
   resetGroup(group) {
-    var groupConfig = ValidationEngine.getGroupConfig(group);
+    const groupConfig = ValidationEngine.getGroupConfig(group);
     if (!groupConfig) {
       throw _errors.default.Error('E0110');
     }

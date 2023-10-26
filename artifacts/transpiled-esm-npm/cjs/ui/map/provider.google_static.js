@@ -8,35 +8,35 @@ var _provider = _interopRequireDefault(require("./provider"));
 var _color = _interopRequireDefault(require("../../color"));
 var _click = require("../../events/click");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var GOOGLE_STATIC_URL = 'https://maps.google.com/maps/api/staticmap?';
-var GoogleStaticProvider = _provider.default.inherit({
-  _locationToString: function _locationToString(location) {
-    var latLng = this._getLatLng(location);
+let GOOGLE_STATIC_URL = 'https://maps.google.com/maps/api/staticmap?';
+const GoogleStaticProvider = _provider.default.inherit({
+  _locationToString: function (location) {
+    const latLng = this._getLatLng(location);
     return latLng ? latLng.lat + ',' + latLng.lng : location.toString().replace(/ /g, '+');
   },
-  _renderImpl: function _renderImpl() {
+  _renderImpl: function () {
     return this._updateMap();
   },
-  updateDimensions: function updateDimensions() {
+  updateDimensions: function () {
     return this._updateMap();
   },
-  updateMapType: function updateMapType() {
+  updateMapType: function () {
     return this._updateMap();
   },
-  updateBounds: function updateBounds() {
+  updateBounds: function () {
     return Promise.resolve();
   },
-  updateCenter: function updateCenter() {
+  updateCenter: function () {
     return this._updateMap();
   },
-  updateZoom: function updateZoom() {
+  updateZoom: function () {
     return this._updateMap();
   },
-  updateControls: function updateControls() {
+  updateControls: function () {
     return Promise.resolve();
   },
-  addMarkers: function addMarkers(options) {
-    var that = this;
+  addMarkers: function (options) {
+    const that = this;
     return this._updateMap().then(function (result) {
       (0, _iterator.each)(options, function (_, options) {
         that._fireMarkerAddedAction({
@@ -46,8 +46,8 @@ var GoogleStaticProvider = _provider.default.inherit({
       return result;
     });
   },
-  removeMarkers: function removeMarkers(options) {
-    var that = this;
+  removeMarkers: function (options) {
+    const that = this;
     return this._updateMap().then(function (result) {
       (0, _iterator.each)(options, function (_, options) {
         that._fireMarkerRemovedAction({
@@ -57,11 +57,11 @@ var GoogleStaticProvider = _provider.default.inherit({
       return result;
     });
   },
-  adjustViewport: function adjustViewport() {
+  adjustViewport: function () {
     return Promise.resolve();
   },
-  addRoutes: function addRoutes(options) {
-    var that = this;
+  addRoutes: function (options) {
+    const that = this;
     return this._updateMap().then(function (result) {
       (0, _iterator.each)(options, function (_, options) {
         that._fireRouteAddedAction({
@@ -71,8 +71,8 @@ var GoogleStaticProvider = _provider.default.inherit({
       return result;
     });
   },
-  removeRoutes: function removeRoutes(options) {
-    var that = this;
+  removeRoutes: function (options) {
+    const that = this;
     return this._updateMap().then(function (result) {
       (0, _iterator.each)(options, function (_, options) {
         that._fireRouteRemovedAction({
@@ -82,31 +82,31 @@ var GoogleStaticProvider = _provider.default.inherit({
       return result;
     });
   },
-  clean: function clean() {
+  clean: function () {
     this._$container.css('backgroundImage', 'none');
     _events_engine.default.off(this._$container, this._addEventNamespace(_click.name));
     return Promise.resolve();
   },
-  mapRendered: function mapRendered() {
+  mapRendered: function () {
     return true;
   },
-  _updateMap: function _updateMap() {
-    var key = this._keyOption('googleStatic');
-    var $container = this._$container;
-    var requestOptions = ['sensor=false', 'size=' + Math.round((0, _size.getWidth)($container)) + 'x' + Math.round((0, _size.getHeight)($container)), 'maptype=' + this._option('type'), 'center=' + this._locationToString(this._option('center')), 'zoom=' + this._option('zoom'), this._markersSubstring()];
+  _updateMap: function () {
+    const key = this._keyOption('googleStatic');
+    const $container = this._$container;
+    const requestOptions = ['sensor=false', 'size=' + Math.round((0, _size.getWidth)($container)) + 'x' + Math.round((0, _size.getHeight)($container)), 'maptype=' + this._option('type'), 'center=' + this._locationToString(this._option('center')), 'zoom=' + this._option('zoom'), this._markersSubstring()];
     requestOptions.push.apply(requestOptions, this._routeSubstrings());
     if (key) {
       requestOptions.push('key=' + key);
     }
-    var request = GOOGLE_STATIC_URL + requestOptions.join('&');
+    const request = GOOGLE_STATIC_URL + requestOptions.join('&');
     this._$container.css('background', 'url("' + request + '") no-repeat 0 0');
     this._attachClickEvent();
     return Promise.resolve(true);
   },
-  _markersSubstring: function _markersSubstring() {
-    var that = this;
-    var markers = [];
-    var markerIcon = this._option('markerIconSrc');
+  _markersSubstring: function () {
+    const that = this;
+    const markers = [];
+    const markerIcon = this._option('markerIconSrc');
     if (markerIcon) {
       markers.push('icon:' + markerIcon);
     }
@@ -115,14 +115,14 @@ var GoogleStaticProvider = _provider.default.inherit({
     });
     return 'markers=' + markers.join('|');
   },
-  _routeSubstrings: function _routeSubstrings() {
-    var that = this;
-    var routes = [];
+  _routeSubstrings: function () {
+    const that = this;
+    const routes = [];
     (0, _iterator.each)(this._option('routes'), function (_, route) {
-      var color = new _color.default(route.color || that._defaultRouteColor()).toHex().replace('#', '0x');
-      var opacity = Math.round((route.opacity || that._defaultRouteOpacity()) * 255).toString(16);
-      var width = route.weight || that._defaultRouteWeight();
-      var locations = [];
+      const color = new _color.default(route.color || that._defaultRouteColor()).toHex().replace('#', '0x');
+      const opacity = Math.round((route.opacity || that._defaultRouteOpacity()) * 255).toString(16);
+      const width = route.weight || that._defaultRouteWeight();
+      const locations = [];
       (0, _iterator.each)(route.locations, function (_, routePoint) {
         locations.push(that._locationToString(routePoint));
       });
@@ -130,9 +130,9 @@ var GoogleStaticProvider = _provider.default.inherit({
     });
     return routes;
   },
-  _attachClickEvent: function _attachClickEvent() {
-    var that = this;
-    var eventName = this._addEventNamespace(_click.name);
+  _attachClickEvent: function () {
+    const that = this;
+    const eventName = this._addEventNamespace(_click.name);
     _events_engine.default.off(this._$container, eventName);
     _events_engine.default.on(this._$container, eventName, function (e) {
       that._fireClickAction({

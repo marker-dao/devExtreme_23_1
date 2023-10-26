@@ -15,9 +15,9 @@ var _type = require("../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var window = (0, _window.getWindow)();
-var FILE_CHUNK_BLOB_NAME = 'chunk';
-var FILE_SYSTEM_COMMNAD = {
+const window = (0, _window.getWindow)();
+const FILE_CHUNK_BLOB_NAME = 'chunk';
+const FILE_SYSTEM_COMMNAD = {
   GET_DIR_CONTENTS: 'GetDirContents',
   CREATE_DIR: 'CreateDir',
   RENAME: 'Rename',
@@ -28,11 +28,11 @@ var FILE_SYSTEM_COMMNAD = {
   ABORT_UPLOAD: 'AbortUpload',
   DOWLOAD: 'Download'
 };
-var REQUEST_METHOD = {
+const REQUEST_METHOD = {
   GET: 'GET',
   POST: 'POST'
 };
-var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
+let RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   _inheritsLoose(RemoteFileSystemProvider, _FileSystemProviderBa);
   function RemoteFileSystemProvider(options) {
     var _this;
@@ -47,13 +47,10 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   }
   var _proto = RemoteFileSystemProvider.prototype;
   _proto.getItems = function getItems(parentDir) {
-    var _this2 = this;
-    var pathInfo = parentDir.getFullPathInfo();
+    const pathInfo = parentDir.getFullPathInfo();
     return this._executeRequest(FILE_SYSTEM_COMMNAD.GET_DIR_CONTENTS, {
       pathInfo
-    }).then(function (result) {
-      return _this2._convertDataObjectsToFileItems(result.result, pathInfo);
-    });
+    }).then(result => this._convertDataObjectsToFileItems(result.result, pathInfo));
   };
   _proto.renameItem = function renameItem(item, name) {
     return this._executeRequest(FILE_SYSTEM_COMMNAD.RENAME, {
@@ -69,39 +66,30 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     });
   };
   _proto.deleteItems = function deleteItems(items) {
-    var _this3 = this;
-    return items.map(function (item) {
-      return _this3._executeRequest(FILE_SYSTEM_COMMNAD.REMOVE, {
-        pathInfo: item.getFullPathInfo(),
-        isDirectory: item.isDirectory
-      });
-    });
+    return items.map(item => this._executeRequest(FILE_SYSTEM_COMMNAD.REMOVE, {
+      pathInfo: item.getFullPathInfo(),
+      isDirectory: item.isDirectory
+    }));
   };
   _proto.moveItems = function moveItems(items, destinationDirectory) {
-    var _this4 = this;
-    return items.map(function (item) {
-      return _this4._executeRequest(FILE_SYSTEM_COMMNAD.MOVE, {
-        sourcePathInfo: item.getFullPathInfo(),
-        sourceIsDirectory: item.isDirectory,
-        destinationPathInfo: destinationDirectory.getFullPathInfo()
-      });
-    });
+    return items.map(item => this._executeRequest(FILE_SYSTEM_COMMNAD.MOVE, {
+      sourcePathInfo: item.getFullPathInfo(),
+      sourceIsDirectory: item.isDirectory,
+      destinationPathInfo: destinationDirectory.getFullPathInfo()
+    }));
   };
   _proto.copyItems = function copyItems(items, destinationFolder) {
-    var _this5 = this;
-    return items.map(function (item) {
-      return _this5._executeRequest(FILE_SYSTEM_COMMNAD.COPY, {
-        sourcePathInfo: item.getFullPathInfo(),
-        sourceIsDirectory: item.isDirectory,
-        destinationPathInfo: destinationFolder.getFullPathInfo()
-      });
-    });
+    return items.map(item => this._executeRequest(FILE_SYSTEM_COMMNAD.COPY, {
+      sourcePathInfo: item.getFullPathInfo(),
+      sourceIsDirectory: item.isDirectory,
+      destinationPathInfo: destinationFolder.getFullPathInfo()
+    }));
   };
   _proto.uploadFileChunk = function uploadFileChunk(fileData, chunksInfo, destinationDirectory) {
     if (chunksInfo.chunkIndex === 0) {
       chunksInfo.customData.uploadId = new _guid.default();
     }
-    var args = {
+    const args = {
       destinationPathInfo: destinationDirectory.getFullPathInfo(),
       chunkMetadata: JSON.stringify({
         UploadId: chunksInfo.customData.uploadId,
@@ -111,7 +99,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
         FileSize: fileData.size
       })
     };
-    var ajaxSettings = {
+    const ajaxSettings = {
       url: this._endpointUrl,
       headers: this._requestHeaders || {},
       method: REQUEST_METHOD.POST,
@@ -129,9 +117,9 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
       xhrFields: {},
       cache: false
     };
-    var deferred = new _deferred.Deferred();
+    const deferred = new _deferred.Deferred();
     this._beforeSendInternal(ajaxSettings);
-    _ajax.default.sendRequest(ajaxSettings).done(function (result) {
+    _ajax.default.sendRequest(ajaxSettings).done(result => {
       !result.success && deferred.reject(result) || deferred.resolve();
     }).fail(deferred.reject);
     return deferred.promise();
@@ -142,14 +130,14 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     });
   };
   _proto.downloadItems = function downloadItems(items) {
-    var args = this._getDownloadArgs(items);
-    var $form = (0, _renderer.default)('<form>').css({
+    const args = this._getDownloadArgs(items);
+    const $form = (0, _renderer.default)('<form>').css({
       display: 'none'
     }).attr({
       method: REQUEST_METHOD.POST,
       action: args.url
     });
-    var formDataEntries = {
+    const formDataEntries = {
       command: args.command,
       arguments: args.arguments
     };
@@ -157,13 +145,11 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     this._appendFormDataInputsToForm(formDataEntries, $form);
     $form.appendTo('body');
     _events_engine.default.trigger($form, 'submit');
-    setTimeout(function () {
-      return $form.remove();
-    });
+    setTimeout(() => $form.remove());
   };
   _proto.getItemsContent = function getItemsContent(items) {
-    var args = this._getDownloadArgs(items);
-    var ajaxSettings = {
+    const args = this._getDownloadArgs(items);
+    const ajaxSettings = {
       url: args.url,
       headers: this._requestHeaders || {},
       method: REQUEST_METHOD.POST,
@@ -184,13 +170,11 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     return _ajax.default.sendRequest(ajaxSettings);
   };
   _proto._getDownloadArgs = function _getDownloadArgs(items) {
-    var pathInfoList = items.map(function (item) {
-      return item.getFullPathInfo();
-    });
-    var args = {
+    const pathInfoList = items.map(item => item.getFullPathInfo());
+    const args = {
       pathInfoList
     };
-    var argsStr = JSON.stringify(args);
+    const argsStr = JSON.stringify(args);
     return {
       url: this._endpointUrl,
       arguments: argsStr,
@@ -198,14 +182,12 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     };
   };
   _proto._getItemsIds = function _getItemsIds(items) {
-    return items.map(function (it) {
-      return it.relativeName;
-    });
+    return items.map(it => it.relativeName);
   };
   _proto._executeRequest = function _executeRequest(command, args) {
-    var method = command === FILE_SYSTEM_COMMNAD.GET_DIR_CONTENTS ? REQUEST_METHOD.GET : REQUEST_METHOD.POST;
-    var deferred = new _deferred.Deferred();
-    var ajaxSettings = {
+    const method = command === FILE_SYSTEM_COMMNAD.GET_DIR_CONTENTS ? REQUEST_METHOD.GET : REQUEST_METHOD.POST;
+    const deferred = new _deferred.Deferred();
+    const ajaxSettings = {
       url: this._getEndpointUrl(command, args),
       headers: this._requestHeaders || {},
       method,
@@ -215,11 +197,9 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
       cache: false
     };
     this._beforeSendInternal(ajaxSettings);
-    _ajax.default.sendRequest(ajaxSettings).then(function (result) {
+    _ajax.default.sendRequest(ajaxSettings).then(result => {
       !result.success && deferred.reject(result) || deferred.resolve(result);
-    }, function (e) {
-      return deferred.reject(e);
-    });
+    }, e => deferred.reject(e));
     return deferred.promise();
   };
   _proto._beforeSubmitInternal = function _beforeSubmitInternal(formDataEntries) {
@@ -231,7 +211,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   };
   _proto._beforeSendInternal = function _beforeSendInternal(ajaxSettings) {
     if ((0, _type.isFunction)(this._beforeAjaxSend)) {
-      var ajaxArguments = {
+      const ajaxArguments = {
         headers: ajaxSettings.headers,
         formData: ajaxSettings.data,
         xhrFields: ajaxSettings.xhrFields
@@ -252,8 +232,8 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     }
   };
   _proto._createFormData = function _createFormData(formDataEntries) {
-    var formData = new window.FormData();
-    for (var entryName in formDataEntries) {
+    const formData = new window.FormData();
+    for (const entryName in formDataEntries) {
       if (Object.prototype.hasOwnProperty.call(formDataEntries, entryName) && (0, _type.isDefined)(formDataEntries[entryName])) {
         formData.append(entryName, formDataEntries[entryName]);
       }
@@ -261,7 +241,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     return formData;
   };
   _proto._appendFormDataInputsToForm = function _appendFormDataInputsToForm(formDataEntries, formElement) {
-    for (var entryName in formDataEntries) {
+    for (const entryName in formDataEntries) {
       if (Object.prototype.hasOwnProperty.call(formDataEntries, entryName) && (0, _type.isDefined)(formDataEntries[entryName])) {
         (0, _renderer.default)('<input>').attr({
           type: 'hidden',
@@ -272,19 +252,19 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     }
   };
   _proto._getEndpointUrl = function _getEndpointUrl(command, args) {
-    var queryString = this._getQueryString({
+    const queryString = this._getQueryString({
       command,
       arguments: JSON.stringify(args)
     });
-    var separator = this._endpointUrl && this._endpointUrl.indexOf('?') > 0 ? '&' : '?';
+    const separator = this._endpointUrl && this._endpointUrl.indexOf('?') > 0 ? '&' : '?';
     return this._endpointUrl + separator + queryString;
   };
   _proto._getQueryString = function _getQueryString(params) {
-    var pairs = [];
-    var keys = Object.keys(params);
-    for (var i = 0; i < keys.length; i++) {
-      var key = keys[i];
-      var value = params[key];
+    const pairs = [];
+    const keys = Object.keys(params);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      let value = params[key];
       if (value === undefined) {
         continue;
       }
@@ -294,16 +274,15 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
       if (Array.isArray(value)) {
         this._processQueryStringArrayParam(key, value, pairs);
       } else {
-        var pair = this._getQueryStringPair(key, value);
+        const pair = this._getQueryStringPair(key, value);
         pairs.push(pair);
       }
     }
     return pairs.join('&');
   };
   _proto._processQueryStringArrayParam = function _processQueryStringArrayParam(key, array, pairs) {
-    var _this6 = this;
-    (0, _iterator.each)(array, function (_, item) {
-      var pair = _this6._getQueryStringPair(key, item);
+    (0, _iterator.each)(array, (_, item) => {
+      const pair = this._getQueryStringPair(key, item);
       pairs.push(pair);
     });
   };
@@ -311,7 +290,7 @@ var RemoteFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     return encodeURIComponent(key) + '=' + encodeURIComponent(value);
   };
   _proto._hasSubDirs = function _hasSubDirs(dataObj) {
-    var hasSubDirs = this._hasSubDirsGetter(dataObj);
+    const hasSubDirs = this._hasSubDirsGetter(dataObj);
     return typeof hasSubDirs === 'boolean' ? hasSubDirs : true;
   };
   _proto._getKeyExpr = function _getKeyExpr(options) {

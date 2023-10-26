@@ -71,7 +71,7 @@ export var Component = Class.inherit({
     this._disposingCallbacks = _disposingCallbacks || Callbacks();
     this.postponedOperations = new PostponedOperations();
     this._createOptions(options);
-    license.verifyLicense(Config().licenseKey);
+    license.validateLicense(Config().licenseKey);
   },
   _createOptions(options) {
     this.beginUpdate();

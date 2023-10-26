@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/m_aggregate_calculator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,7 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @ts-expect-error
 
 function depthFirstSearch(i, depth, root, callback) {
-  var j = 0;
+  let j = 0;
   if (i < depth) {
     for (; j < root.items.length; j++) {
       depthFirstSearch(i + 1, depth, root.items[j], callback);
@@ -35,11 +35,11 @@ function depthFirstSearch(i, depth, root, callback) {
 }
 // NOTE: https://github.com/jquery/jquery/blame/master/src/core.js#L392
 function map(array, callback) {
-  var i;
+  let i;
   if ('map' in array) {
     return array.map(callback);
   }
-  var result = new Array(array.length);
+  const result = new Array(array.length);
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (i in array) {
     result[i] = callback(array[i], i);
@@ -53,9 +53,11 @@ function isCount(aggregator) {
   return aggregator === _utils.aggregators.count;
 }
 function normalizeAggregate(aggregate) {
-  var selector = (0, _data.compileGetter)(aggregate.selector);
-  var skipEmptyValues = 'skipEmptyValues' in aggregate ? aggregate.skipEmptyValues : true;
-  var aggregator = aggregate.aggregator;
+  const selector = (0, _data.compileGetter)(aggregate.selector);
+  const skipEmptyValues = 'skipEmptyValues' in aggregate ? aggregate.skipEmptyValues : true;
+  let {
+    aggregator
+  } = aggregate;
   if (typeof aggregator === 'string') {
     aggregator = _utils.aggregators[aggregator];
     if (!aggregator) {
@@ -92,13 +94,13 @@ var _default = _class.default.inherit({
     return this._totals;
   },
   _aggregate(aggregates, data, container) {
-    var length = data.items ? data.items.length : 0;
-    for (var i = 0; i < aggregates.length; i++) {
+    const length = data.items ? data.items.length : 0;
+    for (let i = 0; i < aggregates.length; i++) {
       if (isCount(aggregates[i].aggregator)) {
         container[i] = (container[i] || 0) + length;
         continue;
       }
-      for (var j = 0; j < length; j++) {
+      for (let j = 0; j < length; j++) {
         this._accumulate(i, aggregates[i], container, data.items[j]);
       }
     }
@@ -110,7 +112,7 @@ var _default = _class.default.inherit({
     if (level === this._groupLevel) {
       this._aggregate(this._totalAggregates, data, this._totals);
     } else {
-      for (var i = 0; i < data.items.length; i++) {
+      for (let i = 0; i < data.items.length; i++) {
         this._calculateTotals(level + 1, data.items[i]);
       }
     }
@@ -119,17 +121,17 @@ var _default = _class.default.inherit({
     }
   },
   _calculateGroups(root) {
-    var maxLevel = this._groupLevel;
-    var currentLevel = maxLevel + 1;
-    var seedFn = this._seed.bind(this, this._groupAggregates);
-    var stepFn = this._aggregate.bind(this, this._groupAggregates);
-    var finalizeFn = this._finalize.bind(this, this._groupAggregates);
+    const maxLevel = this._groupLevel;
+    let currentLevel = maxLevel + 1;
+    const seedFn = this._seed.bind(this, this._groupAggregates);
+    const stepFn = this._aggregate.bind(this, this._groupAggregates);
+    const finalizeFn = this._finalize.bind(this, this._groupAggregates);
     function aggregator(node) {
       node.aggregates = seedFn(currentLevel - 1);
       if (currentLevel === maxLevel) {
         stepFn(node, node.aggregates);
       } else {
-        depthFirstSearch(currentLevel, maxLevel, node, function (innerNode) {
+        depthFirstSearch(currentLevel, maxLevel, node, innerNode => {
           stepFn(innerNode, node.aggregates);
         });
       }
@@ -140,16 +142,22 @@ var _default = _class.default.inherit({
     }
   },
   _seed(aggregates, groupIndex) {
-    return map(aggregates, function (aggregate) {
-      var aggregator = aggregate.aggregator;
-      var seed = 'seed' in aggregator ? (0, _type.isFunction)(aggregator.seed) ? aggregator.seed(groupIndex) : aggregator.seed : NaN;
+    return map(aggregates, aggregate => {
+      const {
+        aggregator
+      } = aggregate;
+      const seed = 'seed' in aggregator ? (0, _type.isFunction)(aggregator.seed) ? aggregator.seed(groupIndex) : aggregator.seed : NaN;
       return seed;
     });
   },
   _accumulate(aggregateIndex, aggregate, results, item) {
-    var value = aggregate.selector(item);
-    var aggregator = aggregate.aggregator;
-    var skipEmptyValues = aggregate.skipEmptyValues;
+    const value = aggregate.selector(item);
+    const {
+      aggregator
+    } = aggregate;
+    const {
+      skipEmptyValues
+    } = aggregate;
     if (skipEmptyValues && isEmpty(value)) {
       return;
     }
@@ -160,8 +168,8 @@ var _default = _class.default.inherit({
     }
   },
   _finalize(aggregates, results) {
-    return map(aggregates, function (aggregate, index) {
-      var fin = aggregate.aggregator.finalize;
+    return map(aggregates, (aggregate, index) => {
+      const fin = aggregate.aggregator.finalize;
       return fin ? fin(results[index]) : results[index];
     });
   }

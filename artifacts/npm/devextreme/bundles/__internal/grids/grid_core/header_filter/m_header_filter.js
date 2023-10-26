@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/header_filter/m_header_filter.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -33,7 +33,7 @@ var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_header_filter_core = require("./m_header_filter_core");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var DATE_INTERVAL_FORMATS = {
+const DATE_INTERVAL_FORMATS = {
   month(value) {
     return _date.default.getMonthNames()[value - 1];
   },
@@ -44,14 +44,14 @@ var DATE_INTERVAL_FORMATS = {
 function ungroupUTCDates(items, dateParts, dates) {
   dateParts = dateParts || [];
   dates = dates || [];
-  items.forEach(function (item) {
+  items.forEach(item => {
     if ((0, _type.isDefined)(item.key)) {
-      var isMonthPart = dateParts.length === 1;
+      const isMonthPart = dateParts.length === 1;
       dateParts.push(isMonthPart ? item.key - 1 : item.key);
       if (item.items) {
         ungroupUTCDates(item.items, dateParts, dates);
       } else {
-        var date = new Date(Date.UTC.apply(Date, dateParts));
+        const date = new Date(Date.UTC.apply(Date, dateParts));
         dates.push(date);
       }
       dateParts.pop();
@@ -62,12 +62,10 @@ function ungroupUTCDates(items, dateParts, dates) {
   return dates;
 }
 function convertDataFromUTCToLocal(data, column) {
-  var dates = ungroupUTCDates(data);
-  var query = (0, _query.default)(dates);
-  var group = _m_utils.default.getHeaderFilterGroupParameters(_extends(_extends({}, column), {
-    calculateCellValue: function calculateCellValue(date) {
-      return date;
-    }
+  const dates = ungroupUTCDates(data);
+  const query = (0, _query.default)(dates);
+  const group = _m_utils.default.getHeaderFilterGroupParameters(_extends(_extends({}, column), {
+    calculateCellValue: date => date
   }));
   return _store_helper.default.queryByOptions(query, {
     group
@@ -76,23 +74,23 @@ function convertDataFromUTCToLocal(data, column) {
 function isUTCFormat(format) {
   return (format === null || format === void 0 ? void 0 : format.slice(-1)) === 'Z' || (format === null || format === void 0 ? void 0 : format.slice(-3)) === '\'Z\'';
 }
-var HeaderFilterController = _m_modules.default.ViewController.inherit(function () {
-  var getFormatOptions = function getFormatOptions(value, column, currentLevel) {
-    var groupInterval = _filtering.default.getGroupInterval(column);
-    var result = _m_utils.default.getFormatOptionsByColumn(column, 'headerFilter');
+const HeaderFilterController = _m_modules.default.ViewController.inherit(function () {
+  const getFormatOptions = function (value, column, currentLevel) {
+    const groupInterval = _filtering.default.getGroupInterval(column);
+    const result = _m_utils.default.getFormatOptionsByColumn(column, 'headerFilter');
     if (groupInterval) {
       result.groupInterval = groupInterval[currentLevel];
       if (_m_utils.default.isDateType(column.dataType)) {
         result.format = DATE_INTERVAL_FORMATS[groupInterval[currentLevel]];
       } else if (column.dataType === 'number') {
         result.getDisplayFormat = function () {
-          var formatOptions = {
+          const formatOptions = {
             format: column.format,
             target: 'headerFilter'
           };
-          var firstValueText = _m_utils.default.formatValue(value, formatOptions);
-          var secondValue = value + groupInterval[currentLevel];
-          var secondValueText = _m_utils.default.formatValue(secondValue, formatOptions);
+          const firstValueText = _m_utils.default.formatValue(value, formatOptions);
+          const secondValue = value + groupInterval[currentLevel];
+          const secondValueText = _m_utils.default.formatValue(secondValue, formatOptions);
           return firstValueText && secondValueText ? "".concat(firstValueText, " - ").concat(secondValueText) : '';
         };
       }
@@ -106,10 +104,10 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       this._headerFilterView = this.getView('headerFilterView');
     },
     _updateSelectedState(items, column) {
-      var i = items.length;
-      var isExclude = column.filterType === 'exclude';
+      let i = items.length;
+      const isExclude = column.filterType === 'exclude';
       while (i--) {
-        var item = items[i];
+        const item = items[i];
         if ('items' in items[i]) {
           this._updateSelectedState(items[i].items, column);
         }
@@ -117,12 +115,20 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       }
     },
     _normalizeGroupItem(item, currentLevel, options) {
-      var value;
-      var displayValue;
-      var path = options.path;
-      var valueSelector = options.valueSelector;
-      var displaySelector = options.displaySelector;
-      var column = options.column;
+      let value;
+      let displayValue;
+      const {
+        path
+      } = options;
+      const {
+        valueSelector
+      } = options;
+      const {
+        displaySelector
+      } = options;
+      const {
+        column
+      } = options;
       if (valueSelector && displaySelector) {
         value = valueSelector(item);
         displayValue = displaySelector(item);
@@ -147,26 +153,32 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       return item;
     },
     getHeaderItemText(displayValue, column, currentLevel, headerFilterOptions) {
-      var text = _m_utils.default.formatValue(displayValue, getFormatOptions(displayValue, column, currentLevel));
+      let text = _m_utils.default.formatValue(displayValue, getFormatOptions(displayValue, column, currentLevel));
       if (!text) {
         text = headerFilterOptions.texts.emptyValue;
       }
       return text;
     },
     _processGroupItems(groupItems, currentLevel, path, options) {
-      var that = this;
-      var displaySelector;
-      var valueSelector;
-      var column = options.column;
-      var lookup = column.lookup;
-      var level = options.level;
+      const that = this;
+      let displaySelector;
+      let valueSelector;
+      const {
+        column
+      } = options;
+      const {
+        lookup
+      } = column;
+      const {
+        level
+      } = options;
       path = path || [];
       currentLevel = currentLevel || 0;
       if (lookup) {
         displaySelector = (0, _data.compileGetter)(lookup.displayExpr);
         valueSelector = (0, _data.compileGetter)(lookup.valueExpr);
       }
-      for (var i = 0; i < groupItems.length; i++) {
+      for (let i = 0; i < groupItems.length; i++) {
         groupItems[i] = that._normalizeGroupItem(groupItems[i], currentLevel, {
           column: options.column,
           headerFilterOptions: options.headerFilterOptions,
@@ -186,13 +198,13 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
     },
     getDataSource(column) {
       var _a;
-      var dataSource = this._dataController.dataSource();
-      var remoteGrouping = dataSource === null || dataSource === void 0 ? void 0 : dataSource.remoteOperations().grouping;
-      var group = _m_utils.default.getHeaderFilterGroupParameters(column, remoteGrouping);
-      var headerFilterDataSource = (_a = column.headerFilter) === null || _a === void 0 ? void 0 : _a.dataSource;
-      var headerFilterOptions = this.option('headerFilter');
-      var isLookup = false;
-      var options = {
+      const dataSource = this._dataController.dataSource();
+      const remoteGrouping = dataSource === null || dataSource === void 0 ? void 0 : dataSource.remoteOperations().grouping;
+      const group = _m_utils.default.getHeaderFilterGroupParameters(column, remoteGrouping);
+      const headerFilterDataSource = (_a = column.headerFilter) === null || _a === void 0 ? void 0 : _a.dataSource;
+      const headerFilterOptions = this.option('headerFilter');
+      let isLookup = false;
+      const options = {
         component: this.component
       };
       if (!dataSource) return;
@@ -202,28 +214,28 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
         isLookup = true;
         if (this.option('syncLookupFilterValues')) {
           this._currentColumn = column;
-          var filter = this._dataController.getCombinedFilter();
+          const filter = this._dataController.getCombinedFilter();
           this._currentColumn = null;
           options.dataSource = _m_utils.default.getWrappedLookupDataSource(column, dataSource, filter);
         } else {
           options.dataSource = _m_utils.default.normalizeLookupDataSource(column.lookup);
         }
       } else {
-        var cutoffLevel = Array.isArray(group) ? group.length - 1 : 0;
+        const cutoffLevel = Array.isArray(group) ? group.length - 1 : 0;
         this._currentColumn = column;
-        var _filter = this._dataController.getCombinedFilter();
+        const filter = this._dataController.getCombinedFilter();
         this._currentColumn = null;
         options.dataSource = {
-          filter: _filter,
+          filter,
           group,
           useDefaultSearch: true,
-          load: function load(options) {
+          load: options => {
             // @ts-expect-error Deferred ctor.
-            var d = new _deferred.Deferred();
+            const d = new _deferred.Deferred();
             // TODO remove in 16.1
             options.dataField = column.dataField || column.name;
-            dataSource.load(options).done(function (data) {
-              var convertUTCDates = remoteGrouping && isUTCFormat(column.serializationFormat) && cutoffLevel > 3;
+            dataSource.load(options).done(data => {
+              const convertUTCDates = remoteGrouping && isUTCFormat(column.serializationFormat) && cutoffLevel > 3;
               if (convertUTCDates) {
                 data = convertDataFromUTCToLocal(data, column);
               }
@@ -241,14 +253,12 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       if ((0, _type.isFunction)(headerFilterDataSource)) {
         headerFilterDataSource.call(column, options);
       }
-      var origPostProcess = options.dataSource.postProcess;
-      var that = this;
+      const origPostProcess = options.dataSource.postProcess;
+      const that = this;
       options.dataSource.postProcess = function (data) {
-        var items = data;
+        let items = data;
         if (isLookup) {
-          items = items.filter(function (item) {
-            return item[column.lookup.valueExpr] !== null;
-          });
+          items = items.filter(item => item[column.lookup.valueExpr] !== null);
           if (this.pageIndex() === 0 && !this.searchValue()) {
             items = items.slice(0);
             items.unshift(null);
@@ -269,12 +279,12 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       return this._currentColumn;
     },
     showHeaderFilterMenu(columnIndex, isGroupPanel) {
-      var columnsController = this._columnsController;
-      var column = (0, _extend.extend)(true, {}, this._columnsController.getColumns()[columnIndex]);
+      const columnsController = this._columnsController;
+      const column = (0, _extend.extend)(true, {}, this._columnsController.getColumns()[columnIndex]);
       if (column) {
-        var visibleIndex = columnsController.getVisibleIndex(columnIndex);
-        var view = isGroupPanel ? this.getView('headerPanel') : this.getView('columnHeadersView');
-        // @ts-expect-error TODO: Check this code, how it works in runtime without error?
+        const visibleIndex = columnsController.getVisibleIndex(columnIndex);
+        const view = isGroupPanel ? this.getView('headerPanel') : this.getView('columnHeadersView');
+        // eslint-disable-next-line no-var, vars-on-top
         var $columnElement = $columnElement || view.getColumnElements().eq(isGroupPanel ? column.groupIndex : visibleIndex);
         this.showHeaderFilterMenuBase({
           columnElement: $columnElement,
@@ -290,31 +300,32 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
       }
     },
     showHeaderFilterMenuBase(options) {
-      var _this = this;
-      var that = this;
-      var column = options.column;
+      const that = this;
+      const {
+        column
+      } = options;
       if (column) {
-        var groupInterval = _filtering.default.getGroupInterval(column);
-        var dataSource = that._dataController.dataSource();
-        var remoteFiltering = dataSource && dataSource.remoteOperations().filtering;
-        var previousOnHidden = options.onHidden;
+        const groupInterval = _filtering.default.getGroupInterval(column);
+        const dataSource = that._dataController.dataSource();
+        const remoteFiltering = dataSource && dataSource.remoteOperations().filtering;
+        const previousOnHidden = options.onHidden;
         (0, _extend.extend)(options, column, {
           type: groupInterval && groupInterval.length > 1 ? 'tree' : 'list',
           remoteFiltering,
           onShowing(e) {
-            var dxResizableInstance = e.component.$overlayContent().dxResizable('instance');
-            dxResizableInstance && dxResizableInstance.option('onResizeEnd', function (e) {
-              var columnsController = that.getController('columns');
-              var headerFilterByColumn = columnsController.columnOption(options.dataField, 'headerFilter');
+            const dxResizableInstance = e.component.$overlayContent().dxResizable('instance');
+            dxResizableInstance && dxResizableInstance.option('onResizeEnd', e => {
+              const columnsController = that.getController('columns');
+              let headerFilterByColumn = columnsController.columnOption(options.dataField, 'headerFilter');
               headerFilterByColumn = headerFilterByColumn || {};
               headerFilterByColumn.width = e.width;
               headerFilterByColumn.height = e.height;
               columnsController.columnOption(options.dataField, 'headerFilter', headerFilterByColumn, true);
             });
           },
-          onHidden: function onHidden() {
+          onHidden: () => {
             previousOnHidden === null || previousOnHidden === void 0 ? void 0 : previousOnHidden();
-            (0, _accessibility.restoreFocus)(_this);
+            (0, _accessibility.restoreFocus)(this);
           }
         });
         options.dataSource = that.getDataSource(options);
@@ -330,11 +341,13 @@ var HeaderFilterController = _m_modules.default.ViewController.inherit(function 
     }
   };
 }());
-var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_core.headerFilterMixin, {
+const ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_core.headerFilterMixin, {
   _renderCellContent($cell, options) {
-    var that = this;
-    var $headerFilterIndicator;
-    var column = options.column;
+    const that = this;
+    let $headerFilterIndicator;
+    const {
+      column
+    } = options;
     if (!column.command && (0, _m_header_filter_core.allowHeaderFiltering)(column) && that.option('headerFilter.visible') && options.rowType === 'header') {
       $headerFilterIndicator = that._applyColumnState({
         name: 'headerFilter',
@@ -347,17 +360,16 @@ var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_fi
     this.callBase.apply(this, arguments);
   },
   _subscribeToIndicatorEvent($indicator, column, indicatorName) {
-    var _this2 = this;
     if (indicatorName === 'headerFilter') {
-      _events_engine.default.on($indicator, _click.name, this.createAction(function (e) {
+      _events_engine.default.on($indicator, _click.name, this.createAction(e => {
         e.event.stopPropagation();
-        (0, _accessibility.saveFocusedElementInfo)($indicator, _this2);
-        _this2.getController('headerFilter').showHeaderFilterMenu(column.index, false);
+        (0, _accessibility.saveFocusedElementInfo)($indicator, this);
+        this.getController('headerFilter').showHeaderFilterMenu(column.index, false);
       }));
     }
   },
   _updateIndicator($cell, column, indicatorName) {
-    var $indicator = this.callBase($cell, column, indicatorName);
+    const $indicator = this.callBase($cell, column, indicatorName);
     $indicator && this._subscribeToIndicatorEvent($indicator, column, indicatorName);
   },
   _updateHeaderFilterIndicators() {
@@ -369,7 +381,9 @@ var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_fi
     return true;
   },
   _columnOptionChanged(e) {
-    var optionNames = e.optionNames;
+    const {
+      optionNames
+    } = e;
     if (_m_utils.default.checkChanges(optionNames, ['filterValues', 'filterType'])) {
       if (this._needUpdateFilterIndicators()) {
         this._updateHeaderFilterIndicators();
@@ -379,11 +393,11 @@ var ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_fi
     this.callBase(e);
   }
 });
-var HeaderPanelHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_core.headerFilterMixin, {
+const HeaderPanelHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_core.headerFilterMixin, {
   _createGroupPanelItem($rootElement, groupColumn) {
-    var that = this;
-    var $item = that.callBase.apply(that, arguments);
-    var $headerFilterIndicator;
+    const that = this;
+    const $item = that.callBase.apply(that, arguments);
+    let $headerFilterIndicator;
     if (!groupColumn.command && (0, _m_header_filter_core.allowHeaderFiltering)(groupColumn) && that.option('headerFilter.visible')) {
       $headerFilterIndicator = that._applyColumnState({
         name: 'headerFilter',
@@ -395,8 +409,10 @@ var HeaderPanelHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_c
         },
         showColumnLines: true
       });
-      $headerFilterIndicator && _events_engine.default.on($headerFilterIndicator, _click.name, that.createAction(function (e) {
-        var event = e.event;
+      $headerFilterIndicator && _events_engine.default.on($headerFilterIndicator, _click.name, that.createAction(e => {
+        const {
+          event
+        } = e;
         event.stopPropagation();
         that.getController('headerFilter').showHeaderFilterMenu(groupColumn.index, true);
       }));
@@ -407,7 +423,7 @@ var HeaderPanelHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_c
 function invertFilterExpression(filter) {
   return ['!', filter];
 }
-var DataControllerFilterRowExtender = {
+const DataControllerFilterRowExtender = {
   skipCalculateColumnFilters() {
     return false;
   },
@@ -415,19 +431,19 @@ var DataControllerFilterRowExtender = {
     if (this.skipCalculateColumnFilters()) {
       return this.callBase();
     }
-    var that = this;
-    var filters = [that.callBase()];
-    var columns = that._columnsController.getVisibleColumns(null, true);
-    var headerFilterController = that.getController('headerFilter');
-    var currentColumn = headerFilterController.getCurrentColumn();
-    (0, _iterator.each)(columns, function (_, column) {
-      var filter;
+    const that = this;
+    const filters = [that.callBase()];
+    const columns = that._columnsController.getVisibleColumns(null, true);
+    const headerFilterController = that.getController('headerFilter');
+    const currentColumn = headerFilterController.getCurrentColumn();
+    (0, _iterator.each)(columns, (_, column) => {
+      let filter;
       if (currentColumn && currentColumn.index === column.index) {
         return;
       }
       if ((0, _m_header_filter_core.allowHeaderFiltering)(column) && column.calculateFilterExpression && Array.isArray(column.filterValues) && column.filterValues.length) {
-        var filterValues = [];
-        (0, _iterator.each)(column.filterValues, function (_, filterValue) {
+        let filterValues = [];
+        (0, _iterator.each)(column.filterValues, (_, filterValue) => {
           if (Array.isArray(filterValue)) {
             filter = filterValue;
           } else {
@@ -448,7 +464,7 @@ var DataControllerFilterRowExtender = {
     return _m_utils.default.combineFilters(filters);
   }
 };
-var headerFilterModule = {
+const headerFilterModule = {
   defaultOptions() {
     return {
       syncLookupFilterValues: true,

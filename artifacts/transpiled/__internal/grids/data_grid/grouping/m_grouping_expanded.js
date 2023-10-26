@@ -19,15 +19,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // @ts-expect-error
 
-var loadTotalCount = function loadTotalCount(dataSource, options) {
+const loadTotalCount = function (dataSource, options) {
   // @ts-expect-error
-  var d = new _deferred.Deferred();
-  var loadOptions = (0, _extend.extend)({
+  const d = new _deferred.Deferred();
+  const loadOptions = (0, _extend.extend)({
     skip: 0,
     take: 1,
     requireTotalCount: true
   }, options);
-  dataSource.load(loadOptions).done(function (data, extra) {
+  dataSource.load(loadOptions).done((data, extra) => {
     d.resolve(extra && extra.totalCount);
   }).fail(d.reject.bind(d));
   return d;
@@ -35,20 +35,20 @@ var loadTotalCount = function loadTotalCount(dataSource, options) {
 /// #DEBUG
 exports.loadTotalCount = loadTotalCount;
 /// #ENDDEBUG
-var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
-  var foreachCollapsedGroups = function foreachCollapsedGroups(that, callback, updateOffsets) {
-    return that.foreachGroups(function (groupInfo) {
+const GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
+  const foreachCollapsedGroups = function (that, callback, updateOffsets) {
+    return that.foreachGroups(groupInfo => {
       if (!groupInfo.isExpanded) {
         return callback(groupInfo);
       }
     }, false, false, updateOffsets, true);
   };
-  var correctSkipLoadOption = function correctSkipLoadOption(that, skip) {
-    var skipCorrection = 0;
-    var resultSkip = skip || 0;
+  const correctSkipLoadOption = function (that, skip) {
+    let skipCorrection = 0;
+    let resultSkip = skip || 0;
     if (skip) {
       // @ts-expect-error
-      foreachCollapsedGroups(that, function (groupInfo) {
+      foreachCollapsedGroups(that, groupInfo => {
         if (groupInfo.offset - skipCorrection >= skip) {
           return false;
         }
@@ -58,14 +58,14 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     }
     return resultSkip;
   };
-  var processGroupItems = function processGroupItems(that, items, path, offset, skipFirstItem, take) {
-    var removeLastItemsCount = 0;
-    var needRemoveFirstItem = false;
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
+  const processGroupItems = function (that, items, path, offset, skipFirstItem, take) {
+    let removeLastItemsCount = 0;
+    let needRemoveFirstItem = false;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
       if (item.items !== undefined) {
         path.push(item.key);
-        var groupInfo = that.findGroupInfo(path);
+        const groupInfo = that.findGroupInfo(path);
         if (groupInfo && !groupInfo.isExpanded) {
           item.collapsedItems = item.items;
           item.items = null;
@@ -78,7 +78,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
             needRemoveFirstItem = true;
           }
         } else if (item.items) {
-          var offsetInfo = processGroupItems(that, item.items, path, offset, skipFirstItem, take);
+          const offsetInfo = processGroupItems(that, item.items, path, offset, skipFirstItem, take);
           if (skipFirstItem) {
             if (offsetInfo.offset - offset > 1) {
               item.isContinuation = true;
@@ -120,25 +120,25 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       take
     };
   };
-  var pathEquals = function pathEquals(path1, path2) {
+  const pathEquals = function (path1, path2) {
     if (path1.length !== path2.length) return false;
-    for (var i = 0; i < path1.length; i++) {
+    for (let i = 0; i < path1.length; i++) {
       if (!(0, _utils.keysEqual)(null, path1[i], path2[i])) {
         return false;
       }
     }
     return true;
   };
-  var updateGroupOffsets = function updateGroupOffsets(that, items, path, offset, additionalGroupInfo) {
+  const updateGroupOffsets = function (that, items, path, offset, additionalGroupInfo) {
     if (!items) return;
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
       if ('key' in item && item.items !== undefined) {
         path.push(item.key);
         if (additionalGroupInfo && pathEquals(additionalGroupInfo.path, path) && !item.isContinuation) {
           additionalGroupInfo.offset = offset;
         }
-        var groupInfo = that.findGroupInfo(path);
+        const groupInfo = that.findGroupInfo(path);
         if (groupInfo && !item.isContinuation) {
           groupInfo.offset = offset;
         }
@@ -154,20 +154,20 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     }
     return offset;
   };
-  var removeGroupLoadOption = function removeGroupLoadOption(storeLoadOptions, loadOptions) {
+  const removeGroupLoadOption = function (storeLoadOptions, loadOptions) {
     if (loadOptions.group) {
-      var groups = _m_core.default.normalizeSortingInfo(loadOptions.group);
-      var sorts = _m_core.default.normalizeSortingInfo(storeLoadOptions.sort);
+      const groups = _m_core.default.normalizeSortingInfo(loadOptions.group);
+      const sorts = _m_core.default.normalizeSortingInfo(storeLoadOptions.sort);
       storeLoadOptions.sort = _store_helper.default.arrangeSortingInfo(groups, sorts);
       delete loadOptions.group;
     }
   };
-  var createNotGroupFilter = function createNotGroupFilter(path, storeLoadOptions, group) {
-    var groups = _m_core.default.normalizeSortingInfo(group || storeLoadOptions.group);
-    var filter = [];
-    for (var i = 0; i < path.length; i++) {
-      var filterElement = [];
-      for (var j = 0; j <= i; j++) {
+  const createNotGroupFilter = function (path, storeLoadOptions, group) {
+    const groups = _m_core.default.normalizeSortingInfo(group || storeLoadOptions.group);
+    let filter = [];
+    for (let i = 0; i < path.length; i++) {
+      const filterElement = [];
+      for (let j = 0; j <= i; j++) {
         filterElement.push([groups[j].selector, i === j ? '<>' : '=', path[j]]);
       }
       filter.push(_m_core.default.combineFilters(filterElement));
@@ -175,11 +175,11 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     filter = _m_core.default.combineFilters(filter, 'or');
     return _m_core.default.combineFilters([filter, storeLoadOptions.filter]);
   };
-  var getGroupCount = function getGroupCount(item, groupCount) {
-    var count = item.count || item.items.length;
+  const getGroupCount = function (item, groupCount) {
+    let count = item.count || item.items.length;
     if (!item.count && groupCount > 1) {
       count = 0;
-      for (var i = 0; i < item.items.length; i++) {
+      for (let i = 0; i < item.items.length; i++) {
         count += getGroupCount(item.items[i], groupCount - 1);
       }
     }
@@ -187,20 +187,24 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
   };
   return {
     handleDataLoading(options) {
-      var that = this;
-      var storeLoadOptions = options.storeLoadOptions;
-      var collapsedGroups = [];
-      var collapsedItemsCount = 0;
-      var skipFirstItem = false;
-      var take;
-      var group = options.loadOptions.group;
-      var skipCorrection = 0;
+      const that = this;
+      const {
+        storeLoadOptions
+      } = options;
+      const collapsedGroups = [];
+      let collapsedItemsCount = 0;
+      let skipFirstItem = false;
+      let take;
+      const {
+        group
+      } = options.loadOptions;
+      let skipCorrection = 0;
       removeGroupLoadOption(storeLoadOptions, options.loadOptions);
       options.group = options.group || group;
       if (options.isCustomLoading) {
         return;
       }
-      var loadOptions = (0, _extend.extend)({}, storeLoadOptions);
+      const loadOptions = (0, _extend.extend)({}, storeLoadOptions);
       loadOptions.skip = correctSkipLoadOption(that, storeLoadOptions.skip);
       if (loadOptions.skip && loadOptions.take && group) {
         loadOptions.skip--;
@@ -212,7 +216,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
         loadOptions.take++;
       }
       // @ts-expect-error
-      foreachCollapsedGroups(that, function (groupInfo) {
+      foreachCollapsedGroups(that, groupInfo => {
         if (groupInfo.offset >= loadOptions.skip + loadOptions.take + skipCorrection) {
           return false;
         }
@@ -233,15 +237,17 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       options.take = take;
     },
     handleDataLoaded(options, callBase) {
-      var that = this;
-      var collapsedGroups = options.collapsedGroups;
-      var groups = _m_core.default.normalizeSortingInfo(options.group);
-      var groupCount = groups.length;
+      const that = this;
+      const {
+        collapsedGroups
+      } = options;
+      const groups = _m_core.default.normalizeSortingInfo(options.group);
+      const groupCount = groups.length;
       function appendCollapsedPath(data, path, groups, collapsedGroup, offset) {
         if (!data || !path.length || !groups.length) return;
-        var keyValue;
-        var i;
-        var pathValue = (0, _data.toComparable)(path[0], true);
+        let keyValue;
+        let i;
+        const pathValue = (0, _data.toComparable)(path[0], true);
         for (i = 0; i < data.length; i++) {
           keyValue = (0, _data.toComparable)(data[i].key, true);
           if (offset >= collapsedGroup.offset || pathValue === keyValue) {
@@ -267,13 +273,15 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       }
       callBase(options);
       if (groupCount) {
-        var data = options.data;
-        var query = (0, _query.default)(data);
-        _store_helper.default.multiLevelGroup(query, groups).enumerate().done(function (groupedData) {
+        let {
+          data
+        } = options;
+        const query = (0, _query.default)(data);
+        _store_helper.default.multiLevelGroup(query, groups).enumerate().done(groupedData => {
           data = groupedData;
         });
         if (collapsedGroups) {
-          for (var pathIndex = 0; pathIndex < collapsedGroups.length; pathIndex++) {
+          for (let pathIndex = 0; pathIndex < collapsedGroups.length; pathIndex++) {
             appendCollapsedPath(data, collapsedGroups[pathIndex].path, groups, collapsedGroups[pathIndex], options.skip);
           }
         }
@@ -287,8 +295,8 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       return item.items === null;
     },
     updateTotalItemsCount() {
-      var itemsCountCorrection = 0;
-      foreachCollapsedGroups(this, function (groupInfo) {
+      let itemsCountCorrection = 0;
+      foreachCollapsedGroups(this, groupInfo => {
         if (groupInfo.count) {
           itemsCountCorrection -= groupInfo.count - 1;
         }
@@ -296,13 +304,13 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       this.callBase(itemsCountCorrection);
     },
     changeRowExpand(path) {
-      var that = this;
-      var dataSource = that._dataSource;
-      var beginPageIndex = dataSource.beginPageIndex ? dataSource.beginPageIndex() : dataSource.pageIndex();
-      var dataSourceItems = dataSource.items();
-      var offset = correctSkipLoadOption(that, beginPageIndex * dataSource.pageSize());
-      var groupInfo = that.findGroupInfo(path);
-      var groupCountQuery;
+      const that = this;
+      const dataSource = that._dataSource;
+      const beginPageIndex = dataSource.beginPageIndex ? dataSource.beginPageIndex() : dataSource.pageIndex();
+      const dataSourceItems = dataSource.items();
+      const offset = correctSkipLoadOption(that, beginPageIndex * dataSource.pageSize());
+      let groupInfo = that.findGroupInfo(path);
+      let groupCountQuery;
       if (groupInfo && !groupInfo.isExpanded) {
         // @ts-expect-error
         groupCountQuery = new _deferred.Deferred().resolve(groupInfo.count);
@@ -314,7 +322,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
           })
         });
       }
-      return (0, _deferred.when)(groupCountQuery).done(function (count) {
+      return (0, _deferred.when)(groupCountQuery).done(count => {
         // eslint-disable-next-line radix
         count = parseInt(count.length ? count[0] : count);
         if (groupInfo) {
@@ -342,19 +350,21 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       return false;
     },
     refresh(options, operationTypes) {
-      var that = this;
-      var storeLoadOptions = options.storeLoadOptions;
-      var dataSource = that._dataSource;
+      const that = this;
+      const {
+        storeLoadOptions
+      } = options;
+      const dataSource = that._dataSource;
       this.callBase.apply(this, arguments);
       if (operationTypes.reload) {
-        return foreachCollapsedGroups(that, function (groupInfo) {
-          var groupCountQuery = loadTotalCount(dataSource, {
+        return foreachCollapsedGroups(that, groupInfo => {
+          const groupCountQuery = loadTotalCount(dataSource, {
             filter: (0, _m_utils.createGroupFilter)(groupInfo.path, storeLoadOptions)
           });
-          var groupOffsetQuery = loadTotalCount(dataSource, {
+          const groupOffsetQuery = loadTotalCount(dataSource, {
             filter: (0, _m_grouping_core.createOffsetFilter)(groupInfo.path, storeLoadOptions)
           });
-          return (0, _deferred.when)(groupOffsetQuery, groupCountQuery).done(function (offset, count) {
+          return (0, _deferred.when)(groupOffsetQuery, groupCountQuery).done((offset, count) => {
             // eslint-disable-next-line radix
             offset = parseInt(offset.length ? offset[0] : offset);
             // eslint-disable-next-line radix

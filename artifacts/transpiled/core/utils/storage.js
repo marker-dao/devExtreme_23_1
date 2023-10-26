@@ -2,9 +2,9 @@
 
 exports.sessionStorage = void 0;
 var _window = require("../../core/utils/window");
-var window = (0, _window.getWindow)();
-var getSessionStorage = function getSessionStorage() {
-  var sessionStorage;
+const window = (0, _window.getWindow)();
+const getSessionStorage = function () {
+  let sessionStorage;
   try {
     sessionStorage = window.sessionStorage;
   } catch (e) {}

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment/utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,14 +13,17 @@ var _utils = require("../workspaces/utils");
 var _message = _interopRequireDefault(require("../../../../localization/message"));
 var _date = _interopRequireDefault(require("../../../../localization/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EditorLabelLocalizationConst = 'dxScheduler-editorLabelEndDate';
-var getAppointmentStyles = function getAppointmentStyles(viewModel) {
-  var defaultSize = 50;
-  var _viewModel$geometry = viewModel.geometry,
-    height = _viewModel$geometry.height,
-    left = _viewModel$geometry.left,
-    top = _viewModel$geometry.top,
-    width = _viewModel$geometry.width;
+const EditorLabelLocalizationConst = 'dxScheduler-editorLabelEndDate';
+const getAppointmentStyles = viewModel => {
+  const defaultSize = 50;
+  const {
+    geometry: {
+      height,
+      left,
+      top,
+      width
+    }
+  } = viewModel;
   return (0, _utils.addToStyles)([{
     attr: 'height',
     value: "".concat(height || defaultSize, "px")
@@ -36,29 +39,29 @@ var getAppointmentStyles = function getAppointmentStyles(viewModel) {
   }]);
 };
 exports.getAppointmentStyles = getAppointmentStyles;
-var getAppointmentKey = function getAppointmentKey(geometry) {
-  var height = geometry.height,
-    left = geometry.left,
-    top = geometry.top,
-    width = geometry.width;
+const getAppointmentKey = geometry => {
+  const {
+    height,
+    left,
+    top,
+    width
+  } = geometry;
   return "".concat(left, "-").concat(top, "-").concat(width, "-").concat(height);
 };
 exports.getAppointmentKey = getAppointmentKey;
-var getReducedIconTooltipText = function getReducedIconTooltipText(endDate) {
-  var tooltipLabel = _message.default.format(EditorLabelLocalizationConst);
+const getReducedIconTooltipText = endDate => {
+  const tooltipLabel = _message.default.format(EditorLabelLocalizationConst);
   if (!endDate) {
     return tooltipLabel;
   }
-  var date = new Date(endDate);
-  var monthAndDay = _date.default.format(date, 'monthAndDay');
-  var year = _date.default.format(date, 'year');
+  const date = new Date(endDate);
+  const monthAndDay = _date.default.format(date, 'monthAndDay');
+  const year = _date.default.format(date, 'year');
   return "".concat(tooltipLabel, ": ").concat(monthAndDay, ", ").concat(year);
 };
 exports.getReducedIconTooltipText = getReducedIconTooltipText;
-var mergeStylesWithColor = function mergeStylesWithColor(color, styles) {
-  return !color ? styles : (0, _utils.addToStyles)([{
-    attr: 'backgroundColor',
-    value: color
-  }], styles);
-};
+const mergeStylesWithColor = (color, styles) => !color ? styles : (0, _utils.addToStyles)([{
+  attr: 'backgroundColor',
+  value: color
+}], styles);
 exports.mergeStylesWithColor = mergeStylesWithColor;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.helper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,29 +13,29 @@ var _data = require("../../core/utils/data");
 var _type = require("../../core/utils/type");
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var GanttHelper = {
+const GanttHelper = {
   prepareMapHandler(getters) {
-    return function (data) {
-      return Object.keys(getters).reduce(function (previous, key) {
-        var resultKey = key === 'key' ? 'id' : key;
+    return data => {
+      return Object.keys(getters).reduce((previous, key) => {
+        const resultKey = key === 'key' ? 'id' : key;
         previous[resultKey] = getters[key](data);
         return previous;
       }, {});
     };
   },
   prepareSetterMapHandler(setters) {
-    return function (data) {
-      return Object.keys(setters).reduce(function (previous, key) {
-        var resultKey = key === 'key' ? 'id' : key;
+    return data => {
+      return Object.keys(setters).reduce((previous, key) => {
+        const resultKey = key === 'key' ? 'id' : key;
         setters[key](previous, data[resultKey]);
         return previous;
       }, {});
     };
   },
   compileGettersByOption(optionValue) {
-    var getters = {};
-    for (var field in optionValue) {
-      var exprMatches = field.match(/(\w*)Expr/);
+    const getters = {};
+    for (const field in optionValue) {
+      const exprMatches = field.match(/(\w*)Expr/);
       if (exprMatches) {
         getters[exprMatches[1]] = (0, _data.compileGetter)(optionValue[exprMatches[0]]);
       }
@@ -43,9 +43,9 @@ var GanttHelper = {
     return getters;
   },
   compileSettersByOption(optionValue) {
-    var setters = {};
-    for (var field in optionValue) {
-      var exprMatches = field.match(/(\w*)Expr/);
+    const setters = {};
+    for (const field in optionValue) {
+      const exprMatches = field.match(/(\w*)Expr/);
       if (exprMatches && !(0, _type.isFunction)(optionValue[exprMatches[0]])) {
         setters[exprMatches[1]] = (0, _data.compileSetter)(optionValue[exprMatches[0]]);
       }
@@ -53,9 +53,9 @@ var GanttHelper = {
     return setters;
   },
   compileFuncSettersByOption(optionValue) {
-    var setters = {};
-    for (var field in optionValue) {
-      var exprMatches = field.match(/(\w*)Expr/);
+    const setters = {};
+    for (const field in optionValue) {
+      const exprMatches = field.match(/(\w*)Expr/);
       if (exprMatches && (0, _type.isFunction)(optionValue[exprMatches[0]])) {
         setters[exprMatches[1]] = optionValue[exprMatches[0]];
       }
@@ -63,8 +63,8 @@ var GanttHelper = {
     return setters;
   },
   getStoreObject(option, modelObject) {
-    var setters = GanttHelper.compileSettersByOption(option);
-    return Object.keys(setters).reduce(function (previous, key) {
+    const setters = GanttHelper.compileSettersByOption(option);
+    return Object.keys(setters).reduce((previous, key) => {
       if (key !== 'key') {
         setters[key](previous, modelObject[key]);
       }
@@ -72,11 +72,11 @@ var GanttHelper = {
     }, {});
   },
   getInvertedData(data, keyGetter) {
-    var inverted = {};
+    const inverted = {};
     if (data) {
-      for (var i = 0; i < data.length; i++) {
-        var dataItem = data[i];
-        var key = keyGetter(dataItem);
+      for (let i = 0; i < data.length; i++) {
+        const dataItem = data[i];
+        const key = keyGetter(dataItem);
         inverted[key] = dataItem;
       }
     }
@@ -92,9 +92,9 @@ var GanttHelper = {
     if (node !== null && node !== void 0 && node.data && node !== null && node !== void 0 && node.visible) {
       array.push(node.data);
     }
-    for (var i = 0; i < ((_node$children = node.children) === null || _node$children === void 0 ? void 0 : _node$children.length); i++) {
+    for (let i = 0; i < ((_node$children = node.children) === null || _node$children === void 0 ? void 0 : _node$children.length); i++) {
       var _node$children;
-      var child = node.children[i];
+      const child = node.children[i];
       GanttHelper.convertTreeToList(child, array);
     }
   },

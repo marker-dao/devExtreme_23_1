@@ -4,7 +4,7 @@
 
 /* Core (dx.module-core.js) */
 /* eslint-disable import/no-commonjs */
-var DevExpress = require('../bundles/modules/core');
+const DevExpress = require('../bundles/modules/core');
 
 /* Integrations (dx.module-core.js) */
 
@@ -31,12 +31,12 @@ require('../events/transform');
 
 /* Data (dx.module-core.js) */
 
-var data = DevExpress.data = require('../bundles/modules/data');
+const data = DevExpress.data = require('../bundles/modules/data');
 data.odata = require('../bundles/modules/data.odata');
 
 /* UI core (dx.module-core.js) */
 
-var ui = DevExpress.ui = require('../bundles/modules/ui');
+const ui = DevExpress.ui = require('../bundles/modules/ui');
 ui.themes = require('../ui/themes');
 
 // deprecated
@@ -127,9 +127,12 @@ ui.dxFileManager = require('../ui/file_manager');
 ui.dxDiagram = require('../ui/diagram');
 ui.dxGantt = require('../ui/gantt');
 
+/* Chart common */
+require('../bundles/modules/common.charts');
+
 /* Viz core (dx.module-viz-core.js) */
 
-var viz = DevExpress.viz = require('../bundles/modules/viz');
+const viz = DevExpress.viz = require('../bundles/modules/viz');
 viz.currentTheme = require('../viz/themes').currentTheme;
 viz.registerTheme = require('../viz/themes').registerTheme;
 viz.exportFromMarkup = require('../viz/export').exportFromMarkup;

@@ -2,7 +2,7 @@
 
 exports._TESTS_resetDataKey = _TESTS_resetDataKey;
 exports.generateDataKey = generateDataKey;
-var nextDataKey = 1;
+let nextDataKey = 1;
 function generateDataKey() {
   return 'vectormap-data-' + nextDataKey++;
 }

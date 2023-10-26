@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/data_controller/m_data_controller.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -186,15 +186,15 @@ export class DataController extends ControllerWithDataMixin {
     if (!this._dataSource) {
       return filter;
     }
-    var combinedFilter = filter !== null && filter !== void 0 ? filter : this._dataSource.filter();
+    var combined = filter !== null && filter !== void 0 ? filter : this._dataSource.filter();
     var isColumnsTypesDefined = this._columnsController.isDataSourceApplied() || this._columnsController.isAllDataTypesDefined();
     if (isColumnsTypesDefined) {
       var additionalFilter = this._calculateAdditionalFilter();
-      combinedFilter = additionalFilter ? gridCoreUtils.combineFilters([additionalFilter, combinedFilter]) : combinedFilter;
+      combined = additionalFilter ? gridCoreUtils.combineFilters([additionalFilter, combined]) : combined;
     }
     var isRemoteFiltering = this._dataSource.remoteOperations().filtering || returnDataField;
-    combinedFilter = this._columnsController.updateFilter(combinedFilter, isRemoteFiltering);
-    return combinedFilter;
+    combined = this._columnsController.updateFilter(combined, isRemoteFiltering);
+    return combined;
   }
   waitReady() {
     if (this._updateLockCount) {

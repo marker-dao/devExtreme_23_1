@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointment_popup/m_form.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,6 +21,7 @@ import DataSource from '../../../data/data_source';
 import messageLocalization from '../../../localization/message';
 import { Semaphore } from '../../../renovation/ui/scheduler/utils/semaphore/semaphore';
 import Form from '../../../ui/form';
+import { current, isFluent } from '../../../ui/themes';
 import { createAppointmentAdapter } from '../m_appointment_adapter';
 import timeZoneDataUtils from '../timezones/m_utils_timezones_data';
 var SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
@@ -28,7 +29,8 @@ export var APPOINTMENT_FORM_GROUP_NAMES = {
   Main: 'mainGroup',
   Recurrence: 'recurrenceGroup'
 };
-var getDateWithStartHour = (date, startDayHour) => new Date(new Date(date).setHours(startDayHour));
+var getStylingModeFunc = () => isFluent(current()) ? 'filled' : undefined;
+var getStartDateWithStartHour = (startDate, startDayHour) => new Date(new Date(startDate).setHours(startDayHour));
 var validateAppointmentFormDate = (editor, value, previousValue) => {
   var isCurrentDateCorrect = value === null || !!value;
   var isPreviousDateCorrect = previousValue === null || !!previousValue;
@@ -53,6 +55,7 @@ var createDateBoxEditor = (dataField, colSpan, firstDayOfWeek, label, onValueCha
     type: 'required'
   }],
   editorOptions: {
+    stylingMode: getStylingModeFunc(),
     width: '100%',
     calendarOptions: {
       firstDayOfWeek
@@ -219,6 +222,9 @@ export class AppointmentForm {
       colSpan: 2,
       label: {
         text: messageLocalization.format('dxScheduler-editorLabelTitle')
+      },
+      editorOptions: {
+        stylingMode: getStylingModeFunc()
       }
     }, {
       itemType: 'group',
@@ -251,19 +257,16 @@ export class AppointmentForm {
             var startDateEditor = this.form.getEditor(dataExprs.startDateExpr);
             var endDateEditor = this.form.getEditor(dataExprs.endDateExpr);
             var startDate = dateSerialization.deserializeDate(startDateEditor.option('value'));
-            var endDate = dateSerialization.deserializeDate(endDateEditor.option('value'));
             if (this.semaphore.isFree() && startDate) {
               if (value) {
                 var allDayStartDate = dateUtils.trimTime(startDate);
-                var allDayEndDate = dateUtils.trimTime(endDate);
                 startDateEditor.option('value', new Date(allDayStartDate));
-                endDateEditor.option('value', new Date(allDayEndDate));
+                endDateEditor.option('value', new Date(allDayStartDate));
               } else {
-                var startDateWithStartHour = getDateWithStartHour(startDate, this.scheduler.getStartDayHour());
-                var endDateWithStartHour = getDateWithStartHour(endDate, this.scheduler.getStartDayHour());
-                var calculatedEndDate = this.scheduler.getCalculatedEndDate(endDateWithStartHour);
+                var startDateWithStartHour = getStartDateWithStartHour(startDate, this.scheduler.getStartDayHour());
+                var endDate = this.scheduler.getCalculatedEndDate(startDateWithStartHour);
                 startDateEditor.option('value', startDateWithStartHour);
-                endDateEditor.option('value', calculatedEndDate);
+                endDateEditor.option('value', endDate);
               }
             }
             var startDateItemPath = "".concat(APPOINTMENT_FORM_GROUP_NAMES.Main, ".").concat(dataExprs.startDateExpr);
@@ -304,6 +307,9 @@ export class AppointmentForm {
       colSpan: 2,
       label: {
         text: messageLocalization.format('dxScheduler-editorLabelDescription')
+      },
+      editorOptions: {
+        stylingMode: getStylingModeFunc()
       }
     }, {
       itemType: 'empty',

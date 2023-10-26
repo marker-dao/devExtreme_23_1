@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/workspaces/month/date_table/cell.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,8 +13,7 @@ var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
 var _combine_classes = require("../../../../../utils/combine_classes");
 var _cell = require("../../base/date_table/cell");
-var _excluded = ["allDay", "ariaLabel", "children", "className", "contentTemplateProps", "dataCellTemplate", "endDate", "firstDayOfMonth", "groupIndex", "groups", "index", "isFirstGroupCell", "isFocused", "isLastGroupCell", "isSelected", "otherMonth", "startDate", "text", "today"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["allDay", "ariaLabel", "children", "className", "contentTemplateProps", "dataCellTemplate", "endDate", "firstDayOfMonth", "groupIndex", "groups", "index", "isFirstGroupCell", "isFocused", "isLastGroupCell", "isSelected", "otherMonth", "startDate", "text", "today"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -23,21 +22,24 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var classes = _ref.classes,
-    contentTemplateProps = _ref.contentTemplateProps,
-    _ref$props = _ref.props,
-    dataCellTemplate = _ref$props.dataCellTemplate,
-    endDate = _ref$props.endDate,
-    groupIndex = _ref$props.groupIndex,
-    groups = _ref$props.groups,
-    index = _ref$props.index,
-    isFirstGroupCell = _ref$props.isFirstGroupCell,
-    isFocused = _ref$props.isFocused,
-    isLastGroupCell = _ref$props.isLastGroupCell,
-    isSelected = _ref$props.isSelected,
-    startDate = _ref$props.startDate,
-    text = _ref$props.text;
+const viewFunction = _ref => {
+  let {
+    classes,
+    contentTemplateProps,
+    props: {
+      dataCellTemplate,
+      endDate,
+      groupIndex,
+      groups,
+      index,
+      isFirstGroupCell,
+      isFocused,
+      isLastGroupCell,
+      isSelected,
+      startDate,
+      text
+    }
+  } = _ref;
   return (0, _inferno.createComponentVNode)(2, _cell.DateTableCellBase, {
     "className": classes,
     "dataCellTemplate": dataCellTemplate,
@@ -56,12 +58,8 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var MonthDateTableCell = /*#__PURE__*/function (_BaseInfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let MonthDateTableCell = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(MonthDateTableCell, _BaseInfernoComponent);
   function MonthDateTableCell(props) {
     var _this;
@@ -77,7 +75,7 @@ var MonthDateTableCell = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         dataCellTemplate: getTemplate(props.dataCellTemplate)
@@ -89,12 +87,13 @@ var MonthDateTableCell = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(MonthDateTableCell, [{
     key: "classes",
-    get: function get() {
-      var _this$props = this.props,
-        className = _this$props.className,
-        firstDayOfMonth = _this$props.firstDayOfMonth,
-        otherMonth = _this$props.otherMonth,
-        today = _this$props.today;
+    get: function () {
+      const {
+        className,
+        firstDayOfMonth,
+        otherMonth,
+        today
+      } = this.props;
       return (0, _combine_classes.combineClasses)({
         'dx-scheduler-date-table-other-month': !!otherMonth,
         'dx-scheduler-date-table-current-date': !!today,
@@ -104,47 +103,28 @@ var MonthDateTableCell = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   }, {
     key: "contentTemplateProps",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['contentTemplateProps'] !== undefined) {
         return this.__getterCache['contentTemplateProps'];
       }
-      return this.__getterCache['contentTemplateProps'] = function () {
-        var _this2$props = _this2.props,
-          index = _this2$props.index,
-          text = _this2$props.text;
+      return this.__getterCache['contentTemplateProps'] = (() => {
+        const {
+          index,
+          text
+        } = this.props;
         return {
           data: {
             text
           },
           index
         };
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props2 = this.props,
-        allDay = _this$props2.allDay,
-        ariaLabel = _this$props2.ariaLabel,
-        children = _this$props2.children,
-        className = _this$props2.className,
-        contentTemplateProps = _this$props2.contentTemplateProps,
-        dataCellTemplate = _this$props2.dataCellTemplate,
-        endDate = _this$props2.endDate,
-        firstDayOfMonth = _this$props2.firstDayOfMonth,
-        groupIndex = _this$props2.groupIndex,
-        groups = _this$props2.groups,
-        index = _this$props2.index,
-        isFirstGroupCell = _this$props2.isFirstGroupCell,
-        isFocused = _this$props2.isFocused,
-        isLastGroupCell = _this$props2.isLastGroupCell,
-        isSelected = _this$props2.isSelected,
-        otherMonth = _this$props2.otherMonth,
-        startDate = _this$props2.startDate,
-        text = _this$props2.text,
-        today = _this$props2.today,
-        restProps = _objectWithoutProperties(_this$props2, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

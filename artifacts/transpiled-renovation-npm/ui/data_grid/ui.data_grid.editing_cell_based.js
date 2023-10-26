@@ -6,7 +6,7 @@ Object.keys(_editing_cell_based).forEach(function (key) {
   if (key in exports && exports[key] === _editing_cell_based[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _editing_cell_based[key];
     }
   });

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/custom_store.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,12 +20,12 @@ var _array_query = _interopRequireDefault(require("./array_query"));
 var _store_helper = _interopRequireDefault(require("./store_helper"));
 var _deferred = require("../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TOTAL_COUNT = 'totalCount';
-var LOAD = 'load';
-var BY_KEY = 'byKey';
-var INSERT = 'insert';
-var UPDATE = 'update';
-var REMOVE = 'remove';
+const TOTAL_COUNT = 'totalCount';
+const LOAD = 'load';
+const BY_KEY = 'byKey';
+const INSERT = 'insert';
+const UPDATE = 'update';
+const REMOVE = 'remove';
 function isPromise(obj) {
   return obj && (0, _type.isFunction)(obj.then);
 }
@@ -42,15 +42,15 @@ function throwInvalidUserFuncResult(name) {
 }
 function createUserFuncFailureHandler(pendingDeferred) {
   function errorMessageFromXhr(promiseArguments) {
-    var xhr = promiseArguments[0];
-    var textStatus = promiseArguments[1];
+    const xhr = promiseArguments[0];
+    const textStatus = promiseArguments[1];
     if (!xhr || !xhr.getResponseHeader) {
       return null;
     }
     return (0, _utils.errorMessageFromXhr)(xhr, textStatus);
   }
   return function (arg) {
-    var error;
+    let error;
     if (arg instanceof Error) {
       error = arg;
     } else {
@@ -62,8 +62,8 @@ function createUserFuncFailureHandler(pendingDeferred) {
   };
 }
 function invokeUserLoad(store, options) {
-  var userFunc = store._loadFunc;
-  var userResult;
+  const userFunc = store._loadFunc;
+  let userResult;
   ensureRequiredFuncOption(LOAD, userFunc);
   userResult = userFunc.apply(store, [options]);
   if (Array.isArray(userResult)) {
@@ -78,8 +78,8 @@ function invokeUserLoad(store, options) {
   return (0, _deferred.fromPromise)(userResult);
 }
 function invokeUserTotalCountFunc(store, options) {
-  var userFunc = store._totalCountFunc;
-  var userResult;
+  const userFunc = store._totalCountFunc;
+  let userResult;
   if (!(0, _type.isFunction)(userFunc)) {
     throw _errors.errors.Error('E4021');
   }
@@ -94,8 +94,8 @@ function invokeUserTotalCountFunc(store, options) {
   return (0, _deferred.fromPromise)(userResult);
 }
 function invokeUserByKeyFunc(store, key, extraOptions) {
-  var userFunc = store._byKeyFunc;
-  var userResult;
+  const userFunc = store._byKeyFunc;
+  let userResult;
   ensureRequiredFuncOption(BY_KEY, userFunc);
   userResult = userFunc.apply(store, [key, extraOptions]);
   if (!isPromise(userResult)) {
@@ -107,7 +107,7 @@ function runRawLoad(pendingDeferred, store, userFuncOptions, continuation) {
   if (store.__rawData) {
     continuation(store.__rawData);
   } else {
-    var loadPromise = store.__rawDataPromise || invokeUserLoad(store, userFuncOptions);
+    const loadPromise = store.__rawDataPromise || invokeUserLoad(store, userFuncOptions);
     if (store._cacheRawData) {
       store.__rawDataPromise = loadPromise;
     }
@@ -123,19 +123,19 @@ function runRawLoad(pendingDeferred, store, userFuncOptions, continuation) {
 }
 function runRawLoadWithQuery(pendingDeferred, store, options, countOnly) {
   options = options || {};
-  var userFuncOptions = {};
+  const userFuncOptions = {};
   if ('userData' in options) {
     userFuncOptions.userData = options.userData;
   }
   runRawLoad(pendingDeferred, store, userFuncOptions, function (rawData) {
-    var rawDataQuery = (0, _array_query.default)(rawData, {
+    const rawDataQuery = (0, _array_query.default)(rawData, {
       errorHandler: store._errorHandler
     });
-    var itemsQuery;
-    var totalCountQuery;
-    var waitList = [];
-    var items;
-    var totalCount;
+    let itemsQuery;
+    let totalCountQuery;
+    const waitList = [];
+    let items;
+    let totalCount;
     if (!countOnly) {
       itemsQuery = _store_helper.default.queryByOptions(rawDataQuery, options);
       if (itemsQuery === rawDataQuery) {
@@ -173,9 +173,9 @@ function runRawLoadWithQuery(pendingDeferred, store, options, countOnly) {
 }
 function runRawLoadWithKey(pendingDeferred, store, key) {
   runRawLoad(pendingDeferred, store, {}, function (rawData) {
-    var keyExpr = store.key();
-    var item;
-    for (var i = 0, len = rawData.length; i < len; i++) {
+    const keyExpr = store.key();
+    let item;
+    for (let i = 0, len = rawData.length; i < len; i++) {
       item = rawData[i];
       if ((0, _utils.keysEqual)(keyExpr, store.keyOf(rawData[i]), key)) {
         pendingDeferred.resolve(item);
@@ -185,8 +185,8 @@ function runRawLoadWithKey(pendingDeferred, store, key) {
     pendingDeferred.reject(_errors.errors.Error('E4009'));
   });
 }
-var CustomStore = _abstract_store.default.inherit({
-  ctor: function ctor(options) {
+const CustomStore = _abstract_store.default.inherit({
+  ctor: function (options) {
     options = options || {};
     this.callBase(options);
     this._useDefaultSearch = !!options.useDefaultSearch || options.loadMode === 'raw';
@@ -202,14 +202,14 @@ var CustomStore = _abstract_store.default.inherit({
   _clearCache() {
     delete this.__rawData;
   },
-  createQuery: function createQuery() {
+  createQuery: function () {
     throw _errors.errors.Error('E4010');
   },
-  clearRawDataCache: function clearRawDataCache() {
+  clearRawDataCache: function () {
     this._clearCache();
   },
-  _totalCountImpl: function _totalCountImpl(options) {
-    var d = new _deferred.Deferred();
+  _totalCountImpl: function (options) {
+    let d = new _deferred.Deferred();
     if (this._loadMode === 'raw' && !this._totalCountFunc) {
       runRawLoadWithQuery(d, this, options, true);
     } else {
@@ -220,7 +220,7 @@ var CustomStore = _abstract_store.default.inherit({
     }
     return d.promise();
   },
-  _pushImpl: function _pushImpl(changes) {
+  _pushImpl: function (changes) {
     if (this.__rawData) {
       (0, _array_utils.applyBatch)({
         keyInfo: this,
@@ -229,8 +229,8 @@ var CustomStore = _abstract_store.default.inherit({
       });
     }
   },
-  _loadImpl: function _loadImpl(options) {
-    var d = new _deferred.Deferred();
+  _loadImpl: function (options) {
+    let d = new _deferred.Deferred();
     if (this._loadMode === 'raw') {
       runRawLoadWithQuery(d, this, options, false);
     } else {
@@ -241,8 +241,8 @@ var CustomStore = _abstract_store.default.inherit({
     }
     return d.promise();
   },
-  _byKeyImpl: function _byKeyImpl(key, extraOptions) {
-    var d = new _deferred.Deferred();
+  _byKeyImpl: function (key, extraOptions) {
+    const d = new _deferred.Deferred();
     if (this._byKeyViaLoad()) {
       this._requireKey();
       runRawLoadWithKey(d, this, key);
@@ -253,14 +253,14 @@ var CustomStore = _abstract_store.default.inherit({
     }
     return d.promise();
   },
-  _byKeyViaLoad: function _byKeyViaLoad() {
+  _byKeyViaLoad: function () {
     return this._loadMode === 'raw' && !this._byKeyFunc;
   },
-  _insertImpl: function _insertImpl(values) {
-    var that = this;
-    var userFunc = that._insertFunc;
-    var userResult;
-    var d = new _deferred.Deferred();
+  _insertImpl: function (values) {
+    const that = this;
+    const userFunc = that._insertFunc;
+    let userResult;
+    const d = new _deferred.Deferred();
     ensureRequiredFuncOption(INSERT, userFunc);
     userResult = userFunc.apply(that, [values]); // should return key or data
 
@@ -276,10 +276,10 @@ var CustomStore = _abstract_store.default.inherit({
     }).fail(createUserFuncFailureHandler(d));
     return d.promise();
   },
-  _updateImpl: function _updateImpl(key, values) {
-    var userFunc = this._updateFunc;
-    var userResult;
-    var d = new _deferred.Deferred();
+  _updateImpl: function (key, values) {
+    const userFunc = this._updateFunc;
+    let userResult;
+    const d = new _deferred.Deferred();
     ensureRequiredFuncOption(UPDATE, userFunc);
     userResult = userFunc.apply(this, [key, values]);
     if (!isPromise(userResult)) {
@@ -294,10 +294,10 @@ var CustomStore = _abstract_store.default.inherit({
     }).fail(createUserFuncFailureHandler(d));
     return d.promise();
   },
-  _removeImpl: function _removeImpl(key) {
-    var userFunc = this._removeFunc;
-    var userResult;
-    var d = new _deferred.Deferred();
+  _removeImpl: function (key) {
+    const userFunc = this._removeFunc;
+    let userResult;
+    const d = new _deferred.Deferred();
     ensureRequiredFuncOption(REMOVE, userFunc);
     userResult = userFunc.apply(this, [key]);
     if (!isPromise(userResult)) {

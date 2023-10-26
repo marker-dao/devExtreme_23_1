@@ -6,12 +6,13 @@ var _type = require("../../core/utils/type");
 var _devices = _interopRequireDefault(require("../../core/devices"));
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _devices$real = _devices.default.real(),
-  ios = _devices$real.ios,
-  mac = _devices$real.mac;
-var isFocusingOnCaretChange = ios || mac;
-var getCaret = function getCaret(input) {
-  var range;
+const {
+  ios,
+  mac
+} = _devices.default.real();
+const isFocusingOnCaretChange = ios || mac;
+const getCaret = function (input) {
+  let range;
   try {
     range = {
       start: input.selectionStart,
@@ -25,8 +26,8 @@ var getCaret = function getCaret(input) {
   }
   return range;
 };
-var setCaret = function setCaret(input, position) {
-  var body = _dom_adapter.default.getBody();
+const setCaret = function (input, position) {
+  const body = _dom_adapter.default.getBody();
   if (!body.contains(input) && !body.contains(input.getRootNode().host)) {
     return;
   }
@@ -35,8 +36,8 @@ var setCaret = function setCaret(input, position) {
     input.selectionEnd = position.end;
   } catch (e) {}
 };
-var caret = function caret(input, position) {
-  var force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+const caret = function (input, position) {
+  let force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   input = (0, _renderer.default)(input).get(0);
   if (!(0, _type.isDefined)(position)) {
     return getCaret(input);

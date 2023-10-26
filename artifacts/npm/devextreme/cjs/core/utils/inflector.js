@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/inflector.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,29 +10,29 @@
 
 exports.underscore = exports.titleize = exports.humanize = exports.dasherize = exports.captionize = exports.camelize = void 0;
 var _iterator = require("./iterator");
-var _normalize = function _normalize(text) {
+const _normalize = function (text) {
   if (text === undefined || text === null) {
     return '';
   }
   return String(text);
 };
-var _upperCaseFirst = function _upperCaseFirst(text) {
+const _upperCaseFirst = function (text) {
   return _normalize(text).charAt(0).toUpperCase() + text.substr(1);
 };
-var _chop = function _chop(text) {
+const _chop = function (text) {
   return _normalize(text).replace(/([a-z\d])([A-Z])/g, '$1 $2').split(/[\s_-]+/);
 };
-var dasherize = function dasherize(text) {
+const dasherize = function (text) {
   return (0, _iterator.map)(_chop(text), function (p) {
     return p.toLowerCase();
   }).join('-');
 };
 exports.dasherize = dasherize;
-var underscore = function underscore(text) {
+const underscore = function (text) {
   return dasherize(text).replace(/-/g, '_');
 };
 exports.underscore = underscore;
-var camelize = function camelize(text, upperFirst) {
+const camelize = function (text, upperFirst) {
   return (0, _iterator.map)(_chop(text), function (p, i) {
     p = p.toLowerCase();
     if (upperFirst || i > 0) {
@@ -42,23 +42,23 @@ var camelize = function camelize(text, upperFirst) {
   }).join('');
 };
 exports.camelize = camelize;
-var humanize = function humanize(text) {
+const humanize = function (text) {
   return _upperCaseFirst(dasherize(text).replace(/-/g, ' '));
 };
 exports.humanize = humanize;
-var titleize = function titleize(text) {
+const titleize = function (text) {
   return (0, _iterator.map)(_chop(text), function (p) {
     return _upperCaseFirst(p.toLowerCase());
   }).join(' ');
 };
 exports.titleize = titleize;
-var DIGIT_CHARS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-var captionize = function captionize(name) {
-  var captionList = [];
-  var i;
-  var char;
-  var isPrevCharNewWord = false;
-  var isNewWord = false;
+const DIGIT_CHARS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const captionize = function (name) {
+  const captionList = [];
+  let i;
+  let char;
+  let isPrevCharNewWord = false;
+  let isNewWord = false;
   for (i = 0; i < name.length; i++) {
     char = name.charAt(i);
     isNewWord = char === char.toUpperCase() && char !== '-' && char !== ')' && char !== '/' || char in DIGIT_CHARS;

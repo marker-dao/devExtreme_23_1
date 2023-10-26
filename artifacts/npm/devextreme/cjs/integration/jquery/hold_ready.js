@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/jquery/hold_ready.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-restricted-imports
 
 if (_jquery.default && !_themes_callback.themeReadyCallback.fired()) {
-  var holdReady = _jquery.default.holdReady || _jquery.default.fn.holdReady;
+  const holdReady = _jquery.default.holdReady || _jquery.default.fn.holdReady;
   holdReady(true);
   _themes_callback.themeReadyCallback.add(function () {
     _ready_callbacks.default.add(function () {

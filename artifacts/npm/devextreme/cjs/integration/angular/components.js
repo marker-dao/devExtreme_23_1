@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/angular/components.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,10 +16,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 if (_angular.default) {
   _module.default.service('dxDigestCallbacks', ['$rootScope', function ($rootScope) {
-    var begin = (0, _callbacks.default)();
-    var prioritizedEnd = (0, _callbacks.default)();
-    var end = (0, _callbacks.default)();
-    var digestPhase = false;
+    const begin = (0, _callbacks.default)();
+    const prioritizedEnd = (0, _callbacks.default)();
+    const end = (0, _callbacks.default)();
+    let digestPhase = false;
     $rootScope.$watch(function () {
       if (digestPhase) {
         return;
@@ -34,7 +34,7 @@ if (_angular.default) {
     });
     return {
       begin: {
-        add: function add(callback) {
+        add: function (callback) {
           if (digestPhase) {
             callback();
           }

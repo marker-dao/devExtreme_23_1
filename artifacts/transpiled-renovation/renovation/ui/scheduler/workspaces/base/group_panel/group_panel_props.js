@@ -1,7 +1,7 @@
 "use strict";
 
 exports.GroupPanelBaseProps = void 0;
-var GroupPanelBaseProps = {
+const GroupPanelBaseProps = {
   groupPanelData: Object.freeze({
     groupPanelItems: [],
     baseColSpan: 1

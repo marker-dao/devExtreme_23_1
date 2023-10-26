@@ -5,19 +5,19 @@ var _console = require("./console");
 var _dependency_injector = _interopRequireDefault(require("./dependency_injector"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var _default = (0, _dependency_injector.default)({
-  isWrapped: function isWrapped() {
+  isWrapped: function () {
     return false;
   },
-  isWritableWrapped: function isWritableWrapped() {
+  isWritableWrapped: function () {
     return false;
   },
-  wrap: function wrap(value) {
+  wrap: function (value) {
     return value;
   },
-  unwrap: function unwrap(value) {
+  unwrap: function (value) {
     return value;
   },
-  assign: function assign() {
+  assign: function () {
     _console.logger.error('Method \'assign\' should not be used for not wrapped variables. Use \'isWrapped\' method for ensuring.');
   }
 });

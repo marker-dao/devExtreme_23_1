@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/workspaces/base/ordinary_layout.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,8 +23,7 @@ var _layout4 = require("./date_table/layout");
 var _layout5 = require("../timeline/header_panel/layout");
 var _layout6 = require("./header_panel/layout");
 var _layout7 = require("../../appointment/layout");
-var _excluded = ["addDateTableClass", "addVerticalSizesClassToRows", "allDayAppointments", "allDayPanelRef", "appointments", "bottomVirtualRowHeight", "className", "dataCellTemplate", "dateCellTemplate", "dateHeaderData", "dateTableRef", "dateTableTemplate", "groupByDate", "groupOrientation", "groupPanelClassName", "groupPanelData", "groupPanelHeight", "groupPanelRef", "groups", "headerEmptyCellWidth", "headerPanelTemplate", "intervalCount", "isAllDayPanelCollapsed", "isAllDayPanelVisible", "isRenderDateHeader", "isRenderGroupPanel", "isRenderHeaderEmptyCell", "isRenderTimePanel", "isStandaloneAllDayPanel", "isUseMonthDateTable", "isUseTimelineHeader", "isWorkSpaceWithOddCells", "leftVirtualCellWidth", "onScroll", "resourceCellTemplate", "rightVirtualCellWidth", "scrollingDirection", "tablesWidth", "timeCellTemplate", "timePanelData", "timePanelRef", "topVirtualRowHeight", "viewData", "widgetElementRef", "width"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["addDateTableClass", "addVerticalSizesClassToRows", "allDayAppointments", "allDayPanelRef", "appointments", "bottomVirtualRowHeight", "className", "dataCellTemplate", "dateCellTemplate", "dateHeaderData", "dateTableRef", "dateTableTemplate", "groupByDate", "groupOrientation", "groupPanelClassName", "groupPanelData", "groupPanelHeight", "groupPanelRef", "groups", "headerEmptyCellWidth", "headerPanelTemplate", "intervalCount", "isAllDayPanelCollapsed", "isAllDayPanelVisible", "isRenderDateHeader", "isRenderGroupPanel", "isRenderHeaderEmptyCell", "isRenderTimePanel", "isStandaloneAllDayPanel", "isUseMonthDateTable", "isUseTimelineHeader", "isWorkSpaceWithOddCells", "leftVirtualCellWidth", "onScroll", "resourceCellTemplate", "rightVirtualCellWidth", "scrollingDirection", "tablesWidth", "timeCellTemplate", "timePanelData", "timePanelRef", "topVirtualRowHeight", "viewData", "widgetElementRef", "width"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -34,39 +33,42 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var dateTableScrollableRef = _ref.dateTableScrollableRef,
-    _ref$props = _ref.props,
-    allDayPanelRef = _ref$props.allDayPanelRef,
-    className = _ref$props.className,
-    dataCellTemplate = _ref$props.dataCellTemplate,
-    dateCellTemplate = _ref$props.dateCellTemplate,
-    dateHeaderData = _ref$props.dateHeaderData,
-    dateTableRef = _ref$props.dateTableRef,
-    groupByDate = _ref$props.groupByDate,
-    groupOrientation = _ref$props.groupOrientation,
-    groupPanelClassName = _ref$props.groupPanelClassName,
-    groupPanelData = _ref$props.groupPanelData,
-    groupPanelHeight = _ref$props.groupPanelHeight,
-    groupPanelRef = _ref$props.groupPanelRef,
-    groups = _ref$props.groups,
-    headerEmptyCellWidth = _ref$props.headerEmptyCellWidth,
-    isRenderDateHeader = _ref$props.isRenderDateHeader,
-    isRenderGroupPanel = _ref$props.isRenderGroupPanel,
-    isRenderHeaderEmptyCell = _ref$props.isRenderHeaderEmptyCell,
-    isRenderTimePanel = _ref$props.isRenderTimePanel,
-    isStandaloneAllDayPanel = _ref$props.isStandaloneAllDayPanel,
-    isUseMonthDateTable = _ref$props.isUseMonthDateTable,
-    isUseTimelineHeader = _ref$props.isUseTimelineHeader,
-    resourceCellTemplate = _ref$props.resourceCellTemplate,
-    scrollingDirection = _ref$props.scrollingDirection,
-    timeCellTemplate = _ref$props.timeCellTemplate,
-    timePanelData = _ref$props.timePanelData,
-    timePanelRef = _ref$props.timePanelRef,
-    viewData = _ref$props.viewData,
-    widgetElementRef = _ref$props.widgetElementRef;
-  var DateTable = isUseMonthDateTable ? _layout3.MonthDateTableLayout : _layout4.DateTableLayoutBase;
-  var HeaderPanel = isUseTimelineHeader ? _layout5.TimelineHeaderPanelLayout : _layout6.HeaderPanelLayout;
+const viewFunction = _ref => {
+  let {
+    dateTableScrollableRef,
+    props: {
+      allDayPanelRef,
+      className,
+      dataCellTemplate,
+      dateCellTemplate,
+      dateHeaderData,
+      dateTableRef,
+      groupByDate,
+      groupOrientation,
+      groupPanelClassName,
+      groupPanelData,
+      groupPanelHeight,
+      groupPanelRef,
+      groups,
+      headerEmptyCellWidth,
+      isRenderDateHeader,
+      isRenderGroupPanel,
+      isRenderHeaderEmptyCell,
+      isRenderTimePanel,
+      isStandaloneAllDayPanel,
+      isUseMonthDateTable,
+      isUseTimelineHeader,
+      resourceCellTemplate,
+      scrollingDirection,
+      timeCellTemplate,
+      timePanelData,
+      timePanelRef,
+      viewData,
+      widgetElementRef
+    }
+  } = _ref;
+  const DateTable = isUseMonthDateTable ? _layout3.MonthDateTableLayout : _layout4.DateTableLayoutBase;
+  const HeaderPanel = isUseTimelineHeader ? _layout5.TimelineHeaderPanelLayout : _layout6.HeaderPanelLayout;
   return (0, _inferno.createComponentVNode)(2, _widget.Widget, {
     "className": className,
     "rootElementRef": widgetElementRef,
@@ -116,12 +118,8 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var OrdinaryLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let OrdinaryLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(OrdinaryLayout, _BaseInfernoComponent);
   function OrdinaryLayout(props) {
     var _this;
@@ -136,7 +134,7 @@ var OrdinaryLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
     return this.dateTableScrollableRef.current.container().getBoundingClientRect().width;
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         headerPanelTemplate: getTemplate(props.headerPanelTemplate),
@@ -152,54 +150,9 @@ var OrdinaryLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(OrdinaryLayout, [{
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        addDateTableClass = _this$props.addDateTableClass,
-        addVerticalSizesClassToRows = _this$props.addVerticalSizesClassToRows,
-        allDayAppointments = _this$props.allDayAppointments,
-        allDayPanelRef = _this$props.allDayPanelRef,
-        appointments = _this$props.appointments,
-        bottomVirtualRowHeight = _this$props.bottomVirtualRowHeight,
-        className = _this$props.className,
-        dataCellTemplate = _this$props.dataCellTemplate,
-        dateCellTemplate = _this$props.dateCellTemplate,
-        dateHeaderData = _this$props.dateHeaderData,
-        dateTableRef = _this$props.dateTableRef,
-        dateTableTemplate = _this$props.dateTableTemplate,
-        groupByDate = _this$props.groupByDate,
-        groupOrientation = _this$props.groupOrientation,
-        groupPanelClassName = _this$props.groupPanelClassName,
-        groupPanelData = _this$props.groupPanelData,
-        groupPanelHeight = _this$props.groupPanelHeight,
-        groupPanelRef = _this$props.groupPanelRef,
-        groups = _this$props.groups,
-        headerEmptyCellWidth = _this$props.headerEmptyCellWidth,
-        headerPanelTemplate = _this$props.headerPanelTemplate,
-        intervalCount = _this$props.intervalCount,
-        isAllDayPanelCollapsed = _this$props.isAllDayPanelCollapsed,
-        isAllDayPanelVisible = _this$props.isAllDayPanelVisible,
-        isRenderDateHeader = _this$props.isRenderDateHeader,
-        isRenderGroupPanel = _this$props.isRenderGroupPanel,
-        isRenderHeaderEmptyCell = _this$props.isRenderHeaderEmptyCell,
-        isRenderTimePanel = _this$props.isRenderTimePanel,
-        isStandaloneAllDayPanel = _this$props.isStandaloneAllDayPanel,
-        isUseMonthDateTable = _this$props.isUseMonthDateTable,
-        isUseTimelineHeader = _this$props.isUseTimelineHeader,
-        isWorkSpaceWithOddCells = _this$props.isWorkSpaceWithOddCells,
-        leftVirtualCellWidth = _this$props.leftVirtualCellWidth,
-        onScroll = _this$props.onScroll,
-        resourceCellTemplate = _this$props.resourceCellTemplate,
-        rightVirtualCellWidth = _this$props.rightVirtualCellWidth,
-        scrollingDirection = _this$props.scrollingDirection,
-        tablesWidth = _this$props.tablesWidth,
-        timeCellTemplate = _this$props.timeCellTemplate,
-        timePanelData = _this$props.timePanelData,
-        timePanelRef = _this$props.timePanelRef,
-        topVirtualRowHeight = _this$props.topVirtualRowHeight,
-        viewData = _this$props.viewData,
-        widgetElementRef = _this$props.widgetElementRef,
-        width = _this$props.width,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

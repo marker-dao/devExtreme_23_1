@@ -1,5 +1,5 @@
 "use strict";
 
 exports.TOOLBAR_CLASS = void 0;
-var TOOLBAR_CLASS = 'dx-toolbar';
+const TOOLBAR_CLASS = 'dx-toolbar';
 exports.TOOLBAR_CLASS = TOOLBAR_CLASS;

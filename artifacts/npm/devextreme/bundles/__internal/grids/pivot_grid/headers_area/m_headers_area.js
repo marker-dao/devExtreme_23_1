@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/pivot_grid/headers_area/m_headers_area.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,29 +20,34 @@ var _type = require("../../../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../../../ui/scroll_view/ui.scrollable"));
 var _m_area_item = require("../area_item/m_area_item");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var PIVOTGRID_AREA_CLASS = 'dx-pivotgrid-area';
-var PIVOTGRID_AREA_COLUMN_CLASS = 'dx-pivotgrid-horizontal-headers';
-var PIVOTGRID_AREA_ROW_CLASS = 'dx-pivotgrid-vertical-headers';
-var PIVOTGRID_TOTAL_CLASS = 'dx-total';
-var PIVOTGRID_GRAND_TOTAL_CLASS = 'dx-grandtotal';
-var PIVOTGRID_ROW_TOTAL_CLASS = 'dx-row-total';
-var PIVOTGRID_EXPANDED_CLASS = 'dx-pivotgrid-expanded';
-var PIVOTGRID_COLLAPSED_CLASS = 'dx-pivotgrid-collapsed';
-var PIVOTGRID_LAST_CELL_CLASS = 'dx-last-cell';
-var PIVOTGRID_VERTICAL_SCROLL_CLASS = 'dx-vertical-scroll';
-var PIVOTGRID_EXPAND_BORDER = 'dx-expand-border';
-var isRenovatedScrollable = !!_ui.default.IS_RENOVATED_WIDGET;
+const PIVOTGRID_AREA_CLASS = 'dx-pivotgrid-area';
+const PIVOTGRID_AREA_COLUMN_CLASS = 'dx-pivotgrid-horizontal-headers';
+const PIVOTGRID_AREA_ROW_CLASS = 'dx-pivotgrid-vertical-headers';
+const PIVOTGRID_TOTAL_CLASS = 'dx-total';
+const PIVOTGRID_GRAND_TOTAL_CLASS = 'dx-grandtotal';
+const PIVOTGRID_ROW_TOTAL_CLASS = 'dx-row-total';
+const PIVOTGRID_EXPANDED_CLASS = 'dx-pivotgrid-expanded';
+const PIVOTGRID_COLLAPSED_CLASS = 'dx-pivotgrid-collapsed';
+const PIVOTGRID_LAST_CELL_CLASS = 'dx-last-cell';
+const PIVOTGRID_VERTICAL_SCROLL_CLASS = 'dx-vertical-scroll';
+const PIVOTGRID_EXPAND_BORDER = 'dx-expand-border';
+const isRenovatedScrollable = !!_ui.default.IS_RENOVATED_WIDGET;
 function getCellPath(tableElement, cell) {
   if (cell) {
-    var _tableElement$data = tableElement.data(),
-      data = _tableElement$data.data;
-    var rowIndex = cell.parentNode.rowIndex;
-    var cellIndex = cell.cellIndex;
+    const {
+      data
+    } = tableElement.data();
+    const {
+      rowIndex
+    } = cell.parentNode;
+    const {
+      cellIndex
+    } = cell;
     return data[rowIndex] && data[rowIndex][cellIndex] && data[rowIndex][cellIndex].path;
   }
   return undefined;
 }
-var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
+const HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
   ctor(component) {
     this.callBase(component);
     this._scrollBarWidth = 0;
@@ -57,10 +62,18 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     return (0, _renderer.default)('<div>').addClass(this._getAreaClassName()).addClass(PIVOTGRID_AREA_CLASS);
   },
   _applyCustomStyles(options) {
-    var cssArray = options.cssArray;
-    var cell = options.cell;
-    var rowsCount = options.rowsCount;
-    var classArray = options.classArray;
+    const {
+      cssArray
+    } = options;
+    const {
+      cell
+    } = options;
+    const {
+      rowsCount
+    } = options;
+    const {
+      classArray
+    } = options;
     if (options.cellIndex === options.cellsCount - 1) {
       cssArray.push("".concat(options.rtlEnabled ? 'border-left:' : 'border-right:', "0px"));
     }
@@ -82,7 +95,7 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     this.callBase(options);
   },
   _getMainElementMarkup() {
-    var thead = _dom_adapter.default.createElement('thead');
+    const thead = _dom_adapter.default.createElement('thead');
     thead.setAttribute('class', this._getAreaClassName());
     return thead;
   },
@@ -98,8 +111,8 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     this._virtualContentWidth = params.width;
   },
   hasScroll() {
-    var tableWidth = this._virtualContent ? this._virtualContentWidth : this._tableWidth;
-    var groupWidth = this.getGroupWidth();
+    const tableWidth = this._virtualContent ? this._virtualContentWidth : this._tableWidth;
+    const groupWidth = this.getGroupWidth();
     if (groupWidth && tableWidth) {
       return tableWidth - groupWidth >= 1;
     }
@@ -117,15 +130,17 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     });
   },
   updateScrollableOptions(_ref) {
-    var rtlEnabled = _ref.rtlEnabled;
-    var scrollable = this._getScrollable();
+    let {
+      rtlEnabled
+    } = _ref;
+    const scrollable = this._getScrollable();
     isRenovatedScrollable && scrollable.option({
       rtlEnabled
     });
   },
   processScrollBarSpacing(scrollBarWidth) {
-    var groupAlignment = this.option('rtlEnabled') ? 'right' : 'left';
-    var groupWidth = this.getGroupWidth();
+    const groupAlignment = this.option('rtlEnabled') ? 'right' : 'left';
+    const groupWidth = this.getGroupWidth();
     if (groupWidth) {
       this.setGroupWidth(groupWidth - scrollBarWidth);
     }
@@ -137,10 +152,10 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
     this._scrollBarWidth = scrollBarWidth;
   },
   getScrollPath(offset) {
-    var tableElement = this.tableElement();
-    var cell;
+    const tableElement = this.tableElement();
+    let cell;
     offset -= parseInt(tableElement[0].style.left, 10) || 0;
-    (0, _iterator.each)(tableElement.find('td'), function (_, td) {
+    (0, _iterator.each)(tableElement.find('td'), (_, td) => {
       if (td.colSpan === 1 && td.offsetLeft <= offset && td.offsetWidth + td.offsetLeft > offset) {
         cell = td;
         return false;
@@ -155,7 +170,7 @@ var HorizontalHeadersArea = _m_area_item.AreaItem.inherit({
   }
 });
 exports.HorizontalHeadersArea = HorizontalHeadersArea;
-var VerticalHeadersArea = HorizontalHeadersArea.inherit({
+const VerticalHeadersArea = HorizontalHeadersArea.inherit({
   _getAreaClassName() {
     return PIVOTGRID_AREA_ROW_CLASS;
   },
@@ -183,8 +198,8 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     this._virtualContentHeight = params.height;
   },
   hasScroll() {
-    var tableHeight = this._virtualContent ? this._virtualContentHeight : this._tableHeight;
-    var groupHeight = this.getGroupHeight();
+    const tableHeight = this._virtualContent ? this._virtualContentHeight : this._tableHeight;
+    const groupHeight = this.getGroupHeight();
     if (groupHeight && tableHeight) {
       return tableHeight - groupHeight >= 1;
     }
@@ -201,7 +216,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     });
   },
   processScrollBarSpacing(scrollBarWidth) {
-    var groupHeight = this.getGroupHeight();
+    const groupHeight = this.getGroupHeight();
     if (groupHeight) {
       this.setGroupHeight(groupHeight - scrollBarWidth);
     }
@@ -209,7 +224,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
       this._groupElement.next().remove();
     }
     if (scrollBarWidth) {
-      var $div = (0, _renderer.default)('<div>');
+      const $div = (0, _renderer.default)('<div>');
       (0, _size.setWidth)($div, '100%');
       (0, _size.setHeight)($div, scrollBarWidth - 1);
       this._groupElement.after($div);
@@ -217,11 +232,11 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     this._scrollBarWidth = scrollBarWidth;
   },
   getScrollPath(offset) {
-    var tableElement = this.tableElement();
-    var cell;
+    const tableElement = this.tableElement();
+    let cell;
     offset -= parseInt(tableElement[0].style.top, 10) || 0;
-    (0, _iterator.each)(tableElement.find('tr'), function (_, tr) {
-      var td = tr.childNodes[tr.childNodes.length - 1];
+    (0, _iterator.each)(tableElement.find('tr'), (_, tr) => {
+      const td = tr.childNodes[tr.childNodes.length - 1];
       if (td && td.rowSpan === 1 && td.offsetTop <= offset && td.offsetHeight + td.offsetTop > offset) {
         cell = td;
         return false;
@@ -241,7 +256,7 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     }
   },
   _getMainElementMarkup() {
-    var tbody = _dom_adapter.default.createElement('tbody');
+    const tbody = _dom_adapter.default.createElement('tbody');
     tbody.classList.add(this._getAreaClassName());
     return tbody;
   },
@@ -249,21 +264,25 @@ var VerticalHeadersArea = HorizontalHeadersArea.inherit({
     return '</tbody>';
   },
   updateColspans(columnCount) {
-    var rows = this.tableElement()[0].rows;
-    var columnOffset = 0;
-    var columnOffsetResetIndexes = [];
+    const {
+      rows
+    } = this.tableElement()[0];
+    let columnOffset = 0;
+    const columnOffsetResetIndexes = [];
     if (this.getColumnsCount() - columnCount > 0) {
       return;
     }
-    for (var i = 0; i < rows.length; i += 1) {
-      for (var j = 0; j < rows[i].cells.length; j += 1) {
-        var cell = rows[i].cells[j];
-        var rowSpan = cell.rowSpan;
+    for (let i = 0; i < rows.length; i += 1) {
+      for (let j = 0; j < rows[i].cells.length; j += 1) {
+        const cell = rows[i].cells[j];
+        const {
+          rowSpan
+        } = cell;
         if (columnOffsetResetIndexes[i]) {
           columnOffset -= columnOffsetResetIndexes[i];
           columnOffsetResetIndexes[i] = 0;
         }
-        var diff = columnCount - (columnOffset + cell.colSpan);
+        const diff = columnCount - (columnOffset + cell.colSpan);
         if (j === rows[i].cells.length - 1 && diff > 0) {
           cell.colSpan += diff;
         }

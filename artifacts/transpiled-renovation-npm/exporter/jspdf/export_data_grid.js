@@ -5,7 +5,7 @@ var _type = require("../../core/utils/type");
 var _errors = _interopRequireDefault(require("../../core/errors"));
 var _export = require("./common/export");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var HOW_TO_MIGRATE_ARTICLE = 'https://supportcenter.devexpress.com/ticket/details/t1077554';
+const HOW_TO_MIGRATE_ARTICLE = 'https://supportcenter.devexpress.com/ticket/details/t1077554';
 function _getFullOptions(options) {
   if (!((0, _type.isDefined)(options) && (0, _type.isObject)(options))) {
     throw Error('The "exportDataGrid" method requires a configuration object.');

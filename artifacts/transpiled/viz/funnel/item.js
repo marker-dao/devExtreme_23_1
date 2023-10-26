@@ -2,12 +2,12 @@
 
 exports.default = void 0;
 var _type = require("../../core/utils/type");
-var states = ['normal', 'hover', 'selection', 'selection'];
+const states = ['normal', 'hover', 'selection', 'selection'];
 function parseStyles(color, style, baseStyle) {
-  var border = style.border;
-  var baseBorder = baseStyle.border;
-  var borderVisible = (0, _type.isDefined)(border.visible) ? border.visible : baseBorder.visible;
-  var borderWidth = (0, _type.isDefined)(border.width) ? border.width : baseBorder.width;
+  const border = style.border;
+  const baseBorder = baseStyle.border;
+  const borderVisible = (0, _type.isDefined)(border.visible) ? border.visible : baseBorder.visible;
+  const borderWidth = (0, _type.isDefined)(border.width) ? border.width : baseBorder.width;
   return {
     fill: color,
     hatching: style.hatching,
@@ -16,8 +16,8 @@ function parseStyles(color, style, baseStyle) {
   };
 }
 function Item(widget, options) {
-  var that = this;
-  var data = options.data;
+  const that = this;
+  const data = options.data;
   that.code = 0;
   that.widget = widget;
   that.figure = options.figure;
@@ -34,16 +34,16 @@ function Item(widget, options) {
   };
 }
 Item.prototype = {
-  getState: function getState() {
+  getState: function () {
     return states[this.code];
   },
-  getNormalStyle: function getNormalStyle() {
+  getNormalStyle: function () {
     return this.states.normal;
   },
-  setHover: function setHover() {
+  setHover: function () {
     this.hover(true);
   },
-  hover: function hover(state) {
+  hover: function (state) {
     if (!this.widget._getOption('hoverEnabled', true) || state === this.isHovered()) {
       return;
     }
@@ -55,7 +55,7 @@ Item.prototype = {
     });
     this.widget._resume();
   },
-  setState: function setState(code, state) {
+  setState: function (code, state) {
     if (state) {
       this.code |= code;
     } else {
@@ -63,8 +63,8 @@ Item.prototype = {
     }
     this.widget._applyTilesAppearance();
   },
-  select: function select(state) {
-    var mode = this.widget._getOption('selectionMode', true);
+  select: function (state) {
+    const mode = this.widget._getOption('selectionMode', true);
     if (mode === 'none' || state === this.isSelected()) {
       return;
     }
@@ -78,16 +78,16 @@ Item.prototype = {
     });
     this.widget._resume();
   },
-  showTooltip: function showTooltip(coords) {
+  showTooltip: function (coords) {
     this.widget._showTooltip(this.id, coords);
   },
-  getColor: function getColor() {
+  getColor: function () {
     return this.color;
   },
-  isHovered: function isHovered() {
+  isHovered: function () {
     return !!(this.code & 1);
   },
-  isSelected: function isSelected() {
+  isSelected: function () {
     return !!(this.code & 2);
   }
 };

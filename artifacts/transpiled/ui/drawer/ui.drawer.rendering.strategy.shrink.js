@@ -8,23 +8,23 @@ var _inflector = require("../../core/utils/inflector");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ShrinkStrategy = /*#__PURE__*/function (_DrawerStrategy) {
+let ShrinkStrategy = /*#__PURE__*/function (_DrawerStrategy) {
   _inheritsLoose(ShrinkStrategy, _DrawerStrategy);
   function ShrinkStrategy() {
     return _DrawerStrategy.apply(this, arguments) || this;
   }
   var _proto = ShrinkStrategy.prototype;
   _proto._internalRenderPosition = function _internalRenderPosition(changePositionUsingFxAnimation, whenAnimationCompleted) {
-    var drawer = this.getDrawerInstance();
-    var direction = drawer.calcTargetPosition();
-    var $panel = (0, _renderer.default)(drawer.content());
-    var panelSize = this._getPanelSize(drawer.option('opened'));
-    var panelOffset = this._getPanelOffset(drawer.option('opened'));
-    var revealMode = drawer.option('revealMode');
+    const drawer = this.getDrawerInstance();
+    const direction = drawer.calcTargetPosition();
+    const $panel = (0, _renderer.default)(drawer.content());
+    const panelSize = this._getPanelSize(drawer.option('opened'));
+    const panelOffset = this._getPanelOffset(drawer.option('opened'));
+    const revealMode = drawer.option('revealMode');
     if (changePositionUsingFxAnimation) {
       if (revealMode === 'slide') {
         _uiDrawer.animation.margin({
-          complete: function complete() {
+          complete: () => {
             whenAnimationCompleted.resolve();
           },
           $element: $panel,
@@ -34,7 +34,7 @@ var ShrinkStrategy = /*#__PURE__*/function (_DrawerStrategy) {
         });
       } else if (revealMode === 'expand') {
         _uiDrawer.animation.size({
-          complete: function complete() {
+          complete: () => {
             whenAnimationCompleted.resolve();
           },
           $element: $panel,

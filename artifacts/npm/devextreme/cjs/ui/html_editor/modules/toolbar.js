@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/toolbar.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,35 +35,35 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ToolbarModule = _base.default;
+let ToolbarModule = _base.default;
 if (_devextremeQuill.default) {
-  var TOOLBAR_WRAPPER_CLASS = 'dx-htmleditor-toolbar-wrapper';
-  var TOOLBAR_CLASS = 'dx-htmleditor-toolbar';
-  var TOOLBAR_FORMAT_WIDGET_CLASS = 'dx-htmleditor-toolbar-format';
-  var TOOLBAR_SEPARATOR_CLASS = 'dx-htmleditor-toolbar-separator';
-  var TOOLBAR_MENU_SEPARATOR_CLASS = 'dx-htmleditor-toolbar-menu-separator';
-  var ACTIVE_FORMAT_CLASS = 'dx-format-active';
-  var SELECTED_STATE_CLASS = 'dx-state-selected';
-  var ICON_CLASS = 'dx-icon';
-  var SELECTION_CHANGE_EVENT = 'selection-change';
-  var USER_ACTION = 'user';
-  var SILENT_ACTION = 'silent';
-  var FORMAT_HOTKEYS = {
+  const TOOLBAR_WRAPPER_CLASS = 'dx-htmleditor-toolbar-wrapper';
+  const TOOLBAR_CLASS = 'dx-htmleditor-toolbar';
+  const TOOLBAR_FORMAT_WIDGET_CLASS = 'dx-htmleditor-toolbar-format';
+  const TOOLBAR_SEPARATOR_CLASS = 'dx-htmleditor-toolbar-separator';
+  const TOOLBAR_MENU_SEPARATOR_CLASS = 'dx-htmleditor-toolbar-menu-separator';
+  const ACTIVE_FORMAT_CLASS = 'dx-format-active';
+  const SELECTED_STATE_CLASS = 'dx-state-selected';
+  const ICON_CLASS = 'dx-icon';
+  const SELECTION_CHANGE_EVENT = 'selection-change';
+  const USER_ACTION = 'user';
+  const SILENT_ACTION = 'silent';
+  const FORMAT_HOTKEYS = {
     66: 'bold',
     73: 'italic',
     85: 'underline'
   };
-  var KEY_CODES = {
+  const KEY_CODES = {
     b: 66,
     i: 73,
     u: 85
   };
-  var localize = function localize(name) {
+  const localize = name => {
     return _message.default.format("dxHtmlEditor-".concat((0, _inflector.camelize)(name)));
   };
-  var localizeValue = function localizeValue(value, name) {
+  const localizeValue = (value, name) => {
     if (name === 'header') {
-      var isHeaderValue = (0, _type.isDefined)(value) && value !== false;
+      const isHeaderValue = (0, _type.isDefined)(value) && value !== false;
       return isHeaderValue ? "".concat(localize('heading'), " ").concat(value) : localize('normalText');
     }
     return localize(value) || value;
@@ -89,23 +89,23 @@ if (_devextremeQuill.default) {
         // Possible better solutions:
         // - rework or extend a toolbar menu api or life cycle;
         // - support a separate cache for toolbar items' state and apply it on each item's initialization.
-        var toolbarMenu = _this.toolbarInstance._layoutStrategy._menu;
+        const toolbarMenu = _this.toolbarInstance._layoutStrategy._menu;
         if (toolbarMenu) {
-          var _renderPopup = toolbarMenu._renderPopup;
+          const _renderPopup = toolbarMenu._renderPopup;
           toolbarMenu._renderPopup = function () {
             for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
               args[_key] = arguments[_key];
             }
-            _renderPopup.apply.apply(_renderPopup, [toolbarMenu].concat(args));
-            toolbarMenu._popup.on('showing', function () {
+            _renderPopup.apply(toolbarMenu, ...args);
+            toolbarMenu._popup.on('showing', () => {
               _this._updateToolbar(true);
             });
           };
         }
-        _this.quill.on('editor-change', function (eventName, newValue, oldValue, eventSource) {
-          var isSilentMode = eventSource === SILENT_ACTION && (0, _type.isEmptyObject)(_this.quill.getFormat());
+        _this.quill.on('editor-change', (eventName, newValue, oldValue, eventSource) => {
+          const isSilentMode = eventSource === SILENT_ACTION && (0, _type.isEmptyObject)(_this.quill.getFormat());
           if (!isSilentMode) {
-            var isSelectionChanged = eventName === SELECTION_CHANGE_EVENT;
+            const isSelectionChanged = eventName === SELECTION_CHANGE_EVENT;
             _this._updateToolbar(isSelectionChanged);
           }
         });
@@ -123,7 +123,7 @@ if (_devextremeQuill.default) {
       this.updateTableWidgets();
     };
     _proto._updateFormatWidget = function _updateFormatWidget(name, isApplied, formats) {
-      var widget = this._toolbarWidgets.getByName(name);
+      const widget = this._toolbarWidgets.getByName(name);
       if (!widget) {
         return;
       }
@@ -138,19 +138,20 @@ if (_devextremeQuill.default) {
       this._toggleClearFormatting(isApplied || !(0, _type.isEmptyObject)(formats));
     };
     _proto._renderToolbar = function _renderToolbar() {
-      var _this2 = this;
-      var container = this.options.container || this._getContainer();
+      const container = this.options.container || this._getContainer();
       this._$toolbar = (0, _renderer.default)('<div>').addClass(TOOLBAR_CLASS).appendTo(container);
       this._$toolbarContainer = (0, _renderer.default)(container).addClass(TOOLBAR_WRAPPER_CLASS);
-      _events_engine.default.on(this._$toolbarContainer, (0, _index.addNamespace)('mousedown', this.editorInstance.NAME), function (e) {
+      _events_engine.default.on(this._$toolbarContainer, (0, _index.addNamespace)('mousedown', this.editorInstance.NAME), e => {
         e.preventDefault();
       });
       this._subscribeFormatHotKeys();
       this.toolbarInstance = this.editorInstance._createComponent(this._$toolbar, _toolbar.default, this.toolbarConfig);
-      this.editorInstance.on('optionChanged', function (_ref) {
-        var name = _ref.name;
+      this.editorInstance.on('optionChanged', _ref => {
+        let {
+          name
+        } = _ref;
         if (name === 'readOnly' || name === 'disabled') {
-          _this2.toolbarInstance.option('disabled', _this2.isInteractionDisabled);
+          this.toolbarInstance.option('disabled', this.isInteractionDisabled);
         }
       });
     };
@@ -168,12 +169,12 @@ if (_devextremeQuill.default) {
       this.toolbarInstance && this.toolbarInstance.repaint();
     };
     _proto._getContainer = function _getContainer() {
-      var $container = (0, _renderer.default)('<div>');
+      const $container = (0, _renderer.default)('<div>');
       this.editorInstance.$element().prepend($container);
       return $container;
     };
     _proto._detectRenamedOptions = function _detectRenamedOptions(item) {
-      var optionsInfo = [{
+      const optionsInfo = [{
         newName: 'name',
         oldName: 'formatName'
       }, {
@@ -181,7 +182,7 @@ if (_devextremeQuill.default) {
         oldName: 'formatValues'
       }];
       if ((0, _type.isObject)(item)) {
-        (0, _iterator.each)(optionsInfo, function (index, optionName) {
+        (0, _iterator.each)(optionsInfo, (index, optionName) => {
           if (Object.prototype.hasOwnProperty.call(item, optionName.oldName)) {
             _ui.default.log('W1016', optionName.oldName, optionName.newName);
           }
@@ -203,14 +204,16 @@ if (_devextremeQuill.default) {
       }, this._handleFormatHotKey.bind(this));
     };
     _proto._handleFormatHotKey = function _handleFormatHotKey(range, context, _ref2) {
-      var which = _ref2.which;
-      var formatName = FORMAT_HOTKEYS[which];
+      let {
+        which
+      } = _ref2;
+      const formatName = FORMAT_HOTKEYS[which];
       this._updateButtonState(formatName);
     };
     _proto._updateButtonState = function _updateButtonState(formatName) {
-      var formatWidget = this._toolbarWidgets.getByName(formatName);
-      var currentFormat = this.quill.getFormat();
-      var formatValue = currentFormat[formatName];
+      const formatWidget = this._toolbarWidgets.getByName(formatName);
+      const currentFormat = this.quill.getFormat();
+      const formatValue = currentFormat[formatName];
       if (formatValue) {
         this._markActiveFormatWidget(formatName, formatWidget, currentFormat);
       } else {
@@ -218,16 +221,15 @@ if (_devextremeQuill.default) {
       }
     };
     _proto._prepareToolbarItems = function _prepareToolbarItems() {
-      var _this3 = this;
-      var resultItems = [];
-      (0, _iterator.each)(this.options.items, function (index, item) {
-        var newItem;
-        _this3._detectRenamedOptions(item);
+      const resultItems = [];
+      (0, _iterator.each)(this.options.items, (index, item) => {
+        let newItem;
+        this._detectRenamedOptions(item);
         if ((0, _type.isObject)(item)) {
-          newItem = _this3._handleObjectItem(item);
+          newItem = this._handleObjectItem(item);
         } else if ((0, _type.isString)(item)) {
-          var buttonItemConfig = _this3._prepareButtonItemConfig(item);
-          newItem = _this3._getToolbarItem(buttonItemConfig);
+          const buttonItemConfig = this._prepareButtonItemConfig(item);
+          newItem = this._getToolbarItem(buttonItemConfig);
         }
         if (newItem) {
           resultItems.push(newItem);
@@ -237,11 +239,11 @@ if (_devextremeQuill.default) {
     };
     _proto._handleObjectItem = function _handleObjectItem(item) {
       if (item.name && item.acceptedValues && this._isAcceptableItem(item.widget, 'dxSelectBox')) {
-        var selectItemConfig = this._prepareSelectItemConfig(item);
+        const selectItemConfig = this._prepareSelectItemConfig(item);
         return this._getToolbarItem(selectItemConfig);
       } else if (item.name && this._isAcceptableItem(item.widget, 'dxButton')) {
-        var defaultButtonItemConfig = this._prepareButtonItemConfig(item.name);
-        var buttonItemConfig = (0, _extend.extend)(true, defaultButtonItemConfig, item);
+        const defaultButtonItemConfig = this._prepareButtonItemConfig(item.name);
+        const buttonItemConfig = (0, _extend.extend)(true, defaultButtonItemConfig, item);
         return this._getToolbarItem(buttonItemConfig);
       } else {
         return this._getToolbarItem(item);
@@ -252,8 +254,8 @@ if (_devextremeQuill.default) {
     };
     _proto._prepareButtonItemConfig = function _prepareButtonItemConfig(name) {
       var _ICON_MAP$name;
-      var iconName = (_ICON_MAP$name = _toolbar_helper.ICON_MAP[name]) !== null && _ICON_MAP$name !== void 0 ? _ICON_MAP$name : name;
-      var buttonText = (0, _inflector.titleize)(name);
+      const iconName = (_ICON_MAP$name = _toolbar_helper.ICON_MAP[name]) !== null && _ICON_MAP$name !== void 0 ? _ICON_MAP$name : name;
+      const buttonText = (0, _inflector.titleize)(name);
       return {
         widget: 'dxButton',
         name,
@@ -268,24 +270,25 @@ if (_devextremeQuill.default) {
       };
     };
     _proto._prepareSelectItemConfig = function _prepareSelectItemConfig(item) {
-      var _this4 = this;
-      var name = item.name,
-        acceptedValues = item.acceptedValues;
+      const {
+        name,
+        acceptedValues
+      } = item;
       return (0, _extend.extend)(true, {
         widget: 'dxSelectBox',
         name,
         options: {
           stylingMode: 'filled',
           dataSource: acceptedValues,
-          displayExpr: function displayExpr(value) {
+          displayExpr: value => {
             return localizeValue(value, name);
           },
           placeholder: localize(name),
-          onValueChanged: function onValueChanged(e) {
-            if (!_this4._isReset) {
-              _this4._hideAdaptiveMenu();
-              (0, _toolbar_helper.applyFormat)(_this4, [name, e.value, USER_ACTION], e.event);
-              _this4._setValueSilent(e.component, e.value);
+          onValueChanged: e => {
+            if (!this._isReset) {
+              this._hideAdaptiveMenu();
+              (0, _toolbar_helper.applyFormat)(this, [name, e.value, USER_ACTION], e.event);
+              this._setValueSilent(e.component, e.value);
             }
           }
         }
@@ -297,18 +300,17 @@ if (_devextremeQuill.default) {
       }
     };
     _proto._getToolbarItem = function _getToolbarItem(item) {
-      var _this5 = this;
-      var baseItem = {
+      const baseItem = {
         options: {
-          onInitialized: function onInitialized(e) {
+          onInitialized: e => {
             if (item.name) {
               e.component.$element().addClass(TOOLBAR_FORMAT_WIDGET_CLASS);
               e.component.$element().toggleClass("dx-".concat(item.name.toLowerCase(), "-format"), !!item.name);
-              _this5._toolbarWidgets.add(item.name, e.component);
+              this._toolbarWidgets.add(item.name, e.component);
             }
           },
-          onDisposing: function onDisposing() {
-            _this5._toolbarWidgets.remove(item.name);
+          onDisposing: () => {
+            this._toolbarWidgets.remove(item.name);
           }
         }
       };
@@ -386,10 +388,10 @@ if (_devextremeQuill.default) {
           }
         },
         separator: {
-          template: function template(data, index, element) {
+          template: (data, index, element) => {
             (0, _renderer.default)(element).addClass(TOOLBAR_SEPARATOR_CLASS);
           },
-          menuItemTemplate: function menuItemTemplate(data, index, element) {
+          menuItemTemplate: (data, index, element) => {
             (0, _renderer.default)(element).addClass(TOOLBAR_MENU_SEPARATOR_CLASS);
           }
         }
@@ -399,31 +401,29 @@ if (_devextremeQuill.default) {
       return this._getDefaultItemsConfig()[name];
     };
     _proto.updateHistoryWidgets = function updateHistoryWidgets() {
-      var historyModule = this.quill.history;
+      const historyModule = this.quill.history;
       if (!historyModule) {
         return;
       }
-      var _historyModule$stack = historyModule.stack,
-        undoOps = _historyModule$stack.undo,
-        redoOps = _historyModule$stack.redo;
+      const {
+        undo: undoOps,
+        redo: redoOps
+      } = historyModule.stack;
       this._updateManipulationWidget(this._toolbarWidgets.getByName('undo'), Boolean(undoOps.length));
       this._updateManipulationWidget(this._toolbarWidgets.getByName('redo'), Boolean(redoOps.length));
     };
     _proto.updateTableWidgets = function updateTableWidgets() {
-      var _this6 = this;
-      var table = this.quill.getModule('table');
+      const table = this.quill.getModule('table');
       if (!table) {
         return;
       }
-      var selection = this.quill.getSelection();
-      var formats = selection && this.quill.getFormat(selection) || {};
-      var isTableOperationsEnabled = this._tableFormats.some(function (format) {
-        return Boolean(formats[format]);
-      });
-      _table_helper.TABLE_OPERATIONS.forEach(function (operationName) {
-        var isInsertTable = operationName === 'insertTable';
-        var widget = _this6._toolbarWidgets.getByName(operationName);
-        _this6._updateManipulationWidget(widget, isInsertTable ? !isTableOperationsEnabled : isTableOperationsEnabled);
+      const selection = this.quill.getSelection();
+      const formats = selection && this.quill.getFormat(selection) || {};
+      const isTableOperationsEnabled = this._tableFormats.some(format => Boolean(formats[format]));
+      _table_helper.TABLE_OPERATIONS.forEach(operationName => {
+        const isInsertTable = operationName === 'insertTable';
+        const widget = this._toolbarWidgets.getByName(operationName);
+        this._updateManipulationWidget(widget, isInsertTable ? !isTableOperationsEnabled : isTableOperationsEnabled);
       });
     };
     _proto._updateManipulationWidget = function _updateManipulationWidget(widget, isOperationEnabled) {
@@ -433,18 +433,18 @@ if (_devextremeQuill.default) {
       widget.option('disabled', !isOperationEnabled);
     };
     _proto.updateFormatWidgets = function updateFormatWidgets(isResetRequired) {
-      var selection = this.quill.getSelection();
+      const selection = this.quill.getSelection();
       if (!selection) {
         return;
       }
-      var formats = this.quill.getFormat(selection);
-      var hasFormats = !(0, _type.isEmptyObject)(formats);
+      const formats = this.quill.getFormat(selection);
+      const hasFormats = !(0, _type.isEmptyObject)(formats);
       if (!hasFormats || isResetRequired) {
         this._resetFormatWidgets();
       }
-      for (var formatName in formats) {
-        var widgetName = this._getFormatWidgetName(formatName, formats);
-        var formatWidget = this._toolbarWidgets.getByName(widgetName) || this._toolbarWidgets.getByName(formatName);
+      for (const formatName in formats) {
+        const widgetName = this._getFormatWidgetName(formatName, formats);
+        const formatWidget = this._toolbarWidgets.getByName(widgetName) || this._toolbarWidgets.getByName(formatName);
         if (!formatWidget) {
           continue;
         }
@@ -464,7 +464,7 @@ if (_devextremeQuill.default) {
       }
     };
     _proto._toggleClearFormatting = function _toggleClearFormatting(hasFormats) {
-      var clearWidget = this._toolbarWidgets.getByName('clear');
+      const clearWidget = this._toolbarWidgets.getByName('clear');
       if (clearWidget) {
         clearWidget.option('disabled', !hasFormats);
       }
@@ -473,14 +473,14 @@ if (_devextremeQuill.default) {
       return name === 'color' || name === 'background';
     };
     _proto._updateColorWidget = function _updateColorWidget(name, color) {
-      var formatWidget = this._toolbarWidgets.getByName(name);
+      const formatWidget = this._toolbarWidgets.getByName(name);
       if (!formatWidget) {
         return;
       }
       formatWidget.$element().find(".".concat(ICON_CLASS)).css('borderBottomColor', color || 'transparent');
     };
     _proto._getFormatWidgetName = function _getFormatWidgetName(name, formats) {
-      var widgetName;
+      let widgetName;
       switch (name) {
         case 'align':
           widgetName = name + (0, _inflector.titleize)(formats[name]);
@@ -508,9 +508,8 @@ if (_devextremeQuill.default) {
       this._isReset = false;
     };
     _proto._resetFormatWidgets = function _resetFormatWidgets() {
-      var _this7 = this;
-      this._toolbarWidgets.each(function (name, widget) {
-        _this7._resetFormatWidget(name, widget);
+      this._toolbarWidgets.each((name, widget) => {
+        this._resetFormatWidget(name, widget);
       });
     };
     _proto._resetFormatWidget = function _resetFormatWidget(name, widget) {
@@ -528,14 +527,14 @@ if (_devextremeQuill.default) {
     };
     _proto.addClickHandler = function addClickHandler(name, handler) {
       this._formatHandlers[name] = handler;
-      var formatWidget = this._toolbarWidgets.getByName(name);
+      const formatWidget = this._toolbarWidgets.getByName(name);
       if (formatWidget && formatWidget.NAME === 'dxButton') {
         formatWidget.option('onClick', handler);
       }
     };
     _createClass(ToolbarModule, [{
       key: "toolbarConfig",
-      get: function get() {
+      get: function () {
         return {
           dataSource: this._prepareToolbarItems(),
           disabled: this.isInteractionDisabled,
@@ -545,7 +544,7 @@ if (_devextremeQuill.default) {
       }
     }, {
       key: "isInteractionDisabled",
-      get: function get() {
+      get: function () {
         return this.editorInstance.option('readOnly') || this.editorInstance.option('disabled');
       }
     }]);

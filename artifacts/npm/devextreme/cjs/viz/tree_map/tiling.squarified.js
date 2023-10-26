@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/tiling.squarified.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ exports.default = void 0;
 var _tilingSquarified = _interopRequireDefault(require("./tiling.squarified.base"));
 var _tiling = require("./tiling");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _max = Math.max;
+const _max = Math.max;
 function accumulate(total, current) {
   return _max(total, current);
 }

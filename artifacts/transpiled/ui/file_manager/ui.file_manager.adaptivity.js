@@ -12,12 +12,12 @@ var _splitter = _interopRequireDefault(require("../splitter"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var window = (0, _window.getWindow)();
-var ADAPTIVE_STATE_SCREEN_WIDTH = 573;
-var FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS = 'dx-filemanager-adaptivity-drawer-panel';
-var DRAWER_PANEL_CONTENT_INITIAL = 'dx-drawer-panel-content-initial';
-var DRAWER_PANEL_CONTENT_ADAPTIVE = 'dx-drawer-panel-content-adaptive';
-var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
+const window = (0, _window.getWindow)();
+const ADAPTIVE_STATE_SCREEN_WIDTH = 573;
+const FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS = 'dx-filemanager-adaptivity-drawer-panel';
+const DRAWER_PANEL_CONTENT_INITIAL = 'dx-drawer-panel-content-initial';
+const DRAWER_PANEL_CONTENT_ADAPTIVE = 'dx-drawer-panel-content-adaptive';
+let FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerAdaptivityControl, _Widget);
   function FileManagerAdaptivityControl() {
     return _Widget.apply(this, arguments) || this;
@@ -27,7 +27,7 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
     _Widget.prototype._initMarkup.call(this);
     this._initActions();
     this._isInAdaptiveState = false;
-    var $drawer = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const $drawer = (0, _renderer.default)('<div>').appendTo(this.$element());
     (0, _renderer.default)('<div>').addClass(FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS).appendTo($drawer);
     this._drawer = this._createComponent($drawer, _ui2.default);
     this._drawer.option({
@@ -35,8 +35,8 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
       template: this._createDrawerTemplate.bind(this)
     });
     (0, _renderer.default)(this._drawer.content()).addClass(DRAWER_PANEL_CONTENT_INITIAL);
-    var $drawerContent = $drawer.find(".".concat(FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS)).first();
-    var contentRenderer = this.option('contentTemplate');
+    const $drawerContent = $drawer.find(".".concat(FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS)).first();
+    const contentRenderer = this.option('contentTemplate');
     if ((0, _type.isFunction)(contentRenderer)) {
       contentRenderer($drawerContent);
     }
@@ -70,7 +70,9 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
     this._setDrawerWidth(e.leftPanelWidth);
   };
   _proto._onActiveStateChanged = function _onActiveStateChanged(_ref) {
-    var isActive = _ref.isActive;
+    let {
+      isActive
+    } = _ref;
     this._splitter.disableSplitterCalculation(!isActive);
     !isActive && this._splitter.$element().css('left', 'auto');
   };
@@ -88,7 +90,7 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._checkAdaptiveState = function _checkAdaptiveState() {
-    var oldState = this._isInAdaptiveState;
+    const oldState = this._isInAdaptiveState;
     this._isInAdaptiveState = this._isSmallScreen();
     if (oldState !== this._isInAdaptiveState) {
       this.toggleDrawer(!this._isInAdaptiveState, true);
@@ -123,7 +125,7 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'drawerTemplate':
       case 'contentTemplate':
@@ -143,7 +145,7 @@ var FileManagerAdaptivityControl = /*#__PURE__*/function (_Widget) {
     this._updateDrawerMaxSize();
     this._drawer.option('animationEnabled', !skipAnimation);
     this._drawer.toggle(showing);
-    var isSplitterActive = this._isDrawerOpened() && !this.isInAdaptiveState();
+    const isSplitterActive = this._isDrawerOpened() && !this.isInAdaptiveState();
     this._splitter.toggleDisabled(!isSplitterActive);
   };
   _proto.getSplitterElement = function getSplitterElement() {

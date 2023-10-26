@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/data_provider/m_appointment_data_provider.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,11 +21,11 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var FilterStrategies = {
+const FilterStrategies = {
   virtual: 'virtual',
   standard: 'standard'
 };
-var AppointmentDataProvider = /*#__PURE__*/function () {
+let AppointmentDataProvider = /*#__PURE__*/function () {
   function AppointmentDataProvider(options) {
     this.options = options;
     this.dataSource = this.options.dataSource;
@@ -42,7 +42,7 @@ var AppointmentDataProvider = /*#__PURE__*/function () {
     return this.filterStrategy;
   };
   _proto.initFilterStrategy = function initFilterStrategy() {
-    var filterOptions = {
+    const filterOptions = {
       resources: this.options.resources,
       dataAccessors: this.dataAccessors,
       startDayHour: this.options.startDayHour,
@@ -81,8 +81,8 @@ var AppointmentDataProvider = /*#__PURE__*/function () {
     if (!this.dataSource || !remoteFiltering) {
       return;
     }
-    var dataSourceFilter = this.dataSource.filter();
-    var filter = (0, _remote.default)({
+    const dataSourceFilter = this.dataSource.filter();
+    const filter = (0, _remote.default)({
       dataSourceFilter,
       dataAccessors: this.dataAccessors,
       min,
@@ -126,17 +126,17 @@ var AppointmentDataProvider = /*#__PURE__*/function () {
   };
   _createClass(AppointmentDataProvider, [{
     key: "keyName",
-    get: function get() {
+    get: function () {
       return this.appointmentDataSource.keyName;
     }
   }, {
     key: "isDataSourceInit",
-    get: function get() {
+    get: function () {
       return !!this.dataSource;
     }
   }, {
     key: "filterStrategyName",
-    get: function get() {
+    get: function () {
       return this.options.getIsVirtualScrolling() ? FilterStrategies.virtual : FilterStrategies.standard;
     }
   }]);

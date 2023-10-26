@@ -13,15 +13,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // eslint-disable-next-line no-restricted-imports
 
-var CURRENCY_STYLES = ['symbol', 'accounting'];
+const CURRENCY_STYLES = ['symbol', 'accounting'];
 if (_globalize.default && _globalize.default.formatCurrency) {
   if (_globalize.default.locale().locale === 'en') {
     _globalize.default.locale('en');
   }
-  var formattersCache = {};
-  var getFormatter = function getFormatter(currency, format) {
-    var formatter;
-    var formatCacheKey;
+  const formattersCache = {};
+  const getFormatter = (currency, format) => {
+    let formatter;
+    let formatCacheKey;
     if (typeof format === 'object') {
       formatCacheKey = _globalize.default.locale().locale + ':' + currency + ':' + JSON.stringify(format);
     } else {
@@ -33,49 +33,49 @@ if (_globalize.default && _globalize.default.formatCurrency) {
     }
     return formatter;
   };
-  var globalizeCurrencyLocalization = {
-    _formatNumberCore: function _formatNumberCore(value, format, formatConfig) {
+  const globalizeCurrencyLocalization = {
+    _formatNumberCore: function (value, format, formatConfig) {
       if (format === 'currency') {
-        var currency = formatConfig && formatConfig.currency || (0, _config.default)().defaultCurrency;
+        const currency = formatConfig && formatConfig.currency || (0, _config.default)().defaultCurrency;
         return getFormatter(currency, this._normalizeFormatConfig(format, formatConfig, value))(value);
       }
       return this.callBase.apply(this, arguments);
     },
-    _normalizeFormatConfig: function _normalizeFormatConfig(format, formatConfig, value) {
-      var normalizedConfig = this.callBase(format, formatConfig, value);
+    _normalizeFormatConfig: function (format, formatConfig, value) {
+      const normalizedConfig = this.callBase(format, formatConfig, value);
       if (format === 'currency') {
         var _formatConfig$useCurr;
-        var useAccountingStyle = (_formatConfig$useCurr = formatConfig.useCurrencyAccountingStyle) !== null && _formatConfig$useCurr !== void 0 ? _formatConfig$useCurr : (0, _config.default)().defaultUseCurrencyAccountingStyle;
+        const useAccountingStyle = (_formatConfig$useCurr = formatConfig.useCurrencyAccountingStyle) !== null && _formatConfig$useCurr !== void 0 ? _formatConfig$useCurr : (0, _config.default)().defaultUseCurrencyAccountingStyle;
         normalizedConfig.style = CURRENCY_STYLES[+useAccountingStyle];
       }
       return normalizedConfig;
     },
-    format: function format(value, _format) {
+    format: function (value, format) {
       if (typeof value !== 'number') {
         return value;
       }
-      _format = this._normalizeFormat(_format);
-      if (_format) {
-        if (_format.currency === 'default') {
-          _format.currency = (0, _config.default)().defaultCurrency;
+      format = this._normalizeFormat(format);
+      if (format) {
+        if (format.currency === 'default') {
+          format.currency = (0, _config.default)().defaultCurrency;
         }
-        if (_format.type === 'currency') {
-          return this._formatNumber(value, this._parseNumberFormatString('currency'), _format);
-        } else if (!_format.type && _format.currency) {
-          return getFormatter(_format.currency, _format)(value);
+        if (format.type === 'currency') {
+          return this._formatNumber(value, this._parseNumberFormatString('currency'), format);
+        } else if (!format.type && format.currency) {
+          return getFormatter(format.currency, format)(value);
         }
       }
       return this.callBase.apply(this, arguments);
     },
-    getCurrencySymbol: function getCurrencySymbol(currency) {
+    getCurrencySymbol: function (currency) {
       if (!currency) {
         currency = (0, _config.default)().defaultCurrency;
       }
       return _globalize.default.cldr.main('numbers/currencies/' + currency);
     },
-    getOpenXmlCurrencyFormat: function getOpenXmlCurrencyFormat(currency) {
-      var currencySymbol = this.getCurrencySymbol(currency).symbol;
-      var accountingFormat = _globalize.default.cldr.main('numbers/currencyFormats-numberSystem-latn').accounting;
+    getOpenXmlCurrencyFormat: function (currency) {
+      const currencySymbol = this.getCurrencySymbol(currency).symbol;
+      const accountingFormat = _globalize.default.cldr.main('numbers/currencyFormats-numberSystem-latn').accounting;
       return (0, _open_xml_currency_format.default)(currencySymbol, accountingFormat);
     }
   };

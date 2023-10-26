@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/converterController.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 "use strict";
 
 exports.default = void 0;
-var ConverterController = /*#__PURE__*/function () {
+let ConverterController = /*#__PURE__*/function () {
   function ConverterController() {
     this._converters = {};
   }
@@ -22,7 +22,7 @@ var ConverterController = /*#__PURE__*/function () {
   };
   return ConverterController;
 }();
-var controller = new ConverterController();
+const controller = new ConverterController();
 var _default = controller;
 exports.default = _default;
 module.exports = exports.default;

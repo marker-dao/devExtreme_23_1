@@ -10,39 +10,31 @@ var _utils = require("./utils");
 var _errors = require("../errors");
 var _utils2 = require("../utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DEFAULT_PROTOCOL_VERSION = 2;
-var STRING_FUNCTIONS = ['contains', 'notcontains', 'startswith', 'endswith'];
-var compileCriteria = function () {
-  var protocolVersion;
-  var forceLowerCase;
-  var fieldTypes;
-  var createBinaryOperationFormatter = function createBinaryOperationFormatter(op) {
-    return function (prop, val) {
-      return "".concat(prop, " ").concat(op, " ").concat(val);
-    };
+const DEFAULT_PROTOCOL_VERSION = 2;
+const STRING_FUNCTIONS = ['contains', 'notcontains', 'startswith', 'endswith'];
+const compileCriteria = (() => {
+  let protocolVersion;
+  let forceLowerCase;
+  let fieldTypes;
+  const createBinaryOperationFormatter = op => (prop, val) => "".concat(prop, " ").concat(op, " ").concat(val);
+  const createStringFuncFormatter = (op, reverse) => (prop, val) => {
+    const bag = [op, '('];
+    if (forceLowerCase) {
+      prop = prop.indexOf('tolower(') === -1 ? "tolower(".concat(prop, ")") : prop;
+      val = val.toLowerCase();
+    }
+    if (reverse) {
+      bag.push(val, ',', prop);
+    } else {
+      bag.push(prop, ',', val);
+    }
+    bag.push(')');
+    return bag.join('');
   };
-  var createStringFuncFormatter = function createStringFuncFormatter(op, reverse) {
-    return function (prop, val) {
-      var bag = [op, '('];
-      if (forceLowerCase) {
-        prop = prop.indexOf('tolower(') === -1 ? "tolower(".concat(prop, ")") : prop;
-        val = val.toLowerCase();
-      }
-      if (reverse) {
-        bag.push(val, ',', prop);
-      } else {
-        bag.push(prop, ',', val);
-      }
-      bag.push(')');
-      return bag.join('');
-    };
+  const isStringFunction = function (name) {
+    return STRING_FUNCTIONS.some(funcName => funcName === name);
   };
-  var isStringFunction = function isStringFunction(name) {
-    return STRING_FUNCTIONS.some(function (funcName) {
-      return funcName === name;
-    });
-  };
-  var formatters = {
+  const formatters = {
     '=': createBinaryOperationFormatter('eq'),
     '<>': createBinaryOperationFormatter('ne'),
     '>': createBinaryOperationFormatter('gt'),
@@ -52,46 +44,46 @@ var compileCriteria = function () {
     'startswith': createStringFuncFormatter('startswith'),
     'endswith': createStringFuncFormatter('endswith')
   };
-  var formattersV2 = (0, _extend.extend)({}, formatters, {
+  const formattersV2 = (0, _extend.extend)({}, formatters, {
     'contains': createStringFuncFormatter('substringof', true),
     'notcontains': createStringFuncFormatter('not substringof', true)
   });
-  var formattersV4 = (0, _extend.extend)({}, formatters, {
+  const formattersV4 = (0, _extend.extend)({}, formatters, {
     'contains': createStringFuncFormatter('contains'),
     'notcontains': createStringFuncFormatter('not contains')
   });
-  var compileBinary = function compileBinary(criteria) {
+  const compileBinary = criteria => {
     var _fieldTypes;
     criteria = (0, _utils2.normalizeBinaryCriterion)(criteria);
-    var op = criteria[1];
-    var fieldName = criteria[0];
-    var fieldType = fieldTypes && fieldTypes[fieldName];
+    const op = criteria[1];
+    const fieldName = criteria[0];
+    const fieldType = fieldTypes && fieldTypes[fieldName];
     if (fieldType && isStringFunction(op) && fieldType !== 'String') {
       throw new _errors.errors.Error('E4024', op, fieldName, fieldType);
     }
-    var formatters = protocolVersion === 4 ? formattersV4 : formattersV2;
-    var formatter = formatters[op.toLowerCase()];
+    const formatters = protocolVersion === 4 ? formattersV4 : formattersV2;
+    const formatter = formatters[op.toLowerCase()];
     if (!formatter) {
       throw _errors.errors.Error('E4003', op);
     }
-    var value = criteria[2];
+    let value = criteria[2];
     if ((_fieldTypes = fieldTypes) !== null && _fieldTypes !== void 0 && _fieldTypes[fieldName]) {
       value = (0, _utils.convertPrimitiveValue)(fieldTypes[fieldName], value);
     }
     return formatter((0, _utils.serializePropName)(fieldName), (0, _utils.serializeValue)(value, protocolVersion));
   };
-  var compileUnary = function compileUnary(criteria) {
-    var op = criteria[0];
-    var crit = compileCore(criteria[1]);
+  const compileUnary = criteria => {
+    const op = criteria[0];
+    const crit = compileCore(criteria[1]);
     if (op === '!') {
       return "not (".concat(crit, ")");
     }
     throw _errors.errors.Error('E4003', op);
   };
-  var compileGroup = function compileGroup(criteria) {
-    var bag = [];
-    var groupOperator;
-    var nextGroupOperator;
+  const compileGroup = criteria => {
+    const bag = [];
+    let groupOperator;
+    let nextGroupOperator;
     (0, _iterator.each)(criteria, function (index, criterion) {
       if (Array.isArray(criterion)) {
         if (bag.length > 1 && groupOperator !== nextGroupOperator) {
@@ -106,7 +98,7 @@ var compileCriteria = function () {
     });
     return bag.join(" ".concat(groupOperator, " "));
   };
-  var compileCore = function compileCore(criteria) {
+  const compileCore = criteria => {
     if (Array.isArray(criteria[0])) {
       return compileGroup(criteria);
     }
@@ -115,27 +107,25 @@ var compileCriteria = function () {
     }
     return compileBinary(criteria);
   };
-  return function (criteria, version, types, filterToLower) {
+  return (criteria, version, types, filterToLower) => {
     fieldTypes = types;
     forceLowerCase = filterToLower !== null && filterToLower !== void 0 ? filterToLower : (0, _config.default)().oDataFilterToLower;
     protocolVersion = version;
     return compileCore(criteria);
   };
-}();
-var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
-  var _sorting = [];
-  var _criteria = [];
-  var _expand = queryOptions.expand;
-  var _select;
-  var _skip;
-  var _take;
-  var _countQuery;
-  var _oDataVersion = queryOptions.version || DEFAULT_PROTOCOL_VERSION;
-  var hasSlice = function hasSlice() {
-    return _skip || _take !== undefined;
-  };
-  var hasFunction = function hasFunction(criterion) {
-    for (var i = 0; i < criterion.length; i++) {
+})();
+const createODataQueryAdapter = queryOptions => {
+  let _sorting = [];
+  const _criteria = [];
+  const _expand = queryOptions.expand;
+  let _select;
+  let _skip;
+  let _take;
+  let _countQuery;
+  const _oDataVersion = queryOptions.version || DEFAULT_PROTOCOL_VERSION;
+  const hasSlice = () => _skip || _take !== undefined;
+  const hasFunction = criterion => {
+    for (let i = 0; i < criterion.length; i++) {
       if ((0, _type.isFunction)(criterion[i])) {
         return true;
       }
@@ -145,8 +135,8 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
     }
     return false;
   };
-  var requestData = function requestData() {
-    var result = {};
+  const requestData = () => {
+    const result = {};
     if (!_countQuery) {
       if (_sorting.length) {
         result['$orderby'] = _sorting.join(',');
@@ -161,9 +151,9 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
       result['$expand'] = (0, _utils.generateExpand)(_oDataVersion, _expand, _select) || undefined;
     }
     if (_criteria.length) {
-      var criteria = _criteria.length < 2 ? _criteria[0] : _criteria;
-      var fieldTypes = queryOptions === null || queryOptions === void 0 ? void 0 : queryOptions.fieldTypes;
-      var filterToLower = queryOptions === null || queryOptions === void 0 ? void 0 : queryOptions.filterToLower;
+      const criteria = _criteria.length < 2 ? _criteria[0] : _criteria;
+      const fieldTypes = queryOptions === null || queryOptions === void 0 ? void 0 : queryOptions.fieldTypes;
+      const filterToLower = queryOptions === null || queryOptions === void 0 ? void 0 : queryOptions.filterToLower;
       result['$filter'] = compileCriteria(criteria, _oDataVersion, fieldTypes, filterToLower);
     }
     if (_countQuery) {
@@ -179,16 +169,16 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
     }
     return result;
   };
-  var tryLiftSelect = function tryLiftSelect(tasks) {
-    var selectIndex = -1;
-    for (var i = 0; i < tasks.length; i++) {
+  const tryLiftSelect = tasks => {
+    let selectIndex = -1;
+    for (let i = 0; i < tasks.length; i++) {
       if (tasks[i].name === 'select') {
         selectIndex = i;
         break;
       }
     }
     if (selectIndex < 0 || !(0, _type.isFunction)(tasks[selectIndex].args[0])) return;
-    var nextTask = tasks[1 + selectIndex];
+    const nextTask = tasks[1 + selectIndex];
     if (!nextTask || nextTask.name !== 'slice') return;
     tasks[1 + selectIndex] = tasks[selectIndex];
     tasks[selectIndex] = nextTask;
@@ -210,14 +200,14 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
       });
     },
     multiSort(args) {
-      var rules;
+      let rules;
       if (hasSlice()) {
         return false;
       }
-      for (var i = 0; i < args.length; i++) {
-        var getter = args[i][0];
-        var desc = !!args[i][1];
-        var rule = void 0;
+      for (let i = 0; i < args.length; i++) {
+        const getter = args[i][0];
+        const desc = !!args[i][1];
+        let rule;
         if (typeof getter !== 'string') {
           return false;
         }
@@ -261,11 +251,9 @@ var createODataQueryAdapter = function createODataQueryAdapter(queryOptions) {
       }
       _select = expr;
     },
-    count: function count() {
-      return _countQuery = true;
-    }
+    count: () => _countQuery = true
   };
 };
 _query_adapters.default.odata = createODataQueryAdapter;
-var odata = createODataQueryAdapter;
+const odata = createODataQueryAdapter;
 exports.odata = odata;

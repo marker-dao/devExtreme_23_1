@@ -6,7 +6,7 @@ Object.keys(_m_remote_store_utils).forEach(function (key) {
   if (key in exports && exports[key] === _m_remote_store_utils[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_remote_store_utils[key];
     }
   });

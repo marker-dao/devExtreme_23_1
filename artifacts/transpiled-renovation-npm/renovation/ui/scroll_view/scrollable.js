@@ -14,8 +14,7 @@ var _consts = require("./common/consts");
 var _scrollable_props = require("./common/scrollable_props");
 var _resolve_rtl = require("../../utils/resolve_rtl");
 var _config_context = require("../../common/config_context");
-var _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "inertiaEnabled", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onBounce", "onEnd", "onPullDown", "onReachBottom", "onScroll", "onStart", "onUpdated", "onVisibilityChange", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "scrollByThumb", "scrollLocationChange", "showScrollbar", "useKeyboard", "useNative", "useSimulatedScrollbar", "visible", "width"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "inertiaEnabled", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onBounce", "onEnd", "onPullDown", "onReachBottom", "onScroll", "onStart", "onUpdated", "onVisibilityChange", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "scrollByThumb", "scrollLocationChange", "showScrollbar", "useKeyboard", "useNative", "useSimulatedScrollbar", "visible", "width"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -25,47 +24,50 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(viewModel) {
-  var isServerSide = viewModel.isServerSide,
-    _viewModel$props = viewModel.props,
-    aria = _viewModel$props.aria,
-    bounceEnabled = _viewModel$props.bounceEnabled,
-    children = _viewModel$props.children,
-    classes = _viewModel$props.classes,
-    direction = _viewModel$props.direction,
-    disabled = _viewModel$props.disabled,
-    forceGeneratePockets = _viewModel$props.forceGeneratePockets,
-    height = _viewModel$props.height,
-    inertiaEnabled = _viewModel$props.inertiaEnabled,
-    loadPanelTemplate = _viewModel$props.loadPanelTemplate,
-    needScrollViewContentWrapper = _viewModel$props.needScrollViewContentWrapper,
-    onBounce = _viewModel$props.onBounce,
-    onEnd = _viewModel$props.onEnd,
-    onPullDown = _viewModel$props.onPullDown,
-    onReachBottom = _viewModel$props.onReachBottom,
-    onScroll = _viewModel$props.onScroll,
-    onStart = _viewModel$props.onStart,
-    onUpdated = _viewModel$props.onUpdated,
-    onVisibilityChange = _viewModel$props.onVisibilityChange,
-    pullDownEnabled = _viewModel$props.pullDownEnabled,
-    pulledDownText = _viewModel$props.pulledDownText,
-    pullingDownText = _viewModel$props.pullingDownText,
-    reachBottomEnabled = _viewModel$props.reachBottomEnabled,
-    reachBottomText = _viewModel$props.reachBottomText,
-    refreshStrategy = _viewModel$props.refreshStrategy,
-    refreshingText = _viewModel$props.refreshingText,
-    scrollByContent = _viewModel$props.scrollByContent,
-    scrollByThumb = _viewModel$props.scrollByThumb,
-    showScrollbar = _viewModel$props.showScrollbar,
-    useKeyboard = _viewModel$props.useKeyboard,
-    useNative = _viewModel$props.useNative,
-    useSimulatedScrollbar = _viewModel$props.useSimulatedScrollbar,
-    visible = _viewModel$props.visible,
-    width = _viewModel$props.width,
-    restAttributes = viewModel.restAttributes,
-    rtlEnabled = viewModel.rtlEnabled,
-    scrollableNativeRef = viewModel.scrollableNativeRef,
-    scrollableSimulatedRef = viewModel.scrollableSimulatedRef;
+const viewFunction = viewModel => {
+  const {
+    isServerSide,
+    props: {
+      aria,
+      bounceEnabled,
+      children,
+      classes,
+      direction,
+      disabled,
+      forceGeneratePockets,
+      height,
+      inertiaEnabled,
+      loadPanelTemplate,
+      needScrollViewContentWrapper,
+      onBounce,
+      onEnd,
+      onPullDown,
+      onReachBottom,
+      onScroll,
+      onStart,
+      onUpdated,
+      onVisibilityChange,
+      pullDownEnabled,
+      pulledDownText,
+      pullingDownText,
+      reachBottomEnabled,
+      reachBottomText,
+      refreshStrategy,
+      refreshingText,
+      scrollByContent,
+      scrollByThumb,
+      showScrollbar,
+      useKeyboard,
+      useNative,
+      useSimulatedScrollbar,
+      visible,
+      width
+    },
+    restAttributes,
+    rtlEnabled,
+    scrollableNativeRef,
+    scrollableSimulatedRef
+  } = viewModel;
   return useNative ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _native.ScrollableNative, _extends({
     "aria": aria,
     "classes": classes,
@@ -133,12 +135,8 @@ var viewFunction = function viewFunction(viewModel) {
   }), null, scrollableSimulatedRef));
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(Scrollable, _InfernoWrapperCompon);
   function Scrollable(props) {
     var _this;
@@ -184,17 +182,18 @@ var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
     if (!this.props.useNative) {
       this.updateHandler();
     }
-    var currentScrollOffset = this.props.useNative ? this.scrollOffset() : {
+    const currentScrollOffset = this.props.useNative ? this.scrollOffset() : {
       top: this.container().scrollTop,
       left: this.container().scrollLeft
     };
-    var distance = (0, _get_offset_distance.getOffsetDistance)((0, _convert_location.convertToLocation)(targetLocation, this.props.direction), currentScrollOffset);
+    const distance = (0, _get_offset_distance.getOffsetDistance)((0, _convert_location.convertToLocation)(targetLocation, this.props.direction), currentScrollOffset);
     this.scrollBy(distance);
   };
   _proto.scrollBy = function scrollBy(distance) {
-    var _convertToLocation = (0, _convert_location.convertToLocation)(distance, this.props.direction),
-      left = _convertToLocation.left,
-      top = _convertToLocation.top;
+    let {
+      left,
+      top
+    } = (0, _convert_location.convertToLocation)(distance, this.props.direction);
     if (!(0, _type.isDefined)(top) || !(0, _type.isNumeric)(top)) {
       top = 0;
     }
@@ -226,11 +225,13 @@ var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
     if (!this.content().contains(element)) {
       return;
     }
-    var scrollPosition = {
+    const scrollPosition = {
       top: 0,
       left: 0
     };
-    var direction = this.props.direction;
+    const {
+      direction
+    } = this.props;
     if (direction !== _consts.DIRECTION_VERTICAL) {
       scrollPosition.left = this.getScrollElementPosition(element, _consts.DIRECTION_HORIZONTAL, offset);
     }
@@ -267,7 +268,7 @@ var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
     return this.scrollableRef.clientWidth();
   };
   _proto.getScrollElementPosition = function getScrollElementPosition(targetElement, direction, offset) {
-    var scrollOffset = this.scrollOffset();
+    const scrollOffset = this.scrollOffset();
     return (0, _get_element_location_internal.getElementLocationInternal)(targetElement, direction, this.container(), scrollOffset, offset);
   };
   _proto.startLoading = function startLoading() {
@@ -279,7 +280,7 @@ var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         loadPanelTemplate: getTemplate(props.loadPanelTemplate)
@@ -296,7 +297,7 @@ var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(Scrollable, [{
     key: "config",
-    get: function get() {
+    get: function () {
       if (this.context[_config_context.ConfigContext.id]) {
         return this.context[_config_context.ConfigContext.id];
       }
@@ -304,7 +305,7 @@ var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "scrollableRef",
-    get: function get() {
+    get: function () {
       if (this.props.useNative) {
         return this.scrollableNativeRef.current;
       }
@@ -312,58 +313,22 @@ var Scrollable = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "rtlEnabled",
-    get: function get() {
-      var rtlEnabled = this.props.rtlEnabled;
+    get: function () {
+      const {
+        rtlEnabled
+      } = this.props;
       return !!(0, _resolve_rtl.resolveRtlEnabled)(rtlEnabled, this.config);
     }
   }, {
     key: "isServerSide",
-    get: function get() {
+    get: function () {
       return !(0, _window.hasWindow)();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        addWidgetClass = _this$props.addWidgetClass,
-        aria = _this$props.aria,
-        bounceEnabled = _this$props.bounceEnabled,
-        children = _this$props.children,
-        classes = _this$props.classes,
-        direction = _this$props.direction,
-        disabled = _this$props.disabled,
-        forceGeneratePockets = _this$props.forceGeneratePockets,
-        height = _this$props.height,
-        inertiaEnabled = _this$props.inertiaEnabled,
-        loadPanelTemplate = _this$props.loadPanelTemplate,
-        needRenderScrollbars = _this$props.needRenderScrollbars,
-        needScrollViewContentWrapper = _this$props.needScrollViewContentWrapper,
-        onBounce = _this$props.onBounce,
-        onEnd = _this$props.onEnd,
-        onPullDown = _this$props.onPullDown,
-        onReachBottom = _this$props.onReachBottom,
-        onScroll = _this$props.onScroll,
-        onStart = _this$props.onStart,
-        onUpdated = _this$props.onUpdated,
-        onVisibilityChange = _this$props.onVisibilityChange,
-        pullDownEnabled = _this$props.pullDownEnabled,
-        pulledDownText = _this$props.pulledDownText,
-        pullingDownText = _this$props.pullingDownText,
-        reachBottomEnabled = _this$props.reachBottomEnabled,
-        reachBottomText = _this$props.reachBottomText,
-        refreshStrategy = _this$props.refreshStrategy,
-        refreshingText = _this$props.refreshingText,
-        rtlEnabled = _this$props.rtlEnabled,
-        scrollByContent = _this$props.scrollByContent,
-        scrollByThumb = _this$props.scrollByThumb,
-        scrollLocationChange = _this$props.scrollLocationChange,
-        showScrollbar = _this$props.showScrollbar,
-        useKeyboard = _this$props.useKeyboard,
-        useNative = _this$props.useNative,
-        useSimulatedScrollbar = _this$props.useSimulatedScrollbar,
-        visible = _this$props.visible,
-        width = _this$props.width,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

@@ -10,31 +10,31 @@ var _pointer = _interopRequireDefault(require("../pointer"));
 var _emitter = _interopRequireDefault(require("./emitter"));
 var _emitter_registrator = _interopRequireDefault(require("./emitter_registrator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ACTIVE_EVENT_NAME = 'dxactive';
+const ACTIVE_EVENT_NAME = 'dxactive';
 exports.active = ACTIVE_EVENT_NAME;
-var INACTIVE_EVENT_NAME = 'dxinactive';
+const INACTIVE_EVENT_NAME = 'dxinactive';
 exports.inactive = INACTIVE_EVENT_NAME;
-var ACTIVE_TIMEOUT = 30;
-var INACTIVE_TIMEOUT = 400;
-var FeedbackEvent = _class.default.inherit({
-  ctor: function ctor(timeout, fire) {
+const ACTIVE_TIMEOUT = 30;
+const INACTIVE_TIMEOUT = 400;
+const FeedbackEvent = _class.default.inherit({
+  ctor: function (timeout, fire) {
     this._timeout = timeout;
     this._fire = fire;
   },
-  start: function start() {
-    var that = this;
+  start: function () {
+    const that = this;
     this._schedule(function () {
       that.force();
     });
   },
-  _schedule: function _schedule(fn) {
+  _schedule: function (fn) {
     this.stop();
     this._timer = setTimeout(fn, this._timeout);
   },
-  stop: function stop() {
+  stop: function () {
     clearTimeout(this._timer);
   },
-  force: function force() {
+  force: function () {
     if (this._fired) {
       return;
     }
@@ -42,18 +42,18 @@ var FeedbackEvent = _class.default.inherit({
     this._fire();
     this._fired = true;
   },
-  fired: function fired() {
+  fired: function () {
     return this._fired;
   }
 });
-var activeFeedback;
-var FeedbackEmitter = _emitter.default.inherit({
-  ctor: function ctor() {
+let activeFeedback;
+const FeedbackEmitter = _emitter.default.inherit({
+  ctor: function () {
     this.callBase.apply(this, arguments);
     this._active = new FeedbackEvent(0, _common.noop);
     this._inactive = new FeedbackEvent(0, _common.noop);
   },
-  configure: function configure(data, eventName) {
+  configure: function (data, eventName) {
     switch (eventName) {
       case ACTIVE_EVENT_NAME:
         data.activeTimeout = data.timeout;
@@ -64,10 +64,10 @@ var FeedbackEmitter = _emitter.default.inherit({
     }
     this.callBase(data);
   },
-  start: function start(e) {
+  start: function (e) {
     if (activeFeedback) {
-      var activeChildExists = (0, _dom.contains)(this.getElement().get(0), activeFeedback.getElement().get(0));
-      var childJustActivated = !activeFeedback._active.fired();
+      const activeChildExists = (0, _dom.contains)(this.getElement().get(0), activeFeedback.getElement().get(0));
+      const childJustActivated = !activeFeedback._active.fired();
       if (activeChildExists && childJustActivated) {
         this._cancel();
         return;
@@ -78,14 +78,14 @@ var FeedbackEmitter = _emitter.default.inherit({
     this._initEvents(e);
     this._active.start();
   },
-  _initEvents: function _initEvents(e) {
-    var that = this;
-    var eventTarget = this._getEmitterTarget(e);
-    var mouseEvent = (0, _index.isMouseEvent)(e);
-    var isSimulator = _devices.default.isSimulator();
-    var deferFeedback = isSimulator || !mouseEvent;
-    var activeTimeout = (0, _common.ensureDefined)(this.activeTimeout, ACTIVE_TIMEOUT);
-    var inactiveTimeout = (0, _common.ensureDefined)(this.inactiveTimeout, INACTIVE_TIMEOUT);
+  _initEvents: function (e) {
+    const that = this;
+    const eventTarget = this._getEmitterTarget(e);
+    const mouseEvent = (0, _index.isMouseEvent)(e);
+    const isSimulator = _devices.default.isSimulator();
+    const deferFeedback = isSimulator || !mouseEvent;
+    const activeTimeout = (0, _common.ensureDefined)(this.activeTimeout, ACTIVE_TIMEOUT);
+    const inactiveTimeout = (0, _common.ensureDefined)(this.inactiveTimeout, INACTIVE_TIMEOUT);
     this._active = new FeedbackEvent(deferFeedback ? activeTimeout : 0, function () {
       that._fireEvent(ACTIVE_EVENT_NAME, e, {
         target: eventTarget
@@ -98,11 +98,11 @@ var FeedbackEmitter = _emitter.default.inherit({
       activeFeedback = null;
     });
   },
-  cancel: function cancel(e) {
+  cancel: function (e) {
     this.end(e);
   },
-  end: function end(e) {
-    var skipTimers = e.type !== _pointer.default.up;
+  end: function (e) {
+    const skipTimers = e.type !== _pointer.default.up;
     if (skipTimers) {
       this._active.stop();
     } else {
@@ -113,7 +113,7 @@ var FeedbackEmitter = _emitter.default.inherit({
       this._inactive.force();
     }
   },
-  dispose: function dispose() {
+  dispose: function () {
     this._active.stop();
     this._inactive.stop();
     if (activeFeedback === this) {
@@ -121,7 +121,7 @@ var FeedbackEmitter = _emitter.default.inherit({
     }
     this.callBase();
   },
-  lockInactive: function lockInactive() {
+  lockInactive: function () {
     this._active.force();
     this._inactive.stop();
     activeFeedback = null;
@@ -130,12 +130,12 @@ var FeedbackEmitter = _emitter.default.inherit({
   }
 });
 FeedbackEmitter.lock = function (deferred) {
-  var lockInactive = activeFeedback ? activeFeedback.lockInactive() : _common.noop;
+  const lockInactive = activeFeedback ? activeFeedback.lockInactive() : _common.noop;
   deferred.done(lockInactive);
 };
 (0, _emitter_registrator.default)({
   emitter: FeedbackEmitter,
   events: [ACTIVE_EVENT_NAME, INACTIVE_EVENT_NAME]
 });
-var lock = FeedbackEmitter.lock;
+const lock = FeedbackEmitter.lock;
 exports.lock = lock;

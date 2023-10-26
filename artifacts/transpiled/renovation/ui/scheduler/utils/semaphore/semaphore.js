@@ -1,7 +1,7 @@
 "use strict";
 
 exports.Semaphore = void 0;
-var Semaphore = /*#__PURE__*/function () {
+let Semaphore = /*#__PURE__*/function () {
   function Semaphore() {
     this.counter = 0;
   }

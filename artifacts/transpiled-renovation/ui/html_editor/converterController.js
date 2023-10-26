@@ -1,7 +1,7 @@
 "use strict";
 
 exports.default = void 0;
-var ConverterController = /*#__PURE__*/function () {
+let ConverterController = /*#__PURE__*/function () {
   function ConverterController() {
     this._converters = {};
   }
@@ -14,7 +14,7 @@ var ConverterController = /*#__PURE__*/function () {
   };
   return ConverterController;
 }();
-var controller = new ConverterController();
+const controller = new ConverterController();
 var _default = controller;
 exports.default = _default;
 module.exports = exports.default;

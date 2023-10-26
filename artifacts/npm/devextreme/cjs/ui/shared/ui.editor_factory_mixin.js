@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/shared/ui.editor_factory_mixin.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,11 +26,13 @@ require("../check_box");
 require("../select_box");
 require("../date_box");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var isWrapped = _variable_wrapper.default.isWrapped;
-var CHECKBOX_SIZE_CLASS = 'checkbox-size';
-var EDITOR_INLINE_BLOCK = 'dx-editor-inline-block';
-var EditorFactoryMixin = function () {
-  var getResultConfig = function getResultConfig(config, options) {
+const {
+  isWrapped
+} = _variable_wrapper.default;
+const CHECKBOX_SIZE_CLASS = 'checkbox-size';
+const EDITOR_INLINE_BLOCK = 'dx-editor-inline-block';
+const EditorFactoryMixin = function () {
+  const getResultConfig = function (config, options) {
     return (0, _extend.extend)(config, {
       readOnly: options.readOnly,
       placeholder: options.placeholder,
@@ -41,22 +43,22 @@ var EditorFactoryMixin = function () {
       tabIndex: options.tabIndex
     }, options.editorOptions);
   };
-  var checkEnterBug = function checkEnterBug() {
+  const checkEnterBug = function () {
     return _browser.default.mozilla || _devices.default.real().ios; // Workaround for T344096, T249363, T314719, caused by https://connect.microsoft.com/IE/feedback/details/1552272/
   };
 
-  var getTextEditorConfig = function getTextEditorConfig(options) {
-    var data = {};
-    var isEnterBug = checkEnterBug();
-    var sharedData = options.sharedData || data;
+  const getTextEditorConfig = function (options) {
+    const data = {};
+    const isEnterBug = checkEnterBug();
+    const sharedData = options.sharedData || data;
     return getResultConfig({
       placeholder: options.placeholder,
       width: options.width,
       value: options.value,
-      onValueChanged: function onValueChanged(e) {
-        var needDelayedUpdate = options.parentType === 'filterRow' || options.parentType === 'searchPanel';
-        var isInputOrKeyUpEvent = e.event && (e.event.type === 'input' || e.event.type === 'keyup');
-        var updateValue = function updateValue(e, notFireEvent) {
+      onValueChanged: function (e) {
+        const needDelayedUpdate = options.parentType === 'filterRow' || options.parentType === 'searchPanel';
+        const isInputOrKeyUpEvent = e.event && (e.event.type === 'input' || e.event.type === 'keyup');
+        const updateValue = function (e, notFireEvent) {
           options && options.setValue(e.value, notFireEvent);
         };
         clearTimeout(data.valueChangeTimeout);
@@ -68,7 +70,7 @@ var EditorFactoryMixin = function () {
           updateValue(e);
         }
       },
-      onKeyDown: function onKeyDown(e) {
+      onKeyDown: function (e) {
         if (isEnterBug && (0, _index.normalizeKeyName)(e.event) === 'enter') {
           _events_engine.default.trigger((0, _renderer.default)(e.component._input()), 'change');
         }
@@ -76,17 +78,19 @@ var EditorFactoryMixin = function () {
       valueChangeEvent: 'change' + (options.parentType === 'filterRow' ? ' keyup input' : '')
     }, options);
   };
-  var prepareDateBox = function prepareDateBox(options) {
+  const prepareDateBox = function (options) {
     options.editorName = 'dxDateBox';
     options.editorOptions = getResultConfig({
       value: options.value,
-      onValueChanged: function onValueChanged(args) {
+      onValueChanged: function (args) {
         options.setValue(args.value);
       },
-      onKeyDown: function onKeyDown(_ref) {
-        var component = _ref.component,
-          event = _ref.event;
-        var useMaskBehavior = component.option('useMaskBehavior');
+      onKeyDown: function (_ref) {
+        let {
+          component,
+          event
+        } = _ref;
+        const useMaskBehavior = component.option('useMaskBehavior');
         if ((checkEnterBug() || useMaskBehavior) && (0, _index.normalizeKeyName)(event) === 'enter') {
           component.blur();
           component.focus();
@@ -98,10 +102,10 @@ var EditorFactoryMixin = function () {
       width: options.parentType === 'filterBuilder' ? undefined : 'auto'
     }, options);
   };
-  var prepareTextBox = function prepareTextBox(options) {
-    var config = getTextEditorConfig(options);
-    var isSearching = options.parentType === 'searchPanel';
-    var toString = function toString(value) {
+  const prepareTextBox = function (options) {
+    const config = getTextEditorConfig(options);
+    const isSearching = options.parentType === 'searchPanel';
+    const toString = function (value) {
       return (0, _type.isDefined)(value) ? value.toString() : '';
     };
     if (options.editorType && options.editorType !== 'dxTextBox') {
@@ -114,17 +118,17 @@ var EditorFactoryMixin = function () {
     options.editorName = 'dxTextBox';
     options.editorOptions = config;
   };
-  var prepareNumberBox = function prepareNumberBox(options) {
-    var config = getTextEditorConfig(options);
+  const prepareNumberBox = function (options) {
+    const config = getTextEditorConfig(options);
     config.value = (0, _type.isDefined)(options.value) ? options.value : null;
     options.editorName = 'dxNumberBox';
     options.editorOptions = config;
   };
-  var prepareBooleanEditor = function prepareBooleanEditor(options) {
+  const prepareBooleanEditor = function (options) {
     if (options.parentType === 'filterRow' || options.parentType === 'filterBuilder') {
       prepareLookupEditor((0, _extend.extend)(options, {
         lookup: {
-          displayExpr: function displayExpr(data) {
+          displayExpr: function (data) {
             if (data === true) {
               return options.trueText || 'true';
             } else if (data === false) {
@@ -140,32 +144,32 @@ var EditorFactoryMixin = function () {
   };
   function watchLookupDataSource(options) {
     if (options.row && options.row.watch && options.parentType === 'dataRow') {
-      var editorOptions = options.editorOptions || {};
+      const editorOptions = options.editorOptions || {};
       options.editorOptions = editorOptions;
-      var selectBox;
-      var onInitialized = editorOptions.onInitialized;
+      let selectBox;
+      const onInitialized = editorOptions.onInitialized;
       editorOptions.onInitialized = function (e) {
         onInitialized && onInitialized.apply(this, arguments);
         selectBox = e.component;
         selectBox.on('disposing', stopWatch);
       };
-      var dataSource;
-      var stopWatch = options.row.watch(function () {
+      let dataSource;
+      const stopWatch = options.row.watch(() => {
         dataSource = options.lookup.dataSource(options.row);
         return dataSource && dataSource.filter;
-      }, function () {
+      }, () => {
         selectBox.option('dataSource', dataSource);
-      }, function (row) {
+      }, row => {
         options.row = row;
       });
     }
   }
   function prepareLookupEditor(options) {
-    var lookup = options.lookup;
-    var displayGetter;
-    var dataSource;
-    var postProcess;
-    var isFilterRow = options.parentType === 'filterRow';
+    const lookup = options.lookup;
+    let displayGetter;
+    let dataSource;
+    let postProcess;
+    const isFilterRow = options.parentType === 'filterRow';
     if (lookup) {
       var _options$editorType;
       displayGetter = (0, _data.compileGetter)(lookup.displayExpr);
@@ -190,7 +194,7 @@ var EditorFactoryMixin = function () {
           };
         }
       }
-      var allowClearing = Boolean(lookup.allowClearing && !isFilterRow);
+      const allowClearing = Boolean(lookup.allowClearing && !isFilterRow);
       options.editorName = (_options$editorType = options.editorType) !== null && _options$editorType !== void 0 ? _options$editorType : 'dxSelectBox';
       options.editorOptions = getResultConfig({
         searchEnabled: true,
@@ -199,15 +203,15 @@ var EditorFactoryMixin = function () {
         searchExpr: options.lookup.searchExpr || options.lookup.displayExpr,
         allowClearing: allowClearing,
         showClearButton: allowClearing,
-        displayExpr: function displayExpr(data) {
+        displayExpr: function (data) {
           if (data === null) {
             return options.showAllText;
           }
           return displayGetter(data);
         },
         dataSource: dataSource,
-        onValueChanged: function onValueChanged(e) {
-          var params = [e.value];
+        onValueChanged: function (e) {
+          const params = [e.value];
           !isFilterRow && params.push(e.component.option('text'));
           options.setValue.apply(this, params);
         }
@@ -224,13 +228,13 @@ var EditorFactoryMixin = function () {
       hoverStateEnabled: !options.readOnly,
       focusStateEnabled: !options.readOnly,
       activeStateEnabled: false,
-      onValueChanged: function onValueChanged(e) {
+      onValueChanged: function (e) {
         options.setValue && options.setValue(e.value, e /* for selection */);
       }
     }, options);
   }
-  var createEditorCore = function createEditorCore(that, options) {
-    var $editorElement = (0, _renderer.default)(options.editorElement);
+  const createEditorCore = function (that, options) {
+    const $editorElement = (0, _renderer.default)(options.editorElement);
     if (options.editorName && options.editorOptions && $editorElement[options.editorName]) {
       if (options.editorName === 'dxCheckBox' || options.editorName === 'dxSwitch') {
         if (!options.isOnForm) {
@@ -240,9 +244,9 @@ var EditorFactoryMixin = function () {
       }
       that._createComponent($editorElement, options.editorName, options.editorOptions);
       if (options.editorName === 'dxDateBox') {
-        var dateBox = $editorElement.dxDateBox('instance');
-        var defaultEnterKeyHandler = dateBox._supportedKeys()['enter'];
-        dateBox.registerKeyHandler('enter', function (e) {
+        const dateBox = $editorElement.dxDateBox('instance');
+        const defaultEnterKeyHandler = dateBox._supportedKeys()['enter'];
+        dateBox.registerKeyHandler('enter', e => {
           if (dateBox.option('opened')) {
             defaultEnterKeyHandler(e);
           }
@@ -258,17 +262,17 @@ var EditorFactoryMixin = function () {
       }
     }
   };
-  var prepareCustomEditor = function prepareCustomEditor(options) {
+  const prepareCustomEditor = options => {
     options.editorName = options.editorType;
     options.editorOptions = getResultConfig({
       value: options.value,
-      onValueChanged: function onValueChanged(args) {
+      onValueChanged: function (args) {
         options.setValue(args.value);
       }
     }, options);
   };
-  var prepareEditor = function prepareEditor(options) {
-    var prepareDefaultEditor = {
+  const prepareEditor = options => {
+    const prepareDefaultEditor = {
       'dxDateBox': prepareDateBox,
       'dxCheckBox': prepareCheckBox,
       'dxNumberBox': prepareNumberBox,
@@ -298,7 +302,7 @@ var EditorFactoryMixin = function () {
     }
   };
   return {
-    createEditor: function createEditor($container, options) {
+    createEditor: function ($container, options) {
       options.cancel = false;
       options.editorElement = (0, _element.getPublicElement)($container);
       if (!(0, _type.isDefined)(options.tabIndex)) {

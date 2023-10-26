@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/viz/common/base_widget.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,8 +21,7 @@ var _gray_scale_filter = require("./renderers/gray_scale_filter");
 var _utils = require("./utils");
 var _resolve_rtl = require("../../utils/resolve_rtl");
 var _utils2 = require("./renderers/utils");
-var _excluded = ["canvas", "canvasChange", "children", "className", "classes", "defaultCanvas", "disabled", "margin", "pointerEvents", "rootElementRef", "rtlEnabled", "size"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["canvas", "canvasChange", "children", "className", "classes", "defaultCanvas", "disabled", "margin", "pointerEvents", "rootElementRef", "rtlEnabled", "size"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -32,7 +31,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var DEFAULT_CANVAS = {
+const DEFAULT_CANVAS = {
   left: 0,
   top: 0,
   right: 0,
@@ -40,24 +39,25 @@ var DEFAULT_CANVAS = {
   width: 0,
   height: 0
 };
-var getCssClasses = function getCssClasses(model) {
-  var containerClassesMap = {
+const getCssClasses = model => {
+  const containerClassesMap = {
     'dx-widget': true,
     'dx-visibility-change-handler': true,
     [String(model.className)]: !!model.className
   };
   return (0, _combine_classes.combineClasses)(containerClassesMap);
 };
-var calculateCanvas = function calculateCanvas(model) {
+const calculateCanvas = model => {
   var _model$size, _model$margin, _model$defaultCanvas;
-  var _ref = (_model$size = model.size) !== null && _model$size !== void 0 ? _model$size : {},
-    height = _ref.height,
-    width = _ref.width;
-  var margin = (_model$margin = model.margin) !== null && _model$margin !== void 0 ? _model$margin : {};
-  var defaultCanvas = (_model$defaultCanvas = model.defaultCanvas) !== null && _model$defaultCanvas !== void 0 ? _model$defaultCanvas : DEFAULT_CANVAS;
-  var elementWidth = !(0, _utils.sizeIsValid)(width) ? (0, _utils.getElementWidth)(model.element) : 0;
-  var elementHeight = !(0, _utils.sizeIsValid)(height) ? (0, _utils.getElementHeight)(model.element) : 0;
-  var canvas = {
+  const {
+    height,
+    width
+  } = (_model$size = model.size) !== null && _model$size !== void 0 ? _model$size : {};
+  const margin = (_model$margin = model.margin) !== null && _model$margin !== void 0 ? _model$margin : {};
+  const defaultCanvas = (_model$defaultCanvas = model.defaultCanvas) !== null && _model$defaultCanvas !== void 0 ? _model$defaultCanvas : DEFAULT_CANVAS;
+  const elementWidth = !(0, _utils.sizeIsValid)(width) ? (0, _utils.getElementWidth)(model.element) : 0;
+  const elementHeight = !(0, _utils.sizeIsValid)(height) ? (0, _utils.getElementHeight)(model.element) : 0;
+  const canvas = {
     width: width && width <= 0 ? 0 : Math.floor((0, _utils.pickPositiveValue)([width, elementWidth, defaultCanvas.width])),
     height: height && height <= 0 ? 0 : Math.floor((0, _utils.pickPositiveValue)([height, elementHeight, defaultCanvas.height])),
     left: (0, _utils.pickPositiveValue)([margin.left, defaultCanvas.left]),
@@ -70,10 +70,10 @@ var calculateCanvas = function calculateCanvas(model) {
   }
   return canvas;
 };
-var viewFunction = function viewFunction(viewModel) {
-  var grayFilterId = viewModel.props.disabled ? (0, _utils2.getNextDefsSvgId)() : undefined;
-  var canvas = viewModel.props.canvas || DEFAULT_CANVAS;
-  var widget = (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", viewModel.cssClasses, (0, _inferno.createComponentVNode)(2, _svg_root.RootSvgElement, {
+const viewFunction = viewModel => {
+  const grayFilterId = viewModel.props.disabled ? (0, _utils2.getNextDefsSvgId)() : undefined;
+  const canvas = viewModel.props.canvas || DEFAULT_CANVAS;
+  const widget = (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", viewModel.cssClasses, (0, _inferno.createComponentVNode)(2, _svg_root.RootSvgElement, {
     "rootElementRef": viewModel.svgElementRef,
     "className": viewModel.props.classes,
     "width": canvas.width,
@@ -90,9 +90,9 @@ var viewFunction = function viewFunction(viewModel) {
   }) : widget;
 };
 exports.viewFunction = viewFunction;
-var Props = _base_props.BaseWidgetProps;
+const Props = _base_props.BaseWidgetProps;
 exports.Props = Props;
-var BaseWidget = /*#__PURE__*/function (_InfernoComponent) {
+let BaseWidget = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(BaseWidget, _InfernoComponent);
   function BaseWidget(props) {
     var _this;
@@ -123,11 +123,12 @@ var BaseWidget = /*#__PURE__*/function (_InfernoComponent) {
     this.setCanvas();
   };
   _proto.setCanvas = function setCanvas() {
-    var _this$props = this.props,
-      defaultCanvas = _this$props.defaultCanvas,
-      margin = _this$props.margin,
-      size = _this$props.size;
-    var newCanvas = calculateCanvas({
+    const {
+      defaultCanvas,
+      margin,
+      size
+    } = this.props;
+    const newCanvas = calculateCanvas({
       element: this.containerRef.current,
       defaultCanvas,
       size,
@@ -135,8 +136,8 @@ var BaseWidget = /*#__PURE__*/function (_InfernoComponent) {
     });
     if ((0, _type.isDefined)(newCanvas.height) && (0, _type.isDefined)(newCanvas.width) && (0, _utils.isUpdatedFlatObject)(this.props.canvas !== undefined ? this.props.canvas : this.state.canvas, newCanvas)) {
       {
-        var __newValue;
-        this.setState(function (__state_argument) {
+        let __newValue;
+        this.setState(__state_argument => {
           __newValue = newCanvas;
           return {
             canvas: __newValue
@@ -150,7 +151,7 @@ var BaseWidget = /*#__PURE__*/function (_InfernoComponent) {
     return this.svgElementRef.current;
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         canvas: this.props.canvas !== undefined ? this.props.canvas : this.state.canvas
@@ -168,7 +169,7 @@ var BaseWidget = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(BaseWidget, [{
     key: "config",
-    get: function get() {
+    get: function () {
       if (this.context[_config_context.ConfigContext.id]) {
         return this.context[_config_context.ConfigContext.id];
       }
@@ -176,51 +177,46 @@ var BaseWidget = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "shouldRenderConfigProvider",
-    get: function get() {
-      var rtlEnabled = this.props.rtlEnabled;
+    get: function () {
+      const {
+        rtlEnabled
+      } = this.props;
       return (0, _resolve_rtl.resolveRtlEnabledDefinition)(rtlEnabled, this.config);
     }
   }, {
     key: "rtlEnabled",
-    get: function get() {
-      var rtlEnabled = this.props.rtlEnabled;
+    get: function () {
+      const {
+        rtlEnabled
+      } = this.props;
       return (0, _resolve_rtl.resolveRtlEnabled)(rtlEnabled, this.config);
     }
   }, {
     key: "pointerEventsState",
-    get: function get() {
-      var _this$props2 = this.props,
-        disabled = _this$props2.disabled,
-        pointerEvents = _this$props2.pointerEvents;
+    get: function () {
+      const {
+        disabled,
+        pointerEvents
+      } = this.props;
       return disabled ? 'none' : pointerEvents;
     }
   }, {
     key: "cssClasses",
-    get: function get() {
-      var className = this.props.className;
+    get: function () {
+      const {
+        className
+      } = this.props;
       return getCssClasses({
         className
       });
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props$canvas = _extends({}, this.props, {
+    get: function () {
+      const _this$props$canvas = _extends({}, this.props, {
           canvas: this.props.canvas !== undefined ? this.props.canvas : this.state.canvas
         }),
-        canvas = _this$props$canvas.canvas,
-        canvasChange = _this$props$canvas.canvasChange,
-        children = _this$props$canvas.children,
-        className = _this$props$canvas.className,
-        classes = _this$props$canvas.classes,
-        defaultCanvas = _this$props$canvas.defaultCanvas,
-        disabled = _this$props$canvas.disabled,
-        margin = _this$props$canvas.margin,
-        pointerEvents = _this$props$canvas.pointerEvents,
-        rootElementRef = _this$props$canvas.rootElementRef,
-        rtlEnabled = _this$props$canvas.rtlEnabled,
-        size = _this$props$canvas.size,
-        restProps = _objectWithoutProperties(_this$props$canvas, _excluded);
+        restProps = _objectWithoutPropertiesLoose(_this$props$canvas, _excluded);
       return restProps;
     }
   }]);

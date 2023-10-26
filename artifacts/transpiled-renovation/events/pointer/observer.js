@@ -5,18 +5,18 @@ var _iterator = require("../../core/utils/iterator");
 var _ready_callbacks = _interopRequireDefault(require("../../core/utils/ready_callbacks"));
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var addEventsListener = function addEventsListener(events, handler) {
+const addEventsListener = function (events, handler) {
   _ready_callbacks.default.add(function () {
     events.split(' ').forEach(function (event) {
       _dom_adapter.default.listen(_dom_adapter.default.getDocument(), event, handler, true);
     });
   });
 };
-var Observer = function Observer(eventMap, pointerEquals, onPointerAdding) {
+const Observer = function (eventMap, pointerEquals, onPointerAdding) {
   onPointerAdding = onPointerAdding || function () {};
-  var pointers = [];
-  var getPointerIndex = function getPointerIndex(e) {
-    var index = -1;
+  let pointers = [];
+  const getPointerIndex = function (e) {
+    let index = -1;
     (0, _iterator.each)(pointers, function (i, pointer) {
       if (!pointerEquals(e, pointer)) {
         return true;
@@ -26,19 +26,19 @@ var Observer = function Observer(eventMap, pointerEquals, onPointerAdding) {
     });
     return index;
   };
-  var addPointer = function addPointer(e) {
+  const addPointer = function (e) {
     if (getPointerIndex(e) === -1) {
       onPointerAdding(e);
       pointers.push(e);
     }
   };
-  var removePointer = function removePointer(e) {
-    var index = getPointerIndex(e);
+  const removePointer = function (e) {
+    const index = getPointerIndex(e);
     if (index > -1) {
       pointers.splice(index, 1);
     }
   };
-  var updatePointer = function updatePointer(e) {
+  const updatePointer = function (e) {
     pointers[getPointerIndex(e)] = e;
   };
   addEventsListener(eventMap['dxpointerdown'], addPointer);

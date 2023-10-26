@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/axes/axes_utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,12 +9,12 @@
 "use strict";
 
 exports.measureLabels = exports.calculateCanvasMargins = void 0;
-var _max = Math.max;
-var calculateCanvasMargins = function calculateCanvasMargins(bBoxes, canvas) {
-  var cLeft = canvas.left;
-  var cTop = canvas.top;
-  var cRight = canvas.width - canvas.right;
-  var cBottom = canvas.height - canvas.bottom;
+const _max = Math.max;
+const calculateCanvasMargins = function (bBoxes, canvas) {
+  const cLeft = canvas.left;
+  const cTop = canvas.top;
+  const cRight = canvas.width - canvas.right;
+  const cBottom = canvas.height - canvas.bottom;
   return bBoxes.reduce(function (margins, bBox) {
     if (!bBox || bBox.isEmpty) {
       return margins;
@@ -33,9 +33,9 @@ var calculateCanvasMargins = function calculateCanvasMargins(bBoxes, canvas) {
   });
 };
 exports.calculateCanvasMargins = calculateCanvasMargins;
-var measureLabels = function measureLabels(items) {
+const measureLabels = function (items) {
   items.forEach(function (item) {
-    var label = item.getContentContainer();
+    const label = item.getContentContainer();
     item.labelBBox = label ? label.getBBox() : {
       x: 0,
       y: 0,

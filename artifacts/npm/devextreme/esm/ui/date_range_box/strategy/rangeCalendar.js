@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/date_range_box/strategy/rangeCalendar.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -87,6 +87,8 @@ class RangeCalendarStrategy extends CalendarStrategy {
       value,
       multiView
     } = this.dateRangeBox.option();
+
+    // eslint-disable-next-line no-var
     var disabledDates = isFunction(disabledDatesValue) ? this._injectComponent(disabledDatesValue) : disabledDates;
     return extend(super._getWidgetOptions(), {
       disabledDates,

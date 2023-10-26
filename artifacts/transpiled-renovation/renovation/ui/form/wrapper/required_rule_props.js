@@ -1,5 +1,5 @@
 "use strict";
 
 exports.RequiredRule = void 0;
-var RequiredRule = {};
+const RequiredRule = {};
 exports.RequiredRule = RequiredRule;

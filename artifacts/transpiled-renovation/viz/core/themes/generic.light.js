@@ -1,23 +1,23 @@
 "use strict";
 
 exports.default = void 0;
-var WHITE = '#ffffff';
-var BLACK = '#000000';
-var LIGHT_GREY = '#d3d3d3';
-var GREY_GREEN = '#303030';
-var SOME_GREY = '#2b2b2b';
-var RED = '#ff0000';
-var PRIMARY_TITLE_COLOR = '#232323';
-var SECONDARY_TITLE_COLOR = '#767676';
-var NONE = 'none';
-var SOLID = 'solid';
-var TOP = 'top';
-var RIGHT = 'right';
-var BOTTOM = 'bottom';
-var LEFT = 'left';
-var CENTER = 'center';
-var INSIDE = 'inside';
-var OUTSIDE = 'outside';
+const WHITE = '#ffffff';
+const BLACK = '#000000';
+const LIGHT_GREY = '#d3d3d3';
+const GREY_GREEN = '#303030';
+const SOME_GREY = '#2b2b2b';
+const RED = '#ff0000';
+const PRIMARY_TITLE_COLOR = '#232323';
+const SECONDARY_TITLE_COLOR = '#767676';
+const NONE = 'none';
+const SOLID = 'solid';
+const TOP = 'top';
+const RIGHT = 'right';
+const BOTTOM = 'bottom';
+const LEFT = 'left';
+const CENTER = 'center';
+const INSIDE = 'inside';
+const OUTSIDE = 'outside';
 var _default = [{
   theme: {
     name: 'generic.light',
@@ -1623,7 +1623,7 @@ var _default = [{
         }
       },
       tooltip: {
-        customizeTooltip: function customizeTooltip(info) {
+        customizeTooltip: function (info) {
           return {
             text: info.item.argument + ' ' + info.valueText
           };
@@ -1642,7 +1642,7 @@ var _default = [{
         horizontalOffset: 0,
         verticalOffset: 0,
         showForZeroValues: false,
-        customizeText: function customizeText(info) {
+        customizeText: function (info) {
           return info.item.argument + ' ' + info.valueText;
         },
         position: 'columns',
@@ -1688,7 +1688,7 @@ var _default = [{
           width: 2,
           color: WHITE
         },
-        customizeText: function customizeText(info) {
+        customizeText: function (info) {
           return info.title;
         },
         shadow: {

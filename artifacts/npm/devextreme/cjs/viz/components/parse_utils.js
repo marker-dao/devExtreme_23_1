@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/components/parse_utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,26 +14,26 @@ var _common = require("../../core/utils/common");
 var _date_serialization = _interopRequireDefault(require("../../core/utils/date_serialization"));
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var parsers = {
-  string: function string(val) {
+const parsers = {
+  string: function (val) {
     return (0, _type.isDefined)(val) ? '' + val : val;
   },
-  numeric: function numeric(val) {
+  numeric: function (val) {
     if (!(0, _type.isDefined)(val)) {
       return val;
     }
-    var parsedVal = Number(val);
+    let parsedVal = Number(val);
     if (isNaN(parsedVal)) {
       parsedVal = undefined;
     }
     return parsedVal;
   },
-  datetime: function datetime(val) {
+  datetime: function (val) {
     if (!(0, _type.isDefined)(val)) {
       return val;
     }
-    var parsedVal;
-    var numVal = Number(val);
+    let parsedVal;
+    const numVal = Number(val);
     if (!isNaN(numVal)) {
       parsedVal = new Date(numVal);
     } else {
@@ -48,7 +48,7 @@ var parsers = {
 function correctValueType(type) {
   return type === 'numeric' || type === 'datetime' || type === 'string' ? type : '';
 }
-var getParser = function getParser(valueType) {
+const getParser = function (valueType) {
   return parsers[correctValueType(valueType)] || _common.noop;
 };
 exports.getParser = getParser;

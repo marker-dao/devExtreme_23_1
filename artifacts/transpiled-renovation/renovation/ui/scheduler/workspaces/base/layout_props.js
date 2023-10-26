@@ -1,7 +1,7 @@
 "use strict";
 
 exports.LayoutProps = void 0;
-var LayoutProps = {
+const LayoutProps = {
   viewData: Object.freeze({
     groupedData: [],
     leftVirtualCellCount: 0,

@@ -18,12 +18,12 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var MODULE_NAMESPACE = 'dxHtmlEditorPopupModule';
-var ListPopupModule = _base.default;
+const MODULE_NAMESPACE = 'dxHtmlEditorPopupModule';
+let ListPopupModule = _base.default;
 if (_devextremeQuill.default) {
-  var SUGGESTION_LIST_CLASS = 'dx-suggestion-list';
-  var SUGGESTION_LIST_WRAPPER_CLASS = 'dx-suggestion-list-wrapper';
-  var MIN_HEIGHT = 100;
+  const SUGGESTION_LIST_CLASS = 'dx-suggestion-list';
+  const SUGGESTION_LIST_WRAPPER_CLASS = 'dx-suggestion-list-wrapper';
+  const MIN_HEIGHT = 100;
   ListPopupModule = /*#__PURE__*/function (_BaseModule) {
     _inheritsLoose(ListPopupModule, _BaseModule);
     var _proto = ListPopupModule.prototype;
@@ -42,29 +42,28 @@ if (_devextremeQuill.default) {
       return _this;
     }
     _proto.renderList = function renderList($container, options) {
-      var $list = (0, _renderer.default)('<div>').addClass(SUGGESTION_LIST_CLASS).appendTo($container);
+      const $list = (0, _renderer.default)('<div>').addClass(SUGGESTION_LIST_CLASS).appendTo($container);
       this._list = this.options.editorInstance._createComponent($list, _list_light.default, options);
     };
     _proto.renderPopup = function renderPopup() {
-      var editorInstance = this.options.editorInstance;
-      var $container = (0, _renderer.default)('<div>').appendTo(editorInstance.$element());
-      var popupConfig = this._getPopupConfig();
+      const editorInstance = this.options.editorInstance;
+      const $container = (0, _renderer.default)('<div>').appendTo(editorInstance.$element());
+      const popupConfig = this._getPopupConfig();
       return editorInstance._createComponent($container, _popup.default, popupConfig);
     };
     _proto._getPopupConfig = function _getPopupConfig() {
-      var _this2 = this;
       return {
-        contentTemplate: function contentTemplate(contentElem) {
-          var listConfig = _this2._getListConfig(_this2.options);
-          _this2.renderList((0, _renderer.default)(contentElem), listConfig);
+        contentTemplate: contentElem => {
+          const listConfig = this._getListConfig(this.options);
+          this.renderList((0, _renderer.default)(contentElem), listConfig);
         },
         deferRendering: false,
-        onShown: function onShown() {
-          _this2._list.focus();
+        onShown: () => {
+          this._list.focus();
         },
-        onHidden: function onHidden() {
-          _this2._list.unselectAll();
-          _this2._list.option('focusedElement', null);
+        onHidden: () => {
+          this._list.unselectAll();
+          this._list.option('focusedElement', null);
         },
         showTitle: false,
         width: 'auto',
@@ -105,8 +104,8 @@ if (_devextremeQuill.default) {
       }
     };
     _proto._renderPreventFocusOut = function _renderPreventFocusOut() {
-      var eventName = (0, _index.addNamespace)('mousedown', MODULE_NAMESPACE);
-      _events_engine.default.on(this._popup.$wrapper(), eventName, function (e) {
+      const eventName = (0, _index.addNamespace)('mousedown', MODULE_NAMESPACE);
+      _events_engine.default.on(this._popup.$wrapper(), eventName, e => {
         e.preventDefault();
       });
     };
@@ -122,9 +121,9 @@ if (_devextremeQuill.default) {
     };
     _createClass(ListPopupModule, [{
       key: "maxHeight",
-      get: function get() {
-        var window = (0, _window.getWindow)();
-        var windowHeight = window && (0, _size.getHeight)(window) || 0;
+      get: function () {
+        const window = (0, _window.getWindow)();
+        const windowHeight = window && (0, _size.getHeight)(window) || 0;
         return Math.max(MIN_HEIGHT, windowHeight * 0.5);
       }
     }]);

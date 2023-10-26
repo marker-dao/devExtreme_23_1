@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/validator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,12 +21,12 @@ var _component_registrator = _interopRequireDefault(require("../core/component_r
 var _deferred = require("../core/utils/deferred");
 var _guid = _interopRequireDefault(require("../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var VALIDATOR_CLASS = 'dx-validator';
-var VALIDATION_STATUS_VALID = 'valid';
-var VALIDATION_STATUS_INVALID = 'invalid';
-var VALIDATION_STATUS_PENDING = 'pending';
-var Validator = _dom_component.default.inherit({
-  _initOptions: function _initOptions(options) {
+const VALIDATOR_CLASS = 'dx-validator';
+const VALIDATION_STATUS_VALID = 'valid';
+const VALIDATION_STATUS_INVALID = 'invalid';
+const VALIDATION_STATUS_PENDING = 'pending';
+const Validator = _dom_component.default.inherit({
+  _initOptions: function (options) {
     this.callBase.apply(this, arguments);
     this.option(_validation_engine.default.initValidationOptions(options));
   },
@@ -68,7 +68,7 @@ var Validator = _dom_component.default.inherit({
     };
   },
   _initGroupRegistration() {
-    var group = this._findGroup();
+    const group = this._findGroup();
     if (!this._groupWasInit) {
       this.on('disposing', function (args) {
         _validation_engine.default.removeRegisteredValidator(args.component._validationGroup, args.component);
@@ -88,37 +88,36 @@ var Validator = _dom_component.default.inherit({
     });
   },
   _getEditor() {
-    var element = this.$element()[0];
+    const element = this.$element()[0];
     return (0, _element_data.data)(element, 'dx-validation-target');
   },
   _initAdapter() {
-    var _this = this;
-    var dxStandardEditor = this._getEditor();
-    var adapter = this.option('adapter');
+    const dxStandardEditor = this._getEditor();
+    let adapter = this.option('adapter');
     if (!adapter) {
       if (dxStandardEditor) {
         adapter = new _default_adapter.default(dxStandardEditor, this);
-        adapter.validationRequestsCallbacks.push(function (args) {
-          if (_this._validationInfo.skipValidation) {
+        adapter.validationRequestsCallbacks.push(args => {
+          if (this._validationInfo.skipValidation) {
             return;
           }
-          _this.validate(args);
+          this.validate(args);
         });
         this.option('adapter', adapter);
         return;
       }
       throw _ui.default.Error('E0120');
     }
-    var callbacks = adapter.validationRequestsCallbacks;
+    const callbacks = adapter.validationRequestsCallbacks;
     if (callbacks) {
-      callbacks.push(function (args) {
-        _this.validate(args);
+      callbacks.push(args => {
+        this.validate(args);
       });
     }
   },
   _toggleRTLDirection(isRtl) {
     var _this$option$editor$o, _this$option, _this$option$editor;
-    var rtlEnabled = (_this$option$editor$o = (_this$option = this.option('adapter')) === null || _this$option === void 0 ? void 0 : (_this$option$editor = _this$option.editor) === null || _this$option$editor === void 0 ? void 0 : _this$option$editor.option('rtlEnabled')) !== null && _this$option$editor$o !== void 0 ? _this$option$editor$o : isRtl;
+    const rtlEnabled = (_this$option$editor$o = (_this$option = this.option('adapter')) === null || _this$option === void 0 ? void 0 : (_this$option$editor = _this$option.editor) === null || _this$option$editor === void 0 ? void 0 : _this$option$editor.option('rtlEnabled')) !== null && _this$option$editor$o !== void 0 ? _this$option$editor$o : isRtl;
     this.callBase(rtlEnabled);
   },
   _initMarkup() {
@@ -130,17 +129,19 @@ var Validator = _dom_component.default.inherit({
     this._toggleAccessibilityAttributes();
   },
   _toggleAccessibilityAttributes() {
-    var dxStandardEditor = this._getEditor();
+    const dxStandardEditor = this._getEditor();
     if (dxStandardEditor) {
-      var rules = this.option('validationRules') || [];
-      var isRequired = rules.some(function (_ref) {
-        var type = _ref.type;
+      const rules = this.option('validationRules') || [];
+      const isRequired = rules.some(_ref => {
+        let {
+          type
+        } = _ref;
         return type === 'required';
       }) || null;
       if (dxStandardEditor.isInitialized()) {
         dxStandardEditor.setAria('required', isRequired);
       }
-      dxStandardEditor.option('_onMarkupRendered', function () {
+      dxStandardEditor.option('_onMarkupRendered', () => {
         dxStandardEditor.setAria('required', isRequired);
       });
     }
@@ -172,11 +173,10 @@ var Validator = _dom_component.default.inherit({
     }
   },
   _getValidationRules() {
-    var _this2 = this;
     if (!this._validationRules) {
-      this._validationRules = (0, _iterator.map)(this.option('validationRules'), function (rule, index) {
+      this._validationRules = (0, _iterator.map)(this.option('validationRules'), (rule, index) => {
         return (0, _extend.extend)({}, rule, {
-          validator: _this2,
+          validator: this,
           index: index
         });
       });
@@ -184,25 +184,24 @@ var Validator = _dom_component.default.inherit({
     return this._validationRules;
   },
   _findGroup() {
-    var $element = this.$element();
+    const $element = this.$element();
     return this.option('validationGroup') || _validation_engine.default.findGroup($element, this._modelByElement($element));
   },
   _resetValidationRules() {
     delete this._validationRules;
   },
   validate(args) {
-    var _this3 = this;
-    var adapter = this.option('adapter');
-    var name = this.option('name');
-    var bypass = adapter.bypass && adapter.bypass();
-    var value = args && args.value !== undefined ? args.value : adapter.getValue();
-    var currentError = adapter.getCurrentValidationError && adapter.getCurrentValidationError();
-    var rules = this._getValidationRules();
-    var currentResult = this._validationInfo && this._validationInfo.result;
+    const adapter = this.option('adapter');
+    const name = this.option('name');
+    const bypass = adapter.bypass && adapter.bypass();
+    const value = args && args.value !== undefined ? args.value : adapter.getValue();
+    const currentError = adapter.getCurrentValidationError && adapter.getCurrentValidationError();
+    const rules = this._getValidationRules();
+    const currentResult = this._validationInfo && this._validationInfo.result;
     if (currentResult && currentResult.status === VALIDATION_STATUS_PENDING && currentResult.value === value) {
       return (0, _extend.extend)({}, currentResult);
     }
-    var result;
+    let result;
     if (bypass) {
       result = {
         isValid: true,
@@ -221,16 +220,16 @@ var Validator = _dom_component.default.inherit({
     }
     result.id = new _guid.default().toString();
     this._applyValidationResult(result, adapter);
-    result.complete && result.complete.then(function (res) {
-      if (res.id === _this3._validationInfo.result.id) {
-        _this3._applyValidationResult(res, adapter);
+    result.complete && result.complete.then(res => {
+      if (res.id === this._validationInfo.result.id) {
+        this._applyValidationResult(res, adapter);
       }
     });
     return (0, _extend.extend)({}, this._validationInfo.result);
   },
   reset() {
-    var adapter = this.option('adapter');
-    var result = {
+    const adapter = this.option('adapter');
+    const result = {
       id: null,
       isValid: true,
       brokenRule: null,
@@ -247,12 +246,12 @@ var Validator = _dom_component.default.inherit({
   },
   _updateValidationResult(result) {
     if (!this._validationInfo.result || this._validationInfo.result.id !== result.id) {
-      var complete = this._validationInfo.deferred && this._validationInfo.result.complete;
+      const complete = this._validationInfo.deferred && this._validationInfo.result.complete;
       this._validationInfo.result = (0, _extend.extend)({}, result, {
         complete
       });
     } else {
-      for (var prop in result) {
+      for (const prop in result) {
         if (prop !== 'id' && prop !== 'complete') {
           this._validationInfo.result[prop] = result[prop];
         }
@@ -260,7 +259,7 @@ var Validator = _dom_component.default.inherit({
     }
   },
   _applyValidationResult(result, adapter) {
-    var validatedAction = this._createActionByOption('onValidated', {
+    const validatedAction = this._createActionByOption('onValidated', {
       excludeValidators: ['readOnly']
     });
     result.validator = this;
@@ -286,10 +285,10 @@ var Validator = _dom_component.default.inherit({
     }
   },
   focus() {
-    var adapter = this.option('adapter');
+    const adapter = this.option('adapter');
     adapter && adapter.focus && adapter.focus();
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return false;
   }
 });

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/workspaces/m_agenda.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -36,17 +36,19 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var tableCreator = _m_table_creator.default.tableCreator;
-var AGENDA_CLASS = 'dx-scheduler-agenda';
-var AGENDA_DATE_CLASS = 'dx-scheduler-agenda-date';
-var GROUP_TABLE_CLASS = 'dx-scheduler-group-table';
-var TIME_PANEL_ROW_CLASS = 'dx-scheduler-time-panel-row';
-var TIME_PANEL_CELL_CLASS = 'dx-scheduler-time-panel-cell';
-var NODATA_CONTAINER_CLASS = 'dx-scheduler-agenda-nodata';
-var LAST_ROW_CLASS = 'dx-scheduler-date-table-last-row';
-var INNER_CELL_MARGIN = 5;
-var OUTER_CELL_MARGIN = 20;
-var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
+const {
+  tableCreator
+} = _m_table_creator.default;
+const AGENDA_CLASS = 'dx-scheduler-agenda';
+const AGENDA_DATE_CLASS = 'dx-scheduler-agenda-date';
+const GROUP_TABLE_CLASS = 'dx-scheduler-group-table';
+const TIME_PANEL_ROW_CLASS = 'dx-scheduler-time-panel-row';
+const TIME_PANEL_CELL_CLASS = 'dx-scheduler-time-panel-cell';
+const NODATA_CONTAINER_CLASS = 'dx-scheduler-agenda-nodata';
+const LAST_ROW_CLASS = 'dx-scheduler-date-table-last-row';
+const INNER_CELL_MARGIN = 5;
+const OUTER_CELL_MARGIN = 20;
+let SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
   _inheritsLoose(SchedulerAgenda, _WorkSpace);
   function SchedulerAgenda() {
     return _WorkSpace.apply(this, arguments) || this;
@@ -68,8 +70,12 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
-    var value = args.value;
+    const {
+      name
+    } = args;
+    const {
+      value
+    } = args;
     switch (name) {
       case 'agendaDuration':
         break;
@@ -138,7 +144,7 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     this._$dateTableContainer = (0, _renderer.default)('<div>').addClass('dx-scheduler-date-table-container');
   };
   _proto._initGroupTable = function _initGroupTable() {
-    var groups = this.option('groups');
+    const groups = this.option('groups');
     if (groups && groups.length) {
       this._$groupTable = (0, _renderer.default)('<table>').addClass(GROUP_TABLE_CLASS);
     }
@@ -149,7 +155,7 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     this._initPositionHelper();
   };
   _proto._recalculateAgenda = function _recalculateAgenda(rows) {
-    var cellTemplates = [];
+    let cellTemplates = [];
     this._cleanView();
     if (this._rowsIsEmpty(rows)) {
       this._renderNoData();
@@ -182,23 +188,21 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     return (0, _common.noop)();
   };
   _proto._setGroupHeaderCellsHeight = function _setGroupHeaderCellsHeight() {
-    var $cells = this._getGroupHeaderCells().filter(function (_, element) {
-      return !element.getAttribute('rowSpan');
-    });
-    var rows = this._removeEmptyRows(this._rows);
+    const $cells = this._getGroupHeaderCells().filter((_, element) => !element.getAttribute('rowSpan'));
+    const rows = this._removeEmptyRows(this._rows);
     if (!rows.length) {
       return;
     }
-    for (var i = 0; i < $cells.length; i++) {
-      var $cellContent = $cells.eq(i).find('.dx-scheduler-group-header-content');
+    for (let i = 0; i < $cells.length; i++) {
+      const $cellContent = $cells.eq(i).find('.dx-scheduler-group-header-content');
       (0, _size.setOuterHeight)($cellContent, this._getGroupRowHeight(rows[i]));
     }
   };
   _proto._rowsIsEmpty = function _rowsIsEmpty(rows) {
-    var result = true;
-    for (var i = 0; i < rows.length; i++) {
-      var groupRow = rows[i];
-      for (var j = 0; j < groupRow.length; j++) {
+    let result = true;
+    for (let i = 0; i < rows.length; i++) {
+      const groupRow = rows[i];
+      for (let j = 0; j < groupRow.length; j++) {
         if (groupRow[j]) {
           result = false;
           break;
@@ -208,17 +212,15 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     return result;
   };
   _proto._attachGroupCountClass = function _attachGroupCountClass() {
-    var className = (0, _base.getVerticalGroupCountClass)(this.option('groups'));
+    const className = (0, _base.getVerticalGroupCountClass)(this.option('groups'));
     this.$element().addClass(className);
   };
   _proto._removeEmptyRows = function _removeEmptyRows(rows) {
-    var result = [];
-    var isEmpty = function isEmpty(data) {
-      return !data.some(function (value) {
-        return value > 0;
-      });
+    const result = [];
+    const isEmpty = function (data) {
+      return !data.some(value => value > 0);
     };
-    for (var i = 0; i < rows.length; i++) {
+    for (let i = 0; i < rows.length; i++) {
       if (rows[i].length && !isEmpty(rows[i])) {
         result.push(rows[i]);
       }
@@ -229,20 +231,17 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     return this._$groupTable;
   };
   _proto._makeGroupRows = function _makeGroupRows() {
-    var _this = this;
-    var tree = (0, _m_utils.createReducedResourcesTree)(this.option('loadedResources'), function (field, action) {
-      return (0, _m_utils.getDataAccessors)(_this.option('getResourceDataAccessors')(), field, action);
-    }, this.option('getFilteredItems')());
-    var cellTemplate = this.option('resourceCellTemplate');
-    var getGroupHeaderContentClass = _m_classes.GROUP_HEADER_CONTENT_CLASS;
-    var cellTemplates = [];
-    var table = tableCreator.makeGroupedTableFromJSON(tableCreator.VERTICAL, tree, {
+    const tree = (0, _m_utils.createReducedResourcesTree)(this.option('loadedResources'), (field, action) => (0, _m_utils.getDataAccessors)(this.option('getResourceDataAccessors')(), field, action), this.option('getFilteredItems')());
+    const cellTemplate = this.option('resourceCellTemplate');
+    const getGroupHeaderContentClass = _m_classes.GROUP_HEADER_CONTENT_CLASS;
+    const cellTemplates = [];
+    const table = tableCreator.makeGroupedTableFromJSON(tableCreator.VERTICAL, tree, {
       cellTag: 'th',
       groupTableClass: GROUP_TABLE_CLASS,
       groupRowClass: _m_classes.GROUP_ROW_CLASS,
       groupCellClass: this._getGroupHeaderClass(),
       groupCellCustomContent(cell, cellTextElement, index, data) {
-        var container = _dom_adapter.default.createElement('div');
+        const container = _dom_adapter.default.createElement('div');
         container.className = getGroupHeaderContentClass;
         if (cellTemplate && cellTemplate.render) {
           cellTemplates.push(cellTemplate.render.bind(cellTemplate, {
@@ -256,7 +255,7 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
             index
           }));
         } else {
-          var contentWrapper = _dom_adapter.default.createElement('div');
+          const contentWrapper = _dom_adapter.default.createElement('div');
           contentWrapper.appendChild(cellTextElement);
           container.appendChild(contentWrapper);
         }
@@ -313,15 +312,15 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     return false;
   };
   _proto._prepareCellTemplateOptions = function _prepareCellTemplateOptions(text, date, rowIndex, $cell) {
-    var groupsOpt = this.option('groups');
-    var groups = {};
-    var isGroupedView = !!groupsOpt.length;
-    var path = isGroupedView && (0, _m_utils.getPathToLeaf)(rowIndex, groupsOpt) || [];
-    path.forEach(function (resourceValue, resourceIndex) {
-      var resourceName = groupsOpt[resourceIndex].name;
+    const groupsOpt = this.option('groups');
+    const groups = {};
+    const isGroupedView = !!groupsOpt.length;
+    const path = isGroupedView && (0, _m_utils.getPathToLeaf)(rowIndex, groupsOpt) || [];
+    path.forEach((resourceValue, resourceIndex) => {
+      const resourceName = groupsOpt[resourceIndex].name;
       groups[resourceName] = resourceValue;
     });
-    var groupIndex = isGroupedView ? this._getGroupIndexByResourceId(groups) : undefined;
+    const groupIndex = isGroupedView ? this._getGroupIndexByResourceId(groups) : undefined;
     return {
       model: {
         text,
@@ -336,17 +335,17 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ;
   _proto._renderTableBody = function _renderTableBody(options, delayCellTemplateRendering) {
-    var cellTemplates = [];
-    var cellTemplateOpt = options.cellTemplate;
+    const cellTemplates = [];
+    const cellTemplateOpt = options.cellTemplate;
     this._$rows = [];
-    var i;
-    var fillTableBody = function (rowIndex, rowSize) {
+    let i;
+    const fillTableBody = function (rowIndex, rowSize) {
       if (rowSize) {
-        var date;
-        var cellDateNumber;
-        var cellDayName;
-        var $row = (0, _renderer.default)('<tr>');
-        var $td = (0, _renderer.default)('<td>');
+        let date;
+        let cellDateNumber;
+        let cellDayName;
+        const $row = (0, _renderer.default)('<tr>');
+        const $td = (0, _renderer.default)('<td>');
         (0, _size.setHeight)($td, this._getRowHeight(rowSize));
         if (options.getStartDate) {
           date = options.getStartDate && options.getStartDate(rowIndex);
@@ -354,7 +353,7 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
           cellDayName = _date2.default.format(date, _base.formatWeekday);
         }
         if (cellTemplateOpt && cellTemplateOpt.render) {
-          var templateOptions = this._prepareCellTemplateOptions("".concat(cellDateNumber, " ").concat(cellDayName), date, i, $td);
+          const templateOptions = this._prepareCellTemplateOptions("".concat(cellDateNumber, " ").concat(cellDayName), date, i, $td);
           cellTemplates.push(cellTemplateOpt.render.bind(cellTemplateOpt, templateOptions));
         } else if (cellDateNumber && cellDayName) {
           $td.addClass(AGENDA_DATE_CLASS).text("".concat(cellDateNumber, " ").concat(cellDayName));
@@ -378,7 +377,7 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
   };
   _proto._setLastRowClass = function _setLastRowClass() {
     if (this._rows.length > 1 && this._$rows.length) {
-      var $lastRow = this._$rows[this._$rows.length - 1];
+      const $lastRow = this._$rows[this._$rows.length - 1];
       $lastRow.addClass(LAST_ROW_CLASS);
     }
   };
@@ -394,13 +393,13 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     });
   };
   _proto._getTimePanelStartDate = function _getTimePanelStartDate(rowIndex) {
-    var current = new Date(this.option('currentDate'));
-    var cellDate = new Date(current.setDate(current.getDate() + rowIndex));
+    const current = new Date(this.option('currentDate'));
+    const cellDate = new Date(current.setDate(current.getDate() + rowIndex));
     return cellDate;
   };
   _proto._getRowHeight = function _getRowHeight(rowSize) {
-    var baseHeight = this.option('rowHeight');
-    var innerOffset = (rowSize - 1) * INNER_CELL_MARGIN;
+    const baseHeight = this.option('rowHeight');
+    const innerOffset = (rowSize - 1) * INNER_CELL_MARGIN;
     return rowSize ? baseHeight * rowSize + innerOffset + OUTER_CELL_MARGIN : 0;
   };
   _proto._getGroupRowHeight = function _getGroupRowHeight(groupRows) {
@@ -408,8 +407,8 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     if (!groupRows) {
       return;
     }
-    var result = 0;
-    for (var i = 0; i < groupRows.length; i++) {
+    let result = 0;
+    for (let i = 0; i < groupRows.length; i++) {
       result += this._getRowHeight(groupRows[i]);
     }
     return result;
@@ -420,17 +419,17 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
   _proto.onDataSourceChanged = function onDataSourceChanged(appointments) {
     _WorkSpace.prototype.onDataSourceChanged.call(this);
     this._renderView();
-    var rows = this._calculateRows(appointments);
+    const rows = this._calculateRows(appointments);
     this._recalculateAgenda(rows);
   };
   _proto.getAgendaVerticalStepHeight = function getAgendaVerticalStepHeight() {
     return this.option('rowHeight');
   };
   _proto.getEndViewDate = function getEndViewDate() {
-    var currentDate = new Date(this.option('currentDate'));
-    var agendaDuration = this.option('agendaDuration');
+    const currentDate = new Date(this.option('currentDate'));
+    const agendaDuration = this.option('agendaDuration');
     currentDate.setHours(this.option('endDayHour'));
-    var result = currentDate.setDate(currentDate.getDate() + agendaDuration - 1) - 60000;
+    const result = currentDate.setDate(currentDate.getDate() + agendaDuration - 1) - 60000;
     return new Date(result);
   };
   _proto.getEndViewDateByEndDayHour = function getEndViewDateByEndDayHour() {
@@ -443,12 +442,12 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
     };
   };
   _proto.updateScrollPosition = function updateScrollPosition(date) {
-    var newDate = this.timeZoneCalculator.createDate(date, {
+    const newDate = this.timeZoneCalculator.createDate(date, {
       path: 'toGrid'
     });
-    var bounds = this.getVisibleBounds();
-    var startDateHour = newDate.getHours();
-    var startDateMinutes = newDate.getMinutes();
+    const bounds = this.getVisibleBounds();
+    const startDateHour = newDate.getHours();
+    const startDateMinutes = newDate.getMinutes();
     if (this.needUpdateScrollPosition(startDateHour, startDateMinutes, bounds, newDate)) {
       this.scrollToTime(startDateHour, startDateMinutes, newDate);
     }
@@ -456,7 +455,7 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ;
   _proto.needUpdateScrollPosition = function needUpdateScrollPosition(hours, minutes, bounds, newData) {
-    var isUpdateNeeded = false;
+    let isUpdateNeeded = false;
     if (hours < bounds.top.hours || hours > bounds.bottom.hours) {
       isUpdateNeeded = true;
     }
@@ -483,17 +482,17 @@ var SchedulerAgenda = /*#__PURE__*/function (_WorkSpace) {
   };
   _createClass(SchedulerAgenda, [{
     key: "type",
-    get: function get() {
+    get: function () {
       return _m_constants.VIEWS.AGENDA;
     }
   }, {
     key: "renderingStrategy",
-    get: function get() {
+    get: function () {
       return this.invoke('getLayoutManager').getRenderingStrategyInstance();
     }
   }, {
     key: "appointmentDataProvider",
-    get: function get() {
+    get: function () {
       return this.option('getAppointmentDataProvider')();
     }
   }]);

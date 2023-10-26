@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/common.d.ts)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,10 +9,6 @@
 import {
     dxChartSeriesTypesCommonSeries,
 } from './chart';
-
-import {
-    Font,
-} from './core/base_widget';
 
 import {
     HorizontalAlignment,
@@ -25,6 +21,7 @@ import {
     DashStyle,
     LegendMarkerState,
     SeriesType as CommonSeriesType,
+    Font,
 } from '../common/charts';
 
 import type * as Common from '../common/charts';

@@ -6,9 +6,9 @@ var _window = require("../core/utils/window");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* global Debug*/
 
-var window = (0, _window.getWindow)();
-var IS_WINJS_ORIGIN;
-var IS_LOCAL_ORIGIN;
+const window = (0, _window.getWindow)();
+let IS_WINJS_ORIGIN;
+let IS_LOCAL_ORIGIN;
 function isLocalHostName(url) {
   return /^(localhost$|127\.)/i.test(url); // TODO more precise check for 127.x.x.x IP
 }
@@ -19,14 +19,14 @@ function isLocalHostName(url) {
 * @param1 options:Object
 * @hidden
 */
-var EndpointSelector = function EndpointSelector(config) {
+const EndpointSelector = function (config) {
   this.config = config;
   IS_WINJS_ORIGIN = window.location.protocol === 'ms-appx:';
   IS_LOCAL_ORIGIN = isLocalHostName(window.location.hostname);
 };
 EndpointSelector.prototype = {
-  urlFor: function urlFor(key) {
-    var bag = this.config[key];
+  urlFor: function (key) {
+    const bag = this.config[key];
     if (!bag) {
       throw _errors.default.Error('E0006');
     }

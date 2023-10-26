@@ -35,10 +35,10 @@ var _format_helper = _interopRequireDefault(require("../../../format_helper"));
 var _date = _interopRequireDefault(require("../../../localization/date"));
 var _const = require("./const");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var setFieldProperty = function setFieldProperty(field, property, value, isInitialization) {
-  var initProperties = field._initProperties = field._initProperties || {};
-  var initValue = isInitialization ? value : field[property];
-  var needInitProperty = !Object.prototype.hasOwnProperty.call(initProperties, property) || isInitialization;
+const setFieldProperty = function (field, property, value, isInitialization) {
+  const initProperties = field._initProperties = field._initProperties || {};
+  const initValue = isInitialization ? value : field[property];
+  const needInitProperty = !Object.prototype.hasOwnProperty.call(initProperties, property) || isInitialization;
   if (needInitProperty && property !== '_initProperties') {
     initProperties[property] = initValue;
   }
@@ -48,13 +48,13 @@ exports.setFieldProperty = setFieldProperty;
 function sendRequest(options) {
   return _ajax.default.sendRequest(options);
 }
-var foreachTreeAsyncDate = new Date();
+let foreachTreeAsyncDate = new Date();
 function createForeachTreeFunc(isAsync) {
-  var foreachTreeFunc = function foreachTreeFunc(items, callback, parentAtFirst, members, index, isChildrenProcessing) {
+  const foreachTreeFunc = function (items, callback, parentAtFirst, members, index, isChildrenProcessing) {
     members = members || [];
     items = items || [];
-    var i;
-    var deferred;
+    let i;
+    let deferred;
     index = index || 0;
     function createForeachTreeAsyncHandler(deferred, i, isChildrenProcessing) {
       (0, _deferred.when)(foreachTreeFunc(items, callback, parentAtFirst, members, i, isChildrenProcessing)).done(deferred.resolve);
@@ -67,14 +67,14 @@ function createForeachTreeFunc(isAsync) {
         createForeachTreeAsyncHandler(deferred, i, false);
         return deferred;
       }
-      var item = items[i];
+      const item = items[i];
       if (!isChildrenProcessing) {
         members.unshift(item);
         if (parentAtFirst && callback(members, i) === false) {
           return undefined;
         }
         if (item.children) {
-          var childrenDeferred = foreachTreeFunc(item.children, callback, parentAtFirst, members);
+          const childrenDeferred = foreachTreeFunc(item.children, callback, parentAtFirst, members);
           if (isAsync && childrenDeferred) {
             // @ts-expect-error
             deferred = new _deferred.Deferred();
@@ -96,14 +96,14 @@ function createForeachTreeFunc(isAsync) {
   };
   return foreachTreeFunc;
 }
-var foreachTree = createForeachTreeFunc(false);
+const foreachTree = createForeachTreeFunc(false);
 exports.foreachTree = foreachTree;
-var foreachTreeAsync = createForeachTreeFunc(true);
+const foreachTreeAsync = createForeachTreeFunc(true);
 exports.foreachTreeAsync = foreachTreeAsync;
 function findField(fields, id) {
   if (fields && (0, _type.isDefined)(id)) {
-    for (var i = 0; i < fields.length; i += 1) {
-      var field = fields[i];
+    for (let i = 0; i < fields.length; i += 1) {
+      const field = fields[i];
       if (field.name === id || field.caption === id || field.dataField === id || field.index === id) {
         return i;
       }
@@ -113,8 +113,8 @@ function findField(fields, id) {
 }
 function formatValue(value, options) {
   // because isNaN function works incorrectly with strings and undefined (T889965)
-  var valueText = value === value && _format_helper.default.format(value, options.format);
-  var formatObject = {
+  const valueText = value === value && _format_helper.default.format(value, options.format);
+  const formatObject = {
     value,
     valueText: valueText || ''
   };
@@ -122,11 +122,11 @@ function formatValue(value, options) {
 }
 function getCompareFunction(valueSelector) {
   return function (a, b) {
-    var result = 0;
-    var valueA = valueSelector(a);
-    var valueB = valueSelector(b);
-    var aIsDefined = (0, _type.isDefined)(valueA);
-    var bIsDefined = (0, _type.isDefined)(valueB);
+    let result = 0;
+    const valueA = valueSelector(a);
+    const valueB = valueSelector(b);
+    const aIsDefined = (0, _type.isDefined)(valueA);
+    const bIsDefined = (0, _type.isDefined)(valueB);
     if (aIsDefined && bIsDefined) {
       if (valueA > valueB) {
         result = 1;
@@ -144,8 +144,8 @@ function getCompareFunction(valueSelector) {
   };
 }
 function createPath(items) {
-  var result = [];
-  for (var i = items.length - 1; i >= 0; i -= 1) {
+  const result = [];
+  for (let i = items.length - 1; i >= 0; i -= 1) {
     result.push(items[i].key || items[i].value);
   }
   return result;
@@ -156,30 +156,30 @@ function foreachDataLevel(data, callback, index, childrenField) {
   if (data.length) {
     callback(data, index);
   }
-  for (var i = 0; i < data.length; i += 1) {
-    var item = data[i];
+  for (let i = 0; i < data.length; i += 1) {
+    const item = data[i];
     if (item[childrenField] && item[childrenField].length) {
       foreachDataLevel(item[childrenField], callback, index + 1, childrenField);
     }
   }
 }
 function mergeArraysByMaxValue(values1, values2) {
-  var result = [];
-  for (var i = 0; i < values1.length; i += 1) {
+  const result = [];
+  for (let i = 0; i < values1.length; i += 1) {
     result.push(Math.max(values1[i] || 0, values2[i] || 0));
   }
   return result;
 }
 function getExpandedLevel(options, axisName) {
-  var dimensions = options[axisName];
-  var expandLevel = 0;
-  var expandedPaths = (axisName === 'columns' ? options.columnExpandedPaths : options.rowExpandedPaths) || [];
+  const dimensions = options[axisName];
+  let expandLevel = 0;
+  const expandedPaths = (axisName === 'columns' ? options.columnExpandedPaths : options.rowExpandedPaths) || [];
   if (options.headerName === axisName) {
     expandLevel = options.path.length;
   } else if (options.headerName && options.headerName !== axisName && options.oppositePath) {
     expandLevel = options.oppositePath.length;
   } else {
-    (0, _iterator.each)(expandedPaths, function (_, path) {
+    (0, _iterator.each)(expandedPaths, (_, path) => {
       expandLevel = Math.max(expandLevel, path.length);
     });
   }
@@ -189,23 +189,21 @@ function getExpandedLevel(options, axisName) {
   return expandLevel;
 }
 function createGroupFields(item) {
-  return (0, _iterator.map)(['year', 'quarter', 'month'], function (value, index) {
-    return (0, _extend.extend)({}, item, {
-      groupInterval: value,
-      groupIndex: index
-    });
-  });
+  return (0, _iterator.map)(['year', 'quarter', 'month'], (value, index) => (0, _extend.extend)({}, item, {
+    groupInterval: value,
+    groupIndex: index
+  }));
 }
 function parseFields(dataSource, fieldsList, path, fieldsDataType) {
-  var result = [];
-  Object.keys(fieldsList || []).forEach(function (field) {
+  const result = [];
+  Object.keys(fieldsList || []).forEach(field => {
     if (field && field.startsWith('__')) return;
-    var dataIndex = 1;
-    var currentPath = path.length ? "".concat(path, ".").concat(field) : field;
-    var dataType = fieldsDataType[currentPath];
-    var getter = (0, _data.compileGetter)(currentPath);
-    var value = fieldsList[field];
-    var items;
+    let dataIndex = 1;
+    const currentPath = path.length ? "".concat(path, ".").concat(field) : field;
+    let dataType = fieldsDataType[currentPath];
+    const getter = (0, _data.compileGetter)(currentPath);
+    let value = fieldsList[field];
+    let items;
     while (!(0, _type.isDefined)(value) && dataSource[dataIndex]) {
       value = getter(dataSource[dataIndex]);
       dataIndex += 1;
@@ -230,17 +228,17 @@ function parseFields(dataSource, fieldsList, path, fieldsDataType) {
   return result;
 }
 function discoverObjectFields(items, fields) {
-  var fieldsDataType = getFieldsDataType(fields);
+  const fieldsDataType = getFieldsDataType(fields);
   return parseFields(items, items[0], '', fieldsDataType);
 }
 function getFieldsDataType(fields) {
-  var result = {};
-  (0, _iterator.each)(fields, function (_, field) {
+  const result = {};
+  (0, _iterator.each)(fields, (_, field) => {
     result[field.dataField] = result[field.dataField] || field.dataType;
   });
   return result;
 }
-var DATE_INTERVAL_FORMATS = {
+const DATE_INTERVAL_FORMATS = {
   month(value) {
     return _date.default.getMonthNames()[value - 1];
   },
@@ -257,20 +255,20 @@ function setDefaultFieldValueFormatting(field) {
       setFieldProperty(field, 'format', DATE_INTERVAL_FORMATS[field.groupInterval]);
     }
   } else if (field.dataType === 'number') {
-    var groupInterval = (0, _type.isNumeric)(field.groupInterval) && field.groupInterval > 0 && field.groupInterval;
+    const groupInterval = (0, _type.isNumeric)(field.groupInterval) && field.groupInterval > 0 && field.groupInterval;
     if (groupInterval && !field.customizeText) {
-      setFieldProperty(field, 'customizeText', function (formatObject) {
-        var secondValue = formatObject.value + groupInterval;
-        var secondValueText = _format_helper.default.format(secondValue, field.format);
+      setFieldProperty(field, 'customizeText', formatObject => {
+        const secondValue = formatObject.value + groupInterval;
+        const secondValueText = _format_helper.default.format(secondValue, field.format);
         return formatObject.valueText && secondValueText ? "".concat(formatObject.valueText, " - ").concat(secondValueText) : '';
       });
     }
   }
 }
 function getFiltersByPath(fields, path) {
-  var result = [];
+  const result = [];
   path = path || [];
-  for (var i = 0; i < path.length; i += 1) {
+  for (let i = 0; i < path.length; i += 1) {
     result.push((0, _extend.extend)({}, fields[i], {
       groupIndex: null,
       groupName: null,
@@ -280,27 +278,27 @@ function getFiltersByPath(fields, path) {
   }
   return result;
 }
-var storeDrillDownMixin = {
+const storeDrillDownMixin = {
   createDrillDownDataSource(descriptions, params) {
-    var items = this.getDrillDownItems(descriptions, params);
-    var arrayStore;
+    const items = this.getDrillDownItems(descriptions, params);
+    let arrayStore;
     function createCustomStoreMethod(methodName) {
       return function (options) {
-        var d;
+        let d;
         if (arrayStore) {
           d = arrayStore[methodName](options);
         } else {
           // @ts-expect-error
           d = new _deferred.Deferred();
-          (0, _deferred.when)(items).done(function (data) {
-            var arrayStore = new _array_store.default(data);
+          (0, _deferred.when)(items).done(data => {
+            const arrayStore = new _array_store.default(data);
             arrayStore[methodName](options).done(d.resolve).fail(d.reject);
           }).fail(d.reject);
         }
         return d;
       };
     }
-    var dataSource = new _data_source.DataSource({
+    const dataSource = new _data_source.DataSource({
       load: createCustomStoreMethod('load'),
       totalCount: createCustomStoreMethod('totalCount'),
       key: this.key()
@@ -312,15 +310,13 @@ exports.storeDrillDownMixin = storeDrillDownMixin;
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-var getScrollbarWidth = function getScrollbarWidth(containerElement) {
-  return containerElement.offsetWidth - containerElement.clientWidth;
-};
+const getScrollbarWidth = containerElement => containerElement.offsetWidth - containerElement.clientWidth;
 exports.getScrollbarWidth = getScrollbarWidth;
-var calculateScrollbarWidth = (0, _call_once.default)(function () {
-  var document = _dom_adapter.default.getDocument();
+const calculateScrollbarWidth = (0, _call_once.default)(() => {
+  const document = _dom_adapter.default.getDocument();
   document.body.insertAdjacentHTML('beforeend', "<div class=\"".concat(_const.CLASSES.scrollBarMeasureElement, "\"></div>"));
-  var scrollbar = document.body.lastElementChild;
-  var scrollbarWidth = getScrollbarWidth(scrollbar);
+  const scrollbar = document.body.lastElementChild;
+  const scrollbarWidth = getScrollbarWidth(scrollbar);
   if (scrollbar) {
     document.body.removeChild(scrollbar);
   }

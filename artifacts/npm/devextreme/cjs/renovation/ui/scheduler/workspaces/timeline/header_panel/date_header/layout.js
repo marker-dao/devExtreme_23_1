@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/workspaces/timeline/header_panel/date_header/layout.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,10 +15,9 @@ var _row = require("../../../base/row");
 var _utils = require("../../../utils");
 var _cell = require("../../../base/header_panel/date_header/cell");
 var _layout = require("../../../base/header_panel/date_header/layout");
-var _getThemeType2 = _interopRequireDefault(require("../../../../../../utils/getThemeType"));
-var _excluded = ["dateCellTemplate", "dateHeaderData", "groupByDate", "groupOrientation", "groups", "timeCellTemplate"];
+var _getThemeType = _interopRequireDefault(require("../../../../../../utils/getThemeType"));
+const _excluded = ["dateCellTemplate", "dateHeaderData", "groupByDate", "groupOrientation", "groups", "timeCellTemplate"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -27,33 +26,39 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var _getThemeType = (0, _getThemeType2.default)(),
-  isMaterialBased = _getThemeType.isMaterialBased;
-var viewFunction = function viewFunction(_ref) {
-  var isHorizontalGrouping = _ref.isHorizontalGrouping,
-    _ref$props = _ref.props,
-    dateCellTemplate = _ref$props.dateCellTemplate,
-    dateHeaderData = _ref$props.dateHeaderData,
-    timeCellTemplate = _ref$props.timeCellTemplate;
-  var dataMap = dateHeaderData.dataMap,
-    isMonthDateHeader = dateHeaderData.isMonthDateHeader,
-    leftVirtualCellCount = dateHeaderData.leftVirtualCellCount,
-    leftVirtualCellWidth = dateHeaderData.leftVirtualCellWidth,
-    rightVirtualCellCount = dateHeaderData.rightVirtualCellCount,
-    rightVirtualCellWidth = dateHeaderData.rightVirtualCellWidth,
-    weekDayLeftVirtualCellCount = dateHeaderData.weekDayLeftVirtualCellCount,
-    weekDayLeftVirtualCellWidth = dateHeaderData.weekDayLeftVirtualCellWidth,
-    weekDayRightVirtualCellCount = dateHeaderData.weekDayRightVirtualCellCount,
-    weekDayRightVirtualCellWidth = dateHeaderData.weekDayRightVirtualCellWidth;
-  return (0, _inferno.createFragment)(dataMap.map(function (dateHeaderRow, rowIndex) {
-    var rowsCount = dataMap.length;
-    var isTimeCellTemplate = rowsCount - 1 === rowIndex;
-    var isWeekDayRow = rowsCount > 1 && rowIndex === 0;
-    var splitText = isMaterialBased && (isMonthDateHeader || isWeekDayRow);
-    var validLeftVirtualCellCount = leftVirtualCellCount;
-    var validRightVirtualCellCount = rightVirtualCellCount;
-    var validRightVirtualCellWidth = rightVirtualCellWidth;
-    var validLeftVirtualCellWidth = leftVirtualCellWidth;
+const {
+  isMaterialBased
+} = (0, _getThemeType.default)();
+const viewFunction = _ref => {
+  let {
+    isHorizontalGrouping,
+    props: {
+      dateCellTemplate,
+      dateHeaderData,
+      timeCellTemplate
+    }
+  } = _ref;
+  const {
+    dataMap,
+    isMonthDateHeader,
+    leftVirtualCellCount,
+    leftVirtualCellWidth,
+    rightVirtualCellCount,
+    rightVirtualCellWidth,
+    weekDayLeftVirtualCellCount,
+    weekDayLeftVirtualCellWidth,
+    weekDayRightVirtualCellCount,
+    weekDayRightVirtualCellWidth
+  } = dateHeaderData;
+  return (0, _inferno.createFragment)(dataMap.map((dateHeaderRow, rowIndex) => {
+    const rowsCount = dataMap.length;
+    const isTimeCellTemplate = rowsCount - 1 === rowIndex;
+    const isWeekDayRow = rowsCount > 1 && rowIndex === 0;
+    const splitText = isMaterialBased && (isMonthDateHeader || isWeekDayRow);
+    let validLeftVirtualCellCount = leftVirtualCellCount;
+    let validRightVirtualCellCount = rightVirtualCellCount;
+    let validRightVirtualCellWidth = rightVirtualCellWidth;
+    let validLeftVirtualCellWidth = leftVirtualCellWidth;
     if (isWeekDayRow) {
       validLeftVirtualCellCount = weekDayLeftVirtualCellCount;
       validRightVirtualCellCount = weekDayRightVirtualCellCount;
@@ -66,18 +71,20 @@ var viewFunction = function viewFunction(_ref) {
       "leftVirtualCellCount": validLeftVirtualCellCount,
       "rightVirtualCellWidth": validRightVirtualCellWidth,
       "rightVirtualCellCount": validRightVirtualCellCount,
-      children: dateHeaderRow.map(function (_ref2) {
-        var colSpan = _ref2.colSpan,
-          endDate = _ref2.endDate,
-          groupIndex = _ref2.groupIndex,
-          cellGroups = _ref2.groups,
-          index = _ref2.index,
-          isFirstGroupCell = _ref2.isFirstGroupCell,
-          isLastGroupCell = _ref2.isLastGroupCell,
-          key = _ref2.key,
-          startDate = _ref2.startDate,
-          text = _ref2.text,
-          today = _ref2.today;
+      children: dateHeaderRow.map(_ref2 => {
+        let {
+          colSpan,
+          endDate,
+          groupIndex,
+          groups: cellGroups,
+          index,
+          isFirstGroupCell,
+          isLastGroupCell,
+          key,
+          startDate,
+          text,
+          today
+        } = _ref2;
         return (0, _inferno.createComponentVNode)(2, _cell.DateHeaderCell, {
           "startDate": startDate,
           "endDate": endDate,
@@ -100,12 +107,8 @@ var viewFunction = function viewFunction(_ref) {
   }), 0);
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var TimelineDateHeaderLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let TimelineDateHeaderLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(TimelineDateHeaderLayout, _BaseInfernoComponent);
   function TimelineDateHeaderLayout(props) {
     var _this;
@@ -115,7 +118,7 @@ var TimelineDateHeaderLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
   }
   var _proto = TimelineDateHeaderLayout.prototype;
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         dateCellTemplate: getTemplate(props.dateCellTemplate),
@@ -127,24 +130,19 @@ var TimelineDateHeaderLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(TimelineDateHeaderLayout, [{
     key: "isHorizontalGrouping",
-    get: function get() {
-      var _this$props = this.props,
-        groupByDate = _this$props.groupByDate,
-        groupOrientation = _this$props.groupOrientation,
-        groups = _this$props.groups;
+    get: function () {
+      const {
+        groupByDate,
+        groupOrientation,
+        groups
+      } = this.props;
       return (0, _utils.isHorizontalGroupingApplied)(groups, groupOrientation) && !groupByDate;
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props2 = this.props,
-        dateCellTemplate = _this$props2.dateCellTemplate,
-        dateHeaderData = _this$props2.dateHeaderData,
-        groupByDate = _this$props2.groupByDate,
-        groupOrientation = _this$props2.groupOrientation,
-        groups = _this$props2.groups,
-        timeCellTemplate = _this$props2.timeCellTemplate,
-        restProps = _objectWithoutProperties(_this$props2, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

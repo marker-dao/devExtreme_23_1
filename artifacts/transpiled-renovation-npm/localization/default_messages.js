@@ -3,7 +3,7 @@
 exports.defaultMessages = void 0;
 /* eslint-disable node/no-unsupported-features/es-syntax */
 // !!! AUTO-GENERATED FILE, DO NOT EDIT
-var defaultMessages = {
+const defaultMessages = {
   "en": {
     "Yes": "Yes",
     "No": "No",

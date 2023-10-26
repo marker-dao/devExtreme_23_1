@@ -1,7 +1,7 @@
 "use strict";
 
 exports.convertToScreenSizeQualifier = void 0;
-var convertToScreenSizeQualifier = function convertToScreenSizeQualifier(width) {
+const convertToScreenSizeQualifier = width => {
   if (width < 768) {
     return 'xs';
   }

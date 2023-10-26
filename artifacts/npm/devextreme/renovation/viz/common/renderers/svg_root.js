@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/viz/common/renderers/svg_root.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,8 +12,7 @@ exports.viewFunction = exports.RootSvgElementProps = exports.RootSvgElement = vo
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
 var _config_context = require("../../../common/config_context");
-var _excluded = ["children", "className", "filter", "height", "pointerEvents", "rootElementRef", "styles", "width"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["children", "className", "filter", "height", "pointerEvents", "rootElementRef", "styles", "width"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -23,17 +22,20 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var viewFunction = function viewFunction(_ref) {
-  var config = _ref.config,
-    _ref$props = _ref.props,
-    children = _ref$props.children,
-    className = _ref$props.className,
-    filter = _ref$props.filter,
-    height = _ref$props.height,
-    pointerEvents = _ref$props.pointerEvents,
-    width = _ref$props.width,
-    styles = _ref.styles,
-    svgRef = _ref.svgRef;
+const viewFunction = _ref => {
+  let {
+    config,
+    props: {
+      children,
+      className,
+      filter,
+      height,
+      pointerEvents,
+      width
+    },
+    styles,
+    svgRef
+  } = _ref;
   return (0, _inferno.createVNode)(32, "svg", className, children, 0, {
     "xmlns": "http://www.w3.org/2000/svg",
     "version": "1.1",
@@ -49,13 +51,13 @@ var viewFunction = function viewFunction(_ref) {
   }, null, svgRef);
 };
 exports.viewFunction = viewFunction;
-var RootSvgElementProps = {
+const RootSvgElementProps = {
   className: '',
   height: 0,
   width: 0
 };
 exports.RootSvgElementProps = RootSvgElementProps;
-var RootSvgElement = /*#__PURE__*/function (_InfernoComponent) {
+let RootSvgElement = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(RootSvgElement, _InfernoComponent);
   function RootSvgElement(props) {
     var _this;
@@ -70,13 +72,15 @@ var RootSvgElement = /*#__PURE__*/function (_InfernoComponent) {
     return [new _inferno2.InfernoEffect(this.setRootElementRef, [])];
   };
   _proto.setRootElementRef = function setRootElementRef() {
-    var rootElementRef = this.props.rootElementRef;
+    const {
+      rootElementRef
+    } = this.props;
     if (rootElementRef) {
       rootElementRef.current = this.svgRef.current;
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       svgRef: this.svgRef,
@@ -87,7 +91,7 @@ var RootSvgElement = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(RootSvgElement, [{
     key: "config",
-    get: function get() {
+    get: function () {
       if (this.context[_config_context.ConfigContext.id]) {
         return this.context[_config_context.ConfigContext.id];
       }
@@ -95,7 +99,7 @@ var RootSvgElement = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "styles",
-    get: function get() {
+    get: function () {
       return _extends({
         display: 'block',
         overflow: 'hidden',
@@ -108,17 +112,9 @@ var RootSvgElement = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        children = _this$props.children,
-        className = _this$props.className,
-        filter = _this$props.filter,
-        height = _this$props.height,
-        pointerEvents = _this$props.pointerEvents,
-        rootElementRef = _this$props.rootElementRef,
-        styles = _this$props.styles,
-        width = _this$props.width,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

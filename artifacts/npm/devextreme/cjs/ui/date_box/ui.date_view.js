@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,36 +19,36 @@ var _ui2 = _interopRequireDefault(require("./ui.date_utils"));
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _date2 = _interopRequireDefault(require("../../localization/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DATEVIEW_CLASS = 'dx-dateview';
-var DATEVIEW_COMPACT_CLASS = 'dx-dateview-compact';
-var DATEVIEW_WRAPPER_CLASS = 'dx-dateview-wrapper';
-var DATEVIEW_ROLLER_CONTAINER_CLASS = 'dx-dateview-rollers';
-var DATEVIEW_ROLLER_CLASS = 'dx-dateviewroller';
-var TYPE = {
+const DATEVIEW_CLASS = 'dx-dateview';
+const DATEVIEW_COMPACT_CLASS = 'dx-dateview-compact';
+const DATEVIEW_WRAPPER_CLASS = 'dx-dateview-wrapper';
+const DATEVIEW_ROLLER_CONTAINER_CLASS = 'dx-dateview-rollers';
+const DATEVIEW_ROLLER_CLASS = 'dx-dateviewroller';
+const TYPE = {
   date: 'date',
   datetime: 'datetime',
   time: 'time'
 };
-var ROLLER_TYPE = {
+const ROLLER_TYPE = {
   year: 'year',
   month: 'month',
   day: 'day',
   hours: 'hours'
 };
-var DateView = _editor.default.inherit({
-  _valueOption: function _valueOption() {
-    var value = this.option('value');
-    var date = new Date(value);
+const DateView = _editor.default.inherit({
+  _valueOption: function () {
+    const value = this.option('value');
+    const date = new Date(value);
     return !value || isNaN(date) ? this._getDefaultDate() : date;
   },
-  _getDefaultDate: function _getDefaultDate() {
-    var date = new Date();
+  _getDefaultDate: function () {
+    const date = new Date();
     if (this.option('type') === TYPE.date) {
       return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
     return date;
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       minDate: _ui2.default.MIN_DATEVIEW_DEFAULT_DATE,
       maxDate: _ui2.default.MAX_DATEVIEW_DEFAULT_DATE,
@@ -57,128 +57,128 @@ var DateView = _editor.default.inherit({
       applyCompactClass: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device(_device) {
-        return _device.deviceType !== 'desktop';
+      device: function (device) {
+        return device.deviceType !== 'desktop';
       },
       options: {
         applyCompactClass: true
       }
     }]);
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this.$element().addClass(DATEVIEW_CLASS);
     this._toggleFormatClasses(this.option('type'));
     this._toggleCompactClass();
   },
-  _toggleFormatClasses: function _toggleFormatClasses(currentFormat, previousFormat) {
+  _toggleFormatClasses: function (currentFormat, previousFormat) {
     this.$element().addClass(DATEVIEW_CLASS + '-' + currentFormat);
     previousFormat && this.$element().removeClass(DATEVIEW_CLASS + '-' + previousFormat);
   },
-  _toggleCompactClass: function _toggleCompactClass() {
+  _toggleCompactClass: function () {
     this.$element().toggleClass(DATEVIEW_COMPACT_CLASS, this.option('applyCompactClass'));
   },
-  _wrapper: function _wrapper() {
+  _wrapper: function () {
     return this._$wrapper;
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl: function () {
     this._$wrapper = (0, _renderer.default)('<div>').addClass(DATEVIEW_WRAPPER_CLASS);
     this._renderRollers();
     this._$wrapper.appendTo(this.$element());
   },
-  _renderRollers: function _renderRollers() {
+  _renderRollers: function () {
     if (!this._$rollersContainer) {
       this._$rollersContainer = (0, _renderer.default)('<div>').addClass(DATEVIEW_ROLLER_CONTAINER_CLASS);
     }
     this._$rollersContainer.empty();
     this._createRollerConfigs();
     this._rollers = {};
-    var that = this;
+    const that = this;
     (0, _iterator.each)(that._rollerConfigs, function (name) {
-      var $roller = (0, _renderer.default)('<div>').appendTo(that._$rollersContainer).addClass(DATEVIEW_ROLLER_CLASS + '-' + that._rollerConfigs[name].type);
+      const $roller = (0, _renderer.default)('<div>').appendTo(that._$rollersContainer).addClass(DATEVIEW_ROLLER_CLASS + '-' + that._rollerConfigs[name].type);
       that._rollers[that._rollerConfigs[name].type] = that._createComponent($roller, _ui.default, {
         items: that._rollerConfigs[name].displayItems,
         selectedIndex: that._rollerConfigs[name].selectedIndex,
         showScrollbar: 'never',
         scrollByContent: true,
-        onStart: function onStart(e) {
-          var roller = e.component;
+        onStart: function (e) {
+          const roller = e.component;
           roller._toggleActive(true);
           that._setActiveRoller(that._rollerConfigs[name], roller.option('selectedIndex'));
         },
-        onEnd: function onEnd(e) {
-          var roller = e.component;
+        onEnd: function (e) {
+          const roller = e.component;
           roller._toggleActive(false);
         },
-        onClick: function onClick(e) {
-          var roller = e.component;
+        onClick: function (e) {
+          const roller = e.component;
           roller._toggleActive(true);
           that._setActiveRoller(that._rollerConfigs[name], roller.option('selectedIndex'));
           that._setRollerState(that._rollerConfigs[name], roller.option('selectedIndex'));
           roller._toggleActive(false);
         },
-        onSelectedIndexChanged: function onSelectedIndexChanged(e) {
-          var roller = e.component;
+        onSelectedIndexChanged: function (e) {
+          const roller = e.component;
           that._setRollerState(that._rollerConfigs[name], roller.option('selectedIndex'));
         }
       });
     });
     that._$rollersContainer.appendTo(that._wrapper());
   },
-  _createRollerConfigs: function _createRollerConfigs(type) {
-    var that = this;
+  _createRollerConfigs: function (type) {
+    const that = this;
     type = type || that.option('type');
     that._rollerConfigs = {};
     _date2.default.getFormatParts(_ui2.default.FORMATS_MAP[type]).forEach(function (partName) {
       that._createRollerConfig(partName);
     });
   },
-  _createRollerConfig: function _createRollerConfig(componentName) {
-    var componentInfo = _ui2.default.DATE_COMPONENTS_INFO[componentName];
-    var valueRange = this._calculateRollerConfigValueRange(componentName);
-    var startValue = valueRange.startValue;
-    var endValue = valueRange.endValue;
-    var formatter = componentInfo.formatter;
-    var curDate = this._getCurrentDate();
-    var config = {
+  _createRollerConfig: function (componentName) {
+    const componentInfo = _ui2.default.DATE_COMPONENTS_INFO[componentName];
+    const valueRange = this._calculateRollerConfigValueRange(componentName);
+    const startValue = valueRange.startValue;
+    const endValue = valueRange.endValue;
+    const formatter = componentInfo.formatter;
+    const curDate = this._getCurrentDate();
+    const config = {
       type: componentName,
       setValue: componentInfo.setter,
       valueItems: [],
       displayItems: [],
-      getIndex: function getIndex(value) {
+      getIndex: function (value) {
         return value[componentInfo.getter]() - startValue;
       }
     };
-    for (var i = startValue; i <= endValue; i++) {
+    for (let i = startValue; i <= endValue; i++) {
       config.valueItems.push(i);
       config.displayItems.push(formatter(i, curDate));
     }
     config.selectedIndex = config.getIndex(curDate);
     this._rollerConfigs[componentName] = config;
   },
-  _setActiveRoller: function _setActiveRoller(currentRoller) {
-    var activeRoller = currentRoller && this._rollers[currentRoller.type];
+  _setActiveRoller: function (currentRoller) {
+    const activeRoller = currentRoller && this._rollers[currentRoller.type];
     (0, _iterator.each)(this._rollers, function () {
       this.toggleActiveState(this === activeRoller);
     });
   },
-  _updateRollersPosition: function _updateRollersPosition() {
-    var that = this;
+  _updateRollersPosition: function () {
+    const that = this;
     (0, _iterator.each)(this._rollers, function (type) {
-      var correctIndex = that._rollerConfigs[type].getIndex(that._getCurrentDate());
+      const correctIndex = that._rollerConfigs[type].getIndex(that._getCurrentDate());
       this.option('selectedIndex', correctIndex);
     });
   },
-  _setRollerState: function _setRollerState(roller, selectedIndex) {
+  _setRollerState: function (roller, selectedIndex) {
     if (selectedIndex !== roller.selectedIndex) {
-      var rollerValue = roller.valueItems[selectedIndex];
-      var setValue = roller.setValue;
-      var currentValue = new Date(this._getCurrentDate());
-      var currentDate = currentValue.getDate();
-      var minDate = this.option('minDate');
-      var maxDate = this.option('maxDate');
+      const rollerValue = roller.valueItems[selectedIndex];
+      const setValue = roller.setValue;
+      let currentValue = new Date(this._getCurrentDate());
+      let currentDate = currentValue.getDate();
+      const minDate = this.option('minDate');
+      const maxDate = this.option('maxDate');
       if (roller.type === ROLLER_TYPE.month) {
         currentDate = Math.min(currentDate, _ui2.default.getMaxMonthDay(currentValue.getFullYear(), rollerValue));
       } else if (roller.type === ROLLER_TYPE.year) {
@@ -186,7 +186,7 @@ var DateView = _editor.default.inherit({
       }
       currentValue.setDate(currentDate);
       currentValue[setValue](rollerValue);
-      var normalizedDate = _date.default.normalizeDate(currentValue, minDate, maxDate);
+      const normalizedDate = _date.default.normalizeDate(currentValue, minDate, maxDate);
       currentValue = _ui2.default.mergeDates(normalizedDate, currentValue, 'time');
       currentValue = _date.default.normalizeDate(currentValue, minDate, maxDate);
       this.option('value', currentValue);
@@ -200,11 +200,11 @@ var DateView = _editor.default.inherit({
       this._refreshRoller(ROLLER_TYPE.hours);
     }
   },
-  _refreshRoller: function _refreshRoller(rollerType) {
-    var roller = this._rollers[rollerType];
+  _refreshRoller: function (rollerType) {
+    const roller = this._rollers[rollerType];
     if (roller) {
       this._createRollerConfig(rollerType);
-      var rollerConfig = this._rollerConfigs[rollerType];
+      const rollerConfig = this._rollerConfigs[rollerType];
       if (rollerType === ROLLER_TYPE.day || rollerConfig.displayItems.toString() !== roller.option('items').toString()) {
         roller.option({
           items: rollerConfig.displayItems,
@@ -213,25 +213,25 @@ var DateView = _editor.default.inherit({
       }
     }
   },
-  _getCurrentDate: function _getCurrentDate() {
-    var curDate = this._valueOption();
-    var minDate = this.option('minDate');
-    var maxDate = this.option('maxDate');
+  _getCurrentDate: function () {
+    const curDate = this._valueOption();
+    const minDate = this.option('minDate');
+    const maxDate = this.option('maxDate');
     return _date.default.normalizeDate(curDate, minDate, maxDate);
   },
-  _calculateRollerConfigValueRange: function _calculateRollerConfigValueRange(componentName) {
-    var curDate = this._getCurrentDate();
-    var minDate = this.option('minDate');
-    var maxDate = this.option('maxDate');
-    var minYear = _date.default.sameYear(curDate, minDate);
-    var minMonth = minYear && curDate.getMonth() === minDate.getMonth();
-    var maxYear = _date.default.sameYear(curDate, maxDate);
-    var maxMonth = maxYear && curDate.getMonth() === maxDate.getMonth();
-    var minHour = minMonth && curDate.getDate() === minDate.getDate();
-    var maxHour = maxMonth && curDate.getDate() === maxDate.getDate();
-    var componentInfo = _ui2.default.DATE_COMPONENTS_INFO[componentName];
-    var startValue = componentInfo.startValue;
-    var endValue = componentInfo.endValue;
+  _calculateRollerConfigValueRange: function (componentName) {
+    const curDate = this._getCurrentDate();
+    const minDate = this.option('minDate');
+    const maxDate = this.option('maxDate');
+    const minYear = _date.default.sameYear(curDate, minDate);
+    const minMonth = minYear && curDate.getMonth() === minDate.getMonth();
+    const maxYear = _date.default.sameYear(curDate, maxDate);
+    const maxMonth = maxYear && curDate.getMonth() === maxDate.getMonth();
+    const minHour = minMonth && curDate.getDate() === minDate.getDate();
+    const maxHour = maxMonth && curDate.getDate() === maxDate.getDate();
+    const componentInfo = _ui2.default.DATE_COMPONENTS_INFO[componentName];
+    let startValue = componentInfo.startValue;
+    let endValue = componentInfo.endValue;
     if (componentName === ROLLER_TYPE.year) {
       startValue = minDate.getFullYear();
       endValue = maxDate.getFullYear();
@@ -262,12 +262,12 @@ var DateView = _editor.default.inherit({
       endValue: endValue
     };
   },
-  _refreshRollers: function _refreshRollers() {
+  _refreshRollers: function () {
     this._refreshRoller(ROLLER_TYPE.month);
     this._refreshRoller(ROLLER_TYPE.day);
     this._refreshRoller(ROLLER_TYPE.hours);
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'minDate':
       case 'maxDate':
@@ -290,7 +290,7 @@ var DateView = _editor.default.inherit({
         this.callBase(args);
     }
   },
-  _clean: function _clean() {
+  _clean: function () {
     this.callBase();
     delete this._$rollersContainer;
   }

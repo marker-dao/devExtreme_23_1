@@ -8,26 +8,32 @@ var _type = require("../core/utils/type");
 var _window = require("../core/utils/window");
 var _toast = _interopRequireDefault(require("./toast"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var $notify = null;
-var $containers = {};
+const window = (0, _window.getWindow)();
+let $notify = null;
+const $containers = {};
 function notify(message, /* optional */typeOrStack, displayTime) {
-  var options = (0, _type.isPlainObject)(message) ? message : {
+  const options = (0, _type.isPlainObject)(message) ? message : {
     message: message
   };
-  var stack = (0, _type.isPlainObject)(typeOrStack) ? typeOrStack : undefined;
-  var type = (0, _type.isPlainObject)(typeOrStack) ? undefined : typeOrStack;
-  var userOnHidden = options.onHidden;
+  const stack = (0, _type.isPlainObject)(typeOrStack) ? typeOrStack : undefined;
+  const type = (0, _type.isPlainObject)(typeOrStack) ? undefined : typeOrStack;
+  const {
+    onHidden: userOnHidden
+  } = options;
   if (stack !== null && stack !== void 0 && stack.position) {
-    var position = stack.position;
-    var direction = stack.direction || getDefaultDirection(position);
-    var containerKey = (0, _type.isString)(position) ? position : "".concat(position.top, "-").concat(position.left, "-").concat(position.bottom, "-").concat(position.right);
-    var userOnShowing = options.onShowing;
-    var $container = getStackContainer(containerKey);
+    const {
+      position
+    } = stack;
+    const direction = stack.direction || getDefaultDirection(position);
+    const containerKey = (0, _type.isString)(position) ? position : "".concat(position.top, "-").concat(position.left, "-").concat(position.bottom, "-").concat(position.right);
+    const {
+      onShowing: userOnShowing
+    } = options;
+    const $container = getStackContainer(containerKey);
     setContainerClasses($container, direction);
     (0, _extend.extend)(options, {
       container: $container,
-      onShowing: function onShowing(args) {
+      onShowing: function (args) {
         setContainerStyles($container, direction, position);
         userOnShowing === null || userOnShowing === void 0 ? void 0 : userOnShowing(args);
       }
@@ -36,7 +42,7 @@ function notify(message, /* optional */typeOrStack, displayTime) {
   (0, _extend.extend)(options, {
     type: type,
     displayTime: displayTime,
-    onHidden: function onHidden(args) {
+    onHidden: function (args) {
       (0, _renderer.default)(args.element).remove();
       userOnHidden === null || userOnHidden === void 0 ? void 0 : userOnHidden(args);
     }
@@ -44,41 +50,44 @@ function notify(message, /* optional */typeOrStack, displayTime) {
   $notify = (0, _renderer.default)('<div>').appendTo((0, _view_port.value)());
   new _toast.default($notify, options).show();
 }
-var getDefaultDirection = function getDefaultDirection(position) {
+const getDefaultDirection = position => {
   return (0, _type.isString)(position) && position.includes('top') ? 'down-push' : 'up-push';
 };
-var createStackContainer = function createStackContainer(key) {
-  var $container = (0, _renderer.default)('<div>').appendTo((0, _view_port.value)());
+const createStackContainer = key => {
+  const $container = (0, _renderer.default)('<div>').appendTo((0, _view_port.value)());
   $containers[key] = $container;
   return $container;
 };
-var getStackContainer = function getStackContainer(key) {
-  var $container = $containers[key];
+const getStackContainer = key => {
+  const $container = $containers[key];
   return $container ? $container : createStackContainer(key);
 };
-var setContainerClasses = function setContainerClasses(container, direction) {
-  var containerClasses = "dx-toast-stack dx-toast-stack-".concat(direction, "-direction");
+const setContainerClasses = (container, direction) => {
+  const containerClasses = "dx-toast-stack dx-toast-stack-".concat(direction, "-direction");
   container.removeAttr('class').addClass(containerClasses);
 };
-var setContainerStyles = function setContainerStyles(container, direction, position) {
-  var _container$children$f = container.children().first().get(0),
-    toastWidth = _container$children$f.offsetWidth,
-    toastHeight = _container$children$f.offsetHeight;
-  var dimensions = {
+const setContainerStyles = (container, direction, position) => {
+  const {
+    offsetWidth: toastWidth,
+    offsetHeight: toastHeight
+  } = container.children().first().get(0);
+  const dimensions = {
     toastWidth,
     toastHeight,
     windowHeight: window.innerHeight,
     windowWidth: window.innerWidth
   };
-  var coordinates = (0, _type.isString)(position) ? getCoordinatesByAlias(position, dimensions) : position;
-  var styles = getPositionStylesByCoordinates(direction, coordinates, dimensions);
+  const coordinates = (0, _type.isString)(position) ? getCoordinatesByAlias(position, dimensions) : position;
+  const styles = getPositionStylesByCoordinates(direction, coordinates, dimensions);
   container.css(styles);
 };
-var getCoordinatesByAlias = function getCoordinatesByAlias(alias, _ref) {
-  var toastWidth = _ref.toastWidth,
-    toastHeight = _ref.toastHeight,
-    windowHeight = _ref.windowHeight,
-    windowWidth = _ref.windowWidth;
+const getCoordinatesByAlias = (alias, _ref) => {
+  let {
+    toastWidth,
+    toastHeight,
+    windowHeight,
+    windowWidth
+  } = _ref;
   switch (alias) {
     case 'top left':
       return {
@@ -128,12 +137,14 @@ var getCoordinatesByAlias = function getCoordinatesByAlias(alias, _ref) {
       };
   }
 };
-var getPositionStylesByCoordinates = function getPositionStylesByCoordinates(direction, coordinates, dimensions) {
+const getPositionStylesByCoordinates = (direction, coordinates, dimensions) => {
   var _coordinates$bottom, _coordinates$left, _coordinates$right, _coordinates$top, _coordinates$left2, _coordinates$right2, _coordinates$right3, _coordinates$top2, _coordinates$bottom2, _coordinates$left3, _coordinates$top3, _coordinates$bottom3;
-  var toastWidth = dimensions.toastWidth,
-    toastHeight = dimensions.toastHeight,
-    windowHeight = dimensions.windowHeight,
-    windowWidth = dimensions.windowWidth;
+  const {
+    toastWidth,
+    toastHeight,
+    windowHeight,
+    windowWidth
+  } = dimensions;
   switch (direction.replace(/-push|-stack/g, '')) {
     case 'up':
       return {
@@ -168,10 +179,8 @@ var getPositionStylesByCoordinates = function getPositionStylesByCoordinates(dir
 
 ///#DEBUG
 Object.setPrototypeOf(notify, {
-  _resetContainers: function _resetContainers() {
-    Object.keys($containers).forEach(function (key) {
-      return delete $containers[key];
-    });
+  _resetContainers: function () {
+    Object.keys($containers).forEach(key => delete $containers[key]);
   }
 });
 ///#ENDDEBUG

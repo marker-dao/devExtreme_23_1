@@ -8,14 +8,14 @@ var _bar_series = require("./bar_series");
 var _extend2 = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _common = require("../../core/utils/common");
-var lineSeries = _line_series.chart.line;
-var areaSeries = _area_series.chart.area;
-var chartBarSeries = _bar_series.chart.bar;
-var polarBarSeries = _bar_series.polar.bar;
-var _extend = _extend2.extend;
-var _each = _iterator.each;
-var _noop = _common.noop;
-var chart = {};
+const lineSeries = _line_series.chart.line;
+const areaSeries = _area_series.chart.area;
+const chartBarSeries = _bar_series.chart.bar;
+const polarBarSeries = _bar_series.polar.bar;
+const _extend = _extend2.extend;
+const _each = _iterator.each;
+const _noop = _common.noop;
+const chart = {};
 exports.chart = chart;
 chart.bubble = _extend({}, _scatter_series.chart, {
   _calculateErrorBars: _noop,
@@ -30,32 +30,34 @@ chart.bubble = _extend({}, _scatter_series.chart, {
   _setMarkerGroupSettings: polarBarSeries._setMarkerGroupSettings,
   areErrorBarsVisible: _noop,
   _createErrorBarGroup: _noop,
-  _checkData: function _checkData(data, skippedFields) {
+  _checkData: function (data, skippedFields) {
     return _scatter_series.chart._checkData.call(this, data, skippedFields, {
       value: this.getValueFields()[0],
       size: this.getSizeField()
     });
   },
-  _getPointDataSelector: function _getPointDataSelector(data, options) {
-    var sizeField = this.getSizeField();
-    var baseGetter = _scatter_series.chart._getPointDataSelector.call(this);
-    return function (data) {
-      var pointData = baseGetter(data);
+  _getPointDataSelector: function (data, options) {
+    const sizeField = this.getSizeField();
+    const baseGetter = _scatter_series.chart._getPointDataSelector.call(this);
+    return data => {
+      const pointData = baseGetter(data);
       pointData.size = data[sizeField];
       return pointData;
     };
   },
   _aggregators: {
     avg(_ref, series) {
-      var data = _ref.data,
-        intervalStart = _ref.intervalStart,
-        intervalEnd = _ref.intervalEnd;
+      let {
+        data,
+        intervalStart,
+        intervalEnd
+      } = _ref;
       if (!data.length) {
         return;
       }
-      var valueField = series.getValueFields()[0];
-      var sizeField = series.getSizeField();
-      var aggregate = data.reduce(function (result, item) {
+      const valueField = series.getValueFields()[0];
+      const sizeField = series.getSizeField();
+      const aggregate = data.reduce((result, item) => {
         result[0] += item[valueField];
         result[1] += item[sizeField];
         result[2]++;
@@ -68,17 +70,17 @@ chart.bubble = _extend({}, _scatter_series.chart, {
       };
     }
   },
-  getValueFields: function getValueFields() {
+  getValueFields: function () {
     return [this._options.valueField || 'val'];
   },
-  getSizeField: function getSizeField() {
+  getSizeField: function () {
     return this._options.sizeField || 'size';
   },
-  _animate: function _animate() {
-    var that = this;
-    var lastPointIndex = that._drawnPoints.length - 1;
-    var labelsGroup = that._labelsGroup;
-    var labelAnimFunc = function labelAnimFunc() {
+  _animate: function () {
+    const that = this;
+    const lastPointIndex = that._drawnPoints.length - 1;
+    const labelsGroup = that._labelsGroup;
+    const labelAnimFunc = function () {
       labelsGroup && labelsGroup.animate({
         opacity: 1
       }, {
@@ -93,7 +95,7 @@ chart.bubble = _extend({}, _scatter_series.chart, {
       });
     });
   },
-  _patchMarginOptions: function _patchMarginOptions(options) {
+  _patchMarginOptions: function (options) {
     options.processBubbleSize = true;
     return options;
   }

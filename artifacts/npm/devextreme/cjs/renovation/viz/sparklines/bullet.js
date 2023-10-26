@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/viz/sparklines/bullet.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,9 +25,8 @@ var _events_engine = _interopRequireDefault(require("../../../events/core/events
 var _index = require("../../../events/utils/index");
 var _pointer = _interopRequireDefault(require("../../../events/pointer"));
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
-var _excluded = ["canvas", "canvasChange", "children", "className", "classes", "color", "defaultCanvas", "disabled", "endScaleValue", "margin", "onTooltipHidden", "onTooltipShown", "pointerEvents", "rtlEnabled", "showTarget", "showZeroLevel", "size", "startScaleValue", "target", "targetColor", "targetWidth", "tooltip", "value"];
+const _excluded = ["canvas", "canvasChange", "children", "className", "classes", "color", "defaultCanvas", "disabled", "endScaleValue", "margin", "onTooltipHidden", "onTooltipShown", "pointerEvents", "rtlEnabled", "showTarget", "showZeroLevel", "size", "startScaleValue", "target", "targetColor", "targetWidth", "tooltip", "value"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -37,23 +36,25 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var TARGET_MIN_Y = 0.02;
-var TARGET_MAX_Y = 0.98;
-var BAR_VALUE_MIN_Y = 0.1;
-var BAR_VALUE_MAX_Y = 0.9;
-var DEFAULT_CANVAS_WIDTH = 300;
-var DEFAULT_CANVAS_HEIGHT = 30;
-var DEFAULT_HORIZONTAL_MARGIN = 1;
-var DEFAULT_VERTICAL_MARGIN = 2;
-var DEFAULT_OFFSET = {
+const TARGET_MIN_Y = 0.02;
+const TARGET_MAX_Y = 0.98;
+const BAR_VALUE_MIN_Y = 0.1;
+const BAR_VALUE_MAX_Y = 0.9;
+const DEFAULT_CANVAS_WIDTH = 300;
+const DEFAULT_CANVAS_HEIGHT = 30;
+const DEFAULT_HORIZONTAL_MARGIN = 1;
+const DEFAULT_VERTICAL_MARGIN = 2;
+const DEFAULT_OFFSET = {
   top: 0,
   left: 0
 };
-var EVENT_NS = 'sparkline-tooltip';
-var POINTER_ACTION = (0, _index.addNamespace)([_pointer.default.down, _pointer.default.move], EVENT_NS);
-var inCanvas = function inCanvas(canvas, x, y) {
-  var height = canvas.height,
-    width = canvas.width;
+const EVENT_NS = 'sparkline-tooltip';
+const POINTER_ACTION = (0, _index.addNamespace)([_pointer.default.down, _pointer.default.move], EVENT_NS);
+const inCanvas = (canvas, x, y) => {
+  const {
+    height,
+    width
+  } = canvas;
   return (0, _utils2.pointInCanvas)({
     left: 0,
     top: 0,
@@ -63,38 +64,45 @@ var inCanvas = function inCanvas(canvas, x, y) {
     height
   }, x, y);
 };
-var getCssClasses = function getCssClasses(_ref) {
-  var classes = _ref.classes;
-  var rootClassesMap = {
+const getCssClasses = _ref => {
+  let {
+    classes
+  } = _ref;
+  const rootClassesMap = {
     dxb: true,
     'dxb-bullet': true,
     [String(classes)]: !!classes
   };
   return (0, _combine_classes.combineClasses)(rootClassesMap);
 };
-var getContainerCssClasses = function getContainerCssClasses(_ref2) {
-  var className = _ref2.className;
-  var rootClassesMap = {
+const getContainerCssClasses = _ref2 => {
+  let {
+    className
+  } = _ref2;
+  const rootClassesMap = {
     'dx-bullet': true,
     [String(className)]: !!className
   };
   return (0, _combine_classes.combineClasses)(rootClassesMap);
 };
-var viewFunction = function viewFunction(viewModel) {
-  var _viewModel$props = viewModel.props,
-    color = _viewModel$props.color,
-    disabled = _viewModel$props.disabled,
-    margin = _viewModel$props.margin,
-    size = _viewModel$props.size,
-    targetColor = _viewModel$props.targetColor,
-    targetWidth = _viewModel$props.targetWidth;
-  var barValueShape = viewModel.barValueShape,
-    customizedTooltipProps = viewModel.customizedTooltipProps,
-    isValidBulletScale = viewModel.isValidBulletScale,
-    isValidTarget = viewModel.isValidTarget,
-    isValidZeroLevel = viewModel.isValidZeroLevel,
-    targetShape = viewModel.targetShape,
-    zeroLevelShape = viewModel.zeroLevelShape;
+const viewFunction = viewModel => {
+  const {
+    color,
+    disabled,
+    margin,
+    size,
+    targetColor,
+    targetWidth
+  } = viewModel.props;
+  const {
+    barValueShape,
+    customizedTooltipProps,
+    isValidBulletScale,
+    isValidTarget,
+    isValidZeroLevel,
+    targetShape,
+    zeroLevelShape
+  } = viewModel;
   return (0, _inferno.createFragment)([(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _base_widget.BaseWidget, _extends({
     "rootElementRef": viewModel.widgetRootRef,
     "classes": viewModel.cssClasses,
@@ -137,7 +145,7 @@ var viewFunction = function viewFunction(viewModel) {
   }), null, viewModel.tooltipRef))], 0);
 };
 exports.viewFunction = viewFunction;
-var BulletProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors({
+const BulletProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors({
   value: 0,
   color: '#e8c267',
   target: 0,
@@ -149,7 +157,7 @@ var BulletProps = Object.create(Object.prototype, _extends(Object.getOwnProperty
   tooltip: Object.freeze(_tooltip.TooltipProps)
 })));
 exports.BulletProps = BulletProps;
-var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
+let Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(Bullet, _InfernoWrapperCompon);
   function Bullet(props) {
     var _this;
@@ -193,50 +201,47 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     (_this$_effects$2 = this._effects[1]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([this.state.tooltipVisible, this.state.offsetState, this.state.canvasState]);
   };
   _proto.tooltipEffect = function tooltipEffect() {
-    var _this2 = this;
-    var disabled = this.props.disabled;
+    const {
+      disabled
+    } = this.props;
     if (!disabled && this.customizedTooltipProps.enabled) {
       var _this$widgetRef$curre;
-      var svg = (_this$widgetRef$curre = this.widgetRef.current) === null || _this$widgetRef$curre === void 0 ? void 0 : _this$widgetRef$curre.svg();
+      const svg = (_this$widgetRef$curre = this.widgetRef.current) === null || _this$widgetRef$curre === void 0 ? void 0 : _this$widgetRef$curre.svg();
       _events_engine.default.on(svg, POINTER_ACTION, this.pointerHandler);
-      return function () {
-        _events_engine.default.off(svg, POINTER_ACTION, _this2.pointerHandler);
+      return () => {
+        _events_engine.default.off(svg, POINTER_ACTION, this.pointerHandler);
       };
     }
     return undefined;
   };
   _proto.tooltipOutEffect = function tooltipOutEffect() {
-    var _this3 = this;
     if (this.state.tooltipVisible) {
-      var document = _dom_adapter.default.getDocument();
+      const document = _dom_adapter.default.getDocument();
       _events_engine.default.on(document, POINTER_ACTION, this.pointerOutHandler);
-      return function () {
-        _events_engine.default.off(document, POINTER_ACTION, _this3.pointerOutHandler);
+      return () => {
+        _events_engine.default.off(document, POINTER_ACTION, this.pointerOutHandler);
       };
     }
     return undefined;
   };
   _proto.onCanvasChange = function onCanvasChange(canvas) {
     var _this$widgetRef$curre2, _this$widgetRef$curre3;
-    this.setState(function (__state_argument) {
-      return {
-        canvasState: canvas
-      };
-    });
-    var svgElement = (_this$widgetRef$curre2 = (_this$widgetRef$curre3 = this.widgetRef.current) === null || _this$widgetRef$curre3 === void 0 ? void 0 : _this$widgetRef$curre3.svg()) !== null && _this$widgetRef$curre2 !== void 0 ? _this$widgetRef$curre2 : undefined;
-    this.setState(function (__state_argument) {
-      return {
-        offsetState: (0, _get_element_offset.getElementOffset)(svgElement)
-      };
-    });
+    this.setState(__state_argument => ({
+      canvasState: canvas
+    }));
+    const svgElement = (_this$widgetRef$curre2 = (_this$widgetRef$curre3 = this.widgetRef.current) === null || _this$widgetRef$curre3 === void 0 ? void 0 : _this$widgetRef$curre3.svg()) !== null && _this$widgetRef$curre2 !== void 0 ? _this$widgetRef$curre2 : undefined;
+    this.setState(__state_argument => ({
+      offsetState: (0, _get_element_offset.getElementOffset)(svgElement)
+    }));
   };
   _proto.prepareScaleProps = function prepareScaleProps() {
-    var _this$props = this.props,
-      endScaleValue = _this$props.endScaleValue,
-      startScaleValue = _this$props.startScaleValue,
-      target = _this$props.target,
-      value = _this$props.value;
-    var tmpProps = {
+    const {
+      endScaleValue,
+      startScaleValue,
+      target,
+      value
+    } = this.props;
+    const tmpProps = {
       inverted: false,
       value,
       target,
@@ -244,7 +249,7 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
       endScaleValue: endScaleValue === undefined ? Math.max(target, value) : endScaleValue
     };
     if (tmpProps.endScaleValue < tmpProps.startScaleValue) {
-      var level = tmpProps.endScaleValue;
+      const level = tmpProps.endScaleValue;
       tmpProps.endScaleValue = tmpProps.startScaleValue;
       tmpProps.startScaleValue = level;
       tmpProps.inverted = true;
@@ -252,9 +257,11 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     return tmpProps;
   };
   _proto.getRange = function getRange(scaleProps) {
-    var endScaleValue = scaleProps.endScaleValue,
-      inverted = scaleProps.inverted,
-      startScaleValue = scaleProps.startScaleValue;
+    const {
+      endScaleValue,
+      inverted,
+      startScaleValue
+    } = scaleProps;
     return {
       arg: {
         invert: this.rtlEnabled ? !inverted : inverted,
@@ -272,31 +279,30 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     };
   };
   _proto.getSimpleShape = function getSimpleShape(value) {
-    var translatorY = this.state.valueAxis.getTranslator();
-    var x = this.state.argumentAxis.getTranslator().translate(value);
+    const translatorY = this.state.valueAxis.getTranslator();
+    const x = this.state.argumentAxis.getTranslator().translate(value);
     return [x, translatorY.translate(TARGET_MIN_Y), x, translatorY.translate(TARGET_MAX_Y)];
   };
   _proto.pointerHandler = function pointerHandler() {
-    this.setState(function (__state_argument) {
-      return {
-        tooltipVisible: true
-      };
-    });
+    this.setState(__state_argument => ({
+      tooltipVisible: true
+    }));
   };
   _proto.pointerOutHandler = function pointerOutHandler(_ref3) {
-    var pageX = _ref3.pageX,
-      pageY = _ref3.pageY;
-    var _this$state$offsetSta = this.state.offsetState,
-      left = _this$state$offsetSta.left,
-      top = _this$state$offsetSta.top;
-    var x = Math.floor(pageX - left);
-    var y = Math.floor(pageY - top);
+    let {
+      pageX,
+      pageY
+    } = _ref3;
+    const {
+      left,
+      top
+    } = this.state.offsetState;
+    const x = Math.floor(pageX - left);
+    const y = Math.floor(pageY - top);
     if (!inCanvas(this.state.canvasState, x, y)) {
-      this.setState(function (__state_argument) {
-        return {
-          tooltipVisible: false
-        };
-      });
+      this.setState(__state_argument => ({
+        tooltipVisible: false
+      }));
     }
   };
   _proto.componentWillUpdate = function componentWillUpdate(nextProps, nextState, context) {
@@ -312,7 +318,7 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         canvas: this.props.canvas !== undefined ? this.props.canvas : this.state.canvas
@@ -352,7 +358,7 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(Bullet, [{
     key: "config",
-    get: function get() {
+    get: function () {
       if (this.context[_config_context.ConfigContext.id]) {
         return this.context[_config_context.ConfigContext.id];
       }
@@ -360,47 +366,53 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "cssClasses",
-    get: function get() {
-      var classes = this.props.classes;
+    get: function () {
+      const {
+        classes
+      } = this.props;
       return getCssClasses({
         classes
       });
     }
   }, {
     key: "cssClassName",
-    get: function get() {
-      var className = this.props.className;
+    get: function () {
+      const {
+        className
+      } = this.props;
       return getContainerCssClasses({
         className
       });
     }
   }, {
     key: "rtlEnabled",
-    get: function get() {
-      var rtlEnabled = this.props.rtlEnabled;
+    get: function () {
+      const {
+        rtlEnabled
+      } = this.props;
       return (0, _resolve_rtl.resolveRtlEnabled)(rtlEnabled, this.config);
     }
   }, {
     key: "tooltipEnabled",
-    get: function get() {
+    get: function () {
       return !(this.props.value === undefined && this.props.target === undefined);
     }
   }, {
     key: "tooltipData",
-    get: function get() {
-      var _this4 = this;
+    get: function () {
       if (this.__getterCache['tooltipData'] !== undefined) {
         return this.__getterCache['tooltipData'];
       }
-      return this.__getterCache['tooltipData'] = function () {
-        var _this4$props = _this4.props,
-          target = _this4$props.target,
-          tooltip = _this4$props.tooltip,
-          value = _this4$props.value;
-        var valueText = (0, _utils2.getFormatValue)(value, undefined, {
+      return this.__getterCache['tooltipData'] = (() => {
+        const {
+          target,
+          tooltip,
+          value
+        } = this.props;
+        const valueText = (0, _utils2.getFormatValue)(value, undefined, {
           format: tooltip === null || tooltip === void 0 ? void 0 : tooltip.format
         });
-        var targetText = (0, _utils2.getFormatValue)(target, undefined, {
+        const targetText = (0, _utils2.getFormatValue)(target, undefined, {
           format: tooltip === null || tooltip === void 0 ? void 0 : tooltip.format
         });
         return {
@@ -410,32 +422,32 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
           target: targetText,
           valueTexts: ['Actual Value:', valueText, 'Target Value:', targetText]
         };
-      }();
+      })();
     }
   }, {
     key: "tooltipCoords",
-    get: function get() {
-      var _this5 = this;
+    get: function () {
       if (this.__getterCache['tooltipCoords'] !== undefined) {
         return this.__getterCache['tooltipCoords'];
       }
-      return this.__getterCache['tooltipCoords'] = function () {
-        var canvas = _this5.state.canvasState;
-        var rootOffset = _this5.state.offsetState;
+      return this.__getterCache['tooltipCoords'] = (() => {
+        const canvas = this.state.canvasState;
+        const rootOffset = this.state.offsetState;
         return {
           x: canvas.width / 2 + rootOffset.left,
           y: canvas.height / 2 + rootOffset.top
         };
-      }();
+      })();
     }
   }, {
     key: "customizedTooltipProps",
-    get: function get() {
-      var _this$props2 = this.props,
-        onTooltipHidden = _this$props2.onTooltipHidden,
-        onTooltipShown = _this$props2.onTooltipShown,
-        tooltip = _this$props2.tooltip;
-      var customProps = _extends({
+    get: function () {
+      const {
+        onTooltipHidden,
+        onTooltipShown,
+        tooltip
+      } = this.props;
+      const customProps = _extends({
         enabled: this.tooltipEnabled,
         eventData: {
           component: this.widgetRef
@@ -451,7 +463,7 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "defaultCanvas",
-    get: function get() {
+    get: function () {
       return {
         width: DEFAULT_CANVAS_WIDTH,
         height: DEFAULT_CANVAS_HEIGHT,
@@ -463,66 +475,70 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "scaleProps",
-    get: function get() {
-      var _this6 = this;
+    get: function () {
       if (this.__getterCache['scaleProps'] !== undefined) {
         return this.__getterCache['scaleProps'];
       }
-      return this.__getterCache['scaleProps'] = function () {
-        var props = _this6.prepareScaleProps();
-        var canvas = _this6.state.canvasState;
-        var ranges = _this6.getRange(props);
-        _this6.state.argumentAxis.update(ranges.arg, canvas, undefined);
-        _this6.state.valueAxis.update(ranges.val, canvas, undefined);
+      return this.__getterCache['scaleProps'] = (() => {
+        const props = this.prepareScaleProps();
+        const canvas = this.state.canvasState;
+        const ranges = this.getRange(props);
+        this.state.argumentAxis.update(ranges.arg, canvas, undefined);
+        this.state.valueAxis.update(ranges.val, canvas, undefined);
         return props;
-      }();
+      })();
     }
   }, {
     key: "isValidBulletScale",
-    get: function get() {
-      var _this$props3 = this.props,
-        endScaleValue = _this$props3.endScaleValue,
-        startScaleValue = _this$props3.startScaleValue,
-        target = _this$props3.target,
-        value = _this$props3.value;
-      var isValidBounds = startScaleValue !== endScaleValue;
-      var isValidMin = Number.isFinite(startScaleValue);
-      var isValidMax = Number.isFinite(endScaleValue);
-      var isValidValue = Number.isFinite(value);
-      var isValidTarget = Number.isFinite(target);
+    get: function () {
+      const {
+        endScaleValue,
+        startScaleValue,
+        target,
+        value
+      } = this.props;
+      const isValidBounds = startScaleValue !== endScaleValue;
+      const isValidMin = Number.isFinite(startScaleValue);
+      const isValidMax = Number.isFinite(endScaleValue);
+      const isValidValue = Number.isFinite(value);
+      const isValidTarget = Number.isFinite(target);
       return isValidBounds && isValidMax && isValidMin && isValidTarget && isValidValue;
     }
   }, {
     key: "targetShape",
-    get: function get() {
+    get: function () {
       return this.getSimpleShape(this.scaleProps.target);
     }
   }, {
     key: "zeroLevelShape",
-    get: function get() {
+    get: function () {
       return this.getSimpleShape(0);
     }
   }, {
     key: "isValidTarget",
-    get: function get() {
-      var showTarget = this.props.showTarget;
+    get: function () {
+      const {
+        showTarget
+      } = this.props;
       return !(this.scaleProps.target > this.scaleProps.endScaleValue || this.scaleProps.target < this.scaleProps.startScaleValue || !showTarget);
     }
   }, {
     key: "isValidZeroLevel",
-    get: function get() {
-      var showZeroLevel = this.props.showZeroLevel;
+    get: function () {
+      const {
+        showZeroLevel
+      } = this.props;
       return !(this.scaleProps.endScaleValue < 0 || this.scaleProps.startScaleValue > 0 || !showZeroLevel);
     }
   }, {
     key: "barValueShape",
-    get: function get() {
-      var translatorX = this.state.argumentAxis.getTranslator();
-      var translatorY = this.state.valueAxis.getTranslator();
-      var y2 = translatorY.translate(BAR_VALUE_MIN_Y);
-      var y1 = translatorY.translate(BAR_VALUE_MAX_Y);
-      var x1 = Number.NaN;
-      var x2 = Number.NaN;
+    get: function () {
+      const translatorX = this.state.argumentAxis.getTranslator();
+      const translatorY = this.state.valueAxis.getTranslator();
+      const y2 = translatorY.translate(BAR_VALUE_MIN_Y);
+      const y1 = translatorY.translate(BAR_VALUE_MAX_Y);
+      let x1 = Number.NaN;
+      let x2 = Number.NaN;
       if (this.scaleProps.value > 0) {
         x1 = Math.max(0, this.scaleProps.startScaleValue);
         x2 = this.scaleProps.value >= this.scaleProps.endScaleValue ? this.scaleProps.endScaleValue : Math.max(this.scaleProps.value, x1);
@@ -536,34 +552,11 @@ var Bullet = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props$canvas = _extends({}, this.props, {
+    get: function () {
+      const _this$props$canvas = _extends({}, this.props, {
           canvas: this.props.canvas !== undefined ? this.props.canvas : this.state.canvas
         }),
-        canvas = _this$props$canvas.canvas,
-        canvasChange = _this$props$canvas.canvasChange,
-        children = _this$props$canvas.children,
-        className = _this$props$canvas.className,
-        classes = _this$props$canvas.classes,
-        color = _this$props$canvas.color,
-        defaultCanvas = _this$props$canvas.defaultCanvas,
-        disabled = _this$props$canvas.disabled,
-        endScaleValue = _this$props$canvas.endScaleValue,
-        margin = _this$props$canvas.margin,
-        onTooltipHidden = _this$props$canvas.onTooltipHidden,
-        onTooltipShown = _this$props$canvas.onTooltipShown,
-        pointerEvents = _this$props$canvas.pointerEvents,
-        rtlEnabled = _this$props$canvas.rtlEnabled,
-        showTarget = _this$props$canvas.showTarget,
-        showZeroLevel = _this$props$canvas.showZeroLevel,
-        size = _this$props$canvas.size,
-        startScaleValue = _this$props$canvas.startScaleValue,
-        target = _this$props$canvas.target,
-        targetColor = _this$props$canvas.targetColor,
-        targetWidth = _this$props$canvas.targetWidth,
-        tooltip = _this$props$canvas.tooltip,
-        value = _this$props$canvas.value,
-        restProps = _objectWithoutProperties(_this$props$canvas, _excluded);
+        restProps = _objectWithoutPropertiesLoose(_this$props$canvas, _excluded);
       return restProps;
     }
   }]);

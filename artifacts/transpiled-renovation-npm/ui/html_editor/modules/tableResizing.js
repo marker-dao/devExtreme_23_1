@@ -18,19 +18,19 @@ var _table_helper = require("../utils/table_helper");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DX_COLUMN_RESIZE_FRAME_CLASS = 'dx-table-resize-frame';
-var DX_COLUMN_RESIZER_CLASS = 'dx-htmleditor-column-resizer';
-var DX_ROW_RESIZER_CLASS = 'dx-htmleditor-row-resizer';
-var DEFAULTS = {
+const DX_COLUMN_RESIZE_FRAME_CLASS = 'dx-table-resize-frame';
+const DX_COLUMN_RESIZER_CLASS = 'dx-htmleditor-column-resizer';
+const DX_ROW_RESIZER_CLASS = 'dx-htmleditor-row-resizer';
+const DEFAULTS = {
   minColumnWidth: 40,
   minRowHeight: 24
 };
-var DRAGGABLE_ELEMENT_OFFSET = 2;
-var ROUGH_OFFSET = 3;
-var MODULE_NAMESPACE = 'dxHtmlTableResizingModule';
-var POINTERDOWN_EVENT = (0, _index.addNamespace)('dxpointerdown', MODULE_NAMESPACE);
-var SCROLL_EVENT = (0, _index.addNamespace)('scroll', MODULE_NAMESPACE);
-var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
+const DRAGGABLE_ELEMENT_OFFSET = 2;
+const ROUGH_OFFSET = 3;
+const MODULE_NAMESPACE = 'dxHtmlTableResizingModule';
+const POINTERDOWN_EVENT = (0, _index.addNamespace)('dxpointerdown', MODULE_NAMESPACE);
+const SCROLL_EVENT = (0, _index.addNamespace)('scroll', MODULE_NAMESPACE);
+let TableResizingModule = /*#__PURE__*/function (_BaseModule) {
   _inheritsLoose(TableResizingModule, _BaseModule);
   function TableResizingModule(quill, options) {
     var _this;
@@ -60,7 +60,7 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     return (0, _type.isDefined)(newValue) ? Math.max(newValue, 0) : DEFAULTS[propertyName];
   };
   _proto._applyResizingImpl = function _applyResizingImpl() {
-    var $tables = this._findTables();
+    const $tables = this._findTables();
     if ($tables.length) {
       this._fixTablesWidths($tables);
       this._createResizeFrames($tables);
@@ -78,22 +78,21 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     this.quill.off('text-change', this._quillTextChangeHandler);
   };
   _proto._getQuillTextChangeHandler = function _getQuillTextChangeHandler(delta, oldContent, source) {
-    var _this2 = this;
-    return function (delta, oldContent, source) {
-      if (_this2._isTableChanging()) {
-        var $tables = _this2._findTables();
-        _this2._removeResizeFrames();
+    return (delta, oldContent, source) => {
+      if (this._isTableChanging()) {
+        const $tables = this._findTables();
+        this._removeResizeFrames();
         if (source === 'api') {
-          _this2._fixTablesWidths($tables);
+          this._fixTablesWidths($tables);
         }
-        _this2._updateTablesColumnsWidth($tables);
-        _this2._createResizeFrames($tables);
-        _this2._updateFramesPositions();
-        _this2._updateFramesSeparators();
+        this._updateTablesColumnsWidth($tables);
+        this._createResizeFrames($tables);
+        this._updateFramesPositions();
+        this._updateFramesSeparators();
       } else {
-        _this2._updateFramesPositions();
-        if (!_this2._isDragging) {
-          _this2._updateFramesSeparators();
+        this._updateFramesPositions();
+        if (!this._isDragging) {
+          this._updateFramesSeparators();
         }
       }
     };
@@ -103,28 +102,27 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     return (_this$_framesForTable = this._framesForTables) === null || _this$_framesForTable === void 0 ? void 0 : _this$_framesForTable.get($table.get(0));
   };
   _proto._resizeHandler = function _resizeHandler() {
-    var _this3 = this;
-    this._windowResizeTimeout = setTimeout(function () {
-      var $tables = _this3._findTables();
-      (0, _iterator.each)($tables, function (index, table) {
-        var $table = (0, _renderer.default)(table);
-        var frame = _this3._tableResizeFrames[index];
-        var actualTableWidth = (0, _size.getOuterWidth)($table);
-        var lastTableWidth = _this3._tableLastWidth(frame);
+    this._windowResizeTimeout = setTimeout(() => {
+      const $tables = this._findTables();
+      (0, _iterator.each)($tables, (index, table) => {
+        const $table = (0, _renderer.default)(table);
+        const frame = this._tableResizeFrames[index];
+        const actualTableWidth = (0, _size.getOuterWidth)($table);
+        const lastTableWidth = this._tableLastWidth(frame);
         if (Math.abs(actualTableWidth - lastTableWidth) > 1) {
-          _this3._tableLastWidth(frame, actualTableWidth);
-          _this3._updateColumnsWidth($table, index);
+          this._tableLastWidth(frame, actualTableWidth);
+          this._updateColumnsWidth($table, index);
         }
       });
-      _this3._updateFramesPositions();
-      _this3._updateFramesSeparators();
+      this._updateFramesPositions();
+      this._updateFramesSeparators();
     });
   };
   _proto._findTables = function _findTables() {
     return (0, _renderer.default)(this._quillContainer).find('table');
   };
   _proto._getWidthStyleValue = function _getWidthStyleValue($element) {
-    var styleValue = $element[0].style.width;
+    const styleValue = $element[0].style.width;
     return styleValue !== '' ? parseInt(styleValue) : undefined;
   };
   _proto._tableLastWidth = function _tableLastWidth(frame, newValue) {
@@ -135,67 +133,65 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     }
   };
   _proto._fixTablesWidths = function _fixTablesWidths($tables) {
-    var _this4 = this;
-    (0, _iterator.each)($tables, function (index, table) {
-      var $table = (0, _renderer.default)(table);
-      var $columnElements = _this4._getTableDeterminantElements($table, 'horizontal');
-      if (!_this4._tableResizeFrames[index]) {
-        _this4._tableResizeFrames[index] = {
+    (0, _iterator.each)($tables, (index, table) => {
+      const $table = (0, _renderer.default)(table);
+      const $columnElements = this._getTableDeterminantElements($table, 'horizontal');
+      if (!this._tableResizeFrames[index]) {
+        this._tableResizeFrames[index] = {
           lastWidth: undefined
         };
       }
-      var frame = _this4._getFrameForTable($table);
+      const frame = this._getFrameForTable($table);
       if (!frame) {
-        _this4._tableResizeFrames.push({
+        this._tableResizeFrames.push({
           $table: $table
         });
       }
       if ((0, _table_helper.getAutoSizedElements)($table).length === 0) {
-        var _this4$_tableLastWidt;
-        var _this4$_getColumnElem = _this4._getColumnElementsSum($columnElements),
-          columnsSum = _this4$_getColumnElem.columnsSum;
+        var _this$_tableLastWidth;
+        const {
+          columnsSum
+        } = this._getColumnElementsSum($columnElements);
         (0, _table_helper.unfixTableWidth)($table, {
-          quill: _this4.quill
+          quill: this.quill
         });
-        var tableWidth = (_this4$_tableLastWidt = _this4._tableLastWidth(frame)) !== null && _this4$_tableLastWidt !== void 0 ? _this4$_tableLastWidt : (0, _size.getOuterWidth)($table);
+        const tableWidth = (_this$_tableLastWidth = this._tableLastWidth(frame)) !== null && _this$_tableLastWidth !== void 0 ? _this$_tableLastWidth : (0, _size.getOuterWidth)($table);
         if (frame) {
-          _this4._tableLastWidth(frame, Math.max(columnsSum, tableWidth));
+          this._tableLastWidth(frame, Math.max(columnsSum, tableWidth));
         }
       }
     });
   };
   _proto._createResizeFrames = function _createResizeFrames($tables) {
-    var _this5 = this;
     this._framesForTables = new Map();
-    $tables.each(function (index, table) {
-      var _this5$_tableResizeFr;
-      var $table = (0, _renderer.default)(table);
-      var $lastTable = (_this5$_tableResizeFr = _this5._tableResizeFrames[index]) === null || _this5$_tableResizeFr === void 0 ? void 0 : _this5$_tableResizeFr.$table;
-      var $tableLastWidth = _this5._tableResizeFrames[index].lastWidth;
-      _this5._tableResizeFrames[index] = {
-        $frame: _this5._createTableResizeFrame(table),
+    $tables.each((index, table) => {
+      var _this$_tableResizeFra;
+      const $table = (0, _renderer.default)(table);
+      const $lastTable = (_this$_tableResizeFra = this._tableResizeFrames[index]) === null || _this$_tableResizeFra === void 0 ? void 0 : _this$_tableResizeFra.$table;
+      const $tableLastWidth = this._tableResizeFrames[index].lastWidth;
+      this._tableResizeFrames[index] = {
+        $frame: this._createTableResizeFrame(table),
         $table: $table,
         index: index,
         lastWidth: $lastTable && table === $lastTable.get(0) ? $tableLastWidth : undefined,
-        columnsCount: _this5._getTableDeterminantElements($table, 'horizontal').length,
-        rowsCount: _this5._getTableDeterminantElements($table, 'vertical').length
+        columnsCount: this._getTableDeterminantElements($table, 'horizontal').length,
+        rowsCount: this._getTableDeterminantElements($table, 'vertical').length
       };
-      _this5._framesForTables.set(table, _this5._tableResizeFrames[index]);
+      this._framesForTables.set(table, this._tableResizeFrames[index]);
     });
     this._tableResizeFrames.length = $tables.length;
   };
   _proto._isTableChanging = function _isTableChanging() {
-    var _this6 = this;
-    var $tables = this._findTables();
-    var result = false;
+    const $tables = this._findTables();
+    let result = false;
     if ($tables.length !== this._tableResizeFrames.length) {
       result = true;
     } else {
-      (0, _iterator.each)($tables, function (index, table) {
-        var $table = (0, _renderer.default)(table);
-        var frame = _this6._tableResizeFrames[index];
-        var isColumnsCountChanged = (frame === null || frame === void 0 ? void 0 : frame.columnsCount) !== _this6._getTableDeterminantElements($table, 'horizontal').length;
-        var isRowCountChanged = (frame === null || frame === void 0 ? void 0 : frame.rowsCount) !== _this6._getTableDeterminantElements($table, 'vertical').length;
+      (0, _iterator.each)($tables, (index, table) => {
+        const $table = (0, _renderer.default)(table);
+        const frame = this._tableResizeFrames[index];
+        const isColumnsCountChanged = (frame === null || frame === void 0 ? void 0 : frame.columnsCount) !== this._getTableDeterminantElements($table, 'horizontal').length;
+        const isRowCountChanged = (frame === null || frame === void 0 ? void 0 : frame.rowsCount) !== this._getTableDeterminantElements($table, 'vertical').length;
         if (isColumnsCountChanged || isRowCountChanged) {
           result = true;
           return false;
@@ -205,13 +201,12 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     return result;
   };
   _proto._removeResizeFrames = function _removeResizeFrames(clearArray) {
-    var _this7 = this,
-      _this$_framesForTable2;
-    (0, _iterator.each)(this._tableResizeFrames, function (index, resizeFrame) {
+    var _this$_framesForTable2;
+    (0, _iterator.each)(this._tableResizeFrames, (index, resizeFrame) => {
       if (resizeFrame.$frame) {
         var _resizeFrame$$frame;
-        var resizerElementsSelector = ".".concat(DX_COLUMN_RESIZER_CLASS, ", .").concat(DX_ROW_RESIZER_CLASS);
-        _this7._detachSeparatorEvents((_resizeFrame$$frame = resizeFrame.$frame) === null || _resizeFrame$$frame === void 0 ? void 0 : _resizeFrame$$frame.find(resizerElementsSelector));
+        const resizerElementsSelector = ".".concat(DX_COLUMN_RESIZER_CLASS, ", .").concat(DX_ROW_RESIZER_CLASS);
+        this._detachSeparatorEvents((_resizeFrame$$frame = resizeFrame.$frame) === null || _resizeFrame$$frame === void 0 ? void 0 : _resizeFrame$$frame.find(resizerElementsSelector));
         resizeFrame.$frame.remove();
       }
     });
@@ -221,7 +216,7 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     }
   };
   _proto._detachSeparatorEvents = function _detachSeparatorEvents($lineSeparators) {
-    $lineSeparators.each(function (i, $lineSeparator) {
+    $lineSeparators.each((i, $lineSeparator) => {
       _events_engine.default.off($lineSeparator, POINTERDOWN_EVENT);
     });
   };
@@ -229,20 +224,21 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     return (0, _renderer.default)('<div>').addClass(DX_COLUMN_RESIZE_FRAME_CLASS).appendTo(this._quillContainer);
   };
   _proto._updateFramesPositions = function _updateFramesPositions() {
-    var _this8 = this;
-    (0, _iterator.each)(this._tableResizeFrames, function (index, tableResizeFrame) {
-      _this8._updateFramePosition(tableResizeFrame.$table, tableResizeFrame.$frame);
+    (0, _iterator.each)(this._tableResizeFrames, (index, tableResizeFrame) => {
+      this._updateFramePosition(tableResizeFrame.$table, tableResizeFrame.$frame);
     });
   };
   _proto._updateFramePosition = function _updateFramePosition($table, $frame) {
-    var _getBoundingRect = (0, _position.getBoundingRect)($table.get(0)),
-      height = _getBoundingRect.height,
-      width = _getBoundingRect.width,
-      targetTop = _getBoundingRect.top,
-      targetLeft = _getBoundingRect.left;
-    var _getBoundingRect2 = (0, _position.getBoundingRect)(this.quill.root),
-      containerTop = _getBoundingRect2.top,
-      containerLeft = _getBoundingRect2.left;
+    const {
+      height,
+      width,
+      top: targetTop,
+      left: targetLeft
+    } = (0, _position.getBoundingRect)($table.get(0));
+    const {
+      top: containerTop,
+      left: containerLeft
+    } = (0, _position.getBoundingRect)(this.quill.root);
     $frame.css({
       height: height,
       width: width,
@@ -255,13 +251,12 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     });
   };
   _proto._updateFramesSeparators = function _updateFramesSeparators(direction) {
-    var _this9 = this;
-    (0, _iterator.each)(this._tableResizeFrames, function (index, frame) {
+    (0, _iterator.each)(this._tableResizeFrames, (index, frame) => {
       if (direction) {
-        _this9._updateFrameSeparators(frame, direction);
+        this._updateFrameSeparators(frame, direction);
       } else {
-        _this9._updateFrameSeparators(frame, 'vertical');
-        _this9._updateFrameSeparators(frame, 'horizontal');
+        this._updateFrameSeparators(frame, 'vertical');
+        this._updateFrameSeparators(frame, 'horizontal');
       }
     });
   };
@@ -270,7 +265,7 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
   };
   _proto._removeDraggable = function _removeDraggable($currentLineSeparator, lineResizerClass) {
     if (this._isDraggable($currentLineSeparator)) {
-      var draggable = (0, _renderer.default)($currentLineSeparator).dxDraggable('instance');
+      const draggable = (0, _renderer.default)($currentLineSeparator).dxDraggable('instance');
       draggable.dispose();
       (0, _renderer.default)($currentLineSeparator).addClass(lineResizerClass);
     }
@@ -279,9 +274,7 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     if (direction === 'vertical') {
       return {
         lineResizerClass: DX_ROW_RESIZER_CLASS,
-        sizeFunction: function sizeFunction(x) {
-          return (0, _size.getOuterHeight)(x);
-        },
+        sizeFunction: x => (0, _size.getOuterHeight)(x),
         positionCoordinate: 'top',
         positionStyleProperty: 'height',
         positionCoordinateName: 'y'
@@ -289,9 +282,7 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     } else {
       return {
         lineResizerClass: DX_COLUMN_RESIZER_CLASS,
-        sizeFunction: function sizeFunction(x) {
-          return (0, _size.getOuterWidth)(x);
-        },
+        sizeFunction: x => (0, _size.getOuterWidth)(x),
         positionCoordinate: this.editorInstance.option('rtlEnabled') ? 'right' : 'left',
         positionStyleProperty: 'width',
         positionCoordinateName: 'x'
@@ -302,25 +293,25 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     return directionInfo.sizeFunction($element);
   };
   _proto._updateFrameSeparators = function _updateFrameSeparators(frame, direction) {
-    var $determinantElements = this._getTableDeterminantElements(frame.$table, direction);
-    var determinantElementsCount = $determinantElements.length;
-    var determinantElementsSeparatorsCount = determinantElementsCount - 1;
-    var directionInfo = this._getDirectionInfo(direction);
-    var lineSeparators = frame.$frame.find(".".concat(directionInfo.lineResizerClass));
-    var styleOptions = {
+    const $determinantElements = this._getTableDeterminantElements(frame.$table, direction);
+    const determinantElementsCount = $determinantElements.length;
+    const determinantElementsSeparatorsCount = determinantElementsCount - 1;
+    const directionInfo = this._getDirectionInfo(direction);
+    const lineSeparators = frame.$frame.find(".".concat(directionInfo.lineResizerClass));
+    const styleOptions = {
       transform: 'none'
     };
-    var currentPosition = 0;
-    for (var i = 0; i <= determinantElementsSeparatorsCount; i++) {
+    let currentPosition = 0;
+    for (let i = 0; i <= determinantElementsSeparatorsCount; i++) {
       currentPosition += this._getSize($determinantElements.eq(i), directionInfo);
       if (!(0, _type.isDefined)(lineSeparators[i])) {
         lineSeparators[i] = (0, _renderer.default)('<div>').addClass(directionInfo.lineResizerClass).appendTo(frame.$frame).get(0);
       }
-      var $currentLineSeparator = (0, _renderer.default)(lineSeparators[i]);
+      const $currentLineSeparator = (0, _renderer.default)(lineSeparators[i]);
       this._removeDraggable($currentLineSeparator, directionInfo.lineResizerClass);
       styleOptions[directionInfo.positionCoordinate] = currentPosition - DRAGGABLE_ELEMENT_OFFSET;
       (0, _renderer.default)($currentLineSeparator).css(styleOptions);
-      var attachSeparatorData = {
+      const attachSeparatorData = {
         lineSeparator: lineSeparators[i],
         index: i,
         $determinantElements,
@@ -338,18 +329,19 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     }
   };
   _proto._attachColumnSeparatorEvents = function _attachColumnSeparatorEvents(options) {
-    var _this10 = this;
-    _events_engine.default.on(options.lineSeparator, POINTERDOWN_EVENT, function () {
-      _this10._createDraggableElement(options);
+    _events_engine.default.on(options.lineSeparator, POINTERDOWN_EVENT, () => {
+      this._createDraggableElement(options);
     });
   };
   _proto._dragStartHandler = function _dragStartHandler(_ref) {
-    var $determinantElements = _ref.$determinantElements,
-      index = _ref.index,
-      frame = _ref.frame,
-      direction = _ref.direction,
-      lineSeparator = _ref.lineSeparator;
-    var directionInfo = this._getDirectionInfo(direction);
+    let {
+      $determinantElements,
+      index,
+      frame,
+      direction,
+      lineSeparator
+    } = _ref;
+    const directionInfo = this._getDirectionInfo(direction);
     this._isDragging = true;
     this._fixColumnsWidth(frame.$table);
     this._startLineSize = parseInt(this._getSize((0, _renderer.default)($determinantElements[index]), directionInfo));
@@ -371,8 +363,8 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     if (!this._nextLineSize) {
       return true;
     } else if (nextColumnNewSize >= this._minColumnWidth) {
-      var isWidthIncreased = this._nextColumnOffsetLimit ? eventOffset < this._nextColumnOffsetLimit : eventOffset < 0;
-      var isWidthLimited = Math.abs(this._getWidthStyleValue($nextColumnElement) - (0, _size.getOuterWidth)($nextColumnElement)) > ROUGH_OFFSET;
+      const isWidthIncreased = this._nextColumnOffsetLimit ? eventOffset < this._nextColumnOffsetLimit : eventOffset < 0;
+      const isWidthLimited = Math.abs(this._getWidthStyleValue($nextColumnElement) - (0, _size.getOuterWidth)($nextColumnElement)) > ROUGH_OFFSET;
       return isWidthIncreased || !isWidthLimited;
     }
     return false;
@@ -381,17 +373,19 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     return this._nextLineSize && nextColumnNewSize > 0;
   };
   _proto._horizontalDragHandler = function _horizontalDragHandler(_ref2) {
-    var currentLineNewSize = _ref2.currentLineNewSize,
-      directionInfo = _ref2.directionInfo,
-      eventOffset = _ref2.eventOffset,
-      $determinantElements = _ref2.$determinantElements,
-      index = _ref2.index,
-      frame = _ref2.frame;
-    var nextColumnNewSize = this._nextLineSize && this._nextLineSize - eventOffset;
-    var isCurrentColumnWidthEnough = currentLineNewSize >= this._minColumnWidth;
-    var $lineElements = (0, _table_helper.getLineElements)(frame.$table, index);
-    var $nextLineElements = (0, _table_helper.getLineElements)(frame.$table, index + 1);
-    var realWidthDiff = (0, _size.getOuterWidth)($lineElements.eq(0)) - currentLineNewSize;
+    let {
+      currentLineNewSize,
+      directionInfo,
+      eventOffset,
+      $determinantElements,
+      index,
+      frame
+    } = _ref2;
+    let nextColumnNewSize = this._nextLineSize && this._nextLineSize - eventOffset;
+    const isCurrentColumnWidthEnough = currentLineNewSize >= this._minColumnWidth;
+    const $lineElements = (0, _table_helper.getLineElements)(frame.$table, index);
+    const $nextLineElements = (0, _table_helper.getLineElements)(frame.$table, index + 1);
+    const realWidthDiff = (0, _size.getOuterWidth)($lineElements.eq(0)) - currentLineNewSize;
     if (isCurrentColumnWidthEnough) {
       if (this._isNextColumnWidthEnough(nextColumnNewSize, $determinantElements.eq(index + 1), eventOffset)) {
         (0, _table_helper.setLineElementsFormat)(this, {
@@ -406,8 +400,8 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
             value: nextColumnNewSize
           });
         }
-        var isTableWidthChanged = Math.abs(this._startTableWidth - (0, _size.getOuterWidth)(frame.$table)) < ROUGH_OFFSET;
-        var shouldRevertNewValue = Math.abs(realWidthDiff) > ROUGH_OFFSET || !this._nextLineSize && isTableWidthChanged;
+        const isTableWidthChanged = Math.abs(this._startTableWidth - (0, _size.getOuterWidth)(frame.$table)) < ROUGH_OFFSET;
+        const shouldRevertNewValue = Math.abs(realWidthDiff) > ROUGH_OFFSET || !this._nextLineSize && isTableWidthChanged;
         if (shouldRevertNewValue) {
           (0, _table_helper.setLineElementsFormat)(this, {
             elements: $lineElements,
@@ -430,34 +424,38 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     this._$highlightedElement.css(directionInfo.positionCoordinate, this._startLineSeparatorPosition + eventOffset + realWidthDiff + 'px');
   };
   _proto._verticalDragHandler = function _verticalDragHandler(_ref3) {
-    var currentLineNewSize = _ref3.currentLineNewSize,
-      directionInfo = _ref3.directionInfo,
-      eventOffset = _ref3.eventOffset,
-      $determinantElements = _ref3.$determinantElements,
-      index = _ref3.index,
-      frame = _ref3.frame;
-    var newHeight = Math.max(currentLineNewSize, this._minRowHeight);
-    var $lineElements = (0, _table_helper.getLineElements)(frame.$table, index, 'vertical');
+    let {
+      currentLineNewSize,
+      directionInfo,
+      eventOffset,
+      $determinantElements,
+      index,
+      frame
+    } = _ref3;
+    const newHeight = Math.max(currentLineNewSize, this._minRowHeight);
+    const $lineElements = (0, _table_helper.getLineElements)(frame.$table, index, 'vertical');
     (0, _table_helper.setLineElementsFormat)(this, {
       elements: $lineElements,
       property: directionInfo.positionStyleProperty,
       value: newHeight
     });
-    var rowHeightDiff = (0, _size.getOuterHeight)($determinantElements.eq(index)) - currentLineNewSize;
+    const rowHeightDiff = (0, _size.getOuterHeight)($determinantElements.eq(index)) - currentLineNewSize;
     this._$highlightedElement.css(directionInfo.positionCoordinate, this._startLineSeparatorPosition + eventOffset + rowHeightDiff + 'px');
   };
   _proto._dragMoveHandler = function _dragMoveHandler(event, _ref4) {
-    var $determinantElements = _ref4.$determinantElements,
-      index = _ref4.index,
-      frame = _ref4.frame,
-      direction = _ref4.direction;
-    var directionInfo = this._getDirectionInfo(direction);
-    var eventOffset = event.offset[directionInfo.positionCoordinateName];
+    let {
+      $determinantElements,
+      index,
+      frame,
+      direction
+    } = _ref4;
+    const directionInfo = this._getDirectionInfo(direction);
+    let eventOffset = event.offset[directionInfo.positionCoordinateName];
     this.editorInstance._saveValueChangeEvent(event);
     if (this._shouldRevertOffset(direction)) {
       eventOffset = -eventOffset;
     }
-    var currentLineNewSize = this._startLineSize + eventOffset;
+    const currentLineNewSize = this._startLineSize + eventOffset;
     if (direction === 'horizontal') {
       this._horizontalDragHandler({
         currentLineNewSize,
@@ -489,12 +487,14 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     this._updateFramesSeparators();
   };
   _proto._isLastColumnResizing = function _isLastColumnResizing(_ref5) {
-    var $determinantElements = _ref5.$determinantElements,
-      index = _ref5.index;
+    let {
+      $determinantElements,
+      index
+    } = _ref5;
     return !(0, _type.isDefined)($determinantElements[index + 1]);
   };
   _proto._getBoundaryConfig = function _getBoundaryConfig(options) {
-    var result = {};
+    const result = {};
     if (options.direction === 'vertical') {
       result.boundary = options.frame.$table;
       result.boundOffset = {
@@ -507,7 +507,7 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
       if (!this._isLastColumnResizing(options)) {
         result.boundary = options.frame.$table;
       } else {
-        var $content = this.editorInstance._getContent();
+        const $content = this.editorInstance._getContent();
         result.boundary = $content;
         result.boundOffset = {
           bottom: 0,
@@ -520,52 +520,51 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     return result;
   };
   _proto._createDraggableElement = function _createDraggableElement(options) {
-    var _this$_$highlightedEl2,
-      _this11 = this;
-    var boundaryConfig = this._getBoundaryConfig(options);
-    var directionClass = options.direction === 'vertical' ? 'dx-htmleditor-highlighted-row' : 'dx-htmleditor-highlighted-column';
+    var _this$_$highlightedEl2;
+    const boundaryConfig = this._getBoundaryConfig(options);
+    const directionClass = options.direction === 'vertical' ? 'dx-htmleditor-highlighted-row' : 'dx-htmleditor-highlighted-column';
     (_this$_$highlightedEl2 = this._$highlightedElement) === null || _this$_$highlightedEl2 === void 0 ? void 0 : _this$_$highlightedEl2.remove();
     this._$highlightedElement = (0, _renderer.default)('<div>').addClass("".concat(directionClass)).insertAfter((0, _renderer.default)(options.lineSeparator));
-    var config = {
+    const config = {
       contentTemplate: null,
       allowMoveByClick: false,
       dragDirection: options.direction,
-      onDragMove: function onDragMove(_ref6) {
-        var component = _ref6.component,
-          event = _ref6.event;
-        _this11._dragMoveHandler(event, options);
+      onDragMove: _ref6 => {
+        let {
+          component,
+          event
+        } = _ref6;
+        this._dragMoveHandler(event, options);
       },
-      onDragStart: function onDragStart() {
-        _this11._dragStartHandler(options);
+      onDragStart: () => {
+        this._dragStartHandler(options);
       },
-      onDragEnd: function onDragEnd() {
-        _this11._dragEndHandler(options);
+      onDragEnd: () => {
+        this._dragEndHandler(options);
       }
     };
     (0, _extend.extend)(config, boundaryConfig);
     this._currentDraggableElement = this.editorInstance._createComponent(options.lineSeparator, _draggable.default, config);
   };
   _proto._fixColumnsWidth = function _fixColumnsWidth($table) {
-    var _this12 = this;
-    var determinantElements = this._getTableDeterminantElements($table);
-    (0, _iterator.each)(determinantElements, function (index, element) {
-      var columnWidth = (0, _size.getOuterWidth)(element);
-      var $lineElements = (0, _table_helper.getLineElements)($table, index);
-      (0, _table_helper.setLineElementsFormat)(_this12, {
+    const determinantElements = this._getTableDeterminantElements($table);
+    (0, _iterator.each)(determinantElements, (index, element) => {
+      const columnWidth = (0, _size.getOuterWidth)(element);
+      const $lineElements = (0, _table_helper.getLineElements)($table, index);
+      (0, _table_helper.setLineElementsFormat)(this, {
         elements: $lineElements,
         property: 'width',
-        value: Math.max(columnWidth, _this12._minColumnWidth)
+        value: Math.max(columnWidth, this._minColumnWidth)
       });
     });
   };
   _proto._getColumnElementsSum = function _getColumnElementsSum(columnElements) {
-    var _this13 = this;
-    var columnsWidths = [];
-    var columnsSum = 0;
-    (0, _iterator.each)(columnElements, function (index, element) {
-      var $element = (0, _renderer.default)(element);
-      var columnWidth = _this13._getWidthStyleValue($element) || (0, _size.getOuterWidth)($element);
-      columnsWidths[index] = Math.max(columnWidth, _this13._minColumnWidth);
+    const columnsWidths = [];
+    let columnsSum = 0;
+    (0, _iterator.each)(columnElements, (index, element) => {
+      const $element = (0, _renderer.default)(element);
+      const columnWidth = this._getWidthStyleValue($element) || (0, _size.getOuterWidth)($element);
+      columnsWidths[index] = Math.max(columnWidth, this._minColumnWidth);
       columnsSum += columnsWidths[index];
     });
     return {
@@ -574,16 +573,15 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     };
   };
   _proto._setColumnsRatioWidth = function _setColumnsRatioWidth(columnElements, ratio, columnsWidths, $table) {
-    var _this14 = this;
-    (0, _iterator.each)(columnElements, function (index) {
-      var $lineElements = (0, _table_helper.getLineElements)($table, index);
-      var resultWidth;
+    (0, _iterator.each)(columnElements, index => {
+      const $lineElements = (0, _table_helper.getLineElements)($table, index);
+      let resultWidth;
       if (ratio > 0) {
-        resultWidth = _this14._minColumnWidth + Math.round((columnsWidths[index] - _this14._minColumnWidth) * ratio);
+        resultWidth = this._minColumnWidth + Math.round((columnsWidths[index] - this._minColumnWidth) * ratio);
       } else {
-        resultWidth = _this14._minColumnWidth;
+        resultWidth = this._minColumnWidth;
       }
-      (0, _table_helper.setLineElementsFormat)(_this14, {
+      (0, _table_helper.setLineElementsFormat)(this, {
         elements: $lineElements,
         property: 'width',
         value: resultWidth
@@ -591,18 +589,19 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     });
   };
   _proto._updateColumnsWidth = function _updateColumnsWidth($table, frameIndex) {
-    var determinantElements = this._getTableDeterminantElements($table);
-    var frame = this._tableResizeFrames[frameIndex];
+    const determinantElements = this._getTableDeterminantElements($table);
+    let frame = this._tableResizeFrames[frameIndex];
     if (!frame) {
       this._tableResizeFrames[frameIndex] = {};
     }
     frame = this._tableResizeFrames[frameIndex];
-    var tableWidth = this._tableLastWidth(frame) || (0, _size.getOuterWidth)($table);
-    var ratio;
-    var _this$_getColumnEleme = this._getColumnElementsSum(determinantElements),
-      columnsWidths = _this$_getColumnEleme.columnsWidths,
-      columnsSum = _this$_getColumnEleme.columnsSum;
-    var minWidthForColumns = determinantElements.length * this._minColumnWidth;
+    const tableWidth = this._tableLastWidth(frame) || (0, _size.getOuterWidth)($table);
+    let ratio;
+    const {
+      columnsWidths,
+      columnsSum
+    } = this._getColumnElementsSum(determinantElements);
+    const minWidthForColumns = determinantElements.length * this._minColumnWidth;
     if (columnsSum > minWidthForColumns) {
       ratio = (tableWidth - minWidthForColumns) / (columnsSum - minWidthForColumns);
     } else {
@@ -612,9 +611,8 @@ var TableResizingModule = /*#__PURE__*/function (_BaseModule) {
     this._setColumnsRatioWidth(determinantElements, ratio, columnsWidths, $table);
   };
   _proto._updateTablesColumnsWidth = function _updateTablesColumnsWidth($tables) {
-    var _this15 = this;
-    (0, _iterator.each)($tables, function (index, table) {
-      _this15._updateColumnsWidth((0, _renderer.default)(table), index);
+    (0, _iterator.each)($tables, (index, table) => {
+      this._updateColumnsWidth((0, _renderer.default)(table), index);
     });
   };
   _proto.option = function option(_option, value) {

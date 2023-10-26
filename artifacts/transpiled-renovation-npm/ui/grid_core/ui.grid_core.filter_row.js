@@ -6,7 +6,7 @@ Object.keys(_m_filter_row).forEach(function (key) {
   if (key in exports && exports[key] === _m_filter_row[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_filter_row[key];
     }
   });

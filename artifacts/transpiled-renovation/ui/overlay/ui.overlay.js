@@ -32,42 +32,41 @@ var _ui2 = _interopRequireDefault(require("../widget/ui.widget"));
 var _browser = _interopRequireDefault(require("../../core/utils/browser"));
 var zIndexPool = _interopRequireWildcard(require("./z_index"));
 var _overlay_position_controller = require("./overlay_position_controller");
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ready = _ready_callbacks.default.add;
-var window = (0, _window.getWindow)();
-var viewPortChanged = _view_port.changeCallback;
-var OVERLAY_CLASS = 'dx-overlay';
-var OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
-var OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
-var OVERLAY_SHADER_CLASS = 'dx-overlay-shader';
-var INNER_OVERLAY_CLASS = 'dx-inner-overlay';
-var INVISIBLE_STATE_CLASS = 'dx-state-invisible';
-var ANONYMOUS_TEMPLATE_NAME = 'content';
-var RTL_DIRECTION_CLASS = 'dx-rtl';
-var OVERLAY_STACK = [];
-var PREVENT_SAFARI_SCROLLING_CLASS = 'dx-prevent-safari-scrolling';
-var TAB_KEY = 'tab';
-ready(function () {
-  _events_engine.default.subscribeGlobal(_dom_adapter.default.getDocument(), _pointer.default.down, function (e) {
-    for (var i = OVERLAY_STACK.length - 1; i >= 0; i--) {
+const ready = _ready_callbacks.default.add;
+const window = (0, _window.getWindow)();
+const viewPortChanged = _view_port.changeCallback;
+const OVERLAY_CLASS = 'dx-overlay';
+const OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
+const OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
+const OVERLAY_SHADER_CLASS = 'dx-overlay-shader';
+const INNER_OVERLAY_CLASS = 'dx-inner-overlay';
+const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
+const ANONYMOUS_TEMPLATE_NAME = 'content';
+const RTL_DIRECTION_CLASS = 'dx-rtl';
+const OVERLAY_STACK = [];
+const PREVENT_SAFARI_SCROLLING_CLASS = 'dx-prevent-safari-scrolling';
+const TAB_KEY = 'tab';
+ready(() => {
+  _events_engine.default.subscribeGlobal(_dom_adapter.default.getDocument(), _pointer.default.down, e => {
+    for (let i = OVERLAY_STACK.length - 1; i >= 0; i--) {
       if (!OVERLAY_STACK[i]._proxiedDocumentDownHandler(e)) {
         return;
       }
     }
   });
 });
-var Overlay = _ui2.default.inherit({
-  _supportedKeys: function _supportedKeys() {
+const Overlay = _ui2.default.inherit({
+  _supportedKeys: function () {
     return (0, _extend.extend)(this.callBase(), {
-      escape: function escape() {
+      escape: function () {
         this.hide();
       }
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
-    var _this = this;
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       /**
       * @name dxOverlayOptions.activeStateEnabled
@@ -123,8 +122,8 @@ var Overlay = _ui2.default.inherit({
       container: undefined,
       visualContainer: undefined,
       // NOTE: private options
-      hideTopOverlayHandler: function hideTopOverlayHandler() {
-        _this.hide();
+      hideTopOverlayHandler: () => {
+        this.hide();
       },
       hideOnParentScroll: false,
       preventScrollEvents: true,
@@ -135,9 +134,9 @@ var Overlay = _ui2.default.inherit({
       _fixWrapperPosition: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return !(0, _window.hasWindow)();
       },
       options: {
@@ -148,16 +147,16 @@ var Overlay = _ui2.default.inherit({
       }
     }]);
   },
-  _setOptionsByReference: function _setOptionsByReference() {
+  _setOptionsByReference: function () {
     this.callBase();
     (0, _extend.extend)(this._optionsByReference, {
       animation: true
     });
   },
-  $wrapper: function $wrapper() {
+  $wrapper: function () {
     return this._$wrapper;
   },
-  _eventBindingTarget: function _eventBindingTarget() {
+  _eventBindingTarget: function () {
     return this._$content;
   },
   _setDeprecatedOptions() {
@@ -169,7 +168,7 @@ var Overlay = _ui2.default.inherit({
       }
     });
   },
-  ctor: function ctor(element, options) {
+  ctor: function (element, options) {
     this.callBase(element, options);
     function createWrapperAttrDeprecationInfo() {
       return {
@@ -195,8 +194,7 @@ var Overlay = _ui2.default.inherit({
       message: 'If you enable this option, end-users may experience scrolling issues.'
     });
   },
-  _init: function _init() {
-    var _this2 = this;
+  _init: function () {
     this.callBase();
     this._initActions();
     this._initHideOnOutsideClickHandler();
@@ -205,7 +203,7 @@ var Overlay = _ui2.default.inherit({
     this._$wrapper = (0, _renderer.default)('<div>').addClass(OVERLAY_WRAPPER_CLASS);
     this._$content = (0, _renderer.default)('<div>').addClass(OVERLAY_CONTENT_CLASS);
     this._initInnerOverlayClass();
-    var $element = this.$element();
+    const $element = this.$element();
     if (this.option('copyRootClassesToWrapper')) {
       this._$wrapper.addClass($element.attr('class'));
     }
@@ -214,8 +212,8 @@ var Overlay = _ui2.default.inherit({
     this._toggleViewPortSubscription(true);
     this._initHideTopOverlayHandler(this.option('hideTopOverlayHandler'));
     this._parentsScrollSubscriptionInfo = {
-      handler: function handler(e) {
-        _this2._hideOnParentsScrollHandler(e);
+      handler: e => {
+        this._hideOnParentsScrollHandler(e);
       }
     };
     this.warnPositionAsFunction();
@@ -226,29 +224,28 @@ var Overlay = _ui2.default.inherit({
       _errors.default.log('W0018');
     }
   },
-  _initInnerOverlayClass: function _initInnerOverlayClass() {
+  _initInnerOverlayClass: function () {
     this._$content.toggleClass(INNER_OVERLAY_CLASS, this.option('innerOverlay'));
   },
-  _initHideTopOverlayHandler: function _initHideTopOverlayHandler(handler) {
+  _initHideTopOverlayHandler: function (handler) {
     this._hideTopOverlayHandler = handler;
   },
-  _getActionsList: function _getActionsList() {
+  _getActionsList: function () {
     return ['onShowing', 'onShown', 'onHiding', 'onHidden', 'onPositioned', 'onVisualPositionChanged'];
   },
-  _initActions: function _initActions() {
-    var _this3 = this;
+  _initActions: function () {
     this._actions = {};
-    var actions = this._getActionsList();
-    (0, _iterator.each)(actions, function (_, action) {
-      _this3._actions[action] = _this3._createActionByOption(action, {
+    const actions = this._getActionsList();
+    (0, _iterator.each)(actions, (_, action) => {
+      this._actions[action] = this._createActionByOption(action, {
         excludeValidators: ['disabled', 'readOnly']
       }) || _common.noop;
     });
   },
-  _initHideOnOutsideClickHandler: function _initHideOnOutsideClickHandler() {
-    var _this4 = this;
+  _initHideOnOutsideClickHandler: function () {
+    var _this = this;
     this._proxiedDocumentDownHandler = function () {
-      return _this4._documentDownHandler.apply(_this4, arguments);
+      return _this._documentDownHandler(...arguments);
     };
   },
   _initMarkup() {
@@ -256,21 +253,22 @@ var Overlay = _ui2.default.inherit({
     this._renderWrapperAttributes();
     this._initPositionController();
   },
-  _documentDownHandler: function _documentDownHandler(e) {
+  _documentDownHandler: function (e) {
     if (this._showAnimationProcessing) {
       this._stopAnimation();
     }
-    var isAttachedTarget = (0, _renderer.default)(window.document).is(e.target) || (0, _dom.contains)(window.document, e.target);
-    var isInnerOverlay = (0, _renderer.default)(e.target).closest(".".concat(INNER_OVERLAY_CLASS)).length;
-    var outsideClick = isAttachedTarget && !isInnerOverlay && !(this._$content.is(e.target) || (0, _dom.contains)(this._$content.get(0), e.target));
+    const isAttachedTarget = (0, _renderer.default)(window.document).is(e.target) || (0, _dom.contains)(window.document, e.target);
+    const isInnerOverlay = (0, _renderer.default)(e.target).closest(".".concat(INNER_OVERLAY_CLASS)).length;
+    const outsideClick = isAttachedTarget && !isInnerOverlay && !(this._$content.is(e.target) || (0, _dom.contains)(this._$content.get(0), e.target));
     if (outsideClick && this._shouldHideOnOutsideClick(e)) {
       this._outsideClickHandler(e);
     }
     return this.option('propagateOutsideClick');
   },
-  _shouldHideOnOutsideClick: function _shouldHideOnOutsideClick(e) {
-    var _this$option = this.option(),
-      hideOnOutsideClick = _this$option.hideOnOutsideClick;
+  _shouldHideOnOutsideClick: function (e) {
+    const {
+      hideOnOutsideClick
+    } = this.option();
     if ((0, _type.isFunction)(hideOnOutsideClick)) {
       return hideOnOutsideClick(e);
     }
@@ -282,119 +280,117 @@ var Overlay = _ui2.default.inherit({
     }
     this.hide();
   },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+  _getAnonymousTemplateName: function () {
     return ANONYMOUS_TEMPLATE_NAME;
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this._templateManager.addDefaultTemplates({
       content: new _empty_template.EmptyTemplate()
     });
     this.callBase();
   },
-  _isTopOverlay: function _isTopOverlay() {
-    var overlayStack = this._overlayStack();
-    for (var i = overlayStack.length - 1; i >= 0; i--) {
-      var tabbableElements = overlayStack[i]._findTabbableBounds();
+  _isTopOverlay: function () {
+    const overlayStack = this._overlayStack();
+    for (let i = overlayStack.length - 1; i >= 0; i--) {
+      const tabbableElements = overlayStack[i]._findTabbableBounds();
       if (tabbableElements.first || tabbableElements.last) {
         return overlayStack[i] === this;
       }
     }
     return false;
   },
-  _overlayStack: function _overlayStack() {
+  _overlayStack: function () {
     return OVERLAY_STACK;
   },
-  _zIndexInitValue: function _zIndexInitValue() {
+  _zIndexInitValue: function () {
     return Overlay.baseZIndex();
   },
-  _toggleViewPortSubscription: function _toggleViewPortSubscription(toggle) {
-    var _this5 = this;
+  _toggleViewPortSubscription: function (toggle) {
+    var _this2 = this;
     viewPortChanged.remove(this._viewPortChangeHandle);
     if (toggle) {
       this._viewPortChangeHandle = function () {
-        _this5._viewPortChangeHandler.apply(_this5, arguments);
+        _this2._viewPortChangeHandler(...arguments);
       };
       viewPortChanged.add(this._viewPortChangeHandle);
     }
   },
-  _viewPortChangeHandler: function _viewPortChangeHandler() {
+  _viewPortChangeHandler: function () {
     this._positionController.updateContainer(this.option('container'));
     this._refresh();
   },
   _renderWrapperAttributes() {
-    var _this$option2 = this.option(),
-      wrapperAttr = _this$option2.wrapperAttr;
-    var attributes = (0, _extend.extend)({}, wrapperAttr);
-    var classNames = attributes.class;
+    const {
+      wrapperAttr
+    } = this.option();
+    const attributes = (0, _extend.extend)({}, wrapperAttr);
+    const classNames = attributes.class;
     delete attributes.class;
     this.$wrapper().attr(attributes).removeClass(this._customWrapperClass).addClass(classNames);
     this._customWrapperClass = classNames;
   },
-  _renderVisibilityAnimate: function _renderVisibilityAnimate(visible) {
+  _renderVisibilityAnimate: function (visible) {
     this._stopAnimation();
     return visible ? this._show() : this._hide();
   },
-  _getAnimationConfig: function _getAnimationConfig() {
+  _getAnimationConfig: function () {
     return this._getOptionValue('animation', this);
   },
   _toggleBodyScroll: _common.noop,
-  _animateShowing: function _animateShowing() {
+  _animateShowing: function () {
     var _this$_getAnimationCo,
       _showAnimation$start,
       _showAnimation$comple,
-      _this6 = this;
-    var animation = (_this$_getAnimationCo = this._getAnimationConfig()) !== null && _this$_getAnimationCo !== void 0 ? _this$_getAnimationCo : {};
-    var showAnimation = this._normalizeAnimation(animation.show, 'to');
-    var startShowAnimation = (_showAnimation$start = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.start) !== null && _showAnimation$start !== void 0 ? _showAnimation$start : _common.noop;
-    var completeShowAnimation = (_showAnimation$comple = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.complete) !== null && _showAnimation$comple !== void 0 ? _showAnimation$comple : _common.noop;
+      _this3 = this;
+    const animation = (_this$_getAnimationCo = this._getAnimationConfig()) !== null && _this$_getAnimationCo !== void 0 ? _this$_getAnimationCo : {};
+    const showAnimation = this._normalizeAnimation(animation.show, 'to');
+    const startShowAnimation = (_showAnimation$start = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.start) !== null && _showAnimation$start !== void 0 ? _showAnimation$start : _common.noop;
+    const completeShowAnimation = (_showAnimation$comple = showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.complete) !== null && _showAnimation$comple !== void 0 ? _showAnimation$comple : _common.noop;
     this._animate(showAnimation, function () {
-      if (_this6._isAnimationPaused) {
+      if (_this3._isAnimationPaused) {
         return;
       }
-      if (_this6.option('focusStateEnabled')) {
-        _events_engine.default.trigger(_this6._focusTarget(), 'focus');
+      if (_this3.option('focusStateEnabled')) {
+        _events_engine.default.trigger(_this3._focusTarget(), 'focus');
       }
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
-      completeShowAnimation.call.apply(completeShowAnimation, [_this6].concat(args));
-      _this6._showAnimationProcessing = false;
-      _this6._isHidden = false;
-      _this6._actions.onShown();
-      _this6._toggleSafariScrolling();
-      _this6._showingDeferred.resolve();
+      completeShowAnimation.call(_this3, ...args);
+      _this3._showAnimationProcessing = false;
+      _this3._isHidden = false;
+      _this3._actions.onShown();
+      _this3._toggleSafariScrolling();
+      _this3._showingDeferred.resolve();
     }, function () {
-      if (_this6._isAnimationPaused) {
+      if (_this3._isAnimationPaused) {
         return;
       }
       for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         args[_key2] = arguments[_key2];
       }
-      startShowAnimation.call.apply(startShowAnimation, [_this6].concat(args));
-      _this6._showAnimationProcessing = true;
+      startShowAnimation.call(_this3, ...args);
+      _this3._showAnimationProcessing = true;
     });
   },
-  _processShowingHidingCancel: function _processShowingHidingCancel(cancelArg, applyFunction, cancelFunction) {
+  _processShowingHidingCancel: function (cancelArg, applyFunction, cancelFunction) {
     if ((0, _type.isPromise)(cancelArg)) {
-      cancelArg.then(function (shouldCancel) {
+      cancelArg.then(shouldCancel => {
         if (shouldCancel) {
           cancelFunction();
         } else {
           applyFunction();
         }
-      }).catch(function () {
-        return applyFunction();
-      });
+      }).catch(() => applyFunction());
     } else {
       cancelArg ? cancelFunction() : applyFunction();
     }
   },
-  _show: function _show() {
-    var _this7 = this;
+  _show: function () {
     this._showingDeferred = new _deferred.Deferred();
     this._parentHidden = this._isParentHidden();
-    this._showingDeferred.done(function () {
-      delete _this7._parentHidden;
+    this._showingDeferred.done(() => {
+      delete this._parentHidden;
     });
     if (this._parentHidden) {
       this._isHidden = true;
@@ -408,34 +404,34 @@ var Overlay = _ui2.default.inherit({
       delete this._isHidingActionCanceled;
       this._showingDeferred.reject();
     } else {
-      var show = function show() {
-        _this7._toggleBodyScroll(_this7.option('enableBodyScroll'));
-        _this7._stopAnimation();
-        _this7._toggleVisibility(true);
-        _this7._$content.css('visibility', 'hidden');
-        _this7._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
-        _this7._updateZIndexStackPosition(true);
-        _this7._positionController.openingHandled();
-        _this7._renderContent();
-        var showingArgs = {
+      const show = () => {
+        this._toggleBodyScroll(this.option('enableBodyScroll'));
+        this._stopAnimation();
+        this._toggleVisibility(true);
+        this._$content.css('visibility', 'hidden');
+        this._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
+        this._updateZIndexStackPosition(true);
+        this._positionController.openingHandled();
+        this._renderContent();
+        const showingArgs = {
           cancel: false
         };
-        _this7._actions.onShowing(showingArgs);
-        var cancelShow = function cancelShow() {
-          _this7._toggleVisibility(false);
-          _this7._$content.css('visibility', '');
-          _this7._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
-          _this7._isShowingActionCanceled = true;
-          _this7._moveFromContainer();
-          _this7.option('visible', false);
-          _this7._showingDeferred.resolve();
+        this._actions.onShowing(showingArgs);
+        const cancelShow = () => {
+          this._toggleVisibility(false);
+          this._$content.css('visibility', '');
+          this._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
+          this._isShowingActionCanceled = true;
+          this._moveFromContainer();
+          this.option('visible', false);
+          this._showingDeferred.resolve();
         };
-        var applyShow = function applyShow() {
-          _this7._$content.css('visibility', '');
-          _this7._renderVisibility(true);
-          _this7._animateShowing();
+        const applyShow = () => {
+          this._$content.css('visibility', '');
+          this._renderVisibility(true);
+          this._animateShowing();
         };
-        _this7._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
+        this._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
       };
       if (this.option('templatesRenderAsynchronously')) {
         this._stopShowTimer();
@@ -447,7 +443,7 @@ var Overlay = _ui2.default.inherit({
     }
     return this._showingDeferred.promise();
   },
-  _normalizeAnimation: function _normalizeAnimation(showHideConfig, direction) {
+  _normalizeAnimation: function (showHideConfig, direction) {
     if (showHideConfig) {
       showHideConfig = (0, _extend.extend)({
         type: 'slide',
@@ -461,43 +457,42 @@ var Overlay = _ui2.default.inherit({
     }
     return showHideConfig;
   },
-  _animateHiding: function _animateHiding() {
+  _animateHiding: function () {
     var _this$_getAnimationCo2,
       _hideAnimation$start,
       _hideAnimation$comple,
-      _this8 = this;
-    var animation = (_this$_getAnimationCo2 = this._getAnimationConfig()) !== null && _this$_getAnimationCo2 !== void 0 ? _this$_getAnimationCo2 : {};
-    var hideAnimation = this._normalizeAnimation(animation.hide, 'from');
-    var startHideAnimation = (_hideAnimation$start = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.start) !== null && _hideAnimation$start !== void 0 ? _hideAnimation$start : _common.noop;
-    var completeHideAnimation = (_hideAnimation$comple = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.complete) !== null && _hideAnimation$comple !== void 0 ? _hideAnimation$comple : _common.noop;
+      _this4 = this;
+    const animation = (_this$_getAnimationCo2 = this._getAnimationConfig()) !== null && _this$_getAnimationCo2 !== void 0 ? _this$_getAnimationCo2 : {};
+    const hideAnimation = this._normalizeAnimation(animation.hide, 'from');
+    const startHideAnimation = (_hideAnimation$start = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.start) !== null && _hideAnimation$start !== void 0 ? _hideAnimation$start : _common.noop;
+    const completeHideAnimation = (_hideAnimation$comple = hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.complete) !== null && _hideAnimation$comple !== void 0 ? _hideAnimation$comple : _common.noop;
     this._animate(hideAnimation, function () {
-      var _this8$_actions;
-      _this8._$content.css('pointerEvents', '');
-      _this8._renderVisibility(false);
+      var _this4$_actions;
+      _this4._$content.css('pointerEvents', '');
+      _this4._renderVisibility(false);
       for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
         args[_key3] = arguments[_key3];
       }
-      completeHideAnimation.call.apply(completeHideAnimation, [_this8].concat(args));
-      _this8._hideAnimationProcessing = false;
-      (_this8$_actions = _this8._actions) === null || _this8$_actions === void 0 ? void 0 : _this8$_actions.onHidden();
-      _this8._hidingDeferred.resolve();
+      completeHideAnimation.call(_this4, ...args);
+      _this4._hideAnimationProcessing = false;
+      (_this4$_actions = _this4._actions) === null || _this4$_actions === void 0 ? void 0 : _this4$_actions.onHidden();
+      _this4._hidingDeferred.resolve();
     }, function () {
-      _this8._$content.css('pointerEvents', 'none');
+      _this4._$content.css('pointerEvents', 'none');
       for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
         args[_key4] = arguments[_key4];
       }
-      startHideAnimation.call.apply(startHideAnimation, [_this8].concat(args));
-      _this8._hideAnimationProcessing = true;
+      startHideAnimation.call(_this4, ...args);
+      _this4._hideAnimationProcessing = true;
     });
   },
-  _hide: function _hide() {
-    var _this9 = this;
+  _hide: function () {
     if (!this._currentVisible) {
       return new _deferred.Deferred().resolve().promise();
     }
     this._currentVisible = false;
     this._hidingDeferred = new _deferred.Deferred();
-    var hidingArgs = {
+    const hidingArgs = {
       cancel: false
     };
     if (this._isShowingActionCanceled) {
@@ -507,30 +502,30 @@ var Overlay = _ui2.default.inherit({
       this._actions.onHiding(hidingArgs);
       this._toggleSafariScrolling();
       this._toggleBodyScroll(true);
-      var cancelHide = function cancelHide() {
-        _this9._isHidingActionCanceled = true;
-        _this9.option('visible', true);
-        _this9._hidingDeferred.resolve();
+      const cancelHide = () => {
+        this._isHidingActionCanceled = true;
+        this.option('visible', true);
+        this._hidingDeferred.resolve();
       };
-      var applyHide = function applyHide() {
-        _this9._forceFocusLost();
-        _this9._toggleShading(false);
-        _this9._toggleSubscriptions(false);
-        _this9._stopShowTimer();
-        _this9._animateHiding();
+      const applyHide = () => {
+        this._forceFocusLost();
+        this._toggleShading(false);
+        this._toggleSubscriptions(false);
+        this._stopShowTimer();
+        this._animateHiding();
       };
       this._processShowingHidingCancel(hidingArgs.cancel, applyHide, cancelHide);
     }
     return this._hidingDeferred.promise();
   },
-  _forceFocusLost: function _forceFocusLost() {
-    var activeElement = _dom_adapter.default.getActiveElement();
-    var shouldResetActiveElement = !!this._$content.find(activeElement).length;
+  _forceFocusLost: function () {
+    const activeElement = _dom_adapter.default.getActiveElement();
+    const shouldResetActiveElement = !!this._$content.find(activeElement).length;
     if (shouldResetActiveElement) {
       (0, _dom.resetActiveElement)();
     }
   },
-  _animate: function _animate(animation, completeCallback, startCallback) {
+  _animate: function (animation, completeCallback, startCallback) {
     if (animation) {
       startCallback = startCallback || animation.start || _common.noop;
       _fx.default.animate(this._$content, (0, _extend.extend)({}, animation, {
@@ -541,10 +536,10 @@ var Overlay = _ui2.default.inherit({
       completeCallback();
     }
   },
-  _stopAnimation: function _stopAnimation() {
+  _stopAnimation: function () {
     _fx.default.stop(this._$content, true);
   },
-  _renderVisibility: function _renderVisibility(visible) {
+  _renderVisibility: function (visible) {
     if (visible && this._isParentHidden()) {
       return;
     }
@@ -568,9 +563,9 @@ var Overlay = _ui2.default.inherit({
     this._toggleShading(visible);
     this._toggleSubscriptions(visible);
   },
-  _updateZIndexStackPosition: function _updateZIndexStackPosition(pushToStack) {
-    var overlayStack = this._overlayStack();
-    var index = overlayStack.indexOf(this);
+  _updateZIndexStackPosition: function (pushToStack) {
+    const overlayStack = this._overlayStack();
+    const index = overlayStack.indexOf(this);
     if (pushToStack) {
       if (index === -1) {
         this._zIndex = zIndexPool.create(this._zIndexInitValue());
@@ -583,33 +578,33 @@ var Overlay = _ui2.default.inherit({
       zIndexPool.remove(this._zIndex);
     }
   },
-  _toggleShading: function _toggleShading(visible) {
+  _toggleShading: function (visible) {
     this._$wrapper.toggleClass(OVERLAY_SHADER_CLASS, visible && this.option('shading'));
     this._$wrapper.css('backgroundColor', this.option('shading') ? this.option('shadingColor') : '');
     this._toggleTabTerminator(visible && this.option('shading'));
   },
-  _initTabTerminatorHandler: function _initTabTerminatorHandler() {
-    var _this10 = this;
+  _initTabTerminatorHandler: function () {
+    var _this5 = this;
     this._proxiedTabTerminatorHandler = function () {
-      _this10._tabKeyHandler.apply(_this10, arguments);
+      _this5._tabKeyHandler(...arguments);
     };
   },
-  _toggleTabTerminator: function _toggleTabTerminator(enabled) {
-    var eventName = (0, _index.addNamespace)('keydown', this.NAME);
+  _toggleTabTerminator: function (enabled) {
+    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
     if (enabled) {
       _events_engine.default.on(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
     } else {
       _events_engine.default.off(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
     }
   },
-  _findTabbableBounds: function _findTabbableBounds() {
-    var $elements = this._$wrapper.find('*');
-    var elementsCount = $elements.length - 1;
-    var result = {
+  _findTabbableBounds: function () {
+    const $elements = this._$wrapper.find('*');
+    const elementsCount = $elements.length - 1;
+    const result = {
       first: null,
       last: null
     };
-    for (var i = 0; i <= elementsCount; i++) {
+    for (let i = 0; i <= elementsCount; i++) {
       if (!result.first && $elements.eq(i).is(_selectors.tabbable)) {
         result.first = $elements.eq(i);
       }
@@ -622,31 +617,31 @@ var Overlay = _ui2.default.inherit({
     }
     return result;
   },
-  _tabKeyHandler: function _tabKeyHandler(e) {
+  _tabKeyHandler: function (e) {
     if ((0, _index.normalizeKeyName)(e) !== TAB_KEY || !this._isTopOverlay()) {
       return;
     }
-    var tabbableElements = this._findTabbableBounds();
-    var $firstTabbable = tabbableElements.first;
-    var $lastTabbable = tabbableElements.last;
-    var isTabOnLast = !e.shiftKey && e.target === $lastTabbable.get(0);
-    var isShiftTabOnFirst = e.shiftKey && e.target === $firstTabbable.get(0);
-    var isEmptyTabList = tabbableElements.length === 0;
-    var isOutsideTarget = !(0, _dom.contains)(this._$wrapper.get(0), e.target);
+    const tabbableElements = this._findTabbableBounds();
+    const $firstTabbable = tabbableElements.first;
+    const $lastTabbable = tabbableElements.last;
+    const isTabOnLast = !e.shiftKey && e.target === $lastTabbable.get(0);
+    const isShiftTabOnFirst = e.shiftKey && e.target === $firstTabbable.get(0);
+    const isEmptyTabList = tabbableElements.length === 0;
+    const isOutsideTarget = !(0, _dom.contains)(this._$wrapper.get(0), e.target);
     if (isTabOnLast || isShiftTabOnFirst || isEmptyTabList || isOutsideTarget) {
       e.preventDefault();
-      var $focusElement = e.shiftKey ? $lastTabbable : $firstTabbable;
+      const $focusElement = e.shiftKey ? $lastTabbable : $firstTabbable;
       _events_engine.default.trigger($focusElement, 'focusin');
       _events_engine.default.trigger($focusElement, 'focus');
     }
   },
-  _toggleSubscriptions: function _toggleSubscriptions(enabled) {
+  _toggleSubscriptions: function (enabled) {
     if ((0, _window.hasWindow)()) {
       this._toggleHideTopOverlayCallback(enabled);
       this._toggleHideOnParentsScrollSubscription(enabled);
     }
   },
-  _toggleHideTopOverlayCallback: function _toggleHideTopOverlayCallback(subscribe) {
+  _toggleHideTopOverlayCallback: function (subscribe) {
     if (!this._hideTopOverlayHandler) {
       return;
     }
@@ -656,16 +651,17 @@ var Overlay = _ui2.default.inherit({
       _hide_callback.hideCallback.remove(this._hideTopOverlayHandler);
     }
   },
-  _toggleHideOnParentsScrollSubscription: function _toggleHideOnParentsScrollSubscription(needSubscribe) {
+  _toggleHideOnParentsScrollSubscription: function (needSubscribe) {
     var _this$_parentsScrollS;
-    var scrollEvent = (0, _index.addNamespace)('scroll', this.NAME);
-    var _ref = (_this$_parentsScrollS = this._parentsScrollSubscriptionInfo) !== null && _this$_parentsScrollS !== void 0 ? _this$_parentsScrollS : {},
-      prevTargets = _ref.prevTargets,
-      handler = _ref.handler;
+    const scrollEvent = (0, _index.addNamespace)('scroll', this.NAME);
+    const {
+      prevTargets,
+      handler
+    } = (_this$_parentsScrollS = this._parentsScrollSubscriptionInfo) !== null && _this$_parentsScrollS !== void 0 ? _this$_parentsScrollS : {};
     _events_engine.default.off(prevTargets, scrollEvent, handler);
-    var closeOnScroll = this.option('hideOnParentScroll');
+    const closeOnScroll = this.option('hideOnParentScroll');
     if (needSubscribe && closeOnScroll) {
-      var $parents = this._hideOnParentScrollTarget().parents();
+      let $parents = this._hideOnParentScrollTarget().parents();
       if (_devices.default.real().deviceType === 'desktop') {
         $parents = $parents.add(window);
       }
@@ -673,9 +669,9 @@ var Overlay = _ui2.default.inherit({
       this._parentsScrollSubscriptionInfo.prevTargets = $parents;
     }
   },
-  _hideOnParentsScrollHandler: function _hideOnParentsScrollHandler(e) {
-    var closeHandled = false;
-    var closeOnScroll = this.option('hideOnParentScroll');
+  _hideOnParentsScrollHandler: function (e) {
+    let closeHandled = false;
+    const closeOnScroll = this.option('hideOnParentScroll');
     if ((0, _type.isFunction)(closeOnScroll)) {
       closeHandled = closeOnScroll(e);
     }
@@ -683,22 +679,22 @@ var Overlay = _ui2.default.inherit({
       this.hide();
     }
   },
-  _hideOnParentScrollTarget: function _hideOnParentScrollTarget() {
+  _hideOnParentScrollTarget: function () {
     return this._$wrapper;
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._appendContentToElement();
     this._renderVisibilityAnimate(this.option('visible'));
   },
-  _appendContentToElement: function _appendContentToElement() {
+  _appendContentToElement: function () {
     if (!this._$content.parent().is(this.$element())) {
       this._$content.appendTo(this.$element());
     }
   },
-  _renderContent: function _renderContent() {
-    var shouldDeferRendering = !this._currentVisible && this.option('deferRendering');
-    var isParentHidden = this.option('visible') && this._isParentHidden();
+  _renderContent: function () {
+    const shouldDeferRendering = !this._currentVisible && this.option('deferRendering');
+    const isParentHidden = this.option('visible') && this._isParentHidden();
     if (isParentHidden) {
       this._isHidden = true;
       return;
@@ -710,20 +706,20 @@ var Overlay = _ui2.default.inherit({
     this._appendContentToElement();
     this.callBase();
   },
-  _isParentHidden: function _isParentHidden() {
+  _isParentHidden: function () {
     if (!this.option('_checkParentVisibility')) {
       return false;
     }
     if (this._parentHidden !== undefined) {
       return this._parentHidden;
     }
-    var $parent = this.$element().parent();
+    const $parent = this.$element().parent();
     if ($parent.is(':visible')) {
       return false;
     }
-    var isHidden = false;
+    let isHidden = false;
     $parent.add($parent.parents()).each(function () {
-      var $element = (0, _renderer.default)(this);
+      const $element = (0, _renderer.default)(this);
       if ($element.css('display') === 'none') {
         isHidden = true;
         return false;
@@ -731,39 +727,39 @@ var Overlay = _ui2.default.inherit({
     });
     return isHidden || !_dom_adapter.default.getBody().contains($parent.get(0));
   },
-  _renderContentImpl: function _renderContentImpl() {
-    var _this11 = this;
-    var whenContentRendered = new _deferred.Deferred();
-    var contentTemplateOption = this.option('contentTemplate');
-    var contentTemplate = this._getTemplate(contentTemplateOption);
-    var transclude = this._templateManager.anonymousTemplateName === contentTemplateOption;
+  _renderContentImpl: function () {
+    const whenContentRendered = new _deferred.Deferred();
+    const contentTemplateOption = this.option('contentTemplate');
+    const contentTemplate = this._getTemplate(contentTemplateOption);
+    const transclude = this._templateManager.anonymousTemplateName === contentTemplateOption;
     contentTemplate && contentTemplate.render({
       container: (0, _element.getPublicElement)(this.$content()),
       noModel: true,
       transclude,
-      onRendered: function onRendered() {
+      onRendered: () => {
         whenContentRendered.resolve();
 
         // NOTE: T1114344
-        if (_this11.option('templatesRenderAsynchronously')) {
-          _this11._dimensionChanged();
+        if (this.option('templatesRenderAsynchronously')) {
+          this._dimensionChanged();
         }
       }
     });
     this._toggleWrapperScrollEventsSubscription(this.option('preventScrollEvents'));
-    whenContentRendered.done(function () {
-      if (_this11.option('visible')) {
-        _this11._moveToContainer();
+    whenContentRendered.done(() => {
+      if (this.option('visible')) {
+        this._moveToContainer();
       }
     });
     return whenContentRendered.promise();
   },
   _getPositionControllerConfig() {
-    var _this$option3 = this.option(),
-      container = _this$option3.container,
-      visualContainer = _this$option3.visualContainer,
-      _fixWrapperPosition = _this$option3._fixWrapperPosition,
-      restorePosition = _this$option3.restorePosition;
+    const {
+      container,
+      visualContainer,
+      _fixWrapperPosition,
+      restorePosition
+    } = this.option();
     // NOTE: position is passed to controller in renderGeometry to prevent window field using in server side mode
 
     return {
@@ -781,31 +777,32 @@ var Overlay = _ui2.default.inherit({
   _initPositionController() {
     this._positionController = new _overlay_position_controller.OverlayPositionController(this._getPositionControllerConfig());
   },
-  _toggleWrapperScrollEventsSubscription: function _toggleWrapperScrollEventsSubscription(enabled) {
-    var eventName = (0, _index.addNamespace)(_drag.move, this.NAME);
+  _toggleWrapperScrollEventsSubscription: function (enabled) {
+    const eventName = (0, _index.addNamespace)(_drag.move, this.NAME);
     _events_engine.default.off(this._$wrapper, eventName);
     if (enabled) {
       _events_engine.default.on(this._$wrapper, eventName, {
-        validate: function validate() {
+        validate: function () {
           return true;
         },
-        getDirection: function getDirection() {
+        getDirection: function () {
           return 'both';
         },
-        _toggleGestureCover: function _toggleGestureCover(toggle) {
+        _toggleGestureCover: function (toggle) {
           if (!toggle) {
             this._toggleGestureCoverImpl(toggle);
           }
         },
         _clearSelection: _common.noop,
         isNative: true
-      }, function (e) {
-        var originalEvent = e.originalEvent.originalEvent;
-        var _ref2 = originalEvent || {},
-          type = _ref2.type;
-        var isWheel = type === 'wheel';
-        var isMouseMove = type === 'mousemove';
-        var isScrollByWheel = isWheel && !(0, _index.isCommandKeyPressed)(e);
+      }, e => {
+        const originalEvent = e.originalEvent.originalEvent;
+        const {
+          type
+        } = originalEvent || {};
+        const isWheel = type === 'wheel';
+        const isMouseMove = type === 'mousemove';
+        const isScrollByWheel = isWheel && !(0, _index.isCommandKeyPressed)(e);
         e._cancelPreventDefault = true;
         if (originalEvent && e.cancelable !== false && (!isMouseMove && !isWheel || isScrollByWheel)) {
           e.preventDefault();
@@ -813,36 +810,37 @@ var Overlay = _ui2.default.inherit({
       });
     }
   },
-  _moveFromContainer: function _moveFromContainer() {
+  _moveFromContainer: function () {
     this._$content.appendTo(this.$element());
     this._$wrapper.detach();
   },
   _checkContainerExists() {
-    var $wrapperContainer = this._positionController.$container;
+    const $wrapperContainer = this._positionController.$container;
 
     // NOTE: The container is undefined when DOM is not ready yet. See T1143527
     if ($wrapperContainer === undefined) {
       return;
     }
-    var containerExists = $wrapperContainer.length > 0;
+    const containerExists = $wrapperContainer.length > 0;
     if (!containerExists) {
       _ui.default.log('W1021', this.NAME);
     }
   },
-  _moveToContainer: function _moveToContainer() {
-    var $wrapperContainer = this._positionController.$container;
+  _moveToContainer: function () {
+    const $wrapperContainer = this._positionController.$container;
     this._$wrapper.appendTo($wrapperContainer);
     this._$content.appendTo(this._$wrapper);
   },
-  _renderGeometry: function _renderGeometry(options) {
-    var _this$option4 = this.option(),
-      visible = _this$option4.visible;
+  _renderGeometry: function (options) {
+    const {
+      visible
+    } = this.option();
     if (visible && (0, _window.hasWindow)()) {
       this._stopAnimation();
       this._renderGeometryImpl();
     }
   },
-  _renderGeometryImpl: function _renderGeometryImpl() {
+  _renderGeometryImpl: function () {
     // NOTE: position can be specified as a function which needs to be called strict on render start
     this._positionController.updatePosition(this._getOptionValue('position'));
     this._renderWrapper();
@@ -852,17 +850,17 @@ var Overlay = _ui2.default.inherit({
   _renderPosition() {
     this._positionController.positionContent();
   },
-  _isAllWindowCovered: function _isAllWindowCovered() {
+  _isAllWindowCovered: function () {
     return (0, _type.isWindow)(this._positionController.$visualContainer.get(0)) && this.option('shading');
   },
-  _toggleSafariScrolling: function _toggleSafariScrolling() {
-    var visible = this.option('visible');
-    var $body = (0, _renderer.default)(_dom_adapter.default.getBody());
-    var isIosSafari = _devices.default.real().platform === 'ios' && _browser.default.safari;
-    var isAllWindowCovered = this._isAllWindowCovered();
-    var isScrollingPrevented = $body.hasClass(PREVENT_SAFARI_SCROLLING_CLASS);
-    var shouldPreventScrolling = !isScrollingPrevented && visible && isAllWindowCovered;
-    var shouldEnableScrolling = isScrollingPrevented && (!visible || !isAllWindowCovered || this._disposed);
+  _toggleSafariScrolling: function () {
+    const visible = this.option('visible');
+    const $body = (0, _renderer.default)(_dom_adapter.default.getBody());
+    const isIosSafari = _devices.default.real().platform === 'ios' && _browser.default.safari;
+    const isAllWindowCovered = this._isAllWindowCovered();
+    const isScrollingPrevented = $body.hasClass(PREVENT_SAFARI_SCROLLING_CLASS);
+    const shouldPreventScrolling = !isScrollingPrevented && visible && isAllWindowCovered;
+    const shouldEnableScrolling = isScrollingPrevented && (!visible || !isAllWindowCovered || this._disposed);
     if (isIosSafari) {
       if (shouldEnableScrolling) {
         $body.removeClass(PREVENT_SAFARI_SCROLLING_CLASS);
@@ -874,24 +872,24 @@ var Overlay = _ui2.default.inherit({
       }
     }
   },
-  _renderWrapper: function _renderWrapper() {
+  _renderWrapper: function () {
     this._positionController.styleWrapperPosition();
     this._renderWrapperDimensions();
     this._positionController.positionWrapper();
   },
-  _renderWrapperDimensions: function _renderWrapperDimensions() {
-    var $visualContainer = this._positionController.$visualContainer;
-    var documentElement = _dom_adapter.default.getDocumentElement();
-    var isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
-    var wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : (0, _size.getOuterWidth)($visualContainer);
-    var wrapperHeight = isVisualContainerWindow ? window.innerHeight : (0, _size.getOuterHeight)($visualContainer);
+  _renderWrapperDimensions: function () {
+    const $visualContainer = this._positionController.$visualContainer;
+    const documentElement = _dom_adapter.default.getDocumentElement();
+    const isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
+    const wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : (0, _size.getOuterWidth)($visualContainer);
+    const wrapperHeight = isVisualContainerWindow ? window.innerHeight : (0, _size.getOuterHeight)($visualContainer);
     this._$wrapper.css({
       width: wrapperWidth,
       height: wrapperHeight
     });
   },
-  _renderDimensions: function _renderDimensions() {
-    var content = this._$content.get(0);
+  _renderDimensions: function () {
+    const content = this._$content.get(0);
     this._$content.css({
       minWidth: this._getOptionValue('minWidth', content),
       maxWidth: this._getOptionValue('maxWidth', content),
@@ -901,26 +899,23 @@ var Overlay = _ui2.default.inherit({
       height: this._getOptionValue('height', content)
     });
   },
-  _focusTarget: function _focusTarget() {
+  _focusTarget: function () {
     return this._$content;
   },
-  _attachKeyboardEvents: function _attachKeyboardEvents() {
-    var _this12 = this;
-    this._keyboardListenerId = _short.keyboard.on(this._$content, null, function (opts) {
-      return _this12._keyboardHandler(opts);
-    });
+  _attachKeyboardEvents: function () {
+    this._keyboardListenerId = _short.keyboard.on(this._$content, null, opts => this._keyboardHandler(opts));
   },
-  _keyboardHandler: function _keyboardHandler(options) {
-    var e = options.originalEvent;
-    var $target = (0, _renderer.default)(e.target);
+  _keyboardHandler: function (options) {
+    const e = options.originalEvent;
+    const $target = (0, _renderer.default)(e.target);
     if ($target.is(this._$content) || !this.option('ignoreChildEvents')) {
-      this.callBase.apply(this, arguments);
+      this.callBase(...arguments);
     }
   },
-  _isVisible: function _isVisible() {
+  _isVisible: function () {
     return this.option('visible');
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       if (this.option('visible')) {
         this._renderVisibilityAnimate(visible);
@@ -929,11 +924,11 @@ var Overlay = _ui2.default.inherit({
       this._renderVisibilityAnimate(visible);
     }
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     this._renderGeometry();
   },
-  _clean: function _clean() {
-    var options = this.option();
+  _clean: function () {
+    const options = this.option();
     if (!this._contentAlreadyRendered && !options.isRenovated) {
       this.$content().empty();
     }
@@ -947,7 +942,7 @@ var Overlay = _ui2.default.inherit({
     }
     this._asyncShowTimeout = null;
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     _fx.default.stop(this._$content, false);
     clearTimeout(this._deferShowTimer);
     this._toggleViewPortSubscription(false);
@@ -962,13 +957,14 @@ var Overlay = _ui2.default.inherit({
     this._$wrapper.remove();
     this._$content.remove();
   },
-  _toggleRTLDirection: function _toggleRTLDirection(rtl) {
+  _toggleRTLDirection: function (rtl) {
     this._$content.toggleClass(RTL_DIRECTION_CLASS, rtl);
   },
-  _optionChanged: function _optionChanged(args) {
-    var _this13 = this;
-    var value = args.value,
-      name = args.name;
+  _optionChanged: function (args) {
+    const {
+      value,
+      name
+    } = args;
     if (this._getActionsList().includes(name)) {
       this._initActions();
       return;
@@ -1000,12 +996,12 @@ var Overlay = _ui2.default.inherit({
         this._toggleSafariScrolling();
         break;
       case 'visible':
-        this._renderVisibilityAnimate(value).done(function () {
-          var _this13$_animateDefer;
-          return (_this13$_animateDefer = _this13._animateDeferred) === null || _this13$_animateDefer === void 0 ? void 0 : _this13$_animateDefer.resolveWith(_this13);
-        }).fail(function () {
-          var _this13$_animateDefer2;
-          return (_this13$_animateDefer2 = _this13._animateDeferred) === null || _this13$_animateDefer2 === void 0 ? void 0 : _this13$_animateDefer2.reject();
+        this._renderVisibilityAnimate(value).done(() => {
+          var _this$_animateDeferre;
+          return (_this$_animateDeferre = this._animateDeferred) === null || _this$_animateDeferre === void 0 ? void 0 : _this$_animateDeferre.resolveWith(this);
+        }).fail(() => {
+          var _this$_animateDeferre2;
+          return (_this$_animateDeferre2 = this._animateDeferred) === null || _this$_animateDeferre2 === void 0 ? void 0 : _this$_animateDeferre2.reject();
         });
         break;
       case 'container':
@@ -1060,38 +1056,37 @@ var Overlay = _ui2.default.inherit({
         this.callBase(args);
     }
   },
-  toggle: function toggle(showing) {
-    var _this14 = this;
+  toggle: function (showing) {
     showing = showing === undefined ? !this.option('visible') : showing;
-    var result = new _deferred.Deferred();
+    const result = new _deferred.Deferred();
     if (showing === this.option('visible')) {
       return result.resolveWith(this, [showing]).promise();
     }
-    var animateDeferred = new _deferred.Deferred();
+    const animateDeferred = new _deferred.Deferred();
     this._animateDeferred = animateDeferred;
     this.option('visible', showing);
-    animateDeferred.promise().done(function () {
-      delete _this14._animateDeferred;
-      result.resolveWith(_this14, [_this14.option('visible')]);
-    }).fail(function () {
-      delete _this14._animateDeferred;
+    animateDeferred.promise().done(() => {
+      delete this._animateDeferred;
+      result.resolveWith(this, [this.option('visible')]);
+    }).fail(() => {
+      delete this._animateDeferred;
       result.reject();
     });
     return result.promise();
   },
-  $content: function $content() {
+  $content: function () {
     return this._$content;
   },
-  show: function show() {
+  show: function () {
     return this.toggle(true);
   },
-  hide: function hide() {
+  hide: function () {
     return this.toggle(false);
   },
-  content: function content() {
+  content: function () {
     return (0, _element.getPublicElement)(this._$content);
   },
-  repaint: function repaint() {
+  repaint: function () {
     if (this._contentAlreadyRendered) {
       this._positionController.restorePositionOnNextRender(true);
       this._renderGeometry({
@@ -1108,7 +1103,7 @@ var Overlay = _ui2.default.inherit({
 * @name ui.dxOverlay
 * @section utils
 */
-Overlay.baseZIndex = function (zIndex) {
+Overlay.baseZIndex = zIndex => {
   return zIndexPool.base(zIndex);
 };
 (0, _component_registrator.default)('dxOverlay', Overlay);

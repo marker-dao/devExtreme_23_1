@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/editors/check_box/check_box_icon.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,9 +16,8 @@ var _window = require("../../../../core/utils/window");
 var _style = require("../../../../core/utils/style");
 var _type = require("../../../../core/utils/type");
 var _utils = require("./utils");
-var _excluded = ["isChecked", "size"];
+const _excluded = ["isChecked", "size"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -28,19 +27,21 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var viewFunction = function viewFunction(viewModel) {
-  var cssStyles = viewModel.cssStyles,
-    elementRef = viewModel.elementRef;
+const viewFunction = viewModel => {
+  const {
+    cssStyles,
+    elementRef
+  } = viewModel;
   return (0, _inferno.createVNode)(1, "span", "dx-checkbox-icon", null, 1, {
     "style": (0, _inferno2.normalizeStyles)(cssStyles)
   }, null, elementRef);
 };
 exports.viewFunction = viewFunction;
-var CheckBoxIconProps = {
+const CheckBoxIconProps = {
   isChecked: false
 };
 exports.CheckBoxIconProps = CheckBoxIconProps;
-var CheckBoxIcon = /*#__PURE__*/function (_InfernoComponent) {
+let CheckBoxIcon = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(CheckBoxIcon, _InfernoComponent);
   function CheckBoxIcon(props) {
     var _this;
@@ -63,17 +64,18 @@ var CheckBoxIcon = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.isChecked, this.props.size]);
   };
   _proto.updateFontSize = function updateFontSize() {
-    var _this$props = this.props,
-      isChecked = _this$props.isChecked,
-      size = _this$props.size;
+    const {
+      isChecked,
+      size
+    } = this.props;
     if ((0, _window.hasWindow)() && size) {
-      var newIconSize = this.getIconSize(size);
-      var newFontSize = (0, _utils.getFontSizeByIconSize)(newIconSize, isChecked);
+      const newIconSize = this.getIconSize(size);
+      const newFontSize = (0, _utils.getFontSizeByIconSize)(newIconSize, isChecked);
       this.setIconFontSize(newFontSize);
     }
   };
   _proto.setIconFontSize = function setIconFontSize(fontSize) {
-    var element = this.elementRef.current;
+    const element = this.elementRef.current;
     element.style.fontSize = "".concat(fontSize, "px");
   };
   _proto.getIconSize = function getIconSize(size) {
@@ -86,9 +88,9 @@ var CheckBoxIcon = /*#__PURE__*/function (_InfernoComponent) {
     return this.getComputedIconSize();
   };
   _proto.getComputedIconSize = function getComputedIconSize() {
-    var element = this.elementRef.current;
-    var iconComputedStyle = (0, _get_computed_style.default)(element);
-    var computedIconSize = parseInt(iconComputedStyle === null || iconComputedStyle === void 0 ? void 0 : iconComputedStyle.width, 10);
+    const element = this.elementRef.current;
+    const iconComputedStyle = (0, _get_computed_style.default)(element);
+    const computedIconSize = parseInt(iconComputedStyle === null || iconComputedStyle === void 0 ? void 0 : iconComputedStyle.width, 10);
     return computedIconSize;
   };
   _proto.componentWillUpdate = function componentWillUpdate(nextProps, nextState, context) {
@@ -98,7 +100,7 @@ var CheckBoxIcon = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       elementRef: this.elementRef,
@@ -111,28 +113,27 @@ var CheckBoxIcon = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(CheckBoxIcon, [{
     key: "cssStyles",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['cssStyles'] !== undefined) {
         return this.__getterCache['cssStyles'];
       }
-      return this.__getterCache['cssStyles'] = function () {
-        var size = _this2.props.size;
-        var width = (0, _style.normalizeStyleProp)('width', size);
-        var height = (0, _style.normalizeStyleProp)('height', size);
+      return this.__getterCache['cssStyles'] = (() => {
+        const {
+          size
+        } = this.props;
+        const width = (0, _style.normalizeStyleProp)('width', size);
+        const height = (0, _style.normalizeStyleProp)('height', size);
         return {
           height,
           width
         };
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props2 = this.props,
-        isChecked = _this$props2.isChecked,
-        size = _this$props2.size,
-        restProps = _objectWithoutProperties(_this$props2, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

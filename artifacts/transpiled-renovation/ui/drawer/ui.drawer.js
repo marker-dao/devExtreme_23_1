@@ -22,16 +22,16 @@ var _visibility_change = require("../../events/visibility_change");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE drawer
 
-var DRAWER_CLASS = 'dx-drawer';
-var DRAWER_WRAPPER_CLASS = 'dx-drawer-wrapper';
-var DRAWER_PANEL_CONTENT_CLASS = 'dx-drawer-panel-content';
-var DRAWER_VIEW_CONTENT_CLASS = 'dx-drawer-content';
-var DRAWER_SHADER_CLASS = 'dx-drawer-shader';
-var INVISIBLE_STATE_CLASS = 'dx-state-invisible';
-var OPENED_STATE_CLASS = 'dx-drawer-opened';
-var ANONYMOUS_TEMPLATE_NAME = 'content';
-var PANEL_TEMPLATE_NAME = 'panel';
-var Drawer = _ui.default.inherit({
+const DRAWER_CLASS = 'dx-drawer';
+const DRAWER_WRAPPER_CLASS = 'dx-drawer-wrapper';
+const DRAWER_PANEL_CONTENT_CLASS = 'dx-drawer-panel-content';
+const DRAWER_VIEW_CONTENT_CLASS = 'dx-drawer-content';
+const DRAWER_SHADER_CLASS = 'dx-drawer-shader';
+const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
+const OPENED_STATE_CLASS = 'dx-drawer-opened';
+const ANONYMOUS_TEMPLATE_NAME = 'content';
+const PANEL_TEMPLATE_NAME = 'panel';
+const Drawer = _ui.default.inherit({
   _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       position: 'left',
@@ -104,18 +104,18 @@ var Drawer = _ui.default.inherit({
         this._strategy = new _uiDrawerRenderingStrategy.default(this);
     }
   },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+  _getAnonymousTemplateName: function () {
     return ANONYMOUS_TEMPLATE_NAME;
   },
   _initTemplates() {
-    var defaultTemplates = {};
+    const defaultTemplates = {};
     defaultTemplates[PANEL_TEMPLATE_NAME] = new _empty_template.EmptyTemplate();
     defaultTemplates[ANONYMOUS_TEMPLATE_NAME] = new _empty_template.EmptyTemplate();
     this._templateManager.addDefaultTemplates(defaultTemplates);
     this.callBase();
   },
   _viewContentWrapperClickHandler(e) {
-    var closeOnOutsideClick = this.option('closeOnOutsideClick');
+    let closeOnOutsideClick = this.option('closeOnOutsideClick');
     if ((0, _type.isFunction)(closeOnOutsideClick)) {
       closeOnOutsideClick = closeOnOutsideClick(e);
     }
@@ -144,22 +144,21 @@ var Drawer = _ui.default.inherit({
     this._refreshWrapperChildrenOrder();
   },
   _render() {
-    var _this = this;
     this._initMinMaxSize();
     this.callBase();
-    this._whenPanelContentRendered.always(function () {
+    this._whenPanelContentRendered.always(() => {
       ///#DEBUG
-      if (_this.option('__debugWhenPanelContentRendered')) {
-        _this.option('__debugWhenPanelContentRendered')({
-          drawer: _this
+      if (this.option('__debugWhenPanelContentRendered')) {
+        this.option('__debugWhenPanelContentRendered')({
+          drawer: this
         });
       }
       ///#ENDDEBUG
 
-      _this._initMinMaxSize();
-      _this._strategy.refreshPanelElementSize(_this.option('revealMode') === 'slide' || !_this.isHorizontalDirection());
-      _this._renderPosition(_this.option('opened'), true);
-      _this._removePanelManualPosition();
+      this._initMinMaxSize();
+      this._strategy.refreshPanelElementSize(this.option('revealMode') === 'slide' || !this.isHorizontalDirection());
+      this._renderPosition(this.option('opened'), true);
+      this._removePanelManualPosition();
     });
   },
   _removePanelManualPosition() {
@@ -176,7 +175,7 @@ var Drawer = _ui.default.inherit({
   },
   _renderPanelContentWrapper() {
     this._$panelContentWrapper = (0, _renderer.default)('<div>').addClass(DRAWER_PANEL_CONTENT_CLASS);
-    var position = this.calcTargetPosition();
+    const position = this.calcTargetPosition();
     if (this.option('openedStateMode') === 'push' && ['top', 'bottom'].indexOf(position) > -1) {
       this._$panelContentWrapper.addClass(DRAWER_PANEL_CONTENT_CLASS + '-push-top-or-bottom');
     }
@@ -205,7 +204,7 @@ var Drawer = _ui.default.inherit({
     this.$element().addClass(DRAWER_CLASS + '-' + this.calcTargetPosition());
   },
   _refreshWrapperChildrenOrder() {
-    var position = this.calcTargetPosition();
+    const position = this.calcTargetPosition();
     if (this._strategy.isViewContentFirst(position, this.option('rtlEnabled'))) {
       this._$wrapper.prepend(this._$viewContentWrapper);
     } else {
@@ -219,10 +218,10 @@ var Drawer = _ui.default.inherit({
     this.$element().addClass(DRAWER_CLASS + '-' + this.option('revealMode'));
   },
   _renderViewContent() {
-    var contentTemplateOption = this.option('contentTemplate');
-    var contentTemplate = this._getTemplate(contentTemplateOption);
+    const contentTemplateOption = this.option('contentTemplate');
+    const contentTemplate = this._getTemplate(contentTemplateOption);
     if (contentTemplate) {
-      var $viewTemplate = contentTemplate.render({
+      const $viewTemplate = contentTemplate.render({
         container: this.viewContent(),
         noModel: true,
         transclude: this._templateManager.anonymousTemplateName === contentTemplateOption
@@ -243,14 +242,14 @@ var Drawer = _ui.default.inherit({
     this._initMinMaxSize();
   },
   _initMinMaxSize() {
-    var realPanelSize = this.isHorizontalDirection() ? this.getRealPanelWidth() : this.getRealPanelHeight();
+    const realPanelSize = this.isHorizontalDirection() ? this.getRealPanelWidth() : this.getRealPanelHeight();
     this._maxSize = this.option('maxSize') || realPanelSize;
     this._minSize = this.option('minSize') || 0;
   },
   calcTargetPosition() {
-    var position = this.option('position');
-    var rtl = this.option('rtlEnabled');
-    var result = position;
+    const position = this.option('position');
+    const rtl = this.option('rtlEnabled');
+    let result = position;
     if (position === 'before') {
       result = rtl ? 'right' : 'left';
     } else if (position === 'after') {
@@ -293,8 +292,8 @@ var Drawer = _ui.default.inherit({
     }
   },
   _getPanelTemplateElement() {
-    var $panelContent = this._strategy.getPanelContent();
-    var $result = $panelContent;
+    const $panelContent = this._strategy.getPanelContent();
+    let $result = $panelContent;
     if ($panelContent.children().length) {
       $result = $panelContent.children().eq(0);
       if ($panelContent.hasClass('dx-overlay-content') && $result.hasClass('dx-template-wrapper') && $result.children().length) {
@@ -305,18 +304,18 @@ var Drawer = _ui.default.inherit({
     return $result.get(0);
   },
   getElementHeight($element) {
-    var $children = $element.children();
+    const $children = $element.children();
     return $children.length ? (0, _position.getBoundingRect)($children.eq(0).get(0)).height : (0, _position.getBoundingRect)($element.get(0)).height;
   },
   isHorizontalDirection() {
-    var position = this.calcTargetPosition();
+    const position = this.calcTargetPosition();
     return position === 'left' || position === 'right';
   },
   stopAnimations(jumpToEnd) {
     _fx.default.stop(this._$shader, jumpToEnd);
     _fx.default.stop((0, _renderer.default)(this.content()), jumpToEnd);
     _fx.default.stop((0, _renderer.default)(this.viewContent()), jumpToEnd);
-    var overlay = this.getOverlay();
+    const overlay = this.getOverlay();
     if (overlay) {
       _fx.default.stop((0, _renderer.default)(overlay.$content()), jumpToEnd);
     }
@@ -333,7 +332,7 @@ var Drawer = _ui.default.inherit({
     (0, _visibility_change.triggerResizeEvent)(this.viewContent());
   },
   _isInvertedPosition() {
-    var position = this.calcTargetPosition();
+    const position = this.calcTargetPosition();
     return position === 'right' || position === 'bottom';
   },
   _renderPosition(isDrawerOpened, disableAnimation, jumpToEnd) {
@@ -347,7 +346,7 @@ var Drawer = _ui.default.inherit({
     (0, _renderer.default)(this.viewContent()).css('paddingRight', 0);
     (0, _renderer.default)(this.viewContent()).css('paddingTop', 0);
     (0, _renderer.default)(this.viewContent()).css('paddingBottom', 0);
-    var animationEnabled = this.option('animationEnabled');
+    let animationEnabled = this.option('animationEnabled');
     if (disableAnimation === true) {
       animationEnabled = false;
     }
@@ -391,7 +390,6 @@ var Drawer = _ui.default.inherit({
     this.$element().toggleClass(OPENED_STATE_CLASS, opened);
   },
   _refreshPanel() {
-    var _this2 = this;
     (0, _renderer.default)(this.viewContent()).css('left', 0); // can affect animation
     (0, _renderer.default)(this.viewContent()).css('transform', 'translate(0px, 0px)'); // can affect animation
     (0, _renderer.default)(this.viewContent()).removeClass('dx-theme-background-color');
@@ -403,10 +401,10 @@ var Drawer = _ui.default.inherit({
     this._strategy.renderPanelContent(this._whenPanelContentRefreshed);
     this._strategy.onPanelContentRendered();
     if ((0, _window.hasWindow)()) {
-      this._whenPanelContentRefreshed.always(function () {
-        _this2._strategy.refreshPanelElementSize(_this2.option('revealMode') === 'slide');
-        _this2._renderPosition(_this2.option('opened'), true, true);
-        _this2._removePanelManualPosition();
+      this._whenPanelContentRefreshed.always(() => {
+        this._strategy.refreshPanelElementSize(this.option('revealMode') === 'slide');
+        this._renderPosition(this.option('opened'), true, true);
+        this._removePanelManualPosition();
       });
     }
   },
@@ -491,7 +489,7 @@ var Drawer = _ui.default.inherit({
     return this.toggle(false);
   },
   toggle(opened) {
-    var targetOpened = opened === undefined ? !this.option('opened') : opened;
+    const targetOpened = opened === undefined ? !this.option('opened') : opened;
     this._whenAnimationCompleted = new _deferred.Deferred();
     this.option('opened', targetOpened);
     return this._whenAnimationCompleted.promise();

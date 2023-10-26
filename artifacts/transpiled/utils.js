@@ -2,13 +2,13 @@
 
 Object.defineProperty(exports, "compileGetter", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _data.compileGetter;
   }
 });
 Object.defineProperty(exports, "compileSetter", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _data.compileSetter;
   }
 });

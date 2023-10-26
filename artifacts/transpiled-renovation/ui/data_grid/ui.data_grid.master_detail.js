@@ -6,7 +6,7 @@ Object.keys(_master_detail).forEach(function (key) {
   if (key in exports && exports[key] === _master_detail[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _master_detail[key];
     }
   });

@@ -15,9 +15,9 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var TIMELINE_CLASS = 'dx-scheduler-timeline-work-week';
-var LAST_DAY_WEEK_INDEX = 5;
-var SchedulerTimelineWorkWeek = /*#__PURE__*/function (_SchedulerTimelineWee) {
+const TIMELINE_CLASS = 'dx-scheduler-timeline-work-week';
+const LAST_DAY_WEEK_INDEX = 5;
+let SchedulerTimelineWorkWeek = /*#__PURE__*/function (_SchedulerTimelineWee) {
   _inheritsLoose(SchedulerTimelineWorkWeek, _SchedulerTimelineWee);
   function SchedulerTimelineWorkWeek() {
     var _this;
@@ -25,7 +25,7 @@ var SchedulerTimelineWorkWeek = /*#__PURE__*/function (_SchedulerTimelineWee) {
       args[_key] = arguments[_key];
     }
     // @ts-expect-error
-    _this = _SchedulerTimelineWee.call.apply(_SchedulerTimelineWee, [this].concat(args)) || this;
+    _this = _SchedulerTimelineWee.call(this, ...args) || this;
     _this._getWeekendsCount = _work_week.getWeekendsCount;
     return _this;
   }
@@ -34,7 +34,7 @@ var SchedulerTimelineWorkWeek = /*#__PURE__*/function (_SchedulerTimelineWee) {
     return TIMELINE_CLASS;
   };
   _proto._incrementDate = function _incrementDate(date) {
-    var day = date.getDay();
+    const day = date.getDay();
     if (day === LAST_DAY_WEEK_INDEX) {
       date.setDate(date.getDate() + 2);
     }
@@ -42,7 +42,7 @@ var SchedulerTimelineWorkWeek = /*#__PURE__*/function (_SchedulerTimelineWee) {
   };
   _createClass(SchedulerTimelineWorkWeek, [{
     key: "type",
-    get: function get() {
+    get: function () {
       return _m_constants.VIEWS.TIMELINE_WORK_WEEK;
     }
   }]);

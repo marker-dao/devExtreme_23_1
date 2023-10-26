@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/component_wrapper/navigation/scroll_view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ var _deferred = require("../../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ScrollViewWrapper = /*#__PURE__*/function (_Component) {
+let ScrollViewWrapper = /*#__PURE__*/function (_Component) {
   _inheritsLoose(ScrollViewWrapper, _Component);
   function ScrollViewWrapper(element, options) {
     var _this;
@@ -47,12 +47,14 @@ var ScrollViewWrapper = /*#__PURE__*/function (_Component) {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-    var callBase = _Component.prototype.on.apply(this, args);
+    const callBase = _Component.prototype.on.apply(this, args);
     this.updateAdditionalOptions();
     return callBase;
   };
   _proto._optionChanged = function _optionChanged(option) {
-    var name = option.name;
+    const {
+      name
+    } = option;
     if (name === 'useNative') {
       this._isNodeReplaced = false;
     }

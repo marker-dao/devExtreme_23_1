@@ -3,36 +3,36 @@
 exports.prepareSegmentRectPoints = void 0;
 Object.defineProperty(exports, "refreshPaths", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _renderer.refreshPaths;
   }
 });
 var _renderer = require("./core/renderers/renderer");
 var _iterator = require("../core/utils/iterator");
 // 'var' because JSHint throws W021 error
-var prepareSegmentRectPoints = function prepareSegmentRectPoints(left, top, width, height, borderOptions) {
-  var maxSW = ~~((width < height ? width : height) / 2);
-  var sw = borderOptions.width || 0;
-  var newSW = sw < maxSW ? sw : maxSW;
+let prepareSegmentRectPoints = function (left, top, width, height, borderOptions) {
+  const maxSW = ~~((width < height ? width : height) / 2);
+  const sw = borderOptions.width || 0;
+  const newSW = sw < maxSW ? sw : maxSW;
   left = left + newSW / 2;
   top = top + newSW / 2;
   width = width - newSW;
   height = height - newSW;
-  var right = left + width;
-  var bottom = top + height;
-  var points = [];
-  var segments = [];
-  var segmentSequence;
-  var visiblyOpt = 0;
-  var prevSegmentVisibility = 0;
-  var allSegment = {
+  const right = left + width;
+  const bottom = top + height;
+  let points = [];
+  let segments = [];
+  let segmentSequence;
+  let visiblyOpt = 0;
+  let prevSegmentVisibility = 0;
+  const allSegment = {
     top: [[left, top], [right, top]],
     right: [[right, top], [right, bottom]],
     bottom: [[right, bottom], [left, bottom]],
     left: [[left, bottom], [left, top]]
   };
   (0, _iterator.each)(allSegment, function (seg) {
-    var visibility = !!borderOptions[seg];
+    const visibility = !!borderOptions[seg];
     visiblyOpt = visiblyOpt * 2 + ~~visibility;
   });
   switch (visiblyOpt) {
@@ -47,7 +47,7 @@ var prepareSegmentRectPoints = function prepareSegmentRectPoints(left, top, widt
       segmentSequence = ['top', 'right', 'bottom', 'left'];
   }
   (0, _iterator.each)(segmentSequence, function (_, seg) {
-    var segmentVisibility = !!borderOptions[seg];
+    const segmentVisibility = !!borderOptions[seg];
     if (!prevSegmentVisibility && segments.length) {
       points.push(segments);
       segments = [];

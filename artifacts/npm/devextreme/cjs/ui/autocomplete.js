@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/autocomplete.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,15 +19,15 @@ var _index = require("../events/utils/index");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE autocomplete
 
-var AUTOCOMPLETE_CLASS = 'dx-autocomplete';
-var AUTOCOMPLETE_POPUP_WRAPPER_CLASS = 'dx-autocomplete-popup-wrapper';
-var Autocomplete = _ui.default.inherit({
-  _supportedKeys: function _supportedKeys() {
-    var item = this._list ? this._list.option('focusedElement') : null;
-    var parent = this.callBase();
+const AUTOCOMPLETE_CLASS = 'dx-autocomplete';
+const AUTOCOMPLETE_POPUP_WRAPPER_CLASS = 'dx-autocomplete-popup-wrapper';
+const Autocomplete = _ui.default.inherit({
+  _supportedKeys: function () {
+    let item = this._list ? this._list.option('focusedElement') : null;
+    const parent = this.callBase();
     item = item && (0, _renderer.default)(item);
     return (0, _extend.extend)({}, parent, {
-      upArrow: function upArrow(e) {
+      upArrow: function (e) {
         if (parent.upArrow.apply(this, arguments) && !(0, _index.isCommandKeyPressed)(e)) {
           e.preventDefault();
           e.stopPropagation();
@@ -38,7 +38,7 @@ var Autocomplete = _ui.default.inherit({
         }
         return true;
       },
-      downArrow: function downArrow(e) {
+      downArrow: function (e) {
         if (parent.downArrow.apply(this, arguments) && !(0, _index.isCommandKeyPressed)(e)) {
           e.preventDefault();
           e.stopPropagation();
@@ -49,11 +49,11 @@ var Autocomplete = _ui.default.inherit({
         }
         return true;
       },
-      enter: function enter(e) {
+      enter: function (e) {
         if (!item) {
           this.close();
         }
-        var opened = this.option('opened');
+        const opened = this.option('opened');
         if (opened) {
           e.preventDefault();
         }
@@ -61,7 +61,7 @@ var Autocomplete = _ui.default.inherit({
       }
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       minSearchLength: 1,
       maxItemCount: 10,
@@ -108,42 +108,43 @@ var Autocomplete = _ui.default.inherit({
   * @hidden
   */
 
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this.$element().addClass(AUTOCOMPLETE_CLASS);
     this.setAria('autocomplete', 'inline');
   },
-  _displayGetterExpr: function _displayGetterExpr() {
+  _displayGetterExpr: function () {
     return this.option('valueExpr');
   },
-  _closeOutsideDropDownHandler: function _closeOutsideDropDownHandler(_ref) {
-    var target = _ref.target;
+  _closeOutsideDropDownHandler: function (_ref) {
+    let {
+      target
+    } = _ref;
     return !(0, _renderer.default)(target).closest(this.$element()).length;
   },
-  _renderDimensions: function _renderDimensions() {
+  _renderDimensions: function () {
     this.callBase();
     this._updatePopupWidth();
     this._updateListDimensions();
   },
-  _popupWrapperClass: function _popupWrapperClass() {
+  _popupWrapperClass: function () {
     return this.callBase() + ' ' + AUTOCOMPLETE_POPUP_WRAPPER_CLASS;
   },
-  _listConfig: function _listConfig() {
-    var _this = this;
+  _listConfig: function () {
     return (0, _extend.extend)(this.callBase(), {
       pageLoadMode: 'none',
-      onSelectionChanged: function onSelectionChanged(e) {
-        _this._setSelectedItem(e.addedItems[0]);
+      onSelectionChanged: e => {
+        this._setSelectedItem(e.addedItems[0]);
       }
     });
   },
-  _listItemClickHandler: function _listItemClickHandler(e) {
+  _listItemClickHandler: function (e) {
     this._saveValueChangeEvent(e.event);
-    var value = this._displayGetter(e.itemData);
+    const value = this._displayGetter(e.itemData);
     this.option('value', value);
     this.close();
   },
-  _setListDataSource: function _setListDataSource() {
+  _setListDataSource: function () {
     if (!this._list) {
       return;
     }
@@ -151,39 +152,39 @@ var Autocomplete = _ui.default.inherit({
     this.callBase();
   },
   _refreshSelected: _common.noop,
-  _searchCanceled: function _searchCanceled() {
+  _searchCanceled: function () {
     this.callBase();
     this.close();
   },
-  _loadItem: function _loadItem(value, cache) {
-    var selectedItem = this._getItemFromPlain(value, cache);
+  _loadItem: function (value, cache) {
+    const selectedItem = this._getItemFromPlain(value, cache);
     return new _deferred.Deferred().resolve(selectedItem).promise();
   },
-  _dataSourceOptions: function _dataSourceOptions() {
+  _dataSourceOptions: function () {
     return {
       paginate: true,
       pageSize: this.option('maxItemCount')
     };
   },
-  _searchDataSource: function _searchDataSource(searchValue) {
+  _searchDataSource: function (searchValue) {
     this._dataSource.pageSize(this.option('maxItemCount'));
     this.callBase(searchValue);
     this._clearFocusedItem();
   },
-  _clearFocusedItem: function _clearFocusedItem() {
+  _clearFocusedItem: function () {
     if (this._list) {
       this._list.option('focusedElement', null);
       this._list.option('selectedIndex', -1);
     }
   },
-  _renderValueEventName: function _renderValueEventName() {
+  _renderValueEventName: function () {
     return 'input keyup';
   },
-  _valueChangeEventHandler: function _valueChangeEventHandler(e) {
-    var value = this._input().val() || null;
+  _valueChangeEventHandler: function (e) {
+    const value = this._input().val() || null;
     return this.callBase(e, value);
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'maxItemCount':
         this._searchDataSource();
@@ -197,12 +198,12 @@ var Autocomplete = _ui.default.inherit({
         this.callBase(args);
     }
   },
-  clear: function clear() {
+  clear: function () {
     this.callBase();
     this.close();
   },
-  reset: function reset() {
-    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+  reset: function () {
+    let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
     if (arguments.length) {
       this.callBase(value);
     } else {

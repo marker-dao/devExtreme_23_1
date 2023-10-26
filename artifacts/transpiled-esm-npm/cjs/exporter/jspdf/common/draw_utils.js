@@ -13,8 +13,7 @@ exports.setDocumentStyles = setDocumentStyles;
 var _type = require("../../../core/utils/type");
 var _extend = require("../../../core/utils/extend");
 var _pdf_utils = require("./pdf_utils");
-var _excluded = ["_rect", "gridCell"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["_rect", "gridCell"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -24,21 +23,25 @@ function roundToThreeDecimals(value) {
 }
 
 function drawCellsContent(doc, customDrawCell, cellsArray, docStyles) {
-  cellsArray.forEach(function (cell) {
-    var _rect = cell._rect,
-      gridCell = cell.gridCell,
-      pdfCell = _objectWithoutProperties(cell, _excluded);
-    var x = _rect.x,
-      y = _rect.y,
-      w = _rect.w,
-      h = _rect.h;
-    var rect = {
+  cellsArray.forEach(cell => {
+    const {
+        _rect,
+        gridCell
+      } = cell,
+      pdfCell = _objectWithoutPropertiesLoose(cell, _excluded);
+    const {
+      x,
+      y,
+      w,
+      h
+    } = _rect;
+    const rect = {
       x,
       y,
       w,
       h
     };
-    var eventArg = {
+    const eventArg = {
       doc,
       rect,
       pdfCell,
@@ -63,33 +66,33 @@ function drawRect(doc, x, y, width, height, style) {
   }
 }
 function getLineHeightShift(doc) {
-  var DEFAULT_LINE_HEIGHT = 1.15;
+  const DEFAULT_LINE_HEIGHT = 1.15;
 
   // TODO: check lineHeightFactor from text options. Currently supports only doc options - https://github.com/MrRio/jsPDF/issues/3234
   return (doc.getLineHeightFactor() - DEFAULT_LINE_HEIGHT) * doc.getFontSize();
 }
 function drawTextInRect(doc, text, rect, verticalAlign, horizontalAlign, jsPDFTextOptions) {
-  var textArray = text.split('\n');
-  var linesCount = textArray.length;
-  var heightOfOneLine = (0, _pdf_utils.calculateTextHeight)(doc, textArray[0], doc.getFont(), {
+  const textArray = text.split('\n');
+  const linesCount = textArray.length;
+  const heightOfOneLine = (0, _pdf_utils.calculateTextHeight)(doc, textArray[0], doc.getFont(), {
     wordWrapEnabled: false,
     targetRectWidth: 1000000000
   });
-  var vAlign = verticalAlign !== null && verticalAlign !== void 0 ? verticalAlign : 'middle';
-  var hAlign = horizontalAlign !== null && horizontalAlign !== void 0 ? horizontalAlign : 'left';
-  var verticalAlignCoefficientsMap = {
+  const vAlign = verticalAlign !== null && verticalAlign !== void 0 ? verticalAlign : 'middle';
+  const hAlign = horizontalAlign !== null && horizontalAlign !== void 0 ? horizontalAlign : 'left';
+  const verticalAlignCoefficientsMap = {
     top: 0,
     middle: 0.5,
     bottom: 1
   };
-  var horizontalAlignMap = {
+  const horizontalAlignMap = {
     left: 0,
     center: 0.5,
     right: 1
   };
-  var y = rect.y + rect.h * verticalAlignCoefficientsMap[vAlign] - heightOfOneLine * (linesCount - 1) * verticalAlignCoefficientsMap[vAlign] + getLineHeightShift(doc);
-  var x = rect.x + rect.w * horizontalAlignMap[hAlign];
-  var textOptions = (0, _extend.extend)({
+  const y = rect.y + rect.h * verticalAlignCoefficientsMap[vAlign] - heightOfOneLine * (linesCount - 1) * verticalAlignCoefficientsMap[vAlign] + getLineHeightShift(doc);
+  const x = rect.x + rect.w * horizontalAlignMap[hAlign];
+  const textOptions = (0, _extend.extend)({
     baseline: vAlign,
     align: hAlign
   }, jsPDFTextOptions);
@@ -104,15 +107,17 @@ function drawCellBackground(doc, cell) {
 function drawCellText(doc, cell, docStyles) {
   if ((0, _type.isDefined)(cell.text) && cell.text !== '') {
     // TODO: use cell.text.trim() ?
-    var textColor = cell.textColor,
-      font = cell.font,
-      _rect = cell._rect,
-      padding = cell.padding;
+    const {
+      textColor,
+      font,
+      _rect,
+      padding
+    } = cell;
     setTextStyles(doc, {
       textColor,
       font
     }, docStyles);
-    var textRect = {
+    const textRect = {
       x: _rect.x + padding.left,
       y: _rect.y + padding.top,
       w: _rect.w - (padding.left + padding.right),
@@ -133,14 +138,10 @@ function drawCellText(doc, cell, docStyles) {
 }
 
 function drawCellsLines(doc, cellsArray, docStyles) {
-  cellsArray.filter(function (cell) {
-    return !(0, _type.isDefined)(cell.borderColor);
-  }).forEach(function (cell) {
+  cellsArray.filter(cell => !(0, _type.isDefined)(cell.borderColor)).forEach(cell => {
     drawBorders(doc, cell._rect, cell, docStyles);
   });
-  cellsArray.filter(function (cell) {
-    return (0, _type.isDefined)(cell.borderColor);
-  }).forEach(function (cell) {
+  cellsArray.filter(cell => (0, _type.isDefined)(cell.borderColor)).forEach(cell => {
     drawBorders(doc, cell._rect, cell, docStyles);
   });
 }
@@ -148,16 +149,14 @@ function drawGridLines(doc, rect, options, docStyles) {
   drawBorders(doc, rect, options, docStyles);
 }
 function drawBorders(doc, rect, _ref, docStyles) {
-  var borderWidth = _ref.borderWidth,
-    borderColor = _ref.borderColor,
-    _ref$drawLeftBorder = _ref.drawLeftBorder,
-    drawLeftBorder = _ref$drawLeftBorder === void 0 ? true : _ref$drawLeftBorder,
-    _ref$drawRightBorder = _ref.drawRightBorder,
-    drawRightBorder = _ref$drawRightBorder === void 0 ? true : _ref$drawRightBorder,
-    _ref$drawTopBorder = _ref.drawTopBorder,
-    drawTopBorder = _ref$drawTopBorder === void 0 ? true : _ref$drawTopBorder,
-    _ref$drawBottomBorder = _ref.drawBottomBorder,
-    drawBottomBorder = _ref$drawBottomBorder === void 0 ? true : _ref$drawBottomBorder;
+  let {
+    borderWidth,
+    borderColor,
+    drawLeftBorder = true,
+    drawRightBorder = true,
+    drawTopBorder = true,
+    drawBottomBorder = true
+  } = _ref;
   if (!(0, _type.isDefined)(rect)) {
     throw 'rect is required';
   }
@@ -193,11 +192,13 @@ function drawBorders(doc, rect, _ref, docStyles) {
 }
 
 function setTextStyles(doc, _ref2, docStyles) {
-  var textColor = _ref2.textColor,
-    font = _ref2.font;
+  let {
+    textColor,
+    font
+  } = _ref2;
   trySetColor(doc, 'text', (0, _type.isDefined)(textColor) ? textColor : docStyles.textColor);
-  var currentFont = (0, _type.isDefined)(font) ? (0, _extend.extend)({}, docStyles.font, font) : docStyles.font;
-  var docFont = doc.getFont();
+  const currentFont = (0, _type.isDefined)(font) ? (0, _extend.extend)({}, docStyles.font, font) : docStyles.font;
+  const docFont = doc.getFont();
   if (currentFont.name !== docFont.fontName || currentFont.style !== docFont.fontStyle || (0, _type.isDefined)(currentFont.weight) // fontWeight logic, https://raw.githack.com/MrRio/jsPDF/master/docs/jspdf.js.html#line4842
   ) {
     doc.setFont(currentFont.name, currentFont.style, currentFont.weight);
@@ -207,23 +208,26 @@ function setTextStyles(doc, _ref2, docStyles) {
   }
 }
 function setLinesStyles(doc, _ref3, docStyles) {
-  var borderWidth = _ref3.borderWidth,
-    borderColor = _ref3.borderColor;
-  var currentBorderWidth = (0, _type.isDefined)(borderWidth) ? borderWidth : docStyles.borderWidth;
+  let {
+    borderWidth,
+    borderColor
+  } = _ref3;
+  const currentBorderWidth = (0, _type.isDefined)(borderWidth) ? borderWidth : docStyles.borderWidth;
   if (currentBorderWidth !== getDocBorderWidth(doc)) {
     setDocBorderWidth(doc, (0, _pdf_utils.toPdfUnit)(doc, currentBorderWidth));
   }
   trySetColor(doc, 'draw', (0, _type.isDefined)(borderColor) ? borderColor : docStyles.borderColor);
 }
 function trySetColor(doc, target, color) {
-  var getterName = "get".concat(capitalizeFirstLetter(target), "Color");
-  var setterName = "set".concat(capitalizeFirstLetter(target), "Color");
-  var _color$ch = color.ch1,
-    ch1 = _color$ch === void 0 ? color : _color$ch,
-    ch2 = color.ch2,
-    ch3 = color.ch3,
-    ch4 = color.ch4;
-  var normalizedColor = doc.__private__.decodeColorString(doc.__private__.encodeColorString({
+  const getterName = "get".concat(capitalizeFirstLetter(target), "Color");
+  const setterName = "set".concat(capitalizeFirstLetter(target), "Color");
+  const {
+    ch1 = color,
+    ch2,
+    ch3,
+    ch4
+  } = color;
+  const normalizedColor = doc.__private__.decodeColorString(doc.__private__.encodeColorString({
     ch1,
     ch2,
     ch3,
@@ -231,13 +235,11 @@ function trySetColor(doc, target, color) {
     precision: target === 'text' ? 3 : 2
   }));
   if (normalizedColor !== doc[getterName]() || target === 'fill') {
-    doc[setterName].apply(doc, [ch1, ch2, ch3, ch4].filter(function (item) {
-      return item !== undefined;
-    }));
+    doc[setterName].apply(doc, [ch1, ch2, ch3, ch4].filter(item => item !== undefined));
   }
 }
 function getDocumentStyles(doc) {
-  var docFont = doc.getFont();
+  const docFont = doc.getFont();
   return {
     borderWidth: getDocBorderWidth(doc),
     borderColor: doc.getDrawColor(),
@@ -250,15 +252,17 @@ function getDocumentStyles(doc) {
   };
 }
 function setDocumentStyles(doc, styles) {
-  var borderWidth = styles.borderWidth,
-    borderColor = styles.borderColor,
-    font = styles.font,
-    textColor = styles.textColor;
-  var docFont = doc.getFont();
+  const {
+    borderWidth,
+    borderColor,
+    font,
+    textColor
+  } = styles;
+  const docFont = doc.getFont();
   if (docFont.fontName !== font.name || docFont.fontStyle !== font.style) {
     doc.setFont(font.name, font.style, undefined);
   }
-  var docFontSize = doc.getFontSize();
+  const docFontSize = doc.getFontSize();
   if (docFontSize !== font.size) {
     doc.setFontSize(font.size);
   }

@@ -7,10 +7,10 @@ var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _window = require("./window");
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
+const window = (0, _window.getWindow)();
 function getMarkup(element, backgroundColor) {
-  var temp = _dom_adapter.default.createElement('div');
-  var clone = element.cloneNode(true);
+  const temp = _dom_adapter.default.createElement('div');
+  const clone = element.cloneNode(true);
   if (backgroundColor) {
     (0, _renderer.default)(clone).css('backgroundColor', backgroundColor);
   }
@@ -18,7 +18,7 @@ function getMarkup(element, backgroundColor) {
   return temp.innerHTML;
 }
 function fixNamespaces(markup) {
-  var first = true;
+  let first = true;
   if (markup.indexOf('xmlns:xlink') === -1) {
     markup = markup.replace('<svg', '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
   }
@@ -35,7 +35,7 @@ function fixNamespaces(markup) {
 function decodeHtmlEntities(markup) {
   return markup.replace(/&quot;/gi, '&#34;').replace(/&amp;/gi, '&#38;').replace(/&apos;/gi, '&#39;').replace(/&lt;/gi, '&#60;').replace(/&gt;/gi, '&#62;').replace(/&nbsp;/gi, '&#160;').replace(/&shy;/gi, '&#173;');
 }
-var HIDDEN_FOR_EXPORT = 'hidden-for-export';
+const HIDDEN_FOR_EXPORT = 'hidden-for-export';
 exports.HIDDEN_FOR_EXPORT = HIDDEN_FOR_EXPORT;
 function getSvgMarkup(element, backgroundColor) {
   return fixNamespaces(decodeHtmlEntities(getMarkup(element, backgroundColor)));

@@ -14,11 +14,11 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _iterator = require("../../../core/utils/iterator");
 var _inflector = require("../../../core/utils/inflector");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TABLE_FORMATS = ['table', 'tableHeaderCell'];
-var TABLE_OPERATIONS = ['insertTable', 'insertHeaderRow', 'insertRowAbove', 'insertRowBelow', 'insertColumnLeft', 'insertColumnRight', 'deleteColumn', 'deleteRow', 'deleteTable', 'cellProperties', 'tableProperties'];
+const TABLE_FORMATS = ['table', 'tableHeaderCell'];
+const TABLE_OPERATIONS = ['insertTable', 'insertHeaderRow', 'insertRowAbove', 'insertRowBelow', 'insertColumnLeft', 'insertColumnRight', 'deleteColumn', 'deleteRow', 'deleteTable', 'cellProperties', 'tableProperties'];
 exports.TABLE_OPERATIONS = TABLE_OPERATIONS;
 function getTableFormats(quill) {
-  var tableModule = quill.getModule('table');
+  const tableModule = quill.getModule('table');
 
   // backward compatibility with an old devextreme-quill packages
   return tableModule !== null && tableModule !== void 0 && tableModule.tableFormats ? tableModule.tableFormats() : TABLE_FORMATS;
@@ -27,23 +27,25 @@ function hasEmbedContent(module, selection) {
   return !!selection && module.quill.getText(selection).length < selection.length;
 }
 function unfixTableWidth($table, _ref) {
-  var tableBlot = _ref.tableBlot,
-    quill = _ref.quill;
-  var unfixValue = 'initial';
-  var formatBlot = tableBlot !== null && tableBlot !== void 0 ? tableBlot : quill.scroll.find($table.get(0));
+  let {
+    tableBlot,
+    quill
+  } = _ref;
+  const unfixValue = 'initial';
+  const formatBlot = tableBlot !== null && tableBlot !== void 0 ? tableBlot : quill.scroll.find($table.get(0));
   formatBlot.format('tableWidth', unfixValue);
 }
 function getColumnElements($table) {
-  var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  let index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   return $table.find('tr').eq(index).find('th, td');
 }
 function getAutoSizedElements($table) {
-  var direction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'horizontal';
-  var result = [];
-  var isHorizontal = direction === 'horizontal';
-  var $lineElements = isHorizontal ? getColumnElements($table) : getRowElements($table);
-  $lineElements.each(function (index, element) {
-    var $element = (0, _renderer.default)(element);
+  let direction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'horizontal';
+  const result = [];
+  const isHorizontal = direction === 'horizontal';
+  const $lineElements = isHorizontal ? getColumnElements($table) : getRowElements($table);
+  $lineElements.each((index, element) => {
+    const $element = (0, _renderer.default)(element);
     if ($element.get(0).style[isHorizontal ? 'width' : 'height'] === '') {
       result.push($element);
     }
@@ -51,41 +53,41 @@ function getAutoSizedElements($table) {
   return result;
 }
 function setLineElementsFormat(module, _ref2) {
-  var elements = _ref2.elements,
-    property = _ref2.property,
-    value = _ref2.value;
-  var tableBlotNames = module.quill.getModule('table').tableBlots;
-  var fullPropertyName = "cell".concat((0, _inflector.camelize)(property, true));
-  (0, _iterator.each)(elements, function (i, element) {
+  let {
+    elements,
+    property,
+    value
+  } = _ref2;
+  const tableBlotNames = module.quill.getModule('table').tableBlots;
+  const fullPropertyName = "cell".concat((0, _inflector.camelize)(property, true));
+  (0, _iterator.each)(elements, (i, element) => {
     var _formatBlot;
-    var formatBlot = module.quill.scroll.find(element);
+    let formatBlot = module.quill.scroll.find(element);
     if (!tableBlotNames.includes(formatBlot.statics.blotName)) {
-      var descendBlot = formatBlot.descendant(function (blot) {
-        return tableBlotNames.includes(blot.statics.blotName);
-      });
+      const descendBlot = formatBlot.descendant(blot => tableBlotNames.includes(blot.statics.blotName));
       formatBlot = descendBlot ? descendBlot[0] : null;
     }
     (_formatBlot = formatBlot) === null || _formatBlot === void 0 ? void 0 : _formatBlot.format(fullPropertyName, value + 'px');
   });
 }
 function getLineElements($table, index) {
-  var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'horizontal';
+  let direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'horizontal';
   return direction === 'horizontal' ? getRowElements($table, index) : getColumnElements($table, index);
 }
 function getRowElements($table) {
-  var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  let index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   return $table.find("th:nth-child(".concat(1 + index, "), td:nth-child(").concat(1 + index, ")"));
 }
 function getTableOperationHandler(quill, operationName) {
   for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
     rest[_key - 2] = arguments[_key];
   }
-  return function () {
-    var table = quill.getModule('table');
+  return () => {
+    const table = quill.getModule('table');
     if (!table) {
       return;
     }
     quill.focus();
-    return table[operationName].apply(table, rest);
+    return table[operationName](...rest);
   };
 }

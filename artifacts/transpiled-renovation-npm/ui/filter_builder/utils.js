@@ -50,12 +50,12 @@ var _message = _interopRequireDefault(require("../../localization/message"));
 var _data_source = require("../../data/data_source/data_source");
 var _ui2 = _interopRequireDefault(require("./ui.filter_operations_dictionary"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DEFAULT_DATA_TYPE = 'string';
-var EMPTY_MENU_ICON = 'icon-none';
-var AND_GROUP_OPERATION = 'and';
-var EQUAL_OPERATION = '=';
-var NOT_EQUAL_OPERATION = '<>';
-var DATATYPE_OPERATIONS = {
+const DEFAULT_DATA_TYPE = 'string';
+const EMPTY_MENU_ICON = 'icon-none';
+const AND_GROUP_OPERATION = 'and';
+const EQUAL_OPERATION = '=';
+const NOT_EQUAL_OPERATION = '<>';
+const DATATYPE_OPERATIONS = {
   'number': ['=', '<>', '<', '>', '<=', '>=', 'isblank', 'isnotblank'],
   'string': ['contains', 'notcontains', 'startswith', 'endswith', '=', '<>', 'isblank', 'isnotblank'],
   'date': ['=', '<>', '<', '>', '<=', '>=', 'isblank', 'isnotblank'],
@@ -63,19 +63,19 @@ var DATATYPE_OPERATIONS = {
   'boolean': ['=', '<>', 'isblank', 'isnotblank'],
   'object': ['isblank', 'isnotblank']
 };
-var DEFAULT_FORMAT = {
+const DEFAULT_FORMAT = {
   'date': 'shortDate',
   'datetime': 'shortDateShortTime'
 };
-var LOOKUP_OPERATIONS = ['=', '<>', 'isblank', 'isnotblank'];
-var AVAILABLE_FIELD_PROPERTIES = ['caption', 'customizeText', 'dataField', 'dataType', 'editorTemplate', 'falseText', 'editorOptions', 'filterOperations', 'format', 'lookup', 'trueText', 'calculateFilterExpression', 'name'];
-var FILTER_BUILDER_CLASS = 'dx-filterbuilder';
-var FILTER_BUILDER_ITEM_TEXT_CLASS = FILTER_BUILDER_CLASS + '-text';
-var FILTER_BUILDER_ITEM_TEXT_PART_CLASS = FILTER_BUILDER_ITEM_TEXT_CLASS + '-part';
-var FILTER_BUILDER_ITEM_TEXT_SEPARATOR_CLASS = FILTER_BUILDER_ITEM_TEXT_CLASS + '-separator';
-var FILTER_BUILDER_ITEM_TEXT_SEPARATOR_EMPTY_CLASS = FILTER_BUILDER_ITEM_TEXT_SEPARATOR_CLASS + '-empty';
+const LOOKUP_OPERATIONS = ['=', '<>', 'isblank', 'isnotblank'];
+const AVAILABLE_FIELD_PROPERTIES = ['caption', 'customizeText', 'dataField', 'dataType', 'editorTemplate', 'falseText', 'editorOptions', 'filterOperations', 'format', 'lookup', 'trueText', 'calculateFilterExpression', 'name'];
+const FILTER_BUILDER_CLASS = 'dx-filterbuilder';
+const FILTER_BUILDER_ITEM_TEXT_CLASS = FILTER_BUILDER_CLASS + '-text';
+const FILTER_BUILDER_ITEM_TEXT_PART_CLASS = FILTER_BUILDER_ITEM_TEXT_CLASS + '-part';
+const FILTER_BUILDER_ITEM_TEXT_SEPARATOR_CLASS = FILTER_BUILDER_ITEM_TEXT_CLASS + '-separator';
+const FILTER_BUILDER_ITEM_TEXT_SEPARATOR_EMPTY_CLASS = FILTER_BUILDER_ITEM_TEXT_SEPARATOR_CLASS + '-empty';
 function getFormattedValueText(field, value) {
-  var fieldFormat = field.format || DEFAULT_FORMAT[field.dataType];
+  const fieldFormat = field.format || DEFAULT_FORMAT[field.dataType];
   return _format_helper.default.format(value, fieldFormat);
 }
 function isNegationGroup(group) {
@@ -93,16 +93,16 @@ function setGroupCriteria(group, criteria) {
   return group;
 }
 function convertGroupToNewStructure(group, value) {
-  var isNegationValue = function isNegationValue(value) {
+  const isNegationValue = function (value) {
     return value.indexOf('!') !== -1;
   };
-  var convertGroupToNegationGroup = function convertGroupToNegationGroup(group) {
-    var criteria = group.slice(0);
+  const convertGroupToNegationGroup = function (group) {
+    const criteria = group.slice(0);
     group.length = 0;
     group.push('!', criteria);
   };
-  var convertNegationGroupToGroup = function convertNegationGroupToGroup(group) {
-    var criteria = getGroupCriteria(group);
+  const convertNegationGroupToGroup = function (group) {
+    const criteria = getGroupCriteria(group);
     group.length = 0;
     [].push.apply(group, criteria);
   };
@@ -116,12 +116,12 @@ function convertGroupToNewStructure(group, value) {
 }
 function setGroupValue(group, value) {
   convertGroupToNewStructure(group, value);
-  var criteria = getGroupCriteria(group);
-  var i;
-  var getNormalizedGroupValue = function getNormalizedGroupValue(value) {
+  const criteria = getGroupCriteria(group);
+  let i;
+  const getNormalizedGroupValue = function (value) {
     return value.indexOf('!') === -1 ? value : value.substring(1);
   };
-  var changeCriteriaValue = function changeCriteriaValue(criteria, value) {
+  const changeCriteriaValue = function (criteria, value) {
     for (i = 0; i < criteria.length; i++) {
       if (!Array.isArray(criteria[i])) {
         criteria[i] = value;
@@ -133,7 +133,7 @@ function setGroupValue(group, value) {
   return group;
 }
 function getGroupMenuItem(group, availableGroups) {
-  var groupValue = getGroupValue(group);
+  const groupValue = getGroupValue(group);
   return availableGroups.filter(function (item) {
     return item.value === groupValue;
   })[0];
@@ -142,9 +142,9 @@ function getCriteriaOperation(criteria) {
   if (isCondition(criteria)) {
     return AND_GROUP_OPERATION;
   }
-  var value = '';
-  for (var i = 0; i < criteria.length; i++) {
-    var item = criteria[i];
+  let value = '';
+  for (let i = 0; i < criteria.length; i++) {
+    const item = criteria[i];
     if (!Array.isArray(item)) {
       if (value && value !== item) {
         throw new _errors.errors.Error('E4019');
@@ -157,8 +157,8 @@ function getCriteriaOperation(criteria) {
   return value;
 }
 function getGroupValue(group) {
-  var criteria = getGroupCriteria(group);
-  var value = getCriteriaOperation(criteria);
+  const criteria = getGroupCriteria(group);
+  let value = getCriteriaOperation(criteria);
   if (!value) {
     value = AND_GROUP_OPERATION;
   }
@@ -174,15 +174,15 @@ function containItems(entity) {
   return Array.isArray(entity) && entity.length;
 }
 function getFilterOperations(field) {
-  var result = containItems(field.filterOperations) ? field.filterOperations : getDefaultFilterOperations(field);
+  const result = containItems(field.filterOperations) ? field.filterOperations : getDefaultFilterOperations(field);
   return (0, _extend.extend)([], result);
 }
 function getCaptionByOperation(operation, filterOperationDescriptions) {
-  var operationName = _ui2.default.getNameByFilterOperation(operation);
+  const operationName = _ui2.default.getNameByFilterOperation(operation);
   return filterOperationDescriptions && filterOperationDescriptions[operationName] ? filterOperationDescriptions[operationName] : operationName;
 }
 function getOperationFromAvailable(operation, availableOperations) {
-  for (var i = 0; i < availableOperations.length; i++) {
+  for (let i = 0; i < availableOperations.length; i++) {
     if (availableOperations[i].value === operation) {
       return availableOperations[i];
     }
@@ -190,25 +190,25 @@ function getOperationFromAvailable(operation, availableOperations) {
   throw new _ui.default.Error('E1048', operation);
 }
 function getCustomOperation(customOperations, name) {
-  var filteredOperations = customOperations.filter(function (item) {
+  const filteredOperations = customOperations.filter(function (item) {
     return item.name === name;
   });
   return filteredOperations.length ? filteredOperations[0] : null;
 }
 function getAvailableOperations(field, filterOperationDescriptions, customOperations) {
-  var filterOperations = getFilterOperations(field);
-  var isLookupField = !!field.lookup;
+  const filterOperations = getFilterOperations(field);
+  const isLookupField = !!field.lookup;
   customOperations.forEach(function (customOperation) {
     if (!field.filterOperations && filterOperations.indexOf(customOperation.name) === -1) {
-      var dataTypes = customOperation && customOperation.dataTypes;
-      var isOperationForbidden = isLookupField ? !!customOperation.notForLookup : false;
+      const dataTypes = customOperation && customOperation.dataTypes;
+      const isOperationForbidden = isLookupField ? !!customOperation.notForLookup : false;
       if (!isOperationForbidden && dataTypes && dataTypes.indexOf(field.dataType || DEFAULT_DATA_TYPE) >= 0) {
         filterOperations.push(customOperation.name);
       }
     }
   });
   return filterOperations.map(function (operation) {
-    var customOperation = getCustomOperation(customOperations, operation);
+    const customOperation = getCustomOperation(customOperations, operation);
     if (customOperation) {
       return {
         icon: customOperation.icon || EMPTY_MENU_ICON,
@@ -229,14 +229,14 @@ function getDefaultOperation(field) {
   return field.defaultFilterOperation || getFilterOperations(field)[0];
 }
 function createCondition(field, customOperations) {
-  var condition = [field.dataField, '', ''];
-  var filterOperation = getDefaultOperation(field);
+  const condition = [field.dataField, '', ''];
+  const filterOperation = getDefaultOperation(field);
   updateConditionByOperation(condition, filterOperation, customOperations);
   return condition;
 }
 function removeItem(group, item) {
-  var criteria = getGroupCriteria(group);
-  var index = criteria.indexOf(item);
+  const criteria = getGroupCriteria(group);
+  const index = criteria.indexOf(item);
   criteria.splice(index, 1);
   if (criteria.length !== 1) {
     criteria.splice(index, 1);
@@ -244,28 +244,28 @@ function removeItem(group, item) {
   return group;
 }
 function createEmptyGroup(value) {
-  var isNegation = isNegationGroupOperation(value);
-  var groupOperation = isNegation ? getGroupOperationFromNegationOperation(value) : value;
+  const isNegation = isNegationGroupOperation(value);
+  const groupOperation = isNegation ? getGroupOperationFromNegationOperation(value) : value;
   return isNegation ? ['!', [groupOperation]] : [groupOperation];
 }
 function isEmptyGroup(group) {
-  var criteria = getGroupCriteria(group);
+  const criteria = getGroupCriteria(group);
   if (isCondition(criteria)) {
     return false;
   }
-  var hasConditions = criteria.some(function (item) {
+  const hasConditions = criteria.some(function (item) {
     return isCondition(item);
   });
   return !hasConditions;
 }
 function addItem(item, group) {
-  var criteria = getGroupCriteria(group);
-  var groupValue = getGroupValue(criteria);
+  const criteria = getGroupCriteria(group);
+  const groupValue = getGroupValue(criteria);
   criteria.length === 1 ? criteria.unshift(item) : criteria.push(item, groupValue);
   return group;
 }
 function getField(dataField, fields) {
-  for (var i = 0; i < fields.length; i++) {
+  for (let i = 0; i < fields.length; i++) {
     if (fields[i].name === dataField) {
       return fields[i];
     }
@@ -273,7 +273,7 @@ function getField(dataField, fields) {
       return fields[i];
     }
   }
-  var extendedFields = getItems(fields, true).filter(function (item) {
+  const extendedFields = getItems(fields, true).filter(function (item) {
     return item.dataField.toLowerCase() === dataField.toLowerCase();
   });
   if (extendedFields.length > 0) {
@@ -295,9 +295,9 @@ function isCondition(criteria) {
 }
 function convertToInnerGroup(group, customOperations, defaultGroupOperation) {
   defaultGroupOperation = defaultGroupOperation || AND_GROUP_OPERATION;
-  var groupOperation = getCriteriaOperation(group).toLowerCase() || defaultGroupOperation;
-  var innerGroup = [];
-  for (var i = 0; i < group.length; i++) {
+  const groupOperation = getCriteriaOperation(group).toLowerCase() || defaultGroupOperation;
+  let innerGroup = [];
+  for (let i = 0; i < group.length; i++) {
     if (isGroup(group[i])) {
       innerGroup.push(convertToInnerStructure(group[i], customOperations, defaultGroupOperation));
       innerGroup = appendGroupOperationToGroup(innerGroup, groupOperation);
@@ -312,7 +312,7 @@ function convertToInnerGroup(group, customOperations, defaultGroupOperation) {
   return innerGroup;
 }
 function conditionHasCustomOperation(condition, customOperations) {
-  var customOperation = getCustomOperation(customOperations, condition[1]);
+  const customOperation = getCustomOperation(customOperations, condition[1]);
   return customOperation && customOperation.name === condition[1];
 }
 function convertToInnerCondition(condition, customOperations) {
@@ -332,15 +332,15 @@ function getGroupOperationFromNegationOperation(operation) {
   return operation.substring(3).toLowerCase();
 }
 function appendGroupOperationToCriteria(criteria, groupOperation) {
-  var isNegation = isNegationGroupOperation(groupOperation);
+  const isNegation = isNegationGroupOperation(groupOperation);
   groupOperation = isNegation ? getGroupOperationFromNegationOperation(groupOperation) : groupOperation;
   return isNegation ? ['!', criteria, groupOperation] : [criteria, groupOperation];
 }
 function appendGroupOperationToGroup(group, groupOperation) {
-  var isNegation = isNegationGroupOperation(groupOperation);
+  const isNegation = isNegationGroupOperation(groupOperation);
   groupOperation = isNegation ? getGroupOperationFromNegationOperation(groupOperation) : groupOperation;
   group.push(groupOperation);
-  var result = group;
+  let result = group;
   if (isNegation) {
     result = ['!', result];
   }
@@ -363,8 +363,8 @@ function convertToInnerStructure(value, customOperations, defaultGroupOperation)
 function getNormalizedFields(fields) {
   return fields.reduce(function (result, field) {
     if ((0, _type.isDefined)(field.dataField)) {
-      var normalizedField = {};
-      for (var key in field) {
+      const normalizedField = {};
+      for (const key in field) {
         if (field[key] && AVAILABLE_FIELD_PROPERTIES.indexOf(key) > -1) {
           normalizedField[key] = field[key];
         }
@@ -385,9 +385,9 @@ function getNormalizedFields(fields) {
   }, []);
 }
 function getConditionFilterExpression(condition, fields, customOperations, target) {
-  var field = getField(condition[0], fields);
-  var filterExpression = convertToInnerCondition(condition, customOperations);
-  var customOperation = customOperations.length && getCustomOperation(customOperations, filterExpression[1]);
+  const field = getField(condition[0], fields);
+  const filterExpression = convertToInnerCondition(condition, customOperations);
+  const customOperation = customOperations.length && getCustomOperation(customOperations, filterExpression[1]);
   if (customOperation && customOperation.calculateFilterExpression) {
     return customOperation.calculateFilterExpression.apply(customOperation, [filterExpression[2], field, fields]);
   } else if (field.createFilterExpression) {
@@ -403,28 +403,28 @@ function getFilterExpression(value, fields, customOperations, target) {
     return null;
   }
   if (isNegationGroup(value)) {
-    var filterExpression = getFilterExpression(value[1], fields, customOperations, target);
+    const filterExpression = getFilterExpression(value[1], fields, customOperations, target);
     return ['!', filterExpression];
   }
-  var criteria = getGroupCriteria(value);
+  const criteria = getGroupCriteria(value);
   if (isCondition(criteria)) {
     return getConditionFilterExpression(criteria, fields, customOperations, target) || null;
   } else {
-    var result = [];
-    var _filterExpression;
-    var groupValue = getGroupValue(criteria);
-    for (var i = 0; i < criteria.length; i++) {
+    let result = [];
+    let filterExpression;
+    const groupValue = getGroupValue(criteria);
+    for (let i = 0; i < criteria.length; i++) {
       if (isGroup(criteria[i])) {
-        _filterExpression = getFilterExpression(criteria[i], fields, customOperations, target);
-        if (_filterExpression) {
+        filterExpression = getFilterExpression(criteria[i], fields, customOperations, target);
+        if (filterExpression) {
           i && result.push(groupValue);
-          result.push(_filterExpression);
+          result.push(filterExpression);
         }
       } else if (isCondition(criteria[i])) {
-        _filterExpression = getConditionFilterExpression(criteria[i], fields, customOperations, target);
-        if (_filterExpression) {
+        filterExpression = getConditionFilterExpression(criteria[i], fields, customOperations, target);
+        if (filterExpression) {
           result.length && result.push(groupValue);
-          result.push(_filterExpression);
+          result.push(filterExpression);
         }
       }
     }
@@ -435,15 +435,15 @@ function getFilterExpression(value, fields, customOperations, target) {
   }
 }
 function getNormalizedFilter(group) {
-  var criteria = getGroupCriteria(group);
-  var i;
+  const criteria = getGroupCriteria(group);
+  let i;
   if (criteria.length === 0) {
     return null;
   }
-  var itemsForRemove = [];
+  const itemsForRemove = [];
   for (i = 0; i < criteria.length; i++) {
     if (isGroup(criteria[i])) {
-      var normalizedGroupValue = getNormalizedFilter(criteria[i]);
+      const normalizedGroupValue = getNormalizedFilter(criteria[i]);
       if (normalizedGroupValue) {
         criteria[i] = normalizedGroupValue;
       } else {
@@ -475,14 +475,14 @@ function getCurrentLookupValueText(field, value, handler) {
     handler('');
     return;
   }
-  var lookup = field.lookup;
+  const lookup = field.lookup;
   if (lookup.items) {
     handler(lookup.calculateCellValue(value) || '');
   } else {
-    var lookupDataSource = (0, _type.isFunction)(lookup.dataSource) ? lookup.dataSource({}) : lookup.dataSource;
-    var dataSource = new _data_source.DataSource(lookupDataSource);
+    const lookupDataSource = (0, _type.isFunction)(lookup.dataSource) ? lookup.dataSource({}) : lookup.dataSource;
+    const dataSource = new _data_source.DataSource(lookupDataSource);
     dataSource.loadSingle(lookup.valueExpr, value).done(function (result) {
-      var valueText = '';
+      let valueText = '';
       if (result) {
         valueText = lookup.displayExpr ? (0, _data.compileGetter)(lookup.displayExpr)(result) : result;
       }
@@ -499,7 +499,7 @@ function getCurrentLookupValueText(field, value, handler) {
   }
 }
 function getPrimitiveValueText(field, value, customOperation, target, options) {
-  var valueText;
+  let valueText;
   if (value === true) {
     valueText = field.trueText || _message.default.format('dxDataGrid-trueText');
   } else if (value === false) {
@@ -525,32 +525,26 @@ function getPrimitiveValueText(field, value, customOperation, target, options) {
   return valueText;
 }
 function getArrayValueText(field, value, customOperation, target) {
-  var options = {
+  const options = {
     values: value
   };
-  return value.map(function (v) {
-    return getPrimitiveValueText(field, v, customOperation, target, options);
-  });
+  return value.map(v => getPrimitiveValueText(field, v, customOperation, target, options));
 }
 function checkDefaultValue(value) {
   return value === '' || value === null;
 }
 function getCurrentValueText(field, value, customOperation) {
-  var target = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'filterBuilder';
+  let target = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'filterBuilder';
   if (checkDefaultValue(value)) {
     return '';
   }
   if (Array.isArray(value)) {
-    var result = new _deferred.Deferred();
+    const result = new _deferred.Deferred();
     _deferred.when.apply(this, getArrayValueText(field, value, customOperation, target)).done(function () {
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
-      var text = args.some(function (item) {
-        return !checkDefaultValue(item);
-      }) ? args.map(function (item) {
-        return !checkDefaultValue(item) ? item : '?';
-      }) : '';
+      const text = args.some(item => !checkDefaultValue(item)) ? args.map(item => !checkDefaultValue(item) ? item : '?') : '';
       result.resolve(text);
     });
     return result;
@@ -564,7 +558,7 @@ function itemExists(plainItems, parentId) {
   });
 }
 function pushItemAndCheckParent(originalItems, plainItems, item) {
-  var dataField = item.dataField;
+  const dataField = item.dataField;
   if (hasParent(dataField)) {
     item.parentId = getParentIdFromItemDataField(dataField);
     if (!itemExists(plainItems, item.parentId) && !itemExists(originalItems, item.parentId)) {
@@ -581,7 +575,7 @@ function pushItemAndCheckParent(originalItems, plainItems, item) {
   plainItems.push(item);
 }
 function generateCaptionByDataField(dataField, allowHierarchicalFields) {
-  var caption = '';
+  let caption = '';
   if (allowHierarchicalFields) {
     dataField = dataField.substring(dataField.lastIndexOf('.') + 1);
   } else if (hasParent(dataField)) {
@@ -596,9 +590,9 @@ function generateCaptionByDataField(dataField, allowHierarchicalFields) {
   return (0, _inflector.captionize)(dataField);
 }
 function getItems(fields, allowHierarchicalFields) {
-  var items = [];
-  for (var i = 0; i < fields.length; i++) {
-    var item = (0, _extend.extend)(true, {
+  const items = [];
+  for (let i = 0; i < fields.length; i++) {
+    const item = (0, _extend.extend)(true, {
       caption: generateCaptionByDataField(fields[i].dataField, allowHierarchicalFields)
     }, fields[i]);
     item.id = item.name || item.dataField;
@@ -618,8 +612,8 @@ function getParentIdFromItemDataField(dataField) {
 }
 function getCaptionWithParents(item, plainItems) {
   if (hasParent(item.dataField)) {
-    var parentId = getParentIdFromItemDataField(item.dataField);
-    for (var i = 0; i < plainItems.length; i++) {
+    const parentId = getParentIdFromItemDataField(item.dataField);
+    for (let i = 0; i < plainItems.length; i++) {
       if (plainItems[i].dataField === parentId) {
         return getCaptionWithParents(plainItems[i], plainItems) + '.' + item.caption;
       }
@@ -628,7 +622,7 @@ function getCaptionWithParents(item, plainItems) {
   return item.caption;
 }
 function updateConditionByOperation(condition, operation, customOperations) {
-  var customOperation = getCustomOperation(customOperations, operation);
+  let customOperation = getCustomOperation(customOperations, operation);
   if (customOperation) {
     if (customOperation.hasValue === false) {
       condition[1] = operation;
@@ -655,7 +649,7 @@ function updateConditionByOperation(condition, operation, customOperations) {
   return condition;
 }
 function getOperationValue(condition) {
-  var caption;
+  let caption;
   if (condition[2] === null) {
     if (condition[1] === EQUAL_OPERATION) {
       caption = 'isblank';
@@ -671,8 +665,8 @@ function isValidCondition(condition) {
   return condition[2] !== '';
 }
 function getMergedOperations(customOperations, betweenCaption, context) {
-  var result = (0, _extend.extend)(true, [], customOperations);
-  var betweenIndex = -1;
+  const result = (0, _extend.extend)(true, [], customOperations);
+  let betweenIndex = -1;
   result.some(function (customOperation, index) {
     if (customOperation.name === 'between') {
       betweenIndex = index;
@@ -694,14 +688,14 @@ function removeFieldConditionsFromFilter(filter, dataField) {
     return null;
   }
   if (isCondition(filter)) {
-    var hasMatchedCondition = isMatchedCondition(filter, dataField);
+    const hasMatchedCondition = isMatchedCondition(filter, dataField);
     return !hasMatchedCondition ? filter : null;
   } else {
     return syncConditionIntoGroup(filter, [dataField], false);
   }
 }
 function syncConditionIntoGroup(filter, addedFilter, canPush) {
-  var result = [];
+  const result = [];
   filter.forEach(function (item) {
     if (isCondition(item)) {
       if (isMatchedCondition(item, addedFilter[0])) {
@@ -738,7 +732,7 @@ function syncFilters(filter, addedFilter) {
       return [filter, AND_GROUP_OPERATION, addedFilter];
     }
   }
-  var groupValue = getGroupValue(filter);
+  const groupValue = getGroupValue(filter);
   if (groupValue !== AND_GROUP_OPERATION) {
     return [addedFilter, 'and', filter];
   }
@@ -753,11 +747,11 @@ function getMatchedConditions(filter, dataField) {
       return [];
     }
   }
-  var groupValue = getGroupValue(filter);
+  const groupValue = getGroupValue(filter);
   if (groupValue !== AND_GROUP_OPERATION) {
     return [];
   }
-  var result = filter.filter(function (item) {
+  const result = filter.filter(function (item) {
     return isCondition(item) && isMatchedCondition(item, dataField);
   });
   return result;
@@ -771,11 +765,11 @@ function filterHasField(filter, dataField) {
     return (isCondition(item) || isGroup(item)) && filterHasField(item, dataField);
   });
 }
-var renderValueText = function renderValueText($container, value, customOperation) {
+const renderValueText = function ($container, value, customOperation) {
   if (Array.isArray(value)) {
-    var lastItemIndex = value.length - 1;
+    const lastItemIndex = value.length - 1;
     $container.empty();
-    value.forEach(function (t, i) {
+    value.forEach((t, i) => {
       (0, _renderer.default)('<span>').addClass(FILTER_BUILDER_ITEM_TEXT_PART_CLASS).text(t).appendTo($container);
       if (i !== lastItemIndex) {
         (0, _renderer.default)('<span>').addClass(FILTER_BUILDER_ITEM_TEXT_SEPARATOR_CLASS).text(customOperation && customOperation.valueSeparator ? customOperation.valueSeparator : '|').addClass(FILTER_BUILDER_ITEM_TEXT_SEPARATOR_EMPTY_CLASS).appendTo($container);

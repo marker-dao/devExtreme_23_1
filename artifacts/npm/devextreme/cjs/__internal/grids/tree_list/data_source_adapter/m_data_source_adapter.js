@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/data_source_adapter/m_data_source_adapter.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,34 +27,32 @@ var _m_data_source_adapter = _interopRequireDefault(require("../../../grids/grid
 var _m_utils = _interopRequireDefault(require("../../../grids/grid_core/m_utils"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var queryByOptions = _store_helper.default.queryByOptions;
-var DEFAULT_KEY_EXPRESSION = 'id';
-var isFullBranchFilterMode = function isFullBranchFilterMode(that) {
-  return that.option('filterMode') === 'fullBranch';
-};
-var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function () {
-  var getChildKeys = function getChildKeys(that, keys) {
-    var childKeys = [];
-    keys.forEach(function (key) {
-      var node = that.getNodeByKey(key);
-      node && node.children.forEach(function (child) {
+const {
+  queryByOptions
+} = _store_helper.default;
+const DEFAULT_KEY_EXPRESSION = 'id';
+const isFullBranchFilterMode = that => that.option('filterMode') === 'fullBranch';
+let DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function () {
+  const getChildKeys = function (that, keys) {
+    const childKeys = [];
+    keys.forEach(key => {
+      const node = that.getNodeByKey(key);
+      node && node.children.forEach(child => {
         childKeys.push(child.key);
       });
     });
     return childKeys;
   };
-  var applySorting = function applySorting(data, sort) {
-    return queryByOptions((0, _query.default)(data), {
-      sort
-    }).toArray();
-  };
+  const applySorting = (data, sort) => queryByOptions((0, _query.default)(data), {
+    sort
+  }).toArray();
   return {
     _createKeyGetter() {
-      var keyExpr = this.getKeyExpr();
+      const keyExpr = this.getKeyExpr();
       return (0, _data.compileGetter)(keyExpr);
     },
     _createKeySetter() {
-      var keyExpr = this.getKeyExpr();
+      const keyExpr = this.getKeyExpr();
       if ((0, _type.isFunction)(keyExpr)) {
         return keyExpr;
       }
@@ -64,7 +62,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return (0, _data.compileGetter)(this.option('parentIdExpr'));
     },
     createParentIdSetter() {
-      var parentIdExpr = this.option('parentIdExpr');
+      const parentIdExpr = this.option('parentIdExpr');
       if ((0, _type.isFunction)(parentIdExpr)) {
         return parentIdExpr;
       }
@@ -74,28 +72,30 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return (0, _data.compileGetter)(this.option('itemsExpr'));
     },
     _createHasItemsGetter() {
-      var hasItemsExpr = this.option('hasItemsExpr');
+      const hasItemsExpr = this.option('hasItemsExpr');
       return hasItemsExpr && (0, _data.compileGetter)(hasItemsExpr);
     },
     _createHasItemsSetter() {
-      var hasItemsExpr = this.option('hasItemsExpr');
+      const hasItemsExpr = this.option('hasItemsExpr');
       if ((0, _type.isFunction)(hasItemsExpr)) {
         return hasItemsExpr;
       }
       return hasItemsExpr && (0, _data.compileSetter)(hasItemsExpr);
     },
     _updateIndexByKeyObject(items) {
-      var that = this;
+      const that = this;
       that._indexByKey = {};
-      (0, _iterator.each)(items, function (index, item) {
+      (0, _iterator.each)(items, (index, item) => {
         that._indexByKey[item.key] = index;
       });
     },
     _calculateHasItems(node, options) {
-      var that = this;
-      var parentIds = options.storeLoadOptions.parentIds;
-      var hasItems;
-      var isFullBranch = isFullBranchFilterMode(that);
+      const that = this;
+      const {
+        parentIds
+      } = options.storeLoadOptions;
+      let hasItems;
+      const isFullBranch = isFullBranchFilterMode(that);
       if (that._hasItemsGetter && (parentIds || !options.storeLoadOptions.filter || isFullBranch)) {
         hasItems = that._hasItemsGetter(node.data);
       }
@@ -111,7 +111,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return !!hasItems;
     },
     _fillVisibleItemsByNodes(nodes, options, result) {
-      for (var i = 0; i < nodes.length; i++) {
+      for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].visible) {
           result.push(nodes[i]);
         }
@@ -121,14 +121,14 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
     },
     _convertItemToNode(item, rootValue, nodeByKey) {
-      var key = this._keyGetter(item);
-      var parentId = this._parentIdGetter(item);
+      const key = this._keyGetter(item);
+      let parentId = this._parentIdGetter(item);
       parentId = (0, _type.isDefined)(parentId) ? parentId : rootValue;
-      var parentNode = nodeByKey[parentId] = nodeByKey[parentId] || {
+      const parentNode = nodeByKey[parentId] = nodeByKey[parentId] || {
         key: parentId,
         children: []
       };
-      var node = nodeByKey[key] = nodeByKey[key] || {
+      const node = nodeByKey[key] = nodeByKey[key] || {
         key,
         children: []
       };
@@ -137,18 +137,18 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return node;
     },
     _createNodesByItems(items, visibleItems) {
-      var that = this;
-      var rootValue = that.option('rootValue');
-      var visibleByKey = {};
-      var nodeByKey = that._nodeByKey = {};
-      var i;
+      const that = this;
+      const rootValue = that.option('rootValue');
+      const visibleByKey = {};
+      const nodeByKey = that._nodeByKey = {};
+      let i;
       if (visibleItems) {
         for (i = 0; i < visibleItems.length; i++) {
           visibleByKey[this._keyGetter(visibleItems[i])] = true;
         }
       }
       for (i = 0; i < items.length; i++) {
-        var node = that._convertItemToNode(items[i], rootValue, nodeByKey);
+        const node = that._convertItemToNode(items[i], rootValue, nodeByKey);
         if (node.key === undefined) {
           return;
         }
@@ -157,7 +157,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
           node.parent.children.push(node);
         }
       }
-      var rootNode = nodeByKey[rootValue] || {
+      const rootNode = nodeByKey[rootValue] || {
         key: rootValue,
         children: []
       };
@@ -165,11 +165,11 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return rootNode;
     },
     _convertDataToPlainStructure(data, parentId, result) {
-      var key;
+      let key;
       if (this._itemsGetter && !data.isConverted) {
         result = result || [];
-        for (var i = 0; i < data.length; i++) {
-          var item = (0, _array_utils.createObjectWithChanges)(data[i]);
+        for (let i = 0; i < data.length; i++) {
+          const item = (0, _array_utils.createObjectWithChanges)(data[i]);
           key = this._keyGetter(item);
           if (key === undefined) {
             key = result.length + 1;
@@ -177,10 +177,10 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
           }
           this._parentIdSetter(item, parentId === undefined ? this.option('rootValue') : parentId);
           result.push(item);
-          var childItems = this._itemsGetter(item);
+          const childItems = this._itemsGetter(item);
           if (childItems && childItems.length) {
             this._convertDataToPlainStructure(childItems, key, result);
-            var itemsExpr = this.option('itemsExpr');
+            const itemsExpr = this.option('itemsExpr');
             if (!(0, _type.isFunction)(itemsExpr)) {
               // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
               delete item[itemsExpr];
@@ -193,8 +193,8 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return data;
     },
     _createIdFilter(field, keys) {
-      var parentIdFilters = [];
-      for (var i = 0; i < keys.length; i++) {
+      const parentIdFilters = [];
+      for (let i = 0; i < keys.length; i++) {
         parentIdFilters.push([field, '=', keys[i]]);
       }
       return _m_utils.default.combineFilters(parentIdFilters, 'or');
@@ -202,7 +202,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
     _customizeRemoteOperations(options, operationTypes) {
       this.callBase.apply(this, arguments);
       options.remoteOperations.paging = false;
-      var expandVisibleNodes = false;
+      let expandVisibleNodes = false;
       if (this.option('autoExpandAll')) {
         options.remoteOperations.sorting = false;
         options.remoteOperations.filtering = false;
@@ -229,9 +229,9 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       options.expandVisibleNodes = expandVisibleNodes;
     },
     _getParentIdsToLoad(parentIds) {
-      var parentIdsToLoad = [];
-      for (var i = 0; i < parentIds.length; i++) {
-        var node = this.getNodeByKey(parentIds[i]);
+      const parentIdsToLoad = [];
+      for (let i = 0; i < parentIds.length; i++) {
+        const node = this.getNodeByKey(parentIds[i]);
         if (!node || node.hasChildren && !node.children.length) {
           parentIdsToLoad.push(parentIds[i]);
         }
@@ -239,18 +239,20 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return parentIdsToLoad;
     },
     _handleCustomizeStoreLoadOptions(options) {
-      var rootValue = this.option('rootValue');
-      var parentIdExpr = this.option('parentIdExpr');
-      var parentIds = options.storeLoadOptions.parentIds;
+      const rootValue = this.option('rootValue');
+      const parentIdExpr = this.option('parentIdExpr');
+      let {
+        parentIds
+      } = options.storeLoadOptions;
       if (parentIds) {
         options.isCustomLoading = false;
       }
       this.callBase.apply(this, arguments);
       if (options.remoteOperations.filtering && !options.isCustomLoading) {
         if (isFullBranchFilterMode(this) && options.cachedStoreData || !options.storeLoadOptions.filter) {
-          var expandedRowKeys = options.collapseVisibleNodes ? [] : this.option('expandedRowKeys');
+          const expandedRowKeys = options.collapseVisibleNodes ? [] : this.option('expandedRowKeys');
           parentIds = [rootValue].concat(expandedRowKeys).concat(parentIds || []);
-          var parentIdsToLoad = options.data ? this._getParentIdsToLoad(parentIds) : parentIds;
+          const parentIdsToLoad = options.data ? this._getParentIdsToLoad(parentIds) : parentIds;
           if (parentIdsToLoad.length) {
             options.cachedPagingData = undefined;
             options.data = undefined;
@@ -264,20 +266,20 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
     },
     _generateInfoToLoad(data, needChildren) {
-      var that = this;
-      var key;
-      var keyMap = {};
-      var resultKeyMap = {};
-      var resultKeys = [];
-      var rootValue = that.option('rootValue');
-      var i;
+      const that = this;
+      let key;
+      const keyMap = {};
+      const resultKeyMap = {};
+      const resultKeys = [];
+      const rootValue = that.option('rootValue');
+      let i;
       for (i = 0; i < data.length; i++) {
         key = needChildren ? that._parentIdGetter(data[i]) : that._keyGetter(data[i]);
         keyMap[key] = true;
       }
       for (i = 0; i < data.length; i++) {
         key = needChildren ? that._keyGetter(data[i]) : that._parentIdGetter(data[i]);
-        var needToLoad = needChildren ? that.isRowExpanded(key) : key !== rootValue;
+        const needToLoad = needChildren ? that.isRowExpanded(key) : key !== rootValue;
         if (!keyMap[key] && !resultKeyMap[key] && needToLoad) {
           resultKeyMap[key] = true;
           resultKeys.push(key);
@@ -289,64 +291,54 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       };
     },
     _loadParentsOrChildren(data, options, needChildren) {
-      var _this = this;
       var _a, _b, _c;
-      var filter;
-      var needLocalFiltering;
-      var _this$_generateInfoTo = this._generateInfoToLoad(data, needChildren),
-        keys = _this$_generateInfoTo.keys,
-        keyMap = _this$_generateInfoTo.keyMap;
+      let filter;
+      let needLocalFiltering;
+      const {
+        keys,
+        keyMap
+      } = this._generateInfoToLoad(data, needChildren);
       // @ts-expect-error
-      var d = new _deferred.Deferred();
-      var isRemoteFiltering = options.remoteOperations.filtering;
-      var maxFilterLengthInRequest = this.option('maxFilterLengthInRequest');
-      var sort = (_b = (_a = options.storeLoadOptions) === null || _a === void 0 ? void 0 : _a.sort) !== null && _b !== void 0 ? _b : (_c = options.loadOptions) === null || _c === void 0 ? void 0 : _c.sort;
-      var loadOptions = isRemoteFiltering ? options.storeLoadOptions : options.loadOptions;
-      var concatLoadedData = function concatLoadedData(loadedData) {
+      const d = new _deferred.Deferred();
+      const isRemoteFiltering = options.remoteOperations.filtering;
+      const maxFilterLengthInRequest = this.option('maxFilterLengthInRequest');
+      const sort = (_b = (_a = options.storeLoadOptions) === null || _a === void 0 ? void 0 : _a.sort) !== null && _b !== void 0 ? _b : (_c = options.loadOptions) === null || _c === void 0 ? void 0 : _c.sort;
+      let loadOptions = isRemoteFiltering ? options.storeLoadOptions : options.loadOptions;
+      const concatLoadedData = loadedData => {
         if (isRemoteFiltering) {
-          _this._cachedStoreData = applySorting(_this._cachedStoreData.concat(loadedData), sort);
+          this._cachedStoreData = applySorting(this._cachedStoreData.concat(loadedData), sort);
         }
         return applySorting(data.concat(loadedData), sort);
       };
       if (!keys.length) {
         return d.resolve(data);
       }
-      var cachedNodes = keys.map(function (id) {
-        return _this.getNodeByKey(id);
-      }).filter(function (node) {
-        return node && node.data;
-      });
+      let cachedNodes = keys.map(id => this.getNodeByKey(id)).filter(node => node && node.data);
       if (cachedNodes.length === keys.length) {
         if (needChildren) {
-          cachedNodes = cachedNodes.reduce(function (result, node) {
-            return result.concat(node.children);
-          }, []);
+          cachedNodes = cachedNodes.reduce((result, node) => result.concat(node.children), []);
         }
         if (cachedNodes.length) {
-          return this._loadParentsOrChildren(concatLoadedData(cachedNodes.map(function (node) {
-            return node.data;
-          })), options, needChildren);
+          return this._loadParentsOrChildren(concatLoadedData(cachedNodes.map(node => node.data)), options, needChildren);
         }
       }
-      var keyExpr = needChildren ? this.option('parentIdExpr') : this.getKeyExpr();
+      const keyExpr = needChildren ? this.option('parentIdExpr') : this.getKeyExpr();
       filter = this._createIdFilter(keyExpr, keys);
-      var filterLength = encodeURI(JSON.stringify(filter)).length;
+      const filterLength = encodeURI(JSON.stringify(filter)).length;
       if (filterLength > maxFilterLengthInRequest) {
-        filter = function filter(itemData) {
-          return keyMap[needChildren ? _this._parentIdGetter(itemData) : _this._keyGetter(itemData)];
-        };
+        filter = itemData => keyMap[needChildren ? this._parentIdGetter(itemData) : this._keyGetter(itemData)];
         needLocalFiltering = isRemoteFiltering;
       }
       loadOptions = (0, _extend.extend)({}, loadOptions, {
         filter: !needLocalFiltering ? filter : null
       });
-      var store = options.fullData ? new _array_store.default(options.fullData) : this._dataSource.store();
-      this.loadFromStore(loadOptions, store).done(function (loadedData) {
+      const store = options.fullData ? new _array_store.default(options.fullData) : this._dataSource.store();
+      this.loadFromStore(loadOptions, store).done(loadedData => {
         if (loadedData.length) {
           if (needLocalFiltering) {
             loadedData = (0, _query.default)(loadedData).filter(filter).toArray();
           }
-          _this._loadParentsOrChildren(concatLoadedData(loadedData), options, needChildren).done(d.resolve).fail(d.reject);
+          this._loadParentsOrChildren(concatLoadedData(loadedData), options, needChildren).done(d.resolve).fail(d.reject);
         } else {
           d.resolve(data);
         }
@@ -363,31 +355,28 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return (0, _deferred.when)(data);
     },
     _updateHasItemsMap(options) {
-      var parentIds = options.storeLoadOptions.parentIds;
+      const {
+        parentIds
+      } = options.storeLoadOptions;
       if (parentIds) {
-        for (var i = 0; i < parentIds.length; i++) {
+        for (let i = 0; i < parentIds.length; i++) {
           this._isChildrenLoaded[parentIds[i]] = true;
         }
       }
     },
     _getKeyInfo() {
       return {
-        key: function key() {
-          return 'key';
-        },
-        keyOf: function keyOf(data) {
-          return data.key;
-        }
+        key: () => 'key',
+        keyOf: data => data.key
       };
     },
     _processChanges(changes) {
-      var _this2 = this;
-      var processedChanges = [];
-      changes.forEach(function (change) {
+      let processedChanges = [];
+      changes.forEach(change => {
         if (change.type === 'insert') {
-          processedChanges = processedChanges.concat(_this2._applyInsert(change));
+          processedChanges = processedChanges.concat(this._applyInsert(change));
         } else if (change.type === 'remove') {
-          processedChanges = processedChanges.concat(_this2._applyRemove(change));
+          processedChanges = processedChanges.concat(this._applyRemove(change));
         } else if (change.type === 'update') {
           processedChanges.push({
             type: change.type,
@@ -401,35 +390,32 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return processedChanges;
     },
     _handleChanging(e) {
-      var _this3 = this;
       this.callBase.apply(this, arguments);
-      var processChanges = function processChanges(changes) {
-        var changesToProcess = changes.filter(function (item) {
-          return item.type === 'update';
-        });
-        return _this3._processChanges(changesToProcess);
+      const processChanges = changes => {
+        const changesToProcess = changes.filter(item => item.type === 'update');
+        return this._processChanges(changesToProcess);
       };
       e.postProcessChanges = processChanges;
     },
     _applyBatch(changes) {
-      var processedChanges = this._processChanges(changes);
+      const processedChanges = this._processChanges(changes);
       this.callBase(processedChanges);
     },
     _setHasItems(node, value) {
-      var hasItemsSetter = this._hasItemsSetter;
+      const hasItemsSetter = this._hasItemsSetter;
       node.hasChildren = value;
       if (hasItemsSetter && node.data) {
         hasItemsSetter(node.data, value);
       }
     },
     _applyInsert(change) {
-      var that = this;
-      var baseChanges = [];
-      var parentId = that.parentKeyOf(change.data);
-      var parentNode = that.getNodeByKey(parentId);
+      const that = this;
+      const baseChanges = [];
+      const parentId = that.parentKeyOf(change.data);
+      const parentNode = that.getNodeByKey(parentId);
       if (parentNode) {
-        var rootValue = that.option('rootValue');
-        var node = that._convertItemToNode(change.data, rootValue, that._nodeByKey);
+        const rootValue = that.option('rootValue');
+        const node = that._convertItemToNode(change.data, rootValue, that._nodeByKey);
         node.hasChildren = false;
         node.level = parentNode.level + 1;
         node.visible = true;
@@ -437,7 +423,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         that._isChildrenLoaded[node.key] = true;
         that._setHasItems(parentNode, true);
         if ((!parentNode.parent || that.isRowExpanded(parentNode.key)) && change.index !== undefined) {
-          var index = that.items().indexOf(parentNode) + 1;
+          let index = that.items().indexOf(parentNode) + 1;
           index += change.index >= 0 ? Math.min(change.index, parentNode.children.length) : parentNode.children.length;
           baseChanges.push({
             type: change.type,
@@ -452,29 +438,27 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return false;
     },
     _applyRemove(change) {
-      var baseChanges = [];
-      var node = this.getNodeByKey(change.key);
-      var parentNode = node && node.parent;
+      let baseChanges = [];
+      const node = this.getNodeByKey(change.key);
+      const parentNode = node && node.parent;
       if (parentNode) {
-        var index = parentNode.children.indexOf(node);
+        const index = parentNode.children.indexOf(node);
         if (index >= 0) {
           parentNode.children.splice(index, 1);
           if (!parentNode.children.length) {
             this._setHasItems(parentNode, false);
           }
           baseChanges.push(change);
-          baseChanges = baseChanges.concat(this.getChildNodeKeys(change.key).map(function (key) {
-            return {
-              type: change.type,
-              key
-            };
-          }));
+          baseChanges = baseChanges.concat(this.getChildNodeKeys(change.key).map(key => ({
+            type: change.type,
+            key
+          })));
         }
       }
       return baseChanges;
     },
     _handleDataLoaded(options) {
-      var data = options.data = this._convertDataToPlainStructure(options.data);
+      const data = options.data = this._convertDataToPlainStructure(options.data);
       if (!options.remoteOperations.filtering && options.loadOptions.filter) {
         options.fullData = queryByOptions((0, _query.default)(options.data), {
           sort: options.loadOptions && options.loadOptions.sort
@@ -487,23 +471,21 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
     },
     _fillNodes(nodes, options, expandedRowKeys, level) {
-      var isFullBranch = isFullBranchFilterMode(this);
+      const isFullBranch = isFullBranchFilterMode(this);
       level = level || 0;
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        var needToExpand = false;
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        let needToExpand = false;
         // node.hasChildren = false;
         this._fillNodes(nodes[i].children, options, expandedRowKeys, level + 1);
         node.level = level;
         node.hasChildren = this._calculateHasItems(node, options);
         if (node.visible && node.hasChildren) {
           if (isFullBranch) {
-            if (node.children.filter(function (node) {
-              return node.visible;
-            }).length) {
+            if (node.children.filter(node => node.visible).length) {
               needToExpand = true;
             } else if (node.children.length) {
-              _m_core.default.foreachNodes(node.children, function (node) {
+              _m_core.default.foreachNodes(node.children, node => {
                 node.visible = true;
               });
             }
@@ -520,9 +502,13 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
     },
     _processTreeStructure(options, visibleItems) {
-      var data = options.data;
-      var parentIds = options.storeLoadOptions.parentIds;
-      var expandedRowKeys = [];
+      let {
+        data
+      } = options;
+      const {
+        parentIds
+      } = options.storeLoadOptions;
+      const expandedRowKeys = [];
       if (parentIds && parentIds.length || this._isReload) {
         if (options.fullData && options.fullData.length > options.data.length) {
           data = options.fullData;
@@ -545,29 +531,35 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
         });
         this._isNodesInitializing = false;
       }
-      var resultData = [];
+      const resultData = [];
       this._fillVisibleItemsByNodes(this._rootNode.children, options, resultData);
       options.data = resultData;
       this._totalItemsCount = resultData.length;
     },
     _handleDataLoadedCore(options) {
-      var that = this;
-      var data = options.data;
-      var callBase = that.callBase;
-      var filter = options.storeLoadOptions.filter || options.loadOptions.filter;
-      var filterMode = that.option('filterMode');
-      var visibleItems;
-      var parentIds = options.storeLoadOptions.parentIds;
-      var needLoadParents = filter && (!parentIds || !parentIds.length) && filterMode !== 'standard';
+      const that = this;
+      const {
+        data
+      } = options;
+      const {
+        callBase
+      } = that;
+      const filter = options.storeLoadOptions.filter || options.loadOptions.filter;
+      const filterMode = that.option('filterMode');
+      let visibleItems;
+      const {
+        parentIds
+      } = options.storeLoadOptions;
+      const needLoadParents = filter && (!parentIds || !parentIds.length) && filterMode !== 'standard';
       if (!options.isCustomLoading) {
         if (needLoadParents) {
           // @ts-expect-error
-          var d = options.data = new _deferred.Deferred();
+          const d = options.data = new _deferred.Deferred();
           if (filterMode === 'matchOnly') {
             visibleItems = data;
           }
-          return that._loadParents(data, options).done(function (data) {
-            that._loadChildrenIfNeed(data, options).done(function (data) {
+          return that._loadParents(data, options).done(data => {
+            that._loadChildrenIfNeed(data, options).done(data => {
               options.data = data;
               that._processTreeStructure(options, visibleItems);
               callBase.call(that, options);
@@ -580,13 +572,15 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       that.callBase(options);
     },
     _handlePush(_ref) {
-      var changes = _ref.changes;
-      var reshapeOnPush = this._dataSource._reshapeOnPush;
-      var isNeedReshape = reshapeOnPush && !!changes.length;
+      let {
+        changes
+      } = _ref;
+      const reshapeOnPush = this._dataSource._reshapeOnPush;
+      const isNeedReshape = reshapeOnPush && !!changes.length;
       if (isNeedReshape) {
         this._isReload = true;
       }
-      changes.forEach(function (change) {
+      changes.forEach(change => {
         var _a;
         (_a = change.index) !== null && _a !== void 0 ? _a : change.index = -1;
       });
@@ -595,7 +589,7 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     init(dataSource, remoteOperations) {
       this.callBase.apply(this, arguments);
-      var dataStructure = this.option('dataStructure');
+      const dataStructure = this.option('dataStructure');
       this._keyGetter = this._createKeyGetter();
       this._parentIdGetter = this.createParentIdGetter();
       this._hasItemsGetter = this._createHasItemsGetter();
@@ -611,9 +605,9 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       this.createAction('onNodesInitialized');
     },
     getKeyExpr() {
-      var store = this.store();
-      var key = store && store.key();
-      var keyExpr = this.option('keyExpr');
+      const store = this.store();
+      const key = store && store.key();
+      const keyExpr = this.option('keyExpr');
       if ((0, _type.isDefined)(key) && (0, _type.isDefined)(keyExpr)) {
         if (!(0, _common.equalByValue)(key, keyExpr)) {
           throw _ui.default.Error('E1044');
@@ -635,21 +629,23 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
     },
     isRowExpanded(key, cache) {
       if (cache) {
-        var isExpandedByKey = cache.isExpandedByKey;
+        let {
+          isExpandedByKey
+        } = cache;
         if (!isExpandedByKey) {
           isExpandedByKey = cache.isExpandedByKey = {};
-          this.option('expandedRowKeys').forEach(function (key) {
+          this.option('expandedRowKeys').forEach(key => {
             isExpandedByKey[key] = true;
           });
         }
         return !!isExpandedByKey[key];
       }
-      var indexExpandedNodeKey = _m_utils.default.getIndexByKey(key, this.option('expandedRowKeys'), null);
+      const indexExpandedNodeKey = _m_utils.default.getIndexByKey(key, this.option('expandedRowKeys'), null);
       return indexExpandedNodeKey >= 0;
     },
     _changeRowExpandCore(key) {
-      var expandedRowKeys = this.option('expandedRowKeys').slice();
-      var indexExpandedNodeKey = _m_utils.default.getIndexByKey(key, expandedRowKeys, null);
+      const expandedRowKeys = this.option('expandedRowKeys').slice();
+      const indexExpandedNodeKey = _m_utils.default.getIndexByKey(key, expandedRowKeys, null);
       if (indexExpandedNodeKey < 0) {
         expandedRowKeys.push(key);
       } else {
@@ -668,30 +664,30 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       }
     },
     getNodeLeafKeys() {
-      var that = this;
-      var result = [];
-      var keys = that._rootNode ? [that._rootNode.key] : [];
-      keys.forEach(function (key) {
-        var node = that.getNodeByKey(key);
-        node && _m_core.default.foreachNodes([node], function (childNode) {
+      const that = this;
+      const result = [];
+      const keys = that._rootNode ? [that._rootNode.key] : [];
+      keys.forEach(key => {
+        const node = that.getNodeByKey(key);
+        node && _m_core.default.foreachNodes([node], childNode => {
           !childNode.children.length && result.push(childNode.key);
         });
       });
       return result;
     },
     getChildNodeKeys(parentKey) {
-      var node = this.getNodeByKey(parentKey);
-      var childrenKeys = [];
-      node && _m_core.default.foreachNodes(node.children, function (childNode) {
+      const node = this.getNodeByKey(parentKey);
+      const childrenKeys = [];
+      node && _m_core.default.foreachNodes(node.children, childNode => {
         childrenKeys.push(childNode.key);
       });
       return childrenKeys;
     },
     loadDescendants(keys, childrenOnly) {
-      var that = this;
+      const that = this;
       // @ts-expect-error
-      var d = new _deferred.Deferred();
-      var remoteOperations = that.remoteOperations();
+      const d = new _deferred.Deferred();
+      const remoteOperations = that.remoteOperations();
       if ((0, _type.isDefined)(keys)) {
         keys = Array.isArray(keys) ? keys : [keys];
       } else {
@@ -700,11 +696,11 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       if (!remoteOperations.filtering || !keys.length) {
         return d.resolve();
       }
-      var loadOptions = that._dataSource._createStoreLoadOptions();
+      const loadOptions = that._dataSource._createStoreLoadOptions();
       loadOptions.parentIds = keys;
-      that.load(loadOptions).done(function () {
+      that.load(loadOptions).done(() => {
         if (!childrenOnly) {
-          var childKeys = getChildKeys(that, keys);
+          const childKeys = getChildKeys(that, keys);
           if (childKeys.length) {
             that.loadDescendants(childKeys, childrenOnly).done(d.resolve).fail(d.reject);
             return;
@@ -715,12 +711,12 @@ var DataSourceAdapterTreeList = _m_data_source_adapter.default.inherit(function 
       return d.promise();
     },
     forEachNode() {
-      var nodes = [];
-      var callback;
+      let nodes = [];
+      let callback;
       if (arguments.length === 1) {
         // eslint-disable-next-line prefer-destructuring
         callback = arguments[0];
-        var rootNode = this.getRootNode();
+        const rootNode = this.getRootNode();
         nodes = rootNode && rootNode.children || [];
       } else if (arguments.length === 2) {
         // eslint-disable-next-line prefer-destructuring

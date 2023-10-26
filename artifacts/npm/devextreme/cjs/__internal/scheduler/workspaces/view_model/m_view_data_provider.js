@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_view_data_provider.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,7 +35,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
   return t;
 };
-var ViewDataProvider = /*#__PURE__*/function () {
+let ViewDataProvider = /*#__PURE__*/function () {
   function ViewDataProvider(viewType) {
     this.viewDataGenerator = (0, _m_utils.getViewDataGeneratorByViewType)(viewType);
     this.viewData = {};
@@ -50,10 +50,12 @@ var ViewDataProvider = /*#__PURE__*/function () {
   };
   _proto.update = function update(options, isGenerateNewViewData) {
     this.viewDataGenerator = (0, _m_utils.getViewDataGeneratorByViewType)(options.viewType);
-    var viewDataGenerator = this.viewDataGenerator;
-    var dateHeaderDataGenerator = new _m_date_header_data_generator.DateHeaderDataGenerator(viewDataGenerator);
-    var timePanelDataGenerator = new _m_time_panel_data_generator.TimePanelDataGenerator(viewDataGenerator);
-    var renderOptions = this._transformRenderOptions(options);
+    const {
+      viewDataGenerator
+    } = this;
+    const dateHeaderDataGenerator = new _m_date_header_data_generator.DateHeaderDataGenerator(viewDataGenerator);
+    const timePanelDataGenerator = new _m_time_panel_data_generator.TimePanelDataGenerator(viewDataGenerator);
+    const renderOptions = this._transformRenderOptions(options);
     renderOptions.interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
     this._options = renderOptions;
     if (isGenerateNewViewData) {
@@ -81,15 +83,17 @@ var ViewDataProvider = /*#__PURE__*/function () {
     });
   };
   _proto.updateViewData = function updateViewData(options) {
-    var renderOptions = this._transformRenderOptions(options);
+    const renderOptions = this._transformRenderOptions(options);
     this.viewDataMapWithSelection = this.viewDataGenerator.markSelectedAndFocusedCells(this.viewDataMap, renderOptions);
     this.viewData = this.viewDataGenerator.getViewDataFromMap(this.completeViewDataMap, this.viewDataMapWithSelection, renderOptions);
   };
   _proto._transformRenderOptions = function _transformRenderOptions(renderOptions) {
-    var groups = renderOptions.groups,
-      groupOrientation = renderOptions.groupOrientation,
-      groupByDate = renderOptions.groupByDate,
-      isAllDayPanelVisible = renderOptions.isAllDayPanelVisible,
+    const {
+        groups,
+        groupOrientation,
+        groupByDate,
+        isAllDayPanelVisible
+      } = renderOptions,
       restOptions = __rest(renderOptions, ["groups", "groupOrientation", "groupByDate", "isAllDayPanelVisible"]);
     return _extends(_extends({}, restOptions), {
       startViewDate: this.viewDataGenerator._calculateStartViewDate(renderOptions),
@@ -103,9 +107,9 @@ var ViewDataProvider = /*#__PURE__*/function () {
     });
   };
   _proto.getGroupPanelData = function getGroupPanelData(options) {
-    var renderOptions = this._transformRenderOptions(options);
+    const renderOptions = this._transformRenderOptions(options);
     if (renderOptions.groups.length > 0) {
-      var cellCount = this.getCellCount(renderOptions);
+      const cellCount = this.getCellCount(renderOptions);
       return (0, _utils.getGroupPanelData)(renderOptions.groups, cellCount, renderOptions.isGroupedByDate, renderOptions.isGroupedByDate ? 1 : cellCount);
     }
     return undefined;
@@ -117,7 +121,7 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return this._groupedDataMapProvider.getGroupEndDate(groupIndex);
   };
   _proto.findGroupCellStartDate = function findGroupCellStartDate(groupIndex, startDate, endDate) {
-    var isFindByDate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    let isFindByDate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     return this._groupedDataMapProvider.findGroupCellStartDate(groupIndex, startDate, endDate, isFindByDate);
   };
   _proto.findAllDayGroupCellStartDate = function findAllDayGroupCellStartDate(groupIndex, startDate) {
@@ -127,8 +131,12 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return this._groupedDataMapProvider.findCellPositionInMap(cellInfo);
   };
   _proto.hasAllDayPanel = function hasAllDayPanel() {
-    var viewData = this.viewDataMap.viewData;
-    var allDayPanel = viewData.groupedData[0].allDayPanel;
+    const {
+      viewData
+    } = this.viewDataMap;
+    const {
+      allDayPanel
+    } = viewData.groupedData[0];
     return !viewData.isGroupedAllDayPanel && (allDayPanel === null || allDayPanel === void 0 ? void 0 : allDayPanel.length) > 0;
   };
   _proto.getCellsGroup = function getCellsGroup(groupIndex) {
@@ -147,33 +155,33 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return this._groupedDataMapProvider.getRowCountInGroup(groupIndex);
   };
   _proto.getCellData = function getCellData(rowIndex, columnIndex, isAllDay, rtlEnabled) {
-    var row = isAllDay && !this._options.isVerticalGrouping ? this.viewDataMap.allDayPanelMap : this.viewDataMap.dateTableMap[rowIndex];
-    var actualColumnIndex = !rtlEnabled ? columnIndex : row.length - 1 - columnIndex;
-    var cellData = row[actualColumnIndex].cellData;
+    const row = isAllDay && !this._options.isVerticalGrouping ? this.viewDataMap.allDayPanelMap : this.viewDataMap.dateTableMap[rowIndex];
+    const actualColumnIndex = !rtlEnabled ? columnIndex : row.length - 1 - columnIndex;
+    const {
+      cellData
+    } = row[actualColumnIndex];
     return cellData;
   };
   _proto.getCellsByGroupIndexAndAllDay = function getCellsByGroupIndexAndAllDay(groupIndex, allDay) {
-    var rowsPerGroup = this._getRowCountWithAllDayRows();
-    var isShowAllDayPanel = this._options.isAllDayPanelVisible;
-    var firstRowInGroup = this._options.isVerticalGrouping ? groupIndex * rowsPerGroup : 0;
-    var lastRowInGroup = this._options.isVerticalGrouping ? (groupIndex + 1) * rowsPerGroup - 1 : rowsPerGroup;
-    var correctedFirstRow = isShowAllDayPanel && !allDay ? firstRowInGroup + 1 : firstRowInGroup;
-    var correctedLastRow = allDay ? correctedFirstRow : lastRowInGroup;
-    return this.completeViewDataMap.slice(correctedFirstRow, correctedLastRow + 1).map(function (row) {
-      return row.filter(function (_ref) {
-        var currentGroupIndex = _ref.groupIndex;
-        return groupIndex === currentGroupIndex;
-      });
-    });
+    const rowsPerGroup = this._getRowCountWithAllDayRows();
+    const isShowAllDayPanel = this._options.isAllDayPanelVisible;
+    const firstRowInGroup = this._options.isVerticalGrouping ? groupIndex * rowsPerGroup : 0;
+    const lastRowInGroup = this._options.isVerticalGrouping ? (groupIndex + 1) * rowsPerGroup - 1 : rowsPerGroup;
+    const correctedFirstRow = isShowAllDayPanel && !allDay ? firstRowInGroup + 1 : firstRowInGroup;
+    const correctedLastRow = allDay ? correctedFirstRow : lastRowInGroup;
+    return this.completeViewDataMap.slice(correctedFirstRow, correctedLastRow + 1).map(row => row.filter(_ref => {
+      let {
+        groupIndex: currentGroupIndex
+      } = _ref;
+      return groupIndex === currentGroupIndex;
+    }));
   };
   _proto.getCellCountWithGroup = function getCellCountWithGroup(groupIndex) {
-    var rowIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var dateTableGroupedMap = this.groupedDataMap.dateTableGroupedMap;
-    return dateTableGroupedMap.filter(function (_, index) {
-      return index <= groupIndex;
-    }).reduce(function (previous, row) {
-      return previous + row[rowIndex].length;
-    }, 0);
+    let rowIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    const {
+      dateTableGroupedMap
+    } = this.groupedDataMap;
+    return dateTableGroupedMap.filter((_, index) => index <= groupIndex).reduce((previous, row) => previous + row[rowIndex].length, 0);
   };
   _proto.hasGroupAllDayPanel = function hasGroupAllDayPanel(groupIndex) {
     var _a, _b;
@@ -183,23 +191,27 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return ((_b = this.groupedDataMap.allDayPanelGroupedMap[groupIndex]) === null || _b === void 0 ? void 0 : _b.length) > 0;
   };
   _proto.isGroupIntersectDateInterval = function isGroupIntersectDateInterval(groupIndex, startDate, endDate) {
-    var groupStartDate = this.getGroupStartDate(groupIndex);
-    var groupEndDate = this.getGroupEndDate(groupIndex);
+    const groupStartDate = this.getGroupStartDate(groupIndex);
+    const groupEndDate = this.getGroupEndDate(groupIndex);
     return startDate < groupEndDate && endDate > groupStartDate;
   };
   _proto.findGlobalCellPosition = function findGlobalCellPosition(date) {
-    var groupIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var allDay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    var completeViewDataMap = this.completeViewDataMap;
-    var showAllDayPanel = this._options.isAllDayPanelVisible;
-    for (var rowIndex = 0; rowIndex < completeViewDataMap.length; rowIndex += 1) {
-      var currentRow = completeViewDataMap[rowIndex];
-      for (var columnIndex = 0; columnIndex < currentRow.length; columnIndex += 1) {
-        var cellData = currentRow[columnIndex];
-        var currentStartDate = cellData.startDate,
-          currentEndDate = cellData.endDate,
-          currentGroupIndex = cellData.groupIndex,
-          currentAllDay = cellData.allDay;
+    let groupIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    let allDay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    const {
+      completeViewDataMap
+    } = this;
+    const showAllDayPanel = this._options.isAllDayPanelVisible;
+    for (let rowIndex = 0; rowIndex < completeViewDataMap.length; rowIndex += 1) {
+      const currentRow = completeViewDataMap[rowIndex];
+      for (let columnIndex = 0; columnIndex < currentRow.length; columnIndex += 1) {
+        const cellData = currentRow[columnIndex];
+        const {
+          startDate: currentStartDate,
+          endDate: currentEndDate,
+          groupIndex: currentGroupIndex,
+          allDay: currentAllDay
+        } = cellData;
         if (groupIndex === currentGroupIndex && allDay === !!currentAllDay && this._compareDatesAndAllDay(date, currentStartDate, currentEndDate, allDay)) {
           return {
             position: {
@@ -214,32 +226,36 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return undefined;
   };
   _proto._compareDatesAndAllDay = function _compareDatesAndAllDay(date, cellStartDate, cellEndDate, allDay) {
-    var time = date.getTime();
-    var trimmedTime = _date.default.trimTime(date).getTime();
-    var cellStartTime = cellStartDate.getTime();
-    var cellEndTime = cellEndDate.getTime();
+    const time = date.getTime();
+    const trimmedTime = _date.default.trimTime(date).getTime();
+    const cellStartTime = cellStartDate.getTime();
+    const cellEndTime = cellEndDate.getTime();
     return !allDay && time >= cellStartTime && time < cellEndTime || allDay && trimmedTime === cellStartTime;
   };
   _proto.getSkippedDaysCount = function getSkippedDaysCount(groupIndex, startDate, endDate, daysCount) {
-    var dateTableGroupedMap = this._groupedDataMapProvider.groupedDataMap.dateTableGroupedMap;
-    var groupedData = dateTableGroupedMap[groupIndex];
-    var includedDays = 0;
-    for (var rowIndex = 0; rowIndex < groupedData.length; rowIndex += 1) {
-      for (var columnIndex = 0; columnIndex < groupedData[rowIndex].length; columnIndex += 1) {
-        var cell = groupedData[rowIndex][columnIndex].cellData;
+    const {
+      dateTableGroupedMap
+    } = this._groupedDataMapProvider.groupedDataMap;
+    const groupedData = dateTableGroupedMap[groupIndex];
+    let includedDays = 0;
+    for (let rowIndex = 0; rowIndex < groupedData.length; rowIndex += 1) {
+      for (let columnIndex = 0; columnIndex < groupedData[rowIndex].length; columnIndex += 1) {
+        const cell = groupedData[rowIndex][columnIndex].cellData;
         if (startDate.getTime() < cell.endDate.getTime() && endDate.getTime() > cell.startDate.getTime()) {
           includedDays += 1;
         }
       }
     }
-    var lastCell = groupedData[groupedData.length - 1][groupedData[0].length - 1].cellData;
-    var lastCellStart = _date.default.trimTime(lastCell.startDate);
-    var daysAfterView = Math.floor((endDate.getTime() - lastCellStart.getTime()) / _date.default.dateToMilliseconds('day'));
-    var deltaDays = daysAfterView > 0 ? daysAfterView : 0;
+    const lastCell = groupedData[groupedData.length - 1][groupedData[0].length - 1].cellData;
+    const lastCellStart = _date.default.trimTime(lastCell.startDate);
+    const daysAfterView = Math.floor((endDate.getTime() - lastCellStart.getTime()) / _date.default.dateToMilliseconds('day'));
+    const deltaDays = daysAfterView > 0 ? daysAfterView : 0;
     return daysCount - includedDays - deltaDays;
   };
   _proto.getColumnsCount = function getColumnsCount() {
-    var dateTableMap = this.viewDataMap.dateTableMap;
+    const {
+      dateTableMap
+    } = this.viewDataMap;
     return dateTableMap ? dateTableMap[0].length : 0;
   };
   _proto.getViewEdgeIndices = function getViewEdgeIndices(isAllDayPanel) {
@@ -259,11 +275,11 @@ var ViewDataProvider = /*#__PURE__*/function () {
     };
   };
   _proto.getGroupEdgeIndices = function getGroupEdgeIndices(groupIndex, isAllDay) {
-    var groupedDataMap = this.groupedDataMap.dateTableGroupedMap[groupIndex];
-    var cellsCount = groupedDataMap[0].length;
-    var rowsCount = groupedDataMap.length;
-    var firstColumnIndex = groupedDataMap[0][0].position.columnIndex;
-    var lastColumnIndex = groupedDataMap[0][cellsCount - 1].position.columnIndex;
+    const groupedDataMap = this.groupedDataMap.dateTableGroupedMap[groupIndex];
+    const cellsCount = groupedDataMap[0].length;
+    const rowsCount = groupedDataMap.length;
+    const firstColumnIndex = groupedDataMap[0][0].position.columnIndex;
+    const lastColumnIndex = groupedDataMap[0][cellsCount - 1].position.columnIndex;
     if (isAllDay) {
       return {
         firstColumnIndex,
@@ -280,19 +296,25 @@ var ViewDataProvider = /*#__PURE__*/function () {
     };
   };
   _proto.isSameCell = function isSameCell(firstCellData, secondCellData) {
-    var firstStartDate = firstCellData.startDate,
-      firstGroupIndex = firstCellData.groupIndex,
-      firstAllDay = firstCellData.allDay,
-      firstIndex = firstCellData.index;
-    var secondStartDate = secondCellData.startDate,
-      secondGroupIndex = secondCellData.groupIndex,
-      secondAllDay = secondCellData.allDay,
-      secondIndex = secondCellData.index;
+    const {
+      startDate: firstStartDate,
+      groupIndex: firstGroupIndex,
+      allDay: firstAllDay,
+      index: firstIndex
+    } = firstCellData;
+    const {
+      startDate: secondStartDate,
+      groupIndex: secondGroupIndex,
+      allDay: secondAllDay,
+      index: secondIndex
+    } = secondCellData;
     return firstStartDate.getTime() === secondStartDate.getTime() && firstGroupIndex === secondGroupIndex && firstAllDay === secondAllDay && firstIndex === secondIndex;
   };
   _proto.getLastViewDate = function getLastViewDate() {
-    var completeViewDataMap = this.completeViewDataMap;
-    var rowsCount = completeViewDataMap.length - 1;
+    const {
+      completeViewDataMap
+    } = this;
+    const rowsCount = completeViewDataMap.length - 1;
     return completeViewDataMap[rowsCount][completeViewDataMap[rowsCount].length - 1].endDate;
   };
   _proto.getStartViewDate = function getStartViewDate() {
@@ -305,14 +327,14 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return new Date(this.getLastViewDate().getTime() - _date.default.dateToMilliseconds('minute'));
   };
   _proto.getLastViewDateByEndDayHour = function getLastViewDateByEndDayHour(endDayHour) {
-    var lastCellEndDate = this.getLastCellEndDate();
-    var endTime = _date.default.dateTimeFromDecimal(endDayHour);
-    var endDateOfLastViewCell = new Date(lastCellEndDate.setHours(endTime.hours, endTime.minutes));
+    const lastCellEndDate = this.getLastCellEndDate();
+    const endTime = _date.default.dateTimeFromDecimal(endDayHour);
+    const endDateOfLastViewCell = new Date(lastCellEndDate.setHours(endTime.hours, endTime.minutes));
     return this._adjustEndDateByDaylightDiff(lastCellEndDate, endDateOfLastViewCell);
   };
   _proto._adjustEndDateByDaylightDiff = function _adjustEndDateByDaylightDiff(startDate, endDate) {
-    var daylightDiff = _m_utils_time_zone.default.getDaylightOffsetInMs(startDate, endDate);
-    var endDateOfLastViewCell = new Date(endDate.getTime() - daylightDiff);
+    const daylightDiff = _m_utils_time_zone.default.getDaylightOffsetInMs(startDate, endDate);
+    const endDateOfLastViewCell = new Date(endDate.getTime() - daylightDiff);
     return new Date(endDateOfLastViewCell.getTime() - _date.default.dateToMilliseconds('minute'));
   };
   _proto.getCellCountInDay = function getCellCountInDay(startDayHour, endDayHour, hoursInterval) {
@@ -328,7 +350,7 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return this.viewDataGenerator.getVisibleDayDuration(startDayHour, endDayHour, hoursInterval);
   };
   _proto._getRowCountWithAllDayRows = function _getRowCountWithAllDayRows() {
-    var allDayRowCount = this._options.isAllDayPanelVisible ? 1 : 0;
+    const allDayRowCount = this._options.isAllDayPanelVisible ? 1 : 0;
     return this.getRowCount(this._options) + allDayRowCount;
   };
   _proto.getFirstDayOfWeek = function getFirstDayOfWeek(firstDayOfWeekOption) {
@@ -341,17 +363,19 @@ var ViewDataProvider = /*#__PURE__*/function () {
     return this._options;
   };
   _proto.getViewPortGroupCount = function getViewPortGroupCount() {
-    var dateTableGroupedMap = this.groupedDataMap.dateTableGroupedMap;
+    const {
+      dateTableGroupedMap
+    } = this.groupedDataMap;
     return (dateTableGroupedMap === null || dateTableGroupedMap === void 0 ? void 0 : dateTableGroupedMap.length) || 0;
   };
   _createClass(ViewDataProvider, [{
     key: "groupedDataMap",
-    get: function get() {
+    get: function () {
       return this._groupedDataMapProvider.groupedDataMap;
     }
   }, {
     key: "hiddenInterval",
-    get: function get() {
+    get: function () {
       return this.viewDataGenerator.hiddenInterval;
     }
   }]);

@@ -6,7 +6,7 @@ Object.keys(_context_menu).forEach(function (key) {
   if (key in exports && exports[key] === _context_menu[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _context_menu[key];
     }
   });

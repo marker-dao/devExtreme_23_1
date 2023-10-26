@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/summary_display_modes/m_summary_display_modes.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,46 +21,46 @@ exports.summaryDictionary = void 0;
 var _extend = require("../../../../core/utils/extend");
 var _type = require("../../../../core/utils/type");
 var _m_widget_utils = _interopRequireWildcard(require("../m_widget_utils"));
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var COLUMN = 'column';
-var ROW = 'row';
-var NULL = null;
-var calculatePercentValue = function calculatePercentValue(value, totalValue) {
-  var result = value / totalValue;
+const COLUMN = 'column';
+const ROW = 'row';
+const NULL = null;
+const calculatePercentValue = function (value, totalValue) {
+  let result = value / totalValue;
   if (!(0, _type.isDefined)(value) || isNaN(result)) {
     result = NULL;
   }
   return result;
 };
-var percentOfGrandTotal = function percentOfGrandTotal(e, dimension) {
+const percentOfGrandTotal = function (e, dimension) {
   return calculatePercentValue(e.value(), e.grandTotal(dimension).value());
 };
-var percentOfParent = function percentOfParent(e, dimension) {
-  var parent = e.parent(dimension);
-  var parentValue = parent ? parent.value() : e.value();
+const percentOfParent = function (e, dimension) {
+  const parent = e.parent(dimension);
+  const parentValue = parent ? parent.value() : e.value();
   return calculatePercentValue(e.value(), parentValue);
 };
-var createAbsoluteVariationExp = function createAbsoluteVariationExp(allowCrossGroup) {
+const createAbsoluteVariationExp = function (allowCrossGroup) {
   return function (e) {
-    var prevCell = e.prev(COLUMN, allowCrossGroup);
-    var prevValue = prevCell && prevCell.value();
+    const prevCell = e.prev(COLUMN, allowCrossGroup);
+    const prevValue = prevCell && prevCell.value();
     if ((0, _type.isDefined)(prevValue) && (0, _type.isDefined)(e.value())) {
       return e.value() - prevValue;
     }
     return NULL;
   };
 };
-var createPercentVariationExp = function createPercentVariationExp(allowCrossGroup) {
-  var absoluteExp = createAbsoluteVariationExp(allowCrossGroup);
+const createPercentVariationExp = function (allowCrossGroup) {
+  const absoluteExp = createAbsoluteVariationExp(allowCrossGroup);
   return function (e) {
-    var absVar = absoluteExp(e);
-    var prevCell = e.prev(COLUMN, allowCrossGroup);
-    var prevValue = prevCell && prevCell.value();
+    const absVar = absoluteExp(e);
+    const prevCell = e.prev(COLUMN, allowCrossGroup);
+    const prevValue = prevCell && prevCell.value();
     return absVar !== NULL && prevValue ? absVar / prevValue : NULL;
   };
 };
-var summaryDictionary = {
+const summaryDictionary = {
   percentOfColumnTotal(e) {
     return percentOfParent(e, ROW);
   },
@@ -78,25 +78,25 @@ var summaryDictionary = {
   }
 };
 exports.summaryDictionary = summaryDictionary;
-var getPrevCellCrossGroup = function getPrevCellCrossGroup(cell, direction) {
+const getPrevCellCrossGroup = function (cell, direction) {
   if (!cell || !cell.parent(direction)) {
     return undefined;
   }
-  var prevCell = cell.prev(direction);
+  let prevCell = cell.prev(direction);
   if (!prevCell) {
     prevCell = getPrevCellCrossGroup(cell.parent(direction), direction);
   }
   return prevCell;
 };
-var createRunningTotalExpr = function createRunningTotalExpr(field) {
+const createRunningTotalExpr = function (field) {
   if (!field.runningTotal) {
     return undefined;
   }
-  var direction = field.runningTotal === COLUMN ? ROW : COLUMN;
+  const direction = field.runningTotal === COLUMN ? ROW : COLUMN;
   return function (e) {
-    var prevCell = field.allowCrossGroupCalculation ? getPrevCellCrossGroup(e, direction) : e.prev(direction, false);
-    var value = e.value(true);
-    var prevValue = prevCell && prevCell.value(true);
+    const prevCell = field.allowCrossGroupCalculation ? getPrevCellCrossGroup(e, direction) : e.prev(direction, false);
+    let value = e.value(true);
+    const prevValue = prevCell && prevCell.value(true);
     if ((0, _type.isDefined)(prevValue) && (0, _type.isDefined)(value)) {
       value = prevValue + value;
     } else if ((0, _type.isDefined)(prevValue)) {
@@ -112,20 +112,20 @@ function createCache() {
   };
 }
 function getFieldPos(descriptions, field, cache) {
-  var fieldParams = {
+  let fieldParams = {
     index: -1
   };
   if (!(0, _type.isObject)(field)) {
     if (cache.fields[field]) {
       field = cache[field];
     } else {
-      var allFields = descriptions.columns.concat(descriptions.rows).concat(descriptions.values);
-      var fieldIndex = (0, _m_widget_utils.findField)(allFields, field);
+      const allFields = descriptions.columns.concat(descriptions.rows).concat(descriptions.values);
+      const fieldIndex = (0, _m_widget_utils.findField)(allFields, field);
       field = cache[field] = allFields[fieldIndex];
     }
   }
   if (field) {
-    var area = field.area || 'data';
+    const area = field.area || 'data';
     fieldParams = cache.positions[field.index] = cache.positions[field.index] || {
       area,
       index: descriptions[area === 'data' ? 'values' : "".concat(area, "s")].indexOf(field)
@@ -136,7 +136,7 @@ function getFieldPos(descriptions, field, cache) {
 function getPathFieldName(dimension) {
   return dimension === ROW ? '_rowPath' : '_columnPath';
 }
-var SummaryCell = function SummaryCell(columnPath, rowPath, data, descriptions, fieldIndex, fieldsCache) {
+const SummaryCell = function (columnPath, rowPath, data, descriptions, fieldIndex, fieldsCache) {
   // - @ts-expect-error
   this._columnPath = columnPath;
   // - @ts-expect-error
@@ -149,7 +149,7 @@ var SummaryCell = function SummaryCell(columnPath, rowPath, data, descriptions, 
   this._data = data;
   // - @ts-expect-error
   this._descriptions = descriptions;
-  var cell = data.values && data.values[rowPath[0].index] && data.values[rowPath[0].index][columnPath[0].index];
+  const cell = data.values && data.values[rowPath[0].index] && data.values[rowPath[0].index][columnPath[0].index];
   if (cell) {
     cell.originalCell = cell.originalCell || cell.slice();
     cell.postProcessedFlags = cell.postProcessedFlags || [];
@@ -167,12 +167,12 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return this._descriptions[dimension];
   },
   _createCell(config) {
-    var that = this;
+    const that = this;
     return new SummaryCell(config._columnPath || that._columnPath, config._rowPath || that._rowPath, that._data, that._descriptions, that._fieldIndex);
   },
   parent(direction) {
-    var path = this._getPath(direction).slice();
-    var config = {};
+    const path = this._getPath(direction).slice();
+    const config = {};
     path.shift();
     if (path.length) {
       config[getPathFieldName(direction)] = path;
@@ -181,12 +181,12 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return NULL;
   },
   children(direction) {
-    var path = this._getPath(direction).slice();
-    var item = path[0];
-    var result = [];
-    var cellConfig = {};
+    const path = this._getPath(direction).slice();
+    const item = path[0];
+    const result = [];
+    const cellConfig = {};
     if (item.children) {
-      for (var i = 0; i < item.children.length; i += 1) {
+      for (let i = 0; i < item.children.length; i += 1) {
         cellConfig[getPathFieldName(direction)] = [item.children[i]].concat(path.slice());
         // @ts-expect-error
         result.push(this._createCell(cellConfig));
@@ -195,11 +195,11 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return result;
   },
   grandTotal(direction) {
-    var config = {};
-    var rowPath = this._rowPath;
-    var columnPath = this._columnPath;
-    var dimensionPath = this._getPath(direction);
-    var pathFieldName = getPathFieldName(direction);
+    const config = {};
+    const rowPath = this._rowPath;
+    const columnPath = this._columnPath;
+    const dimensionPath = this._getPath(direction);
+    const pathFieldName = getPathFieldName(direction);
     if (!direction) {
       config._rowPath = [rowPath[rowPath.length - 1]];
       config._columnPath = [columnPath[columnPath.length - 1]];
@@ -209,12 +209,12 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return this._createCell(config);
   },
   next(direction, allowCrossGroup) {
-    var currentPath = this._getPath(direction);
-    var item = currentPath[0];
-    var parent = this.parent(direction);
-    var siblings;
+    const currentPath = this._getPath(direction);
+    const item = currentPath[0];
+    let parent = this.parent(direction);
+    let siblings;
     if (parent) {
-      var index = currentPath[1].children.indexOf(item);
+      const index = currentPath[1].children.indexOf(item);
       siblings = parent.children(direction);
       if (siblings[index + 1]) {
         return siblings[index + 1];
@@ -230,12 +230,12 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return NULL;
   },
   prev(direction, allowCrossGroup) {
-    var currentPath = this._getPath(direction);
-    var item = currentPath[0];
-    var parent = this.parent(direction);
-    var siblings;
+    const currentPath = this._getPath(direction);
+    const item = currentPath[0];
+    let parent = this.parent(direction);
+    let siblings;
     if (parent) {
-      var index = currentPath[1].children.indexOf(item);
+      const index = currentPath[1].children.indexOf(item);
       siblings = parent.children(direction);
       if (siblings[index - 1]) {
         return siblings[index - 1];
@@ -257,15 +257,15 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     if (area === 'data') {
       return this._descriptions.values[this._fieldIndex];
     }
-    var path = this._getPath(area);
-    var descriptions = this._getDimension(area);
-    var field = descriptions[path.length - 2];
+    const path = this._getPath(area);
+    const descriptions = this._getDimension(area);
+    const field = descriptions[path.length - 2];
     return field || NULL;
   },
   child(direction, fieldValue) {
-    var childLevelField;
-    var children = this.children(direction);
-    for (var i = 0; i < children.length; i += 1) {
+    let childLevelField;
+    const children = this.children(direction);
+    for (let i = 0; i < children.length; i += 1) {
       childLevelField = childLevelField || children[i].field(direction);
       if (children[i].value(childLevelField) === fieldValue) {
         return children[i];
@@ -274,24 +274,26 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return NULL;
   },
   slice(field, value) {
-    var that = this;
-    var config = {};
-    var fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
-    var area = fieldPos.area;
-    var fieldIndex = fieldPos.index;
-    var sliceCell = NULL;
-    var newPath = [];
+    const that = this;
+    const config = {};
+    const fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
+    const {
+      area
+    } = fieldPos;
+    const fieldIndex = fieldPos.index;
+    let sliceCell = NULL;
+    const newPath = [];
     if (area === ROW || area === COLUMN) {
-      var path = this._getPath(area).slice();
-      var level = fieldIndex !== -1 && path.length - 2 - fieldIndex;
+      const path = this._getPath(area).slice();
+      const level = fieldIndex !== -1 && path.length - 2 - fieldIndex;
       if (path[level]) {
         newPath[path.length - 1] = path[path.length - 1];
-        for (var i = level; i >= 0; i -= 1) {
+        for (let i = level; i >= 0; i -= 1) {
           if (path[i + 1]) {
-            var childItems = path[i + 1].children || [];
-            var currentValue = i === level ? value : path[i].value;
+            const childItems = path[i + 1].children || [];
+            const currentValue = i === level ? value : path[i].value;
             path[i] = undefined;
-            for (var childIndex = 0; childIndex < childItems.length; childIndex += 1) {
+            for (let childIndex = 0; childIndex < childItems.length; childIndex += 1) {
               if (childItems[childIndex].value === currentValue) {
                 path[i] = childItems[childIndex];
                 break;
@@ -309,17 +311,17 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return sliceCell;
   },
   value(arg1, arg2) {
-    var cell = this._cell;
-    var fieldIndex = this._fieldIndex;
-    var fistArgIsBoolean = arg1 === true || arg1 === false;
-    var field = !fistArgIsBoolean ? arg1 : NULL;
-    var needCalculatedValue = fistArgIsBoolean && arg1 || arg2;
+    const cell = this._cell;
+    let fieldIndex = this._fieldIndex;
+    const fistArgIsBoolean = arg1 === true || arg1 === false;
+    const field = !fistArgIsBoolean ? arg1 : NULL;
+    const needCalculatedValue = fistArgIsBoolean && arg1 || arg2;
     if ((0, _type.isDefined)(field)) {
-      var fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
+      const fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
       fieldIndex = fieldPos.index;
       if (fieldPos.area !== 'data') {
-        var path = this._getPath(fieldPos.area);
-        var level = fieldIndex !== -1 && path.length - 2 - fieldIndex;
+        const path = this._getPath(fieldPos.area);
+        const level = fieldIndex !== -1 && path.length - 2 - fieldIndex;
         return path[level] && path[level].value;
       }
     }
@@ -329,9 +331,9 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
     return NULL;
   },
   isPostProcessed(field) {
-    var fieldIndex = this._fieldIndex;
+    let fieldIndex = this._fieldIndex;
     if ((0, _type.isDefined)(field)) {
-      var fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
+      const fieldPos = getFieldPos(this._descriptions, field, this._fieldsCache);
       fieldIndex = fieldPos.index;
       if (fieldPos.area !== 'data') {
         return false;
@@ -341,9 +343,11 @@ SummaryCell.prototype = (0, _extend.extend)(SummaryCell.prototype, {
   }
 });
 function getExpression(field) {
-  var summaryDisplayMode = field.summaryDisplayMode;
-  var crossGroupCalculation = field.allowCrossGroupCalculation;
-  var expression = NULL;
+  const {
+    summaryDisplayMode
+  } = field;
+  const crossGroupCalculation = field.allowCrossGroupCalculation;
+  let expression = NULL;
   if ((0, _type.isFunction)(field.calculateSummaryValue)) {
     expression = field.calculateSummaryValue;
   } else if (summaryDisplayMode) {
@@ -361,8 +365,10 @@ function getExpression(field) {
   return expression;
 }
 function processDataCell(data, rowIndex, columnIndex, isRunningTotalCalculation) {
-  var values = data.values[rowIndex][columnIndex] = data.values[rowIndex][columnIndex] || [];
-  var originalCell = values.originalCell;
+  const values = data.values[rowIndex][columnIndex] = data.values[rowIndex][columnIndex] || [];
+  const {
+    originalCell
+  } = values;
   if (!originalCell) {
     return;
   }
@@ -373,37 +379,37 @@ function processDataCell(data, rowIndex, columnIndex, isRunningTotalCalculation)
   data.values[rowIndex][columnIndex].allowResetting = isRunningTotalCalculation;
 }
 function applyDisplaySummaryMode(descriptions, data) {
-  var expressions = [];
-  var columnElements = [{
+  const expressions = [];
+  const columnElements = [{
     index: data.grandTotalColumnIndex,
     children: data.columns
   }];
-  var rowElements = [{
+  const rowElements = [{
     index: data.grandTotalRowIndex,
     children: data.rows
   }];
-  var valueFields = descriptions.values;
-  var fieldsCache = createCache();
+  const valueFields = descriptions.values;
+  const fieldsCache = createCache();
   data.values = data.values || [];
-  (0, _m_widget_utils.foreachTree)(columnElements, function (columnPath) {
+  (0, _m_widget_utils.foreachTree)(columnElements, columnPath => {
     columnPath[0].isEmpty = [];
   }, false);
-  (0, _m_widget_utils.foreachTree)(rowElements, function (rowPath) {
-    var rowItem = rowPath[0];
+  (0, _m_widget_utils.foreachTree)(rowElements, rowPath => {
+    const rowItem = rowPath[0];
     rowItem.isEmpty = [];
     data.values[rowItem.index] = data.values[rowItem.index] || [];
-    (0, _m_widget_utils.foreachTree)(columnElements, function (columnPath) {
-      var columnItem = columnPath[0];
-      var isEmptyCell;
+    (0, _m_widget_utils.foreachTree)(columnElements, columnPath => {
+      const columnItem = columnPath[0];
+      let isEmptyCell;
       processDataCell(data, rowItem.index, columnItem.index, false);
-      for (var i = 0; i < valueFields.length; i += 1) {
-        var field = valueFields[i];
-        var expression = expressions[i] = expressions[i] === undefined ? getExpression(field) : expressions[i];
+      for (let i = 0; i < valueFields.length; i += 1) {
+        const field = valueFields[i];
+        const expression = expressions[i] = expressions[i] === undefined ? getExpression(field) : expressions[i];
         isEmptyCell = false;
         if (expression) {
-          var expressionArg = new SummaryCell(columnPath, rowPath, data, descriptions, i, fieldsCache);
-          var cell = expressionArg.cell();
-          var value = cell[i] = expression(expressionArg);
+          const expressionArg = new SummaryCell(columnPath, rowPath, data, descriptions, i, fieldsCache);
+          const cell = expressionArg.cell();
+          const value = cell[i] = expression(expressionArg);
           cell.postProcessedFlags[i] = true;
           isEmptyCell = value === null || value === undefined;
         }
@@ -423,30 +429,30 @@ function applyDisplaySummaryMode(descriptions, data) {
   data.isEmptyGrandTotalColumn = columnElements[0].isEmpty;
 }
 function applyRunningTotal(descriptions, data) {
-  var expressions = [];
-  var columnElements = [{
+  const expressions = [];
+  const columnElements = [{
     index: data.grandTotalColumnIndex,
     children: data.columns
   }];
-  var rowElements = [{
+  const rowElements = [{
     index: data.grandTotalRowIndex,
     children: data.rows
   }];
-  var valueFields = descriptions.values;
-  var fieldsCache = createCache();
+  const valueFields = descriptions.values;
+  const fieldsCache = createCache();
   data.values = data.values || [];
-  (0, _m_widget_utils.foreachTree)(rowElements, function (rowPath) {
-    var rowItem = rowPath[0];
+  (0, _m_widget_utils.foreachTree)(rowElements, rowPath => {
+    const rowItem = rowPath[0];
     data.values[rowItem.index] = data.values[rowItem.index] || [];
-    (0, _m_widget_utils.foreachTree)(columnElements, function (columnPath) {
-      var columnItem = columnPath[0];
+    (0, _m_widget_utils.foreachTree)(columnElements, columnPath => {
+      const columnItem = columnPath[0];
       processDataCell(data, rowItem.index, columnItem.index, true);
-      for (var i = 0; i < valueFields.length; i += 1) {
-        var field = valueFields[i];
-        var expression = expressions[i] = expressions[i] === undefined ? createRunningTotalExpr(field) : expressions[i];
+      for (let i = 0; i < valueFields.length; i += 1) {
+        const field = valueFields[i];
+        const expression = expressions[i] = expressions[i] === undefined ? createRunningTotalExpr(field) : expressions[i];
         if (expression) {
-          var expressionArg = new SummaryCell(columnPath, rowPath, data, descriptions, i, fieldsCache);
-          var cell = expressionArg.cell();
+          const expressionArg = new SummaryCell(columnPath, rowPath, data, descriptions, i, fieldsCache);
+          const cell = expressionArg.cell();
           cell[i] = expression(expressionArg);
           cell.postProcessedFlags[i] = true;
         }
@@ -455,11 +461,11 @@ function applyRunningTotal(descriptions, data) {
   }, false);
 }
 function createMockSummaryCell(descriptions, fields, indices) {
-  var summaryCell = new SummaryCell([], [], {}, descriptions, 0);
+  const summaryCell = new SummaryCell([], [], {}, descriptions, 0);
   summaryCell.value = function (fieldId) {
     if ((0, _type.isDefined)(fieldId)) {
-      var index = (0, _m_widget_utils.findField)(fields, fieldId);
-      var field = fields[index];
+      const index = (0, _m_widget_utils.findField)(fields, fieldId);
+      const field = fields[index];
       if (!indices[index] && field && !(0, _type.isDefined)(field.area)) {
         descriptions.values.push(field);
         indices[index] = true;

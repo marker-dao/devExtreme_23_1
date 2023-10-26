@@ -10,9 +10,8 @@ var _message = _interopRequireDefault(require("../../../../../../localization/me
 var _m_utils_timezones_data = _interopRequireDefault(require("../../../../../../__internal/scheduler/timezones/m_utils_timezones_data"));
 var _data_source = _interopRequireDefault(require("../../../../../../data/data_source"));
 var _utils = require("../../../../../../core/options/utils");
-var _excluded = ["date", "value", "valueChange"];
+const _excluded = ["date", "value", "valueChange"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -22,10 +21,12 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var noTzTitle = _message.default.format('dxScheduler-noTimezoneTitle');
-var viewFunction = function viewFunction(_ref) {
-  var dataSource = _ref.dataSource,
-    timeZone = _ref.timeZone;
+const noTzTitle = _message.default.format('dxScheduler-noTimezoneTitle');
+const viewFunction = _ref => {
+  let {
+    dataSource,
+    timeZone
+  } = _ref;
   return (0, _inferno.createComponentVNode)(2, _select_box.SelectBox, {
     "value": timeZone,
     "dataSource": dataSource,
@@ -36,9 +37,9 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var TimeZoneEditorProps = {};
+const TimeZoneEditorProps = {};
 exports.TimeZoneEditorProps = TimeZoneEditorProps;
-var TimeZoneEditor = /*#__PURE__*/function (_InfernoComponent) {
+let TimeZoneEditor = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(TimeZoneEditor, _InfernoComponent);
   function TimeZoneEditor(props) {
     var _this;
@@ -55,25 +56,20 @@ var TimeZoneEditor = /*#__PURE__*/function (_InfernoComponent) {
     return [new _inferno2.InfernoEffect(this.initDate, [])];
   };
   _proto.initDate = function initDate() {
-    var _this2 = this;
     if (!this.state.timeZone) {
-      this.setState(function (__state_argument) {
-        return {
-          timeZone: _this2.props.value
-        };
-      });
+      this.setState(__state_argument => ({
+        timeZone: this.props.value
+      }));
     }
   };
   _proto.updateDate = function updateDate(timeZone) {
-    this.setState(function (__state_argument) {
-      return {
-        timeZone: timeZone
-      };
-    });
+    this.setState(__state_argument => ({
+      timeZone: timeZone
+    }));
     this.props.valueChange(timeZone);
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       timeZone: this.state.timeZone,
@@ -84,7 +80,7 @@ var TimeZoneEditor = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(TimeZoneEditor, [{
     key: "dataSource",
-    get: function get() {
+    get: function () {
       return new _data_source.default({
         store: _m_utils_timezones_data.default.getDisplayedTimeZones(this.props.date),
         paginate: true,
@@ -93,12 +89,9 @@ var TimeZoneEditor = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        date = _this$props.date,
-        value = _this$props.value,
-        valueChange = _this$props.valueChange,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);
@@ -106,7 +99,7 @@ var TimeZoneEditor = /*#__PURE__*/function (_InfernoComponent) {
 }(_inferno2.InfernoComponent);
 exports.TimeZoneEditor = TimeZoneEditor;
 TimeZoneEditor.defaultProps = TimeZoneEditorProps;
-var __defaultOptionRules = [];
+const __defaultOptionRules = [];
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
   TimeZoneEditor.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(TimeZoneEditor.defaultProps), Object.getOwnPropertyDescriptors((0, _utils.convertRulesToOptions)(__defaultOptionRules))));

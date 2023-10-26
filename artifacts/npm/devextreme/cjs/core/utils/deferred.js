@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/deferred.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ var _type = require("../utils/type");
 var _extend = require("../utils/extend");
 var _callbacks = _interopRequireDefault(require("../utils/callbacks"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var deferredConfig = [{
+const deferredConfig = [{
   method: 'resolve',
   handler: 'done',
   state: 'resolved'
@@ -28,19 +28,19 @@ var deferredConfig = [{
   method: 'notify',
   handler: 'progress'
 }];
-var _DeferredObj = function DeferredObj() {
-  var that = this;
+let DeferredObj = function () {
+  const that = this;
   this._state = 'pending';
   this._promise = {};
   deferredConfig.forEach(function (config) {
-    var methodName = config.method;
+    const methodName = config.method;
     this[methodName + 'Callbacks'] = (0, _callbacks.default)();
     this[methodName] = function () {
       return this[methodName + 'With'](this._promise, arguments);
     }.bind(this);
     this._promise[config.handler] = function (handler) {
       if (!handler) return this;
-      var callbacks = that[methodName + 'Callbacks'];
+      const callbacks = that[methodName + 'Callbacks'];
       if (callbacks.fired()) {
         handler.apply(that[methodName + 'Context'], that[methodName + 'Args']);
       } else {
@@ -58,15 +58,15 @@ var _DeferredObj = function DeferredObj() {
     return this.then(null, handler);
   };
   this._promise.then = function (resolve, reject) {
-    var result = new _DeferredObj();
+    const result = new DeferredObj();
     ['done', 'fail'].forEach(function (method) {
-      var callback = method === 'done' ? resolve : reject;
+      const callback = method === 'done' ? resolve : reject;
       this[method](function () {
         if (!callback) {
           result[method === 'done' ? 'resolve' : 'reject'].apply(this, arguments);
           return;
         }
-        var callbackResult = callback && callback.apply(this, arguments);
+        const callbackResult = callback && callback.apply(this, arguments);
         if ((0, _type.isDeferred)(callbackResult)) {
           callbackResult.done(result.resolve).fail(result.reject);
         } else if ((0, _type.isPromise)(callbackResult)) {
@@ -87,10 +87,10 @@ var _DeferredObj = function DeferredObj() {
   this._promise.promise(this);
 };
 deferredConfig.forEach(function (config) {
-  var methodName = config.method;
-  var state = config.state;
-  _DeferredObj.prototype[methodName + 'With'] = function (context, args) {
-    var callbacks = this[methodName + 'Callbacks'];
+  const methodName = config.method;
+  const state = config.state;
+  DeferredObj.prototype[methodName + 'With'] = function (context, args) {
+    const callbacks = this[methodName + 'Callbacks'];
     if (this.state() === 'pending') {
       this[methodName + 'Args'] = args;
       this[methodName + 'Context'] = context;
@@ -104,7 +104,7 @@ function fromPromise(promise, context) {
   if ((0, _type.isDeferred)(promise)) {
     return promise;
   } else if ((0, _type.isPromise)(promise)) {
-    var d = new _DeferredObj();
+    const d = new DeferredObj();
     promise.then(function () {
       d.resolveWith.apply(d, [context].concat([[].slice.call(arguments)]));
     }, function () {
@@ -112,17 +112,17 @@ function fromPromise(promise, context) {
     });
     return d;
   }
-  return new _DeferredObj().resolveWith(context, [promise]);
+  return new DeferredObj().resolveWith(context, [promise]);
 }
-var whenFunc = function whenFunc() {
+let whenFunc = function () {
   if (arguments.length === 1) {
     return fromPromise(arguments[0]);
   }
-  var values = [].slice.call(arguments);
-  var contexts = [];
-  var resolvedCount = 0;
-  var deferred = new _DeferredObj();
-  var updateState = function updateState(i) {
+  const values = [].slice.call(arguments);
+  const contexts = [];
+  let resolvedCount = 0;
+  const deferred = new DeferredObj();
+  const updateState = function (i) {
     return function (value) {
       contexts[i] = this;
       values[i] = arguments.length > 1 ? [].slice.call(arguments) : value;
@@ -132,7 +132,7 @@ var whenFunc = function whenFunc() {
       }
     };
   };
-  for (var i = 0; i < values.length; i++) {
+  for (let i = 0; i < values.length; i++) {
     if ((0, _type.isDeferred)(values[i])) {
       values[i].promise().done(updateState(i)).fail(deferred.reject);
     } else {
@@ -145,11 +145,11 @@ var whenFunc = function whenFunc() {
   return deferred.promise();
 };
 function setStrategy(value) {
-  _DeferredObj = value.Deferred;
+  DeferredObj = value.Deferred;
   whenFunc = value.when;
 }
 function Deferred() {
-  return new _DeferredObj();
+  return new DeferredObj();
 }
 function when() {
   return whenFunc.apply(this, arguments);

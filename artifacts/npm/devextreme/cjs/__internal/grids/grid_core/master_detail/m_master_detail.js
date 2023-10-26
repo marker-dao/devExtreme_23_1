@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/master_detail/m_master_detail.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,11 +22,11 @@ var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // @ts-expect-error
 
-var MASTER_DETAIL_CELL_CLASS = 'dx-master-detail-cell';
-var MASTER_DETAIL_ROW_CLASS = 'dx-master-detail-row';
-var CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
-var ROW_LINES_CLASS = 'dx-row-lines';
-var masterDetailModule = {
+const MASTER_DETAIL_CELL_CLASS = 'dx-master-detail-cell';
+const MASTER_DETAIL_ROW_CLASS = 'dx-master-detail-row';
+const CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
+const ROW_LINES_CLASS = 'dx-row-lines';
+const masterDetailModule = {
   defaultOptions() {
     return {
       masterDetail: {
@@ -40,7 +40,7 @@ var masterDetailModule = {
     controllers: {
       columns: {
         _getExpandColumnsCore() {
-          var expandColumns = this.callBase();
+          const expandColumns = this.callBase();
           if (this.option('masterDetail.enabled')) {
             expandColumns.push({
               type: 'detailExpand',
@@ -51,18 +51,18 @@ var masterDetailModule = {
         }
       },
       data: function () {
-        var initMasterDetail = function initMasterDetail(that) {
+        const initMasterDetail = function (that) {
           that._expandedItems = [];
           that._isExpandAll = that.option('masterDetail.autoExpandAll');
         };
         return {
           init() {
-            var that = this;
+            const that = this;
             initMasterDetail(that);
             that.callBase();
           },
           expandAll(groupIndex) {
-            var that = this;
+            const that = this;
             if (groupIndex < 0) {
               that._isExpandAll = true;
               that._expandedItems = [];
@@ -72,7 +72,7 @@ var masterDetailModule = {
             }
           },
           collapseAll(groupIndex) {
-            var that = this;
+            const that = this;
             if (groupIndex < 0) {
               that._isExpandAll = false;
               that._expandedItems = [];
@@ -82,26 +82,28 @@ var masterDetailModule = {
             }
           },
           isRowExpanded(key) {
-            var that = this;
-            var expandIndex = _m_utils.default.getIndexByKey(key, that._expandedItems);
+            const that = this;
+            const expandIndex = _m_utils.default.getIndexByKey(key, that._expandedItems);
             if (Array.isArray(key)) {
               return that.callBase.apply(that, arguments);
             }
             return !!(that._isExpandAll ^ (expandIndex >= 0 && that._expandedItems[expandIndex].visible));
           },
           _getRowIndicesForExpand(key) {
-            var rowIndex = this.getRowIndexByKey(key);
+            const rowIndex = this.getRowIndexByKey(key);
             return [rowIndex, rowIndex + 1];
           },
           _changeRowExpandCore(key) {
-            var that = this;
-            var result;
+            const that = this;
+            let result;
             if (Array.isArray(key)) {
               result = that.callBase.apply(that, arguments);
             } else {
-              var expandIndex = _m_utils.default.getIndexByKey(key, that._expandedItems);
+              const expandIndex = _m_utils.default.getIndexByKey(key, that._expandedItems);
               if (expandIndex >= 0) {
-                var visible = that._expandedItems[expandIndex].visible;
+                const {
+                  visible
+                } = that._expandedItems[expandIndex];
                 that._expandedItems[expandIndex].visible = !visible;
               } else {
                 that._expandedItems.push({
@@ -119,12 +121,12 @@ var masterDetailModule = {
             return result;
           },
           _processDataItem(data, options) {
-            var that = this;
-            var dataItem = that.callBase.apply(that, arguments);
+            const that = this;
+            const dataItem = that.callBase.apply(that, arguments);
             dataItem.isExpanded = that.isRowExpanded(dataItem.key);
             if (options.detailColumnIndex === undefined) {
               options.detailColumnIndex = -1;
-              (0, _iterator.each)(options.visibleColumns, function (index, column) {
+              (0, _iterator.each)(options.visibleColumns, (index, column) => {
                 if (column.command === 'expand' && !(0, _type.isDefined)(column.groupIndex)) {
                   options.detailColumnIndex = index;
                   return false;
@@ -138,21 +140,21 @@ var masterDetailModule = {
             return dataItem;
           },
           _processItems(items, change) {
-            var that = this;
-            var changeType = change.changeType;
-            var result = [];
+            const that = this;
+            const {
+              changeType
+            } = change;
+            const result = [];
             items = that.callBase.apply(that, arguments);
             if (changeType === 'loadingAll') {
               return items;
             }
             if (changeType === 'refresh') {
-              that._expandedItems = (0, _common.grep)(that._expandedItems, function (item) {
-                return item.visible;
-              });
+              that._expandedItems = (0, _common.grep)(that._expandedItems, item => item.visible);
             }
-            (0, _iterator.each)(items, function (index, item) {
+            (0, _iterator.each)(items, (index, item) => {
               result.push(item);
-              var expandIndex = _m_utils.default.getIndexByKey(item.key, that._expandedItems);
+              const expandIndex = _m_utils.default.getIndexByKey(item.key, that._expandedItems);
               if (item.rowType === 'data' && (item.isExpanded || expandIndex >= 0) && !item.isNewRow) {
                 result.push({
                   visible: item.isExpanded,
@@ -166,17 +168,17 @@ var masterDetailModule = {
             return result;
           },
           optionChanged(args) {
-            var that = this;
-            var isEnabledChanged;
-            var isAutoExpandAllChanged;
+            const that = this;
+            let isEnabledChanged;
+            let isAutoExpandAllChanged;
             if (args.name === 'masterDetail') {
               args.name = 'dataSource';
               // eslint-disable-next-line default-case
               switch (args.fullName) {
                 case 'masterDetail':
                   {
-                    var value = args.value || {};
-                    var previousValue = args.previousValue || {};
+                    const value = args.value || {};
+                    const previousValue = args.previousValue || {};
                     isEnabledChanged = value.enabled !== previousValue.enabled;
                     isAutoExpandAllChanged = value.autoExpandAll !== previousValue.autoExpandAll;
                     break;
@@ -207,39 +209,34 @@ var masterDetailModule = {
           this._updateParentDataGrids(this.component.$element());
         },
         _updateParentDataGrids($element) {
-          var _this = this;
-          var $masterDetailRow = $element.closest(".".concat(MASTER_DETAIL_ROW_CLASS));
+          const $masterDetailRow = $element.closest(".".concat(MASTER_DETAIL_ROW_CLASS));
           if ($masterDetailRow.length) {
-            (0, _deferred.when)(this._updateMasterDataGrid($masterDetailRow, $element)).done(function () {
-              _this._updateParentDataGrids($masterDetailRow.parent());
+            (0, _deferred.when)(this._updateMasterDataGrid($masterDetailRow, $element)).done(() => {
+              this._updateParentDataGrids($masterDetailRow.parent());
             });
           }
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _updateMasterDataGrid($masterDetailRow, $detailElement) {
-          var masterRowOptions = (0, _renderer.default)($masterDetailRow).data('options');
-          var masterDataGrid = (0, _renderer.default)($masterDetailRow).closest(".".concat(this.getWidgetContainerClass())).parent().data('dxDataGrid');
+          const masterRowOptions = (0, _renderer.default)($masterDetailRow).data('options');
+          const masterDataGrid = (0, _renderer.default)($masterDetailRow).closest(".".concat(this.getWidgetContainerClass())).parent().data('dxDataGrid');
           if (masterRowOptions && masterDataGrid) {
             return this._updateMasterDataGridCore(masterDataGrid, masterRowOptions);
           }
         },
         _updateMasterDataGridCore(masterDataGrid, masterRowOptions) {
-          var d = (0, _deferred.Deferred)();
+          const d = (0, _deferred.Deferred)();
           if (masterDataGrid.getView('rowsView').isFixedColumns()) {
             this._updateFixedMasterDetailGrids(masterDataGrid, masterRowOptions.rowIndex, (0, _renderer.default)(masterRowOptions.rowElement)).done(d.resolve);
           } else {
             if (masterDataGrid.option('scrolling.useNative') === true) {
-              masterDataGrid.updateDimensions().done(function () {
-                return d.resolve(true);
-              });
+              masterDataGrid.updateDimensions().done(() => d.resolve(true));
               return;
             }
-            var scrollable = masterDataGrid.getScrollable();
+            const scrollable = masterDataGrid.getScrollable();
             if (scrollable) {
               // T607490
-              scrollable === null || scrollable === void 0 ? void 0 : scrollable.update().done(function () {
-                return d.resolve();
-              });
+              scrollable === null || scrollable === void 0 ? void 0 : scrollable.update().done(() => d.resolve());
             } else {
               d.resolve();
             }
@@ -247,21 +244,18 @@ var masterDetailModule = {
           return d.promise();
         },
         _updateFixedMasterDetailGrids(masterDataGrid, masterRowIndex, $detailElement) {
-          var _this2 = this;
-          var d = (0, _deferred.Deferred)();
-          var $rows = (0, _renderer.default)(masterDataGrid.getRowElement(masterRowIndex));
-          var $tables = (0, _renderer.default)(masterDataGrid.getView('rowsView').getTableElements());
-          var rowsNotEqual = ($rows === null || $rows === void 0 ? void 0 : $rows.length) === 2 && (0, _size.getHeight)($rows.eq(0)) !== (0, _size.getHeight)($rows.eq(1));
-          var tablesNotEqual = ($tables === null || $tables === void 0 ? void 0 : $tables.length) === 2 && (0, _size.getHeight)($tables.eq(0)) !== (0, _size.getHeight)($tables.eq(1));
+          const d = (0, _deferred.Deferred)();
+          const $rows = (0, _renderer.default)(masterDataGrid.getRowElement(masterRowIndex));
+          const $tables = (0, _renderer.default)(masterDataGrid.getView('rowsView').getTableElements());
+          const rowsNotEqual = ($rows === null || $rows === void 0 ? void 0 : $rows.length) === 2 && (0, _size.getHeight)($rows.eq(0)) !== (0, _size.getHeight)($rows.eq(1));
+          const tablesNotEqual = ($tables === null || $tables === void 0 ? void 0 : $tables.length) === 2 && (0, _size.getHeight)($tables.eq(0)) !== (0, _size.getHeight)($tables.eq(1));
           if (rowsNotEqual || tablesNotEqual) {
-            var detailElementWidth = (0, _size.getWidth)($detailElement);
-            masterDataGrid.updateDimensions().done(function () {
-              var isDetailHorizontalScrollCanBeShown = _this2.option('columnAutoWidth') && masterDataGrid.option('scrolling.useNative') === true;
-              var isDetailGridWidthChanged = isDetailHorizontalScrollCanBeShown && detailElementWidth !== (0, _size.getWidth)($detailElement);
+            const detailElementWidth = (0, _size.getWidth)($detailElement);
+            masterDataGrid.updateDimensions().done(() => {
+              const isDetailHorizontalScrollCanBeShown = this.option('columnAutoWidth') && masterDataGrid.option('scrolling.useNative') === true;
+              const isDetailGridWidthChanged = isDetailHorizontalScrollCanBeShown && detailElementWidth !== (0, _size.getWidth)($detailElement);
               if (isDetailHorizontalScrollCanBeShown && isDetailGridWidthChanged) {
-                _this2.updateDimensions().done(function () {
-                  return d.resolve(true);
-                });
+                this.updateDimensions().done(() => d.resolve(true));
               } else {
                 d.resolve(true);
               }
@@ -273,7 +267,7 @@ var masterDetailModule = {
         _toggleBestFitMode(isBestFit) {
           this.callBase.apply(this, arguments);
           if (this.option('masterDetail.template')) {
-            var $rowsTable = this._rowsView.getTableElement();
+            const $rowsTable = this._rowsView.getTableElement();
             if ($rowsTable) {
               $rowsTable.find('.dx-master-detail-cell').css('maxWidth', isBestFit ? 0 : '');
             }
@@ -285,11 +279,13 @@ var masterDetailModule = {
       rowsView: function () {
         return {
           _getCellTemplate(options) {
-            var that = this;
-            var column = options.column;
-            var editingController = that.getController('editing');
-            var isEditRow = editingController && editingController.isEditRow(options.rowIndex);
-            var template;
+            const that = this;
+            const {
+              column
+            } = options;
+            const editingController = that.getController('editing');
+            const isEditRow = editingController && editingController.isEditRow(options.rowIndex);
+            let template;
             if (column.command === 'detail' && !isEditRow) {
               template = that.option('masterDetail.template') || {
                 allowRenderToDetachedContainer: false,
@@ -304,7 +300,7 @@ var masterDetailModule = {
             return row && row.rowType && row.rowType.indexOf('detail') === 0;
           },
           _createRow(row) {
-            var $row = this.callBase.apply(this, arguments);
+            const $row = this.callBase.apply(this, arguments);
             if (row && this._isDetailRow(row)) {
               this.option('showRowLines') && $row.addClass(ROW_LINES_CLASS);
               $row.addClass(MASTER_DETAIL_ROW_CLASS);
@@ -315,9 +311,11 @@ var masterDetailModule = {
             return $row;
           },
           _renderCells($row, options) {
-            var row = options.row;
-            var $detailCell;
-            var visibleColumns = this._columnsController.getVisibleColumns();
+            const {
+              row
+            } = options;
+            let $detailCell;
+            const visibleColumns = this._columnsController.getVisibleColumns();
             if (row.rowType && this._isDetailRow(row)) {
               if (this._needRenderCell(0, options.columnIndices)) {
                 $detailCell = this._renderCell($row, {

@@ -3,13 +3,16 @@
 exports.getOverflowIndicatorStyles = exports.getOverflowIndicatorColor = exports.getIndicatorColor = void 0;
 var _utils = require("../../workspaces/utils");
 var _utils2 = require("../../resources/utils");
-var getOverflowIndicatorStyles = function getOverflowIndicatorStyles(viewModel) {
-  var _viewModel$geometry = viewModel.geometry,
-    height = _viewModel$geometry.height,
-    left = _viewModel$geometry.left,
-    top = _viewModel$geometry.top,
-    width = _viewModel$geometry.width;
-  var result = (0, _utils.addToStyles)([{
+const getOverflowIndicatorStyles = viewModel => {
+  const {
+    geometry: {
+      height,
+      left,
+      top,
+      width
+    }
+  } = viewModel;
+  const result = (0, _utils.addToStyles)([{
     attr: 'left',
     value: "".concat(left, "px")
   }, {
@@ -28,16 +31,14 @@ var getOverflowIndicatorStyles = function getOverflowIndicatorStyles(viewModel) 
   return result;
 };
 exports.getOverflowIndicatorStyles = getOverflowIndicatorStyles;
-var getOverflowIndicatorColor = function getOverflowIndicatorColor(color, colors) {
-  return !colors.length || colors.filter(function (item) {
-    return item !== color;
-  }).length === 0 ? color : undefined;
-};
+const getOverflowIndicatorColor = (color, colors) => !colors.length || colors.filter(item => item !== color).length === 0 ? color : undefined;
 exports.getOverflowIndicatorColor = getOverflowIndicatorColor;
-var getIndicatorColor = function getIndicatorColor(appointmentContext, viewModel, groups) {
+const getIndicatorColor = (appointmentContext, viewModel, groups) => {
   var _viewModel$groupIndex;
-  var groupIndex = (_viewModel$groupIndex = viewModel.groupIndex) !== null && _viewModel$groupIndex !== void 0 ? _viewModel$groupIndex : 0;
-  var appointment = viewModel.items.settings[0].appointment;
+  const groupIndex = (_viewModel$groupIndex = viewModel.groupIndex) !== null && _viewModel$groupIndex !== void 0 ? _viewModel$groupIndex : 0;
+  const {
+    appointment
+  } = viewModel.items.settings[0];
   return (0, _utils2.getAppointmentColor)({
     resources: appointmentContext.resources,
     resourceLoaderMap: appointmentContext.resourceLoaderMap,

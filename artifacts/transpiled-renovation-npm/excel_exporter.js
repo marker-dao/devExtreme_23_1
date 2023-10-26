@@ -2,13 +2,13 @@
 
 Object.defineProperty(exports, "exportDataGrid", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _export_data_grid.exportDataGrid;
   }
 });
 Object.defineProperty(exports, "exportPivotGrid", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _export_pivot_grid.exportPivotGrid;
   }
 });

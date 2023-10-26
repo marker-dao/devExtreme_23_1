@@ -23,15 +23,15 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 // STYLE button
 
-var ANONYMOUS_TEMPLATE_NAME = 'content';
-var Button = /*#__PURE__*/function (_Widget) {
+const ANONYMOUS_TEMPLATE_NAME = 'content';
+let Button = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(Button, _Widget);
   function Button() {
     var _this;
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-    _this = _Widget.call.apply(_Widget, [this].concat(args)) || this;
+    _this = _Widget.call(this, ...args) || this;
     _this._feedbackHideTimeout = 100;
     return _this;
   }
@@ -43,9 +43,9 @@ var Button = /*#__PURE__*/function (_Widget) {
     return this.$element().find('.dx-button-submit-input');
   };
   _proto._attachActiveEvents = function _attachActiveEvents(active, inactive) {
-    var $el = this._eventBindingTarget();
-    var namespace = 'inkRipple';
-    var selector = this._activeStateUnit;
+    const $el = this._eventBindingTarget();
+    const namespace = 'inkRipple';
+    const selector = this._activeStateUnit;
     _short.active.off($el, {
       namespace,
       selector
@@ -61,16 +61,12 @@ var Button = /*#__PURE__*/function (_Widget) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _Widget.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
-        return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
-      },
+      device: () => _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator(),
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
-        return (0, _themes.isMaterial)((0, _themes.current)());
-      },
+      device: () => (0, _themes.isMaterial)((0, _themes.current)()),
       options: {
         useInkRipple: true
       }
@@ -83,18 +79,20 @@ var Button = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._findGroup = function _findGroup() {
-    var $element = this.$element();
-    var model = this._modelByElement($element);
-    var _this$option = this.option(),
-      validationGroup = _this$option.validationGroup;
+    const $element = this.$element();
+    const model = this._modelByElement($element);
+    const {
+      validationGroup
+    } = this.option();
     return validationGroup || _validation_engine.default.findGroup($element, model);
   };
   _proto._getContentData = function _getContentData() {
-    var _this$option2 = this.option(),
-      icon = _this$option2.icon,
-      text = _this$option2.text,
-      type = _this$option2.type,
-      _templateData = _this$option2._templateData;
+    const {
+      icon,
+      text,
+      type,
+      _templateData
+    } = this.option();
     return (0, _extend.extend)({
       icon: type === 'back' && !icon ? 'back' : icon,
       text
@@ -118,26 +116,30 @@ var Button = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._getSubmitAction = function _getSubmitAction() {
-    var _this2 = this;
-    var needValidate = true;
-    var validationStatus = 'valid';
-    return this._createAction(function (_ref) {
-      var event = _ref.event;
+    let needValidate = true;
+    let validationStatus = 'valid';
+    return this._createAction(_ref => {
+      let {
+        event
+      } = _ref;
       if (needValidate) {
-        var validationGroup = _this2._validationGroupConfig;
+        const validationGroup = this._validationGroupConfig;
         if (validationGroup) {
-          var _validationGroup$vali = validationGroup.validate(),
-            status = _validationGroup$vali.status,
-            complete = _validationGroup$vali.complete;
+          const {
+            status,
+            complete
+          } = validationGroup.validate();
           validationStatus = status;
           if (status === 'pending') {
             needValidate = false;
-            _this2.option('disabled', true);
-            complete.then(function (_ref2) {
-              var status = _ref2.status;
-              _this2.option('disabled', false);
+            this.option('disabled', true);
+            complete.then(_ref2 => {
+              let {
+                status
+              } = _ref2;
+              this.option('disabled', false);
               validationStatus = status;
-              validationStatus === 'valid' && _this2._submitInput().click();
+              validationStatus === 'valid' && this._submitInput().click();
               needValidate = true;
             });
           }
@@ -162,19 +164,22 @@ var Button = /*#__PURE__*/function (_Widget) {
     return ANONYMOUS_TEMPLATE_NAME;
   };
   _proto._initTemplates = function _initTemplates() {
-    var _this3 = this;
     this._templateManager.addDefaultTemplates({
-      content: new _function_template.FunctionTemplate(function (_ref3) {
-        var _ref3$model = _ref3.model,
-          model = _ref3$model === void 0 ? {} : _ref3$model,
-          container = _ref3.container;
-        var text = model.text,
-          icon = model.icon;
-        var _this3$option = _this3.option(),
-          iconPosition = _this3$option.iconPosition;
-        var $icon = (0, _icon.getImageContainer)(icon);
-        var $textContainer = text && (0, _renderer.default)('<span>').text(text).addClass('dx-button-text');
-        var $container = (0, _renderer.default)(container);
+      content: new _function_template.FunctionTemplate(_ref3 => {
+        let {
+          model = {},
+          container
+        } = _ref3;
+        const {
+          text,
+          icon
+        } = model;
+        const {
+          iconPosition
+        } = this.option();
+        const $icon = (0, _icon.getImageContainer)(icon);
+        const $textContainer = text && (0, _renderer.default)('<span>').text(text).addClass('dx-button-text');
+        const $container = (0, _renderer.default)(container);
         $container.append($textContainer);
         if (iconPosition === 'left') {
           $container.prepend($icon);
@@ -187,7 +192,9 @@ var Button = /*#__PURE__*/function (_Widget) {
     _Widget.prototype._initTemplates.call(this);
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const {
+      name
+    } = args;
     switch (name) {
       case 'onClick':
         this._updateClick();
@@ -221,90 +228,92 @@ var Button = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._renderClick = function _renderClick() {
-    var _this4 = this;
-    var $el = this.$element();
+    const $el = this.$element();
     _short.dxClick.off($el, {
       namespace: this.NAME
     });
-    _short.dxClick.on($el, function (event) {
-      return _this4._executeClickAction(event);
-    }, {
+    _short.dxClick.on($el, event => this._executeClickAction(event), {
       namespace: this.NAME
     });
     this._updateClick();
   };
   _proto._renderInkRipple = function _renderInkRipple() {
-    var _this5 = this;
-    var _this$option3 = this.option(),
-      text = _this$option3.text,
-      icon = _this$option3.icon,
-      type = _this$option3.type,
-      useInkRipple = _this$option3.useInkRipple;
+    const {
+      text,
+      icon,
+      type,
+      useInkRipple
+    } = this.option();
     if (useInkRipple) {
-      var isOnlyIconButton = !text && icon || type === 'back';
-      var _inkRipple = (0, _utils.render)(isOnlyIconButton ? {
+      const isOnlyIconButton = !text && icon || type === 'back';
+      const _inkRipple = (0, _utils.render)(isOnlyIconButton ? {
         waveSizeCoefficient: 1,
         useHoldAnimation: false,
         isCentered: true
       } : {});
-      var changeWaveVisibility = function changeWaveVisibility(event, visible) {
-        var _this5$option = _this5.option(),
-          activeStateEnabled = _this5$option.activeStateEnabled,
-          useInkRipple = _this5$option.useInkRipple;
-        if (useInkRipple && activeStateEnabled && !_this5._disposed) {
-          var config = {
-            element: _this5._$content(),
+      const changeWaveVisibility = (event, visible) => {
+        const {
+          activeStateEnabled,
+          useInkRipple
+        } = this.option();
+        if (useInkRipple && activeStateEnabled && !this._disposed) {
+          const config = {
+            element: this._$content(),
             event
           };
           visible ? _inkRipple.showWave(config) : _inkRipple.hideWave(config);
         }
       };
-      this._attachActiveEvents(function (_ref4) {
-        var event = _ref4.event;
+      this._attachActiveEvents(_ref4 => {
+        let {
+          event
+        } = _ref4;
         return changeWaveVisibility(event, true);
-      }, function (_ref5) {
-        var event = _ref5.event;
+      }, _ref5 => {
+        let {
+          event
+        } = _ref5;
         return changeWaveVisibility(event);
       });
     }
   };
   _proto._renderStylingMode = function _renderStylingMode() {
-    var $element = this.$element();
-    var _this$option4 = this.option(),
-      stylingMode = _this$option4.stylingMode;
+    const $element = this.$element();
+    let {
+      stylingMode
+    } = this.option();
     if (['contained', 'text', 'outlined'].indexOf(stylingMode) === -1) {
       stylingMode = this._getDefaultOptions().stylingMode;
     }
     $element.addClass("dx-button-mode-".concat(stylingMode));
   };
   _proto._renderSubmitInput = function _renderSubmitInput() {
-    var _this$option5 = this.option(),
-      useSubmitBehavior = _this$option5.useSubmitBehavior;
+    const {
+      useSubmitBehavior
+    } = this.option();
     if (useSubmitBehavior) {
-      var submitAction = this._getSubmitAction();
-      var $content = this._$content();
+      const submitAction = this._getSubmitAction();
+      const $content = this._$content();
       (0, _renderer.default)('<input>').attr('type', 'submit').attr('tabindex', -1).addClass('dx-button-submit-input').appendTo($content);
-      _short.click.on(this._$submitInput(), function (event) {
-        return submitAction({
-          event
-        });
-      });
+      _short.click.on(this._$submitInput(), event => submitAction({
+        event
+      }));
     }
   };
   _proto._renderType = function _renderType() {
-    var _this$option6 = this.option(),
-      type = _this$option6.type;
-    var $element = this.$element();
+    const {
+      type
+    } = this.option();
+    const $element = this.$element();
     type && $element.addClass("dx-button-".concat(type));
   };
   _proto._submitInput = function _submitInput() {
     return this._$submitInput().get(0);
   };
   _proto._supportedKeys = function _supportedKeys() {
-    var _this6 = this;
-    var click = function click(e) {
+    const click = e => {
       e.preventDefault();
-      _this6._executeClickAction(e);
+      this._executeClickAction(e);
     };
     return (0, _extend.extend)(_Widget.prototype._supportedKeys.call(this), {
       space: click,
@@ -312,10 +321,11 @@ var Button = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._updateAriaLabel = function _updateAriaLabel() {
-    var ariaTarget = this._getAriaTarget();
-    var _this$option7 = this.option(),
-      icon = _this$option7.icon,
-      text = _this$option7.text;
+    const ariaTarget = this._getAriaTarget();
+    let {
+      icon,
+      text
+    } = this.option();
     if (!text) {
       if ((0, _icon.getImageSourceType)(icon) === 'image') {
         icon = icon.indexOf('base64') === -1 ? icon.replace(/.+\/([^.]+)\..+$/, '$1') : 'Base64';
@@ -325,30 +335,31 @@ var Button = /*#__PURE__*/function (_Widget) {
     ariaTarget.attr('aria-label', text || null);
   };
   _proto._updateClick = function _updateClick() {
-    var _this7 = this;
     this._clickAction = this._createActionByOption('onClick', {
       excludeValidators: ['readOnly'],
-      afterExecute: function afterExecute() {
-        var _this7$option = _this7.option(),
-          useSubmitBehavior = _this7$option.useSubmitBehavior;
-        useSubmitBehavior && setTimeout(function () {
-          return _this7._submitInput().click();
-        });
+      afterExecute: () => {
+        const {
+          useSubmitBehavior
+        } = this.option();
+        useSubmitBehavior && setTimeout(() => this._submitInput().click());
       }
     });
   };
   _proto._updateContent = function _updateContent() {
-    var $element = this.$element();
-    var $content = this._$content();
-    var data = this._getContentData();
-    var _this$option8 = this.option(),
-      template = _this$option8.template,
-      iconPosition = _this$option8.iconPosition;
-    var icon = data.icon,
-      text = data.text;
+    const $element = this.$element();
+    let $content = this._$content();
+    const data = this._getContentData();
+    const {
+      template,
+      iconPosition
+    } = this.option();
+    const {
+      icon,
+      text
+    } = data;
     $content.length ? $content.empty() : $content = (0, _renderer.default)('<div>').addClass('dx-button-content').appendTo($element);
     $element.toggleClass('dx-button-has-icon', !!icon).toggleClass('dx-button-icon-right', !!icon && iconPosition !== 'left').toggleClass('dx-button-has-text', !!text);
-    var $template = (0, _renderer.default)(this._getTemplateByOption('template').render({
+    const $template = (0, _renderer.default)(this._getTemplateByOption('template').render({
       model: data,
       container: (0, _element.getPublicElement)($content),
       transclude: this._templateManager.anonymousTemplateName === template
@@ -360,9 +371,10 @@ var Button = /*#__PURE__*/function (_Widget) {
     this._updateSubmitInput();
   };
   _proto._updateSubmitInput = function _updateSubmitInput() {
-    var _this$option9 = this.option(),
-      useSubmitBehavior = _this$option9.useSubmitBehavior;
-    var $submitInput = this._$submitInput();
+    const {
+      useSubmitBehavior
+    } = this.option();
+    const $submitInput = this._$submitInput();
     if (!useSubmitBehavior && $submitInput.length) {
       $submitInput.remove();
     } else if (useSubmitBehavior && !$submitInput.length) {
@@ -370,26 +382,22 @@ var Button = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._updateStylingMode = function _updateStylingMode() {
-    var $element = this.$element();
-    ['contained', 'text', 'outlined'].map(function (mode) {
-      return "dx-button-mode-".concat(mode);
-    }).forEach(function (className) {
+    const $element = this.$element();
+    ['contained', 'text', 'outlined'].map(mode => "dx-button-mode-".concat(mode)).forEach(className => {
       $element.removeClass(className);
     });
     this._renderStylingMode();
   };
   _proto._updateType = function _updateType() {
-    var $element = this.$element();
-    ['back', 'danger', 'default', 'normal', 'success'].map(function (type) {
-      return "dx-button-".concat(type);
-    }).forEach(function (className) {
+    const $element = this.$element();
+    ['back', 'danger', 'default', 'normal', 'success'].map(type => "dx-button-".concat(type)).forEach(className => {
       $element.removeClass(className);
     });
     this._renderType();
   };
   _createClass(Button, [{
     key: "_validationGroupConfig",
-    get: function get() {
+    get: function () {
       return _validation_engine.default.getGroupConfig(this._findGroup());
     }
   }]);

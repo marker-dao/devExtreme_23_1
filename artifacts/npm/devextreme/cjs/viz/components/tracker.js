@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/components/tracker.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,19 +15,19 @@ var _click = require("../../events/click");
 var _pointer = _interopRequireDefault(require("../../events/pointer"));
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var downPointerEventName = _pointer.default.down;
-var movePointerEventName = _pointer.default.move;
+const downPointerEventName = _pointer.default.down;
+const movePointerEventName = _pointer.default.move;
 function Tracker(parameters) {
   this._initHandlers(parameters);
 }
 Tracker.prototype = {
   constructor: Tracker,
-  _initHandlers: function _initHandlers(parameters) {
-    var document = _dom_adapter.default.getDocument();
+  _initHandlers: function (parameters) {
+    const document = _dom_adapter.default.getDocument();
     parameters.getCoords = function (e) {
       // TODO: Looks like "eventData" just returns e.pageX, e.pageY. Investigate and use just e.pageX, e.pageY is possible. Don't forget about touch.
-      var data = (0, _index.eventData)(e);
-      var offset = parameters.widget._renderer.getRootOffset();
+      const data = (0, _index.eventData)(e);
+      const offset = parameters.widget._renderer.getRootOffset();
       return [data.x - offset.left, data.y - offset.top];
     };
     parameters.root.on(_click.name, clickHandler);
@@ -50,7 +50,7 @@ Tracker.prototype = {
     // But for now removing "stopPropagation" will suffice - it can be implemented faster and with less changes, there are no known drawbacks in it.
     // We use "stopPropagation" to prevent unexpected scrolling or zooming when widget has some own scrolling behavior and is located inside another widget
     // (like dxScrollable) with its own scrolling behavior - dxTreeMap does not have own scrolling behavior.
-    var isRootDown = false;
+    let isRootDown = false;
     function downHandler(e) {
       if (isRootDown) {
         isRootDown = false;
@@ -66,12 +66,12 @@ Tracker.prototype = {
       parameters.widget._getOption('tooltip').enabled && processTooltip(e, parameters);
     }
   },
-  dispose: function dispose() {
+  dispose: function () {
     this._disposeHandlers();
   }
 };
 function processClick(e, params) {
-  var id = params.getData(e);
+  const id = params.getData(e);
   if (id >= 0) {
     params.click({
       node: params.getNode(id),
@@ -81,7 +81,7 @@ function processClick(e, params) {
   }
 }
 function processHover(e, params) {
-  var id = params.getData(e);
+  const id = params.getData(e);
   if (id >= 0) {
     params.getNode(id).setHover();
   } else {
@@ -89,8 +89,8 @@ function processHover(e, params) {
   }
 }
 function processTooltip(e, params) {
-  var id = params.getData(e, true);
-  var coords;
+  const id = params.getData(e, true);
+  let coords;
   if (id >= 0) {
     coords = (0, _index.eventData)(e);
     params.getNode(id).showTooltip([coords.x, coords.y]);

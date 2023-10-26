@@ -13,11 +13,11 @@ if (_globalize.default && _globalize.default.load) {
     _globalize.default.locale('en');
   }
   _core.default.inject({
-    locale: function locale(_locale) {
-      if (!_locale) {
+    locale: function (locale) {
+      if (!locale) {
         return _globalize.default.locale().locale;
       }
-      _globalize.default.locale(_locale);
+      _globalize.default.locale(locale);
     }
   });
 }

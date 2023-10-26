@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/data_source_adapter/m_data_source_adapter.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,7 +29,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
     if (items) {
       items = items.slice(0);
       if (groupCount) {
-        for (var i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
           items[i] = (0, _extend.extend)({
             key: items[i].key
           }, items[i]);
@@ -40,7 +40,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
     return items;
   }
   function calculateOperationTypes(loadOptions, lastLoadOptions, isFullReload) {
-    var operationTypes = {
+    let operationTypes = {
       reload: true,
       fullReload: true
     };
@@ -76,8 +76,8 @@ var _default = _m_modules.default.Controller.inherit(function () {
     };
   }
   function getPageDataFromCache(options, updatePaging) {
-    var groupCount = _m_utils.default.normalizeSortingInfo(options.group || options.storeLoadOptions.group || options.loadOptions.group).length;
-    var items = [];
+    const groupCount = _m_utils.default.normalizeSortingInfo(options.group || options.storeLoadOptions.group || options.loadOptions.group).length;
+    const items = [];
     if (fillItemsFromCache(items, options, groupCount)) {
       return items;
     }
@@ -87,19 +87,21 @@ var _default = _m_modules.default.Controller.inherit(function () {
   }
   function fillItemsFromCache(items, options, groupCount, fromEnd) {
     var _a, _b, _c, _d, _e;
-    var storeLoadOptions = options.storeLoadOptions;
-    var take = (_b = (_a = options.take) !== null && _a !== void 0 ? _a : storeLoadOptions.take) !== null && _b !== void 0 ? _b : 0;
-    var cachedItems = (_c = options.cachedData) === null || _c === void 0 ? void 0 : _c.items;
+    const {
+      storeLoadOptions
+    } = options;
+    const take = (_b = (_a = options.take) !== null && _a !== void 0 ? _a : storeLoadOptions.take) !== null && _b !== void 0 ? _b : 0;
+    const cachedItems = (_c = options.cachedData) === null || _c === void 0 ? void 0 : _c.items;
     if (take && cachedItems) {
-      var skip = (_e = (_d = options.skip) !== null && _d !== void 0 ? _d : storeLoadOptions.skip) !== null && _e !== void 0 ? _e : 0;
-      for (var i = 0; i < take; i++) {
-        var localIndex = fromEnd ? take - 1 - i : i;
-        var cacheItemIndex = localIndex + skip;
-        var cacheItem = cachedItems[cacheItemIndex];
+      const skip = (_e = (_d = options.skip) !== null && _d !== void 0 ? _d : storeLoadOptions.skip) !== null && _e !== void 0 ? _e : 0;
+      for (let i = 0; i < take; i++) {
+        const localIndex = fromEnd ? take - 1 - i : i;
+        const cacheItemIndex = localIndex + skip;
+        const cacheItem = cachedItems[cacheItemIndex];
         if (cacheItem === undefined && cacheItemIndex in cachedItems) {
           return true;
         }
-        var item = getItemFromCache(options, cacheItem, groupCount, localIndex, take);
+        const item = getItemFromCache(options, cacheItem, groupCount, localIndex, take);
         if (item) {
           items.push(item);
         } else {
@@ -112,18 +114,20 @@ var _default = _m_modules.default.Controller.inherit(function () {
   }
   function getItemFromCache(options, cacheItem, groupCount, index, take) {
     if (groupCount && cacheItem) {
-      var skips = index === 0 && options.skips || [];
-      var takes = index === take - 1 && options.takes || [];
+      const skips = index === 0 && options.skips || [];
+      const takes = index === take - 1 && options.takes || [];
       return getGroupItemFromCache(cacheItem, groupCount, skips, takes);
     }
     return cacheItem;
   }
   function getGroupItemFromCache(cacheItem, groupCount, skips, takes) {
     if (groupCount && cacheItem) {
-      var result = _extends({}, cacheItem);
-      var skip = skips[0] || 0;
-      var take = takes[0];
-      var items = cacheItem.items;
+      const result = _extends({}, cacheItem);
+      const skip = skips[0] || 0;
+      const take = takes[0];
+      const {
+        items
+      } = cacheItem;
       if (items) {
         if (take === undefined && !items[skip]) {
           return;
@@ -135,10 +139,10 @@ var _default = _m_modules.default.Controller.inherit(function () {
         if (take) {
           result.isContinuationOnNextPage = cacheItem.count > take;
         }
-        for (var i = 0; take === undefined ? items[i + skip] : i < take; i++) {
-          var childCacheItem = items[i + skip];
-          var isLast = i + 1 === take;
-          var item = getGroupItemFromCache(childCacheItem, groupCount - 1, i === 0 ? skips.slice(1) : [], isLast ? takes.slice(1) : []);
+        for (let i = 0; take === undefined ? items[i + skip] : i < take; i++) {
+          const childCacheItem = items[i + skip];
+          const isLast = i + 1 === take;
+          const item = getGroupItemFromCache(childCacheItem, groupCount - 1, i === 0 ? skips.slice(1) : [], isLast ? takes.slice(1) : []);
           if (item !== undefined) {
             result.items.push(item);
           } else {
@@ -152,12 +156,14 @@ var _default = _m_modules.default.Controller.inherit(function () {
   }
   function updatePagingOptionsByCache(cacheItemsFromBegin, options, groupCount) {
     var _a, _b;
-    var cacheItemBeginCount = cacheItemsFromBegin.length;
-    var storeLoadOptions = options.storeLoadOptions;
+    const cacheItemBeginCount = cacheItemsFromBegin.length;
+    const {
+      storeLoadOptions
+    } = options;
     if (storeLoadOptions.skip !== undefined && storeLoadOptions.take && !groupCount) {
-      var cacheItemsFromEnd = [];
+      const cacheItemsFromEnd = [];
       fillItemsFromCache(cacheItemsFromEnd, options, groupCount, true);
-      var cacheItemEndCount = cacheItemsFromEnd.length;
+      const cacheItemEndCount = cacheItemsFromEnd.length;
       if (cacheItemBeginCount || cacheItemEndCount) {
         options.skip = (_a = options.skip) !== null && _a !== void 0 ? _a : storeLoadOptions.skip;
         options.take = (_b = options.take) !== null && _b !== void 0 ? _b : storeLoadOptions.take;
@@ -175,27 +181,29 @@ var _default = _m_modules.default.Controller.inherit(function () {
   }
   function setPageDataToCache(options, data, groupCount) {
     var _a, _b, _c, _d;
-    var storeLoadOptions = options.storeLoadOptions;
-    var skip = (_b = (_a = options.skip) !== null && _a !== void 0 ? _a : storeLoadOptions.skip) !== null && _b !== void 0 ? _b : 0;
-    var take = (_d = (_c = options.take) !== null && _c !== void 0 ? _c : storeLoadOptions.take) !== null && _d !== void 0 ? _d : 0;
-    for (var i = 0; i < take; i++) {
-      var globalIndex = i + skip;
-      var cacheItems = options.cachedData.items;
-      var skips = i === 0 && options.skips || [];
+    const {
+      storeLoadOptions
+    } = options;
+    const skip = (_b = (_a = options.skip) !== null && _a !== void 0 ? _a : storeLoadOptions.skip) !== null && _b !== void 0 ? _b : 0;
+    const take = (_d = (_c = options.take) !== null && _c !== void 0 ? _c : storeLoadOptions.take) !== null && _d !== void 0 ? _d : 0;
+    for (let i = 0; i < take; i++) {
+      const globalIndex = i + skip;
+      const cacheItems = options.cachedData.items;
+      const skips = i === 0 && options.skips || [];
       cacheItems[globalIndex] = getCacheItem(cacheItems[globalIndex], data[i], groupCount, skips);
     }
   }
   function getCacheItem(cacheItem, loadedItem, groupCount, skips) {
     if (groupCount && loadedItem) {
-      var result = _extends({}, loadedItem);
+      const result = _extends({}, loadedItem);
       delete result.isContinuation;
       delete result.isContinuationOnNextPage;
-      var skip = skips[0] || 0;
+      const skip = skips[0] || 0;
       if (loadedItem.items) {
         result.items = (cacheItem === null || cacheItem === void 0 ? void 0 : cacheItem.items) || {};
-        loadedItem.items.forEach(function (item, index) {
-          var globalIndex = index + skip;
-          var childSkips = index === 0 ? skips.slice(1) : [];
+        loadedItem.items.forEach((item, index) => {
+          const globalIndex = index + skip;
+          const childSkips = index === 0 ? skips.slice(1) : [];
           result.items[globalIndex] = getCacheItem(result.items[globalIndex], item, groupCount - 1, childSkips);
         });
       }
@@ -203,9 +211,9 @@ var _default = _m_modules.default.Controller.inherit(function () {
     }
     return loadedItem;
   }
-  var members = {
+  const members = {
     init(dataSource, remoteOperations) {
-      var that = this;
+      const that = this;
       that._dataSource = dataSource;
       that._remoteOperations = remoteOperations || {};
       that._isLastPage = !dataSource.isLastPage();
@@ -236,7 +244,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
       dataSource.on('loadError', that._loadErrorHandler);
       dataSource.on('changing', that._changingHandler);
       dataSource.store().on('beforePush', that._pushHandler);
-      (0, _iterator.each)(dataSource, function (memberName, member) {
+      (0, _iterator.each)(dataSource, (memberName, member) => {
         if (!that[memberName] && (0, _type.isFunction)(member)) {
           that[memberName] = function () {
             return this._dataSource[memberName].apply(this._dataSource, arguments);
@@ -248,9 +256,9 @@ var _default = _m_modules.default.Controller.inherit(function () {
       return this._remoteOperations;
     },
     dispose(isSharedDataSource) {
-      var that = this;
-      var dataSource = that._dataSource;
-      var store = dataSource.store();
+      const that = this;
+      const dataSource = that._dataSource;
+      const store = dataSource.store();
       dataSource.off('changed', that._dataChangedHandler);
       dataSource.off('customizeStoreLoadOptions', that._customizeStoreLoadOptionsHandler);
       dataSource.off('customizeLoadResult', that._dataLoadedHandler);
@@ -263,8 +271,8 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
     },
     refresh(options, operationTypes) {
-      var that = this;
-      var dataSource = that._dataSource;
+      const that = this;
+      const dataSource = that._dataSource;
       if (operationTypes.reload) {
         that.resetCurrentTotalCount();
         that._isLastPage = !dataSource.paginate();
@@ -283,15 +291,13 @@ var _default = _m_modules.default.Controller.inherit(function () {
       this._cachedData = createEmptyCachedData();
     },
     _needClearStoreDataCache() {
-      var remoteOperations = this.remoteOperations();
-      var operationTypes = calculateOperationTypes(this._lastLoadOptions || {}, {});
-      var isLocalOperations = Object.keys(remoteOperations).every(function (operationName) {
-        return !operationTypes[operationName] || !remoteOperations[operationName];
-      });
+      const remoteOperations = this.remoteOperations();
+      const operationTypes = calculateOperationTypes(this._lastLoadOptions || {}, {});
+      const isLocalOperations = Object.keys(remoteOperations).every(operationName => !operationTypes[operationName] || !remoteOperations[operationName]);
       return !isLocalOperations;
     },
     push(changes, fromStore) {
-      var store = this.store();
+      const store = this.store();
       if (this._needClearStoreDataCache()) {
         this._cachedStoreData = undefined;
       }
@@ -311,17 +317,16 @@ var _default = _m_modules.default.Controller.inherit(function () {
       this.pushed.fire(changes);
     },
     getDataIndexGetter() {
-      var _this = this;
       if (!this._dataIndexGetter) {
-        var indexByKey;
-        var storeData;
-        var store = this.store();
-        this._dataIndexGetter = function (data) {
-          var isCacheUpdated = storeData && storeData !== _this._cachedStoreData;
+        let indexByKey;
+        let storeData;
+        const store = this.store();
+        this._dataIndexGetter = data => {
+          const isCacheUpdated = storeData && storeData !== this._cachedStoreData;
           if (!indexByKey || isCacheUpdated) {
-            storeData = _this._cachedStoreData || [];
+            storeData = this._cachedStoreData || [];
             indexByKey = {};
-            for (var i = 0; i < storeData.length; i++) {
+            for (let i = 0; i < storeData.length; i++) {
               indexByKey[(0, _common.getKeyHash)(store.keyOf(storeData[i]))] = i;
             }
           }
@@ -337,19 +342,14 @@ var _default = _m_modules.default.Controller.inherit(function () {
       return true;
     },
     _applyBatch(changes, fromStore) {
-      var _this2 = this;
-      var keyInfo = this._getKeyInfo();
-      var dataSource = this._dataSource;
-      var groupCount = _m_utils.default.normalizeSortingInfo(this.group()).length;
-      var isReshapeMode = this.option('editing.refreshMode') === 'reshape';
-      var isVirtualMode = this.option('scrolling.mode') === 'virtual';
-      changes = changes.filter(function (change) {
-        return !dataSource.paginate() || change.type !== 'insert' || change.index !== undefined;
-      });
-      var getItemCount = function getItemCount() {
-        return groupCount ? _this2.itemsCount() : _this2.items().length;
-      };
-      var oldItemCount = getItemCount();
+      const keyInfo = this._getKeyInfo();
+      const dataSource = this._dataSource;
+      const groupCount = _m_utils.default.normalizeSortingInfo(this.group()).length;
+      const isReshapeMode = this.option('editing.refreshMode') === 'reshape';
+      const isVirtualMode = this.option('scrolling.mode') === 'virtual';
+      changes = changes.filter(change => !dataSource.paginate() || change.type !== 'insert' || change.index !== undefined);
+      const getItemCount = () => groupCount ? this.itemsCount() : this.items().length;
+      const oldItemCount = getItemCount();
       // @ts-expect-error
       (0, _array_utils.applyBatch)({
         keyInfo,
@@ -368,14 +368,16 @@ var _default = _m_modules.default.Controller.inherit(function () {
         useInsertIndex: true,
         skipCopying: !this._needToCopyDataObject()
       });
-      var needUpdateTotalCountCorrection = this._currentTotalCount > 0 || (fromStore || !isReshapeMode) && isVirtualMode;
+      const needUpdateTotalCountCorrection = this._currentTotalCount > 0 || (fromStore || !isReshapeMode) && isVirtualMode;
       if (needUpdateTotalCountCorrection) {
         this._totalCountCorrection += getItemCount() - oldItemCount;
       }
       changes.splice(0, changes.length);
     },
     _handlePush(_ref) {
-      var changes = _ref.changes;
+      let {
+        changes
+      } = _ref;
       this.push(changes, true);
     },
     _handleChanging(e) {
@@ -383,18 +385,15 @@ var _default = _m_modules.default.Controller.inherit(function () {
       this._applyBatch(e.changes, true);
     },
     _needCleanCacheByOperation(operationType, remoteOperations) {
-      var operationTypesByOrder = ['filtering', 'sorting', 'paging'];
-      var operationTypeIndex = operationTypesByOrder.indexOf(operationType);
-      var currentOperationTypes = operationTypeIndex >= 0 ? operationTypesByOrder.slice(operationTypeIndex) : [operationType];
-      return currentOperationTypes.some(function (operationType) {
-        return remoteOperations[operationType];
-      });
+      const operationTypesByOrder = ['filtering', 'sorting', 'paging'];
+      const operationTypeIndex = operationTypesByOrder.indexOf(operationType);
+      const currentOperationTypes = operationTypeIndex >= 0 ? operationTypesByOrder.slice(operationTypeIndex) : [operationType];
+      return currentOperationTypes.some(operationType => remoteOperations[operationType]);
     },
     _customizeRemoteOperations(options, operationTypes) {
-      var _this3 = this;
-      var cachedStoreData = this._cachedStoreData;
-      var cachedPagingData = this._cachedPagingData;
-      var cachedData = this._cachedData;
+      let cachedStoreData = this._cachedStoreData;
+      let cachedPagingData = this._cachedPagingData;
+      let cachedData = this._cachedData;
       if (options.storeLoadOptions.filter && !options.remoteOperations.filtering || options.storeLoadOptions.sort && !options.remoteOperations.sorting) {
         options.remoteOperations = {
           filtering: options.remoteOperations.filtering,
@@ -412,8 +411,8 @@ var _default = _m_modules.default.Controller.inherit(function () {
         } else if (operationTypes.groupExpanding) {
           cachedData = createEmptyCachedData();
         }
-        (0, _iterator.each)(operationTypes, function (operationType, value) {
-          if (value && _this3._needCleanCacheByOperation(operationType, options.remoteOperations)) {
+        (0, _iterator.each)(operationTypes, (operationType, value) => {
+          if (value && this._needCleanCacheByOperation(operationType, options.remoteOperations)) {
             cachedStoreData = undefined;
             cachedPagingData = undefined;
           }
@@ -440,41 +439,40 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
     },
     _handleDataLoading(options) {
-      var _this4 = this;
-      var dataSource = this._dataSource;
-      var lastLoadOptions = this._lastLoadOptions;
+      const dataSource = this._dataSource;
+      const lastLoadOptions = this._lastLoadOptions;
       this.customizeStoreLoadOptions.fire(options);
       options.delay = this.option('loadingTimeout');
       options.originalStoreLoadOptions = options.storeLoadOptions;
       options.remoteOperations = (0, _extend.extend)({}, this.remoteOperations());
-      var isFullReload = !this.isLoaded() && !this._isRefreshing;
+      const isFullReload = !this.isLoaded() && !this._isRefreshing;
       if (this.option('integrationOptions.renderedOnServer') && !this.isLoaded()) {
         options.delay = undefined;
       }
-      var loadOptions = (0, _extend.extend)({
+      const loadOptions = (0, _extend.extend)({
         pageIndex: this.pageIndex(),
         pageSize: this.pageSize()
       }, options.storeLoadOptions);
-      var operationTypes = calculateOperationTypes(loadOptions, lastLoadOptions, isFullReload);
+      const operationTypes = calculateOperationTypes(loadOptions, lastLoadOptions, isFullReload);
       this._customizeRemoteOperations(options, operationTypes);
       if (!options.isCustomLoading) {
-        var isRefreshing = this._isRefreshing;
+        const isRefreshing = this._isRefreshing;
         options.pageIndex = dataSource.pageIndex();
         options.lastLoadOptions = loadOptions;
         options.operationTypes = operationTypes;
         this._loadingOperationTypes = operationTypes;
         this._isRefreshing = true;
-        (0, _deferred.when)(isRefreshing || this._isRefreshed || this.refresh(options, operationTypes)).done(function () {
-          if (_this4._lastOperationId === options.operationId) {
-            _this4._isRefreshed = true;
-            _this4.load().always(function () {
-              _this4._isRefreshed = false;
+        (0, _deferred.when)(isRefreshing || this._isRefreshed || this.refresh(options, operationTypes)).done(() => {
+          if (this._lastOperationId === options.operationId) {
+            this._isRefreshed = true;
+            this.load().always(() => {
+              this._isRefreshed = false;
             });
           }
-        }).fail(function () {
+        }).fail(() => {
           dataSource.cancel(options.operationId);
-        }).always(function () {
-          _this4._isRefreshing = false;
+        }).always(() => {
+          this._isRefreshing = false;
         });
         dataSource.cancel(this._lastOperationId);
         this._lastOperationId = options.operationId;
@@ -485,10 +483,12 @@ var _default = _m_modules.default.Controller.inherit(function () {
       this._handleDataLoadingCore(options);
     },
     _handleDataLoadingCore(options) {
-      var remoteOperations = options.remoteOperations;
+      const {
+        remoteOperations
+      } = options;
       options.loadOptions = {};
-      var cachedExtra = options.cachedData.extra;
-      var localLoadOptionNames = {
+      const cachedExtra = options.cachedData.extra;
+      const localLoadOptionNames = {
         filter: !remoteOperations.filtering,
         sort: !remoteOperations.sorting,
         group: !remoteOperations.grouping,
@@ -498,7 +498,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
         requireTotalCount: cachedExtra && 'totalCount' in cachedExtra || !remoteOperations.paging,
         langParams: !remoteOperations.filtering || !remoteOperations.sorting
       };
-      (0, _iterator.each)(options.storeLoadOptions, function (optionName, optionValue) {
+      (0, _iterator.each)(options.storeLoadOptions, (optionName, optionValue) => {
         if (localLoadOptionNames[optionName]) {
           options.loadOptions[optionName] = optionValue;
           delete options.storeLoadOptions[optionName];
@@ -509,16 +509,21 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
     },
     _handleDataLoaded(options) {
-      var _this5 = this;
       var _a, _b;
-      var loadOptions = options.loadOptions;
-      var localPaging = options.remoteOperations && !options.remoteOperations.paging;
-      var cachedData = options.cachedData;
-      var storeLoadOptions = options.storeLoadOptions;
-      var needCache = this.option('cacheEnabled') !== false && storeLoadOptions;
-      var needPageCache = needCache && !options.isCustomLoading && cachedData && (!localPaging || storeLoadOptions.group);
-      var needPagingCache = needCache && localPaging;
-      var needStoreCache = needPagingCache && !options.isCustomLoading;
+      const {
+        loadOptions
+      } = options;
+      const localPaging = options.remoteOperations && !options.remoteOperations.paging;
+      const {
+        cachedData
+      } = options;
+      const {
+        storeLoadOptions
+      } = options;
+      const needCache = this.option('cacheEnabled') !== false && storeLoadOptions;
+      const needPageCache = needCache && !options.isCustomLoading && cachedData && (!localPaging || storeLoadOptions.group);
+      const needPagingCache = needCache && localPaging;
+      const needStoreCache = needPagingCache && !options.isCustomLoading;
       if (!loadOptions) {
         this._dataSource.cancel(options.operationId);
         return;
@@ -532,7 +537,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
       if (loadOptions.group) {
         loadOptions.group = options.group || loadOptions.group;
       }
-      var groupCount = _m_utils.default.normalizeSortingInfo(options.group || storeLoadOptions.group || loadOptions.group).length;
+      const groupCount = _m_utils.default.normalizeSortingInfo(options.group || storeLoadOptions.group || loadOptions.group).length;
       if (options.cachedDataPartBegin) {
         options.data = options.cachedDataPartBegin.concat(options.data);
       }
@@ -551,12 +556,12 @@ var _default = _m_modules.default.Controller.inherit(function () {
             }
           }
           // @ts-expect-error
-          new _array_store.default(options.data).load(loadOptions).done(function (data) {
+          new _array_store.default(options.data).load(loadOptions).done(data => {
             options.data = data;
             if (needStoreCache) {
-              _this5._cachedPagingData = cloneItems(options.data, groupCount);
+              this._cachedPagingData = cloneItems(options.data, groupCount);
             }
-          }).fail(function (error) {
+          }).fail(error => {
             // @ts-expect-error
             options.data = new _deferred.Deferred().reject(error);
           });
@@ -574,16 +579,16 @@ var _default = _m_modules.default.Controller.inherit(function () {
         this._handleDataLoadedCore(options);
         if (needPageCache) {
           cachedData.extra = cachedData.extra || (0, _extend.extend)({}, options.extra);
-          (0, _deferred.when)(options.data).done(function (data) {
+          (0, _deferred.when)(options.data).done(data => {
             setPageDataToCache(options, data, groupCount);
           });
         }
       }
-      (0, _deferred.when)(options.data).done(function () {
+      (0, _deferred.when)(options.data).done(() => {
         if (options.lastLoadOptions) {
-          _this5._lastLoadOptions = options.lastLoadOptions;
-          Object.keys(options.operationTypes).forEach(function (operationType) {
-            _this5._lastOperationTypes[operationType] = _this5._lastOperationTypes[operationType] || options.operationTypes[operationType];
+          this._lastLoadOptions = options.lastLoadOptions;
+          Object.keys(options.operationTypes).forEach(operationType => {
+            this._lastOperationTypes[operationType] = this._lastOperationTypes[operationType] || options.operationTypes[operationType];
           });
         }
       });
@@ -613,11 +618,11 @@ var _default = _m_modules.default.Controller.inherit(function () {
       return this.pageSize();
     },
     _handleDataChanged(args) {
-      var currentTotalCount;
-      var dataSource = this._dataSource;
-      var isLoading = false;
-      var isDataLoading = !args || (0, _type.isDefined)(args.changeType);
-      var itemsCount = this.itemsCount();
+      let currentTotalCount;
+      const dataSource = this._dataSource;
+      let isLoading = false;
+      const isDataLoading = !args || (0, _type.isDefined)(args.changeType);
+      const itemsCount = this.itemsCount();
       if (isDataLoading) {
         this._isLastPage = !itemsCount || !this._loadPageSize() || itemsCount < this._loadPageSize();
         if (this._isLastPage) {
@@ -657,9 +662,9 @@ var _default = _m_modules.default.Controller.inherit(function () {
       }
     },
     _scheduleCustomLoadCallbacks(deferred) {
-      var that = this;
+      const that = this;
       that._isCustomLoading = true;
-      deferred.always(function () {
+      deferred.always(() => {
         that._isCustomLoading = false;
       });
     },
@@ -692,16 +697,16 @@ var _default = _m_modules.default.Controller.inherit(function () {
       return this.totalCount();
     },
     pageSize() {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       if (!arguments.length && !dataSource.paginate()) {
         return 0;
       }
       return dataSource.pageSize.apply(dataSource, arguments);
     },
     pageCount() {
-      var that = this;
-      var count = that.totalItemsCount() - that._totalCountCorrection;
-      var pageSize = that.pageSize();
+      const that = this;
+      const count = that.totalItemsCount() - that._totalCountCorrection;
+      const pageSize = that.pageSize();
       if (pageSize && count > 0) {
         return Math.max(1, Math.ceil(count / pageSize));
       }
@@ -711,12 +716,12 @@ var _default = _m_modules.default.Controller.inherit(function () {
       return this._hasLastPage || this._dataSource.totalCount() >= 0;
     },
     loadFromStore(loadOptions, store) {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       // @ts-expect-error
-      var d = new _deferred.Deferred();
+      const d = new _deferred.Deferred();
       if (!dataSource) return;
       store = store || dataSource.store();
-      store.load(loadOptions).done(function (data, extra) {
+      store.load(loadOptions).done((data, extra) => {
         if (data && !Array.isArray(data) && Array.isArray(data.data)) {
           extra = data;
           data = data.data;
@@ -729,21 +734,20 @@ var _default = _m_modules.default.Controller.inherit(function () {
       return !!this._isCustomLoading;
     },
     load(options) {
-      var _this6 = this;
-      var that = this;
-      var dataSource = that._dataSource;
+      const that = this;
+      const dataSource = that._dataSource;
       // @ts-expect-error
-      var d = new _deferred.Deferred();
+      const d = new _deferred.Deferred();
       if (options) {
-        var store = dataSource.store();
-        var dataSourceLoadOptions = dataSource.loadOptions();
-        var loadResult = {
+        const store = dataSource.store();
+        const dataSourceLoadOptions = dataSource.loadOptions();
+        const loadResult = {
           storeLoadOptions: (0, _extend.extend)({}, options, {
             langParams: dataSourceLoadOptions === null || dataSourceLoadOptions === void 0 ? void 0 : dataSourceLoadOptions.langParams
           }),
           isCustomLoading: true
         };
-        (0, _iterator.each)(store._customLoadOptions() || [], function (_, optionName) {
+        (0, _iterator.each)(store._customLoadOptions() || [], (_, optionName) => {
           if (!(optionName in loadResult.storeLoadOptions)) {
             loadResult.storeLoadOptions[optionName] = dataSourceLoadOptions[optionName];
           }
@@ -752,11 +756,11 @@ var _default = _m_modules.default.Controller.inherit(function () {
         that._scheduleCustomLoadCallbacks(d);
         dataSource._scheduleLoadCallbacks(d);
         that._handleCustomizeStoreLoadOptions(loadResult);
-        executeTask(function () {
+        executeTask(() => {
           if (!dataSource.store()) {
             return d.reject('canceled');
           }
-          (0, _deferred.when)(loadResult.data || that.loadFromStore(loadResult.storeLoadOptions)).done(function (data, extra) {
+          (0, _deferred.when)(loadResult.data || that.loadFromStore(loadResult.storeLoadOptions)).done((data, extra) => {
             loadResult.data = data;
             loadResult.extra = extra || {};
             that._handleDataLoaded(loadResult);
@@ -764,7 +768,7 @@ var _default = _m_modules.default.Controller.inherit(function () {
               loadResult.extra.totalCount = store.totalCount(loadResult.storeLoadOptions);
             }
             // TODO map function??
-            (0, _deferred.when)(loadResult.data, loadResult.extra.totalCount).done(function (data, totalCount) {
+            (0, _deferred.when)(loadResult.data, loadResult.extra.totalCount).done((data, totalCount) => {
               loadResult.extra.totalCount = totalCount;
               d.resolve(data, loadResult.extra);
             }).fail(d.reject);
@@ -772,8 +776,8 @@ var _default = _m_modules.default.Controller.inherit(function () {
         }, that.option('loadingTimeout'));
         return d.fail(function () {
           that._eventsStrategy.fireEvent('loadError', arguments);
-        }).always(function () {
-          _this6._isLoadingAll = false;
+        }).always(() => {
+          this._isLoadingAll = false;
         }).promise();
       }
       return dataSource.load();

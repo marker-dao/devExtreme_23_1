@@ -4,14 +4,13 @@ exports.getValidGroups = exports.getCurrentViewProps = exports.getCurrentViewCon
 exports.getViewConfigProp = getViewConfigProp;
 var _untyped_getCurrentView = require("./untyped_getCurrentView");
 var _type = require("../../../../core/utils/type");
-var _excluded = ["height", "scrolling", "width"];
+const _excluded = ["height", "scrolling", "width"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-var getCurrentView = _untyped_getCurrentView.renovationGetCurrentView;
+const getCurrentView = _untyped_getCurrentView.renovationGetCurrentView;
 exports.getCurrentView = getCurrentView;
-var getCurrentViewProps = function getCurrentViewProps(currentView, views) {
-  var currentViewProps = getCurrentView(currentView, views);
+const getCurrentViewProps = (currentView, views) => {
+  const currentViewProps = getCurrentView(currentView, views);
   return (0, _type.isString)(currentViewProps) ? {
     type: currentViewProps
   } : currentViewProps;
@@ -20,15 +19,17 @@ exports.getCurrentViewProps = getCurrentViewProps;
 function getViewConfigProp(schedulerProp, viewProp) {
   return viewProp !== undefined ? viewProp : schedulerProp;
 }
-var getCurrentViewConfig = function getCurrentViewConfig(currentViewProps, schedulerProps, currentDate) {
-  var height = schedulerProps.height,
-    schedulerScrolling = schedulerProps.scrolling,
-    width = schedulerProps.width,
-    restSchedulerProps = _objectWithoutProperties(schedulerProps, _excluded);
-  var scrolling = currentViewProps.scrolling;
-  var isVirtualScrolling = schedulerScrolling.mode === 'virtual' || (scrolling === null || scrolling === void 0 ? void 0 : scrolling.mode) === 'virtual';
-  var crossScrollingEnabled = schedulerProps.crossScrollingEnabled || isVirtualScrolling;
-  var result = _extends({
+const getCurrentViewConfig = (currentViewProps, schedulerProps, currentDate) => {
+  const {
+      scrolling: schedulerScrolling
+    } = schedulerProps,
+    restSchedulerProps = _objectWithoutPropertiesLoose(schedulerProps, _excluded);
+  const {
+    scrolling
+  } = currentViewProps;
+  const isVirtualScrolling = schedulerScrolling.mode === 'virtual' || (scrolling === null || scrolling === void 0 ? void 0 : scrolling.mode) === 'virtual';
+  const crossScrollingEnabled = schedulerProps.crossScrollingEnabled || isVirtualScrolling;
+  const result = _extends({
     scrolling: schedulerScrolling
   }, restSchedulerProps, currentViewProps, {
     schedulerHeight: schedulerProps.height,
@@ -51,7 +52,5 @@ var getCurrentViewConfig = function getCurrentViewConfig(currentViewProps, sched
   });
 };
 exports.getCurrentViewConfig = getCurrentViewConfig;
-var getValidGroups = function getValidGroups(schedulerGroups, viewGroups) {
-  return getViewConfigProp(schedulerGroups, viewGroups);
-};
+const getValidGroups = (schedulerGroups, viewGroups) => getViewConfigProp(schedulerGroups, viewGroups);
 exports.getValidGroups = getValidGroups;

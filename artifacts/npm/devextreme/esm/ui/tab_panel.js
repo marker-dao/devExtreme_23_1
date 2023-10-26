@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tab_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,7 @@ import { getImageContainer } from '../core/utils/icon';
 import { getPublicElement } from '../core/element';
 import { isPlainObject, isDefined } from '../core/utils/type';
 import { BindableTemplate } from '../core/templates/bindable_template';
-import { isMaterial, isFluent, current as currentTheme } from './themes';
+import { isMaterialBased, isFluent, current as currentTheme } from './themes';
 
 // STYLE tabPanel
 
@@ -41,6 +41,12 @@ var TABS_POSITION = {
   right: 'right',
   bottom: 'bottom',
   left: 'left'
+};
+var TABS_INDICATOR_POSITION_BY_TABS_POSITION = {
+  top: 'bottom',
+  right: 'left',
+  bottom: 'top',
+  left: 'right'
 };
 var TABS_ORIENTATION = {
   horizontal: 'horizontal',
@@ -72,15 +78,15 @@ var TabPanel = MultiView.inherit({
       onTitleRendered: null,
       badgeExpr: function badgeExpr(data) {
         return data ? data.badge : undefined;
-      }
-
+      },
       /**
       * @name dxTabPanelItem.visible
       * @hidden
       */
+
+      _tabsIndicatorPosition: null
     });
   },
-
   _defaultOptionsRules: function _defaultOptionsRules() {
     var themeName = currentTheme();
     return this.callBase().concat([{
@@ -109,12 +115,11 @@ var TabPanel = MultiView.inherit({
         return isFluent(themeName);
       },
       options: {
-        iconPosition: ICON_POSITION.top,
         stylingMode: STYLING_MODE.secondary
       }
     }, {
       device() {
-        return isMaterial(themeName);
+        return isMaterialBased(themeName);
       },
       options: {
         iconPosition: ICON_POSITION.top
@@ -202,7 +207,15 @@ var TabPanel = MultiView.inherit({
     this.setAria('controls', undefined, $(tabItems));
     this.setAria('controls', id, $activeTab);
   },
-  _tabConfig: function _tabConfig() {
+  _getTabsIndicatorPosition() {
+    var {
+      _tabsIndicatorPosition,
+      tabsPosition
+    } = this.option();
+    return _tabsIndicatorPosition !== null && _tabsIndicatorPosition !== void 0 ? _tabsIndicatorPosition : TABS_INDICATOR_POSITION_BY_TABS_POSITION[tabsPosition];
+  },
+  _tabConfig() {
+    var tabsIndicatorPosition = this._getTabsIndicatorPosition();
     return {
       selectOnFocus: true,
       focusStateEnabled: this.option('focusStateEnabled'),
@@ -252,7 +265,8 @@ var TabPanel = MultiView.inherit({
       stylingMode: this.option('stylingMode'),
       _itemAttributes: {
         class: TABPANEL_TABS_ITEM_CLASS
-      }
+      },
+      _indicatorPosition: tabsIndicatorPosition
     };
   },
   _renderFocusTarget: function _renderFocusTarget() {
@@ -290,17 +304,7 @@ var TabPanel = MultiView.inherit({
   },
   _updateTabsOrientation() {
     var orientation = this._getTabsOrientation();
-    this._tabs.option('orientation', orientation);
-  },
-  _updateTabsIconPosition(iconPosition) {
-    this._tabs.option({
-      iconPosition
-    });
-  },
-  _updateTabsStylingMode(stylingMode) {
-    this._tabs.option({
-      stylingMode
-    });
+    this._setTabsOption('orientation', orientation);
   },
   _toggleWrapperFocusedClass(isFocused) {
     this._toggleFocusClass(isFocused, this._$wrapper);
@@ -330,7 +334,7 @@ var TabPanel = MultiView.inherit({
     this._tabs._focusOutHandler(e);
     this._isFocusOutHandlerExecuting = false;
   },
-  _setTabsOption: function _setTabsOption(name, value) {
+  _setTabsOption(name, value) {
     if (this._tabs) {
       this._tabs.option(name, value);
     }
@@ -349,6 +353,10 @@ var TabPanel = MultiView.inherit({
   repaint: function repaint() {
     this.callBase();
     this._tabs.repaint();
+  },
+  _updateTabsIndicatorPosition() {
+    var value = this._getTabsIndicatorPosition();
+    this.option('_tabsIndicatorPosition', value);
   },
   _optionChanged: function _optionChanged(args) {
     var {
@@ -430,13 +438,17 @@ var TabPanel = MultiView.inherit({
         break;
       case 'tabsPosition':
         this._toggleTabPanelTabsPositionClass();
+        this._updateTabsIndicatorPosition();
         this._updateTabsOrientation();
         break;
       case 'iconPosition':
-        this._updateTabsIconPosition(value);
+        this._setTabsOption('iconPosition', value);
         break;
       case 'stylingMode':
-        this._updateTabsStylingMode(value);
+        this._setTabsOption('stylingMode', value);
+        break;
+      case '_tabsIndicatorPosition':
+        this._setTabsOption('_indicatorPosition', value);
         break;
       default:
         this.callBase(args);

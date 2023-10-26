@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/responsive_box.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,13 +23,13 @@ var _uiCollection_widget = _interopRequireDefault(require("./collection/ui.colle
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE responsiveBox
 
-var RESPONSIVE_BOX_CLASS = 'dx-responsivebox';
-var SCREEN_SIZE_CLASS_PREFIX = RESPONSIVE_BOX_CLASS + '-screen-';
-var BOX_ITEM_CLASS = 'dx-box-item';
-var BOX_ITEM_DATA_KEY = 'dxBoxItemData';
-var HD_SCREEN_WIDTH = 1920;
-var ResponsiveBox = _uiCollection_widget.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const RESPONSIVE_BOX_CLASS = 'dx-responsivebox';
+const SCREEN_SIZE_CLASS_PREFIX = RESPONSIVE_BOX_CLASS + '-screen-';
+const BOX_ITEM_CLASS = 'dx-box-item';
+const BOX_ITEM_DATA_KEY = 'dxBoxItemData';
+const HD_SCREEN_WIDTH = 1920;
+const ResponsiveBox = _uiCollection_widget.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       rows: [],
       cols: [],
@@ -94,29 +94,29 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       currentScreenFactor: undefined
     });
   },
-  _init: function _init() {
+  _init: function () {
     if (!this.option('screenByWidth')) {
       this._options.silent('screenByWidth', _window.defaultScreenFactorFunc);
     }
     this.callBase();
     this._initLayoutChangedAction();
   },
-  _initLayoutChangedAction: function _initLayoutChangedAction() {
+  _initLayoutChangedAction: function () {
     this._layoutChangedAction = this._createActionByOption('onLayoutChanged', {
       excludeValidators: ['disabled', 'readonly']
     });
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return BOX_ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return BOX_ITEM_DATA_KEY;
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this.$element().addClass(RESPONSIVE_BOX_CLASS);
   },
-  _renderItems: function _renderItems() {
+  _renderItems: function () {
     this._setScreenSize();
     this._screenItems = this._itemsByScreen();
     this._prepareGrid();
@@ -124,8 +124,8 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
     this._layoutItems();
     this._linkNodeToItem();
   },
-  _itemOptionChanged: function _itemOptionChanged(item) {
-    var $item = this._findItemElementByItem(item);
+  _itemOptionChanged: function (item) {
+    const $item = this._findItemElementByItem(item);
     if (!$item.length) {
       return;
     }
@@ -133,35 +133,35 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
     this._clearItemNodeTemplates();
     this._update(true);
   },
-  _setScreenSize: function _setScreenSize() {
-    var currentScreen = this._getCurrentScreen();
+  _setScreenSize: function () {
+    const currentScreen = this._getCurrentScreen();
     this._removeScreenSizeClass();
     this.$element().addClass(SCREEN_SIZE_CLASS_PREFIX + currentScreen);
     this.option('currentScreenFactor', currentScreen);
   },
-  _removeScreenSizeClass: function _removeScreenSizeClass() {
-    var currentScreenFactor = this.option('currentScreenFactor');
+  _removeScreenSizeClass: function () {
+    const currentScreenFactor = this.option('currentScreenFactor');
     currentScreenFactor && this.$element().removeClass(SCREEN_SIZE_CLASS_PREFIX + currentScreenFactor);
   },
-  _prepareGrid: function _prepareGrid() {
-    var grid = this._grid = [];
+  _prepareGrid: function () {
+    const grid = this._grid = [];
     this._prepareRowsAndCols();
     (0, _iterator.each)(this._rows, function () {
-      var row = [];
+      const row = [];
       grid.push(row);
       (0, _iterator.each)(this._cols, function () {
         row.push(this._createEmptyCell());
       }.bind(this));
     }.bind(this));
   },
-  getSingleColumnRows: function getSingleColumnRows() {
-    var rows = this.option('rows');
-    var screenItemsLength = this._screenItems.length;
+  getSingleColumnRows: function () {
+    const rows = this.option('rows');
+    const screenItemsLength = this._screenItems.length;
     if (rows.length) {
-      var filteredRows = this._filterByScreen(rows);
-      var result = [];
-      for (var i = 0; i < screenItemsLength; i++) {
-        var sizeConfig = this._defaultSizeConfig();
+      const filteredRows = this._filterByScreen(rows);
+      const result = [];
+      for (let i = 0; i < screenItemsLength; i++) {
+        const sizeConfig = this._defaultSizeConfig();
         if (i < filteredRows.length && (0, _type.isDefined)(filteredRows[i].shrink)) {
           sizeConfig.shrink = filteredRows[i].shrink;
         }
@@ -172,7 +172,7 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       return this._defaultSizeConfig(screenItemsLength);
     }
   },
-  _prepareRowsAndCols: function _prepareRowsAndCols() {
+  _prepareRowsAndCols: function () {
     if (this._isSingleColumnScreen()) {
       this._prepareSingleColumnScreenItems();
       this._rows = this.getSingleColumnRows();
@@ -182,10 +182,10 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       this._cols = this._sizesByScreen(this.option('cols'));
     }
   },
-  _isSingleColumnScreen: function _isSingleColumnScreen() {
+  _isSingleColumnScreen: function () {
     return this._screenRegExp().test(this.option('singleColumnScreen')) || !this.option('rows').length || !this.option('cols').length;
   },
-  _prepareSingleColumnScreenItems: function _prepareSingleColumnScreenItems() {
+  _prepareSingleColumnScreenItems: function () {
     this._screenItems.sort(function (item1, item2) {
       return item1.location.row - item2.location.row || item1.location.col - item2.location.col;
     });
@@ -198,12 +198,12 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       });
     });
   },
-  _sizesByScreen: function _sizesByScreen(sizeConfigs) {
+  _sizesByScreen: function (sizeConfigs) {
     return (0, _iterator.map)(this._filterByScreen(sizeConfigs), function (sizeConfig) {
       return (0, _extend.extend)(this._defaultSizeConfig(), sizeConfig);
     }.bind(this));
   },
-  _createDefaultSizeConfig: function _createDefaultSizeConfig() {
+  _createDefaultSizeConfig: function () {
     return {
       ratio: 1,
       baseSize: 0,
@@ -211,35 +211,35 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       maxSize: 0
     };
   },
-  _defaultSizeConfig: function _defaultSizeConfig(size) {
-    var defaultSizeConfig = this._createDefaultSizeConfig();
+  _defaultSizeConfig: function (size) {
+    const defaultSizeConfig = this._createDefaultSizeConfig();
     if (!arguments.length) {
       return defaultSizeConfig;
     }
-    var result = [];
-    for (var i = 0; i < size; i++) {
+    const result = [];
+    for (let i = 0; i < size; i++) {
       result.push(defaultSizeConfig);
     }
     return result;
   },
-  _filterByScreen: function _filterByScreen(items) {
-    var screenRegExp = this._screenRegExp();
+  _filterByScreen: function (items) {
+    const screenRegExp = this._screenRegExp();
     return (0, _common.grep)(items, function (item) {
       return !item.screen || screenRegExp.test(item.screen);
     });
   },
-  _screenRegExp: function _screenRegExp() {
-    var screen = this._getCurrentScreen();
+  _screenRegExp: function () {
+    const screen = this._getCurrentScreen();
     return new RegExp('(^|\\s)' + screen + '($|\\s)', 'i');
   },
-  _getCurrentScreen: function _getCurrentScreen() {
-    var width = this._screenWidth();
+  _getCurrentScreen: function () {
+    const width = this._screenWidth();
     return this.option('screenByWidth')(width);
   },
-  _screenWidth: function _screenWidth() {
+  _screenWidth: function () {
     return (0, _window.hasWindow)() ? (0, _size.getWidth)((0, _window.getWindow)()) : HD_SCREEN_WIDTH;
   },
-  _createEmptyCell: function _createEmptyCell() {
+  _createEmptyCell: function () {
     return {
       item: {},
       location: {
@@ -248,22 +248,21 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       }
     };
   },
-  _spreadItems: function _spreadItems() {
+  _spreadItems: function () {
     (0, _iterator.each)(this._screenItems, function (_, itemInfo) {
-      var location = itemInfo.location || {};
-      var itemCol = location.col;
-      var itemRow = location.row;
-      var row = this._grid[itemRow];
-      var itemCell = row && row[itemCol];
+      const location = itemInfo.location || {};
+      const itemCol = location.col;
+      const itemRow = location.row;
+      const row = this._grid[itemRow];
+      const itemCell = row && row[itemCol];
       this._occupyCells(itemCell, itemInfo);
     }.bind(this));
   },
-  _itemsByScreen: function _itemsByScreen() {
-    var _this = this;
-    return this.option('items').reduce(function (result, item) {
-      var locations = item.location || {};
+  _itemsByScreen: function () {
+    return this.option('items').reduce((result, item) => {
+      let locations = item.location || {};
       locations = (0, _type.isPlainObject)(locations) ? [locations] : locations;
-      _this._filterByScreen(locations).forEach(function (location) {
+      this._filterByScreen(locations).forEach(location => {
         result.push({
           item: item,
           location: (0, _extend.extend)({
@@ -275,39 +274,39 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       return result;
     }, []);
   },
-  _occupyCells: function _occupyCells(itemCell, itemInfo) {
+  _occupyCells: function (itemCell, itemInfo) {
     if (!itemCell || this._isItemCellOccupied(itemCell, itemInfo)) {
       return;
     }
     (0, _extend.extend)(itemCell, itemInfo);
     this._markSpanningCell(itemCell);
   },
-  _isItemCellOccupied: function _isItemCellOccupied(itemCell, itemInfo) {
+  _isItemCellOccupied: function (itemCell, itemInfo) {
     if (!(0, _type.isEmptyObject)(itemCell.item)) {
       return true;
     }
-    var result = false;
+    let result = false;
     this._loopOverSpanning(itemInfo.location, function (cell) {
       result = result || !(0, _type.isEmptyObject)(cell.item);
     });
     return result;
   },
-  _loopOverSpanning: function _loopOverSpanning(location, callback) {
-    var rowEnd = location.row + location.rowspan - 1;
-    var colEnd = location.col + location.colspan - 1;
-    var boundRowEnd = Math.min(rowEnd, this._rows.length - 1);
-    var boundColEnd = Math.min(colEnd, this._cols.length - 1);
+  _loopOverSpanning: function (location, callback) {
+    const rowEnd = location.row + location.rowspan - 1;
+    const colEnd = location.col + location.colspan - 1;
+    const boundRowEnd = Math.min(rowEnd, this._rows.length - 1);
+    const boundColEnd = Math.min(colEnd, this._cols.length - 1);
     location.rowspan -= rowEnd - boundRowEnd;
     location.colspan -= colEnd - boundColEnd;
-    for (var rowIndex = location.row; rowIndex <= boundRowEnd; rowIndex++) {
-      for (var colIndex = location.col; colIndex <= boundColEnd; colIndex++) {
+    for (let rowIndex = location.row; rowIndex <= boundRowEnd; rowIndex++) {
+      for (let colIndex = location.col; colIndex <= boundColEnd; colIndex++) {
         if (rowIndex !== location.row || colIndex !== location.col) {
           callback(this._grid[rowIndex][colIndex]);
         }
       }
     }
   },
-  _markSpanningCell: function _markSpanningCell(itemCell) {
+  _markSpanningCell: function (itemCell) {
     this._loopOverSpanning(itemCell.location, function (cell) {
       (0, _extend.extend)(cell, {
         item: itemCell.item,
@@ -315,22 +314,22 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       });
     });
   },
-  _linkNodeToItem: function _linkNodeToItem() {
+  _linkNodeToItem: function () {
     (0, _iterator.each)(this._itemElements(), function (_, itemNode) {
-      var $item = (0, _renderer.default)(itemNode);
-      var item = $item.data(BOX_ITEM_DATA_KEY);
+      const $item = (0, _renderer.default)(itemNode);
+      const item = $item.data(BOX_ITEM_DATA_KEY);
       if (!item.box) {
         item.node = $item.children();
       }
     });
   },
-  _layoutItems: function _layoutItems() {
-    var rowsCount = this._grid.length;
-    var colsCount = rowsCount && this._grid[0].length;
+  _layoutItems: function () {
+    const rowsCount = this._grid.length;
+    const colsCount = rowsCount && this._grid[0].length;
     if (!rowsCount && !colsCount) {
       return;
     }
-    var result = this._layoutBlock({
+    const result = this._layoutBlock({
       direction: 'col',
       row: {
         start: 0,
@@ -341,7 +340,7 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
         end: colsCount - 1
       }
     });
-    var rootBox = this._prepareBoxConfig(result.box || {
+    const rootBox = this._prepareBoxConfig(result.box || {
       direction: 'row',
       items: [(0, _extend.extend)(result, {
         ratio: 1
@@ -351,8 +350,8 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
     this._$root = (0, _renderer.default)('<div>').appendTo(this._itemContainer());
     this._createComponent(this._$root, _box.default, rootBox);
   },
-  _rootBoxConfig: function _rootBoxConfig(items) {
-    var rootItems = (0, _iterator.each)(items, function (index, item) {
+  _rootBoxConfig: function (items) {
+    const rootItems = (0, _iterator.each)(items, function (index, item) {
       this._needApplyAutoBaseSize(item) && (0, _extend.extend)(item, {
         baseSize: 'auto'
       });
@@ -369,41 +368,41 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       onItemRendered: this._createActionByOption('onItemRendered')
     };
   },
-  _needApplyAutoBaseSize: function _needApplyAutoBaseSize(item) {
+  _needApplyAutoBaseSize: function (item) {
     return !item.baseSize && (!item.minSize || item.minSize === 'auto') && (!item.maxSize || item.maxSize === 'auto');
   },
-  _prepareBoxConfig: function _prepareBoxConfig(config) {
+  _prepareBoxConfig: function (config) {
     return (0, _extend.extend)(config || {}, {
       crossAlign: 'stretch',
       onItemStateChanged: this.option('onItemStateChanged')
     });
   },
-  _layoutBlock: function _layoutBlock(options) {
+  _layoutBlock: function (options) {
     if (this._isSingleItem(options)) {
       return this._itemByCell(options.row.start, options.col.start);
     }
     return this._layoutDirection(options);
   },
-  _isSingleItem: function _isSingleItem(options) {
-    var firstCellLocation = this._grid[options.row.start][options.col.start].location;
-    var isItemRowSpanned = options.row.end - options.row.start === firstCellLocation.rowspan - 1;
-    var isItemColSpanned = options.col.end - options.col.start === firstCellLocation.colspan - 1;
+  _isSingleItem: function (options) {
+    const firstCellLocation = this._grid[options.row.start][options.col.start].location;
+    const isItemRowSpanned = options.row.end - options.row.start === firstCellLocation.rowspan - 1;
+    const isItemColSpanned = options.col.end - options.col.start === firstCellLocation.colspan - 1;
     return isItemRowSpanned && isItemColSpanned;
   },
-  _itemByCell: function _itemByCell(rowIndex, colIndex) {
-    var itemCell = this._grid[rowIndex][colIndex];
+  _itemByCell: function (rowIndex, colIndex) {
+    const itemCell = this._grid[rowIndex][colIndex];
     return itemCell.spanningCell ? null : itemCell.item;
   },
-  _layoutDirection: function _layoutDirection(options) {
-    var items = [];
-    var direction = options.direction;
-    var crossDirection = this._crossDirection(direction);
-    var block;
+  _layoutDirection: function (options) {
+    const items = [];
+    const direction = options.direction;
+    const crossDirection = this._crossDirection(direction);
+    let block;
     while (block = this._nextBlock(options)) {
       if (this._isBlockIndivisible(options.prevBlockOptions, block)) {
         throw _ui.default.Error('E1025');
       }
-      var item = this._layoutBlock({
+      const item = this._layoutBlock({
         direction: crossDirection,
         row: block.row,
         col: block.col,
@@ -422,35 +421,35 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       })
     };
   },
-  _isBlockIndivisible: function _isBlockIndivisible(options, block) {
+  _isBlockIndivisible: function (options, block) {
     return options && options.col.start === block.col.start && options.col.end === block.col.end && options.row.start === block.row.start && options.row.end === block.row.end;
   },
-  _crossDirection: function _crossDirection(direction) {
+  _crossDirection: function (direction) {
     return direction === 'col' ? 'row' : 'col';
   },
-  _nextBlock: function _nextBlock(options) {
-    var direction = options.direction;
-    var crossDirection = this._crossDirection(direction);
-    var startIndex = options[direction].start;
-    var endIndex = options[direction].end;
-    var crossStartIndex = options[crossDirection].start;
+  _nextBlock: function (options) {
+    const direction = options.direction;
+    const crossDirection = this._crossDirection(direction);
+    const startIndex = options[direction].start;
+    const endIndex = options[direction].end;
+    const crossStartIndex = options[crossDirection].start;
     if (crossStartIndex > options[crossDirection].end) {
       return null;
     }
-    var crossSpan = 1;
-    for (var crossIndex = crossStartIndex; crossIndex < crossStartIndex + crossSpan; crossIndex++) {
-      var lineCrossSpan = 1;
-      for (var index = startIndex; index <= endIndex; index++) {
-        var cell = this._cellByDirection(direction, index, crossIndex);
+    let crossSpan = 1;
+    for (let crossIndex = crossStartIndex; crossIndex < crossStartIndex + crossSpan; crossIndex++) {
+      let lineCrossSpan = 1;
+      for (let index = startIndex; index <= endIndex; index++) {
+        const cell = this._cellByDirection(direction, index, crossIndex);
         lineCrossSpan = Math.max(lineCrossSpan, cell.location[crossDirection + 'span']);
       }
-      var lineCrossEndIndex = crossIndex + lineCrossSpan;
-      var crossEndIndex = crossStartIndex + crossSpan;
+      const lineCrossEndIndex = crossIndex + lineCrossSpan;
+      const crossEndIndex = crossStartIndex + crossSpan;
       if (lineCrossEndIndex > crossEndIndex) {
         crossSpan += lineCrossEndIndex - crossEndIndex;
       }
     }
-    var result = {};
+    const result = {};
     result[direction] = {
       start: startIndex,
       end: endIndex
@@ -461,17 +460,17 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
     };
     return result;
   },
-  _cellByDirection: function _cellByDirection(direction, index, crossIndex) {
+  _cellByDirection: function (direction, index, crossIndex) {
     return direction === 'col' ? this._grid[crossIndex][index] : this._grid[index][crossIndex];
   },
-  _blockSize: function _blockSize(block, direction) {
-    var defaultMinSize = direction === 'row' ? 'auto' : 0;
-    var sizeConfigs = direction === 'row' ? this._rows : this._cols;
-    var result = (0, _extend.extend)(this._createDefaultSizeConfig(), {
+  _blockSize: function (block, direction) {
+    const defaultMinSize = direction === 'row' ? 'auto' : 0;
+    const sizeConfigs = direction === 'row' ? this._rows : this._cols;
+    const result = (0, _extend.extend)(this._createDefaultSizeConfig(), {
       ratio: 0
     });
-    for (var index = block[direction].start; index <= block[direction].end; index++) {
-      var sizeConfig = sizeConfigs[index];
+    for (let index = block[direction].start; index <= block[direction].end; index++) {
+      const sizeConfig = sizeConfigs[index];
       result.ratio += sizeConfig.ratio;
       result.baseSize += sizeConfig.baseSize;
       result.minSize += sizeConfig.minSize;
@@ -485,8 +484,8 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
     this._isSingleColumnScreen() && (result.baseSize = 'auto');
     return result;
   },
-  _update: function _update(forceRemoveRoot) {
-    var $existingRoot = this._$root;
+  _update: function (forceRemoveRoot) {
+    const $existingRoot = this._$root;
     this._renderItems();
     if ($existingRoot) {
       if (forceRemoveRoot) {
@@ -498,16 +497,16 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
     }
     this._layoutChangedAction();
   },
-  _saveAssistantRoot: function _saveAssistantRoot($root) {
+  _saveAssistantRoot: function ($root) {
     this._assistantRoots = this._assistantRoots || [];
     this._assistantRoots.push($root);
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._clearItemNodeTemplates();
     this._cleanUnusedRoots();
     this.callBase.apply(this, arguments);
   },
-  _cleanUnusedRoots: function _cleanUnusedRoots() {
+  _cleanUnusedRoots: function () {
     if (!this._assistantRoots) {
       return;
     }
@@ -515,13 +514,13 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
       (0, _renderer.default)(item).remove();
     });
   },
-  _clearItemNodeTemplates: function _clearItemNodeTemplates() {
+  _clearItemNodeTemplates: function () {
     (0, _iterator.each)(this.option('items'), function () {
       delete this.node;
     });
   },
   _attachClickEvent: _common.noop,
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'rows':
       case 'cols':
@@ -548,12 +547,12 @@ var ResponsiveBox = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     if (this._getCurrentScreen() !== this.option('currentScreenFactor')) {
       this._update();
     }
   },
-  repaint: function repaint() {
+  repaint: function () {
     this._update();
   }
 

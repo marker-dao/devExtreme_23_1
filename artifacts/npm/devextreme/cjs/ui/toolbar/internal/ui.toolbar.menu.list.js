@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toolbar/internal/ui.toolbar.menu.list.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,14 +15,14 @@ var _uiList = require("../../list/ui.list.base");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var TOOLBAR_MENU_ACTION_CLASS = 'dx-toolbar-menu-action';
-var TOOLBAR_HIDDEN_BUTTON_CLASS = 'dx-toolbar-hidden-button';
-var TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS = 'dx-toolbar-hidden-button-group';
-var TOOLBAR_MENU_SECTION_CLASS = 'dx-toolbar-menu-section';
-var TOOLBAR_MENU_CUSTOM_CLASS = 'dx-toolbar-menu-custom';
-var TOOLBAR_MENU_LAST_SECTION_CLASS = 'dx-toolbar-menu-last-section';
-var SCROLLVIEW_CONTENT_CLASS = 'dx-scrollview-content';
-var ToolbarMenuList = /*#__PURE__*/function (_ListBase) {
+const TOOLBAR_MENU_ACTION_CLASS = 'dx-toolbar-menu-action';
+const TOOLBAR_HIDDEN_BUTTON_CLASS = 'dx-toolbar-hidden-button';
+const TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS = 'dx-toolbar-hidden-button-group';
+const TOOLBAR_MENU_SECTION_CLASS = 'dx-toolbar-menu-section';
+const TOOLBAR_MENU_CUSTOM_CLASS = 'dx-toolbar-menu-custom';
+const TOOLBAR_MENU_LAST_SECTION_CLASS = 'dx-toolbar-menu-last-section';
+const SCROLLVIEW_CONTENT_CLASS = 'dx-scrollview-content';
+let ToolbarMenuList = /*#__PURE__*/function (_ListBase) {
   _inheritsLoose(ToolbarMenuList, _ListBase);
   function ToolbarMenuList() {
     return _ListBase.apply(this, arguments) || this;
@@ -44,14 +44,13 @@ var ToolbarMenuList = /*#__PURE__*/function (_ListBase) {
     return this._getSections().children(this._itemSelector());
   };
   _proto._renderSections = function _renderSections() {
-    var _this = this;
-    var $container = this._itemContainer();
-    (0, _iterator.each)(['before', 'center', 'after', 'menu'], function (_, section) {
-      var sectionName = "_$".concat(section, "Section");
-      if (!_this[sectionName]) {
-        _this[sectionName] = (0, _renderer.default)('<div>').addClass(TOOLBAR_MENU_SECTION_CLASS);
+    const $container = this._itemContainer();
+    (0, _iterator.each)(['before', 'center', 'after', 'menu'], (_, section) => {
+      const sectionName = "_$".concat(section, "Section");
+      if (!this[sectionName]) {
+        this[sectionName] = (0, _renderer.default)('<div>').addClass(TOOLBAR_MENU_SECTION_CLASS);
       }
-      _this[sectionName].appendTo($container);
+      this[sectionName].appendTo($container);
     });
   };
   _proto._renderItems = function _renderItems() {
@@ -59,19 +58,19 @@ var ToolbarMenuList = /*#__PURE__*/function (_ListBase) {
     this._updateSections();
   };
   _proto._setMenuRole = function _setMenuRole() {
-    var $menuContainer = this.$element().find(".".concat(SCROLLVIEW_CONTENT_CLASS));
+    const $menuContainer = this.$element().find(".".concat(SCROLLVIEW_CONTENT_CLASS));
     $menuContainer.attr('role', 'menu');
   };
   _proto._updateSections = function _updateSections() {
-    var $sections = this.$element().find(".".concat(TOOLBAR_MENU_SECTION_CLASS));
+    const $sections = this.$element().find(".".concat(TOOLBAR_MENU_SECTION_CLASS));
     $sections.removeClass(TOOLBAR_MENU_LAST_SECTION_CLASS);
     $sections.not(':empty').eq(-1).addClass(TOOLBAR_MENU_LAST_SECTION_CLASS);
   };
   _proto._renderItem = function _renderItem(index, item, itemContainer, $after) {
     var _item$location;
-    var location = (_item$location = item.location) !== null && _item$location !== void 0 ? _item$location : 'menu';
-    var $container = this["_$".concat(location, "Section")];
-    var itemElement = _ListBase.prototype._renderItem.call(this, index, item, $container, $after);
+    const location = (_item$location = item.location) !== null && _item$location !== void 0 ? _item$location : 'menu';
+    const $container = this["_$".concat(location, "Section")];
+    const itemElement = _ListBase.prototype._renderItem.call(this, index, item, $container, $after);
     if (this._getItemTemplateName({
       itemData: item
     })) {
@@ -90,9 +89,9 @@ var ToolbarMenuList = /*#__PURE__*/function (_ListBase) {
     return itemElement;
   };
   _proto._getItemTemplateName = function _getItemTemplateName(args) {
-    var template = _ListBase.prototype._getItemTemplateName.call(this, args);
-    var data = args.itemData;
-    var menuTemplate = data && data['menuItemTemplate'];
+    const template = _ListBase.prototype._getItemTemplateName.call(this, args);
+    const data = args.itemData;
+    const menuTemplate = data && data['menuItemTemplate'];
     return menuTemplate || template;
   };
   _proto._dataSourceOptions = function _dataSourceOptions() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/resize_observer.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,23 +11,22 @@
 exports.default = void 0;
 var _common = require("./utils/common");
 var _window = require("./utils/window");
-var window = (0, _window.getWindow)();
-var ResizeObserverMock = {
+const window = (0, _window.getWindow)();
+const ResizeObserverMock = {
   observe: _common.noop,
   unobserve: _common.noop,
   disconnect: _common.noop
 };
-var ResizeObserverSingleton = /*#__PURE__*/function () {
+let ResizeObserverSingleton = /*#__PURE__*/function () {
   function ResizeObserverSingleton() {
-    var _this = this;
     if (!(0, _window.hasWindow)() || !window.ResizeObserver) {
       return ResizeObserverMock;
     }
     this._callbacksMap = new Map();
-    this._observer = new window.ResizeObserver(function (entries) {
-      entries.forEach(function (entry) {
+    this._observer = new window.ResizeObserver(entries => {
+      entries.forEach(entry => {
         var _this$_callbacksMap$g;
-        (_this$_callbacksMap$g = _this._callbacksMap.get(entry.target)) === null || _this$_callbacksMap$g === void 0 ? void 0 : _this$_callbacksMap$g(entry);
+        (_this$_callbacksMap$g = this._callbacksMap.get(entry.target)) === null || _this$_callbacksMap$g === void 0 ? void 0 : _this$_callbacksMap$g(entry);
       });
     });
   }
@@ -46,7 +45,7 @@ var ResizeObserverSingleton = /*#__PURE__*/function () {
   };
   return ResizeObserverSingleton;
 }();
-var resizeObserverSingleton = new ResizeObserverSingleton();
+const resizeObserverSingleton = new ResizeObserverSingleton();
 var _default = resizeObserverSingleton;
 exports.default = _default;
 module.exports = exports.default;

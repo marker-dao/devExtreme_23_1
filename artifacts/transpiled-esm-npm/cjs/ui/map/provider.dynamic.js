@@ -5,12 +5,12 @@ var _extend = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _provider = _interopRequireDefault(require("./provider"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var abstract = _provider.default.abstract;
-var DynamicProvider = _provider.default.inherit({
-  _geocodeLocation: function _geocodeLocation(location) {
+const abstract = _provider.default.abstract;
+const DynamicProvider = _provider.default.inherit({
+  _geocodeLocation: function (location) {
     return new Promise(function (resolve) {
-      var cache = this._geocodedLocations;
-      var cachedLocation = cache[location];
+      const cache = this._geocodedLocations;
+      const cachedLocation = cache[location];
       if (cachedLocation) {
         resolve(cachedLocation);
       } else {
@@ -21,7 +21,7 @@ var DynamicProvider = _provider.default.inherit({
       }
     }.bind(this));
   },
-  _renderImpl: function _renderImpl() {
+  _renderImpl: function () {
     return this._load().then(function () {
       return this._init();
     }.bind(this)).then(function () {
@@ -31,14 +31,14 @@ var DynamicProvider = _provider.default.inherit({
 
       // NOTE: setTimeout is needed by providers to correctly initialize bounds
       return new Promise(function (resolve) {
-        var timeout = setTimeout(function () {
+        const timeout = setTimeout(function () {
           clearTimeout(timeout);
           resolve();
         });
       });
     }.bind(this));
   },
-  _load: function _load() {
+  _load: function () {
     if (!this._mapsLoader) {
       this._mapsLoader = this._loadImpl();
     }
@@ -49,7 +49,7 @@ var DynamicProvider = _provider.default.inherit({
   _loadImpl: abstract,
   _init: abstract,
   _attachHandlers: abstract,
-  addMarkers: function addMarkers(options) {
+  addMarkers: function (options) {
     return Promise.all((0, _iterator.map)(options, function (options) {
       return this._addMarker(options);
     }.bind(this))).then(function (markerObjects) {
@@ -59,7 +59,7 @@ var DynamicProvider = _provider.default.inherit({
       })];
     }.bind(this));
   },
-  _addMarker: function _addMarker(options) {
+  _addMarker: function (options) {
     return this._renderMarker(options).then(function (markerObject) {
       this._markers.push((0, _extend.extend)({
         options: options
@@ -72,15 +72,15 @@ var DynamicProvider = _provider.default.inherit({
     }.bind(this));
   },
   _renderMarker: abstract,
-  removeMarkers: function removeMarkers(markersOptionsToRemove) {
-    var that = this;
+  removeMarkers: function (markersOptionsToRemove) {
+    const that = this;
     (0, _iterator.each)(markersOptionsToRemove, function (_, markerOptionToRemove) {
       that._removeMarker(markerOptionToRemove);
     });
     return Promise.resolve();
   },
-  _removeMarker: function _removeMarker(markersOptionToRemove) {
-    var that = this;
+  _removeMarker: function (markersOptionToRemove) {
+    const that = this;
     (0, _iterator.each)(this._markers, function (markerIndex, markerObject) {
       if (markerObject.options !== markersOptionToRemove) {
         return true;
@@ -94,12 +94,12 @@ var DynamicProvider = _provider.default.inherit({
     });
   },
   _destroyMarker: abstract,
-  _clearMarkers: function _clearMarkers() {
+  _clearMarkers: function () {
     while (this._markers.length > 0) {
       this._removeMarker(this._markers[0].options);
     }
   },
-  addRoutes: function addRoutes(options) {
+  addRoutes: function (options) {
     return Promise.all((0, _iterator.map)(options, function (options) {
       return this._addRoute(options);
     }.bind(this))).then(function (routeObjects) {
@@ -109,7 +109,7 @@ var DynamicProvider = _provider.default.inherit({
       })];
     }.bind(this));
   },
-  _addRoute: function _addRoute(options) {
+  _addRoute: function (options) {
     return this._renderRoute(options).then(function (routeObject) {
       this._routes.push((0, _extend.extend)({
         options: options
@@ -122,15 +122,15 @@ var DynamicProvider = _provider.default.inherit({
     }.bind(this));
   },
   _renderRoute: abstract,
-  removeRoutes: function removeRoutes(options) {
-    var that = this;
+  removeRoutes: function (options) {
+    const that = this;
     (0, _iterator.each)(options, function (routeIndex, options) {
       that._removeRoute(options);
     });
     return Promise.resolve();
   },
-  _removeRoute: function _removeRoute(options) {
-    var that = this;
+  _removeRoute: function (options) {
+    const that = this;
     (0, _iterator.each)(this._routes, function (routeIndex, routeObject) {
       if (routeObject.options !== options) {
         return true;
@@ -144,20 +144,20 @@ var DynamicProvider = _provider.default.inherit({
     });
   },
   _destroyRoute: abstract,
-  _clearRoutes: function _clearRoutes() {
+  _clearRoutes: function () {
     while (this._routes.length > 0) {
       this._removeRoute(this._routes[0].options);
     }
   },
-  adjustViewport: function adjustViewport() {
+  adjustViewport: function () {
     return this._fitBounds();
   },
-  isEventsCanceled: function isEventsCanceled() {
+  isEventsCanceled: function () {
     return true;
   },
   _fitBounds: abstract,
-  _updateBounds: function _updateBounds() {
-    var that = this;
+  _updateBounds: function () {
+    const that = this;
     this._clearBounds();
     if (!this._option('autoAdjust')) {
       return;
@@ -170,7 +170,7 @@ var DynamicProvider = _provider.default.inherit({
       routeObject.southWest && that._extendBounds(routeObject.southWest);
     });
   },
-  _clearBounds: function _clearBounds() {
+  _clearBounds: function () {
     this._bounds = null;
   },
   _extendBounds: abstract

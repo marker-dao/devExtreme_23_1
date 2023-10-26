@@ -7,17 +7,17 @@ var _templates_storage = _interopRequireDefault(require("../utils/templates_stor
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var Mention = {};
+let Mention = {};
 if (_devextremeQuill.default) {
-  var Embed = _devextremeQuill.default.import('blots/embed');
-  var MENTION_CLASS = 'dx-mention';
+  const Embed = _devextremeQuill.default.import('blots/embed');
+  const MENTION_CLASS = 'dx-mention';
   Mention = /*#__PURE__*/function (_Embed) {
     _inheritsLoose(Mention, _Embed);
     function Mention() {
       return _Embed.apply(this, arguments) || this;
     }
     Mention.create = function create(data) {
-      var node = _Embed.create.call(this);
+      const node = _Embed.create.call(this);
       node.setAttribute('spellcheck', false);
       node.dataset.marker = data.marker;
       node.dataset.mentionValue = data.value;
@@ -33,7 +33,7 @@ if (_devextremeQuill.default) {
       };
     };
     Mention.renderContent = function renderContent(node, data) {
-      var template = this._templatesStorage.get({
+      const template = this._templatesStorage.get({
         editorKey: data.keyInTemplateStorage,
         marker: data.marker
       });
@@ -47,7 +47,7 @@ if (_devextremeQuill.default) {
       }
     };
     Mention.baseContentRender = function baseContentRender(node, data) {
-      var $marker = (0, _renderer.default)('<span>').text(data.marker);
+      const $marker = (0, _renderer.default)('<span>').text(data.marker);
       (0, _renderer.default)(node).append($marker).append(data.value);
     };
     Mention.addTemplate = function addTemplate(data, template) {

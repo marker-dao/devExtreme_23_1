@@ -13,21 +13,21 @@ var _ui = _interopRequireDefault(require("../overlay/ui.overlay"));
 var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var ready = _ready_callbacks.default.add;
+const ready = _ready_callbacks.default.add;
 
 // STYLE toast
 
-var TOAST_CLASS = 'dx-toast';
-var TOAST_CLASS_PREFIX = TOAST_CLASS + '-';
-var TOAST_WRAPPER_CLASS = TOAST_CLASS_PREFIX + 'wrapper';
-var TOAST_CONTENT_CLASS = TOAST_CLASS_PREFIX + 'content';
-var TOAST_MESSAGE_CLASS = TOAST_CLASS_PREFIX + 'message';
-var TOAST_ICON_CLASS = TOAST_CLASS_PREFIX + 'icon';
-var WIDGET_NAME = 'dxToast';
-var toastTypes = ['info', 'warning', 'error', 'success'];
-var TOAST_STACK = [];
-var FIRST_Z_INDEX_OFFSET = 8000;
-var POSITION_ALIASES = {
+const TOAST_CLASS = 'dx-toast';
+const TOAST_CLASS_PREFIX = TOAST_CLASS + '-';
+const TOAST_WRAPPER_CLASS = TOAST_CLASS_PREFIX + 'wrapper';
+const TOAST_CONTENT_CLASS = TOAST_CLASS_PREFIX + 'content';
+const TOAST_MESSAGE_CLASS = TOAST_CLASS_PREFIX + 'message';
+const TOAST_ICON_CLASS = TOAST_CLASS_PREFIX + 'icon';
+const WIDGET_NAME = 'dxToast';
+const toastTypes = ['info', 'warning', 'error', 'success'];
+const TOAST_STACK = [];
+const FIRST_Z_INDEX_OFFSET = 8000;
+const POSITION_ALIASES = {
   'top': {
     my: 'top',
     at: 'top',
@@ -59,22 +59,22 @@ var POSITION_ALIASES = {
     offset: '0 0'
   }
 };
-var DEFAULT_BOUNDARY_OFFSET = {
+const DEFAULT_BOUNDARY_OFFSET = {
   h: 0,
   v: 0
 };
-var DEFAULT_MARGIN = 20;
+const DEFAULT_MARGIN = 20;
 ready(function () {
   _events_engine.default.subscribeGlobal(_dom_adapter.default.getDocument(), _pointer.default.down, function (e) {
-    for (var i = TOAST_STACK.length - 1; i >= 0; i--) {
+    for (let i = TOAST_STACK.length - 1; i >= 0; i--) {
       if (!TOAST_STACK[i]._proxiedDocumentDownHandler(e)) {
         return;
       }
     }
   });
 });
-var Toast = _ui.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const Toast = _ui.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       message: '',
       type: 'info',
@@ -107,8 +107,8 @@ var Toast = _ui.default.inherit({
       closeOnClick: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
-    var tabletAndMobileAnimation = {
+  _defaultOptionsRules: function () {
+    const tabletAndMobileAnimation = {
       show: {
         type: 'fade',
         duration: 200,
@@ -122,7 +122,7 @@ var Toast = _ui.default.inherit({
         to: 0
       }
     };
-    var tabletAndMobileCommonOptions = {
+    const tabletAndMobileCommonOptions = {
       displayTime: (0, _themes.isMaterialBased)() ? 4000 : 2000,
       hideOnOutsideClick: true,
       animation: tabletAndMobileAnimation
@@ -153,11 +153,11 @@ var Toast = _ui.default.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._posStringToObject();
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl: function () {
     this._message = (0, _renderer.default)('<div>').addClass(TOAST_MESSAGE_CLASS).text(this.option('message')).appendTo(this.$content());
     this.setAria('role', 'alert', this._message);
     if (toastTypes.includes(this.option('type').toLowerCase())) {
@@ -165,7 +165,7 @@ var Toast = _ui.default.inherit({
     }
     this.callBase();
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this.$element().addClass(TOAST_CLASS);
     this.$wrapper().addClass(TOAST_WRAPPER_CLASS);
@@ -174,15 +174,15 @@ var Toast = _ui.default.inherit({
     this._toggleCloseEvents('Swipe');
     this._toggleCloseEvents('Click');
   },
-  _toggleCloseEvents: function _toggleCloseEvents(event) {
-    var dxEvent = 'dx' + event.toLowerCase();
+  _toggleCloseEvents: function (event) {
+    const dxEvent = 'dx' + event.toLowerCase();
     _events_engine.default.off(this.$content(), dxEvent);
     this.option('closeOn' + event) && _events_engine.default.on(this.$content(), dxEvent, this.hide.bind(this));
   },
-  _posStringToObject: function _posStringToObject() {
+  _posStringToObject: function () {
     if (!(0, _type.isString)(this.option('position'))) return;
-    var verticalPosition = this.option('position').split(' ')[0];
-    var horizontalPosition = this.option('position').split(' ')[1];
+    const verticalPosition = this.option('position').split(' ')[0];
+    const horizontalPosition = this.option('position').split(' ')[1];
     this.option('position', (0, _extend.extend)({
       boundaryOffset: DEFAULT_BOUNDARY_OFFSET
     }, POSITION_ALIASES[verticalPosition]));
@@ -195,23 +195,23 @@ var Toast = _ui.default.inherit({
         break;
     }
   },
-  _show: function _show() {
+  _show: function () {
     return this.callBase.apply(this, arguments).always(function () {
       clearTimeout(this._hideTimeout);
       this._hideTimeout = setTimeout(this.hide.bind(this), this.option('displayTime'));
     }.bind(this));
   },
-  _overlayStack: function _overlayStack() {
+  _overlayStack: function () {
     return TOAST_STACK;
   },
-  _zIndexInitValue: function _zIndexInitValue() {
+  _zIndexInitValue: function () {
     return this.callBase() + FIRST_Z_INDEX_OFFSET;
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     clearTimeout(this._hideTimeout);
     this.callBase();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'type':
         this.$content().removeClass(TOAST_CLASS_PREFIX + args.previousValue);

@@ -1,12 +1,12 @@
 "use strict";
 
 exports.default = void 0;
-var ACCENT_COLOR = '#3debd3';
-var BACKGROUND_COLOR = '#465672';
-var TITLE_COLOR = '#fff';
-var SUBTITLE_COLOR = '#919bac';
-var TEXT_COLOR = '#c7ccd4';
-var BORDER_COLOR = '#596980';
+const ACCENT_COLOR = '#3debd3';
+const BACKGROUND_COLOR = '#465672';
+const TITLE_COLOR = '#fff';
+const SUBTITLE_COLOR = '#919bac';
+const TEXT_COLOR = '#c7ccd4';
+const BORDER_COLOR = '#596980';
 var _default = [{
   theme: {
     name: 'generic.darkmoon',

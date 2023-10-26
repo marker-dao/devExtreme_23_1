@@ -6,26 +6,27 @@ var _events_engine = _interopRequireDefault(require("../../events/core/events_en
 var _event_registrator = _interopRequireDefault(require("./event_registrator"));
 var _index = require("../utils/index");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EVENT_NAME = 'dxmousewheel';
+const EVENT_NAME = 'dxmousewheel';
 exports.name = EVENT_NAME;
-var EVENT_NAMESPACE = 'dxWheel';
-var NATIVE_EVENT_NAME = 'wheel';
-var PIXEL_MODE = 0;
-var DELTA_MUTLIPLIER = 30;
-var wheel = {
-  setup: function setup(element) {
-    var $element = (0, _renderer.default)(element);
+const EVENT_NAMESPACE = 'dxWheel';
+const NATIVE_EVENT_NAME = 'wheel';
+const PIXEL_MODE = 0;
+const DELTA_MUTLIPLIER = 30;
+const wheel = {
+  setup: function (element) {
+    const $element = (0, _renderer.default)(element);
     _events_engine.default.on($element, (0, _index.addNamespace)(NATIVE_EVENT_NAME, EVENT_NAMESPACE), wheel._wheelHandler.bind(wheel));
   },
-  teardown: function teardown(element) {
+  teardown: function (element) {
     _events_engine.default.off(element, ".".concat(EVENT_NAMESPACE));
   },
-  _wheelHandler: function _wheelHandler(e) {
-    var _e$originalEvent = e.originalEvent,
-      deltaMode = _e$originalEvent.deltaMode,
-      deltaY = _e$originalEvent.deltaY,
-      deltaX = _e$originalEvent.deltaX,
-      deltaZ = _e$originalEvent.deltaZ;
+  _wheelHandler: function (e) {
+    const {
+      deltaMode,
+      deltaY,
+      deltaX,
+      deltaZ
+    } = e.originalEvent;
     (0, _index.fireEvent)({
       type: EVENT_NAME,
       originalEvent: e,
@@ -39,7 +40,7 @@ var wheel = {
     e.stopPropagation();
   },
   _normalizeDelta(delta) {
-    var deltaMode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : PIXEL_MODE;
+    let deltaMode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : PIXEL_MODE;
     if (deltaMode === PIXEL_MODE) {
       return -delta;
     } else {

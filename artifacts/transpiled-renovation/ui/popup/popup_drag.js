@@ -10,17 +10,19 @@ var _events_engine = _interopRequireDefault(require("../../events/core/events_en
 var _drag = require("../../events/drag");
 var _index = require("../../events/utils/index");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var KEYBOARD_DRAG_STEP = 5;
-var PopupDrag = /*#__PURE__*/function () {
+const KEYBOARD_DRAG_STEP = 5;
+let PopupDrag = /*#__PURE__*/function () {
   function PopupDrag(config) {
     this.init(config);
   }
   var _proto = PopupDrag.prototype;
   _proto.init = function init(_ref) {
-    var dragEnabled = _ref.dragEnabled,
-      handle = _ref.handle,
-      draggableElement = _ref.draggableElement,
-      positionController = _ref.positionController;
+    let {
+      dragEnabled,
+      handle,
+      draggableElement,
+      positionController
+    } = _ref;
     // TODO: get rid of dragEnabled
 
     this._positionController = positionController;
@@ -46,29 +48,28 @@ var PopupDrag = /*#__PURE__*/function () {
     this._moveTo(0, KEYBOARD_DRAG_STEP, e);
   };
   _proto.subscribe = function subscribe() {
-    var _this = this;
-    var eventNames = this._getEventNames();
-    _events_engine.default.on(this._handle, eventNames.startEventName, function (e) {
-      _this._dragStartHandler(e);
+    const eventNames = this._getEventNames();
+    _events_engine.default.on(this._handle, eventNames.startEventName, e => {
+      this._dragStartHandler(e);
     });
-    _events_engine.default.on(this._handle, eventNames.updateEventName, function (e) {
-      _this._dragUpdateHandler(e);
+    _events_engine.default.on(this._handle, eventNames.updateEventName, e => {
+      this._dragUpdateHandler(e);
     });
-    _events_engine.default.on(this._handle, eventNames.endEventName, function (e) {
-      _this._dragEndHandler(e);
+    _events_engine.default.on(this._handle, eventNames.endEventName, e => {
+      this._dragEndHandler(e);
     });
   };
   _proto.unsubscribe = function unsubscribe() {
-    var eventNames = this._getEventNames();
+    const eventNames = this._getEventNames();
     _events_engine.default.off(this._handle, eventNames.startEventName);
     _events_engine.default.off(this._handle, eventNames.updateEventName);
     _events_engine.default.off(this._handle, eventNames.endEventName);
   };
   _proto._getEventNames = function _getEventNames() {
-    var namespace = 'overlayDrag';
-    var startEventName = (0, _index.addNamespace)(_drag.start, namespace);
-    var updateEventName = (0, _index.addNamespace)(_drag.move, namespace);
-    var endEventName = (0, _index.addNamespace)(_drag.end, namespace);
+    const namespace = 'overlayDrag';
+    const startEventName = (0, _index.addNamespace)(_drag.start, namespace);
+    const updateEventName = (0, _index.addNamespace)(_drag.move, namespace);
+    const endEventName = (0, _index.addNamespace)(_drag.end, namespace);
     return {
       startEventName,
       updateEventName,
@@ -76,7 +77,7 @@ var PopupDrag = /*#__PURE__*/function () {
     };
   };
   _proto._dragStartHandler = function _dragStartHandler(e) {
-    var allowedOffsets = this._getAllowedOffsets();
+    const allowedOffsets = this._getAllowedOffsets();
     this._prevOffset = {
       x: 0,
       y: 0
@@ -88,7 +89,7 @@ var PopupDrag = /*#__PURE__*/function () {
     e.maxRightOffset = allowedOffsets.right;
   };
   _proto._dragUpdateHandler = function _dragUpdateHandler(e) {
-    var targetOffset = {
+    const targetOffset = {
       top: e.offset.y - this._prevOffset.y,
       left: e.offset.x - this._prevOffset.x
     };
@@ -105,22 +106,22 @@ var PopupDrag = /*#__PURE__*/function () {
     }
     e.preventDefault();
     e.stopPropagation();
-    var offset = this._fitOffsetIntoAllowedRange(top, left);
+    const offset = this._fitOffsetIntoAllowedRange(top, left);
     this._moveByOffset(offset);
     this._dragEndHandler(e);
   };
   _proto._fitOffsetIntoAllowedRange = function _fitOffsetIntoAllowedRange(top, left) {
-    var allowedOffsets = this._getAllowedOffsets();
+    const allowedOffsets = this._getAllowedOffsets();
     return {
       top: (0, _math.fitIntoRange)(top, -allowedOffsets.top, allowedOffsets.bottom),
       left: (0, _math.fitIntoRange)(left, -allowedOffsets.left, allowedOffsets.right)
     };
   };
   _proto._getContainerDimensions = function _getContainerDimensions() {
-    var document = _dom_adapter.default.getDocument();
-    var container = this._positionController.$dragResizeContainer.get(0);
-    var containerWidth = (0, _size.getOuterWidth)(container);
-    var containerHeight = (0, _size.getOuterHeight)(container);
+    const document = _dom_adapter.default.getDocument();
+    const container = this._positionController.$dragResizeContainer.get(0);
+    let containerWidth = (0, _size.getOuterWidth)(container);
+    let containerHeight = (0, _size.getOuterHeight)(container);
     if ((0, _type.isWindow)(container)) {
       containerHeight = Math.max(document.body.clientHeight, containerHeight);
       containerWidth = Math.max(document.body.clientWidth, containerWidth);
@@ -131,7 +132,7 @@ var PopupDrag = /*#__PURE__*/function () {
     };
   };
   _proto._getContainerPosition = function _getContainerPosition() {
-    var container = this._positionController.$dragResizeContainer.get(0);
+    const container = this._positionController.$dragResizeContainer.get(0);
     return (0, _type.isWindow)(container) ? {
       top: 0,
       left: 0
@@ -141,26 +142,27 @@ var PopupDrag = /*#__PURE__*/function () {
     return (0, _size.getOffset)(this._draggableElement);
   };
   _proto._getInnerDelta = function _getInnerDelta() {
-    var containerDimensions = this._getContainerDimensions();
-    var elementDimensions = this._getElementDimensions();
+    const containerDimensions = this._getContainerDimensions();
+    const elementDimensions = this._getElementDimensions();
     return {
       x: containerDimensions.width - elementDimensions.width,
       y: containerDimensions.height - elementDimensions.height
     };
   };
   _proto._getOuterDelta = function _getOuterDelta() {
-    var _this$_getElementDime = this._getElementDimensions(),
-      width = _this$_getElementDime.width,
-      height = _this$_getElementDime.height;
-    var outsideDragFactor = this._positionController.outsideDragFactor;
+    const {
+      width,
+      height
+    } = this._getElementDimensions();
+    const outsideDragFactor = this._positionController.outsideDragFactor;
     return {
       x: width * outsideDragFactor,
       y: height * outsideDragFactor
     };
   };
   _proto._getFullDelta = function _getFullDelta() {
-    var fullDelta = this._getInnerDelta();
-    var outerDelta = this._getOuterDelta();
+    const fullDelta = this._getInnerDelta();
+    const outerDelta = this._getOuterDelta();
     return {
       x: fullDelta.x + outerDelta.x,
       y: fullDelta.y + outerDelta.y
@@ -173,8 +175,8 @@ var PopupDrag = /*#__PURE__*/function () {
     };
   };
   _proto._getAllowedOffsets = function _getAllowedOffsets() {
-    var fullDelta = this._getFullDelta();
-    var isDragAllowed = fullDelta.y >= 0 && fullDelta.x >= 0;
+    const fullDelta = this._getFullDelta();
+    const isDragAllowed = fullDelta.y >= 0 && fullDelta.x >= 0;
     if (!isDragAllowed) {
       return {
         top: 0,
@@ -183,9 +185,9 @@ var PopupDrag = /*#__PURE__*/function () {
         right: 0
       };
     }
-    var elementPosition = this._getElementPosition();
-    var containerPosition = this._getContainerPosition();
-    var outerDelta = this._getOuterDelta();
+    const elementPosition = this._getElementPosition();
+    const containerPosition = this._getContainerPosition();
+    const outerDelta = this._getOuterDelta();
     return {
       top: elementPosition.top - containerPosition.top + outerDelta.y,
       bottom: -elementPosition.top + containerPosition.top + fullDelta.y,
@@ -194,8 +196,8 @@ var PopupDrag = /*#__PURE__*/function () {
     };
   };
   _proto._moveByOffset = function _moveByOffset(offset) {
-    var currentPosition = (0, _translator.locate)(this._draggableElement);
-    var newPosition = {
+    const currentPosition = (0, _translator.locate)(this._draggableElement);
+    const newPosition = {
       left: currentPosition.left + offset.left,
       top: currentPosition.top + offset.top
     };

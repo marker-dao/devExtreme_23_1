@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/appointment_edit_form/utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,5 @@ exports.getFirstDayOfWeek = void 0;
 var _type = require("../../../../core/utils/type");
 var _date = _interopRequireDefault(require("../../../../localization/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var getFirstDayOfWeek = function getFirstDayOfWeek(firstDayOfWeek) {
-  return (0, _type.isDefined)(firstDayOfWeek) ? firstDayOfWeek : _date.default.firstDayOfWeekIndex();
-};
+const getFirstDayOfWeek = firstDayOfWeek => (0, _type.isDefined)(firstDayOfWeek) ? firstDayOfWeek : _date.default.firstDayOfWeekIndex();
 exports.getFirstDayOfWeek = getFirstDayOfWeek;

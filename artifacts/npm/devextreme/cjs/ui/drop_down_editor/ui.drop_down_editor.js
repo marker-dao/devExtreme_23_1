@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_editor.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,19 +35,19 @@ var _window = require("../../core/utils/window");
 var _utils = require("./utils");
 var _translator = require("../../animation/translator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DROP_DOWN_EDITOR_CLASS = 'dx-dropdowneditor';
-var DROP_DOWN_EDITOR_INPUT_WRAPPER = 'dx-dropdowneditor-input-wrapper';
-var DROP_DOWN_EDITOR_BUTTON_ICON = 'dx-dropdowneditor-icon';
-var DROP_DOWN_EDITOR_OVERLAY = 'dx-dropdowneditor-overlay';
-var DROP_DOWN_EDITOR_OVERLAY_FLIPPED = 'dx-dropdowneditor-overlay-flipped';
-var DROP_DOWN_EDITOR_ACTIVE = 'dx-dropdowneditor-active';
-var DROP_DOWN_EDITOR_FIELD_CLICKABLE = 'dx-dropdowneditor-field-clickable';
-var DROP_DOWN_EDITOR_FIELD_TEMPLATE_WRAPPER = 'dx-dropdowneditor-field-template-wrapper';
-var isIOs = _devices.default.current().platform === 'ios';
-var DropDownEditor = _text_box.default.inherit({
-  _supportedKeys: function _supportedKeys() {
+const DROP_DOWN_EDITOR_CLASS = 'dx-dropdowneditor';
+const DROP_DOWN_EDITOR_INPUT_WRAPPER = 'dx-dropdowneditor-input-wrapper';
+const DROP_DOWN_EDITOR_BUTTON_ICON = 'dx-dropdowneditor-icon';
+const DROP_DOWN_EDITOR_OVERLAY = 'dx-dropdowneditor-overlay';
+const DROP_DOWN_EDITOR_OVERLAY_FLIPPED = 'dx-dropdowneditor-overlay-flipped';
+const DROP_DOWN_EDITOR_ACTIVE = 'dx-dropdowneditor-active';
+const DROP_DOWN_EDITOR_FIELD_CLICKABLE = 'dx-dropdowneditor-field-clickable';
+const DROP_DOWN_EDITOR_FIELD_TEMPLATE_WRAPPER = 'dx-dropdowneditor-field-template-wrapper';
+const isIOs = _devices.default.current().platform === 'ios';
+const DropDownEditor = _text_box.default.inherit({
+  _supportedKeys: function () {
     return (0, _extend.extend)({}, this.callBase(), {
-      tab: function tab(e) {
+      tab: function (e) {
         if (!this.option('opened')) {
           return;
         }
@@ -55,21 +55,21 @@ var DropDownEditor = _text_box.default.inherit({
           this.close();
           return;
         }
-        var $focusableElement = e.shiftKey ? this._getLastPopupElement() : this._getFirstPopupElement();
+        const $focusableElement = e.shiftKey ? this._getLastPopupElement() : this._getFirstPopupElement();
         if ($focusableElement) {
           _events_engine.default.trigger($focusableElement, 'focus');
           $focusableElement.select();
         }
         e.preventDefault();
       },
-      escape: function escape(e) {
+      escape: function (e) {
         if (this.option('opened')) {
           e.preventDefault();
         }
         this.close();
         return true;
       },
-      upArrow: function upArrow(e) {
+      upArrow: function (e) {
         if (!(0, _index.isCommandKeyPressed)(e)) {
           e.preventDefault();
           e.stopPropagation();
@@ -80,7 +80,7 @@ var DropDownEditor = _text_box.default.inherit({
         }
         return true;
       },
-      downArrow: function downArrow(e) {
+      downArrow: function (e) {
         if (!(0, _index.isCommandKeyPressed)(e)) {
           e.preventDefault();
           e.stopPropagation();
@@ -91,7 +91,7 @@ var DropDownEditor = _text_box.default.inherit({
         }
         return true;
       },
-      enter: function enter(e) {
+      enter: function (e) {
         if (this.option('opened')) {
           e.preventDefault();
           this._valueChangeEventHandler(e);
@@ -100,13 +100,13 @@ var DropDownEditor = _text_box.default.inherit({
       }
     });
   },
-  _getDefaultButtons: function _getDefaultButtons() {
+  _getDefaultButtons: function () {
     return this.callBase().concat([{
       name: 'dropDown',
       Ctor: _ui2.default
     }]);
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       value: null,
       onOpened: null,
@@ -169,11 +169,11 @@ var DropDownEditor = _text_box.default.inherit({
     });
   },
 
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return true;
   },
-  _getDefaultPopupPosition: function _getDefaultPopupPosition(isRtlEnabled) {
-    var position = (0, _position2.getDefaultAlignment)(isRtlEnabled);
+  _getDefaultPopupPosition: function (isRtlEnabled) {
+    const position = (0, _position2.getDefaultAlignment)(isRtlEnabled);
     return {
       offset: {
         h: 0,
@@ -184,10 +184,10 @@ var DropDownEditor = _text_box.default.inherit({
       collision: 'flip flip'
     };
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device(_device) {
-        var isGeneric = _device.platform === 'generic';
+      device: function (device) {
+        const isGeneric = device.platform === 'generic';
         return isGeneric;
       },
       options: {
@@ -199,27 +199,28 @@ var DropDownEditor = _text_box.default.inherit({
       }
     }]);
   },
-  _inputWrapper: function _inputWrapper() {
+  _inputWrapper: function () {
     return this.$element().find('.' + DROP_DOWN_EDITOR_INPUT_WRAPPER).first();
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._initVisibilityActions();
     this._initPopupInitializedAction();
     this._updatePopupPosition(this.option('rtlEnabled'));
     this._options.cache('dropDownOptions', this.option('dropDownOptions'));
   },
-  _updatePopupPosition: function _updatePopupPosition(isRtlEnabled) {
-    var _this$_getDefaultPopu = this._getDefaultPopupPosition(isRtlEnabled),
-      my = _this$_getDefaultPopu.my,
-      at = _this$_getDefaultPopu.at;
-    var currentPosition = this.option('popupPosition');
+  _updatePopupPosition: function (isRtlEnabled) {
+    const {
+      my,
+      at
+    } = this._getDefaultPopupPosition(isRtlEnabled);
+    const currentPosition = this.option('popupPosition');
     this.option('popupPosition', (0, _extend.extend)({}, currentPosition, {
       my,
       at
     }));
   },
-  _initVisibilityActions: function _initVisibilityActions() {
+  _initVisibilityActions: function () {
     this._openAction = this._createActionByOption('onOpened', {
       excludeValidators: ['disabled', 'readOnly']
     });
@@ -227,100 +228,99 @@ var DropDownEditor = _text_box.default.inherit({
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _initPopupInitializedAction: function _initPopupInitializedAction() {
+  _initPopupInitializedAction: function () {
     this._popupInitializedAction = this._createActionByOption('onPopupInitialized', {
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._renderSubmitElement();
     this.callBase();
     this.$element().addClass(DROP_DOWN_EDITOR_CLASS);
     this.setAria('role', 'combobox');
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._renderOpenHandler();
     this._attachFocusOutHandler();
     this._renderOpenedState();
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl: function () {
     if (!this.option('deferRendering')) {
       this._createPopup();
     }
   },
-  _renderInput: function _renderInput() {
+  _renderInput: function () {
     this.callBase();
     this._wrapInput();
     this._setDefaultAria();
   },
-  _wrapInput: function _wrapInput() {
+  _wrapInput: function () {
     this._$container = this.$element().wrapInner((0, _renderer.default)('<div>').addClass(DROP_DOWN_EDITOR_INPUT_WRAPPER)).children().eq(0);
   },
-  _setDefaultAria: function _setDefaultAria() {
+  _setDefaultAria: function () {
     this.setAria({
       'haspopup': 'true',
       'autocomplete': 'list'
     });
   },
-  _readOnlyPropValue: function _readOnlyPropValue() {
+  _readOnlyPropValue: function () {
     return !this._isEditable() || this.callBase();
   },
-  _cleanFocusState: function _cleanFocusState() {
+  _cleanFocusState: function () {
     this.callBase();
     if (this.option('fieldTemplate')) {
       this._detachFocusEvents();
     }
   },
-  _getFieldTemplate: function _getFieldTemplate() {
+  _getFieldTemplate: function () {
     return this.option('fieldTemplate') && this._getTemplateByOption('fieldTemplate');
   },
-  _renderMask: function _renderMask() {
+  _renderMask: function () {
     if (this.option('fieldTemplate')) {
       return;
     }
     this.callBase();
   },
-  _renderField: function _renderField() {
-    var fieldTemplate = this._getFieldTemplate();
+  _renderField: function () {
+    const fieldTemplate = this._getFieldTemplate();
     fieldTemplate && this._renderTemplatedField(fieldTemplate, this._fieldRenderData());
   },
-  _renderPlaceholder: function _renderPlaceholder() {
-    var hasFieldTemplate = !!this._getFieldTemplate();
+  _renderPlaceholder: function () {
+    const hasFieldTemplate = !!this._getFieldTemplate();
     if (!hasFieldTemplate) {
       this.callBase();
     }
   },
-  _renderValue: function _renderValue() {
+  _renderValue: function () {
     if (this.option('useHiddenSubmitElement')) {
       this._setSubmitValue();
     }
-    var promise = this.callBase();
+    const promise = this.callBase();
     promise.always(this._renderField.bind(this));
   },
-  _renderTemplatedField: function _renderTemplatedField(fieldTemplate, data) {
-    var _this = this;
-    var isFocused = (0, _selectors.focused)(this._input());
-    var $container = this._$container;
+  _renderTemplatedField: function (fieldTemplate, data) {
+    const isFocused = (0, _selectors.focused)(this._input());
+    const $container = this._$container;
     this._detachKeyboardEvents();
     this._refreshButtonsContainer();
     this._detachWrapperContent();
     this._detachFocusEvents();
     $container.empty();
-    var $templateWrapper = (0, _renderer.default)('<div>').addClass(DROP_DOWN_EDITOR_FIELD_TEMPLATE_WRAPPER).appendTo($container);
+    const $templateWrapper = (0, _renderer.default)('<div>').addClass(DROP_DOWN_EDITOR_FIELD_TEMPLATE_WRAPPER).appendTo($container);
     fieldTemplate.render({
       model: data,
       container: (0, _element.getPublicElement)($templateWrapper),
-      onRendered: function onRendered() {
-        var isRenderedInRoot = !!_this.$element().find($templateWrapper).length;
+      onRendered: () => {
+        const isRenderedInRoot = !!this.$element().find($templateWrapper).length;
         if (!isRenderedInRoot) {
           return;
         }
-        var $input = _this._input();
+        const $input = this._input();
         if (!$input.length) {
           throw _ui.default.Error('E1010');
         }
-        _this._integrateInput();
+        this._integrateInput();
         isFocused && _events_engine.default.trigger($input, 'focus');
       }
     });
@@ -328,18 +328,18 @@ var DropDownEditor = _text_box.default.inherit({
   },
   _detachWrapperContent() {
     var _this$_$submitElement, _this$_$beforeButtons, _this$_$afterButtonsC;
-    var useHiddenSubmitElement = this.option('useHiddenSubmitElement');
+    const useHiddenSubmitElement = this.option('useHiddenSubmitElement');
     useHiddenSubmitElement && ((_this$_$submitElement = this._$submitElement) === null || _this$_$submitElement === void 0 ? void 0 : _this$_$submitElement.detach());
 
     // NOTE: to prevent buttons disposition
-    var beforeButtonsContainerParent = (_this$_$beforeButtons = this._$beforeButtonsContainer) === null || _this$_$beforeButtons === void 0 ? void 0 : _this$_$beforeButtons[0].parentNode;
-    var afterButtonsContainerParent = (_this$_$afterButtonsC = this._$afterButtonsContainer) === null || _this$_$afterButtonsC === void 0 ? void 0 : _this$_$afterButtonsC[0].parentNode;
+    const beforeButtonsContainerParent = (_this$_$beforeButtons = this._$beforeButtonsContainer) === null || _this$_$beforeButtons === void 0 ? void 0 : _this$_$beforeButtons[0].parentNode;
+    const afterButtonsContainerParent = (_this$_$afterButtonsC = this._$afterButtonsContainer) === null || _this$_$afterButtonsC === void 0 ? void 0 : _this$_$afterButtonsC[0].parentNode;
     beforeButtonsContainerParent === null || beforeButtonsContainerParent === void 0 ? void 0 : beforeButtonsContainerParent.removeChild(this._$beforeButtonsContainer[0]);
     afterButtonsContainerParent === null || afterButtonsContainerParent === void 0 ? void 0 : afterButtonsContainerParent.removeChild(this._$afterButtonsContainer[0]);
   },
   _attachWrapperContent($container) {
     var _this$_$submitElement2;
-    var useHiddenSubmitElement = this.option('useHiddenSubmitElement');
+    const useHiddenSubmitElement = this.option('useHiddenSubmitElement');
     $container.prepend(this._$beforeButtonsContainer);
     useHiddenSubmitElement && ((_this$_$submitElement2 = this._$submitElement) === null || _this$_$submitElement2 === void 0 ? void 0 : _this$_$submitElement2.appendTo($container));
     $container.append(this._$afterButtonsContainer);
@@ -347,32 +347,32 @@ var DropDownEditor = _text_box.default.inherit({
   _refreshButtonsContainer() {
     this._$buttonsContainer = this.$element().children().eq(0);
   },
-  _integrateInput: function _integrateInput() {
+  _integrateInput: function () {
     this._renderFocusState();
     this._refreshValueChangeEvent();
     this._refreshEvents();
     this._refreshEmptinessEvent();
   },
-  _refreshEmptinessEvent: function _refreshEmptinessEvent() {
+  _refreshEmptinessEvent: function () {
     _events_engine.default.off(this._input(), 'input blur', this._toggleEmptinessEventHandler);
     this._renderEmptinessEvent();
   },
-  _fieldRenderData: function _fieldRenderData() {
+  _fieldRenderData: function () {
     return this.option('value');
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this._templateManager.addDefaultTemplates({
       dropDownButton: new _function_template.FunctionTemplate(function (options) {
-        var $icon = (0, _renderer.default)('<div>').addClass(DROP_DOWN_EDITOR_BUTTON_ICON);
+        const $icon = (0, _renderer.default)('<div>').addClass(DROP_DOWN_EDITOR_BUTTON_ICON);
         (0, _renderer.default)(options.container).append($icon);
       })
     });
     this.callBase();
   },
-  _renderOpenHandler: function _renderOpenHandler() {
-    var $inputWrapper = this._inputWrapper();
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
-    var openOnFieldClick = this.option('openOnFieldClick');
+  _renderOpenHandler: function () {
+    const $inputWrapper = this._inputWrapper();
+    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+    const openOnFieldClick = this.option('openOnFieldClick');
     _events_engine.default.off($inputWrapper, eventName);
     _events_engine.default.on($inputWrapper, eventName, this._getInputClickHandler(openOnFieldClick));
     this.$element().toggleClass(DROP_DOWN_EDITOR_FIELD_CLICKABLE, openOnFieldClick);
@@ -380,49 +380,47 @@ var DropDownEditor = _text_box.default.inherit({
       this._openOnFieldClickAction = this._createAction(this._openHandler.bind(this));
     }
   },
-  _attachFocusOutHandler: function _attachFocusOutHandler() {
-    var _this2 = this;
+  _attachFocusOutHandler: function () {
     if (isIOs) {
       this._detachFocusOutEvents();
-      _events_engine.default.on(this._inputWrapper(), (0, _index.addNamespace)('focusout', this.NAME), function (event) {
-        var newTarget = event.relatedTarget;
-        if (newTarget && _this2.option('opened')) {
-          var isNewTargetOutside = _this2._isTargetOutOfComponent(newTarget);
+      _events_engine.default.on(this._inputWrapper(), (0, _index.addNamespace)('focusout', this.NAME), event => {
+        const newTarget = event.relatedTarget;
+        if (newTarget && this.option('opened')) {
+          const isNewTargetOutside = this._isTargetOutOfComponent(newTarget);
           if (isNewTargetOutside) {
-            _this2.close();
+            this.close();
           }
         }
       });
     }
   },
-  _isTargetOutOfComponent: function _isTargetOutOfComponent(newTarget) {
-    var popupWrapper = this.content ? (0, _renderer.default)(this.content()).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY)) : this._$popup;
-    var isTargetOutsidePopup = (0, _renderer.default)(newTarget).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY), popupWrapper).length === 0;
+  _isTargetOutOfComponent: function (newTarget) {
+    const popupWrapper = this.content ? (0, _renderer.default)(this.content()).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY)) : this._$popup;
+    const isTargetOutsidePopup = (0, _renderer.default)(newTarget).closest(".".concat(DROP_DOWN_EDITOR_OVERLAY), popupWrapper).length === 0;
     return isTargetOutsidePopup;
   },
-  _detachFocusOutEvents: function _detachFocusOutEvents() {
+  _detachFocusOutEvents: function () {
     isIOs && _events_engine.default.off(this._inputWrapper(), (0, _index.addNamespace)('focusout', this.NAME));
   },
-  _getInputClickHandler: function _getInputClickHandler(openOnFieldClick) {
-    var _this3 = this;
-    return openOnFieldClick ? function (e) {
-      _this3._executeOpenAction(e);
-    } : function (e) {
-      _this3._focusInput();
+  _getInputClickHandler: function (openOnFieldClick) {
+    return openOnFieldClick ? e => {
+      this._executeOpenAction(e);
+    } : e => {
+      this._focusInput();
     };
   },
-  _openHandler: function _openHandler() {
+  _openHandler: function () {
     this._toggleOpenState();
   },
-  _executeOpenAction: function _executeOpenAction(e) {
+  _executeOpenAction: function (e) {
     this._openOnFieldClickAction({
       event: e
     });
   },
-  _keyboardEventBindingTarget: function _keyboardEventBindingTarget() {
+  _keyboardEventBindingTarget: function () {
     return this._input();
   },
-  _focusInput: function _focusInput() {
+  _focusInput: function () {
     if (this.option('disabled')) {
       return false;
     }
@@ -432,22 +430,24 @@ var DropDownEditor = _text_box.default.inherit({
     }
     return true;
   },
-  _resetCaretPosition: function _resetCaretPosition() {
-    var ignoreEditable = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var inputElement = this._input().get(0);
+  _resetCaretPosition: function () {
+    let ignoreEditable = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    const inputElement = this._input().get(0);
     if (inputElement) {
-      var value = inputElement.value;
-      var caretPosition = (0, _type.isDefined)(value) && (ignoreEditable || this._isEditable()) ? value.length : 0;
+      const {
+        value
+      } = inputElement;
+      const caretPosition = (0, _type.isDefined)(value) && (ignoreEditable || this._isEditable()) ? value.length : 0;
       this._caret({
         start: caretPosition,
         end: caretPosition
       }, true);
     }
   },
-  _isEditable: function _isEditable() {
+  _isEditable: function () {
     return this.option('acceptCustomValue');
   },
-  _toggleOpenState: function _toggleOpenState(isVisible) {
+  _toggleOpenState: function (isVisible) {
     if (!this._focusInput()) {
       return;
     }
@@ -459,21 +459,21 @@ var DropDownEditor = _text_box.default.inherit({
   _getControlsAria() {
     return this._popup && this._popupContentId;
   },
-  _renderOpenedState: function _renderOpenedState() {
-    var opened = this.option('opened');
+  _renderOpenedState: function () {
+    const opened = this.option('opened');
     if (opened) {
       this._createPopup();
     }
     this.$element().toggleClass(DROP_DOWN_EDITOR_ACTIVE, opened);
     this._setPopupOption('visible', opened);
-    var arias = {
+    const arias = {
       'expanded': opened,
       'controls': this._getControlsAria()
     };
     this.setAria(arias);
     this.setAria('owns', (opened || undefined) && this._popupContentId, this.$element());
   },
-  _createPopup: function _createPopup() {
+  _createPopup: function () {
     if (this._$popup) {
       return;
     }
@@ -482,8 +482,8 @@ var DropDownEditor = _text_box.default.inherit({
     this._renderPopupContent();
   },
   _renderPopupContent: _common.noop,
-  _renderPopup: function _renderPopup() {
-    var popupConfig = (0, _extend.extend)(this._popupConfig(), this._options.cache('dropDownOptions'));
+  _renderPopup: function () {
+    const popupConfig = (0, _extend.extend)(this._popupConfig(), this._options.cache('dropDownOptions'));
     delete popupConfig.closeOnOutsideClick;
     if (popupConfig.elementAttr && !Object.keys(popupConfig.elementAttr).length) {
       delete popupConfig.elementAttr;
@@ -502,10 +502,7 @@ var DropDownEditor = _text_box.default.inherit({
     this._bindInnerWidgetOptions(this._popup, 'dropDownOptions');
   },
   _attachPopupKeyHandler() {
-    var _this4 = this;
-    _events_engine.default.on(this._popup.$overlayContent(), (0, _index.addNamespace)('keydown', this.NAME), function (e) {
-      return _this4._popupKeyHandler(e);
-    });
+    _events_engine.default.on(this._popup.$overlayContent(), (0, _index.addNamespace)('keydown', this.NAME), e => this._popupKeyHandler(e));
   },
   _popupKeyHandler(e) {
     switch ((0, _index.normalizeKeyName)(e)) {
@@ -518,9 +515,9 @@ var DropDownEditor = _text_box.default.inherit({
     }
   },
   _popupTabHandler(e) {
-    var $target = (0, _renderer.default)(e.target);
-    var moveBackward = e.shiftKey && $target.is(this._getFirstPopupElement());
-    var moveForward = !e.shiftKey && $target.is(this._getLastPopupElement());
+    const $target = (0, _renderer.default)(e.target);
+    const moveBackward = e.shiftKey && $target.is(this._getFirstPopupElement());
+    const moveForward = !e.shiftKey && $target.is(this._getLastPopupElement());
     if (moveForward || moveBackward) {
       _events_engine.default.trigger(this.field(), 'focus');
       e.preventDefault();
@@ -535,8 +532,7 @@ var DropDownEditor = _text_box.default.inherit({
     this.setAria('id', this._popupContentId, $popupContent);
   },
   _contentReadyHandler: _common.noop,
-  _popupConfig: function _popupConfig() {
-    var _this5 = this;
+  _popupConfig: function () {
     return {
       onInitialized: this._getPopupInitializedHandler(),
       position: (0, _extend.extend)(this.option('popupPosition'), {
@@ -544,15 +540,11 @@ var DropDownEditor = _text_box.default.inherit({
       }),
       showTitle: this.option('dropDownOptions.showTitle'),
       _ignoreFunctionValueDeprecation: true,
-      width: function width() {
-        return (0, _utils.getElementWidth)(_this5.$element());
-      },
+      width: () => (0, _utils.getElementWidth)(this.$element()),
       height: 'auto',
       shading: false,
       hideOnParentScroll: true,
-      hideOnOutsideClick: function hideOnOutsideClick(e) {
-        return _this5._closeOutsideDropDownHandler(e);
-      },
+      hideOnOutsideClick: e => this._closeOutsideDropDownHandler(e),
       animation: {
         show: {
           type: 'fade',
@@ -580,19 +572,18 @@ var DropDownEditor = _text_box.default.inherit({
     };
   },
   _popupInitializedHandler: _common.noop,
-  _getPopupInitializedHandler: function _getPopupInitializedHandler() {
-    var _this6 = this;
-    var onPopupInitialized = this.option('onPopupInitialized');
-    return function (e) {
-      _this6._popupInitializedHandler(e);
+  _getPopupInitializedHandler: function () {
+    const onPopupInitialized = this.option('onPopupInitialized');
+    return e => {
+      this._popupInitializedHandler(e);
       if (onPopupInitialized) {
-        _this6._popupInitializedAction({
+        this._popupInitializedAction({
           popup: e.component
         });
       }
     };
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     // TODO: Use ResizeObserver to hide popup after editor visibility change
     // instead of window's dimension change,
     if ((0, _window.hasWindow)() && !this.$element().is(':visible')) {
@@ -601,76 +592,78 @@ var DropDownEditor = _text_box.default.inherit({
     }
     this._updatePopupWidth();
   },
-  _updatePopupWidth: function _updatePopupWidth() {
-    var _this7 = this;
-    var popupWidth = (0, _utils.getSizeValue)(this.option('dropDownOptions.width'));
+  _updatePopupWidth: function () {
+    const popupWidth = (0, _utils.getSizeValue)(this.option('dropDownOptions.width'));
     if (popupWidth === undefined) {
-      this._setPopupOption('width', function () {
-        return (0, _utils.getElementWidth)(_this7.$element());
-      });
+      this._setPopupOption('width', () => (0, _utils.getElementWidth)(this.$element()));
     }
   },
-  _popupPositionedHandler: function _popupPositionedHandler(e) {
+  _popupPositionedHandler: function (e) {
     var _e$position, _e$position$v;
-    var _this$option = this.option(),
-      labelMode = _this$option.labelMode,
-      stylingMode = _this$option.stylingMode;
+    const {
+      labelMode,
+      stylingMode
+    } = this.option();
     if (!this._popup) {
       return;
     }
-    var $popupOverlayContent = this._popup.$overlayContent();
-    var isOverlayFlipped = (_e$position = e.position) === null || _e$position === void 0 ? void 0 : (_e$position$v = _e$position.v) === null || _e$position$v === void 0 ? void 0 : _e$position$v.flip;
-    var shouldIndentForLabel = labelMode !== 'hidden' && labelMode !== 'outside' && stylingMode === 'outlined';
+    const $popupOverlayContent = this._popup.$overlayContent();
+    const isOverlayFlipped = (_e$position = e.position) === null || _e$position === void 0 ? void 0 : (_e$position$v = _e$position.v) === null || _e$position$v === void 0 ? void 0 : _e$position$v.flip;
+    const shouldIndentForLabel = labelMode !== 'hidden' && labelMode !== 'outside' && stylingMode === 'outlined';
     if (e.position) {
       $popupOverlayContent.toggleClass(DROP_DOWN_EDITOR_OVERLAY_FLIPPED, isOverlayFlipped);
     }
     if (isOverlayFlipped && shouldIndentForLabel && this._label.isVisible()) {
-      var $label = this._label.$element();
+      const $label = this._label.$element();
       (0, _translator.move)($popupOverlayContent, {
         top: (0, _translator.locate)($popupOverlayContent).top - parseInt($label.css('fontSize'))
       });
     }
   },
   _popupShowingHandler: _common.noop,
-  _popupHidingHandler: function _popupHidingHandler() {
+  _popupHidingHandler: function () {
     this.option('opened', false);
   },
-  _popupShownHandler: function _popupShownHandler() {
+  _popupShownHandler: function () {
     var _this$_validationMess;
     this._openAction();
     (_this$_validationMess = this._validationMessage) === null || _this$_validationMess === void 0 ? void 0 : _this$_validationMess.option('positionSide', this._getValidationMessagePositionSide());
   },
-  _popupHiddenHandler: function _popupHiddenHandler() {
+  _popupHiddenHandler: function () {
     var _this$_validationMess2;
     this._closeAction();
     (_this$_validationMess2 = this._validationMessage) === null || _this$_validationMess2 === void 0 ? void 0 : _this$_validationMess2.option('positionSide', this._getValidationMessagePositionSide());
   },
-  _getValidationMessagePositionSide: function _getValidationMessagePositionSide() {
-    var validationMessagePosition = this.option('validationMessagePosition');
+  _getValidationMessagePositionSide: function () {
+    const validationMessagePosition = this.option('validationMessagePosition');
     if (validationMessagePosition !== 'auto') {
       return validationMessagePosition;
     }
-    var positionSide = 'bottom';
+    let positionSide = 'bottom';
     if (this._popup && this._popup.option('visible')) {
-      var _animationPosition$se = _position.default.setup(this.$element()),
-        myTop = _animationPosition$se.top;
-      var _animationPosition$se2 = _position.default.setup(this._popup.$content()),
-        popupTop = _animationPosition$se2.top;
+      const {
+        top: myTop
+      } = _position.default.setup(this.$element());
+      const {
+        top: popupTop
+      } = _position.default.setup(this._popup.$content());
       positionSide = myTop + this.option('popupPosition').offset.v > popupTop ? 'bottom' : 'top';
     }
     return positionSide;
   },
-  _closeOutsideDropDownHandler: function _closeOutsideDropDownHandler(_ref) {
-    var target = _ref.target;
-    var $target = (0, _renderer.default)(target);
-    var dropDownButton = this.getButton('dropDown');
-    var $dropDownButton = dropDownButton && dropDownButton.$element();
-    var isInputClicked = !!$target.closest(this.$element()).length;
-    var isDropDownButtonClicked = !!$target.closest($dropDownButton).length;
-    var isOutsideClick = !isInputClicked && !isDropDownButtonClicked;
+  _closeOutsideDropDownHandler: function (_ref) {
+    let {
+      target
+    } = _ref;
+    const $target = (0, _renderer.default)(target);
+    const dropDownButton = this.getButton('dropDown');
+    const $dropDownButton = dropDownButton && dropDownButton.$element();
+    const isInputClicked = !!$target.closest(this.$element()).length;
+    const isDropDownButtonClicked = !!$target.closest($dropDownButton).length;
+    const isOutsideClick = !isInputClicked && !isDropDownButtonClicked;
     return isOutsideClick;
   },
-  _clean: function _clean() {
+  _clean: function () {
     delete this._openOnFieldClickAction;
     if (this._$popup) {
       this._$popup.remove();
@@ -679,25 +672,25 @@ var DropDownEditor = _text_box.default.inherit({
     }
     this.callBase();
   },
-  _setPopupOption: function _setPopupOption(optionName, value) {
+  _setPopupOption: function (optionName, value) {
     this._setWidgetOption('_popup', arguments);
   },
-  _validatedOpening: function _validatedOpening() {
+  _validatedOpening: function () {
     if (!this.option('readOnly')) {
       this._toggleOpenState(true);
     }
   },
-  _getPopupToolbarItems: function _getPopupToolbarItems() {
+  _getPopupToolbarItems: function () {
     return this.option('applyValueMode') === 'useButtons' ? this._popupToolbarItemsConfig() : [];
   },
-  _getFirstPopupElement: function _getFirstPopupElement() {
+  _getFirstPopupElement: function () {
     return (0, _renderer.default)(this._popup.getFocusableElements()).first();
   },
-  _getLastPopupElement: function _getLastPopupElement() {
+  _getLastPopupElement: function () {
     return (0, _renderer.default)(this._popup.getFocusableElements()).last();
   },
-  _popupToolbarItemsConfig: function _popupToolbarItemsConfig() {
-    var buttonsConfig = [{
+  _popupToolbarItemsConfig: function () {
+    const buttonsConfig = [{
       shortcut: 'done',
       options: {
         onClick: this._applyButtonHandler.bind(this),
@@ -712,11 +705,11 @@ var DropDownEditor = _text_box.default.inherit({
     }];
     return this._applyButtonsLocation(buttonsConfig);
   },
-  _applyButtonsLocation: function _applyButtonsLocation(buttonsConfig) {
-    var buttonsLocation = this.option('buttonsLocation');
-    var resultConfig = buttonsConfig;
+  _applyButtonsLocation: function (buttonsConfig) {
+    const buttonsLocation = this.option('buttonsLocation');
+    const resultConfig = buttonsConfig;
     if (buttonsLocation !== 'default') {
-      var position = (0, _common.splitPair)(buttonsLocation);
+      const position = (0, _common.splitPair)(buttonsLocation);
       (0, _iterator.each)(resultConfig, function (_, element) {
         (0, _extend.extend)(element, {
           toolbar: position[0],
@@ -726,42 +719,42 @@ var DropDownEditor = _text_box.default.inherit({
     }
     return resultConfig;
   },
-  _applyButtonHandler: function _applyButtonHandler() {
+  _applyButtonHandler: function () {
     this.close();
     this.option('focusStateEnabled') && this.focus();
   },
-  _cancelButtonHandler: function _cancelButtonHandler() {
+  _cancelButtonHandler: function () {
     this.close();
     this.option('focusStateEnabled') && this.focus();
   },
-  _popupOptionChanged: function _popupOptionChanged(args) {
-    var options = _ui3.default.getOptionsFromContainer(args);
+  _popupOptionChanged: function (args) {
+    const options = _ui3.default.getOptionsFromContainer(args);
     this._setPopupOption(options);
-    var optionsKeys = Object.keys(options);
+    const optionsKeys = Object.keys(options);
     if (optionsKeys.indexOf('width') !== -1 || optionsKeys.indexOf('height') !== -1) {
       this._dimensionChanged();
     }
   },
-  _renderSubmitElement: function _renderSubmitElement() {
+  _renderSubmitElement: function () {
     if (this.option('useHiddenSubmitElement')) {
       this._$submitElement = (0, _renderer.default)('<input>').attr('type', 'hidden').appendTo(this.$element());
     }
   },
-  _setSubmitValue: function _setSubmitValue() {
+  _setSubmitValue: function () {
     this._getSubmitElement().val(this.option('value'));
   },
-  _getSubmitElement: function _getSubmitElement() {
+  _getSubmitElement: function () {
     if (this.option('useHiddenSubmitElement')) {
       return this._$submitElement;
     } else {
       return this.callBase();
     }
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._detachFocusOutEvents();
     this.callBase();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     var _this$_popup;
     switch (args.name) {
       case 'width':
@@ -827,16 +820,16 @@ var DropDownEditor = _text_box.default.inherit({
         this.callBase(args);
     }
   },
-  open: function open() {
+  open: function () {
     this.option('opened', true);
   },
-  close: function close() {
+  close: function () {
     this.option('opened', false);
   },
-  field: function field() {
+  field: function () {
     return (0, _element.getPublicElement)(this._input());
   },
-  content: function content() {
+  content: function () {
     return this._popup ? this._popup.content() : null;
   }
 });

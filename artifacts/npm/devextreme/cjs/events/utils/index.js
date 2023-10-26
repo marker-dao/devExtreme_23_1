@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/utils/index.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ var _iterator = require("../../core/utils/iterator");
 var _extend = require("../../core/utils/extend");
 var _selectors = require("../../ui/widget/selectors");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var KEY_MAP = {
+const KEY_MAP = {
   'backspace': 'backspace',
   'tab': 'tab',
   'enter': 'enter',
@@ -39,7 +39,7 @@ var KEY_MAP = {
   'control': 'control',
   'shift': 'shift'
 };
-var LEGACY_KEY_CODES = {
+const LEGACY_KEY_CODES = {
   // iOS 10.2 and lower didn't supports KeyboardEvent.key
   '8': 'backspace',
   '9': 'tab',
@@ -65,31 +65,23 @@ var LEGACY_KEY_CODES = {
   '17': 'control',
   '18': 'alt'
 };
-var EVENT_SOURCES_REGEX = {
+const EVENT_SOURCES_REGEX = {
   dx: /^dx/i,
   mouse: /(mouse|wheel)/i,
   touch: /^touch/i,
   keyboard: /^key/i,
   pointer: /^(ms)?pointer/i
 };
-var fixMethod = function fixMethod(e) {
-  return e;
-};
-var copyEvent = function copyEvent(originalEvent) {
-  return fixMethod(_events_engine.default.Event(originalEvent, originalEvent), originalEvent);
-};
-var isDxEvent = function isDxEvent(e) {
-  return eventSource(e) === 'dx';
-};
-var isNativeMouseEvent = function isNativeMouseEvent(e) {
-  return eventSource(e) === 'mouse';
-};
-var isNativeTouchEvent = function isNativeTouchEvent(e) {
-  return eventSource(e) === 'touch';
-};
-var eventSource = function eventSource(_ref) {
-  var type = _ref.type;
-  var result = 'other';
+let fixMethod = e => e;
+const copyEvent = originalEvent => fixMethod(_events_engine.default.Event(originalEvent, originalEvent), originalEvent);
+const isDxEvent = e => eventSource(e) === 'dx';
+const isNativeMouseEvent = e => eventSource(e) === 'mouse';
+const isNativeTouchEvent = e => eventSource(e) === 'touch';
+const eventSource = _ref => {
+  let {
+    type
+  } = _ref;
+  let result = 'other';
   (0, _iterator.each)(EVENT_SOURCES_REGEX, function (key) {
     if (this.test(type)) {
       result = key;
@@ -99,37 +91,31 @@ var eventSource = function eventSource(_ref) {
   return result;
 };
 exports.eventSource = eventSource;
-var isPointerEvent = function isPointerEvent(e) {
-  return eventSource(e) === 'pointer';
-};
+const isPointerEvent = e => eventSource(e) === 'pointer';
 exports.isPointerEvent = isPointerEvent;
-var isMouseEvent = function isMouseEvent(e) {
-  return isNativeMouseEvent(e) || (isPointerEvent(e) || isDxEvent(e)) && e.pointerType === 'mouse';
-};
+const isMouseEvent = e => isNativeMouseEvent(e) || (isPointerEvent(e) || isDxEvent(e)) && e.pointerType === 'mouse';
 exports.isMouseEvent = isMouseEvent;
-var isDxMouseWheelEvent = function isDxMouseWheelEvent(e) {
-  return e && e.type === 'dxmousewheel';
-};
+const isDxMouseWheelEvent = e => e && e.type === 'dxmousewheel';
 exports.isDxMouseWheelEvent = isDxMouseWheelEvent;
-var isTouchEvent = function isTouchEvent(e) {
-  return isNativeTouchEvent(e) || (isPointerEvent(e) || isDxEvent(e)) && e.pointerType === 'touch';
-};
+const isTouchEvent = e => isNativeTouchEvent(e) || (isPointerEvent(e) || isDxEvent(e)) && e.pointerType === 'touch';
 exports.isTouchEvent = isTouchEvent;
-var isKeyboardEvent = function isKeyboardEvent(e) {
-  return eventSource(e) === 'keyboard';
-};
+const isKeyboardEvent = e => eventSource(e) === 'keyboard';
 exports.isKeyboardEvent = isKeyboardEvent;
-var isFakeClickEvent = function isFakeClickEvent(_ref2) {
-  var screenX = _ref2.screenX,
-    offsetX = _ref2.offsetX,
-    pageX = _ref2.pageX;
+const isFakeClickEvent = _ref2 => {
+  let {
+    screenX,
+    offsetX,
+    pageX
+  } = _ref2;
   return screenX === 0 && !offsetX && pageX === 0;
 };
 exports.isFakeClickEvent = isFakeClickEvent;
-var eventData = function eventData(_ref3) {
-  var pageX = _ref3.pageX,
-    pageY = _ref3.pageY,
-    timeStamp = _ref3.timeStamp;
+const eventData = _ref3 => {
+  let {
+    pageX,
+    pageY,
+    timeStamp
+  } = _ref3;
   return {
     x: pageX,
     y: pageY,
@@ -137,17 +123,17 @@ var eventData = function eventData(_ref3) {
   };
 };
 exports.eventData = eventData;
-var eventDelta = function eventDelta(from, to) {
-  return {
-    x: to.x - from.x,
-    y: to.y - from.y,
-    time: to.time - from.time || 1
-  };
-};
+const eventDelta = (from, to) => ({
+  x: to.x - from.x,
+  y: to.y - from.y,
+  time: to.time - from.time || 1
+});
 exports.eventDelta = eventDelta;
-var hasTouches = function hasTouches(e) {
-  var originalEvent = e.originalEvent,
-    pointers = e.pointers;
+const hasTouches = e => {
+  const {
+    originalEvent,
+    pointers
+  } = e;
   if (isNativeTouchEvent(e)) {
     return (originalEvent.touches || []).length;
   }
@@ -159,32 +145,30 @@ var hasTouches = function hasTouches(e) {
 
 // TODO: for tests
 exports.hasTouches = hasTouches;
-var skipEvents = false;
-var forceSkipEvents = function forceSkipEvents() {
-  return skipEvents = true;
-};
+let skipEvents = false;
+const forceSkipEvents = () => skipEvents = true;
 exports.forceSkipEvents = forceSkipEvents;
-var stopEventsSkipping = function stopEventsSkipping() {
-  return skipEvents = false;
-};
+const stopEventsSkipping = () => skipEvents = false;
 exports.stopEventsSkipping = stopEventsSkipping;
-var needSkipEvent = function needSkipEvent(e) {
+const needSkipEvent = e => {
   // TODO: for tests
   if (skipEvents) {
     return true;
   }
 
   // TODO: this checking used in swipeable first move handler. is it correct?
-  var target = e.target;
-  var $target = (0, _renderer.default)(target);
-  var isContentEditable = (target === null || target === void 0 ? void 0 : target.isContentEditable) || (target === null || target === void 0 ? void 0 : target.hasAttribute('contenteditable'));
-  var touchInEditable = $target.is('input, textarea, select') || isContentEditable;
+  const {
+    target
+  } = e;
+  const $target = (0, _renderer.default)(target);
+  const isContentEditable = (target === null || target === void 0 ? void 0 : target.isContentEditable) || (target === null || target === void 0 ? void 0 : target.hasAttribute('contenteditable'));
+  const touchInEditable = $target.is('input, textarea, select') || isContentEditable;
   if (isDxMouseWheelEvent(e)) {
-    var isTextArea = $target.is('textarea') && $target.hasClass('dx-texteditor-input');
+    const isTextArea = $target.is('textarea') && $target.hasClass('dx-texteditor-input');
     if (isTextArea || isContentEditable) {
       return false;
     }
-    var isInputFocused = $target.is('input[type=\'number\'], textarea, select') && $target.is(':focus');
+    const isInputFocused = $target.is('input[type=\'number\'], textarea, select') && $target.is(':focus');
     return isInputFocused;
   }
   if (isMouseEvent(e)) {
@@ -196,29 +180,31 @@ var needSkipEvent = function needSkipEvent(e) {
   }
 };
 exports.needSkipEvent = needSkipEvent;
-var setEventFixMethod = function setEventFixMethod(func) {
-  return fixMethod = func;
-};
+const setEventFixMethod = func => fixMethod = func;
 exports.setEventFixMethod = setEventFixMethod;
-var createEvent = function createEvent(originalEvent, args) {
-  var event = copyEvent(originalEvent);
+const createEvent = (originalEvent, args) => {
+  const event = copyEvent(originalEvent);
   args && (0, _extend.extend)(event, args);
   return event;
 };
 exports.createEvent = createEvent;
-var fireEvent = function fireEvent(props) {
-  var originalEvent = props.originalEvent,
-    delegateTarget = props.delegateTarget;
-  var event = createEvent(originalEvent, props);
+const fireEvent = props => {
+  const {
+    originalEvent,
+    delegateTarget
+  } = props;
+  const event = createEvent(originalEvent, props);
   _events_engine.default.trigger(delegateTarget || event.target, event);
   return event;
 };
 exports.fireEvent = fireEvent;
-var normalizeKeyName = function normalizeKeyName(_ref4) {
-  var key = _ref4.key,
-    which = _ref4.which;
-  var normalizedKey = KEY_MAP[key === null || key === void 0 ? void 0 : key.toLowerCase()] || key;
-  var normalizedKeyFromWhich = LEGACY_KEY_CODES[which];
+const normalizeKeyName = _ref4 => {
+  let {
+    key,
+    which
+  } = _ref4;
+  const normalizedKey = KEY_MAP[key === null || key === void 0 ? void 0 : key.toLowerCase()] || key;
+  const normalizedKeyFromWhich = LEGACY_KEY_CODES[which];
   if (normalizedKeyFromWhich && normalizedKey === key) {
     return normalizedKeyFromWhich;
   } else if (!normalizedKey && which) {
@@ -227,17 +213,21 @@ var normalizeKeyName = function normalizeKeyName(_ref4) {
   return normalizedKey;
 };
 exports.normalizeKeyName = normalizeKeyName;
-var getChar = function getChar(_ref5) {
-  var key = _ref5.key,
-    which = _ref5.which;
+const getChar = _ref5 => {
+  let {
+    key,
+    which
+  } = _ref5;
   return key || String.fromCharCode(which);
 };
 exports.getChar = getChar;
-var addNamespace = _add_namespace.default;
+const addNamespace = _add_namespace.default;
 exports.addNamespace = addNamespace;
-var isCommandKeyPressed = function isCommandKeyPressed(_ref6) {
-  var ctrlKey = _ref6.ctrlKey,
-    metaKey = _ref6.metaKey;
+const isCommandKeyPressed = _ref6 => {
+  let {
+    ctrlKey,
+    metaKey
+  } = _ref6;
   return ctrlKey || metaKey;
 };
 exports.isCommandKeyPressed = isCommandKeyPressed;

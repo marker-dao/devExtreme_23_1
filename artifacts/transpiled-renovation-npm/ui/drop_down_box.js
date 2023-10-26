@@ -19,31 +19,31 @@ var _dom_adapter = _interopRequireDefault(require("../core/dom_adapter"));
 var _element = require("../core/element");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE dropDownBox
-var getActiveElement = _dom_adapter.default.getActiveElement;
-var DROP_DOWN_BOX_CLASS = 'dx-dropdownbox';
-var ANONYMOUS_TEMPLATE_NAME = 'content';
-var realDevice = _devices.default.real();
-var DropDownBox = _ui.default.inherit({
-  _supportedKeys: function _supportedKeys() {
+const getActiveElement = _dom_adapter.default.getActiveElement;
+const DROP_DOWN_BOX_CLASS = 'dx-dropdownbox';
+const ANONYMOUS_TEMPLATE_NAME = 'content';
+const realDevice = _devices.default.real();
+const DropDownBox = _ui.default.inherit({
+  _supportedKeys: function () {
     return (0, _extend.extend)({}, this.callBase(), {
-      tab: function tab(e) {
+      tab: function (e) {
         if (!this.option('opened')) {
           return;
         }
-        var $tabbableElements = this._getTabbableElements();
-        var $focusableElement = e.shiftKey ? $tabbableElements.last() : $tabbableElements.first();
+        const $tabbableElements = this._getTabbableElements();
+        const $focusableElement = e.shiftKey ? $tabbableElements.last() : $tabbableElements.first();
         $focusableElement && _events_engine.default.trigger($focusableElement, 'focus');
         e.preventDefault();
       }
     });
   },
-  _getTabbableElements: function _getTabbableElements() {
+  _getTabbableElements: function () {
     return this._getElements().filter(_selectors.tabbable);
   },
-  _getElements: function _getElements() {
+  _getElements: function () {
     return (0, _renderer.default)(this.content()).find('*');
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       /**
        * @name dxDropDownBoxOptions.attr
@@ -81,60 +81,57 @@ var DropDownBox = _ui.default.inherit({
        */
 
       openOnFieldClick: true,
-      displayValueFormatter: function displayValueFormatter(value) {
+      displayValueFormatter: function (value) {
         return Array.isArray(value) ? value.join(', ') : value;
       },
       useHiddenSubmitElement: true
     });
   },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+  _getAnonymousTemplateName: function () {
     return ANONYMOUS_TEMPLATE_NAME;
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this.callBase();
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._initDataExpressions();
     this.$element().addClass(DROP_DOWN_BOX_CLASS);
     this.callBase();
   },
-  _setSubmitValue: function _setSubmitValue() {
-    var value = this.option('value');
-    var submitValue = this._shouldUseDisplayValue(value) ? this._displayGetter(value) : value;
+  _setSubmitValue: function () {
+    const value = this.option('value');
+    const submitValue = this._shouldUseDisplayValue(value) ? this._displayGetter(value) : value;
     this._getSubmitElement().val(submitValue);
   },
-  _shouldUseDisplayValue: function _shouldUseDisplayValue(value) {
+  _shouldUseDisplayValue: function (value) {
     return this.option('valueExpr') === 'this' && (0, _type.isObject)(value);
   },
   _sortValuesByKeysOrder(orderedKeys, values) {
-    var sortedValues = values.sort(function (a, b) {
+    const sortedValues = values.sort((a, b) => {
       return orderedKeys.indexOf(a.itemKey) - orderedKeys.indexOf(b.itemKey);
     });
-    return sortedValues.map(function (x) {
-      return x.itemDisplayValue;
-    });
+    return sortedValues.map(x => x.itemDisplayValue);
   },
-  _renderInputValue: function _renderInputValue() {
-    var _this = this;
+  _renderInputValue: function () {
     this._rejectValueLoading();
-    var values = [];
+    const values = [];
     if (!this._dataSource) {
       this.callBase(values);
       return new _deferred.Deferred().resolve();
     }
-    var currentValue = this._getCurrentValue();
-    var keys = currentValue !== null && currentValue !== void 0 ? currentValue : [];
+    const currentValue = this._getCurrentValue();
+    let keys = currentValue !== null && currentValue !== void 0 ? currentValue : [];
     keys = Array.isArray(keys) ? keys : [keys];
-    var itemLoadDeferreds = (0, _iterator.map)(keys, function (key) {
-      var deferred = new _deferred.Deferred();
-      _this._loadItem(key).always(function (item) {
-        var displayValue = _this._displayGetter(item);
+    const itemLoadDeferreds = (0, _iterator.map)(keys, key => {
+      const deferred = new _deferred.Deferred();
+      this._loadItem(key).always(item => {
+        const displayValue = this._displayGetter(item);
         if ((0, _type.isDefined)(displayValue)) {
           values.push({
             itemKey: key,
             itemDisplayValue: displayValue
           });
-        } else if (_this.option('acceptCustomValue')) {
+        } else if (this.option('acceptCustomValue')) {
           values.push({
             itemKey: key,
             itemDisplayValue: key
@@ -144,17 +141,17 @@ var DropDownBox = _ui.default.inherit({
       });
       return deferred;
     });
-    var callBase = this.callBase.bind(this);
-    return _deferred.when.apply(this, itemLoadDeferreds).always(function () {
-      var orderedValues = _this._sortValuesByKeysOrder(keys, values);
-      _this.option('displayValue', orderedValues);
+    const callBase = this.callBase.bind(this);
+    return _deferred.when.apply(this, itemLoadDeferreds).always(() => {
+      const orderedValues = this._sortValuesByKeysOrder(keys, values);
+      this.option('displayValue', orderedValues);
       callBase(values.length && orderedValues);
     });
   },
-  _loadItem: function _loadItem(value) {
-    var deferred = new _deferred.Deferred();
-    var that = this;
-    var selectedItem = (0, _common.grep)(this.option('items') || [], function (item) {
+  _loadItem: function (value) {
+    const deferred = new _deferred.Deferred();
+    const that = this;
+    const selectedItem = (0, _common.grep)(this.option('items') || [], function (item) {
       return this._isValueEquals(this._valueGetter(item), value);
     }.bind(this))[0];
     if (selectedItem !== undefined) {
@@ -175,13 +172,13 @@ var DropDownBox = _ui.default.inherit({
     }
     return deferred.promise();
   },
-  _popupTabHandler: function _popupTabHandler(e) {
+  _popupTabHandler: function (e) {
     if ((0, _index.normalizeKeyName)(e) !== 'tab') return;
-    var $firstTabbable = this._getTabbableElements().first().get(0);
-    var $lastTabbable = this._getTabbableElements().last().get(0);
-    var $target = e.target;
-    var moveBackward = !!($target === $firstTabbable && e.shiftKey);
-    var moveForward = !!($target === $lastTabbable && !e.shiftKey);
+    const $firstTabbable = this._getTabbableElements().first().get(0);
+    const $lastTabbable = this._getTabbableElements().last().get(0);
+    const $target = e.target;
+    const moveBackward = !!($target === $firstTabbable && e.shiftKey);
+    const moveForward = !!($target === $lastTabbable && !e.shiftKey);
     if (moveBackward || moveForward) {
       this.close();
       _events_engine.default.trigger(this._input(), 'focus');
@@ -190,16 +187,16 @@ var DropDownBox = _ui.default.inherit({
       }
     }
   },
-  _renderPopupContent: function _renderPopupContent() {
+  _renderPopupContent: function () {
     if (this.option('contentTemplate') === ANONYMOUS_TEMPLATE_NAME) {
       return;
     }
-    var contentTemplate = this._getTemplateByOption('contentTemplate');
+    const contentTemplate = this._getTemplateByOption('contentTemplate');
     if (!(contentTemplate && this.option('contentTemplate'))) {
       return;
     }
-    var $popupContent = this._popup.$content();
-    var templateData = {
+    const $popupContent = this._popup.$content();
+    const templateData = {
       value: this._fieldRenderData(),
       component: this
     };
@@ -209,29 +206,30 @@ var DropDownBox = _ui.default.inherit({
       model: templateData
     });
   },
-  _canShowVirtualKeyboard: function _canShowVirtualKeyboard() {
+  _canShowVirtualKeyboard: function () {
     return realDevice.mac; // T845484
   },
 
-  _isNestedElementActive: function _isNestedElementActive() {
-    var activeElement = getActiveElement();
+  _isNestedElementActive: function () {
+    const activeElement = getActiveElement();
     return activeElement && this._popup.$content().get(0).contains(activeElement);
   },
-  _shouldHideOnParentScroll: function _shouldHideOnParentScroll() {
+  _shouldHideOnParentScroll: function () {
     return realDevice.deviceType === 'desktop' && this._canShowVirtualKeyboard() && this._isNestedElementActive();
   },
-  _popupHiddenHandler: function _popupHiddenHandler() {
+  _popupHiddenHandler: function () {
     this.callBase();
     this._popupPosition = undefined;
   },
-  _popupPositionedHandler: function _popupPositionedHandler(e) {
+  _popupPositionedHandler: function (e) {
     this.callBase(e);
     this._popupPosition = e.position;
   },
-  _getDefaultPopupPosition: function _getDefaultPopupPosition(isRtlEnabled) {
-    var _this$callBase = this.callBase(isRtlEnabled),
-      my = _this$callBase.my,
-      at = _this$callBase.at;
+  _getDefaultPopupPosition: function (isRtlEnabled) {
+    const {
+      my,
+      at
+    } = this.callBase(isRtlEnabled);
     return {
       my,
       at,
@@ -241,9 +239,10 @@ var DropDownBox = _ui.default.inherit({
       collision: 'flipfit'
     };
   },
-  _popupConfig: function _popupConfig() {
-    var _this$option = this.option(),
-      focusStateEnabled = _this$option.focusStateEnabled;
+  _popupConfig: function () {
+    const {
+      focusStateEnabled
+    } = this.option();
     return (0, _extend.extend)(this.callBase(), {
       tabIndex: -1,
       dragEnabled: false,
@@ -256,18 +255,18 @@ var DropDownBox = _ui.default.inherit({
       _ignoreFunctionValueDeprecation: true,
       maxHeight: function () {
         var _this$_popupPosition;
-        var popupLocation = (_this$_popupPosition = this._popupPosition) === null || _this$_popupPosition === void 0 ? void 0 : _this$_popupPosition.v.location;
+        const popupLocation = (_this$_popupPosition = this._popupPosition) === null || _this$_popupPosition === void 0 ? void 0 : _this$_popupPosition.v.location;
         return (0, _utils.getElementMaxHeightByWindow)(this.$element(), popupLocation);
       }.bind(this)
     });
   },
-  _popupShownHandler: function _popupShownHandler() {
+  _popupShownHandler: function () {
     this.callBase();
-    var $firstElement = this._getTabbableElements().first();
+    const $firstElement = this._getTabbableElements().first();
     _events_engine.default.trigger($firstElement, 'focus');
   },
   _setCollectionWidgetOption: _common.noop,
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     this._dataExpressionOptionChanged(args);
     switch (args.name) {
       case 'dataSource':

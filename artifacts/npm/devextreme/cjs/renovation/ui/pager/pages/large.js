@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/pager/pages/large.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,10 +14,9 @@ var _inferno2 = require("@devextreme/runtime/inferno");
 var _page = require("./page");
 var _pager_props = require("../common/pager_props");
 var _config_context = require("../../../common/config_context");
-var _excluded = ["pageIndexes"],
+const _excluded = ["pageIndexes"],
   _excluded2 = ["maxPagesCount", "pageCount", "pageIndex", "pageIndexChange"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -26,18 +25,16 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-var PAGER_PAGE_SEPARATOR_CLASS = 'dx-separator';
-var viewFunction = function viewFunction(_ref) {
-  var pages = _ref.pages;
-  var PagesMarkup = pages.map(function (_ref2) {
-    var key = _ref2.key,
-      pageProps = _ref2.pageProps;
+const PAGER_PAGE_SEPARATOR_CLASS = 'dx-separator';
+const viewFunction = _ref => {
+  let {
+    pages
+  } = _ref;
+  const PagesMarkup = pages.map(_ref2 => {
+    let {
+      key,
+      pageProps
+    } = _ref2;
     return pageProps ? (0, _inferno.createComponentVNode)(2, _page.Page, {
       "index": pageProps.index,
       "selected": pageProps.selected,
@@ -47,7 +44,7 @@ var viewFunction = function viewFunction(_ref) {
   return (0, _inferno.createFragment)(PagesMarkup, 0);
 };
 exports.viewFunction = viewFunction;
-var PAGES_LIMITER = 4;
+const PAGES_LIMITER = 4;
 function getDelimiterType(startIndex, slidingWindowSize, pageCount) {
   if (startIndex === 1) {
     return 'high';
@@ -58,22 +55,22 @@ function getDelimiterType(startIndex, slidingWindowSize, pageCount) {
   return 'both';
 }
 function createPageIndexesBySlidingWindowIndexes(slidingWindowIndexes, pageCount, delimiter) {
-  var pageIndexes = [];
-  var indexesForReuse = [];
+  let pageIndexes = [];
+  let indexesForReuse = [];
   switch (delimiter) {
     case 'none':
-      pageIndexes = _toConsumableArray(slidingWindowIndexes);
+      pageIndexes = [...slidingWindowIndexes];
       break;
     case 'both':
-      pageIndexes = [0, 'low'].concat(_toConsumableArray(slidingWindowIndexes), ['high', pageCount - 1]);
+      pageIndexes = [0, 'low', ...slidingWindowIndexes, 'high', pageCount - 1];
       indexesForReuse = slidingWindowIndexes.slice(1, -1);
       break;
     case 'high':
-      pageIndexes = [0].concat(_toConsumableArray(slidingWindowIndexes), ['high', pageCount - 1]);
+      pageIndexes = [0, ...slidingWindowIndexes, 'high', pageCount - 1];
       indexesForReuse = slidingWindowIndexes.slice(0, -1);
       break;
     case 'low':
-      pageIndexes = [0, 'low'].concat(_toConsumableArray(slidingWindowIndexes), [pageCount - 1]);
+      pageIndexes = [0, 'low', ...slidingWindowIndexes, pageCount - 1];
       indexesForReuse = slidingWindowIndexes.slice(1);
       break;
   }
@@ -84,36 +81,36 @@ function createPageIndexesBySlidingWindowIndexes(slidingWindowIndexes, pageCount
   };
 }
 function createPageIndexes(startIndex, slidingWindowSize, pageCount, delimiter) {
-  var slidingWindowIndexes = [];
-  for (var i = 0; i < slidingWindowSize; i += 1) {
+  const slidingWindowIndexes = [];
+  for (let i = 0; i < slidingWindowSize; i += 1) {
     slidingWindowIndexes.push(i + startIndex);
   }
   return createPageIndexesBySlidingWindowIndexes(slidingWindowIndexes, pageCount, delimiter);
 }
-var PagesLargePropsType = Object.defineProperties({}, {
+const PagesLargePropsType = Object.defineProperties({}, {
   pageIndex: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.pageIndex;
     },
     configurable: true,
     enumerable: true
   },
   maxPagesCount: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.maxPagesCount;
     },
     configurable: true,
     enumerable: true
   },
   pageCount: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.pageCount;
     },
     configurable: true,
     enumerable: true
   }
 });
-var PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
+let PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(PagesLarge, _BaseInfernoComponent);
   function PagesLarge(props) {
     var _this;
@@ -127,17 +124,22 @@ var PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
   }
   var _proto = PagesLarge.prototype;
   _proto.canReuseSlidingWindow = function canReuseSlidingWindow(currentPageCount, pageIndex) {
-    var indexesForReuse = this.slidingWindowState.indexesForReuse;
-    var lastPageIsFartherThanWindow = indexesForReuse.slice(-1)[0] < currentPageCount - 1;
-    var pageIndexExistInIndexes = indexesForReuse.includes(pageIndex);
+    const {
+      indexesForReuse
+    } = this.slidingWindowState;
+    const lastPageIsFartherThanWindow = indexesForReuse.slice(-1)[0] < currentPageCount - 1;
+    const pageIndexExistInIndexes = indexesForReuse.includes(pageIndex);
     return lastPageIsFartherThanWindow && pageIndexExistInIndexes;
   };
   _proto.generatePageIndexes = function generatePageIndexes() {
-    var _this$props = this.props,
-      pageCount = _this$props.pageCount,
-      pageIndex = _this$props.pageIndex;
-    var startIndex = 0;
-    var slidingWindowIndexes = this.slidingWindowState.slidingWindowIndexes;
+    const {
+      pageCount,
+      pageIndex
+    } = this.props;
+    let startIndex = 0;
+    const {
+      slidingWindowIndexes
+    } = this.slidingWindowState;
     if (pageIndex === slidingWindowIndexes[0]) {
       startIndex = pageIndex - 1;
     } else if (pageIndex === slidingWindowIndexes[slidingWindowIndexes.length - 1]) {
@@ -149,25 +151,28 @@ var PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
     } else {
       startIndex = pageIndex - 1;
     }
-    var slidingWindowSize = PAGES_LIMITER;
-    var delimiter = getDelimiterType(startIndex, slidingWindowSize, pageCount);
-    var _createPageIndexes = createPageIndexes(startIndex, slidingWindowSize, pageCount, delimiter),
-      pageIndexes = _createPageIndexes.pageIndexes,
-      slidingWindowState = _objectWithoutProperties(_createPageIndexes, _excluded);
+    const slidingWindowSize = PAGES_LIMITER;
+    const delimiter = getDelimiterType(startIndex, slidingWindowSize, pageCount);
+    const _createPageIndexes = createPageIndexes(startIndex, slidingWindowSize, pageCount, delimiter),
+      {
+        pageIndexes
+      } = _createPageIndexes,
+      slidingWindowState = _objectWithoutPropertiesLoose(_createPageIndexes, _excluded);
     this.slidingWindowStateHolder = slidingWindowState;
     return pageIndexes;
   };
   _proto.isSlidingWindowMode = function isSlidingWindowMode() {
-    var _this$props2 = this.props,
-      maxPagesCount = _this$props2.maxPagesCount,
-      pageCount = _this$props2.pageCount;
+    const {
+      maxPagesCount,
+      pageCount
+    } = this.props;
     return pageCount <= PAGES_LIMITER || pageCount <= maxPagesCount;
   };
   _proto.onPageClick = function onPageClick(pageIndex) {
     this.props.pageIndexChange(pageIndex);
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       config: this.config,
@@ -178,7 +183,7 @@ var PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(PagesLarge, [{
     key: "config",
-    get: function get() {
+    get: function () {
       if (this.context[_config_context.ConfigContext.id]) {
         return this.context[_config_context.ConfigContext.id];
       }
@@ -186,8 +191,8 @@ var PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   }, {
     key: "slidingWindowState",
-    get: function get() {
-      var slidingWindowState = this.slidingWindowStateHolder;
+    get: function () {
+      const slidingWindowState = this.slidingWindowStateHolder;
       if (!slidingWindowState) {
         return {
           indexesForReuse: [],
@@ -198,30 +203,33 @@ var PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   }, {
     key: "pageIndexes",
-    get: function get() {
-      var pageCount = this.props.pageCount;
+    get: function () {
+      const {
+        pageCount
+      } = this.props;
       if (this.isSlidingWindowMode()) {
         return createPageIndexes(0, pageCount, pageCount, 'none').pageIndexes;
       }
       if (this.canReuseSlidingWindow(pageCount, this.props.pageIndex)) {
-        var slidingWindowIndexes = this.slidingWindowState.slidingWindowIndexes;
-        var delimiter = getDelimiterType(slidingWindowIndexes[0], PAGES_LIMITER, pageCount);
+        const {
+          slidingWindowIndexes
+        } = this.slidingWindowState;
+        const delimiter = getDelimiterType(slidingWindowIndexes[0], PAGES_LIMITER, pageCount);
         return createPageIndexesBySlidingWindowIndexes(slidingWindowIndexes, pageCount, delimiter).pageIndexes;
       }
       return this.generatePageIndexes();
     }
   }, {
     key: "pages",
-    get: function get() {
-      var _this2 = this,
-        _this$config;
-      var pageIndex = this.props.pageIndex;
-      var createPage = function createPage(index) {
-        var pagerProps = index === 'low' || index === 'high' ? null : {
+    get: function () {
+      var _this$config;
+      const {
+        pageIndex
+      } = this.props;
+      const createPage = index => {
+        const pagerProps = index === 'low' || index === 'high' ? null : {
           index,
-          onClick: function onClick() {
-            return _this2.onPageClick(index);
-          },
+          onClick: () => this.onPageClick(index),
           selected: pageIndex === index
         };
         return {
@@ -229,20 +237,14 @@ var PagesLarge = /*#__PURE__*/function (_BaseInfernoComponent) {
           pageProps: pagerProps
         };
       };
-      var rtlPageIndexes = (_this$config = this.config) !== null && _this$config !== void 0 && _this$config.rtlEnabled ? _toConsumableArray(this.pageIndexes).reverse() : this.pageIndexes;
-      return rtlPageIndexes.map(function (index) {
-        return createPage(index);
-      });
+      const rtlPageIndexes = (_this$config = this.config) !== null && _this$config !== void 0 && _this$config.rtlEnabled ? [...this.pageIndexes].reverse() : this.pageIndexes;
+      return rtlPageIndexes.map(index => createPage(index));
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props3 = this.props,
-        maxPagesCount = _this$props3.maxPagesCount,
-        pageCount = _this$props3.pageCount,
-        pageIndex = _this$props3.pageIndex,
-        pageIndexChange = _this$props3.pageIndexChange,
-        restProps = _objectWithoutProperties(_this$props3, _excluded2);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded2);
       return restProps;
     }
   }]);

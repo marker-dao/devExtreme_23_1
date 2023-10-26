@@ -4,27 +4,27 @@ exports.plugin = void 0;
 var _common = require("../../core/utils/common");
 var _data_helper = _interopRequireDefault(require("../../data_helper"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var postCtor = _data_helper.default.postCtor;
-var name;
-var members = {
-  _dataSourceLoadErrorHandler: function _dataSourceLoadErrorHandler() {
+const postCtor = _data_helper.default.postCtor;
+let name;
+const members = {
+  _dataSourceLoadErrorHandler: function () {
     this._dataSourceChangedHandler();
   },
-  _dataSourceOptions: function _dataSourceOptions() {
+  _dataSourceOptions: function () {
     return {
       paginate: false
     };
   },
-  _updateDataSource: function _updateDataSource() {
+  _updateDataSource: function () {
     this._refreshDataSource();
     if (!this.option('dataSource')) {
       this._dataSourceChangedHandler();
     }
   },
-  _dataIsLoaded: function _dataIsLoaded() {
+  _dataIsLoaded: function () {
     return !this._dataSource || this._dataSource.isLoaded();
   },
-  _dataSourceItems: function _dataSourceItems() {
+  _dataSourceItems: function () {
     return this._dataSource && this._dataSource.items();
   }
 };
@@ -34,9 +34,9 @@ for (name in _data_helper.default) {
   }
   members[name] = _data_helper.default[name];
 }
-var plugin = {
+const plugin = {
   name: 'data_source',
-  init: function init() {
+  init: function () {
     postCtor.call(this);
   },
   dispose: _common.noop,

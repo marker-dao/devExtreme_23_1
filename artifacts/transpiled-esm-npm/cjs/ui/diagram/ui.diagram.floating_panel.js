@@ -10,8 +10,8 @@ var _uiDiagram = _interopRequireDefault(require("./ui.diagram.panel"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DIAGRAM_MOBILE_POPUP_CLASS = 'dx-diagram-mobile-popup';
-var DiagramFloatingPanel = /*#__PURE__*/function (_DiagramPanel) {
+const DIAGRAM_MOBILE_POPUP_CLASS = 'dx-diagram-mobile-popup';
+let DiagramFloatingPanel = /*#__PURE__*/function (_DiagramPanel) {
   _inheritsLoose(DiagramFloatingPanel, _DiagramPanel);
   function DiagramFloatingPanel() {
     return _DiagramPanel.apply(this, arguments) || this;
@@ -30,8 +30,8 @@ var DiagramFloatingPanel = /*#__PURE__*/function (_DiagramPanel) {
   };
   _proto._initMarkup = function _initMarkup() {
     _DiagramPanel.prototype._initMarkup.call(this);
-    var $parent = this.$element();
-    var $popupElement = (0, _renderer.default)('<div>').addClass(this._getPopupClass()).addClass(this.isMobileView() && DIAGRAM_MOBILE_POPUP_CLASS).appendTo($parent);
+    const $parent = this.$element();
+    const $popupElement = (0, _renderer.default)('<div>').addClass(this._getPopupClass()).addClass(this.isMobileView() && DIAGRAM_MOBILE_POPUP_CLASS).appendTo($parent);
     this._popup = this._createComponent($popupElement, _ui.default, this._getPopupOptions());
     this._updatePopupVisible();
   };
@@ -51,18 +51,18 @@ var DiagramFloatingPanel = /*#__PURE__*/function (_DiagramPanel) {
     return this._popup.content();
   };
   _proto._getPopupTitle = function _getPopupTitle() {
-    var $content = (0, _renderer.default)(this._getPopupContent());
+    const $content = (0, _renderer.default)(this._getPopupContent());
     return $content.parent().find('.dx-popup-title');
   };
   _proto._getPointerUpElements = function _getPointerUpElements() {
     return [this._getPopupContent(), this._getPopupTitle()];
   };
   _proto._getVerticalPaddingsAndBorders = function _getVerticalPaddingsAndBorders() {
-    var $content = (0, _renderer.default)(this._getPopupContent());
+    const $content = (0, _renderer.default)(this._getPopupContent());
     return (0, _size.getOuterHeight)($content) - (0, _size.getHeight)($content);
   };
   _proto._getHorizontalPaddingsAndBorders = function _getHorizontalPaddingsAndBorders() {
-    var $content = (0, _renderer.default)(this._getPopupContent());
+    const $content = (0, _renderer.default)(this._getPopupContent());
     return (0, _size.getOuterWidth)($content) - (0, _size.getWidth)($content);
   };
   _proto._getPopupClass = function _getPopupClass() {
@@ -95,10 +95,10 @@ var DiagramFloatingPanel = /*#__PURE__*/function (_DiagramPanel) {
   _proto._getPopupSlideAnimationObject = function _getPopupSlideAnimationObject(properties) {
     return (0, _extend.extend)({
       type: 'slide',
-      start: function start() {
+      start: () => {
         (0, _renderer.default)('body').css('overflow', 'hidden');
       },
-      complete: function complete() {
+      complete: () => {
         (0, _renderer.default)('body').css('overflow', '');
       }
     }, properties);
@@ -114,8 +114,7 @@ var DiagramFloatingPanel = /*#__PURE__*/function (_DiagramPanel) {
     };
   };
   _proto._getPopupOptions = function _getPopupOptions() {
-    var _this = this;
-    var that = this;
+    const that = this;
     return {
       animation: (0, _window.hasWindow)() ? this._getPopupAnimation() : null,
       shading: false,
@@ -132,33 +131,33 @@ var DiagramFloatingPanel = /*#__PURE__*/function (_DiagramPanel) {
       showCloseButton: true,
       copyRootClassesToWrapper: true,
       _ignoreCopyRootClassesToWrapperDeprecation: true,
-      onContentReady: function onContentReady() {
+      onContentReady: function () {
         that._renderPopupContent(that._popup.content());
       },
-      onShowing: function onShowing() {
-        _this._onVisibilityChangingAction({
+      onShowing: () => {
+        this._onVisibilityChangingAction({
           visible: true,
-          component: _this
+          component: this
         });
       },
-      onShown: function onShown() {
-        _this.option('isVisible', true);
-        _this._onVisibilityChangedAction({
+      onShown: () => {
+        this.option('isVisible', true);
+        this._onVisibilityChangedAction({
           visible: true,
-          component: _this
+          component: this
         });
       },
-      onHiding: function onHiding() {
-        _this._onVisibilityChangingAction({
+      onHiding: () => {
+        this._onVisibilityChangingAction({
           visible: false,
-          component: _this
+          component: this
         });
       },
-      onHidden: function onHidden() {
-        _this.option('isVisible', false);
-        _this._onVisibilityChangedAction({
+      onHidden: () => {
+        this.option('isVisible', false);
+        this._onVisibilityChangedAction({
           visible: false,
-          component: _this
+          component: this
         });
       }
     };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.dialog.delete_item.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,18 +17,20 @@ var _uiFile_manager = _interopRequireDefault(require("./ui.file_manager.dialog")
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_DIALOG_DELETE_ITEM = 'dx-filemanager-dialog-delete-item';
-var FILE_MANAGER_DIALOG_DELETE_ITEM_POPUP = 'dx-filemanager-dialog-delete-item-popup'; // TODO ensure needed
-var FileManagerDeleteItemDialog = /*#__PURE__*/function (_FileManagerDialogBas) {
+const FILE_MANAGER_DIALOG_DELETE_ITEM = 'dx-filemanager-dialog-delete-item';
+const FILE_MANAGER_DIALOG_DELETE_ITEM_POPUP = 'dx-filemanager-dialog-delete-item-popup'; // TODO ensure needed
+let FileManagerDeleteItemDialog = /*#__PURE__*/function (_FileManagerDialogBas) {
   _inheritsLoose(FileManagerDeleteItemDialog, _FileManagerDialogBas);
   function FileManagerDeleteItemDialog() {
     return _FileManagerDialogBas.apply(this, arguments) || this;
   }
   var _proto = FileManagerDeleteItemDialog.prototype;
   _proto.show = function show(_ref) {
-    var itemName = _ref.itemName,
-      itemCount = _ref.itemCount;
-    var text = itemCount === 1 ? _message.default.format('dxFileManager-dialogDeleteItemSingleItemConfirmation', itemName) : _message.default.format('dxFileManager-dialogDeleteItemMultipleItemsConfirmation', itemCount);
+    let {
+      itemName,
+      itemCount
+    } = _ref;
+    const text = itemCount === 1 ? _message.default.format('dxFileManager-dialogDeleteItemSingleItemConfirmation', itemName) : _message.default.format('dxFileManager-dialogDeleteItemMultipleItemsConfirmation', itemCount);
     if (this._$text) {
       this._$text.text(text);
     } else {

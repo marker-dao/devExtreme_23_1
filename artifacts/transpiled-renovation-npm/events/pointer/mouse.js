@@ -5,7 +5,7 @@ var _extend = require("../../core/utils/extend");
 var _base = _interopRequireDefault(require("./base"));
 var _observer = _interopRequireDefault(require("./observer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var eventMap = {
+const eventMap = {
   'dxpointerdown': 'mousedown',
   'dxpointermove': 'mousemove',
   'dxpointerup': 'mouseup',
@@ -15,16 +15,16 @@ var eventMap = {
   'dxpointerenter': 'mouseenter',
   'dxpointerleave': 'mouseleave'
 };
-var normalizeMouseEvent = function normalizeMouseEvent(e) {
+const normalizeMouseEvent = function (e) {
   e.pointerId = 1;
   return {
     pointers: observer.pointers(),
     pointerId: 1
   };
 };
-var observer;
-var activated = false;
-var activateStrategy = function activateStrategy() {
+let observer;
+let activated = false;
+const activateStrategy = function () {
   if (activated) {
     return;
   }
@@ -33,12 +33,12 @@ var activateStrategy = function activateStrategy() {
   });
   activated = true;
 };
-var MouseStrategy = _base.default.inherit({
-  ctor: function ctor() {
+const MouseStrategy = _base.default.inherit({
+  ctor: function () {
     this.callBase.apply(this, arguments);
     activateStrategy();
   },
-  _fireEvent: function _fireEvent(args) {
+  _fireEvent: function (args) {
     return this.callBase((0, _extend.extend)(normalizeMouseEvent(args.originalEvent), args));
   }
 });

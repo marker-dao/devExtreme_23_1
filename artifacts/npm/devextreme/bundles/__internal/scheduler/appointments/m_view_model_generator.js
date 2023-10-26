@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/m_view_model_generator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,7 @@ var _m_strategy_vertical = _interopRequireDefault(require("./rendering_strategie
 var _m_strategy_week = _interopRequireDefault(require("./rendering_strategies/m_strategy_week"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var RENDERING_STRATEGIES = {
+const RENDERING_STRATEGIES = {
   horizontal: _m_strategy_horizontal.default,
   horizontalMonth: _m_strategy_horizontal_month.default,
   horizontalMonthLine: _m_strategy_horizontal_month_line.default,
@@ -29,20 +29,22 @@ var RENDERING_STRATEGIES = {
   week: _m_strategy_week.default,
   agenda: _m_strategy_agenda.default
 };
-var AppointmentViewModelGenerator = /*#__PURE__*/function () {
+let AppointmentViewModelGenerator = /*#__PURE__*/function () {
   function AppointmentViewModelGenerator() {}
   var _proto = AppointmentViewModelGenerator.prototype;
   _proto.initRenderingStrategy = function initRenderingStrategy(options) {
-    var RenderingStrategy = RENDERING_STRATEGIES[options.appointmentRenderingStrategyName];
+    const RenderingStrategy = RENDERING_STRATEGIES[options.appointmentRenderingStrategyName];
     this.renderingStrategy = new RenderingStrategy(options);
   };
   _proto.generate = function generate(filteredItems, options) {
-    var isRenovatedAppointments = options.isRenovatedAppointments;
-    var appointments = filteredItems ? filteredItems.slice() : [];
+    const {
+      isRenovatedAppointments
+    } = options;
+    const appointments = filteredItems ? filteredItems.slice() : [];
     this.initRenderingStrategy(options);
-    var renderingStrategy = this.getRenderingStrategy();
-    var positionMap = renderingStrategy.createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
-    var viewModel = this.postProcess(appointments, positionMap, isRenovatedAppointments);
+    const renderingStrategy = this.getRenderingStrategy();
+    const positionMap = renderingStrategy.createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
+    const viewModel = this.postProcess(appointments, positionMap, isRenovatedAppointments);
     if (isRenovatedAppointments) {
       // TODO this structure should be by default after remove old render
       return this.makeRenovatedViewModels(viewModel, options.supportAllDayRow, options.isVerticalGroupOrientation);
@@ -53,18 +55,18 @@ var AppointmentViewModelGenerator = /*#__PURE__*/function () {
     };
   };
   _proto.postProcess = function postProcess(filteredItems, positionMap, isRenovatedAppointments) {
-    var renderingStrategy = this.getRenderingStrategy();
-    return filteredItems.map(function (data, index) {
+    const renderingStrategy = this.getRenderingStrategy();
+    return filteredItems.map((data, index) => {
       // TODO research do we need this code
       if (!renderingStrategy.keepAppointmentSettings()) {
         delete data.settings;
       }
       // TODO Seems we can analize direction in the rendering strategies
-      var appointmentSettings = positionMap[index];
-      appointmentSettings.forEach(function (item) {
+      const appointmentSettings = positionMap[index];
+      appointmentSettings.forEach(item => {
         item.direction = renderingStrategy.getDirection() === 'vertical' && !item.allDay ? 'vertical' : 'horizontal';
       });
-      var item = {
+      const item = {
         itemData: data,
         settings: appointmentSettings
       };
@@ -76,17 +78,18 @@ var AppointmentViewModelGenerator = /*#__PURE__*/function () {
     });
   };
   _proto.makeRenovatedViewModels = function makeRenovatedViewModels(viewModel, supportAllDayRow, isVerticalGrouping) {
-    var _this = this;
-    var strategy = this.getRenderingStrategy();
-    var regularViewModels = [];
-    var allDayViewModels = [];
-    var compactOptions = [];
-    var isAllDayPanel = supportAllDayRow && !isVerticalGrouping;
-    viewModel.forEach(function (_ref) {
-      var itemData = _ref.itemData,
-        settings = _ref.settings;
-      settings.forEach(function (options) {
-        var item = _this.prepareViewModel(options, strategy, itemData);
+    const strategy = this.getRenderingStrategy();
+    const regularViewModels = [];
+    const allDayViewModels = [];
+    const compactOptions = [];
+    const isAllDayPanel = supportAllDayRow && !isVerticalGrouping;
+    viewModel.forEach(_ref => {
+      let {
+        itemData,
+        settings
+      } = _ref;
+      settings.forEach(options => {
+        const item = this.prepareViewModel(options, strategy, itemData);
         if (options.isCompact) {
           compactOptions.push({
             compactViewModel: options.virtual,
@@ -99,16 +102,16 @@ var AppointmentViewModelGenerator = /*#__PURE__*/function () {
         }
       });
     });
-    var compactViewModels = this.prepareCompactViewModels(compactOptions, supportAllDayRow);
-    var result = _extends({
+    const compactViewModels = this.prepareCompactViewModels(compactOptions, supportAllDayRow);
+    const result = _extends({
       allDay: allDayViewModels,
       regular: regularViewModels
     }, compactViewModels);
     return result;
   };
   _proto.prepareViewModel = function prepareViewModel(options, strategy, itemData) {
-    var geometry = strategy.getAppointmentGeometry(options);
-    var viewModel = {
+    const geometry = strategy.getAppointmentGeometry(options);
+    const viewModel = {
       key: (0, _utils.getAppointmentKey)(geometry),
       appointment: itemData,
       geometry: _extends(_extends({}, geometry), {
@@ -144,35 +147,35 @@ var AppointmentViewModelGenerator = /*#__PURE__*/function () {
     };
   };
   _proto.prepareCompactViewModels = function prepareCompactViewModels(compactOptions, supportAllDayRow) {
-    var _this2 = this;
-    var regularCompact = {};
-    var allDayCompact = {};
-    compactOptions.forEach(function (_ref2) {
-      var compactViewModel = _ref2.compactViewModel,
-        appointmentViewModel = _ref2.appointmentViewModel;
-      var index = compactViewModel.index,
-        isAllDay = compactViewModel.isAllDay;
-      var viewModel = isAllDay && supportAllDayRow ? allDayCompact : regularCompact;
+    const regularCompact = {};
+    const allDayCompact = {};
+    compactOptions.forEach(_ref2 => {
+      let {
+        compactViewModel,
+        appointmentViewModel
+      } = _ref2;
+      const {
+        index,
+        isAllDay
+      } = compactViewModel;
+      const viewModel = isAllDay && supportAllDayRow ? allDayCompact : regularCompact;
       if (!viewModel[index]) {
-        viewModel[index] = _this2.getCompactViewModelFrame(compactViewModel);
+        viewModel[index] = this.getCompactViewModelFrame(compactViewModel);
       }
-      var _viewModel$index$item = viewModel[index].items,
-        settings = _viewModel$index$item.settings,
-        data = _viewModel$index$item.data,
-        colors = _viewModel$index$item.colors;
+      const {
+        settings,
+        data,
+        colors
+      } = viewModel[index].items;
       settings.push(appointmentViewModel);
       data.push(appointmentViewModel.appointment);
       colors.push(appointmentViewModel.info.resourceColor);
     });
-    var toArray = function toArray(items) {
-      return Object.keys(items).map(function (key) {
-        return _extends({
-          key
-        }, items[key]);
-      });
-    };
-    var allDayViewModels = toArray(allDayCompact);
-    var regularViewModels = toArray(regularCompact);
+    const toArray = items => Object.keys(items).map(key => _extends({
+      key
+    }, items[key]));
+    const allDayViewModels = toArray(allDayCompact);
+    const regularViewModels = toArray(regularCompact);
     return {
       allDayCompact: allDayViewModels,
       regularCompact: regularViewModels

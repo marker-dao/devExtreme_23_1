@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/shaders/m_current_time_shader.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,19 +14,18 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DATE_TIME_SHADER_CLASS = 'dx-scheduler-date-time-shader';
-var CurrentTimeShader = /*#__PURE__*/function () {
+const DATE_TIME_SHADER_CLASS = 'dx-scheduler-date-time-shader';
+let CurrentTimeShader = /*#__PURE__*/function () {
   function CurrentTimeShader(_workSpace) {
     this._workSpace = _workSpace;
     this._$container = this._workSpace._dateTableScrollable.$content();
   }
   var _proto = CurrentTimeShader.prototype;
   _proto.render = function render() {
-    var _this = this;
     this.initShaderElements();
     this.renderShader();
-    this._shader.forEach(function (shader) {
-      _this._$container.append(shader);
+    this._shader.forEach(shader => {
+      this._$container.append(shader);
     });
   };
   _proto.initShaderElements = function initShaderElements() {

@@ -8,27 +8,27 @@ var _uiFile_managerDialog = _interopRequireDefault(require("./ui.file_manager.di
 var _uiFile_managerDialog2 = _interopRequireDefault(require("./ui.file_manager.dialog.folder_chooser"));
 var _uiFile_managerDialog3 = _interopRequireDefault(require("./ui.file_manager.dialog.delete_item"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FileManagerDialogManager = /*#__PURE__*/function () {
+let FileManagerDialogManager = /*#__PURE__*/function () {
   function FileManagerDialogManager($element, options) {
     this._$element = $element;
     this._options = options;
-    var baseDialogOptions = {
+    const baseDialogOptions = {
       onClosed: this._options['onDialogClosed'],
       rtlEnabled: this._options['rtlEnabled']
     };
-    var $chooseFolderDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
+    const $chooseFolderDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
     this._chooseDirectoryDialog = new _uiFile_managerDialog2.default($chooseFolderDialog, (0, _extend.extend)(baseDialogOptions, this._options['chooseDirectoryDialog']));
-    var $renameDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
+    const $renameDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
     this._renameItemDialog = new _uiFile_managerDialog.default($renameDialog, (0, _extend.extend)(baseDialogOptions, {
       title: _message.default.format('dxFileManager-dialogRenameItemTitle'),
       buttonText: _message.default.format('dxFileManager-dialogRenameItemButtonText')
     }));
-    var $createDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
+    const $createDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
     this._createItemDialog = new _uiFile_managerDialog.default($createDialog, (0, _extend.extend)(baseDialogOptions, {
       title: _message.default.format('dxFileManager-dialogCreateDirectoryTitle'),
       buttonText: _message.default.format('dxFileManager-dialogCreateDirectoryButtonText')
     }));
-    var $deleteItemDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
+    const $deleteItemDialog = (0, _renderer.default)('<div>').appendTo(this._$element);
     this._deleteItemDialog = new _uiFile_managerDialog3.default($deleteItemDialog, baseDialogOptions);
   }
   var _proto = FileManagerDialogManager.prototype;
@@ -50,7 +50,7 @@ var FileManagerDialogManager = /*#__PURE__*/function () {
     return this._deleteItemDialog;
   };
   _proto.updateDialogRtl = function updateDialogRtl(value) {
-    [this._chooseDirectoryDialog, this._renameItemDialog, this._createItemDialog, this._deleteItemDialog].forEach(function (dialog) {
+    [this._chooseDirectoryDialog, this._renameItemDialog, this._createItemDialog, this._deleteItemDialog].forEach(dialog => {
       dialog.option('rtlEnabled', value);
     });
   };

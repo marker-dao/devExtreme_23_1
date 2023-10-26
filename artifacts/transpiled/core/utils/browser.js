@@ -3,15 +3,15 @@
 exports.default = void 0;
 var _extend = require("./extend");
 var _window = require("./window");
-var navigator = (0, _window.getNavigator)();
-var webkitRegExp = /(webkit)[ /]([\w.]+)/;
-var mozillaRegExp = /(mozilla)(?:.*? rv:([\w.]+))/;
-var browserFromUA = function browserFromUA(ua) {
+const navigator = (0, _window.getNavigator)();
+const webkitRegExp = /(webkit)[ /]([\w.]+)/;
+const mozillaRegExp = /(mozilla)(?:.*? rv:([\w.]+))/;
+const browserFromUA = ua => {
   ua = ua.toLowerCase();
-  var result = {};
-  var matches = webkitRegExp.exec(ua) || ua.indexOf('compatible') < 0 && mozillaRegExp.exec(ua) || [];
-  var browserName = matches[1];
-  var browserVersion = matches[2];
+  const result = {};
+  const matches = webkitRegExp.exec(ua) || ua.indexOf('compatible') < 0 && mozillaRegExp.exec(ua) || [];
+  let browserName = matches[1];
+  let browserVersion = matches[2];
   if (browserName === 'webkit') {
     result['webkit'] = true;
     if (ua.indexOf('chrome') >= 0 || ua.indexOf('crios') >= 0) {

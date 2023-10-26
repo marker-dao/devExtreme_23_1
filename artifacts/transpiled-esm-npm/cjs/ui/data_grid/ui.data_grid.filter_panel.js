@@ -6,7 +6,7 @@ Object.keys(_filter_panel).forEach(function (key) {
   if (key in exports && exports[key] === _filter_panel[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _filter_panel[key];
     }
   });

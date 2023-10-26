@@ -15,8 +15,8 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var WEEK_CLASS = 'dx-scheduler-work-space-week';
-var SchedulerWorkSpaceWeek = /*#__PURE__*/function (_SchedulerWorkSpaceVe) {
+const WEEK_CLASS = 'dx-scheduler-work-space-week';
+let SchedulerWorkSpaceWeek = /*#__PURE__*/function (_SchedulerWorkSpaceVe) {
   _inheritsLoose(SchedulerWorkSpaceWeek, _SchedulerWorkSpaceVe);
   function SchedulerWorkSpaceWeek() {
     return _SchedulerWorkSpaceVe.apply(this, arguments) || this;
@@ -30,7 +30,7 @@ var SchedulerWorkSpaceWeek = /*#__PURE__*/function (_SchedulerWorkSpaceVe) {
   };
   _createClass(SchedulerWorkSpaceWeek, [{
     key: "type",
-    get: function get() {
+    get: function () {
       return _m_constants.VIEWS.WEEK;
     }
   }]);

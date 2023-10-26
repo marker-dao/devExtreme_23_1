@@ -10,10 +10,9 @@ var _ui = _interopRequireDefault(require("../../../ui/popover/ui.popover"));
 var _dom_component_wrapper = require("../common/dom_component_wrapper");
 var _base_props = require("../common/base_props");
 var _utils = require("../../../core/options/utils");
-var _excluded = ["children"],
+const _excluded = ["children"],
   _excluded2 = ["accessKey", "activeStateEnabled", "animation", "children", "className", "container", "contentTemplate", "defaultVisible", "deferRendering", "disabled", "focusStateEnabled", "height", "hideEvent", "hideOnOutsideClick", "hint", "hoverStateEnabled", "maxHeight", "maxWidth", "minHeight", "minWidth", "onClick", "onHidden", "onHiding", "onInitialized", "onKeyDown", "onOptionChanged", "onShowing", "onShown", "onTitleRendered", "position", "rtlEnabled", "shading", "shadingColor", "showCloseButton", "showEvent", "showTitle", "tabIndex", "target", "title", "titleTemplate", "toolbarItems", "visible", "visibleChange", "width"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -23,11 +22,13 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var isDesktop = !(!_devices.default.real().generic || _devices.default.isSimulator());
-var viewFunction = function viewFunction(_ref) {
-  var componentProps = _ref.componentProps,
-    domComponentWrapperRef = _ref.domComponentWrapperRef,
-    restAttributes = _ref.restAttributes;
+const isDesktop = !(!_devices.default.real().generic || _devices.default.isSimulator());
+const viewFunction = _ref => {
+  let {
+    componentProps,
+    domComponentWrapperRef,
+    restAttributes
+  } = _ref;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _dom_component_wrapper.DomComponentWrapper, _extends({
     "componentType": _ui.default,
     "componentProps": componentProps.restProps,
@@ -37,7 +38,7 @@ var viewFunction = function viewFunction(_ref) {
   }), null, domComponentWrapperRef));
 };
 exports.viewFunction = viewFunction;
-var PopoverProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors({
+const PopoverProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors({
   animation: Object.freeze({
     show: {
       type: 'fade',
@@ -69,16 +70,12 @@ var PopoverProps = Object.create(Object.prototype, _extends(Object.getOwnPropert
   titleTemplate: 'title',
   width: 'auto',
   defaultVisible: true,
-  visibleChange: function visibleChange() {},
+  visibleChange: () => {},
   isReactComponentWrapper: true
 })));
 exports.PopoverProps = PopoverProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var Popover = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let Popover = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(Popover, _InfernoComponent);
   function Popover(props) {
     var _this;
@@ -106,17 +103,16 @@ var Popover = /*#__PURE__*/function (_InfernoComponent) {
     this.instance = (_this$domComponentWra = this.domComponentWrapperRef.current) === null || _this$domComponentWra === void 0 ? void 0 : _this$domComponentWra.getInstance();
   };
   _proto.setHideEventListener = function setHideEventListener() {
-    var _this2 = this;
-    this.instance.option('onHiding', function () {
+    this.instance.option('onHiding', () => {
       {
-        var __newValue;
-        _this2.setState(function (__state_argument) {
+        let __newValue;
+        this.setState(__state_argument => {
           __newValue = false;
           return {
             visible: __newValue
           };
         });
-        _this2.props.visibleChange(__newValue);
+        this.props.visibleChange(__newValue);
       }
     });
   };
@@ -127,7 +123,7 @@ var Popover = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         visible: this.props.visible !== undefined ? this.props.visible : this.state.visible,
@@ -141,74 +137,31 @@ var Popover = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(Popover, [{
     key: "componentProps",
-    get: function get() {
-      var _this3 = this;
+    get: function () {
       if (this.__getterCache['componentProps'] !== undefined) {
         return this.__getterCache['componentProps'];
       }
-      return this.__getterCache['componentProps'] = function () {
-        var _this3$props$visible = _extends({}, _this3.props, {
-            visible: _this3.props.visible !== undefined ? _this3.props.visible : _this3.state.visible
+      return this.__getterCache['componentProps'] = (() => {
+        const _this$props$visible = _extends({}, this.props, {
+            visible: this.props.visible !== undefined ? this.props.visible : this.state.visible
           }),
-          children = _this3$props$visible.children,
-          restProps = _objectWithoutProperties(_this3$props$visible, _excluded);
+          {
+            children
+          } = _this$props$visible,
+          restProps = _objectWithoutPropertiesLoose(_this$props$visible, _excluded);
         return {
           children,
           restProps
         };
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props$visible = _extends({}, this.props, {
+    get: function () {
+      const _this$props$visible2 = _extends({}, this.props, {
           visible: this.props.visible !== undefined ? this.props.visible : this.state.visible
         }),
-        accessKey = _this$props$visible.accessKey,
-        activeStateEnabled = _this$props$visible.activeStateEnabled,
-        animation = _this$props$visible.animation,
-        children = _this$props$visible.children,
-        className = _this$props$visible.className,
-        container = _this$props$visible.container,
-        contentTemplate = _this$props$visible.contentTemplate,
-        defaultVisible = _this$props$visible.defaultVisible,
-        deferRendering = _this$props$visible.deferRendering,
-        disabled = _this$props$visible.disabled,
-        focusStateEnabled = _this$props$visible.focusStateEnabled,
-        height = _this$props$visible.height,
-        hideEvent = _this$props$visible.hideEvent,
-        hideOnOutsideClick = _this$props$visible.hideOnOutsideClick,
-        hint = _this$props$visible.hint,
-        hoverStateEnabled = _this$props$visible.hoverStateEnabled,
-        maxHeight = _this$props$visible.maxHeight,
-        maxWidth = _this$props$visible.maxWidth,
-        minHeight = _this$props$visible.minHeight,
-        minWidth = _this$props$visible.minWidth,
-        onClick = _this$props$visible.onClick,
-        onHidden = _this$props$visible.onHidden,
-        onHiding = _this$props$visible.onHiding,
-        onInitialized = _this$props$visible.onInitialized,
-        onKeyDown = _this$props$visible.onKeyDown,
-        onOptionChanged = _this$props$visible.onOptionChanged,
-        onShowing = _this$props$visible.onShowing,
-        onShown = _this$props$visible.onShown,
-        onTitleRendered = _this$props$visible.onTitleRendered,
-        position = _this$props$visible.position,
-        rtlEnabled = _this$props$visible.rtlEnabled,
-        shading = _this$props$visible.shading,
-        shadingColor = _this$props$visible.shadingColor,
-        showCloseButton = _this$props$visible.showCloseButton,
-        showEvent = _this$props$visible.showEvent,
-        showTitle = _this$props$visible.showTitle,
-        tabIndex = _this$props$visible.tabIndex,
-        target = _this$props$visible.target,
-        title = _this$props$visible.title,
-        titleTemplate = _this$props$visible.titleTemplate,
-        toolbarItems = _this$props$visible.toolbarItems,
-        visible = _this$props$visible.visible,
-        visibleChange = _this$props$visible.visibleChange,
-        width = _this$props$visible.width,
-        restProps = _objectWithoutProperties(_this$props$visible, _excluded2);
+        restProps = _objectWithoutPropertiesLoose(_this$props$visible2, _excluded2);
       return restProps;
     }
   }]);
@@ -216,18 +169,16 @@ var Popover = /*#__PURE__*/function (_InfernoComponent) {
 }(_inferno2.InfernoComponent);
 exports.Popover = Popover;
 function __processTwoWayProps(defaultProps) {
-  var twoWayProps = ['visible'];
-  return Object.keys(defaultProps).reduce(function (props, propName) {
-    var propValue = defaultProps[propName];
-    var defaultPropName = twoWayProps.some(function (p) {
-      return p === propName;
-    }) ? 'default' + propName.charAt(0).toUpperCase() + propName.slice(1) : propName;
+  const twoWayProps = ['visible'];
+  return Object.keys(defaultProps).reduce((props, propName) => {
+    const propValue = defaultProps[propName];
+    const defaultPropName = twoWayProps.some(p => p === propName) ? 'default' + propName.charAt(0).toUpperCase() + propName.slice(1) : propName;
     props[defaultPropName] = propValue;
     return props;
   }, {});
 }
 Popover.defaultProps = PopoverProps;
-var __defaultOptionRules = [];
+const __defaultOptionRules = [];
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
   Popover.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(Popover.defaultProps), Object.getOwnPropertyDescriptors(__processTwoWayProps((0, _utils.convertRulesToOptions)(__defaultOptionRules)))));

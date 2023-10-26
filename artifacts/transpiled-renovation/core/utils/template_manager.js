@@ -17,33 +17,27 @@ var _extend = require("./extend");
 var _type = require("./type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var findTemplates = function findTemplates(element, name) {
-  var optionsAttributeName = 'data-options';
-  var templates = (0, _renderer.default)(element).contents().filter("[".concat(optionsAttributeName, "*=\"").concat(name, "\"]"));
-  return [].slice.call(templates).map(function (element) {
-    var optionsString = (0, _renderer.default)(element).attr(optionsAttributeName) || '';
+const findTemplates = (element, name) => {
+  const optionsAttributeName = 'data-options';
+  const templates = (0, _renderer.default)(element).contents().filter("[".concat(optionsAttributeName, "*=\"").concat(name, "\"]"));
+  return [].slice.call(templates).map(element => {
+    const optionsString = (0, _renderer.default)(element).attr(optionsAttributeName) || '';
     return {
       element,
       options: (0, _config.default)().optionsParser(optionsString)[name]
     };
-  }).filter(function (template) {
-    return !!template.options;
-  });
+  }).filter(template => !!template.options);
 };
 exports.findTemplates = findTemplates;
-var suitableTemplatesByName = function suitableTemplatesByName(rawTemplates) {
-  var templatesMap = (0, _array.groupBy)(rawTemplates, function (template) {
-    return template.options.name;
-  });
+const suitableTemplatesByName = rawTemplates => {
+  const templatesMap = (0, _array.groupBy)(rawTemplates, template => template.options.name);
   if (templatesMap['undefined']) {
     throw _errors.default.Error('E0023');
   }
-  var result = {};
-  Object.keys(templatesMap).forEach(function (name) {
+  const result = {};
+  Object.keys(templatesMap).forEach(name => {
     var _findBestMatches$;
-    var suitableTemplate = (_findBestMatches$ = (0, _common.findBestMatches)(_devices.default.current(), templatesMap[name], function (template) {
-      return template.options;
-    })[0]) === null || _findBestMatches$ === void 0 ? void 0 : _findBestMatches$.element;
+    const suitableTemplate = (_findBestMatches$ = (0, _common.findBestMatches)(_devices.default.current(), templatesMap[name], template => template.options)[0]) === null || _findBestMatches$ === void 0 ? void 0 : _findBestMatches$.element;
     if (suitableTemplate) {
       result[name] = suitableTemplate;
     }
@@ -51,22 +45,22 @@ var suitableTemplatesByName = function suitableTemplatesByName(rawTemplates) {
   return result;
 };
 exports.suitableTemplatesByName = suitableTemplatesByName;
-var addOneRenderedCall = function addOneRenderedCall(template) {
-  var render = template.render.bind(template);
+const addOneRenderedCall = template => {
+  const render = template.render.bind(template);
   return (0, _extend.extend)({}, template, {
     render(options) {
-      var templateResult = render(options);
+      const templateResult = render(options);
       options && options.onRendered && options.onRendered();
       return templateResult;
     }
   });
 };
 exports.addOneRenderedCall = addOneRenderedCall;
-var addPublicElementNormalization = function addPublicElementNormalization(template) {
-  var render = template.render.bind(template);
+const addPublicElementNormalization = template => {
+  const render = template.render.bind(template);
   return (0, _extend.extend)({}, template, {
     render(options) {
-      var $container = (0, _renderer.default)(options.container);
+      const $container = (0, _renderer.default)(options.container);
       return render(_extends({}, options, {
         container: (0, _element.getPublicElement)($container)
       }));
@@ -74,8 +68,8 @@ var addPublicElementNormalization = function addPublicElementNormalization(templ
   });
 };
 exports.addPublicElementNormalization = addPublicElementNormalization;
-var getNormalizedTemplateArgs = function getNormalizedTemplateArgs(options) {
-  var args = [];
+const getNormalizedTemplateArgs = options => {
+  const args = [];
   if ('model' in options) {
     args.push(options.model);
   }
@@ -86,20 +80,18 @@ var getNormalizedTemplateArgs = function getNormalizedTemplateArgs(options) {
   return args;
 };
 exports.getNormalizedTemplateArgs = getNormalizedTemplateArgs;
-var validateTemplateSource = function validateTemplateSource(templateSource) {
+const validateTemplateSource = templateSource => {
   return typeof templateSource === 'string' ? (0, _dom.normalizeTemplateElement)(templateSource) : templateSource;
 };
 exports.validateTemplateSource = validateTemplateSource;
-var templateKey = function templateKey(templateSource) {
+const templateKey = templateSource => {
   return (0, _type.isRenderer)(templateSource) && templateSource[0] || templateSource;
 };
 exports.templateKey = templateKey;
-var defaultCreateElement = function defaultCreateElement(element) {
-  return new _template.Template(element);
-};
+const defaultCreateElement = element => new _template.Template(element);
 exports.defaultCreateElement = defaultCreateElement;
-var acquireIntegrationTemplate = function acquireIntegrationTemplate(templateSource, templates, isAsyncTemplate, skipTemplates) {
-  var integrationTemplate = null;
+const acquireIntegrationTemplate = (templateSource, templates, isAsyncTemplate, skipTemplates) => {
+  let integrationTemplate = null;
   if (!skipTemplates || skipTemplates.indexOf(templateSource) === -1) {
     integrationTemplate = templates[templateSource];
     if (integrationTemplate && !(integrationTemplate instanceof _template_base.TemplateBase)) {
@@ -114,7 +106,7 @@ var acquireIntegrationTemplate = function acquireIntegrationTemplate(templateSou
   return integrationTemplate;
 };
 exports.acquireIntegrationTemplate = acquireIntegrationTemplate;
-var acquireTemplate = function acquireTemplate(templateSource, createTemplate, templates, isAsyncTemplate, skipTemplates, defaultTemplates) {
+const acquireTemplate = (templateSource, createTemplate, templates, isAsyncTemplate, skipTemplates, defaultTemplates) => {
   if (templateSource == null) {
     return new _empty_template.EmptyTemplate();
   }

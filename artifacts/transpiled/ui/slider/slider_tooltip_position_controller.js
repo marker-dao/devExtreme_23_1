@@ -9,7 +9,7 @@ var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var SLIDER_TOOLTIP_POSITION_ALIASES = {
+const SLIDER_TOOLTIP_POSITION_ALIASES = {
   'top': {
     my: 'bottom center',
     at: 'top center',
@@ -21,27 +21,27 @@ var SLIDER_TOOLTIP_POSITION_ALIASES = {
     collision: 'fit none'
   }
 };
-var SLIDER_TOOLTIP_DEFAULT_BOUNDARY_OFFSET = {
+const SLIDER_TOOLTIP_DEFAULT_BOUNDARY_OFFSET = {
   h: 2,
   v: 1
 };
-var SLIDER_CLASS = 'dx-slider';
-var SliderTooltipPositionController = /*#__PURE__*/function (_PopoverPositionContr) {
+const SLIDER_CLASS = 'dx-slider';
+let SliderTooltipPositionController = /*#__PURE__*/function (_PopoverPositionContr) {
   _inheritsLoose(SliderTooltipPositionController, _PopoverPositionContr);
   function SliderTooltipPositionController() {
     return _PopoverPositionContr.apply(this, arguments) || this;
   }
   var _proto = SliderTooltipPositionController.prototype;
   _proto._normalizePosition = function _normalizePosition(positionProp) {
-    var $sliderHandle = this._props.target;
-    var sliderClass = ".".concat(SLIDER_CLASS);
-    var $slider = $sliderHandle === null || $sliderHandle === void 0 ? void 0 : $sliderHandle.closest(sliderClass);
-    var defaultPositionConfig = {
+    const $sliderHandle = this._props.target;
+    const sliderClass = ".".concat(SLIDER_CLASS);
+    const $slider = $sliderHandle === null || $sliderHandle === void 0 ? void 0 : $sliderHandle.closest(sliderClass);
+    const defaultPositionConfig = {
       of: $sliderHandle,
       boundaryOffset: SLIDER_TOOLTIP_DEFAULT_BOUNDARY_OFFSET,
       boundary: $slider === null || $slider === void 0 ? void 0 : $slider.get(0)
     };
-    var resultPosition = (0, _extend.extend)(true, {}, defaultPositionConfig, this._positionToObject(positionProp));
+    const resultPosition = (0, _extend.extend)(true, {}, defaultPositionConfig, this._positionToObject(positionProp));
     this._positionSide = this._getDisplaySide(resultPosition);
     return resultPosition;
   };
@@ -50,12 +50,13 @@ var SliderTooltipPositionController = /*#__PURE__*/function (_PopoverPositionCon
     this._fitIntoSlider();
   };
   _proto._fitIntoSlider = function _fitIntoSlider() {
-    var _positionUtils$calcul = _position.default.calculate(this._$content, this._position).h,
-      collisionSide = _positionUtils$calcul.collisionSide,
-      oversize = _positionUtils$calcul.oversize;
-    var left = this._visualPosition.left;
-    var isLeftSide = collisionSide === 'left';
-    var offset = (isLeftSide ? 1 : -1) * oversize;
+    const {
+      collisionSide,
+      oversize
+    } = _position.default.calculate(this._$content, this._position).h;
+    const left = this._visualPosition.left;
+    const isLeftSide = collisionSide === 'left';
+    const offset = (isLeftSide ? 1 : -1) * oversize;
     (0, _translator.move)(this._$content, {
       left: left + offset
     });

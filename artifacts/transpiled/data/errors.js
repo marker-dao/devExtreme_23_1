@@ -8,7 +8,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 * @docid
 * @name ErrorsData
 */
-var errors = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
+const errors = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
   /**
   * @name ErrorsData.E4000
   */
@@ -123,19 +123,17 @@ var errors = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
   W4002: 'Data loading has failed for some cells due to the following error: {0}'
 });
 exports.errors = errors;
-var errorHandler = null;
+let errorHandler = null;
 exports.errorHandler = errorHandler;
-var handleError = function handleError(error) {
+const handleError = function (error) {
   var _errorHandler;
   ///#DEBUG
-  var id = error && '__id' in error ? error.__id : 'E4000';
+  const id = error && '__id' in error ? error.__id : 'E4000';
   errors.log(id, error);
   ///#ENDDEBUG
 
   (_errorHandler = errorHandler) === null || _errorHandler === void 0 ? void 0 : _errorHandler(error);
 };
 exports.handleError = handleError;
-var setErrorHandler = function setErrorHandler(handler) {
-  return exports.errorHandler = errorHandler = handler;
-};
+const setErrorHandler = handler => exports.errorHandler = errorHandler = handler;
 exports.setErrorHandler = setErrorHandler;

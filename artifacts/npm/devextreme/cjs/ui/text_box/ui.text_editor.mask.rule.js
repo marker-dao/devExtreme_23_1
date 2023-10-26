@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.mask.rule.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,13 +14,13 @@ var _extend = require("../../core/utils/extend");
 var _type = require("../../core/utils/type");
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EMPTY_CHAR = ' ';
-var BaseMaskRule = _class.default.inherit({
-  ctor: function ctor(config) {
+const EMPTY_CHAR = ' ';
+const BaseMaskRule = _class.default.inherit({
+  ctor: function (config) {
     this._value = EMPTY_CHAR;
     (0, _extend.extend)(this, config);
   },
-  next: function next(rule) {
+  next: function (rule) {
     if (!arguments.length) {
       return this._next;
     }
@@ -30,10 +30,10 @@ var BaseMaskRule = _class.default.inherit({
   value: _common.noop,
   rawValue: _common.noop,
   handle: _common.noop,
-  _prepareHandlingArgs: function _prepareHandlingArgs(args, config) {
+  _prepareHandlingArgs: function (args, config) {
     var _config$str, _config$start, _config$length;
     config = config || {};
-    var handlingProperty = Object.prototype.hasOwnProperty.call(args, 'value') ? 'value' : 'text';
+    const handlingProperty = Object.prototype.hasOwnProperty.call(args, 'value') ? 'value' : 'text';
     args[handlingProperty] = (_config$str = config.str) !== null && _config$str !== void 0 ? _config$str : args[handlingProperty];
     args.start = (_config$start = config.start) !== null && _config$start !== void 0 ? _config$start : args.start;
     args.length = (_config$length = config.length) !== null && _config$length !== void 0 ? _config$length : args.length;
@@ -42,57 +42,57 @@ var BaseMaskRule = _class.default.inherit({
   },
   reset: _common.noop,
   clear: _common.noop,
-  first: function first(index) {
+  first: function (index) {
     index = index || 0;
     return this.next().first(index + 1);
   },
-  isAccepted: function isAccepted() {
+  isAccepted: function () {
     return false;
   },
-  adjustedCaret: function adjustedCaret(caret, isForwardDirection, char) {
+  adjustedCaret: function (caret, isForwardDirection, char) {
     return isForwardDirection ? this._adjustedForward(caret, 0, char) : this._adjustedBackward(caret, 0, char);
   },
   _adjustedForward: _common.noop,
   _adjustedBackward: _common.noop,
   isValid: _common.noop
 });
-var EmptyMaskRule = BaseMaskRule.inherit({
+const EmptyMaskRule = BaseMaskRule.inherit({
   next: _common.noop,
-  handle: function handle() {
+  handle: function () {
     return 0;
   },
-  text: function text() {
+  text: function () {
     return '';
   },
-  value: function value() {
+  value: function () {
     return '';
   },
-  first: function first() {
+  first: function () {
     return 0;
   },
-  rawValue: function rawValue() {
+  rawValue: function () {
     return '';
   },
-  adjustedCaret: function adjustedCaret() {
+  adjustedCaret: function () {
     return 0;
   },
-  isValid: function isValid() {
+  isValid: function () {
     return true;
   }
 });
 exports.EmptyMaskRule = EmptyMaskRule;
-var MaskRule = BaseMaskRule.inherit({
-  text: function text() {
+const MaskRule = BaseMaskRule.inherit({
+  text: function () {
     return (this._value !== EMPTY_CHAR ? this._value : this.maskChar) + this.next().text();
   },
-  value: function value() {
+  value: function () {
     return this._value + this.next().value();
   },
-  rawValue: function rawValue() {
+  rawValue: function () {
     return this._value + this.next().rawValue();
   },
-  handle: function handle(args) {
-    var str = Object.prototype.hasOwnProperty.call(args, 'value') ? args.value : args.text;
+  handle: function (args) {
+    const str = Object.prototype.hasOwnProperty.call(args, 'value') ? args.value : args.text;
     if (!str || !str.length || !args.length) {
       return 0;
     }
@@ -101,8 +101,8 @@ var MaskRule = BaseMaskRule.inherit({
         start: args.start - 1
       }));
     }
-    var char = str[0];
-    var rest = str.substring(1);
+    const char = str[0];
+    const rest = str.substring(1);
     this._tryAcceptChar(char, args);
     return this._accepted() ? this.next().handle(this._prepareHandlingArgs(args, {
       str: rest,
@@ -112,41 +112,41 @@ var MaskRule = BaseMaskRule.inherit({
       length: args.length - 1
     }));
   },
-  clear: function clear(args) {
+  clear: function (args) {
     this._tryAcceptChar(EMPTY_CHAR, args);
     this.next().clear(this._prepareHandlingArgs(args));
   },
-  reset: function reset() {
+  reset: function () {
     this._accepted(false);
     this.next().reset();
   },
-  _tryAcceptChar: function _tryAcceptChar(char, args) {
+  _tryAcceptChar: function (char, args) {
     this._accepted(false);
     if (!this._isAllowed(char, args)) {
       return;
     }
-    var acceptedChar = char === EMPTY_CHAR ? this.maskChar : char;
+    const acceptedChar = char === EMPTY_CHAR ? this.maskChar : char;
     args.fullText = args.fullText.substring(0, args.index) + acceptedChar + args.fullText.substring(args.index + 1);
     this._accepted(true);
     this._value = char;
   },
-  _accepted: function _accepted(value) {
+  _accepted: function (value) {
     if (!arguments.length) {
       return !!this._isAccepted;
     }
     this._isAccepted = !!value;
   },
-  first: function first(index) {
+  first: function (index) {
     return this._value === EMPTY_CHAR ? index || 0 : this.callBase(index);
   },
-  _isAllowed: function _isAllowed(char, args) {
+  _isAllowed: function (char, args) {
     if (char === EMPTY_CHAR) {
       return true;
     }
     return this._isValid(char, args);
   },
-  _isValid: function _isValid(char, args) {
-    var allowedChars = this.allowedChars;
+  _isValid: function (char, args) {
+    const allowedChars = this.allowedChars;
     if (allowedChars instanceof RegExp) {
       return allowedChars.test(char);
     }
@@ -158,33 +158,33 @@ var MaskRule = BaseMaskRule.inherit({
     }
     return allowedChars === char;
   },
-  isAccepted: function isAccepted(caret) {
+  isAccepted: function (caret) {
     return caret === 0 ? this._accepted() : this.next().isAccepted(caret - 1);
   },
-  _adjustedForward: function _adjustedForward(caret, index, char) {
+  _adjustedForward: function (caret, index, char) {
     if (index >= caret) {
       return index;
     }
     return this.next()._adjustedForward(caret, index + 1, char) || index + 1;
   },
-  _adjustedBackward: function _adjustedBackward(caret, index) {
+  _adjustedBackward: function (caret, index) {
     if (index >= caret - 1) {
       return caret;
     }
     return this.next()._adjustedBackward(caret, index + 1) || index + 1;
   },
-  isValid: function isValid(args) {
+  isValid: function (args) {
     return this._isValid(this._value, args) && this.next().isValid(this._prepareHandlingArgs(args));
   }
 });
 exports.MaskRule = MaskRule;
-var StubMaskRule = MaskRule.inherit({
-  value: function value() {
+const StubMaskRule = MaskRule.inherit({
+  value: function () {
     return this.next().value();
   },
-  handle: function handle(args) {
-    var hasValueProperty = Object.prototype.hasOwnProperty.call(args, 'value');
-    var str = hasValueProperty ? args.value : args.text;
+  handle: function (args) {
+    const hasValueProperty = Object.prototype.hasOwnProperty.call(args, 'value');
+    const str = hasValueProperty ? args.value : args.text;
     if (!str.length || !args.length) {
       return 0;
     }
@@ -193,30 +193,30 @@ var StubMaskRule = MaskRule.inherit({
         start: args.start && args.start - 1
       }));
     }
-    var char = str[0];
-    var rest = str.substring(1);
+    const char = str[0];
+    const rest = str.substring(1);
     this._tryAcceptChar(char);
-    var nextArgs = this._isAllowed(char) ? this._prepareHandlingArgs(args, {
+    const nextArgs = this._isAllowed(char) ? this._prepareHandlingArgs(args, {
       str: rest,
       length: args.length - 1
     }) : args;
     return this.next().handle(nextArgs) + 1;
   },
-  clear: function clear(args) {
+  clear: function (args) {
     this._accepted(false);
     this.next().clear(this._prepareHandlingArgs(args));
   },
-  _tryAcceptChar: function _tryAcceptChar(char) {
+  _tryAcceptChar: function (char) {
     this._accepted(this._isValid(char));
   },
-  _isValid: function _isValid(char) {
+  _isValid: function (char) {
     return char === this.maskChar;
   },
-  first: function first(index) {
+  first: function (index) {
     index = index || 0;
     return this.next().first(index + 1);
   },
-  _adjustedForward: function _adjustedForward(caret, index, char) {
+  _adjustedForward: function (caret, index, char) {
     if (index >= caret && char === this.maskChar) {
       return index;
     }
@@ -225,13 +225,13 @@ var StubMaskRule = MaskRule.inherit({
     }
     return this.next()._adjustedForward(caret, index + 1, char);
   },
-  _adjustedBackward: function _adjustedBackward(caret, index) {
+  _adjustedBackward: function (caret, index) {
     if (index >= caret - 1) {
       return 0;
     }
     return this.next()._adjustedBackward(caret, index + 1);
   },
-  isValid: function isValid(args) {
+  isValid: function (args) {
     return this.next().isValid(this._prepareHandlingArgs(args));
   }
 });

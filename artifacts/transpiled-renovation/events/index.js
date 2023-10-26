@@ -7,15 +7,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 * @name events
 */
 
-var on = _events_engine.default.on;
+const on = _events_engine.default.on;
 exports.on = on;
-var one = _events_engine.default.one;
+const one = _events_engine.default.one;
 exports.one = one;
-var off = _events_engine.default.off;
+const off = _events_engine.default.off;
 exports.off = off;
-var trigger = _events_engine.default.trigger;
+const trigger = _events_engine.default.trigger;
 exports.trigger = trigger;
-var triggerHandler = _events_engine.default.triggerHandler;
+const triggerHandler = _events_engine.default.triggerHandler;
 
 /**
 * @name events.Event
@@ -28,5 +28,5 @@ var triggerHandler = _events_engine.default.triggerHandler;
 * @hidden
 */
 exports.triggerHandler = triggerHandler;
-var Event = _events_engine.default.Event;
+const Event = _events_engine.default.Event;
 exports.Event = Event;

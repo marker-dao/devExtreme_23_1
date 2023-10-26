@@ -27,50 +27,45 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 // STYLE fileUploader
 
-var window = (0, _window.getWindow)();
-var FILEUPLOADER_CLASS = 'dx-fileuploader';
-var FILEUPLOADER_EMPTY_CLASS = 'dx-fileuploader-empty';
-var FILEUPLOADER_SHOW_FILE_LIST_CLASS = 'dx-fileuploader-show-file-list';
-var FILEUPLOADER_DRAGOVER_CLASS = 'dx-fileuploader-dragover';
-var FILEUPLOADER_WRAPPER_CLASS = 'dx-fileuploader-wrapper';
-var FILEUPLOADER_CONTAINER_CLASS = 'dx-fileuploader-container';
-var FILEUPLOADER_CONTENT_CLASS = 'dx-fileuploader-content';
-var FILEUPLOADER_INPUT_WRAPPER_CLASS = 'dx-fileuploader-input-wrapper';
-var FILEUPLOADER_INPUT_CONTAINER_CLASS = 'dx-fileuploader-input-container';
-var FILEUPLOADER_INPUT_LABEL_CLASS = 'dx-fileuploader-input-label';
-var FILEUPLOADER_INPUT_CLASS = 'dx-fileuploader-input';
-var FILEUPLOADER_FILES_CONTAINER_CLASS = 'dx-fileuploader-files-container';
-var FILEUPLOADER_FILE_CONTAINER_CLASS = 'dx-fileuploader-file-container';
-var FILEUPLOADER_FILE_INFO_CLASS = 'dx-fileuploader-file-info';
-var FILEUPLOADER_FILE_STATUS_MESSAGE_CLASS = 'dx-fileuploader-file-status-message';
-var FILEUPLOADER_FILE_CLASS = 'dx-fileuploader-file';
-var FILEUPLOADER_FILE_NAME_CLASS = 'dx-fileuploader-file-name';
-var FILEUPLOADER_FILE_SIZE_CLASS = 'dx-fileuploader-file-size';
-var FILEUPLOADER_BUTTON_CLASS = 'dx-fileuploader-button';
-var FILEUPLOADER_BUTTON_CONTAINER_CLASS = 'dx-fileuploader-button-container';
-var FILEUPLOADER_CANCEL_BUTTON_CLASS = 'dx-fileuploader-cancel-button';
-var FILEUPLOADER_UPLOAD_BUTTON_CLASS = 'dx-fileuploader-upload-button';
-var FILEUPLOADER_INVALID_CLASS = 'dx-fileuploader-invalid';
-var FILEUPLOADER_AFTER_LOAD_DELAY = 400;
-var FILEUPLOADER_CHUNK_META_DATA_NAME = 'chunkMetadata';
-var DRAG_EVENT_DELTA = 1;
-var renderFileUploaderInput = function renderFileUploaderInput() {
-  return (0, _renderer.default)('<input>').attr('type', 'file');
-};
-var isFormDataSupported = function isFormDataSupported() {
-  return !!window.FormData;
-};
-var FileUploader = /*#__PURE__*/function (_Editor) {
+const window = (0, _window.getWindow)();
+const FILEUPLOADER_CLASS = 'dx-fileuploader';
+const FILEUPLOADER_EMPTY_CLASS = 'dx-fileuploader-empty';
+const FILEUPLOADER_SHOW_FILE_LIST_CLASS = 'dx-fileuploader-show-file-list';
+const FILEUPLOADER_DRAGOVER_CLASS = 'dx-fileuploader-dragover';
+const FILEUPLOADER_WRAPPER_CLASS = 'dx-fileuploader-wrapper';
+const FILEUPLOADER_CONTAINER_CLASS = 'dx-fileuploader-container';
+const FILEUPLOADER_CONTENT_CLASS = 'dx-fileuploader-content';
+const FILEUPLOADER_INPUT_WRAPPER_CLASS = 'dx-fileuploader-input-wrapper';
+const FILEUPLOADER_INPUT_CONTAINER_CLASS = 'dx-fileuploader-input-container';
+const FILEUPLOADER_INPUT_LABEL_CLASS = 'dx-fileuploader-input-label';
+const FILEUPLOADER_INPUT_CLASS = 'dx-fileuploader-input';
+const FILEUPLOADER_FILES_CONTAINER_CLASS = 'dx-fileuploader-files-container';
+const FILEUPLOADER_FILE_CONTAINER_CLASS = 'dx-fileuploader-file-container';
+const FILEUPLOADER_FILE_INFO_CLASS = 'dx-fileuploader-file-info';
+const FILEUPLOADER_FILE_STATUS_MESSAGE_CLASS = 'dx-fileuploader-file-status-message';
+const FILEUPLOADER_FILE_CLASS = 'dx-fileuploader-file';
+const FILEUPLOADER_FILE_NAME_CLASS = 'dx-fileuploader-file-name';
+const FILEUPLOADER_FILE_SIZE_CLASS = 'dx-fileuploader-file-size';
+const FILEUPLOADER_BUTTON_CLASS = 'dx-fileuploader-button';
+const FILEUPLOADER_BUTTON_CONTAINER_CLASS = 'dx-fileuploader-button-container';
+const FILEUPLOADER_CANCEL_BUTTON_CLASS = 'dx-fileuploader-cancel-button';
+const FILEUPLOADER_UPLOAD_BUTTON_CLASS = 'dx-fileuploader-upload-button';
+const FILEUPLOADER_INVALID_CLASS = 'dx-fileuploader-invalid';
+const FILEUPLOADER_AFTER_LOAD_DELAY = 400;
+const FILEUPLOADER_CHUNK_META_DATA_NAME = 'chunkMetadata';
+const DRAG_EVENT_DELTA = 1;
+let renderFileUploaderInput = () => (0, _renderer.default)('<input>').attr('type', 'file');
+const isFormDataSupported = () => !!window.FormData;
+let FileUploader = /*#__PURE__*/function (_Editor) {
   _inheritsLoose(FileUploader, _Editor);
   function FileUploader() {
     return _Editor.apply(this, arguments) || this;
   }
   var _proto = FileUploader.prototype;
   _proto._supportedKeys = function _supportedKeys() {
-    var _this = this;
-    var click = function click(e) {
+    const click = e => {
       e.preventDefault();
-      var $selectButton = _this._selectButton.$element();
+      const $selectButton = this._selectButton.$element();
       _events_engine.default.trigger($selectButton, _click.name);
     };
     return (0, _extend.extend)(_Editor.prototype._supportedKeys.call(this), {
@@ -158,9 +153,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _Editor.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
-        return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
-      },
+      device: () => _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator(),
       options: {
         focusStateEnabled: true
       }
@@ -174,44 +167,34 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
         }
       }
     }, {
-      device: function device() {
-        return _devices.default.real().deviceType !== 'desktop';
-      },
+      device: () => _devices.default.real().deviceType !== 'desktop',
       options: {
         useDragOver: false
       }
     }, {
-      device: function device() {
-        return !isFormDataSupported();
-      },
+      device: () => !isFormDataSupported(),
       options: {
         uploadMode: 'useForm'
       }
     }, {
-      device: function device() {
-        return _devices.default.real().deviceType !== 'desktop';
-      },
+      device: () => _devices.default.real().deviceType !== 'desktop',
       options: {
         nativeDropSupported: false
       }
     }, {
-      device: function device() {
-        return (0, _themes.isMaterial)();
-      },
+      device: () => (0, _themes.isMaterial)(),
       options: {
         _uploadButtonType: 'default'
       }
     }, {
-      device: function device() {
-        return (0, _themes.isFluent)();
-      },
+      device: () => (0, _themes.isFluent)(),
       options: {
         _buttonStylingMode: 'text'
       }
     }]);
   };
   _proto._initOptions = function _initOptions(options) {
-    var isLabelTextDefined = ('labelText' in options);
+    const isLabelTextDefined = ('labelText' in options);
     _Editor.prototype._initOptions.call(this, options);
     if (!isLabelTextDefined && !this._shouldDragOverBeRendered()) {
       this.option('labelText', '');
@@ -234,26 +217,25 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._createDropZoneLeaveAction();
   };
   _proto._setUploadStrategy = function _setUploadStrategy() {
-    var strategy = null;
+    let strategy = null;
     if (this.option('chunkSize') > 0) {
-      var uploadChunk = this.option('uploadChunk');
+      const uploadChunk = this.option('uploadChunk');
       strategy = uploadChunk && (0, _type.isFunction)(uploadChunk) ? new CustomChunksFileUploadStrategy(this) : new DefaultChunksFileUploadStrategy(this);
     } else {
-      var uploadFile = this.option('uploadFile');
+      const uploadFile = this.option('uploadFile');
       strategy = uploadFile && (0, _type.isFunction)(uploadFile) ? new CustomWholeFileUploadStrategy(this) : new DefaultWholeFileUploadStrategy(this);
     }
     this._uploadStrategy = strategy;
   };
   _proto._initFileInput = function _initFileInput() {
-    var _this2 = this;
     this._isCustomClickEvent = false;
     if (!this._$fileInput) {
       this._$fileInput = renderFileUploaderInput();
       _events_engine.default.on(this._$fileInput, 'change', this._inputChangeHandler.bind(this));
-      _events_engine.default.on(this._$fileInput, 'click', function (e) {
+      _events_engine.default.on(this._$fileInput, 'click', e => {
         e.stopPropagation();
-        _this2._resetInputValue();
-        return _this2.option('useNativeInputClick') || _this2._isCustomClickEvent;
+        this._resetInputValue();
+        return this.option('useNativeInputClick') || this._isCustomClickEvent;
       });
     }
     this._$fileInput.prop({
@@ -267,12 +249,12 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (this._doPreventInputChange) {
       return;
     }
-    var fileName = this._$fileInput.val().replace(/^.*\\/, '');
-    var files = this._$fileInput.prop('files');
+    const fileName = this._$fileInput.val().replace(/^.*\\/, '');
+    const files = this._$fileInput.prop('files');
     if (files && !files.length && this.option('uploadMode') !== 'useForm') {
       return;
     }
-    var value = files ? this._getFiles(files) : [{
+    const value = files ? this._getFiles(files) : [{
       name: fileName
     }];
     this._changeValue(value);
@@ -284,21 +266,17 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return this.option('uploadMode') !== 'useForm' && this.option('extendSelection') && this.option('multiple');
   };
   _proto._changeValue = function _changeValue(value) {
-    var files = this._shouldFileListBeExtended() ? this.option('value').slice() : [];
+    const files = this._shouldFileListBeExtended() ? this.option('value').slice() : [];
     this.option('value', files.concat(value));
   };
   _proto._getFiles = function _getFiles(fileList) {
-    var values = [];
-    (0, _iterator.each)(fileList, function (_, value) {
-      return values.push(value);
-    });
+    const values = [];
+    (0, _iterator.each)(fileList, (_, value) => values.push(value));
     return values;
   };
   _proto._getFile = function _getFile(fileData) {
-    var targetFileValue = (0, _type.isNumeric)(fileData) ? this.option('value')[fileData] : fileData;
-    return this._files.filter(function (file) {
-      return file.value === targetFileValue;
-    })[0];
+    const targetFileValue = (0, _type.isNumeric)(fileData) ? this.option('value')[fileData] : fileData;
+    return this._files.filter(file => file.value === targetFileValue)[0];
   };
   _proto._initLabel = function _initLabel() {
     if (!this._$inputLabel) {
@@ -307,7 +285,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._updateInputLabelText();
   };
   _proto._updateInputLabelText = function _updateInputLabelText() {
-    var correctedValue = this._isInteractionDisabled() ? '' : this.option('labelText');
+    const correctedValue = this._isInteractionDisabled() ? '' : this.option('labelText');
     this._$inputLabel.text(correctedValue);
   };
   _proto._focusTarget = function _focusTarget() {
@@ -341,9 +319,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._ensureCancelButtonInitialized(file);
   };
   _proto._setStatusMessage = function _setStatusMessage(file, message) {
-    var _this3 = this;
-    setTimeout(function () {
-      if (_this3.option('showFileList')) {
+    setTimeout(() => {
+      if (this.option('showFileList')) {
         if (file.$statusMessage) {
           file.$statusMessage.text(message);
           file.$statusMessage.css('display', '');
@@ -356,8 +333,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return this.option('uploadMode') === 'instantly' ? this.option('uploadAbortedMessage') : this.option('readyToUploadMessage');
   };
   _proto._createFiles = function _createFiles() {
-    var _this4 = this;
-    var value = this.option('value');
+    const value = this.option('value');
     if (this._files && (value.length === 0 || !this._shouldFileListBeExtended())) {
       this._preventFilesUploading(this._files);
       this._files = null;
@@ -365,17 +341,14 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (!this._files) {
       this._files = [];
     }
-    (0, _iterator.each)(value.slice(this._files.length), function (_, value) {
-      var file = _this4._createFile(value);
-      _this4._validateFile(file);
-      _this4._files.push(file);
+    (0, _iterator.each)(value.slice(this._files.length), (_, value) => {
+      const file = this._createFile(value);
+      this._validateFile(file);
+      this._files.push(file);
     });
   };
   _proto._preventFilesUploading = function _preventFilesUploading(files) {
-    var _this5 = this;
-    files.forEach(function (file) {
-      return _this5._uploadStrategy.abortUpload(file);
-    });
+    files.forEach(file => this._uploadStrategy.abortUpload(file));
   };
   _proto._validateFile = function _validateFile(file) {
     file.isValidFileExtension = this._validateFileExtension(file);
@@ -383,17 +356,17 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     file.isValidMaxSize = this._validateMaxFileSize(file);
   };
   _proto._validateFileExtension = function _validateFileExtension(file) {
-    var allowedExtensions = this.option('allowedFileExtensions');
-    var accept = this.option('accept');
-    var allowedTypes = this._getAllowedFileTypes(accept);
-    var fileExtension = file.value.name.substring(file.value.name.lastIndexOf('.')).toLowerCase();
+    const allowedExtensions = this.option('allowedFileExtensions');
+    const accept = this.option('accept');
+    const allowedTypes = this._getAllowedFileTypes(accept);
+    const fileExtension = file.value.name.substring(file.value.name.lastIndexOf('.')).toLowerCase();
     if (accept.length !== 0 && !this._isFileTypeAllowed(file.value, allowedTypes)) {
       return false;
     }
     if (allowedExtensions.length === 0) {
       return true;
     }
-    for (var i = 0; i < allowedExtensions.length; i++) {
+    for (let i = 0; i < allowedExtensions.length; i++) {
       if (fileExtension === allowedExtensions[i].toLowerCase()) {
         return true;
       }
@@ -401,13 +374,13 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return false;
   };
   _proto._validateMaxFileSize = function _validateMaxFileSize(file) {
-    var fileSize = file.value.size;
-    var maxFileSize = this.option('maxFileSize');
+    const fileSize = file.value.size;
+    const maxFileSize = this.option('maxFileSize');
     return maxFileSize > 0 ? fileSize <= maxFileSize : true;
   };
   _proto._validateMinFileSize = function _validateMinFileSize(file) {
-    var fileSize = file.value.size;
-    var minFileSize = this.option('minFileSize');
+    const fileSize = file.value.size;
+    const minFileSize = this.option('minFileSize');
     return minFileSize > 0 ? fileSize >= minFileSize : true;
   };
   _proto._createBeforeSendAction = function _createBeforeSendAction() {
@@ -478,19 +451,18 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     file.request = undefined;
   };
   _proto._renderFiles = function _renderFiles() {
-    var _this6 = this,
-      _this$_validationMess;
-    var value = this.option('value');
+    var _this$_validationMess;
+    const value = this.option('value');
     if (!this._$filesContainer) {
       this._$filesContainer = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILES_CONTAINER_CLASS).appendTo(this._$content);
     } else if (!this._shouldFileListBeExtended() || value.length === 0) {
       this._$filesContainer.empty();
     }
-    var showFileList = this.option('showFileList');
+    const showFileList = this.option('showFileList');
     if (showFileList) {
-      (0, _iterator.each)(this._files, function (_, file) {
+      (0, _iterator.each)(this._files, (_, file) => {
         if (!file.$file) {
-          _this6._renderFile(file);
+          this._renderFile(file);
         }
       });
     }
@@ -500,11 +472,11 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     (_this$_validationMess = this._validationMessage) === null || _this$_validationMess === void 0 ? void 0 : _this$_validationMess.repaint();
   };
   _proto._renderFile = function _renderFile(file) {
-    var value = file.value;
-    var $fileContainer = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILE_CONTAINER_CLASS).appendTo(this._$filesContainer);
+    const value = file.value;
+    const $fileContainer = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILE_CONTAINER_CLASS).appendTo(this._$filesContainer);
     this._renderFileButtons(file, $fileContainer);
     file.$file = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILE_CLASS).appendTo($fileContainer);
-    var $fileInfo = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILE_INFO_CLASS).appendTo(file.$file);
+    const $fileInfo = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILE_INFO_CLASS).appendTo(file.$file);
     file.$statusMessage = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILE_STATUS_MESSAGE_CLASS).appendTo(file.$file);
     (0, _renderer.default)('<div>').addClass(FILEUPLOADER_FILE_NAME_CLASS).text(value.name).appendTo($fileInfo);
     if ((0, _type.isDefined)(value.size)) {
@@ -529,38 +501,36 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return (0, _renderer.default)('<span>').text(this.option(key));
   };
   _proto._updateFileNameMaxWidth = function _updateFileNameMaxWidth() {
-    var cancelButtonsCount = this.option('allowCanceling') && this.option('uploadMode') !== 'useForm' ? 1 : 0;
-    var uploadButtonsCount = this.option('uploadMode') === 'useButtons' ? 1 : 0;
-    var filesContainerWidth = (0, _size.getWidth)(this._$filesContainer.find('.' + FILEUPLOADER_FILE_CONTAINER_CLASS).first()) || (0, _size.getWidth)(this._$filesContainer);
-    var $buttonContainer = this._$filesContainer.find('.' + FILEUPLOADER_BUTTON_CONTAINER_CLASS).eq(0);
-    var buttonsWidth = (0, _size.getWidth)($buttonContainer) * (cancelButtonsCount + uploadButtonsCount);
-    var $fileSize = this._$filesContainer.find('.' + FILEUPLOADER_FILE_SIZE_CLASS).eq(0);
-    var prevFileSize = $fileSize.text();
+    const cancelButtonsCount = this.option('allowCanceling') && this.option('uploadMode') !== 'useForm' ? 1 : 0;
+    const uploadButtonsCount = this.option('uploadMode') === 'useButtons' ? 1 : 0;
+    const filesContainerWidth = (0, _size.getWidth)(this._$filesContainer.find('.' + FILEUPLOADER_FILE_CONTAINER_CLASS).first()) || (0, _size.getWidth)(this._$filesContainer);
+    const $buttonContainer = this._$filesContainer.find('.' + FILEUPLOADER_BUTTON_CONTAINER_CLASS).eq(0);
+    const buttonsWidth = (0, _size.getWidth)($buttonContainer) * (cancelButtonsCount + uploadButtonsCount);
+    const $fileSize = this._$filesContainer.find('.' + FILEUPLOADER_FILE_SIZE_CLASS).eq(0);
+    const prevFileSize = $fileSize.text();
     $fileSize.text('1000 Mb');
-    var fileSizeWidth = (0, _size.getWidth)($fileSize);
+    const fileSizeWidth = (0, _size.getWidth)($fileSize);
     $fileSize.text(prevFileSize);
     this._$filesContainer.find('.' + FILEUPLOADER_FILE_NAME_CLASS).css('maxWidth', filesContainerWidth - buttonsWidth - fileSizeWidth);
   };
   _proto._renderFileButtons = function _renderFileButtons(file, $container) {
-    var $cancelButton = this._getCancelButton(file);
+    const $cancelButton = this._getCancelButton(file);
     $cancelButton && $container.append($cancelButton);
-    var $uploadButton = this._getUploadButton(file);
+    const $uploadButton = this._getUploadButton(file);
     $uploadButton && $container.append($uploadButton);
   };
   _proto._getCancelButton = function _getCancelButton(file) {
-    var _this7 = this;
     if (this.option('uploadMode') === 'useForm') {
       return null;
     }
-    var _this$option = this.option(),
-      allowCanceling = _this$option.allowCanceling,
-      readOnly = _this$option.readOnly,
-      hoverStateEnabled = _this$option.hoverStateEnabled,
-      _buttonStylingMode = _this$option._buttonStylingMode;
+    const {
+      allowCanceling,
+      readOnly,
+      hoverStateEnabled,
+      _buttonStylingMode
+    } = this.option();
     file.cancelButton = this._createComponent((0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS + ' ' + FILEUPLOADER_CANCEL_BUTTON_CLASS), _button.default, {
-      onClick: function onClick() {
-        return _this7._removeFile(file);
-      },
+      onClick: () => this._removeFile(file),
       icon: 'close',
       visible: allowCanceling,
       disabled: readOnly,
@@ -571,40 +541,34 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return (0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CONTAINER_CLASS).append(file.cancelButton.$element());
   };
   _proto._getUploadButton = function _getUploadButton(file) {
-    var _this8 = this;
     if (!file.isValid() || this.option('uploadMode') !== 'useButtons') {
       return null;
     }
-    var _this$option2 = this.option(),
-      hoverStateEnabled = _this$option2.hoverStateEnabled,
-      _buttonStylingMode = _this$option2._buttonStylingMode;
+    const {
+      hoverStateEnabled,
+      _buttonStylingMode
+    } = this.option();
     file.uploadButton = this._createComponent((0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS + ' ' + FILEUPLOADER_UPLOAD_BUTTON_CLASS), _button.default, {
-      onClick: function onClick() {
-        return _this8._uploadFile(file);
-      },
+      onClick: () => this._uploadFile(file),
       icon: 'upload',
       hoverStateEnabled: hoverStateEnabled,
       stylingMode: _buttonStylingMode
     });
-    file.onLoadStart.add(function () {
-      return file.uploadButton.option({
-        visible: false,
-        disabled: true
-      });
-    });
-    file.onAbort.add(function () {
-      return file.uploadButton.option({
-        visible: true,
-        disabled: false
-      });
-    });
+    file.onLoadStart.add(() => file.uploadButton.option({
+      visible: false,
+      disabled: true
+    }));
+    file.onAbort.add(() => file.uploadButton.option({
+      visible: true,
+      disabled: false
+    }));
     return (0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CONTAINER_CLASS).append(file.uploadButton.$element());
   };
   _proto._removeFile = function _removeFile(file) {
     var _file$$file;
     (_file$$file = file.$file) === null || _file$$file === void 0 ? void 0 : _file$$file.parent().remove();
     this._files.splice(this._files.indexOf(file), 1);
-    var value = this.option('value').slice();
+    const value = this.option('value').slice();
     value.splice(value.indexOf(file.value), 1);
     this._preventRecreatingFiles = true;
     this.option('value', value);
@@ -616,7 +580,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (this.option('uploadMode') === 'useForm' || !(0, _type.isDefined)(fileData)) {
       return;
     }
-    var file = this._getFile(fileData);
+    const file = this._getFile(fileData);
     if (file) {
       if (file.uploadStarted) {
         this._preventFilesUploading([file]);
@@ -628,7 +592,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this.$element().toggleClass(FILEUPLOADER_EMPTY_CLASS, !this._files.length || this._hasInvalidFile(this._files));
   };
   _proto._hasInvalidFile = function _hasInvalidFile(files) {
-    for (var i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i++) {
       if (!files[i].isValid()) {
         return true;
       }
@@ -636,9 +600,9 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return false;
   };
   _proto._getFileSize = function _getFileSize(size) {
-    var i = 0;
-    var labels = [_message.default.format('dxFileUploader-bytes'), _message.default.format('dxFileUploader-kb'), _message.default.format('dxFileUploader-Mb'), _message.default.format('dxFileUploader-Gb')];
-    var count = labels.length - 1;
+    let i = 0;
+    const labels = [_message.default.format('dxFileUploader-bytes'), _message.default.format('dxFileUploader-kb'), _message.default.format('dxFileUploader-Mb'), _message.default.format('dxFileUploader-Gb')];
+    const count = labels.length - 1;
     while (i < count && size >= 1024) {
       size /= 1024;
       i++;
@@ -646,7 +610,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return Math.round(size) + ' ' + labels[i];
   };
   _proto._renderSelectButton = function _renderSelectButton() {
-    var $button = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS).appendTo(this._$inputWrapper);
+    const $button = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS).appendTo(this._$inputWrapper);
     this._selectButton = this._createComponent($button, _button.default, {
       text: this.option('selectButtonText'),
       focusStateEnabled: false,
@@ -692,7 +656,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (this.option('uploadMode') !== 'useButtons') {
       return;
     }
-    var $uploadButton = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS).addClass(FILEUPLOADER_UPLOAD_BUTTON_CLASS).appendTo(this._$content);
+    const $uploadButton = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_BUTTON_CLASS).addClass(FILEUPLOADER_UPLOAD_BUTTON_CLASS).appendTo(this._$content);
     this._uploadButton = this._createComponent($uploadButton, _button.default, {
       text: this.option('uploadButtonText'),
       onClick: this._uploadButtonClickHandler.bind(this),
@@ -714,7 +678,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._$inputContainer = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_INPUT_CONTAINER_CLASS).appendTo(this._$inputWrapper);
     this._$fileInput.addClass(FILEUPLOADER_INPUT_CLASS);
     this._renderInput();
-    var labelId = "dx-fileuploader-input-label-".concat(new _guid.default());
+    const labelId = "dx-fileuploader-input-label-".concat(new _guid.default());
     this._$inputLabel.attr('id', labelId).addClass(FILEUPLOADER_INPUT_LABEL_CLASS).appendTo(this._$inputContainer);
     this.setAria('labelledby', labelId, this._$fileInput);
   };
@@ -728,8 +692,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._applyInputAttributes(this.option('inputAttr'));
   };
   _proto._selectButtonInputTemplate = function _selectButtonInputTemplate(data, content) {
-    var $content = (0, _renderer.default)(content);
-    var $text = (0, _renderer.default)('<span>').addClass('dx-button-text').text(data.text);
+    const $content = (0, _renderer.default)(content);
+    const $text = (0, _renderer.default)('<span>').addClass('dx-button-text').text(data.text);
     $content.append($text).append(this._$fileInput);
     return $content;
   };
@@ -743,7 +707,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     _events_engine.default.off((0, _renderer.default)(target), (0, _index.addNamespace)('', this.NAME));
   };
   _proto._attachDragEventHandlers = function _attachDragEventHandlers(target) {
-    var isCustomTarget = target !== this._$inputWrapper;
+    const isCustomTarget = target !== this._$inputWrapper;
     if (!(0, _type.isDefined)(target) || !this._shouldDragOverBeRendered()) {
       return;
     }
@@ -761,10 +725,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return this.option('nativeDropSupported') && this.option('uploadMode') === 'useForm';
   };
   _proto._getDropZoneElement = function _getDropZoneElement(isCustomTarget, e) {
-    var targetList = isCustomTarget ? Array.from((0, _renderer.default)(this.option('dropZone'))) : [this._$inputWrapper];
-    targetList = targetList.map(function (element) {
-      return (0, _renderer.default)(element).get(0);
-    });
+    let targetList = isCustomTarget ? Array.from((0, _renderer.default)(this.option('dropZone'))) : [this._$inputWrapper];
+    targetList = targetList.map(element => (0, _renderer.default)(element).get(0));
     return targetList[targetList.indexOf(e.currentTarget)];
   };
   _proto._dragEnterHandler = function _dragEnterHandler(isCustomTarget, e) {
@@ -774,16 +736,14 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (!this._useInputForDrop()) {
       e.preventDefault();
     }
-    var dropZoneElement = this._getDropZoneElement(isCustomTarget, e);
+    const dropZoneElement = this._getDropZoneElement(isCustomTarget, e);
     if ((0, _type.isDefined)(dropZoneElement) && this._shouldRaiseDragOver(e, dropZoneElement)) {
       this._activeDropZone = dropZoneElement;
       this._tryToggleDropZoneActive(true, isCustomTarget, e);
     }
   };
   _proto._shouldRaiseDragOver = function _shouldRaiseDragOver(e, dropZoneElement) {
-    return this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false) && e.originalEvent.dataTransfer.types.find(function (item) {
-      return item === 'Files';
-    });
+    return this._activeDropZone === null && this.isMouseOverElement(e, dropZoneElement, false) && e.originalEvent.dataTransfer.types.find(item => item === 'Files');
   };
   _proto._dragOverHandler = function _dragOverHandler(isCustomTarget, e) {
     if (!this._useInputForDrop()) {
@@ -792,7 +752,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     e.originalEvent.dataTransfer.dropEffect = 'copy';
     if (!isCustomTarget) {
       // only default dropzone has pseudoelements
-      var dropZoneElement = this._getDropZoneElement(false, e);
+      const dropZoneElement = this._getDropZoneElement(false, e);
       if (this._shouldRaiseDragOver(e, dropZoneElement)) {
         this._dragEnterHandler(false, e);
       }
@@ -814,8 +774,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return this._activeDropZone !== null && !this.isMouseOverElement(e, this._activeDropZone, !isCustomTarget, -DRAG_EVENT_DELTA);
   };
   _proto._tryToggleDropZoneActive = function _tryToggleDropZoneActive(active, isCustom, event) {
-    var classAction = active ? 'addClass' : 'removeClass';
-    var mouseAction = active ? '_dropZoneEnterAction' : '_dropZoneLeaveAction';
+    const classAction = active ? 'addClass' : 'removeClass';
+    const mouseAction = active ? '_dropZoneEnterAction' : '_dropZoneLeaveAction';
     this[mouseAction]({
       event,
       dropZoneElement: this._activeDropZone
@@ -833,8 +793,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       return;
     }
     e.preventDefault();
-    var fileList = e.originalEvent.dataTransfer.files;
-    var files = this._getFiles(fileList);
+    const fileList = e.originalEvent.dataTransfer.files;
+    const files = this._getFiles(fileList);
     if (!this.option('multiple') && files.length > 1 || files.length === 0) {
       return;
     }
@@ -844,9 +804,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     }
   };
   _proto._areAllFilesLoaded = function _areAllFilesLoaded() {
-    return this._files.every(function (file) {
-      return !file.isValid() || file._isError || file._isLoaded || file.isAborted;
-    });
+    return this._files.every(file => !file.isValid() || file._isError || file._isLoaded || file.isAborted);
   };
   _proto._handleAllFilesUploaded = function _handleAllFilesUploaded() {
     this._recalculateProgress();
@@ -858,13 +816,11 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     if (!acceptSting.length) {
       return [];
     }
-    return acceptSting.split(',').map(function (item) {
-      return item.trim();
-    });
+    return acceptSting.split(',').map(item => item.trim());
   };
   _proto._isFileTypeAllowed = function _isFileTypeAllowed(file, allowedTypes) {
-    for (var i = 0, n = allowedTypes.length; i < n; i++) {
-      var allowedType = allowedTypes[i];
+    for (let i = 0, n = allowedTypes.length; i < n; i++) {
+      let allowedType = allowedTypes[i];
       if (allowedType[0] === '.') {
         allowedType = allowedType.replace('.', '\\.');
         if (file.name.match(new RegExp(allowedType + '$', 'i'))) {
@@ -880,8 +836,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return false;
   };
   _proto._renderWrapper = function _renderWrapper() {
-    var $wrapper = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_WRAPPER_CLASS).appendTo(this.$element());
-    var $container = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_CONTAINER_CLASS).appendTo($wrapper);
+    const $wrapper = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_WRAPPER_CLASS).appendTo(this.$element());
+    const $container = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_CONTAINER_CLASS).appendTo($wrapper);
     this._$content = (0, _renderer.default)('<div>').addClass(FILEUPLOADER_CONTENT_CLASS).appendTo($container);
   };
   _proto._clean = function _clean() {
@@ -890,7 +846,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._detachSelectFileDialogHandler(this.option('dialogTrigger'));
     this._detachDragEventHandlers(this.option('dropZone'));
     if (this._files) {
-      this._files.forEach(function (file) {
+      this._files.forEach(file => {
         file.$file = null;
         file.$statusMessage = null;
       });
@@ -902,7 +858,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       return;
     }
     if ((0, _type.isDefined)(fileData)) {
-      var file = this._getFile(fileData);
+      const file = this._getFile(fileData);
       if (file) {
         this._preventFilesUploading([file]);
       }
@@ -915,7 +871,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
       return;
     }
     if ((0, _type.isDefined)(fileData)) {
-      var file = this._getFile(fileData);
+      const file = this._getFile(fileData);
       if (file && isFormDataSupported()) {
         this._uploadFile(file);
       }
@@ -924,11 +880,8 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     }
   };
   _proto._uploadFiles = function _uploadFiles() {
-    var _this9 = this;
     if (isFormDataSupported()) {
-      (0, _iterator.each)(this._files, function (_, file) {
-        return _this9._uploadFile(file);
-      });
+      (0, _iterator.each)(this._files, (_, file) => this._uploadFile(file));
     }
   };
   _proto._uploadFile = function _uploadFile(file) {
@@ -949,7 +902,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     });
   };
   _proto._updateTotalProgress = function _updateTotalProgress(totalFilesSize, totalLoadedFilesSize) {
-    var progress = 0;
+    let progress = 0;
     if ((0, _type.isDefined)(totalFilesSize)) {
       if (this._files.length > 0 && this._areAllFilesLoaded() && totalFilesSize === 0 && totalLoadedFilesSize === 0) {
         progress = this._getProgressValue(1);
@@ -967,16 +920,15 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     file.$statusMessage.css('display', 'none');
   };
   _proto._ensureCancelButtonInitialized = function _ensureCancelButtonInitialized(file) {
-    var _this10 = this;
     if (file.isInitialized) {
       return;
     }
-    file.cancelButton.option('onClick', function () {
-      _this10._preventFilesUploading([file]);
-      _this10._removeFile(file);
+    file.cancelButton.option('onClick', () => {
+      this._preventFilesUploading([file]);
+      this._removeFile(file);
     });
-    var hideCancelButton = function hideCancelButton() {
-      setTimeout(function () {
+    const hideCancelButton = () => {
+      setTimeout(() => {
         file.cancelButton.option({
           visible: false
         });
@@ -986,34 +938,29 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     file.onError.add(hideCancelButton);
   };
   _proto._createProgressBar = function _createProgressBar(fileSize) {
-    var _this11 = this;
     return this._createComponent((0, _renderer.default)('<div>'), _progress_bar.default, {
       value: undefined,
       min: 0,
       max: fileSize,
-      statusFormat: function statusFormat(ratio) {
-        return _this11._getProgressValue(ratio) + '%';
-      },
+      statusFormat: ratio => this._getProgressValue(ratio) + '%',
       showStatus: false,
       statusPosition: 'right'
     });
   };
   _proto._getTotalFilesSize = function _getTotalFilesSize() {
-    var _this12 = this;
     if (!this._totalFilesSize) {
       this._totalFilesSize = 0;
-      (0, _iterator.each)(this._files, function (_, file) {
-        _this12._totalFilesSize += file.value.size;
+      (0, _iterator.each)(this._files, (_, file) => {
+        this._totalFilesSize += file.value.size;
       });
     }
     return this._totalFilesSize;
   };
   _proto._getTotalLoadedFilesSize = function _getTotalLoadedFilesSize() {
-    var _this13 = this;
     if (!this._totalLoadedFilesSize) {
       this._totalLoadedFilesSize = 0;
-      (0, _iterator.each)(this._files, function (_, file) {
-        _this13._totalLoadedFilesSize += file.loadedSize;
+      (0, _iterator.each)(this._files, (_, file) => {
+        this._totalLoadedFilesSize += file.loadedSize;
       });
     }
     return this._totalLoadedFilesSize;
@@ -1027,16 +974,16 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     this._updateTotalProgress(this._getTotalFilesSize(), this._getTotalLoadedFilesSize());
   };
   _proto.isMouseOverElement = function isMouseOverElement(mouseEvent, element, correctPseudoElements) {
-    var dragEventDelta = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : DRAG_EVENT_DELTA;
+    let dragEventDelta = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : DRAG_EVENT_DELTA;
     if (!element) return false;
-    var beforeHeight = correctPseudoElements ? parseFloat(window.getComputedStyle(element, ':before').height) : 0;
-    var afterHeight = correctPseudoElements ? parseFloat(window.getComputedStyle(element, ':after').height) : 0;
-    var x = (0, _size.getOffset)(element).left;
-    var y = (0, _size.getOffset)(element).top + beforeHeight;
-    var w = element.offsetWidth;
-    var h = element.offsetHeight - beforeHeight - afterHeight;
-    var eventX = this._getEventX(mouseEvent);
-    var eventY = this._getEventY(mouseEvent);
+    const beforeHeight = correctPseudoElements ? parseFloat(window.getComputedStyle(element, ':before').height) : 0;
+    const afterHeight = correctPseudoElements ? parseFloat(window.getComputedStyle(element, ':after').height) : 0;
+    const x = (0, _size.getOffset)(element).left;
+    const y = (0, _size.getOffset)(element).top + beforeHeight;
+    const w = element.offsetWidth;
+    const h = element.offsetHeight - beforeHeight - afterHeight;
+    const eventX = this._getEventX(mouseEvent);
+    const eventY = this._getEventY(mouseEvent);
     return eventX + dragEventDelta >= x && eventX - dragEventDelta < x + w && eventY + dragEventDelta >= y && eventY - dragEventDelta < y + h;
   };
   _proto._getEventX = function _getEventX(e) {
@@ -1046,7 +993,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return (0, _index.isTouchEvent)(e) ? this._getTouchEventY(e) : e.clientY + this._getDocumentScrollTop();
   };
   _proto._getTouchEventX = function _getTouchEventX(e) {
-    var touchPoint = null;
+    let touchPoint = null;
     if (e.changedTouches.length > 0) {
       touchPoint = e.changedTouches;
     } else if (e.targetTouches.length > 0) {
@@ -1055,7 +1002,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return touchPoint ? touchPoint[0].pageX : 0;
   };
   _proto._getTouchEventY = function _getTouchEventY(e) {
-    var touchPoint = null;
+    let touchPoint = null;
     if (e.changedTouches.length > 0) {
       touchPoint = e.changedTouches;
     } else if (e.targetTouches.length > 0) {
@@ -1064,17 +1011,17 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
     return touchPoint ? touchPoint[0].pageY : 0;
   };
   _proto._getDocumentScrollTop = function _getDocumentScrollTop() {
-    var document = _dom_adapter.default.getDocument();
+    const document = _dom_adapter.default.getDocument();
     return document.documentElement.scrollTop || document.body.scrollTop;
   };
   _proto._getDocumentScrollLeft = function _getDocumentScrollLeft() {
-    var document = _dom_adapter.default.getDocument();
+    const document = _dom_adapter.default.getDocument();
     return document.documentElement.scrollLeft || document.body.scrollLeft;
   };
   _proto._updateReadOnlyState = function _updateReadOnlyState() {
-    var readOnly = this.option('readOnly');
+    const readOnly = this.option('readOnly');
     this._selectButton.option('disabled', readOnly);
-    this._files.forEach(function (file) {
+    this._files.forEach(file => {
       var _file$cancelButton;
       return (_file$cancelButton = file.cancelButton) === null || _file$cancelButton === void 0 ? void 0 : _file$cancelButton.option('disabled', readOnly);
     });
@@ -1083,19 +1030,21 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
   };
   _proto._updateHoverState = function _updateHoverState() {
     var _this$_selectButton, _this$_uploadButton;
-    var value = this.option('hoverStateEnabled');
+    const value = this.option('hoverStateEnabled');
     (_this$_selectButton = this._selectButton) === null || _this$_selectButton === void 0 ? void 0 : _this$_selectButton.option('hoverStateEnabled', value);
     (_this$_uploadButton = this._uploadButton) === null || _this$_uploadButton === void 0 ? void 0 : _this$_uploadButton.option('hoverStateEnabled', value);
-    this._files.forEach(function (file) {
+    this._files.forEach(file => {
       var _file$uploadButton, _file$cancelButton2;
       (_file$uploadButton = file.uploadButton) === null || _file$uploadButton === void 0 ? void 0 : _file$uploadButton.option('hoverStateEnabled', value);
       (_file$cancelButton2 = file.cancelButton) === null || _file$cancelButton2 === void 0 ? void 0 : _file$cancelButton2.option('hoverStateEnabled', value);
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name,
-      value = args.value,
-      previousValue = args.previousValue;
+    const {
+      name,
+      value,
+      previousValue
+    } = args;
     switch (name) {
       case 'height':
       case 'width':
@@ -1142,7 +1091,7 @@ var FileUploader = /*#__PURE__*/function (_Editor) {
         this._uploadButton && this._uploadButton.option('type', value);
         break;
       case '_buttonStylingMode':
-        this._files.forEach(function (file) {
+        this._files.forEach(file => {
           var _file$uploadButton2, _file$cancelButton3;
           (_file$uploadButton2 = file.uploadButton) === null || _file$uploadButton2 === void 0 ? void 0 : _file$uploadButton2.option('stylingMode', value);
           (_file$cancelButton3 = file.cancelButton) === null || _file$cancelButton3 === void 0 ? void 0 : _file$cancelButton3.option('stylingMode', value);
@@ -1263,13 +1212,11 @@ FileUploader.__internals = {
     renderFileUploaderInput = renderer;
   },
   resetFileInputTag() {
-    renderFileUploaderInput = function renderFileUploaderInput() {
-      return (0, _renderer.default)('<input>').attr('type', 'file');
-    };
+    renderFileUploaderInput = () => (0, _renderer.default)('<input>').attr('type', 'file');
   }
 };
 ///#ENDDEBUG
-var FileBlobReader = /*#__PURE__*/function () {
+let FileBlobReader = /*#__PURE__*/function () {
   function FileBlobReader(file, chunkSize) {
     this.file = file;
     this.chunkSize = chunkSize;
@@ -1280,7 +1227,7 @@ var FileBlobReader = /*#__PURE__*/function () {
     if (!this.file) {
       return null;
     }
-    var result = this.createBlobResult(this.file, this.index, this.chunkSize);
+    const result = this.createBlobResult(this.file, this.index, this.chunkSize);
     if (result.isCompleted) {
       this.file = null;
     }
@@ -1288,7 +1235,7 @@ var FileBlobReader = /*#__PURE__*/function () {
     return result;
   };
   _proto2.createBlobResult = function createBlobResult(file, index, chunkSize) {
-    var currentPosition = index * chunkSize;
+    const currentPosition = index * chunkSize;
     return {
       blob: this.sliceFile(file, currentPosition, chunkSize),
       index: index,
@@ -1306,7 +1253,7 @@ var FileBlobReader = /*#__PURE__*/function () {
   };
   return FileBlobReader;
 }();
-var FileUploadStrategyBase = /*#__PURE__*/function () {
+let FileUploadStrategyBase = /*#__PURE__*/function () {
   function FileUploadStrategyBase(fileUploader) {
     this.fileUploader = fileUploader;
   }
@@ -1321,31 +1268,26 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
     }
   };
   _proto3.abortUpload = function abortUpload(file) {
-    var _this14 = this;
     if (file._isError || file._isLoaded || file.isAborted || !file.uploadStarted) {
       return;
     }
     file.isAborted = true;
     file.request && file.request.abort();
     if (this._isCustomCallback('abortUpload')) {
-      var abortUpload = this.fileUploader.option('abortUpload');
-      var arg = this._createUploadArgument(file);
-      var deferred = null;
+      const abortUpload = this.fileUploader.option('abortUpload');
+      const arg = this._createUploadArgument(file);
+      let deferred = null;
       try {
-        var result = abortUpload(file.value, arg);
+        const result = abortUpload(file.value, arg);
         deferred = (0, _deferred.fromPromise)(result);
       } catch (error) {
         deferred = new _deferred.Deferred().reject(error).promise();
       }
-      deferred.done(function () {
-        return file.onAbort.fire();
-      }).fail(function (error) {
-        return _this14._handleFileError(file, error);
-      });
+      deferred.done(() => file.onAbort.fire()).fail(error => this._handleFileError(file, error));
     }
   };
   _proto3._beforeSend = function _beforeSend(xhr, file) {
-    var arg = this._createUploadArgument(file);
+    const arg = this._createUploadArgument(file);
     this.fileUploader._beforeSendAction({
       request: xhr,
       file: file.value,
@@ -1356,7 +1298,7 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
   _proto3._createUploadArgument = function _createUploadArgument(file) {};
   _proto3._uploadCore = function _uploadCore(file) {};
   _proto3._isCustomCallback = function _isCustomCallback(name) {
-    var callback = this.fileUploader.option(name);
+    const callback = this.fileUploader.option(name);
     return callback && (0, _type.isFunction)(callback);
   };
   _proto3._handleProgress = function _handleProgress(file, e) {
@@ -1402,7 +1344,7 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
     });
   };
   _proto3._onAbortHandler = function _onAbortHandler(file, e) {
-    var args = {
+    const args = {
       file: file.value,
       event: e,
       request: file.request,
@@ -1413,7 +1355,7 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
     this.fileUploader._handleAllFilesUploaded();
   };
   _proto3._onErrorHandler = function _onErrorHandler(file, error) {
-    var args = {
+    const args = {
       file: file.value,
       event: undefined,
       request: file.request,
@@ -1425,7 +1367,7 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
     this.fileUploader._handleAllFilesUploaded();
   };
   _proto3._onLoadedHandler = function _onLoadedHandler(file, e) {
-    var args = {
+    const args = {
       file: file.value,
       event: e,
       request: file.request,
@@ -1438,10 +1380,10 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
   };
   _proto3._onProgressHandler = function _onProgressHandler(file, e) {
     if (file) {
-      var totalFilesSize = this.fileUploader._getTotalFilesSize();
-      var totalLoadedFilesSize = this.fileUploader._getTotalLoadedFilesSize();
-      var loadedSize = Math.min(e.loaded, file.value.size);
-      var segmentSize = loadedSize - file.loadedSize;
+      const totalFilesSize = this.fileUploader._getTotalFilesSize();
+      const totalLoadedFilesSize = this.fileUploader._getTotalLoadedFilesSize();
+      const loadedSize = Math.min(e.loaded, file.value.size);
+      const segmentSize = loadedSize - file.loadedSize;
       file.loadedSize = loadedSize;
       this.fileUploader._updateTotalProgress(totalFilesSize, totalLoadedFilesSize + segmentSize);
       this.fileUploader._updateProgressBar(file, this._getLoadedData(loadedSize, e.total, segmentSize, e));
@@ -1455,8 +1397,8 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
     };
   };
   _proto3._extendFormData = function _extendFormData(formData) {
-    var formDataEntries = this.fileUploader.option('uploadCustomData');
-    for (var entryName in formDataEntries) {
+    const formDataEntries = this.fileUploader.option('uploadCustomData');
+    for (const entryName in formDataEntries) {
       if (Object.prototype.hasOwnProperty.call(formDataEntries, entryName) && (0, _type.isDefined)(formDataEntries[entryName])) {
         formData.append(entryName, formDataEntries[entryName]);
       }
@@ -1464,18 +1406,18 @@ var FileUploadStrategyBase = /*#__PURE__*/function () {
   };
   return FileUploadStrategyBase;
 }();
-var ChunksFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa) {
+let ChunksFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa) {
   _inheritsLoose(ChunksFileUploadStrategyBase, _FileUploadStrategyBa);
   function ChunksFileUploadStrategyBase(fileUploader) {
-    var _this15;
-    _this15 = _FileUploadStrategyBa.call(this, fileUploader) || this;
-    _this15.chunkSize = _this15.fileUploader.option('chunkSize');
-    return _this15;
+    var _this;
+    _this = _FileUploadStrategyBa.call(this, fileUploader) || this;
+    _this.chunkSize = _this.fileUploader.option('chunkSize');
+    return _this;
   }
   var _proto4 = ChunksFileUploadStrategyBase.prototype;
   _proto4._uploadCore = function _uploadCore(file) {
-    var realFile = file.value;
-    var chunksData = {
+    const realFile = file.value;
+    const chunksData = {
       name: realFile.name,
       loadedBytes: 0,
       type: realFile.type,
@@ -1492,11 +1434,10 @@ var ChunksFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa)
     return jsFile.size === 0 ? 1 : Math.ceil(jsFile.size / this.chunkSize);
   };
   _proto4._sendChunk = function _sendChunk(file, chunksData) {
-    var _this16 = this;
-    var chunk = chunksData.blobReader.read();
+    const chunk = chunksData.blobReader.read();
     chunksData.currentChunk = chunk;
     if (chunk) {
-      this._sendChunkCore(file, chunksData, chunk).done(function () {
+      this._sendChunkCore(file, chunksData, chunk).done(() => {
         if (file.isAborted) {
           return;
         }
@@ -1508,12 +1449,10 @@ var ChunksFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa)
         if (chunk.isCompleted) {
           file.onLoad.fire();
         }
-        setTimeout(function () {
-          return _this16._sendChunk(file, chunksData);
-        });
-      }).fail(function (error) {
-        if (_this16._shouldHandleError(file, error)) {
-          _this16._handleFileError(file, error);
+        setTimeout(() => this._sendChunk(file, chunksData));
+      }).fail(error => {
+        if (this._shouldHandleError(file, error)) {
+          this._handleFileError(file, error);
         }
       });
     }
@@ -1542,31 +1481,22 @@ var ChunksFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa)
   };
   return ChunksFileUploadStrategyBase;
 }(FileUploadStrategyBase);
-var DefaultChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadStra) {
+let DefaultChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadStra) {
   _inheritsLoose(DefaultChunksFileUploadStrategy, _ChunksFileUploadStra);
   function DefaultChunksFileUploadStrategy() {
     return _ChunksFileUploadStra.apply(this, arguments) || this;
   }
   var _proto5 = DefaultChunksFileUploadStrategy.prototype;
   _proto5._sendChunkCore = function _sendChunkCore(file, chunksData, chunk) {
-    var _this17 = this;
     return _ajax.default.sendRequest({
       url: this.fileUploader.option('uploadUrl'),
       method: this.fileUploader.option('uploadMethod'),
       headers: this.fileUploader.option('uploadHeaders'),
-      beforeSend: function beforeSend(xhr) {
-        return _this17._beforeSend(xhr, file);
-      },
+      beforeSend: xhr => this._beforeSend(xhr, file),
       upload: {
-        'onprogress': function onprogress(e) {
-          return _this17._handleProgress(file, e);
-        },
-        'onloadstart': function onloadstart() {
-          return _this17._tryRaiseStartLoad(file);
-        },
-        'onabort': function onabort() {
-          return file.onAbort.fire();
-        }
+        'onprogress': e => this._handleProgress(file, e),
+        'onloadstart': () => this._tryRaiseStartLoad(file),
+        'onabort': () => file.onAbort.fire()
       },
       data: this._createFormData({
         fileName: chunksData.name,
@@ -1581,7 +1511,7 @@ var DefaultChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadSt
     });
   };
   _proto5._createFormData = function _createFormData(options) {
-    var formData = new window.FormData();
+    const formData = new window.FormData();
     formData.append(options.blobName, options.blob);
     formData.append(FILEUPLOADER_CHUNK_META_DATA_NAME, JSON.stringify({
       FileName: options.fileName,
@@ -1596,7 +1526,7 @@ var DefaultChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadSt
   };
   return DefaultChunksFileUploadStrategy;
 }(ChunksFileUploadStrategyBase);
-var CustomChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadStra2) {
+let CustomChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadStra2) {
   _inheritsLoose(CustomChunksFileUploadStrategy, _ChunksFileUploadStra2);
   function CustomChunksFileUploadStrategy() {
     return _ChunksFileUploadStra2.apply(this, arguments) || this;
@@ -1604,10 +1534,10 @@ var CustomChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadStr
   var _proto6 = CustomChunksFileUploadStrategy.prototype;
   _proto6._sendChunkCore = function _sendChunkCore(file, chunksData) {
     this._tryRaiseStartLoad(file);
-    var chunksInfo = this._createChunksInfo(chunksData);
-    var uploadChunk = this.fileUploader.option('uploadChunk');
+    const chunksInfo = this._createChunksInfo(chunksData);
+    const uploadChunk = this.fileUploader.option('uploadChunk');
     try {
-      var result = uploadChunk(file.value, chunksInfo);
+      const result = uploadChunk(file.value, chunksInfo);
       return (0, _deferred.fromPromise)(result);
     } catch (error) {
       return new _deferred.Deferred().reject(error).promise();
@@ -1618,22 +1548,21 @@ var CustomChunksFileUploadStrategy = /*#__PURE__*/function (_ChunksFileUploadStr
   };
   return CustomChunksFileUploadStrategy;
 }(ChunksFileUploadStrategyBase);
-var WholeFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa2) {
+let WholeFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa2) {
   _inheritsLoose(WholeFileUploadStrategyBase, _FileUploadStrategyBa2);
   function WholeFileUploadStrategyBase() {
     return _FileUploadStrategyBa2.apply(this, arguments) || this;
   }
   var _proto7 = WholeFileUploadStrategyBase.prototype;
   _proto7._uploadCore = function _uploadCore(file) {
-    var _this18 = this;
     file.loadedSize = 0;
-    this._uploadFile(file).done(function () {
+    this._uploadFile(file).done(() => {
       if (!file.isAborted) {
         file.onLoad.fire();
       }
-    }).fail(function (error) {
-      if (_this18._shouldHandleError(file, error)) {
-        _this18._handleFileError(file, error);
+    }).fail(error => {
+      if (this._shouldHandleError(file, error)) {
+        this._handleFileError(file, error);
       }
     });
   };
@@ -1642,68 +1571,58 @@ var WholeFileUploadStrategyBase = /*#__PURE__*/function (_FileUploadStrategyBa2)
     file.onProgress.fire(e);
   };
   _proto7._getLoadedData = function _getLoadedData(loaded, total, segmentSize, event) {
-    var result = _FileUploadStrategyBa2.prototype._getLoadedData.call(this, loaded, total, segmentSize, event);
+    const result = _FileUploadStrategyBa2.prototype._getLoadedData.call(this, loaded, total, segmentSize, event);
     result.event = event;
     return result;
   };
   return WholeFileUploadStrategyBase;
 }(FileUploadStrategyBase);
-var DefaultWholeFileUploadStrategy = /*#__PURE__*/function (_WholeFileUploadStrat) {
+let DefaultWholeFileUploadStrategy = /*#__PURE__*/function (_WholeFileUploadStrat) {
   _inheritsLoose(DefaultWholeFileUploadStrategy, _WholeFileUploadStrat);
   function DefaultWholeFileUploadStrategy() {
     return _WholeFileUploadStrat.apply(this, arguments) || this;
   }
   var _proto8 = DefaultWholeFileUploadStrategy.prototype;
   _proto8._uploadFile = function _uploadFile(file) {
-    var _this19 = this;
     return _ajax.default.sendRequest({
       url: this.fileUploader.option('uploadUrl'),
       method: this.fileUploader.option('uploadMethod'),
       headers: this.fileUploader.option('uploadHeaders'),
-      beforeSend: function beforeSend(xhr) {
-        return _this19._beforeSend(xhr, file);
-      },
+      beforeSend: xhr => this._beforeSend(xhr, file),
       upload: {
-        'onprogress': function onprogress(e) {
-          return _this19._handleProgress(file, e);
-        },
-        'onloadstart': function onloadstart() {
-          return file.onLoadStart.fire();
-        },
-        'onabort': function onabort() {
-          return file.onAbort.fire();
-        }
+        'onprogress': e => this._handleProgress(file, e),
+        'onloadstart': () => file.onLoadStart.fire(),
+        'onabort': () => file.onAbort.fire()
       },
       data: this._createFormData(this.fileUploader.option('name'), file.value)
     });
   };
   _proto8._createFormData = function _createFormData(fieldName, fieldValue) {
-    var formData = new window.FormData();
+    const formData = new window.FormData();
     formData.append(fieldName, fieldValue, fieldValue.name);
     this._extendFormData(formData);
     return formData;
   };
   return DefaultWholeFileUploadStrategy;
 }(WholeFileUploadStrategyBase);
-var CustomWholeFileUploadStrategy = /*#__PURE__*/function (_WholeFileUploadStrat2) {
+let CustomWholeFileUploadStrategy = /*#__PURE__*/function (_WholeFileUploadStrat2) {
   _inheritsLoose(CustomWholeFileUploadStrategy, _WholeFileUploadStrat2);
   function CustomWholeFileUploadStrategy() {
     return _WholeFileUploadStrat2.apply(this, arguments) || this;
   }
   var _proto9 = CustomWholeFileUploadStrategy.prototype;
   _proto9._uploadFile = function _uploadFile(file) {
-    var _this20 = this;
     file.onLoadStart.fire();
-    var progressCallback = function progressCallback(loadedBytes) {
-      var arg = {
+    const progressCallback = loadedBytes => {
+      const arg = {
         loaded: loadedBytes,
         total: file.value.size
       };
-      _this20._handleProgress(file, arg);
+      this._handleProgress(file, arg);
     };
-    var uploadFile = this.fileUploader.option('uploadFile');
+    const uploadFile = this.fileUploader.option('uploadFile');
     try {
-      var result = uploadFile(file.value, progressCallback);
+      const result = uploadFile(file.value, progressCallback);
       return (0, _deferred.fromPromise)(result);
     } catch (error) {
       return new _deferred.Deferred().reject(error).promise();

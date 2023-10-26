@@ -2,11 +2,11 @@
 
 exports.extendFromObject = exports.extend = void 0;
 var _type = require("./type");
-var extendFromObject = function extendFromObject(target, source, overrideExistingValues) {
+const extendFromObject = function (target, source, overrideExistingValues) {
   target = target || {};
-  for (var prop in source) {
+  for (const prop in source) {
     if (Object.prototype.hasOwnProperty.call(source, prop)) {
-      var value = source[prop];
+      const value = source[prop];
       if (!(prop in target) || overrideExistingValues) {
         target[prop] = value;
       }
@@ -15,25 +15,25 @@ var extendFromObject = function extendFromObject(target, source, overrideExistin
   return target;
 };
 exports.extendFromObject = extendFromObject;
-var extend = function extend(target) {
+const extend = function (target) {
   target = target || {};
-  var i = 1;
-  var deep = false;
+  let i = 1;
+  let deep = false;
   if (typeof target === 'boolean') {
     deep = target;
     target = arguments[1] || {};
     i++;
   }
   for (; i < arguments.length; i++) {
-    var source = arguments[i];
+    const source = arguments[i];
     if (source == null) {
       continue;
     }
-    for (var key in source) {
-      var targetValue = target[key];
-      var sourceValue = source[key];
-      var sourceValueIsArray = false;
-      var clone = void 0;
+    for (const key in source) {
+      const targetValue = target[key];
+      const sourceValue = source[key];
+      let sourceValueIsArray = false;
+      let clone;
       if (key === '__proto__' || key === 'constructor' || target === sourceValue) {
         continue;
       }

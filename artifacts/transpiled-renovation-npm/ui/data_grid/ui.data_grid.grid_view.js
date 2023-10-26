@@ -6,7 +6,7 @@ Object.keys(_grid_view).forEach(function (key) {
   if (key in exports && exports[key] === _grid_view[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _grid_view[key];
     }
   });

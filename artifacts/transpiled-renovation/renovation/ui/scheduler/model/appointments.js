@@ -9,13 +9,11 @@ var _base = require("../view_model/to_test/views/utils/base");
 var _utils2 = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var toMs = function toMs(name) {
-  return _date.default.dateToMilliseconds(name);
-};
-var getAppointmentsConfig = function getAppointmentsConfig(schedulerConfig, viewConfig, loadedResources, viewDataProvider, isAllDayPanelSupported) {
-  var groupCount = (0, _m_utils.getGroupCount)(loadedResources);
-  var startViewDate = viewDataProvider.getStartViewDate();
-  var dateRange = [startViewDate, viewDataProvider.getLastViewDateByEndDayHour(viewConfig.endDayHour)];
+const toMs = name => _date.default.dateToMilliseconds(name);
+const getAppointmentsConfig = (schedulerConfig, viewConfig, loadedResources, viewDataProvider, isAllDayPanelSupported) => {
+  const groupCount = (0, _m_utils.getGroupCount)(loadedResources);
+  const startViewDate = viewDataProvider.getStartViewDate();
+  const dateRange = [startViewDate, viewDataProvider.getLastViewDateByEndDayHour(viewConfig.endDayHour)];
   return {
     adaptivityEnabled: schedulerConfig.adaptivityEnabled,
     rtlEnabled: schedulerConfig.rtlEnabled,
@@ -52,22 +50,22 @@ var getAppointmentsConfig = function getAppointmentsConfig(schedulerConfig, view
   };
 };
 exports.getAppointmentsConfig = getAppointmentsConfig;
-var getAppointmentsModel = function getAppointmentsModel(appointmentsConfig, viewDataProvider, timeZoneCalculator, dataAccessors, cellsMetaData) {
-  var groupedByDate = (0, _utils.isGroupingByDate)(appointmentsConfig.groups, appointmentsConfig.groupOrientation, appointmentsConfig.groupByDate);
-  var groupCount = appointmentsConfig.groupCount,
-    isVerticalGroupOrientation = appointmentsConfig.isVerticalGroupOrientation;
-  var positionHelper = new _m_position_helper.PositionHelper({
+const getAppointmentsModel = (appointmentsConfig, viewDataProvider, timeZoneCalculator, dataAccessors, cellsMetaData) => {
+  const groupedByDate = (0, _utils.isGroupingByDate)(appointmentsConfig.groups, appointmentsConfig.groupOrientation, appointmentsConfig.groupByDate);
+  const {
+    groupCount,
+    isVerticalGroupOrientation
+  } = appointmentsConfig;
+  const positionHelper = new _m_position_helper.PositionHelper({
     viewDataProvider,
     groupedByDate,
     rtlEnabled: appointmentsConfig.rtlEnabled,
     groupCount,
     isVerticalGrouping: groupCount && isVerticalGroupOrientation,
-    getDOMMetaDataCallback: function getDOMMetaDataCallback() {
-      return cellsMetaData;
-    }
+    getDOMMetaDataCallback: () => cellsMetaData
   });
-  var isGroupedAllDayPanel = (0, _base.calculateIsGroupedAllDayPanel)(appointmentsConfig.loadedResources, appointmentsConfig.groupOrientation, appointmentsConfig.showAllDayPanel);
-  var rowCount = viewDataProvider.getRowCount({
+  const isGroupedAllDayPanel = (0, _base.calculateIsGroupedAllDayPanel)(appointmentsConfig.loadedResources, appointmentsConfig.groupOrientation, appointmentsConfig.showAllDayPanel);
+  const rowCount = viewDataProvider.getRowCount({
     intervalCount: appointmentsConfig.intervalCount,
     currentDate: appointmentsConfig.currentDate,
     viewType: appointmentsConfig.viewType,
@@ -75,14 +73,15 @@ var getAppointmentsModel = function getAppointmentsModel(appointmentsConfig, vie
     startDayHour: appointmentsConfig.startDayHour,
     endDayHour: appointmentsConfig.endDayHour
   });
-  var allDayHeight = (0, _m_position_helper.getAllDayHeight)(appointmentsConfig.showAllDayPanel, appointmentsConfig.isVerticalGroupOrientation, cellsMetaData);
-  var endViewDate = viewDataProvider.getLastCellEndDate();
-  var visibleDayDuration = viewDataProvider.getVisibleDayDuration(appointmentsConfig.startDayHour, appointmentsConfig.endDayHour, appointmentsConfig.hoursInterval);
-  var _viewDataProvider$get = viewDataProvider.getViewOptions(),
-    leftVirtualCellCount = _viewDataProvider$get.startCellIndex,
-    topVirtualRowCount = _viewDataProvider$get.startRowIndex;
-  var cellDuration = (0, _base.getCellDuration)(appointmentsConfig.viewType, appointmentsConfig.startDayHour, appointmentsConfig.endDayHour, appointmentsConfig.hoursInterval);
-  var appointmentRenderingStrategyName = (0, _utils2.getAppointmentRenderingStrategyName)(appointmentsConfig.viewType);
+  const allDayHeight = (0, _m_position_helper.getAllDayHeight)(appointmentsConfig.showAllDayPanel, appointmentsConfig.isVerticalGroupOrientation, cellsMetaData);
+  const endViewDate = viewDataProvider.getLastCellEndDate();
+  const visibleDayDuration = viewDataProvider.getVisibleDayDuration(appointmentsConfig.startDayHour, appointmentsConfig.endDayHour, appointmentsConfig.hoursInterval);
+  const {
+    startCellIndex: leftVirtualCellCount,
+    startRowIndex: topVirtualRowCount
+  } = viewDataProvider.getViewOptions();
+  const cellDuration = (0, _base.getCellDuration)(appointmentsConfig.viewType, appointmentsConfig.startDayHour, appointmentsConfig.endDayHour, appointmentsConfig.hoursInterval);
+  const appointmentRenderingStrategyName = (0, _utils2.getAppointmentRenderingStrategyName)(appointmentsConfig.viewType);
   return _extends({}, appointmentsConfig, {
     appointmentRenderingStrategyName,
     loadedResources: appointmentsConfig.loadedResources,

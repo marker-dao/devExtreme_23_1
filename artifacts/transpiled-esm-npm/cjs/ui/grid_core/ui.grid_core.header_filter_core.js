@@ -6,7 +6,7 @@ Object.keys(_m_header_filter_core).forEach(function (key) {
   if (key in exports && exports[key] === _m_header_filter_core[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_header_filter_core[key];
     }
   });

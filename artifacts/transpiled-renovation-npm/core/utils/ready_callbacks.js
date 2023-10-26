@@ -6,16 +6,16 @@ var _dependency_injector = _interopRequireDefault(require("./dependency_injector
 var _window = require("./window");
 var _call_once = _interopRequireDefault(require("./call_once"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var callbacks = [];
-var subscribeReady = (0, _call_once.default)(function () {
-  var removeListener = _dom_adapter.default.listen(_dom_adapter.default.getDocument(), 'DOMContentLoaded', function () {
+let callbacks = [];
+const subscribeReady = (0, _call_once.default)(() => {
+  const removeListener = _dom_adapter.default.listen(_dom_adapter.default.getDocument(), 'DOMContentLoaded', () => {
     readyCallbacks.fire();
     removeListener();
   });
 });
-var readyCallbacks = {
-  add: function add(callback) {
-    var windowExists = (0, _window.hasWindow)();
+const readyCallbacks = {
+  add: callback => {
+    const windowExists = (0, _window.hasWindow)();
     if (windowExists && _dom_adapter.default.getReadyState() !== 'loading') {
       callback();
     } else {
@@ -23,10 +23,8 @@ var readyCallbacks = {
       windowExists && subscribeReady();
     }
   },
-  fire: function fire() {
-    callbacks.forEach(function (callback) {
-      return callback();
-    });
+  fire: () => {
+    callbacks.forEach(callback => callback());
     callbacks = [];
   }
 };

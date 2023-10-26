@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/m_compact_appointments_helper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,24 +24,26 @@ var _m_appointment_adapter = require("./m_appointment_adapter");
 var _m_constants = require("./m_constants");
 var _m_data_structures = require("./m_data_structures");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var APPOINTMENT_COLLECTOR_CLASS = 'dx-scheduler-appointment-collector';
-var COMPACT_APPOINTMENT_COLLECTOR_CLASS = "".concat(APPOINTMENT_COLLECTOR_CLASS, "-compact");
-var APPOINTMENT_COLLECTOR_CONTENT_CLASS = "".concat(APPOINTMENT_COLLECTOR_CLASS, "-content");
-var WEEK_VIEW_COLLECTOR_OFFSET = 5;
-var COMPACT_THEME_WEEK_VIEW_COLLECTOR_OFFSET = 1;
-var CompactAppointmentsHelper = /*#__PURE__*/function () {
+const APPOINTMENT_COLLECTOR_CLASS = 'dx-scheduler-appointment-collector';
+const COMPACT_APPOINTMENT_COLLECTOR_CLASS = "".concat(APPOINTMENT_COLLECTOR_CLASS, "-compact");
+const APPOINTMENT_COLLECTOR_CONTENT_CLASS = "".concat(APPOINTMENT_COLLECTOR_CLASS, "-content");
+const WEEK_VIEW_COLLECTOR_OFFSET = 5;
+const COMPACT_THEME_WEEK_VIEW_COLLECTOR_OFFSET = 1;
+let CompactAppointmentsHelper = /*#__PURE__*/function () {
   function CompactAppointmentsHelper(instance) {
     this.instance = instance;
     this.elements = [];
   }
   var _proto = CompactAppointmentsHelper.prototype;
   _proto.render = function render(options) {
-    var isCompact = options.isCompact,
-      items = options.items,
-      buttonColor = options.buttonColor;
-    var template = this._createTemplate(items.data.length, isCompact);
-    var button = this._createCompactButton(template, options);
-    var $button = button.$element();
+    const {
+      isCompact,
+      items,
+      buttonColor
+    } = options;
+    const template = this._createTemplate(items.data.length, isCompact);
+    const button = this._createCompactButton(template, options);
+    const $button = button.$element();
     this._makeBackgroundColor($button, items.colors, buttonColor);
     this._makeBackgroundDarker($button);
     this.elements.push($button);
@@ -49,19 +51,20 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
     return $button;
   };
   _proto.clear = function clear() {
-    this.elements.forEach(function (button) {
+    this.elements.forEach(button => {
       button.detach();
       button.remove();
     });
     this.elements = [];
   };
   _proto._createTooltipInfos = function _createTooltipInfos(items) {
-    var _this = this;
-    return items.data.map(function (appointment, index) {
+    return items.data.map((appointment, index) => {
       var _a;
-      var targetedAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, _this.instance._dataAccessors, _this.instance.timeZoneCalculator).clone();
+      const targetedAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, this.instance._dataAccessors, this.instance.timeZoneCalculator).clone();
       if (((_a = items.settings) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-        var info = items.settings[index].info;
+        const {
+          info
+        } = items.settings[index];
         targetedAdapter.startDate = info.sourceAppointment.startDate;
         targetedAdapter.endDate = info.sourceAppointment.endDate;
       }
@@ -69,7 +72,7 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
     });
   };
   _proto._onButtonClick = function _onButtonClick(e, options) {
-    var $button = (0, _renderer.default)(e.element);
+    const $button = (0, _renderer.default)(e.element);
     this.instance.showAppointmentTooltipCore($button, $button.data('items'), this._getExtraOptionsForTooltip(options, $button));
   };
   _proto._getExtraOptionsForTooltip = function _getExtraOptionsForTooltip(options, $appointmentCollector) {
@@ -81,27 +84,23 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
     };
   };
   _proto._clickEvent = function _clickEvent(onAppointmentClick) {
-    var _this2 = this;
-    return function (e) {
-      var clickEventArgs = _this2.instance._createEventArgs(e);
+    return e => {
+      const clickEventArgs = this.instance._createEventArgs(e);
       onAppointmentClick(clickEventArgs);
     };
   };
   _proto._createTooltipDragBehavior = function _createTooltipDragBehavior($appointmentCollector) {
-    var _this3 = this;
-    return function (e) {
-      var $element = (0, _renderer.default)(e.element);
-      var $schedulerElement = (0, _renderer.default)(_this3.instance.element());
-      var workSpace = _this3.instance.getWorkSpace();
-      var getItemData = function getItemData(itemElement) {
+    return e => {
+      const $element = (0, _renderer.default)(e.element);
+      const $schedulerElement = (0, _renderer.default)(this.instance.element());
+      const workSpace = this.instance.getWorkSpace();
+      const getItemData = itemElement => {
         var _a;
         return (_a = (0, _renderer.default)(itemElement).data(_m_constants.LIST_ITEM_DATA_KEY)) === null || _a === void 0 ? void 0 : _a.appointment;
       };
-      var getItemSettings = function getItemSettings(_, event) {
-        return event.itemSettings;
-      };
-      var initialPosition = (0, _translator.locate)($appointmentCollector);
-      var options = {
+      const getItemSettings = (_, event) => event.itemSettings;
+      const initialPosition = (0, _translator.locate)($appointmentCollector);
+      const options = {
         filter: ".".concat(_m_constants.LIST_ITEM_CLASS),
         isSetCursorOffset: true,
         initialPosition,
@@ -122,12 +121,12 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
   };
   _proto._makeBackgroundColor = function _makeBackgroundColor($button, colors, color) {
     _deferred.when.apply(null, colors).done(function () {
-      this._makeBackgroundColorCore($button, color, Array.prototype.slice.call(arguments));
+      this._makeBackgroundColorCore($button, color, [...arguments]);
     }.bind(this));
   };
   _proto._makeBackgroundColorCore = function _makeBackgroundColorCore($button, color, itemColors) {
-    color && color.done(function (color) {
-      var backgroundColor = (0, _utils.getOverflowIndicatorColor)(color, itemColors);
+    color && color.done(color => {
+      const backgroundColor = (0, _utils.getOverflowIndicatorColor)(color, itemColors);
       if (backgroundColor) {
         $button.css('backgroundColor', backgroundColor);
       }
@@ -140,51 +139,45 @@ var CompactAppointmentsHelper = /*#__PURE__*/function () {
     });
   };
   _proto._createCompactButton = function _createCompactButton(template, options) {
-    var _this4 = this;
-    var $button = this._createCompactButtonElement(options);
+    const $button = this._createCompactButtonElement(options);
     return this.instance._createComponent($button, _button.default, {
       type: 'default',
       width: options.width,
       height: options.height,
-      onClick: function onClick(e) {
-        return _this4._onButtonClick(e, options);
-      },
+      onClick: e => this._onButtonClick(e, options),
       template: this._renderTemplate(template, options.items, options.isCompact)
     });
   };
   _proto._createCompactButtonElement = function _createCompactButtonElement(_ref) {
-    var isCompact = _ref.isCompact,
-      $container = _ref.$container,
-      coordinates = _ref.coordinates;
-    var result = (0, _renderer.default)('<div>').addClass(APPOINTMENT_COLLECTOR_CLASS).toggleClass(COMPACT_APPOINTMENT_COLLECTOR_CLASS, isCompact).appendTo($container);
+    let {
+      isCompact,
+      $container,
+      coordinates
+    } = _ref;
+    const result = (0, _renderer.default)('<div>').addClass(APPOINTMENT_COLLECTOR_CLASS).toggleClass(COMPACT_APPOINTMENT_COLLECTOR_CLASS, isCompact).appendTo($container);
     this._setPosition(result, coordinates);
     return result;
   };
   _proto._renderTemplate = function _renderTemplate(template, items, isCompact) {
-    return new _function_template.FunctionTemplate(function (options) {
-      return template.render({
-        model: {
-          appointmentCount: items.data.length,
-          isCompact
-        },
-        container: options.container
-      });
-    });
+    return new _function_template.FunctionTemplate(options => template.render({
+      model: {
+        appointmentCount: items.data.length,
+        isCompact
+      },
+      container: options.container
+    }));
   };
   _proto._createTemplate = function _createTemplate(count, isCompact) {
     this._initButtonTemplate(count, isCompact);
     return this.instance._getAppointmentTemplate('appointmentCollectorTemplate');
   };
   _proto._initButtonTemplate = function _initButtonTemplate(count, isCompact) {
-    var _this5 = this;
     this.instance._templateManager.addDefaultTemplates({
-      appointmentCollector: new _function_template.FunctionTemplate(function (options) {
-        return _this5._createButtonTemplate(count, (0, _renderer.default)(options.container), isCompact);
-      })
+      appointmentCollector: new _function_template.FunctionTemplate(options => this._createButtonTemplate(count, (0, _renderer.default)(options.container), isCompact))
     });
   };
   _proto._createButtonTemplate = function _createButtonTemplate(appointmentCount, element, isCompact) {
-    var text = isCompact ? appointmentCount : _message.default.getFormatter('dxScheduler-moreAppointments')(appointmentCount);
+    const text = isCompact ? appointmentCount : _message.default.getFormatter('dxScheduler-moreAppointments')(appointmentCount);
     return element.append((0, _renderer.default)('<span>').text(text)).addClass(APPOINTMENT_COLLECTOR_CONTENT_CLASS);
   };
   return CompactAppointmentsHelper;

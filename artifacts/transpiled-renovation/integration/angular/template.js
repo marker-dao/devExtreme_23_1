@@ -8,7 +8,7 @@ var _dom = require("../../core/utils/dom");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var NgTemplate = /*#__PURE__*/function (_TemplateBase) {
+const NgTemplate = /*#__PURE__*/function (_TemplateBase) {
   _inheritsLoose(NgTemplate, _TemplateBase);
   function NgTemplate(element, templateCompiler) {
     var _this;
@@ -19,7 +19,7 @@ var NgTemplate = /*#__PURE__*/function (_TemplateBase) {
   }
   var _proto = NgTemplate.prototype;
   _proto._renderCore = function _renderCore(options) {
-    var compiledTemplate = this._compiledTemplate;
+    const compiledTemplate = this._compiledTemplate;
     return (0, _type.isFunction)(compiledTemplate) ? compiledTemplate(options) : compiledTemplate;
   };
   _proto.source = function source() {

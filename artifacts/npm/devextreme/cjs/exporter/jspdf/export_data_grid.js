@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/jspdf/export_data_grid.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,7 @@ var _type = require("../../core/utils/type");
 var _errors = _interopRequireDefault(require("../../core/errors"));
 var _export = require("./common/export");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var HOW_TO_MIGRATE_ARTICLE = 'https://supportcenter.devexpress.com/ticket/details/t1077554';
+const HOW_TO_MIGRATE_ARTICLE = 'https://supportcenter.devexpress.com/ticket/details/t1077554';
 function _getFullOptions(options) {
   if (!((0, _type.isDefined)(options) && (0, _type.isObject)(options))) {
     throw Error('The "exportDataGrid" method requires a configuration object.');

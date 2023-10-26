@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/popup/popup_overflow_manager.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,19 +15,19 @@ var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _devices = _interopRequireDefault(require("../../core/devices"));
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var overflowManagerMock = {
+const overflowManagerMock = {
   setOverflow: _common.noop,
   restoreOverflow: _common.noop
 };
-var createBodyOverflowManager = function createBodyOverflowManager() {
+const createBodyOverflowManager = () => {
   if (!(0, _window.hasWindow)()) {
     return overflowManagerMock;
   }
-  var window = (0, _window.getWindow)();
-  var documentElement = _dom_adapter.default.getDocument().documentElement;
-  var body = _dom_adapter.default.getBody();
-  var isIosDevice = _devices.default.real().platform === 'ios';
-  var prevSettings = {
+  const window = (0, _window.getWindow)();
+  const documentElement = _dom_adapter.default.getDocument().documentElement;
+  const body = _dom_adapter.default.getBody();
+  const isIosDevice = _devices.default.real().platform === 'ios';
+  const prevSettings = {
     overflow: null,
     overflowX: null,
     overflowY: null,
@@ -36,12 +36,14 @@ var createBodyOverflowManager = function createBodyOverflowManager() {
     top: null,
     left: null
   };
-  var setBodyPositionFixed = function setBodyPositionFixed() {
+  const setBodyPositionFixed = () => {
     if ((0, _type.isDefined)(prevSettings.position) || body.style.position === 'fixed') {
       return;
     }
-    var scrollY = window.scrollY,
-      scrollX = window.scrollX;
+    const {
+      scrollY,
+      scrollX
+    } = window;
     prevSettings.position = body.style.position;
     prevSettings.top = body.style.top;
     prevSettings.left = body.style.left;
@@ -49,13 +51,13 @@ var createBodyOverflowManager = function createBodyOverflowManager() {
     body.style.setProperty('top', "".concat(-scrollY, "px"));
     body.style.setProperty('left', "".concat(-scrollX, "px"));
   };
-  var restoreBodyPositionFixed = function restoreBodyPositionFixed() {
+  const restoreBodyPositionFixed = () => {
     if (!(0, _type.isDefined)(prevSettings.position)) {
       return;
     }
-    var scrollY = -parseInt(body.style.top, 10);
-    var scrollX = -parseInt(body.style.left, 10);
-    ['position', 'top', 'left'].forEach(function (property) {
+    const scrollY = -parseInt(body.style.top, 10);
+    const scrollX = -parseInt(body.style.left, 10);
+    ['position', 'top', 'left'].forEach(property => {
       if (prevSettings[property]) {
         body.style.setProperty(property, prevSettings[property]);
       } else {
@@ -65,7 +67,7 @@ var createBodyOverflowManager = function createBodyOverflowManager() {
     window.scrollTo(scrollX, scrollY);
     prevSettings.position = null;
   };
-  var setBodyOverflow = function setBodyOverflow() {
+  const setBodyOverflow = () => {
     setBodyPaddingRight();
     if (prevSettings.overflow || body.style.overflow === 'hidden') {
       return;
@@ -75,15 +77,13 @@ var createBodyOverflowManager = function createBodyOverflowManager() {
     prevSettings.overflowY = body.style.overflowY;
     body.style.setProperty('overflow', 'hidden');
   };
-  var restoreBodyOverflow = function restoreBodyOverflow() {
+  const restoreBodyOverflow = () => {
     restoreBodyPaddingRight();
-    ['overflow', 'overflowX', 'overflowY'].forEach(function (property) {
+    ['overflow', 'overflowX', 'overflowY'].forEach(property => {
       if (!(0, _type.isDefined)(prevSettings[property])) {
         return;
       }
-      var propertyInKebabCase = property.replace(/(X)|(Y)/, function (symbol) {
-        return "-".concat(symbol.toLowerCase());
-      });
+      const propertyInKebabCase = property.replace(/(X)|(Y)/, symbol => "-".concat(symbol.toLowerCase()));
       if (prevSettings[property]) {
         body.style.setProperty(propertyInKebabCase, prevSettings[property]);
       } else {
@@ -92,17 +92,17 @@ var createBodyOverflowManager = function createBodyOverflowManager() {
       prevSettings[property] = null;
     });
   };
-  var setBodyPaddingRight = function setBodyPaddingRight() {
-    var scrollBarWidth = window.innerWidth - documentElement.clientWidth;
+  const setBodyPaddingRight = () => {
+    const scrollBarWidth = window.innerWidth - documentElement.clientWidth;
     if (prevSettings.paddingRight || scrollBarWidth <= 0) {
       return;
     }
-    var paddingRight = window.getComputedStyle(body).getPropertyValue('padding-right');
-    var computedBodyPaddingRight = parseInt(paddingRight, 10);
+    const paddingRight = window.getComputedStyle(body).getPropertyValue('padding-right');
+    const computedBodyPaddingRight = parseInt(paddingRight, 10);
     prevSettings.paddingRight = computedBodyPaddingRight;
     body.style.setProperty('padding-right', "".concat(computedBodyPaddingRight + scrollBarWidth, "px"));
   };
-  var restoreBodyPaddingRight = function restoreBodyPaddingRight() {
+  const restoreBodyPaddingRight = () => {
     if (!(0, _type.isDefined)(prevSettings.paddingRight)) {
       return;
     }

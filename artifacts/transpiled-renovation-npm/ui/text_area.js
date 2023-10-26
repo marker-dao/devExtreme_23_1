@@ -17,11 +17,11 @@ var _text_box = _interopRequireDefault(require("./text_box"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE textArea
 
-var TEXTAREA_CLASS = 'dx-textarea';
-var TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
-var TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
-var TextArea = _text_box.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const TEXTAREA_CLASS = 'dx-textarea';
+const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
+const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
+const TextArea = _text_box.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       /**
       * @name dxTextAreaOptions.mode
@@ -75,55 +75,55 @@ var TextArea = _text_box.default.inherit({
     });
   },
 
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.$element().addClass(TEXTAREA_CLASS);
     this.callBase();
     this.setAria('multiline', 'true');
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl: function () {
     this._updateInputHeight();
     this.callBase();
   },
-  _renderInput: function _renderInput() {
+  _renderInput: function () {
     this.callBase();
     this._renderScrollHandler();
   },
-  _createInput: function _createInput() {
-    var $input = (0, _renderer.default)('<textarea>');
+  _createInput: function () {
+    const $input = (0, _renderer.default)('<textarea>');
     this._applyInputAttributes($input, this.option('inputAttr'));
     this._updateInputAutoResizeAppearance($input);
     return $input;
   },
-  _applyInputAttributes: function _applyInputAttributes($input, customAttributes) {
+  _applyInputAttributes: function ($input, customAttributes) {
     $input.attr(customAttributes).addClass(TEXTEDITOR_INPUT_CLASS);
   },
-  _renderScrollHandler: function _renderScrollHandler() {
+  _renderScrollHandler: function () {
     this._eventY = 0;
-    var $input = this._input();
-    var initScrollData = (0, _utils.prepareScrollData)($input, true);
+    const $input = this._input();
+    const initScrollData = (0, _utils.prepareScrollData)($input, true);
     _events_engine.default.on($input, (0, _index.addNamespace)(_emitterGesture.default.init, this.NAME), initScrollData, _common.noop);
     _events_engine.default.on($input, (0, _index.addNamespace)(_pointer.default.down, this.NAME), this._pointerDownHandler.bind(this));
     _events_engine.default.on($input, (0, _index.addNamespace)(_pointer.default.move, this.NAME), this._pointerMoveHandler.bind(this));
   },
-  _pointerDownHandler: function _pointerDownHandler(e) {
+  _pointerDownHandler: function (e) {
     this._eventY = (0, _index.eventData)(e).y;
   },
-  _pointerMoveHandler: function _pointerMoveHandler(e) {
-    var currentEventY = (0, _index.eventData)(e).y;
-    var delta = this._eventY - currentEventY;
+  _pointerMoveHandler: function (e) {
+    const currentEventY = (0, _index.eventData)(e).y;
+    const delta = this._eventY - currentEventY;
     if ((0, _utils.allowScroll)(this._input(), delta)) {
       e.isScrollingEvent = true;
       e.stopPropagation();
     }
     this._eventY = currentEventY;
   },
-  _renderDimensions: function _renderDimensions() {
-    var $element = this.$element();
-    var element = $element.get(0);
-    var width = this._getOptionValue('width', element);
-    var height = this._getOptionValue('height', element);
-    var minHeight = this.option('minHeight');
-    var maxHeight = this.option('maxHeight');
+  _renderDimensions: function () {
+    const $element = this.$element();
+    const element = $element.get(0);
+    const width = this._getOptionValue('width', element);
+    const height = this._getOptionValue('height', element);
+    const minHeight = this.option('minHeight');
+    const maxHeight = this.option('maxHeight');
     $element.css({
       minHeight: minHeight !== undefined ? minHeight : '',
       maxHeight: maxHeight !== undefined ? maxHeight : '',
@@ -131,34 +131,34 @@ var TextArea = _text_box.default.inherit({
       height: height
     });
   },
-  _resetDimensions: function _resetDimensions() {
+  _resetDimensions: function () {
     this.$element().css({
       'height': '',
       'minHeight': '',
       'maxHeight': ''
     });
   },
-  _renderEvents: function _renderEvents() {
+  _renderEvents: function () {
     if (this.option('autoResizeEnabled')) {
       _events_engine.default.on(this._input(), (0, _index.addNamespace)('input paste', this.NAME), this._updateInputHeight.bind(this));
     }
     this.callBase();
   },
-  _refreshEvents: function _refreshEvents() {
+  _refreshEvents: function () {
     _events_engine.default.off(this._input(), (0, _index.addNamespace)('input paste', this.NAME));
     this.callBase();
   },
   _getHeightDifference($input) {
     return (0, _size.getVerticalOffsets)(this._$element.get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorContainer.get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorInputContainer.get(0), false) + (0, _size.getElementBoxParams)('height', (0, _window.getWindow)().getComputedStyle($input.get(0))).margin;
   },
-  _updateInputHeight: function _updateInputHeight() {
+  _updateInputHeight: function () {
     if (!(0, _window.hasWindow)()) {
       return;
     }
-    var $input = this._input();
-    var height = this.option('height');
-    var autoHeightResizing = height === undefined && this.option('autoResizeEnabled');
-    var shouldCalculateInputHeight = autoHeightResizing || height === undefined && this.option('minHeight');
+    const $input = this._input();
+    const height = this.option('height');
+    const autoHeightResizing = height === undefined && this.option('autoResizeEnabled');
+    const shouldCalculateInputHeight = autoHeightResizing || height === undefined && this.option('minHeight');
     if (!shouldCalculateInputHeight) {
       $input.css('height', '');
       return;
@@ -166,17 +166,17 @@ var TextArea = _text_box.default.inherit({
     this._resetDimensions();
     this._$element.css('height', (0, _size.getOuterHeight)(this._$element));
     $input.css('height', 0);
-    var heightDifference = this._getHeightDifference($input);
+    const heightDifference = this._getHeightDifference($input);
     this._renderDimensions();
-    var minHeight = this._getBoundaryHeight('minHeight');
-    var maxHeight = this._getBoundaryHeight('maxHeight');
-    var inputHeight = $input[0].scrollHeight;
+    const minHeight = this._getBoundaryHeight('minHeight');
+    const maxHeight = this._getBoundaryHeight('maxHeight');
+    let inputHeight = $input[0].scrollHeight;
     if (minHeight !== undefined) {
       inputHeight = Math.max(inputHeight, minHeight - heightDifference);
     }
     if (maxHeight !== undefined) {
-      var adjustedMaxHeight = maxHeight - heightDifference;
-      var needScroll = inputHeight > adjustedMaxHeight;
+      const adjustedMaxHeight = maxHeight - heightDifference;
+      const needScroll = inputHeight > adjustedMaxHeight;
       inputHeight = Math.min(inputHeight, adjustedMaxHeight);
       this._updateInputAutoResizeAppearance($input, !needScroll);
     }
@@ -185,30 +185,30 @@ var TextArea = _text_box.default.inherit({
       this._$element.css('height', 'auto');
     }
   },
-  _getBoundaryHeight: function _getBoundaryHeight(optionName) {
-    var boundaryValue = this.option(optionName);
+  _getBoundaryHeight: function (optionName) {
+    const boundaryValue = this.option(optionName);
     if ((0, _type.isDefined)(boundaryValue)) {
       return typeof boundaryValue === 'number' ? boundaryValue : (0, _size.parseHeight)(boundaryValue, this.$element().get(0).parentElement, this._$element.get(0));
     }
   },
   _renderInputType: _common.noop,
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this._updateInputHeight();
     }
   },
-  _updateInputAutoResizeAppearance: function _updateInputAutoResizeAppearance($input, isAutoResizeEnabled) {
+  _updateInputAutoResizeAppearance: function ($input, isAutoResizeEnabled) {
     if ($input) {
-      var autoResizeEnabled = (0, _common.ensureDefined)(isAutoResizeEnabled, this.option('autoResizeEnabled'));
+      const autoResizeEnabled = (0, _common.ensureDefined)(isAutoResizeEnabled, this.option('autoResizeEnabled'));
       $input.toggleClass(TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE, autoResizeEnabled);
     }
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     if (this.option('visible')) {
       this._updateInputHeight();
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'autoResizeEnabled':
         this._updateInputAutoResizeAppearance(this._input(), args.value);

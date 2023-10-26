@@ -13,7 +13,7 @@ var _scroll_view = _interopRequireDefault(require("../../../../ui/scroll_view"))
 var _accessibility = require("../../../../ui/shared/accessibility");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FilterBuilderView = _m_modules.default.View.inherit({
+const FilterBuilderView = _m_modules.default.View.inherit({
   _renderCore() {
     this._updatePopupOptions();
   },
@@ -35,7 +35,7 @@ var FilterBuilderView = _m_modules.default.View.inherit({
     }
   },
   _initPopup() {
-    var that = this;
+    const that = this;
     that._disposePopup();
     that._filterBuilderPopup = that._createComponent(that.element(), _ui.default, (0, _extend.extend)({
       title: _message.default.format('dxDataGrid-filterBuilderPopupTitle'),
@@ -56,8 +56,8 @@ var FilterBuilderView = _m_modules.default.View.inherit({
     }));
   },
   _getPopupContentTemplate(contentElement) {
-    var $contentElement = (0, _renderer.default)(contentElement);
-    var $filterBuilderContainer = (0, _renderer.default)('<div>').appendTo((0, _renderer.default)(contentElement));
+    const $contentElement = (0, _renderer.default)(contentElement);
+    const $filterBuilderContainer = (0, _renderer.default)('<div>').appendTo((0, _renderer.default)(contentElement));
     this._filterBuilder = this._createComponent($filterBuilderContainer, _filter_builder.default, (0, _extend.extend)({
       value: this.option('filterValue'),
       fields: this.getController('columns').getFilteringColumns()
@@ -69,7 +69,7 @@ var FilterBuilderView = _m_modules.default.View.inherit({
     });
   },
   _getPopupToolbarItems() {
-    var that = this;
+    const that = this;
     return [{
       toolbar: 'bottom',
       location: 'after',
@@ -77,7 +77,7 @@ var FilterBuilderView = _m_modules.default.View.inherit({
       options: {
         text: _message.default.format('OK'),
         onClick() {
-          var filter = that._filterBuilder.option('value');
+          const filter = that._filterBuilder.option('value');
           that.option('filterValue', filter);
           that._filterBuilderPopup.hide();
         }
@@ -106,7 +106,7 @@ var FilterBuilderView = _m_modules.default.View.inherit({
     }
   }
 });
-var filterBuilderModule = {
+const filterBuilderModule = {
   defaultOptions() {
     return {
       filterBuilder: {

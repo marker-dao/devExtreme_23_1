@@ -17,13 +17,7 @@ var _operation_manager = _interopRequireDefault(require("./operation_manager"));
 var _utils2 = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-var DataSource = _class.default.inherit({
+const DataSource = _class.default.inherit({
   /**
   * @name DataSource.ctor
   * @publicName ctor(url)
@@ -49,8 +43,7 @@ var DataSource = _class.default.inherit({
   * @hidden
   */
   ctor(options) {
-    var _this = this,
-      _options$reshapeOnPus;
+    var _options$reshapeOnPus;
     options = (0, _utils2.normalizeDataSourceOptions)(options);
     this._eventsStrategy = new _events_strategy.EventsStrategy(this, {
       syncStrategy: true
@@ -63,24 +56,20 @@ var DataSource = _class.default.inherit({
 
     this._store = options.store;
     this._changedTime = 0;
-    var needThrottling = options.pushAggregationTimeout !== 0;
+    const needThrottling = options.pushAggregationTimeout !== 0;
     if (needThrottling) {
-      var throttlingTimeout = options.pushAggregationTimeout === undefined ? function () {
-        return _this._changedTime * 5;
-      } : options.pushAggregationTimeout;
-      var pushDeferred;
-      var lastPushWaiters;
-      var throttlingPushHandler = (0, _utils.throttleChanges)(function (changes) {
+      const throttlingTimeout = options.pushAggregationTimeout === undefined ? () => this._changedTime * 5 : options.pushAggregationTimeout;
+      let pushDeferred;
+      let lastPushWaiters;
+      const throttlingPushHandler = (0, _utils.throttleChanges)(changes => {
         pushDeferred.resolve();
-        var storePushPending = _deferred.when.apply(void 0, _toConsumableArray(lastPushWaiters));
-        storePushPending.done(function () {
-          return _this._onPush(changes);
-        });
+        const storePushPending = (0, _deferred.when)(...lastPushWaiters);
+        storePushPending.done(() => this._onPush(changes));
         lastPushWaiters = undefined;
         pushDeferred = undefined;
       }, throttlingTimeout);
-      this._onPushHandler = function (args) {
-        _this._aggregationTimeoutId = throttlingPushHandler(args.changes);
+      this._onPushHandler = args => {
+        this._aggregationTimeoutId = throttlingPushHandler(args.changes);
         if (!pushDeferred) {
           pushDeferred = new _deferred.Deferred();
         }
@@ -89,9 +78,7 @@ var DataSource = _class.default.inherit({
       };
       this._store.on('beforePushAggregation', this._onPushHandler);
     } else {
-      this._onPushHandler = function (changes) {
-        return _this._onPush(changes);
-      };
+      this._onPushHandler = changes => this._onPush(changes);
       this._store.on('push', this._onPushHandler);
     }
     this._storeLoadOptions = this._extractLoadOptions(options);
@@ -106,9 +93,9 @@ var DataSource = _class.default.inherit({
     this._searchExpr = options.searchExpr;
     this._paginate = options.paginate;
     this._reshapeOnPush = (_options$reshapeOnPus = options.reshapeOnPush) !== null && _options$reshapeOnPus !== void 0 ? _options$reshapeOnPus : false;
-    (0, _iterator.each)(['onChanged', 'onLoadError', 'onLoadingChanged', 'onCustomizeLoadResult', 'onCustomizeStoreLoadOptions'], function (_, optionName) {
+    (0, _iterator.each)(['onChanged', 'onLoadError', 'onLoadingChanged', 'onCustomizeLoadResult', 'onCustomizeStoreLoadOptions'], (_, optionName) => {
       if (optionName in options) {
-        _this.on(optionName.substr(2, 1).toLowerCase() + optionName.substr(3), options[optionName]);
+        this.on(optionName.substr(2, 1).toLowerCase() + optionName.substr(3), options[optionName]);
       }
     });
     this._operationManager = new _operation_manager.default();
@@ -138,9 +125,9 @@ var DataSource = _class.default.inherit({
     this._disposed = true;
   },
   _extractLoadOptions(options) {
-    var result = {};
-    var names = ['sort', 'filter', 'langParams', 'select', 'group', 'requireTotalCount'];
-    var customNames = this._store._customLoadOptions();
+    const result = {};
+    let names = ['sort', 'filter', 'langParams', 'select', 'group', 'requireTotalCount'];
+    const customNames = this._store._customLoadOptions();
     if (customNames) {
       names = names.concat(customNames);
     }
@@ -181,13 +168,12 @@ var DataSource = _class.default.inherit({
     return this._isLastPage;
   },
   generateStoreLoadOptionAccessor(optionName) {
-    var _this2 = this;
-    return function (args) {
-      var normalizedArgs = (0, _utils2.normalizeStoreLoadOptionAccessorArguments)(args);
+    return args => {
+      const normalizedArgs = (0, _utils2.normalizeStoreLoadOptionAccessorArguments)(args);
       if (normalizedArgs === undefined) {
-        return _this2._storeLoadOptions[optionName];
+        return this._storeLoadOptions[optionName];
       }
-      _this2._storeLoadOptions[optionName] = normalizedArgs;
+      this._storeLoadOptions[optionName] = normalizedArgs;
     };
   },
   sort() {
@@ -197,7 +183,7 @@ var DataSource = _class.default.inherit({
     return this.generateStoreLoadOptionAccessor('sort')(args);
   },
   filter() {
-    var newFilter = (0, _utils2.normalizeStoreLoadOptionAccessorArguments)(arguments);
+    const newFilter = (0, _utils2.normalizeStoreLoadOptionAccessorArguments)(arguments);
     if (newFilter === undefined) {
       return this._storeLoadOptions.filter;
     }
@@ -237,7 +223,7 @@ var DataSource = _class.default.inherit({
     this.pageIndex(0);
   },
   searchExpr(expr) {
-    var argc = arguments.length;
+    const argc = arguments.length;
     if (argc === 0) {
       return this._searchExpr;
     }
@@ -273,22 +259,21 @@ var DataSource = _class.default.inherit({
     return (0, _queue.create)();
   },
   _changeLoadingCount(increment) {
-    var oldLoading = this.isLoading();
+    const oldLoading = this.isLoading();
     this._loadingCount += increment;
-    var newLoading = this.isLoading();
+    const newLoading = this.isLoading();
     if (oldLoading ^ newLoading) {
       this._eventsStrategy.fireEvent('loadingChanged', [newLoading]);
     }
   },
   _scheduleLoadCallbacks(deferred) {
-    var _this3 = this;
     this.beginLoading();
-    deferred.always(function () {
-      _this3.endLoading();
+    deferred.always(() => {
+      this.endLoading();
     });
   },
   _scheduleFailCallbacks(deferred) {
-    var _this4 = this;
+    var _this = this;
     deferred.fail(function () {
       for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
         args[_key4] = arguments[_key4];
@@ -296,35 +281,31 @@ var DataSource = _class.default.inherit({
       if (args[0] === _utils2.CANCELED_TOKEN) {
         return;
       }
-      _this4._eventsStrategy.fireEvent('loadError', args);
+      _this._eventsStrategy.fireEvent('loadError', args);
     });
   },
   _fireChanged(args) {
-    var date = new Date();
+    const date = new Date();
     this._eventsStrategy.fireEvent('changed', args);
     this._changedTime = new Date() - date;
   },
   _scheduleChangedCallbacks(deferred) {
-    var _this5 = this;
-    deferred.done(function () {
-      return _this5._fireChanged();
-    });
+    deferred.done(() => this._fireChanged());
   },
   loadSingle(propName, propValue) {
-    var _this6 = this;
-    var d = new _deferred.Deferred();
-    var key = this.key();
-    var store = this._store;
-    var options = this._createStoreLoadOptions();
-    var handleDone = function handleDone(data) {
-      var isEmptyArray = Array.isArray(data) && !data.length;
+    const d = new _deferred.Deferred();
+    const key = this.key();
+    const store = this._store;
+    const options = this._createStoreLoadOptions();
+    const handleDone = data => {
+      const isEmptyArray = Array.isArray(data) && !data.length;
       if (!(0, _type.isDefined)(data) || isEmptyArray) {
         d.reject(new _errors.errors.Error('E4009'));
       } else {
         if (!Array.isArray(data)) {
           data = [data];
         }
-        d.resolve(_this6._applyMapFunction(data)[0]);
+        d.resolve(this._applyMapFunction(data)[0]);
       }
     };
     this._scheduleFailCallbacks(d);
@@ -337,10 +318,8 @@ var DataSource = _class.default.inherit({
     delete options.refresh;
     delete options.pageIndex;
     delete options.searchString;
-    var shouldForceByKey = function shouldForceByKey() {
-      return store instanceof _custom_store.default && !store._byKeyViaLoad();
-    };
-    (function () {
+    const shouldForceByKey = () => store instanceof _custom_store.default && !store._byKeyViaLoad();
+    (() => {
       // NOTE for CustomStore always using byKey for backward compatibility with "old user datasource"
       if (propName === key || shouldForceByKey()) {
         return store.byKey(propValue, options);
@@ -352,25 +331,24 @@ var DataSource = _class.default.inherit({
     return d.promise();
   },
   load() {
-    var _this7 = this;
-    var d = new _deferred.Deferred();
-    var loadTask = function loadTask() {
-      if (_this7._disposed) {
+    const d = new _deferred.Deferred();
+    const loadTask = () => {
+      if (this._disposed) {
         return undefined;
       }
       if (!(0, _utils2.isPending)(d)) {
         return;
       }
-      return _this7._loadFromStore(loadOperation, d);
+      return this._loadFromStore(loadOperation, d);
     };
     this._scheduleLoadCallbacks(d);
     this._scheduleFailCallbacks(d);
     this._scheduleChangedCallbacks(d);
-    var loadOperation = this._createLoadOperation(d);
+    const loadOperation = this._createLoadOperation(d);
     this._eventsStrategy.fireEvent('customizeStoreLoadOptions', [loadOperation]);
-    this._loadQueue.add(function () {
+    this._loadQueue.add(() => {
       if (typeof loadOperation.delay === 'number') {
-        _this7._delayedLoadTask = (0, _common.executeAsync)(loadTask, loadOperation.delay);
+        this._delayedLoadTask = (0, _common.executeAsync)(loadTask, loadOperation.delay);
       } else {
         loadTask();
       }
@@ -381,27 +359,24 @@ var DataSource = _class.default.inherit({
     });
   },
   _onPush(changes) {
-    var _this8 = this;
     if (this._reshapeOnPush) {
       this.load();
     } else {
-      var changingArgs = {
+      const changingArgs = {
         changes
       };
       this._eventsStrategy.fireEvent('changing', [changingArgs]);
-      var group = this.group();
-      var items = this.items();
-      var groupLevel = 0;
-      var dataSourceChanges = this.paginate() || group ? changes.filter(function (item) {
-        return item.type === 'update';
-      }) : changes;
+      const group = this.group();
+      const items = this.items();
+      let groupLevel = 0;
+      let dataSourceChanges = this.paginate() || group ? changes.filter(item => item.type === 'update') : changes;
       if (group) {
         groupLevel = Array.isArray(group) ? group.length : 1;
       }
       if (this._mapFunc) {
-        dataSourceChanges.forEach(function (item) {
+        dataSourceChanges.forEach(item => {
           if (item.type === 'insert') {
-            item.data = _this8._mapFunc(item.data);
+            item.data = this._mapFunc(item.data);
           }
         });
       }
@@ -421,22 +396,19 @@ var DataSource = _class.default.inherit({
     }
   },
   _createLoadOperation(deferred) {
-    var _this9 = this;
-    var operationId = this._operationManager.add(deferred);
-    var storeLoadOptions = this._createStoreLoadOptions();
+    const operationId = this._operationManager.add(deferred);
+    const storeLoadOptions = this._createStoreLoadOptions();
     if (this._store && !(0, _type.isEmptyObject)(storeLoadOptions === null || storeLoadOptions === void 0 ? void 0 : storeLoadOptions.langParams)) {
       this._store._langParams = _extends({}, this._store._langParams, storeLoadOptions.langParams);
     }
-    deferred.always(function () {
-      return _this9._operationManager.remove(operationId);
-    });
+    deferred.always(() => this._operationManager.remove(operationId));
     return {
       operationId,
       storeLoadOptions
     };
   },
   reload() {
-    var store = this.store();
+    const store = this.store();
     store._clearCache();
     this._init();
     return this.load();
@@ -460,7 +432,7 @@ var DataSource = _class.default.inherit({
     }
   },
   _createStoreLoadOptions() {
-    var result = (0, _extend.extend)({}, this._storeLoadOptions);
+    const result = (0, _extend.extend)({}, this._storeLoadOptions);
     this._addSearchOptions(result);
     if (this._paginate) {
       if (this._pageSize) {
@@ -472,10 +444,10 @@ var DataSource = _class.default.inherit({
     return result;
   },
   _addSearchFilter(storeLoadOptions) {
-    var value = this._searchValue;
-    var op = this._searchOperation;
-    var selector = this._searchExpr;
-    var searchFilter = [];
+    const value = this._searchValue;
+    const op = this._searchOperation;
+    let selector = this._searchExpr;
+    const searchFilter = [];
     if (!value) {
       return;
     }
@@ -501,9 +473,8 @@ var DataSource = _class.default.inherit({
     }
   },
   _loadFromStore(loadOptions, pendingDeferred) {
-    var _this10 = this;
-    var handleSuccess = function handleSuccess(data, extra) {
-      if (_this10._disposed) {
+    const handleSuccess = (data, extra) => {
+      if (this._disposed) {
         return;
       }
       if (!(0, _utils2.isPending)(pendingDeferred)) {
@@ -511,11 +482,11 @@ var DataSource = _class.default.inherit({
       }
 
       // Process result
-      var loadResult = (0, _extend.extend)((0, _utils2.normalizeLoadResult)(data, extra), loadOptions);
-      _this10._eventsStrategy.fireEvent('customizeLoadResult', [loadResult]);
-      (0, _deferred.when)(loadResult.data).done(function (data) {
+      const loadResult = (0, _extend.extend)((0, _utils2.normalizeLoadResult)(data, extra), loadOptions);
+      this._eventsStrategy.fireEvent('customizeLoadResult', [loadResult]);
+      (0, _deferred.when)(loadResult.data).done(data => {
         loadResult.data = data;
-        _this10._processStoreLoadResult(loadResult, pendingDeferred);
+        this._processStoreLoadResult(loadResult, pendingDeferred);
       }).fail(pendingDeferred.reject);
     };
     if (loadOptions.data) {
@@ -524,17 +495,16 @@ var DataSource = _class.default.inherit({
     return this.store().load(loadOptions.storeLoadOptions).done(handleSuccess).fail(pendingDeferred.reject);
   },
   _processStoreLoadResult(loadResult, pendingDeferred) {
-    var _this11 = this;
-    var data = loadResult.data;
-    var extra = loadResult.extra;
-    var storeLoadOptions = loadResult.storeLoadOptions;
-    var resolvePendingDeferred = function resolvePendingDeferred() {
-      _this11._isLoaded = true;
-      _this11._totalCount = isFinite(extra.totalCount) ? extra.totalCount : -1;
+    let data = loadResult.data;
+    let extra = loadResult.extra;
+    const storeLoadOptions = loadResult.storeLoadOptions;
+    const resolvePendingDeferred = () => {
+      this._isLoaded = true;
+      this._totalCount = isFinite(extra.totalCount) ? extra.totalCount : -1;
       return pendingDeferred.resolve(data, extra);
     };
-    var proceedLoadingTotalCount = function proceedLoadingTotalCount() {
-      _this11.store().totalCount(storeLoadOptions).done(function (count) {
+    const proceedLoadingTotalCount = () => {
+      this.store().totalCount(storeLoadOptions).done(function (count) {
         extra.totalCount = count;
         resolvePendingDeferred();
       }).fail(pendingDeferred.reject);

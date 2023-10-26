@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scroll_view/ui.scrollable.native.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,18 +19,18 @@ var _devices = _interopRequireDefault(require("../../core/devices"));
 var _class = _interopRequireDefault(require("../../core/class"));
 var _ui = _interopRequireDefault(require("./ui.scrollbar"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SCROLLABLE_NATIVE = 'dxNativeScrollable';
-var SCROLLABLE_NATIVE_CLASS = 'dx-scrollable-native';
-var SCROLLABLE_SCROLLBAR_SIMULATED = 'dx-scrollable-scrollbar-simulated';
-var SCROLLABLE_SCROLLBARS_HIDDEN = 'dx-scrollable-scrollbars-hidden';
-var VERTICAL = 'vertical';
-var HORIZONTAL = 'horizontal';
-var HIDE_SCROLLBAR_TIMEOUT = 500;
-var NativeStrategy = _class.default.inherit({
-  ctor: function ctor(scrollable) {
+const SCROLLABLE_NATIVE = 'dxNativeScrollable';
+const SCROLLABLE_NATIVE_CLASS = 'dx-scrollable-native';
+const SCROLLABLE_SCROLLBAR_SIMULATED = 'dx-scrollable-scrollbar-simulated';
+const SCROLLABLE_SCROLLBARS_HIDDEN = 'dx-scrollable-scrollbars-hidden';
+const VERTICAL = 'vertical';
+const HORIZONTAL = 'horizontal';
+const HIDE_SCROLLBAR_TIMEOUT = 500;
+const NativeStrategy = _class.default.inherit({
+  ctor: function (scrollable) {
     this._init(scrollable);
   },
-  _init: function _init(scrollable) {
+  _init: function (scrollable) {
     this._component = scrollable;
     this._$element = scrollable.$element();
     this._$container = (0, _renderer.default)(scrollable.container());
@@ -45,29 +45,29 @@ var NativeStrategy = _class.default.inherit({
     this._getMaxOffset = scrollable._getMaxOffset.bind(scrollable);
     this._isRtlNativeStrategy = scrollable._isRtlNativeStrategy.bind(scrollable);
   },
-  render: function render() {
-    var device = _devices.default.real();
-    var deviceType = device.platform;
+  render: function () {
+    const device = _devices.default.real();
+    const deviceType = device.platform;
     this._$element.addClass(SCROLLABLE_NATIVE_CLASS).addClass(SCROLLABLE_NATIVE_CLASS + '-' + deviceType).toggleClass(SCROLLABLE_SCROLLBARS_HIDDEN, !this._isScrollbarVisible());
     if (this._isScrollbarVisible() && this._useSimulatedScrollbar) {
       this._renderScrollbars();
     }
   },
-  updateRtlPosition: function updateRtlPosition(isFirstRender) {
+  updateRtlPosition: function (isFirstRender) {
     if (isFirstRender && this.option('rtlEnabled')) {
       if (this._isScrollbarVisible() && this._useSimulatedScrollbar) {
         this._moveScrollbars();
       }
     }
   },
-  _renderScrollbars: function _renderScrollbars() {
+  _renderScrollbars: function () {
     this._scrollbars = {};
     this._hideScrollbarTimeout = 0;
     this._$element.addClass(SCROLLABLE_SCROLLBAR_SIMULATED);
     this._renderScrollbar(VERTICAL);
     this._renderScrollbar(HORIZONTAL);
   },
-  _renderScrollbar: function _renderScrollbar(direction) {
+  _renderScrollbar: function (direction) {
     if (!this._isDirection(direction)) {
       return;
     }
@@ -78,7 +78,7 @@ var NativeStrategy = _class.default.inherit({
   },
   handleInit: _common.noop,
   handleStart: _common.noop,
-  handleMove: function handleMove(e) {
+  handleMove: function (e) {
     if (this._isLocked()) {
       e.cancel = true;
       return;
@@ -90,20 +90,21 @@ var NativeStrategy = _class.default.inherit({
   handleEnd: _common.noop,
   handleCancel: _common.noop,
   handleStop: _common.noop,
-  _eachScrollbar: function _eachScrollbar(callback) {
+  _eachScrollbar: function (callback) {
     callback = callback.bind(this);
     (0, _iterator.each)(this._scrollbars || {}, function (direction, scrollbar) {
       callback(scrollbar, direction);
     });
   },
-  createActions: function createActions() {
+  createActions: function () {
     this._scrollAction = this._createActionByOption('onScroll');
     this._updateAction = this._createActionByOption('onUpdated');
   },
-  _createActionArgs: function _createActionArgs() {
-    var _this$location = this.location(),
-      left = _this$location.left,
-      top = _this$location.top;
+  _createActionArgs: function () {
+    const {
+      left,
+      top
+    } = this.location();
     return {
       event: this._eventForUserAction,
       scrollOffset: this._getScrollOffset(),
@@ -113,10 +114,11 @@ var NativeStrategy = _class.default.inherit({
       reachedBottom: this._isDirection(VERTICAL) ? Math.round(Math.abs(top) - this._getMaxOffset().top) >= 0 : undefined
     };
   },
-  _getScrollOffset: function _getScrollOffset() {
-    var _this$location2 = this.location(),
-      top = _this$location2.top,
-      left = _this$location2.left;
+  _getScrollOffset: function () {
+    const {
+      top,
+      left
+    } = this.location();
     return {
       top: -top,
       left: this._normalizeOffsetLeft(-left)
@@ -128,26 +130,28 @@ var NativeStrategy = _class.default.inherit({
     }
     return scrollLeft;
   },
-  _isReachedLeft: function _isReachedLeft(left) {
+  _isReachedLeft: function (left) {
     return this._isDirection(HORIZONTAL) ? Math.round(left) >= 0 : undefined;
   },
-  _isReachedRight: function _isReachedRight(left) {
+  _isReachedRight: function (left) {
     return this._isDirection(HORIZONTAL) ? Math.round(Math.abs(left) - this._getMaxOffset().left) >= 0 : undefined;
   },
-  _isScrollbarVisible: function _isScrollbarVisible() {
-    var _this$option = this.option(),
-      showScrollbar = _this$option.showScrollbar;
+  _isScrollbarVisible: function () {
+    const {
+      showScrollbar
+    } = this.option();
     return showScrollbar !== 'never' && showScrollbar !== false;
   },
-  handleScroll: function handleScroll(e) {
+  handleScroll: function (e) {
     this._eventForUserAction = e;
     this._moveScrollbars();
     this._scrollAction(this._createActionArgs());
   },
-  _moveScrollbars: function _moveScrollbars() {
-    var _this$_getScrollOffse = this._getScrollOffset(),
-      top = _this$_getScrollOffse.top,
-      left = _this$_getScrollOffse.left;
+  _moveScrollbars: function () {
+    const {
+      top,
+      left
+    } = this._getScrollOffset();
     this._eachScrollbar(function (scrollbar) {
       scrollbar.moveTo({
         top: -top,
@@ -157,7 +161,7 @@ var NativeStrategy = _class.default.inherit({
     });
     this._hideScrollbars();
   },
-  _hideScrollbars: function _hideScrollbars() {
+  _hideScrollbars: function () {
     clearTimeout(this._hideScrollbarTimeout);
     this._hideScrollbarTimeout = setTimeout(function () {
       this._eachScrollbar(function (scrollbar) {
@@ -165,22 +169,22 @@ var NativeStrategy = _class.default.inherit({
       });
     }.bind(this), HIDE_SCROLLBAR_TIMEOUT);
   },
-  location: function location() {
+  location: function () {
     return {
       left: -this._$container.scrollLeft(),
       top: -this._$container.scrollTop()
     };
   },
   disabledChanged: _common.noop,
-  update: function update() {
+  update: function () {
     this._update();
     this._updateAction(this._createActionArgs());
   },
-  _update: function _update() {
+  _update: function () {
     this._updateDimensions();
     this._updateScrollbars();
   },
-  _updateDimensions: function _updateDimensions() {
+  _updateDimensions: function () {
     this._containerSize = {
       height: (0, _size.getHeight)(this._$container),
       width: (0, _size.getWidth)(this._$container)
@@ -194,9 +198,9 @@ var NativeStrategy = _class.default.inherit({
       width: (0, _size.getWidth)(this._$content)
     };
   },
-  _updateScrollbars: function _updateScrollbars() {
+  _updateScrollbars: function () {
     this._eachScrollbar(function (scrollbar, direction) {
-      var dimension = direction === VERTICAL ? 'height' : 'width';
+      const dimension = direction === VERTICAL ? 'height' : 'width';
       scrollbar.option({
         containerSize: this._containerSize[dimension],
         contentSize: this._componentContentSize[dimension]
@@ -204,15 +208,15 @@ var NativeStrategy = _class.default.inherit({
       scrollbar.update();
     });
   },
-  _allowedDirections: function _allowedDirections() {
+  _allowedDirections: function () {
     return {
       vertical: this._isDirection(VERTICAL) && this._contentSize.height > this._containerSize.height,
       horizontal: this._isDirection(HORIZONTAL) && this._contentSize.width > this._containerSize.width
     };
   },
-  dispose: function dispose() {
-    var className = this._$element.get(0).className;
-    var scrollableNativeRegexp = new RegExp(SCROLLABLE_NATIVE_CLASS + '\\S*', 'g');
+  dispose: function () {
+    const className = this._$element.get(0).className;
+    const scrollableNativeRegexp = new RegExp(SCROLLABLE_NATIVE_CLASS + '\\S*', 'g');
     if (scrollableNativeRegexp.test(className)) {
       this._$element.removeClass(className.match(scrollableNativeRegexp).join(' '));
     }
@@ -221,17 +225,17 @@ var NativeStrategy = _class.default.inherit({
     this._removeScrollbars();
     clearTimeout(this._hideScrollbarTimeout);
   },
-  _removeScrollbars: function _removeScrollbars() {
+  _removeScrollbars: function () {
     this._eachScrollbar(function (scrollbar) {
       scrollbar.$element().remove();
     });
   },
-  scrollBy: function scrollBy(distance) {
-    var location = this.location();
+  scrollBy: function (distance) {
+    const location = this.location();
     this._$container.scrollTop(Math.round(-location.top - distance.top));
     this._$container.scrollLeft(Math.round(-location.left - distance.left));
   },
-  validate: function validate(e) {
+  validate: function (e) {
     if (this.option('disabled')) {
       return false;
     }
@@ -243,8 +247,8 @@ var NativeStrategy = _class.default.inherit({
   // TODO: rtl
   // TODO: horizontal scroll when shift is pressed
   _isScrolledInMaxDirection(e) {
-    var container = this._$container.get(0);
-    var result;
+    const container = this._$container.get(0);
+    let result;
     if (e.delta > 0) {
       result = e.shiftKey ? !container.scrollLeft : !container.scrollTop;
     } else {
@@ -256,7 +260,7 @@ var NativeStrategy = _class.default.inherit({
     }
     return result;
   },
-  getDirection: function getDirection() {
+  getDirection: function () {
     return this._allowedDirection();
   }
 });

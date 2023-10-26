@@ -127,6 +127,9 @@ ui.dxFileManager = require('../ui/file_manager');
 ui.dxDiagram = require('../ui/diagram');
 ui.dxGantt = require('../ui/gantt');
 
+/* Chart common */
+require('../bundles/modules/common.charts');
+
 /* Viz core (dx.module-viz-core.js) */
 
 var viz = DevExpress.viz = require('../bundles/modules/viz');

@@ -4,13 +4,7 @@ exports.default = void 0;
 var _type = require("../../core/utils/type");
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-var CalendarSelectionStrategy = /*#__PURE__*/function () {
+let CalendarSelectionStrategy = /*#__PURE__*/function () {
   function CalendarSelectionStrategy(component) {
     this.calendar = component;
   }
@@ -31,21 +25,15 @@ var CalendarSelectionStrategy = /*#__PURE__*/function () {
     }
   };
   _proto.processValueChanged = function processValueChanged(value, previousValue) {
-    var _value,
-      _this = this,
-      _previousValue;
+    var _value, _previousValue;
     if ((0, _type.isDefined)(value) && !Array.isArray(value)) {
       value = [value];
     }
     if ((0, _type.isDefined)(previousValue) && !Array.isArray(previousValue)) {
       previousValue = [previousValue];
     }
-    value = ((_value = value) === null || _value === void 0 ? void 0 : _value.map(function (item) {
-      return _this._convertToDate(item);
-    })) || [];
-    previousValue = ((_previousValue = previousValue) === null || _previousValue === void 0 ? void 0 : _previousValue.map(function (item) {
-      return _this._convertToDate(item);
-    })) || [];
+    value = ((_value = value) === null || _value === void 0 ? void 0 : _value.map(item => this._convertToDate(item))) || [];
+    previousValue = ((_previousValue = previousValue) === null || _previousValue === void 0 ? void 0 : _previousValue.map(item => this._convertToDate(item))) || [];
     this._updateViewsValue(value);
     this.updateAriaSelected(value, previousValue);
     if (!this._currentDateChanged) {
@@ -54,15 +42,15 @@ var CalendarSelectionStrategy = /*#__PURE__*/function () {
     this._currentDateChanged = false;
   };
   _proto._isDateDisabled = function _isDateDisabled(date) {
-    var min = this.calendar._dateOption('min');
-    var max = this.calendar._dateOption('max');
-    var isLessThanMin = (0, _type.isDefined)(min) && date < min && !_date.default.sameDate(min, date);
-    var isBiggerThanMax = (0, _type.isDefined)(max) && date > max && !_date.default.sameDate(max, date);
+    const min = this.calendar._dateOption('min');
+    const max = this.calendar._dateOption('max');
+    const isLessThanMin = (0, _type.isDefined)(min) && date < min && !_date.default.sameDate(min, date);
+    const isBiggerThanMax = (0, _type.isDefined)(max) && date > max && !_date.default.sameDate(max, date);
     return this.calendar._view.isDateDisabled(date) || isLessThanMin || isBiggerThanMax;
   };
   _proto._getLowestDateInArray = function _getLowestDateInArray(dates) {
     if (dates.length) {
-      return new Date(Math.min.apply(Math, _toConsumableArray(dates)));
+      return new Date(Math.min(...dates));
     }
   };
   _proto._convertToDate = function _convertToDate(value) {
@@ -81,9 +69,10 @@ var CalendarSelectionStrategy = /*#__PURE__*/function () {
     this.calendar.option('currentDate', value !== null && value !== void 0 ? value : new Date());
   };
   _proto._shouldHandleWeekNumberClick = function _shouldHandleWeekNumberClick() {
-    var _this$calendar$option = this.calendar.option(),
-      selectionMode = _this$calendar$option.selectionMode,
-      selectWeekOnClick = _this$calendar$option.selectWeekOnClick;
+    const {
+      selectionMode,
+      selectWeekOnClick
+    } = this.calendar.option();
     return selectWeekOnClick && selectionMode !== 'single';
   };
   return CalendarSelectionStrategy;

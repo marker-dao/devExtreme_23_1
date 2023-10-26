@@ -4,8 +4,7 @@ exports.viewFunction = exports.RowProps = exports.Row = void 0;
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
 var _virtual_cell = require("./virtual_cell");
-var _excluded = ["children", "className", "isHeaderRow", "leftVirtualCellCount", "leftVirtualCellWidth", "rightVirtualCellCount", "rightVirtualCellWidth", "styles"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["children", "className", "isHeaderRow", "leftVirtualCellCount", "leftVirtualCellWidth", "rightVirtualCellCount", "rightVirtualCellWidth", "styles"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -14,18 +13,21 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var viewFunction = function viewFunction(_ref) {
-  var hasLeftVirtualCell = _ref.hasLeftVirtualCell,
-    hasRightVirtualCell = _ref.hasRightVirtualCell,
-    _ref$props = _ref.props,
-    children = _ref$props.children,
-    className = _ref$props.className,
-    isHeaderRow = _ref$props.isHeaderRow,
-    leftVirtualCellCount = _ref$props.leftVirtualCellCount,
-    leftVirtualCellWidth = _ref$props.leftVirtualCellWidth,
-    rightVirtualCellCount = _ref$props.rightVirtualCellCount,
-    rightVirtualCellWidth = _ref$props.rightVirtualCellWidth,
-    styles = _ref$props.styles;
+const viewFunction = _ref => {
+  let {
+    hasLeftVirtualCell,
+    hasRightVirtualCell,
+    props: {
+      children,
+      className,
+      isHeaderRow,
+      leftVirtualCellCount,
+      leftVirtualCellWidth,
+      rightVirtualCellCount,
+      rightVirtualCellWidth,
+      styles
+    }
+  } = _ref;
   return (0, _inferno.createVNode)(1, "tr", className, [hasLeftVirtualCell && (0, _inferno.createComponentVNode)(2, _virtual_cell.VirtualCell, {
     "width": leftVirtualCellWidth,
     "colSpan": leftVirtualCellCount,
@@ -39,14 +41,14 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var RowProps = {
+const RowProps = {
   className: '',
   leftVirtualCellWidth: 0,
   rightVirtualCellWidth: 0,
   isHeaderRow: false
 };
 exports.RowProps = RowProps;
-var Row = /*#__PURE__*/function (_BaseInfernoComponent) {
+let Row = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(Row, _BaseInfernoComponent);
   function Row(props) {
     var _this;
@@ -56,7 +58,7 @@ var Row = /*#__PURE__*/function (_BaseInfernoComponent) {
   }
   var _proto = Row.prototype;
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       hasLeftVirtualCell: this.hasLeftVirtualCell,
@@ -66,29 +68,25 @@ var Row = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(Row, [{
     key: "hasLeftVirtualCell",
-    get: function get() {
-      var leftVirtualCellCount = this.props.leftVirtualCellCount;
+    get: function () {
+      const {
+        leftVirtualCellCount
+      } = this.props;
       return !!leftVirtualCellCount;
     }
   }, {
     key: "hasRightVirtualCell",
-    get: function get() {
-      var rightVirtualCellCount = this.props.rightVirtualCellCount;
+    get: function () {
+      const {
+        rightVirtualCellCount
+      } = this.props;
       return !!rightVirtualCellCount;
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        children = _this$props.children,
-        className = _this$props.className,
-        isHeaderRow = _this$props.isHeaderRow,
-        leftVirtualCellCount = _this$props.leftVirtualCellCount,
-        leftVirtualCellWidth = _this$props.leftVirtualCellWidth,
-        rightVirtualCellCount = _this$props.rightVirtualCellCount,
-        rightVirtualCellWidth = _this$props.rightVirtualCellWidth,
-        styles = _this$props.styles,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/colorizing.discrete.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 exports.default = void 0;
 var _colorizing = require("./colorizing");
 function discreteColorizer(options, themeManager, root) {
-  var palette = themeManager.createPalette(options.palette, {
+  const palette = themeManager.createPalette(options.palette, {
     useHighlight: true,
     extensionMode: options.paletteExtensionMode,
     count: options.colorizeGroups ? getNodesCount(root) : getLeafsCount(root)
@@ -19,11 +19,11 @@ function discreteColorizer(options, themeManager, root) {
   return (options.colorizeGroups ? discreteGroupColorizer : discreteLeafColorizer)(palette, root);
 }
 function getLeafsCount(root) {
-  var allNodes = root.nodes.slice();
-  var i;
-  var ii = allNodes.length;
-  var count = 0;
-  var node;
+  const allNodes = root.nodes.slice();
+  let i;
+  const ii = allNodes.length;
+  let count = 0;
+  let node;
   for (i = 0; i < ii; ++i) {
     node = allNodes[i];
     if (node.isNode()) {
@@ -35,17 +35,17 @@ function getLeafsCount(root) {
   return count;
 }
 function discreteLeafColorizer(palette) {
-  var colors = palette.generateColors();
+  const colors = palette.generateColors();
   return function (node) {
     return colors[node.index];
   };
 }
 function getNodesCount(root) {
-  var allNodes = root.nodes.slice();
-  var i;
-  var ii = allNodes.length;
-  var count = 0;
-  var node;
+  const allNodes = root.nodes.slice();
+  let i;
+  const ii = allNodes.length;
+  let count = 0;
+  let node;
   for (i = 0; i < ii; ++i) {
     node = allNodes[i];
     if (node.isNode()) {
@@ -55,11 +55,11 @@ function getNodesCount(root) {
   return count;
 }
 function prepareDiscreteGroupColors(palette, root) {
-  var colors = {};
-  var allNodes = root.nodes.slice();
-  var i;
-  var ii = allNodes.length;
-  var node;
+  const colors = {};
+  let allNodes = root.nodes.slice();
+  let i;
+  let ii = allNodes.length;
+  let node;
   for (i = 0; i < ii; ++i) {
     node = allNodes[i];
     if (node.isNode()) {
@@ -72,7 +72,7 @@ function prepareDiscreteGroupColors(palette, root) {
   return colors;
 }
 function discreteGroupColorizer(palette, root) {
-  var colors = prepareDiscreteGroupColors(palette, root);
+  const colors = prepareDiscreteGroupColors(palette, root);
   return function (node) {
     return colors[node._id];
   };

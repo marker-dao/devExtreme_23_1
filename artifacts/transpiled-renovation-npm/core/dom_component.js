@@ -18,8 +18,10 @@ var _type = require("./utils/type");
 var _window = require("../core/utils/window");
 var _short = require("../events/short");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var abstract = _component.Component.abstract;
-var DOMComponent = _component.Component.inherit({
+const {
+  abstract
+} = _component.Component;
+const DOMComponent = _component.Component.inherit({
   _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       width: undefined,
@@ -49,11 +51,10 @@ var DOMComponent = _component.Component.inherit({
   _getSynchronizableOptionsForCreateComponent() {
     return ['rtlEnabled', 'disabled', 'templatesRenderAsynchronously'];
   },
-  _checkFunctionValueDeprecation: function _checkFunctionValueDeprecation(optionNames) {
-    var _this = this;
+  _checkFunctionValueDeprecation: function (optionNames) {
     if (!this.option('_ignoreFunctionValueDeprecation')) {
-      optionNames.forEach(function (optionName) {
-        if ((0, _type.isFunction)(_this.option(optionName))) {
+      optionNames.forEach(optionName => {
+        if ((0, _type.isFunction)(this.option(optionName))) {
           _errors.default.log('W0017', optionName);
         }
       });
@@ -71,12 +72,12 @@ var DOMComponent = _component.Component.inherit({
     this.callBase([].concat(this.constructor._classCustomRules || [], instanceCustomRules || []));
   },
   _isInitialOptionValue(name) {
-    var isCustomOption = this.constructor._classCustomRules && Object.prototype.hasOwnProperty.call(this._convertRulesToOptions(this.constructor._classCustomRules), name);
+    const isCustomOption = this.constructor._classCustomRules && Object.prototype.hasOwnProperty.call(this._convertRulesToOptions(this.constructor._classCustomRules), name);
     return !isCustomOption && this.callBase(name);
   },
   _attachWindowResizeCallback() {
     if (this._isDimensionChangeSupported()) {
-      var windowResizeCallBack = this._windowResizeCallBack = this._dimensionChanged.bind(this);
+      const windowResizeCallBack = this._windowResizeCallBack = this._dimensionChanged.bind(this);
       _resize_callbacks.default.add(windowResizeCallBack);
     }
   },
@@ -88,8 +89,9 @@ var DOMComponent = _component.Component.inherit({
     (0, _window.hasWindow)() && this._render();
   },
   _initMarkup() {
-    var _ref = this.option() || {},
-      rtlEnabled = _ref.rtlEnabled;
+    const {
+      rtlEnabled
+    } = this.option() || {};
     this._renderElementAttributes();
     this._toggleRTLDirection(rtlEnabled);
     this._renderVisibilityChange();
@@ -100,10 +102,11 @@ var DOMComponent = _component.Component.inherit({
     (0, _shadow_dom.addShadowDomStyles)(this.$element());
   },
   _renderElementAttributes() {
-    var _ref2 = this.option() || {},
-      elementAttr = _ref2.elementAttr;
-    var attributes = (0, _extend.extend)({}, elementAttr);
-    var classNames = attributes.class;
+    const {
+      elementAttr
+    } = this.option() || {};
+    const attributes = (0, _extend.extend)({}, elementAttr);
+    const classNames = attributes.class;
     delete attributes.class;
     this.$element().attr(attributes).removeClass(this._customClass).addClass(classNames);
     this._customClass = classNames;
@@ -113,15 +116,15 @@ var DOMComponent = _component.Component.inherit({
       this._attachDimensionChangeHandlers();
     }
     if (this._isVisibilityChangeSupported()) {
-      var $element = this.$element();
+      const $element = this.$element();
       $element.addClass('dx-visibility-change-handler');
     }
   },
   _renderDimensions() {
-    var $element = this.$element();
-    var element = $element.get(0);
-    var width = this._getOptionValue('width', element);
-    var height = this._getOptionValue('height', element);
+    const $element = this.$element();
+    const element = $element.get(0);
+    const width = this._getOptionValue('width', element);
+    const height = this._getOptionValue('height', element);
     if (this._isCssUpdateRequired(element, height, width)) {
       $element.css({
         width: width === null ? '' : width,
@@ -133,42 +136,34 @@ var DOMComponent = _component.Component.inherit({
     return !!((0, _type.isDefined)(width) || (0, _type.isDefined)(height) || element.style.width || element.style.height);
   },
   _attachDimensionChangeHandlers() {
-    var _this2 = this;
-    var $el = this.$element();
-    var namespace = "".concat(this.NAME, "VisibilityChange");
+    const $el = this.$element();
+    const namespace = "".concat(this.NAME, "VisibilityChange");
     _short.resize.off($el, {
       namespace
     });
-    _short.resize.on($el, function () {
-      return _this2._dimensionChanged();
-    }, {
+    _short.resize.on($el, () => this._dimensionChanged(), {
       namespace
     });
   },
   _attachVisibilityChangeHandlers() {
-    var _this3 = this;
     if (this._isVisibilityChangeSupported()) {
-      var $el = this.$element();
-      var namespace = "".concat(this.NAME, "VisibilityChange");
+      const $el = this.$element();
+      const namespace = "".concat(this.NAME, "VisibilityChange");
       this._isHidden = !this._isVisible();
       _short.visibility.off($el, {
         namespace
       });
-      _short.visibility.on($el, function () {
-        return _this3._checkVisibilityChanged('shown');
-      }, function () {
-        return _this3._checkVisibilityChanged('hiding');
-      }, {
+      _short.visibility.on($el, () => this._checkVisibilityChanged('shown'), () => this._checkVisibilityChanged('hiding'), {
         namespace
       });
     }
   },
   _isVisible() {
-    var $element = this.$element();
+    const $element = this.$element();
     return $element.is(':visible');
   },
   _checkVisibilityChanged(action) {
-    var isVisible = this._isVisible();
+    const isVisible = this._isVisible();
     if (isVisible) {
       if (action === 'hiding' && !this._isHidden) {
         this._visibilityChanged(false);
@@ -184,9 +179,10 @@ var DOMComponent = _component.Component.inherit({
   },
   _clean: _common.noop,
   _modelByElement() {
-    var _this$option = this.option(),
-      modelByElement = _this$option.modelByElement;
-    var $element = this.$element();
+    const {
+      modelByElement
+    } = this.option();
+    const $element = this.$element();
     return modelByElement ? modelByElement($element) : undefined;
   },
   _invalidate() {
@@ -211,30 +207,27 @@ var DOMComponent = _component.Component.inherit({
     }
   },
   _toggleRTLDirection(rtl) {
-    var $element = this.$element();
+    const $element = this.$element();
     $element.toggleClass('dx-rtl', rtl);
   },
   _createComponent(element, component) {
-    var _this4 = this;
-    var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var synchronizableOptions = (0, _common.grep)(this._getSynchronizableOptionsForCreateComponent(), function (value) {
-      return !(value in config);
-    });
-    var _this$option2 = this.option(),
-      integrationOptions = _this$option2.integrationOptions;
-    var _this$option3 = this.option(),
-      nestedComponentOptions = _this$option3.nestedComponentOptions;
+    let config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    const synchronizableOptions = (0, _common.grep)(this._getSynchronizableOptionsForCreateComponent(), value => !(value in config));
+    const {
+      integrationOptions
+    } = this.option();
+    let {
+      nestedComponentOptions
+    } = this.option();
     nestedComponentOptions = nestedComponentOptions || _common.noop;
-    var nestedComponentConfig = (0, _extend.extend)({
+    const nestedComponentConfig = (0, _extend.extend)({
       integrationOptions
     }, nestedComponentOptions(this));
-    synchronizableOptions.forEach(function (optionName) {
-      return nestedComponentConfig[optionName] = _this4.option(optionName);
-    });
+    synchronizableOptions.forEach(optionName => nestedComponentConfig[optionName] = this.option(optionName));
     this._extendConfig(config, nestedComponentConfig);
-    var instance = void 0;
+    let instance = void 0;
     if ((0, _type.isString)(component)) {
-      var $element = (0, _renderer.default)(element)[component](config);
+      const $element = (0, _renderer.default)(element)[component](config);
       instance = $element[component]('instance');
     } else if (element) {
       instance = component.getInstance(element);
@@ -245,36 +238,36 @@ var DOMComponent = _component.Component.inherit({
       }
     }
     if (instance) {
-      var optionChangedHandler = function optionChangedHandler(_ref3) {
-        var name = _ref3.name,
-          value = _ref3.value;
+      const optionChangedHandler = _ref => {
+        let {
+          name,
+          value
+        } = _ref;
         if (synchronizableOptions.includes(name)) {
           instance.option(name, value);
         }
       };
       this.on('optionChanged', optionChangedHandler);
-      instance.on('disposing', function () {
-        return _this4.off('optionChanged', optionChangedHandler);
-      });
+      instance.on('disposing', () => this.off('optionChanged', optionChangedHandler));
     }
     return instance;
   },
   _extendConfig(config, extendConfig) {
-    (0, _iterator.each)(extendConfig, function (key, value) {
+    (0, _iterator.each)(extendConfig, (key, value) => {
       !Object.prototype.hasOwnProperty.call(config, key) && (config[key] = value);
     });
   },
   _defaultActionConfig() {
-    var $element = this.$element();
-    var context = this._modelByElement($element);
+    const $element = this.$element();
+    const context = this._modelByElement($element);
     return (0, _extend.extend)(this.callBase(), {
       context
     });
   },
   _defaultActionArgs() {
-    var $element = this.$element();
-    var model = this._modelByElement($element);
-    var element = this.element();
+    const $element = this.$element();
+    const model = this._modelByElement($element);
+    const element = this.element();
     return (0, _extend.extend)(this.callBase(), {
       element,
       model
@@ -301,11 +294,13 @@ var DOMComponent = _component.Component.inherit({
     }
   },
   _removeAttributes(element) {
-    var attrs = element.attributes;
-    for (var i = attrs.length - 1; i >= 0; i--) {
-      var attr = attrs[i];
+    const attrs = element.attributes;
+    for (let i = attrs.length - 1; i >= 0; i--) {
+      const attr = attrs[i];
       if (attr) {
-        var name = attr.name;
+        const {
+          name
+        } = attr;
         if (!name.indexOf('aria-') || name.indexOf('dx-') !== -1 || name === 'role' || name === 'style' || name === 'tabindex') {
           element.removeAttribute(name);
         }
@@ -313,9 +308,7 @@ var DOMComponent = _component.Component.inherit({
     }
   },
   _removeClasses(element) {
-    element.className = element.className.split(' ').filter(function (cssClass) {
-      return cssClass.lastIndexOf('dx-', 0) !== 0;
-    }).join(' ');
+    element.className = element.className.split(' ').filter(cssClass => cssClass.lastIndexOf('dx-', 0) !== 0).join(' ');
   },
   _updateDOMComponent(renderRequired) {
     if (renderRequired) {
@@ -326,7 +319,7 @@ var DOMComponent = _component.Component.inherit({
     }
   },
   endUpdate() {
-    var renderRequired = this._isInitializingRequired();
+    const renderRequired = this._isInitializingRequired();
     this.callBase();
     this._isUpdateAllowed() && this._updateDOMComponent(renderRequired);
   },
@@ -334,11 +327,11 @@ var DOMComponent = _component.Component.inherit({
     return this._$element;
   },
   element() {
-    var $element = this.$element();
+    const $element = this.$element();
     return (0, _element.getPublicElement)($element);
   },
   dispose() {
-    var element = this.$element().get(0);
+    const element = this.$element().get(0);
     (0, _element_data.cleanDataRecursive)(element, true);
     element.textContent = '';
     this._removeAttributes(element);
@@ -347,7 +340,7 @@ var DOMComponent = _component.Component.inherit({
   resetOption(optionName) {
     this.callBase(optionName);
     if (optionName === 'width' || optionName === 'height') {
-      var initialOption = this.initialOption(optionName);
+      const initialOption = this.initialOption(optionName);
       !(0, _type.isDefined)(initialOption) && this.$element().css(optionName, '');
     }
   },
@@ -356,23 +349,27 @@ var DOMComponent = _component.Component.inherit({
   },
   _initTemplateManager() {
     if (this._templateManager || !this._useTemplates()) return void 0;
-    var _this$option4 = this.option(),
-      _this$option4$integra = _this$option4.integrationOptions,
-      integrationOptions = _this$option4$integra === void 0 ? {} : _this$option4$integra;
-    var createTemplate = integrationOptions.createTemplate;
+    const {
+      integrationOptions = {}
+    } = this.option();
+    const {
+      createTemplate
+    } = integrationOptions;
     this._templateManager = new _template_manager.TemplateManager(createTemplate, this._getAnonymousTemplateName());
     this._initTemplates();
   },
   _initTemplates() {
-    var _this5 = this;
-    var _this$_templateManage = this._templateManager.extractTemplates(this.$element()),
-      templates = _this$_templateManage.templates,
-      anonymousTemplateMeta = _this$_templateManage.anonymousTemplateMeta;
-    var anonymousTemplate = this.option("integrationOptions.templates.".concat(anonymousTemplateMeta.name));
-    templates.forEach(function (_ref4) {
-      var name = _ref4.name,
-        template = _ref4.template;
-      _this5._options.silent("integrationOptions.templates.".concat(name), template);
+    const {
+      templates,
+      anonymousTemplateMeta
+    } = this._templateManager.extractTemplates(this.$element());
+    const anonymousTemplate = this.option("integrationOptions.templates.".concat(anonymousTemplateMeta.name));
+    templates.forEach(_ref2 => {
+      let {
+        name,
+        template
+      } = _ref2;
+      this._options.silent("integrationOptions.templates.".concat(name), template);
     });
     if (anonymousTemplateMeta.name && !anonymousTemplate) {
       this._options.silent("integrationOptions.templates.".concat(anonymousTemplateMeta.name), anonymousTemplateMeta.template);
@@ -383,9 +380,9 @@ var DOMComponent = _component.Component.inherit({
     return this._getTemplate(this.option(optionName));
   },
   _getTemplate(templateSource) {
-    var templates = this.option('integrationOptions.templates');
-    var isAsyncTemplate = this.option('templatesRenderAsynchronously');
-    var skipTemplates = this.option('integrationOptions.skipTemplates');
+    const templates = this.option('integrationOptions.templates');
+    const isAsyncTemplate = this.option('templatesRenderAsynchronously');
+    const skipTemplates = this.option('integrationOptions.skipTemplates');
     return this._templateManager.getTemplate(templateSource, templates, {
       isAsyncTemplate,
       skipTemplates

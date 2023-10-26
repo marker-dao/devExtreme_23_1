@@ -4,17 +4,17 @@ exports.tabbable = exports.focused = exports.focusable = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var focusableFn = function focusableFn(element, tabIndex) {
+const focusableFn = function (element, tabIndex) {
   if (!visible(element)) {
     return false;
   }
-  var nodeName = element.nodeName.toLowerCase();
-  var isTabIndexNotNaN = !isNaN(tabIndex);
-  var isDisabled = element.disabled;
-  var isDefaultFocus = /^(input|select|textarea|button|object|iframe)$/.test(nodeName);
-  var isHyperlink = nodeName === 'a';
-  var isFocusable;
-  var isContentEditable = element.isContentEditable;
+  const nodeName = element.nodeName.toLowerCase();
+  const isTabIndexNotNaN = !isNaN(tabIndex);
+  const isDisabled = element.disabled;
+  const isDefaultFocus = /^(input|select|textarea|button|object|iframe)$/.test(nodeName);
+  const isHyperlink = nodeName === 'a';
+  let isFocusable;
+  const isContentEditable = element.isContentEditable;
   if (isDefaultFocus || isContentEditable) {
     isFocusable = !isDisabled;
   } else {
@@ -27,21 +27,21 @@ var focusableFn = function focusableFn(element, tabIndex) {
   return isFocusable;
 };
 function visible(element) {
-  var $element = (0, _renderer.default)(element);
+  const $element = (0, _renderer.default)(element);
   return $element.is(':visible') && $element.css('visibility') !== 'hidden' && $element.parents().css('visibility') !== 'hidden';
 }
-var focusable = function focusable(index, element) {
+const focusable = function (index, element) {
   return focusableFn(element, (0, _renderer.default)(element).attr('tabIndex'));
 };
 exports.focusable = focusable;
-var tabbable = function tabbable(index, element) {
-  var tabIndex = (0, _renderer.default)(element).attr('tabIndex');
+const tabbable = function (index, element) {
+  const tabIndex = (0, _renderer.default)(element).attr('tabIndex');
   return (isNaN(tabIndex) || tabIndex >= 0) && focusableFn(element, tabIndex);
 };
 // note: use this method instead of is(":focus")
 exports.tabbable = tabbable;
-var focused = function focused($element) {
-  var element = (0, _renderer.default)($element).get(0);
+const focused = function ($element) {
+  const element = (0, _renderer.default)($element).get(0);
   return _dom_adapter.default.getActiveElement(element) === element;
 };
 exports.focused = focused;

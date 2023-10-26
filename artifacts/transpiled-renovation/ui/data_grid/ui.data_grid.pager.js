@@ -6,7 +6,7 @@ Object.keys(_pager).forEach(function (key) {
   if (key in exports && exports[key] === _pager[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _pager[key];
     }
   });

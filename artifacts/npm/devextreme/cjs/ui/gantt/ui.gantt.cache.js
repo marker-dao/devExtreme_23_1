@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.cache.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@
 
 exports.GanttDataCache = void 0;
 var _extend = require("../../core/utils/extend");
-var GanttDataCache = /*#__PURE__*/function () {
+let GanttDataCache = /*#__PURE__*/function () {
   function GanttDataCache() {
     this._cache = {};
     this._timers = {};
@@ -19,7 +19,7 @@ var GanttDataCache = /*#__PURE__*/function () {
   _proto.saveData = function saveData(key, data, keyExpireCallback) {
     if (data) {
       this._clearTimer(key);
-      var storage = this._getCache(key, true);
+      const storage = this._getCache(key, true);
       (0, _extend.extendFromObject)(storage, data, true);
       if (keyExpireCallback) {
         this._setExpireTimer(key, keyExpireCallback);
@@ -27,7 +27,7 @@ var GanttDataCache = /*#__PURE__*/function () {
     }
   };
   _proto.pullDataFromCache = function pullDataFromCache(key, target) {
-    var data = this._getCache(key);
+    const data = this._getCache(key);
     if (data) {
       (0, _extend.extendFromObject)(target, data);
     }
@@ -46,10 +46,9 @@ var GanttDataCache = /*#__PURE__*/function () {
     return this._cache[key];
   };
   _proto._setExpireTimer = function _setExpireTimer(key, callback) {
-    var _this = this;
-    this._timers[key] = setTimeout(function () {
-      callback(key, _this._getCache(key));
-      _this._onKeyExpired(key);
+    this._timers[key] = setTimeout(() => {
+      callback(key, this._getCache(key));
+      this._onKeyExpired(key);
     }, 200);
   };
   _proto._onKeyExpired = function _onKeyExpired(key) {
@@ -60,7 +59,7 @@ var GanttDataCache = /*#__PURE__*/function () {
     delete this._cache[key];
   };
   _proto._clearTimer = function _clearTimer(key) {
-    var timers = this._timers;
+    const timers = this._timers;
     if (timers && timers[key]) {
       clearTimeout(timers[key]);
       delete timers[key];

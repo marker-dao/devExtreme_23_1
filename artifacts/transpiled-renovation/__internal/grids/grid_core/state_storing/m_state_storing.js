@@ -12,10 +12,10 @@ var _m_state_storing_core = _interopRequireDefault(require("./m_state_storing_co
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // @ts-expect-error
 
-var getDataState = function getDataState(that) {
-  var pagerView = that.getView('pagerView');
-  var dataController = that.getController('data');
-  var state = {
+const getDataState = that => {
+  const pagerView = that.getView('pagerView');
+  const dataController = that.getController('data');
+  const state = {
     allowedPageSizes: pagerView ? pagerView.getPageSizes() : undefined,
     filterPanel: {
       filterEnabled: that.option('filterPanel.filterEnabled')
@@ -26,20 +26,20 @@ var getDataState = function getDataState(that) {
   return (0, _extend.extend)(state, dataController.getUserState());
 };
 // TODO move processLoadState to target modules (data, columns, pagerView)
-var processLoadState = function processLoadState(that) {
-  var columnsController = that.getController('columns');
-  var selectionController = that.getController('selection');
-  var exportController = that.getController('export');
-  var dataController = that.getController('data');
+const processLoadState = that => {
+  const columnsController = that.getController('columns');
+  const selectionController = that.getController('selection');
+  const exportController = that.getController('export');
+  const dataController = that.getController('data');
   if (columnsController) {
-    columnsController.columnsChanged.add(function () {
+    columnsController.columnsChanged.add(() => {
       that.updateState({
         columns: columnsController.getUserState()
       });
     });
   }
   if (selectionController) {
-    selectionController.selectionChanged.add(function (e) {
+    selectionController.selectionChanged.add(e => {
       that.updateState({
         selectedRowKeys: e.selectedRowKeys,
         selectionFilter: e.selectionFilter
@@ -49,24 +49,24 @@ var processLoadState = function processLoadState(that) {
   if (dataController) {
     that._initialPageSize = that.option('paging.pageSize');
     that._initialFilterValue = that.option('filterValue');
-    dataController.changed.add(function () {
-      var state = getDataState(that);
+    dataController.changed.add(() => {
+      const state = getDataState(that);
       that.updateState(state);
     });
   }
   if (exportController) {
-    exportController.selectionOnlyChanged.add(function () {
+    exportController.selectionOnlyChanged.add(() => {
       that.updateState({
         exportSelectionOnly: exportController.selectionOnly()
       });
     });
   }
 };
-var DEFAULT_FILTER_VALUE = null;
-var getFilterValue = function getFilterValue(that, state) {
-  var filterSyncController = that.getController('filterSync');
-  var columnsController = that.getController('columns');
-  var hasFilterState = state.columns || state.filterValue !== undefined;
+const DEFAULT_FILTER_VALUE = null;
+const getFilterValue = (that, state) => {
+  const filterSyncController = that.getController('filterSync');
+  const columnsController = that.getController('columns');
+  const hasFilterState = state.columns || state.filterValue !== undefined;
   if (filterSyncController) {
     if (hasFilterState) {
       return state.filterValue || filterSyncController.getFilterValueFromColumns(state.columns);
@@ -75,7 +75,7 @@ var getFilterValue = function getFilterValue(that, state) {
   }
   return DEFAULT_FILTER_VALUE;
 };
-var stateStoringModule = {
+const stateStoringModule = {
   defaultOptions() {
     return {
       stateStoring: {
@@ -95,14 +95,14 @@ var stateStoringModule = {
     views: {
       rowsView: {
         init() {
-          var that = this;
-          var dataController = that.getController('data');
+          const that = this;
+          const dataController = that.getController('data');
           that.callBase();
-          dataController.stateLoaded.add(function () {
+          dataController.stateLoaded.add(() => {
             if (dataController.isLoaded() && !dataController.getDataSource()) {
               that.setLoading(false);
               that.renderNoDataText();
-              var columnHeadersView = that.component.getView('columnHeadersView');
+              const columnHeadersView = that.component.getView('columnHeadersView');
               columnHeadersView && columnHeadersView.render();
               that.component._fireContentReadyAction();
             }
@@ -120,7 +120,7 @@ var stateStoringModule = {
           return this.callBase() || this.getController('data').isStateLoading();
         },
         state(state) {
-          var result = this.callBase.apply(this, arguments);
+          const result = this.callBase.apply(this, arguments);
           if (state !== undefined) {
             this.applyState((0, _extend.extend)(true, {}, state));
           }
@@ -128,10 +128,10 @@ var stateStoringModule = {
         },
         updateState(state) {
           if (this.isEnabled()) {
-            var oldState = this.state();
-            var newState = (0, _extend.extend)({}, oldState, state);
-            var oldStateHash = (0, _common.getKeyHash)(oldState);
-            var newStateHash = (0, _common.getKeyHash)(newState);
+            const oldState = this.state();
+            const newState = (0, _extend.extend)({}, oldState, state);
+            const oldStateHash = (0, _common.getKeyHash)(oldState);
+            const newStateHash = (0, _common.getKeyHash)(newState);
             if (!(0, _common.equalByValue)(oldStateHash, newStateHash)) {
               state = (0, _extend.extend)(true, {}, state);
               (0, _extend.extend)(this._state, state);
@@ -143,17 +143,25 @@ var stateStoringModule = {
         },
         applyState(state) {
           var _a;
-          var allowedPageSizes = state.allowedPageSizes;
-          var searchText = state.searchText;
-          var selectedRowKeys = state.selectedRowKeys;
-          var selectionFilter = state.selectionFilter;
-          var exportController = this.getController('export');
-          var columnsController = this.getController('columns');
-          var dataController = this.getController('data');
-          var scrollingMode = this.option('scrolling.mode');
-          var isVirtualScrollingMode = scrollingMode === 'virtual' || scrollingMode === 'infinite';
-          var showPageSizeSelector = this.option('pager.visible') === true && this.option('pager.showPageSizeSelector');
-          var hasHeight = (_a = this.getView('rowsView')) === null || _a === void 0 ? void 0 : _a.hasHeight();
+          const {
+            allowedPageSizes
+          } = state;
+          const {
+            searchText
+          } = state;
+          const {
+            selectedRowKeys
+          } = state;
+          const {
+            selectionFilter
+          } = state;
+          const exportController = this.getController('export');
+          const columnsController = this.getController('columns');
+          const dataController = this.getController('data');
+          const scrollingMode = this.option('scrolling.mode');
+          const isVirtualScrollingMode = scrollingMode === 'virtual' || scrollingMode === 'infinite';
+          const showPageSizeSelector = this.option('pager.visible') === true && this.option('pager.showPageSizeSelector');
+          const hasHeight = (_a = this.getView('rowsView')) === null || _a === void 0 ? void 0 : _a.hasHeight();
           this.component.beginUpdate();
           if (columnsController) {
             columnsController.setUserState(state.columns);
@@ -183,8 +191,8 @@ var stateStoringModule = {
       },
       columns: {
         _shouldReturnVisibleColumns() {
-          var result = this.callBase.apply(this, arguments);
-          var stateStoringController = this.getController('stateStoring');
+          const result = this.callBase.apply(this, arguments);
+          const stateStoringController = this.getController('stateStoring');
           return result && (!stateStoringController.isEnabled() || stateStoringController.isLoaded());
         }
       },
@@ -193,23 +201,24 @@ var stateStoringModule = {
           return this.callBase().concat(['stateLoaded']);
         },
         _refreshDataSource() {
-          var _this = this;
-          var callBase = this.callBase;
-          var stateStoringController = this.getController('stateStoring');
+          const {
+            callBase
+          } = this;
+          const stateStoringController = this.getController('stateStoring');
           if (stateStoringController.isEnabled() && !stateStoringController.isLoaded()) {
             clearTimeout(this._restoreStateTimeoutID);
             // @ts-expect-error
-            var deferred = new _deferred.Deferred();
-            this._restoreStateTimeoutID = setTimeout(function () {
-              stateStoringController.load().always(function () {
-                _this._restoreStateTimeoutID = null;
-              }).done(function () {
-                callBase.call(_this);
-                _this.stateLoaded.fire();
+            const deferred = new _deferred.Deferred();
+            this._restoreStateTimeoutID = setTimeout(() => {
+              stateStoringController.load().always(() => {
+                this._restoreStateTimeoutID = null;
+              }).done(() => {
+                callBase.call(this);
+                this.stateLoaded.fire();
                 deferred.resolve();
-              }).fail(function (error) {
-                _this.stateLoaded.fire();
-                _this._handleLoadError(error || 'Unknown error');
+              }).fail(error => {
+                this.stateLoaded.fire();
+                this._handleLoadError(error || 'Unknown error');
                 deferred.reject();
               });
             });
@@ -220,8 +229,8 @@ var stateStoringModule = {
           }
         },
         isLoading() {
-          var that = this;
-          var stateStoringController = that.getController('stateStoring');
+          const that = this;
+          const stateStoringController = that.getController('stateStoring');
           return this.callBase() || stateStoringController.isLoading();
         },
         isStateLoading() {
@@ -238,8 +247,8 @@ var stateStoringModule = {
       selection: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _fireSelectionChanged(options) {
-          var stateStoringController = this.getController('stateStoring');
-          var isDeferredSelection = this.option('selection.deferred');
+          const stateStoringController = this.getController('stateStoring');
+          const isDeferredSelection = this.option('selection.deferred');
           if (stateStoringController.isLoading() && isDeferredSelection) {
             return;
           }

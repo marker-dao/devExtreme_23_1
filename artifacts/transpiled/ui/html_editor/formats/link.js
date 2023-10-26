@@ -6,9 +6,9 @@ var _type = require("../../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ExtLink = {};
+let ExtLink = {};
 if (_devextremeQuill.default) {
-  var Link = _devextremeQuill.default.import('formats/link');
+  const Link = _devextremeQuill.default.import('formats/link');
   ExtLink = /*#__PURE__*/function (_Link) {
     _inheritsLoose(ExtLink, _Link);
     function ExtLink() {
@@ -16,8 +16,8 @@ if (_devextremeQuill.default) {
     }
     ExtLink.create = function create(data) {
       var _data$href;
-      var HREF = (_data$href = data === null || data === void 0 ? void 0 : data.href) !== null && _data$href !== void 0 ? _data$href : data;
-      var node = _Link.create.call(this, HREF);
+      const HREF = (_data$href = data === null || data === void 0 ? void 0 : data.href) !== null && _data$href !== void 0 ? _data$href : data;
+      const node = _Link.create.call(this, HREF);
       if ((0, _type.isObject)(data)) {
         if (data.text) {
           node.innerText = data.text;
@@ -36,10 +36,11 @@ if (_devextremeQuill.default) {
     };
     var _proto = ExtLink.prototype;
     _proto.formats = function formats() {
-      var formats = _Link.prototype.formats.call(this);
-      var _ExtLink$formats = ExtLink.formats(this.domNode),
-        href = _ExtLink$formats.href,
-        target = _ExtLink$formats.target;
+      const formats = _Link.prototype.formats.call(this);
+      const {
+        href,
+        target
+      } = ExtLink.formats(this.domNode);
       formats.link = href;
       formats.target = target;
       return formats;

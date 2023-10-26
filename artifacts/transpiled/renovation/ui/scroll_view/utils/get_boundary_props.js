@@ -21,13 +21,16 @@ function isReachedBottom(element, scrollOffsetTop, pocketHeight, epsilon) {
   return Math.round((0, _get_scroll_top_max.getScrollTopMax)(element) - scrollOffsetTop - pocketHeight) <= epsilon;
 }
 function getBoundaryProps(direction, scrollOffset, element) {
-  var pocketHeight = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-  var left = scrollOffset.left,
-    top = scrollOffset.top;
-  var boundaryProps = {};
-  var _ScrollDirection = new _scroll_direction.ScrollDirection(direction),
-    isHorizontal = _ScrollDirection.isHorizontal,
-    isVertical = _ScrollDirection.isVertical;
+  let pocketHeight = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+  const {
+    left,
+    top
+  } = scrollOffset;
+  const boundaryProps = {};
+  const {
+    isHorizontal,
+    isVertical
+  } = new _scroll_direction.ScrollDirection(direction);
   if (isHorizontal) {
     boundaryProps.reachedLeft = isReachedLeft(left, 0);
     boundaryProps.reachedRight = isReachedRight(element, left, 0);

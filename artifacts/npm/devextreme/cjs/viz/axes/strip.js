@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/axes/strip.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,16 +13,16 @@ var _type = require("../../core/utils/type");
 var _utils = require("../core/utils");
 var _extend = require("../../core/utils/extend");
 function createStrip(axis, options) {
-  var storedCoord;
-  var lastStoredCoordinates;
-  var labelOptions = options.label || {};
+  let storedCoord;
+  let lastStoredCoordinates;
+  const labelOptions = options.label || {};
   return {
     options,
     label: null,
     rect: null,
     _getCoord() {
-      var canvas = axis._getCanvasStartEnd();
-      var range = axis._translator.getBusinessRange();
+      const canvas = axis._getCanvasStartEnd();
+      const range = axis._translator.getBusinessRange();
       return axis._getStripPos(options.startValue, options.endValue, canvas.start, canvas.end, range);
     },
     _drawLabel(coords) {
@@ -36,7 +36,7 @@ function createStrip(axis, options) {
         return;
       }
       if (((0, _type.isDefined)(options.startValue) || (0, _type.isDefined)(options.endValue)) && (0, _type.isDefined)(options.color)) {
-        var stripPos = this._getCoord();
+        const stripPos = this._getCoord();
         this.labelCoords = labelOptions.text ? axis._getStripLabelCoords(stripPos.from, stripPos.to, labelOptions) : null;
         if (stripPos.outOfCanvas || !(0, _type.isDefined)(stripPos.to) || !(0, _type.isDefined)(stripPos.from)) {
           return;
@@ -52,7 +52,7 @@ function createStrip(axis, options) {
     },
     removeLabel() {},
     updatePosition(animate) {
-      var stripPos = this._getCoord();
+      const stripPos = this._getCoord();
       if (animate && storedCoord) {
         this.label && this.label.attr(axis._getStripLabelCoords(storedCoord.from, storedCoord.to, options.label));
         this.rect && this.rect.attr(axis._getStripGraphicAttributes(storedCoord.from, storedCoord.to));

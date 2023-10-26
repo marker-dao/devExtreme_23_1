@@ -19,7 +19,7 @@ import PopupDrag from './popup_drag';
 import Resizable from '../resizable';
 import Button from '../button';
 import Overlay from '../overlay/ui.overlay';
-import { isMaterialBased, current as currentTheme } from '../themes';
+import { isMaterialBased, isMaterial, isFluent } from '../themes';
 import '../toolbar/ui.toolbar.base';
 import resizeObserverSingleton from '../../core/resize_observer';
 import * as zIndexPool from '../overlay/z_index';
@@ -48,29 +48,24 @@ var POPUP_CONTENT_FLEX_HEIGHT_CLASS = 'dx-popup-flex-height';
 var POPUP_CONTENT_INHERIT_HEIGHT_CLASS = 'dx-popup-inherit-height';
 var TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';
 var ALLOWED_TOOLBAR_ITEM_ALIASES = ['cancel', 'clear', 'done'];
-var APPLY_VALUE_BUTTONS_ORDER = ['cancel', 'done'];
 var BUTTON_DEFAULT_TYPE = 'default';
 var BUTTON_NORMAL_TYPE = 'normal';
 var BUTTON_TEXT_MODE = 'text';
 var BUTTON_CONTAINED_MODE = 'contained';
+var BUTTON_OUTLINED_MODE = 'outlined';
 var IS_OLD_SAFARI = browser.safari && compareVersions(browser.version, [11]) < 0;
 var HEIGHT_STRATEGIES = {
   static: '',
   inherit: POPUP_CONTENT_INHERIT_HEIGHT_CLASS,
   flex: POPUP_CONTENT_FLEX_HEIGHT_CLASS
 };
-var sortApplyValueItems = actionButtonsItems => {
-  return actionButtonsItems.sort((a, b) => {
-    return APPLY_VALUE_BUTTONS_ORDER.indexOf(a.shortcut) - APPLY_VALUE_BUTTONS_ORDER.indexOf(b.shortcut);
-  });
-};
-var getButtonInfo = shortcut => {
+var getButtonPlace = name => {
   var device = devices.current();
   var platform = device.platform;
   var toolbar = 'bottom';
   var location = 'before';
   if (platform === 'ios') {
-    switch (shortcut) {
+    switch (name) {
       case 'cancel':
         toolbar = 'top';
         break;
@@ -83,7 +78,7 @@ var getButtonInfo = shortcut => {
         break;
     }
   } else if (platform === 'android') {
-    switch (shortcut) {
+    switch (name) {
       case 'cancel':
         location = 'after';
         break;
@@ -94,8 +89,7 @@ var getButtonInfo = shortcut => {
   }
   return {
     toolbar,
-    location,
-    shortcut
+    location
   };
 };
 var Popup = Overlay.inherit({
@@ -144,7 +138,6 @@ var Popup = Overlay.inherit({
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
-    var themeName = currentTheme();
     return this.callBase().concat([{
       device: {
         platform: 'ios'
@@ -182,11 +175,17 @@ var Popup = Overlay.inherit({
       }
     }, {
       device: function device() {
-        return isMaterialBased(themeName);
+        return isMaterialBased();
+      },
+      options: {
+        useFlatToolbarButtons: true
+      }
+    }, {
+      device: function device() {
+        return isMaterial();
       },
       options: {
         useDefaultToolbarButtons: true,
-        useFlatToolbarButtons: true,
         showCloseButton: false
       }
     }]);
@@ -484,28 +483,23 @@ var Popup = Overlay.inherit({
     this._toolbarItemClasses = [];
     var currentPlatform = devices.current().platform;
     var index = 0;
-    var applyValueButtonsInfo = [];
     each(toolbarItems, (_, data) => {
       var isShortcut = isDefined(data.shortcut);
-      var item = isShortcut ? getButtonInfo(data.shortcut) : data;
+      var item = isShortcut ? getButtonPlace(data.shortcut) : data;
       if (isShortcut && currentPlatform === 'ios' && index < 2) {
         item.toolbar = 'top';
         index++;
       }
       item.toolbar = data.toolbar || item.toolbar || 'top';
-      if ((item === null || item === void 0 ? void 0 : item.toolbar) === toolbar) {
+      if (item && item.toolbar === toolbar) {
         if (isShortcut) {
           extend(item, {
             location: data.location
           }, this._getToolbarItemByAlias(data));
-          if (APPLY_VALUE_BUTTONS_ORDER.includes(data.shortcut)) {
-            applyValueButtonsInfo.push({
-              shortcut: data.shortcut,
-              item
-            });
-          } else {
-            toolbarsItems.push(item);
-          }
+        }
+        var isLTROrder = currentPlatform === 'generic';
+        if (data.shortcut === 'done' && isLTROrder || data.shortcut === 'cancel' && !isLTROrder) {
+          toolbarsItems.unshift(item);
         } else {
           toolbarsItems.push(item);
         }
@@ -514,14 +508,25 @@ var Popup = Overlay.inherit({
     if (toolbar === 'top' && this._hasCloseButton()) {
       toolbarsItems.push(this._getCloseButton());
     }
-    var sortedApplyValueItems = sortApplyValueItems(applyValueButtonsInfo).map(item => item.item);
-    return toolbarsItems.concat(...sortedApplyValueItems);
+    return toolbarsItems;
   },
   _hasCloseButton() {
     return this.option('showCloseButton') && this.option('showTitle');
   },
   _getLocalizationKey(itemType) {
     return itemType.toLowerCase() === 'done' ? 'OK' : camelize(itemType, true);
+  },
+  _getToolbarButtonStylingMode: function _getToolbarButtonStylingMode(shortcut) {
+    if (isFluent()) {
+      return shortcut === 'done' ? BUTTON_CONTAINED_MODE : BUTTON_OUTLINED_MODE;
+    }
+    return this.option('useFlatToolbarButtons') ? BUTTON_TEXT_MODE : BUTTON_CONTAINED_MODE;
+  },
+  _getToolbarButtonType: function _getToolbarButtonType(shortcut) {
+    if (isFluent() && shortcut === 'done' || this.option('useDefaultToolbarButtons')) {
+      return BUTTON_DEFAULT_TYPE;
+    }
+    return BUTTON_NORMAL_TYPE;
   },
   _getToolbarItemByAlias: function _getToolbarItemByAlias(data) {
     var that = this;
@@ -533,8 +538,8 @@ var Popup = Overlay.inherit({
       text: messageLocalization.format(this._getLocalizationKey(itemType)),
       onClick: this._createToolbarItemAction(data.onClick),
       integrationOptions: {},
-      type: that.option('useDefaultToolbarButtons') ? BUTTON_DEFAULT_TYPE : BUTTON_NORMAL_TYPE,
-      stylingMode: that.option('useFlatToolbarButtons') ? BUTTON_TEXT_MODE : BUTTON_CONTAINED_MODE
+      type: this._getToolbarButtonType(itemType),
+      stylingMode: this._getToolbarButtonStylingMode(itemType)
     }, data.options || {});
     var itemClass = POPUP_CLASS + '-' + itemType;
     this._toolbarItemClasses.push(itemClass);

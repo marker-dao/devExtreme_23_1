@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scroll_view/utils/get_translate_values.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,11 +11,11 @@
 exports.getTranslateValues = getTranslateValues;
 var _get_element_style = require("./get_element_style");
 function getTranslateValues(el) {
-  var matrix = (0, _get_element_style.getElementTransform)(el);
-  var regex = /matrix.*\((.+)\)/;
-  var matrixValues = regex.exec(matrix);
+  const matrix = (0, _get_element_style.getElementTransform)(el);
+  const regex = /matrix.*\((.+)\)/;
+  const matrixValues = regex.exec(matrix);
   if (matrixValues) {
-    var result = matrixValues[1].split(', ');
+    const result = matrixValues[1].split(', ');
     return {
       left: Number(result[4]),
       top: Number(result[5])

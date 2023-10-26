@@ -1,11 +1,11 @@
 "use strict";
 
 exports.default = void 0;
-var WHITE = '#ffffff';
-var BLACK = '#000000';
-var CONTRAST_ACTIVE = '#cf00da';
-var MARKER_COLOR = '#f8ca00';
-var AREA_LAYER_COLOR = '#686868';
+const WHITE = '#ffffff';
+const BLACK = '#000000';
+const CONTRAST_ACTIVE = '#cf00da';
+const MARKER_COLOR = '#f8ca00';
+const AREA_LAYER_COLOR = '#686868';
 var _default = [{
   theme: {
     name: 'generic.contrast',

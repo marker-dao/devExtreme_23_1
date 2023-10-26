@@ -1,7 +1,7 @@
 "use strict";
 
 exports.default = void 0;
-var SvgBaseProps = {
+const SvgBaseProps = {
   className: ''
 };
 var _default = SvgBaseProps;

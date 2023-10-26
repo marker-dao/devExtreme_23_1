@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/exceljs/export_data_grid.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ exports.exportDataGrid = exportDataGrid;
 var _type = require("../../core/utils/type");
 var _export = require("./export");
 var _export_merged_ranges_manager = require("./export_merged_ranges_manager");
-var DataGridHelpers = /*#__PURE__*/function () {
+let DataGridHelpers = /*#__PURE__*/function () {
   function DataGridHelpers(component, dataProvider, worksheet, options) {
     this.component = component;
     this.dataProvider = dataProvider;
@@ -32,7 +32,7 @@ var DataGridHelpers = /*#__PURE__*/function () {
   _proto._trySetAutoFilter = function _trySetAutoFilter(cellRange) {
     if (this.autoFilterEnabled) {
       if (!(0, _type.isDefined)(this.worksheet.autoFilter) && this.dataProvider.getRowsCount() > 0) {
-        var dataRange = {
+        const dataRange = {
           from: {
             row: cellRange.from.row + this.dataProvider.getHeaderRowCount() - 1,
             column: cellRange.from.column

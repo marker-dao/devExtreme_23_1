@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/m_sortable.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,37 +25,37 @@ var _window = require("../core/utils/window");
 var _events_engine = _interopRequireDefault(require("../events/core/events_engine"));
 var _m_draggable = _interopRequireDefault(require("./m_draggable"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var SORTABLE = 'dxSortable';
-var PLACEHOLDER_CLASS = 'placeholder';
-var CLONE_CLASS = 'clone';
-var isElementVisible = function isElementVisible(itemElement) {
-  return (0, _renderer.default)(itemElement).is(':visible');
-};
-var animate = function animate(element, config) {
+const window = (0, _window.getWindow)();
+const SORTABLE = 'dxSortable';
+const PLACEHOLDER_CLASS = 'placeholder';
+const CLONE_CLASS = 'clone';
+const isElementVisible = itemElement => (0, _renderer.default)(itemElement).is(':visible');
+const animate = (element, config) => {
   var _a, _b;
   if (!element) return;
-  var left = ((_a = config.to) === null || _a === void 0 ? void 0 : _a.left) || 0;
-  var top = ((_b = config.to) === null || _b === void 0 ? void 0 : _b.top) || 0;
+  const left = ((_a = config.to) === null || _a === void 0 ? void 0 : _a.left) || 0;
+  const top = ((_b = config.to) === null || _b === void 0 ? void 0 : _b.top) || 0;
   element.style.transform = "translate(".concat(left, "px,").concat(top, "px)");
   element.style.transition = _fx.default.off ? '' : "transform ".concat(config.duration, "ms ").concat(config.easing);
 };
-var stopAnimation = function stopAnimation(element) {
+const stopAnimation = element => {
   if (!element) return;
   element.style.transform = '';
   element.style.transition = '';
 };
 function getScrollableBoundary($scrollable) {
-  var offset = $scrollable.offset();
-  var style = $scrollable[0].style;
-  var paddingLeft = parseFloat(style.paddingLeft) || 0;
-  var paddingRight = parseFloat(style.paddingRight) || 0;
-  var paddingTop = parseFloat(style.paddingTop) || 0;
+  const offset = $scrollable.offset();
+  const {
+    style
+  } = $scrollable[0];
+  const paddingLeft = parseFloat(style.paddingLeft) || 0;
+  const paddingRight = parseFloat(style.paddingRight) || 0;
+  const paddingTop = parseFloat(style.paddingTop) || 0;
   // use clientWidth, because vertical scrollbar reduces content width
-  var width = $scrollable[0].clientWidth - (paddingLeft + paddingRight);
-  var height = (0, _size.getHeight)($scrollable);
-  var left = offset.left + paddingLeft;
-  var top = offset.top + paddingTop;
+  const width = $scrollable[0].clientWidth - (paddingLeft + paddingRight);
+  const height = (0, _size.getHeight)($scrollable);
+  const left = offset.left + paddingLeft;
+  const top = offset.top + paddingTop;
   return {
     left,
     right: left + width,
@@ -63,7 +63,7 @@ function getScrollableBoundary($scrollable) {
     bottom: top + height
   };
 }
-var Sortable = _m_draggable.default.inherit({
+const Sortable = _m_draggable.default.inherit({
   _init() {
     this.callBase();
     this._sourceScrollHandler = this._handleSourceScroll.bind(this);
@@ -124,14 +124,14 @@ var Sortable = _m_draggable.default.inherit({
     if (e.cancel === true) {
       return;
     }
-    var $sourceElement = this._getSourceElement();
+    const $sourceElement = this._getSourceElement();
     this._updateItemPoints();
     this._subscribeToSourceScroll(e);
     this.option('fromIndex', this._getElementIndex($sourceElement));
     this.option('fromIndexOffset', this.option('offset'));
   },
   _subscribeToSourceScroll(e) {
-    var $scrollable = this._getScrollable((0, _renderer.default)(e.target));
+    const $scrollable = this._getScrollable((0, _renderer.default)(e.target));
     if ($scrollable) {
       this._sourceScrollableInfo = {
         element: $scrollable,
@@ -149,14 +149,13 @@ var Sortable = _m_draggable.default.inherit({
     }
   },
   _handleSourceScroll(e) {
-    var _this = this;
-    var sourceScrollableInfo = this._sourceScrollableInfo;
+    const sourceScrollableInfo = this._sourceScrollableInfo;
     if (sourceScrollableInfo) {
-      ['scrollLeft', 'scrollTop'].forEach(function (scrollProp) {
+      ['scrollLeft', 'scrollTop'].forEach(scrollProp => {
         if (e.target[scrollProp] !== sourceScrollableInfo[scrollProp]) {
-          var scrollBy = e.target[scrollProp] - sourceScrollableInfo[scrollProp];
-          _this._correctItemPoints(scrollBy);
-          _this._movePlaceholder();
+          const scrollBy = e.target[scrollProp] - sourceScrollableInfo[scrollProp];
+          this._correctItemPoints(scrollBy);
+          this._movePlaceholder();
           sourceScrollableInfo[scrollProp] = e.target[scrollProp];
         }
       });
@@ -171,28 +170,28 @@ var Sortable = _m_draggable.default.inherit({
     this._updateItemPoints();
     this.option('fromIndex', -1);
     if (!this._isIndicateMode()) {
-      var itemPoints = this.option('itemPoints');
-      var lastItemPoint = itemPoints[itemPoints.length - 1];
+      const itemPoints = this.option('itemPoints');
+      const lastItemPoint = itemPoints[itemPoints.length - 1];
       if (lastItemPoint) {
-        var $element = this.$element();
-        var $sourceElement = this._getSourceElement();
-        var isVertical = this._isVerticalOrientation();
-        var sourceElementSize = isVertical ? (0, _size.getOuterHeight)($sourceElement, true) : (0, _size.getOuterWidth)($sourceElement, true);
-        var scrollSize = $element.get(0)[isVertical ? 'scrollHeight' : 'scrollWidth'];
-        var scrollPosition = $element.get(0)[isVertical ? 'scrollTop' : 'scrollLeft'];
-        var positionProp = isVertical ? 'top' : 'left';
-        var lastPointPosition = lastItemPoint[positionProp];
-        var elementPosition = $element.offset()[positionProp];
-        var freeSize = elementPosition + scrollSize - scrollPosition - lastPointPosition;
+        const $element = this.$element();
+        const $sourceElement = this._getSourceElement();
+        const isVertical = this._isVerticalOrientation();
+        const sourceElementSize = isVertical ? (0, _size.getOuterHeight)($sourceElement, true) : (0, _size.getOuterWidth)($sourceElement, true);
+        const scrollSize = $element.get(0)[isVertical ? 'scrollHeight' : 'scrollWidth'];
+        const scrollPosition = $element.get(0)[isVertical ? 'scrollTop' : 'scrollLeft'];
+        const positionProp = isVertical ? 'top' : 'left';
+        const lastPointPosition = lastItemPoint[positionProp];
+        const elementPosition = $element.offset()[positionProp];
+        const freeSize = elementPosition + scrollSize - scrollPosition - lastPointPosition;
         if (freeSize < sourceElementSize) {
           if (isVertical) {
-            var items = this._getItems();
-            var $lastItem = (0, _renderer.default)(this._getPrevVisibleItem(items));
+            const items = this._getItems();
+            const $lastItem = (0, _renderer.default)(this._getPrevVisibleItem(items));
             this._$modifiedItem = $lastItem;
             this._modifiedItemMargin = $lastItem.get(0).style.marginBottom;
             $lastItem.css('marginBottom', sourceElementSize - freeSize);
-            var $sortable = $lastItem.closest('.dx-sortable');
-            var sortable = $sortable.data('dxScrollable') || $sortable.data('dxScrollView');
+            const $sortable = $lastItem.closest('.dx-sortable');
+            const sortable = $sortable.data('dxScrollable') || $sortable.data('dxScrollView');
             sortable && sortable.update();
           }
         }
@@ -217,22 +216,21 @@ var Sortable = _m_draggable.default.inherit({
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _allowDrop(event) {
-    var targetDraggable = this._getTargetDraggable();
-    var $targetDraggable = targetDraggable.$element();
-    var $scrollable = this._getScrollable($targetDraggable);
+    const targetDraggable = this._getTargetDraggable();
+    const $targetDraggable = targetDraggable.$element();
+    const $scrollable = this._getScrollable($targetDraggable);
     if ($scrollable) {
-      var _getScrollableBoundar = getScrollableBoundary($scrollable),
-        left = _getScrollableBoundar.left,
-        right = _getScrollableBoundar.right,
-        top = _getScrollableBoundar.top,
-        bottom = _getScrollableBoundar.bottom;
-      var toIndex = this.option('toIndex');
-      var itemPoints = this.option('itemPoints');
-      var itemPoint = itemPoints === null || itemPoints === void 0 ? void 0 : itemPoints.filter(function (item) {
-        return item.index === toIndex;
-      })[0];
+      const {
+        left,
+        right,
+        top,
+        bottom
+      } = getScrollableBoundary($scrollable);
+      const toIndex = this.option('toIndex');
+      const itemPoints = this.option('itemPoints');
+      const itemPoint = itemPoints === null || itemPoints === void 0 ? void 0 : itemPoints.filter(item => item.index === toIndex)[0];
       if (itemPoint && itemPoint.top !== undefined) {
-        var isVertical = this._isVerticalOrientation();
+        const isVertical = this._isVerticalOrientation();
         if (isVertical) {
           return top <= Math.ceil(itemPoint.top) && Math.floor(itemPoint.top) <= bottom;
         }
@@ -243,15 +241,17 @@ var Sortable = _m_draggable.default.inherit({
   },
   dragEnd(sourceEvent) {
     this._unsubscribeFromSourceScroll();
-    var $sourceElement = this._getSourceElement();
-    var sourceDraggable = this._getSourceDraggable();
-    var isSourceDraggable = sourceDraggable.NAME !== this.NAME;
-    var toIndex = this.option('toIndex');
-    var event = sourceEvent.event;
-    var allowDrop = this._allowDrop(event);
+    const $sourceElement = this._getSourceElement();
+    const sourceDraggable = this._getSourceDraggable();
+    const isSourceDraggable = sourceDraggable.NAME !== this.NAME;
+    const toIndex = this.option('toIndex');
+    const {
+      event
+    } = sourceEvent;
+    const allowDrop = this._allowDrop(event);
     if (toIndex !== null && toIndex >= 0 && allowDrop) {
-      var cancelAdd;
-      var cancelRemove;
+      let cancelAdd;
+      let cancelRemove;
       if (sourceDraggable !== this) {
         cancelAdd = this._fireAddEvent(event);
         if (!cancelAdd) {
@@ -271,17 +271,17 @@ var Sortable = _m_draggable.default.inherit({
     return (0, _deferred.Deferred)().resolve();
   },
   dragMove(e) {
-    var itemPoints = this.option('itemPoints');
+    const itemPoints = this.option('itemPoints');
     if (!itemPoints) {
       return;
     }
-    var isVertical = this._isVerticalOrientation();
-    var axisName = isVertical ? 'top' : 'left';
-    var cursorPosition = isVertical ? e.pageY : e.pageX;
-    var rtlEnabled = this.option('rtlEnabled');
-    var itemPoint;
-    for (var i = itemPoints.length - 1; i >= 0; i--) {
-      var centerPosition = itemPoints[i + 1] && (itemPoints[i][axisName] + itemPoints[i + 1][axisName]) / 2;
+    const isVertical = this._isVerticalOrientation();
+    const axisName = isVertical ? 'top' : 'left';
+    const cursorPosition = isVertical ? e.pageY : e.pageX;
+    const rtlEnabled = this.option('rtlEnabled');
+    let itemPoint;
+    for (let i = itemPoints.length - 1; i >= 0; i--) {
+      const centerPosition = itemPoints[i + 1] && (itemPoints[i][axisName] + itemPoints[i + 1][axisName]) / 2;
       if ((!isVertical && rtlEnabled ? cursorPosition > centerPosition : centerPosition > cursorPosition) || centerPosition === undefined) {
         itemPoint = itemPoints[i];
       } else {
@@ -299,7 +299,7 @@ var Sortable = _m_draggable.default.inherit({
     return this.option('dropFeedbackMode') === 'indicate' || this.option('allowDropInsideItem');
   },
   _createPlaceholder() {
-    var $placeholderContainer;
+    let $placeholderContainer;
     if (this._isIndicateMode()) {
       $placeholderContainer = (0, _renderer.default)('<div>').addClass(this._addWidgetPrefix(PLACEHOLDER_CLASS)).insertBefore(this._getSourceDraggable()._$dragElement);
     }
@@ -307,17 +307,17 @@ var Sortable = _m_draggable.default.inherit({
     return $placeholderContainer;
   },
   _getItems() {
-    var itemsSelector = this._getItemsSelector();
+    const itemsSelector = this._getItemsSelector();
     return this._$content().find(itemsSelector).not(".".concat(this._addWidgetPrefix(PLACEHOLDER_CLASS))).not(".".concat(this._addWidgetPrefix(CLONE_CLASS))).toArray();
   },
   _allowReordering() {
-    var sourceDraggable = this._getSourceDraggable();
-    var targetDraggable = this._getTargetDraggable();
+    const sourceDraggable = this._getSourceDraggable();
+    const targetDraggable = this._getTargetDraggable();
     return sourceDraggable !== targetDraggable || this.option('allowReordering');
   },
   _isValidPoint(visibleIndex, draggableVisibleIndex, dropInsideItem) {
-    var allowDropInsideItem = this.option('allowDropInsideItem');
-    var allowReordering = dropInsideItem || this._allowReordering();
+    const allowDropInsideItem = this.option('allowDropInsideItem');
+    const allowReordering = dropInsideItem || this._allowReordering();
     if (!allowReordering && (visibleIndex !== 0 || !allowDropInsideItem)) {
       return false;
     }
@@ -327,22 +327,22 @@ var Sortable = _m_draggable.default.inherit({
     return draggableVisibleIndex === -1 || visibleIndex !== draggableVisibleIndex && (dropInsideItem || visibleIndex !== draggableVisibleIndex + 1);
   },
   _getItemPoints() {
-    var that = this;
-    var result = [];
-    var $item;
-    var offset;
-    var itemWidth;
-    var rtlEnabled = that.option('rtlEnabled');
-    var isVertical = that._isVerticalOrientation();
-    var itemElements = that._getItems();
-    var visibleItemElements = itemElements.filter(isElementVisible);
-    var visibleItemCount = visibleItemElements.length;
-    var $draggableItem = this._getDraggableElement();
-    var draggableVisibleIndex = visibleItemElements.indexOf($draggableItem.get(0));
+    const that = this;
+    let result = [];
+    let $item;
+    let offset;
+    let itemWidth;
+    const rtlEnabled = that.option('rtlEnabled');
+    const isVertical = that._isVerticalOrientation();
+    const itemElements = that._getItems();
+    const visibleItemElements = itemElements.filter(isElementVisible);
+    const visibleItemCount = visibleItemElements.length;
+    const $draggableItem = this._getDraggableElement();
+    const draggableVisibleIndex = visibleItemElements.indexOf($draggableItem.get(0));
     if (visibleItemCount) {
-      for (var i = 0; i <= visibleItemCount; i++) {
-        var needCorrectLeftPosition = !isVertical && rtlEnabled ^ i === visibleItemCount;
-        var needCorrectTopPosition = isVertical && i === visibleItemCount;
+      for (let i = 0; i <= visibleItemCount; i++) {
+        const needCorrectLeftPosition = !isVertical && rtlEnabled ^ i === visibleItemCount;
+        const needCorrectTopPosition = isVertical && i === visibleItemCount;
         if (i < visibleItemCount) {
           $item = (0, _renderer.default)(visibleItemElements[i]);
           offset = $item.offset();
@@ -360,16 +360,16 @@ var Sortable = _m_draggable.default.inherit({
         });
       }
       if (this.option('allowDropInsideItem')) {
-        var points = result;
+        const points = result;
         result = [];
-        for (var _i = 0; _i < points.length; _i++) {
-          result.push(points[_i]);
-          if (points[_i + 1]) {
-            result.push((0, _extend.extend)({}, points[_i], {
+        for (let i = 0; i < points.length; i++) {
+          result.push(points[i]);
+          if (points[i + 1]) {
+            result.push((0, _extend.extend)({}, points[i], {
               dropInsideItem: true,
-              top: Math.floor((points[_i].top + points[_i + 1].top) / 2),
-              left: Math.floor((points[_i].left + points[_i + 1].left) / 2),
-              isValid: this._isValidPoint(_i, draggableVisibleIndex, true)
+              top: Math.floor((points[i].top + points[i + 1].top) / 2),
+              left: Math.floor((points[i].left + points[i + 1].left) / 2),
+              isValid: this._isValidPoint(i, draggableVisibleIndex, true)
             }));
           }
         }
@@ -389,11 +389,11 @@ var Sortable = _m_draggable.default.inherit({
     }
   },
   _correctItemPoints(scrollBy) {
-    var itemPoints = this.option('itemPoints');
+    const itemPoints = this.option('itemPoints');
     if (scrollBy && itemPoints && !this.option('autoUpdate')) {
-      var isVertical = this._isVerticalOrientation();
-      var positionPropName = isVertical ? 'top' : 'left';
-      itemPoints.forEach(function (itemPoint) {
+      const isVertical = this._isVerticalOrientation();
+      const positionPropName = isVertical ? 'top' : 'left';
+      itemPoints.forEach(itemPoint => {
         itemPoint[positionPropName] -= scrollBy;
       });
     }
@@ -402,7 +402,7 @@ var Sortable = _m_draggable.default.inherit({
     return this._getItems().indexOf($itemElement.get(0));
   },
   _getDragTemplateArgs($element) {
-    var args = this.callBase.apply(this, arguments);
+    const args = this.callBase.apply(this, arguments);
     args.model.fromIndex = this._getElementIndex($element);
     return args;
   },
@@ -413,17 +413,17 @@ var Sortable = _m_draggable.default.inherit({
     return this.option('itemOrientation') === 'vertical';
   },
   _normalizeToIndex(toIndex, skipOffsetting) {
-    var isAnotherDraggable = this._getSourceDraggable() !== this._getTargetDraggable();
-    var fromIndex = this._getActualFromIndex();
+    const isAnotherDraggable = this._getSourceDraggable() !== this._getTargetDraggable();
+    const fromIndex = this._getActualFromIndex();
     if (toIndex === null) {
       return fromIndex;
     }
     return Math.max(isAnotherDraggable || fromIndex >= toIndex || skipOffsetting ? toIndex : toIndex - 1, 0);
   },
   _updatePlaceholderPosition(e, itemPoint) {
-    var sourceDraggable = this._getSourceDraggable();
-    var toIndex = this._normalizeToIndex(itemPoint.index, itemPoint.dropInsideItem);
-    var eventArgs = (0, _extend.extend)(this._getEventArgs(e), {
+    const sourceDraggable = this._getSourceDraggable();
+    const toIndex = this._normalizeToIndex(itemPoint.index, itemPoint.dropInsideItem);
+    const eventArgs = (0, _extend.extend)(this._getEventArgs(e), {
       toIndex,
       dropInsideItem: itemPoint.dropInsideItem
     });
@@ -450,9 +450,9 @@ var Sortable = _m_draggable.default.inherit({
   _makeWidthCorrection($item, width) {
     this._$scrollable = this._getScrollable($item);
     if (this._$scrollable) {
-      var scrollableWidth = (0, _size.getWidth)(this._$scrollable);
-      var overflowLeft = this._$scrollable.offset().left - $item.offset().left;
-      var overflowRight = (0, _size.getOuterWidth)($item) - overflowLeft - scrollableWidth;
+      const scrollableWidth = (0, _size.getWidth)(this._$scrollable);
+      const overflowLeft = this._$scrollable.offset().left - $item.offset().left;
+      const overflowRight = (0, _size.getOuterWidth)($item) - overflowLeft - scrollableWidth;
       if (overflowLeft > 0) {
         width -= overflowLeft;
       }
@@ -463,12 +463,12 @@ var Sortable = _m_draggable.default.inherit({
     return width;
   },
   _updatePlaceholderSizes($placeholderElement, itemElement) {
-    var that = this;
-    var dropInsideItem = that.option('dropInsideItem');
-    var $item = (0, _renderer.default)(itemElement);
-    var isVertical = that._isVerticalOrientation();
-    var width = '';
-    var height = '';
+    const that = this;
+    const dropInsideItem = that.option('dropInsideItem');
+    const $item = (0, _renderer.default)(itemElement);
+    const isVertical = that._isVerticalOrientation();
+    let width = '';
+    let height = '';
     $placeholderElement.toggleClass(that._addWidgetPrefix('placeholder-inside'), dropInsideItem);
     if (isVertical || dropInsideItem) {
       width = (0, _size.getOuterWidth)($item);
@@ -483,10 +483,10 @@ var Sortable = _m_draggable.default.inherit({
     });
   },
   _moveItem($itemElement, index, cancelRemove) {
-    var $prevTargetItemElement;
-    var $itemElements = this._getItems();
-    var $targetItemElement = $itemElements[index];
-    var sourceDraggable = this._getSourceDraggable();
+    let $prevTargetItemElement;
+    const $itemElements = this._getItems();
+    const $targetItemElement = $itemElements[index];
+    const sourceDraggable = this._getSourceDraggable();
     if (cancelRemove) {
       $itemElement = $itemElement.clone();
       sourceDraggable._toggleDragSourceClass(false, $itemElement);
@@ -512,9 +512,9 @@ var Sortable = _m_draggable.default.inherit({
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _getEventArgs(e) {
-    var sourceDraggable = this._getSourceDraggable();
-    var targetDraggable = this._getTargetDraggable();
-    var dropInsideItem = targetDraggable.option('dropInsideItem');
+    const sourceDraggable = this._getSourceDraggable();
+    const targetDraggable = this._getTargetDraggable();
+    const dropInsideItem = targetDraggable.option('dropInsideItem');
     return (0, _extend.extend)(this.callBase.apply(this, arguments), {
       fromIndex: sourceDraggable.option('fromIndex'),
       toIndex: this._normalizeToIndex(targetDraggable.option('toIndex'), dropInsideItem),
@@ -522,8 +522,9 @@ var Sortable = _m_draggable.default.inherit({
     });
   },
   _optionChanged(args) {
-    var _this2 = this;
-    var name = args.name;
+    const {
+      name
+    } = args;
     switch (name) {
       case 'onDragChange':
       case 'onPlaceholderPrepared':
@@ -545,11 +546,11 @@ var Sortable = _m_draggable.default.inherit({
       case 'autoUpdate':
         break;
       case 'fromIndex':
-        [false, true].forEach(function (isDragSource) {
-          var fromIndex = isDragSource ? args.value : args.previousValue;
+        [false, true].forEach(isDragSource => {
+          const fromIndex = isDragSource ? args.value : args.previousValue;
           if (fromIndex !== null) {
-            var $fromElement = (0, _renderer.default)(_this2._getItems()[fromIndex]);
-            _this2._toggleDragSourceClass(isDragSource, $fromElement);
+            const $fromElement = (0, _renderer.default)(this._getItems()[fromIndex]);
+            this._toggleDragSourceClass(isDragSource, $fromElement);
           }
         });
         break;
@@ -569,8 +570,8 @@ var Sortable = _m_draggable.default.inherit({
     }
   },
   _isPositionVisible(position) {
-    var $element = this.$element();
-    var scrollContainer;
+    const $element = this.$element();
+    let scrollContainer;
     if ($element.css('overflow') !== 'hidden') {
       scrollContainer = $element.get(0);
     } else {
@@ -584,11 +585,11 @@ var Sortable = _m_draggable.default.inherit({
       });
     }
     if (scrollContainer) {
-      var clientRect = (0, _position.getBoundingRect)(scrollContainer);
-      var isVerticalOrientation = this._isVerticalOrientation();
-      var start = isVerticalOrientation ? 'top' : 'left';
-      var end = isVerticalOrientation ? 'bottom' : 'right';
-      var pageOffset = isVerticalOrientation ? window.pageYOffset : window.pageXOffset;
+      const clientRect = (0, _position.getBoundingRect)(scrollContainer);
+      const isVerticalOrientation = this._isVerticalOrientation();
+      const start = isVerticalOrientation ? 'top' : 'left';
+      const end = isVerticalOrientation ? 'bottom' : 'right';
+      const pageOffset = isVerticalOrientation ? window.pageYOffset : window.pageXOffset;
       if (position[start] < clientRect[start] + pageOffset || position[start] > clientRect[end] + pageOffset) {
         return false;
       }
@@ -596,9 +597,9 @@ var Sortable = _m_draggable.default.inherit({
     return true;
   },
   _optionChangedToIndex(args) {
-    var toIndex = args.value;
+    const toIndex = args.value;
     if (this._isIndicateMode()) {
-      var showPlaceholder = toIndex !== null && toIndex >= 0;
+      const showPlaceholder = toIndex !== null && toIndex >= 0;
       this._togglePlaceholder(showPlaceholder);
       if (showPlaceholder) {
         this._movePlaceholder();
@@ -613,25 +614,25 @@ var Sortable = _m_draggable.default.inherit({
     }
     this._updateItemPoints(true);
     this._updateDragSourceClass();
-    var toIndex = this.option('toIndex');
+    const toIndex = this.option('toIndex');
     this._optionChangedToIndex({
       value: toIndex,
       fullUpdate: true
     });
   },
   _updateDragSourceClass() {
-    var fromIndex = this._getActualFromIndex();
-    var $fromElement = (0, _renderer.default)(this._getItems()[fromIndex]);
+    const fromIndex = this._getActualFromIndex();
+    const $fromElement = (0, _renderer.default)(this._getItems()[fromIndex]);
     if ($fromElement.length) {
       this._$sourceElement = $fromElement;
       this._toggleDragSourceClass(true, $fromElement);
     }
   },
   _makeLeftCorrection(left) {
-    var that = this;
-    var $scrollable = that._$scrollable;
+    const that = this;
+    const $scrollable = that._$scrollable;
     if ($scrollable && that._isVerticalOrientation()) {
-      var overflowLeft = $scrollable.offset().left - left;
+      const overflowLeft = $scrollable.offset().left - left;
       if (overflowLeft > 0) {
         left += overflowLeft;
       }
@@ -639,26 +640,26 @@ var Sortable = _m_draggable.default.inherit({
     return left;
   },
   _movePlaceholder() {
-    var that = this;
-    var $placeholderElement = that._$placeholderElement || that._createPlaceholder();
+    const that = this;
+    const $placeholderElement = that._$placeholderElement || that._createPlaceholder();
     if (!$placeholderElement) {
       return;
     }
-    var items = that._getItems();
-    var toIndex = that.option('toIndex');
-    var isVerticalOrientation = that._isVerticalOrientation();
-    var rtlEnabled = this.option('rtlEnabled');
-    var dropInsideItem = that.option('dropInsideItem');
-    var position = null;
-    var itemElement = items[toIndex];
+    const items = that._getItems();
+    const toIndex = that.option('toIndex');
+    const isVerticalOrientation = that._isVerticalOrientation();
+    const rtlEnabled = this.option('rtlEnabled');
+    const dropInsideItem = that.option('dropInsideItem');
+    let position = null;
+    let itemElement = items[toIndex];
     if (itemElement) {
-      var $itemElement = (0, _renderer.default)(itemElement);
+      const $itemElement = (0, _renderer.default)(itemElement);
       position = $itemElement.offset();
       if (!isVerticalOrientation && rtlEnabled && !dropInsideItem) {
         position.left += (0, _size.getOuterWidth)($itemElement, true);
       }
     } else {
-      var prevVisibleItemElement = itemElement = this._getPrevVisibleItem(items, toIndex);
+      const prevVisibleItemElement = itemElement = this._getPrevVisibleItem(items, toIndex);
       if (prevVisibleItemElement) {
         position = (0, _renderer.default)(prevVisibleItemElement).offset();
         if (isVerticalOrientation) {
@@ -673,8 +674,8 @@ var Sortable = _m_draggable.default.inherit({
       position = null;
     }
     if (position) {
-      var isLastVerticalPosition = isVerticalOrientation && toIndex === items.length;
-      var outerPlaceholderHeight = (0, _size.getOuterHeight)($placeholderElement);
+      const isLastVerticalPosition = isVerticalOrientation && toIndex === items.length;
+      const outerPlaceholderHeight = (0, _size.getOuterHeight)($placeholderElement);
       position.left = that._makeLeftCorrection(position.left);
       position.top = isLastVerticalPosition && position.top >= outerPlaceholderHeight ? position.top - outerPlaceholderHeight : position.top;
       that._move(position, $placeholderElement);
@@ -682,9 +683,9 @@ var Sortable = _m_draggable.default.inherit({
     $placeholderElement.toggle(!!position);
   },
   _getPositions(items, elementSize, fromIndex, toIndex) {
-    var positions = [];
-    for (var i = 0; i < items.length; i++) {
-      var position = 0;
+    const positions = [];
+    for (let i = 0; i < items.length; i++) {
+      let position = 0;
       if (toIndex === null || fromIndex === null) {
         positions.push(position);
         continue;
@@ -711,8 +712,8 @@ var Sortable = _m_draggable.default.inherit({
     return positions;
   },
   _getDraggableElementSize(isVerticalOrientation) {
-    var $draggableItem = this._getDraggableElement();
-    var size = this.option('draggableElementSize');
+    const $draggableItem = this._getDraggableElement();
+    let size = this.option('draggableElementSize');
     if (!size) {
       size = isVerticalOrientation ? ((0, _size.getOuterHeight)($draggableItem) + (0, _size.getOuterHeight)($draggableItem, true)) / 2 : ((0, _size.getOuterWidth)($draggableItem) + (0, _size.getOuterWidth)($draggableItem, true)) / 2;
       if (!this.option('autoUpdate')) {
@@ -722,26 +723,27 @@ var Sortable = _m_draggable.default.inherit({
     return size;
   },
   _getActualFromIndex() {
-    var _this$option = this.option(),
-      fromIndex = _this$option.fromIndex,
-      fromIndexOffset = _this$option.fromIndexOffset,
-      offset = _this$option.offset;
+    const {
+      fromIndex,
+      fromIndexOffset,
+      offset
+    } = this.option();
     return fromIndex == null ? null : fromIndex + fromIndexOffset - offset;
   },
   _moveItems(prevToIndex, toIndex, fullUpdate) {
-    var fromIndex = this._getActualFromIndex();
-    var isVerticalOrientation = this._isVerticalOrientation();
-    var positionPropName = isVerticalOrientation ? 'top' : 'left';
-    var elementSize = this._getDraggableElementSize(isVerticalOrientation);
-    var items = this._getItems();
-    var prevPositions = this._getPositions(items, elementSize, fromIndex, prevToIndex);
-    var positions = this._getPositions(items, elementSize, fromIndex, toIndex);
-    var animationConfig = this.option('animation');
-    var rtlEnabled = this.option('rtlEnabled');
-    for (var i = 0; i < items.length; i++) {
-      var itemElement = items[i];
-      var prevPosition = prevPositions[i];
-      var position = positions[i];
+    const fromIndex = this._getActualFromIndex();
+    const isVerticalOrientation = this._isVerticalOrientation();
+    const positionPropName = isVerticalOrientation ? 'top' : 'left';
+    const elementSize = this._getDraggableElementSize(isVerticalOrientation);
+    const items = this._getItems();
+    const prevPositions = this._getPositions(items, elementSize, fromIndex, prevToIndex);
+    const positions = this._getPositions(items, elementSize, fromIndex, toIndex);
+    const animationConfig = this.option('animation');
+    const rtlEnabled = this.option('rtlEnabled');
+    for (let i = 0; i < items.length; i++) {
+      const itemElement = items[i];
+      const prevPosition = prevPositions[i];
+      const position = positions[i];
       if (toIndex === null || fromIndex === null) {
         stopAnimation(itemElement);
       } else if (prevPosition !== position || fullUpdate && position) {
@@ -754,7 +756,7 @@ var Sortable = _m_draggable.default.inherit({
     }
   },
   _toggleDragSourceClass(value, $element) {
-    var $sourceElement = $element || this._$sourceElement;
+    const $sourceElement = $element || this._$sourceElement;
     this.callBase.apply(this, arguments);
     if (!this._isIndicateMode()) {
       $sourceElement && $sourceElement.toggleClass(this._addWidgetPrefix('source-hidden'), value);
@@ -765,18 +767,18 @@ var Sortable = _m_draggable.default.inherit({
     this.callBase();
   },
   _fireAddEvent(sourceEvent) {
-    var args = this._getEventArgs(sourceEvent);
+    const args = this._getEventArgs(sourceEvent);
     this._getAction('onAdd')(args);
     return args.cancel;
   },
   _fireRemoveEvent(sourceEvent) {
-    var sourceDraggable = this._getSourceDraggable();
-    var args = this._getEventArgs(sourceEvent);
+    const sourceDraggable = this._getSourceDraggable();
+    const args = this._getEventArgs(sourceEvent);
     sourceDraggable._getAction('onRemove')(args);
     return args.cancel;
   },
   _fireReorderEvent(sourceEvent) {
-    var args = this._getEventArgs(sourceEvent);
+    const args = this._getEventArgs(sourceEvent);
     this._getAction('onReorder')(args);
     return args.promise || (0, _deferred.Deferred)().resolve();
   }

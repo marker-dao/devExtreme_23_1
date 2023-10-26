@@ -3,7 +3,7 @@
 exports.default = void 0;
 var _devextremeQuill = _interopRequireDefault(require("devextreme-quill"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FontStyle = {};
+let FontStyle = {};
 if (_devextremeQuill.default) {
   FontStyle = _devextremeQuill.default.import('attributors/style/font');
   FontStyle.whitelist = null;

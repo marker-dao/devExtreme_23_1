@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/core/hook_touch_props.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,12 +9,12 @@
 "use strict";
 
 exports.default = _default;
-var touchPropsToHook = ['pageX', 'pageY', 'screenX', 'screenY', 'clientX', 'clientY'];
-var touchPropHook = function touchPropHook(name, event) {
+const touchPropsToHook = ['pageX', 'pageY', 'screenX', 'screenY', 'clientX', 'clientY'];
+const touchPropHook = function (name, event) {
   if (event[name] && !event.touches || !event.touches) {
     return event[name];
   }
-  var touches = event.touches.length ? event.touches : event.changedTouches;
+  const touches = event.touches.length ? event.touches : event.changedTouches;
   if (!touches.length) {
     return;
   }

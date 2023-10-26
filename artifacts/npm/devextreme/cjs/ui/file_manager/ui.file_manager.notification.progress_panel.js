@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.notification.progress_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,54 +21,51 @@ var _scroll_view = _interopRequireDefault(require("../scroll_view"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_PROGRESS_PANEL_CLASS = 'dx-filemanager-progress-panel';
-var FILE_MANAGER_PROGRESS_PANEL_CONTAINER_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-container");
-var FILE_MANAGER_PROGRESS_PANEL_TITLE_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-title");
-var FILE_MANAGER_PROGRESS_PANEL_TITLE_TEXT_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-title-text");
-var FILE_MANAGER_PROGRESS_PANEL_CLOSE_BUTTON_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-close-button");
-var FILE_MANAGER_PROGRESS_PANEL_INFOS_CONTAINER_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-infos-container");
-var FILE_MANAGER_PROGRESS_PANEL_SEPARATOR_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-separator");
-var FILE_MANAGER_PROGRESS_PANEL_INFO_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-info");
-var FILE_MANAGER_PROGRESS_PANEL_COMMON_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-common");
-var FILE_MANAGER_PROGRESS_PANEL_INFO_WITH_DETAILS_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-info-with-details");
-var FILE_MANAGER_PROGRESS_PANEL_DETAILS_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-details");
-var FILE_MANAGER_PROGRESS_BOX_CLASS = 'dx-filemanager-progress-box';
-var FILE_MANAGER_PROGRESS_BOX_ERROR_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-error");
-var FILE_MANAGER_PROGRESS_BOX_WITHOUT_CLOSE_BUTTON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-without-close-button");
-var FILE_MANAGER_PROGRESS_BOX_IMAGE_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-image");
-var FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-wrapper");
-var FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-common");
-var FILE_MANAGER_PROGRESS_BOX_PROGRESS_BAR_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-progress-bar");
-var FILE_MANAGER_PROGRESS_BOX_CLOSE_BUTTON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-close-button");
-var DX_CARD_CLASS = 'dx-card';
-var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
+const FILE_MANAGER_PROGRESS_PANEL_CLASS = 'dx-filemanager-progress-panel';
+const FILE_MANAGER_PROGRESS_PANEL_CONTAINER_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-container");
+const FILE_MANAGER_PROGRESS_PANEL_TITLE_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-title");
+const FILE_MANAGER_PROGRESS_PANEL_TITLE_TEXT_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-title-text");
+const FILE_MANAGER_PROGRESS_PANEL_CLOSE_BUTTON_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-close-button");
+const FILE_MANAGER_PROGRESS_PANEL_INFOS_CONTAINER_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-infos-container");
+const FILE_MANAGER_PROGRESS_PANEL_SEPARATOR_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-separator");
+const FILE_MANAGER_PROGRESS_PANEL_INFO_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-info");
+const FILE_MANAGER_PROGRESS_PANEL_COMMON_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-common");
+const FILE_MANAGER_PROGRESS_PANEL_INFO_WITH_DETAILS_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-info-with-details");
+const FILE_MANAGER_PROGRESS_PANEL_DETAILS_CLASS = "".concat(FILE_MANAGER_PROGRESS_PANEL_CLASS, "-details");
+const FILE_MANAGER_PROGRESS_BOX_CLASS = 'dx-filemanager-progress-box';
+const FILE_MANAGER_PROGRESS_BOX_ERROR_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-error");
+const FILE_MANAGER_PROGRESS_BOX_WITHOUT_CLOSE_BUTTON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-without-close-button");
+const FILE_MANAGER_PROGRESS_BOX_IMAGE_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-image");
+const FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-wrapper");
+const FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-common");
+const FILE_MANAGER_PROGRESS_BOX_PROGRESS_BAR_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-progress-bar");
+const FILE_MANAGER_PROGRESS_BOX_CLOSE_BUTTON_CLASS = "".concat(FILE_MANAGER_PROGRESS_BOX_CLASS, "-close-button");
+const DX_CARD_CLASS = 'dx-card';
+let FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerProgressPanel, _Widget);
   function FileManagerProgressPanel() {
     return _Widget.apply(this, arguments) || this;
   }
   var _proto = FileManagerProgressPanel.prototype;
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     _Widget.prototype._initMarkup.call(this);
     this._initActions();
     this._operationCount = 0;
     this.$element().addClass(FILE_MANAGER_PROGRESS_PANEL_CLASS);
-    var $scrollView = (0, _renderer.default)('<div>').appendTo(this.$element());
-    var $container = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_CONTAINER_CLASS).appendTo($scrollView);
+    const $scrollView = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const $container = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_CONTAINER_CLASS).appendTo($scrollView);
     this._scrollView = this._createComponent($scrollView, _scroll_view.default, {
       scrollByContent: true,
       scrollByThumb: true,
       showScrollbar: 'onScroll'
     });
-    var $title = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_TITLE_CLASS).appendTo($container);
+    const $title = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_TITLE_CLASS).appendTo($container);
     (0, _renderer.default)('<div>').text(_message.default.format('dxFileManager-notificationProgressPanelTitle')).addClass(FILE_MANAGER_PROGRESS_PANEL_TITLE_TEXT_CLASS).appendTo($title);
-    var $closeButton = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_CLOSE_BUTTON_CLASS).appendTo($title);
+    const $closeButton = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_CLOSE_BUTTON_CLASS).appendTo($title);
     this._createComponent($closeButton, _button.default, {
       icon: 'close',
       stylingMode: 'text',
-      onClick: function onClick() {
-        return _this._raisePanelClosed();
-      }
+      onClick: () => this._raisePanelClosed()
     });
     this._$infosContainer = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_INFOS_CONTAINER_CLASS).appendTo($container);
     this._renderEmptyListText();
@@ -90,7 +87,7 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     };
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'test':
         break;
@@ -104,42 +101,37 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto.addOperation = function addOperation(commonText, showCloseButtonAlways, allowProgressAutoUpdate) {
-    var _this2 = this;
     if (this._operationCount) {
       (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_SEPARATOR_CLASS).prependTo(this._$infosContainer);
     } else {
       this._$infosContainer.empty();
     }
     this._operationCount++;
-    var info = {
+    const info = {
       customCloseHandling: showCloseButtonAlways,
       allowProgressAutoUpdate: (0, _common.ensureDefined)(allowProgressAutoUpdate, true)
     };
-    var $info = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_INFO_CLASS).prependTo(this._$infosContainer);
+    const $info = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_INFO_CLASS).prependTo(this._$infosContainer);
     info.$info = $info;
-    var $common = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_COMMON_CLASS).appendTo($info);
+    const $common = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_COMMON_CLASS).appendTo($info);
     info.common = this._createProgressBox($common, {
       commonText,
       showCloseButton: true,
       showCloseButtonAlways,
-      onCloseButtonClick: function onCloseButtonClick() {
-        return _this2._closeOperation(info);
-      }
+      onCloseButtonClick: () => this._closeOperation(info)
     });
     return info;
   };
   _proto.addOperationDetails = function addOperationDetails(info, details, showCloseButton) {
-    var _this3 = this;
     info.$info.addClass(FILE_MANAGER_PROGRESS_PANEL_INFO_WITH_DETAILS_CLASS);
-    var $details = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_DETAILS_CLASS).appendTo(info.$info);
-    info.details = details.map(function (itemInfo, index) {
+    const $details = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_PANEL_DETAILS_CLASS).appendTo(info.$info);
+    info.details = details.map((itemInfo, index) => {
       itemInfo.info = info;
-      return _this3._createDetailsItem($details, itemInfo, index, false, showCloseButton);
+      return this._createDetailsItem($details, itemInfo, index, false, showCloseButton);
     });
   };
   _proto._createDetailsItem = function _createDetailsItem($container, item, itemIndex, skipProgressBox, showCloseButton) {
-    var _this4 = this;
-    var $detailsItem = (0, _renderer.default)('<div>').appendTo($container);
+    const $detailsItem = (0, _renderer.default)('<div>').appendTo($container);
     if (itemIndex !== -1) {
       $detailsItem.addClass(DX_CARD_CLASS);
     }
@@ -149,9 +141,7 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
       skipProgressBox,
       showCloseButton,
       showCloseButtonAlways: showCloseButton,
-      onCloseButtonClick: function onCloseButtonClick() {
-        return _this4._cancelOperationItem(item, itemIndex);
-      }
+      onCloseButtonClick: () => this._cancelOperationItem(item, itemIndex)
     });
   };
   _proto.completeOperationItem = function completeOperationItem(operationInfo, itemIndex, commonProgress) {
@@ -163,7 +153,7 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
   _proto.updateOperationItemProgress = function updateOperationItemProgress(operationInfo, itemIndex, itemProgress, commonProgress) {
     this.updateOperationCommonProgress(operationInfo, commonProgress);
     if (operationInfo.details) {
-      var detailsItem = operationInfo.details[itemIndex];
+      const detailsItem = operationInfo.details[itemIndex];
       detailsItem.progressBar.option('value', itemProgress);
     }
   };
@@ -186,7 +176,7 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
   };
   _proto.completeSingleOperationWithError = function completeSingleOperationWithError(info, errorText) {
     var _info$details;
-    var detailsItem = (_info$details = info.details) === null || _info$details === void 0 ? void 0 : _info$details[0];
+    const detailsItem = (_info$details = info.details) === null || _info$details === void 0 ? void 0 : _info$details[0];
     info.completed = true;
     this._renderOperationError(detailsItem || info.common, errorText);
     this._setCloseButtonVisible(info.common, true);
@@ -195,7 +185,7 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto.addOperationDetailsError = function addOperationDetailsError(info, index, errorText) {
-    var detailsItem = info.details[index];
+    const detailsItem = info.details[index];
     this._renderOperationError(detailsItem, errorText);
     this._setCloseButtonVisible(detailsItem, false);
   };
@@ -217,7 +207,6 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._createProgressBox = function _createProgressBox($container, options) {
-    var _this5 = this;
     $container.addClass(FILE_MANAGER_PROGRESS_BOX_CLASS);
     if (!options.showCloseButtonAlways) {
       $container.addClass(FILE_MANAGER_PROGRESS_BOX_WITHOUT_CLOSE_BUTTON_CLASS);
@@ -225,24 +214,22 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     if (options.imageUrl) {
       (0, _icon.getImageContainer)(options.imageUrl).addClass(FILE_MANAGER_PROGRESS_BOX_IMAGE_CLASS).appendTo($container);
     }
-    var $wrapper = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS).appendTo($container);
-    var $commonText = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS).text(options.commonText).appendTo($wrapper);
-    var progressBar = null;
+    const $wrapper = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_WRAPPER_CLASS).appendTo($container);
+    const $commonText = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_COMMON_CLASS).text(options.commonText).appendTo($wrapper);
+    let progressBar = null;
     if (!options.skipProgressBox) {
-      var $progressBar = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_PROGRESS_BAR_CLASS).appendTo($wrapper);
+      const $progressBar = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_PROGRESS_BAR_CLASS).appendTo($wrapper);
       progressBar = this._createComponent($progressBar, _progress_bar.default, {
         min: 0,
         max: 100,
         width: '100%',
         validationMessageMode: 'always',
-        statusFormat: function statusFormat(ratio, value) {
-          return _this5._getStatusString(ratio, value);
-        }
+        statusFormat: (ratio, value) => this._getStatusString(ratio, value)
       });
     }
-    var closeButton = null;
+    let closeButton = null;
     if (options.showCloseButton) {
-      var $button = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_CLOSE_BUTTON_CLASS).appendTo($container);
+      const $button = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_PROGRESS_BOX_CLOSE_BUTTON_CLASS).appendTo($container);
       closeButton = this._createComponent($button, _button.default, {
         icon: 'dx-filemanager-i dx-filemanager-i-cancel',
         stylingMode: 'text',
@@ -265,18 +252,13 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._setProgressBarText = function _setProgressBarText(progressBox, text) {
-    progressBox.progressBar.option('statusFormat', function () {
-      return text;
-    });
+    progressBox.progressBar.option('statusFormat', () => text);
   };
   _proto._closeOperation = function _closeOperation(info) {
-    var _this6 = this;
     if (info.customCloseHandling && !info.completed) {
       this._raiseOperationCanceled(info);
       this._setCloseButtonVisible(info.common, false);
-      info.details.forEach(function (item) {
-        return _this6._displayClosedOperationItem(item);
-      });
+      info.details.forEach(item => this._displayClosedOperationItem(item));
     } else {
       this._raiseOperationClosed(info);
       info.$info.next(".".concat(FILE_MANAGER_PROGRESS_PANEL_SEPARATOR_CLASS)).remove();
@@ -289,7 +271,7 @@ var FileManagerProgressPanel = /*#__PURE__*/function (_Widget) {
   };
   _proto._cancelOperationItem = function _cancelOperationItem(item, itemIndex) {
     this._raiseOperationItemCanceled(item, itemIndex);
-    var itemInfo = item.info.details[itemIndex];
+    const itemInfo = item.info.details[itemIndex];
     this._displayClosedOperationItem(itemInfo);
   };
   _proto._displayClosedOperationItem = function _displayClosedOperationItem(itemInfo) {

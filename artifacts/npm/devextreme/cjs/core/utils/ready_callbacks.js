@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/ready_callbacks.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,16 +14,16 @@ var _dependency_injector = _interopRequireDefault(require("./dependency_injector
 var _window = require("./window");
 var _call_once = _interopRequireDefault(require("./call_once"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var callbacks = [];
-var subscribeReady = (0, _call_once.default)(function () {
-  var removeListener = _dom_adapter.default.listen(_dom_adapter.default.getDocument(), 'DOMContentLoaded', function () {
+let callbacks = [];
+const subscribeReady = (0, _call_once.default)(() => {
+  const removeListener = _dom_adapter.default.listen(_dom_adapter.default.getDocument(), 'DOMContentLoaded', () => {
     readyCallbacks.fire();
     removeListener();
   });
 });
-var readyCallbacks = {
-  add: function add(callback) {
-    var windowExists = (0, _window.hasWindow)();
+const readyCallbacks = {
+  add: callback => {
+    const windowExists = (0, _window.hasWindow)();
     if (windowExists && _dom_adapter.default.getReadyState() !== 'loading') {
       callback();
     } else {
@@ -31,10 +31,8 @@ var readyCallbacks = {
       windowExists && subscribeReady();
     }
   },
-  fire: function fire() {
-    callbacks.forEach(function (callback) {
-      return callback();
-    });
+  fire: () => {
+    callbacks.forEach(callback => callback());
     callbacks = [];
   }
 };

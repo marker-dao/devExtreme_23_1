@@ -6,8 +6,8 @@ var _m_focus = require("../../grids/grid_core/focus/m_focus");
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function findIndex(items, callback) {
-  var result = -1;
-  items.forEach(function (node, index) {
+  let result = -1;
+  items.forEach((node, index) => {
     if (callback(node)) {
       result = index;
     }
@@ -27,10 +27,10 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           return this.callBase.apply(this, arguments);
         },
         _isFocusedRowInside(parentKey) {
-          var focusedRowKey = this.option('focusedRowKey');
-          var rowIndex = this.getRowIndexByKey(focusedRowKey);
-          var focusedRow = rowIndex >= 0 && this.getVisibleRows()[rowIndex];
-          var parent = focusedRow && focusedRow.node.parent;
+          const focusedRowKey = this.option('focusedRowKey');
+          const rowIndex = this.getRowIndexByKey(focusedRowKey);
+          const focusedRow = rowIndex >= 0 && this.getVisibleRows()[rowIndex];
+          let parent = focusedRow && focusedRow.node.parent;
           while (parent) {
             if (parent.key === parentKey) {
               return true;
@@ -40,18 +40,18 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           return false;
         },
         getParentKey(key) {
-          var that = this;
-          var dataSource = that._dataSource;
-          var node = that.getNodeByKey(key);
+          const that = this;
+          const dataSource = that._dataSource;
+          const node = that.getNodeByKey(key);
           // @ts-expect-error
-          var d = new _deferred.Deferred();
+          const d = new _deferred.Deferred();
           if (node) {
             d.resolve(node.parent ? node.parent.key : undefined);
           } else {
             dataSource.load({
               filter: [dataSource.getKeyExpr(), '=', key]
-            }).done(function (items) {
-              var parentData = items[0];
+            }).done(items => {
+              const parentData = items[0];
               if (parentData) {
                 d.resolve(dataSource.parentKeyOf(parentData));
               } else {
@@ -62,11 +62,11 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           return d.promise();
         },
         expandAscendants(key) {
-          var that = this;
-          var dataSource = that._dataSource;
+          const that = this;
+          const dataSource = that._dataSource;
           // @ts-expect-error
-          var d = new _deferred.Deferred();
-          that.getParentKey(key).done(function (parentKey) {
+          const d = new _deferred.Deferred();
+          that.getParentKey(key).done(parentKey => {
             if (dataSource && parentKey !== undefined && parentKey !== that.option('rootValue')) {
               dataSource._isNodesInitializing = true;
               that.expandRow(parentKey);
@@ -79,18 +79,16 @@ _m_core.default.registerModule('focus', (0, _extend.extend)(true, {}, _m_focus.f
           return d.promise();
         },
         getPageIndexByKey(key) {
-          var that = this;
-          var dataSource = that._dataSource;
+          const that = this;
+          const dataSource = that._dataSource;
           // @ts-expect-error
-          var d = new _deferred.Deferred();
-          that.expandAscendants(key).done(function () {
+          const d = new _deferred.Deferred();
+          that.expandAscendants(key).done(() => {
             dataSource.load({
               parentIds: []
-            }).done(function (nodes) {
-              var offset = findIndex(nodes, function (node) {
-                return that.keyOf(node.data) === key;
-              });
-              var pageIndex = -1;
+            }).done(nodes => {
+              const offset = findIndex(nodes, node => that.keyOf(node.data) === key);
+              let pageIndex = -1;
               if (offset >= 0) {
                 pageIndex = Math.floor(offset / that.pageSize());
               }

@@ -6,7 +6,7 @@ Object.keys(_m_virtual_scrolling_core).forEach(function (key) {
   if (key in exports && exports[key] === _m_virtual_scrolling_core[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_virtual_scrolling_core[key];
     }
   });

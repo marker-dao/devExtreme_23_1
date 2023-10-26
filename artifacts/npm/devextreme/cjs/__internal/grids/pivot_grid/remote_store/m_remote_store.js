@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/remote_store/m_remote_store.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,18 +22,12 @@ var _data_source = require("../../../../data/data_source/data_source");
 var _utils = require("../../../../data/data_source/utils");
 var _m_widget_utils = _interopRequireWildcard(require("../m_widget_utils"));
 var _m_remote_store_utils = require("./m_remote_store_utils");
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function createGroupingOptions(dimensionOptions, useSortOrder) {
-  var groupingOptions = [];
-  (0, _iterator.each)(dimensionOptions, function (index, dimensionOption) {
+  const groupingOptions = [];
+  (0, _iterator.each)(dimensionOptions, (index, dimensionOption) => {
     groupingOptions.push({
       selector: dimensionOption.dataField,
       groupInterval: dimensionOption.groupInterval,
@@ -44,8 +38,10 @@ function createGroupingOptions(dimensionOptions, useSortOrder) {
   return groupingOptions;
 }
 function getFieldFilterSelector(field) {
-  var selector = field.dataField;
-  var groupInterval = field.groupInterval;
+  let selector = field.dataField;
+  let {
+    groupInterval
+  } = field;
   if (field.dataType === 'date' && typeof groupInterval === 'string') {
     if (groupInterval.toLowerCase() === 'quarter') {
       groupInterval = 'Month';
@@ -55,14 +51,14 @@ function getFieldFilterSelector(field) {
   return selector;
 }
 function getIntervalFilterExpression(selector, numericInterval, numericValue, isExcludedFilterType) {
-  var startFilterValue = [selector, isExcludedFilterType ? '<' : '>=', numericValue];
-  var endFilterValue = [selector, isExcludedFilterType ? '>=' : '<', numericValue + numericInterval];
+  const startFilterValue = [selector, isExcludedFilterType ? '<' : '>=', numericValue];
+  const endFilterValue = [selector, isExcludedFilterType ? '>=' : '<', numericValue + numericInterval];
   return [startFilterValue, isExcludedFilterType ? 'or' : 'and', endFilterValue];
 }
 function getFilterExpressionForFilterValue(field, filterValue) {
-  var selector = getFieldFilterSelector(field);
-  var isExcludedFilterType = field.filterType === 'exclude';
-  var expression = [selector, isExcludedFilterType ? '<>' : '=', filterValue];
+  const selector = getFieldFilterSelector(field);
+  const isExcludedFilterType = field.filterType === 'exclude';
+  let expression = [selector, isExcludedFilterType ? '<>' : '=', filterValue];
   if ((0, _type.isDefined)(field.groupInterval)) {
     if (typeof field.groupInterval === 'string' && field.groupInterval.toLowerCase() === 'quarter') {
       expression = getIntervalFilterExpression(selector, 3, (filterValue - 1) * 3 + 1, isExcludedFilterType);
@@ -73,7 +69,7 @@ function getFilterExpressionForFilterValue(field, filterValue) {
   return expression;
 }
 function createFieldFilterExpressions(field, operation) {
-  var fieldFilterExpressions = [];
+  const fieldFilterExpressions = [];
   if (field.searchValue) {
     return [field.dataField, 'contains', field.searchValue];
   }
@@ -82,10 +78,10 @@ function createFieldFilterExpressions(field, operation) {
   } else {
     operation = operation || 'or';
   }
-  (0, _iterator.each)(field.filterValues, function (index, filterValue) {
-    var currentExpression = [];
+  (0, _iterator.each)(field.filterValues, (index, filterValue) => {
+    let currentExpression = [];
     if (Array.isArray(filterValue)) {
-      var parseLevelsRecursive = field.levels && field.levels.length;
+      const parseLevelsRecursive = field.levels && field.levels.length;
       if (parseLevelsRecursive) {
         currentExpression = createFieldFilterExpressions({
           filterValues: filterValue,
@@ -94,7 +90,7 @@ function createFieldFilterExpressions(field, operation) {
         }, 'and');
       }
     } else {
-      var currentField = field.levels ? field.levels[index] : field;
+      const currentField = field.levels ? field.levels[index] : field;
       currentExpression = getFilterExpressionForFilterValue(currentField, filterValue);
     }
     if (!currentExpression.length) {
@@ -108,9 +104,9 @@ function createFieldFilterExpressions(field, operation) {
   return fieldFilterExpressions;
 }
 function createFilterExpressions(fields) {
-  var filterExpressions = [];
-  (0, _iterator.each)(fields, function (_, field) {
-    var fieldExpressions = createFieldFilterExpressions(field);
+  let filterExpressions = [];
+  (0, _iterator.each)(fields, (_, field) => {
+    const fieldExpressions = createFieldFilterExpressions(field);
     if (!fieldExpressions.length) {
       return [];
     }
@@ -127,8 +123,8 @@ function createFilterExpressions(fields) {
   return filterExpressions;
 }
 function mergeFilters(filter1, filter2) {
-  var mergedFilter;
-  var notEmpty = function notEmpty(filter) {
+  let mergedFilter;
+  const notEmpty = function (filter) {
     return filter && filter.length;
   };
   if (notEmpty(filter1) && notEmpty(filter2)) {
@@ -139,9 +135,9 @@ function mergeFilters(filter1, filter2) {
   return mergedFilter;
 }
 function createLoadOptions(options, externalFilterExpr, hasRows) {
-  var filterExpressions = createFilterExpressions(options.filters);
-  var groupingOptions = createGroupingOptions(options.rows, options.rowTake).concat(createGroupingOptions(options.columns, options.columnTake));
-  var loadOptions = {
+  let filterExpressions = createFilterExpressions(options.filters);
+  const groupingOptions = createGroupingOptions(options.rows, options.rowTake).concat(createGroupingOptions(options.columns, options.columnTake));
+  const loadOptions = {
     groupSummary: [],
     totalSummary: [],
     group: groupingOptions.length ? groupingOptions : undefined,
@@ -162,8 +158,8 @@ function createLoadOptions(options, externalFilterExpr, hasRows) {
   if (filterExpressions.length) {
     loadOptions.filter = filterExpressions;
   }
-  (0, _iterator.each)(options.values, function (_, value) {
-    var summaryOption = {
+  (0, _iterator.each)(options.values, (_, value) => {
+    const summaryOption = {
       selector: value.dataField,
       summaryType: value.summaryType || 'count'
     };
@@ -189,27 +185,31 @@ function parseValue(value, field) {
   return value;
 }
 function parseResult(data, total, descriptions, result) {
-  var rowPath = [];
-  var columnPath = [];
-  var rowHash = result.rowHash;
-  var columnHash = result.columnHash;
+  const rowPath = [];
+  let columnPath = [];
+  const {
+    rowHash
+  } = result;
+  const {
+    columnHash
+  } = result;
   if (total && total.summary) {
-    (0, _iterator.each)(total.summary, function (index, summary) {
+    (0, _iterator.each)(total.summary, (index, summary) => {
       setValue(result.values, summary, result.grandTotalRowIndex, result.grandTotalColumnIndex, index);
     });
   }
   if (total && total.groupCount >= 0) {
-    var skip = descriptions.rows.length ? descriptions.rowSkip : descriptions.columnSkip;
-    data = _toConsumableArray(Array(skip)).concat(data);
+    const skip = descriptions.rows.length ? descriptions.rowSkip : descriptions.columnSkip;
+    data = [...Array(skip)].concat(data);
     data.length = total.groupCount;
   }
   function getItem(dataItem, dimensionName, path, level, field) {
-    var dimensionHash = result["".concat(dimensionName, "Hash")];
-    var parentItem;
-    var parentItemChildren;
-    var item;
-    var pathValue = path.slice(0, level + 1).join('/');
-    var parentPathValue;
+    const dimensionHash = result["".concat(dimensionName, "Hash")];
+    let parentItem;
+    let parentItemChildren;
+    let item;
+    const pathValue = path.slice(0, level + 1).join('/');
+    let parentPathValue;
     if (dimensionHash[pathValue] !== undefined) {
       item = dimensionHash[pathValue];
     } else {
@@ -231,11 +231,11 @@ function parseResult(data, total, descriptions, result) {
     }
     return item;
   }
-  (0, _m_remote_store_utils.forEachGroup)(data, function (item, level) {
-    var rowLevel = level >= descriptions.rows.length ? descriptions.rows.length : level;
-    var columnLevel = level >= descriptions.rows.length ? level - descriptions.rows.length : 0;
-    var columnItem;
-    var rowItem;
+  (0, _m_remote_store_utils.forEachGroup)(data, (item, level) => {
+    const rowLevel = level >= descriptions.rows.length ? descriptions.rows.length : level;
+    const columnLevel = level >= descriptions.rows.length ? level - descriptions.rows.length : 0;
+    let columnItem;
+    let rowItem;
     if (level >= descriptions.rows.length && columnLevel >= descriptions.columns.length) {
       return;
     }
@@ -257,18 +257,16 @@ function parseResult(data, total, descriptions, result) {
     } else {
       result.rows.push({});
     }
-    var currentRowIndex = rowItem && rowItem.index || result.grandTotalRowIndex;
-    var currentColumnIndex = columnItem && columnItem.index || result.grandTotalColumnIndex;
-    (0, _iterator.each)(item && item.summary || [], function (i, summary) {
+    const currentRowIndex = rowItem && rowItem.index || result.grandTotalRowIndex;
+    const currentColumnIndex = columnItem && columnItem.index || result.grandTotalColumnIndex;
+    (0, _iterator.each)(item && item.summary || [], (i, summary) => {
       setValue(result.values, summary, currentRowIndex, currentColumnIndex, i);
     });
   });
   return result;
 }
 function getFiltersForDimension(fields) {
-  return (fields || []).filter(function (f) {
-    return f.filterValues && f.filterValues.length || f.searchValue;
-  });
+  return (fields || []).filter(f => f.filterValues && f.filterValues.length || f.searchValue);
 }
 function getExpandedIndex(options, axis) {
   if (options.headerName) {
@@ -285,16 +283,16 @@ function getFiltersForExpandedDimension(options) {
   return (0, _m_widget_utils.getFiltersByPath)(options[options.headerName], options.path).concat((0, _m_widget_utils.getFiltersByPath)(options[options.headerName === 'rows' ? 'columns' : 'rows'], options.oppositePath || []));
 }
 function getExpandedPathSliceFilter(options, dimensionName, level, firstCollapsedFieldIndex) {
-  var result = [];
-  var startSliceIndex = level > firstCollapsedFieldIndex ? 0 : firstCollapsedFieldIndex;
-  var fields = options.headerName !== dimensionName ? options[dimensionName].slice(startSliceIndex, level) : [];
-  var paths = dimensionName === 'rows' ? options.rowExpandedPaths : options.columnExpandedPaths;
-  (0, _iterator.each)(fields, function (index, field) {
-    var filterValues = [];
-    (0, _iterator.each)(paths, function (_, path) {
+  const result = [];
+  const startSliceIndex = level > firstCollapsedFieldIndex ? 0 : firstCollapsedFieldIndex;
+  const fields = options.headerName !== dimensionName ? options[dimensionName].slice(startSliceIndex, level) : [];
+  const paths = dimensionName === 'rows' ? options.rowExpandedPaths : options.columnExpandedPaths;
+  (0, _iterator.each)(fields, (index, field) => {
+    const filterValues = [];
+    (0, _iterator.each)(paths, (_, path) => {
       path = path.slice(startSliceIndex, level);
       if (index < path.length) {
-        var filterValue = path[index];
+        const filterValue = path[index];
         if (!filterValues.includes(filterValue)) {
           filterValues.push(filterValue);
         }
@@ -310,13 +308,13 @@ function getExpandedPathSliceFilter(options, dimensionName, level, firstCollapse
   return result;
 }
 function getGrandTotalRequest(options, dimensionName, expandedIndex, expandedLevel, commonFilters, firstCollapsedFieldIndex) {
-  var expandedPaths = (dimensionName === 'columns' ? options.columnExpandedPaths : options.rowExpandedPaths) || [];
-  var oppositeDimensionName = dimensionName === 'columns' ? 'rows' : 'columns';
-  var fields = options[dimensionName];
-  var result = [];
-  var newOptions;
+  const expandedPaths = (dimensionName === 'columns' ? options.columnExpandedPaths : options.rowExpandedPaths) || [];
+  const oppositeDimensionName = dimensionName === 'columns' ? 'rows' : 'columns';
+  const fields = options[dimensionName];
+  const result = [];
+  let newOptions;
   if (expandedPaths.length) {
-    for (var i = expandedIndex; i < expandedLevel + 1; i += 1) {
+    for (let i = expandedIndex; i < expandedLevel + 1; i += 1) {
       newOptions = {
         filters: commonFilters.concat(getExpandedPathSliceFilter(options, dimensionName, i, firstCollapsedFieldIndex))
       };
@@ -336,8 +334,8 @@ function getGrandTotalRequest(options, dimensionName, expandedIndex, expandedLev
   return result;
 }
 function getFirstCollapsedIndex(fields) {
-  var firstCollapsedIndex = 0;
-  (0, _iterator.each)(fields, function (index, field) {
+  let firstCollapsedIndex = 0;
+  (0, _iterator.each)(fields, (index, field) => {
     if (!field.expanded) {
       firstCollapsedIndex = index;
       return false;
@@ -347,25 +345,25 @@ function getFirstCollapsedIndex(fields) {
   return firstCollapsedIndex;
 }
 function getRequestsData(options) {
-  var rowExpandedLevel = (0, _m_widget_utils.getExpandedLevel)(options, 'rows');
-  var columnExpandedLevel = (0, _m_widget_utils.getExpandedLevel)(options, 'columns');
-  var filters = options.filters || [];
-  var columnExpandedIndex = getExpandedIndex(options, 'columns');
-  var firstCollapsedColumnIndex = getFirstCollapsedIndex(options.columns);
-  var firstCollapsedRowIndex = getFirstCollapsedIndex(options.rows);
-  var rowExpandedIndex = getExpandedIndex(options, 'rows');
-  var data = [];
+  const rowExpandedLevel = (0, _m_widget_utils.getExpandedLevel)(options, 'rows');
+  const columnExpandedLevel = (0, _m_widget_utils.getExpandedLevel)(options, 'columns');
+  let filters = options.filters || [];
+  const columnExpandedIndex = getExpandedIndex(options, 'columns');
+  const firstCollapsedColumnIndex = getFirstCollapsedIndex(options.columns);
+  const firstCollapsedRowIndex = getFirstCollapsedIndex(options.rows);
+  const rowExpandedIndex = getExpandedIndex(options, 'rows');
+  let data = [];
   filters = filters.concat(getFiltersForDimension(options.rows)).concat(getFiltersForDimension(options.columns)).concat(getFiltersForExpandedDimension(options));
-  var columnTotalsOptions = getGrandTotalRequest(options, 'columns', columnExpandedIndex, columnExpandedLevel, filters, firstCollapsedColumnIndex);
+  const columnTotalsOptions = getGrandTotalRequest(options, 'columns', columnExpandedIndex, columnExpandedLevel, filters, firstCollapsedColumnIndex);
   if (options.rows.length && options.columns.length) {
     if (options.headerName !== 'rows') {
       data = data.concat(columnTotalsOptions);
     }
-    for (var i = rowExpandedIndex; i < rowExpandedLevel + 1; i += 1) {
-      var rows = options.rows.slice(rowExpandedIndex, i + 1);
-      var rowFilterByExpandedPaths = getExpandedPathSliceFilter(options, 'rows', i, firstCollapsedRowIndex);
-      for (var j = columnExpandedIndex; j < columnExpandedLevel + 1; j += 1) {
-        var preparedOptions = (0, _extend.extend)({}, options, {
+    for (let i = rowExpandedIndex; i < rowExpandedLevel + 1; i += 1) {
+      const rows = options.rows.slice(rowExpandedIndex, i + 1);
+      const rowFilterByExpandedPaths = getExpandedPathSliceFilter(options, 'rows', i, firstCollapsedRowIndex);
+      for (let j = columnExpandedIndex; j < columnExpandedLevel + 1; j += 1) {
+        const preparedOptions = (0, _extend.extend)({}, options, {
           columns: options.columns.slice(columnExpandedIndex, j + 1),
           rows,
           filters: filters.concat(getExpandedPathSliceFilter(options, 'columns', j, firstCollapsedColumnIndex)).concat(rowFilterByExpandedPaths)
@@ -379,15 +377,17 @@ function getRequestsData(options) {
   return data;
 }
 function prepareFields(fields) {
-  (0, _iterator.each)(fields || [], function (_, field) {
-    var levels = field.levels;
+  (0, _iterator.each)(fields || [], (_, field) => {
+    const {
+      levels
+    } = field;
     if (levels) {
       prepareFields(levels);
     }
     (0, _m_widget_utils.setDefaultFieldValueFormatting)(field);
   });
 }
-var RemoteStore = _class.default.inherit(function () {
+const RemoteStore = _class.default.inherit(function () {
   return {
     ctor(options) {
       this._dataSource = new _data_source.DataSource(options);
@@ -395,12 +395,12 @@ var RemoteStore = _class.default.inherit(function () {
     },
     getFields(fields) {
       // @ts-expect-error
-      var d = new _deferred.Deferred();
+      const d = new _deferred.Deferred();
       this._store.load({
         skip: 0,
         take: 20
-      }).done(function (data) {
-        var normalizedArguments = (0, _utils.normalizeLoadResult)(data);
+      }).done(data => {
+        const normalizedArguments = (0, _utils.normalizeLoadResult)(data);
         d.resolve(_m_widget_utils.default.discoverObjectFields(normalizedArguments.data, fields));
       }).fail(d.reject);
       return d;
@@ -409,10 +409,10 @@ var RemoteStore = _class.default.inherit(function () {
       return this._store.key();
     },
     load(options) {
-      var that = this;
+      const that = this;
       // @ts-expect-error
-      var d = new _deferred.Deferred();
-      var result = {
+      const d = new _deferred.Deferred();
+      const result = {
         rows: [],
         columns: [],
         values: [],
@@ -423,18 +423,18 @@ var RemoteStore = _class.default.inherit(function () {
         rowIndex: 1,
         columnIndex: 1
       };
-      var requestsData = getRequestsData(options);
-      var deferreds = [];
+      const requestsData = getRequestsData(options);
+      const deferreds = [];
       prepareFields(options.rows);
       prepareFields(options.columns);
       prepareFields(options.filters);
-      (0, _iterator.each)(requestsData, function (_, dataItem) {
+      (0, _iterator.each)(requestsData, (_, dataItem) => {
         deferreds.push(that._store.load(createLoadOptions(dataItem, that.filter(), options.rows.length)));
       });
       _deferred.when.apply(null, deferreds).done(function () {
-        var args = deferreds.length > 1 ? arguments : [arguments];
-        (0, _iterator.each)(args, function (index, argument) {
-          var normalizedArguments = (0, _utils.normalizeLoadResult)(argument[0], argument[1]);
+        const args = deferreds.length > 1 ? arguments : [arguments];
+        (0, _iterator.each)(args, (index, argument) => {
+          const normalizedArguments = (0, _utils.normalizeLoadResult)(argument[0], argument[1]);
           parseResult(normalizedArguments.data, normalizedArguments.extra, requestsData[index], result);
         });
         d.resolve({
@@ -456,9 +456,9 @@ var RemoteStore = _class.default.inherit(function () {
     createDrillDownDataSource(loadOptions, params) {
       loadOptions = loadOptions || {};
       params = params || {};
-      var store = this._store;
-      var filters = (0, _m_widget_utils.getFiltersByPath)(loadOptions.rows, params.rowPath).concat((0, _m_widget_utils.getFiltersByPath)(loadOptions.columns, params.columnPath)).concat(getFiltersForDimension(loadOptions.rows)).concat(loadOptions.filters || []).concat(getFiltersForDimension(loadOptions.columns));
-      var filterExp = createFilterExpressions(filters);
+      const store = this._store;
+      const filters = (0, _m_widget_utils.getFiltersByPath)(loadOptions.rows, params.rowPath).concat((0, _m_widget_utils.getFiltersByPath)(loadOptions.columns, params.columnPath)).concat(getFiltersForDimension(loadOptions.rows)).concat(loadOptions.filters || []).concat(getFiltersForDimension(loadOptions.columns));
+      const filterExp = createFilterExpressions(filters);
       return new _data_source.DataSource({
         load(loadOptions) {
           return store.load((0, _extend.extend)({}, loadOptions, {

@@ -18,26 +18,26 @@ var _index = require("../events/utils/index");
 var _visibility_change = require("../events/visibility_change");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var RESIZABLE = 'dxResizable';
-var RESIZABLE_CLASS = 'dx-resizable';
-var RESIZABLE_RESIZING_CLASS = 'dx-resizable-resizing';
-var RESIZABLE_HANDLE_CLASS = 'dx-resizable-handle';
-var RESIZABLE_HANDLE_TOP_CLASS = 'dx-resizable-handle-top';
-var RESIZABLE_HANDLE_BOTTOM_CLASS = 'dx-resizable-handle-bottom';
-var RESIZABLE_HANDLE_LEFT_CLASS = 'dx-resizable-handle-left';
-var RESIZABLE_HANDLE_RIGHT_CLASS = 'dx-resizable-handle-right';
-var RESIZABLE_HANDLE_CORNER_CLASS = 'dx-resizable-handle-corner';
-var DRAGSTART_START_EVENT_NAME = (0, _index.addNamespace)(_drag.start, RESIZABLE);
-var DRAGSTART_EVENT_NAME = (0, _index.addNamespace)(_drag.move, RESIZABLE);
-var DRAGSTART_END_EVENT_NAME = (0, _index.addNamespace)(_drag.end, RESIZABLE);
-var SIDE_BORDER_WIDTH_STYLES = {
+const RESIZABLE = 'dxResizable';
+const RESIZABLE_CLASS = 'dx-resizable';
+const RESIZABLE_RESIZING_CLASS = 'dx-resizable-resizing';
+const RESIZABLE_HANDLE_CLASS = 'dx-resizable-handle';
+const RESIZABLE_HANDLE_TOP_CLASS = 'dx-resizable-handle-top';
+const RESIZABLE_HANDLE_BOTTOM_CLASS = 'dx-resizable-handle-bottom';
+const RESIZABLE_HANDLE_LEFT_CLASS = 'dx-resizable-handle-left';
+const RESIZABLE_HANDLE_RIGHT_CLASS = 'dx-resizable-handle-right';
+const RESIZABLE_HANDLE_CORNER_CLASS = 'dx-resizable-handle-corner';
+const DRAGSTART_START_EVENT_NAME = (0, _index.addNamespace)(_drag.start, RESIZABLE);
+const DRAGSTART_EVENT_NAME = (0, _index.addNamespace)(_drag.move, RESIZABLE);
+const DRAGSTART_END_EVENT_NAME = (0, _index.addNamespace)(_drag.end, RESIZABLE);
+const SIDE_BORDER_WIDTH_STYLES = {
   'left': 'borderLeftWidth',
   'top': 'borderTopWidth',
   'right': 'borderRightWidth',
   'bottom': 'borderBottomWidth'
 };
-var Resizable = _dom_component.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const Resizable = _dom_component.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       handles: 'all',
       // NOTE: does not affect proportional resize
@@ -62,35 +62,34 @@ var Resizable = _dom_component.default.inherit({
       keepAspectRatio: true
     });
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this.$element().addClass(RESIZABLE_CLASS);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this._renderHandles();
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._renderActions();
   },
-  _renderActions: function _renderActions() {
+  _renderActions: function () {
     this._resizeStartAction = this._createActionByOption('onResizeStart');
     this._resizeEndAction = this._createActionByOption('onResizeEnd');
     this._resizeAction = this._createActionByOption('onResize');
   },
-  _renderHandles: function _renderHandles() {
-    var _this = this;
+  _renderHandles: function () {
     this._handles = [];
-    var handles = this.option('handles');
+    const handles = this.option('handles');
     if (handles === 'none' || !handles) {
       return;
     }
-    var directions = handles === 'all' ? ['top', 'bottom', 'left', 'right'] : handles.split(' ');
-    var activeHandlesMap = {};
-    (0, _iterator.each)(directions, function (index, handleName) {
+    const directions = handles === 'all' ? ['top', 'bottom', 'left', 'right'] : handles.split(' ');
+    const activeHandlesMap = {};
+    (0, _iterator.each)(directions, (index, handleName) => {
       activeHandlesMap[handleName] = true;
-      _this._renderHandle(handleName);
+      this._renderHandle(handleName);
     });
     activeHandlesMap['bottom'] && activeHandlesMap['right'] && this._renderHandle('corner-bottom-right');
     activeHandlesMap['bottom'] && activeHandlesMap['left'] && this._renderHandle('corner-bottom-left');
@@ -98,35 +97,35 @@ var Resizable = _dom_component.default.inherit({
     activeHandlesMap['top'] && activeHandlesMap['left'] && this._renderHandle('corner-top-left');
     this._attachEventHandlers();
   },
-  _renderHandle: function _renderHandle(handleName) {
-    var $handle = (0, _renderer.default)('<div>').addClass(RESIZABLE_HANDLE_CLASS).addClass(RESIZABLE_HANDLE_CLASS + '-' + handleName).appendTo(this.$element());
+  _renderHandle: function (handleName) {
+    const $handle = (0, _renderer.default)('<div>').addClass(RESIZABLE_HANDLE_CLASS).addClass(RESIZABLE_HANDLE_CLASS + '-' + handleName).appendTo(this.$element());
     this._handles.push($handle);
   },
-  _attachEventHandlers: function _attachEventHandlers() {
+  _attachEventHandlers: function () {
     if (this.option('disabled')) {
       return;
     }
-    var handlers = {};
+    const handlers = {};
     handlers[DRAGSTART_START_EVENT_NAME] = this._dragStartHandler.bind(this);
     handlers[DRAGSTART_EVENT_NAME] = this._dragHandler.bind(this);
     handlers[DRAGSTART_END_EVENT_NAME] = this._dragEndHandler.bind(this);
-    this._handles.forEach(function (handleElement) {
+    this._handles.forEach(handleElement => {
       _events_engine.default.on(handleElement, handlers, {
         direction: 'both',
         immediate: true
       });
     });
   },
-  _detachEventHandlers: function _detachEventHandlers() {
-    this._handles.forEach(function (handleElement) {
+  _detachEventHandlers: function () {
+    this._handles.forEach(handleElement => {
       _events_engine.default.off(handleElement);
     });
   },
-  _toggleEventHandlers: function _toggleEventHandlers(shouldAttachEvents) {
+  _toggleEventHandlers: function (shouldAttachEvents) {
     shouldAttachEvents ? this._attachEventHandlers() : this._detachEventHandlers();
   },
-  _getElementSize: function _getElementSize() {
-    var $element = this.$element();
+  _getElementSize: function () {
+    const $element = this.$element();
     return $element.css('boxSizing') === 'border-box' ? {
       width: (0, _size.getOuterWidth)($element),
       height: (0, _size.getOuterHeight)($element)
@@ -135,8 +134,8 @@ var Resizable = _dom_component.default.inherit({
       height: (0, _size.getHeight)($element)
     };
   },
-  _dragStartHandler: function _dragStartHandler(e) {
-    var $element = this.$element();
+  _dragStartHandler: function (e) {
+    const $element = this.$element();
     if ($element.is('.dx-state-disabled, .dx-state-disabled *')) {
       e.cancel = true;
       return;
@@ -154,46 +153,48 @@ var Resizable = _dom_component.default.inherit({
     });
     e.targetElements = null;
   },
-  _toggleResizingClass: function _toggleResizingClass(value) {
+  _toggleResizingClass: function (value) {
     this.$element().toggleClass(RESIZABLE_RESIZING_CLASS, value);
   },
-  _renderDragOffsets: function _renderDragOffsets(e) {
-    var area = this._getArea();
+  _renderDragOffsets: function (e) {
+    const area = this._getArea();
     if (!area) {
       return;
     }
-    var $handle = (0, _renderer.default)(e.target).closest('.' + RESIZABLE_HANDLE_CLASS);
-    var handleWidth = (0, _size.getOuterWidth)($handle);
-    var handleHeight = (0, _size.getOuterHeight)($handle);
-    var handleOffset = $handle.offset();
-    var areaOffset = area.offset;
-    var scrollOffset = this._getAreaScrollOffset();
+    const $handle = (0, _renderer.default)(e.target).closest('.' + RESIZABLE_HANDLE_CLASS);
+    const handleWidth = (0, _size.getOuterWidth)($handle);
+    const handleHeight = (0, _size.getOuterHeight)($handle);
+    const handleOffset = $handle.offset();
+    const areaOffset = area.offset;
+    const scrollOffset = this._getAreaScrollOffset();
     e.maxLeftOffset = this._leftMaxOffset = handleOffset.left - areaOffset.left - scrollOffset.scrollX;
     e.maxRightOffset = this._rightMaxOffset = areaOffset.left + area.width - handleOffset.left - handleWidth + scrollOffset.scrollX;
     e.maxTopOffset = this._topMaxOffset = handleOffset.top - areaOffset.top - scrollOffset.scrollY;
     e.maxBottomOffset = this._bottomMaxOffset = areaOffset.top + area.height - handleOffset.top - handleHeight + scrollOffset.scrollY;
   },
-  _getBorderWidth: function _getBorderWidth($element, direction) {
+  _getBorderWidth: function ($element, direction) {
     if ((0, _type.isWindow)($element.get(0))) return 0;
-    var borderWidth = $element.css(SIDE_BORDER_WIDTH_STYLES[direction]);
+    const borderWidth = $element.css(SIDE_BORDER_WIDTH_STYLES[direction]);
     return parseInt(borderWidth) || 0;
   },
-  _proportionate: function _proportionate(direction, value) {
-    var size = this._elementSize;
-    var factor = direction === 'x' ? size.width / size.height : size.height / size.width;
+  _proportionate: function (direction, value) {
+    const size = this._elementSize;
+    const factor = direction === 'x' ? size.width / size.height : size.height / size.width;
     return value * factor;
   },
-  _getProportionalDelta: function _getProportionalDelta(_ref) {
-    var x = _ref.x,
-      y = _ref.y;
-    var proportionalY = this._proportionate('y', x);
+  _getProportionalDelta: function (_ref) {
+    let {
+      x,
+      y
+    } = _ref;
+    const proportionalY = this._proportionate('y', x);
     if (proportionalY >= y) {
       return {
         x,
         y: proportionalY
       };
     }
-    var proportionalX = this._proportionate('x', y);
+    const proportionalX = this._proportionate('x', y);
     if (proportionalX >= x) {
       return {
         x: proportionalX,
@@ -205,58 +206,44 @@ var Resizable = _dom_component.default.inherit({
       y: 0
     };
   },
-  _getDirectionName: function _getDirectionName(axis) {
-    var sides = this._movingSides;
+  _getDirectionName: function (axis) {
+    const sides = this._movingSides;
     if (axis === 'x') {
       return sides.left ? 'left' : 'right';
     } else {
       return sides.top ? 'top' : 'bottom';
     }
   },
-  _fitIntoArea: function _fitIntoArea(axis, value) {
-    var _this2;
-    var directionName = this._getDirectionName(axis);
-    return Math.min(value, (_this2 = this["_".concat(directionName, "MaxOffset")]) !== null && _this2 !== void 0 ? _this2 : Infinity);
+  _fitIntoArea: function (axis, value) {
+    var _this;
+    const directionName = this._getDirectionName(axis);
+    return Math.min(value, (_this = this["_".concat(directionName, "MaxOffset")]) !== null && _this !== void 0 ? _this : Infinity);
   },
-  _fitDeltaProportionally: function _fitDeltaProportionally(delta) {
-    var _this3 = this;
-    var fittedDelta = _extends({}, delta);
-    var size = this._elementSize;
-    var _this$option = this.option(),
-      minWidth = _this$option.minWidth,
-      minHeight = _this$option.minHeight,
-      maxWidth = _this$option.maxWidth,
-      maxHeight = _this$option.maxHeight;
-    var getWidth = function getWidth() {
-      return size.width + fittedDelta.x;
-    };
-    var getHeight = function getHeight() {
-      return size.height + fittedDelta.y;
-    };
-    var getFittedWidth = function getFittedWidth() {
-      return (0, _math.fitIntoRange)(getWidth(), minWidth, maxWidth);
-    };
-    var getFittedHeight = function getFittedHeight() {
-      return (0, _math.fitIntoRange)(getHeight(), minHeight, maxHeight);
-    };
-    var isInArea = function isInArea(axis) {
-      return fittedDelta[axis] === _this3._fitIntoArea(axis, fittedDelta[axis]);
-    };
-    var isFittedX = function isFittedX() {
-      return (0, _math.inRange)(getWidth(), minWidth, maxWidth) && isInArea('x');
-    };
-    var isFittedY = function isFittedY() {
-      return (0, _math.inRange)(getHeight(), minHeight, maxHeight) && isInArea('y');
-    };
+  _fitDeltaProportionally: function (delta) {
+    let fittedDelta = _extends({}, delta);
+    const size = this._elementSize;
+    const {
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight
+    } = this.option();
+    const getWidth = () => size.width + fittedDelta.x;
+    const getHeight = () => size.height + fittedDelta.y;
+    const getFittedWidth = () => (0, _math.fitIntoRange)(getWidth(), minWidth, maxWidth);
+    const getFittedHeight = () => (0, _math.fitIntoRange)(getHeight(), minHeight, maxHeight);
+    const isInArea = axis => fittedDelta[axis] === this._fitIntoArea(axis, fittedDelta[axis]);
+    const isFittedX = () => (0, _math.inRange)(getWidth(), minWidth, maxWidth) && isInArea('x');
+    const isFittedY = () => (0, _math.inRange)(getHeight(), minHeight, maxHeight) && isInArea('y');
     if (!isFittedX()) {
-      var x = this._fitIntoArea('x', getFittedWidth() - size.width);
+      const x = this._fitIntoArea('x', getFittedWidth() - size.width);
       fittedDelta = {
         x,
         y: this._proportionate('y', x)
       };
     }
     if (!isFittedY()) {
-      var y = this._fitIntoArea('y', getFittedHeight() - size.height);
+      const y = this._fitIntoArea('y', getFittedHeight() - size.height);
       fittedDelta = {
         x: this._proportionate('x', y),
         y
@@ -267,70 +254,75 @@ var Resizable = _dom_component.default.inherit({
       y: 0
     };
   },
-  _fitDelta: function _fitDelta(_ref2) {
-    var x = _ref2.x,
-      y = _ref2.y;
-    var size = this._elementSize;
-    var _this$option2 = this.option(),
-      minWidth = _this$option2.minWidth,
-      minHeight = _this$option2.minHeight,
-      maxWidth = _this$option2.maxWidth,
-      maxHeight = _this$option2.maxHeight;
+  _fitDelta: function (_ref2) {
+    let {
+      x,
+      y
+    } = _ref2;
+    const size = this._elementSize;
+    const {
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight
+    } = this.option();
     return {
       x: (0, _math.fitIntoRange)(size.width + x, minWidth, maxWidth) - size.width,
       y: (0, _math.fitIntoRange)(size.height + y, minHeight, maxHeight) - size.height
     };
   },
-  _getDeltaByOffset: function _getDeltaByOffset(offset) {
-    var sides = this._movingSides;
-    var shouldKeepAspectRatio = this._isCornerHandler(sides) && this.option('keepAspectRatio');
-    var delta = {
+  _getDeltaByOffset: function (offset) {
+    const sides = this._movingSides;
+    const shouldKeepAspectRatio = this._isCornerHandler(sides) && this.option('keepAspectRatio');
+    let delta = {
       x: offset.x * (sides.left ? -1 : 1),
       y: offset.y * (sides.top ? -1 : 1)
     };
     if (shouldKeepAspectRatio) {
-      var proportionalDelta = this._getProportionalDelta(delta);
-      var fittedProportionalDelta = this._fitDeltaProportionally(proportionalDelta);
+      const proportionalDelta = this._getProportionalDelta(delta);
+      const fittedProportionalDelta = this._fitDeltaProportionally(proportionalDelta);
       delta = fittedProportionalDelta;
     } else {
-      var fittedDelta = this._fitDelta(delta);
-      var roundedFittedDelta = this._roundByStep(fittedDelta);
+      const fittedDelta = this._fitDelta(delta);
+      const roundedFittedDelta = this._roundByStep(fittedDelta);
       delta = roundedFittedDelta;
     }
     return delta;
   },
-  _updatePosition: function _updatePosition(delta, _ref3) {
-    var width = _ref3.width,
-      height = _ref3.height;
-    var location = this._elementLocation;
-    var sides = this._movingSides;
-    var $element = this.$element();
-    var elementRect = this._getElementSize();
-    var offsetTop = delta.y * (sides.top ? -1 : 1) - ((elementRect.height || height) - height);
-    var offsetLeft = delta.x * (sides.left ? -1 : 1) - ((elementRect.width || width) - width);
+  _updatePosition: function (delta, _ref3) {
+    let {
+      width,
+      height
+    } = _ref3;
+    const location = this._elementLocation;
+    const sides = this._movingSides;
+    const $element = this.$element();
+    const elementRect = this._getElementSize();
+    const offsetTop = delta.y * (sides.top ? -1 : 1) - ((elementRect.height || height) - height);
+    const offsetLeft = delta.x * (sides.left ? -1 : 1) - ((elementRect.width || width) - width);
     (0, _translator.move)($element, {
       top: location.top + (sides.top ? offsetTop : 0),
       left: location.left + (sides.left ? offsetLeft : 0)
     });
   },
-  _dragHandler: function _dragHandler(e) {
-    var offset = this._getOffset(e);
-    var delta = this._getDeltaByOffset(offset);
-    var dimensions = this._updateDimensions(delta);
+  _dragHandler: function (e) {
+    const offset = this._getOffset(e);
+    const delta = this._getDeltaByOffset(offset);
+    const dimensions = this._updateDimensions(delta);
     this._updatePosition(delta, dimensions);
     this._triggerResizeAction(e, dimensions);
   },
-  _updateDimensions: function _updateDimensions(delta) {
-    var isAbsoluteSize = function isAbsoluteSize(size) {
+  _updateDimensions: function (delta) {
+    const isAbsoluteSize = size => {
       return size.substring(size.length - 2) === 'px';
     };
-    var isStepPrecisionStrict = this.option('stepPrecision') === 'strict';
-    var size = this._elementSize;
-    var width = size.width + delta.x;
-    var height = size.height + delta.y;
-    var elementStyle = this.$element().get(0).style;
-    var shouldRenderWidth = delta.x || isStepPrecisionStrict || isAbsoluteSize(elementStyle.width);
-    var shouldRenderHeight = delta.y || isStepPrecisionStrict || isAbsoluteSize(elementStyle.height);
+    const isStepPrecisionStrict = this.option('stepPrecision') === 'strict';
+    const size = this._elementSize;
+    const width = size.width + delta.x;
+    const height = size.height + delta.y;
+    const elementStyle = this.$element().get(0).style;
+    const shouldRenderWidth = delta.x || isStepPrecisionStrict || isAbsoluteSize(elementStyle.width);
+    const shouldRenderHeight = delta.y || isStepPrecisionStrict || isAbsoluteSize(elementStyle.height);
     if (shouldRenderWidth) this.option({
       width
     });
@@ -342,9 +334,11 @@ var Resizable = _dom_component.default.inherit({
       height: shouldRenderHeight ? height : size.height
     };
   },
-  _triggerResizeAction: function _triggerResizeAction(e, _ref4) {
-    var width = _ref4.width,
-      height = _ref4.height;
+  _triggerResizeAction: function (e, _ref4) {
+    let {
+      width,
+      height
+    } = _ref4;
     this._resizeAction({
       event: e,
       width: this.option('width') || width,
@@ -354,65 +348,63 @@ var Resizable = _dom_component.default.inherit({
     (0, _visibility_change.triggerResizeEvent)(this.$element());
   },
   _isCornerHandler(sides) {
-    return Object.values(sides).reduce(function (xor, value) {
-      return xor ^ value;
-    }, 0) === 0;
+    return Object.values(sides).reduce((xor, value) => xor ^ value, 0) === 0;
   },
-  _getOffset: function _getOffset(e) {
-    var offset = e.offset;
-    var sides = this._movingSides;
+  _getOffset: function (e) {
+    const offset = e.offset;
+    const sides = this._movingSides;
     if (!sides.left && !sides.right) offset.x = 0;
     if (!sides.top && !sides.bottom) offset.y = 0;
     return offset;
   },
-  _roundByStep: function _roundByStep(delta) {
+  _roundByStep: function (delta) {
     return this.option('stepPrecision') === 'strict' ? this._roundStrict(delta) : this._roundNotStrict(delta);
   },
-  _getSteps: function _getSteps() {
+  _getSteps: function () {
     return (0, _common.pairToObject)(this.option('step'), !this.option('roundStepValue'));
   },
-  _roundNotStrict: function _roundNotStrict(delta) {
-    var steps = this._getSteps();
+  _roundNotStrict: function (delta) {
+    const steps = this._getSteps();
     return {
       x: delta.x - delta.x % steps.h,
       y: delta.y - delta.y % steps.v
     };
   },
-  _roundStrict: function _roundStrict(delta) {
-    var sides = this._movingSides;
-    var offset = {
+  _roundStrict: function (delta) {
+    const sides = this._movingSides;
+    const offset = {
       x: delta.x * (sides.left ? -1 : 1),
       y: delta.y * (sides.top ? -1 : 1)
     };
-    var steps = this._getSteps();
-    var location = this._elementLocation;
-    var size = this._elementSize;
-    var xPos = sides.left ? location.left : location.left + size.width;
-    var yPos = sides.top ? location.top : location.top + size.height;
-    var newXShift = (xPos + offset.x) % steps.h;
-    var newYShift = (yPos + offset.y) % steps.v;
-    var sign = Math.sign || function (x) {
+    const steps = this._getSteps();
+    const location = this._elementLocation;
+    const size = this._elementSize;
+    const xPos = sides.left ? location.left : location.left + size.width;
+    const yPos = sides.top ? location.top : location.top + size.height;
+    const newXShift = (xPos + offset.x) % steps.h;
+    const newYShift = (yPos + offset.y) % steps.v;
+    const sign = Math.sign || (x => {
       x = +x;
       if (x === 0 || isNaN(x)) {
         return x;
       }
       return x > 0 ? 1 : -1;
-    };
-    var separatorOffset = function separatorOffset(steps, offset) {
+    });
+    const separatorOffset = (steps, offset) => {
       return (1 + sign(offset) * 0.2) % 1 * steps;
     };
-    var isSmallOffset = function isSmallOffset(offset, steps) {
+    const isSmallOffset = (offset, steps) => {
       return Math.abs(offset) < 0.2 * steps;
     };
-    var newOffsetX = offset.x - newXShift;
-    var newOffsetY = offset.y - newYShift;
+    let newOffsetX = offset.x - newXShift;
+    let newOffsetY = offset.y - newYShift;
     if (newXShift > separatorOffset(steps.h, offset.x)) {
       newOffsetX += steps.h;
     }
     if (newYShift > separatorOffset(steps.v, offset.y)) {
       newOffsetY += steps.v;
     }
-    var roundedOffset = {
+    const roundedOffset = {
       x: (sides.left || sides.right) && !isSmallOffset(offset.x, steps.h) ? newOffsetX : 0,
       y: (sides.top || sides.bottom) && !isSmallOffset(offset.y, steps.v) ? newOffsetY : 0
     };
@@ -421,12 +413,12 @@ var Resizable = _dom_component.default.inherit({
       y: roundedOffset.y * (sides.top ? -1 : 1)
     };
   },
-  _getMovingSides: function _getMovingSides(e) {
-    var $target = (0, _renderer.default)(e.target);
-    var hasCornerTopLeftClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-top-left');
-    var hasCornerTopRightClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-top-right');
-    var hasCornerBottomLeftClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-bottom-left');
-    var hasCornerBottomRightClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-bottom-right');
+  _getMovingSides: function (e) {
+    const $target = (0, _renderer.default)(e.target);
+    const hasCornerTopLeftClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-top-left');
+    const hasCornerTopRightClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-top-right');
+    const hasCornerBottomLeftClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-bottom-left');
+    const hasCornerBottomRightClass = $target.hasClass(RESIZABLE_HANDLE_CORNER_CLASS + '-bottom-right');
     return {
       'top': $target.hasClass(RESIZABLE_HANDLE_TOP_CLASS) || hasCornerTopLeftClass || hasCornerTopRightClass,
       'left': $target.hasClass(RESIZABLE_HANDLE_LEFT_CLASS) || hasCornerTopLeftClass || hasCornerBottomLeftClass,
@@ -434,8 +426,8 @@ var Resizable = _dom_component.default.inherit({
       'right': $target.hasClass(RESIZABLE_HANDLE_RIGHT_CLASS) || hasCornerTopRightClass || hasCornerBottomRightClass
     };
   },
-  _getArea: function _getArea() {
-    var area = this.option('area');
+  _getArea: function () {
+    let area = this.option('area');
     if ((0, _type.isFunction)(area)) {
       area = area.call(this);
     }
@@ -444,15 +436,15 @@ var Resizable = _dom_component.default.inherit({
     }
     return this._getAreaFromElement(area);
   },
-  _getAreaScrollOffset: function _getAreaScrollOffset() {
-    var area = this.option('area');
-    var isElement = !(0, _type.isFunction)(area) && !(0, _type.isPlainObject)(area);
-    var scrollOffset = {
+  _getAreaScrollOffset: function () {
+    const area = this.option('area');
+    const isElement = !(0, _type.isFunction)(area) && !(0, _type.isPlainObject)(area);
+    const scrollOffset = {
       scrollY: 0,
       scrollX: 0
     };
     if (isElement) {
-      var areaElement = (0, _renderer.default)(area)[0];
+      const areaElement = (0, _renderer.default)(area)[0];
       if ((0, _type.isWindow)(areaElement)) {
         scrollOffset.scrollX = areaElement.pageXOffset;
         scrollOffset.scrollY = areaElement.pageYOffset;
@@ -460,8 +452,8 @@ var Resizable = _dom_component.default.inherit({
     }
     return scrollOffset;
   },
-  _getAreaFromObject: function _getAreaFromObject(area) {
-    var result = {
+  _getAreaFromObject: function (area) {
+    const result = {
       width: area.right - area.left,
       height: area.bottom - area.top,
       offset: {
@@ -472,9 +464,9 @@ var Resizable = _dom_component.default.inherit({
     this._correctAreaGeometry(result);
     return result;
   },
-  _getAreaFromElement: function _getAreaFromElement(area) {
-    var $area = (0, _renderer.default)(area);
-    var result;
+  _getAreaFromElement: function (area) {
+    const $area = (0, _renderer.default)(area);
+    let result;
     if ($area.length) {
       result = {
         width: (0, _size.getInnerWidth)($area),
@@ -488,16 +480,16 @@ var Resizable = _dom_component.default.inherit({
     }
     return result;
   },
-  _correctAreaGeometry: function _correctAreaGeometry(result, $area) {
-    var areaBorderLeft = $area ? this._getBorderWidth($area, 'left') : 0;
-    var areaBorderTop = $area ? this._getBorderWidth($area, 'top') : 0;
+  _correctAreaGeometry: function (result, $area) {
+    const areaBorderLeft = $area ? this._getBorderWidth($area, 'left') : 0;
+    const areaBorderTop = $area ? this._getBorderWidth($area, 'top') : 0;
     result.offset.left += areaBorderLeft + this._getBorderWidth(this.$element(), 'left');
     result.offset.top += areaBorderTop + this._getBorderWidth(this.$element(), 'top');
     result.width -= (0, _size.getOuterWidth)(this.$element()) - (0, _size.getInnerWidth)(this.$element());
     result.height -= (0, _size.getOuterHeight)(this.$element()) - (0, _size.getInnerHeight)(this.$element());
   },
-  _dragEndHandler: function _dragEndHandler(e) {
-    var $element = this.$element();
+  _dragEndHandler: function (e) {
+    const $element = this.$element();
     this._resizeEndAction({
       event: e,
       width: (0, _size.getOuterWidth)($element),
@@ -506,13 +498,13 @@ var Resizable = _dom_component.default.inherit({
     });
     this._toggleResizingClass(false);
   },
-  _renderWidth: function _renderWidth(width) {
+  _renderWidth: function (width) {
     this.option('width', (0, _math.fitIntoRange)(width, this.option('minWidth'), this.option('maxWidth')));
   },
-  _renderHeight: function _renderHeight(height) {
+  _renderHeight: function (height) {
     this.option('height', (0, _math.fitIntoRange)(height, this.option('minHeight'), this.option('maxHeight')));
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'disabled':
         this._toggleEventHandlers(!args.value);
@@ -545,10 +537,10 @@ var Resizable = _dom_component.default.inherit({
         break;
     }
   },
-  _clean: function _clean() {
+  _clean: function () {
     this.$element().find('.' + RESIZABLE_HANDLE_CLASS).remove();
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return false;
   }
 });

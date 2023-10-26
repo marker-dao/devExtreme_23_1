@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/double_click.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,35 +17,35 @@ var _event_registrator = _interopRequireDefault(require("./core/event_registrato
 var _click = require("./click");
 var _index = require("./utils/index");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DBLCLICK_EVENT_NAME = 'dxdblclick';
+const DBLCLICK_EVENT_NAME = 'dxdblclick';
 exports.name = DBLCLICK_EVENT_NAME;
-var DBLCLICK_NAMESPACE = 'dxDblClick';
-var NAMESPACED_CLICK_EVENT = (0, _index.addNamespace)(_click.name, DBLCLICK_NAMESPACE);
-var DBLCLICK_TIMEOUT = 300;
-var DblClick = _class.default.inherit({
-  ctor: function ctor() {
+const DBLCLICK_NAMESPACE = 'dxDblClick';
+const NAMESPACED_CLICK_EVENT = (0, _index.addNamespace)(_click.name, DBLCLICK_NAMESPACE);
+const DBLCLICK_TIMEOUT = 300;
+const DblClick = _class.default.inherit({
+  ctor: function () {
     this._handlerCount = 0;
     this._forgetLastClick();
   },
-  _forgetLastClick: function _forgetLastClick() {
+  _forgetLastClick: function () {
     this._firstClickTarget = null;
     this._lastClickTimeStamp = -DBLCLICK_TIMEOUT;
   },
-  add: function add() {
+  add: function () {
     if (this._handlerCount <= 0) {
       _events_engine.default.on(_dom_adapter.default.getDocument(), NAMESPACED_CLICK_EVENT, this._clickHandler.bind(this));
     }
     this._handlerCount++;
   },
-  _clickHandler: function _clickHandler(e) {
-    var timeStamp = e.timeStamp || Date.now();
-    var timeBetweenClicks = timeStamp - this._lastClickTimeStamp;
+  _clickHandler: function (e) {
+    const timeStamp = e.timeStamp || Date.now();
+    const timeBetweenClicks = timeStamp - this._lastClickTimeStamp;
     // NOTE: jQuery sets `timeStamp = Date.now()` for the triggered events, but
     // in the real event timeStamp is the number of milliseconds elapsed from the
     // beginning of the current document's lifetime till the event was created
     // (https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp).
-    var isSimulated = timeBetweenClicks < 0;
-    var isDouble = !isSimulated && timeBetweenClicks < DBLCLICK_TIMEOUT;
+    const isSimulated = timeBetweenClicks < 0;
+    const isDouble = !isSimulated && timeBetweenClicks < DBLCLICK_TIMEOUT;
     if (isDouble) {
       (0, _index.fireEvent)({
         type: DBLCLICK_EVENT_NAME,
@@ -58,7 +58,7 @@ var DblClick = _class.default.inherit({
       this._lastClickTimeStamp = timeStamp;
     }
   },
-  remove: function remove() {
+  remove: function () {
     this._handlerCount--;
     if (this._handlerCount <= 0) {
       this._forgetLastClick();

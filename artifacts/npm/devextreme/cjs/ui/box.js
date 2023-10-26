@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/box.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,37 +24,37 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 // STYLE box
 
-var BOX_CLASS = 'dx-box';
-var BOX_FLEX_CLASS = 'dx-box-flex';
-var BOX_ITEM_CLASS = 'dx-box-item';
-var BOX_ITEM_DATA_KEY = 'dxBoxItemData';
-var SHRINK = 1;
-var MINSIZE_MAP = {
+const BOX_CLASS = 'dx-box';
+const BOX_FLEX_CLASS = 'dx-box-flex';
+const BOX_ITEM_CLASS = 'dx-box-item';
+const BOX_ITEM_DATA_KEY = 'dxBoxItemData';
+const SHRINK = 1;
+const MINSIZE_MAP = {
   'row': 'minWidth',
   'col': 'minHeight'
 };
-var MAXSIZE_MAP = {
+const MAXSIZE_MAP = {
   'row': 'maxWidth',
   'col': 'maxHeight'
 };
-var FLEX_JUSTIFY_CONTENT_MAP = {
+const FLEX_JUSTIFY_CONTENT_MAP = {
   'start': 'flex-start',
   'end': 'flex-end',
   'center': 'center',
   'space-between': 'space-between',
   'space-around': 'space-around'
 };
-var FLEX_ALIGN_ITEMS_MAP = {
+const FLEX_ALIGN_ITEMS_MAP = {
   'start': 'flex-start',
   'end': 'flex-end',
   'center': 'center',
   'stretch': 'stretch'
 };
-var FLEX_DIRECTION_MAP = {
+const FLEX_DIRECTION_MAP = {
   'row': 'row',
   'col': 'column'
 };
-var setFlexProp = function setFlexProp(element, prop, value) {
+const setFlexProp = (element, prop, value) => {
   // NOTE: workaround for jQuery version < 1.11.1 (T181692)
   value = (0, _style.normalizeStyleProp)(prop, value);
   element.style[(0, _style.styleProp)(prop)] = value;
@@ -64,12 +64,12 @@ var setFlexProp = function setFlexProp(element, prop, value) {
     if (value === '' || !(0, _type.isDefined)(value)) {
       return;
     }
-    var cssName = (0, _inflector.dasherize)(prop);
-    var styleExpr = cssName + ': ' + value + ';';
+    const cssName = (0, _inflector.dasherize)(prop);
+    const styleExpr = cssName + ': ' + value + ';';
     (0, _style.setStyle)(element, styleExpr, false);
   }
 };
-var BoxItem = /*#__PURE__*/function (_CollectionWidgetItem) {
+let BoxItem = /*#__PURE__*/function (_CollectionWidgetItem) {
   _inheritsLoose(BoxItem, _CollectionWidgetItem);
   function BoxItem() {
     return _CollectionWidgetItem.apply(this, arguments) || this;
@@ -87,7 +87,7 @@ var BoxItem = /*#__PURE__*/function (_CollectionWidgetItem) {
   };
   return BoxItem;
 }(_item.default);
-var LayoutStrategy = /*#__PURE__*/function () {
+let LayoutStrategy = /*#__PURE__*/function () {
   function LayoutStrategy($element, option) {
     this._$element = $element;
     this._option = option;
@@ -105,7 +105,7 @@ var LayoutStrategy = /*#__PURE__*/function () {
     });
   };
   _proto2._normalizedAlign = function _normalizedAlign() {
-    var align = this._option('align');
+    const align = this._option('align');
     return align in FLEX_JUSTIFY_CONTENT_MAP ? FLEX_JUSTIFY_CONTENT_MAP[align] : align;
   };
   _proto2.renderCrossAlign = function renderCrossAlign() {
@@ -114,22 +114,22 @@ var LayoutStrategy = /*#__PURE__*/function () {
     });
   };
   _proto2._normalizedCrossAlign = function _normalizedCrossAlign() {
-    var crossAlign = this._option('crossAlign');
+    const crossAlign = this._option('crossAlign');
     return crossAlign in FLEX_ALIGN_ITEMS_MAP ? FLEX_ALIGN_ITEMS_MAP[crossAlign] : crossAlign;
   };
   _proto2.renderItems = function renderItems($items) {
-    var flexPropPrefix = (0, _style.stylePropPrefix)('flexDirection');
-    var direction = this._option('direction');
+    const flexPropPrefix = (0, _style.stylePropPrefix)('flexDirection');
+    const direction = this._option('direction');
     (0, _iterator.each)($items, function () {
-      var $item = (0, _renderer.default)(this);
-      var item = $item.data(BOX_ITEM_DATA_KEY);
+      const $item = (0, _renderer.default)(this);
+      const item = $item.data(BOX_ITEM_DATA_KEY);
       $item.css({
         display: flexPropPrefix + 'flex'
       }).css(MAXSIZE_MAP[direction], item.maxSize || 'none').css(MINSIZE_MAP[direction], item.minSize || '0');
       setFlexProp($item.get(0), 'flexBasis', item.baseSize || 0);
       setFlexProp($item.get(0), 'flexGrow', item.ratio);
       setFlexProp($item.get(0), 'flexShrink', (0, _type.isDefined)(item.shrink) ? item.shrink : SHRINK);
-      $item.children().each(function (_, itemContent) {
+      $item.children().each((_, itemContent) => {
         (0, _renderer.default)(itemContent).css({
           width: 'auto',
           height: 'auto',
@@ -143,7 +143,7 @@ var LayoutStrategy = /*#__PURE__*/function () {
   };
   return LayoutStrategy;
 }();
-var Box = /*#__PURE__*/function (_CollectionWidget) {
+let Box = /*#__PURE__*/function (_CollectionWidget) {
   _inheritsLoose(Box, _CollectionWidget);
   function Box() {
     return _CollectionWidget.apply(this, arguments) || this;
@@ -260,7 +260,7 @@ var Box = /*#__PURE__*/function (_CollectionWidget) {
   _proto3._renderItems = function _renderItems(items) {
     _CollectionWidget.prototype._renderItems.call(this, items);
     while (this._queueIsNotEmpty()) {
-      var item = this._shiftItemFromQueue();
+      const item = this._shiftItemFromQueue();
       this._createComponent(item.$item, Box, (0, _extend.extend)({
         itemTemplate: this.option('itemTemplate'),
         itemHoldTimeout: this.option('itemHoldTimeout'),
@@ -274,14 +274,14 @@ var Box = /*#__PURE__*/function (_CollectionWidget) {
     this._layout.renderItems(this._itemElements());
   };
   _proto3._renderItemContent = function _renderItemContent(args) {
-    var $itemNode = args.itemData && args.itemData.node;
+    const $itemNode = args.itemData && args.itemData.node;
     if ($itemNode) {
       return this._renderItemContentByNode(args, $itemNode);
     }
     return _CollectionWidget.prototype._renderItemContent.call(this, args);
   };
   _proto3._postprocessRenderItem = function _postprocessRenderItem(args) {
-    var boxConfig = args.itemData.box;
+    const boxConfig = args.itemData.box;
     if (!boxConfig) {
       return;
     }
@@ -320,10 +320,9 @@ var Box = /*#__PURE__*/function (_CollectionWidget) {
     }
   };
   _proto3._itemOptions = function _itemOptions() {
-    var _this = this;
-    var options = _CollectionWidget.prototype._itemOptions.call(this);
-    options.fireItemStateChangedAction = function (e) {
-      _this._onItemStateChanged(e);
+    const options = _CollectionWidget.prototype._itemOptions.call(this);
+    options.fireItemStateChangedAction = e => {
+      this._onItemStateChanged(e);
     };
     return options;
   }

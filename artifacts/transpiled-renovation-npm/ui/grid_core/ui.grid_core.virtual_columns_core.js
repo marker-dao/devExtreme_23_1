@@ -6,7 +6,7 @@ Object.keys(_m_virtual_columns_core).forEach(function (key) {
   if (key in exports && exports[key] === _m_virtual_columns_core[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_virtual_columns_core[key];
     }
   });

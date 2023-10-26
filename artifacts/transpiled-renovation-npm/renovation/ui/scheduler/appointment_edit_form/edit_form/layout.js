@@ -14,8 +14,7 @@ var _timeZoneEditor = require("./editors/timeZoneEditor");
 var _switchEditor = require("./editors/switchEditor");
 var _descriptionEditor = require("./editors/descriptionEditor");
 var _utils = require("../../../../../core/options/utils");
-var _excluded = ["allDayEditorTemplate", "allowTimeZoneEditing", "allowUpdating", "appointmentData", "dataAccessors", "descriptionEditorTemplate", "endDateEditorTemplate", "firstDayOfWeek", "repeatEditorTemplate", "startDateEditorTemplate", "timeZoneEditorTemplate"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["allDayEditorTemplate", "allowTimeZoneEditing", "allowUpdating", "appointmentData", "dataAccessors", "descriptionEditorTemplate", "endDateEditorTemplate", "firstDayOfWeek", "repeatEditorTemplate", "startDateEditorTemplate", "timeZoneEditorTemplate"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -25,13 +24,15 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var FormColCount = {
+const FormColCount = {
   lg: 2,
   xs: 1
 };
-var viewFunction = function viewFunction(_ref) {
-  var formContextValue = _ref.formContextValue,
-    formItems = _ref.formItems;
+const viewFunction = _ref => {
+  let {
+    formContextValue,
+    formItems
+  } = _ref;
   return (0, _inferno.createComponentVNode)(2, _form.Form, {
     "formData": formContextValue.formData,
     "items": formItems,
@@ -44,7 +45,7 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var EditFormProps = {
+const EditFormProps = {
   startDateEditorTemplate: _startDateEditor.StartDateEditor,
   endDateEditorTemplate: _endDateEditor.EndDateEditor,
   timeZoneEditorTemplate: _timeZoneEditor.TimeZoneEditor,
@@ -53,12 +54,8 @@ var EditFormProps = {
   descriptionEditorTemplate: _descriptionEditor.DescriptionEditor
 };
 exports.EditFormProps = EditFormProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var EditForm = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let EditForm = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(EditForm, _InfernoComponent);
   function EditForm(props) {
     var _this;
@@ -82,13 +79,10 @@ var EditForm = /*#__PURE__*/function (_InfernoComponent) {
     return [new _inferno2.InfernoEffect(this.updateState, [])];
   };
   _proto.updateState = function updateState() {
-    var _this2 = this;
     if (this.state.isAllDay === undefined) {
-      this.setState(function (__state_argument) {
-        return {
-          isAllDay: !!_this2.formContextValue.formData.allDay
-        };
-      });
+      this.setState(__state_argument => ({
+        isAllDay: !!this.formContextValue.formData.allDay
+      }));
     }
   };
   _proto.startDateChange = function startDateChange(date) {
@@ -104,11 +98,9 @@ var EditForm = /*#__PURE__*/function (_InfernoComponent) {
     this.formContextValue.formData.endDateTimeZone = timeZone;
   };
   _proto.allDayChange = function allDayChange(value) {
-    this.setState(function (__state_argument) {
-      return {
-        isAllDay: value
-      };
-    });
+    this.setState(__state_argument => ({
+      isAllDay: value
+    }));
     this.formContextValue.formData.allDay = value;
   };
   _proto.repeatChange = function repeatChange(value) {
@@ -124,7 +116,7 @@ var EditForm = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         startDateEditorTemplate: getTemplate(props.startDateEditorTemplate),
@@ -149,7 +141,7 @@ var EditForm = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(EditForm, [{
     key: "formContextValue",
-    get: function get() {
+    get: function () {
       if (this.context[_form_context.FormContext.id]) {
         return this.context[_form_context.FormContext.id];
       }
@@ -157,76 +149,74 @@ var EditForm = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "formItems",
-    get: function get() {
-      var _this3 = this;
+    get: function () {
       if (this.__getterCache['formItems'] !== undefined) {
         return this.__getterCache['formItems'];
       }
-      return this.__getterCache['formItems'] = function () {
-        var formData = _this3.formContextValue.formData;
-        var StartDateTemplate = _this3.props.startDateEditorTemplate;
-        var EndDateTemplate = _this3.props.endDateEditorTemplate;
-        var TimeZoneTemplate = _this3.props.timeZoneEditorTemplate;
-        var AllDayTemplate = _this3.props.allDayEditorTemplate;
-        var RepeatTemplate = _this3.props.repeatEditorTemplate;
-        var DescriptionTemplate = _this3.props.descriptionEditorTemplate;
-        var recurrenceRule = _this3.formContextValue.formData.recurrenceRule;
-        var isRecurrence = !!recurrenceRule;
-        var appointmentData = _this3.props.appointmentData;
-        var firstDayOfWeek = _this3.props.firstDayOfWeek;
-        var endDateTimeZone = appointmentData.endDateTimeZone,
-          startDateTimeZone = appointmentData.startDateTimeZone;
-        var allDay = !!_this3.state.isAllDay;
-        return (0, _formLayout.getFormLayoutConfig)(_this3.props.dataAccessors.expr, formData, _this3.props.allowTimeZoneEditing, (0, _inferno.createComponentVNode)(2, StartDateTemplate, {
+      return this.__getterCache['formItems'] = (() => {
+        const {
+          formData
+        } = this.formContextValue;
+        const StartDateTemplate = this.props.startDateEditorTemplate;
+        const EndDateTemplate = this.props.endDateEditorTemplate;
+        const TimeZoneTemplate = this.props.timeZoneEditorTemplate;
+        const AllDayTemplate = this.props.allDayEditorTemplate;
+        const RepeatTemplate = this.props.repeatEditorTemplate;
+        const DescriptionTemplate = this.props.descriptionEditorTemplate;
+        const {
+          recurrenceRule
+        } = this.formContextValue.formData;
+        const isRecurrence = !!recurrenceRule;
+        const {
+          appointmentData
+        } = this.props;
+        const {
+          firstDayOfWeek
+        } = this.props;
+        const {
+          endDateTimeZone,
+          startDateTimeZone
+        } = appointmentData;
+        const allDay = !!this.state.isAllDay;
+        return (0, _formLayout.getFormLayoutConfig)(this.props.dataAccessors.expr, formData, this.props.allowTimeZoneEditing, (0, _inferno.createComponentVNode)(2, StartDateTemplate, {
           "value": appointmentData.startDate,
-          "dateChange": _this3.startDateChange,
+          "dateChange": this.startDateChange,
           "startDate": formData.startDate,
           "endDate": formData.endDate,
           "firstDayOfWeek": firstDayOfWeek,
           "isAllDay": allDay
         }), (0, _inferno.createComponentVNode)(2, EndDateTemplate, {
-          "value": _this3.props.appointmentData.endDate,
-          "dateChange": _this3.endDateChange,
+          "value": this.props.appointmentData.endDate,
+          "dateChange": this.endDateChange,
           "startDate": formData.startDate,
           "endDate": formData.endDate,
-          "firstDayOfWeek": _this3.props.firstDayOfWeek,
+          "firstDayOfWeek": this.props.firstDayOfWeek,
           "isAllDay": allDay
         }), (0, _inferno.createComponentVNode)(2, TimeZoneTemplate, {
           "value": startDateTimeZone,
-          "valueChange": _this3.startDateTimeZoneChange,
-          "date": _this3.props.appointmentData.startDate
+          "valueChange": this.startDateTimeZoneChange,
+          "date": this.props.appointmentData.startDate
         }), (0, _inferno.createComponentVNode)(2, TimeZoneTemplate, {
           "value": endDateTimeZone,
-          "valueChange": _this3.endDateTimeZoneChange,
-          "date": _this3.props.appointmentData.endDate
+          "valueChange": this.endDateTimeZoneChange,
+          "date": this.props.appointmentData.endDate
         }), (0, _inferno.createComponentVNode)(2, AllDayTemplate, {
           "value": allDay,
-          "valueChange": _this3.allDayChange
+          "valueChange": this.allDayChange
         }), (0, _inferno.createComponentVNode)(2, RepeatTemplate, {
           "value": isRecurrence,
-          "valueChange": _this3.repeatChange
+          "valueChange": this.repeatChange
         }), (0, _inferno.createComponentVNode)(2, DescriptionTemplate, {
-          "value": _this3.props.appointmentData.description,
-          "valueChange": _this3.descriptionChange
+          "value": this.props.appointmentData.description,
+          "valueChange": this.descriptionChange
         }));
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        allDayEditorTemplate = _this$props.allDayEditorTemplate,
-        allowTimeZoneEditing = _this$props.allowTimeZoneEditing,
-        allowUpdating = _this$props.allowUpdating,
-        appointmentData = _this$props.appointmentData,
-        dataAccessors = _this$props.dataAccessors,
-        descriptionEditorTemplate = _this$props.descriptionEditorTemplate,
-        endDateEditorTemplate = _this$props.endDateEditorTemplate,
-        firstDayOfWeek = _this$props.firstDayOfWeek,
-        repeatEditorTemplate = _this$props.repeatEditorTemplate,
-        startDateEditorTemplate = _this$props.startDateEditorTemplate,
-        timeZoneEditorTemplate = _this$props.timeZoneEditorTemplate,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);
@@ -234,7 +224,7 @@ var EditForm = /*#__PURE__*/function (_InfernoComponent) {
 }(_inferno2.InfernoComponent);
 exports.EditForm = EditForm;
 EditForm.defaultProps = EditFormProps;
-var __defaultOptionRules = [];
+const __defaultOptionRules = [];
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
   EditForm.defaultProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(EditForm.defaultProps), Object.getOwnPropertyDescriptors((0, _utils.convertRulesToOptions)(__defaultOptionRules))));

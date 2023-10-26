@@ -30,7 +30,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } /* eslint-disable prefer-destructuring */
-var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
+let ColumnsController = /*#__PURE__*/function (_modules$Controller) {
   _inheritsLoose(ColumnsController, _modules$Controller);
   function ColumnsController() {
     return _modules$Controller.apply(this, arguments) || this;
@@ -51,14 +51,14 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     };
   };
   _proto._getFirstItems = function _getFirstItems(dataSource) {
-    var groupsCount;
-    var items = [];
-    var getFirstItemsCore = function getFirstItemsCore(items, groupsCount) {
+    let groupsCount;
+    let items = [];
+    const getFirstItemsCore = function (items, groupsCount) {
       if (!items || !groupsCount) {
         return items;
       }
-      for (var i = 0; i < items.length; i++) {
-        var childItems = getFirstItemsCore(items[i].items || items[i].collapsedItems, groupsCount - 1);
+      for (let i = 0; i < items.length; i++) {
+        const childItems = getFirstItemsCore(items[i].items || items[i].collapsedItems, groupsCount - 1);
         if (childItems && childItems.length) {
           return childItems;
         }
@@ -74,8 +74,8 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     !this._skipProcessingColumnsChange && (0, _m_columns_controller_utils.fireColumnsChanged)(this);
   };
   _proto.init = function init(isApplyingUserState) {
-    var that = this;
-    var columns = that.option('columns');
+    const that = this;
+    const columns = that.option('columns');
     that._commandColumns = that._commandColumns || [];
     that._columns = that._columns || [];
     that._isColumnsFromOptions = !!columns;
@@ -97,19 +97,17 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return ['columnsChanged'];
   };
   _proto.getColumnByPath = function getColumnByPath(path, columns) {
-    var that = this;
-    var column;
-    var columnIndexes = [];
-    path.replace(_const.COLUMN_OPTION_REGEXP, function (_, columnIndex) {
+    const that = this;
+    let column;
+    const columnIndexes = [];
+    path.replace(_const.COLUMN_OPTION_REGEXP, (_, columnIndex) => {
       // eslint-disable-next-line radix
       columnIndexes.push(parseInt(columnIndex));
       return '';
     });
     if (columnIndexes.length) {
       if (columns) {
-        column = columnIndexes.reduce(function (column, index) {
-          return column && column.columns && column.columns[index];
-        }, {
+        column = columnIndexes.reduce((column, index) => column && column.columns && column.columns[index], {
           columns
         });
       } else {
@@ -119,7 +117,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return column;
   };
   _proto.optionChanged = function optionChanged(args) {
-    var needUpdateRequireResize;
+    let needUpdateRequireResize;
     switch (args.name) {
       case 'adaptColumnWidthByRatio':
         args.handled = true;
@@ -162,7 +160,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       case 'columnWidth':
         {
           args.handled = true;
-          var ignoreColumnOptionNames = args.fullName === 'columnWidth' && ['width'];
+          const ignoreColumnOptionNames = args.fullName === 'columnWidth' && ['width'];
           this.reinit(ignoreColumnOptionNames);
           break;
         }
@@ -174,9 +172,9 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto._columnOptionChanged = function _columnOptionChanged(args) {
-    var columnOptionValue = {};
-    var column = this.getColumnByPath(args.fullName);
-    var columnOptionName = args.fullName.replace(_const.COLUMN_OPTION_REGEXP, '');
+    let columnOptionValue = {};
+    const column = this.getColumnByPath(args.fullName);
+    const columnOptionName = args.fullName.replace(_const.COLUMN_OPTION_REGEXP, '');
     if (column) {
       if (columnOptionName) {
         columnOptionValue[columnOptionName] = args.value;
@@ -189,7 +187,9 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto._updateRequireResize = function _updateRequireResize(args) {
-    var component = this.component;
+    const {
+      component
+    } = this;
     if (args.fullName.replace(_const.COLUMN_OPTION_REGEXP, '') === 'width' && component._updateLockCount) {
       component._requireResize = true;
     }
@@ -198,13 +198,13 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return ['addColumn', 'deleteColumn', 'columnOption', 'columnCount', 'clearSorting', 'clearGrouping', 'getVisibleColumns', 'getVisibleColumnIndex'];
   };
   _proto.applyDataSource = function applyDataSource(dataSource, forceApplying, isApplyingUserState) {
-    var that = this;
-    var isDataSourceLoaded = dataSource && dataSource.isLoaded();
+    const that = this;
+    const isDataSourceLoaded = dataSource && dataSource.isLoaded();
     that._dataSource = dataSource;
     if (!that._dataSourceApplied || that._dataSourceColumnsCount === 0 || forceApplying || that.option('regenerateColumnsByVisibleItems')) {
       if (isDataSourceLoaded) {
         if (!that._isColumnsFromOptions) {
-          var columnsFromDataSource = (0, _m_columns_controller_utils.createColumnsFromDataSource)(that, dataSource);
+          const columnsFromDataSource = (0, _m_columns_controller_utils.createColumnsFromDataSource)(that, dataSource);
           if (columnsFromDataSource.length) {
             (0, _m_columns_controller_utils.assignColumns)(that, columnsFromDataSource);
             that._dataSourceColumnsCount = that._columns.length;
@@ -229,7 +229,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     this.reinit();
   };
   _proto.resetColumnsCache = function resetColumnsCache() {
-    var that = this;
+    const that = this;
     that._visibleColumns = undefined;
     that._fixedColumns = undefined;
     that._rowCount = undefined;
@@ -251,9 +251,9 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
   };
   _proto.getCommonSettings = function getCommonSettings(column) {
     var _a, _b;
-    var commonColumnSettings = (!column || !column.type) && this.option('commonColumnSettings') || {};
-    var groupingOptions = (_a = this.option('grouping')) !== null && _a !== void 0 ? _a : {};
-    var groupPanelOptions = (_b = this.option('groupPanel')) !== null && _b !== void 0 ? _b : {};
+    const commonColumnSettings = (!column || !column.type) && this.option('commonColumnSettings') || {};
+    const groupingOptions = (_a = this.option('grouping')) !== null && _a !== void 0 ? _a : {};
+    const groupPanelOptions = (_b = this.option('groupPanel')) !== null && _b !== void 0 ? _b : {};
     return (0, _extend.extend)({
       allowFixing: this.option('columnFixing.enabled'),
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -267,18 +267,18 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }, commonColumnSettings);
   };
   _proto.isColumnOptionUsed = function isColumnOptionUsed(optionName) {
-    for (var i = 0; i < this._columns.length; i++) {
+    for (let i = 0; i < this._columns.length; i++) {
       if (this._columns[i][optionName]) {
         return true;
       }
     }
   };
   _proto.isAllDataTypesDefined = function isAllDataTypesDefined(checkSerializers) {
-    var columns = this._columns;
+    const columns = this._columns;
     if (!columns.length) {
       return false;
     }
-    for (var i = 0; i < columns.length; i++) {
+    for (let i = 0; i < columns.length; i++) {
       if (!columns[i].dataField && columns[i].calculateCellValue === columns[i].defaultCalculateCellValue) {
         continue;
       }
@@ -292,14 +292,12 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return this._columns;
   };
   _proto.isBandColumnsUsed = function isBandColumnsUsed() {
-    return this.getColumns().some(function (column) {
-      return column.isBand;
-    });
+    return this.getColumns().some(column => column.isBand);
   };
   _proto.getGroupColumns = function getGroupColumns() {
-    var result = [];
+    const result = [];
     (0, _iterator.each)(this._columns, function () {
-      var column = this;
+      const column = this;
       if ((0, _type.isDefined)(column.groupIndex)) {
         result[column.groupIndex] = column;
       }
@@ -329,10 +327,8 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return this._fixedColumns[rowIndex] || [];
   };
   _proto.getFilteringColumns = function getFilteringColumns() {
-    return this.getColumns().filter(function (item) {
-      return (item.dataField || item.name) && (item.allowFiltering || item.allowHeaderFiltering);
-    }).map(function (item) {
-      var field = (0, _extend.extend)(true, {}, item);
+    return this.getColumns().filter(item => (item.dataField || item.name) && (item.allowFiltering || item.allowHeaderFiltering)).map(item => {
+      const field = (0, _extend.extend)(true, {}, item);
       if (!(0, _type.isDefined)(field.dataField)) {
         field.dataField = field.name;
       }
@@ -344,26 +340,26 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return 0;
   };
   _proto._getFixedColumnsCore = function _getFixedColumnsCore() {
-    var that = this;
-    var result = [];
-    var rowCount = that.getRowCount();
-    var isColumnFixing = that._isColumnFixing();
-    var transparentColumn = {
+    const that = this;
+    const result = [];
+    const rowCount = that.getRowCount();
+    const isColumnFixing = that._isColumnFixing();
+    const transparentColumn = {
       command: 'transparent'
     };
-    var transparentColspan = 0;
-    var notFixedColumnCount;
-    var transparentColumnIndex;
-    var lastFixedPosition;
+    let transparentColspan = 0;
+    let notFixedColumnCount;
+    let transparentColumnIndex;
+    let lastFixedPosition;
     if (isColumnFixing) {
-      for (var i = 0; i <= rowCount; i++) {
+      for (let i = 0; i <= rowCount; i++) {
         notFixedColumnCount = 0;
         lastFixedPosition = null;
         transparentColumnIndex = null;
-        var visibleColumns = that.getVisibleColumns(i, true);
-        for (var j = 0; j < visibleColumns.length; j++) {
-          var prevColumn = visibleColumns[j - 1];
-          var column = visibleColumns[j];
+        const visibleColumns = that.getVisibleColumns(i, true);
+        for (let j = 0; j < visibleColumns.length; j++) {
+          const prevColumn = visibleColumns[j - 1];
+          const column = visibleColumns[j];
           if (!column.fixed) {
             if (i === 0) {
               if (column.isBand && column.colspan) {
@@ -397,19 +393,17 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         result[i].splice(transparentColumnIndex, notFixedColumnCount, transparentColumn);
       }
     }
-    return result.map(function (columns) {
-      return columns.map(function (column) {
-        var newColumn = _extends({}, column);
-        if (newColumn.headerId) {
-          newColumn.headerId += '-fixed';
-        }
-        return newColumn;
-      });
-    });
+    return result.map(columns => columns.map(column => {
+      const newColumn = _extends({}, column);
+      if (newColumn.headerId) {
+        newColumn.headerId += '-fixed';
+      }
+      return newColumn;
+    }));
   };
   _proto._isColumnFixing = function _isColumnFixing() {
-    var isColumnFixing = this.option('columnFixing.enabled');
-    !isColumnFixing && (0, _iterator.each)(this._columns, function (_, column) {
+    let isColumnFixing = this.option('columnFixing.enabled');
+    !isColumnFixing && (0, _iterator.each)(this._columns, (_, column) => {
       if (column.fixed) {
         isColumnFixing = true;
         return false;
@@ -421,43 +415,41 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return this.getGroupColumns();
   };
   _proto.getExpandColumns = function getExpandColumns() {
-    var expandColumns = this._getExpandColumnsCore();
-    var expandColumn;
-    var firstGroupColumn = expandColumns.filter(function (column) {
-      return column.groupIndex === 0;
-    })[0];
-    var isFixedFirstGroupColumn = firstGroupColumn && firstGroupColumn.fixed;
-    var isColumnFixing = this._isColumnFixing();
-    var rtlEnabled = this.option('rtlEnabled');
+    let expandColumns = this._getExpandColumnsCore();
+    let expandColumn;
+    const firstGroupColumn = expandColumns.filter(column => column.groupIndex === 0)[0];
+    const isFixedFirstGroupColumn = firstGroupColumn && firstGroupColumn.fixed;
+    const isColumnFixing = this._isColumnFixing();
+    const rtlEnabled = this.option('rtlEnabled');
     if (expandColumns.length) {
       expandColumn = this.columnOption('command:expand');
     }
-    expandColumns = (0, _iterator.map)(expandColumns, function (column) {
-      return (0, _extend.extend)({}, column, {
-        visibleWidth: null,
-        minWidth: null,
-        cellTemplate: !(0, _type.isDefined)(column.groupIndex) ? column.cellTemplate : null,
-        headerCellTemplate: null,
-        fixed: !(0, _type.isDefined)(column.groupIndex) || !isFixedFirstGroupColumn ? isColumnFixing : true,
-        fixedPosition: rtlEnabled ? 'right' : 'left'
-      }, expandColumn, {
-        index: column.index,
-        type: column.type || _const.GROUP_COMMAND_COLUMN_NAME
-      });
-    });
+    expandColumns = (0, _iterator.map)(expandColumns, column => (0, _extend.extend)({}, column, {
+      visibleWidth: null,
+      minWidth: null,
+      cellTemplate: !(0, _type.isDefined)(column.groupIndex) ? column.cellTemplate : null,
+      headerCellTemplate: null,
+      fixed: !(0, _type.isDefined)(column.groupIndex) || !isFixedFirstGroupColumn ? isColumnFixing : true,
+      fixedPosition: rtlEnabled ? 'right' : 'left'
+    }, expandColumn, {
+      index: column.index,
+      type: column.type || _const.GROUP_COMMAND_COLUMN_NAME
+    }));
     return expandColumns;
   };
   _proto.getBandColumnsCache = function getBandColumnsCache() {
     if (!this._bandColumnsCache) {
-      var columns = this._columns;
-      var columnChildrenByIndex = {};
-      var columnParentByIndex = {};
-      var isPlain = true;
-      columns.forEach(function (column) {
-        var ownerBand = column.ownerBand;
+      const columns = this._columns;
+      const columnChildrenByIndex = {};
+      const columnParentByIndex = {};
+      let isPlain = true;
+      columns.forEach(column => {
+        const {
+          ownerBand
+        } = column;
         // @ts-expect-error
-        var parentIndex = (0, _type.isObject)(ownerBand) ? ownerBand.index : ownerBand;
-        var parent = columns[parentIndex];
+        let parentIndex = (0, _type.isObject)(ownerBand) ? ownerBand.index : ownerBand;
+        const parent = columns[parentIndex];
         if (column.hasColumns) {
           isPlain = false;
         }
@@ -490,22 +482,21 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return (0, _type.isDefined)(column.groupIndex) && !column.showWhenGrouped;
   };
   _proto.hasVisibleDataColumns = function hasVisibleDataColumns() {
-    var _this = this;
-    var columns = this._columns;
-    return columns.some(function (column) {
-      var isVisible = _this._isColumnVisible(column);
-      var isInGroupPanel = _this._isColumnInGroupPanel(column);
-      var isCommand = !!column.command;
+    const columns = this._columns;
+    return columns.some(column => {
+      const isVisible = this._isColumnVisible(column);
+      const isInGroupPanel = this._isColumnInGroupPanel(column);
+      const isCommand = !!column.command;
       return isVisible && !isInGroupPanel && !isCommand;
     });
   };
   _proto._compileVisibleColumnsCore = function _compileVisibleColumnsCore() {
-    var bandColumnsCache = this.getBandColumnsCache();
-    var columns = (0, _m_columns_controller_utils.mergeColumns)(this, this._columns, this._commandColumns, true);
+    const bandColumnsCache = this.getBandColumnsCache();
+    const columns = (0, _m_columns_controller_utils.mergeColumns)(this, this._columns, this._commandColumns, true);
     (0, _m_columns_controller_utils.processBandColumns)(this, columns, bandColumnsCache);
-    var indexedColumns = this._getIndexedColumns(columns);
-    var visibleColumns = this._getVisibleColumnsFromIndexed(indexedColumns);
-    var isDataColumnsInvisible = !this.hasVisibleDataColumns();
+    const indexedColumns = this._getIndexedColumns(columns);
+    const visibleColumns = this._getVisibleColumnsFromIndexed(indexedColumns);
+    const isDataColumnsInvisible = !this.hasVisibleDataColumns();
     if (isDataColumnsInvisible && this._columns.length) {
       visibleColumns[visibleColumns.length - 1].push({
         command: 'empty'
@@ -514,29 +505,30 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return visibleColumns;
   };
   _proto._getIndexedColumns = function _getIndexedColumns(columns) {
-    var _this2 = this;
-    var rtlEnabled = this.option('rtlEnabled');
-    var rowCount = this.getRowCount();
-    var columnDigitsCount = (0, _m_columns_controller_utils.digitsCount)(columns.length);
-    var bandColumnsCache = this.getBandColumnsCache();
-    var positiveIndexedColumns = [];
-    var negativeIndexedColumns = [];
-    for (var i = 0; i < rowCount; i += 1) {
+    const rtlEnabled = this.option('rtlEnabled');
+    const rowCount = this.getRowCount();
+    const columnDigitsCount = (0, _m_columns_controller_utils.digitsCount)(columns.length);
+    const bandColumnsCache = this.getBandColumnsCache();
+    const positiveIndexedColumns = [];
+    const negativeIndexedColumns = [];
+    for (let i = 0; i < rowCount; i += 1) {
       negativeIndexedColumns[i] = [{}];
       // 0 - fixed columns on the left side
       // 1 - not fixed columns
       // 2 - fixed columns on the right side
       positiveIndexedColumns[i] = [{}, {}, {}];
     }
-    columns.forEach(function (column) {
+    columns.forEach(column => {
       var _a, _b, _c, _d;
-      var visibleIndex = column.visibleIndex;
-      var indexedColumns;
-      var parentBandColumns = (0, _m_columns_controller_utils.getParentBandColumns)(column.index, bandColumnsCache.columnParentByIndex);
-      var isVisible = _this2._isColumnVisible(column);
-      var isInGroupPanel = _this2._isColumnInGroupPanel(column);
+      let {
+        visibleIndex
+      } = column;
+      let indexedColumns;
+      const parentBandColumns = (0, _m_columns_controller_utils.getParentBandColumns)(column.index, bandColumnsCache.columnParentByIndex);
+      const isVisible = this._isColumnVisible(column);
+      const isInGroupPanel = this._isColumnInGroupPanel(column);
       if (isVisible && !isInGroupPanel) {
-        var rowIndex = parentBandColumns.length;
+        const rowIndex = parentBandColumns.length;
         if (visibleIndex < 0) {
           visibleIndex = -visibleIndex;
           indexedColumns = negativeIndexedColumns[rowIndex];
@@ -544,8 +536,8 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
           column.fixed = (_b = (_a = parentBandColumns[0]) === null || _a === void 0 ? void 0 : _a.fixed) !== null && _b !== void 0 ? _b : column.fixed;
           column.fixedPosition = (_d = (_c = parentBandColumns[0]) === null || _c === void 0 ? void 0 : _c.fixedPosition) !== null && _d !== void 0 ? _d : column.fixedPosition;
           if (column.fixed) {
-            var isDefaultCommandColumn = !!column.command && !(0, _m_columns_controller_utils.isCustomCommandColumn)(_this2, column);
-            var isFixedToEnd = column.fixedPosition === 'right';
+            const isDefaultCommandColumn = !!column.command && !(0, _m_columns_controller_utils.isCustomCommandColumn)(this, column);
+            let isFixedToEnd = column.fixedPosition === 'right';
             if (rtlEnabled && !isDefaultCommandColumn) {
               isFixedToEnd = !isFixedToEnd;
             }
@@ -556,8 +548,8 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         }
         if (parentBandColumns.length) {
           visibleIndex = (0, _m_columns_controller_utils.numberToString)(visibleIndex, columnDigitsCount);
-          for (var _i = parentBandColumns.length - 1; _i >= 0; _i -= 1) {
-            visibleIndex = (0, _m_columns_controller_utils.numberToString)(parentBandColumns[_i].visibleIndex, columnDigitsCount) + visibleIndex;
+          for (let i = parentBandColumns.length - 1; i >= 0; i -= 1) {
+            visibleIndex = (0, _m_columns_controller_utils.numberToString)(parentBandColumns[i].visibleIndex, columnDigitsCount) + visibleIndex;
           }
         }
         indexedColumns[visibleIndex] = indexedColumns[visibleIndex] || [];
@@ -570,46 +562,44 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     };
   };
   _proto._getVisibleColumnsFromIndexed = function _getVisibleColumnsFromIndexed(_ref) {
-    var _this3 = this;
-    var positiveIndexedColumns = _ref.positiveIndexedColumns,
-      negativeIndexedColumns = _ref.negativeIndexedColumns;
-    var result = [];
-    var rowCount = this.getRowCount();
-    var expandColumns = (0, _m_columns_controller_utils.mergeColumns)(this, this.getExpandColumns(), this._columns);
-    var rowspanGroupColumns = 0;
-    var rowspanExpandColumns = 0;
-    var _loop = function _loop(rowIndex) {
+    let {
+      positiveIndexedColumns,
+      negativeIndexedColumns
+    } = _ref;
+    const result = [];
+    const rowCount = this.getRowCount();
+    const expandColumns = (0, _m_columns_controller_utils.mergeColumns)(this, this.getExpandColumns(), this._columns);
+    let rowspanGroupColumns = 0;
+    let rowspanExpandColumns = 0;
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
       result.push([]);
-      (0, _object.orderEach)(negativeIndexedColumns[rowIndex], function (_, columns) {
+      (0, _object.orderEach)(negativeIndexedColumns[rowIndex], (_, columns) => {
         result[rowIndex].unshift.apply(result[rowIndex], columns);
       });
-      var firstPositiveIndexColumn = result[rowIndex].length;
-      var positiveIndexedRowColumns = positiveIndexedColumns[rowIndex];
-      positiveIndexedRowColumns.forEach(function (columnsByFixing) {
-        (0, _object.orderEach)(columnsByFixing, function (_, columnsByVisibleIndex) {
+      const firstPositiveIndexColumn = result[rowIndex].length;
+      const positiveIndexedRowColumns = positiveIndexedColumns[rowIndex];
+      positiveIndexedRowColumns.forEach(columnsByFixing => {
+        (0, _object.orderEach)(columnsByFixing, (_, columnsByVisibleIndex) => {
           result[rowIndex].push.apply(result[rowIndex], columnsByVisibleIndex);
         });
       });
       // The order of processing is important
       if (rowspanExpandColumns <= rowIndex) {
-        rowspanExpandColumns += _m_columns_controller_utils.processExpandColumns.call(_this3, result[rowIndex], expandColumns, _const.DETAIL_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
+        rowspanExpandColumns += _m_columns_controller_utils.processExpandColumns.call(this, result[rowIndex], expandColumns, _const.DETAIL_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
       if (rowspanGroupColumns <= rowIndex) {
-        rowspanGroupColumns += _m_columns_controller_utils.processExpandColumns.call(_this3, result[rowIndex], expandColumns, _const.GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
+        rowspanGroupColumns += _m_columns_controller_utils.processExpandColumns.call(this, result[rowIndex], expandColumns, _const.GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
-    };
-    for (var rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
-      _loop(rowIndex);
     }
     result.push((0, _m_columns_controller_utils.getDataColumns)(result));
     return result;
   };
   _proto.getInvisibleColumns = function getInvisibleColumns(columns, bandColumnIndex) {
-    var that = this;
-    var result = [];
-    var hiddenColumnsByBand;
+    const that = this;
+    let result = [];
+    let hiddenColumnsByBand;
     columns = columns || that._columns;
-    (0, _iterator.each)(columns, function (_, column) {
+    (0, _iterator.each)(columns, (_, column) => {
       if (column.ownerBand !== bandColumnIndex) {
         return;
       }
@@ -632,17 +622,15 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return result;
   };
   _proto.getChooserColumns = function getChooserColumns(getAllColumns) {
-    var columns = getAllColumns ? this.getColumns() : this.getInvisibleColumns();
-    var columnChooserColumns = columns.filter(function (column) {
-      return column.showInColumnChooser;
-    });
-    var sortOrder = this.option('columnChooser.sortOrder');
+    const columns = getAllColumns ? this.getColumns() : this.getInvisibleColumns();
+    const columnChooserColumns = columns.filter(column => column.showInColumnChooser);
+    const sortOrder = this.option('columnChooser.sortOrder');
     return (0, _m_columns_controller_utils.sortColumns)(columnChooserColumns, sortOrder);
   };
   _proto.allowMoveColumn = function allowMoveColumn(fromVisibleIndex, toVisibleIndex, sourceLocation, targetLocation) {
-    var that = this;
-    var columnIndex = (0, _m_columns_controller_utils.getColumnIndexByVisibleIndex)(that, fromVisibleIndex, sourceLocation);
-    var sourceColumn = that._columns[columnIndex];
+    const that = this;
+    const columnIndex = (0, _m_columns_controller_utils.getColumnIndexByVisibleIndex)(that, fromVisibleIndex, sourceLocation);
+    const sourceColumn = that._columns[columnIndex];
     if (sourceColumn && (sourceColumn.allowReordering || sourceColumn.allowGrouping || sourceColumn.allowHiding)) {
       if (sourceLocation === targetLocation) {
         if (sourceLocation === _const.COLUMN_CHOOSER_LOCATION) {
@@ -665,14 +653,14 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return false;
   };
   _proto.moveColumn = function moveColumn(fromVisibleIndex, toVisibleIndex, sourceLocation, targetLocation) {
-    var that = this;
-    var options = {};
-    var prevGroupIndex;
-    var fromIndex = (0, _m_columns_controller_utils.getColumnIndexByVisibleIndex)(that, fromVisibleIndex, sourceLocation);
-    var toIndex = (0, _m_columns_controller_utils.getColumnIndexByVisibleIndex)(that, toVisibleIndex, targetLocation);
-    var targetGroupIndex;
+    const that = this;
+    const options = {};
+    let prevGroupIndex;
+    const fromIndex = (0, _m_columns_controller_utils.getColumnIndexByVisibleIndex)(that, fromVisibleIndex, sourceLocation);
+    const toIndex = (0, _m_columns_controller_utils.getColumnIndexByVisibleIndex)(that, toVisibleIndex, targetLocation);
+    let targetGroupIndex;
     if (fromIndex >= 0) {
-      var column = that._columns[fromIndex];
+      const column = that._columns[fromIndex];
       // @ts-expect-error
       toVisibleIndex = (0, _type.isObject)(toVisibleIndex) ? toVisibleIndex.columnIndex : toVisibleIndex;
       targetGroupIndex = toIndex >= 0 ? that._columns[toIndex].groupIndex : -1;
@@ -692,7 +680,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         options.groupIndex = (0, _m_columns_controller_utils.moveColumnToGroup)(that, column, targetGroupIndex);
         column.groupIndex = prevGroupIndex;
       } else if (toVisibleIndex >= 0) {
-        var targetColumn = that._columns[toIndex];
+        const targetColumn = that._columns[toIndex];
         if (!targetColumn || column.ownerBand !== targetColumn.ownerBand) {
           options.visibleIndex = _const.MAX_SAFE_INTEGER;
         } else if ((0, _m_columns_controller_utils.isColumnFixed)(that, column) ^ (0, _m_columns_controller_utils.isColumnFixed)(that, targetColumn)) {
@@ -701,7 +689,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
           options.visibleIndex = targetColumn.visibleIndex;
         }
       }
-      var isVisible = targetLocation !== _const.COLUMN_CHOOSER_LOCATION;
+      const isVisible = targetLocation !== _const.COLUMN_CHOOSER_LOCATION;
       if (column.visible !== isVisible) {
         options.visible = isVisible;
       }
@@ -709,14 +697,14 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto.changeSortOrder = function changeSortOrder(columnIndex, sortOrder) {
-    var that = this;
-    var options = {};
-    var sortingOptions = that.option('sorting');
-    var sortingMode = sortingOptions && sortingOptions.mode;
-    var needResetSorting = sortingMode === 'single' || !sortOrder;
-    var allowSorting = sortingMode === 'single' || sortingMode === 'multiple';
-    var column = that._columns[columnIndex];
-    var nextSortOrder = function nextSortOrder(column) {
+    const that = this;
+    const options = {};
+    const sortingOptions = that.option('sorting');
+    const sortingMode = sortingOptions && sortingOptions.mode;
+    const needResetSorting = sortingMode === 'single' || !sortOrder;
+    const allowSorting = sortingMode === 'single' || sortingMode === 'multiple';
+    const column = that._columns[columnIndex];
+    const nextSortOrder = function (column) {
       if (sortOrder === 'ctrl') {
         if (!('sortOrder' in column && 'sortIndex' in column)) {
           return false;
@@ -757,18 +745,18 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     that.columnOption(column.index, options);
   };
   _proto.getSortDataSourceParameters = function getSortDataSourceParameters(useLocalSelector) {
-    var that = this;
-    var sortColumns = [];
-    var sort = [];
+    const that = this;
+    const sortColumns = [];
+    const sort = [];
     (0, _iterator.each)(that._columns, function () {
       if ((this.dataField || this.selector || this.calculateCellValue) && (0, _type.isDefined)(this.sortIndex) && !(0, _type.isDefined)(this.groupIndex)) {
         sortColumns[this.sortIndex] = this;
       }
     });
     (0, _iterator.each)(sortColumns, function () {
-      var sortOrder = this && this.sortOrder;
+      const sortOrder = this && this.sortOrder;
       if ((0, _m_columns_controller_utils.isSortOrderValid)(sortOrder)) {
-        var sortItem = {
+        const sortItem = {
           selector: this.calculateSortValue || this.displayField || this.calculateDisplayValue || useLocalSelector && this.selector || this.dataField || this.calculateCellValue,
           desc: this.sortOrder === 'desc'
         };
@@ -781,11 +769,11 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return sort.length > 0 ? sort : null;
   };
   _proto.getGroupDataSourceParameters = function getGroupDataSourceParameters(useLocalSelector) {
-    var group = [];
+    const group = [];
     (0, _iterator.each)(this.getGroupColumns(), function () {
-      var selector = this.calculateGroupValue || this.displayField || this.calculateDisplayValue || useLocalSelector && this.selector || this.dataField || this.calculateCellValue;
+      const selector = this.calculateGroupValue || this.displayField || this.calculateDisplayValue || useLocalSelector && this.selector || this.dataField || this.calculateCellValue;
       if (selector) {
-        var groupItem = {
+        const groupItem = {
           selector,
           desc: this.sortOrder === 'desc',
           isExpanded: !!this.autoExpandGroup
@@ -799,9 +787,11 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return group.length > 0 ? group : null;
   };
   _proto.refresh = function refresh(updateNewLookupsOnly) {
-    var deferreds = [];
+    const deferreds = [];
     (0, _iterator.each)(this._columns, function () {
-      var lookup = this.lookup;
+      const {
+        lookup
+      } = this;
       if (lookup && !this.calculateDisplayValue) {
         if (updateNewLookupsOnly && lookup.valueMap) {
           return;
@@ -824,11 +814,11 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       column.selector.columnIndex = columnIndex;
       column.selector.originalCallback = column.selector;
     }
-    (0, _iterator.each)(['calculateSortValue', 'calculateGroupValue', 'calculateDisplayValue'], function (_, calculateCallbackName) {
-      var calculateCallback = column[calculateCallbackName];
+    (0, _iterator.each)(['calculateSortValue', 'calculateGroupValue', 'calculateDisplayValue'], (_, calculateCallbackName) => {
+      const calculateCallback = column[calculateCallbackName];
       if ((0, _type.isFunction)(calculateCallback)) {
         if (!calculateCallback.originalCallback) {
-          var context = {
+          const context = {
             column
           };
           column[calculateCallbackName] = function (data) {
@@ -850,11 +840,13 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       column.displayValueMap = column.displayValueMap || {};
     }
     (0, _m_columns_controller_utils.updateSerializers)(column, column.dataType);
-    var lookup = column.lookup;
+    const {
+      lookup
+    } = column;
     if (lookup) {
       (0, _m_columns_controller_utils.updateSerializers)(lookup, lookup.dataType);
     }
-    var dataType = lookup ? lookup.dataType : column.dataType;
+    const dataType = lookup ? lookup.dataType : column.dataType;
     if (dataType) {
       column.alignment = column.alignment || (0, _m_columns_controller_utils.getAlignmentByDataType)(dataType, this.option('rtlEnabled'));
       column.format = column.format || _m_utils.default.getFormatByDataType(dataType);
@@ -868,17 +860,19 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto.updateColumnDataTypes = function updateColumnDataTypes(dataSource) {
-    var that = this;
-    var dateSerializationFormat = that.option('dateSerializationFormat');
-    var firstItems = that._getFirstItems(dataSource);
-    var isColumnDataTypesUpdated = false;
-    (0, _iterator.each)(that._columns, function (index, column) {
-      var i;
-      var value;
-      var dataType;
-      var lookupDataType;
-      var valueDataType;
-      var lookup = column.lookup;
+    const that = this;
+    const dateSerializationFormat = that.option('dateSerializationFormat');
+    const firstItems = that._getFirstItems(dataSource);
+    let isColumnDataTypesUpdated = false;
+    (0, _iterator.each)(that._columns, (index, column) => {
+      let i;
+      let value;
+      let dataType;
+      let lookupDataType;
+      let valueDataType;
+      const {
+        lookup
+      } = column;
       if (_m_utils.default.isDateType(column.dataType) && column.serializationFormat === undefined) {
         column.serializationFormat = dateSerializationFormat;
       }
@@ -931,12 +925,10 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return isColumnDataTypesUpdated;
   };
   _proto._customizeColumns = function _customizeColumns(columns) {
-    var that = this;
-    var customizeColumns = that.option('customizeColumns');
+    const that = this;
+    const customizeColumns = that.option('customizeColumns');
     if (customizeColumns) {
-      var hasOwnerBand = columns.some(function (column) {
-        return (0, _type.isObject)(column.ownerBand);
-      });
+      const hasOwnerBand = columns.some(column => (0, _type.isObject)(column.ownerBand));
       if (hasOwnerBand) {
         (0, _m_columns_controller_utils.updateIndexes)(that);
       }
@@ -945,27 +937,26 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto.updateColumns = function updateColumns(dataSource, forceApplying, isApplyingUserState) {
-    var _this4 = this;
     if (!forceApplying) {
       this.updateSortingGrouping(dataSource);
     }
     if (!dataSource || dataSource.isLoaded()) {
-      var sortParameters = dataSource ? dataSource.sort() || [] : this.getSortDataSourceParameters();
-      var groupParameters = dataSource ? dataSource.group() || [] : this.getGroupDataSourceParameters();
-      var filterParameters = dataSource === null || dataSource === void 0 ? void 0 : dataSource.lastLoadOptions().filter;
+      const sortParameters = dataSource ? dataSource.sort() || [] : this.getSortDataSourceParameters();
+      const groupParameters = dataSource ? dataSource.group() || [] : this.getGroupDataSourceParameters();
+      const filterParameters = dataSource === null || dataSource === void 0 ? void 0 : dataSource.lastLoadOptions().filter;
       if (!isApplyingUserState) {
         this._customizeColumns(this._columns);
       }
       (0, _m_columns_controller_utils.updateIndexes)(this);
-      var columns = this._columns;
-      return (0, _deferred.when)(this.refresh(true)).always(function () {
-        if (_this4._columns !== columns) return;
-        _this4._updateChanges(dataSource, {
+      const columns = this._columns;
+      return (0, _deferred.when)(this.refresh(true)).always(() => {
+        if (this._columns !== columns) return;
+        this._updateChanges(dataSource, {
           sorting: sortParameters,
           grouping: groupParameters,
           filtering: filterParameters
         });
-        (0, _m_columns_controller_utils.fireColumnsChanged)(_this4);
+        (0, _m_columns_controller_utils.fireColumnsChanged)(this);
       });
     }
   };
@@ -980,24 +971,28 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     if (!_m_utils.default.equalSortParameters(parameters.grouping, this.getGroupDataSourceParameters())) {
       (0, _m_columns_controller_utils.updateColumnChanges)(this, 'grouping');
     }
-    var dataController = this.getController('data');
+    const dataController = this.getController('data');
     if (dataController && !_m_utils.default.equalFilterParameters(parameters.filtering, dataController.getCombinedFilter())) {
       (0, _m_columns_controller_utils.updateColumnChanges)(this, 'filtering');
     }
     (0, _m_columns_controller_utils.updateColumnChanges)(this, 'columns');
   };
   _proto.updateSortingGrouping = function updateSortingGrouping(dataSource, fromDataSource) {
-    var that = this;
-    var sortParameters;
-    var isColumnsChanged;
-    var updateSortGroupParameterIndexes = function updateSortGroupParameterIndexes(columns, sortParameters, indexParameterName) {
-      (0, _iterator.each)(columns, function (index, column) {
+    const that = this;
+    let sortParameters;
+    let isColumnsChanged;
+    const updateSortGroupParameterIndexes = function (columns, sortParameters, indexParameterName) {
+      (0, _iterator.each)(columns, (index, column) => {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete column[indexParameterName];
         if (sortParameters) {
-          for (var i = 0; i < sortParameters.length; i++) {
-            var selector = sortParameters[i].selector;
-            var isExpanded = sortParameters[i].isExpanded;
+          for (let i = 0; i < sortParameters.length; i++) {
+            const {
+              selector
+            } = sortParameters[i];
+            const {
+              isExpanded
+            } = sortParameters[i];
             if (selector === column.dataField || selector === column.name || selector === column.selector || selector === column.calculateCellValue || selector === column.calculateGroupValue || selector === column.calculateDisplayValue) {
               if (fromDataSource) {
                 column.sortOrder = 'sortOrder' in column ? column.sortOrder : sortParameters[i].desc ? 'desc' : 'asc';
@@ -1016,16 +1011,16 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     };
     if (dataSource) {
       sortParameters = _m_utils.default.normalizeSortingInfo(dataSource.sort());
-      var groupParameters = _m_utils.default.normalizeSortingInfo(dataSource.group());
-      var columnsGroupParameters = that.getGroupDataSourceParameters();
-      var columnsSortParameters = that.getSortDataSourceParameters();
-      var groupingChanged = !_m_utils.default.equalSortParameters(groupParameters, columnsGroupParameters, true);
-      var groupExpandingChanged = !groupingChanged && !_m_utils.default.equalSortParameters(groupParameters, columnsGroupParameters);
+      const groupParameters = _m_utils.default.normalizeSortingInfo(dataSource.group());
+      const columnsGroupParameters = that.getGroupDataSourceParameters();
+      const columnsSortParameters = that.getSortDataSourceParameters();
+      const groupingChanged = !_m_utils.default.equalSortParameters(groupParameters, columnsGroupParameters, true);
+      const groupExpandingChanged = !groupingChanged && !_m_utils.default.equalSortParameters(groupParameters, columnsGroupParameters);
       if (!that._columns.length) {
-        (0, _iterator.each)(groupParameters, function (index, group) {
+        (0, _iterator.each)(groupParameters, (index, group) => {
           that._columns.push(group.selector);
         });
-        (0, _iterator.each)(sortParameters, function (index, sort) {
+        (0, _iterator.each)(sortParameters, (index, sort) => {
           if (!(0, _type.isFunction)(sort.selector)) {
             that._columns.push(sort.selector);
           }
@@ -1059,13 +1054,13 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto.updateFilter = function updateFilter(filter, remoteFiltering, columnIndex, filterValue) {
-    var that = this;
+    const that = this;
     if (!Array.isArray(filter)) return filter;
     filter = (0, _extend.extend)([], filter);
     columnIndex = filter.columnIndex !== undefined ? filter.columnIndex : columnIndex;
     filterValue = filter.filterValue !== undefined ? filter.filterValue : filterValue;
     if ((0, _type.isString)(filter[0]) && filter[0] !== '!') {
-      var column = that.columnOption(filter[0]);
+      const column = that.columnOption(filter[0]);
       if (remoteFiltering) {
         if ((0, _config.default)().forceIsoDateParsing && column && column.serializeValue && filter.length > 1) {
           filter[filter.length - 1] = column.serializeValue(filter[filter.length - 1], 'filter');
@@ -1079,7 +1074,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
       filter[0].filterValue = filterValue;
       filter[0].selectedFilterOperation = filter.selectedFilterOperation;
     }
-    for (var i = 0; i < filter.length; i++) {
+    for (let i = 0; i < filter.length; i++) {
       filter[i] = that.updateFilter(filter[i], remoteFiltering, columnIndex, filterValue);
     }
     return filter;
@@ -1088,9 +1083,9 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return this._columns ? this._columns.length : 0;
   };
   _proto.columnOption = function columnOption(identifier, option, value, notFireEvent) {
-    var that = this;
-    var columns = that._columns.concat(that._commandColumns);
-    var column = (0, _m_columns_controller_utils.findColumn)(columns, identifier);
+    const that = this;
+    const columns = that._columns.concat(that._commandColumns);
+    const column = (0, _m_columns_controller_utils.findColumn)(columns, identifier);
     if (column) {
       if (arguments.length === 1) {
         return (0, _extend.extend)({}, column);
@@ -1101,7 +1096,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         }
         (0, _m_columns_controller_utils.columnOptionCore)(that, column, option, value, notFireEvent);
       } else if ((0, _type.isObject)(option)) {
-        (0, _iterator.each)(option, function (optionName, value) {
+        (0, _iterator.each)(option, (optionName, value) => {
           (0, _m_columns_controller_utils.columnOptionCore)(that, column, optionName, value, notFireEvent);
         });
       }
@@ -1109,10 +1104,10 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto.clearSorting = function clearSorting() {
-    var that = this;
-    var columnCount = this.columnCount();
+    const that = this;
+    const columnCount = this.columnCount();
     that.beginUpdate();
-    for (var i = 0; i < columnCount; i++) {
+    for (let i = 0; i < columnCount; i++) {
       that.columnOption(i, 'sortOrder', undefined);
       // option needs to be deleted from column to prevert conflicts in syncing loadOptions from dataSource. See T1147379
       delete (0, _m_columns_controller_utils.findColumn)(that._columns, i).sortOrder;
@@ -1120,17 +1115,17 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     that.endUpdate();
   };
   _proto.clearGrouping = function clearGrouping() {
-    var that = this;
-    var columnCount = this.columnCount();
+    const that = this;
+    const columnCount = this.columnCount();
     that.beginUpdate();
-    for (var i = 0; i < columnCount; i++) {
+    for (let i = 0; i < columnCount; i++) {
       that.columnOption(i, 'groupIndex', undefined);
     }
     that.endUpdate();
   };
   _proto.getVisibleIndex = function getVisibleIndex(index, rowIndex) {
-    var columns = this.getVisibleColumns(rowIndex);
-    for (var i = columns.length - 1; i >= 0; i--) {
+    const columns = this.getVisibleColumns(rowIndex);
+    for (let i = columns.length - 1; i >= 0; i--) {
       if (columns[i].index === index) {
         return i;
       }
@@ -1138,20 +1133,18 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return -1;
   };
   _proto.getVisibleIndexByColumn = function getVisibleIndexByColumn(column, rowIndex) {
-    var visibleColumns = this.getVisibleColumns(rowIndex);
-    var visibleColumn = visibleColumns.filter(function (col) {
-      return col.index === column.index && col.command === column.command;
-    })[0];
+    const visibleColumns = this.getVisibleColumns(rowIndex);
+    const visibleColumn = visibleColumns.filter(col => col.index === column.index && col.command === column.command)[0];
     return visibleColumns.indexOf(visibleColumn);
   };
   _proto.getVisibleColumnIndex = function getVisibleColumnIndex(id, rowIndex) {
-    var index = this.columnOption(id, 'index');
+    const index = this.columnOption(id, 'index');
     return this.getVisibleIndex(index, rowIndex);
   };
   _proto.addColumn = function addColumn(options) {
-    var that = this;
-    var column = (0, _m_columns_controller_utils.createColumn)(that, options);
-    var index = that._columns.length;
+    const that = this;
+    let column = (0, _m_columns_controller_utils.createColumn)(that, options);
+    const index = that._columns.length;
     that._columns.push(column);
     if (column.isBand) {
       that._columns = (0, _m_columns_controller_utils.createColumnsFromOptions)(that, that._columns);
@@ -1163,36 +1156,30 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     that._checkColumns();
   };
   _proto.deleteColumn = function deleteColumn(id) {
-    var that = this;
-    var column = that.columnOption(id);
+    const that = this;
+    const column = that.columnOption(id);
     if (column && column.index >= 0) {
       (0, _m_columns_controller_utils.convertOwnerBandToColumnReference)(that._columns);
       that._columns.splice(column.index, 1);
       if (column.isBand) {
-        var childIndexes = that.getChildrenByBandColumn(column.index).map(function (column) {
-          return column.index;
-        });
-        that._columns = that._columns.filter(function (column) {
-          return childIndexes.indexOf(column.index) < 0;
-        });
+        const childIndexes = that.getChildrenByBandColumn(column.index).map(column => column.index);
+        that._columns = that._columns.filter(column => childIndexes.indexOf(column.index) < 0);
       }
       (0, _m_columns_controller_utils.updateIndexes)(that);
       that.updateColumns(that._dataSource);
     }
   };
   _proto.addCommandColumn = function addCommandColumn(options) {
-    var commandColumn = this._commandColumns.filter(function (column) {
-      return column.command === options.command;
-    })[0];
+    let commandColumn = this._commandColumns.filter(column => column.command === options.command)[0];
     if (!commandColumn) {
       commandColumn = options;
       this._commandColumns.push(commandColumn);
     }
   };
   _proto.getUserState = function getUserState() {
-    var columns = this._columns;
-    var result = [];
-    var i;
+    const columns = this._columns;
+    const result = [];
+    let i;
     function handleStateField(index, value) {
       if (columns[i][value] !== undefined) {
         result[i][value] = columns[i][value];
@@ -1208,19 +1195,19 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     column.name = column.name || column.dataField || column.type;
   };
   _proto.setUserState = function setUserState(state) {
-    var that = this;
-    var dataSource = that._dataSource;
-    var ignoreColumnOptionNames = that.option('stateStoring.ignoreColumnOptionNames');
+    const that = this;
+    const dataSource = that._dataSource;
+    let ignoreColumnOptionNames = that.option('stateStoring.ignoreColumnOptionNames');
     state === null || state === void 0 ? void 0 : state.forEach(this.setName);
     if (!ignoreColumnOptionNames) {
       ignoreColumnOptionNames = [];
-      var commonColumnSettings = that.getCommonSettings();
+      const commonColumnSettings = that.getCommonSettings();
       if (!that.option('columnChooser.enabled')) ignoreColumnOptionNames.push('visible');
       if (that.option('sorting.mode') === 'none') ignoreColumnOptionNames.push('sortIndex', 'sortOrder');
       if (!commonColumnSettings.allowGrouping) ignoreColumnOptionNames.push('groupIndex');
       if (!commonColumnSettings.allowFixing) ignoreColumnOptionNames.push('fixed', 'fixedPosition');
       if (!commonColumnSettings.allowResizing) ignoreColumnOptionNames.push('width', 'visibleWidth');
-      var isFilterPanelHidden = !that.option('filterPanel.visible');
+      const isFilterPanelHidden = !that.option('filterPanel.visible');
       if (!that.option('filterRow.visible') && isFilterPanelHidden) ignoreColumnOptionNames.push('filterValue', 'selectedFilterOperation');
       if (!that.option('headerFilter.visible') && isFilterPanelHidden) ignoreColumnOptionNames.push('filterValues', 'filterType');
     }
@@ -1235,14 +1222,16 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto._checkColumns = function _checkColumns() {
-    var usedNames = {};
-    var hasEditableColumnWithoutName = false;
-    var duplicatedNames = [];
-    this._columns.forEach(function (column) {
+    const usedNames = {};
+    let hasEditableColumnWithoutName = false;
+    const duplicatedNames = [];
+    this._columns.forEach(column => {
       var _a;
-      var name = column.name;
-      var isBand = (_a = column.columns) === null || _a === void 0 ? void 0 : _a.length;
-      var isEditable = column.allowEditing && (column.dataField || column.setCellValue) && !isBand;
+      const {
+        name
+      } = column;
+      const isBand = (_a = column.columns) === null || _a === void 0 ? void 0 : _a.length;
+      const isEditable = column.allowEditing && (column.dataField || column.setCellValue) && !isBand;
       if (name) {
         if (usedNames[name]) {
           duplicatedNames.push("\"".concat(name, "\""));
@@ -1260,27 +1249,29 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto._createCalculatedColumnOptions = function _createCalculatedColumnOptions(columnOptions, bandColumn) {
-    var calculatedColumnOptions = {};
-    var dataField = columnOptions.dataField;
+    let calculatedColumnOptions = {};
+    let {
+      dataField
+    } = columnOptions;
     if (Array.isArray(columnOptions.columns) && columnOptions.columns.length || columnOptions.isBand) {
       calculatedColumnOptions.isBand = true;
       dataField = null;
     }
     if (dataField) {
       if ((0, _type.isString)(dataField)) {
-        var getter = (0, _data.compileGetter)(dataField);
+        const getter = (0, _data.compileGetter)(dataField);
         calculatedColumnOptions = {
           caption: (0, _inflector.captionize)(dataField),
           calculateCellValue(data, skipDeserialization) {
             // @ts-expect-error
-            var value = getter(data);
+            const value = getter(data);
             return this.deserializeValue && !skipDeserialization ? this.deserializeValue(value) : value;
           },
           setCellValue: _m_columns_controller_utils.defaultSetCellValue,
           parseValue(text) {
-            var column = this;
-            var result;
-            var parsedValue;
+            const column = this;
+            let result;
+            let parsedValue;
             if (column.dataType === 'number') {
               if ((0, _type.isString)(text) && column.format) {
                 result = (0, _m_columns_controller_utils.strictParseNumber)(text.trim(), column.format);
@@ -1316,7 +1307,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     };
     calculatedColumnOptions.defaultFilterOperation = '=';
     calculatedColumnOptions.createFilterExpression = function (filterValue, selectedFilterOperation) {
-      var result;
+      let result;
       if (this.calculateFilterExpression) {
         result = this.calculateFilterExpression.apply(this, arguments);
       }
@@ -1359,29 +1350,31 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         updateValueMap() {
           this.valueMap = {};
           if (this.items) {
-            var calculateValue = (0, _data.compileGetter)(this.valueExpr);
-            var calculateDisplayValue = (0, _data.compileGetter)(this.displayExpr);
-            for (var i = 0; i < this.items.length; i++) {
-              var item = this.items[i];
-              var displayValue = calculateDisplayValue(item);
+            const calculateValue = (0, _data.compileGetter)(this.valueExpr);
+            const calculateDisplayValue = (0, _data.compileGetter)(this.displayExpr);
+            for (let i = 0; i < this.items.length; i++) {
+              const item = this.items[i];
+              const displayValue = calculateDisplayValue(item);
               this.valueMap[calculateValue(item)] = displayValue;
               this.dataType = this.dataType || (0, _m_columns_controller_utils.getValueDataType)(displayValue);
             }
           }
         },
         update() {
-          var that = this;
-          var dataSource = that.dataSource;
+          const that = this;
+          let {
+            dataSource
+          } = that;
           if (dataSource) {
             if ((0, _type.isFunction)(dataSource) && !_variable_wrapper.default.isWrapped(dataSource)) {
               dataSource = dataSource({});
             }
             if ((0, _type.isPlainObject)(dataSource) || dataSource instanceof _abstract_store.default || Array.isArray(dataSource)) {
               if (that.valueExpr) {
-                var dataSourceOptions = (0, _utils.normalizeDataSourceOptions)(dataSource);
+                const dataSourceOptions = (0, _utils.normalizeDataSourceOptions)(dataSource);
                 dataSourceOptions.paginate = false;
                 dataSource = new _data_source.DataSource(dataSourceOptions);
-                return dataSource.load().done(function (data) {
+                return dataSource.load().done(data => {
                   that.items = data;
                   that.updateValueMap && that.updateValueMap();
                 });
@@ -1399,9 +1392,9 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     if (columnOptions.resized) {
       calculatedColumnOptions.resizedCallbacks.add(columnOptions.resized.bind(columnOptions));
     }
-    (0, _iterator.each)(calculatedColumnOptions, function (optionName) {
+    (0, _iterator.each)(calculatedColumnOptions, optionName => {
       if ((0, _type.isFunction)(calculatedColumnOptions[optionName]) && optionName.indexOf('default') !== 0) {
-        var defaultOptionName = "default".concat(optionName.charAt(0).toUpperCase()).concat(optionName.substr(1));
+        const defaultOptionName = "default".concat(optionName.charAt(0).toUpperCase()).concat(optionName.substr(1));
         calculatedColumnOptions[defaultOptionName] = calculatedColumnOptions[optionName];
       }
     });
@@ -1412,31 +1405,27 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return this._rowCount;
   };
   _proto.getRowIndex = function getRowIndex(columnIndex, alwaysGetRowIndex) {
-    var column = this._columns[columnIndex];
-    var bandColumnsCache = this.getBandColumnsCache();
+    const column = this._columns[columnIndex];
+    const bandColumnsCache = this.getBandColumnsCache();
     return column && (alwaysGetRowIndex || column.visible && !(column.command || (0, _type.isDefined)(column.groupIndex))) ? (0, _m_columns_controller_utils.getParentBandColumns)(columnIndex, bandColumnsCache.columnParentByIndex).length : 0;
   };
   _proto.getChildrenByBandColumn = function getChildrenByBandColumn(bandColumnIndex, onlyVisibleDirectChildren) {
-    var that = this;
-    var bandColumnsCache = that.getBandColumnsCache();
-    var result = (0, _m_columns_controller_utils.getChildrenByBandColumn)(bandColumnIndex, bandColumnsCache.columnChildrenByIndex, !onlyVisibleDirectChildren);
+    const that = this;
+    const bandColumnsCache = that.getBandColumnsCache();
+    const result = (0, _m_columns_controller_utils.getChildrenByBandColumn)(bandColumnIndex, bandColumnsCache.columnChildrenByIndex, !onlyVisibleDirectChildren);
     if (onlyVisibleDirectChildren) {
-      return result.filter(function (column) {
-        return column.visible && !column.command;
-      }).sort(function (column1, column2) {
-        return column1.visibleIndex - column2.visibleIndex;
-      });
+      return result.filter(column => column.visible && !column.command).sort((column1, column2) => column1.visibleIndex - column2.visibleIndex);
     }
     return result;
   };
   _proto.isParentBandColumn = function isParentBandColumn(columnIndex, bandColumnIndex) {
-    var result = false;
-    var column = this._columns[columnIndex];
-    var bandColumnsCache = this.getBandColumnsCache();
-    var parentBandColumns = column && (0, _m_columns_controller_utils.getParentBandColumns)(columnIndex, bandColumnsCache.columnParentByIndex);
+    let result = false;
+    const column = this._columns[columnIndex];
+    const bandColumnsCache = this.getBandColumnsCache();
+    const parentBandColumns = column && (0, _m_columns_controller_utils.getParentBandColumns)(columnIndex, bandColumnsCache.columnParentByIndex);
     if (parentBandColumns) {
       // T416483 - fix for jquery 2.1.4
-      (0, _iterator.each)(parentBandColumns, function (_, bandColumn) {
+      (0, _iterator.each)(parentBandColumns, (_, bandColumn) => {
         if (bandColumn.index === bandColumnIndex) {
           result = true;
           return false;
@@ -1446,10 +1435,10 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return result;
   };
   _proto.isParentColumnVisible = function isParentColumnVisible(columnIndex) {
-    var result = true;
-    var bandColumnsCache = this.getBandColumnsCache();
-    var bandColumns = columnIndex >= 0 && (0, _m_columns_controller_utils.getParentBandColumns)(columnIndex, bandColumnsCache.columnParentByIndex);
-    bandColumns && (0, _iterator.each)(bandColumns, function (_, bandColumn) {
+    let result = true;
+    const bandColumnsCache = this.getBandColumnsCache();
+    const bandColumns = columnIndex >= 0 && (0, _m_columns_controller_utils.getParentBandColumns)(columnIndex, bandColumnsCache.columnParentByIndex);
+    bandColumns && (0, _iterator.each)(bandColumns, (_, bandColumn) => {
       result = result && bandColumn.visible;
       return result;
     });
@@ -1468,7 +1457,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
     return (0, _m_columns_controller_utils.getCustomizeTextByDataType)(dataType);
   };
   _proto.getHeaderContentAlignment = function getHeaderContentAlignment(columnAlignment) {
-    var rtlEnabled = this.option('rtlEnabled');
+    const rtlEnabled = this.option('rtlEnabled');
     if (rtlEnabled) {
       return columnAlignment === 'left' ? 'right' : 'left';
     }
@@ -1477,7 +1466,7 @@ var ColumnsController = /*#__PURE__*/function (_modules$Controller) {
   return ColumnsController;
 }(_m_modules.default.Controller);
 exports.ColumnsController = ColumnsController;
-var columnsControllerModule = {
+const columnsControllerModule = {
   defaultOptions() {
     return {
       commonColumnSettings: {

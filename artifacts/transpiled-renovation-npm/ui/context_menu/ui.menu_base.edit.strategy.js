@@ -7,7 +7,7 @@ var _uiCollection_widgetEditStrategy = _interopRequireDefault(require("../collec
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var MenuBaseEditStrategy = /*#__PURE__*/function (_PlainEditStrategy) {
+let MenuBaseEditStrategy = /*#__PURE__*/function (_PlainEditStrategy) {
   _inheritsLoose(MenuBaseEditStrategy, _PlainEditStrategy);
   function MenuBaseEditStrategy() {
     return _PlainEditStrategy.apply(this, arguments) || this;
@@ -19,16 +19,15 @@ var MenuBaseEditStrategy = /*#__PURE__*/function (_PlainEditStrategy) {
     });
   };
   _proto._stringifyItem = function _stringifyItem(item) {
-    var _this = this;
-    return JSON.stringify(item, function (key, value) {
+    return JSON.stringify(item, (key, value) => {
       if (key === 'template') {
-        return _this._getTemplateString(value);
+        return this._getTemplateString(value);
       }
       return value;
     });
   };
   _proto._getTemplateString = function _getTemplateString(template) {
-    var result;
+    let result;
     if (typeof template === 'object') {
       result = (0, _renderer.default)(template).text();
     } else {

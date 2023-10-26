@@ -15,13 +15,13 @@ var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* global google */
 
-var window = (0, _window.getWindow)();
-var GOOGLE_MAP_READY = '_googleScriptReady';
-var GOOGLE_URL = 'https://maps.googleapis.com/maps/api/js?callback=' + GOOGLE_MAP_READY;
-var INFO_WINDOW_CLASS = 'gm-style-iw';
-var CustomMarker;
-var initCustomMarkerClass = function initCustomMarkerClass() {
-  CustomMarker = function CustomMarker(options) {
+const window = (0, _window.getWindow)();
+const GOOGLE_MAP_READY = '_googleScriptReady';
+let GOOGLE_URL = 'https://maps.googleapis.com/maps/api/js?callback=' + GOOGLE_MAP_READY;
+const INFO_WINDOW_CLASS = 'gm-style-iw';
+let CustomMarker;
+const initCustomMarkerClass = function () {
+  CustomMarker = function (options) {
     this._position = options.position;
     this._offset = options.offset;
     this._$overlayContainer = (0, _renderer.default)('<div>').css({
@@ -33,7 +33,7 @@ var initCustomMarkerClass = function initCustomMarkerClass() {
   };
   CustomMarker.prototype = new google.maps.OverlayView();
   CustomMarker.prototype.onAdd = function () {
-    var $pane = (0, _renderer.default)(this.getPanes().overlayMouseTarget);
+    const $pane = (0, _renderer.default)(this.getPanes().overlayMouseTarget);
     $pane.append(this._$overlayContainer);
     this._clickListener = google.maps.event.addDomListener(this._$overlayContainer.get(0), 'click', function (e) {
       google.maps.event.trigger(this, 'click');
@@ -46,7 +46,7 @@ var initCustomMarkerClass = function initCustomMarkerClass() {
     this._$overlayContainer.remove();
   };
   CustomMarker.prototype.draw = function () {
-    var position = this.getProjection().fromLatLngToDivPixel(this._position);
+    const position = this.getProjection().fromLatLngToDivPixel(this._position);
     this._$overlayContainer.css({
       left: position.x + this._offset.left,
       top: position.y + this._offset.top,
@@ -54,29 +54,29 @@ var initCustomMarkerClass = function initCustomMarkerClass() {
     });
   };
 };
-var googleMapsLoaded = function googleMapsLoaded() {
+const googleMapsLoaded = function () {
   return window.google && window.google.maps;
 };
-var googleMapsLoader;
-var GoogleProvider = _provider.default.inherit({
-  _mapType: function _mapType(type) {
-    var mapTypes = {
+let googleMapsLoader;
+const GoogleProvider = _provider.default.inherit({
+  _mapType: function (type) {
+    const mapTypes = {
       hybrid: google.maps.MapTypeId.HYBRID,
       roadmap: google.maps.MapTypeId.ROADMAP,
       satellite: google.maps.MapTypeId.SATELLITE
     };
     return mapTypes[type] || mapTypes.hybrid;
   },
-  _movementMode: function _movementMode(type) {
-    var movementTypes = {
+  _movementMode: function (type) {
+    const movementTypes = {
       driving: google.maps.TravelMode.DRIVING,
       walking: google.maps.TravelMode.WALKING
     };
     return movementTypes[type] || movementTypes.driving;
   },
-  _resolveLocation: function _resolveLocation(location) {
+  _resolveLocation: function (location) {
     return new Promise(function (resolve) {
-      var latLng = this._getLatLng(location);
+      const latLng = this._getLatLng(location);
       if (latLng) {
         resolve(new google.maps.LatLng(latLng.lat, latLng.lng));
       } else {
@@ -87,13 +87,13 @@ var GoogleProvider = _provider.default.inherit({
     }.bind(this));
   },
   _geocodedLocations: {},
-  _geocodeLocationImpl: function _geocodeLocationImpl(location) {
+  _geocodeLocationImpl: function (location) {
     return new Promise(function (resolve) {
       if (!(0, _type.isDefined)(location)) {
         resolve(new google.maps.LatLng(0, 0));
         return;
       }
-      var geocoder = new google.maps.Geocoder();
+      const geocoder = new google.maps.Geocoder();
       geocoder.geocode({
         'address': location
       }, function (results, status) {
@@ -106,19 +106,19 @@ var GoogleProvider = _provider.default.inherit({
       });
     });
   },
-  _normalizeLocation: function _normalizeLocation(location) {
+  _normalizeLocation: function (location) {
     return {
       lat: location.lat(),
       lng: location.lng()
     };
   },
-  _normalizeLocationRect: function _normalizeLocationRect(locationRect) {
+  _normalizeLocationRect: function (locationRect) {
     return {
       northEast: this._normalizeLocation(locationRect.getNorthEast()),
       southWest: this._normalizeLocation(locationRect.getSouthWest())
     };
   },
-  _loadImpl: function _loadImpl() {
+  _loadImpl: function () {
     return new Promise(function (resolve) {
       if (googleMapsLoaded()) {
         resolve();
@@ -138,9 +138,9 @@ var GoogleProvider = _provider.default.inherit({
       initCustomMarkerClass();
     });
   },
-  _loadMapScript: function _loadMapScript() {
+  _loadMapScript: function () {
     return new Promise(function (resolve) {
-      var key = this._keyOption('google');
+      const key = this._keyOption('google');
       window[GOOGLE_MAP_READY] = resolve;
       _ajax.default.sendRequest({
         url: GOOGLE_URL + (key ? '&key=' + key : ''),
@@ -154,16 +154,16 @@ var GoogleProvider = _provider.default.inherit({
       }
     });
   },
-  _init: function _init() {
+  _init: function () {
     return new Promise(function (resolve) {
       this._resolveLocation(this._option('center')).then(function (center) {
-        var showDefaultUI = this._option('controls');
+        const showDefaultUI = this._option('controls');
         this._map = new google.maps.Map(this._$container[0], {
           zoom: this._option('zoom'),
           center: center,
           disableDefaultUI: !showDefaultUI
         });
-        var listener = google.maps.event.addListener(this._map, 'idle', function () {
+        const listener = google.maps.event.addListener(this._map, 'idle', function () {
           resolve(listener);
         });
       }.bind(this));
@@ -171,70 +171,70 @@ var GoogleProvider = _provider.default.inherit({
       google.maps.event.removeListener(listener);
     });
   },
-  _attachHandlers: function _attachHandlers() {
+  _attachHandlers: function () {
     this._boundsChangeListener = google.maps.event.addListener(this._map, 'bounds_changed', this._boundsChangeHandler.bind(this));
     this._clickListener = google.maps.event.addListener(this._map, 'click', this._clickActionHandler.bind(this));
   },
-  _boundsChangeHandler: function _boundsChangeHandler() {
-    var bounds = this._map.getBounds();
+  _boundsChangeHandler: function () {
+    const bounds = this._map.getBounds();
     this._option('bounds', this._normalizeLocationRect(bounds));
-    var center = this._map.getCenter();
+    const center = this._map.getCenter();
     this._option('center', this._normalizeLocation(center));
     if (!this._preventZoomChangeEvent) {
       this._option('zoom', this._map.getZoom());
     }
   },
-  _clickActionHandler: function _clickActionHandler(e) {
+  _clickActionHandler: function (e) {
     this._fireClickAction({
       location: this._normalizeLocation(e.latLng)
     });
   },
-  updateDimensions: function updateDimensions() {
-    var center = this._option('center');
+  updateDimensions: function () {
+    const center = this._option('center');
     google.maps.event.trigger(this._map, 'resize');
     this._option('center', center);
     return this.updateCenter();
   },
-  updateMapType: function updateMapType() {
+  updateMapType: function () {
     this._map.setMapTypeId(this._mapType(this._option('type')));
     return Promise.resolve();
   },
-  updateBounds: function updateBounds() {
+  updateBounds: function () {
     return Promise.all([this._resolveLocation(this._option('bounds.northEast')), this._resolveLocation(this._option('bounds.southWest'))]).then(function (result) {
-      var bounds = new google.maps.LatLngBounds();
+      const bounds = new google.maps.LatLngBounds();
       bounds.extend(result[0]);
       bounds.extend(result[1]);
       this._map.fitBounds(bounds);
     }.bind(this));
   },
-  updateCenter: function updateCenter() {
+  updateCenter: function () {
     return this._resolveLocation(this._option('center')).then(function (center) {
       this._map.setCenter(center);
       this._option('center', this._normalizeLocation(center));
     }.bind(this));
   },
-  updateZoom: function updateZoom() {
+  updateZoom: function () {
     this._map.setZoom(this._option('zoom'));
     return Promise.resolve();
   },
-  updateControls: function updateControls() {
-    var showDefaultUI = this._option('controls');
+  updateControls: function () {
+    const showDefaultUI = this._option('controls');
     this._map.setOptions({
       disableDefaultUI: !showDefaultUI
     });
     return Promise.resolve();
   },
-  isEventsCanceled: function isEventsCanceled(e) {
-    var gestureHandling = this._map && this._map.get('gestureHandling');
-    var isInfoWindowContent = (0, _renderer.default)(e.target).closest(".".concat(INFO_WINDOW_CLASS)).length > 0;
+  isEventsCanceled: function (e) {
+    const gestureHandling = this._map && this._map.get('gestureHandling');
+    const isInfoWindowContent = (0, _renderer.default)(e.target).closest(".".concat(INFO_WINDOW_CLASS)).length > 0;
     if (isInfoWindowContent || _devices.default.real().deviceType !== 'desktop' && gestureHandling === 'cooperative') {
       return false;
     }
     return this.callBase();
   },
-  _renderMarker: function _renderMarker(options) {
+  _renderMarker: function (options) {
     return this._resolveLocation(options.location).then(function (location) {
-      var marker;
+      let marker;
       if (options.html) {
         marker = new CustomMarker({
           map: this._map,
@@ -252,11 +252,11 @@ var GoogleProvider = _provider.default.inherit({
           icon: options.iconSrc || this._option('markerIconSrc')
         });
       }
-      var infoWindow = this._renderTooltip(marker, options.tooltip);
-      var listener;
+      const infoWindow = this._renderTooltip(marker, options.tooltip);
+      let listener;
       if (options.onClick || options.tooltip) {
-        var markerClickAction = this._mapWidget._createAction(options.onClick || _common.noop);
-        var markerNormalizedLocation = this._normalizeLocation(location);
+        const markerClickAction = this._mapWidget._createAction(options.onClick || _common.noop);
+        const markerNormalizedLocation = this._normalizeLocation(location);
         listener = google.maps.event.addListener(marker, 'click', function () {
           markerClickAction({
             location: markerNormalizedLocation
@@ -273,12 +273,12 @@ var GoogleProvider = _provider.default.inherit({
       };
     }.bind(this));
   },
-  _renderTooltip: function _renderTooltip(marker, options) {
+  _renderTooltip: function (marker, options) {
     if (!options) {
       return;
     }
     options = this._parseTooltipOptions(options);
-    var infoWindow = new google.maps.InfoWindow({
+    const infoWindow = new google.maps.InfoWindow({
       content: options.text
     });
     if (options.visible) {
@@ -286,26 +286,26 @@ var GoogleProvider = _provider.default.inherit({
     }
     return infoWindow;
   },
-  _destroyMarker: function _destroyMarker(marker) {
+  _destroyMarker: function (marker) {
     marker.marker.setMap(null);
     if (marker.listener) {
       google.maps.event.removeListener(marker.listener);
     }
   },
-  _renderRoute: function _renderRoute(options) {
+  _renderRoute: function (options) {
     return Promise.all((0, _iterator.map)(options.locations, function (point) {
       return this._resolveLocation(point);
     }.bind(this))).then(function (locations) {
       return new Promise(function (resolve) {
-        var origin = locations.shift();
-        var destination = locations.pop();
-        var waypoints = (0, _iterator.map)(locations, function (location) {
+        const origin = locations.shift();
+        const destination = locations.pop();
+        const waypoints = (0, _iterator.map)(locations, function (location) {
           return {
             location: location,
             stopover: true
           };
         });
-        var request = {
+        const request = {
           origin: origin,
           destination: destination,
           waypoints: waypoints,
@@ -314,8 +314,8 @@ var GoogleProvider = _provider.default.inherit({
         };
         new google.maps.DirectionsService().route(request, function (response, status) {
           if (status === google.maps.DirectionsStatus.OK) {
-            var color = new _color.default(options.color || this._defaultRouteColor()).toHex();
-            var directionOptions = {
+            const color = new _color.default(options.color || this._defaultRouteColor()).toHex();
+            const directionOptions = {
               directions: response,
               map: this._map,
               suppressMarkers: true,
@@ -326,8 +326,8 @@ var GoogleProvider = _provider.default.inherit({
                 strokeColor: color
               }
             };
-            var route = new google.maps.DirectionsRenderer(directionOptions);
-            var bounds = response.routes[0].bounds;
+            const route = new google.maps.DirectionsRenderer(directionOptions);
+            const bounds = response.routes[0].bounds;
             resolve({
               instance: route,
               northEast: bounds.getNorthEast(),
@@ -343,17 +343,17 @@ var GoogleProvider = _provider.default.inherit({
       }.bind(this));
     }.bind(this));
   },
-  _destroyRoute: function _destroyRoute(routeObject) {
+  _destroyRoute: function (routeObject) {
     routeObject.instance.setMap(null);
   },
-  _fitBounds: function _fitBounds() {
+  _fitBounds: function () {
     this._updateBounds();
     if (this._bounds && this._option('autoAdjust')) {
-      var zoomBeforeFitting = this._map.getZoom();
+      const zoomBeforeFitting = this._map.getZoom();
       this._preventZoomChangeEvent = true;
       this._map.fitBounds(this._bounds);
       this._boundsChangeHandler();
-      var zoomAfterFitting = this._map.getZoom();
+      const zoomAfterFitting = this._map.getZoom();
       if (zoomBeforeFitting < zoomAfterFitting) {
         this._map.setZoom(zoomBeforeFitting);
       } else {
@@ -363,7 +363,7 @@ var GoogleProvider = _provider.default.inherit({
     }
     return Promise.resolve();
   },
-  _extendBounds: function _extendBounds(location) {
+  _extendBounds: function (location) {
     if (this._bounds) {
       this._bounds.extend(location);
     } else {
@@ -371,7 +371,7 @@ var GoogleProvider = _provider.default.inherit({
       this._bounds.extend(location);
     }
   },
-  clean: function clean() {
+  clean: function () {
     if (this._map) {
       google.maps.event.removeListener(this._boundsChangeListener);
       google.maps.event.removeListener(this._clickListener);

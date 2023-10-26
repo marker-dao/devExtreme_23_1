@@ -8,19 +8,19 @@ var _extend = require("../core/utils/extend");
 var _window = require("../core/utils/window");
 var _fx = _interopRequireDefault(require("../animation/fx"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TRACKBAR_CLASS = 'dx-trackbar';
-var TRACKBAR_CONTAINER_CLASS = 'dx-trackbar-container';
-var TRACKBAR_RANGE_CLASS = 'dx-trackbar-range';
-var TRACKBAR_WRAPPER_CLASS = 'dx-trackbar-wrapper';
-var TrackBar = _editor.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const TRACKBAR_CLASS = 'dx-trackbar';
+const TRACKBAR_CONTAINER_CLASS = 'dx-trackbar-container';
+const TRACKBAR_RANGE_CLASS = 'dx-trackbar-range';
+const TRACKBAR_WRAPPER_CLASS = 'dx-trackbar-wrapper';
+const TrackBar = _editor.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       min: 0,
       max: 100,
       value: 0
     });
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.$element().addClass(TRACKBAR_CLASS);
     this._renderWrapper();
     this._renderContainer();
@@ -29,23 +29,23 @@ var TrackBar = _editor.default.inherit({
     this._setRangeStyles();
     this.callBase();
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._setRangeStyles(this._rangeStylesConfig());
   },
-  _renderWrapper: function _renderWrapper() {
+  _renderWrapper: function () {
     this._$wrapper = (0, _renderer.default)('<div>').addClass(TRACKBAR_WRAPPER_CLASS).appendTo(this.$element());
   },
-  _renderContainer: function _renderContainer() {
+  _renderContainer: function () {
     this._$bar = (0, _renderer.default)('<div>').addClass(TRACKBAR_CONTAINER_CLASS).appendTo(this._$wrapper);
   },
-  _renderRange: function _renderRange() {
+  _renderRange: function () {
     this._$range = (0, _renderer.default)('<div>').addClass(TRACKBAR_RANGE_CLASS).appendTo(this._$bar);
   },
-  _renderValue: function _renderValue() {
-    var val = this.option('value');
-    var min = this.option('min');
-    var max = this.option('max');
+  _renderValue: function () {
+    const val = this.option('value');
+    const min = this.option('min');
+    const max = this.option('max');
     if (min > max) {
       return;
     }
@@ -59,7 +59,7 @@ var TrackBar = _editor.default.inherit({
       this._currentRatio = 1;
       return;
     }
-    var ratio = min === max ? 0 : (val - min) / (max - min);
+    const ratio = min === max ? 0 : (val - min) / (max - min);
     !this._needPreventAnimation && this._setRangeStyles({
       width: ratio * 100 + '%'
     });
@@ -70,12 +70,12 @@ var TrackBar = _editor.default.inherit({
     });
     this._currentRatio = ratio;
   },
-  _rangeStylesConfig: function _rangeStylesConfig() {
+  _rangeStylesConfig: function () {
     return {
       width: this._currentRatio * 100 + '%'
     };
   },
-  _setRangeStyles: function _setRangeStyles(options) {
+  _setRangeStyles: function (options) {
     _fx.default.stop(this._$range);
     if (!options) {
       this._$range.css({
@@ -92,7 +92,7 @@ var TrackBar = _editor.default.inherit({
       to: options
     });
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'value':
         this._renderValue();
@@ -106,7 +106,7 @@ var TrackBar = _editor.default.inherit({
         this.callBase(args);
     }
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     _fx.default.stop(this._$range);
     this.callBase();
   }

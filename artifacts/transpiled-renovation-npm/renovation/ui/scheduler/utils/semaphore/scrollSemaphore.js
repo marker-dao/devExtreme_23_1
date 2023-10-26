@@ -2,7 +2,7 @@
 
 exports.ScrollSemaphore = void 0;
 var _semaphore = require("./semaphore");
-var ScrollSemaphore = /*#__PURE__*/function () {
+let ScrollSemaphore = /*#__PURE__*/function () {
   function ScrollSemaphore() {
     this.semaphore = new _semaphore.Semaphore();
     this.position = {
@@ -35,8 +35,8 @@ var ScrollSemaphore = /*#__PURE__*/function () {
   };
   _proto.comparePosition = function comparePosition(target) {
     var _target$left, _target$top;
-    var left = (_target$left = target.left) !== null && _target$left !== void 0 ? _target$left : -1;
-    var top = (_target$top = target.top) !== null && _target$top !== void 0 ? _target$top : -1;
+    const left = (_target$left = target.left) !== null && _target$left !== void 0 ? _target$left : -1;
+    const top = (_target$top = target.top) !== null && _target$top !== void 0 ? _target$top : -1;
     return this.position.left === left && this.position.top === top;
   };
   return ScrollSemaphore;

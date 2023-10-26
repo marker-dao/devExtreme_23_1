@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/common/export_load_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,8 +16,8 @@ var _type = require("../../core/utils/type");
 var _load_panel = _interopRequireDefault(require("../../ui/load_panel"));
 var _uiGrid_core = _interopRequireDefault(require("../../ui/grid_core/ui.grid_core.utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EXPORT_LOAD_PANEL_CLASS = 'dx-export-loadpanel';
-var ExportLoadPanel = /*#__PURE__*/function () {
+const EXPORT_LOAD_PANEL_CLASS = 'dx-export-loadpanel';
+let ExportLoadPanel = /*#__PURE__*/function () {
   function ExportLoadPanel(component, $targetElement, $container, options) {
     this._$targetElement = $targetElement;
     this._$container = $container;

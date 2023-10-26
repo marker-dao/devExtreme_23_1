@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/core/themes/generic.greenmist.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,12 +9,12 @@
 "use strict";
 
 exports.default = void 0;
-var ACCENT_COLOR = '#3cbab2';
-var BACKGROUND_COLOR = '#f5f5f5';
-var TITLE_COLOR = '#28484f';
-var SUBTITLE_COLOR = '#7eb2be';
-var TEXT_COLOR = '#657c80';
-var BORDER_COLOR = '#dedede';
+const ACCENT_COLOR = '#3cbab2';
+const BACKGROUND_COLOR = '#f5f5f5';
+const TITLE_COLOR = '#28484f';
+const SUBTITLE_COLOR = '#7eb2be';
+const TEXT_COLOR = '#657c80';
+const BORDER_COLOR = '#dedede';
 var _default = [{
   theme: {
     name: 'generic.greenmist',

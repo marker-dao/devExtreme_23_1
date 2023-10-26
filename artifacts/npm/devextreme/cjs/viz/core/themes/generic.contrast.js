@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/core/themes/generic.contrast.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,11 +9,11 @@
 "use strict";
 
 exports.default = void 0;
-var WHITE = '#ffffff';
-var BLACK = '#000000';
-var CONTRAST_ACTIVE = '#cf00da';
-var MARKER_COLOR = '#f8ca00';
-var AREA_LAYER_COLOR = '#686868';
+const WHITE = '#ffffff';
+const BLACK = '#000000';
+const CONTRAST_ACTIVE = '#cf00da';
+const MARKER_COLOR = '#f8ca00';
+const AREA_LAYER_COLOR = '#686868';
 var _default = [{
   theme: {
     name: 'generic.contrast',

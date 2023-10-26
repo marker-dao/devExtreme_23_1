@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/virtual_data_loader/m_virtual_data_loader.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -200,11 +200,11 @@ export class VirtualDataLoader {
     return this._dataOptions.pageIndex(pageIndex);
   }
   beginPageIndex(defaultPageIndex) {
-    var beginPageIndex = getBeginPageIndex(this);
-    if (beginPageIndex < 0) {
-      beginPageIndex = defaultPageIndex !== undefined ? defaultPageIndex : this.pageIndex();
+    var index = getBeginPageIndex(this);
+    if (index < 0) {
+      index = defaultPageIndex !== undefined ? defaultPageIndex : this.pageIndex();
     }
-    return beginPageIndex;
+    return index;
   }
   endPageIndex() {
     var endPageIndex = getEndPageIndex(this);
@@ -332,16 +332,16 @@ export class VirtualDataLoader {
     return this._delayDeferred;
   }
   itemsCount(isBase) {
-    var itemsCount = 0;
+    var count = 0;
     var isVirtualMode = this._controller.isVirtualMode();
     if (!isBase && isVirtualMode) {
       this._cache.forEach(cacheItem => {
-        itemsCount += cacheItem.itemsCount;
+        count += cacheItem.itemsCount;
       });
     } else {
-      itemsCount = this._dataOptions.itemsCount();
+      count = this._dataOptions.itemsCount();
     }
-    return itemsCount;
+    return count;
   }
   virtualItemsCount() {
     var pageIndex = getBeginPageIndex(this);

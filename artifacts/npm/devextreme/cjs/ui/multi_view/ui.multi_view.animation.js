@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/multi_view/ui.multi_view.animation.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@ exports.animation = exports._translator = void 0;
 var _fx = _interopRequireDefault(require("../../animation/fx"));
 var _translator2 = require("../../animation/translator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _translator = {
+const _translator = {
   move($element, position) {
     (0, _translator2.move)($element, {
       left: position
@@ -20,7 +20,7 @@ var _translator = {
   }
 };
 exports._translator = _translator;
-var animation = {
+const animation = {
   moveTo($element, position, duration, completeAction) {
     _fx.default.animate($element, {
       type: 'slide',

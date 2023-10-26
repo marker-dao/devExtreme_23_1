@@ -8,11 +8,11 @@ var _window = require("../../core/utils/window");
 var _extend = require("../../core/utils/extend");
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SEPARATOR = 'separator';
-var SEPARATOR_COMMAND = {
+const SEPARATOR = 'separator';
+const SEPARATOR_COMMAND = {
   widget: SEPARATOR
 };
-var CSS_CLASSES = {
+const CSS_CLASSES = {
   SMALL_EDITOR_ITEM: 'dx-diagram-sm-edit-item',
   MEDIUM_EDITOR_ITEM: 'dx-diagram-md-edit-item',
   LARGE_EDITOR_ITEM: 'dx-diagram-lg-edit-item',
@@ -20,43 +20,37 @@ var CSS_CLASSES = {
   COLOR_EDITOR_ITEM: 'dx-diagram-color-edit-item',
   LARGE_ICON_ITEM: 'dx-diagram-lg-icon-item'
 };
-var DiagramCommandsManager = {
+const DiagramCommandsManager = {
   SHOW_TOOLBOX_COMMAND_NAME: 'toolbox',
   SHOW_PROPERTIES_PANEL_COMMAND_NAME: 'propertiesPanel',
-  getAllCommands: function getAllCommands() {
-    var _this = this;
-    var _getDiagram = (0, _diagram.getDiagram)(),
-      DiagramCommand = _getDiagram.DiagramCommand;
+  getAllCommands: function () {
+    const {
+      DiagramCommand
+    } = (0, _diagram.getDiagram)();
     return this._allCommands || (this._allCommands = {
       separator: SEPARATOR_COMMAND,
       exportSvg: {
         command: DiagramCommand.ExportSvg,
         // eslint-disable-line spellcheck/spell-checker
         text: _message.default.format('dxDiagram-commandExportToSvg'),
-        getParameter: function getParameter(widget) {
-          return function (dataURI) {
-            return _this._exportTo(widget, dataURI, 'SVG', 'image/svg+xml');
-          };
+        getParameter: widget => {
+          return dataURI => this._exportTo(widget, dataURI, 'SVG', 'image/svg+xml');
         }
       },
       exportPng: {
         command: DiagramCommand.ExportPng,
         // eslint-disable-line spellcheck/spell-checker
         text: _message.default.format('dxDiagram-commandExportToPng'),
-        getParameter: function getParameter(widget) {
-          return function (dataURI) {
-            return _this._exportTo(widget, dataURI, 'PNG', 'image/png');
-          };
+        getParameter: widget => {
+          return dataURI => this._exportTo(widget, dataURI, 'PNG', 'image/png');
         }
       },
       exportJpg: {
         command: DiagramCommand.ExportJpg,
         // eslint-disable-line spellcheck/spell-checker
         text: _message.default.format('dxDiagram-commandExportToJpg'),
-        getParameter: function getParameter(widget) {
-          return function (dataURI) {
-            return _this._exportTo(widget, dataURI, 'JPEG', 'image/jpeg');
-          };
+        getParameter: widget => {
+          return dataURI => this._exportTo(widget, dataURI, 'JPEG', 'image/jpeg');
         }
       },
       undo: {
@@ -113,7 +107,7 @@ var DiagramCommandsManager = {
         hint: _message.default.format('dxDiagram-commandFontName'),
         text: _message.default.format('dxDiagram-commandFontName'),
         widget: 'dxSelectBox',
-        items: ['Arial', 'Arial Black', 'Helvetica', 'Times New Roman', 'Courier New', 'Courier', 'Verdana', 'Georgia', 'Comic Sans MS', 'Trebuchet MS'].map(function (item) {
+        items: ['Arial', 'Arial Black', 'Helvetica', 'Times New Roman', 'Courier New', 'Courier', 'Verdana', 'Georgia', 'Comic Sans MS', 'Trebuchet MS'].map(item => {
           return {
             text: item,
             value: item
@@ -126,7 +120,7 @@ var DiagramCommandsManager = {
         hint: _message.default.format('dxDiagram-commandFontSize'),
         text: _message.default.format('dxDiagram-commandFontSize'),
         widget: 'dxSelectBox',
-        items: [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72].map(function (item) {
+        items: [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72].map(item => {
           return {
             text: item + 'pt',
             value: item + 'pt'
@@ -178,7 +172,7 @@ var DiagramCommandsManager = {
         text: _message.default.format('dxDiagram-commandLineWidth'),
         hint: _message.default.format('dxDiagram-commandLineWidth'),
         widget: 'dxSelectBox',
-        items: [1, 2, 3, 4, 5, 6, 7, 8].map(function (item) {
+        items: [1, 2, 3, 4, 5, 6, 7, 8].map(item => {
           return {
             text: item + 'px',
             value: item.toString()
@@ -456,12 +450,8 @@ var DiagramCommandsManager = {
         text: _message.default.format('dxDiagram-commandPageSize'),
         widget: 'dxSelectBox',
         cssClass: CSS_CLASSES.LARGE_EDITOR_ITEM,
-        getCommandValue: function getCommandValue(v) {
-          return JSON.parse(v);
-        },
-        getEditorValue: function getEditorValue(v) {
-          return JSON.stringify(v);
-        }
+        getCommandValue: v => JSON.parse(v),
+        getEditorValue: v => JSON.stringify(v)
       },
       pageOrientation: {
         command: DiagramCommand.PageLandscape,
@@ -508,7 +498,7 @@ var DiagramCommandsManager = {
           hint: _message.default.format('dxDiagram-commandAutoZoomByWidth'),
           text: _message.default.format('dxDiagram-commandAutoZoomByWidth')
         }],
-        getEditorDisplayValue: function getEditorDisplayValue(v) {
+        getEditorDisplayValue: v => {
           return Math.round(v * 100) + '%';
         },
         cssClass: CSS_CLASSES.SMALL_EDITOR_ITEM
@@ -530,12 +520,12 @@ var DiagramCommandsManager = {
       }
     });
   },
-  getMainToolbarCommands: function getMainToolbarCommands(commands, excludeCommands) {
-    var allCommands = this.getAllCommands();
-    var mainToolbarCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultMainToolbarCommands(allCommands);
+  getMainToolbarCommands: function (commands, excludeCommands) {
+    const allCommands = this.getAllCommands();
+    const mainToolbarCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultMainToolbarCommands(allCommands);
     return this._prepareToolbarCommands(mainToolbarCommands, excludeCommands);
   },
-  _getDefaultMainToolbarCommands: function _getDefaultMainToolbarCommands(allCommands) {
+  _getDefaultMainToolbarCommands: function (allCommands) {
     return this._defaultMainToolbarCommands || (this._defaultMainToolbarCommands = [allCommands['undo'], allCommands['redo'], allCommands['separator'], allCommands['fontName'], allCommands['fontSize'], allCommands['bold'], allCommands['italic'], allCommands['underline'], allCommands['separator'], allCommands['lineWidth'], allCommands['lineStyle'], allCommands['separator'], allCommands['fontColor'], allCommands['lineColor'], allCommands['fillColor'], allCommands['separator'], allCommands['textAlignLeft'], allCommands['textAlignCenter'], allCommands['textAlignRight'], allCommands['separator'], allCommands['connectorLineType'], allCommands['connectorLineStart'], allCommands['connectorLineEnd'], allCommands['separator'], {
       text: _message.default.format('dxDiagram-uiLayout'),
       showText: 'always',
@@ -548,20 +538,20 @@ var DiagramCommandsManager = {
       }]
     }]);
   },
-  getHistoryToolbarCommands: function getHistoryToolbarCommands(commands, excludeCommands) {
-    var allCommands = this.getAllCommands();
-    var historyToolbarCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultHistoryToolbarCommands(allCommands);
+  getHistoryToolbarCommands: function (commands, excludeCommands) {
+    const allCommands = this.getAllCommands();
+    const historyToolbarCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultHistoryToolbarCommands(allCommands);
     return this._prepareToolbarCommands(historyToolbarCommands, excludeCommands);
   },
-  _getDefaultHistoryToolbarCommands: function _getDefaultHistoryToolbarCommands(allCommands) {
+  _getDefaultHistoryToolbarCommands: function (allCommands) {
     return this._defaultHistoryToolbarCommands || (this._defaultHistoryToolbarCommands = [allCommands['undo'], allCommands['redo'], allCommands['separator'], allCommands['toolbox']]);
   },
-  getViewToolbarCommands: function getViewToolbarCommands(commands, excludeCommands) {
-    var allCommands = this.getAllCommands();
-    var viewToolbarCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultViewToolbarCommands(allCommands);
+  getViewToolbarCommands: function (commands, excludeCommands) {
+    const allCommands = this.getAllCommands();
+    const viewToolbarCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultViewToolbarCommands(allCommands);
     return this._prepareToolbarCommands(viewToolbarCommands, excludeCommands);
   },
-  _getDefaultViewToolbarCommands: function _getDefaultViewToolbarCommands(allCommands) {
+  _getDefaultViewToolbarCommands: function (allCommands) {
     return this._defaultViewToolbarCommands || (this._defaultViewToolbarCommands = [allCommands['zoomLevel'], allCommands['separator'], allCommands['fullScreen'], allCommands['separator'], {
       widget: 'dxButton',
       icon: 'export',
@@ -575,15 +565,15 @@ var DiagramCommandsManager = {
       items: [allCommands['units'], allCommands['separator'], allCommands['showGrid'], allCommands['snapToGrid'], allCommands['gridSize'], allCommands['separator'], allCommands['simpleView'], allCommands['toolbox']]
     }]);
   },
-  getPropertiesToolbarCommands: function getPropertiesToolbarCommands(commands, excludeCommands) {
-    var allCommands = this.getAllCommands();
-    var propertiesCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultPropertiesToolbarCommands(allCommands);
+  getPropertiesToolbarCommands: function (commands, excludeCommands) {
+    const allCommands = this.getAllCommands();
+    const propertiesCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultPropertiesToolbarCommands(allCommands);
     return this._prepareToolbarCommands(propertiesCommands, excludeCommands);
   },
-  _getDefaultPropertiesToolbarCommands: function _getDefaultPropertiesToolbarCommands(allCommands) {
+  _getDefaultPropertiesToolbarCommands: function (allCommands) {
     return this._defaultPropertiesToolbarCommands || (this._defaultPropertiesToolbarCommands = [allCommands['propertiesPanel']]);
   },
-  _getDefaultPropertyPanelCommandGroups: function _getDefaultPropertyPanelCommandGroups() {
+  _getDefaultPropertyPanelCommandGroups: function () {
     return this._defaultPropertyPanelCommandGroups || (this._defaultPropertyPanelCommandGroups = [{
       title: _message.default.format('dxDiagram-uiStyle'),
       groups: [{
@@ -613,24 +603,23 @@ var DiagramCommandsManager = {
       }]
     }]);
   },
-  _preparePropertyPanelGroups: function _preparePropertyPanelGroups(groups) {
-    var _this2 = this;
-    var allCommands = this.getAllCommands();
-    var result = [];
-    groups.forEach(function (g) {
-      var commands = g.commands;
+  _preparePropertyPanelGroups: function (groups) {
+    const allCommands = this.getAllCommands();
+    const result = [];
+    groups.forEach(g => {
+      let commands = g.commands;
       if (commands) {
-        commands = _this2._getPreparedCommands(allCommands, commands);
-        commands = _this2._prepareToolbarCommands(commands);
+        commands = this._getPreparedCommands(allCommands, commands);
+        commands = this._prepareToolbarCommands(commands);
       }
-      var subGroups;
+      let subGroups;
       if (g.groups) {
         subGroups = [];
-        g.groups.forEach(function (sg) {
-          var subCommands = sg.commands;
+        g.groups.forEach(sg => {
+          let subCommands = sg.commands;
           if (subCommands) {
-            subCommands = _this2._getPreparedCommands(allCommands, subCommands);
-            subCommands = _this2._prepareToolbarCommands(subCommands);
+            subCommands = this._getPreparedCommands(allCommands, subCommands);
+            subCommands = this._prepareToolbarCommands(subCommands);
           }
           subGroups.push({
             title: sg.title,
@@ -646,23 +635,22 @@ var DiagramCommandsManager = {
     });
     return result;
   },
-  getPropertyPanelCommandTabs: function getPropertyPanelCommandTabs(commandGroups) {
+  getPropertyPanelCommandTabs: function (commandGroups) {
     commandGroups = commandGroups || this._getDefaultPropertyPanelCommandGroups();
     return this._preparePropertyPanelGroups(commandGroups);
   },
-  getContextMenuCommands: function getContextMenuCommands(commands) {
-    var allCommands = this.getAllCommands();
-    var contextMenuCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultContextMenuCommands(allCommands);
+  getContextMenuCommands: function (commands) {
+    const allCommands = this.getAllCommands();
+    const contextMenuCommands = commands ? this._getPreparedCommands(allCommands, commands) : this._getDefaultContextMenuCommands(allCommands);
     return this._prepareContextMenuCommands(contextMenuCommands);
   },
-  _getDefaultContextMenuCommands: function _getDefaultContextMenuCommands(allCommands) {
+  _getDefaultContextMenuCommands: function (allCommands) {
     return this._defaultContextMenuCommands || (this._defaultContextMenuCommands = [allCommands['cut'], allCommands['copy'], allCommands['paste'], allCommands['delete'], allCommands['separator'], allCommands['selectAll'], allCommands['separator'], allCommands['bringToFront'], allCommands['sendToBack'], allCommands['separator'], allCommands['lock'], allCommands['unlock'], allCommands['separator'], allCommands['insertShapeImage'], allCommands['editShapeImage'], allCommands['deleteShapeImage']]);
   },
   _getPreparedCommands(allCommands, commands) {
-    var _this3 = this;
-    return commands.map(function (c) {
+    return commands.map(c => {
       if (c.widget && c.widget === SEPARATOR) {
-        var command = {
+        const command = {
           command: c,
           location: c.location
         };
@@ -670,8 +658,8 @@ var DiagramCommandsManager = {
       } else if (allCommands[c]) {
         return allCommands[c];
       } else if (c.text || c.icon || c.name) {
-        var internalCommand = c.name && allCommands[c.name];
-        var _command = {
+        const internalCommand = c.name && allCommands[c.name];
+        const command = {
           command: internalCommand && internalCommand.command,
           name: c.name,
           location: c.location,
@@ -689,44 +677,36 @@ var DiagramCommandsManager = {
           iconUnchecked: internalCommand && internalCommand.iconUnchecked
         };
         if (Array.isArray(c.items)) {
-          _command.items = _this3._getPreparedCommands(allCommands, c.items);
+          command.items = this._getPreparedCommands(allCommands, c.items);
         } else {
-          _command.items = internalCommand && internalCommand.items;
+          command.items = internalCommand && internalCommand.items;
         }
-        return _command;
+        return command;
       }
-    }).filter(function (c) {
-      return c;
-    });
+    }).filter(c => c);
   },
   _prepareContextMenuCommands(commands, excludeCommands, rootCommand) {
-    var _this4 = this;
-    var beginGroup = false;
-    return commands.map(function (c) {
-      if (!_this4._isValidCommand(c, excludeCommands)) return;
+    let beginGroup = false;
+    return commands.map(c => {
+      if (!this._isValidCommand(c, excludeCommands)) return;
       if (c.widget && c.widget === SEPARATOR) {
         beginGroup = true;
       } else {
-        var command = _this4._cloneCommand(c, excludeCommands);
+        const command = this._cloneCommand(c, excludeCommands);
         command.icon = command.menuIcon;
         command.beginGroup = beginGroup;
         command.rootCommand = !command.command ? rootCommand && rootCommand.command : undefined;
         beginGroup = false;
         return command;
       }
-    }).filter(function (c) {
-      return c;
-    });
+    }).filter(c => c);
   },
   _prepareToolbarCommands(commands, excludeCommands) {
-    var _this5 = this;
-    return commands.map(function (c) {
-      if (_this5._isValidCommand(c, excludeCommands)) {
-        return _this5._cloneCommand(c, excludeCommands);
+    return commands.map(c => {
+      if (this._isValidCommand(c, excludeCommands)) {
+        return this._cloneCommand(c, excludeCommands);
       }
-    }).filter(function (c) {
-      return c;
-    }).filter(function (c, index, arr) {
+    }).filter(c => c).filter((c, index, arr) => {
       if (c.widget === SEPARATOR && index === arr.length - 1) {
         return false;
       }
@@ -734,7 +714,7 @@ var DiagramCommandsManager = {
     });
   },
   _cloneCommand(c, excludeCommands) {
-    var command = (0, _extend.extend)({}, c);
+    const command = (0, _extend.extend)({}, c);
     if (Array.isArray(c.items)) {
       command.items = this._prepareContextMenuCommands(c.items, excludeCommands, command);
     }
@@ -745,17 +725,17 @@ var DiagramCommandsManager = {
     return excludeCommands.indexOf(c.command) === -1;
   },
   _exportTo(widget, dataURI, format, mimeString) {
-    var window = (0, _window.getWindow)();
+    const window = (0, _window.getWindow)();
     if (window && window.atob && (0, _type.isFunction)(window.Blob)) {
-      var blob = this._getBlobByDataURI(window, dataURI, mimeString);
-      var options = widget.option('export');
+      const blob = this._getBlobByDataURI(window, dataURI, mimeString);
+      const options = widget.option('export');
       _file_saver.fileSaver.saveAs(options.fileName || 'foo', format, blob);
     }
   },
   _getBlobByDataURI(window, dataURI, mimeString) {
-    var byteString = window.atob(dataURI.split(',')[1]);
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
+    const byteString = window.atob(dataURI.split(',')[1]);
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
     return new window.Blob([ia.buffer], {

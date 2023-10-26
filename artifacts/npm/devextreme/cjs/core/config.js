@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/config.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ var _errors = _interopRequireDefault(require("./errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* global DevExpress */
 
-var config = {
+const config = {
   rtlEnabled: false,
   defaultCurrency: 'USD',
   defaultUseCurrencyAccountingStyle: true,
@@ -49,7 +49,7 @@ var config = {
     shading: false,
     direction: 'auto'
   },
-  optionsParser: function optionsParser(optionsString) {
+  optionsParser: optionsString => {
     if (optionsString.trim().charAt(0) !== '{') {
       optionsString = '{' + optionsString + '}';
     }
@@ -64,21 +64,21 @@ var config = {
     }
   }
 };
-var normalizeToJSONString = function normalizeToJSONString(optionsString) {
+const normalizeToJSONString = optionsString => {
   return optionsString.replace(/'/g, '"') // replace all ' to "
   .replace(/,\s*([\]}])/g, '$1') // remove trailing commas
   .replace(/([{,])\s*([^":\s]+)\s*:/g, '$1"$2":'); // add quotes for unquoted keys
 };
 
-var deprecatedFields = ['decimalSeparator', 'thousandsSeparator'];
-var configMethod = function configMethod() {
+const deprecatedFields = ['decimalSeparator', 'thousandsSeparator'];
+const configMethod = function () {
   if (!arguments.length) {
     return config;
   }
-  var newConfig = arguments.length <= 0 ? undefined : arguments[0];
-  deprecatedFields.forEach(function (deprecatedField) {
+  const newConfig = arguments.length <= 0 ? undefined : arguments[0];
+  deprecatedFields.forEach(deprecatedField => {
     if (newConfig[deprecatedField]) {
-      var message = "Now, the ".concat(deprecatedField, " is selected based on the specified locale.");
+      const message = "Now, the ".concat(deprecatedField, " is selected based on the specified locale.");
       _errors.default.log('W0003', 'config', deprecatedField, '19.2', message);
     }
   });

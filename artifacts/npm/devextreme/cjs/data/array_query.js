@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/array_query.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,79 +17,79 @@ var _deferred = require("../core/utils/deferred");
 var _errors = require("./errors");
 var _utils = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var Iterator = _class.default.inherit({
-  toArray: function toArray() {
-    var result = [];
+const Iterator = _class.default.inherit({
+  toArray: function () {
+    const result = [];
     this.reset();
     while (this.next()) {
       result.push(this.current());
     }
     return result;
   },
-  countable: function countable() {
+  countable: function () {
     return false;
   }
 });
-var ArrayIterator = Iterator.inherit({
-  ctor: function ctor(array) {
+const ArrayIterator = Iterator.inherit({
+  ctor: function (array) {
     this.array = array;
     this.index = -1;
   },
-  next: function next() {
+  next: function () {
     if (this.index + 1 < this.array.length) {
       this.index++;
       return true;
     }
     return false;
   },
-  current: function current() {
+  current: function () {
     return this.array[this.index];
   },
-  reset: function reset() {
+  reset: function () {
     this.index = -1;
   },
-  toArray: function toArray() {
+  toArray: function () {
     return this.array.slice(0);
   },
-  countable: function countable() {
+  countable: function () {
     return true;
   },
-  count: function count() {
+  count: function () {
     return this.array.length;
   }
 });
-var WrappedIterator = Iterator.inherit({
-  ctor: function ctor(iter) {
+const WrappedIterator = Iterator.inherit({
+  ctor: function (iter) {
     this.iter = iter;
   },
-  next: function next() {
+  next: function () {
     return this.iter.next();
   },
-  current: function current() {
+  current: function () {
     return this.iter.current();
   },
-  reset: function reset() {
+  reset: function () {
     return this.iter.reset();
   }
 });
-var MapIterator = WrappedIterator.inherit({
-  ctor: function ctor(iter, mapper) {
+const MapIterator = WrappedIterator.inherit({
+  ctor: function (iter, mapper) {
     this.callBase(iter);
     this.index = -1;
     this.mapper = mapper;
   },
-  current: function current() {
+  current: function () {
     return this.mapper(this.callBase(), this.index);
   },
-  next: function next() {
-    var hasNext = this.callBase();
+  next: function () {
+    const hasNext = this.callBase();
     if (hasNext) {
       this.index++;
     }
     return hasNext;
   }
 });
-var defaultCompare = function defaultCompare(xValue, yValue, options) {
+const defaultCompare = function (xValue, yValue, options) {
   if ((0, _type.isString)(xValue) && (0, _type.isString)(yValue) && (options !== null && options !== void 0 && options.locale || options !== null && options !== void 0 && options.collatorOptions)) {
     /* eslint-disable-next-line no-undef */
     return new Intl.Collator((options === null || options === void 0 ? void 0 : options.locale) || undefined, (options === null || options === void 0 ? void 0 : options.collatorOptions) || undefined).compare(xValue, yValue);
@@ -116,8 +116,8 @@ var defaultCompare = function defaultCompare(xValue, yValue, options) {
   }
   return 0;
 };
-var SortIterator = Iterator.inherit({
-  ctor: function ctor(iter, getter, desc, compare) {
+const SortIterator = Iterator.inherit({
+  ctor: function (iter, getter, desc, compare) {
     this.langParams = iter.langParams;
     if (!(iter instanceof MapIterator)) {
       iter = new MapIterator(iter, this._wrap);
@@ -131,35 +131,35 @@ var SortIterator = Iterator.inherit({
       langParams: this.langParams
     }];
   },
-  thenBy: function thenBy(getter, desc, compare) {
-    var result = new SortIterator(this.sortedIter || this.iter, getter, desc, compare);
+  thenBy: function (getter, desc, compare) {
+    const result = new SortIterator(this.sortedIter || this.iter, getter, desc, compare);
     if (!this.sortedIter) {
       result.rules = this.rules.concat(result.rules);
     }
     return result;
   },
-  next: function next() {
+  next: function () {
     this._ensureSorted();
     return this.sortedIter.next();
   },
-  current: function current() {
+  current: function () {
     this._ensureSorted();
     return this.sortedIter.current();
   },
-  reset: function reset() {
+  reset: function () {
     delete this.sortedIter;
   },
-  countable: function countable() {
+  countable: function () {
     return this.sortedIter || this.iter.countable();
   },
-  count: function count() {
+  count: function () {
     if (this.sortedIter) {
       return this.sortedIter.count();
     }
     return this.iter.count();
   },
-  _ensureSorted: function _ensureSorted() {
-    var that = this;
+  _ensureSorted: function () {
+    const that = this;
     if (that.sortedIter) {
       return;
     }
@@ -170,34 +170,32 @@ var SortIterator = Iterator.inherit({
       return that._compare(x, y);
     })), that._unwrap);
   },
-  _wrap: function _wrap(record, index) {
+  _wrap: function (record, index) {
     return {
       index: index,
       value: record
     };
   },
-  _unwrap: function _unwrap(wrappedItem) {
+  _unwrap: function (wrappedItem) {
     return wrappedItem.value;
   },
   _getDefaultCompare(langParams) {
-    return function (xValue, yValue) {
-      return defaultCompare(xValue, yValue, langParams);
-    };
+    return (xValue, yValue) => defaultCompare(xValue, yValue, langParams);
   },
-  _compare: function _compare(x, y) {
-    var xIndex = x.index;
-    var yIndex = y.index;
+  _compare: function (x, y) {
+    const xIndex = x.index;
+    const yIndex = y.index;
     x = x.value;
     y = y.value;
     if (x === y) {
       return xIndex - yIndex;
     }
-    for (var i = 0, rulesCount = this.rules.length; i < rulesCount; i++) {
-      var rule = this.rules[i];
-      var xValue = rule.getter(x);
-      var yValue = rule.getter(y);
-      var compare = rule.compare || this._getDefaultCompare(rule.langParams);
-      var compareResult = compare(xValue, yValue);
+    for (let i = 0, rulesCount = this.rules.length; i < rulesCount; i++) {
+      const rule = this.rules[i];
+      const xValue = rule.getter(x);
+      const yValue = rule.getter(y);
+      const compare = rule.compare || this._getDefaultCompare(rule.langParams);
+      const compareResult = compare(xValue, yValue);
       if (compareResult) {
         return rule.desc ? -compareResult : compareResult;
       }
@@ -205,15 +203,13 @@ var SortIterator = Iterator.inherit({
     return xIndex - yIndex;
   }
 });
-var compileCriteria = function () {
-  var langParams = {};
-  var _toComparable = function _toComparable(value) {
-    return (0, _data.toComparable)(value, false, langParams);
-  };
-  var compileGroup = function compileGroup(crit) {
-    var ops = [];
-    var isConjunctiveOperator = false;
-    var isConjunctiveNextOperator = false;
+const compileCriteria = function () {
+  let langParams = {};
+  const _toComparable = value => (0, _data.toComparable)(value, false, langParams);
+  const compileGroup = function (crit) {
+    const ops = [];
+    let isConjunctiveOperator = false;
+    let isConjunctiveNextOperator = false;
     (0, _iterator.each)(crit, function () {
       if (Array.isArray(this) || (0, _type.isFunction)(this)) {
         if (ops.length > 1 && isConjunctiveOperator !== isConjunctiveNextOperator) {
@@ -227,8 +223,8 @@ var compileCriteria = function () {
       }
     });
     return function (d) {
-      var result = isConjunctiveOperator;
-      for (var i = 0; i < ops.length; i++) {
+      let result = isConjunctiveOperator;
+      for (let i = 0; i < ops.length; i++) {
         if (ops[i](d) !== isConjunctiveOperator) {
           result = !isConjunctiveOperator;
           break;
@@ -237,17 +233,17 @@ var compileCriteria = function () {
       return result;
     };
   };
-  var toString = function toString(value) {
+  const toString = function (value) {
     var _langParams;
     return (0, _type.isDefined)(value) ? (_langParams = langParams) !== null && _langParams !== void 0 && _langParams.locale ? value.toLocaleString(langParams.locale) : value.toString() : '';
   };
-  var compileBinary = function compileBinary(crit) {
+  const compileBinary = function (crit) {
     crit = (0, _utils.normalizeBinaryCriterion)(crit);
-    var getter = (0, _data.compileGetter)(crit[0]);
-    var op = crit[1];
-    var value = crit[2];
+    const getter = (0, _data.compileGetter)(crit[0]);
+    const op = crit[1];
+    let value = crit[2];
     value = _toComparable(value);
-    var compare = function compare(obj, operatorFn) {
+    const compare = (obj, operatorFn) => {
       obj = _toComparable(getter(obj));
       return (value == null || obj == null) && value !== obj ? false : operatorFn(obj, value);
     };
@@ -257,41 +253,25 @@ var compileCriteria = function () {
       case '<>':
         return compileEquals(getter, value, true);
       case '>':
-        return function (obj) {
-          return compare(obj, function (a, b) {
-            return a > b;
-          });
-        };
+        return obj => compare(obj, (a, b) => a > b);
       case '<':
-        return function (obj) {
-          return compare(obj, function (a, b) {
-            return a < b;
-          });
-        };
+        return obj => compare(obj, (a, b) => a < b);
       case '>=':
-        return function (obj) {
-          return compare(obj, function (a, b) {
-            return a >= b;
-          });
-        };
+        return obj => compare(obj, (a, b) => a >= b);
       case '<=':
-        return function (obj) {
-          return compare(obj, function (a, b) {
-            return a <= b;
-          });
-        };
+        return obj => compare(obj, (a, b) => a <= b);
       case 'startswith':
         return function (obj) {
           return _toComparable(toString(getter(obj))).indexOf(value) === 0;
         };
       case 'endswith':
         return function (obj) {
-          var getterValue = _toComparable(toString(getter(obj)));
-          var searchValue = toString(value);
+          const getterValue = _toComparable(toString(getter(obj)));
+          const searchValue = toString(value);
           if (getterValue.length < searchValue.length) {
             return false;
           }
-          var index = getterValue.lastIndexOf(value);
+          const index = getterValue.lastIndexOf(value);
           return index !== -1 && index === getterValue.length - value.length;
         };
       case 'contains':
@@ -309,7 +289,7 @@ var compileCriteria = function () {
     return function (obj) {
       obj = _toComparable(getter(obj));
       // eslint-disable-next-line eqeqeq
-      var result = useStrictComparison(value) ? obj === value : obj == value;
+      let result = useStrictComparison(value) ? obj === value : obj == value;
       if (negate) {
         result = !result;
       }
@@ -320,8 +300,8 @@ var compileCriteria = function () {
     return value === '' || value === 0 || value === false;
   }
   function compileUnary(crit) {
-    var op = crit[0];
-    var criteria = compileCriteria(crit[1], langParams);
+    const op = crit[0];
+    const criteria = compileCriteria(crit[1], langParams);
     if (op === '!') {
       return function (obj) {
         return !criteria(obj);
@@ -343,13 +323,13 @@ var compileCriteria = function () {
     return compileBinary(crit);
   };
 }();
-var FilterIterator = WrappedIterator.inherit({
-  ctor: function ctor(iter, criteria) {
+const FilterIterator = WrappedIterator.inherit({
+  ctor: function (iter, criteria) {
     this.callBase(iter);
     this.langParams = iter.langParams;
     this.criteria = compileCriteria(criteria, this.langParams);
   },
-  next: function next() {
+  next: function () {
     while (this.iter.next()) {
       if (this.criteria(this.current())) {
         return true;
@@ -358,40 +338,40 @@ var FilterIterator = WrappedIterator.inherit({
     return false;
   }
 });
-var GroupIterator = Iterator.inherit({
-  ctor: function ctor(iter, getter) {
+const GroupIterator = Iterator.inherit({
+  ctor: function (iter, getter) {
     this.iter = iter;
     this.getter = getter;
   },
-  next: function next() {
+  next: function () {
     this._ensureGrouped();
     return this.groupedIter.next();
   },
-  current: function current() {
+  current: function () {
     this._ensureGrouped();
     return this.groupedIter.current();
   },
-  reset: function reset() {
+  reset: function () {
     delete this.groupedIter;
   },
-  countable: function countable() {
+  countable: function () {
     return !!this.groupedIter;
   },
-  count: function count() {
+  count: function () {
     return this.groupedIter.count();
   },
-  _ensureGrouped: function _ensureGrouped() {
+  _ensureGrouped: function () {
     if (this.groupedIter) {
       return;
     }
-    var hash = {};
-    var keys = [];
-    var iter = this.iter;
-    var getter = (0, _data.compileGetter)(this.getter);
+    const hash = {};
+    const keys = [];
+    const iter = this.iter;
+    const getter = (0, _data.compileGetter)(this.getter);
     iter.reset();
     while (iter.next()) {
-      var current = iter.current();
-      var key = getter(current);
+      const current = iter.current();
+      const key = getter(current);
       if (key in hash) {
         hash[key].push(current);
       } else {
@@ -407,29 +387,29 @@ var GroupIterator = Iterator.inherit({
     }));
   }
 });
-var SelectIterator = WrappedIterator.inherit({
-  ctor: function ctor(iter, getter) {
+const SelectIterator = WrappedIterator.inherit({
+  ctor: function (iter, getter) {
     this.callBase(iter);
     this.getter = (0, _data.compileGetter)(getter);
   },
-  current: function current() {
+  current: function () {
     return this.getter(this.callBase());
   },
-  countable: function countable() {
+  countable: function () {
     return this.iter.countable();
   },
-  count: function count() {
+  count: function () {
     return this.iter.count();
   }
 });
-var SliceIterator = WrappedIterator.inherit({
-  ctor: function ctor(iter, skip, take) {
+const SliceIterator = WrappedIterator.inherit({
+  ctor: function (iter, skip, take) {
     this.callBase(iter);
     this.skip = Math.max(0, skip);
     this.take = Math.max(0, take);
     this.pos = 0;
   },
-  next: function next() {
+  next: function () {
     if (this.pos >= this.skip + this.take) {
       return false;
     }
@@ -439,18 +419,18 @@ var SliceIterator = WrappedIterator.inherit({
     this.pos++;
     return this.iter.next();
   },
-  reset: function reset() {
+  reset: function () {
     this.callBase();
     this.pos = 0;
   },
-  countable: function countable() {
+  countable: function () {
     return this.iter.countable();
   },
-  count: function count() {
+  count: function () {
     return Math.min(this.iter.count() - this.skip, this.take);
   }
 });
-var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
+const arrayQueryImpl = function (iter, queryOptions) {
   queryOptions = queryOptions || {};
   if (!(iter instanceof Iterator)) {
     iter = new ArrayIterator(iter);
@@ -458,18 +438,18 @@ var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
   if (queryOptions.langParams) {
     iter.langParams = queryOptions.langParams;
   }
-  var handleError = function handleError(error) {
-    var handler = queryOptions.errorHandler;
+  const handleError = function (error) {
+    const handler = queryOptions.errorHandler;
     if (handler) {
       handler(error);
     }
     (0, _errors.handleError)(error);
   };
-  var aggregateCore = function aggregateCore(aggregator) {
-    var d = new _deferred.Deferred().fail(handleError);
-    var seed;
-    var step = aggregator.step;
-    var finalize = aggregator.finalize;
+  const aggregateCore = function (aggregator) {
+    const d = new _deferred.Deferred().fail(handleError);
+    let seed;
+    const step = aggregator.step;
+    const finalize = aggregator.finalize;
     try {
       iter.reset();
       if ('seed' in aggregator) {
@@ -477,7 +457,7 @@ var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
       } else {
         seed = iter.next() ? iter.current() : NaN;
       }
-      var accumulator = seed;
+      let accumulator = seed;
       while (iter.next()) {
         accumulator = step(accumulator, iter.current());
       }
@@ -487,7 +467,7 @@ var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
     }
     return d.promise();
   };
-  var aggregate = function aggregate(seed, step, finalize) {
+  const aggregate = function (seed, step, finalize) {
     if (arguments.length < 2) {
       return aggregateCore({
         step: arguments[0]
@@ -499,27 +479,27 @@ var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
       finalize: finalize
     });
   };
-  var standardAggregate = function standardAggregate(name) {
+  const standardAggregate = function (name) {
     return aggregateCore(_utils.aggregators[name]);
   };
-  var select = function select(getter) {
+  const select = function (getter) {
     if (!(0, _type.isFunction)(getter) && !Array.isArray(getter)) {
       getter = [].slice.call(arguments);
     }
     return chainQuery(new SelectIterator(iter, getter));
   };
-  var selectProp = function selectProp(name) {
+  const selectProp = function (name) {
     return select((0, _data.compileGetter)(name));
   };
   function chainQuery(iter) {
     return arrayQueryImpl(iter, queryOptions);
   }
   return {
-    toArray: function toArray() {
+    toArray: function () {
       return iter.toArray();
     },
-    enumerate: function enumerate() {
-      var d = new _deferred.Deferred().fail(handleError);
+    enumerate: function () {
+      const d = new _deferred.Deferred().fail(handleError);
       try {
         d.resolve(iter.toArray());
       } catch (x) {
@@ -530,35 +510,35 @@ var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
     setLangParams(options) {
       iter.langParams = options;
     },
-    sortBy: function sortBy(getter, desc, compare) {
+    sortBy: function (getter, desc, compare) {
       return chainQuery(new SortIterator(iter, getter, desc, compare));
     },
-    thenBy: function thenBy(getter, desc, compare) {
+    thenBy: function (getter, desc, compare) {
       if (iter instanceof SortIterator) {
         return chainQuery(iter.thenBy(getter, desc, compare));
       }
       throw _errors.errors.Error('E4004');
     },
-    filter: function filter(criteria) {
+    filter: function (criteria) {
       if (!Array.isArray(criteria)) {
         criteria = [].slice.call(arguments);
       }
       return chainQuery(new FilterIterator(iter, criteria));
     },
-    slice: function slice(skip, take) {
+    slice: function (skip, take) {
       if (take === undefined) {
         take = Number.MAX_VALUE;
       }
       return chainQuery(new SliceIterator(iter, skip, take));
     },
     select: select,
-    groupBy: function groupBy(getter) {
+    groupBy: function (getter) {
       return chainQuery(new GroupIterator(iter, getter));
     },
     aggregate: aggregate,
-    count: function count() {
+    count: function () {
       if (iter.countable()) {
-        var d = new _deferred.Deferred().fail(handleError);
+        const d = new _deferred.Deferred().fail(handleError);
         try {
           d.resolve(iter.count());
         } catch (x) {
@@ -568,25 +548,25 @@ var arrayQueryImpl = function arrayQueryImpl(iter, queryOptions) {
       }
       return standardAggregate('count');
     },
-    sum: function sum(getter) {
+    sum: function (getter) {
       if (getter) {
         return selectProp(getter).sum();
       }
       return standardAggregate('sum');
     },
-    min: function min(getter) {
+    min: function (getter) {
       if (getter) {
         return selectProp(getter).min();
       }
       return standardAggregate('min');
     },
-    max: function max(getter) {
+    max: function (getter) {
       if (getter) {
         return selectProp(getter).max();
       }
       return standardAggregate('max');
     },
-    avg: function avg(getter) {
+    avg: function (getter) {
       if (getter) {
         return selectProp(getter).avg();
       }

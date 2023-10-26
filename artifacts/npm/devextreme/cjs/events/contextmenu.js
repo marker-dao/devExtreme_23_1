@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/contextmenu.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,34 +18,34 @@ var _event_registrator = _interopRequireDefault(require("./core/event_registrato
 var _index = require("./utils/index");
 var _hold = _interopRequireDefault(require("./hold"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var CONTEXTMENU_NAMESPACE = 'dxContexMenu';
-var CONTEXTMENU_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)('contextmenu', CONTEXTMENU_NAMESPACE);
-var HOLD_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)(_hold.default.name, CONTEXTMENU_NAMESPACE);
-var CONTEXTMENU_EVENT_NAME = 'dxcontextmenu';
-var ContextMenu = _class.default.inherit({
-  setup: function setup(element) {
-    var $element = (0, _renderer.default)(element);
+const CONTEXTMENU_NAMESPACE = 'dxContexMenu';
+const CONTEXTMENU_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)('contextmenu', CONTEXTMENU_NAMESPACE);
+const HOLD_NAMESPACED_EVENT_NAME = (0, _index.addNamespace)(_hold.default.name, CONTEXTMENU_NAMESPACE);
+const CONTEXTMENU_EVENT_NAME = 'dxcontextmenu';
+const ContextMenu = _class.default.inherit({
+  setup: function (element) {
+    const $element = (0, _renderer.default)(element);
     _events_engine.default.on($element, CONTEXTMENU_NAMESPACED_EVENT_NAME, this._contextMenuHandler.bind(this));
     if (_support.touch || _devices.default.isSimulator()) {
       _events_engine.default.on($element, HOLD_NAMESPACED_EVENT_NAME, this._holdHandler.bind(this));
     }
   },
-  _holdHandler: function _holdHandler(e) {
+  _holdHandler: function (e) {
     if ((0, _index.isMouseEvent)(e) && !_devices.default.isSimulator()) {
       return;
     }
     this._fireContextMenu(e);
   },
-  _contextMenuHandler: function _contextMenuHandler(e) {
+  _contextMenuHandler: function (e) {
     this._fireContextMenu(e);
   },
-  _fireContextMenu: function _fireContextMenu(e) {
+  _fireContextMenu: function (e) {
     return (0, _index.fireEvent)({
       type: CONTEXTMENU_EVENT_NAME,
       originalEvent: e
     });
   },
-  teardown: function teardown(element) {
+  teardown: function (element) {
     _events_engine.default.off(element, '.' + CONTEXTMENU_NAMESPACE);
   }
 });
@@ -58,5 +58,5 @@ var ContextMenu = _class.default.inherit({
 */
 
 (0, _event_registrator.default)(CONTEXTMENU_EVENT_NAME, new ContextMenu());
-var name = CONTEXTMENU_EVENT_NAME;
+const name = CONTEXTMENU_EVENT_NAME;
 exports.name = name;

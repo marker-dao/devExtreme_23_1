@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/m_render.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,16 +19,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @ts-expect-error
 
 // This is temporary - to creating appointments from the old code
-var renderAppointments = function renderAppointments(options) {
-  var instance = options.instance,
-    $dateTable = options.$dateTable,
-    viewModel = options.viewModel;
-  var container = getAppointmentsContainer($dateTable);
+const renderAppointments = options => {
+  const {
+    instance,
+    $dateTable,
+    viewModel
+  } = options;
+  const container = getAppointmentsContainer($dateTable);
   _m_utils.utils.renovation.renderComponent(instance, container, _layout.default, 'renovatedAppointments', viewModel);
 };
 exports.renderAppointments = renderAppointments;
-var getAppointmentsContainer = function getAppointmentsContainer($dateTable) {
-  var container = (0, _renderer.default)('.dx-appointments-container');
+const getAppointmentsContainer = $dateTable => {
+  let container = (0, _renderer.default)('.dx-appointments-container');
   if (container.length === 0) {
     container = (0, _renderer.default)('<div>').addClass('dx-appointments-container').appendTo($dateTable);
   }

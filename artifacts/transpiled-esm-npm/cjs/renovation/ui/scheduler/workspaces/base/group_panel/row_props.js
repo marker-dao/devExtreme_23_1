@@ -1,7 +1,7 @@
 "use strict";
 
 exports.GroupPanelRowProps = void 0;
-var GroupPanelRowProps = {
+const GroupPanelRowProps = {
   groupItems: Object.freeze([]),
   className: ''
 };

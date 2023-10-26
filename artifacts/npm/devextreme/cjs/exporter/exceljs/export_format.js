@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/exceljs/export_format.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,8 +18,8 @@ var _language_codes = require("../../localization/language_codes");
 var _extend = require("../../core/utils/extend");
 require("../../localization/currency");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ARABIC_ZERO_CODE = 1632;
-var DEFINED_NUMBER_FORMTATS = {
+const ARABIC_ZERO_CODE = 1632;
+const DEFINED_NUMBER_FORMTATS = {
   thousands: '#,##0{0},&quot;K&quot;',
   millions: '#,##0{0},,&quot;M&quot;',
   billions: '#,##0{0},,,&quot;B&quot;',
@@ -30,15 +30,15 @@ var DEFINED_NUMBER_FORMTATS = {
   exponential: '0{0}E+00',
   currency: ' '
 };
-var PERIOD_REGEXP = /a+/g;
-var DAY_REGEXP = /E/g;
-var DO_REGEXP = /dE+/g;
-var STANDALONE_MONTH_REGEXP = /L/g;
-var HOUR_REGEXP = /h/g;
-var ANY_REGEXP = /./g;
+const PERIOD_REGEXP = /a+/g;
+const DAY_REGEXP = /E/g;
+const DO_REGEXP = /dE+/g;
+const STANDALONE_MONTH_REGEXP = /L/g;
+const HOUR_REGEXP = /h/g;
+const ANY_REGEXP = /./g;
 function _applyPrecision(format, precision) {
-  var result;
-  var i;
+  let result;
+  let i;
   if (precision > 0) {
     result = format !== 'decimal' ? '.' : '';
     for (i = 0; i < precision; i++) {
@@ -49,8 +49,8 @@ function _applyPrecision(format, precision) {
   return '';
 }
 function _hasArabicDigits(text) {
-  var code;
-  for (var i = 0; i < text.length; i++) {
+  let code;
+  for (let i = 0; i < text.length; i++) {
     code = text.charCodeAt(i);
     if (code >= ARABIC_ZERO_CODE && code < ARABIC_ZERO_CODE + 10) {
       return true;
@@ -59,10 +59,8 @@ function _hasArabicDigits(text) {
   return false;
 }
 function _convertDateFormat(format) {
-  var formattedValue = (_date.default.format(new Date(2009, 8, 8, 6, 5, 4), format) || '').toString();
-  var result = (0, _date2.getFormat)(function (value) {
-    return _date.default.format(value, format);
-  });
+  const formattedValue = (_date.default.format(new Date(2009, 8, 8, 6, 5, 4), format) || '').toString();
+  let result = (0, _date2.getFormat)(value => _date.default.format(value, format));
   if (result) {
     result = _convertDateFormatToOpenXml(result);
     result = _getLanguageInfo(formattedValue) + result;
@@ -70,9 +68,9 @@ function _convertDateFormat(format) {
   return result;
 }
 function _getLanguageInfo(defaultPattern) {
-  var languageID = (0, _language_codes.getLanguageId)();
-  var languageIDStr = languageID ? languageID.toString(16) : '';
-  var languageInfo = '';
+  const languageID = (0, _language_codes.getLanguageId)();
+  let languageIDStr = languageID ? languageID.toString(16) : '';
+  let languageInfo = '';
   if (_hasArabicDigits(defaultPattern)) {
     while (languageIDStr.length < 3) {
       languageIDStr = '0' + languageIDStr;
@@ -95,8 +93,8 @@ function _convertDateFormatToOpenXml(format) {
   }).join('');
 }
 function _convertNumberFormat(format, precision, currency) {
-  var result;
-  var excelFormat;
+  let result;
+  let excelFormat;
   if (format === 'currency') {
     excelFormat = _number.default.getOpenXmlCurrencyFormat(currency);
   } else {
@@ -120,8 +118,8 @@ function _hasCSVQuotedInjection(value, textQualifier) {
   return _includesCSVExpression(value.substring(1, value.length - 1));
 }
 function _includesCSVExpression(value) {
-  var injectionPrefix = /^[@=\t\r]/;
-  var possibleInjectionPrefix = /^[+-]/;
+  const injectionPrefix = /^[@=\t\r]/;
+  const possibleInjectionPrefix = /^[+-]/;
   if (!value) {
     return false;
   }
@@ -133,9 +131,9 @@ function _includesCSVExpression(value) {
   }
   return !(0, _type.isNumeric)(value);
 }
-var ExportFormat = {
+const ExportFormat = {
   formatObjectConverter(format, dataType) {
-    var result = {
+    const result = {
       format: format,
       precision: format && format.precision,
       dataType: dataType
@@ -160,8 +158,8 @@ var ExportFormat = {
     }
   },
   encode(value) {
-    var textQualifier = '"';
-    var escaped = false;
+    const textQualifier = '"';
+    let escaped = false;
     if (_hasCSVInjection(value)) {
       escaped = true;
     } else if (_hasCSVQuotedInjection(value, textQualifier)) {
@@ -169,8 +167,8 @@ var ExportFormat = {
       escaped = true;
     }
     if (escaped) {
-      var singleTextQualifier = textQualifier;
-      var escapedTextQualifier = "".concat(textQualifier).concat(textQualifier);
+      const singleTextQualifier = textQualifier;
+      const escapedTextQualifier = "".concat(textQualifier).concat(textQualifier);
       return textQualifier + '\'' + value.replaceAll(singleTextQualifier, escapedTextQualifier) + textQualifier;
     }
     return value;

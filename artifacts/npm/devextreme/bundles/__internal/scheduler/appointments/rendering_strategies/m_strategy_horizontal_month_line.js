@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/rendering_strategies/m_strategy_horizontal_month_line.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,30 +19,32 @@ var _m_strategy_horizontal = _interopRequireDefault(require("./m_strategy_horizo
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var HOURS_IN_DAY = 24;
-var MINUTES_IN_HOUR = 60;
-var MILLISECONDS_IN_MINUTE = 60000;
-var ZERO_APPOINTMENT_DURATION_IN_DAYS = 1;
-var HorizontalMonthLineRenderingStrategy = /*#__PURE__*/function (_HorizontalAppointmen) {
+const HOURS_IN_DAY = 24;
+const MINUTES_IN_HOUR = 60;
+const MILLISECONDS_IN_MINUTE = 60000;
+const ZERO_APPOINTMENT_DURATION_IN_DAYS = 1;
+let HorizontalMonthLineRenderingStrategy = /*#__PURE__*/function (_HorizontalAppointmen) {
   _inheritsLoose(HorizontalMonthLineRenderingStrategy, _HorizontalAppointmen);
   function HorizontalMonthLineRenderingStrategy() {
     return _HorizontalAppointmen.apply(this, arguments) || this;
   }
   var _proto = HorizontalMonthLineRenderingStrategy.prototype;
   _proto.calculateAppointmentWidth = function calculateAppointmentWidth(appointment, position) {
-    var startDate = _date.default.trimTime(position.info.appointment.startDate);
-    var normalizedEndDate = position.info.appointment.normalizedEndDate;
-    var cellWidth = this.cellWidth || this.getAppointmentMinSize();
-    var duration = Math.ceil(this._getDurationInDays(startDate, normalizedEndDate));
-    var width = this.cropAppointmentWidth(duration * cellWidth, cellWidth);
+    const startDate = _date.default.trimTime(position.info.appointment.startDate);
+    const {
+      normalizedEndDate
+    } = position.info.appointment;
+    const cellWidth = this.cellWidth || this.getAppointmentMinSize();
+    const duration = Math.ceil(this._getDurationInDays(startDate, normalizedEndDate));
+    let width = this.cropAppointmentWidth(duration * cellWidth, cellWidth);
     if (this.isVirtualScrolling) {
-      var skippedDays = this.viewDataProvider.getSkippedDaysCount(position.groupIndex, startDate, normalizedEndDate, duration);
+      const skippedDays = this.viewDataProvider.getSkippedDaysCount(position.groupIndex, startDate, normalizedEndDate, duration);
       width -= skippedDays * cellWidth;
     }
     return width;
   };
   _proto._getDurationInDays = function _getDurationInDays(startDate, endDate) {
-    var adjustedDuration = this._adjustDurationByDaylightDiff(endDate.getTime() - startDate.getTime(), startDate, endDate);
+    const adjustedDuration = this._adjustDurationByDaylightDiff(endDate.getTime() - startDate.getTime(), startDate, endDate);
     return adjustedDuration / _date.default.dateToMilliseconds('day') || ZERO_APPOINTMENT_DURATION_IN_DAYS;
   };
   _proto.getDeltaTime = function getDeltaTime(args, initialSize) {
@@ -58,7 +60,7 @@ var HorizontalMonthLineRenderingStrategy = /*#__PURE__*/function (_HorizontalApp
     return _HorizontalAppointmen.prototype.createTaskPositionMap.call(this, items);
   };
   _proto._getSortedPositions = function _getSortedPositions(map, skipSorting) {
-    var result = _HorizontalAppointmen.prototype._getSortedPositions.call(this, map);
+    let result = _HorizontalAppointmen.prototype._getSortedPositions.call(this, map);
     if (!skipSorting) {
       result = (0, _query.default)(result).sortBy('top').thenBy('left').thenBy('cellPosition').thenBy('i').toArray();
     }

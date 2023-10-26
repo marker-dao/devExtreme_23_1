@@ -1,10 +1,10 @@
 "use strict";
 
 /* eslint-disable import/no-commonjs */
-var windowUtils = require('../../core/utils/window');
-var window = windowUtils.getWindow();
-var DevExpress = window.DevExpress = window.DevExpress || {};
-var errors = DevExpress.errors = require('../../core/errors');
+const windowUtils = require('../../core/utils/window');
+const window = windowUtils.getWindow();
+const DevExpress = window.DevExpress = window.DevExpress || {};
+const errors = DevExpress.errors = require('../../core/errors');
 if (DevExpress._DEVEXTREME_BUNDLE_INITIALIZED) {
   throw errors.Error('E0024');
 }
@@ -19,7 +19,7 @@ DevExpress.Component = require('../../core/component').Component;
 DevExpress.registerComponent = require('../../core/component_registrator');
 DevExpress.devices = require('../../core/devices');
 DevExpress.Color = require('../../color');
-var animationFrame = require('../../animation/frame');
+const animationFrame = require('../../animation/frame');
 
 /**
  * @name utils

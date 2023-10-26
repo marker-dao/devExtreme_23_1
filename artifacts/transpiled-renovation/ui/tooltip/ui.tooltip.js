@@ -8,21 +8,21 @@ var _extend = require("../../core/utils/extend");
 var _deferred = require("../../core/utils/deferred");
 var _view_port = require("../../core/utils/view_port");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var tooltip = null;
-var removeTooltipElement = null;
-var createTooltip = function createTooltip(options) {
+let tooltip = null;
+let removeTooltipElement = null;
+const createTooltip = function (options) {
   options = (0, _extend.extend)({
     position: 'top'
   }, options);
-  var content = options.content;
+  const content = options.content;
   delete options.content;
-  var $tooltip = (0, _renderer.default)('<div>').html(content).appendTo((0, _view_port.value)());
-  removeTooltipElement = function removeTooltipElement() {
+  const $tooltip = (0, _renderer.default)('<div>').html(content).appendTo((0, _view_port.value)());
+  removeTooltipElement = function () {
     $tooltip.remove();
   };
   tooltip = new _tooltip.default($tooltip, options);
 };
-var removeTooltip = function removeTooltip() {
+const removeTooltip = function () {
   if (!tooltip) {
     return;
   }

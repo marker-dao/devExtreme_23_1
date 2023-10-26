@@ -6,18 +6,18 @@ var _renderer = _interopRequireDefault(require("../../core/renderer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line no-restricted-imports
 
-var getClosestNodeWithContext = function getClosestNodeWithContext(node) {
-  var context = _knockout.default.contextFor(node);
+const getClosestNodeWithContext = node => {
+  const context = _knockout.default.contextFor(node);
   if (!context && node.parentNode) {
     return getClosestNodeWithContext(node.parentNode);
   }
   return node;
 };
 exports.getClosestNodeWithContext = getClosestNodeWithContext;
-var getClosestNodeWithKoCreation = function getClosestNodeWithKoCreation(node) {
-  var $el = (0, _renderer.default)(node);
-  var data = $el.data();
-  var hasFlag = data && data['dxKoCreation'];
+const getClosestNodeWithKoCreation = node => {
+  const $el = (0, _renderer.default)(node);
+  const data = $el.data();
+  const hasFlag = data && data['dxKoCreation'];
   if (hasFlag) {
     return node;
   }

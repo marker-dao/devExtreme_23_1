@@ -8,9 +8,8 @@ var _large = require("./large");
 var _pager_props = require("../common/pager_props");
 var _message = _interopRequireDefault(require("../../../../localization/message"));
 var _consts = require("../common/consts");
-var _excluded = ["isLargeDisplayMode", "pageSize", "pageSizeChange", "pageSizes", "rootElementRef"];
+const _excluded = ["isLargeDisplayMode", "pageSize", "pageSizeChange", "pageSizes", "rootElementRef"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -20,13 +19,16 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var viewFunction = function viewFunction(_ref) {
-  var htmlRef = _ref.htmlRef,
-    normalizedPageSizes = _ref.normalizedPageSizes,
-    _ref$props = _ref.props,
-    isLargeDisplayMode = _ref$props.isLargeDisplayMode,
-    pageSize = _ref$props.pageSize,
-    pageSizeChange = _ref$props.pageSizeChange;
+const viewFunction = _ref => {
+  let {
+    htmlRef,
+    normalizedPageSizes,
+    props: {
+      isLargeDisplayMode,
+      pageSize,
+      pageSizeChange
+    }
+  } = _ref;
   return (0, _inferno.createVNode)(1, "div", _consts.PAGER_PAGE_SIZES_CLASS, [isLargeDisplayMode && (0, _inferno.createComponentVNode)(2, _large.PageSizeLarge, {
     "pageSizes": normalizedPageSizes,
     "pageSize": pageSize,
@@ -42,33 +44,33 @@ exports.viewFunction = viewFunction;
 function getAllText() {
   return _message.default.getFormatter('dxPager-pageSizesAllText')();
 }
-var PageSizeSelectorProps = {
+const PageSizeSelectorProps = {
   isLargeDisplayMode: true
 };
-var PageSizeSelectorPropsType = Object.defineProperties({}, {
+const PageSizeSelectorPropsType = Object.defineProperties({}, {
   pageSize: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.pageSize;
     },
     configurable: true,
     enumerable: true
   },
   pageSizes: {
-    get: function get() {
+    get: function () {
       return _pager_props.InternalPagerProps.pageSizes;
     },
     configurable: true,
     enumerable: true
   },
   isLargeDisplayMode: {
-    get: function get() {
+    get: function () {
       return PageSizeSelectorProps.isLargeDisplayMode;
     },
     configurable: true,
     enumerable: true
   }
 });
-var PageSizeSelector = /*#__PURE__*/function (_InfernoComponent) {
+let PageSizeSelector = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(PageSizeSelector, _InfernoComponent);
   function PageSizeSelector(props) {
     var _this;
@@ -84,7 +86,9 @@ var PageSizeSelector = /*#__PURE__*/function (_InfernoComponent) {
     return [new _inferno2.InfernoEffect(this.setRootElementRef, [])];
   };
   _proto.setRootElementRef = function setRootElementRef() {
-    var rootElementRef = this.props.rootElementRef;
+    const {
+      rootElementRef
+    } = this.props;
     if (rootElementRef) {
       rootElementRef.current = this.htmlRef.current;
     }
@@ -96,7 +100,7 @@ var PageSizeSelector = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       htmlRef: this.htmlRef,
@@ -106,34 +110,28 @@ var PageSizeSelector = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(PageSizeSelector, [{
     key: "normalizedPageSizes",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['normalizedPageSizes'] !== undefined) {
         return this.__getterCache['normalizedPageSizes'];
       }
-      return this.__getterCache['normalizedPageSizes'] = function () {
-        var pageSizes = _this2.props.pageSizes;
-        return pageSizes.map(function (p) {
-          return p === 'all' || p === 0 ? {
-            text: getAllText(),
-            value: 0
-          } : {
-            text: String(p),
-            value: p
-          };
+      return this.__getterCache['normalizedPageSizes'] = (() => {
+        const {
+          pageSizes
+        } = this.props;
+        return pageSizes.map(p => p === 'all' || p === 0 ? {
+          text: getAllText(),
+          value: 0
+        } : {
+          text: String(p),
+          value: p
         });
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        isLargeDisplayMode = _this$props.isLargeDisplayMode,
-        pageSize = _this$props.pageSize,
-        pageSizeChange = _this$props.pageSizeChange,
-        pageSizes = _this$props.pageSizes,
-        rootElementRef = _this$props.rootElementRef,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

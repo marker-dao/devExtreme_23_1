@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/workspaces/base/date_table/all_day_panel/table.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,8 +15,7 @@ var _table = require("../../table");
 var _table_body = require("./table_body");
 var _layout_props = require("../../layout_props");
 var _const = require("../../../const");
-var _excluded = ["addDateTableClass", "addVerticalSizesClassToRows", "bottomVirtualRowHeight", "dataCellTemplate", "groupOrientation", "leftVirtualCellWidth", "rightVirtualCellWidth", "tableRef", "topVirtualRowHeight", "viewData", "width"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["addDateTableClass", "addVerticalSizesClassToRows", "bottomVirtualRowHeight", "dataCellTemplate", "groupOrientation", "leftVirtualCellWidth", "rightVirtualCellWidth", "tableRef", "topVirtualRowHeight", "viewData", "width"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -25,14 +24,17 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var allDayPanelData = _ref.allDayPanelData,
-    emptyTableHeight = _ref.emptyTableHeight,
-    _ref$props = _ref.props,
-    dataCellTemplate = _ref$props.dataCellTemplate,
-    tableRef = _ref$props.tableRef,
-    viewData = _ref$props.viewData,
-    width = _ref$props.width;
+const viewFunction = _ref => {
+  let {
+    allDayPanelData,
+    emptyTableHeight,
+    props: {
+      dataCellTemplate,
+      tableRef,
+      viewData,
+      width
+    }
+  } = _ref;
   return (0, _inferno.createComponentVNode)(2, _table.Table, {
     "className": "dx-scheduler-all-day-table",
     "height": emptyTableHeight,
@@ -49,14 +51,10 @@ var viewFunction = function viewFunction(_ref) {
   });
 };
 exports.viewFunction = viewFunction;
-var AllDayTableProps = _layout_props.LayoutProps;
+const AllDayTableProps = _layout_props.LayoutProps;
 exports.AllDayTableProps = AllDayTableProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var AllDayTable = /*#__PURE__*/function (_InfernoWrapperCompon) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let AllDayTable = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(AllDayTable, _InfernoWrapperCompon);
   function AllDayTable(props) {
     var _this;
@@ -76,7 +74,7 @@ var AllDayTable = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         dataCellTemplate: getTemplate(props.dataCellTemplate)
@@ -88,36 +86,24 @@ var AllDayTable = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(AllDayTable, [{
     key: "allDayPanelData",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['allDayPanelData'] !== undefined) {
         return this.__getterCache['allDayPanelData'];
       }
-      return this.__getterCache['allDayPanelData'] = function () {
-        return _this2.props.viewData.groupedData[0].allDayPanel;
-      }();
+      return this.__getterCache['allDayPanelData'] = (() => {
+        return this.props.viewData.groupedData[0].allDayPanel;
+      })();
     }
   }, {
     key: "emptyTableHeight",
-    get: function get() {
+    get: function () {
       return this.allDayPanelData ? undefined : _const.DefaultSizes.allDayPanelHeight;
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        addDateTableClass = _this$props.addDateTableClass,
-        addVerticalSizesClassToRows = _this$props.addVerticalSizesClassToRows,
-        bottomVirtualRowHeight = _this$props.bottomVirtualRowHeight,
-        dataCellTemplate = _this$props.dataCellTemplate,
-        groupOrientation = _this$props.groupOrientation,
-        leftVirtualCellWidth = _this$props.leftVirtualCellWidth,
-        rightVirtualCellWidth = _this$props.rightVirtualCellWidth,
-        tableRef = _this$props.tableRef,
-        topVirtualRowHeight = _this$props.topVirtualRowHeight,
-        viewData = _this$props.viewData,
-        width = _this$props.width,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

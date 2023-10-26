@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/pointer/touch.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ var _extend = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _base = _interopRequireDefault(require("./base"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var eventMap = {
+const eventMap = {
   'dxpointerdown': 'touchstart',
   'dxpointermove': 'touchmove',
   'dxpointerup': 'touchend',
@@ -24,8 +24,8 @@ var eventMap = {
   'dxpointerenter': '',
   'dxpointerleave': ''
 };
-var normalizeTouchEvent = function normalizeTouchEvent(e) {
-  var pointers = [];
+const normalizeTouchEvent = function (e) {
+  const pointers = [];
   (0, _iterator.each)(e.touches, function (_, touch) {
     pointers.push((0, _extend.extend)({
       pointerId: touch.identifier
@@ -36,17 +36,17 @@ var normalizeTouchEvent = function normalizeTouchEvent(e) {
     pointerId: e.changedTouches[0].identifier
   };
 };
-var skipTouchWithSameIdentifier = function skipTouchWithSameIdentifier(pointerEvent) {
+const skipTouchWithSameIdentifier = function (pointerEvent) {
   return _devices.default.real().platform === 'ios' && (pointerEvent === 'dxpointerdown' || pointerEvent === 'dxpointerup');
 };
-var TouchStrategy = _base.default.inherit({
-  ctor: function ctor() {
+const TouchStrategy = _base.default.inherit({
+  ctor: function () {
     this.callBase.apply(this, arguments);
     this._pointerId = 0;
   },
-  _handler: function _handler(e) {
+  _handler: function (e) {
     if (skipTouchWithSameIdentifier(this._eventName)) {
-      var touch = e.changedTouches[0];
+      const touch = e.changedTouches[0];
       if (this._pointerId === touch.identifier && this._pointerId !== 0) {
         return;
       }
@@ -54,7 +54,7 @@ var TouchStrategy = _base.default.inherit({
     }
     return this.callBase.apply(this, arguments);
   },
-  _fireEvent: function _fireEvent(args) {
+  _fireEvent: function (args) {
     return this.callBase((0, _extend.extend)(normalizeTouchEvent(args.originalEvent), args));
   }
 });

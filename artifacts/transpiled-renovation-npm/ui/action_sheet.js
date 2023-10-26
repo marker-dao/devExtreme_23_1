@@ -14,20 +14,20 @@ var _ui2 = _interopRequireDefault(require("./popover/ui.popover"));
 var _bindable_template = require("../core/templates/bindable_template");
 var _deferred = require("../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
+const window = (0, _window.getWindow)();
 // STYLE actionSheet
 
-var ACTION_SHEET_CLASS = 'dx-actionsheet';
-var ACTION_SHEET_CONTAINER_CLASS = 'dx-actionsheet-container';
-var ACTION_SHEET_POPUP_WRAPPER_CLASS = 'dx-actionsheet-popup-wrapper';
-var ACTION_SHEET_POPOVER_WRAPPER_CLASS = 'dx-actionsheet-popover-wrapper';
-var ACTION_SHEET_CANCEL_BUTTON_CLASS = 'dx-actionsheet-cancel';
-var ACTION_SHEET_ITEM_CLASS = 'dx-actionsheet-item';
-var ACTION_SHEET_ITEM_DATA_KEY = 'dxActionSheetItemData';
-var ACTION_SHEET_WITHOUT_TITLE_CLASS = 'dx-actionsheet-without-title';
-var ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE = 'outlined';
-var ActionSheet = _uiCollection_widget.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const ACTION_SHEET_CLASS = 'dx-actionsheet';
+const ACTION_SHEET_CONTAINER_CLASS = 'dx-actionsheet-container';
+const ACTION_SHEET_POPUP_WRAPPER_CLASS = 'dx-actionsheet-popup-wrapper';
+const ACTION_SHEET_POPOVER_WRAPPER_CLASS = 'dx-actionsheet-popover-wrapper';
+const ACTION_SHEET_CANCEL_BUTTON_CLASS = 'dx-actionsheet-cancel';
+const ACTION_SHEET_ITEM_CLASS = 'dx-actionsheet-item';
+const ACTION_SHEET_ITEM_DATA_KEY = 'dxActionSheetItemData';
+const ACTION_SHEET_WITHOUT_TITLE_CLASS = 'dx-actionsheet-without-title';
+const ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE = 'outlined';
+const ActionSheet = _uiCollection_widget.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       usePopover: false,
       target: null,
@@ -98,7 +98,7 @@ var ActionSheet = _uiCollection_widget.default.inherit({
       selectByClick: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
       device: {
         platform: 'ios',
@@ -109,7 +109,7 @@ var ActionSheet = _uiCollection_widget.default.inherit({
       }
     }]);
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this.callBase();
     /**
     * @name dxActionSheetItem.visible
@@ -124,7 +124,7 @@ var ActionSheet = _uiCollection_widget.default.inherit({
     */
     this._templateManager.addDefaultTemplates({
       item: new _bindable_template.BindableTemplate(function ($container, data) {
-        var button = new _button.default((0, _renderer.default)('<div>'), (0, _extend.extend)({
+        const button = new _button.default((0, _renderer.default)('<div>'), (0, _extend.extend)({
           onClick: data && data.click,
           stylingMode: data && data.stylingMode || ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE
         }, data));
@@ -132,55 +132,55 @@ var ActionSheet = _uiCollection_widget.default.inherit({
       }, ['disabled', 'icon', 'text', 'type', 'onClick', 'click', 'stylingMode'], this.option('integrationOptions.watchMethod'))
     });
   },
-  _itemContainer: function _itemContainer() {
+  _itemContainer: function () {
     return this._$itemContainer;
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return ACTION_SHEET_ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return ACTION_SHEET_ITEM_DATA_KEY;
   },
   _toggleVisibility: _common.noop,
   _renderDimensions: _common.noop,
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this.$element().addClass(ACTION_SHEET_CLASS);
     this._createItemContainer();
   },
-  _render: function _render() {
+  _render: function () {
     this._renderPopup();
   },
-  _createItemContainer: function _createItemContainer() {
+  _createItemContainer: function () {
     this._$itemContainer = (0, _renderer.default)('<div>').addClass(ACTION_SHEET_CONTAINER_CLASS);
     this._renderDisabled();
   },
-  _renderDisabled: function _renderDisabled() {
+  _renderDisabled: function () {
     this._$itemContainer.toggleClass('dx-state-disabled', this.option('disabled'));
   },
-  _renderPopup: function _renderPopup() {
+  _renderPopup: function () {
     this._$popup = (0, _renderer.default)('<div>').appendTo(this.$element());
     this._isPopoverMode() ? this._createPopover() : this._createPopup();
     this._renderPopupTitle();
     this._mapPopupOption('visible');
   },
-  _mapPopupOption: function _mapPopupOption(optionName) {
+  _mapPopupOption: function (optionName) {
     this._popup && this._popup.option(optionName, this.option(optionName));
   },
-  _isPopoverMode: function _isPopoverMode() {
+  _isPopoverMode: function () {
     return this.option('usePopover') && this.option('target');
   },
-  _renderPopupTitle: function _renderPopupTitle() {
+  _renderPopupTitle: function () {
     this._mapPopupOption('showTitle');
     this._popup && this._popup.$wrapper().toggleClass(ACTION_SHEET_WITHOUT_TITLE_CLASS, !this.option('showTitle'));
   },
-  _clean: function _clean() {
+  _clean: function () {
     if (this._$popup) {
       this._$popup.remove();
     }
     this.callBase();
   },
-  _overlayConfig: function _overlayConfig() {
+  _overlayConfig: function () {
     return {
       onInitialized: function (args) {
         this._popup = args.component;
@@ -193,7 +193,7 @@ var ActionSheet = _uiCollection_widget.default.inherit({
       onHidden: this.hide.bind(this)
     };
   },
-  _createPopover: function _createPopover() {
+  _createPopover: function () {
     this._createComponent(this._$popup, _ui2.default, (0, _extend.extend)(this._overlayConfig(), {
       width: this.option('width') || 200,
       height: this.option('height') || 'auto',
@@ -202,7 +202,7 @@ var ActionSheet = _uiCollection_widget.default.inherit({
     this._popup.$overlayContent().attr('role', 'dialog');
     this._popup.$wrapper().addClass(ACTION_SHEET_POPOVER_WRAPPER_CLASS);
   },
-  _createPopup: function _createPopup() {
+  _createPopup: function () {
     this._createComponent(this._$popup, _ui.default, (0, _extend.extend)(this._overlayConfig(), {
       dragEnabled: false,
       width: this.option('width') || '100%',
@@ -254,7 +254,7 @@ var ActionSheet = _uiCollection_widget.default.inherit({
     }));
     this._popup.$wrapper().addClass(ACTION_SHEET_POPUP_WRAPPER_CLASS);
   },
-  _popupContentReadyAction: function _popupContentReadyAction() {
+  _popupContentReadyAction: function () {
     this._popup.$content().append(this._$itemContainer);
     this._attachClickEvent();
     this._attachHoldEvent();
@@ -262,7 +262,7 @@ var ActionSheet = _uiCollection_widget.default.inherit({
     this._renderContent();
     this._renderCancelButton();
   },
-  _renderCancelButton: function _renderCancelButton() {
+  _renderCancelButton: function () {
     if (this._isPopoverMode()) {
       return;
     }
@@ -270,15 +270,15 @@ var ActionSheet = _uiCollection_widget.default.inherit({
       this._$cancelButton.remove();
     }
     if (this.option('showCancelButton')) {
-      var cancelClickAction = this._createActionByOption('onCancelClick') || _common.noop;
-      var that = this;
+      const cancelClickAction = this._createActionByOption('onCancelClick') || _common.noop;
+      const that = this;
       this._$cancelButton = (0, _renderer.default)('<div>').addClass(ACTION_SHEET_CANCEL_BUTTON_CLASS).appendTo(this._popup && this._popup.$content());
       this._createComponent(this._$cancelButton, _button.default, {
         disabled: false,
         stylingMode: ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE,
         text: this.option('cancelText'),
-        onClick: function onClick(e) {
-          var hidingArgs = {
+        onClick: function (e) {
+          const hidingArgs = {
             event: e,
             cancel: false
           };
@@ -292,19 +292,19 @@ var ActionSheet = _uiCollection_widget.default.inherit({
     }
   },
   _attachItemClickEvent: _common.noop,
-  _itemClickHandler: function _itemClickHandler(e) {
+  _itemClickHandler: function (e) {
     this.callBase(e);
     if (!(0, _renderer.default)(e.target).is('.dx-state-disabled, .dx-state-disabled *')) {
       this.hide();
     }
   },
-  _itemHoldHandler: function _itemHoldHandler(e) {
+  _itemHoldHandler: function (e) {
     this.callBase(e);
     if (!(0, _renderer.default)(e.target).is('.dx-state-disabled, .dx-state-disabled *')) {
       this.hide();
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'width':
       case 'height':
@@ -332,19 +332,19 @@ var ActionSheet = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  toggle: function toggle(showing) {
-    var that = this;
-    var d = new _deferred.Deferred();
+  toggle: function (showing) {
+    const that = this;
+    const d = new _deferred.Deferred();
     that._popup.toggle(showing).done(function () {
       that.option('visible', showing);
       d.resolveWith(that);
     });
     return d.promise();
   },
-  show: function show() {
+  show: function () {
     return this.toggle(true);
   },
-  hide: function hide() {
+  hide: function () {
     return this.toggle(false);
   }
 

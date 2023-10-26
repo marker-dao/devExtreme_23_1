@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/workspaces/m_work_space_grouped_strategy_horizontal.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,14 +14,14 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _position = require("../../../core/utils/position");
 var _m_classes = require("../m_classes");
-var HorizontalGroupedStrategy = /*#__PURE__*/function () {
+let HorizontalGroupedStrategy = /*#__PURE__*/function () {
   function HorizontalGroupedStrategy(_workSpace) {
     this._workSpace = _workSpace;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   var _proto = HorizontalGroupedStrategy.prototype;
   _proto.prepareCellIndexes = function prepareCellIndexes(cellCoordinates, groupIndex, inAllDay) {
-    var groupByDay = this._workSpace.isGroupedByDate();
+    const groupByDay = this._workSpace.isGroupedByDate();
     if (!groupByDay) {
       return {
         rowIndex: cellCoordinates.rowIndex,
@@ -34,8 +34,8 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
     };
   };
   _proto.getGroupIndex = function getGroupIndex(rowIndex, columnIndex) {
-    var groupByDay = this._workSpace.isGroupedByDate();
-    var groupCount = this._workSpace._getGroupCount();
+    const groupByDay = this._workSpace.isGroupedByDate();
+    const groupCount = this._workSpace._getGroupCount();
     if (groupByDay) {
       return columnIndex % groupCount;
     }
@@ -72,9 +72,9 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
     return this._workSpace.getTimePanelWidth();
   };
   _proto._createGroupBoundOffset = function _createGroupBoundOffset(startCell, endCell, cellWidth) {
-    var extraOffset = cellWidth / 2;
-    var startOffset = startCell ? startCell.offset().left - extraOffset : 0;
-    var endOffset = endCell ? endCell.offset().left + cellWidth + extraOffset : 0;
+    const extraOffset = cellWidth / 2;
+    const startOffset = startCell ? startCell.offset().left - extraOffset : 0;
+    const endOffset = endCell ? endCell.offset().left + cellWidth + extraOffset : 0;
     return {
       left: startOffset,
       right: endOffset,
@@ -83,57 +83,57 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
     };
   };
   _proto._getGroupedByDateBoundOffset = function _getGroupedByDateBoundOffset($cells, cellWidth) {
-    var firstCellIndex = 0;
-    var lastCellIndex = $cells.length - 1;
-    var startCell = $cells.eq(firstCellIndex);
-    var endCell = $cells.eq(lastCellIndex);
+    const firstCellIndex = 0;
+    const lastCellIndex = $cells.length - 1;
+    const startCell = $cells.eq(firstCellIndex);
+    const endCell = $cells.eq(lastCellIndex);
     return this._createGroupBoundOffset(startCell, endCell, cellWidth);
   };
   _proto.getGroupBoundsOffset = function getGroupBoundsOffset(cellCount, $cells, cellWidth, coordinates, groupedDataMap) {
     if (this._workSpace.isGroupedByDate()) {
       return this._getGroupedByDateBoundOffset($cells, cellWidth);
     }
-    var startCell;
-    var endCell;
-    var cellIndex = this._workSpace.getCellIndexByCoordinates(coordinates);
-    var groupIndex = coordinates.groupIndex || Math.floor(cellIndex / cellCount);
-    var currentCellGroup = groupedDataMap.dateTableGroupedMap[groupIndex];
+    let startCell;
+    let endCell;
+    const cellIndex = this._workSpace.getCellIndexByCoordinates(coordinates);
+    const groupIndex = coordinates.groupIndex || Math.floor(cellIndex / cellCount);
+    const currentCellGroup = groupedDataMap.dateTableGroupedMap[groupIndex];
     if (currentCellGroup) {
-      var groupRowLength = currentCellGroup[0].length;
-      var groupStartPosition = currentCellGroup[0][0].position;
-      var groupEndPosition = currentCellGroup[0][groupRowLength - 1].position;
+      const groupRowLength = currentCellGroup[0].length;
+      const groupStartPosition = currentCellGroup[0][0].position;
+      const groupEndPosition = currentCellGroup[0][groupRowLength - 1].position;
       startCell = $cells.eq(groupStartPosition.columnIndex);
       endCell = $cells.eq(groupEndPosition.columnIndex);
     }
     return this._createGroupBoundOffset(startCell, endCell, cellWidth);
   };
   _proto.shiftIndicator = function shiftIndicator($indicator, height, rtlOffset, groupIndex) {
-    var offset = this._getIndicatorOffset(groupIndex);
-    var horizontalOffset = rtlOffset ? rtlOffset - offset : offset;
+    const offset = this._getIndicatorOffset(groupIndex);
+    const horizontalOffset = rtlOffset ? rtlOffset - offset : offset;
     $indicator.css('left', horizontalOffset);
     $indicator.css('top', height);
   };
   _proto._getIndicatorOffset = function _getIndicatorOffset(groupIndex) {
-    var groupByDay = this._workSpace.isGroupedByDate();
+    const groupByDay = this._workSpace.isGroupedByDate();
     return groupByDay ? this._calculateGroupByDateOffset(groupIndex) : this._calculateOffset(groupIndex);
   };
   _proto._calculateOffset = function _calculateOffset(groupIndex) {
-    var indicatorStartPosition = this._workSpace.getIndicatorOffset(groupIndex);
-    var offset = this._workSpace._getCellCount() * this._workSpace.getRoundedCellWidth(groupIndex - 1, 0) * groupIndex;
+    const indicatorStartPosition = this._workSpace.getIndicatorOffset(groupIndex);
+    const offset = this._workSpace._getCellCount() * this._workSpace.getRoundedCellWidth(groupIndex - 1, 0) * groupIndex;
     return indicatorStartPosition + offset;
   };
   _proto._calculateGroupByDateOffset = function _calculateGroupByDateOffset(groupIndex) {
     return this._workSpace.getIndicatorOffset(0) * this._workSpace._getGroupCount() + this._workSpace.getRoundedCellWidth(groupIndex - 1, 0) * groupIndex;
   };
   _proto.getShaderOffset = function getShaderOffset(i, width) {
-    var offset = this._workSpace._getCellCount() * this._workSpace.getRoundedCellWidth(i - 1) * i;
+    const offset = this._workSpace._getCellCount() * this._workSpace.getRoundedCellWidth(i - 1) * i;
     return this._workSpace.option('rtlEnabled') ? (0, _position.getBoundingRect)(this._workSpace._dateTableScrollable.$content().get(0)).width - offset - this._workSpace.getTimePanelWidth() - width : offset;
   };
   _proto.getShaderTopOffset = function getShaderTopOffset(i) {
     return -this.getShaderMaxHeight() * (i > 0 ? 1 : 0);
   };
   _proto.getShaderHeight = function getShaderHeight() {
-    var height = this._workSpace.getIndicationHeight();
+    const height = this._workSpace.getIndicationHeight();
     return height;
   };
   _proto.getShaderMaxHeight = function getShaderMaxHeight() {
@@ -150,7 +150,7 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
   // ---------------
   ;
   _proto.addAdditionalGroupCellClasses = function addAdditionalGroupCellClasses(cellClass, index, i, j) {
-    var applyUnconditionally = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+    let applyUnconditionally = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
     cellClass = this._addLastGroupCellClass(cellClass, index, applyUnconditionally);
     return this._addFirstGroupCellClass(cellClass, index, applyUnconditionally);
   };
@@ -158,7 +158,7 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
     if (applyUnconditionally) {
       return "".concat(cellClass, " ").concat(_m_classes.LAST_GROUP_CELL_CLASS);
     }
-    var groupByDate = this._workSpace.isGroupedByDate();
+    const groupByDate = this._workSpace.isGroupedByDate();
     if (groupByDate) {
       if (index % this._workSpace._getGroupCount() === 0) {
         return "".concat(cellClass, " ").concat(_m_classes.LAST_GROUP_CELL_CLASS);
@@ -172,7 +172,7 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
     if (applyUnconditionally) {
       return "".concat(cellClass, " ").concat(_m_classes.FIRST_GROUP_CELL_CLASS);
     }
-    var groupByDate = this._workSpace.isGroupedByDate();
+    const groupByDate = this._workSpace.isGroupedByDate();
     if (groupByDate) {
       if ((index - 1) % this._workSpace._getGroupCount() === 0) {
         return "".concat(cellClass, " ").concat(_m_classes.FIRST_GROUP_CELL_CLASS);

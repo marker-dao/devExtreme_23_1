@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/devices.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,8 +23,8 @@ var _storage = require("./utils/storage");
 var _view_port = require("./utils/view_port");
 var _config = _interopRequireDefault(require("./config"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var KNOWN_UA_TABLE = {
+const window = (0, _window.getWindow)();
+const KNOWN_UA_TABLE = {
   'iPhone': 'iPhone',
   'iPhone5': 'iPhone',
   'iPhone6': 'iPhone',
@@ -36,7 +36,7 @@ var KNOWN_UA_TABLE = {
   'msSurface': 'Windows ARM Tablet PC',
   'desktop': 'desktop'
 };
-var DEFAULT_DEVICE = {
+const DEFAULT_DEVICE = {
   deviceType: 'desktop',
   platform: 'generic',
   version: [],
@@ -49,12 +49,12 @@ var DEFAULT_DEVICE = {
   // TODO: For internal use (draft, do not document these options!)
   mac: false
 };
-var UA_PARSERS = {
+const UA_PARSERS = {
   generic(userAgent) {
-    var isPhone = /windows phone/i.test(userAgent) || userAgent.match(/WPDesktop/);
-    var isTablet = !isPhone && /Windows(.*)arm(.*)Tablet PC/i.test(userAgent);
-    var isDesktop = !isPhone && !isTablet && /msapphost/i.test(userAgent);
-    var isMac = /((intel|ppc) mac os x)/.test(userAgent.toLowerCase());
+    const isPhone = /windows phone/i.test(userAgent) || userAgent.match(/WPDesktop/);
+    const isTablet = !isPhone && /Windows(.*)arm(.*)Tablet PC/i.test(userAgent);
+    const isDesktop = !isPhone && !isTablet && /msapphost/i.test(userAgent);
+    const isMac = /((intel|ppc) mac os x)/.test(userAgent.toLowerCase());
     if (!(isPhone || isTablet || isDesktop || isMac)) {
       return null;
     }
@@ -67,17 +67,17 @@ var UA_PARSERS = {
     };
   },
   appleTouchDevice(userAgent) {
-    var navigator = (0, _window.getNavigator)();
-    var isIpadOs = /Macintosh/i.test(userAgent) && (navigator === null || navigator === void 0 ? void 0 : navigator.maxTouchPoints) > 2;
-    var isAppleDevice = /ip(hone|od|ad)/i.test(userAgent);
+    const navigator = (0, _window.getNavigator)();
+    const isIpadOs = /Macintosh/i.test(userAgent) && (navigator === null || navigator === void 0 ? void 0 : navigator.maxTouchPoints) > 2;
+    const isAppleDevice = /ip(hone|od|ad)/i.test(userAgent);
     if (!isAppleDevice && !isIpadOs) {
       return null;
     }
-    var isPhone = /ip(hone|od)/i.test(userAgent);
-    var matches = userAgent.match(/os\s{0,}X? (\d+)_(\d+)_?(\d+)?/i);
-    var version = matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10), parseInt(matches[3] || 0, 10)] : [];
-    var isIPhone4 = window.screen.height === 960 / 2;
-    var grade = isIPhone4 ? 'B' : 'A';
+    const isPhone = /ip(hone|od)/i.test(userAgent);
+    const matches = userAgent.match(/os\s{0,}X? (\d+)_(\d+)_?(\d+)?/i);
+    const version = matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10), parseInt(matches[3] || 0, 10)] : [];
+    const isIPhone4 = window.screen.height === 960 / 2;
+    const grade = isIPhone4 ? 'B' : 'A';
     return {
       deviceType: isPhone ? 'phone' : 'tablet',
       platform: 'ios',
@@ -88,16 +88,16 @@ var UA_PARSERS = {
   android(userAgent) {
     // TODO: Check this RegExp.
     //  It looks like there may be missing android user agents.
-    var isAndroid = /android|htc_|silk/i.test(userAgent);
-    var isWinPhone = /windows phone/i.test(userAgent);
+    const isAndroid = /android|htc_|silk/i.test(userAgent);
+    const isWinPhone = /windows phone/i.test(userAgent);
     if (!isAndroid || isWinPhone) {
       return null;
     }
-    var isPhone = /mobile/i.test(userAgent);
-    var matches = userAgent.match(/android (\d+)\.?(\d+)?\.?(\d+)?/i);
-    var version = matches ? [parseInt(matches[1], 10), parseInt(matches[2] || 0, 10), parseInt(matches[3] || 0, 10)] : [];
-    var worseThan4_4 = version.length > 1 && (version[0] < 4 || version[0] === 4 && version[1] < 4);
-    var grade = worseThan4_4 ? 'B' : 'A';
+    const isPhone = /mobile/i.test(userAgent);
+    const matches = userAgent.match(/android (\d+)\.?(\d+)?\.?(\d+)?/i);
+    const version = matches ? [parseInt(matches[1], 10), parseInt(matches[2] || 0, 10), parseInt(matches[3] || 0, 10)] : [];
+    const worseThan4_4 = version.length > 1 && (version[0] < 4 || version[0] === 4 && version[1] < 4);
+    const grade = worseThan4_4 ? 'B' : 'A';
     return {
       deviceType: isPhone ? 'phone' : 'tablet',
       platform: 'android',
@@ -106,8 +106,8 @@ var UA_PARSERS = {
     };
   }
 };
-var UA_PARSERS_ARRAY = [UA_PARSERS.appleTouchDevice, UA_PARSERS.android, UA_PARSERS.generic];
-var Devices = /*#__PURE__*/function () {
+const UA_PARSERS_ARRAY = [UA_PARSERS.appleTouchDevice, UA_PARSERS.android, UA_PARSERS.generic];
+let Devices = /*#__PURE__*/function () {
   /**
   * @name DevicesObject.ctor
   * @publicName ctor(options)
@@ -166,8 +166,8 @@ var Devices = /*#__PURE__*/function () {
     return !!this._window.tinyHippos;
   };
   _proto._getCssClasses = function _getCssClasses(device) {
-    var result = [];
-    var realDevice = this._realDevice;
+    const result = [];
+    const realDevice = this._realDevice;
     device = device || this.current();
 
     // TODO: use real device here?
@@ -218,32 +218,32 @@ var Devices = /*#__PURE__*/function () {
     if ((0, _type.isPlainObject)(deviceName)) {
       return this._fromConfig(deviceName);
     } else {
-      var ua;
+      let ua;
       if (deviceName) {
         ua = KNOWN_UA_TABLE[deviceName];
         if (!ua) {
           throw _errors.default.Error('E0005');
         }
       } else {
-        var navigator = (0, _window.getNavigator)();
+        const navigator = (0, _window.getNavigator)();
         ua = navigator.userAgent;
       }
       return this._fromUA(ua);
     }
   };
   _proto._getDeviceOrNameFromWindowScope = function _getDeviceOrNameFromWindowScope() {
-    var result;
+    let result;
     if ((0, _window.hasWindow)() && (this._window.top['dx-force-device-object'] || this._window.top['dx-force-device'])) {
       result = this._window.top['dx-force-device-object'] || this._window.top['dx-force-device'];
     }
     return result;
   };
   _proto._getDeviceNameFromSessionStorage = function _getDeviceNameFromSessionStorage() {
-    var sessionStorage = (0, _storage.sessionStorage)();
+    const sessionStorage = (0, _storage.sessionStorage)();
     if (!sessionStorage) {
       return;
     }
-    var deviceOrName = sessionStorage.getItem('dx-force-device');
+    const deviceOrName = sessionStorage.getItem('dx-force-device');
     try {
       return JSON.parse(deviceOrName);
     } catch (ex) {
@@ -251,8 +251,8 @@ var Devices = /*#__PURE__*/function () {
     }
   };
   _proto._fromConfig = function _fromConfig(config) {
-    var result = (0, _extend.extend)({}, DEFAULT_DEVICE, this._currentDevice, config);
-    var shortcuts = {
+    const result = (0, _extend.extend)({}, DEFAULT_DEVICE, this._currentDevice, config);
+    const shortcuts = {
       phone: result.deviceType === 'phone',
       tablet: result.deviceType === 'tablet',
       android: result.platform === 'android',
@@ -262,9 +262,9 @@ var Devices = /*#__PURE__*/function () {
     return (0, _extend.extend)(result, shortcuts);
   };
   _proto._fromUA = function _fromUA(ua) {
-    for (var idx = 0; idx < UA_PARSERS_ARRAY.length; idx += 1) {
-      var parser = UA_PARSERS_ARRAY[idx];
-      var config = parser(ua);
+    for (let idx = 0; idx < UA_PARSERS_ARRAY.length; idx += 1) {
+      const parser = UA_PARSERS_ARRAY[idx];
+      const config = parser(ua);
       if (config) {
         return this._fromConfig(config);
       }
@@ -272,8 +272,8 @@ var Devices = /*#__PURE__*/function () {
     return DEFAULT_DEVICE;
   };
   _proto._changeOrientation = function _changeOrientation() {
-    var $window = (0, _renderer.default)(this._window);
-    var orientation = (0, _size.getHeight)($window) > (0, _size.getWidth)($window) ? 'portrait' : 'landscape';
+    const $window = (0, _renderer.default)(this._window);
+    const orientation = (0, _size.getHeight)($window) > (0, _size.getWidth)($window) ? 'portrait' : 'landscape';
     if (this._currentOrientation === orientation) {
       return;
     }
@@ -283,7 +283,7 @@ var Devices = /*#__PURE__*/function () {
     }]);
   };
   _proto._recalculateOrientation = function _recalculateOrientation() {
-    var windowWidth = (0, _size.getWidth)(this._window);
+    const windowWidth = (0, _size.getWidth)(this._window);
     if (this._currentWidth === windowWidth) {
       return;
     }
@@ -300,12 +300,12 @@ var Devices = /*#__PURE__*/function () {
   };
   return Devices;
 }();
-var devices = new Devices();
-var viewPortElement = (0, _view_port.value)();
+const devices = new Devices();
+const viewPortElement = (0, _view_port.value)();
 if (viewPortElement) {
   devices.attachCssClasses(viewPortElement);
 }
-_view_port.changeCallback.add(function (viewPort, prevViewport) {
+_view_port.changeCallback.add((viewPort, prevViewport) => {
   devices.detachCssClasses(prevViewport);
   devices.attachCssClasses(viewPort);
 });

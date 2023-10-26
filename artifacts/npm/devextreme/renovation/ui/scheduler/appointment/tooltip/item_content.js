@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/appointment/tooltip/item_content.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,8 +11,7 @@
 exports.viewFunction = exports.TooltipItemContentProps = exports.TooltipItemContent = void 0;
 var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
-var _excluded = ["formattedDate", "text"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["formattedDate", "text"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -21,13 +20,11 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var viewFunction = function viewFunction(viewModel) {
-  return (0, _inferno.createVNode)(1, "div", "dx-tooltip-appointment-item-content", [(0, _inferno.createVNode)(1, "div", "dx-tooltip-appointment-item-content-subject", viewModel.props.text, 0), (0, _inferno.createVNode)(1, "div", "dx-tooltip-appointment-item-content-date", viewModel.props.formattedDate, 0)], 4);
-};
+const viewFunction = viewModel => (0, _inferno.createVNode)(1, "div", "dx-tooltip-appointment-item-content", [(0, _inferno.createVNode)(1, "div", "dx-tooltip-appointment-item-content-subject", viewModel.props.text, 0), (0, _inferno.createVNode)(1, "div", "dx-tooltip-appointment-item-content-date", viewModel.props.formattedDate, 0)], 4);
 exports.viewFunction = viewFunction;
-var TooltipItemContentProps = {};
+const TooltipItemContentProps = {};
 exports.TooltipItemContentProps = TooltipItemContentProps;
-var TooltipItemContent = /*#__PURE__*/function (_BaseInfernoComponent) {
+let TooltipItemContent = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(TooltipItemContent, _BaseInfernoComponent);
   function TooltipItemContent(props) {
     var _this;
@@ -37,7 +34,7 @@ var TooltipItemContent = /*#__PURE__*/function (_BaseInfernoComponent) {
   }
   var _proto = TooltipItemContent.prototype;
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       restAttributes: this.restAttributes
@@ -45,11 +42,9 @@ var TooltipItemContent = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(TooltipItemContent, [{
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        formattedDate = _this$props.formattedDate,
-        text = _this$props.text,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

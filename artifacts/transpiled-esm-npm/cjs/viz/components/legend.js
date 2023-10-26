@@ -10,43 +10,43 @@ var _object = require("../../core/utils/object");
 var _common = require("../../core/utils/common");
 var _renderer = require("../core/renderers/renderer");
 var _deferred = require("../../core/utils/deferred");
-var _Number = Number;
-var _math = Math;
-var _round = _math.round;
-var _max = _math.max;
-var _min = _math.min;
-var _ceil = _math.ceil;
-var _isDefined = _type.isDefined;
-var _isFunction = _type.isFunction;
-var _enumParser = _utils.enumParser;
-var _normalizeEnum = _utils.normalizeEnum;
-var _extend = _extend2.extend;
-var DEFAULT_MARGIN = 10;
-var DEFAULT_MARKER_HATCHING_WIDTH = 2;
-var DEFAULT_MARKER_HATCHING_STEP = 5;
-var CENTER = 'center';
-var RIGHT = 'right';
-var LEFT = 'left';
-var TOP = 'top';
-var BOTTOM = 'bottom';
-var HORIZONTAL = 'horizontal';
-var VERTICAL = 'vertical';
-var INSIDE = 'inside';
-var OUTSIDE = 'outside';
-var NONE = 'none';
-var HEIGHT = 'height';
-var WIDTH = 'width';
-var parseHorizontalAlignment = _enumParser([LEFT, CENTER, RIGHT]);
-var parseVerticalAlignment = _enumParser([TOP, BOTTOM]);
-var parseOrientation = _enumParser([VERTICAL, HORIZONTAL]);
-var parseItemTextPosition = _enumParser([LEFT, RIGHT, TOP, BOTTOM]);
-var parsePosition = _enumParser([OUTSIDE, INSIDE]);
-var parseItemsAlignment = _enumParser([LEFT, CENTER, RIGHT]);
+const _Number = Number;
+const _math = Math;
+const _round = _math.round;
+const _max = _math.max;
+const _min = _math.min;
+const _ceil = _math.ceil;
+const _isDefined = _type.isDefined;
+const _isFunction = _type.isFunction;
+const _enumParser = _utils.enumParser;
+const _normalizeEnum = _utils.normalizeEnum;
+const _extend = _extend2.extend;
+const DEFAULT_MARGIN = 10;
+const DEFAULT_MARKER_HATCHING_WIDTH = 2;
+const DEFAULT_MARKER_HATCHING_STEP = 5;
+const CENTER = 'center';
+const RIGHT = 'right';
+const LEFT = 'left';
+const TOP = 'top';
+const BOTTOM = 'bottom';
+const HORIZONTAL = 'horizontal';
+const VERTICAL = 'vertical';
+const INSIDE = 'inside';
+const OUTSIDE = 'outside';
+const NONE = 'none';
+const HEIGHT = 'height';
+const WIDTH = 'width';
+const parseHorizontalAlignment = _enumParser([LEFT, CENTER, RIGHT]);
+const parseVerticalAlignment = _enumParser([TOP, BOTTOM]);
+const parseOrientation = _enumParser([VERTICAL, HORIZONTAL]);
+const parseItemTextPosition = _enumParser([LEFT, RIGHT, TOP, BOTTOM]);
+const parsePosition = _enumParser([OUTSIDE, INSIDE]);
+const parseItemsAlignment = _enumParser([LEFT, CENTER, RIGHT]);
 function getState(state, color, stateName) {
   if (!state) {
     return;
   }
-  var colorFromAction = state.fill;
+  const colorFromAction = state.fill;
   return (0, _extend2.extend)({}, {
     state: stateName,
     fill: colorFromAction === NONE ? color : colorFromAction,
@@ -59,7 +59,7 @@ function getState(state, color, stateName) {
   });
 }
 function getAttributes(item, state, size) {
-  var attrs = (0, _renderer.processHatchingAttrs)(item, state);
+  const attrs = (0, _renderer.processHatchingAttrs)(item, state);
   if (attrs.fill && attrs.fill.indexOf('DevExpress') === 0) {
     attrs.fill = (0, _renderer.getFuncIri)(attrs.fill);
   }
@@ -69,7 +69,7 @@ function getAttributes(item, state, size) {
   });
 }
 function parseMargins(options) {
-  var margin = options.margin;
+  let margin = options.margin;
   if (margin >= 0) {
     margin = _Number(options.margin);
     margin = {
@@ -89,10 +89,10 @@ function parseMargins(options) {
   options.margin = margin;
 }
 function getSizeItem(options, markerBBox, labelBBox) {
-  var defaultXMargin = 7;
-  var defaultTopMargin = 4;
-  var width;
-  var height;
+  const defaultXMargin = 7;
+  const defaultTopMargin = 4;
+  let width;
+  let height;
   switch (options.itemTextPosition) {
     case LEFT:
     case RIGHT:
@@ -111,7 +111,7 @@ function getSizeItem(options, markerBBox, labelBBox) {
   };
 }
 function calculateBBoxLabelAndMarker(markerBBox, labelBBox) {
-  var bBox = {};
+  const bBox = {};
   bBox.left = _min(markerBBox.x, labelBBox.x);
   bBox.top = _min(markerBBox.y, labelBBox.y);
   bBox.right = _max(markerBBox.x + markerBBox.width, labelBBox.x + labelBBox.width);
@@ -119,7 +119,7 @@ function calculateBBoxLabelAndMarker(markerBBox, labelBBox) {
   return bBox;
 }
 function applyMarkerState(id, idToIndexMap, items, stateName) {
-  var item = idToIndexMap && items[idToIndexMap[id]];
+  const item = idToIndexMap && items[idToIndexMap[id]];
   if (item) {
     item.renderMarker(item.states[stateName]);
   }
@@ -154,23 +154,23 @@ function inRect(rect, x, y) {
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 }
 function checkLinesSize(lines, layoutOptions, countItems, margins) {
-  var position = {
+  const position = {
     x: 0,
     y: 0
   };
-  var maxMeasureLength = 0;
-  var maxAltMeasureLength = 0;
-  var margin = 0;
+  let maxMeasureLength = 0;
+  let maxAltMeasureLength = 0;
+  let margin = 0;
   if (layoutOptions.direction === 'y') {
     margin = margins.top + margins.bottom;
   } else {
     margin = margins.left + margins.right;
   }
   lines.forEach(function (line, i) {
-    var firstItem = line[0];
-    var lineLength = line.length;
+    const firstItem = line[0];
+    const lineLength = line.length;
     line.forEach(function (item, index) {
-      var offset = item.offset || layoutOptions.spacing;
+      const offset = item.offset || layoutOptions.spacing;
       position[layoutOptions.direction] += item[layoutOptions.measure] + (index !== lineLength - 1 ? offset : 0);
       maxMeasureLength = _max(maxMeasureLength, position[layoutOptions.direction]);
     });
@@ -188,19 +188,19 @@ function decreaseItemCount(layoutOptions, countItems) {
   return _ceil(countItems / layoutOptions.altCountItem);
 }
 function getLineLength(line, layoutOptions) {
-  return line.reduce(function (lineLength, item) {
-    var offset = item.offset || layoutOptions.spacing;
+  return line.reduce((lineLength, item) => {
+    const offset = item.offset || layoutOptions.spacing;
     return lineLength + item[layoutOptions.measure] + offset;
   }, 0);
 }
 function getMaxLineLength(lines, layoutOptions) {
-  return lines.reduce(function (maxLineLength, line) {
+  return lines.reduce((maxLineLength, line) => {
     return _max(maxLineLength, getLineLength(line, layoutOptions));
   }, 0);
 }
 function getInitPositionForDirection(line, layoutOptions, maxLineLength) {
-  var lineLength = getLineLength(line, layoutOptions);
-  var initPosition;
+  const lineLength = getLineLength(line, layoutOptions);
+  let initPosition;
   switch (layoutOptions.itemsAlignment) {
     case RIGHT:
       initPosition = maxLineLength - lineLength;
@@ -238,7 +238,7 @@ function getPos(layoutOptions) {
   }
 }
 function getLines(lines, layoutOptions, itemIndex) {
-  var tableLine = {};
+  const tableLine = {};
   if (itemIndex % layoutOptions.countItem === 0) {
     if (layoutOptions.markerOffset) {
       lines.push([], []);
@@ -255,22 +255,22 @@ function getLines(lines, layoutOptions, itemIndex) {
   return tableLine;
 }
 function setMaxInLine(line, measure) {
-  var maxLineSize = line.reduce(function (maxLineSize, item) {
-    var itemMeasure = item ? item[measure] : maxLineSize;
+  const maxLineSize = line.reduce((maxLineSize, item) => {
+    const itemMeasure = item ? item[measure] : maxLineSize;
     return _max(maxLineSize, itemMeasure);
   }, 0);
-  line.forEach(function (item) {
+  line.forEach(item => {
     if (item) {
       item[measure] = maxLineSize;
     }
   });
 }
 function transpose(array) {
-  var width = array.length;
-  var height = array[0].length;
-  var i;
-  var j;
-  var transposeArray = [];
+  const width = array.length;
+  const height = array[0].length;
+  let i;
+  let j;
+  const transposeArray = [];
   for (i = 0; i < height; i++) {
     transposeArray[i] = [];
     for (j = 0; j < width; j++) {
@@ -290,7 +290,7 @@ function getAlign(position) {
       return LEFT;
   }
 }
-var getMarkerCreator = function getMarkerCreator(type) {
+let getMarkerCreator = function (type) {
   return isCircle(type) ? createCircleMarker : createSquareMarker;
 };
 function getTitleHorizontalAlignment(options) {
@@ -306,8 +306,8 @@ function getTitleHorizontalAlignment(options) {
     }
   }
 }
-var Legend = function Legend(settings) {
-  var that = this;
+let Legend = function (settings) {
+  const that = this;
   that._renderer = settings.renderer;
   that._legendGroup = settings.group;
   that._backgroundClass = settings.backgroundClass;
@@ -320,22 +320,22 @@ var Legend = function Legend(settings) {
   that._updated = false;
 };
 exports.Legend = Legend;
-var _Legend = Legend;
-var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.LayoutElement.prototype);
+const _Legend = Legend;
+const legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.LayoutElement.prototype);
 (0, _extend2.extend)(legendPrototype, {
   constructor: _Legend,
-  getOptions: function getOptions() {
+  getOptions: function () {
     return this._options;
   },
-  update: function update() {
-    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    var options = arguments.length > 1 ? arguments[1] : undefined;
-    var themeManagerTitleOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var that = this;
+  update: function () {
+    let data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    let options = arguments.length > 1 ? arguments[1] : undefined;
+    let themeManagerTitleOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    const that = this;
     options = that._options = parseOptions(options, that._textField, that._allowInsidePosition) || {};
-    var initMarkerSize = options.markerSize;
+    const initMarkerSize = options.markerSize;
     this._updated = true;
-    this._data = data.map(function (dataItem) {
+    this._data = data.map(dataItem => {
       dataItem.size = _Number(dataItem.size > 0 ? dataItem.size : initMarkerSize);
       dataItem.marker = getAttributes(dataItem, dataItem.states.normal);
       Object.defineProperty(dataItem.marker, 'size', {
@@ -373,20 +373,20 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       });
     }
     if (that._title) {
-      var titleOptions = options.title;
+      const titleOptions = options.title;
       themeManagerTitleOptions.horizontalAlignment = getTitleHorizontalAlignment(options);
       that._title.update(themeManagerTitleOptions, titleOptions);
     }
     this.erase();
     return that;
   },
-  isVisible: function isVisible() {
+  isVisible: function () {
     return this._options && this._options.visible;
   },
-  draw: function draw(width, height) {
+  draw: function (width, height) {
     // TODO check multiple groups creation
-    var that = this;
-    var items = that._getItemData();
+    const that = this;
+    const items = that._getItemData();
     that.erase();
     if (!(that.isVisible() && items && items.length)) {
       return that;
@@ -395,7 +395,7 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     that._title.changeLink(that._insideLegendGroup);
     that._createBackground();
     if (that._title.hasText()) {
-      var horizontalPadding = that._background ? 2 * that._options.paddingLeftRight : 0;
+      const horizontalPadding = that._background ? 2 * that._options.paddingLeftRight : 0;
       that._title.draw(width - horizontalPadding, height);
     }
 
@@ -407,28 +407,26 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     that._updateElementsPosition(width, height);
     return that;
   },
-  _measureElements: function _measureElements() {
-    var options = this._options;
-    var maxBBoxHeight = 0;
-    this._items.forEach(function (item) {
-      var labelBBox = item.label.getBBox();
-      var markerBBox = item.marker.getBBox();
+  _measureElements: function () {
+    const options = this._options;
+    let maxBBoxHeight = 0;
+    this._items.forEach(item => {
+      const labelBBox = item.label.getBBox();
+      const markerBBox = item.marker.getBBox();
       item.markerBBox = markerBBox;
       item.markerSize = Math.max(markerBBox.width, markerBBox.height);
-      var bBox = getSizeItem(options, markerBBox, labelBBox);
+      const bBox = getSizeItem(options, markerBBox, labelBBox);
       item.labelBBox = labelBBox;
       item.bBox = bBox;
       maxBBoxHeight = _max(maxBBoxHeight, bBox.height);
     });
     if (options.equalRowHeight) {
-      this._items.forEach(function (item) {
-        return item.bBox.height = maxBBoxHeight;
-      });
+      this._items.forEach(item => item.bBox.height = maxBBoxHeight);
     }
   },
-  _updateElementsPosition: function _updateElementsPosition(width, height) {
-    var that = this;
-    var options = that._options;
+  _updateElementsPosition: function (width, height) {
+    const that = this;
+    const options = that._options;
     this._size = {
       width: width,
       height: height
@@ -436,19 +434,19 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     that._measureElements();
     that._locateElements(options);
     that._finalUpdate(options);
-    var size = that.getLayoutOptions();
+    const size = that.getLayoutOptions();
     if (size.width > width || size.height > height) {
       that.freeSpace();
     }
   },
-  _createItems: function _createItems(items) {
-    var that = this;
-    var options = that._options;
-    var renderer = that._renderer;
-    var createMarker = getMarkerCreator(options.markerShape);
+  _createItems: function (items) {
+    const that = this;
+    const options = that._options;
+    const renderer = that._renderer;
+    const createMarker = getMarkerCreator(options.markerShape);
     that._markersId = {};
-    var templateFunction = !options.markerTemplate ? function (dataItem, group) {
-      var attrs = dataItem.marker;
+    const templateFunction = !options.markerTemplate ? (dataItem, group) => {
+      const attrs = dataItem.marker;
       createMarker(renderer, attrs.size).attr({
         fill: attrs.fill,
         opacity: attrs.opacity,
@@ -457,17 +455,17 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
         element: group
       });
     } : options.markerTemplate;
-    var template = that._widget._getTemplate(templateFunction);
-    var markersGroup = that._markersGroup;
+    const template = that._widget._getTemplate(templateFunction);
+    const markersGroup = that._markersGroup;
     markersGroup.css((0, _utils.patchFontOptions)(options.font));
     that._deferredItems = [];
     that._templatesGroups = [];
-    that._items = (items || []).map(function (dataItem, i) {
-      var stateOfDataItem = dataItem.states;
-      var normalState = stateOfDataItem.normal;
-      var normalStateFill = normalState.fill;
+    that._items = (items || []).map((dataItem, i) => {
+      const stateOfDataItem = dataItem.states;
+      const normalState = stateOfDataItem.normal;
+      const normalStateFill = normalState.fill;
       dataItem.size = dataItem.marker.size;
-      var states = {
+      const states = {
         normal: (0, _extend2.extend)(normalState, {
           fill: normalStateFill || options.markerColor || options.defaultColor,
           state: 'normal'
@@ -476,13 +474,13 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
         selection: getState(stateOfDataItem.selection, normalStateFill, 'selected')
       };
       dataItem.states = states;
-      var itemGroup = renderer.g().append(markersGroup);
-      var markerGroup = renderer.g().attr({
+      const itemGroup = renderer.g().append(markersGroup);
+      const markerGroup = renderer.g().attr({
         class: 'dxl-marker'
       }).append(itemGroup);
       that._deferredItems[i] = new _deferred.Deferred();
       that._templatesGroups.push(markerGroup);
-      var item = {
+      const item = {
         label: that._createLabel(dataItem, itemGroup),
         marker: markerGroup,
         renderer,
@@ -514,41 +512,39 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       return item;
     });
   },
-  getTemplatesGroups: function getTemplatesGroups() {
+  getTemplatesGroups: function () {
     return this._templatesGroups || [];
   },
-  getTemplatesDef: function getTemplatesDef() {
+  getTemplatesDef: function () {
     return this._deferredItems || [];
   },
-  _getItemData: function _getItemData() {
-    var items = this._data || [];
-    var options = this._options || {};
+  _getItemData: function () {
+    let items = this._data || [];
+    const options = this._options || {};
     // For maps in dashboards
     if (options.inverted) {
       items = items.slice().reverse();
     }
-    return items.filter(function (i) {
-      return i.visible;
-    });
+    return items.filter(i => i.visible);
   },
-  _finalUpdate: function _finalUpdate(options) {
+  _finalUpdate: function (options) {
     this._adjustBackgroundSettings(options);
     this._setBoundingRect(options.margin);
   },
   // The name is chosen to be opposite for `draw`
-  erase: function erase() {
-    var that = this;
-    var insideLegendGroup = that._insideLegendGroup;
+  erase: function () {
+    const that = this;
+    const insideLegendGroup = that._insideLegendGroup;
     insideLegendGroup && insideLegendGroup.dispose();
     that._insideLegendGroup = that._markersGroup = that._x1 = that._x2 = that._y2 = that._y2 = null;
     return that;
   },
-  _locateElements: function _locateElements(locationOptions) {
+  _locateElements: function (locationOptions) {
     this._moveInInitialValues();
     this._locateRowsColumns(locationOptions);
   },
-  _moveInInitialValues: function _moveInInitialValues() {
-    var that = this;
+  _moveInInitialValues: function () {
+    const that = this;
     that._title.hasText() && that._title.move([0, 0]);
     that._legendGroup && that._legendGroup.move(0, 0);
     that._background && that._background.attr({
@@ -558,24 +554,24 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       height: 0
     });
   },
-  applySelected: function applySelected(id) {
+  applySelected: function (id) {
     applyMarkerState(id, this._markersId, this._items, 'selection');
     return this;
   },
-  applyHover: function applyHover(id) {
+  applyHover: function (id) {
     applyMarkerState(id, this._markersId, this._items, 'hover');
     return this;
   },
-  resetItem: function resetItem(id) {
+  resetItem: function (id) {
     applyMarkerState(id, this._markersId, this._items, 'normal');
     return this;
   },
-  _createLabel: function _createLabel(data, group) {
-    var labelFormatObject = this._getCustomizeObject(data);
-    var options = this._options;
-    var align = getAlign(options.itemTextPosition);
-    var text = options.customizeText.call(labelFormatObject, labelFormatObject);
-    var fontStyle = _isDefined(data.textOpacity) ? {
+  _createLabel: function (data, group) {
+    const labelFormatObject = this._getCustomizeObject(data);
+    const options = this._options;
+    const align = getAlign(options.itemTextPosition);
+    const text = options.customizeText.call(labelFormatObject, labelFormatObject);
+    const fontStyle = _isDefined(data.textOpacity) ? {
       color: options.font.color,
       opacity: data.textOpacity
     } : {};
@@ -584,18 +580,18 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       class: options.cssClass
     }).append(group);
   },
-  _createHint: function _createHint(data, group) {
-    var labelFormatObject = this._getCustomizeObject(data);
-    var text = this._options.customizeHint.call(labelFormatObject, labelFormatObject);
+  _createHint: function (data, group) {
+    const labelFormatObject = this._getCustomizeObject(data);
+    const text = this._options.customizeHint.call(labelFormatObject, labelFormatObject);
     if (_isDefined(text) && text !== '') {
       group.setTitle(text);
     }
   },
-  _createBackground: function _createBackground() {
-    var that = this;
-    var isInside = that._options.position === INSIDE;
-    var color = that._options.backgroundColor;
-    var fill = color || (isInside ? that._options.containerBackgroundColor : NONE);
+  _createBackground: function () {
+    const that = this;
+    const isInside = that._options.position === INSIDE;
+    const color = that._options.backgroundColor;
+    const fill = color || (isInside ? that._options.containerBackgroundColor : NONE);
     if (that._options.border.visible || (isInside || color) && color !== NONE) {
       that._background = that._renderer.rect(0, 0, 0, 0).attr({
         fill: fill,
@@ -603,12 +599,12 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       }).append(that._insideLegendGroup);
     }
   },
-  _locateRowsColumns: function _locateRowsColumns(options) {
-    var that = this;
-    var iteration = 0;
-    var layoutOptions = that._getItemsLayoutOptions();
-    var countItems = that._items.length;
-    var lines;
+  _locateRowsColumns: function (options) {
+    const that = this;
+    let iteration = 0;
+    const layoutOptions = that._getItemsLayoutOptions();
+    const countItems = that._items.length;
+    let lines;
     do {
       lines = [];
       that._createLines(lines, layoutOptions);
@@ -617,10 +613,10 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     } while (checkLinesSize(lines, layoutOptions, countItems, options.margin) && iteration < countItems);
     that._applyItemPosition(lines, layoutOptions);
   },
-  _createLines: function _createLines(lines, layoutOptions) {
-    this._items.forEach(function (item, i) {
-      var tableLine = getLines(lines, layoutOptions, i);
-      var labelBox = {
+  _createLines: function (lines, layoutOptions) {
+    this._items.forEach((item, i) => {
+      const tableLine = getLines(lines, layoutOptions, i);
+      const labelBox = {
         width: item.labelBBox.width,
         height: item.labelBBox.height,
         element: item.label,
@@ -628,7 +624,7 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
         pos: getPos(layoutOptions),
         itemIndex: i
       };
-      var markerBox = {
+      const markerBox = {
         width: item.markerBBox.width,
         height: item.markerBBox.height,
         element: item.marker,
@@ -644,9 +640,9 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
         },
         itemIndex: i
       };
-      var firstItem;
-      var secondItem;
-      var offsetDirection = layoutOptions.markerOffset ? 'altOffset' : 'offset';
+      let firstItem;
+      let secondItem;
+      const offsetDirection = layoutOptions.markerOffset ? 'altOffset' : 'offset';
       if (layoutOptions.inverseLabelPosition) {
         firstItem = labelBox;
         secondItem = markerBox;
@@ -659,12 +655,10 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       tableLine.firstLine.push(secondItem);
     });
   },
-  _alignLines: function _alignLines(lines, layoutOptions) {
-    var i;
-    var measure = layoutOptions.altMeasure;
-    lines.forEach(function (line) {
-      return setMaxInLine(line, measure);
-    });
+  _alignLines: function (lines, layoutOptions) {
+    let i;
+    let measure = layoutOptions.altMeasure;
+    lines.forEach(line => setMaxInLine(line, measure));
     measure = layoutOptions.measure;
     if (layoutOptions.itemsAlignment) {
       if (layoutOptions.markerOffset) {
@@ -679,28 +673,28 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       setMaxInLine(line, measure);
     }
   },
-  _applyItemPosition: function _applyItemPosition(lines, layoutOptions) {
-    var that = this;
-    var position = {
+  _applyItemPosition: function (lines, layoutOptions) {
+    const that = this;
+    const position = {
       x: 0,
       y: 0
     };
-    var maxLineLength = getMaxLineLength(lines, layoutOptions);
-    lines.forEach(function (line) {
-      var firstItem = line[0];
-      var altOffset = firstItem.altOffset || layoutOptions.altSpacing;
+    const maxLineLength = getMaxLineLength(lines, layoutOptions);
+    lines.forEach(line => {
+      const firstItem = line[0];
+      const altOffset = firstItem.altOffset || layoutOptions.altSpacing;
       position[layoutOptions.direction] = getInitPositionForDirection(line, layoutOptions, maxLineLength);
-      line.forEach(function (item) {
-        var offset = item.offset || layoutOptions.spacing;
-        var wrap = new _layout_element.WrapperLayoutElement(item.element, item.bBox);
-        var itemBBoxOptions = {
+      line.forEach(item => {
+        const offset = item.offset || layoutOptions.spacing;
+        const wrap = new _layout_element.WrapperLayoutElement(item.element, item.bBox);
+        const itemBBoxOptions = {
           x: position.x,
           y: position.y,
           width: item.width,
           height: item.height
         };
-        var itemBBox = new _layout_element.WrapperLayoutElement(null, itemBBoxOptions);
-        var itemLegend = that._items[item.itemIndex];
+        const itemBBox = new _layout_element.WrapperLayoutElement(null, itemBBoxOptions);
+        const itemLegend = that._items[item.itemIndex];
         wrap.position({
           of: itemBBox,
           my: item.pos,
@@ -711,26 +705,26 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       });
       position[layoutOptions.altDirection] += firstItem[layoutOptions.altMeasure] + altOffset;
     });
-    this._items.forEach(function (item) {
-      var itemBBox = calculateBBoxLabelAndMarker(item.bBoxes[0].getLayoutOptions(), item.bBoxes[1].getLayoutOptions());
-      var horizontal = that._options.columnItemSpacing / 2;
-      var vertical = that._options.rowItemSpacing / 2;
+    this._items.forEach(item => {
+      const itemBBox = calculateBBoxLabelAndMarker(item.bBoxes[0].getLayoutOptions(), item.bBoxes[1].getLayoutOptions());
+      const horizontal = that._options.columnItemSpacing / 2;
+      const vertical = that._options.rowItemSpacing / 2;
       item.tracker.left = itemBBox.left - horizontal;
       item.tracker.right = itemBBox.right + horizontal;
       item.tracker.top = itemBBox.top - vertical;
       item.tracker.bottom = itemBBox.bottom + vertical;
     });
   },
-  _getItemsLayoutOptions: function _getItemsLayoutOptions() {
-    var that = this;
-    var options = that._options;
-    var orientation = options.orientation;
-    var layoutOptions = {
+  _getItemsLayoutOptions: function () {
+    const that = this;
+    const options = that._options;
+    const orientation = options.orientation;
+    const layoutOptions = {
       itemsAlignment: options.itemsAlignment,
       orientation: options.orientation
     };
-    var width = that._size.width - (that._background ? 2 * options.paddingLeftRight : 0);
-    var height = that._size.height - (that._background ? 2 * options.paddingTopBottom : 0);
+    const width = that._size.width - (that._background ? 2 * options.paddingLeftRight : 0);
+    const height = that._size.height - (that._background ? 2 * options.paddingTopBottom : 0);
     if (orientation === HORIZONTAL) {
       layoutOptions.length = width;
       layoutOptions.spacing = options.columnItemSpacing;
@@ -778,11 +772,11 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     layoutOptions.altCountItem = layoutOptions.altCountItem || _ceil(that._items.length / layoutOptions.countItem);
     return layoutOptions;
   },
-  _adjustBackgroundSettings: function _adjustBackgroundSettings(locationOptions) {
+  _adjustBackgroundSettings: function (locationOptions) {
     if (!this._background) return;
-    var border = locationOptions.border;
-    var legendBox = this._calculateTotalBox();
-    var backgroundSettings = {
+    const border = locationOptions.border;
+    const legendBox = this._calculateTotalBox();
+    const backgroundSettings = {
       x: _round(legendBox.x - locationOptions.paddingLeftRight),
       y: _round(legendBox.y - locationOptions.paddingTopBottom),
       width: _round(legendBox.width) + 2 * locationOptions.paddingLeftRight,
@@ -799,11 +793,11 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     }
     this._background.attr(backgroundSettings);
   },
-  _setBoundingRect: function _setBoundingRect(margin) {
+  _setBoundingRect: function (margin) {
     if (!this._insideLegendGroup) {
       return;
     }
-    var box = this._calculateTotalBox();
+    const box = this._calculateTotalBox();
     box.height += margin.top + margin.bottom;
     box.widthWithoutMargins = box.width;
     box.width += margin.left + margin.right;
@@ -811,17 +805,17 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     box.y -= margin.top;
     this._boundingRect = box;
   },
-  _calculateTotalBox: function _calculateTotalBox() {
-    var markerBox = this._markersGroup.getBBox();
-    var titleBox = this._title.getCorrectedLayoutOptions();
-    var box = this._insideLegendGroup.getBBox();
-    var verticalPadding = this._background ? 2 * this._options.paddingTopBottom : 0;
+  _calculateTotalBox: function () {
+    const markerBox = this._markersGroup.getBBox();
+    const titleBox = this._title.getCorrectedLayoutOptions();
+    const box = this._insideLegendGroup.getBBox();
+    const verticalPadding = this._background ? 2 * this._options.paddingTopBottom : 0;
     box.height = markerBox.height + titleBox.height + verticalPadding;
     titleBox.width > box.width && (box.width = titleBox.width);
     return box;
   },
-  getActionCallback: function getActionCallback(point) {
-    var that = this;
+  getActionCallback: function (point) {
+    const that = this;
     if (that._options.visible) {
       return function (act) {
         that[act](point.index);
@@ -830,9 +824,9 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       return _common.noop;
     }
   },
-  getLayoutOptions: function getLayoutOptions() {
-    var options = this._options;
-    var boundingRect = this._insideLegendGroup ? this._boundingRect : {
+  getLayoutOptions: function () {
+    const options = this._options;
+    const boundingRect = this._insideLegendGroup ? this._boundingRect : {
       width: 0,
       height: 0,
       x: 0,
@@ -861,9 +855,9 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     }
     return null;
   },
-  shift: function shift(x, y) {
-    var that = this;
-    var box = {};
+  shift: function (x, y) {
+    const that = this;
+    let box = {};
     if (that._insideLegendGroup) {
       that._insideLegendGroup.attr({
         translateX: x - that._boundingRect.x,
@@ -879,17 +873,17 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     that._y2 = box.y + box.height;
     return that;
   },
-  _shiftTitle: function _shiftTitle(boxWidth) {
-    var that = this;
-    var title = that._title;
-    var titleBox = title.getCorrectedLayoutOptions();
+  _shiftTitle: function (boxWidth) {
+    const that = this;
+    const title = that._title;
+    const titleBox = title.getCorrectedLayoutOptions();
     if (!titleBox || !title.hasText()) {
       return;
     }
-    var width = boxWidth - (that._background ? 2 * that._options.paddingLeftRight : 0);
-    var titleOptions = title.getOptions();
-    var titleY = titleBox.y + titleOptions.margin.top;
-    var titleX = 0;
+    const width = boxWidth - (that._background ? 2 * that._options.paddingLeftRight : 0);
+    const titleOptions = title.getOptions();
+    let titleY = titleBox.y + titleOptions.margin.top;
+    let titleX = 0;
     if (titleOptions.verticalAlignment === BOTTOM && that._markersGroup) {
       titleY += that._markersGroup.getBBox().height;
     }
@@ -900,12 +894,12 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
     }
     title.shift(titleX, titleY);
   },
-  _shiftMarkers: function _shiftMarkers() {
-    var titleBox = this._title.getLayoutOptions();
-    var markerBox = this._markersGroup.getBBox();
-    var titleOptions = this._title.getOptions() || {};
-    var center = 0;
-    var y = 0;
+  _shiftMarkers: function () {
+    const titleBox = this._title.getLayoutOptions();
+    const markerBox = this._markersGroup.getBBox();
+    const titleOptions = this._title.getOptions() || {};
+    let center = 0;
+    let y = 0;
     if (titleBox.width > markerBox.width && this._options.horizontalAlignment === CENTER) {
       center = titleBox.width / 2 - markerBox.width / 2;
     }
@@ -917,7 +911,7 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
         translateX: center,
         translateY: y
       });
-      this._items.forEach(function (item) {
+      this._items.forEach(item => {
         item.tracker.left += center;
         item.tracker.right += center;
         item.tracker.top += y;
@@ -925,36 +919,36 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       });
     }
   },
-  getPosition: function getPosition() {
+  getPosition: function () {
     return this._options.position;
   },
-  coordsIn: function coordsIn(x, y) {
+  coordsIn: function (x, y) {
     return x >= this._x1 && x <= this._x2 && y >= this._y1 && y <= this._y2;
   },
-  getItemByCoord: function getItemByCoord(x, y) {
-    var items = this._items;
-    var legendGroup = this._insideLegendGroup;
+  getItemByCoord: function (x, y) {
+    const items = this._items;
+    const legendGroup = this._insideLegendGroup;
     x = x - legendGroup.attr('translateX');
     y = y - legendGroup.attr('translateY');
-    for (var i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
       if (inRect(items[i].tracker, x, y)) {
         return items[i].tracker;
       }
     }
     return null;
   },
-  dispose: function dispose() {
-    var that = this;
+  dispose: function () {
+    const that = this;
     that._title && that._title.dispose();
     that._legendGroup = that._insideLegendGroup = that._title = that._renderer = that._options = that._data = that._items = null;
     return that;
   },
   // BaseWidget_layout_implementation
-  layoutOptions: function layoutOptions() {
+  layoutOptions: function () {
     if (!this.isVisible()) {
       return null;
     }
-    var pos = this.getLayoutOptions();
+    const pos = this.getLayoutOptions();
     return {
       horizontalAlignment: this._options.horizontalAlignment,
       verticalAlignment: this._options.verticalAlignment,
@@ -963,34 +957,34 @@ var legendPrototype = _Legend.prototype = (0, _object.clone)(_layout_element.Lay
       position: this.getPosition()
     };
   },
-  measure: function measure(size) {
+  measure: function (size) {
     if (this._updated || !this._insideLegendGroup) {
       this.draw(size[0], size[1]);
       this._updated = false;
     } else {
-      this._items.forEach(function (item) {
+      this._items.forEach(item => {
         item.bBoxes = [];
       });
       this._updateElementsPosition(size[0], size[1]);
     }
-    var rect = this.getLayoutOptions();
+    const rect = this.getLayoutOptions();
     return [rect.width, rect.height];
   },
-  move: function move(rect) {
+  move: function (rect) {
     this.shift(rect[0], rect[1]);
   },
-  freeSpace: function freeSpace() {
+  freeSpace: function () {
     this._options._incidentOccurred('W2104');
     this.erase();
   }
   // BaseWidget_layout_implementation
 });
 
-var plugin = {
+const plugin = {
   name: 'legend',
-  init: function init() {
-    var that = this;
-    var group = this._renderer.g().attr({
+  init: function () {
+    const that = this;
+    const group = this._renderer.g().attr({
       class: this._rootClassPrefix + '-legend'
     }).enableLinks().append(that._renderer.root);
     that._legend = new Legend({
@@ -1000,7 +994,7 @@ var plugin = {
       itemGroupClass: this._rootClassPrefix + '-item',
       titleGroupClass: this._rootClassPrefix + '-title',
       textField: 'text',
-      getFormatObject: function getFormatObject(data) {
+      getFormatObject: function (data) {
         return {
           item: data.item,
           text: data.text
@@ -1010,19 +1004,19 @@ var plugin = {
     that._layout.add(that._legend);
   },
   extenders: {
-    _applyTilesAppearance: function _applyTilesAppearance() {
-      var that = this;
+    _applyTilesAppearance: function () {
+      const that = this;
       this._items.forEach(function (item) {
         that._applyLegendItemStyle(item.id, item.getState());
       });
     },
-    _buildNodes: function _buildNodes() {
+    _buildNodes: function () {
       this._createLegendItems();
     }
   },
   members: {
-    _applyLegendItemStyle: function _applyLegendItemStyle(id, state) {
-      var legend = this._legend;
+    _applyLegendItemStyle: function (id, state) {
+      const legend = this._legend;
       switch (state) {
         case 'hover':
           legend.applyHover(id);
@@ -1035,19 +1029,19 @@ var plugin = {
           break;
       }
     },
-    _createLegendItems: function _createLegendItems() {
+    _createLegendItems: function () {
       if (this._legend.update(this._getLegendData(), this._getOption('legend'), this._themeManager.theme('legend').title)) {
         this._requestChange(['LAYOUT']);
       }
     }
   },
-  dispose: function dispose() {
+  dispose: function () {
     this._legend.dispose();
   },
-  customize: function customize(constructor) {
+  customize: function (constructor) {
     constructor.prototype._proxyData.push(function (x, y) {
       if (this._legend.coordsIn(x, y)) {
-        var item = this._legend.getItemByCoord(x, y);
+        const item = this._legend.getItemByCoord(x, y);
         if (item) {
           return {
             id: item.id,
@@ -1058,7 +1052,7 @@ var plugin = {
     });
     constructor.addChange({
       code: 'LEGEND',
-      handler: function handler() {
+      handler: function () {
         this._createLegendItems();
       },
       isThemeDependent: true,

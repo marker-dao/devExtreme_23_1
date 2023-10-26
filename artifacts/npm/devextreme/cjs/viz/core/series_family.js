@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/core/series_family.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,12 +17,14 @@ var _common = require("../../core/utils/common");
 var _utils = require("./utils");
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var round = Math.round,
-  abs = Math.abs,
-  pow = Math.pow,
-  sqrt = Math.sqrt;
-var _min = Math.min;
-var DEFAULT_BAR_GROUP_PADDING = 0.3;
+const {
+  round,
+  abs,
+  pow,
+  sqrt
+} = Math;
+const _min = Math.min;
+const DEFAULT_BAR_GROUP_PADDING = 0.3;
 function validateBarPadding(barPadding) {
   return barPadding < 0 || barPadding > 1 ? undefined : barPadding;
 }
@@ -38,13 +40,13 @@ function isStackExist(series, arg) {
 }
 function correctStackCoordinates(series, currentStacks, arg, stack, parameters, barsArea, seriesStackIndexCallback) {
   series.forEach(function (series) {
-    var stackIndex = seriesStackIndexCallback(currentStacks.indexOf(stack), currentStacks.length);
-    var points = series.getPointsByArg(arg, true);
-    var barPadding = validateBarPadding(series.getOptions().barPadding);
-    var barWidth = series.getOptions().barWidth;
-    var offset = getOffset(stackIndex, parameters);
-    var width = parameters.width;
-    var extraParameters;
+    const stackIndex = seriesStackIndexCallback(currentStacks.indexOf(stack), currentStacks.length);
+    const points = series.getPointsByArg(arg, true);
+    const barPadding = validateBarPadding(series.getOptions().barPadding);
+    const barWidth = series.getOptions().barWidth;
+    let offset = getOffset(stackIndex, parameters);
+    let width = parameters.width;
+    let extraParameters;
     if (stackIndex === -1) {
       return;
     }
@@ -63,26 +65,26 @@ function getStackName(series) {
 }
 function adjustBarSeriesDimensionsCore(series, options, seriesStackIndexCallback) {
   var _series$, _series$2;
-  var commonStacks = [];
-  var allArguments = [];
-  var seriesInStacks = {};
-  var barGroupWidth = options.barGroupWidth;
-  var argumentAxis = (_series$ = series[0]) === null || _series$ === void 0 ? void 0 : _series$.getArgumentAxis();
-  var interval;
+  const commonStacks = [];
+  const allArguments = [];
+  const seriesInStacks = {};
+  const barGroupWidth = options.barGroupWidth;
+  const argumentAxis = (_series$ = series[0]) === null || _series$ === void 0 ? void 0 : _series$.getArgumentAxis();
+  let interval;
   if ((_series$2 = series[0]) !== null && _series$2 !== void 0 && _series$2.useAggregation()) {
     var _series$3;
-    var isDateArgAxis = ((_series$3 = series[0]) === null || _series$3 === void 0 ? void 0 : _series$3.argumentType) === 'datetime';
-    var tickInterval = argumentAxis.getTickInterval();
-    var aggregationInterval = argumentAxis.getAggregationInterval();
+    const isDateArgAxis = ((_series$3 = series[0]) === null || _series$3 === void 0 ? void 0 : _series$3.argumentType) === 'datetime';
+    let tickInterval = argumentAxis.getTickInterval();
+    let aggregationInterval = argumentAxis.getAggregationInterval();
     tickInterval = isDateArgAxis ? _date.default.dateToMilliseconds(tickInterval) : tickInterval;
     aggregationInterval = isDateArgAxis ? _date.default.dateToMilliseconds(aggregationInterval) : aggregationInterval;
     interval = aggregationInterval < tickInterval ? aggregationInterval : tickInterval;
   }
   interval = argumentAxis === null || argumentAxis === void 0 ? void 0 : argumentAxis.getTranslator().getInterval(interval);
-  var barsArea = barGroupWidth ? interval > barGroupWidth ? barGroupWidth : interval : interval * (1 - validateBarGroupPadding(options.barGroupPadding));
+  const barsArea = barGroupWidth ? interval > barGroupWidth ? barGroupWidth : interval : interval * (1 - validateBarGroupPadding(options.barGroupPadding));
   series.forEach(function (s, i) {
-    var stackName = getStackName(s) || i.toString();
-    var argument;
+    const stackName = getStackName(s) || i.toString();
+    let argument;
     for (argument in s.pointsByArgument) {
       if (allArguments.indexOf(argument.valueOf()) === -1) {
         allArguments.push(argument.valueOf());
@@ -95,21 +97,21 @@ function adjustBarSeriesDimensionsCore(series, options, seriesStackIndexCallback
     seriesInStacks[stackName].push(s);
   });
   allArguments.forEach(function (arg) {
-    var currentStacks = commonStacks.reduce(function (stacks, stack) {
+    const currentStacks = commonStacks.reduce((stacks, stack) => {
       if (isStackExist(seriesInStacks[stack], arg)) {
         stacks.push(stack);
       }
       return stacks;
     }, []);
-    var parameters = calculateParams(barsArea, currentStacks.length);
-    commonStacks.forEach(function (stack) {
+    const parameters = calculateParams(barsArea, currentStacks.length);
+    commonStacks.forEach(stack => {
       correctStackCoordinates(seriesInStacks[stack], currentStacks, arg, stack, parameters, barsArea, seriesStackIndexCallback);
     });
   });
 }
 function calculateParams(barsArea, count, percentWidth, fixedBarWidth) {
-  var spacing;
-  var width;
+  let spacing;
+  let width;
   if (fixedBarWidth) {
     width = _min(fixedBarWidth, barsArea / count);
     spacing = count > 1 ? round((barsArea - round(width) * count) / (count - 1)) : 0;
@@ -128,7 +130,7 @@ function calculateParams(barsArea, count, percentWidth, fixedBarWidth) {
   };
 }
 function getOffset(stackIndex, parameters) {
-  var width = parameters.rawWidth < 1 ? parameters.rawWidth : parameters.width;
+  const width = parameters.rawWidth < 1 ? parameters.rawWidth : parameters.width;
   return (stackIndex - parameters.middleIndex + 0.5) * width - (parameters.middleIndex - stackIndex - 0.5) * parameters.spacing;
 }
 function correctPointCoordinates(points, width, offset) {
@@ -148,13 +150,13 @@ function getVisibleSeries(that) {
   });
 }
 function getAbsStackSumByArg(stackKeepers, stackName, argument) {
-  var positiveStackValue = (stackKeepers.positive[stackName] || {})[argument] || 0;
-  var negativeStackValue = -(stackKeepers.negative[stackName] || {})[argument] || 0;
+  const positiveStackValue = (stackKeepers.positive[stackName] || {})[argument] || 0;
+  const negativeStackValue = -(stackKeepers.negative[stackName] || {})[argument] || 0;
   return positiveStackValue + negativeStackValue;
 }
 function getStackSumByArg(stackKeepers, stackName, argument) {
-  var positiveStackValue = (stackKeepers.positive[stackName] || {})[argument] || 0;
-  var negativeStackValue = (stackKeepers.negative[stackName] || {})[argument] || 0;
+  const positiveStackValue = (stackKeepers.positive[stackName] || {})[argument] || 0;
+  const negativeStackValue = (stackKeepers.negative[stackName] || {})[argument] || 0;
   return positiveStackValue + negativeStackValue;
 }
 function getSeriesStackIndexCallback(inverted) {
@@ -172,14 +174,14 @@ function isInverted(series) {
   return series[0] && series[0].getArgumentAxis().getTranslator().isInverted();
 }
 function adjustBarSeriesDimensions() {
-  var series = getVisibleSeries(this);
+  const series = getVisibleSeries(this);
   adjustBarSeriesDimensionsCore(series, this._options, getSeriesStackIndexCallback(isInverted(series)));
 }
 function getFirstValueSign(series) {
-  var points = series.getPoints();
-  var value;
-  for (var i = 0; i < points.length; i++) {
-    var point = points[i];
+  const points = series.getPoints();
+  let value;
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i];
     value = point.initialValue && point.initialValue.valueOf();
     if (abs(value) > 0) {
       break;
@@ -188,38 +190,38 @@ function getFirstValueSign(series) {
   return (0, _math.sign)(value);
 }
 function adjustStackedSeriesValues() {
-  var that = this;
-  var negativesAsZeroes = that._options.negativesAsZeroes;
-  var series = getVisibleSeries(that);
-  var stackKeepers = {
+  const that = this;
+  const negativesAsZeroes = that._options.negativesAsZeroes;
+  const series = getVisibleSeries(that);
+  const stackKeepers = {
     positive: {},
     negative: {}
   };
-  var holesStack = {
+  const holesStack = {
     left: {},
     right: {}
   };
-  var lastSeriesInPositiveStack = {};
-  var lastSeriesInNegativeStack = {};
+  const lastSeriesInPositiveStack = {};
+  const lastSeriesInNegativeStack = {};
   series.forEach(function (singleSeries) {
-    var stackName = getStackName(singleSeries);
-    var hole = false;
-    var stack = getFirstValueSign(singleSeries) < 0 ? lastSeriesInNegativeStack : lastSeriesInPositiveStack;
+    const stackName = getStackName(singleSeries);
+    let hole = false;
+    const stack = getFirstValueSign(singleSeries) < 0 ? lastSeriesInNegativeStack : lastSeriesInPositiveStack;
     singleSeries._prevSeries = stack[stackName];
     stack[stackName] = singleSeries;
     singleSeries.holes = (0, _extend.extend)(true, {}, holesStack);
     singleSeries.getPoints().forEach(function (point, index, points) {
-      var value = point.initialValue && point.initialValue.valueOf();
-      var argument = point.argument.valueOf();
-      var stacks = value >= 0 ? stackKeepers.positive : stackKeepers.negative;
-      var isNotBarSeries = singleSeries.type !== 'bar';
+      let value = point.initialValue && point.initialValue.valueOf();
+      let argument = point.argument.valueOf();
+      let stacks = value >= 0 ? stackKeepers.positive : stackKeepers.negative;
+      const isNotBarSeries = singleSeries.type !== 'bar';
       if (negativesAsZeroes && value < 0) {
         stacks = stackKeepers.positive;
         value = 0;
         point.resetValue();
       }
       stacks[stackName] = stacks[stackName] || {};
-      var currentStack = stacks[stackName];
+      const currentStack = stacks[stackName];
       if (currentStack[argument]) {
         if (isNotBarSeries) point.correctValue(currentStack[argument]);
         currentStack[argument] += value;
@@ -228,7 +230,7 @@ function adjustStackedSeriesValues() {
         if (isNotBarSeries) point.resetCorrection();
       }
       if (!point.hasValue()) {
-        var prevPoint = points[index - 1];
+        const prevPoint = points[index - 1];
         if (!hole && prevPoint && prevPoint.hasValue()) {
           argument = prevPoint.argument.valueOf();
           prevPoint._skipSetRightHole = true;
@@ -243,9 +245,9 @@ function adjustStackedSeriesValues() {
     });
   });
   series.forEach(function (singleSeries) {
-    var holes = singleSeries.holes;
+    const holes = singleSeries.holes;
     singleSeries.getPoints().forEach(function (point) {
-      var argument = point.argument.valueOf();
+      const argument = point.argument.valueOf();
       point.resetHoles();
       !point._skipSetLeftHole && point.setHole(holes.left[argument] || holesStack.left[argument] && 0, 'left');
       !point._skipSetRightHole && point.setHole(holes.right[argument] || holesStack.right[argument] && 0, 'right');
@@ -256,39 +258,39 @@ function adjustStackedSeriesValues() {
   that._stackKeepers = stackKeepers;
   series.forEach(function (singleSeries) {
     singleSeries.getPoints().forEach(function (point) {
-      var argument = point.argument.valueOf();
-      var stackName = getStackName(singleSeries);
-      var absTotal = getAbsStackSumByArg(stackKeepers, stackName, argument);
-      var total = getStackSumByArg(stackKeepers, stackName, argument);
+      const argument = point.argument.valueOf();
+      const stackName = getStackName(singleSeries);
+      const absTotal = getAbsStackSumByArg(stackKeepers, stackName, argument);
+      const total = getStackSumByArg(stackKeepers, stackName, argument);
       point.setPercentValue(absTotal, total, holesStack.left[argument], holesStack.right[argument]);
     });
   });
 }
 function updateStackedSeriesValues() {
-  var that = this;
-  var series = getVisibleSeries(that);
-  var stack = that._stackKeepers;
-  var stackKeepers = {
+  const that = this;
+  const series = getVisibleSeries(that);
+  const stack = that._stackKeepers;
+  const stackKeepers = {
     positive: {},
     negative: {}
   };
   (0, _iterator.each)(series, function (_, singleSeries) {
-    var minBarSize = singleSeries.getOptions().minBarSize;
-    var valueAxisTranslator = singleSeries.getValueAxis().getTranslator();
-    var minShownBusinessValue = minBarSize && valueAxisTranslator.getMinBarSize(minBarSize);
-    var stackName = singleSeries.getStackName();
+    const minBarSize = singleSeries.getOptions().minBarSize;
+    const valueAxisTranslator = singleSeries.getValueAxis().getTranslator();
+    const minShownBusinessValue = minBarSize && valueAxisTranslator.getMinBarSize(minBarSize);
+    const stackName = singleSeries.getStackName();
     (0, _iterator.each)(singleSeries.getPoints(), function (index, point) {
       if (!point.hasValue()) {
         return;
       }
-      var value = point.initialValue && point.initialValue.valueOf();
-      var argument = point.argument.valueOf();
+      let value = point.initialValue && point.initialValue.valueOf();
+      const argument = point.argument.valueOf();
       if (that.fullStacked) {
         value = value / getAbsStackSumByArg(stack, stackName, argument) || 0;
       }
-      var updateValue = valueAxisTranslator.checkMinBarSize(value, minShownBusinessValue, point.value);
-      var valueType = getValueType(updateValue);
-      var currentStack = stackKeepers[valueType][stackName] = stackKeepers[valueType][stackName] || {};
+      const updateValue = valueAxisTranslator.checkMinBarSize(value, minShownBusinessValue, point.value);
+      const valueType = getValueType(updateValue);
+      const currentStack = stackKeepers[valueType][stackName] = stackKeepers[valueType][stackName] || {};
       if (currentStack[argument]) {
         point.minValue = currentStack[argument];
         currentStack[argument] += updateValue;
@@ -304,9 +306,9 @@ function updateStackedSeriesValues() {
 }
 function updateFullStackedSeriesValues(series, stackKeepers) {
   (0, _iterator.each)(series, function (_, singleSeries) {
-    var stackName = singleSeries.getStackName ? singleSeries.getStackName() : 'default';
+    const stackName = singleSeries.getStackName ? singleSeries.getStackName() : 'default';
     (0, _iterator.each)(singleSeries.getPoints(), function (index, point) {
-      var stackSum = getAbsStackSumByArg(stackKeepers, stackName, point.argument.valueOf());
+      const stackSum = getAbsStackSumByArg(stackKeepers, stackName, point.argument.valueOf());
       if (stackSum !== 0) {
         point.value = point.value / stackSum;
         if ((0, _type.isNumeric)(point.minValue)) {
@@ -317,12 +319,12 @@ function updateFullStackedSeriesValues(series, stackKeepers) {
   });
 }
 function updateRangeSeriesValues() {
-  var that = this;
-  var series = getVisibleSeries(that);
+  const that = this;
+  const series = getVisibleSeries(that);
   (0, _iterator.each)(series, function (_, singleSeries) {
-    var minBarSize = singleSeries.getOptions().minBarSize;
-    var valueAxisTranslator = singleSeries.getValueAxis().getTranslator();
-    var minShownBusinessValue = minBarSize && valueAxisTranslator.getMinBarSize(minBarSize);
+    const minBarSize = singleSeries.getOptions().minBarSize;
+    const valueAxisTranslator = singleSeries.getValueAxis().getTranslator();
+    const minShownBusinessValue = minBarSize && valueAxisTranslator.getMinBarSize(minBarSize);
     if (minShownBusinessValue) {
       (0, _iterator.each)(singleSeries.getPoints(), function (_, point) {
         if (!point.hasValue()) {
@@ -338,9 +340,9 @@ function updateRangeSeriesValues() {
 }
 function updateBarSeriesValues() {
   (0, _iterator.each)(this.series, function (_, singleSeries) {
-    var minBarSize = singleSeries.getOptions().minBarSize;
-    var valueAxisTranslator = singleSeries.getValueAxis().getTranslator();
-    var minShownBusinessValue = minBarSize && valueAxisTranslator.getMinBarSize(minBarSize);
+    const minBarSize = singleSeries.getOptions().minBarSize;
+    const valueAxisTranslator = singleSeries.getValueAxis().getTranslator();
+    const minShownBusinessValue = minBarSize && valueAxisTranslator.getMinBarSize(minBarSize);
     if (minShownBusinessValue) {
       (0, _iterator.each)(singleSeries.getPoints(), function (index, point) {
         if (point.hasValue()) {
@@ -351,36 +353,36 @@ function updateBarSeriesValues() {
   });
 }
 function adjustCandlestickSeriesDimensions() {
-  var series = getVisibleSeries(this);
+  const series = getVisibleSeries(this);
   adjustBarSeriesDimensionsCore(series, {
     barGroupPadding: 0.3
   }, getSeriesStackIndexCallback(isInverted(series)));
 }
 function adjustBubbleSeriesDimensions() {
-  var series = getVisibleSeries(this);
+  const series = getVisibleSeries(this);
   if (!series.length) {
     return;
   }
-  var options = this._options;
-  var visibleAreaX = series[0].getArgumentAxis().getVisibleArea();
-  var visibleAreaY = series[0].getValueAxis().getVisibleArea();
-  var min = _min(visibleAreaX[1] - visibleAreaX[0], visibleAreaY[1] - visibleAreaY[0]);
-  var minBubbleArea = pow(options.minBubbleSize, 2);
-  var maxBubbleArea = pow(min * options.maxBubbleSize, 2);
-  var equalBubbleSize = (min * options.maxBubbleSize + options.minBubbleSize) / 2;
-  var minPointSize = Infinity;
-  var maxPointSize = -Infinity;
-  var pointSize;
-  var bubbleArea;
-  var sizeProportion;
+  const options = this._options;
+  const visibleAreaX = series[0].getArgumentAxis().getVisibleArea();
+  const visibleAreaY = series[0].getValueAxis().getVisibleArea();
+  const min = _min(visibleAreaX[1] - visibleAreaX[0], visibleAreaY[1] - visibleAreaY[0]);
+  const minBubbleArea = pow(options.minBubbleSize, 2);
+  const maxBubbleArea = pow(min * options.maxBubbleSize, 2);
+  const equalBubbleSize = (min * options.maxBubbleSize + options.minBubbleSize) / 2;
+  let minPointSize = Infinity;
+  let maxPointSize = -Infinity;
+  let pointSize;
+  let bubbleArea;
+  let sizeProportion;
   (0, _iterator.each)(series, function (_, seriesItem) {
     (0, _iterator.each)(seriesItem.getPoints(), function (_, point) {
       maxPointSize = maxPointSize > point.size ? maxPointSize : point.size;
       minPointSize = minPointSize < point.size ? minPointSize : point.size;
     });
   });
-  var sizeDispersion = maxPointSize - minPointSize;
-  var areaDispersion = abs(maxBubbleArea - minBubbleArea);
+  const sizeDispersion = maxPointSize - minPointSize;
+  const areaDispersion = abs(maxBubbleArea - minBubbleArea);
   (0, _iterator.each)(series, function (_, seriesItem) {
     (0, _iterator.each)(seriesItem.getPoints(), function (_, point) {
       if (maxPointSize === minPointSize) {
@@ -395,7 +397,7 @@ function adjustBubbleSeriesDimensions() {
   });
 }
 function SeriesFamily(options) {
-  var that = this;
+  const that = this;
   that.type = (0, _utils.normalizeEnum)(options.type);
   that.pane = options.pane;
   that.series = [];
@@ -448,16 +450,14 @@ SeriesFamily.prototype = {
   adjustSeriesDimensions: _common.noop,
   adjustSeriesValues: _common.noop,
   updateSeriesValues: _common.noop,
-  updateOptions: function updateOptions(options) {
+  updateOptions: function (options) {
     this._options = options;
   },
-  dispose: function dispose() {
+  dispose: function () {
     this.series = null;
   },
-  add: function add(series) {
-    var type = this.type;
-    this.series = (0, _utils.map)(series, function (singleSeries) {
-      return singleSeries.type === type ? singleSeries : null;
-    });
+  add: function (series) {
+    const type = this.type;
+    this.series = (0, _utils.map)(series, singleSeries => singleSeries.type === type ? singleSeries : null);
   }
 };

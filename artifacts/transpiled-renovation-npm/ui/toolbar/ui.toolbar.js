@@ -12,9 +12,9 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 // STYLE toolbar
 
-var TOOLBAR_MULTILINE_CLASS = 'dx-toolbar-multiline';
-var TOOLBAR_AUTO_HIDE_TEXT_CLASS = 'dx-toolbar-text-auto-hide';
-var Toolbar = /*#__PURE__*/function (_ToolbarBase) {
+const TOOLBAR_MULTILINE_CLASS = 'dx-toolbar-multiline';
+const TOOLBAR_AUTO_HIDE_TEXT_CLASS = 'dx-toolbar-text-auto-hide';
+let Toolbar = /*#__PURE__*/function (_ToolbarBase) {
   _inheritsLoose(Toolbar, _ToolbarBase);
   function Toolbar() {
     return _ToolbarBase.apply(this, arguments) || this;
@@ -128,10 +128,12 @@ var Toolbar = /*#__PURE__*/function (_ToolbarBase) {
     this._layoutStrategy._renderMenuItems();
   };
   _proto._renderItem = function _renderItem(index, item, itemContainer, $after) {
-    var itemElement = _ToolbarBase.prototype._renderItem.call(this, index, item, itemContainer, $after);
+    const itemElement = _ToolbarBase.prototype._renderItem.call(this, index, item, itemContainer, $after);
     this._layoutStrategy._renderItem(item, itemElement);
-    var widget = item.widget,
-      showText = item.showText;
+    const {
+      widget,
+      showText
+    } = item;
     if (widget === 'dxButton' && showText === 'inMenu') {
       itemElement.toggleClass(TOOLBAR_AUTO_HIDE_TEXT_CLASS);
     }
@@ -156,7 +158,7 @@ var Toolbar = /*#__PURE__*/function (_ToolbarBase) {
     if (this.$element().is(':hidden')) {
       return;
     }
-    var elementWidth = this._layoutStrategy._arrangeItems();
+    const elementWidth = this._layoutStrategy._arrangeItems();
     if (!this._isMultiline()) {
       _ToolbarBase.prototype._arrangeItems.call(this, elementWidth);
     }
@@ -174,10 +176,7 @@ var Toolbar = /*#__PURE__*/function (_ToolbarBase) {
     }
   };
   _proto._updateFocusableItemsTabIndex = function _updateFocusableItemsTabIndex() {
-    var _this = this;
-    this._getToolbarItems().forEach(function (item) {
-      return (0, _uiToolbar2.toggleItemFocusableElementTabIndex)(_this, item);
-    });
+    this._getToolbarItems().forEach(item => (0, _uiToolbar2.toggleItemFocusableElementTabIndex)(this, item));
   };
   _proto._isMenuItem = function _isMenuItem(itemData) {
     return itemData.location === 'menu' || itemData.locateInMenu === 'always';
@@ -186,8 +185,10 @@ var Toolbar = /*#__PURE__*/function (_ToolbarBase) {
     return itemData.location === undefined || itemData.locateInMenu === 'never';
   };
   _proto._optionChanged = function _optionChanged(_ref) {
-    var name = _ref.name,
-      value = _ref.value;
+    let {
+      name,
+      value
+    } = _ref;
     this._layoutStrategy._optionChanged(name, value);
     switch (name) {
       case 'menuContainer':

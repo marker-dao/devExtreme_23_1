@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/diagram.toolbox_manager.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 exports.default = void 0;
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DiagramToolboxManager = {
+const DiagramToolboxManager = {
   getDefaultGroups() {
     return this._groups || (this._groups = {
       general: {
@@ -36,8 +36,8 @@ var DiagramToolboxManager = {
       }
     });
   },
-  getGroups: function getGroups(groups) {
-    var defaultGroups = this.getDefaultGroups();
+  getGroups: function (groups) {
+    const defaultGroups = this.getDefaultGroups();
     if (groups) {
       return groups.map(function (g) {
         if (typeof g === 'string') {

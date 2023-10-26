@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tabs.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -53,6 +53,12 @@ var TABS_ORIENTATION_CLASS = {
   vertical: 'dx-tabs-vertical',
   horizontal: 'dx-tabs-horizontal'
 };
+var INDICATOR_POSITION_CLASS = {
+  top: 'dx-tab-indicator-position-top',
+  right: 'dx-tab-indicator-position-right',
+  bottom: 'dx-tab-indicator-position-bottom',
+  left: 'dx-tab-indicator-position-left'
+};
 var TABS_ICON_POSITION_CLASS = {
   top: 'dx-tabs-icon-position-top',
   end: 'dx-tabs-icon-position-end',
@@ -73,6 +79,12 @@ var TAB_OFFSET = 30;
 var ORIENTATION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
+};
+var INDICATOR_POSITION = {
+  top: 'top',
+  right: 'right',
+  bottom: 'bottom',
+  left: 'left'
 };
 var SCROLLABLE_DIRECTION = {
   horizontal: 'horizontal',
@@ -116,7 +128,8 @@ var Tabs = CollectionWidget.inherit({
       },
       _itemAttributes: {
         role: 'tab'
-      }
+      },
+      _indicatorPosition: null
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
@@ -166,9 +179,11 @@ var Tabs = CollectionWidget.inherit({
       orientation,
       stylingMode
     } = this.option();
+    var indicatorPosition = this._getIndicatorPosition();
     this.callBase();
     this.$element().addClass(TABS_CLASS);
     this._toggleOrientationClass(orientation);
+    this._toggleIndicatorPositionClass(indicatorPosition);
     this._toggleIconPositionClass();
     this._toggleStylingModeClass(stylingMode);
     this._renderWrapper();
@@ -474,6 +489,28 @@ var Tabs = CollectionWidget.inherit({
   _toggleTabsHorizontalClass(value) {
     this.$element().toggleClass(TABS_ORIENTATION_CLASS.horizontal, value);
   },
+  _getIndicatorPositionClass(indicatorPosition) {
+    return INDICATOR_POSITION_CLASS[indicatorPosition];
+  },
+  _getIndicatorPosition() {
+    var {
+      _indicatorPosition,
+      rtlEnabled
+    } = this.option();
+    if (_indicatorPosition) {
+      return _indicatorPosition;
+    }
+    var isVertical = this._isVertical();
+    if (rtlEnabled) {
+      return isVertical ? INDICATOR_POSITION.left : INDICATOR_POSITION.bottom;
+    } else {
+      return isVertical ? INDICATOR_POSITION.right : INDICATOR_POSITION.bottom;
+    }
+  },
+  _toggleIndicatorPositionClass(indicatorPosition) {
+    var newClass = this._getIndicatorPositionClass(indicatorPosition);
+    this._toggleElementClasses(INDICATOR_POSITION_CLASS, newClass);
+  },
   _toggleOrientationClass(orientation) {
     var isVertical = orientation === ORIENTATION.vertical;
     this._toggleTabsVerticalClass(isVertical);
@@ -494,10 +531,18 @@ var Tabs = CollectionWidget.inherit({
     }
   },
   _toggleIconPositionClass() {
-    for (var key in TABS_ICON_POSITION_CLASS) {
-      this.$element().removeClass(TABS_ICON_POSITION_CLASS[key]);
-    }
     var newClass = this._getTabsIconPositionClass();
+    this._toggleElementClasses(TABS_ICON_POSITION_CLASS, newClass);
+  },
+  _toggleStylingModeClass(value) {
+    var _TABS_STYLING_MODE_CL;
+    var newClass = (_TABS_STYLING_MODE_CL = TABS_STYLING_MODE_CLASS[value]) !== null && _TABS_STYLING_MODE_CL !== void 0 ? _TABS_STYLING_MODE_CL : TABS_STYLING_MODE_CLASS.primary;
+    this._toggleElementClasses(TABS_STYLING_MODE_CLASS, newClass);
+  },
+  _toggleElementClasses(classMap, newClass) {
+    for (var key in classMap) {
+      this.$element().removeClass(classMap[key]);
+    }
     this.$element().addClass(newClass);
   },
   _toggleFocusedDisabledNextClass(currentIndex, isNextDisabled) {
@@ -520,13 +565,6 @@ var Tabs = CollectionWidget.inherit({
     var shouldPrevClassBeSetted = isPrevDisabled && nextFocusedIndex === prevItemIndex;
     this._toggleFocusedDisabledNextClass(currentIndex, shouldNextClassBeSetted);
     this._toggleFocusedDisabledPrevClass(currentIndex, shouldPrevClassBeSetted);
-  },
-  _toggleStylingModeClass(value) {
-    var _TABS_STYLING_MODE_CL;
-    for (var key in TABS_STYLING_MODE_CLASS) {
-      this.$element().removeClass(TABS_STYLING_MODE_CLASS[key]);
-    }
-    this.$element().addClass((_TABS_STYLING_MODE_CL = TABS_STYLING_MODE_CLASS[value]) !== null && _TABS_STYLING_MODE_CL !== void 0 ? _TABS_STYLING_MODE_CL : TABS_STYLING_MODE_CLASS.primary);
   },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {
@@ -557,9 +595,18 @@ var Tabs = CollectionWidget.inherit({
           this._scrollToItem(args.value);
           break;
         }
+      case 'rtlEnabled':
+        {
+          this.callBase(args);
+          var indicatorPosition = this._getIndicatorPosition();
+          this._toggleIndicatorPositionClass(indicatorPosition);
+          break;
+        }
       case 'orientation':
         {
           this._toggleOrientationClass(args.value);
+          var _indicatorPosition2 = this._getIndicatorPosition();
+          this._toggleIndicatorPositionClass(_indicatorPosition2);
           if (!this._isServerSide()) {
             this._updateScrollable();
           }
@@ -579,6 +626,11 @@ var Tabs = CollectionWidget.inherit({
           if (!this._isServerSide()) {
             this._dimensionChanged();
           }
+          break;
+        }
+      case '_indicatorPosition':
+        {
+          this._toggleIndicatorPositionClass(args.value);
           break;
         }
       default:

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/form/layout_manager.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,8 +15,7 @@ var _combine_classes = require("../../utils/combine_classes");
 var _widget = require("../common/widget");
 var _responsive_box = require("../responsive_box/responsive_box");
 var _layout_manager_props = require("./layout_manager_props");
-var _excluded = ["screenByWidth"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["screenByWidth"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -25,9 +24,11 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(viewModel) {
-  var cssClasses = viewModel.cssClasses,
-    restAttributes = viewModel.restAttributes;
+const viewFunction = viewModel => {
+  const {
+    cssClasses,
+    restAttributes
+  } = viewModel;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, _extends({
     "classes": cssClasses
   }, restAttributes, {
@@ -37,7 +38,7 @@ var viewFunction = function viewFunction(viewModel) {
   })));
 };
 exports.viewFunction = viewFunction;
-var LayoutManager = /*#__PURE__*/function (_BaseInfernoComponent) {
+let LayoutManager = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(LayoutManager, _BaseInfernoComponent);
   function LayoutManager(props) {
     var _this;
@@ -47,7 +48,7 @@ var LayoutManager = /*#__PURE__*/function (_BaseInfernoComponent) {
   }
   var _proto = LayoutManager.prototype;
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       cssClasses: this.cssClasses,
@@ -56,17 +57,16 @@ var LayoutManager = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(LayoutManager, [{
     key: "cssClasses",
-    get: function get() {
+    get: function () {
       return (0, _combine_classes.combineClasses)({
         'dx-layout-manager': true
       });
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        screenByWidth = _this$props.screenByWidth,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

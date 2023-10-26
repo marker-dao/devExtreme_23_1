@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scroll_view/internal/load_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,9 +15,8 @@ var _type = require("../../../../core/utils/type");
 var _message = _interopRequireDefault(require("../../../../localization/message"));
 var _load_panel = require("../../overlays/load_panel");
 var _scrollview_loadpanel_props = require("../common/scrollview_loadpanel_props");
-var _excluded = ["refreshingText", "targetElement", "visible"];
+const _excluded = ["refreshingText", "targetElement", "visible"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -26,11 +25,15 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var SCROLLVIEW_LOADPANEL = 'dx-scrollview-loadpanel';
-var viewFunction = function viewFunction(viewModel) {
-  var position = viewModel.position,
-    visible = viewModel.props.visible,
-    refreshingText = viewModel.refreshingText;
+const SCROLLVIEW_LOADPANEL = 'dx-scrollview-loadpanel';
+const viewFunction = viewModel => {
+  const {
+    position,
+    props: {
+      visible
+    },
+    refreshingText
+  } = viewModel;
   return (0, _inferno.createComponentVNode)(2, _load_panel.LoadPanel, {
     "className": SCROLLVIEW_LOADPANEL,
     "shading": false,
@@ -41,7 +44,7 @@ var viewFunction = function viewFunction(viewModel) {
   });
 };
 exports.viewFunction = viewFunction;
-var ScrollViewLoadPanel = /*#__PURE__*/function (_BaseInfernoComponent) {
+let ScrollViewLoadPanel = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(ScrollViewLoadPanel, _BaseInfernoComponent);
   function ScrollViewLoadPanel(props) {
     var _this;
@@ -57,7 +60,7 @@ var ScrollViewLoadPanel = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props),
       refreshingText: this.refreshingText,
@@ -67,8 +70,10 @@ var ScrollViewLoadPanel = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(ScrollViewLoadPanel, [{
     key: "refreshingText",
-    get: function get() {
-      var refreshingText = this.props.refreshingText;
+    get: function () {
+      const {
+        refreshingText
+      } = this.props;
       if ((0, _type.isDefined)(refreshingText)) {
         return refreshingText;
       }
@@ -76,28 +81,24 @@ var ScrollViewLoadPanel = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   }, {
     key: "position",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['position'] !== undefined) {
         return this.__getterCache['position'];
       }
-      return this.__getterCache['position'] = function () {
-        if (_this2.props.targetElement) {
+      return this.__getterCache['position'] = (() => {
+        if (this.props.targetElement) {
           return {
-            of: _this2.props.targetElement.current
+            of: this.props.targetElement.current
           };
         }
         return undefined;
-      }();
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        refreshingText = _this$props.refreshingText,
-        targetElement = _this$props.targetElement,
-        visible = _this$props.visible,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

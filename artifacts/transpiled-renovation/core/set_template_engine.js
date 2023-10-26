@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, "default", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _template_engine_registry.setTemplateEngine;
   }
 });

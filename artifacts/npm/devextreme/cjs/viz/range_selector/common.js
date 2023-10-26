@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/range_selector/common.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,11 +11,11 @@
 exports.utils = exports.formatValue = exports.consts = exports.HEIGHT_COMPACT_MODE = void 0;
 var _smart_formatter = require("../axes/smart_formatter");
 var _type = require("../../core/utils/type");
-var HEIGHT_COMPACT_MODE = 24;
+const HEIGHT_COMPACT_MODE = 24;
 exports.HEIGHT_COMPACT_MODE = HEIGHT_COMPACT_MODE;
-var POINTER_SIZE = 4;
-var EMPTY_SLIDER_MARKER_TEXT = '. . .';
-var utils = {
+const POINTER_SIZE = 4;
+const EMPTY_SLIDER_MARKER_TEXT = '. . .';
+const utils = {
   trackerSettings: {
     fill: 'grey',
     stroke: 'grey',
@@ -26,13 +26,13 @@ var utils = {
   }
 };
 exports.utils = utils;
-var consts = {
+const consts = {
   emptySliderMarkerText: EMPTY_SLIDER_MARKER_TEXT,
   pointerSize: POINTER_SIZE
 };
 exports.consts = consts;
-var formatValue = function formatValue(value, formatOptions, tickIntervalsInfo, valueType, type, logarithmBase) {
-  var formatObject = {
+const formatValue = function (value, formatOptions, tickIntervalsInfo, valueType, type, logarithmBase) {
+  const formatObject = {
     value: value,
     valueText: (0, _smart_formatter.smartFormatter)(value, {
       labelOptions: formatOptions,

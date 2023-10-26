@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tree_view/ui.tree_view.base.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -533,6 +533,7 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       direction: this.option('scrollDirection'),
       useKeyboard: false
     });
+    this.setAria('role', 'treeitem', this._scrollable.$element());
   },
   _renderNodeContainer: function _renderNodeContainer($parent) {
     var $container = $('<ul>').addClass(NODE_CONTAINER_CLASS);

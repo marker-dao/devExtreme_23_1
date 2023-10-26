@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/timezones/m_utils_timezones_data.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,65 +19,60 @@ var _timezones_data = _interopRequireDefault(require("./timezones_data"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* eslint-disable radix */
 
-var getConvertedUntils = function getConvertedUntils(value) {
-  return value.split('|').map(function (until) {
-    if (until === 'Infinity') {
-      return null;
-    }
-    return parseInt(until, 36) * 1000;
-  });
-};
-var parseTimezone = function parseTimezone(timeZoneConfig) {
-  var offsets = timeZoneConfig.offsets;
-  var offsetIndices = timeZoneConfig.offsetIndices;
-  var untils = timeZoneConfig.untils;
-  var offsetList = offsets.split('|').map(function (value) {
-    return parseInt(value);
-  });
-  var offsetIndexList = offsetIndices.split('').map(function (value) {
-    return parseInt(value);
-  });
-  var dateList = getConvertedUntils(untils)
+const getConvertedUntils = value => value.split('|').map(until => {
+  if (until === 'Infinity') {
+    return null;
+  }
+  return parseInt(until, 36) * 1000;
+});
+const parseTimezone = timeZoneConfig => {
+  const {
+    offsets
+  } = timeZoneConfig;
+  const {
+    offsetIndices
+  } = timeZoneConfig;
+  const {
+    untils
+  } = timeZoneConfig;
+  const offsetList = offsets.split('|').map(value => parseInt(value));
+  const offsetIndexList = offsetIndices.split('').map(value => parseInt(value));
+  const dateList = getConvertedUntils(untils)
   // eslint-disable-next-line
-  .map(function (accumulator) {
-    return function (value) {
-      return accumulator += value;
-    };
-  }(0));
+  .map((accumulator => value => accumulator += value)(0));
   return {
     offsetList,
     offsetIndexList,
     dateList
   };
 };
-var TimeZoneCache = /*#__PURE__*/function () {
+let TimeZoneCache = /*#__PURE__*/function () {
   function TimeZoneCache() {
     this.map = new Map();
   }
   var _proto = TimeZoneCache.prototype;
   _proto.tryGet = function tryGet(id) {
     if (!this.map.get(id)) {
-      var config = timeZoneDataUtils.getTimezoneById(id);
+      const config = timeZoneDataUtils.getTimezoneById(id);
       if (!config) {
         return false;
       }
-      var timeZoneInfo = parseTimezone(config);
+      const timeZoneInfo = parseTimezone(config);
       this.map.set(id, timeZoneInfo);
     }
     return this.map.get(id);
   };
   return TimeZoneCache;
 }();
-var tzCache = new TimeZoneCache();
-var timeZoneDataUtils = {
+const tzCache = new TimeZoneCache();
+const timeZoneDataUtils = {
   _tzCache: tzCache,
   _timeZones: _timezones_data.default.zones,
   getDisplayedTimeZones(timestamp) {
-    var _this = this;
-    var timeZones = this._timeZones.map(function (timezone) {
-      var timeZoneInfo = parseTimezone(timezone);
-      var offset = _this.getUtcOffset(timeZoneInfo, timestamp);
-      var title = "(GMT ".concat(_this.formatOffset(offset), ") ").concat(_this.formatId(timezone.id));
+    const timeZones = this._timeZones.map(timezone => {
+      const timeZoneInfo = parseTimezone(timezone);
+      const offset = this.getUtcOffset(timeZoneInfo, timestamp);
+      const title = "(GMT ".concat(this.formatOffset(offset), ") ").concat(this.formatId(timezone.id));
       return {
         offset,
         title,
@@ -87,11 +82,11 @@ var timeZoneDataUtils = {
     return (0, _query.default)(timeZones).sortBy('offset').toArray();
   },
   formatOffset(offset) {
-    var hours = Math.floor(offset);
-    var minutesInDecimal = offset - hours;
-    var signString = (0, _math.sign)(offset) >= 0 ? '+' : '-';
-    var hoursString = "0".concat(Math.abs(hours)).slice(-2);
-    var minutesString = minutesInDecimal > 0 ? ":".concat(minutesInDecimal * 60) : ':00';
+    const hours = Math.floor(offset);
+    const minutesInDecimal = offset - hours;
+    const signString = (0, _math.sign)(offset) >= 0 ? '+' : '-';
+    const hoursString = "0".concat(Math.abs(hours)).slice(-2);
+    const minutesString = minutesInDecimal > 0 ? ":".concat(minutesInDecimal * 60) : ':00';
     return signString + hoursString + minutesString;
   },
   formatId(id) {
@@ -101,9 +96,9 @@ var timeZoneDataUtils = {
     if (!id) {
       return undefined;
     }
-    var tzList = this._timeZones;
-    for (var i = 0; i < tzList.length; i++) {
-      var currentId = tzList[i].id;
+    const tzList = this._timeZones;
+    for (let i = 0; i < tzList.length; i++) {
+      const currentId = tzList[i].id;
       if (currentId === id) {
         return tzList[i];
       }
@@ -112,23 +107,29 @@ var timeZoneDataUtils = {
     return undefined;
   },
   getTimeZoneOffsetById(id, timestamp) {
-    var timeZoneInfo = tzCache.tryGet(id);
+    const timeZoneInfo = tzCache.tryGet(id);
     return timeZoneInfo ? this.getUtcOffset(timeZoneInfo, timestamp) : undefined;
   },
   getTimeZoneDeclarationTuple(id, year) {
-    var timeZoneInfo = tzCache.tryGet(id);
+    const timeZoneInfo = tzCache.tryGet(id);
     return timeZoneInfo ? this.getTimeZoneDeclarationTupleCore(timeZoneInfo, year) : [];
   },
   getTimeZoneDeclarationTupleCore(timeZoneInfo, year) {
-    var offsetList = timeZoneInfo.offsetList;
-    var offsetIndexList = timeZoneInfo.offsetIndexList;
-    var dateList = timeZoneInfo.dateList;
-    var tupleResult = [];
-    for (var i = 0; i < dateList.length; i++) {
-      var currentDate = dateList[i];
-      var currentYear = new Date(currentDate).getFullYear();
+    const {
+      offsetList
+    } = timeZoneInfo;
+    const {
+      offsetIndexList
+    } = timeZoneInfo;
+    const {
+      dateList
+    } = timeZoneInfo;
+    const tupleResult = [];
+    for (let i = 0; i < dateList.length; i++) {
+      const currentDate = dateList[i];
+      const currentYear = new Date(currentDate).getFullYear();
       if (currentYear === year) {
-        var offset = offsetList[offsetIndexList[i + 1]];
+        const offset = offsetList[offsetIndexList[i + 1]];
         tupleResult.push({
           date: currentDate,
           offset: -offset / 60
@@ -141,16 +142,22 @@ var timeZoneDataUtils = {
     return tupleResult;
   },
   getUtcOffset(timeZoneInfo, dateTimeStamp) {
-    var offsetList = timeZoneInfo.offsetList;
-    var offsetIndexList = timeZoneInfo.offsetIndexList;
-    var dateList = timeZoneInfo.dateList;
-    var infinityUntilCorrection = 1;
-    var lastIntervalStartIndex = dateList.length - 1 - infinityUntilCorrection;
-    var index = lastIntervalStartIndex;
+    const {
+      offsetList
+    } = timeZoneInfo;
+    const {
+      offsetIndexList
+    } = timeZoneInfo;
+    const {
+      dateList
+    } = timeZoneInfo;
+    const infinityUntilCorrection = 1;
+    const lastIntervalStartIndex = dateList.length - 1 - infinityUntilCorrection;
+    let index = lastIntervalStartIndex;
     while (index >= 0 && dateTimeStamp < dateList[index]) {
       index--;
     }
-    var offset = offsetList[offsetIndexList[index + 1]];
+    const offset = offsetList[offsetIndexList[index + 1]];
     return -offset / 60 || offset;
   }
 };

@@ -3,9 +3,9 @@
 exports.getImageSourceType = exports.getImageContainer = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ICON_CLASS = 'dx-icon';
-var SVG_ICON_CLASS = 'dx-svg-icon';
-var getImageSourceType = function getImageSourceType(source) {
+const ICON_CLASS = 'dx-icon';
+const SVG_ICON_CLASS = 'dx-svg-icon';
+const getImageSourceType = source => {
   if (!source || typeof source !== 'string') {
     return false;
   }
@@ -24,7 +24,7 @@ var getImageSourceType = function getImageSourceType(source) {
   return false;
 };
 exports.getImageSourceType = getImageSourceType;
-var getImageContainer = function getImageContainer(source) {
+const getImageContainer = source => {
   switch (getImageSourceType(source)) {
     case 'image':
       return (0, _renderer.default)('<img>').attr('src', source).addClass(ICON_CLASS);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.treelist.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,24 +17,24 @@ var _type = require("../../core/utils/type");
 var _uiGantt = require("./ui.gantt.helper");
 var _data_source = require("../../data/data_source/data_source");
 var _array_store = _interopRequireDefault(require("../../data/array_store"));
-var _data2 = require("../../core/utils/data");
+var _data = require("../../core/utils/data");
 var _uiGanttTreelist = require("./ui.gantt.treelist.nodes_state");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var GANTT_TASKS = 'tasks';
-var GANTT_COLLAPSABLE_ROW = 'dx-gantt-collapsable-row';
-var GANTT_DEFAULT_ROW_HEIGHT = 34;
-var GANTT_SCROLL_ACTIVATION_LEVEL = 1;
-var GanttTreeList = /*#__PURE__*/function () {
+const GANTT_TASKS = 'tasks';
+const GANTT_COLLAPSABLE_ROW = 'dx-gantt-collapsable-row';
+const GANTT_DEFAULT_ROW_HEIGHT = 34;
+const GANTT_SCROLL_ACTIVATION_LEVEL = 1;
+let GanttTreeList = /*#__PURE__*/function () {
   function GanttTreeList(gantt) {
     this._gantt = gantt;
     this._$treeList = this._gantt._$treeList;
   }
   var _proto = GanttTreeList.prototype;
   _proto.getTreeList = function getTreeList() {
-    var _this = this;
-    var _this$_gantt$option = this._gantt.option(GANTT_TASKS),
-      keyExpr = _this$_gantt$option.keyExpr,
-      parentIdExpr = _this$_gantt$option.parentIdExpr;
+    const {
+      keyExpr,
+      parentIdExpr
+    } = this._gantt.option(GANTT_TASKS);
     this._treeList = this._gantt._createComponent(this._$treeList, _tree_list.default, {
       dataSource: this.createDataSource(this._gantt._tasksRaw, keyExpr),
       keyExpr: keyExpr,
@@ -59,32 +59,32 @@ var GanttTreeList = /*#__PURE__*/function () {
       autoExpandAll: true,
       showRowLines: this._gantt.option('showRowLines'),
       rootValue: this._gantt.option('rootValue'),
-      onContentReady: function onContentReady(e) {
-        _this._onContentReady(e);
+      onContentReady: e => {
+        this._onContentReady(e);
       },
-      onSelectionChanged: function onSelectionChanged(e) {
-        _this._onSelectionChanged(e);
+      onSelectionChanged: e => {
+        this._onSelectionChanged(e);
       },
-      onRowCollapsed: function onRowCollapsed(e) {
-        _this._onRowCollapsed(e);
+      onRowCollapsed: e => {
+        this._onRowCollapsed(e);
       },
-      onRowExpanded: function onRowExpanded(e) {
-        _this._onRowExpanded(e);
+      onRowExpanded: e => {
+        this._onRowExpanded(e);
       },
-      onRowPrepared: function onRowPrepared(e) {
-        _this._onRowPrepared(e);
+      onRowPrepared: e => {
+        this._onRowPrepared(e);
       },
-      onContextMenuPreparing: function onContextMenuPreparing(e) {
-        _this._onContextMenuPreparing(e);
+      onContextMenuPreparing: e => {
+        this._onContextMenuPreparing(e);
       },
-      onRowClick: function onRowClick(e) {
-        _this.onRowClick(e);
+      onRowClick: e => {
+        this.onRowClick(e);
       },
-      onRowDblClick: function onRowDblClick(e) {
-        _this.onRowDblClick(e);
+      onRowDblClick: e => {
+        this.onRowDblClick(e);
       },
-      onNodesInitialized: function onNodesInitialized(e) {
-        _this._onNodesInitialized(e);
+      onNodesInitialized: e => {
+        this._onNodesInitialized(e);
       },
       _disableDeprecationWarnings: true
     });
@@ -99,7 +99,7 @@ var GanttTreeList = /*#__PURE__*/function () {
     }
   };
   _proto._onContentReady = function _onContentReady(e) {
-    var hasTreeList = !!this._treeList;
+    const hasTreeList = !!this._treeList;
     if (hasTreeList) {
       this._initGanttOnContentReady(e);
     } else {
@@ -116,7 +116,7 @@ var GanttTreeList = /*#__PURE__*/function () {
     this._gantt._sizeHelper.updateGanttRowHeights();
   };
   _proto._onSelectionChanged = function _onSelectionChanged(e) {
-    var selectedRowKey = e.currentSelectedRowKeys[0];
+    const selectedRowKey = e.currentSelectedRowKeys[0];
     this._gantt._setGanttViewOption('selectedRowKey', selectedRowKey);
     this._gantt._setOptionWithoutOptionChange('selectedRowKey', selectedRowKey);
     this._gantt._actionsManager.raiseSelectionChangedAction(selectedRowKey);
@@ -141,7 +141,7 @@ var GanttTreeList = /*#__PURE__*/function () {
       this.setOption('selectedRowKeys', [e.row.data[this._gantt.option('tasks.keyExpr')]]);
     }
     e.items = [];
-    var info = {
+    const info = {
       cancel: false,
       event: e.event,
       type: 'task',
@@ -161,23 +161,22 @@ var GanttTreeList = /*#__PURE__*/function () {
     return this._gantt._hasHeight ? '100%' : '';
   };
   _proto._initScrollSync = function _initScrollSync(treeList) {
-    var _this2 = this;
-    var treeListScrollable = treeList.getScrollable();
+    const treeListScrollable = treeList.getScrollable();
     if (treeListScrollable) {
       treeListScrollable.off('scroll');
-      treeListScrollable.on('scroll', function (e) {
-        _this2._onScroll(e);
+      treeListScrollable.on('scroll', e => {
+        this._onScroll(e);
       });
     }
   };
   _proto._onScroll = function _onScroll(treeListScrollView) {
-    var ganttViewTaskAreaContainer = this._gantt._ganttView.getTaskAreaContainer();
+    const ganttViewTaskAreaContainer = this._gantt._ganttView.getTaskAreaContainer();
     if (ganttViewTaskAreaContainer.scrollTop !== treeListScrollView.component.scrollTop()) {
       ganttViewTaskAreaContainer.scrollTop = treeListScrollView.component.scrollTop();
     }
   };
   _proto._correctRowsViewRowHeight = function _correctRowsViewRowHeight(height) {
-    var view = this._treeList._views && this._treeList._views['rowsView'];
+    const view = this._treeList._views && this._treeList._views['rowsView'];
     if ((view === null || view === void 0 ? void 0 : view._rowHeight) !== height) {
       view._rowHeight = height;
     }
@@ -189,9 +188,9 @@ var GanttTreeList = /*#__PURE__*/function () {
     this.setOption('selectedRowKeys', keys);
   };
   _proto.scrollBy = function scrollBy(scrollTop) {
-    var treeListScrollable = this._treeList.getScrollable();
+    const treeListScrollable = this._treeList.getScrollable();
     if (treeListScrollable) {
-      var diff = scrollTop - treeListScrollable.scrollTop();
+      const diff = scrollTop - treeListScrollable.scrollTop();
       if (Math.abs(diff) >= GANTT_SCROLL_ACTIVATION_LEVEL) {
         treeListScrollable.scrollBy({
           left: 0,
@@ -201,13 +200,13 @@ var GanttTreeList = /*#__PURE__*/function () {
     }
   };
   _proto.updateDataSource = function updateDataSource(data) {
-    var forceUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var forceCustomData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    let forceUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    let forceCustomData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     if (!this._skipUpdateTreeListDataSource() || forceUpdate) {
       this.setDataSource(data);
     } else if (forceCustomData) {
-      var _data = this._treeList.option('dataSource');
-      this._gantt._onParentTasksRecalculated(_data);
+      const data = this._treeList.option('dataSource');
+      this._gantt._onParentTasksRecalculated(data);
     }
   };
   _proto.setDataSource = function setDataSource(data) {
@@ -230,30 +229,30 @@ var GanttTreeList = /*#__PURE__*/function () {
     }
   };
   _proto.saveExpandedKeys = function saveExpandedKeys() {
-    var treeList = this._treeList;
-    var visibleRowCount = treeList === null || treeList === void 0 ? void 0 : treeList.getVisibleRows().length;
+    const treeList = this._treeList;
+    const visibleRowCount = treeList === null || treeList === void 0 ? void 0 : treeList.getVisibleRows().length;
     if (visibleRowCount > 0) {
-      var nodes = this.getAllNodes();
-      var keys = this.getOption('expandedRowKeys');
-      var hasExpandedRows = keys && nodes.length !== visibleRowCount;
+      const nodes = this.getAllNodes();
+      const keys = this.getOption('expandedRowKeys');
+      const hasExpandedRows = keys && nodes.length !== visibleRowCount;
       if (hasExpandedRows) {
-        var state = this.getNodesState();
+        const state = this.getNodesState();
         state.applyNodes(nodes, this.getOption('rootValue'));
         state.saveExpandedState(keys);
       }
     }
   };
   _proto._onNodesInitialized = function _onNodesInitialized(e) {
-    var state = this.getNodesState();
-    var savedKeys = state.getExpandedKeys();
-    var nodes = this.getAllNodes();
+    const state = this.getNodesState();
+    const savedKeys = state.getExpandedKeys();
+    const nodes = this.getAllNodes();
     state.applyNodes(nodes, this.getOption('rootValue'));
-    var expandedKeys = state.getExpandedKeys();
+    const expandedKeys = state.getExpandedKeys();
     if (expandedKeys) {
       this.setOption('expandedRowKeys', expandedKeys);
     }
     if (this.isExpandedStateChanged(savedKeys, expandedKeys)) {
-      var expandedState = nodes.reduce(function (previous, node) {
+      const expandedState = nodes.reduce((previous, node) => {
         previous[node.key] = expandedKeys ? expandedKeys.includes(node.key) : true;
         return previous;
       }, {});
@@ -268,20 +267,13 @@ var GanttTreeList = /*#__PURE__*/function () {
     return this._nodeState;
   };
   _proto.getAllNodes = function getAllNodes() {
-    var _this$_treeList,
-      _this$_treeList$getDa,
-      _this$_treeList2,
-      _this3 = this;
-    var store = (_this$_treeList = this._treeList) === null || _this$_treeList === void 0 ? void 0 : (_this$_treeList$getDa = _this$_treeList.getDataSource()) === null || _this$_treeList$getDa === void 0 ? void 0 : _this$_treeList$getDa.store();
+    var _this$_treeList, _this$_treeList$getDa, _this$_treeList2;
+    const store = (_this$_treeList = this._treeList) === null || _this$_treeList === void 0 ? void 0 : (_this$_treeList$getDa = _this$_treeList.getDataSource()) === null || _this$_treeList$getDa === void 0 ? void 0 : _this$_treeList$getDa.store();
     if (!store || !((_this$_treeList2 = this._treeList) !== null && _this$_treeList2 !== void 0 && _this$_treeList2.getNodeByKey)) {
       return [];
     }
-    var keyGetter = (0, _data2.compileGetter)(store.key());
-    return store._array.map(function (item) {
-      return _this3._treeList.getNodeByKey(keyGetter(item));
-    }).filter(function (item) {
-      return !!item;
-    });
+    const keyGetter = (0, _data.compileGetter)(store.key());
+    return store._array.map(item => this._treeList.getNodeByKey(keyGetter(item))).filter(item => !!item);
   };
   _proto.isExpandedStateChanged = function isExpandedStateChanged(keys1, keys2) {
     if (keys1 === null && keys2 === null) {
@@ -290,16 +282,14 @@ var GanttTreeList = /*#__PURE__*/function () {
     if ((keys1 === null || keys1 === void 0 ? void 0 : keys1.length) !== (keys2 === null || keys2 === void 0 ? void 0 : keys2.length)) {
       return true;
     }
-    return keys1.some(function (key, index) {
-      return key !== keys2[index];
-    });
+    return keys1.some((key, index) => key !== keys2[index]);
   };
   _proto.getOffsetHeight = function getOffsetHeight() {
     return this._gantt._treeList._$element.get(0).offsetHeight;
   };
   _proto.getRowHeight = function getRowHeight() {
-    var $row = this._treeList._$element.find('.dx-data-row');
-    var height = $row.length ? (0, _position.getBoundingRect)($row.last().get(0)).height : GANTT_DEFAULT_ROW_HEIGHT;
+    const $row = this._treeList._$element.find('.dx-data-row');
+    let height = $row.length ? (0, _position.getBoundingRect)($row.last().get(0)).height : GANTT_DEFAULT_ROW_HEIGHT;
     if (!height) {
       height = GANTT_DEFAULT_ROW_HEIGHT;
     }
@@ -310,11 +300,11 @@ var GanttTreeList = /*#__PURE__*/function () {
     return (0, _position.getBoundingRect)(this._treeList._$element.find('.dx-treelist-headers').get(0)).height;
   };
   _proto.getColumns = function getColumns() {
-    var columns = this._gantt.option('columns');
+    const columns = this._gantt.option('columns');
     if (columns) {
-      for (var i = 0; i < columns.length; i++) {
-        var column = columns[i];
-        var isKeyColumn = column.dataField === this._gantt.option("".concat(GANTT_TASKS, ".keyExpr")) || column.dataField === this._gantt.option("".concat(GANTT_TASKS, ".parentIdExpr"));
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        const isKeyColumn = column.dataField === this._gantt.option("".concat(GANTT_TASKS, ".keyExpr")) || column.dataField === this._gantt.option("".concat(GANTT_TASKS, ".parentIdExpr"));
         if (isKeyColumn && !column.dataType) {
           column.dataType = 'object';
         }
@@ -323,15 +313,15 @@ var GanttTreeList = /*#__PURE__*/function () {
     return columns;
   };
   _proto.getSievedItems = function getSievedItems() {
-    var rootNode = this._treeList.getRootNode();
+    const rootNode = this._treeList.getRootNode();
     if (!rootNode) {
       return undefined;
     }
-    var resultArray = [];
+    const resultArray = [];
     _uiGantt.GanttHelper.convertTreeToList(rootNode, resultArray);
-    var getters = _uiGantt.GanttHelper.compileGettersByOption(this._gantt.option(GANTT_TASKS));
-    var validatedData = this._gantt._validateSourceData(GANTT_TASKS, resultArray);
-    var mappedData = validatedData.map(_uiGantt.GanttHelper.prepareMapHandler(getters));
+    const getters = _uiGantt.GanttHelper.compileGettersByOption(this._gantt.option(GANTT_TASKS));
+    const validatedData = this._gantt._validateSourceData(GANTT_TASKS, resultArray);
+    const mappedData = validatedData.map(_uiGantt.GanttHelper.prepareMapHandler(getters));
     return mappedData;
   };
   _proto.setOption = function setOption(optionName, value) {
@@ -343,7 +333,7 @@ var GanttTreeList = /*#__PURE__*/function () {
   };
   _proto.onTaskInserted = function onTaskInserted(insertedId, parentId) {
     if ((0, _type.isDefined)(parentId)) {
-      var expandedRowKeys = this.getOption('expandedRowKeys');
+      const expandedRowKeys = this.getOption('expandedRowKeys');
       if (expandedRowKeys.indexOf(parentId) === -1) {
         expandedRowKeys.push(parentId);
         this.setOption('expandedRowKeys', expandedRowKeys);

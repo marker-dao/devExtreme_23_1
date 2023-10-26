@@ -33,33 +33,33 @@ var _grouped_data_converter_mixin = _interopRequireDefault(require("../shared/gr
 var _get_element_style = require("../../renovation/ui/scroll_view/utils/get_element_style");
 var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var LIST_CLASS = 'dx-list';
-var LIST_ITEMS_CLASS = 'dx-list-items';
-var LIST_ITEM_CLASS = 'dx-list-item';
-var LIST_ITEM_SELECTOR = '.' + LIST_ITEM_CLASS;
-var LIST_ITEM_ICON_CONTAINER_CLASS = 'dx-list-item-icon-container';
-var LIST_ITEM_ICON_CLASS = 'dx-list-item-icon';
-var LIST_GROUP_CLASS = 'dx-list-group';
-var LIST_GROUP_HEADER_CLASS = 'dx-list-group-header';
-var LIST_GROUP_BODY_CLASS = 'dx-list-group-body';
-var LIST_COLLAPSIBLE_GROUPS_CLASS = 'dx-list-collapsible-groups';
-var LIST_GROUP_COLLAPSED_CLASS = 'dx-list-group-collapsed';
-var LIST_GROUP_HEADER_INDICATOR_CLASS = 'dx-list-group-header-indicator';
-var LIST_HAS_NEXT_CLASS = 'dx-has-next';
-var LIST_NEXT_BUTTON_CLASS = 'dx-list-next-button';
-var WRAP_ITEM_TEXT_CLASS = 'dx-wrap-item-text';
-var SELECT_ALL_ITEM_SELECTOR = '.dx-list-select-all';
-var LIST_ITEM_DATA_KEY = 'dxListItemData';
-var LIST_FEEDBACK_SHOW_TIMEOUT = 70;
-var groupItemsGetter = (0, _data.compileGetter)('items');
-var _scrollView;
-var ListBase = _uiCollection_widget.default.inherit({
+const LIST_CLASS = 'dx-list';
+const LIST_ITEMS_CLASS = 'dx-list-items';
+const LIST_ITEM_CLASS = 'dx-list-item';
+const LIST_ITEM_SELECTOR = '.' + LIST_ITEM_CLASS;
+const LIST_ITEM_ICON_CONTAINER_CLASS = 'dx-list-item-icon-container';
+const LIST_ITEM_ICON_CLASS = 'dx-list-item-icon';
+const LIST_GROUP_CLASS = 'dx-list-group';
+const LIST_GROUP_HEADER_CLASS = 'dx-list-group-header';
+const LIST_GROUP_BODY_CLASS = 'dx-list-group-body';
+const LIST_COLLAPSIBLE_GROUPS_CLASS = 'dx-list-collapsible-groups';
+const LIST_GROUP_COLLAPSED_CLASS = 'dx-list-group-collapsed';
+const LIST_GROUP_HEADER_INDICATOR_CLASS = 'dx-list-group-header-indicator';
+const LIST_HAS_NEXT_CLASS = 'dx-has-next';
+const LIST_NEXT_BUTTON_CLASS = 'dx-list-next-button';
+const WRAP_ITEM_TEXT_CLASS = 'dx-wrap-item-text';
+const SELECT_ALL_ITEM_SELECTOR = '.dx-list-select-all';
+const LIST_ITEM_DATA_KEY = 'dxListItemData';
+const LIST_FEEDBACK_SHOW_TIMEOUT = 70;
+const groupItemsGetter = (0, _data.compileGetter)('items');
+let _scrollView;
+const ListBase = _uiCollection_widget.default.inherit({
   _activeStateUnit: [LIST_ITEM_SELECTOR, SELECT_ALL_ITEM_SELECTOR].join(','),
-  _supportedKeys: function _supportedKeys() {
-    var that = this;
-    var moveFocusPerPage = function moveFocusPerPage(direction) {
-      var $item = getEdgeVisibleItem(direction);
-      var isFocusedItem = $item.is(that.option('focusedElement'));
+  _supportedKeys: function () {
+    const that = this;
+    const moveFocusPerPage = function (direction) {
+      let $item = getEdgeVisibleItem(direction);
+      const isFocusedItem = $item.is(that.option('focusedElement'));
       if (isFocusedItem) {
         scrollListTo($item, direction);
         $item = getEdgeVisibleItem(direction);
@@ -68,19 +68,19 @@ var ListBase = _uiCollection_widget.default.inherit({
       that.scrollToItem($item);
     };
     function getEdgeVisibleItem(direction) {
-      var scrollTop = that.scrollTop();
-      var containerHeight = (0, _size.getHeight)(that.$element());
-      var $item = (0, _renderer.default)(that.option('focusedElement'));
-      var isItemVisible = true;
+      const scrollTop = that.scrollTop();
+      const containerHeight = (0, _size.getHeight)(that.$element());
+      let $item = (0, _renderer.default)(that.option('focusedElement'));
+      let isItemVisible = true;
       if (!$item.length) {
         return (0, _renderer.default)();
       }
       while (isItemVisible) {
-        var $nextItem = $item[direction]();
+        const $nextItem = $item[direction]();
         if (!$nextItem.length) {
           break;
         }
-        var nextItemLocation = $nextItem.position().top + (0, _size.getOuterHeight)($nextItem) / 2;
+        const nextItemLocation = $nextItem.position().top + (0, _size.getOuterHeight)($nextItem) / 2;
         isItemVisible = nextItemLocation < containerHeight + scrollTop && nextItemLocation > scrollTop;
         if (isItemVisible) {
           $item = $nextItem;
@@ -89,7 +89,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       return $item;
     }
     function scrollListTo($item, direction) {
-      var resultPosition = $item.position().top;
+      let resultPosition = $item.position().top;
       if (direction === 'prev') {
         resultPosition = $item.position().top - (0, _size.getHeight)(that.$element()) + (0, _size.getOuterHeight)($item);
       }
@@ -98,17 +98,17 @@ var ListBase = _uiCollection_widget.default.inherit({
     return (0, _extend.extend)(this.callBase(), {
       leftArrow: _common.noop,
       rightArrow: _common.noop,
-      pageUp: function pageUp() {
+      pageUp: function () {
         moveFocusPerPage('prev');
         return false;
       },
-      pageDown: function pageDown() {
+      pageDown: function () {
         moveFocusPerPage('next');
         return false;
       }
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       hoverStateEnabled: true,
       pullRefreshEnabled: false,
@@ -153,47 +153,47 @@ var ListBase = _uiCollection_widget.default.inherit({
       useInkRipple: false,
       wrapItemText: false,
       _swipeEnabled: true,
-      showChevronExpr: function showChevronExpr(data) {
+      showChevronExpr: function (data) {
         return data ? data.showChevron : undefined;
       },
-      badgeExpr: function badgeExpr(data) {
+      badgeExpr: function (data) {
         return data ? data.badge : undefined;
       }
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
-    var themeName = (0, _themes.current)();
+  _defaultOptionsRules: function () {
+    const themeName = (0, _themes.current)();
     return this.callBase().concat((0, _uiScrollable.deviceDependentOptions)(), [{
-      device: function device() {
+      device: function () {
         return !_support.nativeScrolling;
       },
       options: {
         useNativeScrolling: false
       }
     }, {
-      device: function device(_device) {
-        return !_support.nativeScrolling && !_devices.default.isSimulator() && _devices.default.real().deviceType === 'desktop' && _device.platform === 'generic';
+      device: function (device) {
+        return !_support.nativeScrolling && !_devices.default.isSimulator() && _devices.default.real().deviceType === 'desktop' && device.platform === 'generic';
       },
       options: {
         showScrollbar: 'onHover',
         pageLoadMode: 'nextButton'
       }
     }, {
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterial)(themeName);
       },
       options: {
         useInkRipple: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterialBased)(themeName);
       },
       options: {
@@ -204,72 +204,72 @@ var ListBase = _uiCollection_widget.default.inherit({
       }
     }]);
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this._updateLoadingState(true);
     }
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return LIST_ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return LIST_ITEM_DATA_KEY;
   },
-  _itemContainer: function _itemContainer() {
+  _itemContainer: function () {
     return this._$container;
   },
-  _getItemsContainer: function _getItemsContainer() {
+  _getItemsContainer: function () {
     return this._$listContainer;
   },
-  _cleanItemContainer: function _cleanItemContainer() {
+  _cleanItemContainer: function () {
     this.callBase();
-    var listContainer = this._getItemsContainer();
+    const listContainer = this._getItemsContainer();
     (0, _renderer.default)(listContainer).empty();
     listContainer.appendTo(this._$container);
   },
-  _saveSelectionChangeEvent: function _saveSelectionChangeEvent(e) {
+  _saveSelectionChangeEvent: function (e) {
     this._selectionChangeEventInstance = e;
   },
-  _getSelectionChangeEvent: function _getSelectionChangeEvent() {
+  _getSelectionChangeEvent: function () {
     return this._selectionChangeEventInstance;
   },
-  _refreshItemElements: function _refreshItemElements() {
+  _refreshItemElements: function () {
     if (!this.option('grouped')) {
       this._itemElementsCache = this._getItemsContainer().children(this._itemSelector());
     } else {
       this._itemElementsCache = this._getItemsContainer().children('.' + LIST_GROUP_CLASS).children('.' + LIST_GROUP_BODY_CLASS).children(this._itemSelector());
     }
   },
-  _modifyByChanges: function _modifyByChanges() {
+  _modifyByChanges: function () {
     this.callBase.apply(this, arguments);
     this._refreshItemElements();
     this._updateLoadingState(true);
   },
-  reorderItem: function reorderItem(itemElement, toItemElement) {
-    var promise = this.callBase(itemElement, toItemElement);
+  reorderItem: function (itemElement, toItemElement) {
+    const promise = this.callBase(itemElement, toItemElement);
     return promise.done(function () {
       this._refreshItemElements();
     });
   },
-  deleteItem: function deleteItem(itemElement) {
-    var promise = this.callBase(itemElement);
+  deleteItem: function (itemElement) {
+    const promise = this.callBase(itemElement);
     return promise.done(function () {
       this._refreshItemElements();
     });
   },
-  _itemElements: function _itemElements() {
+  _itemElements: function () {
     return this._itemElementsCache;
   },
-  _itemSelectHandler: function _itemSelectHandler(e) {
+  _itemSelectHandler: function (e) {
     if (this.option('selectionMode') === 'single' && this.isItemSelected(e.currentTarget)) {
       return;
     }
     return this.callBase(e);
   },
-  _allowDynamicItemsAppend: function _allowDynamicItemsAppend() {
+  _allowDynamicItemsAppend: function () {
     return true;
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._dataController.resetDataSourcePageIndex();
     this._$container = this.$element();
@@ -278,32 +278,32 @@ var ListBase = _uiCollection_widget.default.inherit({
     this._feedbackShowTimeout = LIST_FEEDBACK_SHOW_TIMEOUT;
     this._createGroupRenderAction();
   },
-  _scrollBottomMode: function _scrollBottomMode() {
+  _scrollBottomMode: function () {
     return this.option('pageLoadMode') === 'scrollBottom';
   },
-  _nextButtonMode: function _nextButtonMode() {
+  _nextButtonMode: function () {
     return this.option('pageLoadMode') === 'nextButton';
   },
-  _dataSourceOptions: function _dataSourceOptions() {
-    var scrollBottom = this._scrollBottomMode();
-    var nextButton = this._nextButtonMode();
+  _dataSourceOptions: function () {
+    const scrollBottom = this._scrollBottomMode();
+    const nextButton = this._nextButtonMode();
     return (0, _extend.extend)(this.callBase(), {
       paginate: (0, _common.ensureDefined)(scrollBottom || nextButton, true)
     });
   },
-  _getGroupedOption: function _getGroupedOption() {
+  _getGroupedOption: function () {
     return this.option('grouped');
   },
-  _getGroupContainerByIndex: function _getGroupContainerByIndex(groupIndex) {
+  _getGroupContainerByIndex: function (groupIndex) {
     return this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex).find(".".concat(LIST_GROUP_BODY_CLASS));
   },
-  _dataSourceFromUrlLoadMode: function _dataSourceFromUrlLoadMode() {
+  _dataSourceFromUrlLoadMode: function () {
     return 'raw';
   },
-  _initScrollView: function _initScrollView() {
-    var scrollingEnabled = this.option('scrollingEnabled');
-    var pullRefreshEnabled = scrollingEnabled && this.option('pullRefreshEnabled');
-    var autoPagingEnabled = scrollingEnabled && this._scrollBottomMode() && !!this._dataController.getDataSource();
+  _initScrollView: function () {
+    const scrollingEnabled = this.option('scrollingEnabled');
+    const pullRefreshEnabled = scrollingEnabled && this.option('pullRefreshEnabled');
+    const autoPagingEnabled = scrollingEnabled && this._scrollBottomMode() && !!this._dataController.getDataSource();
     this._scrollView = this._createComponent(this.$element(), getScrollView(), {
       height: this.option('height'),
       width: this.option('width'),
@@ -327,18 +327,18 @@ var ListBase = _uiCollection_widget.default.inherit({
     this._toggleWrapItemText(this.option('wrapItemText'));
     this._createScrollViewActions();
   },
-  _toggleWrapItemText: function _toggleWrapItemText(value) {
+  _toggleWrapItemText: function (value) {
     this._$listContainer.toggleClass(WRAP_ITEM_TEXT_CLASS, value);
   },
-  _createScrollViewActions: function _createScrollViewActions() {
+  _createScrollViewActions: function () {
     this._scrollAction = this._createActionByOption('onScroll');
     this._pullRefreshAction = this._createActionByOption('onPullRefresh');
     this._pageLoadingAction = this._createActionByOption('onPageLoading');
   },
-  _scrollHandler: function _scrollHandler(e) {
+  _scrollHandler: function (e) {
     this._scrollAction && this._scrollAction(e);
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this._templateManager.addDefaultTemplates({
       group: new _bindable_template.BindableTemplate(function ($container, data) {
         if ((0, _type.isPlainObject)(data)) {
@@ -352,21 +352,21 @@ var ListBase = _uiCollection_widget.default.inherit({
     });
     this.callBase();
   },
-  _prepareDefaultItemTemplate: function _prepareDefaultItemTemplate(data, $container) {
+  _prepareDefaultItemTemplate: function (data, $container) {
     this.callBase(data, $container);
     if (data.icon) {
-      var $icon = (0, _icon.getImageContainer)(data.icon).addClass(LIST_ITEM_ICON_CLASS);
-      var $iconContainer = (0, _renderer.default)('<div>').addClass(LIST_ITEM_ICON_CONTAINER_CLASS);
+      const $icon = (0, _icon.getImageContainer)(data.icon).addClass(LIST_ITEM_ICON_CLASS);
+      const $iconContainer = (0, _renderer.default)('<div>').addClass(LIST_ITEM_ICON_CONTAINER_CLASS);
       $iconContainer.append($icon);
       $container.prepend($iconContainer);
     }
   },
-  _getBindableFields: function _getBindableFields() {
+  _getBindableFields: function () {
     return ['text', 'html', 'icon'];
   },
-  _updateLoadingState: function _updateLoadingState(tryLoadMore) {
-    var dataController = this._dataController;
-    var shouldLoadNextPage = this._scrollBottomMode() && tryLoadMore && !dataController.isLoading() && !this._isLastPage();
+  _updateLoadingState: function (tryLoadMore) {
+    const dataController = this._dataController;
+    const shouldLoadNextPage = this._scrollBottomMode() && tryLoadMore && !dataController.isLoading() && !this._isLastPage();
     if (this._shouldContinueLoading(shouldLoadNextPage)) {
       this._infiniteDataLoading();
     } else {
@@ -375,23 +375,23 @@ var ListBase = _uiCollection_widget.default.inherit({
       this._loadIndicationSuppressed(false);
     }
   },
-  _shouldRenderNextButton: function _shouldRenderNextButton() {
+  _shouldRenderNextButton: function () {
     return this._nextButtonMode() && this._dataController.isLoaded();
   },
-  _isDataSourceFirstLoadCompleted: function _isDataSourceFirstLoadCompleted(newValue) {
+  _isDataSourceFirstLoadCompleted: function (newValue) {
     if ((0, _type.isDefined)(newValue)) {
       this._isFirstLoadCompleted = newValue;
     }
     return this._isFirstLoadCompleted;
   },
-  _dataSourceLoadingChangedHandler: function _dataSourceLoadingChangedHandler(isLoading) {
+  _dataSourceLoadingChangedHandler: function (isLoading) {
     if (this._loadIndicationSuppressed()) {
       return;
     }
     if (isLoading && this.option('indicateLoading')) {
       this._showLoadingIndicatorTimer = setTimeout(function () {
-        var isEmpty = !this._itemElements().length;
-        var shouldIndicateLoading = !isEmpty || this._isDataSourceFirstLoadCompleted();
+        const isEmpty = !this._itemElements().length;
+        const shouldIndicateLoading = !isEmpty || this._isDataSourceFirstLoadCompleted();
         if (shouldIndicateLoading) {
           var _this$_scrollView;
           (_this$_scrollView = this._scrollView) === null || _this$_scrollView === void 0 ? void 0 : _this$_scrollView.startLoading();
@@ -405,35 +405,35 @@ var ListBase = _uiCollection_widget.default.inherit({
       this._isDataSourceFirstLoadCompleted(false);
     }
   },
-  _dataSourceChangedHandler: function _dataSourceChangedHandler() {
+  _dataSourceChangedHandler: function () {
     if (!this._shouldAppendItems() && (0, _window.hasWindow)()) {
       this._scrollView && this._scrollView.scrollTo(0);
     }
     this.callBase.apply(this, arguments);
     this._isDataSourceFirstLoadCompleted(true);
   },
-  _refreshContent: function _refreshContent() {
+  _refreshContent: function () {
     this._prepareContent();
     this._fireContentReadyAction();
   },
-  _hideLoadingIfLoadIndicationOff: function _hideLoadingIfLoadIndicationOff() {
+  _hideLoadingIfLoadIndicationOff: function () {
     if (!this.option('indicateLoading')) {
       this._dataSourceLoadingChangedHandler(false);
     }
   },
-  _loadIndicationSuppressed: function _loadIndicationSuppressed(value) {
+  _loadIndicationSuppressed: function (value) {
     if (!arguments.length) {
       return this._isLoadIndicationSuppressed;
     }
     this._isLoadIndicationSuppressed = value;
   },
-  _scrollViewIsFull: function _scrollViewIsFull() {
-    var scrollView = this._scrollView;
+  _scrollViewIsFull: function () {
+    const scrollView = this._scrollView;
     return !scrollView || (0, _size.getHeight)(scrollView.content()) > (0, _size.getHeight)(scrollView.container());
   },
-  _pullDownHandler: function _pullDownHandler(e) {
+  _pullDownHandler: function (e) {
     this._pullRefreshAction(e);
-    var dataController = this._dataController;
+    const dataController = this._dataController;
     if (dataController.getDataSource() && !dataController.isLoading()) {
       this._clearSelectedItems();
       dataController.pageIndex(0);
@@ -442,31 +442,30 @@ var ListBase = _uiCollection_widget.default.inherit({
       this._updateLoadingState();
     }
   },
-  _shouldContinueLoading: function _shouldContinueLoading(shouldLoadNextPage) {
+  _shouldContinueLoading: function (shouldLoadNextPage) {
     var _this$_scrollView$scr, _this$_scrollView$scr2;
-    var isBottomReached = (0, _size.getHeight)(this._scrollView.content()) - (0, _size.getHeight)(this._scrollView.container()) < ((_this$_scrollView$scr = (_this$_scrollView$scr2 = this._scrollView.scrollOffset()) === null || _this$_scrollView$scr2 === void 0 ? void 0 : _this$_scrollView$scr2.top) !== null && _this$_scrollView$scr !== void 0 ? _this$_scrollView$scr : 0);
+    const isBottomReached = (0, _size.getHeight)(this._scrollView.content()) - (0, _size.getHeight)(this._scrollView.container()) < ((_this$_scrollView$scr = (_this$_scrollView$scr2 = this._scrollView.scrollOffset()) === null || _this$_scrollView$scr2 === void 0 ? void 0 : _this$_scrollView$scr2.top) !== null && _this$_scrollView$scr !== void 0 ? _this$_scrollView$scr : 0);
     return shouldLoadNextPage && (!this._scrollViewIsFull() || isBottomReached);
   },
-  _infiniteDataLoading: function _infiniteDataLoading() {
-    var _this = this;
-    var isElementVisible = this.$element().is(':visible');
+  _infiniteDataLoading: function () {
+    const isElementVisible = this.$element().is(':visible');
     if (isElementVisible) {
       clearTimeout(this._loadNextPageTimer);
-      this._loadNextPageTimer = setTimeout(function () {
-        _this._loadNextPage();
+      this._loadNextPageTimer = setTimeout(() => {
+        this._loadNextPage();
       });
     }
   },
-  _scrollBottomHandler: function _scrollBottomHandler(e) {
+  _scrollBottomHandler: function (e) {
     this._pageLoadingAction(e);
-    var dataController = this._dataController;
+    const dataController = this._dataController;
     if (!dataController.isLoading() && !this._isLastPage()) {
       this._loadNextPage();
     } else {
       this._updateLoadingState();
     }
   },
-  _renderItems: function _renderItems(items) {
+  _renderItems: function (items) {
     if (this.option('grouped')) {
       (0, _iterator.each)(items, this._renderGroup.bind(this));
       this._attachGroupCollapseEvent();
@@ -480,17 +479,17 @@ var ListBase = _uiCollection_widget.default.inherit({
     this._refreshItemElements();
     this._updateLoadingState(true);
   },
-  _attachGroupCollapseEvent: function _attachGroupCollapseEvent() {
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
-    var selector = '.' + LIST_GROUP_HEADER_CLASS;
-    var $element = this.$element();
-    var collapsibleGroups = this.option('collapsibleGroups');
+  _attachGroupCollapseEvent: function () {
+    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+    const selector = '.' + LIST_GROUP_HEADER_CLASS;
+    const $element = this.$element();
+    const collapsibleGroups = this.option('collapsibleGroups');
     $element.toggleClass(LIST_COLLAPSIBLE_GROUPS_CLASS, collapsibleGroups);
     _events_engine.default.off($element, eventName, selector);
     if (collapsibleGroups) {
       _events_engine.default.on($element, eventName, selector, function (e) {
         this._createAction(function (e) {
-          var $group = (0, _renderer.default)(e.event.currentTarget).parent();
+          const $group = (0, _renderer.default)(e.event.currentTarget).parent();
           this._collapseGroupHandler($group);
           if (this.option('focusStateEnabled')) {
             this.option('focusedElement', (0, _element.getPublicElement)($group.find('.' + LIST_ITEM_CLASS).eq(0)));
@@ -503,14 +502,14 @@ var ListBase = _uiCollection_widget.default.inherit({
       }.bind(this));
     }
   },
-  _collapseGroupHandler: function _collapseGroupHandler($group, toggle) {
-    var deferred = new _deferred.Deferred();
+  _collapseGroupHandler: function ($group, toggle) {
+    const deferred = new _deferred.Deferred();
     if ($group.hasClass(LIST_GROUP_COLLAPSED_CLASS) === toggle) {
       return deferred.resolve();
     }
-    var $groupBody = $group.children('.' + LIST_GROUP_BODY_CLASS);
-    var startHeight = (0, _size.getOuterHeight)($groupBody);
-    var endHeight = 0;
+    const $groupBody = $group.children('.' + LIST_GROUP_BODY_CLASS);
+    const startHeight = (0, _size.getOuterHeight)($groupBody);
+    let endHeight = 0;
     if (startHeight === 0) {
       (0, _size.setHeight)($groupBody, 'auto');
       endHeight = (0, _size.getOuterHeight)($groupBody);
@@ -533,19 +532,19 @@ var ListBase = _uiCollection_widget.default.inherit({
     });
     return deferred.promise();
   },
-  _dataSourceLoadErrorHandler: function _dataSourceLoadErrorHandler() {
+  _dataSourceLoadErrorHandler: function () {
     this._forgetNextPageLoading();
     if (this._initialized) {
       this._renderEmptyMessage();
       this._updateLoadingState();
     }
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._itemElementsCache = (0, _renderer.default)();
     this.$element().addClass(LIST_CLASS);
     this.callBase();
     this.option('useInkRipple') && this._renderInkRipple();
-    var elementAria = {
+    const elementAria = {
       'role': 'group',
       'roledescription': 'list'
     };
@@ -556,9 +555,10 @@ var ListBase = _uiCollection_widget.default.inherit({
     this._setListAria();
   },
   _setListAria() {
-    var _this$option = this.option(),
-      items = _this$option.items;
-    var listArea = items !== null && items !== void 0 && items.length ? {
+    const {
+      items
+    } = this.option();
+    const listArea = items !== null && items !== void 0 && items.length ? {
       role: 'listbox',
       label: 'Items'
     } : {
@@ -567,19 +567,19 @@ var ListBase = _uiCollection_widget.default.inherit({
     };
     this.setAria(listArea, this._$listContainer);
   },
-  _focusTarget: function _focusTarget() {
+  _focusTarget: function () {
     return this._itemContainer();
   },
-  _renderInkRipple: function _renderInkRipple() {
+  _renderInkRipple: function () {
     this._inkRipple = (0, _utils.render)();
   },
-  _toggleActiveState: function _toggleActiveState($element, value, e) {
+  _toggleActiveState: function ($element, value, e) {
     this.callBase.apply(this, arguments);
-    var that = this;
+    const that = this;
     if (!this._inkRipple) {
       return;
     }
-    var config = {
+    const config = {
       element: $element,
       event: e
     };
@@ -596,25 +596,25 @@ var ListBase = _uiCollection_widget.default.inherit({
       this._inkRipple.hideWave(config);
     }
   },
-  _postprocessRenderItem: function _postprocessRenderItem(args) {
+  _postprocessRenderItem: function (args) {
     this._refreshItemElements();
     this.callBase.apply(this, arguments);
     if (this.option('_swipeEnabled')) {
       this._attachSwipeEvent((0, _renderer.default)(args.itemElement));
     }
   },
-  _attachSwipeEvent: function _attachSwipeEvent($itemElement) {
-    var endEventName = (0, _index.addNamespace)(_swipe.end, this.NAME);
+  _attachSwipeEvent: function ($itemElement) {
+    const endEventName = (0, _index.addNamespace)(_swipe.end, this.NAME);
     _events_engine.default.on($itemElement, endEventName, this._itemSwipeEndHandler.bind(this));
   },
-  _itemSwipeEndHandler: function _itemSwipeEndHandler(e) {
+  _itemSwipeEndHandler: function (e) {
     this._itemDXEventHandler(e, 'onItemSwipe', {
       direction: e.offset < 0 ? 'left' : 'right'
     });
   },
-  _nextButtonHandler: function _nextButtonHandler(e) {
+  _nextButtonHandler: function (e) {
     this._pageLoadingAction(e);
-    var dataController = this._dataController;
+    const dataController = this._dataController;
     if (dataController.getDataSource() && !dataController.isLoading()) {
       this._scrollView.toggleLoading(true);
       this._$nextButton.detach();
@@ -622,18 +622,18 @@ var ListBase = _uiCollection_widget.default.inherit({
       this._loadNextPage();
     }
   },
-  _renderGroup: function _renderGroup(index, group) {
-    var $groupElement = (0, _renderer.default)('<div>').addClass(LIST_GROUP_CLASS).appendTo(this._getItemsContainer());
-    var id = "dx-".concat(new _guid.default().toString());
-    var groupAria = {
+  _renderGroup: function (index, group) {
+    const $groupElement = (0, _renderer.default)('<div>').addClass(LIST_GROUP_CLASS).appendTo(this._getItemsContainer());
+    const id = "dx-".concat(new _guid.default().toString());
+    const groupAria = {
       role: 'group',
       'labelledby': id
     };
     this.setAria(groupAria, $groupElement);
-    var $groupHeaderElement = (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_CLASS).attr('id', id).appendTo($groupElement);
-    var groupTemplateName = this.option('groupTemplate');
-    var groupTemplate = this._getTemplate(group.template || groupTemplateName, group, index, $groupHeaderElement);
-    var renderArgs = {
+    const $groupHeaderElement = (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_CLASS).attr('id', id).appendTo($groupElement);
+    const groupTemplateName = this.option('groupTemplate');
+    const groupTemplate = this._getTemplate(group.template || groupTemplateName, group, index, $groupHeaderElement);
+    const renderArgs = {
       index: index,
       itemData: group,
       container: (0, _element.getPublicElement)($groupHeaderElement)
@@ -643,7 +643,7 @@ var ListBase = _uiCollection_widget.default.inherit({
       (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
     }
     this._renderingGroupIndex = index;
-    var $groupBody = (0, _renderer.default)('<div>').addClass(LIST_GROUP_BODY_CLASS).appendTo($groupElement);
+    const $groupBody = (0, _renderer.default)('<div>').addClass(LIST_GROUP_BODY_CLASS).appendTo($groupElement);
     (0, _iterator.each)(groupItemsGetter(group) || [], function (itemIndex, item) {
       this._renderItem({
         group: index,
@@ -656,28 +656,28 @@ var ListBase = _uiCollection_widget.default.inherit({
       groupData: group
     });
   },
-  downInkRippleHandler: function downInkRippleHandler(e) {
+  downInkRippleHandler: function (e) {
     this._toggleActiveState((0, _renderer.default)(e.currentTarget), true, e);
   },
-  upInkRippleHandler: function upInkRippleHandler(e) {
+  upInkRippleHandler: function (e) {
     this._toggleActiveState((0, _renderer.default)(e.currentTarget), false);
   },
-  attachGroupHeaderInkRippleEvents: function attachGroupHeaderInkRippleEvents() {
-    var selector = '.' + LIST_GROUP_HEADER_CLASS;
-    var $element = this.$element();
+  attachGroupHeaderInkRippleEvents: function () {
+    const selector = '.' + LIST_GROUP_HEADER_CLASS;
+    const $element = this.$element();
     this._downInkRippleHandler = this._downInkRippleHandler || this.downInkRippleHandler.bind(this);
     this._upInkRippleHandler = this._upInkRippleHandler || this.upInkRippleHandler.bind(this);
-    var downArguments = [$element, 'dxpointerdown', selector, this._downInkRippleHandler];
-    var upArguments = [$element, 'dxpointerup dxpointerout', selector, this._upInkRippleHandler];
-    _events_engine.default.off.apply(_events_engine.default, downArguments);
-    _events_engine.default.on.apply(_events_engine.default, downArguments);
-    _events_engine.default.off.apply(_events_engine.default, upArguments);
-    _events_engine.default.on.apply(_events_engine.default, upArguments);
+    const downArguments = [$element, 'dxpointerdown', selector, this._downInkRippleHandler];
+    const upArguments = [$element, 'dxpointerup dxpointerout', selector, this._upInkRippleHandler];
+    _events_engine.default.off(...downArguments);
+    _events_engine.default.on(...downArguments);
+    _events_engine.default.off(...upArguments);
+    _events_engine.default.on(...upArguments);
   },
-  _createGroupRenderAction: function _createGroupRenderAction() {
+  _createGroupRenderAction: function () {
     this._groupRenderAction = this._createActionByOption('onGroupRendered');
   },
-  _clean: function _clean() {
+  _clean: function () {
     clearTimeout(this._inkRippleTimer);
     if (this._$nextButton) {
       this._$nextButton.remove();
@@ -685,20 +685,20 @@ var ListBase = _uiCollection_widget.default.inherit({
     }
     this.callBase.apply(this, arguments);
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._isDataSourceFirstLoadCompleted(false);
     clearTimeout(this._holdTimer);
     clearTimeout(this._loadNextPageTimer);
     clearTimeout(this._showLoadingIndicatorTimer);
     this.callBase();
   },
-  _toggleDisabledState: function _toggleDisabledState(value) {
+  _toggleDisabledState: function (value) {
     this.callBase(value);
     this._scrollView.option('disabled', value || !this.option('scrollingEnabled'));
   },
-  _toggleNextButton: function _toggleNextButton(value) {
-    var dataController = this._dataController;
-    var $nextButton = this._getNextButton();
+  _toggleNextButton: function (value) {
+    const dataController = this._dataController;
+    const $nextButton = this._getNextButton();
     this.$element().toggleClass(LIST_HAS_NEXT_CLASS, value);
     if (value && dataController.isLoaded()) {
       $nextButton.appendTo(this._itemContainer());
@@ -707,15 +707,15 @@ var ListBase = _uiCollection_widget.default.inherit({
       $nextButton.detach();
     }
   },
-  _getNextButton: function _getNextButton() {
+  _getNextButton: function () {
     if (!this._$nextButton) {
       this._$nextButton = this._createNextButton();
     }
     return this._$nextButton;
   },
-  _createNextButton: function _createNextButton() {
-    var $result = (0, _renderer.default)('<div>').addClass(LIST_NEXT_BUTTON_CLASS);
-    var $button = (0, _renderer.default)('<div>').appendTo($result);
+  _createNextButton: function () {
+    const $result = (0, _renderer.default)('<div>').addClass(LIST_NEXT_BUTTON_CLASS);
+    const $button = (0, _renderer.default)('<div>').appendTo($result);
     this._createComponent($button, _button.default, {
       text: this.option('nextButtonText'),
       onClick: this._nextButtonHandler.bind(this),
@@ -724,20 +724,20 @@ var ListBase = _uiCollection_widget.default.inherit({
     });
     return $result;
   },
-  _moveFocus: function _moveFocus() {
+  _moveFocus: function () {
     this.callBase.apply(this, arguments);
     this.scrollToItem(this.option('focusedElement'));
   },
-  _refresh: function _refresh() {
+  _refresh: function () {
     if (!(0, _window.hasWindow)()) {
       this.callBase();
     } else {
-      var scrollTop = this._scrollView.scrollTop();
+      const scrollTop = this._scrollView.scrollTop();
       this.callBase();
       scrollTop && this._scrollView.scrollTo(scrollTop);
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'pageLoadMode':
         this._toggleNextButton(args.value);
@@ -816,12 +816,12 @@ var ListBase = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  _extendActionArgs: function _extendActionArgs($itemElement) {
+  _extendActionArgs: function ($itemElement) {
     if (!this.option('grouped')) {
       return this.callBase($itemElement);
     }
-    var $group = $itemElement.closest('.' + LIST_GROUP_CLASS);
-    var $item = $group.find('.' + LIST_ITEM_CLASS);
+    const $group = $itemElement.closest('.' + LIST_GROUP_CLASS);
+    const $item = $group.find('.' + LIST_ITEM_CLASS);
     return (0, _extend.extend)(this.callBase($itemElement), {
       itemIndex: {
         group: $group.index(),
@@ -829,25 +829,25 @@ var ListBase = _uiCollection_widget.default.inherit({
       }
     });
   },
-  expandGroup: function expandGroup(groupIndex) {
-    var deferred = new _deferred.Deferred();
-    var $group = this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex);
+  expandGroup: function (groupIndex) {
+    const deferred = new _deferred.Deferred();
+    const $group = this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex);
     this._collapseGroupHandler($group, false).done(function () {
       deferred.resolveWith(this);
     }.bind(this));
     return deferred.promise();
   },
-  collapseGroup: function collapseGroup(groupIndex) {
-    var deferred = new _deferred.Deferred();
-    var $group = this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex);
+  collapseGroup: function (groupIndex) {
+    const deferred = new _deferred.Deferred();
+    const $group = this._getItemsContainer().find(".".concat(LIST_GROUP_CLASS)).eq(groupIndex);
     this._collapseGroupHandler($group, true).done(function () {
       deferred.resolveWith(this);
     }.bind(this));
     return deferred;
   },
-  updateDimensions: function updateDimensions() {
-    var that = this;
-    var deferred = new _deferred.Deferred();
+  updateDimensions: function () {
+    const that = this;
+    const deferred = new _deferred.Deferred();
     if (that._scrollView) {
       that._scrollView.update().done(function () {
         !that._scrollViewIsFull() && that._updateLoadingState(true);
@@ -858,38 +858,38 @@ var ListBase = _uiCollection_widget.default.inherit({
     }
     return deferred.promise();
   },
-  reload: function reload() {
+  reload: function () {
     this.callBase();
     this.scrollTo(0);
     this._pullDownHandler();
   },
-  repaint: function repaint() {
+  repaint: function () {
     this.scrollTo(0);
     this.callBase();
   },
-  scrollTop: function scrollTop() {
+  scrollTop: function () {
     return this._scrollView.scrollOffset().top;
   },
-  clientHeight: function clientHeight() {
+  clientHeight: function () {
     return this._scrollView.clientHeight();
   },
-  scrollHeight: function scrollHeight() {
+  scrollHeight: function () {
     return this._scrollView.scrollHeight();
   },
-  scrollBy: function scrollBy(distance) {
+  scrollBy: function (distance) {
     this._scrollView.scrollBy(distance);
   },
-  scrollTo: function scrollTo(location) {
+  scrollTo: function (location) {
     this._scrollView.scrollTo(location);
   },
-  scrollToItem: function scrollToItem(itemElement) {
-    var $item = this._editStrategy.getItemElement(itemElement);
-    var item = $item === null || $item === void 0 ? void 0 : $item.get(0);
+  scrollToItem: function (itemElement) {
+    const $item = this._editStrategy.getItemElement(itemElement);
+    const item = $item === null || $item === void 0 ? void 0 : $item.get(0);
     this._scrollView.scrollToElement(item, {
       bottom: (0, _get_element_style.getElementMargin)(item, 'bottom')
     });
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     this.updateDimensions();
   }
 }).include(_grouped_data_converter_mixin.default);

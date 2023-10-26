@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,9 +27,9 @@ var _m_view_data_generator_work_week = require("./m_view_data_generator_work_wee
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line import/no-cycle
 
-var DAYS_IN_WEEK = 7;
-var MS_IN_DAY = 24 * 60 * 60 * 1000;
-var getViewDataGeneratorByViewType = function getViewDataGeneratorByViewType(viewType) {
+const DAYS_IN_WEEK = 7;
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
+const getViewDataGeneratorByViewType = viewType => {
   switch (viewType) {
     case _m_constants.VIEWS.MONTH:
       return new _m_view_data_generator_month.ViewDataGeneratorMonth();
@@ -50,8 +50,8 @@ var getViewDataGeneratorByViewType = function getViewDataGeneratorByViewType(vie
 };
 exports.getViewDataGeneratorByViewType = getViewDataGeneratorByViewType;
 function alignToFirstDayOfWeek(date, firstDayOfWeek) {
-  var newDate = new Date(date);
-  var dayDiff = newDate.getDay() - firstDayOfWeek;
+  const newDate = new Date(date);
+  let dayDiff = newDate.getDay() - firstDayOfWeek;
   if (dayDiff < 0) {
     dayDiff += DAYS_IN_WEEK;
   }
@@ -59,17 +59,17 @@ function alignToFirstDayOfWeek(date, firstDayOfWeek) {
   return newDate;
 }
 function alignToLastDayOfWeek(date, firstDayOfWeek) {
-  var newDate = alignToFirstDayOfWeek(date, firstDayOfWeek);
+  const newDate = alignToFirstDayOfWeek(date, firstDayOfWeek);
   newDate.setDate(newDate.getDate() + DAYS_IN_WEEK - 1);
   return newDate;
 }
 function calculateDaysBetweenDates(fromDate, toDate) {
-  var msDiff = _date.default.trimTime(toDate).getTime() - _date.default.trimTime(fromDate).getTime();
+  const msDiff = _date.default.trimTime(toDate).getTime() - _date.default.trimTime(fromDate).getTime();
   return Math.round(msDiff / MS_IN_DAY) + 1;
 }
 function calculateAlignedWeeksBetweenDates(fromDate, toDate, firstDayOfWeek) {
-  var alignedFromDate = alignToFirstDayOfWeek(fromDate, firstDayOfWeek);
-  var alignedToDate = alignToLastDayOfWeek(toDate, firstDayOfWeek);
-  var weekCount = calculateDaysBetweenDates(alignedFromDate, alignedToDate) / DAYS_IN_WEEK;
+  const alignedFromDate = alignToFirstDayOfWeek(fromDate, firstDayOfWeek);
+  const alignedToDate = alignToLastDayOfWeek(toDate, firstDayOfWeek);
+  const weekCount = calculateDaysBetweenDates(alignedFromDate, alignedToDate) / DAYS_IN_WEEK;
   return Math.max(weekCount, 6);
 }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.dialog.folder_chooser.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,17 +16,11 @@ var _uiFile_manager = require("./ui.file_manager.common");
 var _uiFile_manager2 = _interopRequireDefault(require("./ui.file_manager.dialog"));
 var _uiFile_manager3 = _interopRequireDefault(require("./ui.file_manager.files_tree_view"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_DIALOG_FOLDER_CHOOSER = 'dx-filemanager-dialog-folder-chooser';
-var FILE_MANAGER_DIALOG_FOLDER_CHOOSER_POPUP = 'dx-filemanager-dialog-folder-chooser-popup';
-var FileManagerFolderChooserDialog = /*#__PURE__*/function (_FileManagerDialogBas) {
+const FILE_MANAGER_DIALOG_FOLDER_CHOOSER = 'dx-filemanager-dialog-folder-chooser';
+const FILE_MANAGER_DIALOG_FOLDER_CHOOSER_POPUP = 'dx-filemanager-dialog-folder-chooser-popup';
+let FileManagerFolderChooserDialog = /*#__PURE__*/function (_FileManagerDialogBas) {
   _inheritsLoose(FileManagerFolderChooserDialog, _FileManagerDialogBas);
   function FileManagerFolderChooserDialog() {
     return _FileManagerDialogBas.apply(this, arguments) || this;
@@ -61,24 +55,17 @@ var FileManagerFolderChooserDialog = /*#__PURE__*/function (_FileManagerDialogBa
     });
   };
   _proto._createContentTemplate = function _createContentTemplate(element) {
-    var _this = this;
     _FileManagerDialogBas.prototype._createContentTemplate.call(this, element);
     this._filesTreeView = this._createComponent((0, _renderer.default)('<div>'), _uiFile_manager3.default, {
       getDirectories: this.option('getDirectories'),
-      getCurrentDirectory: function getCurrentDirectory() {
-        return _this._getDialogSelectedDirectory();
-      },
-      onDirectoryClick: function onDirectoryClick(e) {
-        return _this._onFilesTreeViewDirectoryClick(e);
-      },
-      onFilesTreeViewContentReady: function onFilesTreeViewContentReady() {
-        return _this._toggleUnavailableLocationsDisabled(true);
-      }
+      getCurrentDirectory: () => this._getDialogSelectedDirectory(),
+      onDirectoryClick: e => this._onFilesTreeViewDirectoryClick(e),
+      onFilesTreeViewContentReady: () => this._toggleUnavailableLocationsDisabled(true)
     });
     this._$contentElement.append(this._filesTreeView.$element());
   };
   _proto._getDialogResult = function _getDialogResult() {
-    var result = this._getDialogSelectedDirectory();
+    const result = this._getDialogSelectedDirectory();
     return result ? {
       folder: result
     } : result;
@@ -92,7 +79,9 @@ var FileManagerFolderChooserDialog = /*#__PURE__*/function (_FileManagerDialogBa
     return this._selectedDirectoryInfo;
   };
   _proto._onFilesTreeViewDirectoryClick = function _onFilesTreeViewDirectoryClick(_ref) {
-    var itemData = _ref.itemData;
+    let {
+      itemData
+    } = _ref;
     this._setSelectedDirInfo(itemData);
     this._filesTreeView.updateCurrentDirectory();
   };
@@ -111,24 +100,16 @@ var FileManagerFolderChooserDialog = /*#__PURE__*/function (_FileManagerDialogBa
     _FileManagerDialogBas.prototype._onPopupHidden.call(this);
   };
   _proto._toggleUnavailableLocationsDisabled = function _toggleUnavailableLocationsDisabled(isDisabled) {
-    var _this2 = this;
     if (!this._filesTreeView) {
       return;
     }
-    var locations = this._getLocationsToProcess(isDisabled);
-    this._filesTreeView.toggleDirectoryExpandedStateRecursive(locations.locationsToExpand[0], isDisabled).then(function () {
-      return _this2._filesTreeView.toggleDirectoryLineExpandedState(locations.locationsToCollapse, !isDisabled).then(function () {
-        return locations.locationKeysToDisable.forEach(function (key) {
-          return _this2._filesTreeView.toggleNodeDisabledState(key, isDisabled);
-        });
-      });
-    });
+    const locations = this._getLocationsToProcess(isDisabled);
+    this._filesTreeView.toggleDirectoryExpandedStateRecursive(locations.locationsToExpand[0], isDisabled).then(() => this._filesTreeView.toggleDirectoryLineExpandedState(locations.locationsToCollapse, !isDisabled).then(() => locations.locationKeysToDisable.forEach(key => this._filesTreeView.toggleNodeDisabledState(key, isDisabled))));
   };
   _proto._getLocationsToProcess = function _getLocationsToProcess(isDisabled) {
-    var _expandMap$keys;
-    var expandLocations = {};
-    var collapseLocations = {};
-    this._targetItemInfos.forEach(function (itemInfo) {
+    const expandLocations = {};
+    const collapseLocations = {};
+    this._targetItemInfos.forEach(itemInfo => {
       if (itemInfo.parentDirectory) {
         expandLocations[itemInfo.parentDirectory.getInternalKey()] = itemInfo.parentDirectory;
       }
@@ -136,12 +117,12 @@ var FileManagerFolderChooserDialog = /*#__PURE__*/function (_FileManagerDialogBa
         collapseLocations[itemInfo.getInternalKey()] = itemInfo;
       }
     });
-    var expandMap = (0, _uiFile_manager.getMapFromObject)(expandLocations);
-    var collapseMap = (0, _uiFile_manager.getMapFromObject)(collapseLocations);
+    const expandMap = (0, _uiFile_manager.getMapFromObject)(expandLocations);
+    const collapseMap = (0, _uiFile_manager.getMapFromObject)(collapseLocations);
     return {
       locationsToExpand: isDisabled ? expandMap.values : [],
       locationsToCollapse: isDisabled ? collapseMap.values : [],
-      locationKeysToDisable: (_expandMap$keys = expandMap.keys).concat.apply(_expandMap$keys, _toConsumableArray(collapseMap.keys))
+      locationKeysToDisable: expandMap.keys.concat(...collapseMap.keys)
     };
   };
   return FileManagerFolderChooserDialog;

@@ -14,10 +14,10 @@ var _type = require("../../core/utils/type");
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var DISABLED_STATE_CLASS = 'dx-state-disabled';
-var ITEM_URL_CLASS = 'dx-item-url';
-var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const DISABLED_STATE_CLASS = 'dx-state-disabled';
+const ITEM_URL_CLASS = 'dx-item-url';
+const HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       keyExpr: 'id',
       displayExpr: 'text',
@@ -29,9 +29,9 @@ var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
       expandedExpr: 'expanded'
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
@@ -39,18 +39,18 @@ var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._initAccessors();
     this._initDataAdapter();
     this._initDynamicTemplates();
   },
-  _initDataSource: function _initDataSource() {
+  _initDataSource: function () {
     this.callBase();
     this._dataSource && this._dataSource.paginate(false);
   },
-  _initDataAdapter: function _initDataAdapter() {
-    var accessors = this._createDataAdapterAccessors();
+  _initDataAdapter: function () {
+    const accessors = this._createDataAdapterAccessors();
     this._dataAdapter = new _ui.default((0, _extend.extend)({
       dataAccessors: {
         getters: accessors.getters,
@@ -61,8 +61,8 @@ var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
   },
   _getDataAdapterOptions: _common.noop,
   _getItemExtraPropNames: _common.noop,
-  _initDynamicTemplates: function _initDynamicTemplates() {
-    var fields = ['text', 'html', 'items', 'icon'].concat(this._getItemExtraPropNames());
+  _initDynamicTemplates: function () {
+    const fields = ['text', 'html', 'items', 'icon'].concat(this._getItemExtraPropNames());
     this._templateManager.addDefaultTemplates({
       item: new _bindable_template.BindableTemplate(this._addContent.bind(this), fields, this.option('integrationOptions.watchMethod'), {
         'text': this._displayGetter,
@@ -70,49 +70,59 @@ var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
       })
     });
   },
-  _addContent: function _addContent($container, itemData) {
+  _addContent: function ($container, itemData) {
     $container.html(itemData.html).append(this._getIconContainer(itemData)).append(this._getTextContainer(itemData));
   },
-  _getLinkContainer: function _getLinkContainer(iconContainer, textContainer, _ref) {
-    var linkAttr = _ref.linkAttr,
-      url = _ref.url;
-    var linkAttributes = (0, _type.isObject)(linkAttr) ? linkAttr : {};
+  _getLinkContainer: function (iconContainer, textContainer, _ref) {
+    let {
+      linkAttr,
+      url
+    } = _ref;
+    const linkAttributes = (0, _type.isObject)(linkAttr) ? linkAttr : {};
     return (0, _renderer.default)('<a>').addClass(ITEM_URL_CLASS).attr(_extends({}, linkAttributes, {
       href: url
     })).append(iconContainer).append(textContainer);
   },
-  _getIconContainer: function _getIconContainer(itemData) {
-    return itemData.icon ? (0, _icon.getImageContainer)(itemData.icon) : undefined;
+  _getIconContainer: function (itemData) {
+    if (!itemData.icon) {
+      return undefined;
+    }
+    const $imageContainer = (0, _icon.getImageContainer)(itemData.icon);
+    if ($imageContainer.is('img')) {
+      var _itemData$text;
+      $imageContainer.attr('alt', (_itemData$text = itemData.text) !== null && _itemData$text !== void 0 ? _itemData$text : "".concat(this.NAME, " item icon"));
+    }
+    return $imageContainer;
   },
-  _getTextContainer: function _getTextContainer(itemData) {
+  _getTextContainer: function (itemData) {
     return (0, _renderer.default)('<span>').text(itemData.text);
   },
-  _initAccessors: function _initAccessors() {
-    var that = this;
+  _initAccessors: function () {
+    const that = this;
     (0, _iterator.each)(this._getAccessors(), function (_, accessor) {
       that._compileAccessor(accessor);
     });
     this._compileDisplayGetter();
   },
-  _getAccessors: function _getAccessors() {
+  _getAccessors: function () {
     return ['key', 'selected', 'items', 'disabled', 'parentId', 'expanded'];
   },
-  _getChildNodes: function _getChildNodes(node) {
-    var that = this;
-    var arr = [];
+  _getChildNodes: function (node) {
+    const that = this;
+    const arr = [];
     (0, _iterator.each)(node.internalFields.childrenKeys, function (_, key) {
-      var childNode = that._dataAdapter.getNodeByKey(key);
+      const childNode = that._dataAdapter.getNodeByKey(key);
       arr.push(childNode);
     });
     return arr;
   },
-  _hasChildren: function _hasChildren(node) {
+  _hasChildren: function (node) {
     return node && node.internalFields.childrenKeys.length;
   },
-  _compileAccessor: function _compileAccessor(optionName) {
-    var getter = '_' + optionName + 'Getter';
-    var setter = '_' + optionName + 'Setter';
-    var optionExpr = this.option(optionName + 'Expr');
+  _compileAccessor: function (optionName) {
+    const getter = '_' + optionName + 'Getter';
+    const setter = '_' + optionName + 'Setter';
+    const optionExpr = this.option(optionName + 'Expr');
     if (!optionExpr) {
       this[getter] = _common.noop;
       this[setter] = _common.noop;
@@ -129,38 +139,36 @@ var HierarchicalCollectionWidget = _uiCollection_widget.default.inherit({
     this[getter] = (0, _data.compileGetter)(optionExpr);
     this[setter] = (0, _data.compileSetter)(optionExpr);
   },
-  _createDataAdapterAccessors: function _createDataAdapterAccessors() {
-    var that = this;
-    var accessors = {
+  _createDataAdapterAccessors: function () {
+    const that = this;
+    const accessors = {
       getters: {},
       setters: {}
     };
     (0, _iterator.each)(this._getAccessors(), function (_, accessor) {
-      var getterName = '_' + accessor + 'Getter';
-      var setterName = '_' + accessor + 'Setter';
-      var newAccessor = accessor === 'parentId' ? 'parentKey' : accessor;
+      const getterName = '_' + accessor + 'Getter';
+      const setterName = '_' + accessor + 'Setter';
+      const newAccessor = accessor === 'parentId' ? 'parentKey' : accessor;
       accessors.getters[newAccessor] = that[getterName];
       accessors.setters[newAccessor] = that[setterName];
     });
-    accessors.getters['display'] = !this._displayGetter ? function (itemData) {
-      return itemData.text;
-    } : this._displayGetter;
+    accessors.getters['display'] = !this._displayGetter ? itemData => itemData.text : this._displayGetter;
     return accessors;
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this._addWidgetClass();
   },
-  _addWidgetClass: function _addWidgetClass() {
+  _addWidgetClass: function () {
     this._focusTarget().addClass(this._widgetClass());
   },
   _widgetClass: _common.noop,
-  _renderItemFrame: function _renderItemFrame(index, itemData) {
-    var $itemFrame = this.callBase.apply(this, arguments);
+  _renderItemFrame: function (index, itemData) {
+    const $itemFrame = this.callBase.apply(this, arguments);
     $itemFrame.toggleClass(DISABLED_STATE_CLASS, !!this._disabledGetter(itemData));
     return $itemFrame;
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'displayExpr':
       case 'keyExpr':

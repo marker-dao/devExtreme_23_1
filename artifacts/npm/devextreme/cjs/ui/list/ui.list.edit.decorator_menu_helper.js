@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.edit.decorator_menu_helper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,17 +9,17 @@
 "use strict";
 
 exports.default = void 0;
-var EditDecoratorMenuHelperMixin = {
-  _menuEnabled: function _menuEnabled() {
+const EditDecoratorMenuHelperMixin = {
+  _menuEnabled: function () {
     return !!this._menuItems().length;
   },
-  _menuItems: function _menuItems() {
+  _menuItems: function () {
     return this._list.option('menuItems');
   },
-  _deleteEnabled: function _deleteEnabled() {
+  _deleteEnabled: function () {
     return this._list.option('allowItemDeleting');
   },
-  _fireMenuAction: function _fireMenuAction($itemElement, action) {
+  _fireMenuAction: function ($itemElement, action) {
     this._list._itemEventHandlerByHandler($itemElement, action, {}, {
       excludeValidators: ['disabled', 'readOnly']
     });

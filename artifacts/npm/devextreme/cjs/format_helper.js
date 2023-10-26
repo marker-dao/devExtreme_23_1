@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/format_helper.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,31 +17,31 @@ var _dependency_injector = _interopRequireDefault(require("./core/utils/dependen
 require("./localization/currency");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var _default = (0, _dependency_injector.default)({
-  format: function format(value, _format) {
-    var formatIsValid = (0, _type.isString)(_format) && _format !== '' || (0, _type.isPlainObject)(_format) || (0, _type.isFunction)(_format);
-    var valueIsValid = (0, _type.isNumeric)(value) || (0, _type.isDate)(value);
+  format: function (value, format) {
+    const formatIsValid = (0, _type.isString)(format) && format !== '' || (0, _type.isPlainObject)(format) || (0, _type.isFunction)(format);
+    const valueIsValid = (0, _type.isNumeric)(value) || (0, _type.isDate)(value);
     if (!formatIsValid || !valueIsValid) {
       return (0, _type.isDefined)(value) ? value.toString() : '';
     }
-    if ((0, _type.isFunction)(_format)) {
-      return _format(value);
+    if ((0, _type.isFunction)(format)) {
+      return format(value);
     }
-    if ((0, _type.isString)(_format)) {
-      _format = {
-        type: _format
+    if ((0, _type.isString)(format)) {
+      format = {
+        type: format
       };
     }
     if ((0, _type.isNumeric)(value)) {
-      return _number.default.format(value, _format);
+      return _number.default.format(value, format);
     }
     if ((0, _type.isDate)(value)) {
-      return _date2.default.format(value, _format);
+      return _date2.default.format(value, format);
     }
   },
-  getTimeFormat: function getTimeFormat(showSecond) {
+  getTimeFormat: function (showSecond) {
     return showSecond ? 'longtime' : 'shorttime';
   },
-  _normalizeFormat: function _normalizeFormat(format) {
+  _normalizeFormat: function (format) {
     if (!Array.isArray(format)) {
       return format;
     }
@@ -54,11 +54,11 @@ var _default = (0, _dependency_injector.default)({
       }).join(' ');
     };
   },
-  getDateFormatByDifferences: function getDateFormatByDifferences(dateDifferences, intervalFormat) {
-    var resultFormat = [];
-    var needSpecialSecondFormatter = intervalFormat && dateDifferences.millisecond && !(dateDifferences.year || dateDifferences.month || dateDifferences.day);
+  getDateFormatByDifferences: function (dateDifferences, intervalFormat) {
+    const resultFormat = [];
+    const needSpecialSecondFormatter = intervalFormat && dateDifferences.millisecond && !(dateDifferences.year || dateDifferences.month || dateDifferences.day);
     if (needSpecialSecondFormatter) {
-      var secondFormatter = function secondFormatter(date) {
+      const secondFormatter = function (date) {
         return date.getSeconds() + date.getMilliseconds() / 1000 + 's';
       };
       resultFormat.push(secondFormatter);
@@ -90,7 +90,7 @@ var _default = (0, _dependency_injector.default)({
     }
     if (dateDifferences.month && dateDifferences.day) {
       if (intervalFormat) {
-        var monthDayFormatter = function monthDayFormatter(date) {
+        const monthDayFormatter = function (date) {
           return _date2.default.getMonthNames('abbreviated')[date.getMonth()] + ' ' + _date2.default.format(date, 'day');
         };
         resultFormat.unshift(monthDayFormatter);
@@ -106,7 +106,7 @@ var _default = (0, _dependency_injector.default)({
       if (intervalFormat) {
         resultFormat.unshift('day');
       } else {
-        var dayFormatter = function dayFormatter(date) {
+        const dayFormatter = function (date) {
           return _date2.default.format(date, 'dayofweek') + ', ' + _date2.default.format(date, 'day');
         };
         resultFormat.unshift(dayFormatter);
@@ -115,10 +115,10 @@ var _default = (0, _dependency_injector.default)({
     }
     return this._normalizeFormat(resultFormat);
   },
-  getDateFormatByTicks: function getDateFormatByTicks(ticks) {
-    var maxDiff;
-    var currentDiff;
-    var i;
+  getDateFormatByTicks: function (ticks) {
+    let maxDiff;
+    let currentDiff;
+    let i;
     if (ticks.length > 1) {
       maxDiff = _date.default.getDatesDifferences(ticks[0], ticks[1]);
       for (i = 1; i < ticks.length - 1; i++) {
@@ -138,15 +138,15 @@ var _default = (0, _dependency_injector.default)({
         millisecond: ticks[0].getMilliseconds() > 0
       };
     }
-    var resultFormat = this.getDateFormatByDifferences(maxDiff);
+    const resultFormat = this.getDateFormatByDifferences(maxDiff);
     return resultFormat;
   },
-  getDateFormatByTickInterval: function getDateFormatByTickInterval(startValue, endValue, tickInterval) {
-    var dateUnitInterval;
-    var dateDifferencesConverter = {
+  getDateFormatByTickInterval: function (startValue, endValue, tickInterval) {
+    let dateUnitInterval;
+    const dateDifferencesConverter = {
       week: 'day'
     };
-    var correctDateDifferences = function correctDateDifferences(dateDifferences, tickInterval, value) {
+    const correctDateDifferences = function (dateDifferences, tickInterval, value) {
       switch (tickInterval) {
         case 'year':
         case 'quarter':
@@ -169,7 +169,7 @@ var _default = (0, _dependency_injector.default)({
           dateDifferences.millisecond = value;
       }
     };
-    var correctDifferencesByMaxDate = function correctDifferencesByMaxDate(differences, minDate, maxDate) {
+    const correctDifferencesByMaxDate = function (differences, minDate, maxDate) {
       if (!maxDate.getMilliseconds() && maxDate.getSeconds()) {
         if (maxDate.getSeconds() - minDate.getSeconds() === 1) {
           differences.millisecond = true;
@@ -203,7 +203,7 @@ var _default = (0, _dependency_injector.default)({
       }
     };
     tickInterval = (0, _type.isString)(tickInterval) ? tickInterval.toLowerCase() : tickInterval;
-    var dateDifferences = _date.default.getDatesDifferences(startValue, endValue);
+    const dateDifferences = _date.default.getDatesDifferences(startValue, endValue);
     if (startValue !== endValue) {
       correctDifferencesByMaxDate(dateDifferences, startValue > endValue ? endValue : startValue, startValue > endValue ? startValue : endValue);
     }
@@ -212,7 +212,7 @@ var _default = (0, _dependency_injector.default)({
     dateUnitInterval = _date.default.getDateUnitInterval(tickInterval || 'second');
     correctDateDifferences(dateDifferences, dateUnitInterval, false);
     dateDifferences[dateDifferencesConverter[dateUnitInterval] || dateUnitInterval] = true;
-    var resultFormat = this.getDateFormatByDifferences(dateDifferences);
+    const resultFormat = this.getDateFormatByDifferences(dateDifferences);
     return resultFormat;
   }
 });

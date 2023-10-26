@@ -11,13 +11,13 @@ var _m_data_controller = require("../../../grids/grid_core/data_controller/m_dat
 var _m_data_source_adapter = _interopRequireDefault(require("../data_source_adapter/m_data_source_adapter"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DataController = _m_data_controller.dataControllerModule.controllers.data.inherit(function () {
+const DataController = _m_data_controller.dataControllerModule.controllers.data.inherit(function () {
   return {
     _getDataSourceAdapter() {
       return _m_data_source_adapter.default;
     },
     _getNodeLevel(node) {
-      var level = -1;
+      let level = -1;
       while (node.parent) {
         if (node.visible) {
           level++;
@@ -53,7 +53,7 @@ var DataController = _m_data_controller.dataControllerModule.controllers.data.in
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _isCellChanged(oldRow, newRow, visibleRowIndex, columnIndex, isLiveUpdate) {
-      var firstDataColumnIndex = this._columnsController.getFirstDataColumnIndex();
+      const firstDataColumnIndex = this._columnsController.getFirstDataColumnIndex();
       if (columnIndex === firstDataColumnIndex && oldRow.isSelected !== newRow.isSelected) {
         return true;
       }
@@ -67,13 +67,13 @@ var DataController = _m_data_controller.dataControllerModule.controllers.data.in
       this.callBase.apply(this, arguments);
     },
     keyOf(data) {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       if (dataSource) {
         return dataSource.keyOf(data);
       }
     },
     key() {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       if (dataSource) {
         return dataSource.getKeyExpr();
       }
@@ -82,16 +82,15 @@ var DataController = _m_data_controller.dataControllerModule.controllers.data.in
       return this.callBase().concat(['expandRow', 'collapseRow', 'isRowExpanded', 'getRootNode', 'getNodeByKey', 'loadDescendants', 'forEachNode']);
     },
     changeRowExpand(key) {
-      var _this = this;
       if (this._dataSource) {
-        var args = {
+        const args = {
           key
         };
-        var isExpanded = this.isRowExpanded(key);
+        const isExpanded = this.isRowExpanded(key);
         this.executeAction(isExpanded ? 'onRowCollapsing' : 'onRowExpanding', args);
         if (!args.cancel) {
-          return this._dataSource.changeRowExpand(key).done(function () {
-            _this.executeAction(isExpanded ? 'onRowCollapsed' : 'onRowExpanded', args);
+          return this._dataSource.changeRowExpand(key).done(() => {
+            this.executeAction(isExpanded ? 'onRowCollapsed' : 'onRowExpanded', args);
           });
         }
       }

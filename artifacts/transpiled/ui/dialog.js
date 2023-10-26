@@ -15,15 +15,17 @@ var _extend = require("../core/utils/extend");
 var _window = require("../core/utils/window");
 var _events_engine = _interopRequireDefault(require("../events/core/events_engine"));
 var _view_port = require("../core/utils/view_port");
+var _themes = require("./themes");
 var _message = _interopRequireDefault(require("../localization/message"));
 var _ui = _interopRequireDefault(require("./widget/ui.errors"));
 var _ui2 = _interopRequireDefault(require("./popup/ui.popup"));
 var _common = require("../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var DEFAULT_BUTTON = {
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+const window = (0, _window.getWindow)();
+const DEFAULT_BUTTON = {
   text: 'OK',
-  onClick: function onClick() {
+  onClick: function () {
     return true;
   }
 };
@@ -32,30 +34,48 @@ var DEFAULT_BUTTON = {
  * @name ui.dialog
  */
 
-var DX_DIALOG_CLASSNAME = 'dx-dialog';
-var DX_DIALOG_WRAPPER_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-wrapper");
-var DX_DIALOG_ROOT_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-root");
-var DX_DIALOG_CONTENT_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-content");
-var DX_DIALOG_MESSAGE_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-message");
-var DX_DIALOG_BUTTONS_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-buttons");
-var DX_DIALOG_BUTTON_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-button");
-var DX_BUTTON_CLASSNAME = 'dx-button';
-var custom = function custom(options) {
+const DX_DIALOG_CLASSNAME = 'dx-dialog';
+const DX_DIALOG_WRAPPER_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-wrapper");
+const DX_DIALOG_ROOT_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-root");
+const DX_DIALOG_CONTENT_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-content");
+const DX_DIALOG_MESSAGE_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-message");
+const DX_DIALOG_BUTTONS_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-buttons");
+const DX_DIALOG_BUTTON_CLASSNAME = "".concat(DX_DIALOG_CLASSNAME, "-button");
+const DX_BUTTON_CLASSNAME = 'dx-button';
+const getApplyButtonConfig = () => {
+  if ((0, _themes.isFluent)()) {
+    return {
+      stylingMode: 'contained',
+      type: 'default'
+    };
+  }
+  return {};
+};
+const getCancelButtonConfig = () => {
+  if ((0, _themes.isFluent)()) {
+    return {
+      stylingMode: 'contoutlinedained',
+      type: 'default'
+    };
+  }
+  return {};
+};
+const custom = function (options) {
   var _options$title;
-  var deferred = new _deferred.Deferred();
+  const deferred = new _deferred.Deferred();
   options = options || {};
-  var $element = (0, _renderer.default)('<div>').addClass(DX_DIALOG_CLASSNAME).appendTo((0, _view_port.value)());
-  var isMessageDefined = ('message' in options);
-  var isMessageHtmlDefined = ('messageHtml' in options);
+  const $element = (0, _renderer.default)('<div>').addClass(DX_DIALOG_CLASSNAME).appendTo((0, _view_port.value)());
+  const isMessageDefined = ('message' in options);
+  const isMessageHtmlDefined = ('messageHtml' in options);
   if (isMessageDefined) {
     _ui.default.log('W1013');
   }
-  var messageHtml = String(isMessageHtmlDefined ? options.messageHtml : options.message);
-  var messageId = options.title ? null : new _guid.default();
-  var $message = (0, _renderer.default)('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageHtml).attr('id', messageId);
-  var popupToolbarItems = [];
+  const messageHtml = String(isMessageHtmlDefined ? options.messageHtml : options.message);
+  const messageId = options.title ? null : new _guid.default();
+  const $message = (0, _renderer.default)('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageHtml).attr('id', messageId);
+  const popupToolbarItems = [];
   (0, _iterator.each)(options.buttons || [DEFAULT_BUTTON], function () {
-    var action = new _action.default(this.onClick, {
+    const action = new _action.default(this.onClick, {
       context: popupInstance
     });
     popupToolbarItems.push({
@@ -63,13 +83,15 @@ var custom = function custom(options) {
       location: _devices.default.current().android ? 'after' : 'center',
       widget: 'dxButton',
       options: (0, _extend.extend)({}, this, {
-        onClick: function onClick() {
-          var result = action.execute.apply(action, arguments);
+        onClick: function () {
+          const result = action.execute(...arguments);
           hide(result);
         }
       })
     });
   });
+
+  // eslint-disable-next-line no-var
   var popupInstance = new _ui2.default($element, (0, _extend.extend)({
     title: (_options$title = options.title) !== null && _options$title !== void 0 ? _options$title : '',
     showTitle: (0, _common.ensureDefined)(options.showTitle, true),
@@ -81,25 +103,27 @@ var custom = function custom(options) {
     container: $element,
     visualContainer: window,
     dragAndResizeArea: window,
-    onContentReady: function onContentReady(args) {
+    onContentReady: function (args) {
       args.component.$content().addClass(DX_DIALOG_CONTENT_CLASSNAME).append($message);
       if (messageId) {
         args.component.$overlayContent().attr('aria-labelledby', messageId);
       }
     },
-    onShowing: function onShowing(e) {
+    onShowing: function (e) {
       e.component.bottomToolbar().addClass(DX_DIALOG_BUTTONS_CLASSNAME).find(".".concat(DX_BUTTON_CLASSNAME)).addClass(DX_DIALOG_BUTTON_CLASSNAME);
       (0, _dom.resetActiveElement)();
     },
-    onShown: function onShown(e) {
-      var $firstButton = e.component.bottomToolbar().find(".".concat(DX_BUTTON_CLASSNAME)).first();
+    onShown: function (e) {
+      const $firstButton = e.component.bottomToolbar().find(".".concat(DX_BUTTON_CLASSNAME)).first();
       _events_engine.default.trigger($firstButton, 'focus');
     },
-    onHiding: function onHiding() {
+    onHiding: function () {
       deferred.reject();
     },
-    onHidden: function onHidden(_ref) {
-      var element = _ref.element;
+    onHidden: function (_ref) {
+      let {
+        element
+      } = _ref;
       (0, _renderer.default)(element).remove();
     },
     toolbarItems: popupToolbarItems,
@@ -136,8 +160,8 @@ var custom = function custom(options) {
   popupInstance.$wrapper().addClass(DX_DIALOG_ROOT_CLASSNAME);
   function show() {
     if (_devices.default.real().deviceType === 'phone') {
-      var isPortrait = (0, _size.getHeight)(window) > (0, _size.getWidth)(window);
-      var width = isPortrait ? '90%' : '60%';
+      const isPortrait = (0, _size.getHeight)(window) > (0, _size.getWidth)(window);
+      const width = isPortrait ? '90%' : '60%';
       popupInstance.option({
         width
       });
@@ -155,36 +179,37 @@ var custom = function custom(options) {
   };
 };
 exports.custom = custom;
-var alert = function alert(messageHtml) {
-  var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-  var showTitle = arguments.length > 2 ? arguments[2] : undefined;
-  var options = (0, _type.isPlainObject)(messageHtml) ? messageHtml : {
+const alert = function (messageHtml) {
+  let title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let showTitle = arguments.length > 2 ? arguments[2] : undefined;
+  const options = (0, _type.isPlainObject)(messageHtml) ? messageHtml : {
     title,
     messageHtml,
     showTitle,
+    buttons: [_extends({}, DEFAULT_BUTTON, getApplyButtonConfig())],
     dragEnabled: showTitle
   };
   return custom(options).show();
 };
 exports.alert = alert;
-var confirm = function confirm(messageHtml) {
-  var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-  var showTitle = arguments.length > 2 ? arguments[2] : undefined;
-  var options = (0, _type.isPlainObject)(messageHtml) ? messageHtml : {
+const confirm = function (messageHtml) {
+  let title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let showTitle = arguments.length > 2 ? arguments[2] : undefined;
+  const options = (0, _type.isPlainObject)(messageHtml) ? messageHtml : {
     title,
     messageHtml,
     showTitle,
-    buttons: [{
+    buttons: [_extends({
       text: _message.default.format('Yes'),
-      onClick: function onClick() {
+      onClick: function () {
         return true;
       }
-    }, {
+    }, getApplyButtonConfig()), _extends({
       text: _message.default.format('No'),
-      onClick: function onClick() {
+      onClick: function () {
         return false;
       }
-    }],
+    }, getCancelButtonConfig())],
     dragEnabled: showTitle
   };
   return custom(options).show();

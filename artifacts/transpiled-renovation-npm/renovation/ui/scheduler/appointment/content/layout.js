@@ -5,8 +5,7 @@ var _inferno = require("inferno");
 var _inferno2 = require("@devextreme/runtime/inferno");
 var _layout = require("./details/layout");
 var _layout2 = require("./title/layout");
-var _excluded = ["appointmentTemplate", "data", "dateText", "hideReducedIconTooltip", "index", "isRecurrent", "isReduced", "showReducedIconTooltip", "text"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["appointmentTemplate", "data", "dateText", "hideReducedIconTooltip", "index", "isRecurrent", "isReduced", "showReducedIconTooltip", "text"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -16,17 +15,20 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var _ref$props = _ref.props,
-    appointmentTemplate = _ref$props.appointmentTemplate,
-    data = _ref$props.data,
-    dateText = _ref$props.dateText,
-    index = _ref$props.index,
-    isRecurrent = _ref$props.isRecurrent,
-    isReduced = _ref$props.isReduced,
-    text = _ref$props.text,
-    refReducedIcon = _ref.refReducedIcon;
-  var AppointmentTemplate = appointmentTemplate;
+const viewFunction = _ref => {
+  let {
+    props: {
+      appointmentTemplate,
+      data,
+      dateText,
+      index,
+      isRecurrent,
+      isReduced,
+      text
+    },
+    refReducedIcon
+  } = _ref;
+  const AppointmentTemplate = appointmentTemplate;
   return (0, _inferno.createVNode)(1, "div", "dx-scheduler-appointment-content", appointmentTemplate ? AppointmentTemplate({
     data: data,
     index: index
@@ -37,7 +39,7 @@ var viewFunction = function viewFunction(_ref) {
   }), isRecurrent && (0, _inferno.createVNode)(1, "div", "dx-scheduler-appointment-recurrence-icon dx-icon-repeat"), isReduced && (0, _inferno.createVNode)(1, "div", "dx-scheduler-appointment-reduced-icon", null, 1, null, null, refReducedIcon)], 0), 0);
 };
 exports.viewFunction = viewFunction;
-var AppointmentContentProps = {
+const AppointmentContentProps = {
   text: '',
   dateText: '',
   isRecurrent: false,
@@ -45,12 +47,8 @@ var AppointmentContentProps = {
   index: 0
 };
 exports.AppointmentContentProps = AppointmentContentProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var AppointmentContent = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let AppointmentContent = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(AppointmentContent, _InfernoComponent);
   function AppointmentContent(props) {
     var _this;
@@ -71,21 +69,15 @@ var AppointmentContent = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.showReducedIconTooltip, this.props.data, this.props.hideReducedIconTooltip]);
   };
   _proto.bindHoverEffect = function bindHoverEffect() {
-    var _this2 = this,
-      _this$refReducedIcon$,
-      _this$refReducedIcon$2;
-    var onMouseEnter = function onMouseEnter() {
-      return _this2.onReducedIconMouseEnter();
-    };
-    var onMouseLeave = function onMouseLeave() {
-      return _this2.onReducedIconMouseLeave();
-    };
+    var _this$refReducedIcon$, _this$refReducedIcon$2;
+    const onMouseEnter = () => this.onReducedIconMouseEnter();
+    const onMouseLeave = () => this.onReducedIconMouseLeave();
     (_this$refReducedIcon$ = this.refReducedIcon.current) === null || _this$refReducedIcon$ === void 0 ? void 0 : _this$refReducedIcon$.addEventListener('mouseenter', onMouseEnter);
     (_this$refReducedIcon$2 = this.refReducedIcon.current) === null || _this$refReducedIcon$2 === void 0 ? void 0 : _this$refReducedIcon$2.addEventListener('mouseleave', onMouseLeave);
-    return function () {
-      var _this2$refReducedIcon, _this2$refReducedIcon2;
-      (_this2$refReducedIcon = _this2.refReducedIcon.current) === null || _this2$refReducedIcon === void 0 ? void 0 : _this2$refReducedIcon.removeEventListener('mouseenter', onMouseEnter);
-      (_this2$refReducedIcon2 = _this2.refReducedIcon.current) === null || _this2$refReducedIcon2 === void 0 ? void 0 : _this2$refReducedIcon2.removeEventListener('mouseleave', onMouseLeave);
+    return () => {
+      var _this$refReducedIcon$3, _this$refReducedIcon$4;
+      (_this$refReducedIcon$3 = this.refReducedIcon.current) === null || _this$refReducedIcon$3 === void 0 ? void 0 : _this$refReducedIcon$3.removeEventListener('mouseenter', onMouseEnter);
+      (_this$refReducedIcon$4 = this.refReducedIcon.current) === null || _this$refReducedIcon$4 === void 0 ? void 0 : _this$refReducedIcon$4.removeEventListener('mouseleave', onMouseLeave);
     };
   };
   _proto.onReducedIconMouseEnter = function onReducedIconMouseEnter() {
@@ -98,7 +90,7 @@ var AppointmentContent = /*#__PURE__*/function (_InfernoComponent) {
     this.props.hideReducedIconTooltip();
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         appointmentTemplate: getTemplate(props.appointmentTemplate)
@@ -111,18 +103,9 @@ var AppointmentContent = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(AppointmentContent, [{
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        appointmentTemplate = _this$props.appointmentTemplate,
-        data = _this$props.data,
-        dateText = _this$props.dateText,
-        hideReducedIconTooltip = _this$props.hideReducedIconTooltip,
-        index = _this$props.index,
-        isRecurrent = _this$props.isRecurrent,
-        isReduced = _this$props.isReduced,
-        showReducedIconTooltip = _this$props.showReducedIconTooltip,
-        text = _this$props.text,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

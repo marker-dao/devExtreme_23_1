@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tile_view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,12 +25,12 @@ var _uiCollection_widget = _interopRequireDefault(require("./collection/ui.colle
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE tileView
 
-var TILEVIEW_CLASS = 'dx-tileview';
-var TILEVIEW_CONTAINER_CLASS = 'dx-tileview-wrapper';
-var TILEVIEW_ITEM_CLASS = 'dx-tile';
-var TILEVIEW_ITEM_SELECTOR = '.' + TILEVIEW_ITEM_CLASS;
-var TILEVIEW_ITEM_DATA_KEY = 'dxTileData';
-var CONFIGS = {
+const TILEVIEW_CLASS = 'dx-tileview';
+const TILEVIEW_CONTAINER_CLASS = 'dx-tileview-wrapper';
+const TILEVIEW_ITEM_CLASS = 'dx-tile';
+const TILEVIEW_ITEM_SELECTOR = '.' + TILEVIEW_ITEM_CLASS;
+const TILEVIEW_ITEM_DATA_KEY = 'dxTileData';
+const CONFIGS = {
   'horizontal': {
     itemMainRatio: 'widthRatio',
     itemCrossRatio: 'heightRatio',
@@ -52,9 +52,9 @@ var CONFIGS = {
     crossPosition: 'left'
   }
 };
-var TileView = _uiCollection_widget.default.inherit({
+const TileView = _uiCollection_widget.default.inherit({
   _activeStateUnit: TILEVIEW_ITEM_SELECTOR,
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       items: null,
       direction: 'horizontal',
@@ -100,16 +100,16 @@ var TileView = _uiCollection_widget.default.inherit({
     });
   },
 
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return _support.nativeScrolling;
       },
       options: {
@@ -117,22 +117,22 @@ var TileView = _uiCollection_widget.default.inherit({
       }
     }]);
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return TILEVIEW_ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return TILEVIEW_ITEM_DATA_KEY;
   },
-  _itemContainer: function _itemContainer() {
+  _itemContainer: function () {
     return this._$container;
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this.$element().addClass(TILEVIEW_CLASS);
     this._initScrollView();
   },
-  _dataSourceLoadingChangedHandler: function _dataSourceLoadingChangedHandler(isLoading) {
-    var scrollView = this._scrollView;
+  _dataSourceLoadingChangedHandler: function (isLoading) {
+    const scrollView = this._scrollView;
     if (!scrollView || !scrollView.startLoading) {
       return;
     }
@@ -142,17 +142,18 @@ var TileView = _uiCollection_widget.default.inherit({
       scrollView.finishLoading();
     }
   },
-  _hideLoadingIfLoadIndicationOff: function _hideLoadingIfLoadIndicationOff() {
+  _hideLoadingIfLoadIndicationOff: function () {
     if (!this.option('indicateLoading')) {
       this._dataSourceLoadingChangedHandler(false);
     }
   },
-  _initScrollView: function _initScrollView() {
-    var _this$option = this.option(),
-      width = _this$option.width,
-      height = _this$option.height,
-      direction = _this$option.direction,
-      showScrollbar = _this$option.showScrollbar;
+  _initScrollView: function () {
+    const {
+      width,
+      height,
+      direction,
+      showScrollbar
+    } = this.option();
     this._scrollView = this._createComponent(this.$element(), _scroll_view.default, {
       direction,
       width,
@@ -165,7 +166,7 @@ var TileView = _uiCollection_widget.default.inherit({
     this._$container.addClass(TILEVIEW_CONTAINER_CLASS);
     this._scrollView.option('onUpdated', this._renderGeometry.bind(this));
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     (0, _common.deferRender)(function () {
       this._cellsPerDimension = 1;
@@ -174,25 +175,25 @@ var TileView = _uiCollection_widget.default.inherit({
       this._fireContentReadyAction();
     }.bind(this));
   },
-  _updateScrollView: function _updateScrollView() {
+  _updateScrollView: function () {
     this._scrollView.option('direction', this.option('direction'));
     this._scrollView.update();
     this._indicateLoadingIfAlreadyStarted();
   },
-  _indicateLoadingIfAlreadyStarted: function _indicateLoadingIfAlreadyStarted() {
+  _indicateLoadingIfAlreadyStarted: function () {
     if (this._isDataSourceLoading()) {
       this._dataSourceLoadingChangedHandler(true);
     }
   },
-  _renderGeometry: function _renderGeometry() {
+  _renderGeometry: function () {
     this._config = CONFIGS[this.option('direction')];
-    var items = this.option('items') || [];
-    var config = this._config;
-    var itemMargin = this.option('itemMargin');
-    var maxItemCrossRatio = Math.max.apply(Math, (0, _iterator.map)(items || [], function (item) {
+    const items = this.option('items') || [];
+    const config = this._config;
+    const itemMargin = this.option('itemMargin');
+    const maxItemCrossRatio = Math.max.apply(Math, (0, _iterator.map)(items || [], function (item) {
       return Math.round(item[config.itemCrossRatio] || 1);
     }));
-    var crossDimensionValue;
+    let crossDimensionValue;
     if (_window.hasWindow) {
       crossDimensionValue = (config.crossDimension === 'width' ? _size.getWidth : _size.getHeight)(this.$element());
     } else {
@@ -205,29 +206,31 @@ var TileView = _uiCollection_widget.default.inherit({
     this._arrangeItems(items);
     this._renderContentSize(config, itemMargin);
   },
-  _renderContentSize: function _renderContentSize(_ref, itemMargin) {
-    var mainDimension = _ref.mainDimension,
-      baseItemMainDimension = _ref.baseItemMainDimension;
+  _renderContentSize: function (_ref, itemMargin) {
+    let {
+      mainDimension,
+      baseItemMainDimension
+    } = _ref;
     if ((0, _window.hasWindow)()) {
-      var actualContentSize = this._cells.length * this.option(baseItemMainDimension) + (this._cells.length + 1) * itemMargin;
-      var elementSize = (mainDimension === 'width' ? _size.getWidth : _size.getHeight)(this.$element());
+      const actualContentSize = this._cells.length * this.option(baseItemMainDimension) + (this._cells.length + 1) * itemMargin;
+      const elementSize = (mainDimension === 'width' ? _size.getWidth : _size.getHeight)(this.$element());
       (mainDimension === 'width' ? _size.setWidth : _size.setHeight)(this._$container, Math.max(actualContentSize, elementSize));
     }
   },
-  _arrangeItems: function _arrangeItems(items) {
-    var config = this._config;
-    var itemMainRatio = config.itemMainRatio;
-    var itemCrossRatio = config.itemCrossRatio;
-    var mainPosition = config.mainPosition;
+  _arrangeItems: function (items) {
+    const config = this._config;
+    const itemMainRatio = config.itemMainRatio;
+    const itemCrossRatio = config.itemCrossRatio;
+    const mainPosition = config.mainPosition;
     this._itemsPositions = [];
     (0, _iterator.each)(items, function (index, item) {
-      var currentItem = {};
+      const currentItem = {};
       currentItem[itemMainRatio] = item[itemMainRatio] || 1;
       currentItem[itemCrossRatio] = item[itemCrossRatio] || 1;
       currentItem.index = index;
       currentItem[itemMainRatio] = currentItem[itemMainRatio] <= 0 ? 0 : Math.round(currentItem[config.itemMainRatio]);
       currentItem[itemCrossRatio] = currentItem[itemCrossRatio] <= 0 ? 0 : Math.round(currentItem[config.itemCrossRatio]);
-      var itemPosition = this._getItemPosition(currentItem);
+      const itemPosition = this._getItemPosition(currentItem);
       if (itemPosition[mainPosition] === -1) {
         itemPosition[mainPosition] = this._cells.push(new Array(this._cellsPerDimension)) - 1;
       }
@@ -236,15 +239,15 @@ var TileView = _uiCollection_widget.default.inherit({
       this._itemsPositions.push(itemPosition);
     }.bind(this));
   },
-  _getItemPosition: function _getItemPosition(item) {
-    var config = this._config;
-    var mainPosition = config.mainPosition;
-    var crossPosition = config.crossPosition;
-    var position = {};
+  _getItemPosition: function (item) {
+    const config = this._config;
+    const mainPosition = config.mainPosition;
+    const crossPosition = config.crossPosition;
+    const position = {};
     position[mainPosition] = -1;
     position[crossPosition] = 0;
-    for (var main = 0; main < this._cells.length; main++) {
-      for (var cross = 0; cross < this._cellsPerDimension; cross++) {
+    for (let main = 0; main < this._cells.length; main++) {
+      for (let cross = 0; cross < this._cellsPerDimension; cross++) {
         if (this._itemFit(main, cross, item)) {
           position[mainPosition] = main;
           position[crossPosition] = cross;
@@ -257,16 +260,16 @@ var TileView = _uiCollection_widget.default.inherit({
     }
     return position;
   },
-  _itemFit: function _itemFit(mainPosition, crossPosition, item) {
-    var result = true;
-    var config = this._config;
-    var itemRatioMain = item[config.itemMainRatio];
-    var itemRatioCross = item[config.itemCrossRatio];
+  _itemFit: function (mainPosition, crossPosition, item) {
+    let result = true;
+    const config = this._config;
+    const itemRatioMain = item[config.itemMainRatio];
+    const itemRatioCross = item[config.itemCrossRatio];
     if (crossPosition + itemRatioCross > this._cellsPerDimension) {
       return false;
     }
-    for (var main = mainPosition; main < mainPosition + itemRatioMain; main++) {
-      for (var cross = crossPosition; cross < crossPosition + itemRatioCross; cross++) {
+    for (let main = mainPosition; main < mainPosition + itemRatioMain; main++) {
+      for (let cross = crossPosition; cross < crossPosition + itemRatioCross; cross++) {
         if (this._cells.length - 1 < main) {
           this._cells.push(new Array(this._cellsPerDimension));
         } else if (this._cells[main][cross] !== undefined) {
@@ -277,63 +280,63 @@ var TileView = _uiCollection_widget.default.inherit({
     }
     return result;
   },
-  _occupyCells: function _occupyCells(item, itemPosition) {
-    var config = this._config;
-    var itemPositionMain = itemPosition[config.mainPosition];
-    var itemPositionCross = itemPosition[config.crossPosition];
-    var itemRatioMain = item[config.itemMainRatio];
-    var itemRatioCross = item[config.itemCrossRatio];
-    for (var main = itemPositionMain; main < itemPositionMain + itemRatioMain; main++) {
-      for (var cross = itemPositionCross; cross < itemPositionCross + itemRatioCross; cross++) {
+  _occupyCells: function (item, itemPosition) {
+    const config = this._config;
+    const itemPositionMain = itemPosition[config.mainPosition];
+    const itemPositionCross = itemPosition[config.crossPosition];
+    const itemRatioMain = item[config.itemMainRatio];
+    const itemRatioCross = item[config.itemCrossRatio];
+    for (let main = itemPositionMain; main < itemPositionMain + itemRatioMain; main++) {
+      for (let cross = itemPositionCross; cross < itemPositionCross + itemRatioCross; cross++) {
         this._cells[main][cross] = item.index;
       }
     }
   },
-  _arrangeItem: function _arrangeItem(item, itemPosition) {
-    var config = this._config;
-    var itemPositionMain = itemPosition[config.mainPosition];
-    var itemPositionCross = itemPosition[config.crossPosition];
-    var itemRatioMain = item[config.itemMainRatio];
-    var itemRatioCross = item[config.itemCrossRatio];
-    var baseItemCross = this.option(config.baseItemCrossDimension);
-    var baseItemMain = this.option(config.baseItemMainDimension);
-    var itemMargin = this.option('itemMargin');
-    var cssProps = {
+  _arrangeItem: function (item, itemPosition) {
+    const config = this._config;
+    const itemPositionMain = itemPosition[config.mainPosition];
+    const itemPositionCross = itemPosition[config.crossPosition];
+    const itemRatioMain = item[config.itemMainRatio];
+    const itemRatioCross = item[config.itemCrossRatio];
+    const baseItemCross = this.option(config.baseItemCrossDimension);
+    const baseItemMain = this.option(config.baseItemMainDimension);
+    const itemMargin = this.option('itemMargin');
+    const cssProps = {
       display: itemRatioMain <= 0 || itemRatioCross <= 0 ? 'none' : ''
     };
-    var mainDimension = itemRatioMain * baseItemMain + (itemRatioMain - 1) * itemMargin;
-    var crossDimension = itemRatioCross * baseItemCross + (itemRatioCross - 1) * itemMargin;
+    const mainDimension = itemRatioMain * baseItemMain + (itemRatioMain - 1) * itemMargin;
+    const crossDimension = itemRatioCross * baseItemCross + (itemRatioCross - 1) * itemMargin;
     cssProps[config.mainDimension] = mainDimension < 0 ? 0 : mainDimension;
     cssProps[config.crossDimension] = crossDimension < 0 ? 0 : crossDimension;
     cssProps[config.mainPosition] = itemPositionMain * baseItemMain + (itemPositionMain + 1) * itemMargin;
     cssProps[config.crossPosition] = itemPositionCross * baseItemCross + (itemPositionCross + 1) * itemMargin;
     if (this.option('rtlEnabled')) {
-      var offsetCorrection = (0, _size.getWidth)(this._$container);
-      var baseItemWidth = this.option('baseItemWidth');
-      var itemPositionX = itemPosition.left;
-      var offsetPosition = itemPositionX * baseItemWidth;
-      var itemBaseOffset = baseItemWidth + itemMargin;
-      var itemWidth = itemBaseOffset * item.widthRatio;
-      var subItemMargins = itemPositionX * itemMargin;
+      const offsetCorrection = (0, _size.getWidth)(this._$container);
+      const baseItemWidth = this.option('baseItemWidth');
+      const itemPositionX = itemPosition.left;
+      const offsetPosition = itemPositionX * baseItemWidth;
+      const itemBaseOffset = baseItemWidth + itemMargin;
+      const itemWidth = itemBaseOffset * item.widthRatio;
+      const subItemMargins = itemPositionX * itemMargin;
       cssProps.left = offsetCorrection - (offsetPosition + itemWidth + subItemMargins);
     }
     this._itemElements().eq(item.index).css(cssProps);
   },
-  _moveFocus: function _moveFocus(location) {
-    var FOCUS_UP = 'up';
-    var FOCUS_DOWN = 'down';
-    var FOCUS_LEFT = this.option('rtlEnabled') ? 'right' : 'left';
-    var FOCUS_RIGHT = this.option('rtlEnabled') ? 'left' : 'right';
-    var FOCUS_PAGE_UP = 'pageup';
-    var FOCUS_PAGE_DOWN = 'pagedown';
-    var horizontalDirection = this.option('direction') === 'horizontal';
-    var cells = this._cells;
-    var index = (0, _renderer.default)(this.option('focusedElement')).index();
-    var targetCol = this._itemsPositions[index].left;
-    var targetRow = this._itemsPositions[index].top;
-    var colCount = (horizontalDirection ? cells : cells[0]).length;
-    var rowCount = (horizontalDirection ? cells[0] : cells).length;
-    var getCell = function getCell(col, row) {
+  _moveFocus: function (location) {
+    const FOCUS_UP = 'up';
+    const FOCUS_DOWN = 'down';
+    const FOCUS_LEFT = this.option('rtlEnabled') ? 'right' : 'left';
+    const FOCUS_RIGHT = this.option('rtlEnabled') ? 'left' : 'right';
+    const FOCUS_PAGE_UP = 'pageup';
+    const FOCUS_PAGE_DOWN = 'pagedown';
+    const horizontalDirection = this.option('direction') === 'horizontal';
+    const cells = this._cells;
+    const index = (0, _renderer.default)(this.option('focusedElement')).index();
+    let targetCol = this._itemsPositions[index].left;
+    let targetRow = this._itemsPositions[index].top;
+    const colCount = (horizontalDirection ? cells : cells[0]).length;
+    const rowCount = (horizontalDirection ? cells[0] : cells).length;
+    const getCell = function (col, row) {
       if (horizontalDirection) {
         return cells[col][row];
       }
@@ -378,26 +381,26 @@ var TileView = _uiCollection_widget.default.inherit({
         this.callBase.apply(this, arguments);
         return;
     }
-    var newTargetIndex = getCell(targetCol, targetRow);
+    const newTargetIndex = getCell(targetCol, targetRow);
     if (!(0, _type.isDefined)(newTargetIndex)) {
       return;
     }
-    var $newTarget = this._itemElements().eq(newTargetIndex);
+    const $newTarget = this._itemElements().eq(newTargetIndex);
     this.option('focusedElement', (0, _element.getPublicElement)($newTarget));
     this._scrollToItem($newTarget);
   },
-  _scrollToItem: function _scrollToItem($itemElement) {
+  _scrollToItem: function ($itemElement) {
     if (!$itemElement.length) {
       return;
     }
-    var config = this._config;
-    var outerMainGetter = config.mainDimension === 'width' ? _size.getOuterWidth : _size.getOuterHeight;
-    var itemMargin = this.option('itemMargin');
-    var itemPosition = $itemElement.position()[config.mainPosition];
-    var itemDimension = outerMainGetter($itemElement);
-    var itemTail = itemPosition + itemDimension;
-    var scrollPosition = this.scrollPosition();
-    var clientWidth = outerMainGetter(this.$element());
+    const config = this._config;
+    const outerMainGetter = config.mainDimension === 'width' ? _size.getOuterWidth : _size.getOuterHeight;
+    const itemMargin = this.option('itemMargin');
+    const itemPosition = $itemElement.position()[config.mainPosition];
+    const itemDimension = outerMainGetter($itemElement);
+    const itemTail = itemPosition + itemDimension;
+    const scrollPosition = this.scrollPosition();
+    const clientWidth = outerMainGetter(this.$element());
     if (scrollPosition <= itemPosition && itemTail <= scrollPosition + clientWidth) {
       return;
     }
@@ -407,7 +410,7 @@ var TileView = _uiCollection_widget.default.inherit({
       this._scrollView.scrollTo(itemPosition + itemDimension - clientWidth + itemMargin);
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'items':
         this.callBase(args);
@@ -444,7 +447,7 @@ var TileView = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  scrollPosition: function scrollPosition() {
+  scrollPosition: function () {
     return this._scrollView.scrollOffset()[this._config.mainPosition];
   }
 });

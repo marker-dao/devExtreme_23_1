@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/components/data_validator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,17 +13,17 @@ var _type = require("../../core/utils/type");
 var _extend = require("../../core/utils/extend");
 var _utils = require("../core/utils");
 var _parse_utils = require("./parse_utils");
-var STRING = 'string';
-var NUMERIC = 'numeric';
-var DATETIME = 'datetime';
-var DISCRETE = 'discrete';
-var SEMIDISCRETE = 'semidiscrete';
-var CONTINUOUS = 'continuous';
-var LOGARITHMIC = 'logarithmic';
-var VALUE_TYPE = 'valueType';
-var ARGUMENT_TYPE = 'argumentType';
-var axisTypeParser = (0, _utils.enumParser)([STRING, NUMERIC, DATETIME]);
-var _isArray = Array.isArray;
+const STRING = 'string';
+const NUMERIC = 'numeric';
+const DATETIME = 'datetime';
+const DISCRETE = 'discrete';
+const SEMIDISCRETE = 'semidiscrete';
+const CONTINUOUS = 'continuous';
+const LOGARITHMIC = 'logarithmic';
+const VALUE_TYPE = 'valueType';
+const ARGUMENT_TYPE = 'argumentType';
+const axisTypeParser = (0, _utils.enumParser)([STRING, NUMERIC, DATETIME]);
+const _isArray = Array.isArray;
 function groupingValues(data, others, valueField, index) {
   if (index >= 0) {
     data.slice(index).forEach(function (cell) {
@@ -44,16 +44,16 @@ function processGroups(groups) {
   });
 }
 function sortValues(data, asc, selector) {
-  var func = asc ? function (a, b) {
+  const func = asc ? function (a, b) {
     return a - b;
   } : function (a, b) {
     return b - a;
   };
   data.sort(function (a, b) {
-    var valA = selector(a);
-    var valB = selector(b);
-    var aa = (0, _type.isDefined)(valA) ? 1 : 0;
-    var bb = (0, _type.isDefined)(valB) ? 1 : 0;
+    const valA = selector(a);
+    const valB = selector(b);
+    const aa = (0, _type.isDefined)(valA) ? 1 : 0;
+    const bb = (0, _type.isDefined)(valB) ? 1 : 0;
     return aa && bb ? func(valA, valB) : func(aa, bb);
   });
   return data;
@@ -64,17 +64,17 @@ function resetArgumentAxes(axes) {
   });
 }
 function parseCategories(categories, parser) {
-  var newArray = [];
+  const newArray = [];
   categories.forEach(function (category) {
-    var parsedCategory = parser(category);
+    const parsedCategory = parser(category);
     parsedCategory !== undefined && newArray.push(parsedCategory);
   });
   return newArray;
 }
 function parseAxisCategories(groupsData, parsers) {
-  var argumentCategories = groupsData.argumentOptions && groupsData.argumentOptions.categories;
+  const argumentCategories = groupsData.argumentOptions && groupsData.argumentOptions.categories;
   groupsData.groups.forEach(function (valueGroup, i) {
-    var categories = valueGroup.valueOptions && valueGroup.valueOptions.categories;
+    const categories = valueGroup.valueOptions && valueGroup.valueOptions.categories;
     if (categories) {
       valueGroup.valueOptions.categories = parseCategories(categories, parsers[i + 1]);
     }
@@ -87,7 +87,7 @@ function eigen(x) {
   return x;
 }
 function getType(unit, type) {
-  var result = type;
+  let result = type;
   if (type === STRING || (0, _type.isString)(unit)) {
     result = STRING;
   } else if (type === DATETIME || (0, _type.isDate)(unit)) {
@@ -111,12 +111,12 @@ function validUnit(unit, field, incidentOccurred) {
   }
 }
 function createParserUnit(type, axisType, incidentOccurred) {
-  var parser = type ? (0, _parse_utils.getParser)(type) : eigen;
-  var filterInfinity = axisType !== DISCRETE ? function (x) {
+  const parser = type ? (0, _parse_utils.getParser)(type) : eigen;
+  const filterInfinity = axisType !== DISCRETE ? function (x) {
     return isFinite(x) || x === undefined ? x : null;
   } : eigen;
   return function (unit, field) {
-    var parseUnit = filterInfinity(parser(unit));
+    const parseUnit = filterInfinity(parser(unit));
     if (parseUnit === undefined) {
       validUnit(unit, field, incidentOccurred);
     }
@@ -124,12 +124,12 @@ function createParserUnit(type, axisType, incidentOccurred) {
   };
 }
 function prepareParsers(groupsData, incidentOccurred) {
-  var argumentParser = createParserUnit(groupsData.argumentType, groupsData.argumentAxisType, incidentOccurred);
-  var sizeParser;
-  var valueParser;
-  var categoryParsers = [argumentParser];
-  var cache = {};
-  var list = [];
+  const argumentParser = createParserUnit(groupsData.argumentType, groupsData.argumentAxisType, incidentOccurred);
+  let sizeParser;
+  let valueParser;
+  const categoryParsers = [argumentParser];
+  const cache = {};
+  const list = [];
   groupsData.groups.forEach(function (group, groupIndex) {
     group.series.forEach(function (series) {
       valueParser = createParserUnit(group.valueType, group.valueAxisType, incidentOccurred);
@@ -144,18 +144,18 @@ function prepareParsers(groupsData, incidentOccurred) {
       }
     });
   });
-  for (var field in cache) {
+  for (const field in cache) {
     list.push([field, cache[field]]);
   }
   list.length && parseAxisCategories(groupsData, categoryParsers);
   return list;
 }
 function getParsedCell(cell, parsers) {
-  var i;
-  var ii = parsers.length;
-  var obj = (0, _extend.extend)({}, cell);
-  var field;
-  var value;
+  let i;
+  const ii = parsers.length;
+  const obj = (0, _extend.extend)({}, cell);
+  let field;
+  let value;
   for (i = 0; i < ii; ++i) {
     field = parsers[i][0];
     value = cell[field];
@@ -164,9 +164,9 @@ function getParsedCell(cell, parsers) {
   return obj;
 }
 function parse(data, parsers) {
-  var parsedData = [];
-  var i;
-  var ii = data.length;
+  const parsedData = [];
+  let i;
+  const ii = data.length;
   parsedData.length = ii;
   for (i = 0; i < ii; ++i) {
     parsedData[i] = getParsedCell(data[i], parsers);
@@ -174,9 +174,9 @@ function parse(data, parsers) {
   return parsedData;
 }
 function findIndexByThreshold(data, valueField, threshold) {
-  var i;
-  var ii = data.length;
-  var value;
+  let i;
+  const ii = data.length;
+  let value;
   for (i = 0; i < ii; ++i) {
     value = data[i][valueField];
     if ((0, _type.isDefined)(value) && threshold > value) {
@@ -187,22 +187,22 @@ function findIndexByThreshold(data, valueField, threshold) {
 }
 function groupMinSlices(originalData, argumentField, valueField, smallValuesGrouping) {
   smallValuesGrouping = smallValuesGrouping || {};
-  var mode = smallValuesGrouping.mode;
-  var others = {};
+  const mode = smallValuesGrouping.mode;
+  const others = {};
   if (!mode || mode === 'none') {
     return;
   }
   others[argumentField] = String(smallValuesGrouping.groupName || 'others');
   others[valueField] = 0;
-  var data = sortValues(originalData.slice(), false, function (a) {
+  const data = sortValues(originalData.slice(), false, function (a) {
     return a[valueField];
   });
   groupingValues(data, others, valueField, mode === 'smallValueThreshold' ? findIndexByThreshold(data, valueField, smallValuesGrouping.threshold) : smallValuesGrouping.topCount);
   others[valueField] && originalData.push(others);
 }
 function groupPieData(data, groupsData) {
-  var firstSeries = groupsData.groups[0] && groupsData.groups[0].series[0];
-  var isPie = firstSeries && (firstSeries.type === 'pie' || firstSeries.type === 'doughnut' || firstSeries.type === 'donut');
+  const firstSeries = groupsData.groups[0] && groupsData.groups[0].series[0];
+  const isPie = firstSeries && (firstSeries.type === 'pie' || firstSeries.type === 'doughnut' || firstSeries.type === 'donut');
   if (!isPie) {
     return;
   }
@@ -219,8 +219,8 @@ function addUniqueItemToCollection(item, collection, itemsHash) {
   }
 }
 function getUniqueArgumentFields(groupsData) {
-  var uniqueArgumentFields = [];
-  var hash = {};
+  const uniqueArgumentFields = [];
+  const hash = {};
   groupsData.groups.forEach(function (group) {
     group.series.forEach(function (series) {
       addUniqueItemToCollection(series.getArgumentField(), uniqueArgumentFields, hash);
@@ -229,7 +229,7 @@ function getUniqueArgumentFields(groupsData) {
   return uniqueArgumentFields;
 }
 function sort(a, b) {
-  var result = a - b;
+  const result = a - b;
   if (isNaN(result)) {
     if (!(0, _type.isDefined)(a)) {
       return 1;
@@ -258,7 +258,7 @@ function checkValueTypeOfGroup(group, cell) {
   return group.valueType;
 }
 function getSortByCategories(categories) {
-  var hash = {};
+  const hash = {};
   categories.forEach(function (value, i) {
     hash[value] = i;
   });
@@ -269,14 +269,14 @@ function getSortByCategories(categories) {
   };
 }
 function sortData(data, groupsData, options, uniqueArgumentFields) {
-  var dataByArguments = {};
-  var isDiscrete = groupsData.argumentAxisType === DISCRETE;
-  var userCategories = isDiscrete && groupsData.argumentOptions && groupsData.argumentOptions.categories;
-  var sortFunction = function sortFunction(data) {
+  const dataByArguments = {};
+  const isDiscrete = groupsData.argumentAxisType === DISCRETE;
+  const userCategories = isDiscrete && groupsData.argumentOptions && groupsData.argumentOptions.categories;
+  let sortFunction = function (data) {
     return data;
   };
-  var sortingMethodOption = options.sortingMethod;
-  var reSortCategories;
+  const sortingMethodOption = options.sortingMethod;
+  let reSortCategories;
   if (!userCategories && (0, _type.isFunction)(sortingMethodOption)) {
     data = sortByCallback(data, sortingMethodOption);
   }
@@ -303,10 +303,10 @@ function checkItemExistence(collection, item) {
   }).indexOf(item.valueOf()) === -1;
 }
 function getCategories(data, uniqueArgumentFields, userCategories) {
-  var categories = userCategories ? userCategories.slice() : [];
+  const categories = userCategories ? userCategories.slice() : [];
   uniqueArgumentFields.forEach(function (field) {
     data.forEach(function (item) {
-      var dataItem = item[field];
+      const dataItem = item[field];
       (0, _type.isDefined)(dataItem) && checkItemExistence(categories, dataItem) && categories.push(dataItem);
     });
   });
@@ -319,15 +319,15 @@ function checkArgumentTypeOfGroup(series, cell, groupsData) {
   return groupsData.argumentType;
 }
 function checkType(data, groupsData, checkTypeForAllData) {
-  var groupsWithUndefinedValueType = [];
-  var groupsWithUndefinedArgumentType = [];
-  var argumentTypeGroup = groupsData.argumentOptions && axisTypeParser(groupsData.argumentOptions.argumentType);
-  var groupsIndexes;
+  const groupsWithUndefinedValueType = [];
+  const groupsWithUndefinedArgumentType = [];
+  const argumentTypeGroup = groupsData.argumentOptions && axisTypeParser(groupsData.argumentOptions.argumentType);
+  let groupsIndexes;
   groupsData.groups.forEach(function (group) {
     if (!group.series.length) {
       return;
     }
-    var valueTypeGroup = group.valueOptions && axisTypeParser(group.valueOptions.valueType);
+    const valueTypeGroup = group.valueOptions && axisTypeParser(group.valueOptions.valueType);
     group.valueType = valueTypeGroup;
     groupsData.argumentType = argumentTypeGroup;
     !valueTypeGroup && groupsWithUndefinedValueType.push(group);
@@ -338,7 +338,7 @@ function checkType(data, groupsData, checkTypeForAllData) {
       return index;
     });
     data.some(function (cell) {
-      var defineArg;
+      let defineArg;
       groupsWithUndefinedValueType.forEach(function (group, groupIndex) {
         if (checkValueTypeOfGroup(group, cell) && groupsIndexes.indexOf(groupIndex) >= 0) {
           groupsIndexes.splice(groupIndex, 1);
@@ -356,15 +356,15 @@ function checkType(data, groupsData, checkTypeForAllData) {
   }
 }
 function checkAxisType(groupsData, incidentOccurred) {
-  var argumentOptions = groupsData.argumentOptions || {};
-  var userArgumentCategories = argumentOptions && argumentOptions.categories || [];
-  var argumentAxisType = correctAxisType(groupsData.argumentType, argumentOptions.type, !!userArgumentCategories.length, incidentOccurred);
+  const argumentOptions = groupsData.argumentOptions || {};
+  const userArgumentCategories = argumentOptions && argumentOptions.categories || [];
+  const argumentAxisType = correctAxisType(groupsData.argumentType, argumentOptions.type, !!userArgumentCategories.length, incidentOccurred);
   groupsData.groups.forEach(function (group) {
-    var valueOptions = group.valueOptions || {};
-    var valueCategories = valueOptions.categories || [];
-    var valueAxisType = correctAxisType(group.valueType, valueOptions.type, !!valueCategories.length, incidentOccurred);
+    const valueOptions = group.valueOptions || {};
+    const valueCategories = valueOptions.categories || [];
+    const valueAxisType = correctAxisType(group.valueType, valueOptions.type, !!valueCategories.length, incidentOccurred);
     group.series.forEach(function (series) {
-      var optionsSeries = {};
+      const optionsSeries = {};
       optionsSeries.argumentAxisType = argumentAxisType;
       optionsSeries.valueAxisType = valueAxisType;
       groupsData.argumentAxisType = groupsData.argumentAxisType || optionsSeries.argumentAxisType;
@@ -389,13 +389,13 @@ function checkAxisType(groupsData, incidentOccurred) {
   }
 }
 function verifyData(source, incidentOccurred) {
-  var data = [];
-  var sourceIsDefined = (0, _type.isDefined)(source);
-  var hasError = sourceIsDefined && !_isArray(source);
-  var i;
-  var ii;
-  var k;
-  var item;
+  const data = [];
+  const sourceIsDefined = (0, _type.isDefined)(source);
+  let hasError = sourceIsDefined && !_isArray(source);
+  let i;
+  let ii;
+  let k;
+  let item;
   if (sourceIsDefined && !hasError) {
     for (i = 0, ii = source.length, k = 0; i < ii; ++i) {
       item = source[i];
@@ -423,6 +423,6 @@ function validateData(data, groupsData, incidentOccurred, options) {
     data = parse(data, prepareParsers(groupsData, incidentOccurred));
   }
   groupPieData(data, groupsData);
-  var dataByArgumentFields = sortData(data, groupsData, options, getUniqueArgumentFields(groupsData));
+  const dataByArgumentFields = sortData(data, groupsData, options, getUniqueArgumentFields(groupsData));
   return dataByArgumentFields;
 }

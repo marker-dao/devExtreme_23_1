@@ -2,7 +2,7 @@
 
 exports.getPublicElement = getPublicElement;
 exports.setPublicElementWrapper = setPublicElementWrapper;
-var strategy = function strategy(element) {
+let strategy = function (element) {
   return element && element.get(0);
 };
 function getPublicElement(element) {

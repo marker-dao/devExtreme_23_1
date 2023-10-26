@@ -25,27 +25,21 @@ var _uiFile_manager9 = _interopRequireDefault(require("./ui.file_manager.adaptiv
 var _utils = require("../../core/options/utils");
 var _comparator = require("../../core/utils/comparator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_CLASS = 'dx-filemanager';
-var FILE_MANAGER_WRAPPER_CLASS = FILE_MANAGER_CLASS + '-wrapper';
-var FILE_MANAGER_CONTAINER_CLASS = FILE_MANAGER_CLASS + '-container';
-var FILE_MANAGER_DIRS_PANEL_CLASS = FILE_MANAGER_CLASS + '-dirs-panel';
-var FILE_MANAGER_EDITING_CONTAINER_CLASS = FILE_MANAGER_CLASS + '-editing-container';
-var FILE_MANAGER_ITEMS_PANEL_CLASS = FILE_MANAGER_CLASS + '-items-panel';
-var FILE_MANAGER_ITEM_CUSTOM_THUMBNAIL_CLASS = FILE_MANAGER_CLASS + '-item-custom-thumbnail';
-var PARENT_DIRECTORY_KEY_PREFIX = '[*DXPDK*]$40F96F03-FBD8-43DF-91BE-F55F4B8BA871$';
-var VIEW_AREAS = {
+const FILE_MANAGER_CLASS = 'dx-filemanager';
+const FILE_MANAGER_WRAPPER_CLASS = FILE_MANAGER_CLASS + '-wrapper';
+const FILE_MANAGER_CONTAINER_CLASS = FILE_MANAGER_CLASS + '-container';
+const FILE_MANAGER_DIRS_PANEL_CLASS = FILE_MANAGER_CLASS + '-dirs-panel';
+const FILE_MANAGER_EDITING_CONTAINER_CLASS = FILE_MANAGER_CLASS + '-editing-container';
+const FILE_MANAGER_ITEMS_PANEL_CLASS = FILE_MANAGER_CLASS + '-items-panel';
+const FILE_MANAGER_ITEM_CUSTOM_THUMBNAIL_CLASS = FILE_MANAGER_CLASS + '-item-custom-thumbnail';
+const PARENT_DIRECTORY_KEY_PREFIX = '[*DXPDK*]$40F96F03-FBD8-43DF-91BE-F55F4B8BA871$';
+const VIEW_AREAS = {
   folders: 'navPane',
   items: 'itemView'
 };
-var FileManager = /*#__PURE__*/function (_Widget) {
+let FileManager = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManager, _Widget);
   function FileManager() {
     return _Widget.apply(this, arguments) || this;
@@ -91,56 +85,40 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     this._initCommandManager();
   };
   _proto._createNotificationControl = function _createNotificationControl() {
-    var _this = this;
-    var $notificationControl = (0, _renderer.default)('<div>').addClass('dx-filemanager-notification-container').appendTo(this.$element());
+    const $notificationControl = (0, _renderer.default)('<div>').addClass('dx-filemanager-notification-container').appendTo(this.$element());
     this._notificationControl = this._createComponent($notificationControl, _uiFile_manager6.default, {
       progressPanelContainer: this.$element(),
-      contentTemplate: function contentTemplate(container, notificationControl) {
-        return _this._createWrapper(container, notificationControl);
-      },
-      onActionProgress: function onActionProgress(e) {
-        return _this._onActionProgress(e);
-      },
+      contentTemplate: (container, notificationControl) => this._createWrapper(container, notificationControl),
+      onActionProgress: e => this._onActionProgress(e),
       positionTarget: ".".concat(FILE_MANAGER_CONTAINER_CLASS),
       showProgressPanel: this.option('notifications.showPanel'),
       showNotificationPopup: this.option('notifications.showPopup')
     });
   };
   _proto._createWrapper = function _createWrapper(container, notificationControl) {
-    var _this2 = this;
     this._$wrapper = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_WRAPPER_CLASS).appendTo(container);
     this._createEditing(notificationControl);
-    var $toolbar = (0, _renderer.default)('<div>').appendTo(this._$wrapper);
+    const $toolbar = (0, _renderer.default)('<div>').appendTo(this._$wrapper);
     this._toolbar = this._createComponent($toolbar, _uiFile_manager5.default, {
       commandManager: this._commandManager,
       generalItems: this.option('toolbar.items'),
       fileItems: this.option('toolbar.fileSelectionItems'),
       itemViewMode: this.option('itemView').mode,
-      onItemClick: function onItemClick(args) {
-        return _this2._actions.onToolbarItemClick(args);
-      }
+      onItemClick: args => this._actions.onToolbarItemClick(args)
     });
     this._createAdaptivityControl();
   };
   _proto._createAdaptivityControl = function _createAdaptivityControl() {
-    var _this3 = this;
-    var $container = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_CONTAINER_CLASS).appendTo(this._$wrapper);
+    const $container = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_CONTAINER_CLASS).appendTo(this._$wrapper);
     this._adaptivityControl = this._createComponent($container, _uiFile_manager9.default, {
-      drawerTemplate: function drawerTemplate(container) {
-        return _this3._createFilesTreeView(container);
-      },
-      contentTemplate: function contentTemplate(container) {
-        return _this3._createItemsPanel(container);
-      },
-      onAdaptiveStateChanged: function onAdaptiveStateChanged(e) {
-        return _this3._onAdaptiveStateChanged(e);
-      }
+      drawerTemplate: container => this._createFilesTreeView(container),
+      contentTemplate: container => this._createItemsPanel(container),
+      onAdaptiveStateChanged: e => this._onAdaptiveStateChanged(e)
     });
     this._editing.setUploaderSplitterElement(this._adaptivityControl.getSplitterElement());
   };
   _proto._createEditing = function _createEditing(notificationControl) {
-    var _this4 = this;
-    var $editingContainer = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_EDITING_CONTAINER_CLASS).appendTo(this.$element());
+    const $editingContainer = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_EDITING_CONTAINER_CLASS).appendTo(this.$element());
     this._editing = this._createComponent($editingContainer, _uiFile_manager7.default, {
       controller: this._controller,
       model: {
@@ -150,13 +128,13 @@ var FileManager = /*#__PURE__*/function (_Widget) {
       notificationControl,
       uploadDropZonePlaceholderContainer: this.$element(),
       rtlEnabled: this.option('rtlEnabled'),
-      onSuccess: function onSuccess(_ref) {
-        var updatedOnlyFiles = _ref.updatedOnlyFiles;
-        return _this4._redrawComponent(updatedOnlyFiles);
+      onSuccess: _ref => {
+        let {
+          updatedOnlyFiles
+        } = _ref;
+        return this._redrawComponent(updatedOnlyFiles);
       },
-      onError: function onError(e) {
-        return _this4._onEditingError(e);
-      }
+      onError: e => this._onEditingError(e)
     });
   };
   _proto._createItemsPanel = function _createItemsPanel($container) {
@@ -166,115 +144,98 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     this._updateUploadDropZone();
   };
   _proto._updateUploadDropZone = function _updateUploadDropZone() {
-    var dropZone = this._commandManager.isCommandAvailable('upload') ? this._$itemsPanel : (0, _renderer.default)();
+    const dropZone = this._commandManager.isCommandAvailable('upload') ? this._$itemsPanel : (0, _renderer.default)();
     this._editing.setUploaderDropZone(dropZone);
   };
   _proto._createFilesTreeView = function _createFilesTreeView(container) {
-    var _this5 = this;
     this._filesTreeViewContextMenu = this._createContextMenu(false, VIEW_AREAS.folders);
-    var $filesTreeView = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_DIRS_PANEL_CLASS).appendTo(container);
+    const $filesTreeView = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_DIRS_PANEL_CLASS).appendTo(container);
     this._filesTreeView = this._createComponent($filesTreeView, _uiFile_manager4.default, {
       storeExpandedState: true,
       contextMenu: this._filesTreeViewContextMenu,
       getDirectories: this.getDirectories.bind(this),
       getCurrentDirectory: this._getCurrentDirectory.bind(this),
-      onDirectoryClick: function onDirectoryClick(_ref2) {
-        var itemData = _ref2.itemData;
-        return _this5._setCurrentDirectory(itemData);
+      onDirectoryClick: _ref2 => {
+        let {
+          itemData
+        } = _ref2;
+        return this._setCurrentDirectory(itemData);
       },
-      onItemListDataLoaded: function onItemListDataLoaded() {
-        return _this5._tryEndLoading(VIEW_AREAS.folders);
-      }
+      onItemListDataLoaded: () => this._tryEndLoading(VIEW_AREAS.folders)
     });
     this._filesTreeView.updateCurrentDirectory();
   };
   _proto._createItemView = function _createItemView($container, viewMode) {
-    var _this6 = this;
     this._itemViewContextMenu = this._createContextMenu(true, VIEW_AREAS.items);
-    var itemViewOptions = this.option('itemView');
-    var options = {
+    const itemViewOptions = this.option('itemView');
+    const options = {
       selectionMode: this.option('selectionMode'),
       selectedItemKeys: this.option('selectedItemKeys'),
       focusedItemKey: this.option('focusedItemKey'),
       contextMenu: this._itemViewContextMenu,
       getItems: this._getItemViewItems.bind(this),
-      onError: function onError(_ref3) {
-        var error = _ref3.error;
-        return _this6._showError(error);
+      onError: _ref3 => {
+        let {
+          error
+        } = _ref3;
+        return this._showError(error);
       },
       onSelectionChanged: this._onItemViewSelectionChanged.bind(this),
       onFocusedItemChanged: this._onItemViewFocusedItemChanged.bind(this),
       onSelectedItemOpened: this._onSelectedItemOpened.bind(this),
-      onContextMenuShowing: function onContextMenuShowing(e) {
-        return _this6._onContextMenuShowing(VIEW_AREAS.items, e);
-      },
-      onItemListItemsLoaded: function onItemListItemsLoaded() {
-        return _this6._tryEndLoading(VIEW_AREAS.items);
-      },
+      onContextMenuShowing: e => this._onContextMenuShowing(VIEW_AREAS.items, e),
+      onItemListItemsLoaded: () => this._tryEndLoading(VIEW_AREAS.items),
       getItemThumbnail: this._getItemThumbnailInfo.bind(this),
       customizeDetailColumns: this.option('customizeDetailColumns'),
       detailColumns: this.option('itemView.details.columns')
     };
-    var $itemView = (0, _renderer.default)('<div>').appendTo($container);
+    const $itemView = (0, _renderer.default)('<div>').appendTo($container);
     viewMode = viewMode || itemViewOptions.mode;
-    var widgetClass = viewMode === 'thumbnails' ? _uiFile_managerItem_list2.default : _uiFile_managerItem_list.default;
+    const widgetClass = viewMode === 'thumbnails' ? _uiFile_managerItem_list2.default : _uiFile_managerItem_list.default;
     this._itemView = this._createComponent($itemView, widgetClass, options);
   };
   _proto._createBreadcrumbs = function _createBreadcrumbs($container) {
-    var _this7 = this;
-    var $breadcrumbs = (0, _renderer.default)('<div>').appendTo($container);
+    const $breadcrumbs = (0, _renderer.default)('<div>').appendTo($container);
     this._breadcrumbs = this._createComponent($breadcrumbs, _uiFile_manager8.default, {
       rootFolderDisplayName: this.option('rootFolderName'),
-      onCurrentDirectoryChanging: function onCurrentDirectoryChanging(_ref4) {
-        var currentDirectory = _ref4.currentDirectory;
-        return _this7._setCurrentDirectory(currentDirectory, true);
+      onCurrentDirectoryChanging: _ref4 => {
+        let {
+          currentDirectory
+        } = _ref4;
+        return this._setCurrentDirectory(currentDirectory, true);
       }
     });
     this._breadcrumbs.setCurrentDirectory(this._getCurrentDirectory());
   };
   _proto._createContextMenu = function _createContextMenu(isolateCreationItemCommands, viewArea) {
-    var _this8 = this;
-    var $contextMenu = (0, _renderer.default)('<div>').appendTo(this._$wrapper);
+    const $contextMenu = (0, _renderer.default)('<div>').appendTo(this._$wrapper);
     return this._createComponent($contextMenu, _uiFile_manager3.default, {
       commandManager: this._commandManager,
       items: this.option('contextMenu.items'),
-      onItemClick: function onItemClick(args) {
-        return _this8._actions.onContextMenuItemClick(args);
-      },
-      onContextMenuShowing: function onContextMenuShowing(e) {
-        return _this8._onContextMenuShowing(viewArea, e);
-      },
+      onItemClick: args => this._actions.onContextMenuItemClick(args),
+      onContextMenuShowing: e => this._onContextMenuShowing(viewArea, e),
       isolateCreationItemCommands,
       viewArea
     });
   };
   _proto._initCommandManager = function _initCommandManager() {
-    var _this9 = this;
-    var actions = (0, _extend.extend)(this._editing.getCommandActions(), {
-      refresh: function refresh() {
-        return _this9._refreshAndShowProgress();
-      },
-      thumbnails: function thumbnails() {
-        return _this9.option('itemView.mode', 'thumbnails');
-      },
-      details: function details() {
-        return _this9.option('itemView.mode', 'details');
-      },
-      clearSelection: function clearSelection() {
-        return _this9._clearSelection();
-      },
-      showNavPane: function showNavPane() {
-        return _this9._adaptivityControl.toggleDrawer();
-      }
+    const actions = (0, _extend.extend)(this._editing.getCommandActions(), {
+      refresh: () => this._refreshAndShowProgress(),
+      thumbnails: () => this.option('itemView.mode', 'thumbnails'),
+      details: () => this.option('itemView.mode', 'details'),
+      clearSelection: () => this._clearSelection(),
+      showNavPane: () => this._adaptivityControl.toggleDrawer()
     });
     this._commandManager.registerActions(actions);
   };
   _proto._onItemViewSelectionChanged = function _onItemViewSelectionChanged(_ref5) {
-    var selectedItemInfos = _ref5.selectedItemInfos,
-      selectedItems = _ref5.selectedItems,
-      selectedItemKeys = _ref5.selectedItemKeys,
-      currentSelectedItemKeys = _ref5.currentSelectedItemKeys,
-      currentDeselectedItemKeys = _ref5.currentDeselectedItemKeys;
+    let {
+      selectedItemInfos,
+      selectedItems,
+      selectedItemKeys,
+      currentSelectedItemKeys,
+      currentDeselectedItemKeys
+    } = _ref5;
     this._lockSelectionProcessing = true;
     this.option('selectedItemKeys', selectedItemKeys);
     this._lockSelectionProcessing = false;
@@ -296,27 +257,28 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._onAdaptiveStateChanged = function _onAdaptiveStateChanged(_ref6) {
-    var enabled = _ref6.enabled;
+    let {
+      enabled
+    } = _ref6;
     this._commandManager.setCommandEnabled('showNavPane', enabled);
     this._updateToolbar();
   };
   _proto._onActionProgress = function _onActionProgress(_ref7) {
-    var message = _ref7.message,
-      status = _ref7.status;
+    let {
+      message,
+      status
+    } = _ref7;
     this._toolbar.updateRefreshItem(message, status);
     this._updateToolbar();
   };
   _proto._onEditingError = function _onEditingError(e) {
-    var args = (0, _uiFile_manager.extendAttributes)({}, e, ['errorCode', 'errorText', 'fileSystemItem']);
+    const args = (0, _uiFile_manager.extendAttributes)({}, e, ['errorCode', 'errorText', 'fileSystemItem']);
     this._actions.onErrorOccurred(args);
     e.errorText = args.errorText;
   };
   _proto._refreshAndShowProgress = function _refreshAndShowProgress() {
-    var _this10 = this;
     this._prepareToLoad();
-    return (0, _deferred.when)(this._notificationControl.tryShowProgressPanel(), this._controller.refresh()).then(function () {
-      return _this10._filesTreeView.refresh();
-    });
+    return (0, _deferred.when)(this._notificationControl.tryShowProgressPanel(), this._controller.refresh()).then(() => this._filesTreeView.refresh());
   };
   _proto._isAllWidgetsLoaded = function _isAllWidgetsLoaded() {
     return this._loadedWidgets.length === 2 && this._loadedWidgets.indexOf(VIEW_AREAS.folders) !== -1 && this._loadedWidgets.indexOf(VIEW_AREAS.items) !== -1;
@@ -332,7 +294,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     this._controller.startSingleLoad();
   };
   _proto._updateToolbar = function _updateToolbar(selectedItems) {
-    var items = selectedItems || this._getSelectedItemInfos();
+    const items = selectedItems || this._getSelectedItemInfos();
     this._toolbar.option('contextItems', (0, _common.ensureDefined)(items, []));
   };
   _proto._switchView = function _switchView(viewMode) {
@@ -361,50 +323,43 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     }, isSuccess ? 'success' : 'error', 5000);
   };
   _proto._redrawComponent = function _redrawComponent(onlyFileItemsView) {
-    var _this11 = this;
-    this._itemView.refresh().then(function () {
-      return !onlyFileItemsView && _this11._filesTreeView.refresh();
-    });
+    this._itemView.refresh().then(() => !onlyFileItemsView && this._filesTreeView.refresh());
   };
   _proto._getItemViewItems = function _getItemViewItems() {
-    var _this12 = this;
-    var showFolders = this.option('itemView').showFolders;
-    var result = this._controller.getCurrentItems(!showFolders);
+    const showFolders = this.option('itemView').showFolders;
+    let result = this._controller.getCurrentItems(!showFolders);
     this._updateToolbarWithSelectionOnFirstLoad(result);
     if (this.option('itemView.showParentFolder')) {
-      result = (0, _deferred.when)(result).then(function (items) {
-        return _this12._getPreparedItemViewItems(items);
-      });
+      result = (0, _deferred.when)(result).then(items => this._getPreparedItemViewItems(items));
     }
     return result;
   };
   _proto._updateToolbarWithSelectionOnFirstLoad = function _updateToolbarWithSelectionOnFirstLoad(itemsResult) {
-    var _this13 = this;
     if (!this._firstItemViewLoad) {
       return;
     }
     this._firstItemViewLoad = false;
-    var selectedItemKeys = this.option('selectedItemKeys');
+    const selectedItemKeys = this.option('selectedItemKeys');
     if (selectedItemKeys.length > 0) {
-      (0, _deferred.when)(itemsResult).done(function (items) {
-        var selectedItems = (0, _uiFile_manager.findItemsByKeys)(items, selectedItemKeys);
+      (0, _deferred.when)(itemsResult).done(items => {
+        const selectedItems = (0, _uiFile_manager.findItemsByKeys)(items, selectedItemKeys);
         if (selectedItems.length > 0) {
-          _this13._updateToolbar(selectedItems);
+          this._updateToolbar(selectedItems);
         }
       });
     }
   };
   _proto._getPreparedItemViewItems = function _getPreparedItemViewItems(items) {
-    var selectedDir = this._getCurrentDirectory();
+    const selectedDir = this._getCurrentDirectory();
     if (selectedDir.fileItem.isRoot()) {
       return items;
     }
-    var parentDirItem = selectedDir.fileItem.createClone();
+    const parentDirItem = selectedDir.fileItem.createClone();
     parentDirItem.isParentFolder = true;
     parentDirItem.name = '..';
     parentDirItem.relativeName = '..';
     parentDirItem.key = "".concat(PARENT_DIRECTORY_KEY_PREFIX).concat(selectedDir.fileItem.key);
-    var itemsCopy = _toConsumableArray(items);
+    const itemsCopy = [...items];
     itemsCopy.unshift({
       fileItem: parentDirItem,
       icon: 'parentfolder'
@@ -413,7 +368,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
   };
   _proto._onContextMenuShowing = function _onContextMenuShowing(viewArea, e) {
     var _e$itemData;
-    var eventArgs = (0, _uiFile_manager.extendAttributes)({}, e, ['targetElement', 'cancel', 'event']);
+    let eventArgs = (0, _uiFile_manager.extendAttributes)({}, e, ['targetElement', 'cancel', 'event']);
     eventArgs = (0, _extend.extend)(eventArgs, {
       viewArea,
       fileSystemItem: (_e$itemData = e.itemData) === null || _e$itemData === void 0 ? void 0 : _e$itemData.fileItem,
@@ -423,8 +378,8 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     e.cancel = (0, _common.ensureDefined)(eventArgs.cancel, false);
   };
   _proto._getItemThumbnailInfo = function _getItemThumbnailInfo(fileInfo) {
-    var func = this.option('customizeThumbnail');
-    var thumbnail = (0, _type.isFunction)(func) ? func(fileInfo.fileItem) : fileInfo.fileItem.thumbnail;
+    const func = this.option('customizeThumbnail');
+    const thumbnail = (0, _type.isFunction)(func) ? func(fileInfo.fileItem) : fileInfo.fileItem.thumbnail;
     if (thumbnail) {
       return {
         thumbnail,
@@ -504,18 +459,15 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto.option = function option(options, value) {
-    var _this14 = this;
-    var optionsToCheck = (0, _utils.normalizeOptions)(options, value);
-    var isGetter = arguments.length < 2 && (0, _type.type)(options) !== 'object';
-    var isOptionDefined = function isOptionDefined(name) {
-      return (0, _type.isDefined)(optionsToCheck[name]);
-    };
-    var isOptionValueDiffers = function isOptionValueDiffers(name) {
+    const optionsToCheck = (0, _utils.normalizeOptions)(options, value);
+    const isGetter = arguments.length < 2 && (0, _type.type)(options) !== 'object';
+    const isOptionDefined = name => (0, _type.isDefined)(optionsToCheck[name]);
+    const isOptionValueDiffers = name => {
       if (!isOptionDefined(name)) {
         return false;
       }
-      var previousValue = _this14.option(name);
-      var value = optionsToCheck[name];
+      const previousValue = this.option(name);
+      const value = optionsToCheck[name];
       return !(0, _comparator.equals)(previousValue, value);
     };
     if (!isGetter && isOptionDefined('fileSystemProvider')) {
@@ -527,14 +479,13 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     return _Widget.prototype.option.apply(this, arguments);
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var _this15 = this;
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'currentPath':
         {
-          var updateFunc = function updateFunc() {
-            _this15._lockCurrentPathProcessing = false;
-            return _this15._controller.setCurrentPath(args.value);
+          const updateFunc = () => {
+            this._lockCurrentPathProcessing = false;
+            return this._controller.setCurrentPath(args.value);
           };
           this._lockCurrentPathProcessing = true;
           this._providerUpdateDeferred ? this._providerUpdateDeferred.then(updateFunc) : updateFunc();
@@ -542,12 +493,12 @@ var FileManager = /*#__PURE__*/function (_Widget) {
         break;
       case 'currentPathKeys':
         {
-          var _updateFunc = function _updateFunc() {
-            _this15._lockCurrentPathProcessing = false;
-            return _this15._controller.setCurrentPathByKeys(args.value);
+          const updateFunc = () => {
+            this._lockCurrentPathProcessing = false;
+            return this._controller.setCurrentPathByKeys(args.value);
           };
           this._lockCurrentPathProcessing = true;
-          this._providerUpdateDeferred ? this._providerUpdateDeferred.then(_updateFunc) : _updateFunc();
+          this._providerUpdateDeferred ? this._providerUpdateDeferred.then(updateFunc) : updateFunc();
         }
         break;
       case 'selectedItemKeys':
@@ -569,12 +520,10 @@ var FileManager = /*#__PURE__*/function (_Widget) {
           if (!this._lockCurrentPathProcessing) {
             this._providerUpdateDeferred = new _deferred.Deferred();
           }
-          var pathKeys = this._lockCurrentPathProcessing ? undefined : this.option('currentPathKeys');
-          this._controller.updateProvider(args.value, pathKeys).then(function () {
-            return _this15._providerUpdateDeferred.resolve();
-          }).always(function () {
-            _this15._providerUpdateDeferred = null;
-            _this15.repaint();
+          const pathKeys = this._lockCurrentPathProcessing ? undefined : this.option('currentPathKeys');
+          this._controller.updateProvider(args.value, pathKeys).then(() => this._providerUpdateDeferred.resolve()).always(() => {
+            this._providerUpdateDeferred = null;
+            this.repaint();
           });
           break;
         }
@@ -607,7 +556,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
         break;
       case 'toolbar':
         {
-          var toolbarOptions = {};
+          const toolbarOptions = {};
           if (args.fullName === 'toolbar') {
             if (args.value.items) {
               toolbarOptions.generalItems = args.value.items;
@@ -627,7 +576,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
         break;
       case 'contextMenu':
         if (args.fullName === 'contextMenu' && args.value.items || args.fullName.indexOf('contextMenu.items') === 0) {
-          var contextMenuItems = this.option('contextMenu.items');
+          const contextMenuItems = this.option('contextMenu.items');
           this._filesTreeViewContextMenu.option('items', contextMenuItems);
           this._itemViewContextMenu.option('items', contextMenuItems);
         }
@@ -706,13 +655,17 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     return this._controller.getCurrentDirectory();
   };
   _proto._onControllerInitialized = function _onControllerInitialized(_ref8) {
-    var controller = _ref8.controller;
+    let {
+      controller
+    } = _ref8;
     this._controller = this._controller || controller;
     this._syncToCurrentDirectory();
   };
   _proto._onDataLoading = function _onDataLoading(_ref9) {
-    var operation = _ref9.operation;
-    var options = null;
+    let {
+      operation
+    } = _ref9;
+    let options = null;
     if (operation === _file_items_controller.OPERATIONS.NAVIGATION) {
       options = {
         focusedItemKey: this._itemKeyToFocus,
@@ -723,14 +676,14 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     this._itemView.refresh(options, operation);
   };
   _proto._onSelectedDirectoryChanged = function _onSelectedDirectoryChanged() {
-    var currentDirectory = this._getCurrentDirectory();
+    const currentDirectory = this._getCurrentDirectory();
     this._syncToCurrentDirectory();
     this._actions.onCurrentDirectoryChanged({
       directory: currentDirectory.fileItem
     });
   };
   _proto._syncToCurrentDirectory = function _syncToCurrentDirectory() {
-    var currentDirectory = this._getCurrentDirectory();
+    const currentDirectory = this._getCurrentDirectory();
     if (this._filesTreeView) {
       this._filesTreeView.updateCurrentDirectory();
     }
@@ -743,9 +696,9 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     if (this._lockCurrentPathProcessing) {
       return;
     }
-    var currentPath = this._controller.getCurrentPath();
-    var currentPathKeys = this._controller.getCurrentPathKeys();
-    var options = {};
+    const currentPath = this._controller.getCurrentPath();
+    const currentPathKeys = this._controller.getCurrentPathKeys();
+    const options = {};
     if (this.option('currentPath') !== currentPath) {
       options.currentPath = currentPath;
     }
@@ -766,17 +719,17 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     return this.executeCommand('refresh');
   };
   _proto.getCurrentDirectory = function getCurrentDirectory() {
-    var directoryInfo = this._getCurrentDirectory();
+    const directoryInfo = this._getCurrentDirectory();
     return directoryInfo && directoryInfo.fileItem || null;
   };
   _proto.getSelectedItems = function getSelectedItems() {
-    return this._getSelectedItemInfos().map(function (itemInfo) {
-      return itemInfo.fileItem;
-    });
+    return this._getSelectedItemInfos().map(itemInfo => itemInfo.fileItem);
   };
   _proto._onSelectedItemOpened = function _onSelectedItemOpened(_ref10) {
-    var fileItemInfo = _ref10.fileItemInfo;
-    var fileItem = fileItemInfo.fileItem;
+    let {
+      fileItemInfo
+    } = _ref10;
+    const fileItem = fileItemInfo.fileItem;
     if (!fileItem.isDirectory) {
       this._actions.onSelectedFileOpened({
         file: fileItem
@@ -786,7 +739,7 @@ var FileManager = /*#__PURE__*/function (_Widget) {
     if (fileItem.isParentFolder) {
       this._itemKeyToFocus = this._getCurrentDirectory().fileItem.key;
     }
-    var newCurrentDirectory = fileItem.isParentFolder ? this._getCurrentDirectory().parentDirectory : fileItemInfo;
+    const newCurrentDirectory = fileItem.isParentFolder ? this._getCurrentDirectory().parentDirectory : fileItemInfo;
     this._setCurrentDirectory(newCurrentDirectory);
     if (newCurrentDirectory) {
       this._filesTreeView.toggleDirectoryExpandedState(newCurrentDirectory.parentDirectory, true);

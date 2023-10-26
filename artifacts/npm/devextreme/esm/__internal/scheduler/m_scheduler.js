@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_scheduler.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -36,7 +36,7 @@ import { getPreparedDataItems } from '../../renovation/ui/scheduler/utils/data';
 import { excludeFromRecurrence } from '../../renovation/ui/scheduler/utils/recurrence/excludeFromRecurrence';
 import { isDateAndTimeView as _isDateAndTimeView, isTimelineView, validateDayHours } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { custom as customDialog } from '../../ui/dialog';
-import { isMaterialBased } from '../../ui/themes';
+import { isMaterial, isMaterialBased } from '../../ui/themes';
 import errors from '../../ui/widget/ui.errors';
 import Widget from '../../ui/widget/ui.widget';
 import { AppointmentForm } from './appointment_popup/m_form';
@@ -314,15 +314,21 @@ class Scheduler extends Widget {
             if (!index) $(element).append(' ');
           });
         },
-        _appointmentTooltipOffset: {
-          x: 0,
-          y: 11
-        },
         _appointmentTooltipButtonsPosition: 'top',
         _appointmentTooltipOpenButtonText: null,
         _appointmentCountPerCell: 1,
         _collectorOffset: 20,
         _appointmentOffset: 30
+      }
+    }, {
+      device() {
+        return isMaterial();
+      },
+      options: {
+        _appointmentTooltipOffset: {
+          x: 0,
+          y: 11
+        }
       }
     }]);
   }
@@ -1043,7 +1049,7 @@ class Scheduler extends Widget {
       getEditingConfig: () => this._editing,
       getFirstDayOfWeek: () => this.option('firstDayOfWeek'),
       getStartDayHour: () => this.option('startDayHour'),
-      getCalculatedEndDate: date => this._workSpace.calculateEndDate(date),
+      getCalculatedEndDate: startDateWithStartHour => this._workSpace.calculateEndDate(startDateWithStartHour),
       getTimeZoneCalculator: () => this.timeZoneCalculator
     };
     return new AppointmentForm(scheduler);

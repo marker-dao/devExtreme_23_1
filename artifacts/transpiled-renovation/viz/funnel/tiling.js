@@ -3,8 +3,8 @@
 exports.addAlgorithm = addAlgorithm;
 exports.getAlgorithm = getAlgorithm;
 var _utils = require("../core/utils");
-var algorithms = {};
-var defaultAlgorithm;
+const algorithms = {};
+let defaultAlgorithm;
 function getAlgorithm(name) {
   return algorithms[(0, _utils.normalizeEnum)(name)] || defaultAlgorithm;
 }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/intl/date.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,23 +14,23 @@ var _core = _interopRequireDefault(require("../core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* globals Intl */
 
-var SYMBOLS_TO_REMOVE_REGEX = /[\u200E\u200F]/g;
-var NARROW_NO_BREAK_SPACE_REGEX = /[\u202F]/g;
-var getIntlFormatter = function getIntlFormatter(format) {
-  return function (date) {
+const SYMBOLS_TO_REMOVE_REGEX = /[\u200E\u200F]/g;
+const NARROW_NO_BREAK_SPACE_REGEX = /[\u202F]/g;
+const getIntlFormatter = format => {
+  return date => {
     // NOTE: Intl in some browsers formates dates with timezone offset which was at the moment for this date.
     // But the method "new Date" creates date using current offset. So, we decided to format dates in the UTC timezone.
     if (!format.timeZoneName) {
-      var year = date.getFullYear();
+      const year = date.getFullYear();
       // NOTE: new Date(99,0,1) will return 1999 year, but 99 expected
-      var recognizableAsTwentyCentury = String(year).length < 3;
-      var safeYearShift = 400;
-      var temporaryYearValue = recognizableAsTwentyCentury ? year + safeYearShift : year;
-      var utcDate = new Date(Date.UTC(temporaryYearValue, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
+      const recognizableAsTwentyCentury = String(year).length < 3;
+      const safeYearShift = 400;
+      const temporaryYearValue = recognizableAsTwentyCentury ? year + safeYearShift : year;
+      const utcDate = new Date(Date.UTC(temporaryYearValue, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
       if (recognizableAsTwentyCentury) {
         utcDate.setFullYear(year);
       }
-      var utcFormat = (0, _extend.extend)({
+      const utcFormat = (0, _extend.extend)({
         timeZone: 'UTC'
       }, format);
       return formatDateTime(utcDate, utcFormat);
@@ -38,9 +38,9 @@ var getIntlFormatter = function getIntlFormatter(format) {
     return formatDateTime(date, format);
   };
 };
-var formattersCache = {};
-var getFormatter = function getFormatter(format) {
-  var key = _core.default.locale() + '/' + JSON.stringify(format);
+const formattersCache = {};
+const getFormatter = format => {
+  const key = _core.default.locale() + '/' + JSON.stringify(format);
   if (!formattersCache[key]) {
     formattersCache[key] = new Intl.DateTimeFormat(_core.default.locale(), format).format;
   }
@@ -49,45 +49,45 @@ var getFormatter = function getFormatter(format) {
 function formatDateTime(date, format) {
   return getFormatter(format)(date).replace(SYMBOLS_TO_REMOVE_REGEX, '').replace(NARROW_NO_BREAK_SPACE_REGEX, ' ');
 }
-var formatNumber = function formatNumber(number) {
+const formatNumber = number => {
   return new Intl.NumberFormat(_core.default.locale()).format(number);
 };
-var getAlternativeNumeralsMap = function () {
-  var numeralsMapCache = {};
-  return function (locale) {
+const getAlternativeNumeralsMap = (() => {
+  const numeralsMapCache = {};
+  return locale => {
     if (!(locale in numeralsMapCache)) {
       if (formatNumber(0) === '0') {
         numeralsMapCache[locale] = false;
         return false;
       }
       numeralsMapCache[locale] = {};
-      for (var i = 0; i < 10; ++i) {
+      for (let i = 0; i < 10; ++i) {
         numeralsMapCache[locale][formatNumber(i)] = i;
       }
     }
     return numeralsMapCache[locale];
   };
-}();
-var normalizeNumerals = function normalizeNumerals(dateString) {
-  var alternativeNumeralsMap = getAlternativeNumeralsMap(_core.default.locale());
+})();
+const normalizeNumerals = dateString => {
+  const alternativeNumeralsMap = getAlternativeNumeralsMap(_core.default.locale());
   if (!alternativeNumeralsMap) {
     return dateString;
   }
-  return dateString.split('').map(function (sign) {
+  return dateString.split('').map(sign => {
     return sign in alternativeNumeralsMap ? String(alternativeNumeralsMap[sign]) : sign;
   }).join('');
 };
-var removeLeadingZeroes = function removeLeadingZeroes(str) {
+const removeLeadingZeroes = str => {
   return str.replace(/(\D)0+(\d)/g, '$1$2');
 };
-var dateStringEquals = function dateStringEquals(actual, expected) {
+const dateStringEquals = (actual, expected) => {
   return removeLeadingZeroes(actual) === removeLeadingZeroes(expected);
 };
-var normalizeMonth = function normalizeMonth(text) {
+const normalizeMonth = text => {
   return text.replace('d\u2019', 'de '); // NOTE: For "ca" locale
 };
 
-var intlFormats = {
+const intlFormats = {
   'day': {
     day: 'numeric'
   },
@@ -138,8 +138,8 @@ var intlFormats = {
   }
 };
 Object.defineProperty(intlFormats, 'shortdateshorttime', {
-  get: function get() {
-    var defaultOptions = Intl.DateTimeFormat(_core.default.locale()).resolvedOptions();
+  get: function () {
+    const defaultOptions = Intl.DateTimeFormat(_core.default.locale()).resolvedOptions();
     return {
       year: defaultOptions.year,
       month: defaultOptions.month,
@@ -149,24 +149,24 @@ Object.defineProperty(intlFormats, 'shortdateshorttime', {
     };
   }
 });
-var getIntlFormat = function getIntlFormat(format) {
+const getIntlFormat = format => {
   return typeof format === 'string' && intlFormats[format.toLowerCase()];
 };
-var monthNameStrategies = {
-  standalone: function standalone(monthIndex, monthFormat) {
-    var date = new Date(1999, monthIndex, 13, 1);
-    var dateString = getIntlFormatter({
+const monthNameStrategies = {
+  standalone: function (monthIndex, monthFormat) {
+    const date = new Date(1999, monthIndex, 13, 1);
+    const dateString = getIntlFormatter({
       month: monthFormat
     })(date);
     return dateString;
   },
-  format: function format(monthIndex, monthFormat) {
-    var date = new Date(0, monthIndex, 13, 1);
-    var dateString = normalizeMonth(getIntlFormatter({
+  format: function (monthIndex, monthFormat) {
+    const date = new Date(0, monthIndex, 13, 1);
+    const dateString = normalizeMonth(getIntlFormatter({
       day: 'numeric',
       month: monthFormat
     })(date));
-    var parts = dateString.split(' ').filter(function (part) {
+    const parts = dateString.split(' ').filter(part => {
       return part.indexOf('13') < 0;
     });
     if (parts.length === 1) {
@@ -179,112 +179,110 @@ var monthNameStrategies = {
   }
 };
 var _default = {
-  engine: function engine() {
+  engine: function () {
     return 'intl';
   },
-  getMonthNames: function getMonthNames(format, type) {
-    var intlFormats = {
+  getMonthNames: function (format, type) {
+    const intlFormats = {
       wide: 'long',
       abbreviated: 'short',
       narrow: 'narrow'
     };
-    var monthFormat = intlFormats[format || 'wide'];
+    const monthFormat = intlFormats[format || 'wide'];
     type = type === 'format' ? type : 'standalone';
-    return Array.apply(null, new Array(12)).map(function (_, monthIndex) {
+    return Array.apply(null, new Array(12)).map((_, monthIndex) => {
       return monthNameStrategies[type](monthIndex, monthFormat);
     });
   },
-  getDayNames: function getDayNames(format) {
-    var intlFormats = {
+  getDayNames: function (format) {
+    const intlFormats = {
       wide: 'long',
       abbreviated: 'short',
       short: 'narrow',
       narrow: 'narrow'
     };
-    var getIntlDayNames = function getIntlDayNames(format) {
-      return Array.apply(null, new Array(7)).map(function (_, dayIndex) {
+    const getIntlDayNames = format => {
+      return Array.apply(null, new Array(7)).map((_, dayIndex) => {
         return getIntlFormatter({
           weekday: format
         })(new Date(0, 0, dayIndex));
       });
     };
-    var result = getIntlDayNames(intlFormats[format || 'wide']);
+    const result = getIntlDayNames(intlFormats[format || 'wide']);
     return result;
   },
-  getPeriodNames: function getPeriodNames() {
-    var hour12Formatter = getIntlFormatter({
+  getPeriodNames: function () {
+    const hour12Formatter = getIntlFormatter({
       hour: 'numeric',
       hour12: true
     });
-    return [1, 13].map(function (hours) {
-      var hourNumberText = formatNumber(1); // NOTE: For "bn" locale
-      var timeParts = hour12Formatter(new Date(0, 0, 1, hours)).split(hourNumberText);
+    return [1, 13].map(hours => {
+      const hourNumberText = formatNumber(1); // NOTE: For "bn" locale
+      const timeParts = hour12Formatter(new Date(0, 0, 1, hours)).split(hourNumberText);
       if (timeParts.length !== 2) {
         return '';
       }
-      var biggerPart = timeParts[0].length > timeParts[1].length ? timeParts[0] : timeParts[1];
+      const biggerPart = timeParts[0].length > timeParts[1].length ? timeParts[0] : timeParts[1];
       return biggerPart.trim();
     });
   },
-  format: function format(date, _format) {
+  format: function (date, format) {
     if (!date) {
       return;
     }
-    if (!_format) {
+    if (!format) {
       return date;
     }
 
     // TODO: refactor (extract code form base)
-    if (typeof _format !== 'function' && !_format.formatter) {
-      _format = _format.type || _format;
+    if (typeof format !== 'function' && !format.formatter) {
+      format = format.type || format;
     }
-    var intlFormat = getIntlFormat(_format);
+    const intlFormat = getIntlFormat(format);
     if (intlFormat) {
       return getIntlFormatter(intlFormat)(date);
     }
-    var formatType = typeof _format;
-    if (_format.formatter || formatType === 'function' || formatType === 'string') {
+    const formatType = typeof format;
+    if (format.formatter || formatType === 'function' || formatType === 'string') {
       return this.callBase.apply(this, arguments);
     }
-    return getIntlFormatter(_format)(date);
+    return getIntlFormatter(format)(date);
   },
-  parse: function parse(dateString, format) {
-    var _this = this;
-    var formatter;
+  parse: function (dateString, format) {
+    let formatter;
     if (format && !format.parser && typeof dateString === 'string') {
       dateString = normalizeMonth(dateString);
-      formatter = function formatter(date) {
-        return normalizeMonth(_this.format(date, format));
+      formatter = date => {
+        return normalizeMonth(this.format(date, format));
       };
     }
     return this.callBase(dateString, formatter || format);
   },
-  _parseDateBySimpleFormat: function _parseDateBySimpleFormat(dateString, format) {
-    var _this2 = this;
+  _parseDateBySimpleFormat: function (dateString, format) {
     dateString = normalizeNumerals(dateString);
-    var formatParts = this.getFormatParts(format);
-    var dateParts = dateString.split(/\D+/).filter(function (part) {
+    const formatParts = this.getFormatParts(format);
+    const dateParts = dateString.split(/\D+/).filter(part => {
       return part.length > 0;
     });
     if (formatParts.length !== dateParts.length) {
       return;
     }
-    var dateArgs = this._generateDateArgs(formatParts, dateParts);
-    var constructDate = function constructDate(dateArgs, ampmShift) {
-      var hoursShift = ampmShift ? 12 : 0;
+    const dateArgs = this._generateDateArgs(formatParts, dateParts);
+    const constructDate = (dateArgs, ampmShift) => {
+      const hoursShift = ampmShift ? 12 : 0;
       return new Date(dateArgs.year, dateArgs.month, dateArgs.day, (dateArgs.hours + hoursShift) % 24, dateArgs.minutes, dateArgs.seconds);
     };
-    var constructValidDate = function constructValidDate(ampmShift) {
-      var parsedDate = constructDate(dateArgs, ampmShift);
-      if (dateStringEquals(normalizeNumerals(_this2.format(parsedDate, format)), dateString)) {
+    const constructValidDate = ampmShift => {
+      const parsedDate = constructDate(dateArgs, ampmShift);
+      if (dateStringEquals(normalizeNumerals(this.format(parsedDate, format)), dateString)) {
         return parsedDate;
       }
     };
     return constructValidDate(false) || constructValidDate(true);
   },
-  _generateDateArgs: function _generateDateArgs(formatParts, dateParts) {
-    var currentDate = new Date();
-    var dateArgs = {
+  _generateDateArgs: function (formatParts, dateParts) {
+    const currentDate = new Date();
+    const dateArgs = {
       year: currentDate.getFullYear(),
       month: currentDate.getMonth(),
       day: currentDate.getDate(),
@@ -292,9 +290,9 @@ var _default = {
       minutes: 0,
       seconds: 0
     };
-    formatParts.forEach(function (formatPart, index) {
-      var datePart = dateParts[index];
-      var parsed = parseInt(datePart, 10);
+    formatParts.forEach((formatPart, index) => {
+      const datePart = dateParts[index];
+      let parsed = parseInt(datePart, 10);
       if (formatPart === 'month') {
         parsed = parsed - 1;
       }
@@ -302,35 +300,35 @@ var _default = {
     });
     return dateArgs;
   },
-  formatUsesMonthName: function formatUsesMonthName(format) {
+  formatUsesMonthName: function (format) {
     if (typeof format === 'object' && !(format.type || format.format)) {
       return format.month === 'long';
     }
     return this.callBase.apply(this, arguments);
   },
-  formatUsesDayName: function formatUsesDayName(format) {
+  formatUsesDayName: function (format) {
     if (typeof format === 'object' && !(format.type || format.format)) {
       return format.weekday === 'long';
     }
     return this.callBase.apply(this, arguments);
   },
-  getTimeSeparator: function getTimeSeparator() {
-    var formatOptions = {
+  getTimeSeparator: function () {
+    const formatOptions = {
       hour: 'numeric',
       minute: 'numeric',
       hour12: false
     };
     return normalizeNumerals(formatDateTime(new Date(2001, 1, 1, 11, 11), formatOptions)).replace(/\d/g, '');
   },
-  getFormatParts: function getFormatParts(format) {
+  getFormatParts: function (format) {
     if (typeof format === 'string') {
       return this.callBase(format);
     }
-    var intlFormat = (0, _extend.extend)({}, intlFormats[format.toLowerCase()]);
-    var date = new Date(2001, 2, 4, 5, 6, 7);
-    var formattedDate = getIntlFormatter(intlFormat)(date);
+    const intlFormat = (0, _extend.extend)({}, intlFormats[format.toLowerCase()]);
+    const date = new Date(2001, 2, 4, 5, 6, 7);
+    let formattedDate = getIntlFormatter(intlFormat)(date);
     formattedDate = normalizeNumerals(formattedDate);
-    var formatParts = [{
+    const formatParts = [{
       name: 'year',
       value: 1
     }, {
@@ -349,16 +347,16 @@ var _default = {
       name: 'seconds',
       value: 7
     }];
-    return formatParts.map(function (part) {
+    return formatParts.map(part => {
       return {
         name: part.name,
         index: formattedDate.indexOf(part.value)
       };
-    }).filter(function (part) {
+    }).filter(part => {
       return part.index > -1;
-    }).sort(function (a, b) {
+    }).sort((a, b) => {
       return a.index - b.index;
-    }).map(function (part) {
+    }).map(part => {
       return part.name;
     });
   }

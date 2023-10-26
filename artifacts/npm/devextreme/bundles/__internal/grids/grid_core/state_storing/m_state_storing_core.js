@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/state_storing/m_state_storing_core.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,34 +24,34 @@ var _m_modules = _interopRequireDefault(require("../m_modules"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // @ts-expect-error
 
-var DATE_REGEX = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/;
-var parseDates = function parseDates(state) {
+const DATE_REGEX = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/;
+const parseDates = function (state) {
   if (!state) return;
-  (0, _iterator.each)(state, function (key, value) {
+  (0, _iterator.each)(state, (key, value) => {
     if ((0, _type.isPlainObject)(value) || Array.isArray(value)) {
       parseDates(value);
     } else if (typeof value === 'string') {
-      var date = DATE_REGEX.exec(value);
+      const date = DATE_REGEX.exec(value);
       if (date) {
         state[key] = new Date(Date.UTC(+date[1], +date[2] - 1, +date[3], +date[4], +date[5], +date[6]));
       }
     }
   });
 };
-var StateStoringController = _m_modules.default.ViewController.inherit(function () {
-  var getStorage = function getStorage(options) {
-    var storage = options.type === 'sessionStorage' ? (0, _storage.sessionStorage)() : (0, _window.getWindow)().localStorage;
+const StateStoringController = _m_modules.default.ViewController.inherit(function () {
+  const getStorage = function (options) {
+    const storage = options.type === 'sessionStorage' ? (0, _storage.sessionStorage)() : (0, _window.getWindow)().localStorage;
     if (!storage) {
       throw new Error('E1007');
     }
     return storage;
   };
-  var getUniqueStorageKey = function getUniqueStorageKey(options) {
+  const getUniqueStorageKey = function (options) {
     return (0, _type.isDefined)(options.storageKey) ? options.storageKey : 'storage';
   };
   return {
     _loadState() {
-      var options = this.option('stateStoring');
+      const options = this.option('stateStoring');
       if (options.type === 'custom') {
         return options.customLoad && options.customLoad();
       }
@@ -63,7 +63,7 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
       }
     },
     _saveState(state) {
-      var options = this.option('stateStoring');
+      const options = this.option('stateStoring');
       if (options.type === 'custom') {
         options.customSave && options.customSave(state);
         return;
@@ -81,7 +81,7 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
       return this.option('stateStoring.enabled');
     },
     init() {
-      var that = this;
+      const that = this;
       that._state = {};
       that._isLoaded = false;
       that._isLoading = false;
@@ -100,21 +100,20 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
       return this._isLoading;
     },
     load() {
-      var _this = this;
       this._isLoading = true;
-      var loadResult = (0, _deferred.fromPromise)(this._loadState());
-      loadResult.always(function () {
-        _this._isLoaded = true;
-        _this._isLoading = false;
-      }).done(function (state) {
+      const loadResult = (0, _deferred.fromPromise)(this._loadState());
+      loadResult.always(() => {
+        this._isLoaded = true;
+        this._isLoading = false;
+      }).done(state => {
         if (state !== null && !(0, _type.isEmptyObject)(state)) {
-          _this.state(state);
+          this.state(state);
         }
       });
       return loadResult;
     },
     state(state) {
-      var that = this;
+      const that = this;
       if (!arguments.length) {
         return (0, _extend.extend)(true, {}, that._state);
       }
@@ -122,15 +121,15 @@ var StateStoringController = _m_modules.default.ViewController.inherit(function 
       parseDates(that._state);
     },
     save() {
-      var that = this;
+      const that = this;
       clearTimeout(that._savingTimeoutID);
-      that._savingTimeoutID = setTimeout(function () {
+      that._savingTimeoutID = setTimeout(() => {
         that._saveState(that.state());
         that._savingTimeoutID = undefined;
       }, that.option('stateStoring.savingTimeout'));
     },
     optionChanged(args) {
-      var that = this;
+      const that = this;
       switch (args.name) {
         case 'stateStoring':
           if (that.isEnabled() && !that.isLoading()) {

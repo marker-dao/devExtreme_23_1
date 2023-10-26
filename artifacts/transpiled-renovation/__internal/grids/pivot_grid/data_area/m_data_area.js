@@ -9,12 +9,12 @@ var _support = require("../../../../core/utils/support");
 var _m_area_item = require("../area_item/m_area_item");
 var _m_widget_utils = require("../m_widget_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var PIVOTGRID_AREA_CLASS = 'dx-pivotgrid-area';
-var PIVOTGRID_AREA_DATA_CLASS = 'dx-pivotgrid-area-data';
-var PIVOTGRID_TOTAL_CLASS = 'dx-total';
-var PIVOTGRID_GRAND_TOTAL_CLASS = 'dx-grandtotal';
-var PIVOTGRID_ROW_TOTAL_CLASS = 'dx-row-total';
-var DataArea = _m_area_item.AreaItem.inherit({
+const PIVOTGRID_AREA_CLASS = 'dx-pivotgrid-area';
+const PIVOTGRID_AREA_DATA_CLASS = 'dx-pivotgrid-area-data';
+const PIVOTGRID_TOTAL_CLASS = 'dx-total';
+const PIVOTGRID_GRAND_TOTAL_CLASS = 'dx-grandtotal';
+const PIVOTGRID_ROW_TOTAL_CLASS = 'dx-row-total';
+const DataArea = _m_area_item.AreaItem.inherit({
   _getAreaName() {
     return 'data';
   },
@@ -22,8 +22,12 @@ var DataArea = _m_area_item.AreaItem.inherit({
     return (0, _renderer.default)('<div>').addClass(PIVOTGRID_AREA_CLASS).addClass(PIVOTGRID_AREA_DATA_CLASS).css('borderTopWidth', 0);
   },
   _applyCustomStyles(options) {
-    var cell = options.cell;
-    var classArray = options.classArray;
+    const {
+      cell
+    } = options;
+    const {
+      classArray
+    } = options;
     if (cell.rowType === 'T' || cell.columnType === 'T') {
       classArray.push(PIVOTGRID_TOTAL_CLASS);
     }
@@ -53,17 +57,20 @@ var DataArea = _m_area_item.AreaItem.inherit({
     });
   },
   getUseNativeValue() {
-    var _this$component$optio = this.component.option('scrolling'),
-      useNative = _this$component$optio.useNative;
+    const {
+      useNative
+    } = this.component.option('scrolling');
     return useNative === 'auto' ? !!_support.nativeScrolling : !!useNative;
   },
   getScrollbarWidth() {
     return this.getUseNativeValue() ? (0, _m_widget_utils.calculateScrollbarWidth)() : 0;
   },
   updateScrollableOptions(_ref) {
-    var direction = _ref.direction,
-      rtlEnabled = _ref.rtlEnabled;
-    var scrollable = this._getScrollable();
+    let {
+      direction,
+      rtlEnabled
+    } = _ref;
+    const scrollable = this._getScrollable();
     scrollable.option('useNative', this.getUseNativeValue());
     scrollable.option({
       direction,

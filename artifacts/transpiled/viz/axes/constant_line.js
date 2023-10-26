@@ -3,13 +3,13 @@
 exports.default = createConstantLine;
 var _type = require("../../core/utils/type");
 function createConstantLine(axis, options) {
-  var labelOptions = options.label || {};
-  var labelPosition = labelOptions.position || 'inside';
-  var parsedValue;
-  var valueIsParsed = false;
-  var lastStoredCoordinates;
+  const labelOptions = options.label || {};
+  const labelPosition = labelOptions.position || 'inside';
+  let parsedValue;
+  let valueIsParsed = false;
+  let lastStoredCoordinates;
   axis._checkAlignmentConstantLineLabels(labelOptions);
-  var storedCoord;
+  let storedCoord;
   return {
     options,
     labelOptions,
@@ -28,19 +28,19 @@ function createConstantLine(axis, options) {
       if (!(0, _type.isDefined)(options.value) || axis._translator.getBusinessRange().isEmpty()) {
         return this;
       }
-      var canvas = axis._getCanvasStartEnd();
-      var parsedValue = this.getParsedValue();
+      const canvas = axis._getCanvasStartEnd();
+      const parsedValue = this.getParsedValue();
       this.coord = axis._getConstantLinePos(parsedValue, canvas.start, canvas.end);
-      var rootGroup = options.displayBehindSeries ? axis._axisConstantLineGroups.under : axis._axisConstantLineGroups.above;
-      var group = rootGroup[labelPosition];
+      const rootGroup = options.displayBehindSeries ? axis._axisConstantLineGroups.under : axis._axisConstantLineGroups.above;
+      let group = rootGroup[labelPosition];
       if (!group) {
-        var side = axis._isHorizontal ? labelOptions.verticalAlignment : labelOptions.horizontalAlignment;
+        const side = axis._isHorizontal ? labelOptions.verticalAlignment : labelOptions.horizontalAlignment;
         group = rootGroup[side];
       }
       if (!(0, _type.isDefined)(this.coord)) {
         return this;
       }
-      var path = axis._createConstantLine(this.coord, {
+      const path = axis._createConstantLine(this.coord, {
         stroke: options.color,
         'stroke-width': options.width,
         dashStyle: options.dashStyle
@@ -57,8 +57,8 @@ function createConstantLine(axis, options) {
       this.label && this.label.remove();
     },
     updatePosition(animate) {
-      var canvas = axis._getCanvasStartEnd();
-      var coord = axis._getConstantLinePos(this.getParsedValue(), canvas.start, canvas.end);
+      const canvas = axis._getCanvasStartEnd();
+      const coord = axis._getConstantLinePos(this.getParsedValue(), canvas.start, canvas.end);
       if (!(0, _type.isDefined)(coord)) {
         return;
       }

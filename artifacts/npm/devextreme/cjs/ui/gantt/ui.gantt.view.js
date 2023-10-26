@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,7 +25,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var GanttView = /*#__PURE__*/function (_Widget) {
+let GanttView = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(GanttView, _Widget);
   function GanttView() {
     return _Widget.apply(this, arguments) || this;
@@ -46,7 +46,7 @@ var GanttView = /*#__PURE__*/function (_Widget) {
     this._onAdjustControl = this._createActionByOption('onAdjustControl');
   };
   _proto._initMarkup = function _initMarkup() {
-    var _GanttView = (0, _gantt_importer.getGanttViewCore)();
+    const _GanttView = (0, _gantt_importer.getGanttViewCore)();
     this._ganttViewCore = new _GanttView(this.$element().get(0), this, {
       showResources: this.option('showResources'),
       showDependencies: this.option('showDependencies'),
@@ -84,7 +84,7 @@ var GanttView = /*#__PURE__*/function (_Widget) {
     return this._ganttViewCore.barManager;
   };
   _proto.executeCoreCommand = function executeCoreCommand(id) {
-    var command = this._ganttViewCore.getCommandByKey(id);
+    const command = this._ganttViewCore.getCommandByKey(id);
     if (command) {
       command.execute();
     }
@@ -133,12 +133,12 @@ var GanttView = /*#__PURE__*/function (_Widget) {
     return this._hasAmPM() ? _date.default.getPeriodNames()[1] : '';
   };
   _proto._hasAmPM = function _hasAmPM() {
-    var date = new Date(Date.UTC(2012, 11, 12, 3, 0, 0));
-    var dateString = date.toLocaleTimeString(_core.default.locale());
+    const date = new Date(Date.UTC(2012, 11, 12, 3, 0, 0));
+    const dateString = date.toLocaleTimeString(_core.default.locale());
     return dateString.match(/am|pm/i) || date.toString().match(/am|pm/i);
   };
   _proto._getQuarterNames = function _getQuarterNames() {
-    var quarterFormat = _message.default.format('dxGantt-quarter');
+    const quarterFormat = _message.default.format('dxGantt-quarter');
     if (!quarterFormat) {
       return _date.default.getQuarterNames();
     }
@@ -286,8 +286,8 @@ var GanttView = /*#__PURE__*/function (_Widget) {
     return this.option('headerHeight');
   };
   _proto.getGanttTasksData = function getGanttTasksData() {
-    var tasks = this.option('tasks');
-    var sieveOptions = this.getSieveOptions();
+    const tasks = this.option('tasks');
+    const sieveOptions = this.getSieveOptions();
     if (sieveOptions !== null && sieveOptions !== void 0 && sieveOptions.sievedItems && sieveOptions !== null && sieveOptions !== void 0 && sieveOptions.sieveColumn) {
       return sieveOptions.sievedItems;
     }
@@ -296,7 +296,7 @@ var GanttView = /*#__PURE__*/function (_Widget) {
   _proto._sortAndFilter = function _sortAndFilter(args) {
     this._sieveOptions = args;
     this._update(!(args !== null && args !== void 0 && args.expandTasks));
-    var selectedRowKey = this.option('selectedRowKey');
+    const selectedRowKey = this.option('selectedRowKey');
     this._selectTask(selectedRowKey);
   };
   _proto.getSieveOptions = function getSieveOptions() {
@@ -388,11 +388,11 @@ var GanttView = /*#__PURE__*/function (_Widget) {
     return true;
   };
   _proto.getFormattedDateText = function getFormattedDateText(date) {
-    var result = '';
+    let result = '';
     if (date) {
-      var datePart = _date.default.format(date, 'shortDate');
-      var timeFormat = this._hasAmPM() ? 'hh:mm a' : 'HH:mm';
-      var timePart = _date.default.format(date, timeFormat);
+      const datePart = _date.default.format(date, 'shortDate');
+      const timeFormat = this._hasAmPM() ? 'hh:mm a' : 'HH:mm';
+      const timePart = _date.default.format(date, timeFormat);
       result = datePart + ' ' + timePart;
     }
     return result;
@@ -401,9 +401,9 @@ var GanttView = /*#__PURE__*/function (_Widget) {
     (0, _renderer.default)(container).empty();
   };
   _proto.onTaskAreaSizeChanged = function onTaskAreaSizeChanged(info) {
-    var scrollView = this._taskAreaContainer._scrollView;
+    const scrollView = this._taskAreaContainer._scrollView;
     if ((0, _type.isDefined)(info === null || info === void 0 ? void 0 : info.height)) {
-      var direction = (info === null || info === void 0 ? void 0 : info.height) > this._taskAreaContainer.getHeight() ? 'both' : 'horizontal';
+      const direction = (info === null || info === void 0 ? void 0 : info.height) > this._taskAreaContainer.getHeight() ? 'both' : 'horizontal';
       scrollView.option('direction', direction);
     }
   };
@@ -430,11 +430,11 @@ var GanttView = /*#__PURE__*/function (_Widget) {
     return this.callExportHelperMethod('getTreeListEmptyDataCellInfo');
   };
   _proto.callExportHelperMethod = function callExportHelperMethod(methodName) {
-    var helper = this.option('exportHelper');
+    const helper = this.option('exportHelper');
     for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
-    return helper[methodName].apply(helper, args);
+    return helper[methodName](...args);
   };
   _proto.applyTasksExpandedState = function applyTasksExpandedState(state) {
     var _this$_ganttViewCore3;
@@ -442,7 +442,7 @@ var GanttView = /*#__PURE__*/function (_Widget) {
   };
   _createClass(GanttView, [{
     key: "bars",
-    get: function get() {
+    get: function () {
       return this.option('bars');
     }
   }]);

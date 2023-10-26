@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/m_work_space_work_week.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,8 +23,8 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var WORK_WEEK_CLASS = 'dx-scheduler-work-space-work-week';
-var SchedulerWorkSpaceWorkWeek = /*#__PURE__*/function (_SchedulerWorkSpaceWe) {
+const WORK_WEEK_CLASS = 'dx-scheduler-work-space-work-week';
+let SchedulerWorkSpaceWorkWeek = /*#__PURE__*/function (_SchedulerWorkSpaceWe) {
   _inheritsLoose(SchedulerWorkSpaceWorkWeek, _SchedulerWorkSpaceWe);
   function SchedulerWorkSpaceWorkWeek() {
     var _this;
@@ -32,7 +32,7 @@ var SchedulerWorkSpaceWorkWeek = /*#__PURE__*/function (_SchedulerWorkSpaceWe) {
       args[_key] = arguments[_key];
     }
     // @ts-expect-error
-    _this = _SchedulerWorkSpaceWe.call.apply(_SchedulerWorkSpaceWe, [this].concat(args)) || this;
+    _this = _SchedulerWorkSpaceWe.call(this, ...args) || this;
     _this._getWeekendsCount = _work_week.getWeekendsCount;
     return _this;
   }
@@ -42,7 +42,7 @@ var SchedulerWorkSpaceWorkWeek = /*#__PURE__*/function (_SchedulerWorkSpaceWe) {
   };
   _createClass(SchedulerWorkSpaceWorkWeek, [{
     key: "type",
-    get: function get() {
+    get: function () {
       return _m_constants.VIEWS.WORK_WEEK;
     }
   }]);

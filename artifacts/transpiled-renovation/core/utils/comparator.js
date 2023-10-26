@@ -5,17 +5,17 @@ var _dom_adapter = _interopRequireDefault(require("../dom_adapter"));
 var _data = require("./data");
 var _type = require("./type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var hasNegation = function hasNegation(oldValue, newValue) {
+const hasNegation = function (oldValue, newValue) {
   return 1 / oldValue === 1 / newValue;
 };
-var equals = function equals(oldValue, newValue) {
+const equals = function (oldValue, newValue) {
   oldValue = (0, _data.toComparable)(oldValue, true);
   newValue = (0, _data.toComparable)(newValue, true);
   if (oldValue && newValue && (0, _type.isRenderer)(oldValue) && (0, _type.isRenderer)(newValue)) {
     return newValue.is(oldValue);
   }
-  var oldValueIsNaN = oldValue !== oldValue;
-  var newValueIsNaN = newValue !== newValue;
+  const oldValueIsNaN = oldValue !== oldValue;
+  const newValueIsNaN = newValue !== newValue;
   if (oldValueIsNaN && newValueIsNaN) {
     return true;
   }

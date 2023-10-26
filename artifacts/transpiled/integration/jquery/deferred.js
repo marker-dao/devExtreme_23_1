@@ -7,10 +7,10 @@ var _use_jquery = _interopRequireDefault(require("./use_jquery"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line no-restricted-imports
 
-var useJQuery = (0, _use_jquery.default)();
+const useJQuery = (0, _use_jquery.default)();
 if (useJQuery) {
-  var Deferred = _jquery.default.Deferred;
-  var strategy = {
+  const Deferred = _jquery.default.Deferred;
+  const strategy = {
     Deferred: Deferred
   };
   strategy.when = (0, _version.compare)(_jquery.default.fn.jquery, [3]) < 0 ? _jquery.default.when : function (singleArg) {

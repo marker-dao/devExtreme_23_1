@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/workspaces/view_model/m_time_panel_data_generator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,22 +24,24 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
   return t;
 };
-var TimePanelDataGenerator = /*#__PURE__*/function () {
+let TimePanelDataGenerator = /*#__PURE__*/function () {
   function TimePanelDataGenerator(_viewDataGenerator) {
     this._viewDataGenerator = _viewDataGenerator;
   }
   var _proto = TimePanelDataGenerator.prototype;
   _proto.getCompleteTimePanelMap = function getCompleteTimePanelMap(options, completeViewDataMap) {
-    var startViewDate = options.startViewDate,
-      cellDuration = options.cellDuration,
-      startDayHour = options.startDayHour,
-      isVerticalGrouping = options.isVerticalGrouping,
-      intervalCount = options.intervalCount,
-      currentDate = options.currentDate,
-      viewType = options.viewType,
-      hoursInterval = options.hoursInterval,
-      endDayHour = options.endDayHour;
-    var rowCountInGroup = this._viewDataGenerator.getRowCount({
+    const {
+      startViewDate,
+      cellDuration,
+      startDayHour,
+      isVerticalGrouping,
+      intervalCount,
+      currentDate,
+      viewType,
+      hoursInterval,
+      endDayHour
+    } = options;
+    const rowCountInGroup = this._viewDataGenerator.getRowCount({
       intervalCount,
       currentDate,
       viewType,
@@ -47,7 +49,7 @@ var TimePanelDataGenerator = /*#__PURE__*/function () {
       startDayHour,
       endDayHour
     });
-    var cellCountInGroupRow = this._viewDataGenerator.getCellCount({
+    const cellCountInGroupRow = this._viewDataGenerator.getCellCount({
       intervalCount,
       currentDate,
       viewType,
@@ -55,22 +57,24 @@ var TimePanelDataGenerator = /*#__PURE__*/function () {
       startDayHour,
       endDayHour
     });
-    var allDayRowsCount = 0;
-    return completeViewDataMap.map(function (row, index) {
-      var _a = row[0],
-        allDay = _a.allDay,
-        startDate = _a.startDate,
-        endDate = _a.endDate,
-        groups = _a.groups,
-        groupIndex = _a.groupIndex,
-        isFirstGroupCell = _a.isFirstGroupCell,
-        isLastGroupCell = _a.isLastGroupCell,
-        cellIndex = _a.index,
+    let allDayRowsCount = 0;
+    return completeViewDataMap.map((row, index) => {
+      const _a = row[0],
+        {
+          allDay,
+          startDate,
+          endDate,
+          groups,
+          groupIndex,
+          isFirstGroupCell,
+          isLastGroupCell,
+          index: cellIndex
+        } = _a,
         restCellProps = __rest(_a, ["allDay", "startDate", "endDate", "groups", "groupIndex", "isFirstGroupCell", "isLastGroupCell", "index"]);
       if (allDay) {
         allDayRowsCount += 1;
       }
-      var timeIndex = (index - allDayRowsCount) % rowCountInGroup;
+      const timeIndex = (index - allDayRowsCount) % rowCountInGroup;
       return _extends(_extends({}, restCellProps), {
         startDate,
         allDay,
@@ -84,32 +88,37 @@ var TimePanelDataGenerator = /*#__PURE__*/function () {
     });
   };
   _proto.generateTimePanelData = function generateTimePanelData(completeTimePanelMap, options) {
-    var startRowIndex = options.startRowIndex,
-      rowCount = options.rowCount,
-      topVirtualRowHeight = options.topVirtualRowHeight,
-      bottomVirtualRowHeight = options.bottomVirtualRowHeight,
-      isGroupedAllDayPanel = options.isGroupedAllDayPanel,
-      isVerticalGrouping = options.isVerticalGrouping,
-      isAllDayPanelVisible = options.isAllDayPanelVisible;
-    var indexDifference = isVerticalGrouping || !isAllDayPanelVisible ? 0 : 1;
-    var correctedStartRowIndex = startRowIndex + indexDifference;
-    var displayedRowCount = (0, _base.getDisplayedRowCount)(rowCount, completeTimePanelMap);
-    var timePanelMap = completeTimePanelMap.slice(correctedStartRowIndex, correctedStartRowIndex + displayedRowCount);
-    var timePanelData = {
+    const {
+      startRowIndex,
+      rowCount,
+      topVirtualRowHeight,
+      bottomVirtualRowHeight,
+      isGroupedAllDayPanel,
+      isVerticalGrouping,
+      isAllDayPanelVisible
+    } = options;
+    const indexDifference = isVerticalGrouping || !isAllDayPanelVisible ? 0 : 1;
+    const correctedStartRowIndex = startRowIndex + indexDifference;
+    const displayedRowCount = (0, _base.getDisplayedRowCount)(rowCount, completeTimePanelMap);
+    const timePanelMap = completeTimePanelMap.slice(correctedStartRowIndex, correctedStartRowIndex + displayedRowCount);
+    const timePanelData = {
       topVirtualRowHeight,
       bottomVirtualRowHeight,
       isGroupedAllDayPanel
     };
-    var _this$_generateTimePa = this._generateTimePanelDataFromMap(timePanelMap, isVerticalGrouping),
-      groupedData = _this$_generateTimePa.previousGroupedData;
+    const {
+      previousGroupedData: groupedData
+    } = this._generateTimePanelDataFromMap(timePanelMap, isVerticalGrouping);
     timePanelData.groupedData = groupedData;
     return timePanelData;
   };
   _proto._generateTimePanelDataFromMap = function _generateTimePanelDataFromMap(timePanelMap, isVerticalGrouping) {
-    return timePanelMap.reduce(function (_ref, cellData) {
-      var previousGroupIndex = _ref.previousGroupIndex,
-        previousGroupedData = _ref.previousGroupedData;
-      var currentGroupIndex = cellData.groupIndex;
+    return timePanelMap.reduce((_ref, cellData) => {
+      let {
+        previousGroupIndex,
+        previousGroupedData
+      } = _ref;
+      const currentGroupIndex = cellData.groupIndex;
       if (currentGroupIndex !== previousGroupIndex) {
         previousGroupedData.push({
           dateTable: [],

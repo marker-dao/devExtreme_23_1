@@ -140,7 +140,7 @@ class ScrollHelper {
     var component = this._component;
     var sensitivity = component.option('scrollSensitivity');
     var maxSpeed = component.option('scrollSpeed');
-    return Math.ceil(Math.pow((sensitivity - distance) / sensitivity, 2) * maxSpeed);
+    return Math.ceil(((sensitivity - distance) / sensitivity) ** 2 * maxSpeed);
   }
   scrollByStep() {
     var that = this;

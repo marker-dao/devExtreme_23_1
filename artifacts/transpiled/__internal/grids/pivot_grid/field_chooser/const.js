@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SORT_ORDER = exports.SORTABLE_CONST = exports.ICONS = exports.CLASSES = exports.ATTRIBUTES = void 0;
-var ATTRIBUTES = {
+const ATTRIBUTES = {
   treeViewItem: 'tree-view-item',
   allowScrolling: 'allow-scrolling',
   itemGroup: 'item-group'
 };
 exports.ATTRIBUTES = ATTRIBUTES;
-var CLASSES = {
+const CLASSES = {
   area: {
     self: 'dx-area',
     box: 'dx-area-box',
@@ -49,7 +49,7 @@ var CLASSES = {
   widget: 'dx-widget'
 };
 exports.CLASSES = CLASSES;
-var ICONS = {
+const ICONS = {
   all: 'smalliconslayout',
   column: 'columnfield',
   row: 'rowfield',
@@ -60,13 +60,13 @@ var ICONS = {
   dimension: 'detailslayout'
 };
 exports.ICONS = ICONS;
-var SORTABLE_CONST = {
+const SORTABLE_CONST = {
   targets: {
     drag: 'drag'
   }
 };
 exports.SORTABLE_CONST = SORTABLE_CONST;
-var SORT_ORDER = {
+const SORT_ORDER = {
   descending: 'desc',
   ascending: 'asc'
 };

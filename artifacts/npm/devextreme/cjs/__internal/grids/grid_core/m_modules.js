@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/m_modules.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,25 +23,19 @@ var _window = require("../../../core/utils/window");
 var _message = _interopRequireDefault(require("../../../localization/message"));
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; } /* eslint-disable @typescript-eslint/method-signature-style */ // @ts-expect-error
-var WIDGET_WITH_LEGACY_CONTAINER_NAME = 'dxDataGrid';
-var BORDERED_VIEWS = ['columnHeadersView', 'rowsView', 'footerView', 'filterPanelView'];
-var ModuleItem = _class.default.inherit({
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } /* eslint-disable @typescript-eslint/method-signature-style */ // @ts-expect-error
+const WIDGET_WITH_LEGACY_CONTAINER_NAME = 'dxDataGrid';
+const BORDERED_VIEWS = ['columnHeadersView', 'rowsView', 'footerView', 'filterPanelView'];
+const ModuleItem = _class.default.inherit({
   _endUpdateCore() {},
   ctor(component) {
-    var that = this;
+    const that = this;
     that._updateLockCount = 0;
     that.component = component;
     that._actions = {};
     that._actionConfigs = {};
     (0, _iterator.each)(this.callbackNames() || [], function (index, name) {
-      var flags = that.callbackFlags(name) || {};
+      const flags = that.callbackFlags(name) || {};
       flags.unique = true;
       flags.syncStrategy = true;
       // @ts-expect-error
@@ -64,8 +58,10 @@ var ModuleItem = _class.default.inherit({
     }
   },
   option(name) {
-    var component = this.component;
-    var optionCache = component._optionCache;
+    const {
+      component
+    } = this;
+    const optionCache = component._optionCache;
     if (arguments.length === 1 && optionCache) {
       if (!(name in optionCache)) {
         optionCache[name] = component.option(name);
@@ -75,15 +71,17 @@ var ModuleItem = _class.default.inherit({
     return component.option.apply(component, arguments);
   },
   _silentOption(name, value) {
-    var component = this.component;
-    var optionCache = component._optionCache;
+    const {
+      component
+    } = this;
+    const optionCache = component._optionCache;
     if (optionCache) {
       optionCache[name] = value;
     }
     return component._setOptionWithoutOptionChange(name, value);
   },
   localize(name) {
-    var optionCache = this.component._optionCache;
+    const optionCache = this.component._optionCache;
     if (optionCache) {
       if (!(name in optionCache)) {
         optionCache[name] = _message.default.format(name);
@@ -108,8 +106,8 @@ var ModuleItem = _class.default.inherit({
     return this._actions[actionName];
   },
   setAria(name, value, $target) {
-    var target = $target.get(0);
-    var prefix = name !== 'role' && name !== 'id' ? 'aria-' : '';
+    const target = $target.get(0);
+    const prefix = name !== 'role' && name !== 'id' ? 'aria-' : '';
     if (target.setAttribute) {
       target.setAttribute(prefix + name, value);
     } else {
@@ -124,7 +122,7 @@ var ModuleItem = _class.default.inherit({
   },
   createAction(actionName, config) {
     if ((0, _type.isFunction)(actionName)) {
-      var action = this.component._createAction(actionName.bind(this), config);
+      const action = this.component._createAction(actionName.bind(this), config);
       return function (e) {
         action({
           event: e
@@ -136,30 +134,30 @@ var ModuleItem = _class.default.inherit({
     return undefined;
   },
   executeAction(actionName, options) {
-    var action = this._actions[actionName];
+    const action = this._actions[actionName];
     return action && action(options);
   },
   dispose() {
-    var that = this;
+    const that = this;
     (0, _iterator.each)(that.callbackNames() || [], function () {
       that[this].empty();
     });
   },
   addWidgetPrefix(className) {
-    var componentName = this.component.NAME;
+    const componentName = this.component.NAME;
     return "dx-".concat(componentName.slice(2).toLowerCase()).concat(className ? "-".concat(className) : '');
   },
   getWidgetContainerClass() {
-    var containerName = this.component.NAME === WIDGET_WITH_LEGACY_CONTAINER_NAME ? null : 'container';
+    const containerName = this.component.NAME === WIDGET_WITH_LEGACY_CONTAINER_NAME ? null : 'container';
     return this.addWidgetPrefix(containerName);
   },
   elementIsInsideGrid($element) {
-    var $gridElement = $element.closest(".".concat(this.getWidgetContainerClass())).parent();
+    const $gridElement = $element.closest(".".concat(this.getWidgetContainerClass())).parent();
     return $gridElement.is(this.component.$element());
   }
 });
-var Controller = ModuleItem;
-var ViewController = Controller.inherit({
+const Controller = ModuleItem;
+const ViewController = Controller.inherit({
   getView(name) {
     return this.component._views[name];
   },
@@ -167,7 +165,7 @@ var ViewController = Controller.inherit({
     return this.component._views;
   }
 });
-var View = ModuleItem.inherit({
+const View = ModuleItem.inherit({
   _isReady() {
     return this.component.isReady();
   },
@@ -201,12 +199,13 @@ var View = ModuleItem.inherit({
     return this._$element;
   },
   getElementHeight() {
-    var $element = this.element();
+    const $element = this.element();
     if (!$element) return 0;
-    var marginTop = parseFloat($element.css('marginTop')) || 0;
-    var marginBottom = parseFloat($element.css('marginBottom')) || 0;
-    var _$element$get = $element.get(0),
-      offsetHeight = _$element$get.offsetHeight;
+    const marginTop = parseFloat($element.css('marginTop')) || 0;
+    const marginBottom = parseFloat($element.css('marginBottom')) || 0;
+    const {
+      offsetHeight
+    } = $element.get(0);
     return offsetHeight + marginTop + marginBottom;
   },
   isVisible() {
@@ -219,41 +218,34 @@ var View = ModuleItem.inherit({
     return this.component._views[name];
   },
   getFirstVisibleViewElement() {
-    var columnHeaderView = this.getView('columnHeadersView');
+    const columnHeaderView = this.getView('columnHeadersView');
     if (columnHeaderView && columnHeaderView.isVisible()) {
       return columnHeaderView.element();
     }
     return this.getView('rowsView').element();
   },
   getLastVisibleViewElement() {
-    var filterPanelView = this.getView('filterPanelView');
+    const filterPanelView = this.getView('filterPanelView');
     if (filterPanelView && filterPanelView.isVisible()) {
       return filterPanelView.element();
     }
-    var footerView = this.getView('footerView');
+    const footerView = this.getView('footerView');
     if (footerView && footerView.isVisible()) {
       return footerView.element();
     }
     return this.getView('rowsView').element();
   },
   getViewElementWithClass(className) {
-    var _this = this;
-    var borderedView = BORDERED_VIEWS.map(function (viewName) {
-      return _this.getView(viewName);
-    }).filter(function (view) {
-      return view && view.element();
-    }).find(function (view) {
-      return view.element().hasClass(className);
-    });
+    const borderedView = BORDERED_VIEWS.map(viewName => this.getView(viewName)).filter(view => view && view.element()).find(view => view.element().hasClass(className));
     return borderedView && borderedView.element();
   },
   updateBorderedViews() {
-    var BORDERED_TOP_VIEW_CLASS = 'dx-bordered-top-view';
-    var BORDERED_BOTTOM_VIEW_CLASS = 'dx-bordered-bottom-view';
-    var oldFirstBorderedElement = this.getViewElementWithClass(BORDERED_TOP_VIEW_CLASS);
-    var oldLastBorderedElement = this.getViewElementWithClass(BORDERED_BOTTOM_VIEW_CLASS);
-    var newFirstBorderedElement = this.getFirstVisibleViewElement();
-    var newLastBorderedElement = this.getLastVisibleViewElement();
+    const BORDERED_TOP_VIEW_CLASS = 'dx-bordered-top-view';
+    const BORDERED_BOTTOM_VIEW_CLASS = 'dx-bordered-bottom-view';
+    const oldFirstBorderedElement = this.getViewElementWithClass(BORDERED_TOP_VIEW_CLASS);
+    const oldLastBorderedElement = this.getViewElementWithClass(BORDERED_BOTTOM_VIEW_CLASS);
+    const newFirstBorderedElement = this.getFirstVisibleViewElement();
+    const newLastBorderedElement = this.getLastVisibleViewElement();
     if (oldFirstBorderedElement && !oldFirstBorderedElement.is(newFirstBorderedElement)) {
       oldFirstBorderedElement.removeClass(BORDERED_TOP_VIEW_CLASS);
     }
@@ -268,33 +260,27 @@ var View = ModuleItem.inherit({
     }
   },
   isViewsStateValid() {
-    var _this2 = this;
     var _a;
     if (this.component._views) {
       if (!BORDERED_VIEWS.includes(this.name)) {
         return false;
       }
-      var rowsView = this.getView('rowsView');
+      const rowsView = this.getView('rowsView');
       if (!(rowsView && (0, _type.isDefined)((_a = rowsView.element) === null || _a === void 0 ? void 0 : _a.call(rowsView)))) {
         return false;
       }
-      var optionalViews = ['columnHeadersView', 'footerView', 'filterPanelView'].map(function (viewName) {
-        return _this2.getView(viewName);
-      }).filter(function (view) {
+      const optionalViews = ['columnHeadersView', 'footerView', 'filterPanelView'].map(viewName => this.getView(viewName)).filter(view => {
         var _a;
         return view && ((_a = view.isVisible) === null || _a === void 0 ? void 0 : _a.call(view));
       });
-      var isOptionalViewsRendered = optionalViews.every(function (view) {
-        return view && (0, _type.isDefined)(view.element());
-      });
+      const isOptionalViewsRendered = optionalViews.every(view => view && (0, _type.isDefined)(view.element()));
       return isOptionalViewsRendered;
     }
     return false;
   },
   render($parent, options) {
-    var _this3 = this;
-    var $element = this._$element;
-    var isVisible = this.isVisible();
+    let $element = this._$element;
+    const isVisible = this.isVisible();
     if (!$element && !$parent) return;
     this._requireReady = false;
     if (!$element) {
@@ -307,11 +293,11 @@ var View = ModuleItem.inherit({
     }
     if (isVisible) {
       this.component._optionCache = {};
-      var deferred = this._renderCore(options);
+      const deferred = this._renderCore(options);
       this.component._optionCache = undefined;
       if (deferred) {
-        deferred.done(function () {
-          _this3.renderCompleted.fire(options);
+        deferred.done(() => {
+          this.renderCompleted.fire(options);
         });
       } else {
         this.renderCompleted.fire(options);
@@ -330,20 +316,18 @@ var View = ModuleItem.inherit({
     });
   }
 });
-var MODULES_ORDER_MAX_INDEX = 1000000;
+const MODULES_ORDER_MAX_INDEX = 1000000;
 function getExtendedTypes(types) {
-  var moduleExtenders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var extendTypes = {};
-  Object.entries(moduleExtenders).forEach(function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
-      name = _ref2[0],
-      extender = _ref2[1];
-    var currentType = types[name];
+  let moduleExtenders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  const extendTypes = {};
+  Object.entries(moduleExtenders).forEach(_ref => {
+    let [name, extender] = _ref;
+    const currentType = types[name];
     if (currentType) {
       if ((0, _type.isFunction)(extender)) {
         extendTypes[name] = extender(currentType);
       } else {
-        var classType = currentType;
+        const classType = currentType;
         extendTypes[name] = classType.inherit(extender);
       }
     }
@@ -351,13 +335,13 @@ function getExtendedTypes(types) {
   return extendTypes;
 }
 function registerPublicMethods(componentInstance, name, moduleItem) {
-  var publicMethods = moduleItem.publicMethods();
+  const publicMethods = moduleItem.publicMethods();
   if (publicMethods) {
-    (0, _iterator.each)(publicMethods, function (_, methodName) {
+    (0, _iterator.each)(publicMethods, (_, methodName) => {
       if (moduleItem[methodName]) {
         if (!componentInstance[methodName]) {
           componentInstance[methodName] = function () {
-            return moduleItem[methodName].apply(moduleItem, arguments);
+            return moduleItem[methodName](...arguments);
           };
         } else {
           throw _ui.default.Error('E1005', methodName);
@@ -369,13 +353,17 @@ function registerPublicMethods(componentInstance, name, moduleItem) {
   }
 }
 function processModules(componentInstance, componentClass) {
-  var modules = componentClass.modules;
-  var modulesOrder = componentClass.modulesOrder;
+  const {
+    modules
+  } = componentClass;
+  const {
+    modulesOrder
+  } = componentClass;
   function createModuleItems(moduleTypes) {
-    var moduleItems = {};
-    (0, _iterator.each)(moduleTypes, function (name, moduleType) {
+    const moduleItems = {};
+    (0, _iterator.each)(moduleTypes, (name, moduleType) => {
       // eslint-disable-next-line new-cap
-      var moduleItem = new moduleType(componentInstance);
+      const moduleItem = new moduleType(componentInstance);
       moduleItem.name = name;
       registerPublicMethods(componentInstance, name, moduleItem);
       moduleItems[name] = moduleItem;
@@ -383,9 +371,9 @@ function processModules(componentInstance, componentClass) {
     return moduleItems;
   }
   if (modulesOrder) {
-    modules.sort(function (module1, module2) {
-      var orderIndex1 = modulesOrder.indexOf(module1.name);
-      var orderIndex2 = modulesOrder.indexOf(module2.name);
+    modules.sort((module1, module2) => {
+      let orderIndex1 = modulesOrder.indexOf(module1.name);
+      let orderIndex2 = modulesOrder.indexOf(module2.name);
       if (orderIndex1 < 0) {
         orderIndex1 = MODULES_ORDER_MAX_INDEX;
       }
@@ -395,18 +383,16 @@ function processModules(componentInstance, componentClass) {
       return orderIndex1 - orderIndex2;
     });
   }
-  var rootControllerTypes = {};
-  var rootViewTypes = {};
-  modules.forEach(function (_ref3) {
-    var moduleName = _ref3.name,
-      _ref3$controllers = _ref3.controllers,
-      controllers = _ref3$controllers === void 0 ? {} : _ref3$controllers,
-      _ref3$views = _ref3.views,
-      views = _ref3$views === void 0 ? {} : _ref3$views;
-    Object.entries(controllers).forEach(function (_ref4) {
-      var _ref5 = _slicedToArray(_ref4, 2),
-        name = _ref5[0],
-        type = _ref5[1];
+  const rootControllerTypes = {};
+  const rootViewTypes = {};
+  modules.forEach(_ref2 => {
+    let {
+      name: moduleName,
+      controllers = {},
+      views = {}
+    } = _ref2;
+    Object.entries(controllers).forEach(_ref3 => {
+      let [name, type] = _ref3;
       var _a;
       if (rootControllerTypes[name]) {
         throw _ui.default.Error('E1001', moduleName, name);
@@ -416,10 +402,8 @@ function processModules(componentInstance, componentClass) {
       }
       rootControllerTypes[name] = type;
     });
-    Object.entries(views).forEach(function (_ref6) {
-      var _ref7 = _slicedToArray(_ref6, 2),
-        name = _ref7[0],
-        type = _ref7[1];
+    Object.entries(views).forEach(_ref4 => {
+      let [name, type] = _ref4;
       var _a;
       if (rootViewTypes[name]) {
         throw _ui.default.Error('E1003', moduleName, name);
@@ -430,16 +414,22 @@ function processModules(componentInstance, componentClass) {
       rootViewTypes[name] = type;
     });
   });
-  var moduleExtenders = modules.filter(function (_ref8) {
-    var extenders = _ref8.extenders;
+  const moduleExtenders = modules.filter(_ref5 => {
+    let {
+      extenders
+    } = _ref5;
     return !!extenders;
   });
-  var controllerTypes = moduleExtenders.reduce(function (types, _ref9) {
-    var extenders = _ref9.extenders;
+  const controllerTypes = moduleExtenders.reduce((types, _ref6) => {
+    let {
+      extenders
+    } = _ref6;
     return _extends(_extends({}, types), getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.controllers));
   }, rootControllerTypes);
-  var viewTypes = moduleExtenders.reduce(function (types, _ref10) {
-    var extenders = _ref10.extenders;
+  const viewTypes = moduleExtenders.reduce((types, _ref7) => {
+    let {
+      extenders
+    } = _ref7;
     return _extends(_extends({}, types), getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.views));
   }, rootViewTypes);
   // eslint-disable-next-line no-param-reassign
@@ -447,7 +437,7 @@ function processModules(componentInstance, componentClass) {
   // eslint-disable-next-line no-param-reassign
   componentInstance._views = createModuleItems(viewTypes);
 }
-var callModuleItemsMethod = function callModuleItemsMethod(that, methodName, args) {
+const callModuleItemsMethod = function (that, methodName, args) {
   args = args || [];
   if (that._controllers) {
     (0, _iterator.each)(that._controllers, function () {
@@ -466,8 +456,10 @@ var _default = {
   ViewController,
   Controller,
   registerModule(name, module) {
-    var modules = this.modules;
-    for (var i = 0; i < modules.length; i++) {
+    const {
+      modules
+    } = this;
+    for (let i = 0; i < modules.length; i++) {
       if (modules[i].name === name) {
         return;
       }
@@ -479,9 +471,7 @@ var _default = {
     this.modulesOrder = moduleNames;
   },
   unregisterModule(name) {
-    this.modules = (0, _common.grep)(this.modules, function (module) {
-      return module.name !== name;
-    });
+    this.modules = (0, _common.grep)(this.modules, module => module.name !== name);
   },
   processModules,
   callModuleItemsMethod

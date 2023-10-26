@@ -9,8 +9,8 @@ var _type = require("../core/utils/type");
 var _deferred = require("../core/utils/deferred");
 var _file_system_item = _interopRequireDefault(require("./file_system_item"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DEFAULT_FILE_UPLOAD_CHUNK_SIZE = 200000;
-var FileSystemProviderBase = /*#__PURE__*/function () {
+const DEFAULT_FILE_UPLOAD_CHUNK_SIZE = 200000;
+let FileSystemProviderBase = /*#__PURE__*/function () {
   function FileSystemProviderBase(options) {
     options = (0, _common.ensureDefined)(options, {});
     this._keyGetter = (0, _data.compileGetter)(this._getKeyExpr(options));
@@ -37,17 +37,16 @@ var FileSystemProviderBase = /*#__PURE__*/function () {
     return DEFAULT_FILE_UPLOAD_CHUNK_SIZE;
   };
   _proto._convertDataObjectsToFileItems = function _convertDataObjectsToFileItems(entries, pathInfo) {
-    var _this = this;
-    var result = [];
-    (0, _iterator.each)(entries, function (_, entry) {
-      var fileItem = _this._createFileItem(entry, pathInfo);
+    const result = [];
+    (0, _iterator.each)(entries, (_, entry) => {
+      const fileItem = this._createFileItem(entry, pathInfo);
       result.push(fileItem);
     });
     return result;
   };
   _proto._createFileItem = function _createFileItem(dataObj, pathInfo) {
-    var key = this._keyGetter(dataObj);
-    var fileItem = new _file_system_item.default(pathInfo, this._nameGetter(dataObj), !!this._isDirGetter(dataObj), key);
+    const key = this._keyGetter(dataObj);
+    const fileItem = new _file_system_item.default(pathInfo, this._nameGetter(dataObj), !!this._isDirGetter(dataObj), key);
     fileItem.size = this._sizeGetter(dataObj);
     if (fileItem.size === undefined) {
       fileItem.size = 0;
@@ -92,15 +91,11 @@ var FileSystemProviderBase = /*#__PURE__*/function () {
     return options.dateModifiedExpr || 'dateModified';
   };
   _proto._executeActionAsDeferred = function _executeActionAsDeferred(action, keepResult) {
-    var deferred = new _deferred.Deferred();
+    const deferred = new _deferred.Deferred();
     try {
-      var result = action();
+      const result = action();
       if ((0, _type.isPromise)(result)) {
-        (0, _deferred.fromPromise)(result).done(function (userResult) {
-          return deferred.resolve(keepResult && userResult || undefined);
-        }).fail(function (error) {
-          return deferred.reject(error);
-        });
+        (0, _deferred.fromPromise)(result).done(userResult => deferred.resolve(keepResult && userResult || undefined)).fail(error => deferred.reject(error));
       } else {
         deferred.resolve(keepResult && result || undefined);
       }

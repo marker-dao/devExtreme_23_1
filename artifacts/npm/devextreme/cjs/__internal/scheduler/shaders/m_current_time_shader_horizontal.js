@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/shaders/m_current_time_shader_horizontal.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,17 +18,17 @@ var _m_current_time_shader = _interopRequireDefault(require("./m_current_time_sh
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var HorizontalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
+let HorizontalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
   _inheritsLoose(HorizontalCurrentTimeShader, _CurrentTimeShader);
   function HorizontalCurrentTimeShader() {
     return _CurrentTimeShader.apply(this, arguments) || this;
   }
   var _proto = HorizontalCurrentTimeShader.prototype;
   _proto.renderShader = function renderShader() {
-    var groupCount = this._workSpace._isHorizontalGroupedWorkSpace() ? this._workSpace._getGroupCount() : 1;
-    for (var i = 0; i < groupCount; i += 1) {
-      var isFirstShader = i === 0;
-      var $shader = isFirstShader ? this._$shader : this.createShader();
+    const groupCount = this._workSpace._isHorizontalGroupedWorkSpace() ? this._workSpace._getGroupCount() : 1;
+    for (let i = 0; i < groupCount; i += 1) {
+      const isFirstShader = i === 0;
+      const $shader = isFirstShader ? this._$shader : this.createShader();
       if (this._workSpace.isGroupedByDate()) {
         this._customizeGroupedByDateShader($shader, i);
       } else {
@@ -38,18 +38,18 @@ var HorizontalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
     }
   };
   _proto._customizeShader = function _customizeShader($shader, groupIndex) {
-    var shaderWidth = this._workSpace.getIndicationWidth();
+    const shaderWidth = this._workSpace.getIndicationWidth();
     this._applyShaderWidth($shader, shaderWidth);
     if (groupIndex >= 1) {
-      var workSpace = this._workSpace;
-      var indicationWidth = workSpace._getCellCount() * workSpace.getCellWidth();
+      const workSpace = this._workSpace;
+      const indicationWidth = workSpace._getCellCount() * workSpace.getCellWidth();
       $shader.css('left', indicationWidth);
     } else {
       $shader.css('left', 0);
     }
   };
   _proto._applyShaderWidth = function _applyShaderWidth($shader, width) {
-    var maxWidth = (0, _position.getBoundingRect)(this._$container.get(0)).width;
+    const maxWidth = (0, _position.getBoundingRect)(this._$container.get(0)).width;
     if (width > maxWidth) {
       width = maxWidth;
     }
@@ -58,13 +58,13 @@ var HorizontalCurrentTimeShader = /*#__PURE__*/function (_CurrentTimeShader) {
     }
   };
   _proto._customizeGroupedByDateShader = function _customizeGroupedByDateShader($shader, groupIndex) {
-    var cellCount = this._workSpace.getIndicationCellCount();
-    var integerPart = Math.floor(cellCount);
-    var fractionPart = cellCount - integerPart;
-    var isFirstShaderPart = groupIndex === 0;
-    var workSpace = this._workSpace;
-    var shaderWidth = isFirstShaderPart ? workSpace.getIndicationWidth() : fractionPart * workSpace.getCellWidth();
-    var shaderLeft;
+    const cellCount = this._workSpace.getIndicationCellCount();
+    const integerPart = Math.floor(cellCount);
+    const fractionPart = cellCount - integerPart;
+    const isFirstShaderPart = groupIndex === 0;
+    const workSpace = this._workSpace;
+    const shaderWidth = isFirstShaderPart ? workSpace.getIndicationWidth() : fractionPart * workSpace.getCellWidth();
+    let shaderLeft;
     this._applyShaderWidth($shader, shaderWidth);
     if (isFirstShaderPart) {
       shaderLeft = workSpace._getCellCount() * workSpace.getCellWidth() * groupIndex;

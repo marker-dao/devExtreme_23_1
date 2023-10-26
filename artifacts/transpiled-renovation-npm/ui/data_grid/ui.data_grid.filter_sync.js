@@ -6,7 +6,7 @@ Object.keys(_filter_sync).forEach(function (key) {
   if (key in exports && exports[key] === _filter_sync[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _filter_sync[key];
     }
   });

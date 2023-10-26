@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_grouped_data_map_provider.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ exports.GroupedDataMapProvider = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var GroupedDataMapProvider = /*#__PURE__*/function () {
+let GroupedDataMapProvider = /*#__PURE__*/function () {
   function GroupedDataMapProvider(viewDataGenerator, viewDataMap, completeViewDataMap, viewOptions) {
     this.groupedDataMap = viewDataGenerator.generateGroupedDataMap(viewDataMap);
     this.completeViewDataMap = completeViewDataMap;
@@ -23,27 +23,37 @@ var GroupedDataMapProvider = /*#__PURE__*/function () {
   }
   var _proto = GroupedDataMapProvider.prototype;
   _proto.getGroupStartDate = function getGroupStartDate(groupIndex) {
-    var firstRow = this.getFirstGroupRow(groupIndex);
+    const firstRow = this.getFirstGroupRow(groupIndex);
     if (firstRow) {
-      var startDate = firstRow[0].cellData.startDate;
+      const {
+        startDate
+      } = firstRow[0].cellData;
       return startDate;
     }
   };
   _proto.getGroupEndDate = function getGroupEndDate(groupIndex) {
-    var lastRow = this.getLastGroupRow(groupIndex);
+    const lastRow = this.getLastGroupRow(groupIndex);
     if (lastRow) {
-      var lastColumnIndex = lastRow.length - 1;
-      var cellData = lastRow[lastColumnIndex].cellData;
-      var endDate = cellData.endDate;
+      const lastColumnIndex = lastRow.length - 1;
+      const {
+        cellData
+      } = lastRow[lastColumnIndex];
+      const {
+        endDate
+      } = cellData;
       return endDate;
     }
   };
   _proto.findGroupCellStartDate = function findGroupCellStartDate(groupIndex, startDate, endDate, isFindByDate) {
-    var groupData = this.getGroupFromDateTableGroupMap(groupIndex);
-    var checkCellStartDate = function checkCellStartDate(rowIndex, columnIndex) {
-      var cellData = groupData[rowIndex][columnIndex].cellData;
-      var secondMin = cellData.startDate,
-        secondMax = cellData.endDate;
+    const groupData = this.getGroupFromDateTableGroupMap(groupIndex);
+    const checkCellStartDate = (rowIndex, columnIndex) => {
+      const {
+        cellData
+      } = groupData[rowIndex][columnIndex];
+      let {
+        startDate: secondMin,
+        endDate: secondMax
+      } = cellData;
       if (isFindByDate) {
         secondMin = _date.default.trimTime(secondMin);
         secondMax = _date.default.setToDayEnd(secondMin);
@@ -57,56 +67,60 @@ var GroupedDataMapProvider = /*#__PURE__*/function () {
         return secondMin;
       }
     };
-    var searchVertical = function searchVertical() {
-      var cellCount = groupData[0].length;
-      for (var columnIndex = 0; columnIndex < cellCount; ++columnIndex) {
-        for (var rowIndex = 0; rowIndex < groupData.length; ++rowIndex) {
-          var result = checkCellStartDate(rowIndex, columnIndex);
+    const searchVertical = () => {
+      const cellCount = groupData[0].length;
+      for (let columnIndex = 0; columnIndex < cellCount; ++columnIndex) {
+        for (let rowIndex = 0; rowIndex < groupData.length; ++rowIndex) {
+          const result = checkCellStartDate(rowIndex, columnIndex);
           if (result) return result;
         }
       }
     };
-    var searchHorizontal = function searchHorizontal() {
-      for (var rowIndex = 0; rowIndex < groupData.length; ++rowIndex) {
-        var row = groupData[rowIndex];
-        for (var columnIndex = 0; columnIndex < row.length; ++columnIndex) {
-          var result = checkCellStartDate(rowIndex, columnIndex);
+    const searchHorizontal = () => {
+      for (let rowIndex = 0; rowIndex < groupData.length; ++rowIndex) {
+        const row = groupData[rowIndex];
+        for (let columnIndex = 0; columnIndex < row.length; ++columnIndex) {
+          const result = checkCellStartDate(rowIndex, columnIndex);
           if (result) return result;
         }
       }
     };
-    var startDateVerticalSearch = searchVertical();
-    var startDateHorizontalSearch = searchHorizontal();
+    const startDateVerticalSearch = searchVertical();
+    const startDateHorizontalSearch = searchHorizontal();
     return startDateVerticalSearch > startDateHorizontalSearch ? startDateHorizontalSearch : startDateVerticalSearch;
   };
   _proto.findAllDayGroupCellStartDate = function findAllDayGroupCellStartDate(groupIndex, startDate) {
-    var groupStartDate = this.getGroupStartDate(groupIndex);
+    const groupStartDate = this.getGroupStartDate(groupIndex);
     return groupStartDate > startDate ? groupStartDate : startDate;
   };
   _proto.findCellPositionInMap = function findCellPositionInMap(cellInfo) {
-    var _this = this;
-    var groupIndex = cellInfo.groupIndex,
-      startDate = cellInfo.startDate,
-      isAllDay = cellInfo.isAllDay,
-      index = cellInfo.index;
-    var startTime = isAllDay ? _date.default.trimTime(startDate).getTime() : startDate.getTime();
-    var isStartDateInCell = function isStartDateInCell(cellData) {
-      if (!(0, _base.isDateAndTimeView)(_this._viewOptions.viewType)) {
+    const {
+      groupIndex,
+      startDate,
+      isAllDay,
+      index
+    } = cellInfo;
+    const startTime = isAllDay ? _date.default.trimTime(startDate).getTime() : startDate.getTime();
+    const isStartDateInCell = cellData => {
+      if (!(0, _base.isDateAndTimeView)(this._viewOptions.viewType)) {
         return _date.default.sameDate(startDate, cellData.startDate);
       }
-      var cellStartTime = cellData.startDate.getTime();
-      var cellEndTime = cellData.endDate.getTime();
+      const cellStartTime = cellData.startDate.getTime();
+      const cellEndTime = cellData.endDate.getTime();
       return isAllDay ? cellData.allDay && startTime >= cellStartTime && startTime <= cellEndTime : startTime >= cellStartTime && startTime < cellEndTime;
     };
-    var _this$groupedDataMap = this.groupedDataMap,
-      allDayPanelGroupedMap = _this$groupedDataMap.allDayPanelGroupedMap,
-      dateTableGroupedMap = _this$groupedDataMap.dateTableGroupedMap;
-    var rows = isAllDay && !this._viewOptions.isVerticalGrouping ? allDayPanelGroupedMap[groupIndex] ? [allDayPanelGroupedMap[groupIndex]] : [] : dateTableGroupedMap[groupIndex] || [];
-    for (var rowIndex = 0; rowIndex < rows.length; ++rowIndex) {
-      var row = rows[rowIndex];
-      for (var columnIndex = 0; columnIndex < row.length; ++columnIndex) {
-        var cell = row[columnIndex];
-        var cellData = cell.cellData;
+    const {
+      allDayPanelGroupedMap,
+      dateTableGroupedMap
+    } = this.groupedDataMap;
+    const rows = isAllDay && !this._viewOptions.isVerticalGrouping ? allDayPanelGroupedMap[groupIndex] ? [allDayPanelGroupedMap[groupIndex]] : [] : dateTableGroupedMap[groupIndex] || [];
+    for (let rowIndex = 0; rowIndex < rows.length; ++rowIndex) {
+      const row = rows[rowIndex];
+      for (let columnIndex = 0; columnIndex < row.length; ++columnIndex) {
+        const cell = row[columnIndex];
+        const {
+          cellData
+        } = cell;
         if (this._isSameGroupIndexAndIndex(cellData, groupIndex, index)) {
           if (isStartDateInCell(cellData)) {
             return cell.position;
@@ -120,67 +134,83 @@ var GroupedDataMapProvider = /*#__PURE__*/function () {
     return cellData.groupIndex === groupIndex && (index === undefined || cellData.index === index);
   };
   _proto.getCellsGroup = function getCellsGroup(groupIndex) {
-    var dateTableGroupedMap = this.groupedDataMap.dateTableGroupedMap;
-    var groupData = dateTableGroupedMap[groupIndex];
+    const {
+      dateTableGroupedMap
+    } = this.groupedDataMap;
+    const groupData = dateTableGroupedMap[groupIndex];
     if (groupData) {
-      var cellData = groupData[0][0].cellData;
+      const {
+        cellData
+      } = groupData[0][0];
       return cellData.groups;
     }
   };
   _proto.getCompletedGroupsInfo = function getCompletedGroupsInfo() {
-    var _this2 = this;
-    var dateTableGroupedMap = this.groupedDataMap.dateTableGroupedMap;
-    return dateTableGroupedMap.map(function (groupData) {
-      var firstCell = groupData[0][0];
-      var _firstCell$cellData = firstCell.cellData,
-        allDay = _firstCell$cellData.allDay,
-        groupIndex = _firstCell$cellData.groupIndex;
+    const {
+      dateTableGroupedMap
+    } = this.groupedDataMap;
+    return dateTableGroupedMap.map(groupData => {
+      const firstCell = groupData[0][0];
+      const {
+        allDay,
+        groupIndex
+      } = firstCell.cellData;
       return {
         allDay,
         groupIndex,
-        startDate: _this2.getGroupStartDate(groupIndex),
-        endDate: _this2.getGroupEndDate(groupIndex)
+        startDate: this.getGroupStartDate(groupIndex),
+        endDate: this.getGroupEndDate(groupIndex)
       };
-    }).filter(function (_ref) {
-      var startDate = _ref.startDate;
+    }).filter(_ref => {
+      let {
+        startDate
+      } = _ref;
       return !!startDate;
     });
   };
   _proto.getGroupIndices = function getGroupIndices() {
-    return this.getCompletedGroupsInfo().map(function (_ref2) {
-      var groupIndex = _ref2.groupIndex;
+    return this.getCompletedGroupsInfo().map(_ref2 => {
+      let {
+        groupIndex
+      } = _ref2;
       return groupIndex;
     });
   };
   _proto.getGroupFromDateTableGroupMap = function getGroupFromDateTableGroupMap(groupIndex) {
-    var dateTableGroupedMap = this.groupedDataMap.dateTableGroupedMap;
+    const {
+      dateTableGroupedMap
+    } = this.groupedDataMap;
     return dateTableGroupedMap[groupIndex];
   };
   _proto.getFirstGroupRow = function getFirstGroupRow(groupIndex) {
-    var groupedData = this.getGroupFromDateTableGroupMap(groupIndex);
+    const groupedData = this.getGroupFromDateTableGroupMap(groupIndex);
     if (groupedData) {
-      var cellData = groupedData[0][0].cellData;
+      const {
+        cellData
+      } = groupedData[0][0];
       return !cellData.allDay ? groupedData[0] : groupedData[1];
     }
   };
   _proto.getLastGroupRow = function getLastGroupRow(groupIndex) {
-    var dateTableGroupedMap = this.groupedDataMap.dateTableGroupedMap;
-    var groupedData = dateTableGroupedMap[groupIndex];
+    const {
+      dateTableGroupedMap
+    } = this.groupedDataMap;
+    const groupedData = dateTableGroupedMap[groupIndex];
     if (groupedData) {
-      var lastRowIndex = groupedData.length - 1;
+      const lastRowIndex = groupedData.length - 1;
       return groupedData[lastRowIndex];
     }
   };
   _proto.getLastGroupCellPosition = function getLastGroupCellPosition(groupIndex) {
-    var groupRow = this.getLastGroupRow(groupIndex);
+    const groupRow = this.getLastGroupRow(groupIndex);
     // eslint-disable-next-line no-unsafe-optional-chaining
     return groupRow === null || groupRow === void 0 ? void 0 : groupRow[(groupRow === null || groupRow === void 0 ? void 0 : groupRow.length) - 1].position;
   };
   _proto.getRowCountInGroup = function getRowCountInGroup(groupIndex) {
-    var groupRow = this.getLastGroupRow(groupIndex);
-    var cellAmount = groupRow.length;
-    var lastCellData = groupRow[cellAmount - 1].cellData;
-    var lastCellIndex = lastCellData.index;
+    const groupRow = this.getLastGroupRow(groupIndex);
+    const cellAmount = groupRow.length;
+    const lastCellData = groupRow[cellAmount - 1].cellData;
+    const lastCellIndex = lastCellData.index;
     return (lastCellIndex + 1) / groupRow.length;
   };
   return GroupedDataMapProvider;

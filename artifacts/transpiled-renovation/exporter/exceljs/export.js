@@ -7,14 +7,14 @@ var _extend = require("../../core/utils/extend");
 var _export_load_panel = require("../common/export_load_panel");
 var _window = require("../../core/utils/window");
 // docs.microsoft.com/en-us/office/troubleshoot/excel/determine-column-widths - "Description of how column widths are determined in Excel"
-var MAX_DIGIT_WIDTH_IN_PIXELS = 7; // Calibri font with 11pt size
+const MAX_DIGIT_WIDTH_IN_PIXELS = 7; // Calibri font with 11pt size
 
 // support.office.com/en-us/article/change-the-column-width-and-row-height-72f5e3cc-994d-43e8-ae58-9774a0905f46 - "Column.Max - 255"
 // support.office.com/en-us/article/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3 - "Column width limit - 255 characters"
-var MAX_EXCEL_COLUMN_WIDTH = 255;
-var Export = {
+const MAX_EXCEL_COLUMN_WIDTH = 255;
+const Export = {
   getFullOptions(options) {
-    var fullOptions = (0, _extend.extend)({}, options);
+    const fullOptions = (0, _extend.extend)({}, options);
     if (!((0, _type.isDefined)(fullOptions.worksheet) && (0, _type.isObject)(fullOptions.worksheet))) {
       throw Error('The "worksheet" field must contain an object.');
     }
@@ -24,9 +24,10 @@ var Export = {
         column: 1
       };
     } else if ((0, _type.isString)(fullOptions.topLeftCell)) {
-      var _fullOptions$workshee = fullOptions.worksheet.getCell(fullOptions.topLeftCell),
-        row = _fullOptions$workshee.row,
-        col = _fullOptions$workshee.col;
+      const {
+        row,
+        col
+      } = fullOptions.worksheet.getCell(fullOptions.topLeftCell);
       fullOptions.topLeftCell = {
         row,
         column: col
@@ -53,10 +54,9 @@ var Export = {
     excelCell.numFmt = numberFormat;
   },
   getCellStyles(dataProvider) {
-    var _this = this;
-    var styles = dataProvider.getStyles();
-    styles.forEach(function (style) {
-      var numberFormat = _this.tryConvertToExcelNumberFormat(style.format, style.dataType);
+    const styles = dataProvider.getStyles();
+    styles.forEach(style => {
+      let numberFormat = this.tryConvertToExcelNumberFormat(style.format, style.dataType);
       if ((0, _type.isDefined)(numberFormat)) {
         numberFormat = numberFormat.replace(/&quot;/g, '"');
       }
@@ -65,8 +65,8 @@ var Export = {
     return styles;
   },
   tryConvertToExcelNumberFormat(format, dataType) {
-    var newFormat = _export_format.ExportFormat.formatObjectConverter(format, dataType);
-    var currency = newFormat.currency;
+    const newFormat = _export_format.ExportFormat.formatObjectConverter(format, dataType);
+    const currency = newFormat.currency;
     format = newFormat.format;
     dataType = newFormat.dataType;
     return _export_format.ExportFormat.convertFormat(format, newFormat.precision, dataType, currency);
@@ -86,42 +86,43 @@ var Export = {
     if (!(0, _type.isDefined)(widths)) {
       return;
     }
-    for (var i = 0; i < widths.length; i++) {
-      var columnWidth = widths[i];
+    for (let i = 0; i < widths.length; i++) {
+      const columnWidth = widths[i];
       if (typeof columnWidth === 'number' && isFinite(columnWidth)) {
         worksheet.getColumn(startColumnIndex + i).width = Math.min(MAX_EXCEL_COLUMN_WIDTH, Math.floor(columnWidth / MAX_DIGIT_WIDTH_IN_PIXELS * 100) / 100);
       }
     }
   },
   export(options, Helpers, getLoadPanelTargetElement, getLoadPanelContainer) {
-    var _component$_getIntern,
-      _this2 = this;
-    var component = options.component,
-      worksheet = options.worksheet,
-      topLeftCell = options.topLeftCell,
-      keepColumnWidths = options.keepColumnWidths,
-      selectedRowsOnly = options.selectedRowsOnly,
-      loadPanel = options.loadPanel,
-      encodeExecutableContent = options.encodeExecutableContent;
-    var dataProvider = component.getDataProvider(selectedRowsOnly);
-    var internalComponent = ((_component$_getIntern = component._getInternalInstance) === null || _component$_getIntern === void 0 ? void 0 : _component$_getIntern.call(component)) || component;
-    var initialLoadPanelEnabledOption = internalComponent.option('loadPanel') && internalComponent.option('loadPanel').enabled;
+    var _component$_getIntern;
+    const {
+      component,
+      worksheet,
+      topLeftCell,
+      keepColumnWidths,
+      selectedRowsOnly,
+      loadPanel,
+      encodeExecutableContent
+    } = options;
+    const dataProvider = component.getDataProvider(selectedRowsOnly);
+    const internalComponent = ((_component$_getIntern = component._getInternalInstance) === null || _component$_getIntern === void 0 ? void 0 : _component$_getIntern.call(component)) || component;
+    const initialLoadPanelEnabledOption = internalComponent.option('loadPanel') && internalComponent.option('loadPanel').enabled;
     if (initialLoadPanelEnabledOption) {
       component.option('loadPanel.enabled', false);
     }
-    var exportLoadPanel;
+    let exportLoadPanel;
     if (loadPanel.enabled && (0, _window.hasWindow)()) {
-      var $targetElement = getLoadPanelTargetElement(component);
-      var $container = getLoadPanelContainer(component);
+      const $targetElement = getLoadPanelTargetElement(component);
+      const $container = getLoadPanelContainer(component);
       exportLoadPanel = new _export_load_panel.ExportLoadPanel(component, $targetElement, $container, loadPanel);
       exportLoadPanel.show();
     }
-    var wrapText = !!component.option('wordWrapEnabled');
+    const wrapText = !!component.option('wordWrapEnabled');
     worksheet.properties.outlineProperties = {
       summaryBelow: false,
       summaryRight: false
     };
-    var cellRange = {
+    const cellRange = {
       from: {
         row: topLeftCell.row,
         column: topLeftCell.column
@@ -131,33 +132,33 @@ var Export = {
         column: topLeftCell.column
       }
     };
-    return new Promise(function (resolve) {
-      dataProvider.ready().done(function () {
-        var columns = dataProvider.getColumns();
-        var dataRowsCount = dataProvider.getRowsCount();
-        var helpers = new Helpers(component, dataProvider, worksheet, options);
+    return new Promise(resolve => {
+      dataProvider.ready().done(() => {
+        const columns = dataProvider.getColumns();
+        const dataRowsCount = dataProvider.getRowsCount();
+        const helpers = new Helpers(component, dataProvider, worksheet, options);
         if (keepColumnWidths) {
-          _this2.setColumnsWidth(worksheet, dataProvider.getColumnsWidths(), cellRange.from.column);
+          this.setColumnsWidth(worksheet, dataProvider.getColumnsWidths(), cellRange.from.column);
         }
-        helpers._exportAllFieldHeaders(columns, _this2.setAlignment);
-        var fieldHeaderRowsCount = helpers._getFieldHeaderRowsCount();
+        helpers._exportAllFieldHeaders(columns, this.setAlignment);
+        const fieldHeaderRowsCount = helpers._getFieldHeaderRowsCount();
         cellRange.to.row = cellRange.from.row + fieldHeaderRowsCount;
-        var styles = _this2.getCellStyles(dataProvider);
-        for (var rowIndex = 0; rowIndex < dataRowsCount; rowIndex++) {
-          var currentRowIndex = cellRange.from.row + fieldHeaderRowsCount + rowIndex;
-          var row = worksheet.getRow(currentRowIndex);
-          var startColumnIndex = 0;
+        const styles = this.getCellStyles(dataProvider);
+        for (let rowIndex = 0; rowIndex < dataRowsCount; rowIndex++) {
+          const currentRowIndex = cellRange.from.row + fieldHeaderRowsCount + rowIndex;
+          const row = worksheet.getRow(currentRowIndex);
+          let startColumnIndex = 0;
           if (helpers._isRowFieldHeadersRow(rowIndex)) {
             startColumnIndex = dataProvider.getRowAreaColCount();
-            helpers._exportFieldHeaders('row', currentRowIndex, 0, startColumnIndex, _this2.setAlignment);
+            helpers._exportFieldHeaders('row', currentRowIndex, 0, startColumnIndex, this.setAlignment);
           }
           helpers._trySetOutlineLevel(row, rowIndex);
-          _this2.exportRow(dataProvider, helpers, row, rowIndex, startColumnIndex, columns.length, wrapText, styles, encodeExecutableContent);
+          this.exportRow(dataProvider, helpers, row, rowIndex, startColumnIndex, columns.length, wrapText, styles, encodeExecutableContent);
           cellRange.to.row = currentRowIndex;
         }
         helpers.mergedRangesManager.applyMergedRages();
         cellRange.to.column += columns.length > 0 ? columns.length - 1 : 0;
-        var worksheetViewSettings = worksheet.views[0] || {};
+        const worksheetViewSettings = worksheet.views[0] || {};
         if (component.option('rtlEnabled')) {
           worksheetViewSettings.rightToLeft = true;
         }
@@ -171,7 +172,7 @@ var Export = {
           worksheet.views = [worksheetViewSettings];
         }
         resolve(cellRange);
-      }).always(function () {
+      }).always(() => {
         if (initialLoadPanelEnabledOption) {
           component.option('loadPanel.enabled', initialLoadPanelEnabledOption);
         }
@@ -182,11 +183,11 @@ var Export = {
     });
   },
   exportRow(dataProvider, helpers, row, rowIndex, startColumnIndex, columnsCount, wrapText, styles, encodeExecutableContent) {
-    for (var cellIndex = startColumnIndex; cellIndex < columnsCount; cellIndex++) {
-      var cellData = dataProvider.getCellData(rowIndex, cellIndex, true);
-      var excelCell = row.getCell(helpers._getFirstColumnIndex() + cellIndex);
+    for (let cellIndex = startColumnIndex; cellIndex < columnsCount; cellIndex++) {
+      const cellData = dataProvider.getCellData(rowIndex, cellIndex, true);
+      const excelCell = row.getCell(helpers._getFirstColumnIndex() + cellIndex);
       helpers.mergedRangesManager.updateMergedRanges(excelCell, rowIndex, cellIndex, helpers);
-      var cellInfo = helpers.mergedRangesManager.findMergedCellInfo(rowIndex, cellIndex, helpers._isHeaderCell(rowIndex, cellIndex));
+      const cellInfo = helpers.mergedRangesManager.findMergedCellInfo(rowIndex, cellIndex, helpers._isHeaderCell(rowIndex, cellIndex));
       if ((0, _type.isDefined)(cellInfo) && excelCell !== cellInfo.masterCell) {
         excelCell.style = cellInfo.masterCell.style;
         excelCell.value = cellInfo.masterCell.value;
@@ -197,10 +198,11 @@ var Export = {
           excelCell.value = cellData.value;
         }
         if ((0, _type.isDefined)(excelCell.value)) {
-          var _styles$dataProvider$ = styles[dataProvider.getStyleId(rowIndex, cellIndex)],
-            bold = _styles$dataProvider$.bold,
-            horizontalAlignment = _styles$dataProvider$.alignment,
-            numberFormat = _styles$dataProvider$.numberFormat;
+          const {
+            bold,
+            alignment: horizontalAlignment,
+            numberFormat
+          } = styles[dataProvider.getStyleId(rowIndex, cellIndex)];
           if ((0, _type.isDefined)(numberFormat)) {
             this.setNumberFormat(excelCell, numberFormat);
           } else if ((0, _type.isString)(excelCell.value) && /^[@=+-]/.test(excelCell.value)) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/selection/m_selection.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,21 +32,21 @@ var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var EDITOR_CELL_CLASS = 'dx-editor-cell';
-var ROW_CLASS = 'dx-row';
-var ROW_SELECTION_CLASS = 'dx-selection';
-var SELECT_CHECKBOX_CLASS = 'dx-select-checkbox';
-var CHECKBOXES_HIDDEN_CLASS = 'dx-select-checkboxes-hidden';
-var COMMAND_SELECT_CLASS = 'dx-command-select';
-var SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
-var DATA_ROW_CLASS = 'dx-data-row';
-var SHOW_CHECKBOXES_MODE = 'selection.showCheckBoxesMode';
-var SELECTION_MODE = 'selection.mode';
-var processLongTap = function processLongTap(that, dxEvent) {
-  var selectionController = that.getController('selection');
-  var rowsView = that.getView('rowsView');
-  var $row = (0, _renderer.default)(dxEvent.target).closest(".".concat(DATA_ROW_CLASS));
-  var rowIndex = rowsView.getRowIndex($row);
+const EDITOR_CELL_CLASS = 'dx-editor-cell';
+const ROW_CLASS = 'dx-row';
+const ROW_SELECTION_CLASS = 'dx-selection';
+const SELECT_CHECKBOX_CLASS = 'dx-select-checkbox';
+const CHECKBOXES_HIDDEN_CLASS = 'dx-select-checkboxes-hidden';
+const COMMAND_SELECT_CLASS = 'dx-command-select';
+const SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
+const DATA_ROW_CLASS = 'dx-data-row';
+const SHOW_CHECKBOXES_MODE = 'selection.showCheckBoxesMode';
+const SELECTION_MODE = 'selection.mode';
+const processLongTap = function (that, dxEvent) {
+  const selectionController = that.getController('selection');
+  const rowsView = that.getView('rowsView');
+  const $row = (0, _renderer.default)(dxEvent.target).closest(".".concat(DATA_ROW_CLASS));
+  const rowIndex = rowsView.getRowIndex($row);
   if (rowIndex < 0) return;
   if (that.option(SHOW_CHECKBOXES_MODE) === 'onLongTap') {
     if (selectionController.isSelectionWithCheckboxes()) {
@@ -65,16 +65,16 @@ var processLongTap = function processLongTap(that, dxEvent) {
     }
   }
 };
-var isSeveralRowsSelected = function isSeveralRowsSelected(that, selectionFilter) {
-  var keyIndex = 0;
-  var store = that._dataController.store();
-  var key = store && store.key();
-  var isComplexKey = Array.isArray(key);
+const isSeveralRowsSelected = function (that, selectionFilter) {
+  let keyIndex = 0;
+  const store = that._dataController.store();
+  const key = store && store.key();
+  const isComplexKey = Array.isArray(key);
   if (!selectionFilter.length) {
     return false;
   }
   if (isComplexKey && Array.isArray(selectionFilter[0]) && selectionFilter[1] === 'and') {
-    for (var i = 0; i < selectionFilter.length; i++) {
+    for (let i = 0; i < selectionFilter.length; i++) {
       if (Array.isArray(selectionFilter[i])) {
         if (selectionFilter[i][0] !== key[keyIndex] || selectionFilter[i][1] !== '=') {
           return true;
@@ -86,23 +86,27 @@ var isSeveralRowsSelected = function isSeveralRowsSelected(that, selectionFilter
   }
   return key !== selectionFilter[0];
 };
-var selectionCellTemplate = function selectionCellTemplate(container, options) {
-  var component = options.component;
-  var rowsView = component.getView('rowsView');
+const selectionCellTemplate = (container, options) => {
+  const {
+    component
+  } = options;
+  const rowsView = component.getView('rowsView');
   if (component.option('renderAsync') && !component.option('selection.deferred')) {
     options.value = component.isRowSelected(options.row.key);
   }
   rowsView.renderSelectCheckBoxContainer((0, _renderer.default)(container), options);
 };
-var selectionHeaderTemplate = function selectionHeaderTemplate(container, options) {
-  var column = options.column;
-  var $cellElement = (0, _renderer.default)(container);
-  var columnHeadersView = options.component.getView('columnHeadersView');
+const selectionHeaderTemplate = (container, options) => {
+  const {
+    column
+  } = options;
+  const $cellElement = (0, _renderer.default)(container);
+  const columnHeadersView = options.component.getView('columnHeadersView');
   $cellElement.addClass(EDITOR_CELL_CLASS);
   columnHeadersView._renderSelectAllCheckBox($cellElement, column);
   columnHeadersView._attachSelectAllCheckBoxClickEvent($cellElement);
 };
-var SelectionController = /*#__PURE__*/function (_modules$Controller) {
+let SelectionController = /*#__PURE__*/function (_modules$Controller) {
   _inheritsLoose(SelectionController, _modules$Controller);
   function SelectionController() {
     return _modules$Controller.apply(this, arguments) || this;
@@ -111,10 +115,11 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
   _proto.init = function init() {
     var _a;
     // @ts-expect-error
-    var _ref = (_a = this.option('selection')) !== null && _a !== void 0 ? _a : {},
-      deferred = _ref.deferred,
-      selectAllMode = _ref.selectAllMode,
-      mode = _ref.mode;
+    const {
+      deferred,
+      selectAllMode,
+      mode
+    } = (_a = this.option('selection')) !== null && _a !== void 0 ? _a : {};
     if (this.option('scrolling.mode') === 'infinite' && !deferred && mode === 'multiple' && selectAllMode === 'allPages') {
       _ui.default.log('W1018');
     }
@@ -136,35 +141,21 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     this._updateSelectedOnPush(changes);
   };
   _proto._deselectRemovedOnPush = function _deselectRemovedOnPush(changes) {
-    var isDeferredSelection = this.option('selection.deferred');
-    var removedKeys = changes.filter(function (change) {
-      return change.type === 'remove';
-    }).map(function (change) {
-      return change.key;
-    });
+    const isDeferredSelection = this.option('selection.deferred');
+    let removedKeys = changes.filter(change => change.type === 'remove').map(change => change.key);
     if (isDeferredSelection) {
-      var selectedKeys = this._dataController.items().filter(function (item) {
-        return item.isSelected;
-      }).map(function (item) {
-        return item.key;
-      });
-      removedKeys = removedKeys.filter(function (key) {
-        return selectedKeys.find(function (selectedKey) {
-          return (0, _common.equalByValue)(selectedKey, key);
-        });
-      });
+      const selectedKeys = this._dataController.items().filter(item => item.isSelected).map(item => item.key);
+      removedKeys = removedKeys.filter(key => selectedKeys.find(selectedKey => (0, _common.equalByValue)(selectedKey, key)));
     }
     removedKeys.length && this.deselectRows(removedKeys);
   };
   _proto._updateSelectedOnPush = function _updateSelectedOnPush(changes) {
-    var isDeferredSelection = this.option('selection.deferred');
+    const isDeferredSelection = this.option('selection.deferred');
     if (isDeferredSelection) {
       return;
     }
-    var updateChanges = changes.filter(function (change) {
-      return change.type === 'update';
-    });
-    var data = this.getSelectedRowsData();
+    const updateChanges = changes.filter(change => change.type === 'update');
+    const data = this.getSelectedRowsData();
     (0, _array_utils.applyBatch)({
       keyInfo: this._selection.options,
       data,
@@ -173,15 +164,17 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
   };
   _proto._getSelectionConfig = function _getSelectionConfig() {
     var _a;
-    var dataController = this._dataController;
-    var columnsController = this.getController('columns');
-    var selectionOptions = (_a = this.option('selection')) !== null && _a !== void 0 ? _a : {};
+    const dataController = this._dataController;
+    const columnsController = this.getController('columns');
+    const selectionOptions = (_a = this.option('selection')) !== null && _a !== void 0 ? _a : {};
     // @ts-expect-error
-    var deferred = selectionOptions.deferred;
-    var scrollingMode = this.option('scrolling.mode');
-    var virtualPaging = scrollingMode === 'virtual' || scrollingMode === 'infinite';
-    var allowSelectAll = this.option('selection.allowSelectAll');
-    var legacyScrollingMode = this.option('scrolling.legacyMode');
+    const {
+      deferred
+    } = selectionOptions;
+    const scrollingMode = this.option('scrolling.mode');
+    const virtualPaging = scrollingMode === 'virtual' || scrollingMode === 'infinite';
+    const allowSelectAll = this.option('selection.allowSelectAll');
+    const legacyScrollingMode = this.option('scrolling.legacyMode');
     return {
       selectedKeys: this.option('selectedRowKeys'),
       mode: this._selectionMode,
@@ -190,7 +183,7 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
       selectionFilter: this.option('selectionFilter'),
       ignoreDisabledItems: true,
       allowLoadByRange() {
-        var hasGroupColumns = columnsController.getGroupColumns().length > 0;
+        const hasGroupColumns = columnsController.getGroupColumns().length > 0;
         return virtualPaging && !legacyScrollingMode && !hasGroupColumns && allowSelectAll && !deferred;
       },
       key() {
@@ -223,21 +216,20 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
       filter() {
         return dataController.getCombinedFilter(deferred);
       },
-      totalCount: function totalCount() {
-        return dataController.totalCount();
-      },
+      totalCount: () => dataController.totalCount(),
       getLoadOptions(loadItemIndex, focusedItemIndex, shiftItemIndex) {
         var _a, _b;
-        var _ref2 = (_b = (_a = dataController.dataSource()) === null || _a === void 0 ? void 0 : _a.lastLoadOptions()) !== null && _b !== void 0 ? _b : {},
-          sort = _ref2.sort,
-          filter = _ref2.filter;
-        var minIndex = Math.min(loadItemIndex, focusedItemIndex);
-        var maxIndex = Math.max(loadItemIndex, focusedItemIndex);
+        const {
+          sort,
+          filter
+        } = (_b = (_a = dataController.dataSource()) === null || _a === void 0 ? void 0 : _a.lastLoadOptions()) !== null && _b !== void 0 ? _b : {};
+        let minIndex = Math.min(loadItemIndex, focusedItemIndex);
+        let maxIndex = Math.max(loadItemIndex, focusedItemIndex);
         if ((0, _type.isDefined)(shiftItemIndex)) {
           minIndex = Math.min(shiftItemIndex, minIndex);
           maxIndex = Math.max(shiftItemIndex, maxIndex);
         }
-        var take = maxIndex - minIndex + 1;
+        const take = maxIndex - minIndex + 1;
         return {
           skip: minIndex,
           take,
@@ -249,8 +241,8 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     };
   };
   _proto._updateSelectColumn = function _updateSelectColumn() {
-    var columnsController = this.getController('columns');
-    var isSelectColumnVisible = this.isSelectColumnVisible();
+    const columnsController = this.getController('columns');
+    const isSelectColumnVisible = this.isSelectColumnVisible();
     columnsController.addCommandColumn({
       type: 'selection',
       command: 'select',
@@ -266,11 +258,11 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     columnsController.columnOption('command:select', 'visible', isSelectColumnVisible);
   };
   _proto._createSelection = function _createSelection() {
-    var options = this._getSelectionConfig();
+    const options = this._getSelectionConfig();
     return new _selection.default(options);
   };
   _proto._fireSelectionChanged = function _fireSelectionChanged(options) {
-    var argument = this.option('selection.deferred') ? {
+    const argument = this.option('selection.deferred') ? {
       selectionFilter: this.option('selectionFilter')
     } : {
       selectedRowKeys: this.option('selectedRowKeys')
@@ -281,10 +273,18 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto._updateCheckboxesState = function _updateCheckboxesState(options) {
-    var isDeferredMode = options.isDeferredMode;
-    var selectionFilter = options.selectionFilter;
-    var selectedItemKeys = options.selectedItemKeys;
-    var removedItemKeys = options.removedItemKeys;
+    const {
+      isDeferredMode
+    } = options;
+    const {
+      selectionFilter
+    } = options;
+    const {
+      selectedItemKeys
+    } = options;
+    const {
+      removedItemKeys
+    } = options;
     if (this.option(SHOW_CHECKBOXES_MODE) === 'onClick') {
       if (isDeferredMode ? selectionFilter && isSeveralRowsSelected(this, selectionFilter) : selectedItemKeys.length > 1) {
         this.startSelectionWithCheckboxes();
@@ -294,19 +294,19 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     }
   };
   _proto._updateSelectedItems = function _updateSelectedItems(args) {
-    var that = this;
-    var selectionChangedOptions;
-    var isDeferredMode = that.option('selection.deferred');
-    var selectionFilter = that._selection.selectionFilter();
-    var dataController = that._dataController;
-    var items = dataController.items(true);
-    var visibleItems = dataController.items();
+    const that = this;
+    let selectionChangedOptions;
+    const isDeferredMode = that.option('selection.deferred');
+    const selectionFilter = that._selection.selectionFilter();
+    const dataController = that._dataController;
+    const items = dataController.items(true);
+    const visibleItems = dataController.items();
     if (!items) {
       return;
     }
-    var isSelectionWithCheckboxes = that.isSelectionWithCheckboxes();
-    var changedItemIndexes = that.getChangedItemIndexes(items);
-    var visibleChangedItemIndexes = that.getChangedItemIndexes(visibleItems);
+    const isSelectionWithCheckboxes = that.isSelectionWithCheckboxes();
+    const changedItemIndexes = that.getChangedItemIndexes(items);
+    const visibleChangedItemIndexes = that.getChangedItemIndexes(visibleItems);
     that._updateCheckboxesState({
       selectedItemKeys: args.selectedItemKeys,
       removedItemKeys: args.removedItemKeys,
@@ -337,12 +337,14 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     that._fireSelectionChanged(selectionChangedOptions);
   };
   _proto.getChangedItemIndexes = function getChangedItemIndexes(items) {
-    var that = this;
-    var itemIndexes = [];
-    var isDeferredSelection = this.option('selection.deferred');
-    for (var i = 0, length = items.length; i < length; i++) {
-      var row = items[i];
-      var isItemSelected = that.isRowSelected(isDeferredSelection ? row.data : row.key);
+    const that = this;
+    const itemIndexes = [];
+    const isDeferredSelection = this.option('selection.deferred');
+    for (let i = 0, {
+        length
+      } = items; i < length; i++) {
+      const row = items[i];
+      const isItemSelected = that.isRowSelected(isDeferredSelection ? row.data : row.key);
       if (that._selection.isDataItem(row) && row.isSelected !== isItemSelected) {
         itemIndexes.push(i);
       }
@@ -353,17 +355,16 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     return ['selectionChanged'];
   };
   _proto.optionChanged = function optionChanged(args) {
-    var _this = this;
     _modules$Controller.prototype.optionChanged.call(this, args);
     // eslint-disable-next-line default-case
     switch (args.name) {
       case 'selection':
         {
-          var oldSelectionMode = this._selectionMode;
+          const oldSelectionMode = this._selectionMode;
           this.init();
           if (args.fullName !== 'selection.showCheckBoxesMode') {
-            var selectionMode = this._selectionMode;
-            var selectedRowKeys = this.option('selectedRowKeys');
+            const selectionMode = this._selectionMode;
+            let selectedRowKeys = this.option('selectedRowKeys');
             if (oldSelectionMode !== selectionMode) {
               if (selectionMode === 'single') {
                 if (selectedRowKeys.length > 1) {
@@ -373,8 +374,8 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
                 selectedRowKeys = [];
               }
             }
-            this.selectRows(selectedRowKeys).always(function () {
-              _this._fireSelectionChanged();
+            this.selectRows(selectedRowKeys).always(() => {
+              this._fireSelectionChanged();
             });
           }
           this.getController('columns').updateColumns();
@@ -387,7 +388,7 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
         break;
       case 'selectedRowKeys':
         {
-          var value = args.value || [];
+          const value = args.value || [];
           if (Array.isArray(value) && !this._selectedItemsInternalChange && (this.component.getDataSource() || !value.length)) {
             this.selectRows(value);
           }
@@ -425,7 +426,7 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
   };
   _proto.refresh = function refresh() {
     var _a;
-    var selectedRowKeys = (_a = this.option('selectedRowKeys')) !== null && _a !== void 0 ? _a : [];
+    const selectedRowKeys = (_a = this.option('selectedRowKeys')) !== null && _a !== void 0 ? _a : [];
     if (!this.option('selection.deferred') && selectedRowKeys.length) {
       return this.selectedItemKeys(selectedRowKeys);
     }
@@ -445,13 +446,13 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     return this.selectedItemKeys(keys, true, true);
   };
   _proto.selectRowsByIndexes = function selectRowsByIndexes(indexes) {
-    var items = this._dataController.items();
-    var keys = [];
+    const items = this._dataController.items();
+    const keys = [];
     if (!Array.isArray(indexes)) {
       indexes = Array.prototype.slice.call(arguments, 0);
     }
     (0, _iterator.each)(indexes, function () {
-      var item = items[this];
+      const item = items[this];
       if (item && item.rowType === 'data') {
         keys.push(item.key);
       }
@@ -469,11 +470,11 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     if (this.isSelectionWithCheckboxes()) {
       keys.control = true;
     }
-    var loadedItemIndex = visibleItemIndex + this._dataController.getRowIndexOffset() - this._dataController.getRowIndexOffset(true);
+    const loadedItemIndex = visibleItemIndex + this._dataController.getRowIndexOffset() - this._dataController.getRowIndexOffset(true);
     return this._selection.changeItemSelection(loadedItemIndex, keys, setFocusOnly);
   };
   _proto.focusedItemIndex = function focusedItemIndex(itemIndex) {
-    var that = this;
+    const that = this;
     if ((0, _type.isDefined)(itemIndex)) {
       that._selection._focusedItemIndex = itemIndex;
     } else {
@@ -485,7 +486,7 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     return this.option(SELECTION_MODE) === 'multiple' && (this.option(SHOW_CHECKBOXES_MODE) === 'always' || this._isSelectionWithCheckboxes);
   };
   _proto.startSelectionWithCheckboxes = function startSelectionWithCheckboxes() {
-    var that = this;
+    const that = this;
     if (that.option(SELECTION_MODE) === 'multiple' && !that.isSelectionWithCheckboxes()) {
       that._isSelectionWithCheckboxes = true;
       that._updateSelectColumn();
@@ -494,7 +495,7 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
     return false;
   };
   _proto.stopSelectionWithCheckboxes = function stopSelectionWithCheckboxes() {
-    var that = this;
+    const that = this;
     if (that._isSelectionWithCheckboxes) {
       that._isSelectionWithCheckboxes = false;
       that._updateSelectColumn();
@@ -505,7 +506,7 @@ var SelectionController = /*#__PURE__*/function (_modules$Controller) {
   return SelectionController;
 }(_m_modules.default.Controller);
 exports.SelectionController = SelectionController;
-var selectionModule = {
+const selectionModule = {
   defaultOptions() {
     return {
       selection: {
@@ -527,8 +528,8 @@ var selectionModule = {
     controllers: {
       data: {
         init() {
-          var selectionController = this.getController('selection');
-          var isDeferredMode = this.option('selection.deferred');
+          const selectionController = this.getController('selection');
+          const isDeferredMode = this.option('selection.deferred');
           this.callBase.apply(this, arguments);
           if (isDeferredMode) {
             selectionController._updateCheckboxesState({
@@ -538,20 +539,20 @@ var selectionModule = {
           }
         },
         _loadDataSource() {
-          var that = this;
-          return that.callBase().always(function () {
+          const that = this;
+          return that.callBase().always(() => {
             that.getController('selection').refresh();
           });
         },
         _processDataItem(item, options) {
-          var that = this;
-          var selectionController = that.getController('selection');
-          var hasSelectColumn = selectionController.isSelectColumnVisible();
-          var isDeferredSelection = options.isDeferredSelection = options.isDeferredSelection === undefined ? this.option('selection.deferred') : options.isDeferredSelection;
-          var dataItem = this.callBase.apply(this, arguments);
+          const that = this;
+          const selectionController = that.getController('selection');
+          const hasSelectColumn = selectionController.isSelectColumnVisible();
+          const isDeferredSelection = options.isDeferredSelection = options.isDeferredSelection === undefined ? this.option('selection.deferred') : options.isDeferredSelection;
+          const dataItem = this.callBase.apply(this, arguments);
           dataItem.isSelected = selectionController.isRowSelected(isDeferredSelection ? dataItem.data : dataItem.key);
           if (hasSelectColumn && dataItem.values) {
-            for (var i = 0; i < options.visibleColumns.length; i++) {
+            for (let i = 0; i < options.visibleColumns.length; i++) {
               if (options.visibleColumns[i].command === 'select') {
                 dataItem.values[i] = dataItem.isSelected;
                 break;
@@ -561,10 +562,10 @@ var selectionModule = {
           return dataItem;
         },
         refresh(options) {
-          var that = this;
+          const that = this;
           // @ts-expect-error
-          var d = new _deferred.Deferred();
-          this.callBase.apply(this, arguments).done(function () {
+          const d = new _deferred.Deferred();
+          this.callBase.apply(this, arguments).done(() => {
             if (!options || options.selection) {
               that.getController('selection').refresh().done(d.resolve).fail(d.reject);
             } else {
@@ -580,10 +581,9 @@ var selectionModule = {
           }
         },
         _applyChange(change) {
-          var _this2 = this;
           if (change && change.changeType === 'updateSelection') {
-            change.items.forEach(function (item, index) {
-              var currentItem = _this2._items[index];
+            change.items.forEach((item, index) => {
+              const currentItem = this._items[index];
               if (currentItem) {
                 currentItem.isSelected = item.isSelected;
                 currentItem.values = item.values;
@@ -594,16 +594,10 @@ var selectionModule = {
           return this.callBase.apply(this, arguments);
         },
         _endUpdateCore() {
-          var changes = this._changes;
-          var isUpdateSelection = changes.length > 1 && changes.every(function (change) {
-            return change.changeType === 'updateSelection';
-          });
+          const changes = this._changes;
+          const isUpdateSelection = changes.length > 1 && changes.every(change => change.changeType === 'updateSelection');
           if (isUpdateSelection) {
-            var itemIndexes = changes.map(function (change) {
-              return change.itemIndexes || [];
-            }).reduce(function (a, b) {
-              return a.concat(b);
-            });
+            const itemIndexes = changes.map(change => change.itemIndexes || []).reduce((a, b) => a.concat(b));
             this._changes = [{
               changeType: 'updateSelection',
               itemIndexes
@@ -614,7 +608,7 @@ var selectionModule = {
       },
       contextMenu: {
         _contextMenuPrepared(options) {
-          var dxEvent = options.event;
+          const dxEvent = options.event;
           if (dxEvent.originalEvent && dxEvent.originalEvent.type !== 'dxhold' || options.items && options.items.length > 0) return;
           processLongTap(this, dxEvent);
         }
@@ -623,18 +617,18 @@ var selectionModule = {
     views: {
       columnHeadersView: {
         init() {
-          var that = this;
+          const that = this;
           that.callBase();
           that.getController('selection').selectionChanged.add(that._updateSelectAllValue.bind(that));
         },
         _updateSelectAllValue() {
-          var that = this;
-          var $element = that.element();
-          var $editor = $element && $element.find(".".concat(SELECT_CHECKBOX_CLASS));
+          const that = this;
+          const $element = that.element();
+          const $editor = $element && $element.find(".".concat(SELECT_CHECKBOX_CLASS));
           if ($element && $editor.length && that.option('selection.mode') === 'multiple') {
-            var selectAllValue = that.getController('selection').isSelectAll();
-            var hasSelection = selectAllValue !== false;
-            var isVisible = that.option('selection.allowSelectAll') ? !that.getController('data').isEmpty() : hasSelection;
+            const selectAllValue = that.getController('selection').isSelectAll();
+            const hasSelection = selectAllValue !== false;
+            const isVisible = that.option('selection.allowSelectAll') ? !that.getController('data').isEmpty() : hasSelection;
             $editor.dxCheckBox('instance').option({
               visible: isVisible,
               value: selectAllValue
@@ -642,19 +636,18 @@ var selectionModule = {
           }
         },
         _handleDataChanged(e) {
-          var _this3 = this;
           this.callBase(e);
           if (!e || e.changeType === 'refresh' || e.repaintChangesOnly && e.changeType === 'update') {
-            this.waitAsyncTemplates().done(function () {
-              _this3._updateSelectAllValue();
+            this.waitAsyncTemplates().done(() => {
+              this._updateSelectAllValue();
             });
           }
         },
         _renderSelectAllCheckBox($container, column) {
-          var that = this;
-          var selectionController = that.getController('selection');
-          var isEmptyData = that.getController('data').isEmpty();
-          var groupElement = (0, _renderer.default)('<div>').appendTo($container).addClass(SELECT_CHECKBOX_CLASS);
+          const that = this;
+          const selectionController = that.getController('selection');
+          const isEmptyData = that.getController('data').isEmpty();
+          const groupElement = (0, _renderer.default)('<div>').appendTo($container).addClass(SELECT_CHECKBOX_CLASS);
           that.setAria('label', _message.default.format('dxDataGrid-ariaSelectAll'), groupElement);
           that.getController('editorFactory').createEditor(groupElement, (0, _extend.extend)({}, column, {
             parentType: 'headerRow',
@@ -665,7 +658,7 @@ var selectionModule = {
             },
             tabIndex: that.option('useLegacyKeyboardNavigation') ? -1 : that.option('tabIndex') || 0,
             setValue(value, e) {
-              var allowSelectAll = that.option('selection.allowSelectAll');
+              const allowSelectAll = that.option('selection.allowSelectAll');
               e.component.option('visible', allowSelectAll || e.component.option('value') !== false);
               if (!e.event || selectionController.isSelectAll() === value) {
                 return;
@@ -681,8 +674,10 @@ var selectionModule = {
           return groupElement;
         },
         _attachSelectAllCheckBoxClickEvent($element) {
-          _events_engine.default.on($element, _click.name, this.createAction(function (e) {
-            var event = e.event;
+          _events_engine.default.on($element, _click.name, this.createAction(e => {
+            const {
+              event
+            } = e;
             if (!(0, _renderer.default)(event.target).closest(".".concat(SELECT_CHECKBOX_CLASS)).length) {
               // @ts-expect-error
               _events_engine.default.trigger((0, _renderer.default)(event.currentTarget).children(".".concat(SELECT_CHECKBOX_CLASS)), _click.name);
@@ -702,7 +697,7 @@ var selectionModule = {
           }
         },
         _renderSelectCheckBox(container, options) {
-          var groupElement = (0, _renderer.default)('<div>').addClass(SELECT_CHECKBOX_CLASS).appendTo(container);
+          const groupElement = (0, _renderer.default)('<div>').addClass(SELECT_CHECKBOX_CLASS).appendTo(container);
           this.setAria('label', _message.default.format('dxDataGrid-ariaSelectRow'), groupElement);
           this.getController('editorFactory').createEditor(groupElement, (0, _extend.extend)({}, options.column, {
             parentType: 'dataRow',
@@ -722,9 +717,11 @@ var selectionModule = {
         },
         _attachCheckBoxClickEvent($element) {
           _events_engine.default.on($element, _click.name, this.createAction(function (e) {
-            var selectionController = this.getController('selection');
-            var event = e.event;
-            var rowIndex = this.getRowIndex((0, _renderer.default)(event.currentTarget).closest(".".concat(ROW_CLASS)));
+            const selectionController = this.getController('selection');
+            const {
+              event
+            } = e;
+            const rowIndex = this.getRowIndex((0, _renderer.default)(event.currentTarget).closest(".".concat(ROW_CLASS)));
             if (rowIndex >= 0) {
               selectionController.startSelectionWithCheckboxes();
               selectionController.changeItemSelection(rowIndex, {
@@ -740,18 +737,20 @@ var selectionModule = {
           }));
         },
         _update(change) {
-          var that = this;
-          var tableElements = that.getTableElements();
+          const that = this;
+          const tableElements = that.getTableElements();
           if (change.changeType === 'updateSelection') {
             if (tableElements.length > 0) {
-              (0, _iterator.each)(tableElements, function (_, tableElement) {
-                (0, _iterator.each)(change.itemIndexes || [], function (_, index) {
-                  var $row;
+              (0, _iterator.each)(tableElements, (_, tableElement) => {
+                (0, _iterator.each)(change.itemIndexes || [], (_, index) => {
+                  let $row;
                   // T108078
                   if (change.items[index]) {
                     $row = that._getRowElements((0, _renderer.default)(tableElement)).eq(index);
                     if ($row.length) {
-                      var isSelected = change.items[index].isSelected;
+                      const {
+                        isSelected
+                      } = change.items[index];
                       $row.toggleClass(ROW_SELECTION_CLASS, isSelected === undefined ? false : isSelected).find(".".concat(SELECT_CHECKBOX_CLASS)).dxCheckBox('option', 'value', isSelected);
                       that.setAria('selected', isSelected, $row);
                     }
@@ -765,19 +764,21 @@ var selectionModule = {
           }
         },
         _createTable() {
-          var that = this;
-          var selectionMode = that.option('selection.mode');
-          var $table = that.callBase.apply(that, arguments);
+          const that = this;
+          const selectionMode = that.option('selection.mode');
+          const $table = that.callBase.apply(that, arguments);
           if (selectionMode !== 'none') {
             if (that.option(SHOW_CHECKBOXES_MODE) === 'onLongTap' || !_support.touch) {
               // TODO Not working timeout by hold when it is larger than other timeouts by hold
-              _events_engine.default.on($table, (0, _index.addNamespace)(_hold.default.name, 'dxDataGridRowsView'), ".".concat(DATA_ROW_CLASS), that.createAction(function (e) {
+              _events_engine.default.on($table, (0, _index.addNamespace)(_hold.default.name, 'dxDataGridRowsView'), ".".concat(DATA_ROW_CLASS), that.createAction(e => {
                 processLongTap(that.component, e.event);
                 e.event.stopPropagation();
               }));
             }
-            _events_engine.default.on($table, 'mousedown selectstart', that.createAction(function (e) {
-              var event = e.event;
+            _events_engine.default.on($table, 'mousedown selectstart', that.createAction(e => {
+              const {
+                event
+              } = e;
               if (event.shiftKey) {
                 event.preventDefault();
               }
@@ -786,13 +787,15 @@ var selectionModule = {
           return $table;
         },
         _createRow(row) {
-          var $row = this.callBase.apply(this, arguments);
+          const $row = this.callBase.apply(this, arguments);
           if (row) {
-            var isSelected = row.isSelected;
+            const {
+              isSelected
+            } = row;
             if (isSelected) {
               $row.addClass(ROW_SELECTION_CLASS);
             }
-            var selectionMode = this.option(SELECTION_MODE);
+            const selectionMode = this.option(SELECTION_MODE);
             if (selectionMode !== 'none') {
               this.setAria('selected', isSelected, $row);
             }
@@ -800,9 +803,9 @@ var selectionModule = {
           return $row;
         },
         _rowClick(e) {
-          var that = this;
-          var dxEvent = e.event;
-          var isSelectionDisabled = (0, _renderer.default)(dxEvent.target).closest(".".concat(SELECTION_DISABLED_CLASS)).length;
+          const that = this;
+          const dxEvent = e.event;
+          const isSelectionDisabled = (0, _renderer.default)(dxEvent.target).closest(".".concat(SELECTION_DISABLED_CLASS)).length;
           if (!that.isClickableElement((0, _renderer.default)(dxEvent.target))) {
             if (!isSelectionDisabled && (that.option(SELECTION_MODE) !== 'multiple' || that.option(SHOW_CHECKBOXES_MODE) !== 'always')) {
               if (that.getController('selection').changeItemSelection(e.rowIndex, {
@@ -817,19 +820,19 @@ var selectionModule = {
           }
         },
         isClickableElement($target) {
-          var isCommandSelect = $target.closest(".".concat(COMMAND_SELECT_CLASS)).length;
+          const isCommandSelect = $target.closest(".".concat(COMMAND_SELECT_CLASS)).length;
           return !!isCommandSelect;
         },
         _renderCore(change) {
-          var deferred = this.callBase(change);
+          const deferred = this.callBase(change);
           this._updateCheckboxesClass();
           return deferred;
         },
         _updateCheckboxesClass() {
-          var tableElements = this.getTableElements();
-          var selectionController = this.getController('selection');
-          var isCheckBoxesHidden = selectionController.isSelectColumnVisible() && !selectionController.isSelectionWithCheckboxes();
-          (0, _iterator.each)(tableElements, function (_, tableElement) {
+          const tableElements = this.getTableElements();
+          const selectionController = this.getController('selection');
+          const isCheckBoxesHidden = selectionController.isSelectColumnVisible() && !selectionController.isSelectionWithCheckboxes();
+          (0, _iterator.each)(tableElements, (_, tableElement) => {
             (0, _renderer.default)(tableElement).toggleClass(CHECKBOXES_HIDDEN_CLASS, isCheckBoxesHidden);
           });
         }

@@ -7,7 +7,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-restricted-imports
 
 if (_jquery.default && !_themes_callback.themeReadyCallback.fired()) {
-  var holdReady = _jquery.default.holdReady || _jquery.default.fn.holdReady;
+  const holdReady = _jquery.default.holdReady || _jquery.default.fn.holdReady;
   holdReady(true);
   _themes_callback.themeReadyCallback.add(function () {
     _ready_callbacks.default.add(function () {

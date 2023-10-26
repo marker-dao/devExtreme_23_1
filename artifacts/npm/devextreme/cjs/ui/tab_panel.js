@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tab_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,41 +26,47 @@ var _themes = require("./themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE tabPanel
 
-var TABPANEL_CLASS = 'dx-tabpanel';
-var TABPANEL_TABS_CLASS = 'dx-tabpanel-tabs';
-var TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
-var TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
-var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
-var DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
-var TABS_DATA_DX_TEXT_ATTRIBUTE = 'data-dx_text';
-var TABPANEL_TABS_POSITION_CLASS = {
+const TABPANEL_CLASS = 'dx-tabpanel';
+const TABPANEL_TABS_CLASS = 'dx-tabpanel-tabs';
+const TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
+const TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
+const TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
+const DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
+const TABS_DATA_DX_TEXT_ATTRIBUTE = 'data-dx_text';
+const TABPANEL_TABS_POSITION_CLASS = {
   top: 'dx-tabpanel-tabs-position-top',
   right: 'dx-tabpanel-tabs-position-right',
   bottom: 'dx-tabpanel-tabs-position-bottom',
   left: 'dx-tabpanel-tabs-position-left'
 };
-var TABS_POSITION = {
+const TABS_POSITION = {
   top: 'top',
   right: 'right',
   bottom: 'bottom',
   left: 'left'
 };
-var TABS_ORIENTATION = {
+const TABS_INDICATOR_POSITION_BY_TABS_POSITION = {
+  top: 'bottom',
+  right: 'left',
+  bottom: 'top',
+  left: 'right'
+};
+const TABS_ORIENTATION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
-var ICON_POSITION = {
+const ICON_POSITION = {
   top: 'top',
   end: 'end',
   bottom: 'bottom',
   start: 'start'
 };
-var STYLING_MODE = {
+const STYLING_MODE = {
   primary: 'primary',
   secondary: 'secondary'
 };
-var TabPanel = _multi_view.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const TabPanel = _multi_view.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       itemTitleTemplate: 'title',
       hoverStateEnabled: true,
@@ -73,28 +79,28 @@ var TabPanel = _multi_view.default.inherit({
       onTitleClick: null,
       onTitleHold: null,
       onTitleRendered: null,
-      badgeExpr: function badgeExpr(data) {
+      badgeExpr: function (data) {
         return data ? data.badge : undefined;
-      }
-
+      },
       /**
       * @name dxTabPanelItem.visible
       * @hidden
       */
+
+      _tabsIndicatorPosition: null
     });
   },
-
-  _defaultOptionsRules: function _defaultOptionsRules() {
-    var themeName = (0, _themes.current)();
+  _defaultOptionsRules: function () {
+    const themeName = (0, _themes.current)();
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
+      device: function () {
         return !_support.touch;
       },
       options: {
@@ -112,19 +118,18 @@ var TabPanel = _multi_view.default.inherit({
         return (0, _themes.isFluent)(themeName);
       },
       options: {
-        iconPosition: ICON_POSITION.top,
         stylingMode: STYLING_MODE.secondary
       }
     }, {
       device() {
-        return (0, _themes.isMaterial)(themeName);
+        return (0, _themes.isMaterialBased)(themeName);
       },
       options: {
         iconPosition: ICON_POSITION.top
       }
     }]);
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this.$element().addClass(TABPANEL_CLASS);
     this._toggleTabPanelTabsPositionClass();
@@ -139,17 +144,17 @@ var TabPanel = _multi_view.default.inherit({
       role: 'tabpanel'
     };
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.callBase();
     this._createTitleActions();
     this._renderLayout();
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this.callBase();
     this._templateManager.addDefaultTemplates({
       title: new _bindable_template.BindableTemplate(function ($container, data) {
         if ((0, _type.isPlainObject)(data)) {
-          var $iconElement = (0, _icon.getImageContainer)(data.icon);
+          const $iconElement = (0, _icon.getImageContainer)(data.icon);
           if ($iconElement) {
             $container.append($iconElement);
           }
@@ -161,7 +166,7 @@ var TabPanel = _multi_view.default.inherit({
             $container.text(String(data));
           }
         }
-        var $tabItem = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_CLASS);
+        const $tabItem = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_CLASS);
         if (data !== null && data !== void 0 && data.title) {
           $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, data.title);
         }
@@ -169,43 +174,51 @@ var TabPanel = _multi_view.default.inherit({
       }, ['title', 'icon'], this.option('integrationOptions.watchMethod'))
     });
   },
-  _createTitleActions: function _createTitleActions() {
+  _createTitleActions: function () {
     this._createTitleClickAction();
     this._createTitleHoldAction();
     this._createTitleRenderedAction();
   },
-  _createTitleClickAction: function _createTitleClickAction() {
+  _createTitleClickAction: function () {
     this._titleClickAction = this._createActionByOption('onTitleClick');
   },
-  _createTitleHoldAction: function _createTitleHoldAction() {
+  _createTitleHoldAction: function () {
     this._titleHoldAction = this._createActionByOption('onTitleHold');
   },
-  _createTitleRenderedAction: function _createTitleRenderedAction() {
+  _createTitleRenderedAction: function () {
     this._titleRenderedAction = this._createActionByOption('onTitleRendered');
   },
-  _renderLayout: function _renderLayout() {
+  _renderLayout: function () {
     if (this._tabs) {
       return;
     }
-    var $element = this.$element();
+    const $element = this.$element();
     this._$tabContainer = (0, _renderer.default)('<div>').addClass(TABPANEL_TABS_CLASS).appendTo($element);
-    var $tabs = (0, _renderer.default)('<div>').appendTo(this._$tabContainer);
+    const $tabs = (0, _renderer.default)('<div>').appendTo(this._$tabContainer);
     this._tabs = this._createComponent($tabs, _tabs.default, this._tabConfig());
     this._$container = (0, _renderer.default)('<div>').addClass(TABPANEL_CONTAINER_CLASS).appendTo($element);
     this._$container.append(this._$wrapper);
   },
-  _refreshActiveDescendant: function _refreshActiveDescendant() {
+  _refreshActiveDescendant: function () {
     if (!this._tabs) {
       return;
     }
-    var tabs = this._tabs;
-    var tabItems = tabs.itemElements();
-    var $activeTab = (0, _renderer.default)(tabItems[tabs.option('selectedIndex')]);
-    var id = this.getFocusedItemId();
+    const tabs = this._tabs;
+    const tabItems = tabs.itemElements();
+    const $activeTab = (0, _renderer.default)(tabItems[tabs.option('selectedIndex')]);
+    const id = this.getFocusedItemId();
     this.setAria('controls', undefined, (0, _renderer.default)(tabItems));
     this.setAria('controls', id, $activeTab);
   },
-  _tabConfig: function _tabConfig() {
+  _getTabsIndicatorPosition() {
+    const {
+      _tabsIndicatorPosition,
+      tabsPosition
+    } = this.option();
+    return _tabsIndicatorPosition !== null && _tabsIndicatorPosition !== void 0 ? _tabsIndicatorPosition : TABS_INDICATOR_POSITION_BY_TABS_POSITION[tabsPosition];
+  },
+  _tabConfig() {
+    const tabsIndicatorPosition = this._getTabsIndicatorPosition();
     return {
       selectOnFocus: true,
       focusStateEnabled: this.option('focusStateEnabled'),
@@ -234,8 +247,8 @@ var TabPanel = _multi_view.default.inherit({
       onOptionChanged: function (args) {
         if (args.name === 'focusedElement') {
           if (args.value) {
-            var $value = (0, _renderer.default)(args.value);
-            var $newItem = this._itemElements().eq($value.index());
+            const $value = (0, _renderer.default)(args.value);
+            const $newItem = this._itemElements().eq($value.index());
             this.option('focusedElement', (0, _element.getPublicElement)($newItem));
           } else {
             this.option('focusedElement', args.value);
@@ -255,22 +268,24 @@ var TabPanel = _multi_view.default.inherit({
       stylingMode: this.option('stylingMode'),
       _itemAttributes: {
         class: TABPANEL_TABS_ITEM_CLASS
-      }
+      },
+      _indicatorPosition: tabsIndicatorPosition
     };
   },
-  _renderFocusTarget: function _renderFocusTarget() {
+  _renderFocusTarget: function () {
     this._focusTarget().attr('tabIndex', -1);
   },
   _getTabsOrientation() {
-    var _this$option = this.option(),
-      tabsPosition = _this$option.tabsPosition;
+    const {
+      tabsPosition
+    } = this.option();
     if ([TABS_POSITION.right, TABS_POSITION.left].includes(tabsPosition)) {
       return TABS_ORIENTATION.vertical;
     }
     return TABS_ORIENTATION.horizontal;
   },
   _getTabPanelTabsPositionClass() {
-    var position = this.option('tabsPosition');
+    const position = this.option('tabsPosition');
     switch (position) {
       case TABS_POSITION.right:
         return TABPANEL_TABS_POSITION_CLASS.right;
@@ -284,25 +299,15 @@ var TabPanel = _multi_view.default.inherit({
     }
   },
   _toggleTabPanelTabsPositionClass() {
-    for (var key in TABPANEL_TABS_POSITION_CLASS) {
+    for (const key in TABPANEL_TABS_POSITION_CLASS) {
       this.$element().removeClass(TABPANEL_TABS_POSITION_CLASS[key]);
     }
-    var newClass = this._getTabPanelTabsPositionClass();
+    const newClass = this._getTabPanelTabsPositionClass();
     this.$element().addClass(newClass);
   },
   _updateTabsOrientation() {
-    var orientation = this._getTabsOrientation();
-    this._tabs.option('orientation', orientation);
-  },
-  _updateTabsIconPosition(iconPosition) {
-    this._tabs.option({
-      iconPosition
-    });
-  },
-  _updateTabsStylingMode(stylingMode) {
-    this._tabs.option({
-      stylingMode
-    });
+    const orientation = this._getTabsOrientation();
+    this._setTabsOption('orientation', orientation);
   },
   _toggleWrapperFocusedClass(isFocused) {
     this._toggleFocusClass(isFocused, this._$wrapper);
@@ -310,15 +315,15 @@ var TabPanel = _multi_view.default.inherit({
   _toggleDisabledFocusedClass(isFocused) {
     this._focusTarget().toggleClass(DISABLED_FOCUSED_TAB_CLASS, isFocused);
   },
-  _updateFocusState: function _updateFocusState(e, isFocused) {
+  _updateFocusState: function (e, isFocused) {
     this.callBase(e, isFocused);
-    var isTabsTarget = e.target === this._tabs._focusTarget().get(0);
-    var isMultiViewTarget = e.target === this._focusTarget().get(0);
+    const isTabsTarget = e.target === this._tabs._focusTarget().get(0);
+    const isMultiViewTarget = e.target === this._focusTarget().get(0);
     if (isTabsTarget) {
       this._toggleFocusClass(isFocused, this._focusTarget());
     }
     if (isTabsTarget || isMultiViewTarget) {
-      var isDisabled = this._isDisabled(this.option('focusedElement'));
+      const isDisabled = this._isDisabled(this.option('focusedElement'));
       this._toggleWrapperFocusedClass(isFocused && !isDisabled);
       this._toggleDisabledFocusedClass(isFocused && isDisabled);
     }
@@ -326,36 +331,42 @@ var TabPanel = _multi_view.default.inherit({
       this._toggleFocusClass(isFocused, this._tabs.option('focusedElement'));
     }
   },
-  _focusOutHandler: function _focusOutHandler(e) {
+  _focusOutHandler: function (e) {
     this._isFocusOutHandlerExecuting = true;
     this.callBase.apply(this, arguments);
     this._tabs._focusOutHandler(e);
     this._isFocusOutHandlerExecuting = false;
   },
-  _setTabsOption: function _setTabsOption(name, value) {
+  _setTabsOption(name, value) {
     if (this._tabs) {
       this._tabs.option(name, value);
     }
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this._tabs._dimensionChanged();
     }
   },
-  registerKeyHandler: function registerKeyHandler(key, handler) {
+  registerKeyHandler: function (key, handler) {
     this.callBase(key, handler);
     if (this._tabs) {
       this._tabs.registerKeyHandler(key, handler);
     }
   },
-  repaint: function repaint() {
+  repaint: function () {
     this.callBase();
     this._tabs.repaint();
   },
-  _optionChanged: function _optionChanged(args) {
-    var name = args.name,
-      value = args.value,
-      fullName = args.fullName;
+  _updateTabsIndicatorPosition() {
+    const value = this._getTabsIndicatorPosition();
+    this.option('_tabsIndicatorPosition', value);
+  },
+  _optionChanged: function (args) {
+    const {
+      name,
+      value,
+      fullName
+    } = args;
     switch (name) {
       case 'dataSource':
         this.callBase(args);
@@ -377,8 +388,8 @@ var TabPanel = _multi_view.default.inherit({
           this._setTabsOption(fullName, value);
           this.callBase(args);
           if (this.option('focusStateEnabled') === true) {
-            var selectedIndex = this.option('selectedIndex');
-            var selectedTabContent = this._itemElements().eq(selectedIndex);
+            const selectedIndex = this.option('selectedIndex');
+            const selectedTabContent = this._itemElements().eq(selectedIndex);
             this.option('focusedElement', (0, _element.getPublicElement)(selectedTabContent));
           }
           break;
@@ -396,11 +407,11 @@ var TabPanel = _multi_view.default.inherit({
         break;
       case 'focusedElement':
         {
-          var id = value ? (0, _renderer.default)(value).index() : value;
-          var newItem = value ? this._tabs._itemElements().eq(id) : value;
+          const id = value ? (0, _renderer.default)(value).index() : value;
+          const newItem = value ? this._tabs._itemElements().eq(id) : value;
           this._setTabsOption('focusedElement', (0, _element.getPublicElement)(newItem));
           if (value) {
-            var isDisabled = this._isDisabled(value);
+            const isDisabled = this._isDisabled(value);
             this._toggleWrapperFocusedClass(!isDisabled);
             this._toggleDisabledFocusedClass(isDisabled);
           }
@@ -430,13 +441,17 @@ var TabPanel = _multi_view.default.inherit({
         break;
       case 'tabsPosition':
         this._toggleTabPanelTabsPositionClass();
+        this._updateTabsIndicatorPosition();
         this._updateTabsOrientation();
         break;
       case 'iconPosition':
-        this._updateTabsIconPosition(value);
+        this._setTabsOption('iconPosition', value);
         break;
       case 'stylingMode':
-        this._updateTabsStylingMode(value);
+        this._setTabsOption('stylingMode', value);
+        break;
+      case '_tabsIndicatorPosition':
+        this._setTabsOption('_indicatorPosition', value);
         break;
       default:
         this.callBase(args);

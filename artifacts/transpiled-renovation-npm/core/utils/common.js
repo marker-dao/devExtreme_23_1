@@ -9,22 +9,22 @@ var _iterator = require("./iterator");
 var _type = require("./type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var ensureDefined = function ensureDefined(value, defaultValue) {
+const ensureDefined = function (value, defaultValue) {
   return (0, _type.isDefined)(value) ? value : defaultValue;
 };
 exports.ensureDefined = ensureDefined;
-var executeAsync = function executeAsync(action, context /* , internal */) {
-  var deferred = new _deferred.Deferred();
-  var normalizedContext = context || this;
-  var task = {
+const executeAsync = function (action, context /* , internal */) {
+  const deferred = new _deferred.Deferred();
+  const normalizedContext = context || this;
+  const task = {
     promise: deferred.promise(),
-    abort: function abort() {
+    abort: function () {
       clearTimeout(timerId);
       deferred.rejectWith(normalizedContext);
     }
   };
-  var callback = function callback() {
-    var result = action.call(normalizedContext);
+  const callback = function () {
+    const result = action.call(normalizedContext);
     if (result && result.done && (0, _type.isFunction)(result.done)) {
       result.done(function () {
         deferred.resolveWith(normalizedContext);
@@ -33,15 +33,15 @@ var executeAsync = function executeAsync(action, context /* , internal */) {
       deferred.resolveWith(normalizedContext);
     }
   };
-  var timerId = (arguments[2] || setTimeout)(callback, typeof context === 'number' ? context : 0);
+  const timerId = (arguments[2] || setTimeout)(callback, typeof context === 'number' ? context : 0);
   return task;
 };
 exports.executeAsync = executeAsync;
-var delayedFuncs = [];
-var delayedNames = [];
-var delayedDeferreds = [];
-var executingName;
-var deferExecute = function deferExecute(name, func, deferred) {
+const delayedFuncs = [];
+const delayedNames = [];
+const delayedDeferreds = [];
+let executingName;
+const deferExecute = function (name, func, deferred) {
   if (executingName && executingName !== name) {
     delayedFuncs.push(func);
     delayedNames.push(name);
@@ -49,10 +49,10 @@ var deferExecute = function deferExecute(name, func, deferred) {
     delayedDeferreds.push(deferred);
     return deferred;
   } else {
-    var oldExecutingName = executingName;
-    var currentDelayedCount = delayedDeferreds.length;
+    const oldExecutingName = executingName;
+    const currentDelayedCount = delayedDeferreds.length;
     executingName = name;
-    var result = func();
+    let result = func();
     if (!result) {
       if (delayedDeferreds.length > currentDelayedCount) {
         result = _deferred.when.apply(this, delayedDeferreds.slice(currentDelayedCount));
@@ -70,40 +70,40 @@ var deferExecute = function deferExecute(name, func, deferred) {
     return result || (0, _deferred.when)();
   }
 };
-var deferRender = function deferRender(func, deferred) {
+const deferRender = function (func, deferred) {
   return deferExecute('render', func, deferred);
 };
 exports.deferRender = deferRender;
-var deferUpdate = function deferUpdate(func, deferred) {
+const deferUpdate = function (func, deferred) {
   return deferExecute('update', func, deferred);
 };
 exports.deferUpdate = deferUpdate;
-var deferRenderer = function deferRenderer(func) {
+const deferRenderer = function (func) {
   return function () {
-    var that = this;
+    const that = this;
     return deferExecute('render', function () {
       return func.call(that);
     });
   };
 };
 exports.deferRenderer = deferRenderer;
-var deferUpdater = function deferUpdater(func) {
+const deferUpdater = function (func) {
   return function () {
-    var that = this;
+    const that = this;
     return deferExecute('update', function () {
       return func.call(that);
     });
   };
 };
 exports.deferUpdater = deferUpdater;
-var findBestMatches = function findBestMatches(targetFilter, items, mapFn) {
-  var bestMatches = [];
-  var maxMatchCount = 0;
-  (0, _iterator.each)(items, function (index, itemSrc) {
-    var matchCount = 0;
-    var item = mapFn ? mapFn(itemSrc) : itemSrc;
-    (0, _iterator.each)(targetFilter, function (paramName, targetValue) {
-      var value = item[paramName];
+const findBestMatches = function (targetFilter, items, mapFn) {
+  const bestMatches = [];
+  let maxMatchCount = 0;
+  (0, _iterator.each)(items, (index, itemSrc) => {
+    let matchCount = 0;
+    const item = mapFn ? mapFn(itemSrc) : itemSrc;
+    (0, _iterator.each)(targetFilter, (paramName, targetValue) => {
+      const value = item[paramName];
       if (value === undefined) {
         return;
       }
@@ -126,10 +126,10 @@ var findBestMatches = function findBestMatches(targetFilter, items, mapFn) {
   return bestMatches;
 };
 exports.findBestMatches = findBestMatches;
-var match = function match(value, targetValue) {
+const match = function (value, targetValue) {
   if (Array.isArray(value) && Array.isArray(targetValue)) {
-    var mismatch = false;
-    (0, _iterator.each)(value, function (index, valueItem) {
+    let mismatch = false;
+    (0, _iterator.each)(value, (index, valueItem) => {
       if (valueItem !== targetValue[index]) {
         mismatch = true;
         return false;
@@ -145,7 +145,7 @@ var match = function match(value, targetValue) {
   }
   return false;
 };
-var splitPair = function splitPair(raw) {
+const splitPair = function (raw) {
   var _raw$x, _raw$y;
   switch ((0, _type.type)(raw)) {
     case 'string':
@@ -161,28 +161,28 @@ var splitPair = function splitPair(raw) {
   }
 };
 exports.splitPair = splitPair;
-var normalizeKey = function normalizeKey(id) {
-  var key = (0, _type.isString)(id) ? id : id.toString();
-  var arr = key.match(/[^a-zA-Z0-9_]/g);
-  arr && (0, _iterator.each)(arr, function (_, sign) {
+const normalizeKey = function (id) {
+  let key = (0, _type.isString)(id) ? id : id.toString();
+  const arr = key.match(/[^a-zA-Z0-9_]/g);
+  arr && (0, _iterator.each)(arr, (_, sign) => {
     key = key.replace(sign, '__' + sign.charCodeAt() + '__');
   });
   return key;
 };
 exports.normalizeKey = normalizeKey;
-var denormalizeKey = function denormalizeKey(key) {
-  var arr = key.match(/__\d+__/g);
-  arr && arr.forEach(function (char) {
-    var charCode = parseInt(char.replace('__', ''));
+const denormalizeKey = function (key) {
+  const arr = key.match(/__\d+__/g);
+  arr && arr.forEach(char => {
+    const charCode = parseInt(char.replace('__', ''));
     key = key.replace(char, String.fromCharCode(charCode));
   });
   return key;
 };
 exports.denormalizeKey = denormalizeKey;
-var pairToObject = function pairToObject(raw, preventRound) {
-  var pair = splitPair(raw);
-  var h = preventRound ? parseFloat(pair && pair[0]) : parseInt(pair && pair[0], 10);
-  var v = preventRound ? parseFloat(pair && pair[1]) : parseInt(pair && pair[1], 10);
+const pairToObject = function (raw, preventRound) {
+  const pair = splitPair(raw);
+  let h = preventRound ? parseFloat(pair && pair[0]) : parseInt(pair && pair[0], 10);
+  let v = preventRound ? parseFloat(pair && pair[1]) : parseInt(pair && pair[1], 10);
   if (!isFinite(h)) {
     h = 0;
   }
@@ -195,12 +195,12 @@ var pairToObject = function pairToObject(raw, preventRound) {
   };
 };
 exports.pairToObject = pairToObject;
-var getKeyHash = function getKeyHash(key) {
+const getKeyHash = function (key) {
   if (key instanceof _guid.default) {
     return key.toString();
   } else if ((0, _type.isObject)(key) || Array.isArray(key)) {
     try {
-      var keyHash = JSON.stringify(key);
+      const keyHash = JSON.stringify(key);
       return keyHash === '{}' ? key : keyHash;
     } catch (e) {
       return key;
@@ -209,29 +209,29 @@ var getKeyHash = function getKeyHash(key) {
   return key;
 };
 exports.getKeyHash = getKeyHash;
-var escapeRegExp = function escapeRegExp(string) {
+const escapeRegExp = function (string) {
   return string.replace(/[[\]{}\-()*+?.\\^$|\s]/g, '\\$&');
 };
 exports.escapeRegExp = escapeRegExp;
-var applyServerDecimalSeparator = function applyServerDecimalSeparator(value) {
-  var separator = (0, _config.default)().serverDecimalSeparator;
+const applyServerDecimalSeparator = function (value) {
+  const separator = (0, _config.default)().serverDecimalSeparator;
   if ((0, _type.isDefined)(value)) {
     value = value.toString().replace('.', separator);
   }
   return value;
 };
 exports.applyServerDecimalSeparator = applyServerDecimalSeparator;
-var noop = function noop() {};
+const noop = function () {};
 exports.noop = noop;
-var asyncNoop = function asyncNoop() {
+const asyncNoop = function () {
   return new _deferred.Deferred().resolve().promise();
 };
 exports.asyncNoop = asyncNoop;
-var grep = function grep(elements, checkFunction, invert) {
-  var result = [];
-  var check;
-  var expectedCheck = !invert;
-  for (var i = 0; i < elements.length; i++) {
+const grep = function (elements, checkFunction, invert) {
+  const result = [];
+  let check;
+  const expectedCheck = !invert;
+  for (let i = 0; i < elements.length; i++) {
     check = !!checkFunction(elements[i], i);
     if (check === expectedCheck) {
       result.push(elements[i]);
@@ -240,37 +240,35 @@ var grep = function grep(elements, checkFunction, invert) {
   return result;
 };
 exports.grep = grep;
-var compareArrays = function compareArrays(array1, array2, depth, options) {
+const compareArrays = (array1, array2, depth, options) => {
   if (array1.length !== array2.length) {
     return false;
   }
-  return !array1.some(function (item, idx) {
-    return !compareByValue(item, array2[idx], depth + 1, _extends({}, options, {
-      strict: true
-    }));
-  });
+  return !array1.some((item, idx) => !compareByValue(item, array2[idx], depth + 1, _extends({}, options, {
+    strict: true
+  })));
 };
-var compareObjects = function compareObjects(object1, object2, depth, options) {
-  var keys1 = Object.keys(object1);
-  var keys2 = Object.keys(object2);
+const compareObjects = (object1, object2, depth, options) => {
+  const keys1 = Object.keys(object1);
+  const keys2 = Object.keys(object2);
   if (keys1.length !== keys2.length) {
     return false;
   }
-  var keys2Set = new Set(keys2);
-  return !keys1.some(function (key) {
-    return !keys2Set.has(key) || !compareByValue(object1[key], object2[key], depth + 1, options);
-  });
+  const keys2Set = new Set(keys2);
+  return !keys1.some(key => !keys2Set.has(key) || !compareByValue(object1[key], object2[key], depth + 1, options));
 };
-var DEFAULT_EQUAL_BY_VALUE_OPTS = {
+const DEFAULT_EQUAL_BY_VALUE_OPTS = {
   maxDepth: 3,
   strict: true
 };
-var compareByValue = function compareByValue(value1, value2, depth, options) {
-  var strict = options.strict,
-    maxDepth = options.maxDepth;
-  var comparable1 = (0, _data.toComparable)(value1, true);
-  var comparable2 = (0, _data.toComparable)(value2, true);
-  var comparisonResult = strict ? comparable1 === comparable2
+const compareByValue = (value1, value2, depth, options) => {
+  const {
+    strict,
+    maxDepth
+  } = options;
+  const comparable1 = (0, _data.toComparable)(value1, true);
+  const comparable2 = (0, _data.toComparable)(value2, true);
+  const comparisonResult = strict ? comparable1 === comparable2
   // eslint-disable-next-line eqeqeq
   : comparable1 == comparable2;
   switch (true) {
@@ -285,9 +283,9 @@ var compareByValue = function compareByValue(value1, value2, depth, options) {
       return false;
   }
 };
-var equalByValue = function equalByValue(value1, value2) {
-  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DEFAULT_EQUAL_BY_VALUE_OPTS;
-  var compareOptions = _extends({}, DEFAULT_EQUAL_BY_VALUE_OPTS, options);
+const equalByValue = function (value1, value2) {
+  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DEFAULT_EQUAL_BY_VALUE_OPTS;
+  const compareOptions = _extends({}, DEFAULT_EQUAL_BY_VALUE_OPTS, options);
   return compareByValue(value1, value2, 0, compareOptions);
 };
 exports.equalByValue = equalByValue;

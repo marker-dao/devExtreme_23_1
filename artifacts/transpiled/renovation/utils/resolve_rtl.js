@@ -15,7 +15,7 @@ function resolveRtlEnabled(rtlProp, config) {
   return (0, _config.default)().rtlEnabled;
 }
 function resolveRtlEnabledDefinition(rtlProp, config) {
-  var isPropDefined = (0, _type.isDefined)(rtlProp);
-  var onlyGlobalDefined = (0, _type.isDefined)((0, _config.default)().rtlEnabled) && !isPropDefined && !(0, _type.isDefined)(config === null || config === void 0 ? void 0 : config.rtlEnabled);
+  const isPropDefined = (0, _type.isDefined)(rtlProp);
+  const onlyGlobalDefined = (0, _type.isDefined)((0, _config.default)().rtlEnabled) && !isPropDefined && !(0, _type.isDefined)(config === null || config === void 0 ? void 0 : config.rtlEnabled);
   return isPropDefined && rtlProp !== (config === null || config === void 0 ? void 0 : config.rtlEnabled) || onlyGlobalDefined;
 }

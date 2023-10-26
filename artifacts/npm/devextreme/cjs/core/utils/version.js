@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/version.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,13 +21,13 @@ function compare(x, y, maxLevel) {
   }
   x = normalizeArg(x);
   y = normalizeArg(y);
-  var length = Math.max(x.length, y.length);
+  let length = Math.max(x.length, y.length);
   if (isFinite(maxLevel)) {
     length = Math.min(length, maxLevel);
   }
-  for (var i = 0; i < length; i++) {
-    var xItem = parseInt(x[i] || 0, 10);
-    var yItem = parseInt(y[i] || 0, 10);
+  for (let i = 0; i < length; i++) {
+    const xItem = parseInt(x[i] || 0, 10);
+    const yItem = parseInt(y[i] || 0, 10);
     if (xItem < yItem) {
       return -1;
     }

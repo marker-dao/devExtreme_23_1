@@ -3,7 +3,7 @@
 exports.default = void 0;
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DiagramToolboxManager = {
+const DiagramToolboxManager = {
   getDefaultGroups() {
     return this._groups || (this._groups = {
       general: {
@@ -28,8 +28,8 @@ var DiagramToolboxManager = {
       }
     });
   },
-  getGroups: function getGroups(groups) {
-    var defaultGroups = this.getDefaultGroups();
+  getGroups: function (groups) {
+    const defaultGroups = this.getDefaultGroups();
     if (groups) {
       return groups.map(function (g) {
         if (typeof g === 'string') {

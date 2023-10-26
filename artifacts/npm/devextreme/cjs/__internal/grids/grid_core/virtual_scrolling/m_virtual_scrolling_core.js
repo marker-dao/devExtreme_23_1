@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/virtual_scrolling/m_virtual_scrolling_core.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,25 +26,21 @@ var _events_engine = _interopRequireDefault(require("../../../../events/core/eve
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_virtual_data_loader = require("../virtual_data_loader/m_virtual_data_loader");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SCROLLING_MODE_INFINITE = 'infinite';
-var SCROLLING_MODE_VIRTUAL = 'virtual';
-var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
-var isVirtualMode = function isVirtualMode(that) {
-  return that.option('scrolling.mode') === SCROLLING_MODE_VIRTUAL || that._isVirtual;
-};
-var isAppendMode = function isAppendMode(that) {
-  return that.option('scrolling.mode') === SCROLLING_MODE_INFINITE && !that._isVirtual;
-};
+const SCROLLING_MODE_INFINITE = 'infinite';
+const SCROLLING_MODE_VIRTUAL = 'virtual';
+const LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
+const isVirtualMode = that => that.option('scrolling.mode') === SCROLLING_MODE_VIRTUAL || that._isVirtual;
+const isAppendMode = that => that.option('scrolling.mode') === SCROLLING_MODE_INFINITE && !that._isVirtual;
 function subscribeToExternalScrollers($element, scrollChangedHandler, $targetElement) {
-  var $scrollElement;
-  var scrollableArray = [];
-  var scrollToArray = [];
-  var disposeArray = [];
+  let $scrollElement;
+  const scrollableArray = [];
+  const scrollToArray = [];
+  const disposeArray = [];
   $targetElement = $targetElement || $element;
   function getElementOffset(scrollable) {
-    var $scrollableElement = scrollable.element ? scrollable.$element() : scrollable;
+    const $scrollableElement = scrollable.element ? scrollable.$element() : scrollable;
     // @ts-expect-error
-    var scrollableOffset = _position.default.offset($scrollableElement);
+    const scrollableOffset = _position.default.offset($scrollableElement);
     if (!scrollableOffset) {
       return $element.offset().top;
     }
@@ -52,12 +48,12 @@ function subscribeToExternalScrollers($element, scrollChangedHandler, $targetEle
   }
   function createWindowScrollHandler(scrollable) {
     return function () {
-      var scrollTop = scrollable.scrollTop() - getElementOffset(scrollable);
+      let scrollTop = scrollable.scrollTop() - getElementOffset(scrollable);
       scrollTop = scrollTop > 0 ? scrollTop : 0;
       scrollChangedHandler(scrollTop);
     };
   }
-  var widgetScrollStrategy = {
+  const widgetScrollStrategy = {
     on(scrollable, eventName, handler) {
       scrollable.on('scroll', handler);
     },
@@ -66,31 +62,31 @@ function subscribeToExternalScrollers($element, scrollChangedHandler, $targetEle
     }
   };
   function subscribeToScrollEvents($scrollElement) {
-    var isDocument = $scrollElement.get(0).nodeName === '#document';
+    const isDocument = $scrollElement.get(0).nodeName === '#document';
     // @ts-expect-error
-    var isElement = $scrollElement.get(0).nodeType === (0, _window.getWindow)().Node.ELEMENT_NODE;
-    var scrollable = $scrollElement.data('dxScrollable');
-    var eventsStrategy = widgetScrollStrategy;
+    const isElement = $scrollElement.get(0).nodeType === (0, _window.getWindow)().Node.ELEMENT_NODE;
+    let scrollable = $scrollElement.data('dxScrollable');
+    let eventsStrategy = widgetScrollStrategy;
     if (!scrollable) {
       scrollable = isDocument && (0, _renderer.default)((0, _window.getWindow)()) || isElement && $scrollElement.css('overflowY') === 'auto' && $scrollElement;
       eventsStrategy = _events_engine.default;
       if (!scrollable) return;
     }
-    var handler = createWindowScrollHandler(scrollable);
+    const handler = createWindowScrollHandler(scrollable);
     eventsStrategy.on(scrollable, 'scroll', handler);
-    scrollToArray.push(function (pos) {
-      var topOffset = getElementOffset(scrollable);
-      var scrollMethod = scrollable.scrollTo ? 'scrollTo' : 'scrollTop';
+    scrollToArray.push(pos => {
+      const topOffset = getElementOffset(scrollable);
+      const scrollMethod = scrollable.scrollTo ? 'scrollTo' : 'scrollTop';
       if (pos - topOffset >= 0) {
         scrollable[scrollMethod](pos + topOffset);
       }
     });
     scrollableArray.push(scrollable);
-    disposeArray.push(function () {
+    disposeArray.push(() => {
       eventsStrategy.off(scrollable, 'scroll', handler);
     });
   }
-  var getScrollElementParent = function getScrollElementParent($element) {
+  const getScrollElementParent = $element => {
     var _a;
     return (0, _renderer.default)((_a = $element.get(0).parentNode) !== null && _a !== void 0 ? _a : $element.get(0).host);
   };
@@ -99,19 +95,19 @@ function subscribeToExternalScrollers($element, scrollChangedHandler, $targetEle
   }
   return {
     scrollTo(pos) {
-      (0, _iterator.each)(scrollToArray, function (_, scrollTo) {
+      (0, _iterator.each)(scrollToArray, (_, scrollTo) => {
         scrollTo(pos);
       });
     },
     dispose() {
-      (0, _iterator.each)(disposeArray, function (_, dispose) {
+      (0, _iterator.each)(disposeArray, (_, dispose) => {
         dispose();
       });
     }
   };
 }
-var VirtualScrollController = _class.default.inherit(function () {
-  var members = {
+const VirtualScrollController = _class.default.inherit(function () {
+  const members = {
     ctor(component, dataOptions, isVirtual) {
       this._dataOptions = dataOptions;
       this.component = component;
@@ -138,15 +134,15 @@ var VirtualScrollController = _class.default.inherit(function () {
     },
     virtualItemsCount() {
       if (isVirtualMode(this)) {
-        var dataOptions = this._dataOptions;
-        var totalItemsCount = dataOptions.totalItemsCount();
+        const dataOptions = this._dataOptions;
+        const totalItemsCount = dataOptions.totalItemsCount();
         if (this.option(LEGACY_SCROLLING_MODE) === false && totalItemsCount !== -1) {
-          var viewportParams = this.getViewportParams();
-          var loadedOffset = dataOptions.loadedOffset();
-          var loadedItemCount = dataOptions.loadedItemCount();
-          var skip = Math.max(viewportParams.skip, loadedOffset);
-          var take = Math.min(viewportParams.take, loadedItemCount);
-          var endItemsCount = Math.max(totalItemsCount - (skip + take), 0);
+          const viewportParams = this.getViewportParams();
+          const loadedOffset = dataOptions.loadedOffset();
+          const loadedItemCount = dataOptions.loadedItemCount();
+          const skip = Math.max(viewportParams.skip, loadedOffset);
+          const take = Math.min(viewportParams.take, loadedItemCount);
+          const endItemsCount = Math.max(totalItemsCount - (skip + take), 0);
           return {
             begin: skip,
             end: endItemsCount
@@ -157,8 +153,8 @@ var VirtualScrollController = _class.default.inherit(function () {
     },
     getScrollingTimeout() {
       var _a;
-      var renderAsync = this.option('scrolling.renderAsync');
-      var scrollingTimeout = 0;
+      const renderAsync = this.option('scrolling.renderAsync');
+      let scrollingTimeout = 0;
       if (!(0, _type.isDefined)(renderAsync)) {
         scrollingTimeout = Math.min(this.option('scrolling.timeout') || 0, this._dataOptions.changingDuration());
         if (scrollingTimeout < this.option('scrolling.renderingThreshold')) {
@@ -170,14 +166,13 @@ var VirtualScrollController = _class.default.inherit(function () {
       return scrollingTimeout;
     },
     setViewportPosition(position) {
-      var _this = this;
       // @ts-expect-error
-      var result = new _deferred.Deferred();
-      var scrollingTimeout = this.getScrollingTimeout();
+      const result = new _deferred.Deferred();
+      const scrollingTimeout = this.getScrollingTimeout();
       clearTimeout(this._scrollTimeoutID);
       if (scrollingTimeout > 0) {
-        this._scrollTimeoutID = setTimeout(function () {
-          _this._setViewportPositionCore(position);
+        this._scrollTimeoutID = setTimeout(() => {
+          this._setViewportPositionCore(position);
           result.resolve();
         }, scrollingTimeout);
       } else {
@@ -191,14 +186,14 @@ var VirtualScrollController = _class.default.inherit(function () {
     },
     getItemIndexByPosition(position, viewportItemIndex, height) {
       position = position !== null && position !== void 0 ? position : this._position;
-      var defaultItemSize = this.getItemSize();
-      var offset = 0;
-      var itemOffset = 0;
-      var itemOffsetsWithSize = Object.keys(this._itemSizes).concat(-1);
-      for (var i = 0; i < itemOffsetsWithSize.length && offset < position; i++) {
+      const defaultItemSize = this.getItemSize();
+      let offset = 0;
+      let itemOffset = 0;
+      const itemOffsetsWithSize = Object.keys(this._itemSizes).concat(-1);
+      for (let i = 0; i < itemOffsetsWithSize.length && offset < position; i++) {
         // eslint-disable-next-line radix
-        var itemOffsetWithSize = parseInt(itemOffsetsWithSize[i]);
-        var itemOffsetDiff = (position - offset) / defaultItemSize;
+        const itemOffsetWithSize = parseInt(itemOffsetsWithSize[i]);
+        let itemOffsetDiff = (position - offset) / defaultItemSize;
         if (itemOffsetWithSize < 0 || itemOffset + itemOffsetDiff < itemOffsetWithSize) {
           itemOffset += itemOffsetDiff;
           if (this._sizeRatio < 1 && (0, _type.isDefined)(viewportItemIndex)) {
@@ -210,7 +205,7 @@ var VirtualScrollController = _class.default.inherit(function () {
           offset += itemOffsetDiff * defaultItemSize;
           itemOffset += itemOffsetDiff;
         }
-        var itemSize = this._itemSizes[itemOffsetWithSize];
+        const itemSize = this._itemSizes[itemOffsetWithSize];
         offset += itemSize;
         itemOffset += offset < position ? 1 : (position - offset + itemSize) / itemSize;
       }
@@ -220,28 +215,25 @@ var VirtualScrollController = _class.default.inherit(function () {
       return this._isScrollingBack;
     },
     _setViewportPositionCore(position) {
-      var prevPosition = this._position || 0;
+      const prevPosition = this._position || 0;
       this._position = position;
       if (prevPosition !== this._position) {
         this._isScrollingBack = this._position < prevPosition;
       }
-      var itemIndex = this.getItemIndexByPosition();
-      var result = this.setViewportItemIndex(itemIndex);
+      const itemIndex = this.getItemIndexByPosition();
+      const result = this.setViewportItemIndex(itemIndex);
       this.positionChanged.fire();
       return result;
     },
     setContentItemSizes(sizes) {
-      var _this2 = this;
-      var virtualItemsCount = this.virtualItemsCount();
-      this._contentSize = sizes.reduce(function (a, b) {
-        return a + b;
-      }, 0);
+      const virtualItemsCount = this.virtualItemsCount();
+      this._contentSize = sizes.reduce((a, b) => a + b, 0);
       if (virtualItemsCount) {
-        sizes.forEach(function (size, index) {
-          _this2._itemSizes[virtualItemsCount.begin + index] = size;
+        sizes.forEach((size, index) => {
+          this._itemSizes[virtualItemsCount.begin + index] = size;
         });
-        var virtualContentSize = (virtualItemsCount.begin + virtualItemsCount.end + this.itemsCount()) * this._viewportItemSize;
-        var contentHeightLimit = _m_utils.default.getContentHeightLimit(_browser.default);
+        const virtualContentSize = (virtualItemsCount.begin + virtualItemsCount.end + this.itemsCount()) * this._viewportItemSize;
+        const contentHeightLimit = _m_utils.default.getContentHeightLimit(_browser.default);
         if (virtualContentSize > contentHeightLimit) {
           this._sizeRatio = contentHeightLimit / virtualContentSize;
         } else {
@@ -253,29 +245,28 @@ var VirtualScrollController = _class.default.inherit(function () {
       return this._viewportItemSize * this._sizeRatio;
     },
     getItemOffset(itemIndex, isEnd) {
-      var _this3 = this;
-      var virtualItemsCount = this.virtualItemsCount();
-      var itemCount = itemIndex;
+      const virtualItemsCount = this.virtualItemsCount();
+      let itemCount = itemIndex;
       if (!virtualItemsCount) return 0;
-      var offset = 0;
-      var totalItemsCount = this._dataOptions.totalItemsCount();
-      Object.keys(this._itemSizes).forEach(function (currentItemIndex) {
+      let offset = 0;
+      const totalItemsCount = this._dataOptions.totalItemsCount();
+      Object.keys(this._itemSizes).forEach(currentItemIndex => {
         if (!itemCount) return;
         if (isEnd ? currentItemIndex >= totalItemsCount - itemIndex : currentItemIndex < itemIndex) {
-          offset += _this3._itemSizes[currentItemIndex];
+          offset += this._itemSizes[currentItemIndex];
           itemCount--;
         }
       });
       return Math.floor(offset + itemCount * this._viewportItemSize * this._sizeRatio);
     },
     getContentOffset(type) {
-      var isEnd = type === 'end';
-      var virtualItemsCount = this.virtualItemsCount();
+      const isEnd = type === 'end';
+      const virtualItemsCount = this.virtualItemsCount();
       if (!virtualItemsCount) return 0;
       return this.getItemOffset(isEnd ? virtualItemsCount.end : virtualItemsCount.begin, isEnd);
     },
     getVirtualContentSize() {
-      var virtualItemsCount = this.virtualItemsCount();
+      const virtualItemsCount = this.virtualItemsCount();
       return virtualItemsCount ? this.getContentOffset('begin') + this.getContentOffset('end') + this._contentSize : 0;
     },
     getViewportItemIndex() {
@@ -301,9 +292,9 @@ var VirtualScrollController = _class.default.inherit(function () {
       return this._viewportSize;
     },
     viewportHeight(height, scrollTop) {
-      var position = scrollTop !== null && scrollTop !== void 0 ? scrollTop : this._position;
-      var begin = this.getItemIndexByPosition(position);
-      var end = this.getItemIndexByPosition(position + height, begin, height);
+      const position = scrollTop !== null && scrollTop !== void 0 ? scrollTop : this._position;
+      const begin = this.getItemIndexByPosition(position);
+      const end = this.getItemIndexByPosition(position + height, begin, height);
       this.viewportSize(Math.ceil(end - begin));
       if (!(0, _type.isDefined)(scrollTop) && this._viewportItemIndex !== begin) {
         this._setViewportPositionCore(position);
@@ -316,10 +307,9 @@ var VirtualScrollController = _class.default.inherit(function () {
       }
     },
     subscribeToWindowScrollEvents($element) {
-      var _this4 = this;
-      this._windowScroll = this._windowScroll || subscribeToExternalScrollers($element, function (scrollTop) {
-        if (_this4.viewportItemSize()) {
-          _this4.setViewportPosition(scrollTop);
+      this._windowScroll = this._windowScroll || subscribeToExternalScrollers($element, scrollTop => {
+        if (this.viewportItemSize()) {
+          this.setViewportPosition(scrollTop);
         }
       });
     },
@@ -340,20 +330,20 @@ var VirtualScrollController = _class.default.inherit(function () {
     // new mode
     getViewportParams() {
       var _a;
-      var virtualMode = this.option('scrolling.mode') === SCROLLING_MODE_VIRTUAL;
-      var totalItemsCount = this._dataOptions.totalItemsCount();
-      var hasKnownLastPage = this._dataOptions.hasKnownLastPage();
-      var topIndex = hasKnownLastPage && this._viewportItemIndex > totalItemsCount ? totalItemsCount : this._viewportItemIndex;
-      var bottomIndex = this._viewportSize + topIndex;
-      var maxGap = this.option('scrolling.prerenderedRowChunkSize') || 1;
-      var isScrollingBack = this.isScrollingBack();
-      var minGap = (_a = this.option('scrolling.prerenderedRowCount')) !== null && _a !== void 0 ? _a : 1;
-      var topMinGap = isScrollingBack ? minGap : 0;
-      var bottomMinGap = isScrollingBack ? 0 : minGap;
-      var skip = Math.floor(Math.max(0, topIndex - topMinGap) / maxGap) * maxGap;
-      var take = Math.ceil((bottomIndex + bottomMinGap - skip) / maxGap) * maxGap;
+      const virtualMode = this.option('scrolling.mode') === SCROLLING_MODE_VIRTUAL;
+      const totalItemsCount = this._dataOptions.totalItemsCount();
+      const hasKnownLastPage = this._dataOptions.hasKnownLastPage();
+      const topIndex = hasKnownLastPage && this._viewportItemIndex > totalItemsCount ? totalItemsCount : this._viewportItemIndex;
+      const bottomIndex = this._viewportSize + topIndex;
+      const maxGap = this.option('scrolling.prerenderedRowChunkSize') || 1;
+      const isScrollingBack = this.isScrollingBack();
+      const minGap = (_a = this.option('scrolling.prerenderedRowCount')) !== null && _a !== void 0 ? _a : 1;
+      const topMinGap = isScrollingBack ? minGap : 0;
+      const bottomMinGap = isScrollingBack ? 0 : minGap;
+      const skip = Math.floor(Math.max(0, topIndex - topMinGap) / maxGap) * maxGap;
+      let take = Math.ceil((bottomIndex + bottomMinGap - skip) / maxGap) * maxGap;
       if (virtualMode) {
-        var remainedItems = Math.max(0, totalItemsCount - skip);
+        const remainedItems = Math.max(0, totalItemsCount - skip);
         take = Math.min(take, remainedItems);
       }
       return {
@@ -362,7 +352,7 @@ var VirtualScrollController = _class.default.inherit(function () {
       };
     },
     itemsCount() {
-      var result = 0;
+      let result = 0;
       if (this.option(LEGACY_SCROLLING_MODE)) {
         result = this._dataLoader.itemsCount.apply(this._dataLoader, arguments);
       } else {
@@ -371,7 +361,7 @@ var VirtualScrollController = _class.default.inherit(function () {
       return result;
     }
   };
-  ['pageIndex', 'beginPageIndex', 'endPageIndex', 'pageSize', 'load', 'loadIfNeed', 'handleDataChanged', 'getDelayDeferred'].forEach(function (name) {
+  ['pageIndex', 'beginPageIndex', 'endPageIndex', 'pageSize', 'load', 'loadIfNeed', 'handleDataChanged', 'getDelayDeferred'].forEach(name => {
     members[name] = function () {
       return this._dataLoader[name].apply(this._dataLoader, arguments);
     };

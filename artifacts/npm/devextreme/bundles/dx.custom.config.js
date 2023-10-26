@@ -135,6 +135,9 @@ ui.dxDiagram = require('devextreme/ui/diagram');
 ui.dxGantt = require('devextreme/ui/gantt');
 
 
+/* Chart common */
+require('devextreme/bundles/modules/common.charts');
+
 /* Viz core (dx.module-viz-core.js) */
 
 const viz = DevExpress.viz = require('devextreme/bundles/modules/viz');

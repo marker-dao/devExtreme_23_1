@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/file_items_controller.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,23 +24,17 @@ var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
 var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var DEFAULT_ROOT_FILE_SYSTEM_ITEM_NAME = 'Files';
-var OPERATIONS = {
+const DEFAULT_ROOT_FILE_SYSTEM_ITEM_NAME = 'Files';
+const OPERATIONS = {
   NAVIGATION: 'navigation',
   REFRESH: 'refresh'
 };
 exports.OPERATIONS = OPERATIONS;
-var FileItemsController = /*#__PURE__*/function () {
+let FileItemsController = /*#__PURE__*/function () {
   function FileItemsController(options) {
     options = options || {};
     this._options = (0, _extend.extend)({}, options);
@@ -57,11 +51,10 @@ var FileItemsController = /*#__PURE__*/function () {
   }
   var _proto = FileItemsController.prototype;
   _proto._initialize = function _initialize() {
-    var _this = this;
-    var result = this._options.currentPathKeys && this._options.currentPathKeys.length ? this.setCurrentPathByKeys(this._options.currentPathKeys) : this.setCurrentPath(this._options.currentPath);
-    var completeInitialization = function completeInitialization() {
-      _this._isInitialized = true;
-      _this._raiseInitialized();
+    const result = this._options.currentPathKeys && this._options.currentPathKeys.length ? this.setCurrentPathByKeys(this._options.currentPathKeys) : this.setCurrentPath(this._options.currentPath);
+    const completeInitialization = () => {
+      this._isInitialized = true;
+      this._raiseInitialized();
     };
     if (result) {
       (0, _deferred.when)(result).always(completeInitialization);
@@ -84,8 +77,10 @@ var FileItemsController = /*#__PURE__*/function () {
     this.refresh();
   };
   _proto.setUploadOptions = function setUploadOptions(_ref) {
-    var maxFileSize = _ref.maxFileSize,
-      chunkSize = _ref.chunkSize;
+    let {
+      maxFileSize,
+      chunkSize
+    } = _ref;
     if ((0, _type.isDefined)(chunkSize)) {
       this._options.uploadChunkSize = chunkSize;
     }
@@ -100,18 +95,15 @@ var FileItemsController = /*#__PURE__*/function () {
     this._resetState();
   };
   _proto.updateProvider = function updateProvider(fileProvider, currentPathKeys) {
-    var _this2 = this;
     if (!(0, _type.isDefined)(currentPathKeys)) {
       return this._updateProviderOnly(fileProvider);
     }
-    return (0, _deferred.when)(this._getDirectoryByPathParts(this._rootDirectoryInfo, currentPathKeys, true)).then(function (newDirectory) {
-      if (newDirectory !== _this2._rootDirectoryInfo) {
-        _this2._resetCurrentDirectory();
+    return (0, _deferred.when)(this._getDirectoryByPathParts(this._rootDirectoryInfo, currentPathKeys, true)).then(newDirectory => {
+      if (newDirectory !== this._rootDirectoryInfo) {
+        this._resetCurrentDirectory();
       }
-      _this2._setProvider(fileProvider);
-    }).then(function () {
-      return _this2.setCurrentPathByKeys(currentPathKeys);
-    });
+      this._setProvider(fileProvider);
+    }).then(() => this.setCurrentPathByKeys(currentPathKeys));
   };
   _proto._updateProviderOnly = function _updateProviderOnly(fileProvider) {
     this._resetCurrentDirectory();
@@ -139,8 +131,8 @@ var FileItemsController = /*#__PURE__*/function () {
     return new _object_provider.default(fileProvider);
   };
   _proto.setCurrentPath = function setCurrentPath(path) {
-    var pathParts = (0, _utils.getPathParts)(path);
-    var rawPath = _utils.pathCombine.apply(void 0, _toConsumableArray(pathParts));
+    const pathParts = (0, _utils.getPathParts)(path);
+    const rawPath = (0, _utils.pathCombine)(...pathParts);
     if (this.getCurrentDirectory().fileItem.relativeName === rawPath) {
       return new _deferred.Deferred().resolve().promise();
     }
@@ -153,10 +145,10 @@ var FileItemsController = /*#__PURE__*/function () {
     return this._setCurrentDirectoryByPathParts(pathKeys, true);
   };
   _proto.getCurrentPath = function getCurrentPath() {
-    var currentPath = '';
-    var directory = this.getCurrentDirectory();
+    let currentPath = '';
+    let directory = this.getCurrentDirectory();
     while (directory && !directory.fileItem.isRoot()) {
-      var escapedName = (0, _utils.getEscapedFileName)(directory.fileItem.name);
+      const escapedName = (0, _utils.getEscapedFileName)(directory.fileItem.name);
       currentPath = (0, _utils.pathCombine)(escapedName, currentPath);
       directory = directory.parentDirectory;
     }
@@ -179,7 +171,7 @@ var FileItemsController = /*#__PURE__*/function () {
       this._raisePathPotentiallyChanged();
       return;
     }
-    var requireRaiseSelectedDirectory = this._currentDirectoryInfo.fileItem.key !== directoryInfo.fileItem.key;
+    const requireRaiseSelectedDirectory = this._currentDirectoryInfo.fileItem.key !== directoryInfo.fileItem.key;
     this._currentDirectoryInfo = directoryInfo;
     if (requireRaiseSelectedDirectory && this._isInitialized) {
       if (!this._dataLoading) {
@@ -192,41 +184,30 @@ var FileItemsController = /*#__PURE__*/function () {
     this._currentDirectoryInfo = this._rootDirectoryInfo;
   };
   _proto.getCurrentItems = function getCurrentItems(onlyFiles) {
-    var _this3 = this;
-    return this._dataLoadingDeferred ? this._dataLoadingDeferred.then(function () {
-      return _this3._getCurrentItemsInternal(onlyFiles);
-    }) : this._getCurrentItemsInternal(onlyFiles);
+    return this._dataLoadingDeferred ? this._dataLoadingDeferred.then(() => this._getCurrentItemsInternal(onlyFiles)) : this._getCurrentItemsInternal(onlyFiles);
   };
   _proto._getCurrentItemsInternal = function _getCurrentItemsInternal(onlyFiles) {
-    var _this4 = this;
-    var currentDirectory = this.getCurrentDirectory();
-    var getItemsPromise = this.getDirectoryContents(currentDirectory);
-    return getItemsPromise.then(function (items) {
-      var separatedItems = _this4._separateItemsByType(items);
+    const currentDirectory = this.getCurrentDirectory();
+    const getItemsPromise = this.getDirectoryContents(currentDirectory);
+    return getItemsPromise.then(items => {
+      const separatedItems = this._separateItemsByType(items);
       currentDirectory.fileItem.hasSubDirectories = !!separatedItems.folders.length;
       return onlyFiles ? separatedItems.files : items;
     });
   };
   _proto.getDirectories = function getDirectories(parentDirectoryInfo, skipNavigationOnError) {
-    return this.getDirectoryContents(parentDirectoryInfo, skipNavigationOnError).then(function (itemInfos) {
-      return itemInfos.filter(function (info) {
-        return info.fileItem.isDirectory;
-      });
-    });
+    return this.getDirectoryContents(parentDirectoryInfo, skipNavigationOnError).then(itemInfos => itemInfos.filter(info => info.fileItem.isDirectory));
   };
   _proto._separateItemsByType = function _separateItemsByType(itemInfos) {
-    var folders = [];
-    var files = [];
-    itemInfos.forEach(function (info) {
-      return info.fileItem.isDirectory ? folders.push(info) : files.push(info);
-    });
+    const folders = [];
+    const files = [];
+    itemInfos.forEach(info => info.fileItem.isDirectory ? folders.push(info) : files.push(info));
     return {
       folders,
       files
     };
   };
   _proto.getDirectoryContents = function getDirectoryContents(parentDirectoryInfo, skipNavigationOnError) {
-    var _this5 = this;
     if (!parentDirectoryInfo) {
       return new _deferred.Deferred().resolve([this._rootDirectoryInfo]).promise();
     }
@@ -237,208 +218,172 @@ var FileItemsController = /*#__PURE__*/function () {
       this._changeDirectoryOnError(parentDirectoryInfo, skipNavigationOnError, true);
       return new _deferred.Deferred().reject().promise();
     }
-    var dirKey = parentDirectoryInfo.getInternalKey();
-    var loadItemsDeferred = this._loadedItems[dirKey];
+    const dirKey = parentDirectoryInfo.getInternalKey();
+    let loadItemsDeferred = this._loadedItems[dirKey];
     if (loadItemsDeferred) {
       return loadItemsDeferred;
     }
-    loadItemsDeferred = this._getFileItems(parentDirectoryInfo, skipNavigationOnError).then(function (fileItems) {
+    loadItemsDeferred = this._getFileItems(parentDirectoryInfo, skipNavigationOnError).then(fileItems => {
       fileItems = fileItems || [];
-      parentDirectoryInfo.items = fileItems.map(function (fileItem) {
-        return fileItem.isDirectory && _this5._createDirectoryInfo(fileItem, parentDirectoryInfo) || _this5._createFileInfo(fileItem, parentDirectoryInfo);
-      });
+      parentDirectoryInfo.items = fileItems.map(fileItem => fileItem.isDirectory && this._createDirectoryInfo(fileItem, parentDirectoryInfo) || this._createFileInfo(fileItem, parentDirectoryInfo));
       parentDirectoryInfo.itemsLoaded = true;
       return parentDirectoryInfo.items;
-    }, function () {
-      if (_this5._singleOperationLockId && parentDirectoryInfo.itemsSingleLoadErrorId !== _this5._singleOperationLockId) {
-        parentDirectoryInfo.itemsSingleLoadErrorId = _this5._singleOperationLockId;
+    }, () => {
+      if (this._singleOperationLockId && parentDirectoryInfo.itemsSingleLoadErrorId !== this._singleOperationLockId) {
+        parentDirectoryInfo.itemsSingleLoadErrorId = this._singleOperationLockId;
       }
       return [];
     });
     this._loadedItems[dirKey] = loadItemsDeferred;
-    loadItemsDeferred.always(function () {
-      delete _this5._loadedItems[dirKey];
+    loadItemsDeferred.always(() => {
+      delete this._loadedItems[dirKey];
     });
     return loadItemsDeferred;
   };
   _proto._getFileItems = function _getFileItems(parentDirectoryInfo, skipNavigationOnError) {
-    var _this6 = this;
-    var loadItemsDeferred = null;
+    let loadItemsDeferred = null;
     try {
       loadItemsDeferred = this._fileProvider.getItems(parentDirectoryInfo.fileItem);
     } catch (error) {
       return this._handleItemLoadError(parentDirectoryInfo, error, skipNavigationOnError);
     }
-    return (0, _deferred.when)(loadItemsDeferred).then(function (fileItems) {
-      return _this6._securityController.getAllowedItems(fileItems);
-    }, function (errorInfo) {
-      return _this6._handleItemLoadError(parentDirectoryInfo, errorInfo, skipNavigationOnError);
-    });
+    return (0, _deferred.when)(loadItemsDeferred).then(fileItems => this._securityController.getAllowedItems(fileItems), errorInfo => this._handleItemLoadError(parentDirectoryInfo, errorInfo, skipNavigationOnError));
   };
   _proto.createDirectory = function createDirectory(parentDirectoryInfo, name) {
-    var _this7 = this;
-    var parentDirItem = parentDirectoryInfo.fileItem;
-    var tempDirInfo = this._createDirInfoByName(name, parentDirectoryInfo);
-    var actionInfo = this._createEditActionInfo('create', tempDirInfo, parentDirectoryInfo);
-    return this._processEditAction(actionInfo, function (args) {
+    const parentDirItem = parentDirectoryInfo.fileItem;
+    const tempDirInfo = this._createDirInfoByName(name, parentDirectoryInfo);
+    const actionInfo = this._createEditActionInfo('create', tempDirInfo, parentDirectoryInfo);
+    return this._processEditAction(actionInfo, args => {
       args.parentDirectory = parentDirItem;
       args.name = name;
-      _this7._editingEvents.onDirectoryCreating(args);
-    }, function () {
-      return _this7._fileProvider.createDirectory(parentDirItem, name).done(function (info) {
-        if (!parentDirItem.isRoot()) {
-          parentDirItem.hasSubDirectories = true;
-        }
-        return info;
-      });
-    }, function () {
-      var args = {
+      this._editingEvents.onDirectoryCreating(args);
+    }, () => this._fileProvider.createDirectory(parentDirItem, name).done(info => {
+      if (!parentDirItem.isRoot()) {
+        parentDirItem.hasSubDirectories = true;
+      }
+      return info;
+    }), () => {
+      const args = {
         parentDirectory: parentDirItem,
         name
       };
-      _this7._editingEvents.onDirectoryCreated(args);
-    }, function () {
-      return _this7._resetDirectoryState(parentDirectoryInfo, true);
-    });
+      this._editingEvents.onDirectoryCreated(args);
+    }, () => this._resetDirectoryState(parentDirectoryInfo, true));
   };
   _proto.renameItem = function renameItem(fileItemInfo, name) {
-    var _this8 = this;
-    var sourceItem = fileItemInfo.fileItem.createClone();
-    var actionInfo = this._createEditActionInfo('rename', fileItemInfo, fileItemInfo.parentDirectory, {
+    const sourceItem = fileItemInfo.fileItem.createClone();
+    const actionInfo = this._createEditActionInfo('rename', fileItemInfo, fileItemInfo.parentDirectory, {
       itemNewName: name
     });
-    return this._processEditAction(actionInfo, function (args, itemInfo) {
+    return this._processEditAction(actionInfo, (args, itemInfo) => {
       if (!itemInfo.fileItem.isDirectory) {
-        _this8._securityController.validateExtension(name);
+        this._securityController.validateExtension(name);
       }
       args.item = sourceItem;
       args.newName = name;
-      _this8._editingEvents.onItemRenaming(args);
-    }, function (item) {
-      return _this8._fileProvider.renameItem(item, name);
-    }, function () {
-      var args = {
+      this._editingEvents.onItemRenaming(args);
+    }, item => this._fileProvider.renameItem(item, name), () => {
+      const args = {
         sourceItem,
         itemName: name
       };
-      _this8._editingEvents.onItemRenamed(args);
-    }, function () {
-      var parentDirectory = _this8._getActualDirectoryInfo(fileItemInfo.parentDirectory);
-      _this8._resetDirectoryState(parentDirectory);
-      _this8.setCurrentDirectory(parentDirectory);
+      this._editingEvents.onItemRenamed(args);
+    }, () => {
+      const parentDirectory = this._getActualDirectoryInfo(fileItemInfo.parentDirectory);
+      this._resetDirectoryState(parentDirectory);
+      this.setCurrentDirectory(parentDirectory);
     });
   };
   _proto.moveItems = function moveItems(itemInfos, destinationDirectory) {
-    var _this9 = this;
-    var actionInfo = this._createEditActionInfo('move', itemInfos, destinationDirectory);
-    return this._processEditAction(actionInfo, function (args, itemInfo) {
+    const actionInfo = this._createEditActionInfo('move', itemInfos, destinationDirectory);
+    return this._processEditAction(actionInfo, (args, itemInfo) => {
       args.item = itemInfo.fileItem;
       args.destinationDirectory = destinationDirectory.fileItem;
-      _this9._editingEvents.onItemMoving(args);
-    }, function (item) {
-      return _this9._fileProvider.moveItems([item], destinationDirectory.fileItem);
-    }, function (itemInfo) {
-      var args = {
+      this._editingEvents.onItemMoving(args);
+    }, item => this._fileProvider.moveItems([item], destinationDirectory.fileItem), itemInfo => {
+      const args = {
         sourceItem: itemInfo.fileItem,
         parentDirectory: destinationDirectory.fileItem,
         itemName: itemInfo.fileItem.name,
         itemPath: (0, _utils.pathCombine)(destinationDirectory.fileItem.path, itemInfo.fileItem.name)
       };
-      _this9._editingEvents.onItemMoved(args);
-    }, function (needChangeCurrentDirectory) {
-      itemInfos.forEach(function (itemInfo) {
-        return _this9._resetDirectoryState(itemInfo.parentDirectory, true);
-      });
+      this._editingEvents.onItemMoved(args);
+    }, needChangeCurrentDirectory => {
+      itemInfos.forEach(itemInfo => this._resetDirectoryState(itemInfo.parentDirectory, true));
       if (needChangeCurrentDirectory) {
-        _this9._resetDirectoryState(destinationDirectory);
-        _this9.setCurrentPathByKeys(destinationDirectory.fileItem.pathKeys);
+        this._resetDirectoryState(destinationDirectory);
+        this.setCurrentPathByKeys(destinationDirectory.fileItem.pathKeys);
         destinationDirectory.expanded = true;
       }
     });
   };
   _proto.copyItems = function copyItems(itemInfos, destinationDirectory) {
-    var _this10 = this;
-    var actionInfo = this._createEditActionInfo('copy', itemInfos, destinationDirectory);
-    return this._processEditAction(actionInfo, function (args, itemInfo) {
+    const actionInfo = this._createEditActionInfo('copy', itemInfos, destinationDirectory);
+    return this._processEditAction(actionInfo, (args, itemInfo) => {
       args.item = itemInfo.fileItem;
       args.destinationDirectory = destinationDirectory.fileItem;
-      _this10._editingEvents.onItemCopying(args);
-    }, function (item) {
-      return _this10._fileProvider.copyItems([item], destinationDirectory.fileItem);
-    }, function (itemInfo) {
-      var args = {
+      this._editingEvents.onItemCopying(args);
+    }, item => this._fileProvider.copyItems([item], destinationDirectory.fileItem), itemInfo => {
+      const args = {
         sourceItem: itemInfo.fileItem,
         parentDirectory: destinationDirectory.fileItem,
         itemName: itemInfo.fileItem.name,
         itemPath: (0, _utils.pathCombine)(destinationDirectory.fileItem.path, itemInfo.fileItem.name)
       };
-      _this10._editingEvents.onItemCopied(args);
-    }, function (needChangeCurrentDirectory) {
+      this._editingEvents.onItemCopied(args);
+    }, needChangeCurrentDirectory => {
       if (needChangeCurrentDirectory) {
-        destinationDirectory = _this10._getActualDirectoryInfo(destinationDirectory);
-        _this10._resetDirectoryState(destinationDirectory);
-        _this10.setCurrentDirectory(destinationDirectory);
+        destinationDirectory = this._getActualDirectoryInfo(destinationDirectory);
+        this._resetDirectoryState(destinationDirectory);
+        this.setCurrentDirectory(destinationDirectory);
         destinationDirectory.expanded = true;
       }
     });
   };
   _proto.deleteItems = function deleteItems(itemInfos) {
-    var _this11 = this;
-    var directory = itemInfos.length > 0 ? itemInfos[0].parentDirectory : null;
-    var actionInfo = this._createEditActionInfo('delete', itemInfos, directory);
-    return this._processEditAction(actionInfo, function (args, itemInfo) {
+    const directory = itemInfos.length > 0 ? itemInfos[0].parentDirectory : null;
+    const actionInfo = this._createEditActionInfo('delete', itemInfos, directory);
+    return this._processEditAction(actionInfo, (args, itemInfo) => {
       args.item = itemInfo.fileItem;
-      _this11._editingEvents.onItemDeleting(args);
-    }, function (item) {
-      return _this11._fileProvider.deleteItems([item]);
-    }, function (itemInfo) {
-      return _this11._editingEvents.onItemDeleted({
-        item: itemInfo.fileItem
-      });
-    }, function () {
-      itemInfos.forEach(function (itemInfo) {
-        var parentDir = _this11._getActualDirectoryInfo(itemInfo.parentDirectory);
-        _this11._resetDirectoryState(parentDir);
-        _this11.setCurrentDirectory(parentDir);
+      this._editingEvents.onItemDeleting(args);
+    }, item => this._fileProvider.deleteItems([item]), itemInfo => this._editingEvents.onItemDeleted({
+      item: itemInfo.fileItem
+    }), () => {
+      itemInfos.forEach(itemInfo => {
+        const parentDir = this._getActualDirectoryInfo(itemInfo.parentDirectory);
+        this._resetDirectoryState(parentDir);
+        this.setCurrentDirectory(parentDir);
       });
     });
   };
   _proto.processUploadSession = function processUploadSession(sessionInfo, uploadDirectoryInfo) {
-    var _this12 = this;
-    var itemInfos = this._getItemInfosForUploaderFiles(sessionInfo.files, uploadDirectoryInfo);
-    var actionInfo = this._createEditActionInfo('upload', itemInfos, uploadDirectoryInfo, {
+    const itemInfos = this._getItemInfosForUploaderFiles(sessionInfo.files, uploadDirectoryInfo);
+    const actionInfo = this._createEditActionInfo('upload', itemInfos, uploadDirectoryInfo, {
       sessionInfo
     });
-    return this._processEditAction(actionInfo, function () {}, function (_, index) {
-      return sessionInfo.deferreds[index];
-    }, function () {}, function () {
-      return _this12._resetDirectoryState(uploadDirectoryInfo, true);
-    });
+    return this._processEditAction(actionInfo, () => {}, (_, index) => sessionInfo.deferreds[index], () => {}, () => this._resetDirectoryState(uploadDirectoryInfo, true));
   };
   _proto.uploadFileChunk = function uploadFileChunk(fileData, chunksInfo, destinationDirectory) {
-    var _this13 = this;
-    var startDeferred = null;
+    let startDeferred = null;
     if (chunksInfo.chunkIndex === 0) {
       this._securityController.validateMaxFileSize(fileData.size);
       this._securityController.validateExtension(fileData.name);
-      startDeferred = this._processBeforeItemEditAction(function (args) {
+      startDeferred = this._processBeforeItemEditAction(args => {
         args.fileData = fileData;
         args.destinationDirectory = destinationDirectory;
-        _this13._editingEvents.onFileUploading(args);
+        this._editingEvents.onFileUploading(args);
       });
     } else {
       startDeferred = new _deferred.Deferred().resolve().promise();
     }
-    var result = startDeferred.then(function () {
-      return _this13._fileProvider.uploadFileChunk(fileData, chunksInfo, destinationDirectory);
-    });
+    let result = startDeferred.then(() => this._fileProvider.uploadFileChunk(fileData, chunksInfo, destinationDirectory));
     if (chunksInfo.chunkIndex === chunksInfo.chunkCount - 1) {
-      result = result.done(function () {
-        var args = {
+      result = result.done(() => {
+        const args = {
           fileData,
           parentDirectory: destinationDirectory
         };
-        _this13._editingEvents.onFileUploaded(args);
+        this._editingEvents.onFileUploaded(args);
       });
     }
     return result;
@@ -447,35 +392,30 @@ var FileItemsController = /*#__PURE__*/function () {
     return (0, _deferred.when)(this._fileProvider.abortFileUpload(fileData, chunksInfo, destinationDirectory));
   };
   _proto.getFileUploadChunkSize = function getFileUploadChunkSize() {
-    var chunkSize = this._options.uploadChunkSize;
+    const chunkSize = this._options.uploadChunkSize;
     if (chunkSize && chunkSize > 0) {
       return chunkSize;
     }
     return this._fileProvider.getFileUploadChunkSize();
   };
   _proto.downloadItems = function downloadItems(itemInfos) {
-    var _this14 = this;
-    var deferreds = itemInfos.map(function (itemInfo) {
-      return _this14._processBeforeItemEditAction(function (args) {
+    const deferreds = itemInfos.map(itemInfo => {
+      return this._processBeforeItemEditAction(args => {
         args.item = itemInfo.fileItem;
-        _this14._editingEvents.onItemDownloading(args);
+        this._editingEvents.onItemDownloading(args);
       }, itemInfo);
     });
-    return _deferred.when.apply(void 0, _toConsumableArray(deferreds)).then(function () {
-      var items = itemInfos.map(function (i) {
-        return i.fileItem;
+    return (0, _deferred.when)(...deferreds).then(() => {
+      const items = itemInfos.map(i => i.fileItem);
+      return (0, _deferred.when)(this._getItemActionResult(this._fileProvider.downloadItems(items))).then(() => {}, errorInfo => {
+        this._raiseDownloadItemsError(itemInfos, itemInfos[0].parentDirectory, errorInfo);
       });
-      return (0, _deferred.when)(_this14._getItemActionResult(_this14._fileProvider.downloadItems(items))).then(function () {}, function (errorInfo) {
-        _this14._raiseDownloadItemsError(itemInfos, itemInfos[0].parentDirectory, errorInfo);
-      });
-    }, function (errorInfo) {
-      _this14._raiseDownloadItemsError(itemInfos, itemInfos[0].parentDirectory, errorInfo);
+    }, errorInfo => {
+      this._raiseDownloadItemsError(itemInfos, itemInfos[0].parentDirectory, errorInfo);
     });
   };
   _proto.getItemContent = function getItemContent(itemInfos) {
-    var items = itemInfos.map(function (i) {
-      return i.fileItem;
-    });
+    const items = itemInfos.map(i => i.fileItem);
     return (0, _deferred.when)(this._fileProvider.getItemsContent(items));
   };
   _proto._handleItemLoadError = function _handleItemLoadError(parentDirectoryInfo, errorInfo, skipNavigationOnError) {
@@ -485,7 +425,7 @@ var FileItemsController = /*#__PURE__*/function () {
     return new _deferred.Deferred().reject().promise();
   };
   _proto._raiseGetItemsError = function _raiseGetItemsError(parentDirectoryInfo, errorInfo) {
-    var actionInfo = this._createEditActionInfo('getItems', parentDirectoryInfo, parentDirectoryInfo);
+    const actionInfo = this._createEditActionInfo('getItems', parentDirectoryInfo, parentDirectoryInfo);
     this._raiseEditActionStarting(actionInfo);
     this._raiseEditActionResultAcquired(actionInfo);
     this._raiseEditActionError(actionInfo, {
@@ -496,12 +436,12 @@ var FileItemsController = /*#__PURE__*/function () {
     });
   };
   _proto._raiseDownloadItemsError = function _raiseDownloadItemsError(targetFileInfos, directory, errorInfo) {
-    var actionInfo = this._createEditActionInfo('download', targetFileInfos, directory);
-    var itemsLength = targetFileInfos.length;
+    const actionInfo = this._createEditActionInfo('download', targetFileInfos, directory);
+    const itemsLength = targetFileInfos.length;
     actionInfo.singleRequest = itemsLength === 1;
     this._raiseEditActionStarting(actionInfo);
     this._raiseEditActionResultAcquired(actionInfo);
-    for (var index = 0; index < itemsLength - 1; index++) {
+    for (let index = 0; index < itemsLength - 1; index++) {
       this._raiseEditActionItemError(actionInfo, {
         errorCode: errorInfo.errorCode,
         errorText: errorInfo.errorText,
@@ -530,35 +470,28 @@ var FileItemsController = /*#__PURE__*/function () {
     return Array.isArray(actionResult) ? actionResult[0] : actionResult;
   };
   _proto._processEditAction = function _processEditAction(actionInfo, beforeAction, action, afterAction, completeAction) {
-    var _this15 = this;
-    var isAnyOperationSuccessful = false;
+    let isAnyOperationSuccessful = false;
     this._raiseEditActionStarting(actionInfo);
-    var actionResult = actionInfo.itemInfos.map(function (itemInfo, itemIndex) {
-      return _this15._processBeforeItemEditAction(beforeAction, itemInfo).then(function () {
-        var itemActionResult = _this15._getItemActionResult(action(itemInfo.fileItem, itemIndex));
-        return itemActionResult.done(function () {
-          return afterAction(itemInfo);
-        });
+    const actionResult = actionInfo.itemInfos.map((itemInfo, itemIndex) => {
+      return this._processBeforeItemEditAction(beforeAction, itemInfo).then(() => {
+        const itemActionResult = this._getItemActionResult(action(itemInfo.fileItem, itemIndex));
+        return itemActionResult.done(() => afterAction(itemInfo));
       });
     });
     actionInfo.singleRequest = actionResult.length === 1;
     this._raiseEditActionResultAcquired(actionInfo);
-    return (0, _uiFile_manager.whenSome)(actionResult, function (info) {
+    return (0, _uiFile_manager.whenSome)(actionResult, info => {
       isAnyOperationSuccessful = true;
-      _this15._raiseCompleteEditActionItem(actionInfo, info);
-    }, function (errorInfo) {
-      return _this15._raiseEditActionItemError(actionInfo, errorInfo);
-    }).then(function () {
+      this._raiseCompleteEditActionItem(actionInfo, info);
+    }, errorInfo => this._raiseEditActionItemError(actionInfo, errorInfo)).then(() => {
       completeAction(isAnyOperationSuccessful);
-      _this15._raiseCompleteEditAction(actionInfo);
+      this._raiseCompleteEditAction(actionInfo);
     });
   };
   _proto._createEditActionInfo = function _createEditActionInfo(name, targetItemInfos, directory, customData) {
     targetItemInfos = Array.isArray(targetItemInfos) ? targetItemInfos : [targetItemInfos];
     customData = customData || {};
-    var items = targetItemInfos.map(function (itemInfo) {
-      return itemInfo.fileItem;
-    });
+    const items = targetItemInfos.map(itemInfo => itemInfo.fileItem);
     return {
       name,
       itemInfos: targetItemInfos,
@@ -569,8 +502,8 @@ var FileItemsController = /*#__PURE__*/function () {
     };
   };
   _proto._processBeforeItemEditAction = function _processBeforeItemEditAction(action, itemInfo) {
-    var deferred = new _deferred.Deferred();
-    var args = this._createBeforeActionArgs();
+    const deferred = new _deferred.Deferred();
+    const args = this._createBeforeActionArgs();
     try {
       action(args, itemInfo);
     } catch (errorInfo) {
@@ -584,7 +517,7 @@ var FileItemsController = /*#__PURE__*/function () {
         errorCode: args.errorCode
       });
     } else if ((0, _type.isPromise)(args.cancel)) {
-      (0, _deferred.when)(args.cancel).then(function (res) {
+      (0, _deferred.when)(args.cancel).then(res => {
         if (res === true) {
           deferred.reject();
         } else if ((0, _type.isObject)(res) && res.cancel === true) {
@@ -606,24 +539,23 @@ var FileItemsController = /*#__PURE__*/function () {
     };
   };
   _proto._getItemInfosForUploaderFiles = function _getItemInfosForUploaderFiles(files, parentDirectoryInfo) {
-    var pathInfo = this._getPathInfo(parentDirectoryInfo);
-    var result = [];
-    for (var i = 0; i < files.length; i++) {
-      var file = files[i];
-      var item = new _file_system_item.default(pathInfo, file.name, false);
-      var itemInfo = this._createFileInfo(item, parentDirectoryInfo);
+    const pathInfo = this._getPathInfo(parentDirectoryInfo);
+    const result = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const item = new _file_system_item.default(pathInfo, file.name, false);
+      const itemInfo = this._createFileInfo(item, parentDirectoryInfo);
       result.push(itemInfo);
     }
     return result;
   };
   _proto.refresh = function refresh() {
-    var _this16 = this;
     if (this._lockRefresh) {
       return this._refreshDeferred;
     }
     this._lockRefresh = true;
-    return this._executeDataLoad(function () {
-      return _this16._refreshDeferred = _this16._refreshInternal();
+    return this._executeDataLoad(() => {
+      return this._refreshDeferred = this._refreshInternal();
     }, OPERATIONS.REFRESH);
   };
   _proto.startSingleLoad = function startSingleLoad() {
@@ -633,95 +565,76 @@ var FileItemsController = /*#__PURE__*/function () {
     delete this._singleOperationLockId;
   };
   _proto._refreshInternal = function _refreshInternal() {
-    var _this17 = this;
-    var cachedRootInfo = {
+    const cachedRootInfo = {
       items: this._rootDirectoryInfo.items
     };
-    var selectedKeyParts = this._getDirectoryPathKeyParts(this.getCurrentDirectory());
+    const selectedKeyParts = this._getDirectoryPathKeyParts(this.getCurrentDirectory());
     this._resetDirectoryState(this._rootDirectoryInfo);
-    return this._loadItemsRecursive(this._rootDirectoryInfo, cachedRootInfo).then(function () {
-      var dirInfo = _this17._findDirectoryByPathKeyParts(selectedKeyParts);
-      _this17.setCurrentDirectory(dirInfo);
-      delete _this17._lockRefresh;
+    return this._loadItemsRecursive(this._rootDirectoryInfo, cachedRootInfo).then(() => {
+      const dirInfo = this._findDirectoryByPathKeyParts(selectedKeyParts);
+      this.setCurrentDirectory(dirInfo);
+      delete this._lockRefresh;
     });
   };
   _proto._loadItemsRecursive = function _loadItemsRecursive(directoryInfo, cachedDirectoryInfo) {
-    var _this18 = this;
-    return this.getDirectories(directoryInfo).then(function (dirInfos) {
-      var itemDeferreds = [];
-      var _loop = function _loop(i) {
-        var cachedItem = cachedDirectoryInfo.items.find(function (cache) {
-          return dirInfos[i].fileItem.key === cache.fileItem.key;
-        });
-        if (!cachedItem) return 1; // continue
+    return this.getDirectories(directoryInfo).then(dirInfos => {
+      const itemDeferreds = [];
+      for (let i = 0; i < dirInfos.length; i++) {
+        const cachedItem = cachedDirectoryInfo.items.find(cache => dirInfos[i].fileItem.key === cache.fileItem.key);
+        if (!cachedItem) continue;
         dirInfos[i].expanded = cachedItem.expanded;
         if (dirInfos[i].expanded) {
-          itemDeferreds.push(_this18._loadItemsRecursive(dirInfos[i], cachedItem));
+          itemDeferreds.push(this._loadItemsRecursive(dirInfos[i], cachedItem));
         }
-      };
-      for (var i = 0; i < dirInfos.length; i++) {
-        if (_loop(i)) continue;
       }
       return (0, _uiFile_manager.whenSome)(itemDeferreds);
-    }, function () {
-      return null;
-    });
+    }, () => null);
   };
   _proto._setCurrentDirectoryByPathParts = function _setCurrentDirectoryByPathParts(pathParts, useKeys) {
-    var _this19 = this;
-    return this._executeDataLoad(function () {
-      return _this19._setCurrentDirectoryByPathPartsInternal(pathParts, useKeys);
-    }, OPERATIONS.NAVIGATION);
+    return this._executeDataLoad(() => this._setCurrentDirectoryByPathPartsInternal(pathParts, useKeys), OPERATIONS.NAVIGATION);
   };
   _proto._setCurrentDirectoryByPathPartsInternal = function _setCurrentDirectoryByPathPartsInternal(pathParts, useKeys) {
-    var _this20 = this;
-    return this._getDirectoryByPathParts(this._rootDirectoryInfo, pathParts, useKeys).then(function (directoryInfo) {
-      for (var info = directoryInfo.parentDirectory; info; info = info.parentDirectory) {
+    return this._getDirectoryByPathParts(this._rootDirectoryInfo, pathParts, useKeys).then(directoryInfo => {
+      for (let info = directoryInfo.parentDirectory; info; info = info.parentDirectory) {
         info.expanded = true;
       }
-      _this20.setCurrentDirectory(directoryInfo);
-    }, function () {
-      _this20._raisePathPotentiallyChanged();
+      this.setCurrentDirectory(directoryInfo);
+    }, () => {
+      this._raisePathPotentiallyChanged();
     });
   };
   _proto._executeDataLoad = function _executeDataLoad(action, operation) {
-    var _this21 = this;
     if (this._dataLoadingDeferred) {
-      return this._dataLoadingDeferred.then(function () {
-        return _this21._executeDataLoad(action, operation);
-      });
+      return this._dataLoadingDeferred.then(() => this._executeDataLoad(action, operation));
     }
     this._dataLoading = true;
     this._dataLoadingDeferred = new _deferred.Deferred();
     if (this._isInitialized) {
       this._raiseDataLoading(operation);
     }
-    return action().always(function () {
-      var tempDeferred = _this21._dataLoadingDeferred;
-      _this21._dataLoadingDeferred = null;
-      _this21._dataLoading = false;
+    return action().always(() => {
+      const tempDeferred = this._dataLoadingDeferred;
+      this._dataLoadingDeferred = null;
+      this._dataLoading = false;
       tempDeferred.resolve();
     });
   };
   _proto._getDirectoryByPathParts = function _getDirectoryByPathParts(parentDirectoryInfo, pathParts, useKeys) {
-    var _this22 = this;
     if (pathParts.length < 1) {
       return new _deferred.Deferred().resolve(parentDirectoryInfo).promise();
     }
-    var fieldName = useKeys ? 'key' : 'name';
-    return this.getDirectories(parentDirectoryInfo).then(function (dirInfos) {
-      var subDirInfo = dirInfos.find(function (d) {
-        return d.fileItem[fieldName] === pathParts[0];
-      });
+    const fieldName = useKeys ? 'key' : 'name';
+    return this.getDirectories(parentDirectoryInfo).then(dirInfos => {
+      const subDirInfo = dirInfos.find(d => d.fileItem[fieldName] === pathParts[0]);
       if (!subDirInfo) {
         return new _deferred.Deferred().reject().promise();
       }
-      var restPathParts = _toConsumableArray(pathParts).splice(1);
-      return _this22._getDirectoryByPathParts(subDirInfo, restPathParts, useKeys);
+      const restPathParts = [...pathParts].splice(1);
+      return this._getDirectoryByPathParts(subDirInfo, restPathParts, useKeys);
     });
   };
   _proto._getDirectoryPathKeyParts = function _getDirectoryPathKeyParts(directoryInfo) {
-    var pathParts = [];
+    const pathParts = [];
     while (directoryInfo && directoryInfo.parentDirectory) {
       pathParts.unshift(directoryInfo.fileItem.key);
       directoryInfo = directoryInfo.parentDirectory;
@@ -729,16 +642,14 @@ var FileItemsController = /*#__PURE__*/function () {
     return pathParts;
   };
   _proto._findDirectoryByPathKeyParts = function _findDirectoryByPathKeyParts(keyParts) {
-    var selectedDirInfo = this._rootDirectoryInfo;
+    let selectedDirInfo = this._rootDirectoryInfo;
     if (keyParts.length === 0) {
       return selectedDirInfo;
     }
-    var i = 0;
-    var newSelectedDir = selectedDirInfo;
+    let i = 0;
+    let newSelectedDir = selectedDirInfo;
     while (newSelectedDir && i < keyParts.length) {
-      newSelectedDir = selectedDirInfo.items.find(function (info) {
-        return info.fileItem.key === keyParts[i];
-      });
+      newSelectedDir = selectedDirInfo.items.find(info => info.fileItem.key === keyParts[i]);
       if (newSelectedDir) {
         selectedDirInfo = newSelectedDir;
       }
@@ -747,12 +658,12 @@ var FileItemsController = /*#__PURE__*/function () {
     return selectedDirInfo;
   };
   _proto._getActualDirectoryInfo = function _getActualDirectoryInfo(directoryInfo) {
-    var keys = this._getDirectoryPathKeyParts(directoryInfo);
+    const keys = this._getDirectoryPathKeyParts(directoryInfo);
     return this._findDirectoryByPathKeyParts(keys);
   };
   _proto._createDirInfoByName = function _createDirInfoByName(name, parentDirectoryInfo) {
-    var dirPathInfo = this._getPathInfo(parentDirectoryInfo);
-    var fileItem = new _file_system_item.default(dirPathInfo, name, true);
+    const dirPathInfo = this._getPathInfo(parentDirectoryInfo);
+    const fileItem = new _file_system_item.default(dirPathInfo, name, true);
     return this._createDirectoryInfo(fileItem, parentDirectoryInfo);
   };
   _proto._createDirectoryInfo = function _createDirectoryInfo(fileItem, parentDirectoryInfo) {
@@ -786,12 +697,12 @@ var FileItemsController = /*#__PURE__*/function () {
     if (fileItem.isDirectory) {
       return 'folder';
     }
-    var extension = fileItem.getFileExtension();
-    var icon = this._defaultIconMap[extension];
+    const extension = fileItem.getFileExtension();
+    const icon = this._defaultIconMap[extension];
     return icon || 'doc';
   };
   _proto._createDefaultIconMap = function _createDefaultIconMap() {
-    var result = {
+    const result = {
       '.txt': 'txtfile',
       '.rtf': 'rtffile',
       '.doc': 'docfile',
@@ -802,14 +713,14 @@ var FileItemsController = /*#__PURE__*/function () {
       '.pptx': 'pptxfile',
       '.pdf': 'pdffile'
     };
-    ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.bmp'].forEach(function (extension) {
+    ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.bmp'].forEach(extension => {
       result[extension] = 'image';
     });
     return result;
   };
   _proto._createRootDirectoryInfo = function _createRootDirectoryInfo(text) {
-    var rootDirectory = new _file_system_item.default(null, '', true);
-    var result = this._createDirectoryInfo(rootDirectory, null);
+    const rootDirectory = new _file_system_item.default(null, '', true);
+    const result = this._createDirectoryInfo(rootDirectory, null);
     result.displayName = text || DEFAULT_ROOT_FILE_SYSTEM_ITEM_NAME;
     return result;
   };
@@ -853,10 +764,9 @@ var FileItemsController = /*#__PURE__*/function () {
     this._tryCallAction('onPathPotentiallyChanged');
   };
   _proto._tryCallAction = function _tryCallAction(actionName) {
-    var args = Array.prototype.slice.call(arguments, 1);
+    const args = Array.prototype.slice.call(arguments, 1);
     if (this._isInitialized && this._options[actionName]) {
-      var _this$_options;
-      (_this$_options = this._options)[actionName].apply(_this$_options, _toConsumableArray(args));
+      this._options[actionName](...args);
     }
   };
   _proto._resetState = function _resetState() {
@@ -866,8 +776,8 @@ var FileItemsController = /*#__PURE__*/function () {
     this._loadedItems = {};
   };
   _proto._getPathInfo = function _getPathInfo(directoryInfo) {
-    var pathInfo = [];
-    for (var dirInfo = directoryInfo; dirInfo && !dirInfo.fileItem.isRoot(); dirInfo = dirInfo.parentDirectory) {
+    const pathInfo = [];
+    for (let dirInfo = directoryInfo; dirInfo && !dirInfo.fileItem.isRoot(); dirInfo = dirInfo.parentDirectory) {
       pathInfo.unshift({
         key: dirInfo.fileItem.key,
         name: dirInfo.fileItem.name
@@ -876,40 +786,36 @@ var FileItemsController = /*#__PURE__*/function () {
     return pathInfo;
   };
   _proto.on = function on(eventName, eventHandler) {
-    var finalEventName = "on".concat(eventName);
+    const finalEventName = "on".concat(eventName);
     this._options[finalEventName] = eventHandler;
   };
   _createClass(FileItemsController, [{
     key: "_editingEvents",
-    get: function get() {
+    get: function () {
       return this._options.editingEvents;
     }
   }]);
   return FileItemsController;
 }();
 exports.FileItemsController = FileItemsController;
-var FileSecurityController = /*#__PURE__*/function () {
+let FileSecurityController = /*#__PURE__*/function () {
   function FileSecurityController(options) {
-    var _this23 = this;
-    var defaultOptions = {
+    const defaultOptions = {
       allowedFileExtensions: [],
       maxFileSize: 0
     };
     this._options = (0, _extend.extend)(defaultOptions, options);
     this._extensionsMap = {};
-    this._allowedFileExtensions.forEach(function (extension) {
-      _this23._extensionsMap[extension.toUpperCase()] = true;
+    this._allowedFileExtensions.forEach(extension => {
+      this._extensionsMap[extension.toUpperCase()] = true;
     });
   }
   var _proto2 = FileSecurityController.prototype;
   _proto2.getAllowedItems = function getAllowedItems(items) {
-    var _this24 = this;
     if (this._allowedFileExtensions.length === 0) {
       return items;
     }
-    return items.filter(function (item) {
-      return item.isDirectory || _this24._isValidExtension(item.name);
-    });
+    return items.filter(item => item.isDirectory || this._isValidExtension(item.name));
   };
   _proto2.validateExtension = function validateExtension(name) {
     if (!this._isValidExtension(name)) {
@@ -925,17 +831,17 @@ var FileSecurityController = /*#__PURE__*/function () {
     if (this._allowedFileExtensions.length === 0) {
       return true;
     }
-    var extension = (0, _utils.getFileExtension)(name).toUpperCase();
+    const extension = (0, _utils.getFileExtension)(name).toUpperCase();
     return this._extensionsMap[extension];
   };
   _createClass(FileSecurityController, [{
     key: "_allowedFileExtensions",
-    get: function get() {
+    get: function () {
       return this._options.allowedFileExtensions;
     }
   }, {
     key: "_maxFileSize",
-    get: function get() {
+    get: function () {
       return this._options.maxFileSize;
     }
   }]);

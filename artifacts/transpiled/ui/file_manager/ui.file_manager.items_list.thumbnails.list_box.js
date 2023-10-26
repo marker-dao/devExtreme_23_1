@@ -16,15 +16,15 @@ var _selection = _interopRequireDefault(require("../selection/selection"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_THUMBNAILS_VIEW_PORT_CLASS = 'dx-filemanager-thumbnails-view-port';
-var FILE_MANAGER_THUMBNAILS_ITEM_LIST_CONTAINER_CLASS = 'dx-filemanager-thumbnails-container';
-var FILE_MANAGER_THUMBNAILS_ITEM_CLASS = 'dx-filemanager-thumbnails-item';
-var FILE_MANAGER_THUMBNAILS_ITEM_NAME_CLASS = 'dx-filemanager-thumbnails-item-name';
-var FILE_MANAGER_THUMBNAILS_ITEM_SPACER_CLASS = 'dx-filemanager-thumbnails-item-spacer';
-var FILE_MANAGER_THUMBNAILS_ITEM_DATA_KEY = 'dxFileManagerItemData';
-var FILE_MANAGER_THUMBNAILS_LIST_BOX_NAMESPACE = 'dxFileManagerThumbnailsListBox';
-var FILE_MANAGER_THUMBNAILS_LIST_BOX_HOLD_EVENT_NAME = (0, _index.addNamespace)(_hold.default.name, FILE_MANAGER_THUMBNAILS_LIST_BOX_NAMESPACE);
-var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
+const FILE_MANAGER_THUMBNAILS_VIEW_PORT_CLASS = 'dx-filemanager-thumbnails-view-port';
+const FILE_MANAGER_THUMBNAILS_ITEM_LIST_CONTAINER_CLASS = 'dx-filemanager-thumbnails-container';
+const FILE_MANAGER_THUMBNAILS_ITEM_CLASS = 'dx-filemanager-thumbnails-item';
+const FILE_MANAGER_THUMBNAILS_ITEM_NAME_CLASS = 'dx-filemanager-thumbnails-item-name';
+const FILE_MANAGER_THUMBNAILS_ITEM_SPACER_CLASS = 'dx-filemanager-thumbnails-item-spacer';
+const FILE_MANAGER_THUMBNAILS_ITEM_DATA_KEY = 'dxFileManagerItemData';
+const FILE_MANAGER_THUMBNAILS_LIST_BOX_NAMESPACE = 'dxFileManagerThumbnailsListBox';
+const FILE_MANAGER_THUMBNAILS_LIST_BOX_HOLD_EVENT_NAME = (0, _index.addNamespace)(_hold.default.name, FILE_MANAGER_THUMBNAILS_LIST_BOX_NAMESPACE);
+let FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
   _inheritsLoose(FileManagerThumbnailListBox, _CollectionWidget);
   function FileManagerThumbnailListBox() {
     return _CollectionWidget.apply(this, arguments) || this;
@@ -54,7 +54,7 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     this._getTooltipText = this.option('getTooltipText');
     this._templateManager.addDefaultTemplates({
       item: new _bindable_template.BindableTemplate(function ($container, data, itemModel) {
-        var $itemElement = this._getDefaultItemTemplate(itemModel, $container);
+        const $itemElement = this._getDefaultItemTemplate(itemModel, $container);
         $container.append($itemElement);
       }.bind(this), ['fileItem'], this.option('integrationOptions.watchMethod'))
     });
@@ -134,16 +134,16 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     this._layoutUtils.reset();
   };
   _proto._processArrowKeys = function _processArrowKeys(offset, horizontal, eventArgs) {
-    var item = this._getFocusedItem();
+    const item = this._getFocusedItem();
     if (item) {
       if (!horizontal) {
-        var layout = this._layoutUtils.getLayoutModel();
+        const layout = this._layoutUtils.getLayoutModel();
         if (!layout) {
           return;
         }
         offset *= layout.itemPerRowCount;
       }
-      var newItemIndex = this._getIndexByItem(item) + offset;
+      const newItemIndex = this._getIndexByItem(item) + offset;
       this._focusItemByIndex(newItemIndex, true, eventArgs);
     }
   };
@@ -151,20 +151,20 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     this._focusItemByIndex(index, scrollToItem, eventArgs);
   };
   _proto._processPageChange = function _processPageChange(pageUp, eventArgs) {
-    var item = this._getFocusedItem();
+    const item = this._getFocusedItem();
     if (!item) {
       return;
     }
-    var layout = this._layoutUtils.getLayoutModel();
+    const layout = this._layoutUtils.getLayoutModel();
     if (!layout) {
       return;
     }
-    var itemLayout = this._layoutUtils.createItemLayoutModel(this._getIndexByItem(item));
-    var rowOffset = pageUp ? layout.rowPerPageRate : -layout.rowPerPageRate;
-    var newRowRate = itemLayout.itemRowIndex - rowOffset;
-    var roundFunc = pageUp ? Math.ceil : Math.floor;
-    var newRowIndex = roundFunc(newRowRate);
-    var newItemIndex = newRowIndex * layout.itemPerRowCount + itemLayout.itemColumnIndex;
+    const itemLayout = this._layoutUtils.createItemLayoutModel(this._getIndexByItem(item));
+    const rowOffset = pageUp ? layout.rowPerPageRate : -layout.rowPerPageRate;
+    const newRowRate = itemLayout.itemRowIndex - rowOffset;
+    const roundFunc = pageUp ? Math.ceil : Math.floor;
+    const newRowIndex = roundFunc(newRowRate);
+    let newItemIndex = newRowIndex * layout.itemPerRowCount + itemLayout.itemColumnIndex;
     if (newItemIndex < 0) {
       newItemIndex = 0;
     } else if (newItemIndex >= this._getItemsLength()) {
@@ -173,21 +173,20 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     this._focusItemByIndex(newItemIndex, true, eventArgs);
   };
   _proto._processLongTap = function _processLongTap(e) {
-    var $targetItem = this._closestItemElement((0, _renderer.default)(e.target));
-    var itemIndex = this._getIndexByItemElement($targetItem);
+    const $targetItem = this._closestItemElement((0, _renderer.default)(e.target));
+    const itemIndex = this._getIndexByItemElement($targetItem);
     this._selection.changeItemSelection(itemIndex, {
       control: true
     });
   };
   _proto._attachEventHandlers = function _attachEventHandlers() {
-    var _this = this;
     if (this.option('selectionMode') === 'multiple') {
-      _events_engine.default.on(this._itemContainer(), FILE_MANAGER_THUMBNAILS_LIST_BOX_HOLD_EVENT_NAME, ".".concat(this._itemContentClass()), function (e) {
-        _this._processLongTap(e);
+      _events_engine.default.on(this._itemContainer(), FILE_MANAGER_THUMBNAILS_LIST_BOX_HOLD_EVENT_NAME, ".".concat(this._itemContentClass()), e => {
+        this._processLongTap(e);
         e.stopPropagation();
       });
     }
-    _events_engine.default.on(this._itemContainer(), 'mousedown selectstart', function (e) {
+    _events_engine.default.on(this._itemContainer(), 'mousedown selectstart', e => {
       if (e.shiftKey) {
         e.preventDefault();
       }
@@ -208,13 +207,13 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
   };
   _proto._getDefaultItemTemplate = function _getDefaultItemTemplate(fileItemInfo, $itemElement) {
     $itemElement.attr('title', this._getTooltipText(fileItemInfo));
-    var $itemThumbnail = this._itemThumbnailTemplate(fileItemInfo);
-    var $itemSpacer = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_THUMBNAILS_ITEM_SPACER_CLASS);
-    var $itemName = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_THUMBNAILS_ITEM_NAME_CLASS).text(fileItemInfo.fileItem.name);
+    const $itemThumbnail = this._itemThumbnailTemplate(fileItemInfo);
+    const $itemSpacer = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_THUMBNAILS_ITEM_SPACER_CLASS);
+    const $itemName = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_THUMBNAILS_ITEM_NAME_CLASS).text(fileItemInfo.fileItem.name);
     $itemElement.append($itemThumbnail, $itemSpacer, $itemName);
   };
   _proto._itemSelectHandler = function _itemSelectHandler(e) {
-    var options = {};
+    let options = {};
     if (this.option('selectionMode') === 'multiple') {
       if (!this._isPreserveSelectionMode) {
         this._isPreserveSelectionMode = (0, _index.isCommandKeyPressed)(e) || e.shiftKey;
@@ -224,48 +223,44 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
         shift: e.shiftKey
       };
     }
-    var index = this._getIndexByItemElement(e.currentTarget);
+    const index = this._getIndexByItemElement(e.currentTarget);
     this._selection.changeItemSelection(index, options);
   };
   _proto._initSelectionModule = function _initSelectionModule() {
-    var _this2 = this;
     _CollectionWidget.prototype._initSelectionModule.call(this);
-    var options = (0, _extend.extend)(this._selection.options, {
+    const options = (0, _extend.extend)(this._selection.options, {
       selectedKeys: this.option('selectedItemKeys'),
-      onSelectionChanged: function onSelectionChanged(args) {
-        _this2.option('selectedItems', _this2._getItemsByKeys(args.selectedItemKeys, args.selectedItems));
-        _this2._updateSelectedItems(args);
+      onSelectionChanged: args => {
+        this.option('selectedItems', this._getItemsByKeys(args.selectedItemKeys, args.selectedItems));
+        this._updateSelectedItems(args);
       }
     });
     this._selection = new _selection.default(options);
   };
   _proto._updateSelectedItems = function _updateSelectedItems(args) {
-    var _this3 = this;
-    var addedItemKeys = args.addedItemKeys;
-    var removedItemKeys = args.removedItemKeys;
+    const addedItemKeys = args.addedItemKeys;
+    const removedItemKeys = args.removedItemKeys;
     if (this._rendered && (addedItemKeys.length || removedItemKeys.length)) {
-      var selectionChangePromise = this._selectionChangePromise;
+      const selectionChangePromise = this._selectionChangePromise;
       if (!this._rendering) {
-        var addedSelection = [];
-        var normalizedIndex;
-        var removedSelection = [];
+        const addedSelection = [];
+        let normalizedIndex;
+        const removedSelection = [];
         this._editStrategy.beginCache();
-        for (var i = 0; i < removedItemKeys.length; i++) {
+        for (let i = 0; i < removedItemKeys.length; i++) {
           normalizedIndex = this._getIndexByKey(removedItemKeys[i]);
           removedSelection.push(normalizedIndex);
           this._removeSelection(normalizedIndex);
         }
-        for (var _i = 0; _i < addedItemKeys.length; _i++) {
-          normalizedIndex = this._getIndexByKey(addedItemKeys[_i]);
+        for (let i = 0; i < addedItemKeys.length; i++) {
+          normalizedIndex = this._getIndexByKey(addedItemKeys[i]);
           addedSelection.push(normalizedIndex);
           this._addSelection(normalizedIndex);
         }
         this._editStrategy.endCache();
         this._updateSelection(addedSelection, removedSelection);
       }
-      (0, _deferred.when)(selectionChangePromise).done(function () {
-        return _this3._fireSelectionChangeEvent(args);
-      });
+      (0, _deferred.when)(selectionChangePromise).done(() => this._fireSelectionChangeEvent(args));
     }
   };
   _proto._fireSelectionChangeEvent = function _fireSelectionChangeEvent(args) {
@@ -274,14 +269,14 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     })(args);
   };
   _proto._updateSelection = function _updateSelection(addedSelection, removedSelection) {
-    var selectedItemsCount = this.getSelectedItems().length;
+    const selectedItemsCount = this.getSelectedItems().length;
     if (selectedItemsCount === 0) {
       this._isPreserveSelectionMode = false;
     }
   };
   _proto._normalizeSelectedItems = function _normalizeSelectedItems() {
-    var newKeys = this._getKeysByItems(this.option('selectedItems'));
-    var oldKeys = this._selection.getSelectedItemKeys();
+    const newKeys = this._getKeysByItems(this.option('selectedItems'));
+    const oldKeys = this._selection.getSelectedItemKeys();
     if (!this._compareKeys(oldKeys, newKeys)) {
       this._selection.setSelection(newKeys);
     }
@@ -311,25 +306,22 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
   };
   _proto._focusItemByIndex = function _focusItemByIndex(index, scrollToItem, eventArgs) {
     if (index >= 0 && index < this._getItemsLength()) {
-      var item = this._getItemByIndex(index);
+      const item = this._getItemByIndex(index);
       this._focusItem(item, scrollToItem, eventArgs);
     }
   };
   _proto._syncFocusedItemKey = function _syncFocusedItemKey() {
-    var _this4 = this;
     if (!this._syncFocusedItemKeyDeferred) {
       this._syncFocusedItemKeyDeferred = new _deferred.Deferred();
     }
-    var deferred = this._syncFocusedItemKeyDeferred;
+    const deferred = this._syncFocusedItemKeyDeferred;
     if (this._dataSource && this._dataSource.isLoading()) {
       return deferred.promise();
     }
-    var focusedItemKey = this.option('focusedItemKey');
+    const focusedItemKey = this.option('focusedItemKey');
     if ((0, _type.isDefined)(focusedItemKey)) {
-      var items = this.option('items');
-      var focusedItem = items.find(function (item) {
-        return _this4.keyOf(item) === focusedItemKey;
-      });
+      const items = this.option('items');
+      const focusedItem = items.find(item => this.keyOf(item) === focusedItemKey);
       if (focusedItem) {
         this._focusItem(focusedItem, true);
         deferred.resolve();
@@ -344,9 +336,9 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     return deferred.promise();
   };
   _proto._onFocusedItemChanged = function _onFocusedItemChanged() {
-    var focusedItem = this._getFocusedItem();
-    var newFocusedItemKey = this.keyOf(focusedItem);
-    var oldFocusedItemKey = this.option('focusedItemKey');
+    const focusedItem = this._getFocusedItem();
+    const newFocusedItemKey = this.keyOf(focusedItem);
+    const oldFocusedItemKey = this.option('focusedItemKey');
     if (newFocusedItemKey !== oldFocusedItemKey) {
       this._lockFocusedItemProcessing = true;
       this.option('focusedItemKey', newFocusedItemKey);
@@ -355,7 +347,7 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     }
   };
   _proto._raiseFocusedItemChanged = function _raiseFocusedItemChanged(focusedItem) {
-    var args = {
+    const args = {
       item: focusedItem,
       itemElement: this.option('focusedElement')
     };
@@ -365,8 +357,8 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     if (this.isItemSelected(item) === select) {
       return;
     }
-    var itemElement = this.getItemElementByItem(item);
-    var index = this._getIndexByItemElement(itemElement);
+    const itemElement = this.getItemElementByItem(item);
+    const index = this._getIndexByItemElement(itemElement);
     this._selection.changeItemSelection(index, {
       control: this._isPreserveSelectionMode
     });
@@ -398,7 +390,6 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
     this._selection.deselectAll();
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var _this5 = this;
     switch (args.name) {
       case 'items':
         if (this._layoutUtils) {
@@ -411,9 +402,9 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
           break;
         }
         if ((0, _type.isDefined)(args.value)) {
-          this._syncFocusedItemKey().done(function () {
-            var focusedItem = _this5._getFocusedItem();
-            _this5._raiseFocusedItemChanged(focusedItem);
+          this._syncFocusedItemKey().done(() => {
+            const focusedItem = this._getFocusedItem();
+            this._raiseFocusedItemChanged(focusedItem);
           });
         } else {
           this.option('focusedElement', null);
@@ -430,7 +421,7 @@ var FileManagerThumbnailListBox = /*#__PURE__*/function (_CollectionWidget) {
   };
   return FileManagerThumbnailListBox;
 }(_uiCollection_widget.default);
-var ListBoxLayoutUtils = /*#__PURE__*/function () {
+let ListBoxLayoutUtils = /*#__PURE__*/function () {
   function ListBoxLayoutUtils(scrollView, $viewPort, $itemContainer, $item) {
     this._layoutModel = null;
     this._scrollView = scrollView;
@@ -455,17 +446,17 @@ var ListBoxLayoutUtils = /*#__PURE__*/function () {
     if (!this._$item) {
       return null;
     }
-    var itemWidth = (0, _size.getOuterWidth)(this._$item, true);
+    const itemWidth = (0, _size.getOuterWidth)(this._$item, true);
     if (itemWidth === 0) {
       return null;
     }
-    var itemHeight = (0, _size.getOuterHeight)(this._$item, true);
-    var viewPortWidth = (0, _size.getInnerWidth)(this._$itemContainer);
-    var viewPortHeight = (0, _size.getInnerHeight)(this._$viewPort);
-    var viewPortScrollTop = this._scrollView.scrollTop();
-    var viewPortScrollBottom = viewPortScrollTop + viewPortHeight;
-    var itemPerRowCount = Math.floor(viewPortWidth / itemWidth);
-    var rowPerPageRate = viewPortHeight / itemHeight;
+    const itemHeight = (0, _size.getOuterHeight)(this._$item, true);
+    const viewPortWidth = (0, _size.getInnerWidth)(this._$itemContainer);
+    const viewPortHeight = (0, _size.getInnerHeight)(this._$viewPort);
+    const viewPortScrollTop = this._scrollView.scrollTop();
+    const viewPortScrollBottom = viewPortScrollTop + viewPortHeight;
+    const itemPerRowCount = Math.floor(viewPortWidth / itemWidth);
+    const rowPerPageRate = viewPortHeight / itemHeight;
     return {
       itemWidth: itemWidth,
       itemHeight: itemHeight,
@@ -478,14 +469,14 @@ var ListBoxLayoutUtils = /*#__PURE__*/function () {
     };
   };
   _proto2.createItemLayoutModel = function createItemLayoutModel(index) {
-    var layout = this.getLayoutModel();
+    const layout = this.getLayoutModel();
     if (!layout) {
       return null;
     }
-    var itemRowIndex = Math.floor(index / layout.itemPerRowCount);
-    var itemColumnIndex = index % layout.itemPerRowCount;
-    var itemTop = itemRowIndex * layout.itemHeight;
-    var itemBottom = itemTop + layout.itemHeight;
+    const itemRowIndex = Math.floor(index / layout.itemPerRowCount);
+    const itemColumnIndex = index % layout.itemPerRowCount;
+    const itemTop = itemRowIndex * layout.itemHeight;
+    const itemBottom = itemTop + layout.itemHeight;
     return {
       itemRowIndex: itemRowIndex,
       itemColumnIndex: itemColumnIndex,
@@ -494,14 +485,14 @@ var ListBoxLayoutUtils = /*#__PURE__*/function () {
     };
   };
   _proto2.scrollToItem = function scrollToItem(index) {
-    var layout = this.getLayoutModel();
+    const layout = this.getLayoutModel();
     if (!layout) {
       return;
     }
-    var itemRowIndex = Math.floor(index / layout.itemPerRowCount);
-    var itemTop = itemRowIndex * layout.itemHeight;
-    var itemBottom = itemTop + layout.itemHeight;
-    var newScrollTop = layout.viewPortScrollTop;
+    const itemRowIndex = Math.floor(index / layout.itemPerRowCount);
+    const itemTop = itemRowIndex * layout.itemHeight;
+    const itemBottom = itemTop + layout.itemHeight;
+    let newScrollTop = layout.viewPortScrollTop;
     if (itemTop < layout.viewPortScrollTop) {
       newScrollTop = itemTop;
     } else if (itemBottom > layout.viewPortScrollBottom) {

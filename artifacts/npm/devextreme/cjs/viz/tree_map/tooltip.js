@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/tooltip.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,9 +13,9 @@ var _tree_map = _interopRequireDefault(require("./tree_map.base"));
 require("./api");
 var _tooltip = require("../core/tooltip");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var proto = _tree_map.default.prototype;
+const proto = _tree_map.default.prototype;
 (0, _helpers.expand)(proto, '_extendProxyType', function (proto) {
-  var that = this;
+  const that = this;
   proto.showTooltip = function (coords) {
     that._showTooltip(this._id, coords);
   };
@@ -32,18 +32,18 @@ var proto = _tree_map.default.prototype;
   }
 });
 function getCoords(coords, rect, renderer) {
-  var offset = renderer.getRootOffset();
+  const offset = renderer.getRootOffset();
   return coords || rect && [(rect[0] + rect[2]) / 2 + offset.left, (rect[1] + rect[3]) / 2 + offset.top] || [-1000, -1000];
 }
 proto._showTooltip = function (index, coords) {
-  var that = this;
-  var tooltip = that._tooltip;
-  var node = that._nodes[index];
+  const that = this;
+  const tooltip = that._tooltip;
+  const node = that._nodes[index];
   if (that._tooltipIndex === index) {
     that._moveTooltip(node, coords);
     return;
   }
-  var callback = function callback(result) {
+  const callback = result => {
     if (result === undefined) {
       return;
     }
@@ -52,7 +52,7 @@ proto._showTooltip = function (index, coords) {
     }
     that._tooltipIndex = result ? index : -1;
   };
-  var xy = getCoords(coords, node.rect, this._renderer);
+  const xy = getCoords(coords, node.rect, this._renderer);
   callback(tooltip.show({
     value: node.value,
     valueText: tooltip.formatValue(node.value),
@@ -66,7 +66,7 @@ proto._showTooltip = function (index, coords) {
   }, undefined, callback));
 };
 proto._moveTooltip = function (node, coords) {
-  var xy = getCoords(coords, node.rect, this._renderer);
+  const xy = getCoords(coords, node.rect, this._renderer);
   this._tooltip.move(xy[0], xy[1], 0);
 };
 proto.hideTooltip = function () {

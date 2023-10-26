@@ -3,16 +3,13 @@
 exports.default = void 0;
 var _class = _interopRequireDefault(require("../../core/class"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DefaultAdapter = _class.default.inherit({
+const DefaultAdapter = _class.default.inherit({
   ctor(editor, validator) {
-    var _this = this;
     this.editor = editor;
     this.validator = validator;
     this.validationRequestsCallbacks = [];
-    var handler = function handler(args) {
-      _this.validationRequestsCallbacks.forEach(function (item) {
-        return item(args);
-      });
+    const handler = args => {
+      this.validationRequestsCallbacks.forEach(item => item(args));
     };
     editor.validationRequest.add(handler);
     editor.on('disposing', function () {

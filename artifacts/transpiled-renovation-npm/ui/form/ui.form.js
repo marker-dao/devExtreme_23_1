@@ -33,18 +33,12 @@ require("../validation_group");
 var _constants = require("./constants");
 var _constants2 = require("../toolbar/constants");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); } // TODO: remove reference to 'ui.form.layout_manager.utils.js'
 // STYLE form
-var FOCUSED_STATE_CLASS = 'dx-state-focused';
-var ITEM_OPTIONS_FOR_VALIDATION_UPDATING = ['items', 'isRequired', 'validationRules', 'visible'];
-var Form = _ui.default.inherit({
-  _init: function _init() {
+const FOCUSED_STATE_CLASS = 'dx-state-focused';
+const ITEM_OPTIONS_FOR_VALIDATION_UPDATING = ['items', 'isRequired', 'validationRules', 'visible'];
+const Form = _ui.default.inherit({
+  _init: function () {
     this.callBase();
     this._dirtyFields = new Set();
     this._cachedColCountOptions = [];
@@ -52,7 +46,7 @@ var Form = _ui.default.inherit({
     this._groupsColCount = [];
     this._attachSyncSubscriptions();
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       formID: 'dx-' + new _guid.default(),
       formData: {},
@@ -83,16 +77,16 @@ var Form = _ui.default.inherit({
       isDirty: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterialBased)();
       },
       options: {
         labelLocation: 'top'
       }
     }, {
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterial)();
       },
       options: {
@@ -100,97 +94,99 @@ var Form = _ui.default.inherit({
       }
     }]);
   },
-  _setOptionsByReference: function _setOptionsByReference() {
+  _setOptionsByReference: function () {
     this.callBase();
     (0, _extend.extend)(this._optionsByReference, {
       formData: true,
       validationGroup: true
     });
   },
-  _getGroupColCount: function _getGroupColCount($element) {
+  _getGroupColCount: function ($element) {
     return parseInt($element.attr(_constants.GROUP_COL_COUNT_ATTR));
   },
-  _applyLabelsWidthByCol: function _applyLabelsWidthByCol($container, index) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var labelMarkOptions = arguments.length > 3 ? arguments[3] : undefined;
-    var fieldItemClass = options.inOneColumn ? _constants.FIELD_ITEM_CLASS : _constants.FORM_FIELD_ITEM_COL_CLASS + index;
-    var cssExcludeTabbedSelector = options.excludeTabbed ? ":not(.".concat(_constants.FIELD_ITEM_TAB_CLASS, ")") : '';
+  _applyLabelsWidthByCol: function ($container, index) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    let labelMarkOptions = arguments.length > 3 ? arguments[3] : undefined;
+    const fieldItemClass = options.inOneColumn ? _constants.FIELD_ITEM_CLASS : _constants.FORM_FIELD_ITEM_COL_CLASS + index;
+    const cssExcludeTabbedSelector = options.excludeTabbed ? ":not(.".concat(_constants.FIELD_ITEM_TAB_CLASS, ")") : '';
     (0, _label.setLabelWidthByMaxLabelWidth)($container, ".".concat(fieldItemClass).concat(cssExcludeTabbedSelector), labelMarkOptions);
     return;
   },
-  _applyLabelsWidth: function _applyLabelsWidth($container, excludeTabbed, inOneColumn, colCount, labelMarkOptions) {
+  _applyLabelsWidth: function ($container, excludeTabbed, inOneColumn, colCount, labelMarkOptions) {
     colCount = inOneColumn ? 1 : colCount || this._getGroupColCount($container);
-    var applyLabelsOptions = {
+    const applyLabelsOptions = {
       excludeTabbed: excludeTabbed,
       inOneColumn: inOneColumn
     };
-    var i;
+    let i;
     for (i = 0; i < colCount; i++) {
       this._applyLabelsWidthByCol($container, i, applyLabelsOptions, labelMarkOptions);
     }
   },
-  _getGroupElementsInColumn: function _getGroupElementsInColumn($container, columnIndex, colCount) {
-    var cssColCountSelector = (0, _type.isDefined)(colCount) ? '.' + _constants.GROUP_COL_COUNT_CLASS + colCount : '';
-    var groupSelector = '.' + _constants.FORM_FIELD_ITEM_COL_CLASS + columnIndex + ' > .' + _constants.FIELD_ITEM_CONTENT_CLASS + ' > .' + _constants.FORM_GROUP_CLASS + cssColCountSelector;
+  _getGroupElementsInColumn: function ($container, columnIndex, colCount) {
+    const cssColCountSelector = (0, _type.isDefined)(colCount) ? '.' + _constants.GROUP_COL_COUNT_CLASS + colCount : '';
+    const groupSelector = '.' + _constants.FORM_FIELD_ITEM_COL_CLASS + columnIndex + ' > .' + _constants.FIELD_ITEM_CONTENT_CLASS + ' > .' + _constants.FORM_GROUP_CLASS + cssColCountSelector;
     return $container.find(groupSelector);
   },
-  _applyLabelsWidthWithGroups: function _applyLabelsWidthWithGroups($container, colCount, excludeTabbed, labelMarkOptions) {
+  _applyLabelsWidthWithGroups: function ($container, colCount, excludeTabbed, labelMarkOptions) {
     if (this.option('alignRootItemLabels') === true) {
       // TODO: private option
-      var $rootSimpleItems = $container.find(".".concat(_constants.ROOT_SIMPLE_ITEM_CLASS));
-      for (var colIndex = 0; colIndex < colCount; colIndex++) {
+      const $rootSimpleItems = $container.find(".".concat(_constants.ROOT_SIMPLE_ITEM_CLASS));
+      for (let colIndex = 0; colIndex < colCount; colIndex++) {
         // TODO: root items are aligned with root items only
         // this code doesn't align root items with grouped items in the same column
         // (see T942517)
         this._applyLabelsWidthByCol($rootSimpleItems, colIndex, excludeTabbed, labelMarkOptions);
       }
     }
-    var alignItemLabelsInAllGroups = this.option('alignItemLabelsInAllGroups');
+    const alignItemLabelsInAllGroups = this.option('alignItemLabelsInAllGroups');
     if (alignItemLabelsInAllGroups) {
       this._applyLabelsWidthWithNestedGroups($container, colCount, excludeTabbed, labelMarkOptions);
     } else {
-      var $groups = this.$element().find('.' + _constants.FORM_GROUP_CLASS);
-      var i;
+      const $groups = this.$element().find('.' + _constants.FORM_GROUP_CLASS);
+      let i;
       for (i = 0; i < $groups.length; i++) {
         this._applyLabelsWidth($groups.eq(i), excludeTabbed, undefined, undefined, labelMarkOptions);
       }
     }
   },
-  _applyLabelsWidthWithNestedGroups: function _applyLabelsWidthWithNestedGroups($container, colCount, excludeTabbed, labelMarkOptions) {
-    var applyLabelsOptions = {
+  _applyLabelsWidthWithNestedGroups: function ($container, colCount, excludeTabbed, labelMarkOptions) {
+    const applyLabelsOptions = {
       excludeTabbed: excludeTabbed
     };
-    var colIndex;
-    var groupsColIndex;
-    var groupColIndex;
-    var $groupsByCol;
+    let colIndex;
+    let groupsColIndex;
+    let groupColIndex;
+    let $groupsByCol;
     for (colIndex = 0; colIndex < colCount; colIndex++) {
       $groupsByCol = this._getGroupElementsInColumn($container, colIndex);
       this._applyLabelsWidthByCol($groupsByCol, 0, applyLabelsOptions, labelMarkOptions);
       for (groupsColIndex = 0; groupsColIndex < this._groupsColCount.length; groupsColIndex++) {
         $groupsByCol = this._getGroupElementsInColumn($container, colIndex, this._groupsColCount[groupsColIndex]);
-        var groupColCount = this._getGroupColCount($groupsByCol);
+        const groupColCount = this._getGroupColCount($groupsByCol);
         for (groupColIndex = 1; groupColIndex < groupColCount; groupColIndex++) {
           this._applyLabelsWidthByCol($groupsByCol, groupColIndex, applyLabelsOptions, labelMarkOptions);
         }
       }
     }
   },
-  _labelLocation: function _labelLocation() {
+  _labelLocation: function () {
     return this.option('labelLocation');
   },
-  _alignLabelsInColumn: function _alignLabelsInColumn(_ref) {
-    var layoutManager = _ref.layoutManager,
-      inOneColumn = _ref.inOneColumn,
-      $container = _ref.$container,
-      excludeTabbed = _ref.excludeTabbed,
-      items = _ref.items;
+  _alignLabelsInColumn: function (_ref) {
+    let {
+      layoutManager,
+      inOneColumn,
+      $container,
+      excludeTabbed,
+      items
+    } = _ref;
     if (!(0, _window.hasWindow)() || this._labelLocation() === 'top') {
       // TODO: label location can be changed to 'left/right' for some labels
       // but this condition disables alignment for such items
       return;
     }
-    var labelMarkOptions = (0, _uiFormLayout_manager.convertToLabelMarkOptions)(layoutManager._getMarkOptions());
+    const labelMarkOptions = (0, _uiFormLayout_manager.convertToLabelMarkOptions)(layoutManager._getMarkOptions());
     if (inOneColumn) {
       this._applyLabelsWidth($container, excludeTabbed, true, undefined, labelMarkOptions);
     } else {
@@ -201,17 +197,17 @@ var Form = _ui.default.inherit({
       }
     }
   },
-  _prepareFormData: function _prepareFormData() {
+  _prepareFormData: function () {
     if (!(0, _type.isDefined)(this.option('formData'))) {
       this.option('formData', {});
     }
   },
-  _setStylingModeClass: function _setStylingModeClass() {
+  _setStylingModeClass: function () {
     if (this.option('stylingMode') === 'underlined') {
       this.$element().addClass(_constants.FORM_UNDERLINED_CLASS);
     }
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     _validation_engine.default.addGroup(this._getValidationGroup());
     this._clearCachedInstances();
     this._prepareFormData();
@@ -227,32 +223,31 @@ var Form = _ui.default.inherit({
     this._lastMarkupScreenFactor = this._targetScreenFactor || this._getCurrentScreenFactor();
     this._attachResizeObserverSubscription();
   },
-  _attachResizeObserverSubscription: function _attachResizeObserverSubscription() {
-    var _this = this;
+  _attachResizeObserverSubscription: function () {
     if ((0, _window.hasWindow)()) {
-      var formRootElement = this.$element().get(0);
+      const formRootElement = this.$element().get(0);
       _resize_observer.default.unobserve(formRootElement);
-      _resize_observer.default.observe(formRootElement, function () {
-        _this._resizeHandler();
+      _resize_observer.default.observe(formRootElement, () => {
+        this._resizeHandler();
       });
     }
   },
-  _resizeHandler: function _resizeHandler() {
+  _resizeHandler: function () {
     if (this._cachedLayoutManagers.length) {
-      (0, _iterator.each)(this._cachedLayoutManagers, function (_, layoutManager) {
+      (0, _iterator.each)(this._cachedLayoutManagers, (_, layoutManager) => {
         var _layoutManager$option;
         (_layoutManager$option = layoutManager.option('onLayoutChanged')) === null || _layoutManager$option === void 0 ? void 0 : _layoutManager$option(layoutManager.isSingleColumnMode());
       });
     }
   },
-  _getCurrentScreenFactor: function _getCurrentScreenFactor() {
+  _getCurrentScreenFactor: function () {
     return (0, _window.hasWindow)() ? (0, _window.getCurrentScreenFactor)(this.option('screenByWidth')) : 'lg';
   },
-  _clearCachedInstances: function _clearCachedInstances() {
+  _clearCachedInstances: function () {
     this._itemsRunTimeInfo.clear();
     this._cachedLayoutManagers = [];
   },
-  _alignLabels: function _alignLabels(layoutManager, inOneColumn) {
+  _alignLabels: function (layoutManager, inOneColumn) {
     this._alignLabelsInColumn({
       $container: this.$element(),
       layoutManager,
@@ -262,7 +257,7 @@ var Form = _ui.default.inherit({
     });
     (0, _visibility_change.triggerResizeEvent)(this.$element().find(".".concat(_constants2.TOOLBAR_CLASS)));
   },
-  _clean: function _clean() {
+  _clean: function () {
     this._clearValidationSummary();
     this.callBase();
     this._groupsColCount = [];
@@ -270,8 +265,8 @@ var Form = _ui.default.inherit({
     this._lastMarkupScreenFactor = undefined;
     _resize_observer.default.unobserve(this.$element().get(0));
   },
-  _renderScrollable: function _renderScrollable() {
-    var useNativeScrolling = this.option('useNativeScrolling');
+  _renderScrollable: function () {
+    const useNativeScrolling = this.option('useNativeScrolling');
     this._scrollable = new _ui2.default(this.$element(), {
       useNative: !!useNativeScrolling,
       useSimulatedScrollbar: !useNativeScrolling,
@@ -280,16 +275,16 @@ var Form = _ui.default.inherit({
       bounceEnabled: false
     });
   },
-  _getContent: function _getContent() {
+  _getContent: function () {
     return this.option('scrollingEnabled') ? (0, _renderer.default)(this._scrollable.content()) : this.$element();
   },
-  _clearValidationSummary: function _clearValidationSummary() {
+  _clearValidationSummary: function () {
     var _this$_$validationSum;
     (_this$_$validationSum = this._$validationSummary) === null || _this$_$validationSum === void 0 ? void 0 : _this$_$validationSum.remove();
     this._$validationSummary = undefined;
     this._validationSummary = undefined;
   },
-  _renderValidationSummary: function _renderValidationSummary() {
+  _renderValidationSummary: function () {
     this._clearValidationSummary();
     if (this.option('showValidationSummary')) {
       this._$validationSummary = (0, _renderer.default)('<div>').addClass(_constants.FORM_VALIDATION_SUMMARY).appendTo(this._getContent());
@@ -300,23 +295,23 @@ var Form = _ui.default.inherit({
   },
   _prepareItems(items, parentIsTabbedItem, currentPath, isTabs) {
     if (items) {
-      var result = [];
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        var path = (0, _uiForm4.concatPaths)(currentPath, (0, _uiForm4.createItemPathByIndex)(i, isTabs));
-        var itemRunTimeInfo = {
+      const result = [];
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i];
+        const path = (0, _uiForm4.concatPaths)(currentPath, (0, _uiForm4.createItemPathByIndex)(i, isTabs));
+        const itemRunTimeInfo = {
           item,
           itemIndex: i,
           path
         };
-        var guid = this._itemsRunTimeInfo.add(itemRunTimeInfo);
+        const guid = this._itemsRunTimeInfo.add(itemRunTimeInfo);
         if ((0, _type.isString)(item)) {
           item = {
             dataField: item
           };
         }
         if ((0, _type.isObject)(item)) {
-          var preparedItem = _extends({}, item);
+          const preparedItem = _extends({}, item);
           itemRunTimeInfo.preparedItem = preparedItem;
           preparedItem.guid = guid;
           this._tryPrepareGroupItem(preparedItem);
@@ -336,44 +331,43 @@ var Form = _ui.default.inherit({
       return result;
     }
   },
-  _tryPrepareGroupItem: function _tryPrepareGroupItem(item) {
-    var _this2 = this;
+  _tryPrepareGroupItem: function (item) {
     if (item.itemType === 'group') {
       item.alignItemLabels = (0, _common.ensureDefined)(item.alignItemLabels, true);
-      item._prepareGroupItemTemplate = function (itemTemplate) {
+      item._prepareGroupItemTemplate = itemTemplate => {
         if (item.template) {
-          item.groupContentTemplate = _this2._getTemplate(itemTemplate);
+          item.groupContentTemplate = this._getTemplate(itemTemplate);
         }
-        item.template = _this2._itemGroupTemplate.bind(_this2, item);
+        item.template = this._itemGroupTemplate.bind(this, item);
       };
       item._prepareGroupItemTemplate(item.template);
     }
   },
-  _tryPrepareTabbedItem: function _tryPrepareTabbedItem(item, path) {
+  _tryPrepareTabbedItem: function (item, path) {
     if (item.itemType === 'tabbed') {
       item.template = this._itemTabbedTemplate.bind(this, item);
       item.tabs = this._prepareItems(item.tabs, true, path, true);
     }
   },
-  _tryPrepareItemTemplate: function _tryPrepareItemTemplate(item) {
+  _tryPrepareItemTemplate: function (item) {
     if (item.template) {
       item.template = this._getTemplate(item.template);
     }
   },
-  _checkGrouping: function _checkGrouping(items) {
+  _checkGrouping: function (items) {
     if (items) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
         if (item.itemType === 'group') {
           return true;
         }
       }
     }
   },
-  _renderLayout: function _renderLayout() {
-    var that = this;
-    var items = that.option('items');
-    var $content = that._getContent();
+  _renderLayout: function () {
+    const that = this;
+    let items = that.option('items');
+    const $content = that._getContent();
 
     // TODO: Introduce this.preparedItems and use it for partial rerender???
     // Compare new preparedItems with old preparedItems to detect what should be rerendered?
@@ -384,39 +378,38 @@ var Form = _ui.default.inherit({
       alignItemLabels: that.option('alignItemLabels'),
       screenByWidth: this.option('screenByWidth'),
       colCountByScreen: this.option('colCountByScreen'),
-      onLayoutChanged: function onLayoutChanged(inOneColumn) {
+      onLayoutChanged: function (inOneColumn) {
         that._alignLabels.bind(that)(that._rootLayoutManager, inOneColumn);
       },
-      onContentReady: function onContentReady(e) {
+      onContentReady: function (e) {
         that._alignLabels(e.component, e.component.isSingleColumnMode());
       }
     }));
   },
-  _tryGetItemsForTemplate: function _tryGetItemsForTemplate(item) {
+  _tryGetItemsForTemplate: function (item) {
     return item.items || [];
   },
-  _itemTabbedTemplate: function _itemTabbedTemplate(item, e, $container) {
-    var _this3 = this,
-      _item$tabs;
-    var $tabPanel = (0, _renderer.default)('<div>').appendTo($container);
-    var tabPanelOptions = (0, _extend.extend)({}, item.tabPanelOptions, {
+  _itemTabbedTemplate: function (item, e, $container) {
+    var _item$tabs;
+    const $tabPanel = (0, _renderer.default)('<div>').appendTo($container);
+    const tabPanelOptions = (0, _extend.extend)({}, item.tabPanelOptions, {
       dataSource: item.tabs,
-      onItemRendered: function onItemRendered(args) {
+      onItemRendered: args => {
         var _item$tabPanelOptions, _item$tabPanelOptions2;
         (_item$tabPanelOptions = item.tabPanelOptions) === null || _item$tabPanelOptions === void 0 ? void 0 : (_item$tabPanelOptions2 = _item$tabPanelOptions.onItemRendered) === null || _item$tabPanelOptions2 === void 0 ? void 0 : _item$tabPanelOptions2.call(_item$tabPanelOptions, args);
         (0, _visibility_change.triggerShownEvent)(args.itemElement);
       },
-      itemTemplate: function itemTemplate(itemData, e, container) {
-        var $container = (0, _renderer.default)(container);
-        var alignItemLabels = (0, _common.ensureDefined)(itemData.alignItemLabels, true);
-        var layoutManager = _this3._renderLayoutManager($container, _this3._createLayoutManagerOptions(_this3._tryGetItemsForTemplate(itemData), {
+      itemTemplate: (itemData, e, container) => {
+        const $container = (0, _renderer.default)(container);
+        const alignItemLabels = (0, _common.ensureDefined)(itemData.alignItemLabels, true);
+        const layoutManager = this._renderLayoutManager($container, this._createLayoutManagerOptions(this._tryGetItemsForTemplate(itemData), {
           colCount: itemData.colCount,
           alignItemLabels: alignItemLabels,
-          screenByWidth: _this3.option('screenByWidth'),
+          screenByWidth: this.option('screenByWidth'),
           colCountByScreen: itemData.colCountByScreen,
           cssItemClass: itemData.cssItemClass,
-          onLayoutChanged: function onLayoutChanged(inOneColumn) {
-            _this3._alignLabelsInColumn({
+          onLayoutChanged: inOneColumn => {
+            this._alignLabelsInColumn({
               $container,
               layoutManager,
               items: itemData.items,
@@ -424,13 +417,13 @@ var Form = _ui.default.inherit({
             });
           }
         }));
-        if (_this3._itemsRunTimeInfo) {
-          _this3._itemsRunTimeInfo.extendRunTimeItemInfoByKey(itemData.guid, {
+        if (this._itemsRunTimeInfo) {
+          this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(itemData.guid, {
             layoutManager
           });
         }
         if (alignItemLabels) {
-          _this3._alignLabelsInColumn({
+          this._alignLabelsInColumn({
             $container,
             layoutManager,
             items: itemData.items,
@@ -439,31 +432,28 @@ var Form = _ui.default.inherit({
         }
       }
     });
-    var tryUpdateTabPanelInstance = function tryUpdateTabPanelInstance(items, instance) {
+    const tryUpdateTabPanelInstance = (items, instance) => {
       if (Array.isArray(items)) {
-        items.forEach(function (item) {
-          return _this3._itemsRunTimeInfo.extendRunTimeItemInfoByKey(item.guid, {
-            widgetInstance: instance
-          });
-        });
+        items.forEach(item => this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(item.guid, {
+          widgetInstance: instance
+        }));
       }
     };
-    var tabPanel = this._createComponent($tabPanel, _tab_panel.default, tabPanelOptions);
+    const tabPanel = this._createComponent($tabPanel, _tab_panel.default, tabPanelOptions);
     (0, _renderer.default)($container).parent().addClass(_constants.FIELD_ITEM_CONTENT_HAS_TABS_CLASS);
-    tabPanel.on('optionChanged', function (e) {
+    tabPanel.on('optionChanged', e => {
       if (e.fullName === 'dataSource') {
         tryUpdateTabPanelInstance(e.value, e.component);
       }
     });
     tryUpdateTabPanelInstance([{
       guid: item.guid
-    }].concat(_toConsumableArray((_item$tabs = item.tabs) !== null && _item$tabs !== void 0 ? _item$tabs : [])), tabPanel);
+    }, ...((_item$tabs = item.tabs) !== null && _item$tabs !== void 0 ? _item$tabs : [])], tabPanel);
   },
-  _itemGroupTemplate: function _itemGroupTemplate(item, options, $container) {
-    var _this4 = this;
-    var id = options.editorOptions.inputAttr.id;
-    var $group = (0, _renderer.default)('<div>').toggleClass(_constants.FORM_GROUP_WITH_CAPTION_CLASS, (0, _type.isDefined)(item.caption) && item.caption.length).addClass(_constants.FORM_GROUP_CLASS).appendTo($container);
-    var groupAria = {
+  _itemGroupTemplate: function (item, options, $container) {
+    const id = options.editorOptions.inputAttr.id;
+    const $group = (0, _renderer.default)('<div>').toggleClass(_constants.FORM_GROUP_WITH_CAPTION_CLASS, (0, _type.isDefined)(item.caption) && item.caption.length).addClass(_constants.FORM_GROUP_CLASS).appendTo($container);
+    const groupAria = {
       role: 'group',
       'labelledby': id
     };
@@ -472,13 +462,13 @@ var Form = _ui.default.inherit({
     if (item.caption) {
       (0, _renderer.default)('<span>').addClass(_constants.FORM_GROUP_CAPTION_CLASS).text(item.caption).attr('id', id).appendTo($group);
     }
-    var $groupContent = (0, _renderer.default)('<div>').addClass(_constants.FORM_GROUP_CONTENT_CLASS).appendTo($group);
+    const $groupContent = (0, _renderer.default)('<div>').addClass(_constants.FORM_GROUP_CONTENT_CLASS).appendTo($group);
     if (item.groupContentTemplate) {
-      item._renderGroupContentTemplate = function () {
+      item._renderGroupContentTemplate = () => {
         $groupContent.empty();
-        var data = {
-          formData: _this4.option('formData'),
-          component: _this4
+        const data = {
+          formData: this.option('formData'),
+          component: this
         };
         item.groupContentTemplate.render({
           model: data,
@@ -487,7 +477,7 @@ var Form = _ui.default.inherit({
       };
       item._renderGroupContentTemplate();
     } else {
-      var layoutManager = this._renderLayoutManager($groupContent, this._createLayoutManagerOptions(this._tryGetItemsForTemplate(item), {
+      const layoutManager = this._renderLayoutManager($groupContent, this._createLayoutManagerOptions(this._tryGetItemsForTemplate(item), {
         colCount: item.colCount,
         colCountByScreen: item.colCountByScreen,
         alignItemLabels: item.alignItemLabels,
@@ -496,7 +486,7 @@ var Form = _ui.default.inherit({
       this._itemsRunTimeInfo && this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(item.guid, {
         layoutManager
       });
-      var colCount = layoutManager._getColCount();
+      const colCount = layoutManager._getColCount();
       if (!this._groupsColCount.includes(colCount)) {
         this._groupsColCount.push(colCount);
       }
@@ -504,8 +494,7 @@ var Form = _ui.default.inherit({
       $group.attr(_constants.GROUP_COL_COUNT_ATTR, colCount);
     }
   },
-  _createLayoutManagerOptions: function _createLayoutManagerOptions(items, extendedLayoutManagerOptions) {
-    var _this5 = this;
+  _createLayoutManagerOptions: function (items, extendedLayoutManagerOptions) {
     return (0, _uiForm4.convertToLayoutManagerOptions)({
       form: this,
       formOptions: this.option(),
@@ -513,29 +502,30 @@ var Form = _ui.default.inherit({
       items,
       validationGroup: this._getValidationGroup(),
       extendedLayoutManagerOptions,
-      onFieldDataChanged: function onFieldDataChanged(args) {
-        if (!_this5._isDataUpdating) {
-          _this5._triggerOnFieldDataChanged(args);
+      onFieldDataChanged: args => {
+        if (!this._isDataUpdating) {
+          this._triggerOnFieldDataChanged(args);
         }
       },
-      onContentReady: function onContentReady(args) {
-        _this5._itemsRunTimeInfo.addItemsOrExtendFrom(args.component._itemsRunTimeInfo);
+      onContentReady: args => {
+        this._itemsRunTimeInfo.addItemsOrExtendFrom(args.component._itemsRunTimeInfo);
         extendedLayoutManagerOptions.onContentReady && extendedLayoutManagerOptions.onContentReady(args);
       },
-      onDisposing: function onDisposing(_ref2) {
-        var component = _ref2.component;
-        var nestedItemsRunTimeInfo = component.getItemsRunTimeInfo();
-        _this5._itemsRunTimeInfo.removeItemsByItems(nestedItemsRunTimeInfo);
+      onDisposing: _ref2 => {
+        let {
+          component
+        } = _ref2;
+        const nestedItemsRunTimeInfo = component.getItemsRunTimeInfo();
+        this._itemsRunTimeInfo.removeItemsByItems(nestedItemsRunTimeInfo);
       },
-      onFieldItemRendered: function onFieldItemRendered() {
-        var _this5$_validationSum;
-        (_this5$_validationSum = _this5._validationSummary) === null || _this5$_validationSum === void 0 ? void 0 : _this5$_validationSum.refreshValidationGroup();
+      onFieldItemRendered: () => {
+        var _this$_validationSumm;
+        (_this$_validationSumm = this._validationSummary) === null || _this$_validationSumm === void 0 ? void 0 : _this$_validationSumm.refreshValidationGroup();
       }
     });
   },
-  _renderLayoutManager: function _renderLayoutManager($parent, layoutManagerOptions) {
-    var _this6 = this;
-    var baseColCountByScreen = {
+  _renderLayoutManager: function ($parent, layoutManagerOptions) {
+    const baseColCountByScreen = {
       lg: layoutManagerOptions.colCount,
       md: layoutManagerOptions.colCount,
       sm: layoutManagerOptions.colCount,
@@ -544,33 +534,31 @@ var Form = _ui.default.inherit({
     this._cachedColCountOptions.push({
       colCountByScreen: (0, _extend.extend)(baseColCountByScreen, layoutManagerOptions.colCountByScreen)
     });
-    var $element = (0, _renderer.default)('<div>');
+    const $element = (0, _renderer.default)('<div>');
     $element.appendTo($parent);
-    var instance = this._createComponent($element, 'dxLayoutManager', layoutManagerOptions);
-    instance.on('autoColCountChanged', function () {
-      _this6._clearAutoColCountChangedTimeout();
-      _this6.autoColCountChangedTimeoutId = setTimeout(function () {
-        return !_this6._disposed && _this6._refresh();
-      }, 0);
+    const instance = this._createComponent($element, 'dxLayoutManager', layoutManagerOptions);
+    instance.on('autoColCountChanged', () => {
+      this._clearAutoColCountChangedTimeout();
+      this.autoColCountChangedTimeoutId = setTimeout(() => !this._disposed && this._refresh(), 0);
     });
     this._cachedLayoutManagers.push(instance);
     return instance;
   },
-  _getValidationGroup: function _getValidationGroup() {
+  _getValidationGroup: function () {
     return this.option('validationGroup') || this;
   },
-  _createComponent: function _createComponent($element, type, config) {
-    var that = this;
+  _createComponent: function ($element, type, config) {
+    const that = this;
     config = config || {};
     that._extendConfig(config, {
       readOnly: that.option('readOnly')
     });
     return that.callBase($element, type, config);
   },
-  _attachSyncSubscriptions: function _attachSyncSubscriptions() {
-    var that = this;
+  _attachSyncSubscriptions: function () {
+    const that = this;
     that.on('optionChanged', function (args) {
-      var optionFullName = args.fullName;
+      const optionFullName = args.fullName;
       if (optionFullName === 'formData') {
         if (!(0, _type.isDefined)(args.value)) {
           that._options.silent('formData', args.value = {});
@@ -591,8 +579,8 @@ var Form = _ui.default.inherit({
       }
     });
   },
-  _optionChanged: function _optionChanged(args) {
-    var splitFullName = args.fullName.split('.');
+  _optionChanged: function (args) {
+    const splitFullName = args.fullName.split('.');
 
     // search() is used because the string can be ['items', ' items ', ' items .', 'items[0]', 'items[ 10 ] .', ...]
     if (splitFullName.length > 1 && splitFullName[0].search('items') !== -1 && this._itemsOptionChangedHandler(args)) {
@@ -603,7 +591,7 @@ var Form = _ui.default.inherit({
     }
     this._defaultOptionChangedHandler(args);
   },
-  _defaultOptionChangedHandler: function _defaultOptionChangedHandler(args) {
+  _defaultOptionChangedHandler: function (args) {
     switch (args.name) {
       case 'formData':
         if (!this.option('items')) {
@@ -660,28 +648,28 @@ var Form = _ui.default.inherit({
         this.callBase(args);
     }
   },
-  _itemsOptionChangedHandler: function _itemsOptionChangedHandler(args) {
-    var nameParts = args.fullName.split('.');
-    var value = args.value;
-    var itemPath = this._getItemPath(nameParts);
-    var item = this.option(itemPath);
-    var optionNameWithoutPath = args.fullName.replace(itemPath + '.', '');
-    var simpleOptionName = optionNameWithoutPath.split('.')[0].replace(/\[\d+]/, '');
-    var itemAction = this._tryCreateItemOptionAction(simpleOptionName, item, item[simpleOptionName], args.previousValue, itemPath);
-    var result = this._tryExecuteItemOptionAction(itemAction) || this._tryChangeLayoutManagerItemOption(args.fullName, value);
+  _itemsOptionChangedHandler: function (args) {
+    const nameParts = args.fullName.split('.');
+    const value = args.value;
+    const itemPath = this._getItemPath(nameParts);
+    const item = this.option(itemPath);
+    const optionNameWithoutPath = args.fullName.replace(itemPath + '.', '');
+    const simpleOptionName = optionNameWithoutPath.split('.')[0].replace(/\[\d+]/, '');
+    const itemAction = this._tryCreateItemOptionAction(simpleOptionName, item, item[simpleOptionName], args.previousValue, itemPath);
+    let result = this._tryExecuteItemOptionAction(itemAction) || this._tryChangeLayoutManagerItemOption(args.fullName, value);
     if (!result && item) {
       this._changeItemOption(item, optionNameWithoutPath, value);
-      var items = this._generateItemsFromData(this.option('items'));
+      const items = this._generateItemsFromData(this.option('items'));
       this.option('items', items);
       result = true;
     }
     return result;
   },
-  _formDataOptionChangedHandler: function _formDataOptionChangedHandler(args) {
-    var nameParts = args.fullName.split('.');
-    var value = args.value;
-    var dataField = nameParts.slice(1).join('.');
-    var editor = this.getEditor(dataField);
+  _formDataOptionChangedHandler: function (args) {
+    const nameParts = args.fullName.split('.');
+    const value = args.value;
+    const dataField = nameParts.slice(1).join('.');
+    const editor = this.getEditor(dataField);
     if (editor) {
       editor.option('value', value);
     } else {
@@ -692,7 +680,7 @@ var Form = _ui.default.inherit({
     }
     return true;
   },
-  _tryCreateItemOptionAction: function _tryCreateItemOptionAction(optionName, item, value, previousValue, itemPath) {
+  _tryCreateItemOptionAction: function (optionName, item, value, previousValue, itemPath) {
     if (optionName === 'tabs') {
       this._itemsRunTimeInfo.removeItemsByPathStartWith("".concat(itemPath, ".tabs"));
       value = this._prepareItems(value, true, itemPath, true); // preprocess user value as in _tryPrepareTabbedItem
@@ -705,36 +693,35 @@ var Form = _ui.default.inherit({
       itemsRunTimeInfo: this._itemsRunTimeInfo
     });
   },
-  _tryExecuteItemOptionAction: function _tryExecuteItemOptionAction(action) {
+  _tryExecuteItemOptionAction: function (action) {
     return action && action.tryExecute();
   },
-  _updateValidationGroupAndSummaryIfNeeded: function _updateValidationGroupAndSummaryIfNeeded(fullName) {
-    var optionName = (0, _uiForm4.getOptionNameFromFullName)(fullName);
+  _updateValidationGroupAndSummaryIfNeeded: function (fullName) {
+    const optionName = (0, _uiForm4.getOptionNameFromFullName)(fullName);
     if (ITEM_OPTIONS_FOR_VALIDATION_UPDATING.indexOf(optionName) > -1) {
       _validation_engine.default.addGroup(this._getValidationGroup());
       if (this.option('showValidationSummary')) {
-        var _this$_validationSumm;
-        (_this$_validationSumm = this._validationSummary) === null || _this$_validationSumm === void 0 ? void 0 : _this$_validationSumm.refreshValidationGroup();
+        var _this$_validationSumm2;
+        (_this$_validationSumm2 = this._validationSummary) === null || _this$_validationSumm2 === void 0 ? void 0 : _this$_validationSumm2.refreshValidationGroup();
       }
     }
   },
   _setLayoutManagerItemOption(layoutManager, optionName, value, path) {
-    var _this7 = this;
     if (this._updateLockCount > 0) {
       !layoutManager._updateLockCount && layoutManager.beginUpdate();
-      var key = this._itemsRunTimeInfo.findKeyByPath(path);
-      this.postponedOperations.add(key, function () {
+      const key = this._itemsRunTimeInfo.findKeyByPath(path);
+      this.postponedOperations.add(key, () => {
         !layoutManager._disposed && layoutManager.endUpdate();
         return new _deferred.Deferred().resolve();
       });
     }
-    var contentReadyHandler = function contentReadyHandler(e) {
+    const contentReadyHandler = e => {
       e.component.off('contentReady', contentReadyHandler);
       if ((0, _uiForm4.isFullPathContainsTabs)(path)) {
-        var tabPath = (0, _uiForm4.tryGetTabPath)(path);
-        var tabLayoutManager = _this7._itemsRunTimeInfo.findGroupOrTabLayoutManagerByPath(tabPath);
+        const tabPath = (0, _uiForm4.tryGetTabPath)(path);
+        const tabLayoutManager = this._itemsRunTimeInfo.findGroupOrTabLayoutManagerByPath(tabPath);
         if (tabLayoutManager) {
-          _this7._alignLabelsInColumn({
+          this._alignLabelsInColumn({
             items: tabLayoutManager.option('items'),
             layoutManager: tabLayoutManager,
             $container: tabLayoutManager.$element(),
@@ -742,7 +729,7 @@ var Form = _ui.default.inherit({
           });
         }
       } else {
-        _this7._alignLabels(_this7._rootLayoutManager, _this7._rootLayoutManager.isSingleColumnMode());
+        this._alignLabels(this._rootLayoutManager, this._rootLayoutManager.isSingleColumnMode());
       }
     };
     layoutManager.on('contentReady', contentReadyHandler);
@@ -750,52 +737,51 @@ var Form = _ui.default.inherit({
     this._updateValidationGroupAndSummaryIfNeeded(optionName);
   },
   _tryChangeLayoutManagerItemOption(fullName, value) {
-    var nameParts = fullName.split('.');
-    var optionName = (0, _uiForm4.getOptionNameFromFullName)(fullName);
+    const nameParts = fullName.split('.');
+    const optionName = (0, _uiForm4.getOptionNameFromFullName)(fullName);
     if (optionName === 'items' && nameParts.length > 1) {
-      var itemPath = this._getItemPath(nameParts);
-      var layoutManager = this._itemsRunTimeInfo.findGroupOrTabLayoutManagerByPath(itemPath);
+      const itemPath = this._getItemPath(nameParts);
+      const layoutManager = this._itemsRunTimeInfo.findGroupOrTabLayoutManagerByPath(itemPath);
       if (layoutManager) {
         this._itemsRunTimeInfo.removeItemsByItems(layoutManager.getItemsRunTimeInfo());
-        var items = this._prepareItems(value, false, itemPath);
+        const items = this._prepareItems(value, false, itemPath);
         this._setLayoutManagerItemOption(layoutManager, optionName, items, itemPath);
         return true;
       }
     } else if (nameParts.length > 2) {
-      var endPartIndex = nameParts.length - 2;
-      var _itemPath = this._getItemPath(nameParts.slice(0, endPartIndex));
-      var _layoutManager = this._itemsRunTimeInfo.findGroupOrTabLayoutManagerByPath(_itemPath);
-      if (_layoutManager) {
-        var fullOptionName = (0, _uiForm4.getFullOptionName)(nameParts[endPartIndex], optionName);
+      const endPartIndex = nameParts.length - 2;
+      const itemPath = this._getItemPath(nameParts.slice(0, endPartIndex));
+      const layoutManager = this._itemsRunTimeInfo.findGroupOrTabLayoutManagerByPath(itemPath);
+      if (layoutManager) {
+        const fullOptionName = (0, _uiForm4.getFullOptionName)(nameParts[endPartIndex], optionName);
         if (optionName === 'editorType') {
           // T903774
-          if (_layoutManager.option(fullOptionName) !== value) {
+          if (layoutManager.option(fullOptionName) !== value) {
             return false;
           }
         }
         if (optionName === 'visible') {
           // T874843
-          var formItems = this.option((0, _uiForm4.getFullOptionName)(_itemPath, 'items'));
+          const formItems = this.option((0, _uiForm4.getFullOptionName)(itemPath, 'items'));
           if (formItems && formItems.length) {
-            var layoutManagerItems = _layoutManager.option('items');
-            formItems.forEach(function (item, index) {
-              var layoutItem = layoutManagerItems[index];
+            const layoutManagerItems = layoutManager.option('items');
+            formItems.forEach((item, index) => {
+              const layoutItem = layoutManagerItems[index];
               layoutItem.visibleIndex = item.visibleIndex;
             });
           }
         }
-        this._setLayoutManagerItemOption(_layoutManager, fullOptionName, value, _itemPath);
+        this._setLayoutManagerItemOption(layoutManager, fullOptionName, value, itemPath);
         return true;
       }
     }
     return false;
   },
   _tryChangeLayoutManagerItemOptions(itemPath, options) {
-    var _this8 = this;
-    var result;
+    let result;
     this.beginUpdate();
-    (0, _iterator.each)(options, function (optionName, optionValue) {
-      result = _this8._tryChangeLayoutManagerItemOption((0, _uiForm4.getFullOptionName)(itemPath, optionName), optionValue);
+    (0, _iterator.each)(options, (optionName, optionValue) => {
+      result = this._tryChangeLayoutManagerItemOption((0, _uiForm4.getFullOptionName)(itemPath, optionName), optionValue);
       if (!result) {
         return false;
       }
@@ -803,9 +789,9 @@ var Form = _ui.default.inherit({
     this.endUpdate();
     return result;
   },
-  _getItemPath: function _getItemPath(nameParts) {
-    var itemPath = nameParts[0];
-    var i;
+  _getItemPath: function (nameParts) {
+    let itemPath = nameParts[0];
+    let i;
     for (i = 1; i < nameParts.length; i++) {
       if (nameParts[i].search(/items\[\d+]|tabs\[\d+]/) !== -1) {
         itemPath += '.' + nameParts[i];
@@ -815,12 +801,12 @@ var Form = _ui.default.inherit({
     }
     return itemPath;
   },
-  _triggerOnFieldDataChanged: function _triggerOnFieldDataChanged(args) {
+  _triggerOnFieldDataChanged: function (args) {
     this._updateIsDirty(args.dataField);
     this._createActionByOption('onFieldDataChanged')(args);
   },
-  _triggerOnFieldDataChangedByDataSet: function _triggerOnFieldDataChangedByDataSet(data) {
-    var that = this;
+  _triggerOnFieldDataChangedByDataSet: function (data) {
+    const that = this;
     if (data && (0, _type.isObject)(data)) {
       (0, _iterator.each)(data, function (dataField, value) {
         that._triggerOnFieldDataChanged({
@@ -830,21 +816,21 @@ var Form = _ui.default.inherit({
       });
     }
   },
-  _updateFieldValue: function _updateFieldValue(dataField, value) {
+  _updateFieldValue: function (dataField, value) {
     if ((0, _type.isDefined)(this.option('formData'))) {
-      var editor = this.getEditor(dataField);
+      const editor = this.getEditor(dataField);
       this.option('formData.' + dataField, value);
       if (editor) {
-        var editorValue = editor.option('value');
+        const editorValue = editor.option('value');
         if (editorValue !== value) {
           editor.option('value', value);
         }
       }
     }
   },
-  _generateItemsFromData: function _generateItemsFromData(items) {
-    var formData = this.option('formData');
-    var result = [];
+  _generateItemsFromData: function (items) {
+    const formData = this.option('formData');
+    const result = [];
     if (!items && (0, _type.isDefined)(formData)) {
       (0, _iterator.each)(formData, function (dataField) {
         result.push({
@@ -865,20 +851,20 @@ var Form = _ui.default.inherit({
     }
     return result;
   },
-  _getItemByField: function _getItemByField(field, items) {
-    var that = this;
-    var fieldParts = (0, _type.isObject)(field) ? field : that._getFieldParts(field);
-    var fieldName = fieldParts.fieldName;
-    var fieldPath = fieldParts.fieldPath;
-    var resultItem;
+  _getItemByField: function (field, items) {
+    const that = this;
+    const fieldParts = (0, _type.isObject)(field) ? field : that._getFieldParts(field);
+    const fieldName = fieldParts.fieldName;
+    const fieldPath = fieldParts.fieldPath;
+    let resultItem;
     if (items.length) {
       (0, _iterator.each)(items, function (index, item) {
-        var itemType = item.itemType;
+        const itemType = item.itemType;
         if (fieldPath.length) {
-          var path = fieldPath.slice();
+          const path = fieldPath.slice();
           item = that._getItemByFieldPath(path, fieldName, item);
         } else if (itemType === 'group' && !(item.caption || item.name) || itemType === 'tabbed' && !item.name) {
-          var subItemsField = that._getSubItemField(itemType);
+          const subItemsField = that._getSubItemField(itemType);
           item.items = that._generateItemsFromData(item.items);
           item = that._getItemByField({
             fieldName: fieldName,
@@ -893,11 +879,11 @@ var Form = _ui.default.inherit({
     }
     return resultItem;
   },
-  _getFieldParts: function _getFieldParts(field) {
-    var fieldSeparator = '.';
-    var fieldName = field;
-    var separatorIndex = fieldName.indexOf(fieldSeparator);
-    var resultPath = [];
+  _getFieldParts: function (field) {
+    const fieldSeparator = '.';
+    let fieldName = field;
+    let separatorIndex = fieldName.indexOf(fieldSeparator);
+    const resultPath = [];
     while (separatorIndex !== -1) {
       resultPath.push(fieldName.substr(0, separatorIndex));
       fieldName = fieldName.substr(separatorIndex + 1);
@@ -908,18 +894,18 @@ var Form = _ui.default.inherit({
       fieldPath: resultPath.reverse()
     };
   },
-  _getItemByFieldPath: function _getItemByFieldPath(path, fieldName, item) {
-    var that = this;
-    var itemType = item.itemType;
-    var subItemsField = that._getSubItemField(itemType);
-    var isItemWithSubItems = itemType === 'group' || itemType === 'tabbed' || item.title;
-    var result;
+  _getItemByFieldPath: function (path, fieldName, item) {
+    const that = this;
+    const itemType = item.itemType;
+    const subItemsField = that._getSubItemField(itemType);
+    const isItemWithSubItems = itemType === 'group' || itemType === 'tabbed' || item.title;
+    let result;
     do {
       if (isItemWithSubItems) {
-        var name = item.name || item.caption || item.title;
-        var isGroupWithName = (0, _type.isDefined)(name);
-        var nameWithoutSpaces = (0, _uiForm4.getTextWithoutSpaces)(name);
-        var pathNode = void 0;
+        const name = item.name || item.caption || item.title;
+        const isGroupWithName = (0, _type.isDefined)(name);
+        const nameWithoutSpaces = (0, _uiForm4.getTextWithoutSpaces)(name);
+        let pathNode;
         item[subItemsField] = that._generateItemsFromData(item[subItemsField]);
         if (isGroupWithName) {
           pathNode = path.pop();
@@ -941,12 +927,12 @@ var Form = _ui.default.inherit({
     } while (path.length && !(0, _type.isDefined)(result));
     return result;
   },
-  _getSubItemField: function _getSubItemField(itemType) {
+  _getSubItemField: function (itemType) {
     return itemType === 'tabbed' ? 'tabs' : 'items';
   },
-  _searchItemInEverySubItem: function _searchItemInEverySubItem(path, fieldName, items) {
-    var that = this;
-    var result;
+  _searchItemInEverySubItem: function (path, fieldName, items) {
+    const that = this;
+    let result;
     (0, _iterator.each)(items, function (index, groupItem) {
       result = that._getItemByFieldPath(path.slice(), fieldName, groupItem);
       if (result) {
@@ -958,13 +944,13 @@ var Form = _ui.default.inherit({
     }
     return result;
   },
-  _changeItemOption: function _changeItemOption(item, option, value) {
+  _changeItemOption: function (item, option, value) {
     if ((0, _type.isObject)(item)) {
       item[option] = value;
     }
   },
-  _dimensionChanged: function _dimensionChanged() {
-    var currentScreenFactor = this._getCurrentScreenFactor();
+  _dimensionChanged: function () {
+    const currentScreenFactor = this._getCurrentScreenFactor();
     if (this._lastMarkupScreenFactor !== currentScreenFactor) {
       if (this._isColCountChanged(this._lastMarkupScreenFactor, currentScreenFactor)) {
         this._targetScreenFactor = currentScreenFactor;
@@ -974,8 +960,8 @@ var Form = _ui.default.inherit({
       this._lastMarkupScreenFactor = currentScreenFactor;
     }
   },
-  _isColCountChanged: function _isColCountChanged(oldScreenSize, newScreenSize) {
-    var isChanged = false;
+  _isColCountChanged: function (oldScreenSize, newScreenSize) {
+    let isChanged = false;
     (0, _iterator.each)(this._cachedColCountOptions, function (index, item) {
       if (item.colCountByScreen[oldScreenSize] !== item.colCountByScreen[newScreenSize]) {
         isChanged = true;
@@ -984,13 +970,13 @@ var Form = _ui.default.inherit({
     });
     return isChanged;
   },
-  _refresh: function _refresh() {
-    var editorSelector = '.' + FOCUSED_STATE_CLASS + ' input, .' + FOCUSED_STATE_CLASS + ' textarea';
+  _refresh: function () {
+    const editorSelector = '.' + FOCUSED_STATE_CLASS + ' input, .' + FOCUSED_STATE_CLASS + ' textarea';
     _events_engine.default.trigger(this.$element().find(editorSelector), 'change');
     this.callBase();
   },
-  _updateIsDirty: function _updateIsDirty(dataField) {
-    var editor = this.getEditor(dataField);
+  _updateIsDirty: function (dataField) {
+    const editor = this.getEditor(dataField);
     if (!editor) return;
     if (editor.option('isDirty')) {
       this._dirtyFields.add(dataField);
@@ -999,24 +985,24 @@ var Form = _ui.default.inherit({
     }
     this.option('isDirty', !!this._dirtyFields.size);
   },
-  updateRunTimeInfoForEachEditor: function updateRunTimeInfoForEachEditor(editorAction) {
+  updateRunTimeInfoForEachEditor: function (editorAction) {
     this._itemsRunTimeInfo.each(function (_, itemRunTimeInfo) {
-      var widgetInstance = itemRunTimeInfo.widgetInstance;
+      const widgetInstance = itemRunTimeInfo.widgetInstance;
       if ((0, _type.isDefined)(widgetInstance) && _editor.default.isEditor(widgetInstance)) {
         editorAction(widgetInstance);
       }
     });
   },
-  _clear: function _clear() {
-    this.updateRunTimeInfoForEachEditor(function (editor) {
+  _clear: function () {
+    this.updateRunTimeInfoForEachEditor(editor => {
       editor.clear();
       editor.option('isValid', true);
     });
     _validation_engine.default.resetGroup(this._getValidationGroup());
   },
-  _updateData: function _updateData(data, value, isComplexData) {
-    var that = this;
-    var _data = isComplexData ? value : data;
+  _updateData: function (data, value, isComplexData) {
+    const that = this;
+    const _data = isComplexData ? value : data;
     if ((0, _type.isObject)(_data)) {
       (0, _iterator.each)(_data, function (dataField, fieldValue) {
         that._updateData(isComplexData ? data + '.' + dataField : dataField, fieldValue, (0, _type.isObject)(fieldValue));
@@ -1025,7 +1011,7 @@ var Form = _ui.default.inherit({
       that._updateFieldValue(data, value);
     }
   },
-  registerKeyHandler: function registerKeyHandler(key, handler) {
+  registerKeyHandler: function (key, handler) {
     this.callBase(key, handler);
     this._itemsRunTimeInfo.each(function (_, itemRunTimeInfo) {
       if ((0, _type.isDefined)(itemRunTimeInfo.widgetInstance)) {
@@ -1033,32 +1019,32 @@ var Form = _ui.default.inherit({
       }
     });
   },
-  _focusTarget: function _focusTarget() {
+  _focusTarget: function () {
     return this.$element().find('.' + _constants.FIELD_ITEM_CONTENT_CLASS + ' [tabindex]').first();
   },
-  _visibilityChanged: function _visibilityChanged() {
+  _visibilityChanged: function () {
     this._alignLabels(this._rootLayoutManager, this._rootLayoutManager.isSingleColumnMode());
   },
-  _clearAutoColCountChangedTimeout: function _clearAutoColCountChangedTimeout() {
+  _clearAutoColCountChangedTimeout: function () {
     if (this.autoColCountChangedTimeoutId) {
       clearTimeout(this.autoColCountChangedTimeoutId);
       this.autoColCountChangedTimeoutId = undefined;
     }
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._clearAutoColCountChangedTimeout();
     _validation_engine.default.removeGroup(this._getValidationGroup());
     this.callBase();
   },
-  clear: function clear() {
+  clear: function () {
     this._clear();
   },
-  resetValues: function resetValues() {
+  resetValues: function () {
     this._clear();
   },
-  reset: function reset(editorsData) {
-    this.updateRunTimeInfoForEachEditor(function (editor) {
-      var editorName = editor.option('name');
+  reset: function (editorsData) {
+    this.updateRunTimeInfoForEachEditor(editor => {
+      const editorName = editor.option('name');
       if (editorsData && editorName in editorsData) {
         editor.reset(editorsData[editorName]);
       } else {
@@ -1067,18 +1053,18 @@ var Form = _ui.default.inherit({
     });
     this._renderValidationSummary();
   },
-  updateData: function updateData(data, value) {
+  updateData: function (data, value) {
     this._updateData(data, value);
   },
-  getEditor: function getEditor(dataField) {
+  getEditor: function (dataField) {
     return this._itemsRunTimeInfo.findWidgetInstanceByDataField(dataField) || this._itemsRunTimeInfo.findWidgetInstanceByName(dataField);
   },
-  getButton: function getButton(name) {
+  getButton: function (name) {
     return this._itemsRunTimeInfo.findWidgetInstanceByName(name);
   },
-  updateDimensions: function updateDimensions() {
-    var that = this;
-    var deferred = new _deferred.Deferred();
+  updateDimensions: function () {
+    const that = this;
+    const deferred = new _deferred.Deferred();
     if (that._scrollable) {
       that._scrollable.update().done(function () {
         deferred.resolveWith(that);
@@ -1088,11 +1074,10 @@ var Form = _ui.default.inherit({
     }
     return deferred.promise();
   },
-  itemOption: function itemOption(id, option, value) {
-    var _this9 = this;
-    var items = this._generateItemsFromData(this.option('items'));
-    var item = this._getItemByField(id, items);
-    var path = (0, _uiForm4.getItemPath)(items, item);
+  itemOption: function (id, option, value) {
+    const items = this._generateItemsFromData(this.option('items'));
+    const item = this._getItemByField(id, items);
+    const path = (0, _uiForm4.getItemPath)(items, item);
     if (!item) {
       return;
     }
@@ -1101,9 +1086,9 @@ var Form = _ui.default.inherit({
         return item;
       case 3:
         {
-          var itemAction = this._tryCreateItemOptionAction(option, item, value, item[option], path);
+          const itemAction = this._tryCreateItemOptionAction(option, item, value, item[option], path);
           this._changeItemOption(item, option, value);
-          var fullName = (0, _uiForm4.getFullOptionName)(path, option);
+          const fullName = (0, _uiForm4.getFullOptionName)(path, option);
           if (!this._tryExecuteItemOptionAction(itemAction) && !this._tryChangeLayoutManagerItemOption(fullName, value)) {
             this.option('items', items);
           }
@@ -1113,11 +1098,11 @@ var Form = _ui.default.inherit({
         {
           if ((0, _type.isObject)(option)) {
             if (!this._tryChangeLayoutManagerItemOptions(path, option)) {
-              var allowUpdateItems;
-              (0, _iterator.each)(option, function (optionName, optionValue) {
-                var itemAction = _this9._tryCreateItemOptionAction(optionName, item, optionValue, item[optionName], path);
-                _this9._changeItemOption(item, optionName, optionValue);
-                if (!allowUpdateItems && !_this9._tryExecuteItemOptionAction(itemAction)) {
+              let allowUpdateItems;
+              (0, _iterator.each)(option, (optionName, optionValue) => {
+                const itemAction = this._tryCreateItemOptionAction(optionName, item, optionValue, item[optionName], path);
+                this._changeItemOption(item, optionName, optionValue);
+                if (!allowUpdateItems && !this._tryExecuteItemOptionAction(itemAction)) {
                   allowUpdateItems = true;
                 }
               });
@@ -1128,13 +1113,13 @@ var Form = _ui.default.inherit({
         }
     }
   },
-  validate: function validate() {
+  validate: function () {
     return _validation_engine.default.validateGroup(this._getValidationGroup());
   },
-  getItemID: function getItemID(name) {
+  getItemID: function (name) {
     return 'dx_' + this.option('formID') + '_' + (name || new _guid.default());
   },
-  getTargetScreenFactor: function getTargetScreenFactor() {
+  getTargetScreenFactor: function () {
     return this._targetScreenFactor;
   }
 });

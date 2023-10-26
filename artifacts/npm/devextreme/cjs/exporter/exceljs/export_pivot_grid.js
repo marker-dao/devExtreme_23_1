@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/exceljs/export_pivot_grid.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,8 +15,8 @@ var _position = require("../../core/utils/position");
 var _inflector = require("../../core/utils/inflector");
 var _export_merged_ranges_manager = require("./export_merged_ranges_manager");
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var FIELD_HEADERS_SEPARATOR = ', ';
-var PivotGridHelpers = /*#__PURE__*/function () {
+const FIELD_HEADERS_SEPARATOR = ', ';
+let PivotGridHelpers = /*#__PURE__*/function () {
   function PivotGridHelpers(component, dataProvider, worksheet, options) {
     this.component = component;
     this.dataProvider = dataProvider;
@@ -43,9 +43,10 @@ var PivotGridHelpers = /*#__PURE__*/function () {
     return this.topLeftCell.column;
   };
   _proto._getWorksheetFrozenState = function _getWorksheetFrozenState(cellRange) {
-    var _this$dataProvider$ge = this.dataProvider.getFrozenArea(),
-      x = _this$dataProvider$ge.x,
-      y = _this$dataProvider$ge.y;
+    const {
+      x,
+      y
+    } = this.dataProvider.getFrozenArea();
     return {
       state: 'frozen',
       xSplit: cellRange.from.column + x - 1,
@@ -82,7 +83,7 @@ var PivotGridHelpers = /*#__PURE__*/function () {
   };
   _proto._getFieldHeaderStyles = function _getFieldHeaderStyles() {
     // eslint-disable-next-line spellcheck/spell-checker
-    var borderStyle = {
+    const borderStyle = {
       style: 'thin',
       color: {
         argb: 'FF7E7E7E'
@@ -107,17 +108,11 @@ var PivotGridHelpers = /*#__PURE__*/function () {
     if (!this["export".concat((0, _inflector.camelize)(area, true), "FieldHeaders")]) {
       return [];
     }
-    var fields = this._getAllFieldHeaders()[area === 'data' ? 'values' : "".concat(area, "s")].filter(function (fieldHeader) {
-      return fieldHeader.area === area;
-    });
+    const fields = this._getAllFieldHeaders()[area === 'data' ? 'values' : "".concat(area, "s")].filter(fieldHeader => fieldHeader.area === area);
     if ((0, _position.getDefaultAlignment)(this.rtlEnabled) === 'right') {
-      fields.sort(function (a, b) {
-        return b.areaIndex - a.areaIndex;
-      });
+      fields.sort((a, b) => b.areaIndex - a.areaIndex);
     }
-    return fields.map(function (field) {
-      return field.caption;
-    });
+    return fields.map(field => field.caption);
   };
   _proto._customizeCell = function _customizeCell(excelCell, pivotCell, shouldPreventCall) {
     if ((0, _type.isFunction)(this.customizeCell) && !shouldPreventCall) {
@@ -128,13 +123,13 @@ var PivotGridHelpers = /*#__PURE__*/function () {
     }
   };
   _proto._isRowFieldHeadersRow = function _isRowFieldHeadersRow(rowIndex) {
-    var isLastInfoRangeCell = this._isInfoCell(rowIndex, 0) && this.dataProvider.getCellData(rowIndex + 1, 0, true).cellSourceData.area === 'row';
+    const isLastInfoRangeCell = this._isInfoCell(rowIndex, 0) && this.dataProvider.getCellData(rowIndex + 1, 0, true).cellSourceData.area === 'row';
     return this._allowExportRowFieldHeaders() && isLastInfoRangeCell;
   };
   _proto._exportAllFieldHeaders = function _exportAllFieldHeaders(columns, setAlignment) {
-    var totalCellsCount = columns.length;
-    var rowAreaColCount = this.dataProvider.getRowAreaColCount();
-    var rowIndex = this.topLeftCell.row;
+    const totalCellsCount = columns.length;
+    const rowAreaColCount = this.dataProvider.getRowAreaColCount();
+    let rowIndex = this.topLeftCell.row;
     if (this._allowExportFilterFieldHeaders()) {
       this._exportFieldHeaders('filter', rowIndex, 0, totalCellsCount, setAlignment);
       rowIndex++;
@@ -153,17 +148,17 @@ var PivotGridHelpers = /*#__PURE__*/function () {
     }
   };
   _proto._exportFieldHeaders = function _exportFieldHeaders(area, rowIndex, startColumnIndex, totalColumnsCount, setAlignment) {
-    var fieldHeaders = this["".concat(area, "FieldHeaders")];
-    var row = this.worksheet.getRow(rowIndex);
-    var shouldMergeHeaderField = area !== 'row' || area === 'row' && this.rowHeaderLayout === 'tree';
+    const fieldHeaders = this["".concat(area, "FieldHeaders")];
+    const row = this.worksheet.getRow(rowIndex);
+    const shouldMergeHeaderField = area !== 'row' || area === 'row' && this.rowHeaderLayout === 'tree';
     if (shouldMergeHeaderField) {
       this.mergedRangesManager.addMergedRange(row.getCell(this.topLeftCell.column + startColumnIndex), 0, totalColumnsCount - 1);
     }
-    for (var cellIndex = 0; cellIndex < totalColumnsCount; cellIndex++) {
-      var excelCell = row.getCell(this.topLeftCell.column + startColumnIndex + cellIndex);
-      var values = fieldHeaders;
-      var cellData = [];
-      var value = values.length > totalColumnsCount || shouldMergeHeaderField ? values.join(FIELD_HEADERS_SEPARATOR) : values[cellIndex];
+    for (let cellIndex = 0; cellIndex < totalColumnsCount; cellIndex++) {
+      const excelCell = row.getCell(this.topLeftCell.column + startColumnIndex + cellIndex);
+      const values = fieldHeaders;
+      let cellData = [];
+      const value = values.length > totalColumnsCount || shouldMergeHeaderField ? values.join(FIELD_HEADERS_SEPARATOR) : values[cellIndex];
       cellData = _extends({}, this._getDefaultFieldHeaderCellsData(value), {
         headerType: area
       });
@@ -173,10 +168,11 @@ var PivotGridHelpers = /*#__PURE__*/function () {
     }
   };
   _proto._applyHeaderStyles = function _applyHeaderStyles(excelCell, setAlignment) {
-    var _this$_getFieldHeader = this._getFieldHeaderStyles(),
-      bold = _this$_getFieldHeader.bold,
-      alignment = _this$_getFieldHeader.alignment,
-      border = _this$_getFieldHeader.border;
+    const {
+      bold,
+      alignment,
+      border
+    } = this._getFieldHeaderStyles();
     this._trySetFont(excelCell, bold);
     setAlignment(excelCell, this.wrapText, alignment);
     excelCell.border = border;

@@ -15,34 +15,37 @@ var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var getSwatchContainer = _swatch_container.default.getSwatchContainer;
-var FAB_MAIN_CLASS = 'dx-fa-button-main';
-var FAB_MAIN_CLASS_WITH_LABEL = 'dx-fa-button-with-label';
-var FAB_MAIN_CLASS_WITHOUT_ICON = 'dx-fa-button-without-icon';
-var FAB_CLOSE_ICON_CLASS = 'dx-fa-button-icon-close';
-var INVISIBLE_STATE_CLASS = 'dx-state-invisible';
-var speedDialMainItem = null;
-var modifyActionOptions = function modifyActionOptions(action) {
-  var _action$option = action.option(),
-    animation = _action$option.animation,
-    actionComponent = _action$option.actionComponent,
-    actionVisible = _action$option.actionVisible,
-    actions = _action$option.actions,
-    activeStateEnabled = _action$option.activeStateEnabled,
-    direction = _action$option.direction,
-    elementAttr = _action$option.elementAttr,
-    hint = _action$option.hint,
-    hoverStateEnabled = _action$option.hoverStateEnabled,
-    icon = _action$option.icon,
-    id = _action$option.id,
-    index = _action$option.index,
-    label = _action$option.label,
-    onClick = _action$option.onClick,
-    onContentReady = _action$option.onContentReady,
-    parentPosition = _action$option.parentPosition,
-    position = _action$option.position,
-    visible = _action$option.visible,
-    zIndex = _action$option.zIndex;
+const {
+  getSwatchContainer
+} = _swatch_container.default;
+const FAB_MAIN_CLASS = 'dx-fa-button-main';
+const FAB_MAIN_CLASS_WITH_LABEL = 'dx-fa-button-with-label';
+const FAB_MAIN_CLASS_WITHOUT_ICON = 'dx-fa-button-without-icon';
+const FAB_CLOSE_ICON_CLASS = 'dx-fa-button-icon-close';
+const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
+let speedDialMainItem = null;
+const modifyActionOptions = action => {
+  const {
+    animation,
+    actionComponent,
+    actionVisible,
+    actions,
+    activeStateEnabled,
+    direction,
+    elementAttr,
+    hint,
+    hoverStateEnabled,
+    icon,
+    id,
+    index,
+    label,
+    onClick,
+    onContentReady,
+    parentPosition,
+    position,
+    visible,
+    zIndex
+  } = action.option();
   return (0, _extend.extend)({}, {
     animation,
     actionComponent,
@@ -69,14 +72,14 @@ var modifyActionOptions = function modifyActionOptions(action) {
     onDisposing: null
   });
 };
-var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
+let SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
   _inheritsLoose(SpeedDialMainItem, _SpeedDialItem);
   function SpeedDialMainItem() {
     return _SpeedDialItem.apply(this, arguments) || this;
   }
   var _proto = SpeedDialMainItem.prototype;
   _proto._getDefaultOptions = function _getDefaultOptions() {
-    var defaultOptions = {
+    const defaultOptions = {
       icon: 'add',
       closeIcon: 'close',
       position: {
@@ -107,7 +110,25 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _SpeedDialItem.prototype._defaultOptionsRules.call(this).concat([{
       device() {
-        return (0, _themes.isMaterialBased)() && !(0, _themes.isCompact)();
+        return (0, _themes.isFluent)() && !(0, _themes.isCompact)();
+      },
+      options: {
+        indent: 60,
+        childIndent: 60,
+        childOffset: 0
+      }
+    }, {
+      device() {
+        return (0, _themes.isFluent)() && (0, _themes.isCompact)();
+      },
+      options: {
+        indent: 48,
+        childIndent: 48,
+        childOffset: 0
+      }
+    }, {
+      device() {
+        return (0, _themes.isMaterial)() && !(0, _themes.isCompact)();
       },
       options: {
         indent: 72,
@@ -116,7 +137,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
       }
     }, {
       device() {
-        return (0, _themes.isMaterialBased)() && (0, _themes.isCompact)();
+        return (0, _themes.isMaterial)() && (0, _themes.isCompact)();
       },
       options: {
         indent: 58,
@@ -149,14 +170,12 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
     this._setClickAction();
   };
   _proto._getVisibleActions = function _getVisibleActions(actions) {
-    var currentActions = actions || this.option('actions');
-    return currentActions.filter(function (action) {
-      return action.option('visible');
-    });
+    const currentActions = actions || this.option('actions');
+    return currentActions.filter(action => action.option('visible'));
   };
   _proto._getCurrentOptions = function _getCurrentOptions(actions) {
-    var visibleActions = speedDialMainItem._getVisibleActions(actions);
-    var defaultOptions = this._getDefaultOptions();
+    const visibleActions = speedDialMainItem._getVisibleActions(actions);
+    const defaultOptions = this._getDefaultOptions();
     delete defaultOptions.elementAttr;
     delete defaultOptions.closeOnOutsideClick;
     return visibleActions.length === 1 ? (0, _extend.extend)(modifyActionOptions(visibleActions[0]), {
@@ -166,14 +185,10 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
     });
   };
   _proto._clickHandler = function _clickHandler() {
-    var actions = this._actionItems.filter(function (action) {
-      return action.option('actionVisible');
-    }).sort(function (action, nextAction) {
-      return action.option('index') - nextAction.option('index');
-    });
+    const actions = this._actionItems.filter(action => action.option('actionVisible')).sort((action, nextAction) => action.option('index') - nextAction.option('index'));
     if (actions.length === 1) return;
-    var lastActionIndex = actions.length - 1;
-    for (var i = 0; i < actions.length; i++) {
+    const lastActionIndex = actions.length - 1;
+    for (let i = 0; i < actions.length; i++) {
       actions[i].option('animation', this._getActionAnimation(actions[i], i, lastActionIndex));
       actions[i].option('position', this._getActionPosition(actions, i));
       actions[i]._$wrapper.css('position', this._$wrapper.css('position'));
@@ -188,15 +203,14 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
   };
   _proto._updateZIndexStackPosition = function _updateZIndexStackPosition() {
     _SpeedDialItem.prototype._updateZIndexStackPosition.call(this);
-    var overlayStack = this._overlayStack();
+    const overlayStack = this._overlayStack();
     overlayStack.push(this);
   };
   _proto._renderActions = function _renderActions() {
-    var _this = this;
-    var actions = this.option('actions');
-    var minActionButtonCount = 1;
+    const actions = this.option('actions');
+    const minActionButtonCount = 1;
     if (this._actionItems && this._actionItems.length) {
-      this._actionItems.forEach(function (actionItem) {
+      this._actionItems.forEach(actionItem => {
         actionItem.dispose();
         actionItem.$element().remove();
       });
@@ -204,12 +218,12 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
     }
     this._actionItems = [];
     if (actions.length === minActionButtonCount) return;
-    for (var i = 0; i < actions.length; i++) {
-      var action = actions[i];
-      var $actionElement = (0, _renderer.default)('<div>').appendTo(getSwatchContainer(action.$element()));
+    for (let i = 0; i < actions.length; i++) {
+      const action = actions[i];
+      const $actionElement = (0, _renderer.default)('<div>').appendTo(getSwatchContainer(action.$element()));
       _events_engine.default.off($actionElement, 'click');
-      _events_engine.default.on($actionElement, 'click', function () {
-        _this._clickHandler();
+      _events_engine.default.on($actionElement, 'click', () => {
+        this._clickHandler();
       });
       action._options.silent('actionComponent', action);
       action._options.silent('parentPosition', this._getPosition());
@@ -220,33 +234,33 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
     }
   };
   _proto._getActionAnimation = function _getActionAnimation(action, index, lastActionIndex) {
-    var actionAnimationDelay = 30;
+    const actionAnimationDelay = 30;
     action._options.silent('animation.show.delay', actionAnimationDelay * index);
     action._options.silent('animation.hide.delay', actionAnimationDelay * (lastActionIndex - index));
     return action._options.silent('animation');
   };
   _proto._getDirectionIndex = function _getDirectionIndex(actions, direction) {
-    var directionIndex = 1;
+    const directionIndex = 1;
     if (direction === 'auto') {
-      var contentHeight = (0, _size.getHeight)(this.$content());
-      var actionsHeight = this.initialOption('indent') + this.initialOption('childIndent') * actions.length - contentHeight;
-      var offsetTop = this.$content().offset().top;
+      const contentHeight = (0, _size.getHeight)(this.$content());
+      const actionsHeight = this.initialOption('indent') + this.initialOption('childIndent') * actions.length - contentHeight;
+      const offsetTop = this.$content().offset().top;
       if (actionsHeight < offsetTop) {
         return -directionIndex;
       } else {
-        var offsetBottom = (0, _size.getHeight)(this._positionController._$wrapperCoveredElement) - contentHeight - offsetTop;
+        const offsetBottom = (0, _size.getHeight)(this._positionController._$wrapperCoveredElement) - contentHeight - offsetTop;
         return offsetTop >= offsetBottom ? -directionIndex : directionIndex;
       }
     }
     return direction !== 'down' ? -directionIndex : directionIndex;
   };
   _proto._getActionPosition = function _getActionPosition(actions, index) {
-    var action = actions[index];
-    var actionOffsetXValue = this.initialOption('childOffset');
-    var actionOffsetX = action._options.silent('label') && !this._$label ? this._isPositionLeft(this._getPosition()) ? actionOffsetXValue : -actionOffsetXValue : 0;
-    var actionOffsetYValue = this.initialOption('indent') + this.initialOption('childIndent') * index;
-    var actionOffsetY = this._getDirectionIndex(actions, this.option('direction')) * actionOffsetYValue;
-    var actionPositionAtMy = action._options.silent('label') ? this._isPositionLeft(this._getPosition()) ? 'left' : 'right' : 'center';
+    const action = actions[index];
+    const actionOffsetXValue = this.initialOption('childOffset');
+    const actionOffsetX = action._options.silent('label') && !this._$label ? this._isPositionLeft(this._getPosition()) ? actionOffsetXValue : -actionOffsetXValue : 0;
+    const actionOffsetYValue = this.initialOption('indent') + this.initialOption('childIndent') * index;
+    const actionOffsetY = this._getDirectionIndex(actions, this.option('direction')) * actionOffsetYValue;
+    const actionPositionAtMy = action._options.silent('label') ? this._isPositionLeft(this._getPosition()) ? 'left' : 'right' : 'center';
     return {
       of: this.$content(),
       at: actionPositionAtMy,
@@ -259,7 +273,7 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
   };
   _proto._outsideClickHandler = function _outsideClickHandler(e) {
     if (this._isShadingShown) {
-      var isShadingClick = (0, _renderer.default)(e.target)[0] === this._$wrapper[0];
+      const isShadingClick = (0, _renderer.default)(e.target)[0] === this._$wrapper[0];
       if (isShadingClick) {
         e.preventDefault();
         this._clickHandler();
@@ -315,15 +329,15 @@ var SpeedDialMainItem = /*#__PURE__*/function (_SpeedDialItem) {
 function initAction(newAction) {
   // TODO: workaround for Angular/React/Vue
   newAction._options.silent('onInitializing', null);
-  var isActionExist = false;
+  let isActionExist = false;
   if (!speedDialMainItem) {
-    var $fabMainElement = (0, _renderer.default)('<div>').appendTo(getSwatchContainer(newAction.$element()));
+    const $fabMainElement = (0, _renderer.default)('<div>').appendTo(getSwatchContainer(newAction.$element()));
     speedDialMainItem = newAction._createComponent($fabMainElement, SpeedDialMainItem, (0, _extend.extend)({}, modifyActionOptions(newAction), {
       actions: [newAction]
     }));
   } else {
-    var savedActions = speedDialMainItem.option('actions');
-    savedActions.forEach(function (action) {
+    const savedActions = speedDialMainItem.option('actions');
+    savedActions.forEach(action => {
       if (action._options.silent('id') === newAction._options.silent('id')) {
         isActionExist = true;
         return newAction;
@@ -354,9 +368,9 @@ function initAction(newAction) {
 }
 function disposeAction(actionId) {
   if (!speedDialMainItem) return;
-  var savedActions = speedDialMainItem.option('actions');
-  var savedActionsCount = savedActions.length;
-  savedActions = savedActions.filter(function (action) {
+  let savedActions = speedDialMainItem.option('actions');
+  const savedActionsCount = savedActions.length;
+  savedActions = savedActions.filter(action => {
     return action._options.silent('id') !== actionId;
   });
   if (savedActionsCount === savedActions.length) return;
@@ -376,9 +390,9 @@ function disposeAction(actionId) {
 }
 function repaint() {
   if (!speedDialMainItem) return;
-  var visibleActions = speedDialMainItem._getVisibleActions();
-  var icon = visibleActions.length === 1 ? visibleActions[0].option('icon') : speedDialMainItem._getDefaultOptions().icon;
-  var label = visibleActions.length === 1 ? visibleActions[0].option('label') : speedDialMainItem._getDefaultOptions().label;
+  const visibleActions = speedDialMainItem._getVisibleActions();
+  const icon = visibleActions.length === 1 ? visibleActions[0].option('icon') : speedDialMainItem._getDefaultOptions().icon;
+  const label = visibleActions.length === 1 ? visibleActions[0].option('label') : speedDialMainItem._getDefaultOptions().label;
   speedDialMainItem.option({
     actions: speedDialMainItem.option('actions'),
     icon,

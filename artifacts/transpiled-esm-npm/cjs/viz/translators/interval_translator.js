@@ -5,9 +5,9 @@ var _type = require("../../core/utils/type");
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 var _math = require("../../core/utils/math");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var floor = Math.floor;
+const floor = Math.floor;
 var _default = {
-  _intervalize: function _intervalize(value, interval) {
+  _intervalize: function (value, interval) {
     if (!(0, _type.isDefined)(value)) {
       return undefined;
     }
@@ -23,9 +23,9 @@ var _default = {
     }
     return value;
   },
-  translate: function translate(bp, direction, interval) {
-    var that = this;
-    var specialValue = that.translateSpecialCase(bp);
+  translate: function (bp, direction, interval) {
+    const that = this;
+    const specialValue = that.translateSpecialCase(bp);
     if ((0, _type.isDefined)(specialValue)) {
       return Math.round(specialValue);
     }
@@ -37,26 +37,26 @@ var _default = {
     }
     return that.to(bp, direction, interval);
   },
-  getInterval: function getInterval() {
+  getInterval: function () {
     return Math.round(this._canvasOptions.ratioOfCanvasRange * (this._businessRange.interval || Math.abs(this._canvasOptions.rangeMax - this._canvasOptions.rangeMin)));
   },
-  zoom: function zoom() {},
-  getMinScale: function getMinScale() {},
-  getScale: function getScale() {},
-  _parse: function _parse(value) {
+  zoom: function () {},
+  getMinScale: function () {},
+  getScale: function () {},
+  _parse: function (value) {
     return this._businessRange.dataType === 'datetime' ? new Date(value) : Number(value);
   },
-  fromValue: function fromValue(value) {
+  fromValue: function (value) {
     return this._parse(value);
   },
-  toValue: function toValue(value) {
+  toValue: function (value) {
     return this._parse(value);
   },
-  isValid: function isValid(value, interval) {
-    var that = this;
-    var co = that._canvasOptions;
-    var rangeMin = co.rangeMin;
-    var rangeMax = co.rangeMax;
+  isValid: function (value, interval) {
+    const that = this;
+    const co = that._canvasOptions;
+    let rangeMin = co.rangeMin;
+    let rangeMax = co.rangeMax;
     interval = interval || that._options.interval;
     if (value === null || isNaN(value)) {
       return false;
@@ -71,13 +71,13 @@ var _default = {
     }
     return true;
   },
-  to: function to(bp, direction, interval) {
-    var that = this;
+  to: function (bp, direction, interval) {
+    const that = this;
     interval = interval || that._options.interval;
-    var v1 = that._intervalize(bp, interval);
-    var v2 = _date.default.addInterval(v1, interval);
-    var res = that._to(v1);
-    var p2 = that._to(v2);
+    const v1 = that._intervalize(bp, interval);
+    const v2 = _date.default.addInterval(v1, interval);
+    let res = that._to(v1);
+    const p2 = that._to(v2);
     if (!direction) {
       res = floor((res + p2) / 2);
     } else if (direction > 0) {
@@ -85,11 +85,11 @@ var _default = {
     }
     return res;
   },
-  _to: function _to(value) {
-    var co = this._canvasOptions;
-    var rMin = co.rangeMinVisible;
-    var rMax = co.rangeMaxVisible;
-    var offset = value - rMin;
+  _to: function (value) {
+    const co = this._canvasOptions;
+    const rMin = co.rangeMinVisible;
+    const rMax = co.rangeMaxVisible;
+    let offset = value - rMin;
     if (value < rMin) {
       offset = 0;
     } else if (value > rMax) {
@@ -97,14 +97,14 @@ var _default = {
     }
     return this._conversionValue(this._calculateProjection(offset * this._canvasOptions.ratioOfCanvasRange));
   },
-  from: function from(position, direction) {
-    var that = this;
-    var origInterval = that._options.interval;
-    var interval = origInterval;
-    var co = that._canvasOptions;
-    var rMin = co.rangeMinVisible;
-    var rMax = co.rangeMaxVisible;
-    var value;
+  from: function (position, direction) {
+    const that = this;
+    const origInterval = that._options.interval;
+    let interval = origInterval;
+    const co = that._canvasOptions;
+    const rMin = co.rangeMinVisible;
+    const rMax = co.rangeMaxVisible;
+    let value;
     if (that._businessRange.dataType === 'datetime') {
       interval = _date.default.dateToMilliseconds(origInterval);
     }
@@ -117,7 +117,7 @@ var _default = {
     }
     return value;
   },
-  _add: function _add() {
+  _add: function () {
     return NaN;
   },
   isValueProlonged: true

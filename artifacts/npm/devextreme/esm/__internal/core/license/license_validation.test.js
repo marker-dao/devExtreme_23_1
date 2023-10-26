@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/__internal/core/license/license_validation.test.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import errors from '../../../core/errors';
-import { parseLicenseKey, setLicenseCheckSkipCondition, verifyLicense } from './license_validation';
+import { parseLicenseKey, setLicenseCheckSkipCondition, validateLicense } from './license_validation';
 describe('license token', () => {
   it.each([{
     token: 'ewogICJmb3JtYXQiOiAxLAogICJjdXN0b21lcklkIjogImIxMTQwYjQ2LWZkZTEtNDFiZC1hMjgwLTRkYjlmOGU3ZDliZCIsCiAgIm1heFZlcnNpb25BbGxvd2VkIjogMjMxCn0=.DiDceRbil4IzXl5av7pNkKieyqHHhRf+CM477zDu4N9fyrhkQsjRourYvgVfkbSm+EQplkXhlMBc3s8Vm9n+VtPaMbeWXis92cdW/6HiT+Dm54xw5vZ5POGunKRrNYUzd9zTbYcz0bYA/dc/mHFeUdXA0UlKcx1uMaXmtJrkK74=',
@@ -109,48 +109,174 @@ describe('license check', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
-  test('W0019 error should be logged if license is empty', () => {
-    [['', '1.0'], [null, '1.0'], [undefined, '1.0']].forEach((_ref2, index) => {
-      var [token, version] = _ref2;
-      verifyLicense(token, version);
-      expect(errors.log).toHaveBeenCalledTimes(index + 1);
-      expect(errors.log).toHaveBeenCalledWith('W0019');
-      setLicenseCheckSkipCondition(false);
-    });
+  test.each([{
+    token: '',
+    version: '1.0.3'
+  }, {
+    token: null,
+    version: '1.0.4'
+  }, {
+    token: undefined,
+    version: '1.0.50'
+  }])('W0019 error should be logged if license is empty', _ref2 => {
+    var {
+      token,
+      version
+    } = _ref2;
+    validateLicense(token, version);
+    expect(errors.log).toHaveBeenCalledTimes(1);
+    expect(errors.log).toHaveBeenCalledWith('W0019');
   });
-  test('No messages should be logged if license is valid', () => {
-    [[TOKEN_23_1, '23.1'], [TOKEN_23_1, '12.3'], [TOKEN_23_2, '23.1'], [TOKEN_23_2, '23.2']].forEach(_ref3 => {
-      var [token, version] = _ref3;
-      verifyLicense(token, version);
-      expect(errors.log).not.toHaveBeenCalled();
-    });
+  test.each([{
+    token: '',
+    version: '1.0'
+  }, {
+    token: null,
+    version: '1.0.'
+  }, {
+    token: undefined,
+    version: '1.0.0'
+  }, {
+    token: TOKEN_23_1,
+    version: '23.1.0'
+  }, {
+    token: TOKEN_23_1,
+    version: '12.3.1'
+  }, {
+    token: TOKEN_23_2,
+    version: '23.1.2'
+  }, {
+    token: TOKEN_23_2,
+    version: '23.2.3-preview'
+  }, {
+    token: TOKEN_23_1,
+    version: '23.2.0'
+  }, {
+    token: TOKEN_23_2,
+    version: '42.4.3-alfa'
+  }, {
+    token: TOKEN_UNVERIFIED,
+    version: '1.2.0'
+  }, {
+    token: TOKEN_INVALID_JSON,
+    version: '1.2.1'
+  }, {
+    token: TOKEN_INVALID_BASE64,
+    version: '1.2.2'
+  }, {
+    token: TOKEN_MISSING_FIELD_1,
+    version: '1.2'
+  }, {
+    token: TOKEN_MISSING_FIELD_2,
+    version: '1.2.4-preview'
+  }, {
+    token: TOKEN_MISSING_FIELD_3,
+    version: '1.2.'
+  }, {
+    token: TOKEN_UNSUPPORTED_VERSION,
+    version: '1.2.abc'
+  }, {
+    token: 'Another',
+    version: '1.2.0'
+  }, {
+    token: 'str@nge',
+    version: undefined
+  }, {
+    token: 'in.put',
+    version: undefined
+  }, {
+    token: '3.2.1',
+    version: '1.2.1'
+  }, {
+    token: TOKEN_23_1,
+    version: '123'
+  }])('W0022 error should be logged if version is preview [%#]', _ref3 => {
+    var {
+      token,
+      version
+    } = _ref3;
+    validateLicense(token, version);
+    expect(errors.log).toHaveBeenCalledWith('W0022');
+  });
+  test.each([{
+    token: TOKEN_23_1,
+    version: '23.1.3'
+  }, {
+    token: TOKEN_23_1,
+    version: '12.3.4'
+  }, {
+    token: TOKEN_23_2,
+    version: '23.1.5'
+  }, {
+    token: TOKEN_23_2,
+    version: '23.2.6'
+  }])('No messages should be logged if license is valid', _ref4 => {
+    var {
+      token,
+      version
+    } = _ref4;
+    validateLicense(token, version);
+    expect(errors.log).not.toHaveBeenCalled();
   });
   test('Message should be logged only once', () => {
-    verifyLicense('', '1.0');
-    verifyLicense('', '1.0');
-    verifyLicense('', '1.0');
+    validateLicense('', '1.0');
+    validateLicense('', '1.0');
+    validateLicense('', '1.0');
     expect(errors.log).toHaveBeenCalledTimes(1);
   });
   test('No messages should be logged if setLicenseCheckSkipCondition() used', () => {
     setLicenseCheckSkipCondition();
-    verifyLicense('', '1.0');
+    validateLicense('', '1.0');
     expect(errors.log).not.toHaveBeenCalled();
   });
-  test('W0020 error should be logged if license is outdated', () => {
-    [[TOKEN_23_1, '23.2'], [TOKEN_23_2, '42.4']].forEach((_ref4, index) => {
-      var [token, version] = _ref4;
-      verifyLicense(token, version);
-      expect(errors.log).toHaveBeenCalledTimes(index + 1);
-      expect(errors.log).toHaveBeenCalledWith('W0020');
-      setLicenseCheckSkipCondition(false);
-    });
+  test.each([{
+    token: TOKEN_23_1,
+    version: '23.2.3'
+  }, {
+    token: TOKEN_23_2,
+    version: '42.4.5'
+  }])('W0020 error should be logged if license is outdated', _ref5 => {
+    var {
+      token,
+      version
+    } = _ref5;
+    validateLicense(token, version);
+    expect(errors.log).toHaveBeenCalledTimes(1);
+    expect(errors.log).toHaveBeenCalledWith('W0020');
   });
-  test('W0021 error should be logged if license is corrupted/invalid', () => {
-    [[TOKEN_UNVERIFIED, '1.2.3'], [TOKEN_INVALID_JSON, '1.2.3'], [TOKEN_INVALID_BASE64, '1.2.3'], [TOKEN_MISSING_FIELD_1, '1.2.3'], [TOKEN_MISSING_FIELD_2, '1.2.3'], [TOKEN_MISSING_FIELD_3, '1.2.3'], [TOKEN_UNSUPPORTED_VERSION, '1.2.3'], ['Another', '1.2.3'], ['str@nge'], ['in.put'], ['3.2.1', '1.2.3'], [TOKEN_23_1, '123']].forEach(_ref5 => {
-      var [token, version] = _ref5;
-      verifyLicense(token, version);
-      expect(errors.log).toHaveBeenCalledWith('W0021');
-      setLicenseCheckSkipCondition(false);
-    });
+  test.each([{
+    token: TOKEN_UNVERIFIED,
+    version: '1.2.3'
+  }, {
+    token: TOKEN_INVALID_JSON,
+    version: '1.2.3'
+  }, {
+    token: TOKEN_INVALID_BASE64,
+    version: '1.2.3'
+  }, {
+    token: TOKEN_MISSING_FIELD_1,
+    version: '1.2.3'
+  }, {
+    token: TOKEN_MISSING_FIELD_2,
+    version: '1.2.3'
+  }, {
+    token: TOKEN_MISSING_FIELD_3,
+    version: '1.2.3'
+  }, {
+    token: TOKEN_UNSUPPORTED_VERSION,
+    version: '1.2.3'
+  }, {
+    token: 'str@nge in.put',
+    version: '1.2.3'
+  }, {
+    token: '3.2.1',
+    version: '1.2.3'
+  }])('W0021 error should be logged if license is corrupted/invalid [%#]', _ref6 => {
+    var {
+      token,
+      version
+    } = _ref6;
+    validateLicense(token, version);
+    expect(errors.log).toHaveBeenCalledWith('W0021');
   });
 });

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/plain_data_source.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,18 +10,18 @@
 
 var _tree_map = _interopRequireDefault(require("./tree_map.base"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var proto = _tree_map.default.prototype;
+const proto = _tree_map.default.prototype;
 proto._optionChangesMap.idField = proto._optionChangesMap.parentField = 'NODES_CREATE';
 proto._processDataSourceItems = function (items) {
-  var i;
-  var struct = {};
-  var currentItem;
-  var idField = this._getOption('idField', true);
-  var parentField = this._getOption('parentField', true);
-  var parentId;
-  var rootNodes = [];
-  var tmpItems;
-  var item;
+  let i;
+  const struct = {};
+  let currentItem;
+  const idField = this._getOption('idField', true);
+  const parentField = this._getOption('parentField', true);
+  let parentId;
+  const rootNodes = [];
+  let tmpItems;
+  let item;
   if (!idField || !parentField || items.length === 0) {
     return {
       items: items,
@@ -54,10 +54,10 @@ proto._processDataSourceItems = function (items) {
   };
 };
 function treeFiller(context, items) {
-  var currentItem;
-  var i;
-  var struct = context.struct;
-  var id;
+  let currentItem;
+  let i;
+  const struct = context.struct;
+  let id;
   for (i = 0; i < items.length; i++) {
     currentItem = items[i];
     id = currentItem[context.idField];

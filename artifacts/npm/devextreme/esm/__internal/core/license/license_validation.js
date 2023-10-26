@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/license/license_validation.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,6 +29,7 @@ var TokenKind;
 })(TokenKind || (TokenKind = {}));
 var SPLITTER = '.';
 var FORMAT = 1;
+var RTM_MIN_PATCH_VERSION = 3;
 var GENERAL_ERROR = {
   kind: TokenKind.corrupted,
   error: 'general'
@@ -53,7 +54,7 @@ var VERSION_ERROR = {
   kind: TokenKind.corrupted,
   error: 'version'
 };
-var isLicenseVerified = false;
+var validationPerformed = false;
 // verifies RSASSA-PKCS1-v1.5 signature
 function verifySignature(_ref) {
   var {
@@ -112,14 +113,21 @@ export function parseLicenseKey(encodedKey) {
     }, rest)
   };
 }
-export function verifyLicense(licenseKey) {
+export function validateLicense(licenseKey) {
   var version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : packageVersion;
-  if (isLicenseVerified) {
+  if (validationPerformed) {
     return;
   }
-  isLicenseVerified = true;
-  var warning = null;
+  validationPerformed = true;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  var warning;
   try {
+    var [major, minor, patch] = version.split('.').map(Number);
+    var preview = isNaN(patch) || patch < RTM_MIN_PATCH_VERSION;
+    if (preview) {
+      warning = 'W0022';
+      return;
+    }
     if (!licenseKey) {
       warning = 'W0019';
       return;
@@ -129,7 +137,6 @@ export function verifyLicense(licenseKey) {
       warning = 'W0021';
       return;
     }
-    var [major, minor] = version.split('.').map(Number);
     if (!(major && minor)) {
       warning = 'W0021';
       return;
@@ -149,7 +156,7 @@ export function setLicenseCheckSkipCondition() {
   var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 }
 // NOTE: We need this default export
-// to allow QUnit mock the verifyLicense function
+// to allow QUnit mock the validateLicense function
 export default {
-  verifyLicense
+  validateLicense
 };

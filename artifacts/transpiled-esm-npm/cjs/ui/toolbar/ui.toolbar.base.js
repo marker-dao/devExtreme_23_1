@@ -16,39 +16,39 @@ var _constants = require("./constants");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var TOOLBAR_BEFORE_CLASS = 'dx-toolbar-before';
-var TOOLBAR_CENTER_CLASS = 'dx-toolbar-center';
-var TOOLBAR_AFTER_CLASS = 'dx-toolbar-after';
-var TOOLBAR_MINI_CLASS = 'dx-toolbar-mini';
-var TOOLBAR_ITEM_CLASS = 'dx-toolbar-item';
-var TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';
-var TOOLBAR_BUTTON_CLASS = 'dx-toolbar-button';
-var TOOLBAR_ITEMS_CONTAINER_CLASS = 'dx-toolbar-items-container';
-var TOOLBAR_GROUP_CLASS = 'dx-toolbar-group';
-var TOOLBAR_COMPACT_CLASS = 'dx-toolbar-compact';
-var TEXT_BUTTON_MODE = 'text';
-var DEFAULT_BUTTON_TYPE = 'default';
-var DEFAULT_DROPDOWNBUTTON_STYLING_MODE = 'contained';
-var TOOLBAR_ITEM_DATA_KEY = 'dxToolbarItemDataKey';
-var ANIMATION_TIMEOUT = 15;
-var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
+const TOOLBAR_BEFORE_CLASS = 'dx-toolbar-before';
+const TOOLBAR_CENTER_CLASS = 'dx-toolbar-center';
+const TOOLBAR_AFTER_CLASS = 'dx-toolbar-after';
+const TOOLBAR_MINI_CLASS = 'dx-toolbar-mini';
+const TOOLBAR_ITEM_CLASS = 'dx-toolbar-item';
+const TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';
+const TOOLBAR_BUTTON_CLASS = 'dx-toolbar-button';
+const TOOLBAR_ITEMS_CONTAINER_CLASS = 'dx-toolbar-items-container';
+const TOOLBAR_GROUP_CLASS = 'dx-toolbar-group';
+const TOOLBAR_COMPACT_CLASS = 'dx-toolbar-compact';
+const TEXT_BUTTON_MODE = 'text';
+const DEFAULT_BUTTON_TYPE = 'default';
+const DEFAULT_DROPDOWNBUTTON_STYLING_MODE = 'contained';
+const TOOLBAR_ITEM_DATA_KEY = 'dxToolbarItemDataKey';
+const ANIMATION_TIMEOUT = 15;
+let ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
   _inheritsLoose(ToolbarBase, _AsyncCollectionWidge);
   function ToolbarBase() {
     return _AsyncCollectionWidge.apply(this, arguments) || this;
   }
   var _proto = ToolbarBase.prototype;
   _proto._getSynchronizableOptionsForCreateComponent = function _getSynchronizableOptionsForCreateComponent() {
-    return _AsyncCollectionWidge.prototype._getSynchronizableOptionsForCreateComponent.call(this).filter(function (item) {
-      return item !== 'disabled';
-    });
+    return _AsyncCollectionWidge.prototype._getSynchronizableOptionsForCreateComponent.call(this).filter(item => item !== 'disabled');
   };
   _proto._initTemplates = function _initTemplates() {
     _AsyncCollectionWidge.prototype._initTemplates.call(this);
-    var template = new _bindable_template.BindableTemplate(function ($container, data, rawModel) {
+    const template = new _bindable_template.BindableTemplate(function ($container, data, rawModel) {
       if ((0, _type.isPlainObject)(data)) {
-        var text = data.text,
-          html = data.html,
-          widget = data.widget;
+        const {
+          text,
+          html,
+          widget
+        } = data;
         if (text) {
           $container.text(text).wrapInner('<div>');
         }
@@ -98,7 +98,7 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
   };
   _proto._defaultOptionsRules = function _defaultOptionsRules() {
     return _AsyncCollectionWidge.prototype._defaultOptionsRules.call(this).concat([{
-      device: function device() {
+      device: function () {
         return (0, _themes.isMaterialBased)();
       },
       options: {
@@ -141,13 +141,12 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
     this.setAria('role', 'toolbar');
   };
   _proto._renderSections = function _renderSections() {
-    var _this = this;
-    var $container = this._$toolbarItemsContainer;
-    (0, _iterator.each)(['before', 'center', 'after'], function (_, section) {
-      var sectionClass = "dx-toolbar-".concat(section);
-      var $section = $container.find(".".concat(sectionClass));
+    const $container = this._$toolbarItemsContainer;
+    (0, _iterator.each)(['before', 'center', 'after'], (_, section) => {
+      const sectionClass = "dx-toolbar-".concat(section);
+      const $section = $container.find(".".concat(sectionClass));
       if (!$section.length) {
-        _this["_$".concat(section, "Section")] = (0, _renderer.default)('<div>').addClass(sectionClass).attr('role', 'presentation').appendTo($container);
+        this["_$".concat(section, "Section")] = (0, _renderer.default)('<div>').addClass(sectionClass).attr('role', 'presentation').appendTo($container);
       }
     });
   };
@@ -158,36 +157,36 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
       margin: '0 auto',
       float: 'none'
     });
-    var beforeRect = (0, _position.getBoundingRect)(this._$beforeSection.get(0));
-    var afterRect = (0, _position.getBoundingRect)(this._$afterSection.get(0));
+    const beforeRect = (0, _position.getBoundingRect)(this._$beforeSection.get(0));
+    const afterRect = (0, _position.getBoundingRect)(this._$afterSection.get(0));
     this._alignCenterSection(beforeRect, afterRect, elementWidth);
-    var $label = this._$toolbarItemsContainer.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0);
-    var $section = $label.parent();
+    const $label = this._$toolbarItemsContainer.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0);
+    const $section = $label.parent();
     if (!$label.length) {
       return;
     }
-    var labelOffset = beforeRect.width ? beforeRect.width : $label.position().left;
-    var widthBeforeSection = $section.hasClass(TOOLBAR_BEFORE_CLASS) ? 0 : labelOffset;
-    var widthAfterSection = $section.hasClass(TOOLBAR_AFTER_CLASS) ? 0 : afterRect.width;
-    var elemsAtSectionWidth = 0;
+    const labelOffset = beforeRect.width ? beforeRect.width : $label.position().left;
+    const widthBeforeSection = $section.hasClass(TOOLBAR_BEFORE_CLASS) ? 0 : labelOffset;
+    const widthAfterSection = $section.hasClass(TOOLBAR_AFTER_CLASS) ? 0 : afterRect.width;
+    let elemsAtSectionWidth = 0;
     $section.children().not(".".concat(TOOLBAR_LABEL_CLASS)).each(function () {
       elemsAtSectionWidth += (0, _size.getOuterWidth)(this);
     });
-    var freeSpace = elementWidth - elemsAtSectionWidth;
-    var sectionMaxWidth = Math.max(freeSpace - widthBeforeSection - widthAfterSection, 0);
+    const freeSpace = elementWidth - elemsAtSectionWidth;
+    const sectionMaxWidth = Math.max(freeSpace - widthBeforeSection - widthAfterSection, 0);
     if ($section.hasClass(TOOLBAR_BEFORE_CLASS)) {
       this._alignSection(this._$beforeSection, sectionMaxWidth);
     } else {
-      var labelPaddings = (0, _size.getOuterWidth)($label) - (0, _size.getWidth)($label);
+      const labelPaddings = (0, _size.getOuterWidth)($label) - (0, _size.getWidth)($label);
       $label.css('maxWidth', sectionMaxWidth - labelPaddings);
     }
   };
   _proto._alignCenterSection = function _alignCenterSection(beforeRect, afterRect, elementWidth) {
     this._alignSection(this._$centerSection, elementWidth - beforeRect.width - afterRect.width);
-    var isRTL = this.option('rtlEnabled');
-    var leftRect = isRTL ? afterRect : beforeRect;
-    var rightRect = isRTL ? beforeRect : afterRect;
-    var centerRect = (0, _position.getBoundingRect)(this._$centerSection.get(0));
+    const isRTL = this.option('rtlEnabled');
+    const leftRect = isRTL ? afterRect : beforeRect;
+    const rightRect = isRTL ? beforeRect : afterRect;
+    const centerRect = (0, _position.getBoundingRect)(this._$centerSection.get(0));
     if (leftRect.right > centerRect.left || centerRect.right > rightRect.left) {
       this._$centerSection.css({
         marginLeft: leftRect.width,
@@ -197,11 +196,11 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
     }
   };
   _proto._alignSection = function _alignSection($section, maxWidth) {
-    var $labels = $section.find(".".concat(TOOLBAR_LABEL_CLASS));
-    var labels = $labels.toArray();
+    const $labels = $section.find(".".concat(TOOLBAR_LABEL_CLASS));
+    let labels = $labels.toArray();
     maxWidth = maxWidth - this._getCurrentLabelsPaddings(labels);
-    var currentWidth = this._getCurrentLabelsWidth(labels);
-    var difference = Math.abs(currentWidth - maxWidth);
+    const currentWidth = this._getCurrentLabelsWidth(labels);
+    const difference = Math.abs(currentWidth - maxWidth);
     if (maxWidth < currentWidth) {
       labels = labels.reverse();
       this._alignSectionLabels(labels, difference, false);
@@ -210,17 +209,17 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
     }
   };
   _proto._alignSectionLabels = function _alignSectionLabels(labels, difference, expanding) {
-    var getRealLabelWidth = function getRealLabelWidth(label) {
+    const getRealLabelWidth = function (label) {
       return (0, _position.getBoundingRect)(label).width;
     };
-    for (var i = 0; i < labels.length; i++) {
-      var $label = (0, _renderer.default)(labels[i]);
-      var currentLabelWidth = Math.ceil(getRealLabelWidth(labels[i]));
-      var labelMaxWidth = void 0;
+    for (let i = 0; i < labels.length; i++) {
+      const $label = (0, _renderer.default)(labels[i]);
+      const currentLabelWidth = Math.ceil(getRealLabelWidth(labels[i]));
+      let labelMaxWidth;
       if (expanding) {
         $label.css('maxWidth', 'inherit');
       }
-      var possibleLabelWidth = Math.ceil(expanding ? getRealLabelWidth(labels[i]) : currentLabelWidth);
+      const possibleLabelWidth = Math.ceil(expanding ? getRealLabelWidth(labels[i]) : currentLabelWidth);
       if (possibleLabelWidth < difference) {
         labelMaxWidth = expanding ? possibleLabelWidth : 0;
         difference = difference - possibleLabelWidth;
@@ -233,21 +232,21 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
     }
   };
   _proto._applyCompactMode = function _applyCompactMode() {
-    var $element = this.$element();
+    const $element = this.$element();
     $element.removeClass(TOOLBAR_COMPACT_CLASS);
     if (this.option('compactMode') && this._getSummaryItemsSize('width', this.itemElements(), true) > (0, _size.getWidth)($element)) {
       $element.addClass(TOOLBAR_COMPACT_CLASS);
     }
   };
   _proto._getCurrentLabelsWidth = function _getCurrentLabelsWidth(labels) {
-    var width = 0;
+    let width = 0;
     labels.forEach(function (label, index) {
       width += (0, _size.getOuterWidth)(label);
     });
     return width;
   };
   _proto._getCurrentLabelsPaddings = function _getCurrentLabelsPaddings(labels) {
-    var padding = 0;
+    let padding = 0;
     labels.forEach(function (label, index) {
       padding += (0, _size.getOuterWidth)(label) - (0, _size.getWidth)(label);
     });
@@ -255,31 +254,30 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
   };
   _proto._renderItem = function _renderItem(index, item, itemContainer, $after) {
     var _item$location, _item$text;
-    var location = (_item$location = item.location) !== null && _item$location !== void 0 ? _item$location : 'center';
-    var container = itemContainer !== null && itemContainer !== void 0 ? itemContainer : this["_$".concat(location, "Section")];
-    var itemHasText = !!((_item$text = item.text) !== null && _item$text !== void 0 ? _item$text : item.html);
-    var itemElement = _AsyncCollectionWidge.prototype._renderItem.call(this, index, item, container, $after);
+    const location = (_item$location = item.location) !== null && _item$location !== void 0 ? _item$location : 'center';
+    const container = itemContainer !== null && itemContainer !== void 0 ? itemContainer : this["_$".concat(location, "Section")];
+    const itemHasText = !!((_item$text = item.text) !== null && _item$text !== void 0 ? _item$text : item.html);
+    const itemElement = _AsyncCollectionWidge.prototype._renderItem.call(this, index, item, container, $after);
     itemElement.toggleClass(TOOLBAR_BUTTON_CLASS, !itemHasText).toggleClass(TOOLBAR_LABEL_CLASS, itemHasText).addClass(item.cssClass);
     return itemElement;
   };
   _proto._renderGroupedItems = function _renderGroupedItems() {
-    var _this2 = this;
-    (0, _iterator.each)(this.option('items'), function (groupIndex, group) {
+    (0, _iterator.each)(this.option('items'), (groupIndex, group) => {
       var _group$location;
-      var groupItems = group.items;
-      var $container = (0, _renderer.default)('<div>').addClass(TOOLBAR_GROUP_CLASS);
-      var location = (_group$location = group.location) !== null && _group$location !== void 0 ? _group$location : 'center';
+      const groupItems = group.items;
+      const $container = (0, _renderer.default)('<div>').addClass(TOOLBAR_GROUP_CLASS);
+      const location = (_group$location = group.location) !== null && _group$location !== void 0 ? _group$location : 'center';
       if (!groupItems || !groupItems.length) {
         return;
       }
-      (0, _iterator.each)(groupItems, function (itemIndex, item) {
-        _this2._renderItem(itemIndex, item, $container, null);
+      (0, _iterator.each)(groupItems, (itemIndex, item) => {
+        this._renderItem(itemIndex, item, $container, null);
       });
-      _this2._$toolbarItemsContainer.find(".dx-toolbar-".concat(location)).append($container);
+      this._$toolbarItemsContainer.find(".dx-toolbar-".concat(location)).append($container);
     });
   };
   _proto._renderItems = function _renderItems(items) {
-    var grouped = this.option('grouped') && items.length && items[0].items;
+    const grouped = this.option('grouped') && items.length && items[0].items;
     grouped ? this._renderGroupedItems() : _AsyncCollectionWidge.prototype._renderItems.call(this, items);
   };
   _proto._getToolbarItems = function _getToolbarItems() {
@@ -287,7 +285,7 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
     return (_this$option = this.option('items')) !== null && _this$option !== void 0 ? _this$option : [];
   };
   _proto._renderContentImpl = function _renderContentImpl() {
-    var items = this._getToolbarItems();
+    const items = this._getToolbarItems();
     this.$element().toggleClass(TOOLBAR_MINI_CLASS, items.length === 0);
     if (this._renderedItemsCount) {
       this._renderItems(items.slice(this._renderedItemsCount));
@@ -320,8 +318,10 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
     this._arrangeItems();
   };
   _proto._optionChanged = function _optionChanged(_ref) {
-    var name = _ref.name,
-      value = _ref.value;
+    let {
+      name,
+      value
+    } = _ref;
     switch (name) {
       case 'width':
         _AsyncCollectionWidge.prototype._optionChanged.apply(this, arguments);
@@ -346,13 +346,12 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
     clearTimeout(this._waitParentAnimationTimeout);
   };
   _proto._updateDimensionsInMaterial = function _updateDimensionsInMaterial() {
-    var _this3 = this;
     if ((0, _themes.isMaterial)()) {
-      var _waitParentAnimationFinished = function _waitParentAnimationFinished() {
-        return new Promise(function (resolve) {
-          var check = function check() {
-            var readyToResolve = true;
-            _this3.$element().parents().each(function (_, parent) {
+      const _waitParentAnimationFinished = () => {
+        return new Promise(resolve => {
+          const check = () => {
+            let readyToResolve = true;
+            this.$element().parents().each((_, parent) => {
               if (_fx.default.isAnimating((0, _renderer.default)(parent))) {
                 readyToResolve = false;
                 return false;
@@ -363,27 +362,25 @@ var ToolbarBase = /*#__PURE__*/function (_AsyncCollectionWidge) {
             }
             return readyToResolve;
           };
-          var runCheck = function runCheck() {
-            clearTimeout(_this3._waitParentAnimationTimeout);
-            _this3._waitParentAnimationTimeout = setTimeout(function () {
-              return check() || runCheck();
-            }, ANIMATION_TIMEOUT);
+          const runCheck = () => {
+            clearTimeout(this._waitParentAnimationTimeout);
+            this._waitParentAnimationTimeout = setTimeout(() => check() || runCheck(), ANIMATION_TIMEOUT);
           };
           runCheck();
         });
       };
-      var _checkWebFontForLabelsLoaded = function _checkWebFontForLabelsLoaded() {
-        var $labels = _this3.$element().find(".".concat(TOOLBAR_LABEL_CLASS));
-        var promises = [];
-        $labels.each(function (_, label) {
-          var text = (0, _renderer.default)(label).text();
-          var fontWeight = (0, _renderer.default)(label).css('fontWeight');
+      const _checkWebFontForLabelsLoaded = () => {
+        const $labels = this.$element().find(".".concat(TOOLBAR_LABEL_CLASS));
+        const promises = [];
+        $labels.each((_, label) => {
+          const text = (0, _renderer.default)(label).text();
+          const fontWeight = (0, _renderer.default)(label).css('fontWeight');
           promises.push((0, _themes.waitWebFont)(text, fontWeight));
         });
         return Promise.all(promises);
       };
-      Promise.all([_waitParentAnimationFinished(), _checkWebFontForLabelsLoaded()]).then(function () {
-        _this3._dimensionChanged();
+      Promise.all([_waitParentAnimationFinished(), _checkWebFontForLabelsLoaded()]).then(() => {
+        this._dimensionChanged();
       });
     }
   };

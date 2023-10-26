@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/variables.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,11 +20,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var VariableModule = _base.default;
+let VariableModule = _base.default;
 if (_devextremeQuill.default) {
-  var VARIABLE_FORMAT_CLASS = 'dx-variable-format';
-  var ACTIVE_FORMAT_CLASS = 'dx-format-active';
-  var SELECTED_STATE_CLASS = 'dx-state-selected';
+  const VARIABLE_FORMAT_CLASS = 'dx-variable-format';
+  const ACTIVE_FORMAT_CLASS = 'dx-format-active';
+  const SELECTED_STATE_CLASS = 'dx-state-selected';
   _devextremeQuill.default.register({
     'formats/variable': _variable.default
   }, true);
@@ -32,7 +32,7 @@ if (_devextremeQuill.default) {
     _inheritsLoose(VariableModule, _PopupModule);
     var _proto = VariableModule.prototype;
     _proto._getDefaultOptions = function _getDefaultOptions() {
-      var baseConfig = _PopupModule.prototype._getDefaultOptions.call(this);
+      const baseConfig = _PopupModule.prototype._getDefaultOptions.call(this);
       return (0, _extend.extend)(baseConfig, {
         escapeChar: ''
       });
@@ -40,7 +40,7 @@ if (_devextremeQuill.default) {
     function VariableModule(quill, options) {
       var _this;
       _this = _PopupModule.call(this, quill, options) || this;
-      var toolbar = quill.getModule('toolbar');
+      const toolbar = quill.getModule('toolbar');
       if (toolbar) {
         toolbar.addClickHandler('variable', _this.showPopup.bind(_assertThisInitialized(_this)));
       }
@@ -48,8 +48,8 @@ if (_devextremeQuill.default) {
         key: 'P',
         altKey: true
       }, _this.showPopup.bind(_assertThisInitialized(_this)));
-      _this._popup.on('shown', function (e) {
-        var $ofElement = (0, _renderer.default)(e.component.option('position').of);
+      _this._popup.on('shown', e => {
+        const $ofElement = (0, _renderer.default)(e.component.option('position').of);
         if ($ofElement.hasClass(VARIABLE_FORMAT_CLASS)) {
           $ofElement.addClass(ACTIVE_FORMAT_CLASS);
           $ofElement.addClass(SELECTED_STATE_CLASS);
@@ -58,8 +58,8 @@ if (_devextremeQuill.default) {
       return _this;
     }
     _proto.showPopup = function showPopup(event) {
-      var selection = this.quill.getSelection(true);
-      var position = selection ? selection.index : this.quill.getLength();
+      const selection = this.quill.getSelection(true);
+      const position = selection ? selection.index : this.quill.getLength();
       this.savePosition(position);
       this._resetPopupPosition(event, position);
       _PopupModule.prototype.showPopup.call(this);
@@ -77,8 +77,8 @@ if (_devextremeQuill.default) {
           collision: 'fit'
         });
       } else {
-        var mentionBounds = this.quill.getBounds(position);
-        var rootRect = (0, _position.getBoundingRect)(this.quill.root);
+        const mentionBounds = this.quill.getBounds(position);
+        const rootRect = (0, _position.getBoundingRect)(this.quill.root);
         this._popup.option('position', {
           of: this.quill.root,
           offset: {
@@ -92,9 +92,9 @@ if (_devextremeQuill.default) {
       }
     };
     _proto.insertEmbedContent = function insertEmbedContent(selectionChangedEvent) {
-      var caretPosition = this.getPosition();
-      var selectedItem = selectionChangedEvent.component.option('selectedItem');
-      var variableData = (0, _extend.extend)({}, {
+      const caretPosition = this.getPosition();
+      const selectedItem = selectionChangedEvent.component.option('selectedItem');
+      const variableData = (0, _extend.extend)({}, {
         value: selectedItem,
         escapeChar: this.options.escapeChar
       });

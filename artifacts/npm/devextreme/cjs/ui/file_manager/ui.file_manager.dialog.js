@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.dialog.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,22 +18,21 @@ var _ui2 = _interopRequireDefault(require("../popup/ui.popup"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_DIALOG_CONTENT = 'dx-filemanager-dialog';
-var FILE_MANAGER_DIALOG_POPUP = 'dx-filemanager-dialog-popup';
-var FileManagerDialogBase = /*#__PURE__*/function (_Widget) {
+const FILE_MANAGER_DIALOG_CONTENT = 'dx-filemanager-dialog';
+const FILE_MANAGER_DIALOG_POPUP = 'dx-filemanager-dialog-popup';
+let FileManagerDialogBase = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerDialogBase, _Widget);
   function FileManagerDialogBase() {
     return _Widget.apply(this, arguments) || this;
   }
   var _proto = FileManagerDialogBase.prototype;
   _proto._initMarkup = function _initMarkup() {
-    var _this = this,
-      _options$popupCssClas;
+    var _options$popupCssClas;
     _Widget.prototype._initMarkup.call(this);
     this._createOnClosedAction();
-    var options = this._getDialogOptions();
-    var $popup = (0, _renderer.default)('<div>').appendTo(this.$element());
-    var popupOptions = {
+    const options = this._getDialogOptions();
+    const $popup = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const popupOptions = {
       showTitle: true,
       title: options.title,
       visible: false,
@@ -56,9 +55,11 @@ var FileManagerDialogBase = /*#__PURE__*/function (_Widget) {
           onClick: this._closeDialog.bind(this)
         }
       }],
-      onInitialized: function onInitialized(_ref) {
-        var component = _ref.component;
-        component.registerKeyHandler('enter', _this._applyDialogChanges.bind(_this));
+      onInitialized: _ref => {
+        let {
+          component
+        } = _ref;
+        component.registerKeyHandler('enter', this._applyDialogChanges.bind(this));
       },
       onHidden: this._onPopupHidden.bind(this),
       onShown: this._onPopupShown.bind(this),
@@ -86,7 +87,7 @@ var FileManagerDialogBase = /*#__PURE__*/function (_Widget) {
   };
   _proto._createContentTemplate = function _createContentTemplate(element) {
     this._$contentElement = (0, _renderer.default)('<div>').appendTo(element).addClass(FILE_MANAGER_DIALOG_CONTENT);
-    var cssClass = this._getDialogOptions().contentCssClass;
+    const cssClass = this._getDialogOptions().contentCssClass;
     if (cssClass) {
       this._$contentElement.addClass(cssClass);
     }
@@ -95,7 +96,7 @@ var FileManagerDialogBase = /*#__PURE__*/function (_Widget) {
     return null;
   };
   _proto._applyDialogChanges = function _applyDialogChanges() {
-    var result = this._getDialogResult();
+    const result = this._getDialogResult();
     if (result) {
       this._dialogResult = result;
       this._closeDialog();
@@ -125,7 +126,7 @@ var FileManagerDialogBase = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'onClosed':
         this._createOnPathChangedAction();

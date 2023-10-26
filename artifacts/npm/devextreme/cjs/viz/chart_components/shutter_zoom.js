@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/chart_components/shutter_zoom.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,14 +10,14 @@
 
 exports.default = void 0;
 var _drag = require("../../events/drag");
-var SHUTTER_EVENTS_NS = '.shutter-zoom';
-var DRAG_START_EVENT_NAME = _drag.start + SHUTTER_EVENTS_NS;
-var DRAG_UPDATE_EVENT_NAME = _drag.move + SHUTTER_EVENTS_NS;
-var DRAG_END_EVENT_NAME = _drag.end + SHUTTER_EVENTS_NS;
+const SHUTTER_EVENTS_NS = '.shutter-zoom';
+const DRAG_START_EVENT_NAME = _drag.start + SHUTTER_EVENTS_NS;
+const DRAG_UPDATE_EVENT_NAME = _drag.move + SHUTTER_EVENTS_NS;
+const DRAG_END_EVENT_NAME = _drag.end + SHUTTER_EVENTS_NS;
 function getPointerCoord(rootOffset, canvas, rotated, e) {
-  var coord = Math.floor(rotated ? e.pageY - rootOffset.top : e.pageX - rootOffset.left);
-  var min = rotated ? canvas.y1 : canvas.x1;
-  var max = rotated ? canvas.y2 : canvas.x2;
+  let coord = Math.floor(rotated ? e.pageY - rootOffset.top : e.pageX - rootOffset.left);
+  const min = rotated ? canvas.y1 : canvas.x1;
+  const max = rotated ? canvas.y2 : canvas.x2;
   if (coord < min) {
     coord = min;
   } else if (coord > max) {
@@ -26,14 +26,14 @@ function getPointerCoord(rootOffset, canvas, rotated, e) {
   return coord;
 }
 function checkCoords(rootOffset, canvas, e) {
-  var x = e.pageX - rootOffset.left;
-  var y = e.pageY - rootOffset.top;
+  const x = e.pageX - rootOffset.left;
+  const y = e.pageY - rootOffset.top;
   return x >= canvas.x1 && x <= canvas.x2 && y >= canvas.y1 && y <= canvas.y2;
 }
 function dragStartHandler(ctx) {
   return function (e) {
-    var offset = ctx.getRootOffset();
-    var canvas = ctx.getCanvas();
+    const offset = ctx.getRootOffset();
+    const canvas = ctx.getCanvas();
     if (!checkCoords(offset, canvas, e)) {
       e.cancel = true;
       return;
@@ -52,8 +52,8 @@ function dragStartHandler(ctx) {
 }
 function dragHandler(ctx) {
   return function (e) {
-    var curCoord = getPointerCoord(ctx.rootOffset, ctx.canvas, ctx.rotated, e);
-    var attr = {};
+    const curCoord = getPointerCoord(ctx.rootOffset, ctx.canvas, ctx.rotated, e);
+    const attr = {};
     ctx.curCoord = curCoord;
     attr[ctx.rotated ? 'y' : 'x'] = Math.min(ctx.startCoord, curCoord);
     attr[ctx.rotated ? 'height' : 'width'] = Math.abs(ctx.startCoord - curCoord);
@@ -67,38 +67,38 @@ function dragEndHandler(ctx) {
   };
 }
 function shutterZoom(options) {
-  var chart = options.chart;
-  var renderer = options.renderer;
-  var rotated = options.rotated;
-  var rect = renderer.rect(0, 0, 0, 0).attr(options.shutterOptions);
-  var shutter = {
+  const chart = options.chart;
+  const renderer = options.renderer;
+  const rotated = options.rotated;
+  const rect = renderer.rect(0, 0, 0, 0).attr(options.shutterOptions);
+  const shutter = {
     rect: rect,
     root: renderer.root,
     rotated: rotated,
-    triggerStart: function triggerStart() {
+    triggerStart: function () {
       chart._eventTrigger('zoomStart');
     },
-    triggerEnd: function triggerEnd() {
-      var tr = chart._argumentAxes[0].getTranslator();
-      var rangeStart = Math.min(this.startCoord, this.curCoord);
-      var rangeEnd = Math.max(this.startCoord, this.curCoord);
+    triggerEnd: function () {
+      const tr = chart._argumentAxes[0].getTranslator();
+      const rangeStart = Math.min(this.startCoord, this.curCoord);
+      const rangeEnd = Math.max(this.startCoord, this.curCoord);
       chart._eventTrigger('zoomEnd', {
         rangeStart: tr.from(rangeStart),
         rangeEnd: tr.from(rangeEnd)
       });
     },
-    dispose: function dispose() {
+    dispose: function () {
       renderer.root.off(SHUTTER_EVENTS_NS);
       rect.dispose();
     },
-    getRootOffset: function getRootOffset() {
+    getRootOffset: function () {
       return renderer.getRootOffset();
     },
-    getCanvas: function getCanvas() {
-      var canvas = chart._canvas;
-      var panes = chart.panes;
-      var firstPane = panes[0].canvas;
-      var lastPane = panes[panes.length - 1].canvas;
+    getCanvas: function () {
+      const canvas = chart._canvas;
+      const panes = chart.panes;
+      const firstPane = panes[0].canvas;
+      const lastPane = panes[panes.length - 1].canvas;
       return {
         x1: firstPane.left,
         y1: firstPane.top,
@@ -117,8 +117,8 @@ function shutterZoom(options) {
 }
 var _default = {
   name: 'shutter_zoom',
-  init: function init() {
-    var options = this.option('shutterZoom') || {};
+  init: function () {
+    const options = this.option('shutterZoom') || {};
     if (!options.enabled) {
       return;
     }
@@ -129,7 +129,7 @@ var _default = {
       shutterOptions: options
     });
   },
-  dispose: function dispose() {
+  dispose: function () {
     this._shutterZoom && this._shutterZoom.dispose();
   }
 };

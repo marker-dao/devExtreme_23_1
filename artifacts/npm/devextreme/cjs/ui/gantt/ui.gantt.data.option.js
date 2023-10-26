@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.data.option.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ var _data_helper = _interopRequireDefault(require("../../data_helper"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DataOption = /*#__PURE__*/function (_Component) {
+let DataOption = /*#__PURE__*/function (_Component) {
   _inheritsLoose(DataOption, _Component);
   function DataOption(optionName, getLoadPanel, dataSourceChangedCallback) {
     var _this;
@@ -26,48 +26,45 @@ var DataOption = /*#__PURE__*/function (_Component) {
   }
   var _proto = DataOption.prototype;
   _proto.insert = function insert(data, callback, errorCallback) {
-    var _this2 = this;
     this._showLoadPanel();
-    this._getStore().insert(data).done(function (response) {
+    this._getStore().insert(data).done(response => {
       if (callback) {
         callback(response);
       }
-      _this2._hideLoadPanel();
-    }).fail(function (error) {
+      this._hideLoadPanel();
+    }).fail(error => {
       if (errorCallback) {
         errorCallback(error);
       }
-      _this2._hideLoadPanel();
+      this._hideLoadPanel();
     });
   };
   _proto.update = function update(key, data, callback, errorCallback) {
-    var _this3 = this;
     this._showLoadPanel();
-    this._getStore().update(key, data).done(function (data, key) {
+    this._getStore().update(key, data).done((data, key) => {
       if (callback) {
         callback(data, key);
       }
-      _this3._hideLoadPanel();
-    }).fail(function (error) {
+      this._hideLoadPanel();
+    }).fail(error => {
       if (errorCallback) {
         errorCallback(error);
       }
-      _this3._hideLoadPanel();
+      this._hideLoadPanel();
     });
   };
   _proto.remove = function remove(key, callback, errorCallback) {
-    var _this4 = this;
     this._showLoadPanel();
-    this._getStore().remove(key).done(function (key) {
+    this._getStore().remove(key).done(key => {
       if (callback) {
         callback(key);
       }
-      _this4._hideLoadPanel();
-    }).fail(function (error) {
+      this._hideLoadPanel();
+    }).fail(error => {
       if (errorCallback) {
         errorCallback(error);
       }
-      _this4._hideLoadPanel();
+      this._hideLoadPanel();
     });
   };
   _proto._dataSourceChangedHandler = function _dataSourceChangedHandler(newItems, e) {

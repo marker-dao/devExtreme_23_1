@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/vector_map/vector_map.utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 "use strict";
 
 exports.generateDataKey = generateDataKey;
-var nextDataKey = 1;
+let nextDataKey = 1;
 function generateDataKey() {
   return 'vectormap-data-' + nextDataKey++;
 }

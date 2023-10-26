@@ -8,10 +8,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-restricted-imports
 
 if (_knockout.default) {
-  var originalKOCleanExternalData = _knockout.default.utils.domNodeDisposal.cleanExternalData;
-  var patchCleanData = function patchCleanData() {
+  const originalKOCleanExternalData = _knockout.default.utils.domNodeDisposal.cleanExternalData;
+  const patchCleanData = function () {
     (0, _element_data.afterCleanData)(function (nodes) {
-      var i;
+      let i;
       for (i = 0; i < nodes.length; i++) {
         nodes[i].cleanedByJquery = true;
       }
@@ -34,13 +34,13 @@ if (_knockout.default) {
       }
     };
   };
-  var restoreOriginCleanData = function restoreOriginCleanData() {
+  const restoreOriginCleanData = function () {
     (0, _element_data.afterCleanData)(function () {});
     _knockout.default.utils.domNodeDisposal.cleanExternalData = originalKOCleanExternalData;
   };
   patchCleanData();
   _element_data.strategyChanging.add(function (strategy) {
-    var isJQuery = !!strategy.fn;
+    const isJQuery = !!strategy.fn;
     if (isJQuery && (0, _version.compare)(strategy.fn.jquery, [2, 0]) < 0) {
       restoreOriginCleanData();
     }

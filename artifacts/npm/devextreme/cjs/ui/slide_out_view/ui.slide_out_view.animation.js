@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/slide_out_view/ui.slide_out_view.animation.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,9 +11,9 @@
 exports.animation = void 0;
 var _fx = _interopRequireDefault(require("../../animation/fx"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ANIMATION_DURATION = 400;
-var animation = {
-  moveTo: function moveTo($element, position, completeAction) {
+const ANIMATION_DURATION = 400;
+const animation = {
+  moveTo: function ($element, position, completeAction) {
     _fx.default.animate($element, {
       type: 'slide',
       to: {
@@ -23,7 +23,7 @@ var animation = {
       complete: completeAction
     });
   },
-  complete: function complete($element) {
+  complete: function ($element) {
     _fx.default.stop($element, true);
   }
 };

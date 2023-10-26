@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.strategy.native.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,14 +17,14 @@ var _date_serialization = _interopRequireDefault(require("../../core/utils/date_
 var _extend = require("../../core/utils/extend");
 var _devices = _interopRequireDefault(require("../../core/devices"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var NativeStrategy = _uiDate_box.default.inherit({
+const NativeStrategy = _uiDate_box.default.inherit({
   NAME: 'Native',
-  popupConfig: function popupConfig(_popupConfig) {
-    return (0, _extend.extend)({}, _popupConfig, {
+  popupConfig: function (popupConfig) {
+    return (0, _extend.extend)({}, popupConfig, {
       width: 'auto'
     });
   },
-  getParsedText: function getParsedText(text) {
+  getParsedText: function (text) {
     if (!text) {
       return null;
     }
@@ -38,8 +38,8 @@ var NativeStrategy = _uiDate_box.default.inherit({
   renderPopupContent: _common.noop,
   _getWidgetName: _common.noop,
   _getWidgetOptions: _common.noop,
-  _getDateBoxType: function _getDateBoxType() {
-    var type = this.dateBox.option('type');
+  _getDateBoxType: function () {
+    let type = this.dateBox.option('type');
     if (!_ui.default.SUPPORTED_FORMATS.includes(type)) {
       type = 'date';
     } else if (type === 'datetime' && !(0, _support.inputType)(type)) {
@@ -47,24 +47,24 @@ var NativeStrategy = _uiDate_box.default.inherit({
     }
     return type;
   },
-  customizeButtons: function customizeButtons() {
-    var dropDownButton = this.dateBox.getButton('dropDown');
+  customizeButtons: function () {
+    const dropDownButton = this.dateBox.getButton('dropDown');
     if (_devices.default.real().android && dropDownButton) {
       dropDownButton.on('click', function () {
         this.dateBox._input().get(0).click();
       }.bind(this));
     }
   },
-  getDefaultOptions: function getDefaultOptions() {
+  getDefaultOptions: function () {
     return {
       mode: this._getDateBoxType()
     };
   },
-  getDisplayFormat: function getDisplayFormat(displayFormat) {
-    var type = this._getDateBoxType();
+  getDisplayFormat: function (displayFormat) {
+    const type = this._getDateBoxType();
     return displayFormat || _ui.default.FORMATS_MAP[type];
   },
-  renderInputMinMax: function renderInputMinMax($input) {
+  renderInputMinMax: function ($input) {
     $input.attr({
       min: _date_serialization.default.serializeDate(this.dateBox.dateOption('min'), 'yyyy-MM-dd'),
       max: _date_serialization.default.serializeDate(this.dateBox.dateOption('max'), 'yyyy-MM-dd')

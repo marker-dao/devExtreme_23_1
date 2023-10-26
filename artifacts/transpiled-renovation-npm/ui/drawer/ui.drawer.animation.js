@@ -4,13 +4,13 @@ exports.animation = void 0;
 var _fx = _interopRequireDefault(require("../../animation/fx"));
 var _inflector = require("../../core/utils/inflector");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var animation = {
+const animation = {
   moveTo(config) {
-    var $element = config.$element;
-    var position = config.position;
-    var direction = config.direction || 'left';
-    var toConfig = {};
-    var animationType;
+    const $element = config.$element;
+    const position = config.position;
+    const direction = config.direction || 'left';
+    const toConfig = {};
+    let animationType;
     switch (direction) {
       case 'right':
         toConfig['transform'] = 'translate(' + position + 'px, 0px)';
@@ -33,10 +33,10 @@ var animation = {
     });
   },
   margin(config) {
-    var $element = config.$element;
-    var margin = config.margin;
-    var direction = config.direction || 'left';
-    var toConfig = {};
+    const $element = config.$element;
+    const margin = config.margin;
+    const direction = config.direction || 'left';
+    const toConfig = {};
     toConfig['margin' + (0, _inflector.camelize)(direction, true)] = margin;
     _fx.default.animate($element, {
       to: toConfig,
@@ -54,12 +54,12 @@ var animation = {
     });
   },
   size(config) {
-    var $element = config.$element;
-    var size = config.size;
-    var direction = config.direction || 'left';
-    var marginTop = config.marginTop || 0;
-    var duration = config.duration;
-    var toConfig = {};
+    const $element = config.$element;
+    const size = config.size;
+    const direction = config.direction || 'left';
+    const marginTop = config.marginTop || 0;
+    const duration = config.duration;
+    const toConfig = {};
     if (direction === 'right' || direction === 'left') {
       toConfig['width'] = size;
     } else {

@@ -2,7 +2,7 @@
 
 exports.default = void 0;
 var _iterator = require("../../../core/utils/iterator");
-var WidgetCollector = /*#__PURE__*/function () {
+let WidgetCollector = /*#__PURE__*/function () {
   function WidgetCollector() {
     this._collection = [];
   }
@@ -17,15 +17,15 @@ var WidgetCollector = /*#__PURE__*/function () {
     });
   };
   _proto.remove = function remove(name) {
-    this._collection = this._collection.filter(function (item) {
-      return item.name !== name;
-    });
+    this._collection = this._collection.filter(item => item.name !== name);
   };
   _proto.getByName = function getByName(widgetName) {
-    var widget = null;
-    (0, _iterator.each)(this._collection, function (index, _ref) {
-      var name = _ref.name,
-        instance = _ref.instance;
+    let widget = null;
+    (0, _iterator.each)(this._collection, (index, _ref) => {
+      let {
+        name,
+        instance
+      } = _ref;
       if (name === widgetName) {
         widget = instance;
         return false;
@@ -34,9 +34,11 @@ var WidgetCollector = /*#__PURE__*/function () {
     return widget;
   };
   _proto.each = function each(handler) {
-    this._collection.forEach(function (_ref2) {
-      var name = _ref2.name,
-        instance = _ref2.instance;
+    this._collection.forEach(_ref2 => {
+      let {
+        name,
+        instance
+      } = _ref2;
       return instance && handler(name, instance);
     });
   };

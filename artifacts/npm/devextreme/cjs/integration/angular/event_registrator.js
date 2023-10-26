@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/angular/event_registrator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,12 +17,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 if (_angular.default) {
   _event_registrator_callbacks.default.add(function (name) {
-    var ngEventName = name.slice(0, 2) + name.charAt(2).toUpperCase() + name.slice(3);
+    const ngEventName = name.slice(0, 2) + name.charAt(2).toUpperCase() + name.slice(3);
     _module.default.directive(ngEventName, ['$parse', function ($parse) {
       return function (scope, element, attr) {
-        var attrValue = attr[ngEventName].trim();
-        var handler;
-        var eventOptions = {};
+        const attrValue = attr[ngEventName].trim();
+        let handler;
+        let eventOptions = {};
         if (attrValue.charAt(0) === '{') {
           eventOptions = scope.$eval(attrValue);
           handler = $parse(eventOptions.execute);

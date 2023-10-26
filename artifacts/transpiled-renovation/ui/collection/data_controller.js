@@ -3,19 +3,11 @@
 exports.default = void 0;
 var _common = require("../../core/utils/common");
 var _deferred = require("../../core/utils/deferred");
-var DataControllerMock = {
-  load: function load() {
-    return (0, _deferred.Deferred)().reject();
-  },
-  loadSingle: function loadSingle() {
-    return (0, _deferred.Deferred)().reject();
-  },
-  loadFromStore: function loadFromStore() {
-    return (0, _deferred.Deferred)().reject();
-  },
-  loadNextPage: function loadNextPage() {
-    return (0, _deferred.Deferred)().reject();
-  },
+const DataControllerMock = {
+  load: () => (0, _deferred.Deferred)().reject(),
+  loadSingle: () => (0, _deferred.Deferred)().reject(),
+  loadFromStore: () => (0, _deferred.Deferred)().reject(),
+  loadNextPage: () => (0, _deferred.Deferred)().reject(),
   loadOptions: _common.noop,
   userData: _common.noop,
   cancel: _common.noop,
@@ -45,7 +37,7 @@ var DataControllerMock = {
   on: _common.noop,
   off: _common.noop
 };
-var DataController = /*#__PURE__*/function () {
+let DataController = /*#__PURE__*/function () {
   function DataController(dataSource) {
     if (!dataSource) {
       return DataControllerMock;
@@ -134,8 +126,7 @@ var DataController = /*#__PURE__*/function () {
     return this._dataSource.searchExpr(expr);
   };
   _proto.select = function select() {
-    var _this$_dataSource;
-    return (_this$_dataSource = this._dataSource).select.apply(_this$_dataSource, arguments);
+    return this._dataSource.select(...arguments);
   };
   _proto.key = function key() {
     return this._dataSource.key();

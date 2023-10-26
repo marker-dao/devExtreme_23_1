@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/filter_builder/ui.filter_operations_dictionary.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 "use strict";
 
 exports.default = void 0;
-var OPERATION_ICONS = {
+const OPERATION_ICONS = {
   '=': 'equal',
   '<>': 'notequal',
   '<': 'less',
@@ -23,7 +23,7 @@ var OPERATION_ICONS = {
   'isblank': 'isblank',
   'isnotblank': 'isnotblank'
 };
-var OPERATION_NAME = {
+const OPERATION_NAME = {
   '=': 'equal',
   '<>': 'notEqual',
   '<': 'lessThan',
@@ -39,10 +39,10 @@ var OPERATION_NAME = {
   'between': 'between'
 };
 var _default = {
-  getIconByFilterOperation: function getIconByFilterOperation(filterOperation) {
+  getIconByFilterOperation: function (filterOperation) {
     return OPERATION_ICONS[filterOperation];
   },
-  getNameByFilterOperation: function getNameByFilterOperation(filterOperation) {
+  getNameByFilterOperation: function (filterOperation) {
     return OPERATION_NAME[filterOperation];
   }
 };

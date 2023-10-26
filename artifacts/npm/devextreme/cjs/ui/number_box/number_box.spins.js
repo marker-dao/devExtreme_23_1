@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/number_box/number_box.spins.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,41 +19,37 @@ var _extend = require("../../core/utils/extend");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var SPIN_CLASS = 'dx-numberbox-spin';
-var SPIN_CONTAINER_CLASS = 'dx-numberbox-spin-container';
-var SPIN_TOUCH_FRIENDLY_CLASS = 'dx-numberbox-spin-touch-friendly';
-var SpinButtons = /*#__PURE__*/function (_TextEditorButton) {
+const SPIN_CLASS = 'dx-numberbox-spin';
+const SPIN_CONTAINER_CLASS = 'dx-numberbox-spin-container';
+const SPIN_TOUCH_FRIENDLY_CLASS = 'dx-numberbox-spin-touch-friendly';
+let SpinButtons = /*#__PURE__*/function (_TextEditorButton) {
   _inheritsLoose(SpinButtons, _TextEditorButton);
   function SpinButtons() {
     return _TextEditorButton.apply(this, arguments) || this;
   }
   var _proto = SpinButtons.prototype;
   _proto._attachEvents = function _attachEvents(instance, $spinContainer) {
-    var editor = this.editor;
-    var eventName = (0, _index.addNamespace)(_pointer.default.down, editor.NAME);
-    var $spinContainerChildren = $spinContainer.children();
-    var pointerDownAction = editor._createAction(function (e) {
-      return editor._spinButtonsPointerDownHandler(e);
-    });
+    const {
+      editor
+    } = this;
+    const eventName = (0, _index.addNamespace)(_pointer.default.down, editor.NAME);
+    const $spinContainerChildren = $spinContainer.children();
+    const pointerDownAction = editor._createAction(e => editor._spinButtonsPointerDownHandler(e));
     _events_engine.default.off($spinContainer, eventName);
-    _events_engine.default.on($spinContainer, eventName, function (e) {
-      return pointerDownAction({
-        event: e
-      });
-    });
-    _number_box.default.getInstance($spinContainerChildren.eq(0)).option('onChange', function (e) {
-      return editor._spinUpChangeHandler(e);
-    });
-    _number_box.default.getInstance($spinContainerChildren.eq(1)).option('onChange', function (e) {
-      return editor._spinDownChangeHandler(e);
-    });
+    _events_engine.default.on($spinContainer, eventName, e => pointerDownAction({
+      event: e
+    }));
+    _number_box.default.getInstance($spinContainerChildren.eq(0)).option('onChange', e => editor._spinUpChangeHandler(e));
+    _number_box.default.getInstance($spinContainerChildren.eq(1)).option('onChange', e => editor._spinDownChangeHandler(e));
   };
   _proto._create = function _create() {
-    var editor = this.editor;
-    var $spinContainer = (0, _renderer.default)('<div>').addClass(SPIN_CONTAINER_CLASS);
-    var $spinUp = (0, _renderer.default)('<div>').appendTo($spinContainer);
-    var $spinDown = (0, _renderer.default)('<div>').appendTo($spinContainer);
-    var options = this._getOptions();
+    const {
+      editor
+    } = this;
+    const $spinContainer = (0, _renderer.default)('<div>').addClass(SPIN_CONTAINER_CLASS);
+    const $spinUp = (0, _renderer.default)('<div>').appendTo($spinContainer);
+    const $spinDown = (0, _renderer.default)('<div>').appendTo($spinContainer);
+    const options = this._getOptions();
     this._addToContainer($spinContainer);
     editor._createComponent($spinUp, _number_box.default, (0, _extend.extend)({
       direction: 'up'
@@ -68,20 +64,26 @@ var SpinButtons = /*#__PURE__*/function (_TextEditorButton) {
     };
   };
   _proto._getOptions = function _getOptions() {
-    var editor = this.editor;
-    var visible = this._isVisible();
-    var disabled = editor.option('disabled');
+    const {
+      editor
+    } = this;
+    const visible = this._isVisible();
+    const disabled = editor.option('disabled');
     return {
       visible,
       disabled
     };
   };
   _proto._isVisible = function _isVisible() {
-    var editor = this.editor;
+    const {
+      editor
+    } = this;
     return _TextEditorButton.prototype._isVisible.call(this) && editor.option('showSpinButtons');
   };
   _proto._isTouchFriendly = function _isTouchFriendly() {
-    var editor = this.editor;
+    const {
+      editor
+    } = this;
     return editor.option('showSpinButtons') && editor.option('useLargeSpinButtons');
   }
 
@@ -92,17 +94,19 @@ var SpinButtons = /*#__PURE__*/function (_TextEditorButton) {
     $editor.toggleClass(SPIN_CLASS, isVisible);
   };
   _proto.update = function update() {
-    var shouldUpdate = _TextEditorButton.prototype.update.call(this);
+    const shouldUpdate = _TextEditorButton.prototype.update.call(this);
     if (shouldUpdate) {
-      var editor = this.editor,
-        instance = this.instance;
-      var $editor = editor.$element();
-      var isVisible = this._isVisible();
-      var isTouchFriendly = this._isTouchFriendly();
-      var $spinButtons = instance.children();
-      var spinUp = _number_box.default.getInstance($spinButtons.eq(0));
-      var spinDown = _number_box.default.getInstance($spinButtons.eq(1));
-      var options = this._getOptions();
+      const {
+        editor,
+        instance
+      } = this;
+      const $editor = editor.$element();
+      const isVisible = this._isVisible();
+      const isTouchFriendly = this._isTouchFriendly();
+      const $spinButtons = instance.children();
+      const spinUp = _number_box.default.getInstance($spinButtons.eq(0));
+      const spinDown = _number_box.default.getInstance($spinButtons.eq(1));
+      const options = this._getOptions();
       spinUp.option(options);
       spinDown.option(options);
       this._legacyRender($editor, isTouchFriendly, isVisible);

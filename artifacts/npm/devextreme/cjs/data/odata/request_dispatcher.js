@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/odata/request_dispatcher.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,8 +15,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var DEFAULT_PROTOCOL_VERSION = 2;
-var RequestDispatcher = /*#__PURE__*/function () {
+const DEFAULT_PROTOCOL_VERSION = 2;
+let RequestDispatcher = /*#__PURE__*/function () {
   function RequestDispatcher(options) {
     options = options || {};
     this._url = String(options.url).replace(/\/+$/, '');
@@ -43,27 +43,27 @@ var RequestDispatcher = /*#__PURE__*/function () {
   };
   _createClass(RequestDispatcher, [{
     key: "version",
-    get: function get() {
+    get: function () {
       return this._version;
     }
   }, {
     key: "beforeSend",
-    get: function get() {
+    get: function () {
       return this._beforeSend;
     }
   }, {
     key: "url",
-    get: function get() {
+    get: function () {
       return this._url;
     }
   }, {
     key: "jsonp",
-    get: function get() {
+    get: function () {
       return this._jsonp;
     }
   }, {
     key: "filterToLower",
-    get: function get() {
+    get: function () {
       return this._filterToLower;
     }
   }]);

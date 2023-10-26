@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/memorized_callbacks.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,16 +12,14 @@ exports.default = void 0;
 var _iterator = require("../core/utils/iterator");
 var _callbacks = _interopRequireDefault(require("./utils/callbacks"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var MemorizedCallbacks = /*#__PURE__*/function () {
+let MemorizedCallbacks = /*#__PURE__*/function () {
   function MemorizedCallbacks() {
     this.memory = [];
     this.callbacks = (0, _callbacks.default)();
   }
   var _proto = MemorizedCallbacks.prototype;
   _proto.add = function add(fn) {
-    (0, _iterator.each)(this.memory, function (_, item) {
-      return fn.apply(fn, item);
-    });
+    (0, _iterator.each)(this.memory, (_, item) => fn.apply(fn, item));
     this.callbacks.add(fn);
   };
   _proto.remove = function remove(fn) {

@@ -10,7 +10,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = (0, _extend.extend)({}, _m_modules.default, {
   modules: [],
   foreachNodes(nodes, callBack, ignoreHasChildren) {
-    for (var i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       if (callBack(nodes[i]) !== false && (ignoreHasChildren || nodes[i].hasChildren) && nodes[i].children.length) {
         this.foreachNodes(nodes[i].children, callBack, ignoreHasChildren);
       }

@@ -4,23 +4,25 @@ exports.TextEditorLabel = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _guid = _interopRequireDefault(require("../../core/guid"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TEXTEDITOR_LABEL_CLASS = 'dx-texteditor-label';
-var TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
-var TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
-var TEXTEDITOR_WITH_FLOATING_LABEL_CLASS = 'dx-texteditor-with-floating-label';
-var TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS = 'dx-texteditor-with-before-buttons';
-var LABEL_BEFORE_CLASS = 'dx-label-before';
-var LABEL_CLASS = 'dx-label';
-var LABEL_AFTER_CLASS = 'dx-label-after';
-var TextEditorLabel = /*#__PURE__*/function () {
+const TEXTEDITOR_LABEL_CLASS = 'dx-texteditor-label';
+const TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
+const TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
+const TEXTEDITOR_WITH_FLOATING_LABEL_CLASS = 'dx-texteditor-with-floating-label';
+const TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS = 'dx-texteditor-with-before-buttons';
+const LABEL_BEFORE_CLASS = 'dx-label-before';
+const LABEL_CLASS = 'dx-label';
+const LABEL_AFTER_CLASS = 'dx-label-after';
+let TextEditorLabel = /*#__PURE__*/function () {
   function TextEditorLabel(_ref) {
-    var $editor = _ref.$editor,
-      text = _ref.text,
-      mode = _ref.mode,
-      mark = _ref.mark,
-      containsButtonsBefore = _ref.containsButtonsBefore,
-      containerWidth = _ref.containerWidth,
-      beforeWidth = _ref.beforeWidth;
+    let {
+      $editor,
+      text,
+      mode,
+      mark,
+      containsButtonsBefore,
+      containerWidth,
+      beforeWidth
+    } = _ref;
     this._props = {
       $editor,
       text,
@@ -50,7 +52,7 @@ var TextEditorLabel = /*#__PURE__*/function () {
     this._updateMaxWidth();
   };
   _proto._toggleMarkupVisibility = function _toggleMarkupVisibility() {
-    var visible = this._isVisible();
+    const visible = this._isVisible();
     this._updateEditorBeforeButtonsClass(visible);
     this._updateEditorLabelClass(visible);
     visible ? this._$root.appendTo(this._props.$editor) : this._$root.detach();
@@ -58,7 +60,7 @@ var TextEditorLabel = /*#__PURE__*/function () {
   _proto._updateEditorLabelClass = function _updateEditorLabelClass(visible) {
     this._props.$editor.removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS).removeClass(TEXTEDITOR_WITH_LABEL_CLASS);
     if (visible) {
-      var labelClass = this._props.mode === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS;
+      const labelClass = this._props.mode === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS;
       this._props.$editor.addClass(labelClass);
       if (this._props.mode === 'outside') {
         this._props.$editor.addClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS);
@@ -66,10 +68,10 @@ var TextEditorLabel = /*#__PURE__*/function () {
     }
   };
   _proto._updateEditorBeforeButtonsClass = function _updateEditorBeforeButtonsClass() {
-    var visible = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._isVisible();
+    let visible = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._isVisible();
     this._props.$editor.removeClass(TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS);
     if (visible) {
-      var beforeButtonsClass = this._props.containsButtonsBefore ? TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS : '';
+      const beforeButtonsClass = this._props.containsButtonsBefore ? TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS : '';
       this._props.$editor.addClass(beforeButtonsClass);
     }
   };

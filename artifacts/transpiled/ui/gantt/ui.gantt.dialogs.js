@@ -12,7 +12,7 @@ require("../list/modules/deleting");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var GanttDialog = /*#__PURE__*/function () {
+let GanttDialog = /*#__PURE__*/function () {
   function GanttDialog(owner, $element) {
     this._popupInstance = owner._createComponent($element, _ui.default);
     this.infoMap = {
@@ -25,7 +25,7 @@ var GanttDialog = /*#__PURE__*/function () {
   var _proto = GanttDialog.prototype;
   _proto._apply = function _apply() {
     if (this._dialogInfo.isValidated()) {
-      var result = this._dialogInfo.getResult();
+      const result = this._dialogInfo.getResult();
       this._callback(result);
       this.hide();
     }
@@ -36,7 +36,7 @@ var GanttDialog = /*#__PURE__*/function () {
     if (!this.infoMap[name]) {
       return;
     }
-    var isRefresh = this._popupInstance._isVisible() && this._dialogInfo && this._dialogInfo instanceof this.infoMap[name];
+    const isRefresh = this._popupInstance._isVisible() && this._dialogInfo && this._dialogInfo instanceof this.infoMap[name];
     this._dialogInfo = new this.infoMap[name](parameters, this._apply.bind(this), this.hide.bind(this), editingOptions);
     this._popupInstance.option({
       showTitle: !!this._dialogInfo.getTitle(),
@@ -62,7 +62,7 @@ var GanttDialog = /*#__PURE__*/function () {
   return GanttDialog;
 }();
 exports.GanttDialog = GanttDialog;
-var DialogInfoBase = /*#__PURE__*/function () {
+let DialogInfoBase = /*#__PURE__*/function () {
   function DialogInfoBase(parameters, applyAction, hideAction, editingOptions) {
     this._parameters = parameters;
     this._applyAction = applyAction;
@@ -115,13 +115,12 @@ var DialogInfoBase = /*#__PURE__*/function () {
     return 'auto';
   };
   _proto2.getContentTemplate = function getContentTemplate() {
-    var _this = this;
-    return function (content) {
-      _this._form = new _form.default(content, {
-        formData: _this._getFormData(),
-        items: _this._getFormItems(),
+    return content => {
+      this._form = new _form.default(content, {
+        formData: this._getFormData(),
+        items: this._getFormItems(),
         elementAttr: {
-          class: _this._getFormCssClass()
+          class: this._getFormCssClass()
         },
         rtlEnabled: false
       });
@@ -129,12 +128,12 @@ var DialogInfoBase = /*#__PURE__*/function () {
     };
   };
   _proto2.getResult = function getResult() {
-    var formData = this.getFormData();
+    const formData = this.getFormData();
     this._updateParameters(formData);
     return this._parameters;
   };
   _proto2.getFormData = function getFormData() {
-    var formData = this._form && this._form.option('formData');
+    const formData = this._form && this._form.option('formData');
     return formData;
   };
   _proto2.isValidated = function isValidated() {
@@ -142,7 +141,7 @@ var DialogInfoBase = /*#__PURE__*/function () {
   };
   return DialogInfoBase;
 }();
-var TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
+let TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
   _inheritsLoose(TaskEditDialogInfo, _DialogInfoBase);
   function TaskEditDialogInfo() {
     return _DialogInfoBase.apply(this, arguments) || this;
@@ -152,9 +151,8 @@ var TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
     return _message.default.format('dxGantt-dialogTaskDetailsTitle');
   };
   _proto3._getFormItems = function _getFormItems() {
-    var _this2 = this;
-    var readOnly = !this._editingOptions.enabled || !this._editingOptions.allowTaskUpdating;
-    var readOnlyRange = readOnly || !this._parameters.enableRangeEdit;
+    const readOnly = !this._editingOptions.enabled || !this._editingOptions.allowTaskUpdating;
+    const readOnlyRange = readOnly || !this._parameters.enableRangeEdit;
     return [{
       dataField: 'title',
       editorType: 'dxTextBox',
@@ -182,11 +180,11 @@ var TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
         message: _message.default.format('validation-required-formatted', _message.default.format('dxGantt-dialogStartTitle'))
       }, {
         type: 'custom',
-        validationCallback: function validationCallback(e) {
-          if (_this2._parameters.isValidationRequired) {
-            var correctDateRange = _this2._parameters.getCorrectDateRange(_this2._parameters.id, e.value, _this2._parameters.end);
+        validationCallback: e => {
+          if (this._parameters.isValidationRequired) {
+            const correctDateRange = this._parameters.getCorrectDateRange(this._parameters.id, e.value, this._parameters.end);
             if (correctDateRange.start.getTime() !== e.value.getTime()) {
-              e.rule.message = _this2._getValidationMessage(true, correctDateRange.start);
+              e.rule.message = this._getValidationMessage(true, correctDateRange.start);
               return false;
             }
           }
@@ -210,11 +208,11 @@ var TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
         message: _message.default.format('validation-required-formatted', _message.default.format('dxGantt-dialogEndTitle'))
       }, {
         type: 'custom',
-        validationCallback: function validationCallback(e) {
-          if (_this2._parameters.isValidationRequired) {
-            var correctDateRange = _this2._parameters.getCorrectDateRange(_this2._parameters.id, _this2._parameters.start, e.value);
+        validationCallback: e => {
+          if (this._parameters.isValidationRequired) {
+            const correctDateRange = this._parameters.getCorrectDateRange(this._parameters.id, this._parameters.start, e.value);
             if (correctDateRange.end.getTime() !== e.value.getTime()) {
-              e.rule.message = _this2._getValidationMessage(false, correctDateRange.end);
+              e.rule.message = this._getValidationMessage(false, correctDateRange.end);
               return false;
             }
           }
@@ -253,11 +251,11 @@ var TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
             disabled: !this._editingOptions.allowResourceAdding && !this._editingOptions.allowResourceDeleting,
             text: '...',
             hint: _message.default.format('dxGantt-dialogEditResourceListHint'),
-            onClick: function onClick() {
-              var showTaskEditDialogCallback = function showTaskEditDialogCallback() {
-                _this2._parameters.showTaskEditDialogCommand.execute();
+            onClick: () => {
+              const showTaskEditDialogCallback = () => {
+                this._parameters.showTaskEditDialogCommand.execute();
               };
-              _this2._parameters.showResourcesDialogCommand.execute(showTaskEditDialogCallback);
+              this._parameters.showResourcesDialogCommand.execute(showTaskEditDialogCallback);
             }
           }
         }]
@@ -280,8 +278,8 @@ var TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
     return this._parameters.hiddenFields.indexOf(field) > -1;
   };
   _proto3._getFormData = function _getFormData() {
-    var data = {};
-    for (var field in this._parameters) {
+    const data = {};
+    for (const field in this._parameters) {
       data[field] = field === 'progress' ? this._parameters[field] / 100 : this._parameters[field];
     }
     return data;
@@ -295,12 +293,12 @@ var TaskEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase) {
   };
   _proto3.isValidated = function isValidated() {
     var _this$_form;
-    var validationResult = (_this$_form = this._form) === null || _this$_form === void 0 ? void 0 : _this$_form.validate();
+    const validationResult = (_this$_form = this._form) === null || _this$_form === void 0 ? void 0 : _this$_form.validate();
     return validationResult === null || validationResult === void 0 ? void 0 : validationResult.isValid;
   };
   return TaskEditDialogInfo;
 }(DialogInfoBase);
-var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
+let ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
   _inheritsLoose(ResourcesEditDialogInfo, _DialogInfoBase2);
   function ResourcesEditDialogInfo() {
     return _DialogInfoBase2.apply(this, arguments) || this;
@@ -310,7 +308,6 @@ var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
     return _message.default.format('dxGantt-dialogResourceManagerTitle');
   };
   _proto4._getFormItems = function _getFormItems() {
-    var _this3 = this;
     return [{
       label: {
         visible: false
@@ -324,11 +321,11 @@ var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
         items: this._parameters.resources.items,
         height: 250,
         noDataText: _message.default.format('dxGantt-dialogEditNoResources'),
-        onInitialized: function onInitialized(e) {
-          _this3.list = e.component;
+        onInitialized: e => {
+          this.list = e.component;
         },
-        onItemDeleted: function onItemDeleted(e) {
-          _this3._parameters.resources.remove(e.itemData);
+        onItemDeleted: e => {
+          this._parameters.resources.remove(e.itemData);
         }
       }
     }, {
@@ -338,12 +335,12 @@ var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
       editorType: 'dxTextBox',
       editorOptions: {
         readOnly: !this._editingOptions.enabled || !this._editingOptions.allowResourceAdding,
-        onInitialized: function onInitialized(e) {
-          _this3.textBox = e.component;
+        onInitialized: e => {
+          this.textBox = e.component;
         },
-        onInput: function onInput(e) {
-          var addButton = e.component.getButton('addResource');
-          var resourceName = e.component.option('text');
+        onInput: e => {
+          const addButton = e.component.getButton('addResource');
+          const resourceName = e.component.option('text');
           addButton.option('disabled', resourceName.length === 0);
         },
         buttons: [{
@@ -352,13 +349,13 @@ var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
           options: {
             text: _message.default.format('dxGantt-dialogButtonAdd'),
             disabled: true,
-            onClick: function onClick(e) {
-              var newItem = _this3._parameters.resources.createItem();
-              newItem.text = _this3.textBox.option('text');
-              _this3._parameters.resources.add(newItem);
-              _this3.list.option('items', _this3._parameters.resources.items);
-              _this3.list.scrollToItem(newItem);
-              _this3.textBox.clear();
+            onClick: e => {
+              const newItem = this._parameters.resources.createItem();
+              newItem.text = this.textBox.option('text');
+              this._parameters.resources.add(newItem);
+              this.list.option('items', this._parameters.resources.items);
+              this.list.scrollToItem(newItem);
+              this.textBox.clear();
               e.component.option('disabled', true);
             }
           }
@@ -368,16 +365,15 @@ var ResourcesEditDialogInfo = /*#__PURE__*/function (_DialogInfoBase2) {
   };
   return ResourcesEditDialogInfo;
 }(DialogInfoBase);
-var ConfirmDialogInfo = /*#__PURE__*/function (_DialogInfoBase3) {
+let ConfirmDialogInfo = /*#__PURE__*/function (_DialogInfoBase3) {
   _inheritsLoose(ConfirmDialogInfo, _DialogInfoBase3);
   function ConfirmDialogInfo() {
     return _DialogInfoBase3.apply(this, arguments) || this;
   }
   var _proto5 = ConfirmDialogInfo.prototype;
   _proto5.getContentTemplate = function getContentTemplate() {
-    var _this4 = this;
-    return function (content) {
-      return _this4._getConfirmMessage();
+    return content => {
+      return this._getConfirmMessage();
     };
   };
   _proto5._getConfirmMessage = function _getConfirmMessage() {
@@ -397,19 +393,19 @@ var ConfirmDialogInfo = /*#__PURE__*/function (_DialogInfoBase3) {
   };
   return ConfirmDialogInfo;
 }(DialogInfoBase);
-var ConstraintViolationDialogInfo = /*#__PURE__*/function (_DialogInfoBase4) {
+let ConstraintViolationDialogInfo = /*#__PURE__*/function (_DialogInfoBase4) {
   _inheritsLoose(ConstraintViolationDialogInfo, _DialogInfoBase4);
   function ConstraintViolationDialogInfo() {
     return _DialogInfoBase4.apply(this, arguments) || this;
   }
   var _proto6 = ConstraintViolationDialogInfo.prototype;
   _proto6._getFormItems = function _getFormItems() {
-    var hasCriticalErrors = this._parameters.hasCriticalErrors;
-    var severalErrors = this._parameters.errorsCount > 1;
-    var items = [];
-    var deleteMessage = severalErrors ? 'dxGantt-dialogDeleteDependenciesMessage' : 'dxGantt-dialogDeleteDependencyMessage';
-    var moveMessage = severalErrors ? 'dxGantt-dialogMoveTaskAndKeepDependenciesMessage' : 'dxGantt-dialogMoveTaskAndKeepDependencyMessage';
-    var titleMessage;
+    const hasCriticalErrors = this._parameters.hasCriticalErrors;
+    const severalErrors = this._parameters.errorsCount > 1;
+    const items = [];
+    const deleteMessage = severalErrors ? 'dxGantt-dialogDeleteDependenciesMessage' : 'dxGantt-dialogDeleteDependencyMessage';
+    const moveMessage = severalErrors ? 'dxGantt-dialogMoveTaskAndKeepDependenciesMessage' : 'dxGantt-dialogMoveTaskAndKeepDependencyMessage';
+    let titleMessage;
     if (hasCriticalErrors) {
       titleMessage = severalErrors ? 'dxGantt-dialogConstraintCriticalViolationSeveralTasksMessage' : 'dxGantt-dialogConstraintCriticalViolationMessage';
     } else {

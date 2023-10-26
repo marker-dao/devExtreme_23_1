@@ -3,46 +3,46 @@
 exports.default = void 0;
 var _uiCollection_widgetEdit = _interopRequireDefault(require("./ui.collection_widget.edit.strategy"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var PlainEditStrategy = _uiCollection_widgetEdit.default.inherit({
-  _getPlainItems: function _getPlainItems() {
+const PlainEditStrategy = _uiCollection_widgetEdit.default.inherit({
+  _getPlainItems: function () {
     return this._collectionWidget.option('items') || [];
   },
-  getIndexByItemData: function getIndexByItemData(itemData) {
-    var keyOf = this._collectionWidget.keyOf.bind(this._collectionWidget);
+  getIndexByItemData: function (itemData) {
+    const keyOf = this._collectionWidget.keyOf.bind(this._collectionWidget);
     if (keyOf) {
       return this.getIndexByKey(keyOf(itemData));
     } else {
       return this._getPlainItems().indexOf(itemData);
     }
   },
-  getItemDataByIndex: function getItemDataByIndex(index) {
+  getItemDataByIndex: function (index) {
     return this._getPlainItems()[index];
   },
-  deleteItemAtIndex: function deleteItemAtIndex(index) {
+  deleteItemAtIndex: function (index) {
     this._getPlainItems().splice(index, 1);
   },
-  itemsGetter: function itemsGetter() {
+  itemsGetter: function () {
     return this._getPlainItems();
   },
-  getKeysByItems: function getKeysByItems(items) {
-    var keyOf = this._collectionWidget.keyOf.bind(this._collectionWidget);
-    var result = items;
+  getKeysByItems: function (items) {
+    const keyOf = this._collectionWidget.keyOf.bind(this._collectionWidget);
+    let result = items;
     if (keyOf) {
       result = [];
-      for (var i = 0; i < items.length; i++) {
+      for (let i = 0; i < items.length; i++) {
         result.push(keyOf(items[i]));
       }
     }
     return result;
   },
-  getIndexByKey: function getIndexByKey(key) {
-    var cache = this._cache;
-    var keys = cache && cache.keys || this.getKeysByItems(this._getPlainItems());
+  getIndexByKey: function (key) {
+    const cache = this._cache;
+    const keys = cache && cache.keys || this.getKeysByItems(this._getPlainItems());
     if (cache && !cache.keys) {
       cache.keys = keys;
     }
     if (typeof key === 'object') {
-      for (var i = 0, length = keys.length; i < length; i++) {
+      for (let i = 0, length = keys.length; i < length; i++) {
         if (this._equalKeys(key, keys[i])) return i;
       }
     } else {
@@ -50,31 +50,31 @@ var PlainEditStrategy = _uiCollection_widgetEdit.default.inherit({
     }
     return -1;
   },
-  getItemsByKeys: function getItemsByKeys(keys, items) {
+  getItemsByKeys: function (keys, items) {
     return (items || keys).slice();
   },
-  moveItemAtIndexToIndex: function moveItemAtIndexToIndex(movingIndex, destinationIndex) {
-    var items = this._getPlainItems();
-    var movedItemData = items[movingIndex];
+  moveItemAtIndexToIndex: function (movingIndex, destinationIndex) {
+    const items = this._getPlainItems();
+    const movedItemData = items[movingIndex];
     items.splice(movingIndex, 1);
     items.splice(destinationIndex, 0, movedItemData);
   },
-  _isItemIndex: function _isItemIndex(index) {
+  _isItemIndex: function (index) {
     return typeof index === 'number' && Math.round(index) === index;
   },
-  _getNormalizedItemIndex: function _getNormalizedItemIndex(itemElement) {
+  _getNormalizedItemIndex: function (itemElement) {
     return this._collectionWidget._itemElements().index(itemElement);
   },
-  _normalizeItemIndex: function _normalizeItemIndex(index) {
+  _normalizeItemIndex: function (index) {
     return index;
   },
-  _denormalizeItemIndex: function _denormalizeItemIndex(index) {
+  _denormalizeItemIndex: function (index) {
     return index;
   },
-  _getItemByNormalizedIndex: function _getItemByNormalizedIndex(index) {
+  _getItemByNormalizedIndex: function (index) {
     return index > -1 ? this._collectionWidget._itemElements().eq(index) : null;
   },
-  _itemsFromSameParent: function _itemsFromSameParent() {
+  _itemsFromSameParent: function () {
     return true;
   }
 });

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/utils/get_element_offset.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,14 +10,14 @@
 
 exports.getElementOffset = getElementOffset;
 var _window = require("../../core/utils/window");
-var window = (0, _window.getWindow)();
-var DEFAULT_OFFSET = {
+const window = (0, _window.getWindow)();
+const DEFAULT_OFFSET = {
   top: 0,
   left: 0
 };
 function getElementOffset(el) {
   if (el && (0, _window.hasWindow)()) {
-    var rect = el.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
     return {
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX

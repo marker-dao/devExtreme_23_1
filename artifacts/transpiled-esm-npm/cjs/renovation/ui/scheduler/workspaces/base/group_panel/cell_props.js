@@ -1,7 +1,7 @@
 "use strict";
 
 exports.GroupPanelCellProps = void 0;
-var GroupPanelCellProps = {
+const GroupPanelCellProps = {
   id: 0,
   text: '',
   data: Object.freeze({

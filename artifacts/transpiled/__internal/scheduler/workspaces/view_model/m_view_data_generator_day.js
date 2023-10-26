@@ -8,7 +8,7 @@ var _day = require("../../../../renovation/ui/scheduler/view_model/to_test/views
 var _m_view_data_generator = require("./m_view_data_generator");
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ViewDataGeneratorDay = /*#__PURE__*/function (_ViewDataGenerator) {
+let ViewDataGeneratorDay = /*#__PURE__*/function (_ViewDataGenerator) {
   _inheritsLoose(ViewDataGeneratorDay, _ViewDataGenerator);
   function ViewDataGeneratorDay() {
     return _ViewDataGenerator.apply(this, arguments) || this;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/queue.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,13 +14,13 @@ var _errors = _interopRequireDefault(require("../errors"));
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function createQueue(discardPendingTasks) {
-  var _tasks = [];
-  var _busy = false;
+  let _tasks = [];
+  let _busy = false;
   function exec() {
     while (_tasks.length) {
       _busy = true;
-      var task = _tasks.shift();
-      var result = task();
+      const task = _tasks.shift();
+      const result = task();
       if (result === undefined) {
         continue;
       }
@@ -54,5 +54,5 @@ function createQueue(discardPendingTasks) {
     busy: busy
   };
 }
-var enqueue = createQueue().add; // Default global queue for UI sync, consider renaming
+const enqueue = createQueue().add; // Default global queue for UI sync, consider renaming
 exports.enqueue = enqueue;

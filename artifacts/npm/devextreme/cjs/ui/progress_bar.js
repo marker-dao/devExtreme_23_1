@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/progress_bar.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,19 +17,19 @@ var _component_registrator = _interopRequireDefault(require("../core/component_r
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE progressBar
 
-var PROGRESSBAR_CLASS = 'dx-progressbar';
-var PROGRESSBAR_CONTAINER_CLASS = 'dx-progressbar-container';
-var PROGRESSBAR_RANGE_CONTAINER_CLASS = 'dx-progressbar-range-container';
-var PROGRESSBAR_RANGE_CLASS = 'dx-progressbar-range';
-var PROGRESSBAR_WRAPPER_CLASS = 'dx-progressbar-wrapper';
-var PROGRESSBAR_STATUS_CLASS = 'dx-progressbar-status';
-var PROGRESSBAR_INDETERMINATE_SEGMENT_CONTAINER = 'dx-progressbar-animating-container';
-var PROGRESSBAR_INDETERMINATE_SEGMENT = 'dx-progressbar-animating-segment';
-var ProgressBar = _track_bar.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const PROGRESSBAR_CLASS = 'dx-progressbar';
+const PROGRESSBAR_CONTAINER_CLASS = 'dx-progressbar-container';
+const PROGRESSBAR_RANGE_CONTAINER_CLASS = 'dx-progressbar-range-container';
+const PROGRESSBAR_RANGE_CLASS = 'dx-progressbar-range';
+const PROGRESSBAR_WRAPPER_CLASS = 'dx-progressbar-wrapper';
+const PROGRESSBAR_STATUS_CLASS = 'dx-progressbar-status';
+const PROGRESSBAR_INDETERMINATE_SEGMENT_CONTAINER = 'dx-progressbar-animating-container';
+const PROGRESSBAR_INDETERMINATE_SEGMENT = 'dx-progressbar-animating-segment';
+const ProgressBar = _track_bar.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       value: 0,
-      statusFormat: function statusFormat(ratio) {
+      statusFormat: function (ratio) {
         return 'Progress: ' + Math.round(ratio * 100) + '%';
       },
       showStatus: true,
@@ -59,17 +59,17 @@ var ProgressBar = _track_bar.default.inherit({
     });
   },
 
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device(_device) {
-        return _device.platform === 'android';
+      device: function (device) {
+        return device.platform === 'android';
       },
       options: {
         _animatingSegmentCount: 2
       }
     }]);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._renderStatus();
     this._createCompleteAction();
     this.callBase();
@@ -81,25 +81,25 @@ var ProgressBar = _track_bar.default.inherit({
     this._$range.addClass(PROGRESSBAR_RANGE_CLASS);
     this._toggleStatus(this.option('showStatus'));
   },
-  _useTemplates: function _useTemplates() {
+  _useTemplates: function () {
     return false;
   },
-  _createCompleteAction: function _createCompleteAction() {
+  _createCompleteAction: function () {
     this._completeAction = this._createActionByOption('onComplete');
   },
-  _renderStatus: function _renderStatus() {
+  _renderStatus: function () {
     this._$status = (0, _renderer.default)('<div>').addClass(PROGRESSBAR_STATUS_CLASS);
   },
-  _renderIndeterminateState: function _renderIndeterminateState() {
+  _renderIndeterminateState: function () {
     this._$segmentContainer = (0, _renderer.default)('<div>').addClass(PROGRESSBAR_INDETERMINATE_SEGMENT_CONTAINER);
-    var segments = this.option('_animatingSegmentCount');
-    for (var i = 0; i < segments; i++) {
+    const segments = this.option('_animatingSegmentCount');
+    for (let i = 0; i < segments; i++) {
       (0, _renderer.default)('<div>').addClass(PROGRESSBAR_INDETERMINATE_SEGMENT).addClass(PROGRESSBAR_INDETERMINATE_SEGMENT + '-' + (i + 1)).appendTo(this._$segmentContainer);
     }
     this._$segmentContainer.appendTo(this._$wrapper);
   },
-  _toggleStatus: function _toggleStatus(value) {
-    var splitPosition = this.option('statusPosition').split(' ');
+  _toggleStatus: function (value) {
+    const splitPosition = this.option('statusPosition').split(' ');
     if (value) {
       if (splitPosition[0] === 'top' || splitPosition[0] === 'left') {
         this._$status.prependTo(this._$wrapper);
@@ -111,17 +111,17 @@ var ProgressBar = _track_bar.default.inherit({
     }
     this._togglePositionClass();
   },
-  _togglePositionClass: function _togglePositionClass() {
-    var position = this.option('statusPosition');
-    var splitPosition = position.split(' ');
+  _togglePositionClass: function () {
+    const position = this.option('statusPosition');
+    const splitPosition = position.split(' ');
     this._$wrapper.removeClass('dx-position-top-left dx-position-top-right dx-position-bottom-left dx-position-bottom-right dx-position-left dx-position-right');
-    var positionClass = 'dx-position-' + splitPosition[0];
+    let positionClass = 'dx-position-' + splitPosition[0];
     if (splitPosition[1]) {
       positionClass += '-' + splitPosition[1];
     }
     this._$wrapper.addClass(positionClass);
   },
-  _toggleIndeterminateState: function _toggleIndeterminateState(value) {
+  _toggleIndeterminateState: function (value) {
     if (value) {
       this._renderIndeterminateState();
       this._$bar.toggle(false);
@@ -131,9 +131,9 @@ var ProgressBar = _track_bar.default.inherit({
       delete this._$segmentContainer;
     }
   },
-  _renderValue: function _renderValue() {
-    var val = this.option('value');
-    var max = this.option('max');
+  _renderValue: function () {
+    const val = this.option('value');
+    const max = this.option('max');
     if (!val && val !== 0) {
       this._toggleIndeterminateState(true);
       return;
@@ -147,23 +147,23 @@ var ProgressBar = _track_bar.default.inherit({
     this.callBase();
     this._setStatus();
   },
-  _setStatus: function _setStatus() {
-    var format = this.option('statusFormat');
+  _setStatus: function () {
+    let format = this.option('statusFormat');
     if ((0, _type.isFunction)(format)) {
       format = format.bind(this);
     } else {
-      format = function format(value) {
+      format = function (value) {
         return value;
       };
     }
-    var statusText = format(this._currentRatio, this.option('value'));
+    const statusText = format(this._currentRatio, this.option('value'));
     this._$status.text(statusText);
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._$status.remove();
     this.callBase();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'statusFormat':
         this._setStatus();

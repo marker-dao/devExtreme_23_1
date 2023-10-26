@@ -28,9 +28,8 @@ var _get_allowed_direction = require("../utils/get_allowed_direction");
 var _subscribe_to_resize = require("../utils/subscribe_to_resize");
 var _dom_adapter = _interopRequireDefault(require("../../../../core/dom_adapter"));
 var _get_scroll_left_max = require("../utils/get_scroll_left_max");
-var _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "inertiaEnabled", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onBounce", "onEnd", "onPullDown", "onReachBottom", "onScroll", "onStart", "onUpdated", "onVisibilityChange", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "scrollByThumb", "scrollLocationChange", "showScrollbar", "useKeyboard", "visible", "width"];
+const _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "inertiaEnabled", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onBounce", "onEnd", "onPullDown", "onReachBottom", "onScroll", "onStart", "onUpdated", "onVisibilityChange", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "scrollByThumb", "scrollLocationChange", "showScrollbar", "useKeyboard", "visible", "width"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -40,72 +39,75 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(viewModel) {
-  var active = viewModel.active,
-    bottomPocketHeight = viewModel.bottomPocketHeight,
-    bottomPocketRef = viewModel.bottomPocketRef,
-    containerClientHeight = viewModel.containerClientHeight,
-    containerClientWidth = viewModel.containerClientWidth,
-    containerHasSizes = viewModel.containerHasSizes,
-    containerRef = viewModel.containerRef,
-    containerStyles = viewModel.containerStyles,
-    contentHeight = viewModel.contentHeight,
-    contentPaddingBottom = viewModel.contentPaddingBottom,
-    contentRef = viewModel.contentRef,
-    contentStyles = viewModel.contentStyles,
-    contentWidth = viewModel.contentWidth,
-    cssClasses = viewModel.cssClasses,
-    direction = viewModel.direction,
-    hScrollLocation = viewModel.hScrollLocation,
-    hScrollOffsetMax = viewModel.hScrollOffsetMax,
-    hScrollbarRef = viewModel.hScrollbarRef,
-    handleKeyDown = viewModel.handleKeyDown,
-    hovered = viewModel.hovered,
-    isLoadPanelVisible = viewModel.isLoadPanelVisible,
-    lock = viewModel.lock,
-    onBounce = viewModel.onBounce,
-    onEnd = viewModel.onEnd,
-    onPullDown = viewModel.onPullDown,
-    onReachBottom = viewModel.onReachBottom,
-    onScroll = viewModel.onScroll,
-    onVisibilityChangeHandler = viewModel.onVisibilityChangeHandler,
-    _viewModel$props = viewModel.props,
-    aria = _viewModel$props.aria,
-    bounceEnabled = _viewModel$props.bounceEnabled,
-    children = _viewModel$props.children,
-    forceGeneratePockets = _viewModel$props.forceGeneratePockets,
-    height = _viewModel$props.height,
-    inertiaEnabled = _viewModel$props.inertiaEnabled,
-    LoadPanelTemplate = _viewModel$props.loadPanelTemplate,
-    needRenderScrollbars = _viewModel$props.needRenderScrollbars,
-    needScrollViewContentWrapper = _viewModel$props.needScrollViewContentWrapper,
-    pullDownEnabled = _viewModel$props.pullDownEnabled,
-    pulledDownText = _viewModel$props.pulledDownText,
-    pullingDownText = _viewModel$props.pullingDownText,
-    reachBottomEnabled = _viewModel$props.reachBottomEnabled,
-    reachBottomText = _viewModel$props.reachBottomText,
-    refreshStrategy = _viewModel$props.refreshStrategy,
-    refreshingText = _viewModel$props.refreshingText,
-    rtlEnabled = _viewModel$props.rtlEnabled,
-    scrollByThumb = _viewModel$props.scrollByThumb,
-    showScrollbar = _viewModel$props.showScrollbar,
-    useKeyboard = _viewModel$props.useKeyboard,
-    visible = _viewModel$props.visible,
-    width = _viewModel$props.width,
-    pulledDown = viewModel.pulledDown,
-    restAttributes = viewModel.restAttributes,
-    scrollLocationChange = viewModel.scrollLocationChange,
-    scrollViewContentRef = viewModel.scrollViewContentRef,
-    scrollableRef = viewModel.scrollableRef,
-    scrolling = viewModel.scrolling,
-    topPocketRef = viewModel.topPocketRef,
-    topPocketState = viewModel.topPocketState,
-    unlock = viewModel.unlock,
-    vScrollLocation = viewModel.vScrollLocation,
-    vScrollOffsetMax = viewModel.vScrollOffsetMax,
-    vScrollOffsetMin = viewModel.vScrollOffsetMin,
-    vScrollbarRef = viewModel.vScrollbarRef,
-    wrapperRef = viewModel.wrapperRef;
+const viewFunction = viewModel => {
+  const {
+    active,
+    bottomPocketHeight,
+    bottomPocketRef,
+    containerClientHeight,
+    containerClientWidth,
+    containerHasSizes,
+    containerRef,
+    containerStyles,
+    contentHeight,
+    contentPaddingBottom,
+    contentRef,
+    contentStyles,
+    contentWidth,
+    cssClasses,
+    direction,
+    hScrollLocation,
+    hScrollOffsetMax,
+    hScrollbarRef,
+    handleKeyDown,
+    hovered,
+    isLoadPanelVisible,
+    lock,
+    onBounce,
+    onEnd,
+    onPullDown,
+    onReachBottom,
+    onScroll,
+    onVisibilityChangeHandler,
+    props: {
+      aria,
+      bounceEnabled,
+      children,
+      forceGeneratePockets,
+      height,
+      inertiaEnabled,
+      loadPanelTemplate: LoadPanelTemplate,
+      needRenderScrollbars,
+      needScrollViewContentWrapper,
+      pullDownEnabled,
+      pulledDownText,
+      pullingDownText,
+      reachBottomEnabled,
+      reachBottomText,
+      refreshStrategy,
+      refreshingText,
+      rtlEnabled,
+      scrollByThumb,
+      showScrollbar,
+      useKeyboard,
+      visible,
+      width
+    },
+    pulledDown,
+    restAttributes,
+    scrollLocationChange,
+    scrollViewContentRef,
+    scrollableRef,
+    scrolling,
+    topPocketRef,
+    topPocketState,
+    unlock,
+    vScrollLocation,
+    vScrollOffsetMax,
+    vScrollOffsetMin,
+    vScrollbarRef,
+    wrapperRef
+  } = viewModel;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, _extends({
     "rootElementRef": scrollableRef,
     "focusStateEnabled": useKeyboard,
@@ -189,12 +191,8 @@ var viewFunction = function viewFunction(viewModel) {
   })));
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   _inheritsLoose(ScrollableSimulated, _InfernoComponent);
   function ScrollableSimulated(props) {
     var _this;
@@ -345,95 +343,73 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     (_this$_effects$13 = this._effects[20]) === null || _this$_effects$13 === void 0 ? void 0 : _this$_effects$13.update([this.props.direction, this.props.rtlEnabled]);
   };
   _proto.disposeWheelTimer = function disposeWheelTimer() {
-    var _this2 = this;
-    return function () {
-      return _this2.clearWheelValidationTimer();
-    };
+    return () => this.clearWheelValidationTimer();
   };
   _proto.scrollEffect = function scrollEffect() {
-    var _this3 = this;
-    return (0, _subscribe_to_event.subscribeToScrollEvent)(this.containerRef.current, function () {
-      _this3.handleScroll();
+    return (0, _subscribe_to_event.subscribeToScrollEvent)(this.containerRef.current, () => {
+      this.handleScroll();
     });
   };
   _proto.startEffect = function startEffect() {
-    var _this4 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollStartEvent)(this.wrapperRef.current, function (event) {
-      _this4.handleStart(event);
+    return (0, _subscribe_to_event.subscribeToDXScrollStartEvent)(this.wrapperRef.current, event => {
+      this.handleStart(event);
     });
   };
   _proto.initEffect = function initEffect() {
-    var _this5 = this;
-    return (0, _subscribe_to_event.subscribeToScrollInitEvent)(this.wrapperRef.current, function (event) {
-      _this5.handleInit(event);
+    return (0, _subscribe_to_event.subscribeToScrollInitEvent)(this.wrapperRef.current, event => {
+      this.handleInit(event);
     }, this.getInitEventData());
   };
   _proto.moveEffect = function moveEffect() {
-    var _this6 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollMoveEvent)(this.wrapperRef.current, function (event) {
-      _this6.handleMove(event);
+    return (0, _subscribe_to_event.subscribeToDXScrollMoveEvent)(this.wrapperRef.current, event => {
+      this.handleMove(event);
     });
   };
   _proto.endEffect = function endEffect() {
-    var _this7 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollEndEvent)(this.wrapperRef.current, function (event) {
-      _this7.handleEnd(event);
+    return (0, _subscribe_to_event.subscribeToDXScrollEndEvent)(this.wrapperRef.current, event => {
+      this.handleEnd(event);
     });
   };
   _proto.stopEffect = function stopEffect() {
-    var _this8 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollStopEvent)(this.wrapperRef.current, function () {
-      _this8.handleStop();
+    return (0, _subscribe_to_event.subscribeToDXScrollStopEvent)(this.wrapperRef.current, () => {
+      this.handleStop();
     });
   };
   _proto.cancelEffect = function cancelEffect() {
-    var _this9 = this;
-    return (0, _subscribe_to_event.subscribeToDXScrollCancelEvent)(this.wrapperRef.current, function (event) {
-      _this9.handleCancel(event);
+    return (0, _subscribe_to_event.subscribeToDXScrollCancelEvent)(this.wrapperRef.current, event => {
+      this.handleCancel(event);
     });
   };
   _proto.pointerDownEffect = function pointerDownEffect() {
-    var _this10 = this;
-    return (0, _subscribe_to_event.subscribeToDXPointerDownEvent)(this.wrapperRef.current, function () {
-      _this10.setState(function (__state_argument) {
-        return {
-          active: true
-        };
-      });
+    return (0, _subscribe_to_event.subscribeToDXPointerDownEvent)(this.wrapperRef.current, () => {
+      this.setState(__state_argument => ({
+        active: true
+      }));
     });
   };
   _proto.pointerUpEffect = function pointerUpEffect() {
-    var _this11 = this;
-    return (0, _subscribe_to_event.subscribeToDXPointerUpEvent)(_dom_adapter.default.getDocument(), function () {
-      _this11.setState(function (__state_argument) {
-        return {
-          active: false
-        };
-      });
+    return (0, _subscribe_to_event.subscribeToDXPointerUpEvent)(_dom_adapter.default.getDocument(), () => {
+      this.setState(__state_argument => ({
+        active: false
+      }));
     });
   };
   _proto.mouseEnterEffect = function mouseEnterEffect() {
-    var _this12 = this;
     if (this.isHoverable) {
-      return (0, _subscribe_to_event.subscribeToMouseEnterEvent)(this.scrollableRef.current, function () {
-        _this12.setState(function (__state_argument) {
-          return {
-            hovered: true
-          };
-        });
+      return (0, _subscribe_to_event.subscribeToMouseEnterEvent)(this.scrollableRef.current, () => {
+        this.setState(__state_argument => ({
+          hovered: true
+        }));
       });
     }
     return undefined;
   };
   _proto.mouseLeaveEffect = function mouseLeaveEffect() {
-    var _this13 = this;
     if (this.isHoverable) {
-      return (0, _subscribe_to_event.subscribeToMouseLeaveEvent)(this.scrollableRef.current, function () {
-        _this13.setState(function (__state_argument) {
-          return {
-            hovered: false
-          };
-        });
+      return (0, _subscribe_to_event.subscribeToMouseLeaveEvent)(this.scrollableRef.current, () => {
+        this.setState(__state_argument => ({
+          hovered: false
+        }));
       });
     }
     return undefined;
@@ -446,52 +422,45 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.updatePocketState = function updatePocketState() {
-    var _this14 = this;
     if (this.props.forceGeneratePockets) {
-      this.setState(function (__state_argument) {
-        return {
-          topPocketState: _this14.pulledDown ? _consts.TopPocketState.STATE_READY : _consts.TopPocketState.STATE_RELEASED
-        };
-      });
+      this.setState(__state_argument => ({
+        topPocketState: this.pulledDown ? _consts.TopPocketState.STATE_READY : _consts.TopPocketState.STATE_RELEASED
+      }));
     }
   };
   _proto.subscribeTopPocketToResize = function subscribeTopPocketToResize() {
-    var _this$topPocketRef,
-      _this15 = this;
-    return (0, _subscribe_to_resize.subscribeToResize)((_this$topPocketRef = this.topPocketRef) === null || _this$topPocketRef === void 0 ? void 0 : _this$topPocketRef.current, function (element) {
-      _this15.setTopPocketDimensions(element);
+    var _this$topPocketRef;
+    return (0, _subscribe_to_resize.subscribeToResize)((_this$topPocketRef = this.topPocketRef) === null || _this$topPocketRef === void 0 ? void 0 : _this$topPocketRef.current, element => {
+      this.setTopPocketDimensions(element);
     });
   };
   _proto.subscribeBottomPocketToResize = function subscribeBottomPocketToResize() {
-    var _this$bottomPocketRef,
-      _this16 = this;
-    return (0, _subscribe_to_resize.subscribeToResize)((_this$bottomPocketRef = this.bottomPocketRef) === null || _this$bottomPocketRef === void 0 ? void 0 : _this$bottomPocketRef.current, function (element) {
-      _this16.setBottomPocketDimensions(element);
+    var _this$bottomPocketRef;
+    return (0, _subscribe_to_resize.subscribeToResize)((_this$bottomPocketRef = this.bottomPocketRef) === null || _this$bottomPocketRef === void 0 ? void 0 : _this$bottomPocketRef.current, element => {
+      this.setBottomPocketDimensions(element);
     });
   };
   _proto.subscribeContainerToResize = function subscribeContainerToResize() {
-    var _this17 = this;
-    return (0, _subscribe_to_resize.subscribeToResize)(this.containerRef.current, function (element) {
-      _this17.setContainerDimensions(element);
+    return (0, _subscribe_to_resize.subscribeToResize)(this.containerRef.current, element => {
+      this.setContainerDimensions(element);
     });
   };
   _proto.subscribeToResizeContent = function subscribeToResizeContent() {
-    var _this18 = this;
     if (this.props.needScrollViewContentWrapper) {
-      var unsubscribeHeightResize = (0, _subscribe_to_resize.subscribeToResize)(this.content(), function (element) {
-        _this18.setContentHeight(element);
+      const unsubscribeHeightResize = (0, _subscribe_to_resize.subscribeToResize)(this.content(), element => {
+        this.setContentHeight(element);
       });
-      var unsubscribeWidthResize = (0, _subscribe_to_resize.subscribeToResize)(this.contentRef.current, function (element) {
-        _this18.setContentWidth(element);
+      const unsubscribeWidthResize = (0, _subscribe_to_resize.subscribeToResize)(this.contentRef.current, element => {
+        this.setContentWidth(element);
       });
-      return function () {
+      return () => {
         unsubscribeHeightResize === null || unsubscribeHeightResize === void 0 ? void 0 : unsubscribeHeightResize();
         unsubscribeWidthResize === null || unsubscribeWidthResize === void 0 ? void 0 : unsubscribeWidthResize();
       };
     }
-    return (0, _subscribe_to_resize.subscribeToResize)(this.contentRef.current, function (element) {
-      _this18.setContentHeight(element);
-      _this18.setContentWidth(element);
+    return (0, _subscribe_to_resize.subscribeToResize)(this.contentRef.current, element => {
+      this.setContentHeight(element);
+      this.setContentWidth(element);
     });
   };
   _proto.updateDimensions = function updateDimensions() {
@@ -499,11 +468,9 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   };
   _proto.triggerScrollEvent = function triggerScrollEvent() {
     if (this.state.pendingScrollEvent) {
-      this.setState(function (__state_argument) {
-        return {
-          pendingScrollEvent: false
-        };
-      });
+      this.setState(__state_argument => ({
+        pendingScrollEvent: false
+      }));
       _events_engine.default.triggerHandler(this.containerRef.current, {
         type: 'scroll'
       });
@@ -514,14 +481,14 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
       this.prevDirection = this.props.direction;
       return;
     }
-    var maxScrollOffset = (0, _get_scroll_left_max.getScrollLeftMax)(this.containerRef.current);
-    var needResetInactiveOffset = this.prevDirection !== this.props.direction && maxScrollOffset;
+    const maxScrollOffset = (0, _get_scroll_left_max.getScrollLeftMax)(this.containerRef.current);
+    const needResetInactiveOffset = this.prevDirection !== this.props.direction && maxScrollOffset;
     if (!needResetInactiveOffset) {
       return;
     }
     this.prevDirection = this.props.direction;
-    var inactiveScrollProp = !this.direction.isVertical ? 'scrollTop' : 'scrollLeft';
-    var location = this.props.rtlEnabled && inactiveScrollProp === 'scrollLeft' ? maxScrollOffset : 0;
+    const inactiveScrollProp = !this.direction.isVertical ? 'scrollTop' : 'scrollLeft';
+    const location = this.props.rtlEnabled && inactiveScrollProp === 'scrollLeft' ? maxScrollOffset : 0;
     this.scrollLocationChange({
       fullScrollProp: inactiveScrollProp,
       location
@@ -536,9 +503,10 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   };
   _proto.syncScrollbarsWithContent = function syncScrollbarsWithContent() {
     var _this$vScrollbarRef$c;
-    var _this$containerRef$cu = this.containerRef.current,
-      scrollLeft = _this$containerRef$cu.scrollLeft,
-      scrollTop = _this$containerRef$cu.scrollTop;
+    const {
+      scrollLeft,
+      scrollTop
+    } = this.containerRef.current;
     (_this$vScrollbarRef$c = this.vScrollbarRef.current) === null || _this$vScrollbarRef$c === void 0 ? void 0 : _this$vScrollbarRef$c.scrollTo(scrollTop, false);
     if (!this.props.rtlEnabled) {
       var _this$hScrollbarRef$c;
@@ -547,38 +515,29 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   };
   _proto.startLoading = function startLoading() {
     if (this.loadingIndicatorEnabled && (0, _is_element_visible.isElementVisible)(this.containerRef.current)) {
-      this.setState(function (__state_argument) {
-        return {
-          isLoadPanelVisible: true
-        };
-      });
+      this.setState(__state_argument => ({
+        isLoadPanelVisible: true
+      }));
     }
     this.lock();
   };
   _proto.finishLoading = function finishLoading() {
-    this.setState(function (__state_argument) {
-      return {
-        isLoadPanelVisible: false
-      };
-    });
+    this.setState(__state_argument => ({
+      isLoadPanelVisible: false
+    }));
     this.unlock();
   };
   _proto.getEventArgs = function getEventArgs() {
-    var scrollOffset = this.scrollOffset();
+    const scrollOffset = this.scrollOffset();
     return _extends({
       event: this.eventForUserAction,
       scrollOffset
     }, (0, _get_boundary_props.getBoundaryProps)(this.props.direction, scrollOffset, this.containerRef.current, this.state.topPocketHeight));
   };
   _proto.getInitEventData = function getInitEventData() {
-    var _this19 = this;
     return {
-      getDirection: function getDirection(event) {
-        return _this19.tryGetAllowedDirection(event);
-      },
-      validate: function validate(event) {
-        return _this19.validate(event);
-      },
+      getDirection: event => this.tryGetAllowedDirection(event),
+      validate: event => this.validate(event),
       isNative: false,
       scrollTarget: this.containerRef.current
     };
@@ -590,26 +549,23 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   _proto.onEnd = function onEnd(direction) {
     if (this.direction.isBoth) {
       this.endActionDirections[direction] = true;
-      var _this$endActionDirect = this.endActionDirections,
-        horizontal = _this$endActionDirect.horizontal,
-        vertical = _this$endActionDirect.vertical;
+      const {
+        horizontal,
+        vertical
+      } = this.endActionDirections;
       if (horizontal && vertical) {
         var _this$props$onEnd, _this$props3;
         this.restoreEndActionDirections();
-        this.setState(function (__state_argument) {
-          return {
-            scrolling: false
-          };
-        });
+        this.setState(__state_argument => ({
+          scrolling: false
+        }));
         (_this$props$onEnd = (_this$props3 = this.props).onEnd) === null || _this$props$onEnd === void 0 ? void 0 : _this$props$onEnd.call(_this$props3, this.getEventArgs());
       }
     } else {
       var _this$props$onEnd2, _this$props4;
-      this.setState(function (__state_argument) {
-        return {
-          scrolling: false
-        };
-      });
+      this.setState(__state_argument => ({
+        scrolling: false
+      }));
       (_this$props$onEnd2 = (_this$props4 = this.props).onEnd) === null || _this$props$onEnd2 === void 0 ? void 0 : _this$props$onEnd2.call(_this$props4, this.getEventArgs());
     }
   };
@@ -627,21 +583,17 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   };
   _proto.onPullDown = function onPullDown() {
     var _this$props$onPullDow, _this$props7;
-    this.setState(function (__state_argument) {
-      return {
-        topPocketState: _consts.TopPocketState.STATE_REFRESHING
-      };
-    });
+    this.setState(__state_argument => ({
+      topPocketState: _consts.TopPocketState.STATE_REFRESHING
+    }));
     this.loadingIndicatorEnabled = false;
     this.startLoading();
     (_this$props$onPullDow = (_this$props7 = this.props).onPullDown) === null || _this$props$onPullDow === void 0 ? void 0 : _this$props$onPullDow.call(_this$props7, {});
   };
   _proto.onRelease = function onRelease() {
-    this.setState(function (__state_argument) {
-      return {
-        topPocketState: _consts.TopPocketState.STATE_RELEASED
-      };
-    });
+    this.setState(__state_argument => ({
+      topPocketState: _consts.TopPocketState.STATE_RELEASED
+    }));
     this.loadingIndicatorEnabled = true;
     this.finishLoading();
     this.updateElementDimensions();
@@ -656,49 +608,44 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     if (!(0, _is_element_visible.isElementVisible)(this.containerRef.current)) {
       return;
     }
-    var fullScrollProp = eventData.fullScrollProp,
-      location = eventData.location;
+    const {
+      fullScrollProp,
+      location
+    } = eventData;
     this.containerRef.current[fullScrollProp] = location;
     if (fullScrollProp === 'scrollLeft') {
-      this.setState(function (__state_argument) {
-        return {
-          hScrollLocation: -location
-        };
-      });
+      this.setState(__state_argument => ({
+        hScrollLocation: -location
+      }));
     } else {
-      this.setState(function (__state_argument) {
-        return {
-          vScrollLocation: -location
-        };
-      });
+      this.setState(__state_argument => ({
+        vScrollLocation: -location
+      }));
     }
     this.savedScrollOffset[fullScrollProp] = location;
   };
   _proto.onScroll = function onScroll() {
-    this.setState(function (__state_argument) {
-      return {
-        pendingScrollEvent: true
-      };
-    });
+    this.setState(__state_argument => ({
+      pendingScrollEvent: true
+    }));
   };
   _proto.handleInit = function handleInit(event) {
     var _this$hScrollbarRef$c2, _this$vScrollbarRef$c2;
     this.suppressDirections(event);
     this.restoreEndActionDirections();
     this.eventForUserAction = event;
-    var crossThumbScrolling = this.isCrossThumbScrolling(event);
-    var _getElementOffset = (0, _get_element_offset.getElementOffset)(this.scrollableRef.current),
-      left = _getElementOffset.left,
-      top = _getElementOffset.top;
+    const crossThumbScrolling = this.isCrossThumbScrolling(event);
+    const {
+      left,
+      top
+    } = (0, _get_element_offset.getElementOffset)(this.scrollableRef.current);
     (_this$hScrollbarRef$c2 = this.hScrollbarRef.current) === null || _this$hScrollbarRef$c2 === void 0 ? void 0 : _this$hScrollbarRef$c2.initHandler(event, crossThumbScrolling, left);
     (_this$vScrollbarRef$c2 = this.vScrollbarRef.current) === null || _this$vScrollbarRef$c2 === void 0 ? void 0 : _this$vScrollbarRef$c2.initHandler(event, crossThumbScrolling, top);
   };
   _proto.handleStart = function handleStart(event) {
-    this.setState(function (__state_argument) {
-      return {
-        scrolling: true
-      };
-    });
+    this.setState(__state_argument => ({
+      scrolling: true
+    }));
     this.eventForUserAction = event;
     this.onStart();
   };
@@ -711,7 +658,7 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     (_e$preventDefault = e.preventDefault) === null || _e$preventDefault === void 0 ? void 0 : _e$preventDefault.call(e);
     this.adjustDistance(e, 'delta');
     this.eventForUserAction = e;
-    var isDxMouseWheel = (0, _index.isDxMouseWheelEvent)(e.originalEvent);
+    const isDxMouseWheel = (0, _index.isDxMouseWheelEvent)(e.originalEvent);
     (_this$hScrollbarRef$c3 = this.hScrollbarRef.current) === null || _this$hScrollbarRef$c3 === void 0 ? void 0 : _this$hScrollbarRef$c3.moveHandler(e.delta.x, isDxMouseWheel);
     (_this$vScrollbarRef$c3 = this.vScrollbarRef.current) === null || _this$vScrollbarRef$c3 === void 0 ? void 0 : _this$vScrollbarRef$c3.moveHandler(e.delta.y, isDxMouseWheel);
   };
@@ -734,9 +681,11 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     (_this$vScrollbarRef$c6 = this.vScrollbarRef.current) === null || _this$vScrollbarRef$c6 === void 0 ? void 0 : _this$vScrollbarRef$c6.endHandler(0, false);
   };
   _proto.isCrossThumbScrolling = function isCrossThumbScrolling(event) {
-    var target = event.originalEvent.target;
-    var verticalScrolling = false;
-    var horizontalScrolling = false;
+    const {
+      target
+    } = event.originalEvent;
+    let verticalScrolling = false;
+    let horizontalScrolling = false;
     if (this.direction.isVertical) {
       verticalScrolling = this.props.scrollByThumb && this.vScrollbarRef.current.isThumb(target);
     }
@@ -746,11 +695,11 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     return verticalScrolling || horizontalScrolling;
   };
   _proto.adjustDistance = function adjustDistance(event, property) {
-    var distance = event[property];
+    const distance = event[property];
     distance.x *= this.validDirections[_consts.DIRECTION_HORIZONTAL] ? 1 : 0;
     distance.y *= this.validDirections[_consts.DIRECTION_VERTICAL] ? 1 : 0;
     if ((0, _index.isDxMouseWheelEvent)(event.originalEvent)) {
-      var devicePixelRatio = (0, _get_device_pixel_ratio.getDevicePixelRatio)();
+      const devicePixelRatio = (0, _get_device_pixel_ratio.getDevicePixelRatio)();
       distance.x = Math.round(distance.x / devicePixelRatio * 100) / 100;
       distance.y = Math.round(distance.y / devicePixelRatio * 100) / 100;
     }
@@ -761,14 +710,16 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
       return;
     }
     this.prepareDirections(false);
-    var target = event.originalEvent.target;
+    const {
+      target
+    } = event.originalEvent;
     if (this.direction.isVertical) {
-      var scrollbar = this.vScrollbarRef.current;
+      const scrollbar = this.vScrollbarRef.current;
       this.validDirections[_consts.DIRECTION_VERTICAL] = this.validateEvent(this.isContent(target), scrollbar.isScrollbar(target), scrollbar.isThumb(target));
     }
     if (this.direction.isHorizontal) {
-      var _scrollbar = this.hScrollbarRef.current;
-      this.validDirections[_consts.DIRECTION_HORIZONTAL] = this.validateEvent(this.isContent(target), _scrollbar.isScrollbar(target), _scrollbar.isThumb(target));
+      const scrollbar = this.hScrollbarRef.current;
+      this.validDirections[_consts.DIRECTION_HORIZONTAL] = this.validateEvent(this.isContent(target), scrollbar.isScrollbar(target), scrollbar.isThumb(target));
     }
   };
   _proto.validateEvent = function validateEvent(isContent, isScrollbar, isThumb) {
@@ -779,7 +730,7 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     this.validDirections[_consts.DIRECTION_VERTICAL] = value;
   };
   _proto.isContent = function isContent(element) {
-    var closest = element.closest(".".concat(_consts.SCROLLABLE_SIMULATED_CLASS));
+    const closest = element.closest(".".concat(_consts.SCROLLABLE_SIMULATED_CLASS));
     if ((0, _type.isDefined)(closest)) {
       return closest === this.scrollableRef.current;
     }
@@ -792,14 +743,14 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     return this.locked;
   };
   _proto.validateWheel = function validateWheel(event) {
-    var scrollbar = (0, _get_permissible_wheel_direction.permissibleWheelDirection)(this.props.direction, event.shiftKey) === _consts.DIRECTION_HORIZONTAL ? this.hScrollbarRef.current : this.vScrollbarRef.current;
-    var reachedMin = scrollbar.reachedMin();
-    var reachedMax = scrollbar.reachedMax();
-    var contentGreaterThanContainer = !reachedMin || !reachedMax;
-    var locatedNotAtBound = !reachedMin && !reachedMax;
-    var scrollFromMin = reachedMin && event.delta > 0;
-    var scrollFromMax = reachedMax && event.delta < 0;
-    var validated = contentGreaterThanContainer && (locatedNotAtBound || scrollFromMin || scrollFromMax);
+    const scrollbar = (0, _get_permissible_wheel_direction.permissibleWheelDirection)(this.props.direction, event.shiftKey) === _consts.DIRECTION_HORIZONTAL ? this.hScrollbarRef.current : this.vScrollbarRef.current;
+    const reachedMin = scrollbar.reachedMin();
+    const reachedMax = scrollbar.reachedMax();
+    const contentGreaterThanContainer = !reachedMin || !reachedMax;
+    const locatedNotAtBound = !reachedMin && !reachedMax;
+    const scrollFromMin = reachedMin && event.delta > 0;
+    const scrollFromMax = reachedMax && event.delta < 0;
+    let validated = contentGreaterThanContainer && (locatedNotAtBound || scrollFromMin || scrollFromMax);
     validated = validated || this.validateWheelTimer !== undefined;
     if (validated) {
       this.clearWheelValidationTimer();
@@ -823,7 +774,7 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
       event.originalEvent.preventDefault();
       return;
     }
-    var isKeySupported = Object.values(_consts.KEY_CODES).includes((0, _index.normalizeKeyName)(event));
+    const isKeySupported = Object.values(_consts.KEY_CODES).includes((0, _index.normalizeKeyName)(event));
     if (isKeySupported) {
       event.originalEvent.stopPropagation();
       event.originalEvent.preventDefault();
@@ -870,20 +821,21 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.scrollByLine = function scrollByLine(lines) {
-    var scrollOffset = Math.abs(_consts.SCROLL_LINE_HEIGHT / (0, _get_device_pixel_ratio.getDevicePixelRatio)() * 100) / 100;
+    const scrollOffset = Math.abs(_consts.SCROLL_LINE_HEIGHT / (0, _get_device_pixel_ratio.getDevicePixelRatio)() * 100) / 100;
     this.scrollByLocation({
       top: lines.top * scrollOffset,
       left: lines.left * scrollOffset
     });
   };
   _proto.scrollByPage = function scrollByPage(page) {
-    var distance = {
+    const distance = {
       left: 0,
       top: 0
     };
-    var _this$containerRef$cu2 = this.containerRef.current,
-      clientHeight = _this$containerRef$cu2.clientHeight,
-      clientWidth = _this$containerRef$cu2.clientWidth;
+    const {
+      clientHeight,
+      clientWidth
+    } = this.containerRef.current;
     if ((0, _get_permissible_wheel_direction.permissibleWheelDirection)(this.props.direction, false) === _consts.DIRECTION_VERTICAL) {
       distance.top = page * clientHeight;
     } else {
@@ -892,14 +844,15 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     this.scrollByLocation(distance);
   };
   _proto.scrollByKey = function scrollByKey(key) {
-    var _this$containerRef$cu3 = this.containerRef.current,
-      scrollLeft = _this$containerRef$cu3.scrollLeft,
-      scrollTop = _this$containerRef$cu3.scrollTop;
-    var vOffsetMin = 0;
-    var hOffsetMin = 0;
-    var vOffsetMax = -this.vScrollOffsetMax + this.state.bottomPocketHeight + this.state.contentPaddingBottom;
-    var hOffsetMax = -this.hScrollOffsetMax;
-    var offset = (0, _get_offset_distance.getOffsetDistance)(key === _consts.KEY_CODES.HOME ? {
+    const {
+      scrollLeft,
+      scrollTop
+    } = this.containerRef.current;
+    const vOffsetMin = 0;
+    const hOffsetMin = 0;
+    const vOffsetMax = -this.vScrollOffsetMax + this.state.bottomPocketHeight + this.state.contentPaddingBottom;
+    const hOffsetMax = -this.hScrollOffsetMax;
+    const offset = (0, _get_offset_distance.getOffsetDistance)(key === _consts.KEY_CODES.HOME ? {
       top: vOffsetMin,
       left: this.props.rtlEnabled ? hOffsetMax : hOffsetMin
     } : {
@@ -909,7 +862,7 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
       top: scrollTop,
       left: scrollLeft
     });
-    var direction = (0, _get_permissible_wheel_direction.permissibleWheelDirection)(this.props.direction, false);
+    const direction = (0, _get_permissible_wheel_direction.permissibleWheelDirection)(this.props.direction, false);
     this.scrollByLocation(direction === _consts.DIRECTION_VERTICAL ? {
       top: offset.top,
       left: 0
@@ -930,9 +883,10 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     var _this$props$onVisibil, _this$props9;
     if (visible) {
       var _this$vScrollbarRef$c7, _this$hScrollbarRef$c7;
-      var _this$savedScrollOffs = this.savedScrollOffset,
-        scrollLeft = _this$savedScrollOffs.scrollLeft,
-        scrollTop = _this$savedScrollOffs.scrollTop;
+      const {
+        scrollLeft,
+        scrollTop
+      } = this.savedScrollOffset;
       (_this$vScrollbarRef$c7 = this.vScrollbarRef.current) === null || _this$vScrollbarRef$c7 === void 0 ? void 0 : _this$vScrollbarRef$c7.scrollTo(scrollTop, false);
       (_this$hScrollbarRef$c7 = this.hScrollbarRef.current) === null || _this$hScrollbarRef$c7 === void 0 ? void 0 : _this$hScrollbarRef$c7.scrollTo(scrollLeft, false);
     }
@@ -948,67 +902,46 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     this.setContainerDimensions(this.containerRef.current);
   };
   _proto.setTopPocketDimensions = function setTopPocketDimensions(topPocketEl) {
-    var _this20 = this;
-    this.setState(function (__state_argument) {
-      return {
-        topPocketHeight: _this20.props.forceGeneratePockets && _this20.props.pullDownEnabled ? topPocketEl.clientHeight : 0
-      };
-    });
+    this.setState(__state_argument => ({
+      topPocketHeight: this.props.forceGeneratePockets && this.props.pullDownEnabled ? topPocketEl.clientHeight : 0
+    }));
   };
   _proto.setBottomPocketDimensions = function setBottomPocketDimensions(bottomPocketEl) {
-    var _this21 = this;
-    this.setState(function (__state_argument) {
-      return {
-        bottomPocketHeight: _this21.props.forceGeneratePockets && _this21.props.reachBottomEnabled ? bottomPocketEl.clientHeight : 0
-      };
-    });
+    this.setState(__state_argument => ({
+      bottomPocketHeight: this.props.forceGeneratePockets && this.props.reachBottomEnabled ? bottomPocketEl.clientHeight : 0
+    }));
   };
   _proto.setContentHeight = function setContentHeight(contentEl) {
-    var _this22 = this;
     if ((0, _is_element_visible.isElementVisible)(contentEl)) {
-      this.setState(function (__state_argument) {
-        return {
-          contentClientHeight: contentEl.clientHeight
-        };
-      });
-      this.setState(function (__state_argument) {
-        return {
-          contentScrollHeight: contentEl.scrollHeight
-        };
-      });
-      this.setState(function (__state_argument) {
-        return {
-          contentPaddingBottom: (0, _get_element_style.getElementPadding)(_this22.contentRef.current, 'bottom')
-        };
-      });
+      this.setState(__state_argument => ({
+        contentClientHeight: contentEl.clientHeight
+      }));
+      this.setState(__state_argument => ({
+        contentScrollHeight: contentEl.scrollHeight
+      }));
+      this.setState(__state_argument => ({
+        contentPaddingBottom: (0, _get_element_style.getElementPadding)(this.contentRef.current, 'bottom')
+      }));
     }
   };
   _proto.setContentWidth = function setContentWidth(contentEl) {
     if ((0, _is_element_visible.isElementVisible)(contentEl)) {
-      this.setState(function (__state_argument) {
-        return {
-          contentClientWidth: contentEl.clientWidth
-        };
-      });
-      this.setState(function (__state_argument) {
-        return {
-          contentScrollWidth: contentEl.scrollWidth
-        };
-      });
+      this.setState(__state_argument => ({
+        contentClientWidth: contentEl.clientWidth
+      }));
+      this.setState(__state_argument => ({
+        contentScrollWidth: contentEl.scrollWidth
+      }));
     }
   };
   _proto.setContainerDimensions = function setContainerDimensions(containerEl) {
     if ((0, _is_element_visible.isElementVisible)(containerEl)) {
-      this.setState(function (__state_argument) {
-        return {
-          containerClientHeight: containerEl.clientHeight
-        };
-      });
-      this.setState(function (__state_argument) {
-        return {
-          containerClientWidth: containerEl.clientWidth
-        };
-      });
+      this.setState(__state_argument => ({
+        containerClientHeight: containerEl.clientHeight
+      }));
+      this.setState(__state_argument => ({
+        containerClientWidth: containerEl.clientWidth
+      }));
     }
   };
   _proto.content = function content() {
@@ -1022,11 +955,9 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   };
   _proto.refresh = function refresh() {
     var _this$props$onPullDow2, _this$props10;
-    this.setState(function (__state_argument) {
-      return {
-        topPocketState: _consts.TopPocketState.STATE_READY
-      };
-    });
+    this.setState(__state_argument => ({
+      topPocketState: _consts.TopPocketState.STATE_READY
+    }));
     this.startLoading();
     (_this$props$onPullDow2 = (_this$props10 = this.props).onPullDown) === null || _this$props$onPullDow2 === void 0 ? void 0 : _this$props$onPullDow2.call(_this$props10, {});
   };
@@ -1047,9 +978,10 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     return this.content().offsetWidth;
   };
   _proto.scrollOffset = function scrollOffset() {
-    var _this$savedScrollOffs2 = this.savedScrollOffset,
-      scrollLeft = _this$savedScrollOffs2.scrollLeft,
-      scrollTop = _this$savedScrollOffs2.scrollTop;
+    const {
+      scrollLeft,
+      scrollTop
+    } = this.savedScrollOffset;
     return {
       top: this.vScrollOffsetMax === 0 ? 0 : scrollTop,
       left: this.hScrollOffsetMax === 0 ? 0 : scrollLeft
@@ -1088,25 +1020,24 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   _proto.scrollByLocation = function scrollByLocation(location) {
     var _this$hScrollbarRef$c9, _this$vScrollbarRef$c9;
     this.updateHandler();
-    this.setState(function (__state_argument) {
-      return {
-        scrolling: true
-      };
-    });
+    this.setState(__state_argument => ({
+      scrolling: true
+    }));
     this.prepareDirections(true);
     this.onStart();
-    var _this$containerRef$cu4 = this.containerRef.current,
-      scrollLeft = _this$containerRef$cu4.scrollLeft,
-      scrollTop = _this$containerRef$cu4.scrollTop;
-    var left = location.left,
-      top = location.top;
+    const {
+      scrollLeft,
+      scrollTop
+    } = this.containerRef.current;
+    const {
+      left,
+      top
+    } = location;
     (_this$hScrollbarRef$c9 = this.hScrollbarRef.current) === null || _this$hScrollbarRef$c9 === void 0 ? void 0 : _this$hScrollbarRef$c9.scrollTo(scrollLeft + left, true);
     (_this$vScrollbarRef$c9 = this.vScrollbarRef.current) === null || _this$vScrollbarRef$c9 === void 0 ? void 0 : _this$vScrollbarRef$c9.scrollTo(scrollTop + top, true);
-    this.setState(function (__state_argument) {
-      return {
-        scrolling: false
-      };
-    });
+    this.setState(__state_argument => ({
+      scrolling: false
+    }));
   };
   _proto.componentWillUpdate = function componentWillUpdate(nextProps, nextState, context) {
     _InfernoComponent.prototype.componentWillUpdate.call(this);
@@ -1121,7 +1052,7 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         loadPanelTemplate: getTemplate(props.loadPanelTemplate)
@@ -1218,60 +1149,59 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
   };
   _createClass(ScrollableSimulated, [{
     key: "pulledDown",
-    get: function get() {
+    get: function () {
       return this.props.pullDownEnabled && this.props.bounceEnabled && this.state.topPocketHeight > 0 && this.state.vScrollLocation - this.state.topPocketHeight >= 0;
     }
   }, {
     key: "hScrollOffsetMax",
-    get: function get() {
+    get: function () {
       return -Math.max(this.contentWidth - this.state.containerClientWidth, 0);
     }
   }, {
     key: "vScrollOffsetMax",
-    get: function get() {
+    get: function () {
       return -Math.max(this.contentHeight - this.state.containerClientHeight, 0);
     }
   }, {
     key: "vScrollOffsetMin",
-    get: function get() {
+    get: function () {
       return this.pulledDown && this.state.topPocketState !== _consts.TopPocketState.STATE_RELEASED ? this.state.topPocketHeight : 0;
     }
   }, {
     key: "contentHeight",
-    get: function get() {
+    get: function () {
       var _this$contentRef;
       return (0, _get_element_style.getElementOverflowY)((_this$contentRef = this.contentRef) === null || _this$contentRef === void 0 ? void 0 : _this$contentRef.current) === 'hidden' ? this.state.contentClientHeight : Math.max(this.state.contentScrollHeight, this.state.contentClientHeight);
     }
   }, {
     key: "contentWidth",
-    get: function get() {
+    get: function () {
       var _this$contentRef2;
       return (0, _get_element_style.getElementOverflowX)((_this$contentRef2 = this.contentRef) === null || _this$contentRef2 === void 0 ? void 0 : _this$contentRef2.current) === 'hidden' ? this.state.contentClientWidth : Math.max(this.state.contentScrollWidth, this.state.contentClientWidth);
     }
   }, {
     key: "containerHasSizes",
-    get: function get() {
+    get: function () {
       return this.state.containerClientHeight > 0 && this.state.containerClientWidth > 0;
     }
   }, {
     key: "contentStyles",
-    get: function get() {
-      var _this23 = this;
+    get: function () {
       if (this.__getterCache['contentStyles'] !== undefined) {
         return this.__getterCache['contentStyles'];
       }
-      return this.__getterCache['contentStyles'] = function () {
+      return this.__getterCache['contentStyles'] = (() => {
         return {
-          transform: "translate(".concat(_this23.contentTranslateX, "px, ").concat(_this23.contentTranslateY, "px)")
+          transform: "translate(".concat(this.contentTranslateX, "px, ").concat(this.contentTranslateY, "px)")
         };
-      }();
+      })();
     }
   }, {
     key: "contentTranslateY",
-    get: function get() {
-      var location = this.state.vScrollLocation;
-      var transformValue = location % 1;
-      var maxOffset = this.vScrollOffsetMax - this.state.bottomPocketHeight - this.state.contentPaddingBottom;
+    get: function () {
+      const location = this.state.vScrollLocation;
+      let transformValue = location % 1;
+      const maxOffset = this.vScrollOffsetMax - this.state.bottomPocketHeight - this.state.contentPaddingBottom;
       if (maxOffset >= 0) {
         return 0;
       }
@@ -1288,9 +1218,9 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "contentTranslateX",
-    get: function get() {
-      var location = this.state.hScrollLocation;
-      var transformValue = location % 1;
+    get: function () {
+      const location = this.state.hScrollLocation;
+      let transformValue = location % 1;
       if (!this.props.bounceEnabled || this.hScrollOffsetMax === 0 || (0, _math.inRange)(this.state.hScrollLocation, this.hScrollOffsetMax, 0)) {
         return 0;
       }
@@ -1304,32 +1234,32 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "containerStyles",
-    get: function get() {
-      var _this24 = this;
+    get: function () {
       if (this.__getterCache['containerStyles'] !== undefined) {
         return this.__getterCache['containerStyles'];
       }
-      return this.__getterCache['containerStyles'] = function () {
-        var direction = _this24.permissibleDirection;
-        var vDirectionAllowed = direction === _consts.DIRECTION_VERTICAL || direction === _consts.DIRECTION_BOTH;
-        var hDirectionAllowed = direction === _consts.DIRECTION_HORIZONTAL || direction === _consts.DIRECTION_BOTH;
-        var touchDirection = vDirectionAllowed ? 'pan-x' : '';
+      return this.__getterCache['containerStyles'] = (() => {
+        const direction = this.permissibleDirection;
+        const vDirectionAllowed = direction === _consts.DIRECTION_VERTICAL || direction === _consts.DIRECTION_BOTH;
+        const hDirectionAllowed = direction === _consts.DIRECTION_HORIZONTAL || direction === _consts.DIRECTION_BOTH;
+        let touchDirection = vDirectionAllowed ? 'pan-x' : '';
         touchDirection = hDirectionAllowed ? 'pan-y' : touchDirection;
         touchDirection = vDirectionAllowed && hDirectionAllowed ? 'none' : touchDirection;
         return {
           touchAction: touchDirection
         };
-      }();
+      })();
     }
   }, {
     key: "cssClasses",
-    get: function get() {
-      var _this$props11 = this.props,
-        classes = _this$props11.classes,
-        direction = _this$props11.direction,
-        disabled = _this$props11.disabled,
-        showScrollbar = _this$props11.showScrollbar;
-      var classesMap = {
+    get: function () {
+      const {
+        classes,
+        direction,
+        disabled,
+        showScrollbar
+      } = this.props;
+      const classesMap = {
         'dx-scrollable': true,
         [_consts.SCROLLABLE_SIMULATED_CLASS]: true,
         ["dx-scrollable-".concat(direction)]: true,
@@ -1341,67 +1271,32 @@ var ScrollableSimulated = /*#__PURE__*/function (_InfernoComponent) {
     }
   }, {
     key: "direction",
-    get: function get() {
-      var _this25 = this;
+    get: function () {
       if (this.__getterCache['direction'] !== undefined) {
         return this.__getterCache['direction'];
       }
-      return this.__getterCache['direction'] = function () {
-        return new _scroll_direction.ScrollDirection(_this25.props.direction);
-      }();
+      return this.__getterCache['direction'] = (() => {
+        return new _scroll_direction.ScrollDirection(this.props.direction);
+      })();
     }
   }, {
     key: "permissibleDirection",
-    get: function get() {
-      var bounceEnabled = this.props.bounceEnabled;
+    get: function () {
+      const {
+        bounceEnabled
+      } = this.props;
       return (0, _get_allowed_direction.allowedDirection)(this.props.direction, -this.vScrollOffsetMax, -this.hScrollOffsetMax, bounceEnabled);
     }
   }, {
     key: "isHoverable",
-    get: function get() {
+    get: function () {
       return !this.props.disabled && this.props.showScrollbar === 'onHover';
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props12 = this.props,
-        addWidgetClass = _this$props12.addWidgetClass,
-        aria = _this$props12.aria,
-        bounceEnabled = _this$props12.bounceEnabled,
-        children = _this$props12.children,
-        classes = _this$props12.classes,
-        direction = _this$props12.direction,
-        disabled = _this$props12.disabled,
-        forceGeneratePockets = _this$props12.forceGeneratePockets,
-        height = _this$props12.height,
-        inertiaEnabled = _this$props12.inertiaEnabled,
-        loadPanelTemplate = _this$props12.loadPanelTemplate,
-        needRenderScrollbars = _this$props12.needRenderScrollbars,
-        needScrollViewContentWrapper = _this$props12.needScrollViewContentWrapper,
-        onBounce = _this$props12.onBounce,
-        onEnd = _this$props12.onEnd,
-        onPullDown = _this$props12.onPullDown,
-        onReachBottom = _this$props12.onReachBottom,
-        onScroll = _this$props12.onScroll,
-        onStart = _this$props12.onStart,
-        onUpdated = _this$props12.onUpdated,
-        onVisibilityChange = _this$props12.onVisibilityChange,
-        pullDownEnabled = _this$props12.pullDownEnabled,
-        pulledDownText = _this$props12.pulledDownText,
-        pullingDownText = _this$props12.pullingDownText,
-        reachBottomEnabled = _this$props12.reachBottomEnabled,
-        reachBottomText = _this$props12.reachBottomText,
-        refreshStrategy = _this$props12.refreshStrategy,
-        refreshingText = _this$props12.refreshingText,
-        rtlEnabled = _this$props12.rtlEnabled,
-        scrollByContent = _this$props12.scrollByContent,
-        scrollByThumb = _this$props12.scrollByThumb,
-        scrollLocationChange = _this$props12.scrollLocationChange,
-        showScrollbar = _this$props12.showScrollbar,
-        useKeyboard = _this$props12.useKeyboard,
-        visible = _this$props12.visible,
-        width = _this$props12.width,
-        restProps = _objectWithoutProperties(_this$props12, _excluded);
+    get: function () {
+      const _this$props11 = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props11, _excluded);
       return restProps;
     }
   }]);

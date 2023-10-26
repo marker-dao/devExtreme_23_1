@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/gauges/linear_range_container.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,11 +12,11 @@ exports.default = void 0;
 var _base_range_container = _interopRequireDefault(require("./base_range_container"));
 var _utils = require("../core/utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var _Number = Number;
-var _max = Math.max;
-var LinearRangeContainer = _base_range_container.default.inherit({
-  _processOptions: function _processOptions() {
-    var that = this;
+const _Number = Number;
+const _max = Math.max;
+const LinearRangeContainer = _base_range_container.default.inherit({
+  _processOptions: function () {
+    const that = this;
     that.vertical = that._options.vertical;
     that._inner = that._outer = 0;
     if (that.vertical) {
@@ -45,20 +45,20 @@ var LinearRangeContainer = _base_range_container.default.inherit({
       }
     }
   },
-  _isVisible: function _isVisible() {
+  _isVisible: function () {
     return true;
   },
-  _createRange: function _createRange(range, layout) {
-    var that = this;
-    var inner = that._inner;
-    var outer = that._outer;
-    var startPosition = that._translator.translate(range.start);
-    var endPosition = that._translator.translate(range.end);
-    var points;
-    var x = layout.x;
-    var y = layout.y;
-    var startWidth = range.startWidth;
-    var endWidth = range.endWidth;
+  _createRange: function (range, layout) {
+    const that = this;
+    const inner = that._inner;
+    const outer = that._outer;
+    const startPosition = that._translator.translate(range.start);
+    const endPosition = that._translator.translate(range.end);
+    let points;
+    const x = layout.x;
+    const y = layout.y;
+    const startWidth = range.startWidth;
+    const endWidth = range.endWidth;
     if (that.vertical) {
       points = [x - startWidth * inner, startPosition, x - endWidth * inner, endPosition, x + endWidth * outer, endPosition, x + startWidth * outer, startPosition];
     } else {
@@ -66,9 +66,9 @@ var LinearRangeContainer = _base_range_container.default.inherit({
     }
     return that._renderer.path(points, 'area');
   },
-  measure: function measure(layout) {
-    var result = {};
-    var width;
+  measure: function (layout) {
+    const result = {};
+    let width;
     result.min = result.max = layout[this.vertical ? 'x' : 'y'];
     width = this._options.width;
     width = _Number(width) || _max(_Number(width.start), _Number(width.end));

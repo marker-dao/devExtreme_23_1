@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/resources/m_utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,6 +18,7 @@ import { isDefined } from '../../../core/utils/type';
 import { DataSource } from '../../../data/data_source/data_source';
 import { normalizeDataSourceOptions } from '../../../data/data_source/utils';
 import { hasResourceValue } from '../../../renovation/ui/scheduler/resources/hasResourceValue';
+import { current, isFluent } from '../../../ui/themes';
 export var getValueExpr = resource => resource.valueExpr || 'id';
 export var getDisplayExpr = resource => resource.displayExpr || 'text';
 export var getFieldExpr = resource => resource.fieldExpr || resource.field;
@@ -146,7 +147,8 @@ export var createResourceEditorModel = (resources, loadedResources) => resources
     editorOptions: {
       dataSource: dataSource.length ? dataSource : getWrappedDataSource(resource.dataSource),
       displayExpr: getDisplayExpr(resource),
-      valueExpr: getValueExpr(resource)
+      valueExpr: getValueExpr(resource),
+      stylingMode: isFluent(current()) ? 'filled' : 'outlined'
     },
     dataField,
     editorType: resource.allowMultiple ? 'dxTagBox' : 'dxSelectBox',

@@ -6,7 +6,7 @@ var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var defaultPermissions = {
+const defaultPermissions = {
   create: false,
   copy: false,
   move: false,
@@ -16,7 +16,7 @@ var defaultPermissions = {
   download: false
 };
 exports.defaultPermissions = defaultPermissions;
-var FileManagerCommandManager = /*#__PURE__*/function () {
+let FileManagerCommandManager = /*#__PURE__*/function () {
   function FileManagerCommandManager(permissions) {
     this._actions = {};
     this._permissions = permissions || {};
@@ -24,7 +24,6 @@ var FileManagerCommandManager = /*#__PURE__*/function () {
   }
   var _proto = FileManagerCommandManager.prototype;
   _proto._initCommands = function _initCommands() {
-    var _this = this;
     this._commands = [{
       name: 'create',
       text: _message.default.format('dxFileManager-commandCreate'),
@@ -94,30 +93,29 @@ var FileManagerCommandManager = /*#__PURE__*/function () {
       noFileItemRequired: true
     }];
     this._commandMap = {};
-    this._commands.forEach(function (command) {
-      _this._commandMap[command.name] = command;
+    this._commands.forEach(command => {
+      this._commandMap[command.name] = command;
     });
   };
   _proto.registerActions = function registerActions(actions) {
     this._actions = (0, _extend.extend)(this._actions, actions);
   };
   _proto.executeCommand = function executeCommand(command, arg) {
-    var commandName = (0, _type.isString)(command) ? command : command.name;
-    var action = this._actions[commandName];
+    const commandName = (0, _type.isString)(command) ? command : command.name;
+    const action = this._actions[commandName];
     if (action) {
       return action(arg);
     }
   };
   _proto.updatePermissions = function updatePermissions(permissions) {
-    var _this2 = this;
-    var resultPermissions = (0, _extend.extend)({}, defaultPermissions, permissions);
+    const resultPermissions = (0, _extend.extend)({}, defaultPermissions, permissions);
     this._permissions = resultPermissions;
-    (0, _iterator.each)(this._permissions, function (permission) {
-      _this2._commandMap[permission].enabled = _this2._permissions[permission];
+    (0, _iterator.each)(this._permissions, permission => {
+      this._commandMap[permission].enabled = this._permissions[permission];
     });
   };
   _proto.setCommandEnabled = function setCommandEnabled(commandName, enabled) {
-    var command = this.getCommandByName(commandName);
+    const command = this.getCommandByName(commandName);
     if (command) {
       command.enabled = enabled;
     }
@@ -126,23 +124,19 @@ var FileManagerCommandManager = /*#__PURE__*/function () {
     return this._commandMap[name];
   };
   _proto.isCommandAvailable = function isCommandAvailable(commandName, itemInfos) {
-    var command = this.getCommandByName(commandName);
+    const command = this.getCommandByName(commandName);
     if (!command || !command.enabled) {
       return false;
     }
     if (command.noFileItemRequired) {
       return true;
     }
-    var itemsLength = itemInfos && itemInfos.length || 0;
-    if (itemsLength === 0 || itemInfos.some(function (item) {
-      return item.fileItem.isRoot() || item.fileItem.isParentFolder;
-    })) {
+    const itemsLength = itemInfos && itemInfos.length || 0;
+    if (itemsLength === 0 || itemInfos.some(item => item.fileItem.isRoot() || item.fileItem.isParentFolder)) {
       return false;
     }
     if (commandName === 'download') {
-      return itemInfos.every(function (itemInfo) {
-        return !itemInfo.fileItem.isDirectory;
-      });
+      return itemInfos.every(itemInfo => !itemInfo.fileItem.isDirectory);
     }
     return !command.isSingleFileItemCommand || itemsLength === 1;
   };

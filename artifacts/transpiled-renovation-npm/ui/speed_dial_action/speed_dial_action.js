@@ -11,12 +11,14 @@ var _swatch_container = _interopRequireDefault(require("../widget/swatch_contain
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var getSwatchContainer = _swatch_container.default.getSwatchContainer;
+const {
+  getSwatchContainer
+} = _swatch_container.default;
 
 // STYLE speedDialAction
 
-var ready = _ready_callbacks.default.add;
-var SpeedDialAction = /*#__PURE__*/function (_Widget) {
+const ready = _ready_callbacks.default.add;
+let SpeedDialAction = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(SpeedDialAction, _Widget);
   function SpeedDialAction() {
     return _Widget.apply(this, arguments) || this;
@@ -96,12 +98,9 @@ var SpeedDialAction = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto._render = function _render() {
-    var _this = this;
     this._toggleVisibility(false);
     if (!getSwatchContainer(this.$element())) {
-      ready(function () {
-        return (0, _speed_dial_main_item.initAction)(_this);
-      });
+      ready(() => (0, _speed_dial_main_item.initAction)(this));
     } else {
       (0, _speed_dial_main_item.initAction)(this);
     }

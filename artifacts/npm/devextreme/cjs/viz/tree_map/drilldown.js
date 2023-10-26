@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/drilldown.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,12 +12,12 @@ var _tree_map = _interopRequireDefault(require("./tree_map.base"));
 var _helpers = require("../core/helpers");
 require("./api");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var proto = _tree_map.default.prototype;
+const proto = _tree_map.default.prototype;
 proto._eventsMap.onDrill = {
   name: 'drill'
 };
 (0, _helpers.expand)(proto, '_extendProxyType', function (proto) {
-  var that = this;
+  const that = this;
   proto.drillDown = function () {
     that._drillToNode(this._id);
   };
@@ -26,8 +26,8 @@ proto._eventsMap.onDrill = {
   this._drilldownIndex = -1;
 });
 proto._drillToNode = function (index) {
-  var that = this;
-  var node;
+  const that = this;
+  let node;
   if (that._drilldownIndex !== index) {
     node = that._nodes[index] || that._root;
     if (node.nodes) {

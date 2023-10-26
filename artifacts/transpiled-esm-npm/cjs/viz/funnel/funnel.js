@@ -10,7 +10,7 @@ var _component_registrator = _interopRequireDefault(require("../../core/componen
 var _item = _interopRequireDefault(require("./item"));
 var _data_source = require("../core/data_source");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var NODES_CREATE_CHANGE = 'NODES_CREATE';
+const NODES_CREATE_CHANGE = 'NODES_CREATE';
 (0, _tiling.addAlgorithm)('dynamicslope', _tiling2.default, true);
 (0, _tiling.addAlgorithm)('dynamicheight', _tiling3.default);
 function invertFigure(figure) {
@@ -24,7 +24,7 @@ function getLegendItemState(itemState) {
     hatching: itemState.hatching
   };
 }
-var dxFunnel = _m_base_widget.default.inherit({
+const dxFunnel = _m_base_widget.default.inherit({
   _rootClass: 'dxf-funnel',
   _rootClassPrefix: 'dxf',
   _proxyData: [],
@@ -43,7 +43,7 @@ var dxFunnel = _m_base_widget.default.inherit({
     sortData: NODES_CREATE_CHANGE
   },
   _themeDependentChanges: [NODES_CREATE_CHANGE],
-  _getDefaultSize: function _getDefaultSize() {
+  _getDefaultSize: function () {
     return {
       width: 400,
       height: 400
@@ -53,7 +53,7 @@ var dxFunnel = _m_base_widget.default.inherit({
   _fontFields: ['legend.title.font', 'legend.title.subtitle.font', 'legend.font'],
   _optionChangesOrder: ['DATA_SOURCE'],
   _initialChanges: ['DATA_SOURCE'],
-  _initCore: function _initCore() {
+  _initCore: function () {
     this._group = this._renderer.g().append(this._renderer.root);
     this._items = [];
   },
@@ -66,26 +66,26 @@ var dxFunnel = _m_base_widget.default.inherit({
     }
   },
   _disposeCore: _common.noop,
-  _applySize: function _applySize(rect) {
+  _applySize: function (rect) {
     this._rect = rect.slice();
     this._change(['TILING']);
     return this._rect;
   },
-  _getAlignmentRect: function _getAlignmentRect() {
+  _getAlignmentRect: function () {
     return this._rect;
   },
-  _change_TILING: function _change_TILING() {
-    var that = this;
-    var items = that._items;
-    var rect = that._rect;
-    var convertCoord = function convertCoord(coord, index) {
-      var offset = index % 2;
+  _change_TILING: function () {
+    const that = this;
+    const items = that._items;
+    const rect = that._rect;
+    const convertCoord = function (coord, index) {
+      const offset = index % 2;
       return rect[0 + offset] + (rect[2 + offset] - rect[0 + offset]) * coord;
     };
     this._group.clear();
     items.forEach(function (item, index) {
-      var coords = item.figure.map(convertCoord);
-      var element = that._renderer.path([], 'area').attr({
+      const coords = item.figure.map(convertCoord);
+      const element = that._renderer.path([], 'area').attr({
         points: coords
       }).append(that._group);
       item.coords = coords;
@@ -94,41 +94,41 @@ var dxFunnel = _m_base_widget.default.inherit({
     this._requestChange(['TILES']);
   },
   _customChangesOrder: [NODES_CREATE_CHANGE, 'LAYOUT', 'TILING', 'TILES', 'DRAWN'],
-  _dataSourceChangedHandler: function _dataSourceChangedHandler() {
+  _dataSourceChangedHandler: function () {
     this._requestChange([NODES_CREATE_CHANGE]);
   },
-  _change_DRAWN: function _change_DRAWN() {
+  _change_DRAWN: function () {
     this._drawn();
   },
-  _change_DATA_SOURCE: function _change_DATA_SOURCE() {
+  _change_DATA_SOURCE: function () {
     this._change(['DRAWN']);
     this._updateDataSource();
   },
-  _change_NODES_CREATE: function _change_NODES_CREATE() {
+  _change_NODES_CREATE: function () {
     this._buildNodes();
   },
-  _change_TILES: function _change_TILES() {
+  _change_TILES: function () {
     this._applyTilesAppearance();
   },
-  _suspend: function _suspend() {
+  _suspend: function () {
     if (!this._applyingChanges) {
       this._suspendChanges();
     }
   },
-  _resume: function _resume() {
+  _resume: function () {
     if (!this._applyingChanges) {
       this._resumeChanges();
     }
   },
-  _applyTilesAppearance: function _applyTilesAppearance() {
+  _applyTilesAppearance: function () {
     this._items.forEach(function (item) {
-      var state = item.getState();
+      const state = item.getState();
       item.element.smartAttr(item.states[state]);
     });
   },
-  _hitTestTargets: function _hitTestTargets(x, y) {
-    var that = this;
-    var data;
+  _hitTestTargets: function (x, y) {
+    const that = this;
+    let data;
     this._proxyData.some(function (callback) {
       data = callback.call(that, x, y);
       if (data) {
@@ -137,28 +137,28 @@ var dxFunnel = _m_base_widget.default.inherit({
     });
     return data;
   },
-  clearHover: function clearHover() {
+  clearHover: function () {
     this._suspend();
     this._items.forEach(function (item) {
       item.isHovered() && item.hover(false);
     });
     this._resume();
   },
-  clearSelection: function clearSelection() {
+  clearSelection: function () {
     this._suspend();
     this._items.forEach(function (item) {
       item.isSelected() && item.select(false);
     });
     this._resume();
   },
-  _getData: function _getData() {
-    var that = this;
-    var data = that._dataSourceItems() || [];
-    var valueField = that._getOption('valueField', true);
-    var argumentField = that._getOption('argumentField', true);
-    var colorField = that._getOption('colorField', true);
-    var processedData = data.reduce(function (d, item) {
-      var value = Number(item[valueField]);
+  _getData: function () {
+    const that = this;
+    const data = that._dataSourceItems() || [];
+    const valueField = that._getOption('valueField', true);
+    const argumentField = that._getOption('argumentField', true);
+    const colorField = that._getOption('colorField', true);
+    const processedData = data.reduce(function (d, item) {
+      const value = Number(item[valueField]);
       if (value >= 0) {
         d[0].push({
           value: value,
@@ -170,7 +170,7 @@ var dxFunnel = _m_base_widget.default.inherit({
       }
       return d;
     }, [[], 0]);
-    var items = processedData[0];
+    const items = processedData[0];
     if (data.length > 0 && items.length === 0) {
       that._incidentOccurred('E2005', valueField);
     }
@@ -184,21 +184,21 @@ var dxFunnel = _m_base_widget.default.inherit({
     }
     return items;
   },
-  _buildNodes: function _buildNodes() {
-    var that = this;
-    var data = that._getData();
-    var algorithm = (0, _tiling.getAlgorithm)(that._getOption('algorithm', true));
-    var percents = algorithm.normalizeValues(data);
-    var itemOptions = that._getOption('item');
-    var figures = algorithm.getFigures(percents, that._getOption('neckWidth', true), that._getOption('neckHeight', true));
-    var palette = that._themeManager.createPalette(that._getOption('palette', true), {
+  _buildNodes: function () {
+    const that = this;
+    const data = that._getData();
+    const algorithm = (0, _tiling.getAlgorithm)(that._getOption('algorithm', true));
+    const percents = algorithm.normalizeValues(data);
+    const itemOptions = that._getOption('item');
+    const figures = algorithm.getFigures(percents, that._getOption('neckWidth', true), that._getOption('neckHeight', true));
+    const palette = that._themeManager.createPalette(that._getOption('palette', true), {
       useHighlight: true,
       extensionMode: that._getOption('paletteExtensionMode', true),
       count: figures.length
     });
     that._items = figures.map(function (figure, index) {
-      var curData = data[index];
-      var node = new _item.default(that, {
+      const curData = data[index];
+      const node = new _item.default(that, {
         figure: figure,
         data: curData,
         percent: percents[index],
@@ -218,12 +218,12 @@ var dxFunnel = _m_base_widget.default.inherit({
   },
   _showTooltip: _common.noop,
   hideTooltip: _common.noop,
-  getAllItems: function getAllItems() {
+  getAllItems: function () {
     return this._items.slice();
   },
   _getLegendData() {
-    return this._items.map(function (item) {
-      var states = item.states;
+    return this._items.map(item => {
+      const states = item.states;
       return {
         id: item.id,
         visible: true,
@@ -237,8 +237,8 @@ var dxFunnel = _m_base_widget.default.inherit({
       };
     });
   },
-  _getMinSize: function _getMinSize() {
-    var adaptiveLayout = this._getOption('adaptiveLayout');
+  _getMinSize: function () {
+    const adaptiveLayout = this._getOption('adaptiveLayout');
     return [adaptiveLayout.width, adaptiveLayout.height];
   }
 });

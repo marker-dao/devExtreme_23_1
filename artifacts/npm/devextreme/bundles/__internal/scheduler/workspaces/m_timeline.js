@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/workspaces/m_timeline.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,12 +29,6 @@ var _m_utils_time_zone = _interopRequireDefault(require("../m_utils_time_zone"))
 var _m_current_time_shader_horizontal = _interopRequireDefault(require("../shaders/m_current_time_shader_horizontal"));
 var _m_work_space_indicator = _interopRequireDefault(require("./m_work_space_indicator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -43,16 +37,18 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // NOTE: Renovation component import.
 // @ts-expect-error
-var tableCreator = _m_table_creator.default.tableCreator;
-var TIMELINE_CLASS = 'dx-scheduler-timeline';
-var GROUP_TABLE_CLASS = 'dx-scheduler-group-table';
-var HORIZONTAL_GROUPED_WORKSPACE_CLASS = 'dx-scheduler-work-space-horizontal-grouped';
-var HEADER_PANEL_CELL_CLASS = 'dx-scheduler-header-panel-cell';
-var HEADER_PANEL_WEEK_CELL_CLASS = 'dx-scheduler-header-panel-week-cell';
-var HEADER_ROW_CLASS = 'dx-scheduler-header-row';
-var HORIZONTAL = 'horizontal';
-var toMs = _date.default.dateToMilliseconds;
-var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
+const {
+  tableCreator
+} = _m_table_creator.default;
+const TIMELINE_CLASS = 'dx-scheduler-timeline';
+const GROUP_TABLE_CLASS = 'dx-scheduler-group-table';
+const HORIZONTAL_GROUPED_WORKSPACE_CLASS = 'dx-scheduler-work-space-horizontal-grouped';
+const HEADER_PANEL_CELL_CLASS = 'dx-scheduler-header-panel-cell';
+const HEADER_PANEL_WEEK_CELL_CLASS = 'dx-scheduler-header-panel-week-cell';
+const HEADER_ROW_CLASS = 'dx-scheduler-header-row';
+const HORIZONTAL = 'horizontal';
+const toMs = _date.default.dateToMilliseconds;
+let SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
   _inheritsLoose(SchedulerTimeline, _SchedulerWorkSpace);
   function SchedulerTimeline() {
     var _this;
@@ -81,8 +77,8 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return (0, _position.getBoundingRect)(this.$element().get(0)).height;
   };
   _proto._dateTableScrollableConfig = function _dateTableScrollableConfig() {
-    var config = _SchedulerWorkSpace.prototype._dateTableScrollableConfig.call(this);
-    var timelineConfig = {
+    const config = _SchedulerWorkSpace.prototype._dateTableScrollableConfig.call(this);
+    const timelineConfig = {
       direction: HORIZONTAL
     };
     return this.option('crossScrollingEnabled') ? config : (0, _extend.extend)(config, timelineConfig);
@@ -91,7 +87,7 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return true;
   };
   _proto._headerScrollableConfig = function _headerScrollableConfig() {
-    var config = _SchedulerWorkSpace.prototype._headerScrollableConfig.call(this);
+    const config = _SchedulerWorkSpace.prototype._headerScrollableConfig.call(this);
     return (0, _extend.extend)(config, {
       scrollByContent: true
     });
@@ -115,23 +111,23 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     date.setDate(date.getDate() + 1);
   };
   _proto.getIndicationCellCount = function getIndicationCellCount() {
-    var timeDiff = this._getTimeDiff();
+    const timeDiff = this._getTimeDiff();
     return this._calculateDurationInCells(timeDiff);
   };
   _proto._getTimeDiff = function _getTimeDiff() {
-    var today = this._getToday();
-    var date = this._getIndicationFirstViewDate();
-    var startViewDate = this.getStartViewDate();
-    var dayLightOffset = _m_utils_time_zone.default.getDaylightOffsetInMs(startViewDate, today);
+    let today = this._getToday();
+    const date = this._getIndicationFirstViewDate();
+    const startViewDate = this.getStartViewDate();
+    const dayLightOffset = _m_utils_time_zone.default.getDaylightOffsetInMs(startViewDate, today);
     if (dayLightOffset) {
       today = new Date(today.getTime() + dayLightOffset);
     }
     return today.getTime() - date.getTime();
   };
   _proto._calculateDurationInCells = function _calculateDurationInCells(timeDiff) {
-    var today = this._getToday();
-    var differenceInDays = Math.floor(timeDiff / toMs('day'));
-    var duration = (timeDiff - differenceInDays * toMs('day') - this.option('startDayHour') * toMs('hour')) / this.getCellDuration();
+    const today = this._getToday();
+    const differenceInDays = Math.floor(timeDiff / toMs('day'));
+    let duration = (timeDiff - differenceInDays * toMs('day') - this.option('startDayHour') * toMs('hour')) / this.getCellDuration();
     if (today.getHours() > this.option('endDayHour')) {
       duration = this._getCellCountInDay();
     }
@@ -142,9 +138,9 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
   };
   _proto.getIndicationWidth = function getIndicationWidth() {
     if (this.isGroupedByDate()) {
-      var cellCount = this.getIndicationCellCount();
-      var integerPart = Math.floor(cellCount);
-      var fractionPart = cellCount - integerPart;
+      const cellCount = this.getIndicationCellCount();
+      const integerPart = Math.floor(cellCount);
+      const fractionPart = cellCount - integerPart;
       return this.getCellWidth() * (integerPart * this._getGroupCount() + fractionPart);
     }
     return this.getIndicationCellCount() * this.getCellWidth();
@@ -157,14 +153,14 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
   };
   _proto._setTableSizes = function _setTableSizes() {
     _SchedulerWorkSpace.prototype._setTableSizes.call(this);
-    var minHeight = this._getWorkSpaceMinHeight();
+    const minHeight = this._getWorkSpaceMinHeight();
     (0, _size.setHeight)(this._$sidebarTable, minHeight);
     (0, _size.setHeight)(this._$dateTable, minHeight);
     this.virtualScrollingDispatcher.updateDimensions();
   };
   _proto._getWorkSpaceMinHeight = function _getWorkSpaceMinHeight() {
-    var minHeight = this._getWorkSpaceHeight();
-    var workspaceContainerHeight = (0, _size.getOuterHeight)(this._$flexContainer, true);
+    let minHeight = this._getWorkSpaceHeight();
+    const workspaceContainerHeight = (0, _size.getOuterHeight)(this._$flexContainer, true);
     if (minHeight < workspaceContainerHeight) {
       minHeight = workspaceContainerHeight;
     }
@@ -177,7 +173,7 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     };
   };
   _proto._getCellByCoordinates = function _getCellByCoordinates(cellCoordinates, groupIndex) {
-    var indexes = this._groupedStrategy.prepareCellIndexes(cellCoordinates, groupIndex);
+    const indexes = this._groupedStrategy.prepareCellIndexes(cellCoordinates, groupIndex);
     return this._$dateTable.find('tr').eq(indexes.rowIndex).find('td').eq(indexes.columnIndex);
   };
   _proto._getWorkSpaceWidth = function _getWorkSpaceWidth() {
@@ -187,20 +183,20 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return _date.default.trimTime(new Date(this.getStartViewDate()));
   };
   _proto._getIntervalBetween = function _getIntervalBetween(currentDate, allDay) {
-    var startDayHour = this.option('startDayHour');
-    var endDayHour = this.option('endDayHour');
-    var firstViewDate = this.getStartViewDate();
-    var firstViewDateTime = firstViewDate.getTime();
-    var hiddenInterval = (24 - endDayHour + startDayHour) * toMs('hour');
-    var timeZoneOffset = _date.default.getTimezonesDifference(firstViewDate, currentDate);
-    var apptStart = currentDate.getTime();
-    var fullInterval = apptStart - firstViewDateTime - timeZoneOffset;
-    var fullDays = Math.floor(fullInterval / toMs('day'));
-    var tailDuration = fullInterval - fullDays * toMs('day');
-    var tailDelta = 0;
-    var cellCount = this._getCellCountInDay() * (fullDays - this._getWeekendsCount(fullDays));
-    var gapBeforeAppt = apptStart - _date.default.trimTime(new Date(currentDate)).getTime();
-    var result = cellCount * this.option('hoursInterval') * toMs('hour');
+    const startDayHour = this.option('startDayHour');
+    const endDayHour = this.option('endDayHour');
+    const firstViewDate = this.getStartViewDate();
+    const firstViewDateTime = firstViewDate.getTime();
+    const hiddenInterval = (24 - endDayHour + startDayHour) * toMs('hour');
+    const timeZoneOffset = _date.default.getTimezonesDifference(firstViewDate, currentDate);
+    const apptStart = currentDate.getTime();
+    const fullInterval = apptStart - firstViewDateTime - timeZoneOffset;
+    const fullDays = Math.floor(fullInterval / toMs('day'));
+    const tailDuration = fullInterval - fullDays * toMs('day');
+    let tailDelta = 0;
+    const cellCount = this._getCellCountInDay() * (fullDays - this._getWeekendsCount(fullDays));
+    const gapBeforeAppt = apptStart - _date.default.trimTime(new Date(currentDate)).getTime();
+    let result = cellCount * this.option('hoursInterval') * toMs('hour');
     if (!allDay) {
       if (currentDate.getHours() < startDayHour) {
         tailDelta = tailDuration - hiddenInterval + gapBeforeAppt;
@@ -238,11 +234,11 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return 0;
   };
   _proto.scrollToTime = function scrollToTime(hours, minutes, date) {
-    var coordinates = this._getScrollCoordinates(hours, minutes, date);
-    var scrollable = this.getScrollable();
-    var offset = this.option('rtlEnabled') ? (0, _position.getBoundingRect)(this.getScrollableContainer().get(0)).width : 0;
+    const coordinates = this._getScrollCoordinates(hours, minutes, date);
+    const scrollable = this.getScrollable();
+    const offset = this.option('rtlEnabled') ? (0, _position.getBoundingRect)(this.getScrollableContainer().get(0)).width : 0;
     if (this.option('templatesRenderAsynchronously')) {
-      setTimeout(function () {
+      setTimeout(() => {
         scrollable.scrollBy({
           left: coordinates.left - scrollable.scrollLeft() - offset,
           top: 0
@@ -261,7 +257,7 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ;
   _proto.generateRenderOptions = function generateRenderOptions(argument) {
-    var options = _SchedulerWorkSpace.prototype.generateRenderOptions.call(this, true);
+    const options = _SchedulerWorkSpace.prototype.generateRenderOptions.call(this, true);
     return _extends(_extends({}, options), {
       isGenerateWeekDaysHeaderData: this._needRenderWeekHeader(),
       getDateForHeaderText: _timeline_week.getDateForHeaderText
@@ -300,7 +296,7 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return this.option('timeCellTemplate');
   };
   _proto._renderView = function _renderView() {
-    var groupCellTemplates;
+    let groupCellTemplates;
     if (!this.isRenovatedRender()) {
       groupCellTemplates = this._renderGroupHeader();
     }
@@ -320,9 +316,9 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return (0, _common.noop)();
   };
   _proto._setCurrentTimeCells = function _setCurrentTimeCells() {
-    var timePanelCells = this._getTimePanelCells();
-    var currentTimeCellIndices = this._getCurrentTimePanelCellIndices();
-    currentTimeCellIndices.forEach(function (timePanelCellIndex) {
+    const timePanelCells = this._getTimePanelCells();
+    const currentTimeCellIndices = this._getCurrentTimePanelCellIndices();
+    currentTimeCellIndices.forEach(timePanelCellIndex => {
       timePanelCells.eq(timePanelCellIndex).addClass(_m_classes.HEADER_CURRENT_TIME_CELL_CLASS);
     });
   };
@@ -333,18 +329,17 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return this.$element().find(".".concat(HEADER_PANEL_CELL_CLASS, ":not(.").concat(HEADER_PANEL_WEEK_CELL_CLASS, ")"));
   };
   _proto._getCurrentTimePanelCellIndices = function _getCurrentTimePanelCellIndices() {
-    var columnCountPerGroup = this._getCellCount();
-    var today = this._getToday();
-    var index = this.getCellIndexByDate(today);
-    var _this$_getCellCoordin = this._getCellCoordinatesByIndex(index),
-      currentTimeColumnIndex = _this$_getCellCoordin.columnIndex;
+    const columnCountPerGroup = this._getCellCount();
+    const today = this._getToday();
+    const index = this.getCellIndexByDate(today);
+    const {
+      columnIndex: currentTimeColumnIndex
+    } = this._getCellCoordinatesByIndex(index);
     if (currentTimeColumnIndex === undefined) {
       return [];
     }
-    var horizontalGroupCount = this._isHorizontalGroupedWorkSpace() && !this.isGroupedByDate() ? this._getGroupCount() : 1;
-    return _toConsumableArray(new Array(horizontalGroupCount)).map(function (_, groupIndex) {
-      return columnCountPerGroup * groupIndex + currentTimeColumnIndex;
-    });
+    const horizontalGroupCount = this._isHorizontalGroupedWorkSpace() && !this.isGroupedByDate() ? this._getGroupCount() : 1;
+    return [...new Array(horizontalGroupCount)].map((_, groupIndex) => columnCountPerGroup * groupIndex + currentTimeColumnIndex);
   }
   // --------------
   // These methods should be deleted when we get rid of old render
@@ -360,23 +355,23 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return (0, _common.noop)();
   };
   _proto._renderDateHeader = function _renderDateHeader() {
-    var $headerRow = _SchedulerWorkSpace.prototype._renderDateHeader.call(this);
+    const $headerRow = _SchedulerWorkSpace.prototype._renderDateHeader.call(this);
     if (this._needRenderWeekHeader()) {
-      var firstViewDate = new Date(this.getStartViewDate());
-      var currentDate = new Date(firstViewDate);
-      var $cells = [];
-      var groupCount = this._getGroupCount();
-      var cellCountInDay = this._getCellCountInDay();
-      var colSpan = this.isGroupedByDate() ? cellCountInDay * groupCount : cellCountInDay;
-      var cellTemplate = this.option('dateCellTemplate');
-      var horizontalGroupCount = this._isHorizontalGroupedWorkSpace() && !this.isGroupedByDate() ? groupCount : 1;
-      var cellsInGroup = this.viewDataProvider.viewDataGenerator.daysInInterval * this.option('intervalCount');
-      var cellsCount = cellsInGroup * horizontalGroupCount;
-      for (var templateIndex = 0; templateIndex < cellsCount; templateIndex++) {
-        var $th = (0, _renderer.default)('<th>');
-        var text = (0, _base.formatWeekdayAndDay)(currentDate);
+      const firstViewDate = new Date(this.getStartViewDate());
+      let currentDate = new Date(firstViewDate);
+      const $cells = [];
+      const groupCount = this._getGroupCount();
+      const cellCountInDay = this._getCellCountInDay();
+      const colSpan = this.isGroupedByDate() ? cellCountInDay * groupCount : cellCountInDay;
+      const cellTemplate = this.option('dateCellTemplate');
+      const horizontalGroupCount = this._isHorizontalGroupedWorkSpace() && !this.isGroupedByDate() ? groupCount : 1;
+      const cellsInGroup = this.viewDataProvider.viewDataGenerator.daysInInterval * this.option('intervalCount');
+      const cellsCount = cellsInGroup * horizontalGroupCount;
+      for (let templateIndex = 0; templateIndex < cellsCount; templateIndex++) {
+        const $th = (0, _renderer.default)('<th>');
+        const text = (0, _base.formatWeekdayAndDay)(currentDate);
         if (cellTemplate) {
-          var templateOptions = {
+          const templateOptions = {
             model: _extends({
               text,
               date: new Date(currentDate)
@@ -396,20 +391,20 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
           this._incrementDate(currentDate);
         }
       }
-      var $row = (0, _renderer.default)('<tr>').addClass(HEADER_ROW_CLASS).append($cells);
+      const $row = (0, _renderer.default)('<tr>').addClass(HEADER_ROW_CLASS).append($cells);
       $headerRow.before($row);
     }
   };
   _proto._renderIndicator = function _renderIndicator(height, rtlOffset, $container, groupCount) {
-    var $indicator;
-    var width = this.getIndicationWidth();
+    let $indicator;
+    const width = this.getIndicationWidth();
     if (this.option('groupOrientation') === 'vertical') {
       $indicator = this._createIndicator($container);
       (0, _size.setHeight)($indicator, (0, _position.getBoundingRect)($container.get(0)).height);
       $indicator.css('left', rtlOffset ? rtlOffset - width : width);
     } else {
-      for (var i = 0; i < groupCount; i++) {
-        var offset = this.isGroupedByDate() ? i * this.getCellWidth() : this._getCellCount() * this.getCellWidth() * i;
+      for (let i = 0; i < groupCount; i++) {
+        const offset = this.isGroupedByDate() ? i * this.getCellWidth() : this._getCellCount() * this.getCellWidth() * i;
         $indicator = this._createIndicator($container);
         (0, _size.setHeight)($indicator, (0, _position.getBoundingRect)($container.get(0)).height);
         $indicator.css('left', rtlOffset ? rtlOffset - width - offset : width + offset);
@@ -417,7 +412,7 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
     }
   };
   _proto._makeGroupRows = function _makeGroupRows(groups, groupByDate) {
-    var tableCreatorStrategy = this.option('groupOrientation') === 'vertical' ? tableCreator.VERTICAL : tableCreator.HORIZONTAL;
+    const tableCreatorStrategy = this.option('groupOrientation') === 'vertical' ? tableCreator.VERTICAL : tableCreator.HORIZONTAL;
     return tableCreator.makeGroupedTable(tableCreatorStrategy, groups, {
       groupRowClass: _m_classes.GROUP_ROW_CLASS,
       groupHeaderRowClass: _m_classes.GROUP_ROW_CLASS,
@@ -427,12 +422,12 @@ var SchedulerTimeline = /*#__PURE__*/function (_SchedulerWorkSpace) {
   };
   _createClass(SchedulerTimeline, [{
     key: "verticalGroupTableClass",
-    get: function get() {
+    get: function () {
       return GROUP_TABLE_CLASS;
     }
   }, {
     key: "renovatedHeaderPanelComponent",
-    get: function get() {
+    get: function () {
       return _layout.default;
     }
   }]);

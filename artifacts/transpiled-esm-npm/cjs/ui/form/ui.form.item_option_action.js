@@ -3,7 +3,7 @@
 exports.default = void 0;
 var _class = _interopRequireDefault(require("../../core/class"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ItemOptionAction = /*#__PURE__*/function () {
+let ItemOptionAction = /*#__PURE__*/function () {
   function ItemOptionAction(options) {
     this._options = options;
     this._itemsRunTimeInfo = this._options.itemsRunTimeInfo;

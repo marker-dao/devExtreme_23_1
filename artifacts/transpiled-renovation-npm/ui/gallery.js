@@ -25,33 +25,33 @@ var _message = _interopRequireDefault(require("../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE gallery
 
-var GALLERY_CLASS = 'dx-gallery';
-var GALLERY_INDICATOR_VISIBLE_CLASS = 'dx-gallery-indicator-visible';
-var GALLERY_WRAPPER_CLASS = GALLERY_CLASS + '-wrapper';
-var GALLERY_LOOP_CLASS = 'dx-gallery-loop';
-var GALLERY_ITEM_CONTAINER_CLASS = GALLERY_CLASS + '-container';
-var GALLERY_ACTIVE_CLASS = GALLERY_CLASS + '-active';
-var GALLERY_ITEM_CLASS = GALLERY_CLASS + '-item';
-var GALLERY_INVISIBLE_ITEM_CLASS = GALLERY_CLASS + '-item-invisible';
-var GALLERY_LOOP_ITEM_CLASS = GALLERY_ITEM_CLASS + '-loop';
-var GALLERY_ITEM_SELECTOR = '.' + GALLERY_ITEM_CLASS;
-var GALLERY_ITEM_SELECTED_CLASS = GALLERY_ITEM_CLASS + '-selected';
-var GALLERY_INDICATOR_CLASS = GALLERY_CLASS + '-indicator';
-var GALLERY_INDICATOR_ITEM_CLASS = GALLERY_INDICATOR_CLASS + '-item';
-var GALLERY_INDICATOR_ITEM_SELECTOR = '.' + GALLERY_INDICATOR_ITEM_CLASS;
-var GALLERY_INDICATOR_ITEM_SELECTED_CLASS = GALLERY_INDICATOR_ITEM_CLASS + '-selected';
-var ITEM_CONTENT_SELECTOR = '.dx-item-content';
-var GALLERY_IMAGE_CLASS = 'dx-gallery-item-image';
-var GALLERY_ITEM_DATA_KEY = 'dxGalleryItemData';
-var MAX_CALC_ERROR = 1;
-var GalleryNavButton = _ui.default.inherit({
-  _supportedKeys: function _supportedKeys() {
+const GALLERY_CLASS = 'dx-gallery';
+const GALLERY_INDICATOR_VISIBLE_CLASS = 'dx-gallery-indicator-visible';
+const GALLERY_WRAPPER_CLASS = GALLERY_CLASS + '-wrapper';
+const GALLERY_LOOP_CLASS = 'dx-gallery-loop';
+const GALLERY_ITEM_CONTAINER_CLASS = GALLERY_CLASS + '-container';
+const GALLERY_ACTIVE_CLASS = GALLERY_CLASS + '-active';
+const GALLERY_ITEM_CLASS = GALLERY_CLASS + '-item';
+const GALLERY_INVISIBLE_ITEM_CLASS = GALLERY_CLASS + '-item-invisible';
+const GALLERY_LOOP_ITEM_CLASS = GALLERY_ITEM_CLASS + '-loop';
+const GALLERY_ITEM_SELECTOR = '.' + GALLERY_ITEM_CLASS;
+const GALLERY_ITEM_SELECTED_CLASS = GALLERY_ITEM_CLASS + '-selected';
+const GALLERY_INDICATOR_CLASS = GALLERY_CLASS + '-indicator';
+const GALLERY_INDICATOR_ITEM_CLASS = GALLERY_INDICATOR_CLASS + '-item';
+const GALLERY_INDICATOR_ITEM_SELECTOR = '.' + GALLERY_INDICATOR_ITEM_CLASS;
+const GALLERY_INDICATOR_ITEM_SELECTED_CLASS = GALLERY_INDICATOR_ITEM_CLASS + '-selected';
+const ITEM_CONTENT_SELECTOR = '.dx-item-content';
+const GALLERY_IMAGE_CLASS = 'dx-gallery-item-image';
+const GALLERY_ITEM_DATA_KEY = 'dxGalleryItemData';
+const MAX_CALC_ERROR = 1;
+const GalleryNavButton = _ui.default.inherit({
+  _supportedKeys: function () {
     return (0, _extend.extend)(this.callBase(), {
       pageUp: _common.noop,
       pageDown: _common.noop
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       direction: 'next',
       onClick: null,
@@ -59,11 +59,11 @@ var GalleryNavButton = _ui.default.inherit({
       activeStateEnabled: true
     });
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
-    var that = this;
-    var $element = this.$element();
-    var eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+    const that = this;
+    const $element = this.$element();
+    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
     $element.addClass(GALLERY_CLASS + '-nav-button-' + this.option('direction'));
     _events_engine.default.off($element, eventName);
     _events_engine.default.on($element, eventName, function (e) {
@@ -72,7 +72,7 @@ var GalleryNavButton = _ui.default.inherit({
       });
     });
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'onClick':
       case 'direction':
@@ -83,10 +83,10 @@ var GalleryNavButton = _ui.default.inherit({
     }
   }
 });
-var Gallery = _uiCollection_widget.default.inherit({
+const Gallery = _uiCollection_widget.default.inherit({
   _activeStateUnit: GALLERY_ITEM_SELECTOR,
   _wasAnyItemTemplateRendered: false,
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       /**
        * @name dxGalleryOptions.activeStateEnabled
@@ -133,9 +133,9 @@ var Gallery = _uiCollection_widget.default.inherit({
       selectByClick: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
@@ -143,11 +143,11 @@ var Gallery = _uiCollection_widget.default.inherit({
       }
     }]);
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this.option('loopItemFocus', this.option('loop'));
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this.callBase();
     /**
     * @name dxGalleryItem.visible
@@ -156,7 +156,7 @@ var Gallery = _uiCollection_widget.default.inherit({
 
     this._templateManager.addDefaultTemplates({
       item: new _bindable_template.BindableTemplate(function ($container, data) {
-        var $img = (0, _renderer.default)('<img>').addClass(GALLERY_IMAGE_CLASS);
+        const $img = (0, _renderer.default)('<img>').addClass(GALLERY_IMAGE_CLASS);
         if ((0, _type.isPlainObject)(data)) {
           this._prepareDefaultItemTemplate(data, $container);
           $img.attr({
@@ -169,24 +169,24 @@ var Gallery = _uiCollection_widget.default.inherit({
       }.bind(this), ['imageSrc', 'imageAlt', 'text', 'html'], this.option('integrationOptions.watchMethod'))
     });
   },
-  _dataSourceOptions: function _dataSourceOptions() {
+  _dataSourceOptions: function () {
     return {
       paginate: false
     };
   },
-  _itemContainer: function _itemContainer() {
+  _itemContainer: function () {
     return this._$container;
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return GALLERY_ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return GALLERY_ITEM_DATA_KEY;
   },
-  _actualItemWidth: function _actualItemWidth() {
-    var isWrapAround = this.option('wrapAround');
+  _actualItemWidth: function () {
+    const isWrapAround = this.option('wrapAround');
     if (this.option('stretchImages')) {
-      var itemPerPage = isWrapAround ? this._itemsPerPage() + 1 : this._itemsPerPage();
+      const itemPerPage = isWrapAround ? this._itemsPerPage() + 1 : this._itemsPerPage();
       return 1 / itemPerPage;
     }
     if (isWrapAround) {
@@ -194,10 +194,10 @@ var Gallery = _uiCollection_widget.default.inherit({
     }
     return this._itemPercentWidth();
   },
-  _itemPercentWidth: function _itemPercentWidth() {
-    var percentWidth;
-    var elementWidth = (0, _size.getOuterWidth)(this.$element());
-    var initialItemWidth = this.option('initialItemWidth');
+  _itemPercentWidth: function () {
+    let percentWidth;
+    const elementWidth = (0, _size.getOuterWidth)(this.$element());
+    const initialItemWidth = this.option('initialItemWidth');
     if (initialItemWidth && initialItemWidth <= elementWidth) {
       percentWidth = initialItemWidth / elementWidth;
     } else {
@@ -205,33 +205,33 @@ var Gallery = _uiCollection_widget.default.inherit({
     }
     return percentWidth;
   },
-  _itemsPerPage: function _itemsPerPage() {
-    var itemsPerPage = (0, _window.hasWindow)() ? Math.floor(1 / this._itemPercentWidth()) : 1;
+  _itemsPerPage: function () {
+    const itemsPerPage = (0, _window.hasWindow)() ? Math.floor(1 / this._itemPercentWidth()) : 1;
     return Math.min(itemsPerPage, this._itemsCount());
   },
-  _pagesCount: function _pagesCount() {
+  _pagesCount: function () {
     return Math.ceil(this._itemsCount() / this._itemsPerPage());
   },
-  _itemsCount: function _itemsCount() {
+  _itemsCount: function () {
     return (this.option('items') || []).length;
   },
-  _offsetDirection: function _offsetDirection() {
+  _offsetDirection: function () {
     return this.option('rtlEnabled') ? -1 : 1;
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._renderWrapper();
     this._renderItemsContainer();
     this.$element().addClass(GALLERY_CLASS);
     this.$element().toggleClass(GALLERY_LOOP_CLASS, this.option('loop'));
     this.callBase();
-    var useListBoxRole = this._itemsCount() > 0;
-    var ariaAttrs = {
+    const useListBoxRole = this._itemsCount() > 0;
+    const ariaAttrs = {
       'role': useListBoxRole ? 'listbox' : undefined,
       'label': 'gallery'
     };
     this.setAria(ariaAttrs);
   },
-  _render: function _render() {
+  _render: function () {
     this._renderDragHandler();
     this._renderContainerPosition();
     this._renderItemSizes();
@@ -245,8 +245,8 @@ var Gallery = _uiCollection_widget.default.inherit({
     this._reviseDimensions();
     this.callBase();
   },
-  _dimensionChanged: function _dimensionChanged() {
-    var selectedIndex = this.option('selectedIndex') || 0;
+  _dimensionChanged: function () {
+    const selectedIndex = this.option('selectedIndex') || 0;
     this._stopItemAnimations();
     this._clearCacheWidth();
     this._cloneDuplicateItems();
@@ -256,56 +256,55 @@ var Gallery = _uiCollection_widget.default.inherit({
     this._renderContainerPosition(this._calculateIndexOffset(selectedIndex), true);
     this._renderItemVisibility();
   },
-  _renderDragHandler: function _renderDragHandler() {
-    var eventName = (0, _index.addNamespace)('dragstart', this.NAME);
+  _renderDragHandler: function () {
+    const eventName = (0, _index.addNamespace)('dragstart', this.NAME);
     _events_engine.default.off(this.$element(), eventName);
     _events_engine.default.on(this.$element(), eventName, 'img', function () {
       return false;
     });
   },
-  _renderWrapper: function _renderWrapper() {
+  _renderWrapper: function () {
     if (this._$wrapper) {
       return;
     }
     this._$wrapper = (0, _renderer.default)('<div>').addClass(GALLERY_WRAPPER_CLASS).appendTo(this.$element());
   },
-  _renderItems: function _renderItems(items) {
+  _renderItems: function (items) {
     if (!(0, _window.hasWindow)()) {
-      var selectedIndex = this.option('selectedIndex');
+      const selectedIndex = this.option('selectedIndex');
       items = items.length > selectedIndex ? items.slice(selectedIndex, selectedIndex + 1) : items.slice(0, 1);
     }
     this.callBase(items);
     this._loadNextPageIfNeeded();
   },
   _onItemTemplateRendered() {
-    var _this = this;
-    return function () {
-      if (!_this._wasAnyItemTemplateRendered) {
-        _this._wasAnyItemTemplateRendered = true;
-        (0, _visibility_change.triggerResizeEvent)(_this.$element()); // NOTE: T1132935
+    return () => {
+      if (!this._wasAnyItemTemplateRendered) {
+        this._wasAnyItemTemplateRendered = true;
+        (0, _visibility_change.triggerResizeEvent)(this.$element()); // NOTE: T1132935
       }
     };
   },
 
-  _renderItemsContainer: function _renderItemsContainer() {
+  _renderItemsContainer: function () {
     if (this._$container) {
       return;
     }
     this._$container = (0, _renderer.default)('<div>').addClass(GALLERY_ITEM_CONTAINER_CLASS).appendTo(this._$wrapper);
   },
-  _cloneDuplicateItems: function _cloneDuplicateItems() {
+  _cloneDuplicateItems: function () {
     if (!this.option('loop')) {
       return;
     }
-    var items = this.option('items') || [];
-    var itemsCount = items.length;
-    var lastItemIndex = itemsCount - 1;
-    var i;
+    const items = this.option('items') || [];
+    const itemsCount = items.length;
+    const lastItemIndex = itemsCount - 1;
+    let i;
     if (!itemsCount) return;
     this._getLoopedItems().remove();
-    var duplicateCount = Math.min(this._itemsPerPage(), itemsCount);
-    var $items = this._getRealItems();
-    var $container = this._itemContainer();
+    const duplicateCount = Math.min(this._itemsPerPage(), itemsCount);
+    const $items = this._getRealItems();
+    const $container = this._itemContainer();
     for (i = 0; i < duplicateCount; i++) {
       this._cloneItemForDuplicate($items[i], $container);
     }
@@ -313,27 +312,27 @@ var Gallery = _uiCollection_widget.default.inherit({
       this._cloneItemForDuplicate($items[lastItemIndex - i], $container);
     }
   },
-  _cloneItemForDuplicate: function _cloneItemForDuplicate(item, $container) {
+  _cloneItemForDuplicate: function (item, $container) {
     if (item) {
-      var $clonedItem = (0, _renderer.default)(item).clone(false).addClass(GALLERY_LOOP_ITEM_CLASS).removeAttr('id').css('margin', 0).appendTo($container);
+      const $clonedItem = (0, _renderer.default)(item).clone(false).addClass(GALLERY_LOOP_ITEM_CLASS).removeAttr('id').css('margin', 0).appendTo($container);
       this.setAria({
         hidden: true
       }, $clonedItem);
     }
   },
-  _getRealItems: function _getRealItems() {
-    var selector = '.' + GALLERY_ITEM_CLASS + ':not(.' + GALLERY_LOOP_ITEM_CLASS + ')';
+  _getRealItems: function () {
+    const selector = '.' + GALLERY_ITEM_CLASS + ':not(.' + GALLERY_LOOP_ITEM_CLASS + ')';
     return this.$element().find(selector);
   },
-  _getLoopedItems: function _getLoopedItems() {
+  _getLoopedItems: function () {
     return this.$element().find('.' + GALLERY_LOOP_ITEM_CLASS);
   },
-  _emptyMessageContainer: function _emptyMessageContainer() {
+  _emptyMessageContainer: function () {
     return this._$wrapper;
   },
-  _renderItemSizes: function _renderItemSizes(startIndex) {
-    var $items = this._itemElements();
-    var itemWidth = this._actualItemWidth();
+  _renderItemSizes: function (startIndex) {
+    let $items = this._itemElements();
+    const itemWidth = this._actualItemWidth();
     if (startIndex !== undefined) {
       $items = $items.slice(startIndex);
     }
@@ -341,21 +340,21 @@ var Gallery = _uiCollection_widget.default.inherit({
       (0, _size.setOuterWidth)((0, _renderer.default)($items[index]), itemWidth * 100 + '%');
     });
   },
-  _renderItemPositions: function _renderItemPositions() {
-    var itemWidth = this._actualItemWidth();
-    var itemsCount = this._itemsCount();
-    var itemsPerPage = this._itemsPerPage();
-    var loopItemsCount = this.$element().find('.' + GALLERY_LOOP_ITEM_CLASS).length;
-    var lastItemDuplicateIndex = itemsCount + loopItemsCount - 1;
-    var offsetRatio = this.option('wrapAround') ? 0.5 : 0;
-    var freeSpace = this._itemFreeSpace();
-    var isGapBetweenImages = !!freeSpace;
-    var rtlEnabled = this.option('rtlEnabled');
-    var selectedIndex = this.option('selectedIndex');
-    var side = rtlEnabled ? 'Right' : 'Left';
+  _renderItemPositions: function () {
+    const itemWidth = this._actualItemWidth();
+    const itemsCount = this._itemsCount();
+    const itemsPerPage = this._itemsPerPage();
+    const loopItemsCount = this.$element().find('.' + GALLERY_LOOP_ITEM_CLASS).length;
+    const lastItemDuplicateIndex = itemsCount + loopItemsCount - 1;
+    const offsetRatio = this.option('wrapAround') ? 0.5 : 0;
+    const freeSpace = this._itemFreeSpace();
+    const isGapBetweenImages = !!freeSpace;
+    const rtlEnabled = this.option('rtlEnabled');
+    const selectedIndex = this.option('selectedIndex');
+    const side = rtlEnabled ? 'Right' : 'Left';
     this._itemElements().each(function (index) {
-      var realIndex = index;
-      var isLoopItem = (0, _renderer.default)(this).hasClass(GALLERY_LOOP_ITEM_CLASS);
+      let realIndex = index;
+      const isLoopItem = (0, _renderer.default)(this).hasClass(GALLERY_LOOP_ITEM_CLASS);
       if (index > itemsCount + itemsPerPage - 1) {
         realIndex = lastItemDuplicateIndex - realIndex - itemsPerPage;
       }
@@ -365,27 +364,27 @@ var Gallery = _uiCollection_widget.default.inherit({
         }
         return;
       }
-      var itemPosition = itemWidth * (realIndex + offsetRatio) + freeSpace * (realIndex + 1 - offsetRatio);
-      var property = isLoopItem ? side.toLowerCase() : 'margin' + side;
+      const itemPosition = itemWidth * (realIndex + offsetRatio) + freeSpace * (realIndex + 1 - offsetRatio);
+      const property = isLoopItem ? side.toLowerCase() : 'margin' + side;
       (0, _renderer.default)(this).css(property, itemPosition * 100 + '%');
     });
     this._relocateItems(selectedIndex, selectedIndex, true);
   },
-  _itemFreeSpace: function _itemFreeSpace() {
-    var itemsPerPage = this._itemsPerPage();
+  _itemFreeSpace: function () {
+    let itemsPerPage = this._itemsPerPage();
     if (this.option('wrapAround')) {
       itemsPerPage = itemsPerPage + 1;
     }
     return (1 - this._actualItemWidth() * itemsPerPage) / (itemsPerPage + 1);
   },
-  _renderContainerPosition: function _renderContainerPosition(offset, hideItems, animate) {
+  _renderContainerPosition: function (offset, hideItems, animate) {
     this._releaseInvisibleItems();
     offset = offset || 0;
-    var that = this;
-    var itemWidth = this._actualItemWidth();
-    var targetIndex = offset;
-    var targetPosition = this._offsetDirection() * targetIndex * (itemWidth + this._itemFreeSpace());
-    var positionReady;
+    const that = this;
+    const itemWidth = this._actualItemWidth();
+    const targetIndex = offset;
+    const targetPosition = this._offsetDirection() * targetIndex * (itemWidth + this._itemFreeSpace());
+    let positionReady;
     if ((0, _type.isDefined)(this._animationOverride)) {
       animate = this._animationOverride;
       delete this._animationOverride;
@@ -406,23 +405,23 @@ var Gallery = _uiCollection_widget.default.inherit({
     });
     return positionReady.promise();
   },
-  _startSwipe: function _startSwipe() {
+  _startSwipe: function () {
     this.$element().addClass(GALLERY_ACTIVE_CLASS);
   },
-  _endSwipe: function _endSwipe() {
+  _endSwipe: function () {
     this.$element().removeClass(GALLERY_ACTIVE_CLASS);
   },
-  _animate: function _animate(targetPosition, extraConfig) {
-    var that = this;
-    var $container = this._$container;
-    var animationComplete = new _deferred.Deferred();
+  _animate: function (targetPosition, extraConfig) {
+    const that = this;
+    const $container = this._$container;
+    const animationComplete = new _deferred.Deferred();
     _fx.default.animate(this._$container, (0, _extend.extend)({
       type: 'slide',
       to: {
         left: targetPosition * this._elementWidth()
       },
       duration: that.option('animationDuration'),
-      complete: function complete() {
+      complete: function () {
         if (that._needMoveContainerForward()) {
           (0, _translator.move)($container, {
             left: 0,
@@ -440,25 +439,25 @@ var Gallery = _uiCollection_widget.default.inherit({
     }, extraConfig || {}));
     return animationComplete;
   },
-  _needMoveContainerForward: function _needMoveContainerForward() {
-    var expectedPosition = this._$container.position().left * this._offsetDirection();
-    var actualPosition = -this._maxItemWidth() * this._elementWidth() * this._itemsCount();
+  _needMoveContainerForward: function () {
+    const expectedPosition = this._$container.position().left * this._offsetDirection();
+    const actualPosition = -this._maxItemWidth() * this._elementWidth() * this._itemsCount();
     return expectedPosition <= actualPosition + MAX_CALC_ERROR;
   },
-  _needMoveContainerBack: function _needMoveContainerBack() {
-    var expectedPosition = this._$container.position().left * this._offsetDirection();
-    var actualPosition = this._actualItemWidth() * this._elementWidth();
+  _needMoveContainerBack: function () {
+    const expectedPosition = this._$container.position().left * this._offsetDirection();
+    const actualPosition = this._actualItemWidth() * this._elementWidth();
     return expectedPosition >= actualPosition - MAX_CALC_ERROR;
   },
-  _maxContainerOffset: function _maxContainerOffset() {
+  _maxContainerOffset: function () {
     return -this._maxItemWidth() * (this._itemsCount() - this._itemsPerPage()) * this._offsetDirection();
   },
-  _maxItemWidth: function _maxItemWidth() {
+  _maxItemWidth: function () {
     return this._actualItemWidth() + this._itemFreeSpace();
   },
-  _reviseDimensions: function _reviseDimensions() {
-    var that = this;
-    var $firstItem = that._itemElements().first().find(ITEM_CONTENT_SELECTOR);
+  _reviseDimensions: function () {
+    const that = this;
+    const $firstItem = that._itemElements().first().find(ITEM_CONTENT_SELECTOR);
     if (!$firstItem || $firstItem.is(':hidden')) {
       return;
     }
@@ -470,78 +469,79 @@ var Gallery = _uiCollection_widget.default.inherit({
     }
     this._dimensionChanged();
   },
-  _renderIndicator: function _renderIndicator() {
-    var _this$option = this.option(),
-      showIndicator = _this$option.showIndicator;
+  _renderIndicator: function () {
+    const {
+      showIndicator
+    } = this.option();
     this._cleanIndicators();
     this.$element().toggleClass(GALLERY_INDICATOR_VISIBLE_CLASS, showIndicator);
     if (!showIndicator) {
       return;
     }
-    var indicator = this._$indicator = (0, _renderer.default)('<div>').addClass(GALLERY_INDICATOR_CLASS).appendTo(this._$wrapper);
-    var isIndicatorEnabled = this.option('indicatorEnabled');
-    for (var i = 0; i < this._pagesCount(); i++) {
-      var $indicatorItem = (0, _renderer.default)('<div>').addClass(GALLERY_INDICATOR_ITEM_CLASS).appendTo(indicator);
+    const indicator = this._$indicator = (0, _renderer.default)('<div>').addClass(GALLERY_INDICATOR_CLASS).appendTo(this._$wrapper);
+    const isIndicatorEnabled = this.option('indicatorEnabled');
+    for (let i = 0; i < this._pagesCount(); i++) {
+      const $indicatorItem = (0, _renderer.default)('<div>').addClass(GALLERY_INDICATOR_ITEM_CLASS).appendTo(indicator);
       if (isIndicatorEnabled) {
         this._attachIndicatorClickHandler($indicatorItem, i);
       }
     }
     this._renderSelectedPageIndicator();
   },
-  _attachIndicatorClickHandler: function _attachIndicatorClickHandler($element, index) {
+  _attachIndicatorClickHandler: function ($element, index) {
     _events_engine.default.on($element, (0, _index.addNamespace)(_click.name, this.NAME), function (event) {
       this._indicatorSelectHandler(event, index);
     }.bind(this));
   },
-  _detachIndicatorClickHandler: function _detachIndicatorClickHandler($element) {
+  _detachIndicatorClickHandler: function ($element) {
     _events_engine.default.off($element, (0, _index.addNamespace)(_click.name, this.NAME));
   },
-  _toggleIndicatorInteraction: function _toggleIndicatorInteraction(clickEnabled) {
+  _toggleIndicatorInteraction: function (clickEnabled) {
     var _this$_$indicator;
-    var $indicatorItems = ((_this$_$indicator = this._$indicator) === null || _this$_$indicator === void 0 ? void 0 : _this$_$indicator.find(GALLERY_INDICATOR_ITEM_SELECTOR)) || [];
+    const $indicatorItems = ((_this$_$indicator = this._$indicator) === null || _this$_$indicator === void 0 ? void 0 : _this$_$indicator.find(GALLERY_INDICATOR_ITEM_SELECTOR)) || [];
     if ($indicatorItems.length) {
       $indicatorItems.each(function (index, element) {
         clickEnabled ? this._attachIndicatorClickHandler((0, _renderer.default)(element), index) : this._detachIndicatorClickHandler((0, _renderer.default)(element));
       }.bind(this));
     }
   },
-  _cleanIndicators: function _cleanIndicators() {
+  _cleanIndicators: function () {
     if (this._$indicator) {
       this._$indicator.remove();
     }
   },
-  _renderSelectedItem: function _renderSelectedItem() {
-    var selectedIndex = this.option('selectedIndex');
+  _renderSelectedItem: function () {
+    const selectedIndex = this.option('selectedIndex');
     this._itemElements().removeClass(GALLERY_ITEM_SELECTED_CLASS).eq(selectedIndex).addClass(GALLERY_ITEM_SELECTED_CLASS);
   },
-  _renderItemVisibility: function _renderItemVisibility() {
+  _renderItemVisibility: function () {
     if (this.option('initialItemWidth') || this.option('wrapAround')) {
       this._releaseInvisibleItems();
       return;
     }
-    var selectedIndex = this.option('selectedIndex');
-    this._itemElements().each(function (index, item) {
+    const selectedIndex = this.option('selectedIndex');
+    this._itemElements().each((index, item) => {
       if (selectedIndex !== index) {
         (0, _renderer.default)(item).find(ITEM_CONTENT_SELECTOR).addClass(GALLERY_INVISIBLE_ITEM_CLASS);
       }
     });
   },
-  _releaseInvisibleItems: function _releaseInvisibleItems() {
+  _releaseInvisibleItems: function () {
     this._itemElements().find(ITEM_CONTENT_SELECTOR).removeClass(GALLERY_INVISIBLE_ITEM_CLASS);
   },
-  _renderSelectedPageIndicator: function _renderSelectedPageIndicator() {
+  _renderSelectedPageIndicator: function () {
     if (!this._$indicator) {
       return;
     }
-    var itemIndex = this.option('selectedIndex');
-    var lastIndex = this._pagesCount() - 1;
-    var pageIndex = Math.ceil(itemIndex / this._itemsPerPage());
+    const itemIndex = this.option('selectedIndex');
+    const lastIndex = this._pagesCount() - 1;
+    let pageIndex = Math.ceil(itemIndex / this._itemsPerPage());
     pageIndex = Math.min(lastIndex, pageIndex);
     this._$indicator.find(GALLERY_INDICATOR_ITEM_SELECTOR).removeClass(GALLERY_INDICATOR_ITEM_SELECTED_CLASS).eq(pageIndex).addClass(GALLERY_INDICATOR_ITEM_SELECTED_CLASS);
   },
-  _renderUserInteraction: function _renderUserInteraction() {
-    var rootElement = this.$element();
-    var swipeEnabled = this.option('swipeEnabled') && this._itemsCount() > 1;
+  _renderUserInteraction: function () {
+    const rootElement = this.$element();
+    const swipeEnabled = this.option('swipeEnabled') && this._itemsCount() > 1;
     this._createComponent(rootElement, _swipeable.default, {
       disabled: this.option('disabled') || !swipeEnabled,
       onStart: this._swipeStartHandler.bind(this),
@@ -550,17 +550,17 @@ var Gallery = _uiCollection_widget.default.inherit({
       itemSizeFunc: this._elementWidth.bind(this)
     });
   },
-  _indicatorSelectHandler: function _indicatorSelectHandler(e, indicatorIndex) {
+  _indicatorSelectHandler: function (e, indicatorIndex) {
     if (!this.option('indicatorEnabled')) {
       return;
     }
-    var itemIndex = this._fitPaginatedIndex(indicatorIndex * this._itemsPerPage());
+    const itemIndex = this._fitPaginatedIndex(indicatorIndex * this._itemsPerPage());
     this._needLongMove = true;
     this.option('selectedIndex', itemIndex);
     this._loadNextPageIfNeeded(itemIndex);
   },
-  _renderNavButtons: function _renderNavButtons() {
-    var that = this;
+  _renderNavButtons: function () {
+    const that = this;
     if (!that.option('showNavButtons')) {
       that._cleanNavButtons();
       return;
@@ -568,38 +568,38 @@ var Gallery = _uiCollection_widget.default.inherit({
     that._prevNavButton = (0, _renderer.default)('<div>').appendTo(this._$wrapper);
     that._createComponent(that._prevNavButton, GalleryNavButton, {
       direction: 'prev',
-      onClick: function onClick() {
+      onClick: function () {
         that._prevPage();
       }
     });
     that._nextNavButton = (0, _renderer.default)('<div>').appendTo(this._$wrapper);
     that._createComponent(that._nextNavButton, GalleryNavButton, {
       direction: 'next',
-      onClick: function onClick() {
+      onClick: function () {
         that._nextPage();
       }
     });
     this._renderNavButtonsVisibility();
   },
-  _prevPage: function _prevPage() {
-    var visiblePageSize = this._itemsPerPage();
-    var newSelectedIndex = this.option('selectedIndex') - visiblePageSize;
+  _prevPage: function () {
+    const visiblePageSize = this._itemsPerPage();
+    const newSelectedIndex = this.option('selectedIndex') - visiblePageSize;
     if (newSelectedIndex === -visiblePageSize && visiblePageSize === this._itemsCount()) {
       return this._relocateItems(newSelectedIndex, 0);
     } else {
       return this.goToItem(this._fitPaginatedIndex(newSelectedIndex));
     }
   },
-  _nextPage: function _nextPage() {
-    var visiblePageSize = this._itemsPerPage();
-    var newSelectedIndex = this.option('selectedIndex') + visiblePageSize;
+  _nextPage: function () {
+    const visiblePageSize = this._itemsPerPage();
+    const newSelectedIndex = this.option('selectedIndex') + visiblePageSize;
     if (newSelectedIndex === visiblePageSize && visiblePageSize === this._itemsCount()) {
       return this._relocateItems(newSelectedIndex, 0);
     } else {
       return this.goToItem(this._fitPaginatedIndex(newSelectedIndex)).done(this._loadNextPageIfNeeded);
     }
   },
-  _loadNextPageIfNeeded: function _loadNextPageIfNeeded(selectedIndex) {
+  _loadNextPageIfNeeded: function (selectedIndex) {
     selectedIndex = selectedIndex === undefined ? this.option('selectedIndex') : selectedIndex;
     if (this._dataSource && this._dataSource.paginate() && this._shouldLoadNextPage(selectedIndex) && !this._isDataSourceLoading() && !this._isLastPage()) {
       this._loadNextPage().done(function () {
@@ -611,16 +611,16 @@ var Gallery = _uiCollection_widget.default.inherit({
       }.bind(this));
     }
   },
-  _shouldLoadNextPage: function _shouldLoadNextPage(selectedIndex) {
-    var visiblePageSize = this._itemsPerPage();
+  _shouldLoadNextPage: function (selectedIndex) {
+    const visiblePageSize = this._itemsPerPage();
     return selectedIndex + 2 * visiblePageSize > this.option('items').length;
   },
-  _allowDynamicItemsAppend: function _allowDynamicItemsAppend() {
+  _allowDynamicItemsAppend: function () {
     return true;
   },
-  _fitPaginatedIndex: function _fitPaginatedIndex(itemIndex) {
-    var itemsPerPage = this._itemsPerPage();
-    var restItemsCount = itemIndex < 0 ? itemsPerPage + itemIndex : this._itemsCount() - itemIndex;
+  _fitPaginatedIndex: function (itemIndex) {
+    const itemsPerPage = this._itemsPerPage();
+    const restItemsCount = itemIndex < 0 ? itemsPerPage + itemIndex : this._itemsCount() - itemIndex;
     if (itemIndex > this._itemsCount() - 1) {
       itemIndex = 0;
       this._goToGhostItem = true;
@@ -633,7 +633,7 @@ var Gallery = _uiCollection_widget.default.inherit({
     }
     return itemIndex;
   },
-  _cleanNavButtons: function _cleanNavButtons() {
+  _cleanNavButtons: function () {
     if (this._prevNavButton) {
       this._prevNavButton.remove();
       delete this._prevNavButton;
@@ -643,13 +643,13 @@ var Gallery = _uiCollection_widget.default.inherit({
       delete this._nextNavButton;
     }
   },
-  _renderNavButtonsVisibility: function _renderNavButtonsVisibility() {
+  _renderNavButtonsVisibility: function () {
     if (!this.option('showNavButtons') || !this._prevNavButton || !this._nextNavButton) {
       return;
     }
-    var selectedIndex = this.option('selectedIndex');
-    var loop = this.option('loop');
-    var itemsCount = this._itemsCount();
+    const selectedIndex = this.option('selectedIndex');
+    const loop = this.option('loop');
+    const itemsCount = this._itemsCount();
     this._prevNavButton.show();
     this._nextNavButton.show();
     if (itemsCount === 0) {
@@ -659,8 +659,8 @@ var Gallery = _uiCollection_widget.default.inherit({
     if (loop) {
       return;
     }
-    var nextHidden = selectedIndex === itemsCount - this._itemsPerPage();
-    var prevHidden = itemsCount < 2 || selectedIndex === 0;
+    let nextHidden = selectedIndex === itemsCount - this._itemsPerPage();
+    const prevHidden = itemsCount < 2 || selectedIndex === 0;
     if (this._dataSource && this._dataSource.paginate()) {
       nextHidden = nextHidden && this._isLastPage();
     } else {
@@ -673,9 +673,9 @@ var Gallery = _uiCollection_widget.default.inherit({
       this._nextNavButton.hide();
     }
   },
-  _setupSlideShow: function _setupSlideShow() {
-    var that = this;
-    var slideshowDelay = that.option('slideshowDelay');
+  _setupSlideShow: function () {
+    const that = this;
+    const slideshowDelay = that.option('slideshowDelay');
     clearTimeout(that._slideshowTimer);
     if (!slideshowDelay) {
       return;
@@ -688,20 +688,20 @@ var Gallery = _uiCollection_widget.default.inherit({
       that.nextItem(true).done(that._setupSlideShow);
     }, slideshowDelay);
   },
-  _elementWidth: function _elementWidth() {
+  _elementWidth: function () {
     if (!this._cacheElementWidth) {
       this._cacheElementWidth = (0, _size.getWidth)(this.$element());
     }
     return this._cacheElementWidth;
   },
-  _clearCacheWidth: function _clearCacheWidth() {
+  _clearCacheWidth: function () {
     delete this._cacheElementWidth;
   },
-  _swipeStartHandler: function _swipeStartHandler(e) {
+  _swipeStartHandler: function (e) {
     this._releaseInvisibleItems();
     this._clearCacheWidth();
     this._elementWidth();
-    var itemsCount = this._itemsCount();
+    const itemsCount = this._itemsCount();
     if (!itemsCount) {
       e.event.cancel = true;
       return;
@@ -710,30 +710,30 @@ var Gallery = _uiCollection_widget.default.inherit({
     this._startSwipe();
     this._userInteraction = true;
     if (!this.option('loop')) {
-      var selectedIndex = this.option('selectedIndex');
-      var startOffset = itemsCount - selectedIndex - this._itemsPerPage();
-      var endOffset = selectedIndex;
-      var rtlEnabled = this.option('rtlEnabled');
+      const selectedIndex = this.option('selectedIndex');
+      const startOffset = itemsCount - selectedIndex - this._itemsPerPage();
+      const endOffset = selectedIndex;
+      const rtlEnabled = this.option('rtlEnabled');
       e.event.maxLeftOffset = rtlEnabled ? endOffset : startOffset;
       e.event.maxRightOffset = rtlEnabled ? startOffset : endOffset;
     }
   },
-  _stopItemAnimations: function _stopItemAnimations() {
+  _stopItemAnimations: function () {
     _fx.default.stop(this._$container, true);
   },
-  _swipeUpdateHandler: function _swipeUpdateHandler(e) {
-    var wrapAroundRatio = this.option('wrapAround') ? 1 : 0;
-    var offset = this._offsetDirection() * e.event.offset * (this._itemsPerPage() + wrapAroundRatio) - this.option('selectedIndex');
+  _swipeUpdateHandler: function (e) {
+    const wrapAroundRatio = this.option('wrapAround') ? 1 : 0;
+    const offset = this._offsetDirection() * e.event.offset * (this._itemsPerPage() + wrapAroundRatio) - this.option('selectedIndex');
     if (offset < 0) {
       this._loadNextPageIfNeeded(Math.ceil(Math.abs(offset)));
     }
     this._renderContainerPosition(offset);
   },
-  _swipeEndHandler: function _swipeEndHandler(e) {
-    var targetOffset = e.event.targetOffset * this._offsetDirection() * this._itemsPerPage();
-    var selectedIndex = this.option('selectedIndex');
-    var newIndex = this._fitIndex(selectedIndex - targetOffset);
-    var paginatedIndex = this._fitPaginatedIndex(newIndex);
+  _swipeEndHandler: function (e) {
+    const targetOffset = e.event.targetOffset * this._offsetDirection() * this._itemsPerPage();
+    const selectedIndex = this.option('selectedIndex');
+    const newIndex = this._fitIndex(selectedIndex - targetOffset);
+    const paginatedIndex = this._fitPaginatedIndex(newIndex);
     if (Math.abs(targetOffset) < this._itemsPerPage()) {
       this._relocateItems(selectedIndex);
       return;
@@ -748,14 +748,14 @@ var Gallery = _uiCollection_widget.default.inherit({
     }
     this.option('selectedIndex', paginatedIndex);
   },
-  _setFocusOnSelect: function _setFocusOnSelect() {
+  _setFocusOnSelect: function () {
     this._userInteraction = true;
-    var selectedItem = this._getRealItems().filter('.' + GALLERY_ITEM_SELECTED_CLASS);
+    const selectedItem = this._getRealItems().filter('.' + GALLERY_ITEM_SELECTED_CLASS);
     this.option('focusedElement', (0, _element.getPublicElement)(selectedItem));
     this._userInteraction = false;
   },
-  _flipIndex: function _flipIndex(index) {
-    var itemsCount = this._itemsCount();
+  _flipIndex: function (index) {
+    const itemsCount = this._itemsCount();
     index = index % itemsCount;
     if (index > (itemsCount + 1) / 2) {
       index -= itemsCount;
@@ -765,11 +765,11 @@ var Gallery = _uiCollection_widget.default.inherit({
     }
     return index;
   },
-  _fitIndex: function _fitIndex(index) {
+  _fitIndex: function (index) {
     if (!this.option('loop')) {
       return index;
     }
-    var itemsCount = this._itemsCount();
+    const itemsCount = this._itemsCount();
     if (index >= itemsCount || index < 0) {
       this._goToGhostItem = true;
     }
@@ -782,63 +782,63 @@ var Gallery = _uiCollection_widget.default.inherit({
     }
     return index;
   },
-  _clean: function _clean() {
+  _clean: function () {
     this.callBase();
     this._cleanIndicators();
     this._cleanNavButtons();
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     this._wasAnyItemTemplateRendered = null;
     clearTimeout(this._slideshowTimer);
     this.callBase();
   },
-  _updateSelection: function _updateSelection(addedSelection, removedSelection) {
+  _updateSelection: function (addedSelection, removedSelection) {
     this._stopItemAnimations();
     this._renderNavButtonsVisibility();
     this._renderSelectedItem();
     this._relocateItems(addedSelection[0], removedSelection[0]);
     this._renderSelectedPageIndicator();
   },
-  _relocateItems: function _relocateItems(newIndex, prevIndex, withoutAnimation) {
+  _relocateItems: function (newIndex, prevIndex, withoutAnimation) {
     if (prevIndex === undefined) {
       prevIndex = newIndex;
     }
-    var indexOffset = this._calculateIndexOffset(newIndex, prevIndex);
+    const indexOffset = this._calculateIndexOffset(newIndex, prevIndex);
     this._renderContainerPosition(indexOffset, true, this.option('animationEnabled') && !withoutAnimation).done(function () {
       this._setFocusOnSelect();
       this._userInteraction = false;
       this._setupSlideShow();
     });
   },
-  _focusInHandler: function _focusInHandler() {
+  _focusInHandler: function () {
     if (_fx.default.isAnimating(this._$container) || this._userInteraction) {
       return;
     }
     this.callBase.apply(this, arguments);
   },
-  _focusOutHandler: function _focusOutHandler() {
+  _focusOutHandler: function () {
     if (_fx.default.isAnimating(this._$container) || this._userInteraction) {
       return;
     }
     this.callBase.apply(this, arguments);
   },
   _selectFocusedItem: _common.noop,
-  _moveFocus: function _moveFocus() {
+  _moveFocus: function () {
     this._stopItemAnimations();
     this.callBase.apply(this, arguments);
-    var index = this.itemElements().index((0, _renderer.default)(this.option('focusedElement')));
+    const index = this.itemElements().index((0, _renderer.default)(this.option('focusedElement')));
     this.goToItem(index, this.option('animationEnabled'));
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this._reviseDimensions();
     }
   },
-  _calculateIndexOffset: function _calculateIndexOffset(newIndex, lastIndex) {
+  _calculateIndexOffset: function (newIndex, lastIndex) {
     if (lastIndex === undefined) {
       lastIndex = newIndex;
     }
-    var indexOffset = lastIndex - newIndex;
+    let indexOffset = lastIndex - newIndex;
     if (this.option('loop') && !this._needLongMove && this._goToGhostItem) {
       if (this._isItemOnFirstPage(newIndex) && this._isItemOnLastPage(lastIndex)) {
         indexOffset = -this._itemsPerPage();
@@ -851,13 +851,13 @@ var Gallery = _uiCollection_widget.default.inherit({
     indexOffset = indexOffset - lastIndex;
     return indexOffset;
   },
-  _isItemOnLastPage: function _isItemOnLastPage(itemIndex) {
+  _isItemOnLastPage: function (itemIndex) {
     return itemIndex >= this._itemsCount() - this._itemsPerPage();
   },
-  _isItemOnFirstPage: function _isItemOnFirstPage(itemIndex) {
+  _isItemOnFirstPage: function (itemIndex) {
     return itemIndex <= this._itemsPerPage();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'width':
       case 'initialItemWidth':
@@ -905,9 +905,9 @@ var Gallery = _uiCollection_widget.default.inherit({
         this.callBase(args);
     }
   },
-  goToItem: function goToItem(itemIndex, animation) {
-    var selectedIndex = this.option('selectedIndex');
-    var itemsCount = this._itemsCount();
+  goToItem: function (itemIndex, animation) {
+    const selectedIndex = this.option('selectedIndex');
+    const itemsCount = this._itemsCount();
     if (animation !== undefined) {
       this._animationOverride = animation;
     }
@@ -919,10 +919,10 @@ var Gallery = _uiCollection_widget.default.inherit({
     this.option('selectedIndex', itemIndex);
     return this._deferredAnimate.promise();
   },
-  prevItem: function prevItem(animation) {
+  prevItem: function (animation) {
     return this.goToItem(this.option('selectedIndex') - 1, animation);
   },
-  nextItem: function nextItem(animation) {
+  nextItem: function (animation) {
     return this.goToItem(this.option('selectedIndex') + 1, animation);
   }
 });

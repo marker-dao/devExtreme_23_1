@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/date_range_box.d.ts)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -305,7 +305,7 @@ export type Properties = Omit<DateBoxBaseOptions<dxDateRangeBox>, 'inputAttr' | 
 /**
  * @namespace DevExpress.ui
  */
-declare const DateRangeBoxBase: new(element: UserDefinedElement, options?: Properties) => Omit<DateBoxBase<Properties>, 'field'>;
+declare const DateRangeBoxBase: Omit<typeof DateBoxBase, 'new' | 'prototype'> & (new(element: UserDefinedElement, options?: Properties) => Omit<DateBoxBase<Properties>, 'field'>);
 
 /**
  * @docid

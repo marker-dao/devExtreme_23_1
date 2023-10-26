@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/polar_chart.d.ts)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -46,7 +46,6 @@ import {
 } from '../core/templates/template';
 
 import {
-    Font,
     FileSavingEventInfo,
     ExportInfo,
     IncidentInfo,
@@ -76,6 +75,7 @@ import {
     VisualRange,
     ZoomPanAction,
     ChartsColor,
+    Font,
 } from '../common/charts';
 
 /**

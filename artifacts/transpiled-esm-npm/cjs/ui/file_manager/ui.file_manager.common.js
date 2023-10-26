@@ -5,21 +5,21 @@ var _deferred = require("../../core/utils/deferred");
 var _extend = require("../../core/utils/extend");
 var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
-var whenSome = function whenSome(arg, onSuccess, onError) {
+const whenSome = function (arg, onSuccess, onError) {
   onSuccess = onSuccess || _common.noop;
   onError = onError || _common.noop;
   if (!Array.isArray(arg)) {
     arg = [arg];
   }
-  var deferreds = arg.map(function (item, index) {
-    return (0, _deferred.when)(item).then(function (result) {
+  const deferreds = arg.map((item, index) => {
+    return (0, _deferred.when)(item).then(result => {
       (0, _type.isFunction)(onSuccess) && onSuccess({
         item,
         index,
         result
       });
       return result;
-    }, function (error) {
+    }, error => {
       if (!error) {
         error = {};
       }
@@ -31,10 +31,10 @@ var whenSome = function whenSome(arg, onSuccess, onError) {
   return _deferred.when.apply(null, deferreds);
 };
 exports.whenSome = whenSome;
-var getDisplayFileSize = function getDisplayFileSize(byteSize) {
-  var sizesTitles = ['B', 'KB', 'MB', 'GB', 'TB'];
-  var index = 0;
-  var displaySize = byteSize;
+const getDisplayFileSize = function (byteSize) {
+  const sizesTitles = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let index = 0;
+  let displaySize = byteSize;
   while (displaySize >= 1024 && index <= sizesTitles.length - 1) {
     displaySize /= 1024;
     index++;
@@ -43,8 +43,8 @@ var getDisplayFileSize = function getDisplayFileSize(byteSize) {
   return "".concat(displaySize, " ").concat(sizesTitles[index]);
 };
 exports.getDisplayFileSize = getDisplayFileSize;
-var extendAttributes = function extendAttributes(targetObject, sourceObject, objectKeysArray) {
-  objectKeysArray.forEach(function (objectKey) {
+const extendAttributes = function (targetObject, sourceObject, objectKeysArray) {
+  objectKeysArray.forEach(objectKey => {
     (0, _extend.extend)(true, targetObject, (0, _type.isDefined)(sourceObject[objectKey]) ? {
       [objectKey]: sourceObject[objectKey]
     } : {});
@@ -52,20 +52,20 @@ var extendAttributes = function extendAttributes(targetObject, sourceObject, obj
   return targetObject;
 };
 exports.extendAttributes = extendAttributes;
-var findItemsByKeys = function findItemsByKeys(itemInfos, keys) {
-  var itemMap = {};
-  keys.forEach(function (key) {
+const findItemsByKeys = (itemInfos, keys) => {
+  const itemMap = {};
+  keys.forEach(key => {
     itemMap[key] = null;
   });
-  itemInfos.forEach(function (itemInfo) {
-    var key = itemInfo.fileItem.key;
+  itemInfos.forEach(itemInfo => {
+    const key = itemInfo.fileItem.key;
     if (Object.prototype.hasOwnProperty.call(itemMap, key)) {
       itemMap[key] = itemInfo;
     }
   });
-  var result = [];
-  keys.forEach(function (key) {
-    var itemInfo = itemMap[key];
+  const result = [];
+  keys.forEach(key => {
+    const itemInfo = itemMap[key];
     if (itemInfo) {
       result.push(itemInfo);
     }
@@ -73,12 +73,10 @@ var findItemsByKeys = function findItemsByKeys(itemInfos, keys) {
   return result;
 };
 exports.findItemsByKeys = findItemsByKeys;
-var getMapFromObject = function getMapFromObject(object) {
-  var keys = Object.keys(object);
-  var values = [];
-  keys.forEach(function (key) {
-    return values.push(object[key]);
-  });
+const getMapFromObject = function (object) {
+  const keys = Object.keys(object);
+  const values = [];
+  keys.forEach(key => values.push(object[key]));
   return {
     keys,
     values

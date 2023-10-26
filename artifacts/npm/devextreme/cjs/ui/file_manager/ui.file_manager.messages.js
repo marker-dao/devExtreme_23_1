@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.messages.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@
 
 Object.defineProperty(exports, "ErrorCode", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _error_codes.default;
   }
 });
@@ -18,8 +18,8 @@ exports.FileManagerMessages = void 0;
 var _message = _interopRequireDefault(require("../../localization/message"));
 var _error_codes = _interopRequireDefault(require("../../file_management/error_codes"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FileManagerMessages = {
-  get: function get(errorCode, args) {
+const FileManagerMessages = {
+  get: (errorCode, args) => {
     switch (errorCode) {
       case _error_codes.default.NoAccess:
         return _message.default.format('dxFileManager-errorNoAccess');

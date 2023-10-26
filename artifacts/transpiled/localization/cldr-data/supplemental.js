@@ -3,7 +3,7 @@
 exports.supplementalCldr = void 0;
 /* eslint-disable node/no-unsupported-features/es-syntax */
 // !!! AUTO-GENERATED FILE, DO NOT EDIT
-var supplementalCldr = {
+const supplementalCldr = {
   "supplemental": {
     "version": {
       "_unicodeVersion": "12.1.0",

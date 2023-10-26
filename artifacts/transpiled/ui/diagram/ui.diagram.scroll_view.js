@@ -10,7 +10,7 @@ var _diagram = require("./diagram.importer");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // TODO: Can we get rid of this dependency of the PivotGrid here?
-var DiagramScrollView = /*#__PURE__*/function (_Widget) {
+let DiagramScrollView = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(DiagramScrollView, _Widget);
   function DiagramScrollView() {
     return _Widget.apply(this, arguments) || this;
@@ -18,25 +18,27 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
   var _proto = DiagramScrollView.prototype;
   _proto._init = function _init() {
     _Widget.prototype._init.call(this);
-    var _getDiagram = (0, _diagram.getDiagram)(),
-      EventDispatcher = _getDiagram.EventDispatcher;
+    const {
+      EventDispatcher
+    } = (0, _diagram.getDiagram)();
     this.onScroll = new EventDispatcher();
     this._createOnCreateDiagramAction();
   };
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     _Widget.prototype._initMarkup.call(this);
-    var $scrollViewWrapper = (0, _renderer.default)('<div>').appendTo(this.$element());
-    var options = {
+    const $scrollViewWrapper = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const options = {
       direction: 'both',
       bounceEnabled: false,
       scrollByContent: false,
-      onScroll: function onScroll(_ref) {
-        var scrollOffset = _ref.scrollOffset;
-        _this._raiseOnScroll(scrollOffset.left, scrollOffset.top);
+      onScroll: _ref => {
+        let {
+          scrollOffset
+        } = _ref;
+        this._raiseOnScroll(scrollOffset.left, scrollOffset.top);
       }
     };
-    var useNativeScrolling = this.option('useNativeScrolling');
+    const useNativeScrolling = this.option('useNativeScrolling');
     if (useNativeScrolling !== undefined) {
       options.useNative = useNativeScrolling;
     }
@@ -61,9 +63,10 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
     this._raiseOnScrollWithoutPoint();
   };
   _proto.getSize = function getSize() {
-    var _getDiagram2 = (0, _diagram.getDiagram)(),
-      Size = _getDiagram2.Size;
-    var $element = this._scrollView.$element();
+    const {
+      Size
+    } = (0, _diagram.getDiagram)();
+    const $element = this._scrollView.$element();
     return new Size(Math.floor((0, _size.getWidth)($element)), Math.floor((0, _size.getHeight)($element)));
   };
   _proto.getScrollContainer = function getScrollContainer() {
@@ -74,18 +77,19 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
   };
   _proto.detachEvents = function detachEvents() {};
   _proto._raiseOnScroll = function _raiseOnScroll(left, top) {
-    var _getDiagram3 = (0, _diagram.getDiagram)(),
-      Point = _getDiagram3.Point;
-    this.onScroll.raise('notifyScrollChanged', function () {
+    const {
+      Point
+    } = (0, _diagram.getDiagram)();
+    this.onScroll.raise('notifyScrollChanged', () => {
       return new Point(left, top);
     });
   };
   _proto._raiseOnScrollWithoutPoint = function _raiseOnScrollWithoutPoint() {
-    var _this2 = this;
-    var _getDiagram4 = (0, _diagram.getDiagram)(),
-      Point = _getDiagram4.Point;
-    this.onScroll.raise('notifyScrollChanged', function () {
-      return new Point(_this2._scrollView.scrollLeft(), _this2._scrollView.scrollTop());
+    const {
+      Point
+    } = (0, _diagram.getDiagram)();
+    this.onScroll.raise('notifyScrollChanged', () => {
+      return new Point(this._scrollView.scrollLeft(), this._scrollView.scrollTop());
     });
   };
   _proto._createOnCreateDiagramAction = function _createOnCreateDiagramAction() {

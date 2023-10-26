@@ -11,17 +11,17 @@ var _utils = require("../core/utils");
 var _object = require("../../core/utils/object");
 // there stackedline, fullstackedline, stackedbar, fullstackedbar, stackedarea, fullstackedarea
 
-var chartAreaSeries = _area_series.chart.area;
-var chartBarSeries = _bar_series.chart.bar;
-var baseStackedSeries = {
+const chartAreaSeries = _area_series.chart.area;
+const chartBarSeries = _bar_series.chart.bar;
+const baseStackedSeries = {
   _calculateErrorBars: _common.noop,
-  _updateOptions: function _updateOptions(options) {
+  _updateOptions: function (options) {
     this._stackName = 'axis_' + (options.axis || 'default');
   }
 };
-var chart = {};
+const chart = {};
 exports.chart = chart;
-var polar = {};
+const polar = {};
 exports.polar = polar;
 chart['stackedline'] = (0, _extend2.extend)({}, _line_series.chart.line, baseStackedSeries, {});
 chart['stackedspline'] = (0, _extend2.extend)({}, _line_series.chart['spline'], baseStackedSeries, {});
@@ -31,8 +31,8 @@ chart['fullstackedline'] = (0, _extend2.extend)({}, _line_series.chart.line, bas
 chart['fullstackedspline'] = (0, _extend2.extend)({}, _line_series.chart['spline'], baseStackedSeries, {
   getValueRangeInitialValue: _area_series.chart.area.getValueRangeInitialValue
 });
-var stackedBar = chart['stackedbar'] = (0, _extend2.extend)({}, chartBarSeries, baseStackedSeries, {
-  _updateOptions: function _updateOptions(options) {
+const stackedBar = chart['stackedbar'] = (0, _extend2.extend)({}, chartBarSeries, baseStackedSeries, {
+  _updateOptions: function (options) {
     baseStackedSeries._updateOptions.call(this, options);
     this._stackName = this._stackName + '_stack_' + (options.stack || 'default');
   }
@@ -49,11 +49,11 @@ function clonePoint(point, value, minValue, position) {
   return point;
 }
 function preparePointsForStackedAreaSegment(points) {
-  var i = 0;
-  var p;
-  var result = [];
-  var array;
-  var len = points.length;
+  let i = 0;
+  let p;
+  const result = [];
+  let array;
+  const len = points.length;
   while (i < len) {
     p = points[i];
     array = [p];
@@ -69,15 +69,15 @@ function preparePointsForStackedAreaSegment(points) {
   return [].concat.apply([], result);
 }
 chart['stackedarea'] = (0, _extend2.extend)({}, chartAreaSeries, baseStackedSeries, {
-  _prepareSegment: function _prepareSegment(points, rotated) {
+  _prepareSegment: function (points, rotated) {
     return chartAreaSeries._prepareSegment.call(this, preparePointsForStackedAreaSegment(points), rotated);
   },
-  _appendInGroup: function _appendInGroup() {
+  _appendInGroup: function () {
     this._group.append(this._extGroups.seriesGroup).toBackground();
   }
 });
 function getPointsByArgFromPrevSeries(prevSeries, argument) {
-  var result;
+  let result;
   while (!result && prevSeries) {
     result = prevSeries._segmentByArg && prevSeries._segmentByArg[argument]; // T357324
     prevSeries = prevSeries._prevSeries;
@@ -85,30 +85,30 @@ function getPointsByArgFromPrevSeries(prevSeries, argument) {
   return result;
 }
 chart['stackedsplinearea'] = (0, _extend2.extend)({}, _area_series.chart['splinearea'], baseStackedSeries, {
-  _prepareSegment: function _prepareSegment(points, rotated) {
-    var that = this;
-    var areaSegment;
+  _prepareSegment: function (points, rotated) {
+    const that = this;
+    let areaSegment;
     points = preparePointsForStackedAreaSegment(points);
     if (!this._prevSeries || points.length === 1) {
       areaSegment = _area_series.chart['splinearea']._prepareSegment.call(this, points, rotated);
     } else {
-      var forwardPoints = _line_series.chart.spline._calculateBezierPoints(points, rotated);
-      var backwardPoints = (0, _utils.map)(points, function (p) {
-        var point = p.getCoords(true);
+      const forwardPoints = _line_series.chart.spline._calculateBezierPoints(points, rotated);
+      let backwardPoints = (0, _utils.map)(points, function (p) {
+        const point = p.getCoords(true);
         point.argument = p.argument;
         return point;
       });
-      var prevSeriesForwardPoints = [];
-      var pointByArg = {};
-      var i = 0;
-      var len = that._prevSeries._segments.length;
+      let prevSeriesForwardPoints = [];
+      const pointByArg = {};
+      let i = 0;
+      const len = that._prevSeries._segments.length;
       while (i < len) {
         prevSeriesForwardPoints = prevSeriesForwardPoints.concat(that._prevSeries._segments[i].line);
         i++;
       }
       (0, _iterator.each)(prevSeriesForwardPoints, function (_, p) {
         if (p.argument !== null) {
-          var argument = p.argument.valueOf();
+          const argument = p.argument.valueOf();
           if (!pointByArg[argument]) {
             pointByArg[argument] = [p];
           } else {
@@ -119,8 +119,8 @@ chart['stackedsplinearea'] = (0, _extend2.extend)({}, _area_series.chart['spline
       that._prevSeries._segmentByArg = pointByArg;
       backwardPoints = _line_series.chart.spline._calculateBezierPoints(backwardPoints, rotated);
       (0, _iterator.each)(backwardPoints, function (i, p) {
-        var argument = p.argument.valueOf();
-        var prevSeriesPoints;
+        const argument = p.argument.valueOf();
+        let prevSeriesPoints;
         if (i % 3 === 0) {
           prevSeriesPoints = pointByArg[argument] || getPointsByArgFromPrevSeries(that._prevSeries, argument);
           if (prevSeriesPoints) {

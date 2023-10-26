@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/selection/m_selection.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,15 +15,13 @@ var _type = require("../../../../core/utils/type");
 var _m_selection = require("../../../grids/grid_core/selection/m_selection");
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TREELIST_SELECT_ALL_CLASS = 'dx-treelist-select-all';
-var CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
-var SELECT_CHECKBOX_CLASS = 'dx-select-checkbox';
-var originalRowClick = _m_selection.selectionModule.extenders.views.rowsView._rowClick;
-var originalHandleDataChanged = _m_selection.selectionModule.extenders.controllers.data._handleDataChanged;
-var nodeExists = function nodeExists(array, currentKey) {
-  return !!array.filter(function (key) {
-    return key === currentKey;
-  }).length;
+const TREELIST_SELECT_ALL_CLASS = 'dx-treelist-select-all';
+const CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
+const SELECT_CHECKBOX_CLASS = 'dx-select-checkbox';
+const originalRowClick = _m_selection.selectionModule.extenders.views.rowsView._rowClick;
+const originalHandleDataChanged = _m_selection.selectionModule.extenders.controllers.data._handleDataChanged;
+const nodeExists = function (array, currentKey) {
+  return !!array.filter(key => key === currentKey).length;
 };
 _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_selection.selectionModule, {
   defaultOptions() {
@@ -38,8 +36,8 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
     controllers: {
       data: {
         _handleDataChanged(e) {
-          var selectionController = this.getController('selection');
-          var isRecursiveSelection = selectionController.isRecursiveSelection();
+          const selectionController = this.getController('selection');
+          const isRecursiveSelection = selectionController.isRecursiveSelection();
           if (isRecursiveSelection && (!e || e.changeType !== 'updateSelectionState')) {
             selectionController.updateSelectionState({
               selectedItemKeys: this.option('selectedRowKeys')
@@ -48,12 +46,12 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           originalHandleDataChanged.apply(this, arguments);
         },
         loadDescendants() {
-          var that = this;
-          var d = that.callBase.apply(that, arguments);
-          var selectionController = that.getController('selection');
-          var isRecursiveSelection = selectionController.isRecursiveSelection();
+          const that = this;
+          const d = that.callBase.apply(that, arguments);
+          const selectionController = that.getController('selection');
+          const isRecursiveSelection = selectionController.isRecursiveSelection();
           if (isRecursiveSelection) {
-            d.done(function () {
+            d.done(() => {
               selectionController.updateSelectionState({
                 selectedItemKeys: that.option('selectedRowKeys')
               });
@@ -68,40 +66,32 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           this._selectionStateByKey = {};
         },
         _getSelectionConfig() {
-          var _arguments = arguments,
-            _this = this;
-          var config = this.callBase.apply(this, arguments);
-          var plainItems = config.plainItems;
-          config.plainItems = function (cached) {
-            var result;
+          const config = this.callBase.apply(this, arguments);
+          const {
+            plainItems
+          } = config;
+          config.plainItems = cached => {
+            let result;
             if (cached) {
-              result = _this._dataController.getCachedStoreData();
+              result = this._dataController.getCachedStoreData();
             }
-            result || (result = plainItems.apply(_this, _arguments).map(function (item) {
-              return item.data;
-            }));
+            result || (result = plainItems.apply(this, arguments).map(item => item.data));
             return result || [];
           };
-          config.isItemSelected = function (item) {
-            var key = _this._dataController.keyOf(item);
-            return _this.isRowSelected(key);
+          config.isItemSelected = item => {
+            const key = this._dataController.keyOf(item);
+            return this.isRowSelected(key);
           };
-          config.isSelectableItem = function (item) {
-            return !!item;
-          };
-          config.getItemData = function (item) {
-            return item;
-          };
-          config.allowLoadByRange = function () {
-            return false;
-          };
+          config.isSelectableItem = item => !!item;
+          config.getItemData = item => item;
+          config.allowLoadByRange = () => false;
           return config;
         },
         renderSelectCheckBoxContainer($container, model) {
-          var that = this;
-          var rowsView = that.component.getView('rowsView');
+          const that = this;
+          const rowsView = that.component.getView('rowsView');
           $container.addClass(CELL_FOCUS_DISABLED_CLASS);
-          var $checkbox = rowsView._renderSelectCheckBox($container, {
+          const $checkbox = rowsView._renderSelectCheckBox($container, {
             value: model.row.isSelected,
             row: model.row,
             column: model.column
@@ -110,12 +100,14 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
         },
         _updateSelectColumn: _common.noop,
         _getSelectAllNodeKeys() {
-          var component = this.component;
-          var root = component.getRootNode();
-          var cache = {};
-          var keys = [];
-          var isRecursiveSelection = this.isRecursiveSelection();
-          root && _m_core.default.foreachNodes(root.children, function (node) {
+          const {
+            component
+          } = this;
+          const root = component.getRootNode();
+          const cache = {};
+          const keys = [];
+          const isRecursiveSelection = this.isRecursiveSelection();
+          root && _m_core.default.foreachNodes(root.children, node => {
             if (node.key !== undefined && (node.visible || isRecursiveSelection)) {
               keys.push(node.key);
             }
@@ -127,14 +119,16 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return keys;
         },
         isSelectAll() {
-          var selectedRowKeys = this.option('selectedRowKeys') || [];
+          const selectedRowKeys = this.option('selectedRowKeys') || [];
           if (selectedRowKeys.length === 0) return false;
-          var component = this.component;
-          var visibleKeys = this._getSelectAllNodeKeys();
-          var isRecursiveSelection = this.isRecursiveSelection();
-          var hasIndeterminateState = false;
-          var selectedVisibleKeys = visibleKeys.filter(function (key) {
-            var isRowSelected = component.isRowSelected(key, isRecursiveSelection);
+          const {
+            component
+          } = this;
+          const visibleKeys = this._getSelectAllNodeKeys();
+          const isRecursiveSelection = this.isRecursiveSelection();
+          let hasIndeterminateState = false;
+          const selectedVisibleKeys = visibleKeys.filter(key => {
+            const isRowSelected = component.isRowSelected(key, isRecursiveSelection);
             if (isRowSelected === undefined) {
               hasIndeterminateState = true;
             }
@@ -149,30 +143,27 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return undefined;
         },
         selectAll() {
-          var _this2 = this;
-          var visibleKeys = this._getSelectAllNodeKeys().filter(function (key) {
-            return !_this2.isRowSelected(key);
-          });
+          const visibleKeys = this._getSelectAllNodeKeys().filter(key => !this.isRowSelected(key));
           this.focusedItemIndex(-1);
           return this.selectRows(visibleKeys, true);
         },
         deselectAll() {
-          var visibleKeys = this._getSelectAllNodeKeys();
+          const visibleKeys = this._getSelectAllNodeKeys();
           this.focusedItemIndex(-1);
           return this.deselectRows(visibleKeys);
         },
         selectedItemKeys(value, preserve, isDeselect, isSelectAll) {
-          var that = this;
-          var selectedRowKeys = that.option('selectedRowKeys');
-          var isRecursiveSelection = this.isRecursiveSelection();
-          var normalizedArgs = isRecursiveSelection && that._normalizeSelectionArgs({
+          const that = this;
+          const selectedRowKeys = that.option('selectedRowKeys');
+          const isRecursiveSelection = this.isRecursiveSelection();
+          const normalizedArgs = isRecursiveSelection && that._normalizeSelectionArgs({
             keys: (0, _type.isDefined)(value) ? value : []
           }, preserve, !isDeselect);
           if (normalizedArgs && !(0, _common.equalByValue)(normalizedArgs.selectedRowKeys, selectedRowKeys)) {
             that._isSelectionNormalizing = true;
-            return this.callBase(normalizedArgs.selectedRowKeys, false, false, false).always(function () {
+            return this.callBase(normalizedArgs.selectedRowKeys, false, false, false).always(() => {
               that._isSelectionNormalizing = false;
-            }).done(function (items) {
+            }).done(items => {
               normalizedArgs.selectedRowsData = items;
               that._fireSelectionChanged(normalizedArgs);
             });
@@ -180,31 +171,26 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return this.callBase(value, preserve, isDeselect, isSelectAll);
         },
         changeItemSelection(itemIndex, keyboardKeys) {
-          var _this3 = this;
-          var isRecursiveSelection = this.isRecursiveSelection();
+          const isRecursiveSelection = this.isRecursiveSelection();
           if (isRecursiveSelection && !keyboardKeys.shift) {
-            var key = this._dataController.getKeyByRowIndex(itemIndex);
-            return this.selectedItemKeys(key, true, this.isRowSelected(key)).done(function () {
-              _this3.isRowSelected(key) && _this3.callBase(itemIndex, keyboardKeys, true);
+            const key = this._dataController.getKeyByRowIndex(itemIndex);
+            return this.selectedItemKeys(key, true, this.isRowSelected(key)).done(() => {
+              this.isRowSelected(key) && this.callBase(itemIndex, keyboardKeys, true);
             });
           }
           return this.callBase.apply(this, arguments);
         },
         _updateParentSelectionState(node, isSelected) {
-          var that = this;
-          var state = isSelected;
-          var parentNode = node.parent;
+          const that = this;
+          let state = isSelected;
+          const parentNode = node.parent;
           if (parentNode) {
             if (parentNode.children.length > 1) {
               if (isSelected === false) {
-                var hasSelectedState = parentNode.children.some(function (childNode) {
-                  return that._selectionStateByKey[childNode.key];
-                });
+                const hasSelectedState = parentNode.children.some(childNode => that._selectionStateByKey[childNode.key]);
                 state = hasSelectedState ? undefined : false;
               } else if (isSelected === true) {
-                var hasNonSelectedState = parentNode.children.some(function (childNode) {
-                  return !that._selectionStateByKey[childNode.key];
-                });
+                const hasNonSelectedState = parentNode.children.some(childNode => !that._selectionStateByKey[childNode.key]);
                 state = hasNonSelectedState ? undefined : true;
               }
             }
@@ -215,9 +201,11 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
         },
         _updateChildrenSelectionState(node, isSelected) {
-          var that = this;
-          var children = node.children;
-          children && children.forEach(function (childNode) {
+          const that = this;
+          const {
+            children
+          } = node;
+          children && children.forEach(childNode => {
             that._selectionStateByKey[childNode.key] = isSelected;
             if (childNode.children.length > 0) {
               that._updateChildrenSelectionState(childNode, isSelected);
@@ -225,10 +213,10 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
         },
         _updateSelectionStateCore(keys, isSelected) {
-          var dataController = this._dataController;
-          for (var i = 0; i < keys.length; i++) {
+          const dataController = this._dataController;
+          for (let i = 0; i < keys.length; i++) {
             this._selectionStateByKey[keys[i]] = isSelected;
-            var node = dataController.getNodeByKey(keys[i]);
+            const node = dataController.getNodeByKey(keys[i]);
             if (node) {
               this._updateParentSelectionState(node, isSelected);
               this._updateChildrenSelectionState(node, isSelected);
@@ -236,13 +224,13 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           }
         },
         _getSelectedParentKeys(key, selectedItemKeys, useCash) {
-          var selectedParentNode;
-          var node = this._dataController.getNodeByKey(key);
-          var parentNode = node && node.parent;
-          var result = [];
+          let selectedParentNode;
+          const node = this._dataController.getNodeByKey(key);
+          let parentNode = node && node.parent;
+          let result = [];
           while (parentNode && parentNode.level >= 0) {
             result.unshift(parentNode.key);
-            var isSelected = useCash ? !nodeExists(selectedItemKeys, parentNode.key) && this.isRowSelected(parentNode.key) : selectedItemKeys.indexOf(parentNode.key) >= 0;
+            const isSelected = useCash ? !nodeExists(selectedItemKeys, parentNode.key) && this.isRowSelected(parentNode.key) : selectedItemKeys.indexOf(parentNode.key) >= 0;
             if (isSelected) {
               selectedParentNode = parentNode;
               result = this._getSelectedParentKeys(selectedParentNode.key, selectedItemKeys, useCash).concat(result);
@@ -255,53 +243,51 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return selectedParentNode && result || [];
         },
         _getSelectedChildKeys(key, keysToIgnore) {
-          var _this4 = this;
-          var childKeys = [];
-          var node = this._dataController.getNodeByKey(key);
-          node && _m_core.default.foreachNodes(node.children, function (childNode) {
-            var ignoreKeyIndex = keysToIgnore.indexOf(childNode.key);
+          const childKeys = [];
+          const node = this._dataController.getNodeByKey(key);
+          node && _m_core.default.foreachNodes(node.children, childNode => {
+            const ignoreKeyIndex = keysToIgnore.indexOf(childNode.key);
             if (ignoreKeyIndex < 0) {
               childKeys.push(childNode.key);
             }
-            return ignoreKeyIndex > 0 || ignoreKeyIndex < 0 && _this4._selectionStateByKey[childNode.key] === undefined;
+            return ignoreKeyIndex > 0 || ignoreKeyIndex < 0 && this._selectionStateByKey[childNode.key] === undefined;
           });
           return childKeys;
         },
         _normalizeParentKeys(key, args) {
-          var that = this;
-          var keysToIgnore = [key];
-          var parentNodeKeys = that._getSelectedParentKeys(key, args.selectedRowKeys);
+          const that = this;
+          let keysToIgnore = [key];
+          const parentNodeKeys = that._getSelectedParentKeys(key, args.selectedRowKeys);
           if (parentNodeKeys.length) {
             keysToIgnore = keysToIgnore.concat(parentNodeKeys);
-            keysToIgnore.forEach(function (key) {
-              var index = args.selectedRowKeys.indexOf(key);
+            keysToIgnore.forEach(key => {
+              const index = args.selectedRowKeys.indexOf(key);
               if (index >= 0) {
                 args.selectedRowKeys.splice(index, 1);
               }
             });
-            var childKeys = that._getSelectedChildKeys(parentNodeKeys[0], keysToIgnore);
+            const childKeys = that._getSelectedChildKeys(parentNodeKeys[0], keysToIgnore);
             args.selectedRowKeys = args.selectedRowKeys.concat(childKeys);
           }
         },
         _normalizeChildrenKeys(key, args) {
-          var _this5 = this;
-          var node = this._dataController.getNodeByKey(key);
-          node && node.children.forEach(function (childNode) {
-            var index = args.selectedRowKeys.indexOf(childNode.key);
+          const node = this._dataController.getNodeByKey(key);
+          node && node.children.forEach(childNode => {
+            const index = args.selectedRowKeys.indexOf(childNode.key);
             if (index >= 0) {
               args.selectedRowKeys.splice(index, 1);
             }
-            _this5._normalizeChildrenKeys(childNode.key, args);
+            this._normalizeChildrenKeys(childNode.key, args);
           });
         },
         _normalizeSelectedRowKeysCore(keys, args, preserve, isSelect) {
-          var that = this;
-          keys.forEach(function (key) {
+          const that = this;
+          keys.forEach(key => {
             if (preserve && that.isRowSelected(key) === isSelect) {
               return;
             }
             that._normalizeChildrenKeys(key, args);
-            var index = args.selectedRowKeys.indexOf(key);
+            const index = args.selectedRowKeys.indexOf(key);
             if (isSelect) {
               if (index < 0) {
                 args.selectedRowKeys.push(key);
@@ -317,9 +303,9 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           });
         },
         _normalizeSelectionArgs(args, preserve, isSelect) {
-          var result;
-          var keys = Array.isArray(args.keys) ? args.keys : [args.keys];
-          var selectedRowKeys = this.option('selectedRowKeys') || [];
+          let result;
+          const keys = Array.isArray(args.keys) ? args.keys : [args.keys];
+          const selectedRowKeys = this.option('selectedRowKeys') || [];
           if (keys.length) {
             result = {
               currentSelectedRowKeys: [],
@@ -343,9 +329,9 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return mode === 'leavesOnly';
         },
         _removeDuplicatedKeys(keys) {
-          var result = [];
-          var processedKeys = {};
-          keys.forEach(function (key) {
+          const result = [];
+          const processedKeys = {};
+          keys.forEach(key => {
             if (!processedKeys[key]) {
               processedKeys[key] = true;
               result.push(key);
@@ -354,58 +340,57 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return result;
         },
         _getAllChildKeys(key) {
-          var childKeys = [];
-          var node = this._dataController.getNodeByKey(key);
-          node && _m_core.default.foreachNodes(node.children, function (childNode) {
+          const childKeys = [];
+          const node = this._dataController.getNodeByKey(key);
+          node && _m_core.default.foreachNodes(node.children, childNode => {
             childKeys.push(childNode.key);
           }, true);
           return childKeys;
         },
         _getAllSelectedRowKeys(keys) {
-          var _this6 = this;
-          var result = [];
-          keys.forEach(function (key) {
-            var parentKeys = _this6._getSelectedParentKeys(key, [], true);
-            var childKeys = _this6._getAllChildKeys(key);
+          let result = [];
+          keys.forEach(key => {
+            const parentKeys = this._getSelectedParentKeys(key, [], true);
+            const childKeys = this._getAllChildKeys(key);
             result.push.apply(result, parentKeys.concat([key], childKeys));
           });
           result = this._removeDuplicatedKeys(result);
           return result;
         },
         _getParentSelectedRowKeys(keys) {
-          var that = this;
-          var result = [];
-          keys.forEach(function (key) {
-            var parentKeys = that._getSelectedParentKeys(key, keys);
+          const that = this;
+          const result = [];
+          keys.forEach(key => {
+            const parentKeys = that._getSelectedParentKeys(key, keys);
             !parentKeys.length && result.push(key);
           });
           return result;
         },
         _getLeafSelectedRowKeys(keys) {
-          var that = this;
-          var result = [];
-          var dataController = that._dataController;
-          keys.forEach(function (key) {
-            var node = dataController.getNodeByKey(key);
+          const that = this;
+          const result = [];
+          const dataController = that._dataController;
+          keys.forEach(key => {
+            const node = dataController.getNodeByKey(key);
             node && !node.hasChildren && result.push(key);
           });
           return result;
         },
         isRecursiveSelection() {
-          var selectionMode = this.option('selection.mode');
-          var isRecursive = this.option('selection.recursive');
+          const selectionMode = this.option('selection.mode');
+          const isRecursive = this.option('selection.recursive');
           return selectionMode === 'multiple' && isRecursive;
         },
         updateSelectionState(options) {
-          var removedItemKeys = options.removedItemKeys || [];
-          var selectedItemKeys = options.selectedItemKeys || [];
+          const removedItemKeys = options.removedItemKeys || [];
+          const selectedItemKeys = options.selectedItemKeys || [];
           if (this.isRecursiveSelection()) {
             this._updateSelectionStateCore(removedItemKeys, false);
             this._updateSelectionStateCore(selectedItemKeys, true);
           }
         },
         isRowSelected(key, isRecursiveSelection) {
-          var result = this.callBase.apply(this, arguments);
+          const result = this.callBase.apply(this, arguments);
           isRecursiveSelection = isRecursiveSelection !== null && isRecursiveSelection !== void 0 ? isRecursiveSelection : this.isRecursiveSelection();
           if (!result && isRecursiveSelection) {
             if (key in this._selectionStateByKey) {
@@ -416,11 +401,11 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return result;
         },
         getSelectedRowKeys(mode) {
-          var that = this;
+          const that = this;
           if (!that._dataController) {
             return [];
           }
-          var selectedRowKeys = that.callBase.apply(that, arguments);
+          let selectedRowKeys = that.callBase.apply(that, arguments);
           if (mode) {
             if (this.isRecursiveSelection()) {
               selectedRowKeys = this._getAllSelectedRowKeys(selectedRowKeys);
@@ -436,12 +421,12 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return selectedRowKeys;
         },
         getSelectedRowsData(mode) {
-          var that = this;
-          var dataController = that._dataController;
-          var selectedKeys = this.getSelectedRowKeys(mode) || [];
-          var selectedRowsData = [];
-          selectedKeys.forEach(function (key) {
-            var node = dataController.getNodeByKey(key);
+          const that = this;
+          const dataController = that._dataController;
+          const selectedKeys = this.getSelectedRowKeys(mode) || [];
+          const selectedRowsData = [];
+          selectedKeys.forEach(key => {
+            const node = dataController.getNodeByKey(key);
             node && selectedRowsData.push(node.data);
           });
           return selectedRowsData;
@@ -455,10 +440,10 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
     views: {
       columnHeadersView: {
         _processTemplate(template, options) {
-          var that = this;
-          var resultTemplate;
-          var renderingTemplate = this.callBase(template, options);
-          var firstDataColumnIndex = that._columnsController.getFirstDataColumnIndex();
+          const that = this;
+          let resultTemplate;
+          const renderingTemplate = this.callBase(template, options);
+          const firstDataColumnIndex = that._columnsController.getFirstDataColumnIndex();
           if (renderingTemplate && options.rowType === 'header' && options.column.index === firstDataColumnIndex) {
             resultTemplate = {
               render(options) {
@@ -491,7 +476,7 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
           return $iconContainer;
         },
         _rowClick(e) {
-          var $targetElement = (0, _renderer.default)(e.event.target);
+          const $targetElement = (0, _renderer.default)(e.event.target);
           if (this.isExpandIcon($targetElement)) {
             this.callBase.apply(this, arguments);
           } else {

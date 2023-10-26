@@ -1,20 +1,20 @@
 "use strict";
 
 exports.default = void 0;
-var CENTER = 0.5;
-var LEFTCORNER = 0;
-var RIGHTCORNER = 1;
+const CENTER = 0.5;
+const LEFTCORNER = 0;
+const RIGHTCORNER = 1;
 var _default = {
-  getFigures: function getFigures(data, neckWidth, neckHeight) {
-    var height = 0;
-    var y = 0;
-    var x = 0;
-    var offsetX = 0;
-    var halfNeckWidth = neckWidth / 2;
-    var offsetFromCorner = CENTER - halfNeckWidth;
-    var funnelHeight = 1 - neckHeight;
-    var neckLeftCorner = CENTER - halfNeckWidth;
-    var neckRightCorner = CENTER + halfNeckWidth;
+  getFigures: function (data, neckWidth, neckHeight) {
+    let height = 0;
+    let y = 0;
+    let x = 0;
+    let offsetX = 0;
+    const halfNeckWidth = neckWidth / 2;
+    const offsetFromCorner = CENTER - halfNeckWidth;
+    const funnelHeight = 1 - neckHeight;
+    const neckLeftCorner = CENTER - halfNeckWidth;
+    const neckRightCorner = CENTER + halfNeckWidth;
     return data.map(function (value) {
       x = offsetX;
       y = height;
@@ -29,8 +29,8 @@ var _default = {
       }
     });
   },
-  normalizeValues: function normalizeValues(items) {
-    var sum = items.reduce(function (sum, item) {
+  normalizeValues: function (items) {
+    const sum = items.reduce(function (sum, item) {
       return sum + item.value;
     }, 0);
     return items.map(function (item) {

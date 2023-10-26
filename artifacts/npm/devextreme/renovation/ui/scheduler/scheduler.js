@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/scheduler.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,9 +35,8 @@ var _layout2 = require("./appointment_edit_form/layout");
 var _popup_config = require("./appointment_edit_form/popup_config");
 var _form_context_provider = require("./form_context_provider");
 var _formData = require("./utils/editing/formData");
-var _excluded = ["accessKey", "activeStateEnabled", "adaptivityEnabled", "allDayExpr", "allDayPanelMode", "appointmentCollectorTemplate", "appointmentDragging", "appointmentTemplate", "appointmentTooltipTemplate", "cellDuration", "className", "crossScrollingEnabled", "currentDate", "currentDateChange", "currentView", "currentViewChange", "customizeDateNavigatorText", "dataCellTemplate", "dataSource", "dateCellTemplate", "dateSerializationFormat", "defaultCurrentDate", "defaultCurrentView", "descriptionExpr", "disabled", "editing", "endDateExpr", "endDateTimeZoneExpr", "endDayHour", "firstDayOfWeek", "focusStateEnabled", "groupByDate", "groups", "height", "hint", "hoverStateEnabled", "indicatorUpdateInterval", "max", "maxAppointmentsPerCell", "min", "noDataText", "onAppointmentAdded", "onAppointmentAdding", "onAppointmentClick", "onAppointmentContextMenu", "onAppointmentDblClick", "onAppointmentDeleted", "onAppointmentDeleting", "onAppointmentFormOpening", "onAppointmentRendered", "onAppointmentUpdated", "onAppointmentUpdating", "onCellClick", "onCellContextMenu", "onClick", "onKeyDown", "recurrenceEditMode", "recurrenceExceptionExpr", "recurrenceRuleExpr", "remoteFiltering", "resourceCellTemplate", "resources", "rtlEnabled", "scrolling", "selectedCellData", "shadeUntilCurrentTime", "showAllDayPanel", "showCurrentTimeIndicator", "startDateExpr", "startDateTimeZoneExpr", "startDayHour", "tabIndex", "textExpr", "timeCellTemplate", "timeZone", "toolbar", "useDropDownViewSwitcher", "views", "visible", "width"];
+const _excluded = ["accessKey", "activeStateEnabled", "adaptivityEnabled", "allDayExpr", "allDayPanelMode", "appointmentCollectorTemplate", "appointmentDragging", "appointmentTemplate", "appointmentTooltipTemplate", "cellDuration", "className", "crossScrollingEnabled", "currentDate", "currentDateChange", "currentView", "currentViewChange", "customizeDateNavigatorText", "dataCellTemplate", "dataSource", "dateCellTemplate", "dateSerializationFormat", "defaultCurrentDate", "defaultCurrentView", "descriptionExpr", "disabled", "editing", "endDateExpr", "endDateTimeZoneExpr", "endDayHour", "firstDayOfWeek", "focusStateEnabled", "groupByDate", "groups", "height", "hint", "hoverStateEnabled", "indicatorUpdateInterval", "max", "maxAppointmentsPerCell", "min", "noDataText", "onAppointmentAdded", "onAppointmentAdding", "onAppointmentClick", "onAppointmentContextMenu", "onAppointmentDblClick", "onAppointmentDeleted", "onAppointmentDeleting", "onAppointmentFormOpening", "onAppointmentRendered", "onAppointmentUpdated", "onAppointmentUpdating", "onCellClick", "onCellContextMenu", "onClick", "onKeyDown", "recurrenceEditMode", "recurrenceExceptionExpr", "recurrenceRuleExpr", "remoteFiltering", "resourceCellTemplate", "resources", "rtlEnabled", "scrolling", "selectedCellData", "shadeUntilCurrentTime", "showAllDayPanel", "showCurrentTimeIndicator", "startDateExpr", "startDateTimeZoneExpr", "startDayHour", "tabIndex", "textExpr", "timeCellTemplate", "timeZone", "toolbar", "useDropDownViewSwitcher", "views", "visible", "width"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -47,77 +46,83 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(_ref) {
-  var appointmentEditFormVisible = _ref.appointmentEditFormVisible,
-    appointmentFormData = _ref.appointmentFormData,
-    appointmentPopupSize = _ref.appointmentPopupSize,
-    appointmentsContextValue = _ref.appointmentsContextValue,
-    changeAppointmentEditFormVisible = _ref.changeAppointmentEditFormVisible,
-    changeTooltipVisible = _ref.changeTooltipVisible,
-    classes = _ref.classes,
-    currentViewConfig = _ref.currentViewConfig,
-    dataAccessors = _ref.dataAccessors,
-    formContextValue = _ref.formContextValue,
-    loadedResources = _ref.loadedResources,
-    needCreateAppointmentEditForm = _ref.needCreateAppointmentEditForm,
-    onViewRendered = _ref.onViewRendered,
-    _ref$props = _ref.props,
-    accessKey = _ref$props.accessKey,
-    activeStateEnabled = _ref$props.activeStateEnabled,
-    className = _ref$props.className,
-    currentView = _ref$props.currentView,
-    customizeDateNavigatorText = _ref$props.customizeDateNavigatorText,
-    disabled = _ref$props.disabled,
-    _ref$props$editing = _ref$props.editing,
-    allowTimeZoneEditing = _ref$props$editing.allowTimeZoneEditing,
-    allowUpdating = _ref$props$editing.allowUpdating,
-    focusStateEnabled = _ref$props.focusStateEnabled,
-    height = _ref$props.height,
-    hint = _ref$props.hint,
-    hoverStateEnabled = _ref$props.hoverStateEnabled,
-    max = _ref$props.max,
-    min = _ref$props.min,
-    rtlEnabled = _ref$props.rtlEnabled,
-    tabIndex = _ref$props.tabIndex,
-    toolbarItems = _ref$props.toolbar,
-    useDropDownViewSwitcher = _ref$props.useDropDownViewSwitcher,
-    views = _ref$props.views,
-    visible = _ref$props.visible,
-    width = _ref$props.width,
-    reducedIconEndDate = _ref.reducedIconEndDate,
-    reducedIconTarget = _ref.reducedIconTarget,
-    reducedIconTooltipVisible = _ref.reducedIconTooltipVisible,
-    restAttributes = _ref.restAttributes,
-    setCurrentDate = _ref.setCurrentDate,
-    setCurrentView = _ref.setCurrentView,
-    startViewDate = _ref.startViewDate,
-    tooltipData = _ref.tooltipData,
-    tooltipTarget = _ref.tooltipTarget,
-    tooltipVisible = _ref.tooltipVisible,
-    workSpaceKey = _ref.workSpaceKey;
-  var allDayPanelExpanded = currentViewConfig.allDayPanelExpanded,
-    allowMultipleCellSelection = currentViewConfig.allowMultipleCellSelection,
-    cellDuration = currentViewConfig.cellDuration,
-    crossScrollingEnabled = currentViewConfig.crossScrollingEnabled,
-    currentDate = currentViewConfig.currentDate,
-    dataCellTemplate = currentViewConfig.dataCellTemplate,
-    dateCellTemplate = currentViewConfig.dateCellTemplate,
-    endDayHour = currentViewConfig.endDayHour,
-    firstDayOfWeek = currentViewConfig.firstDayOfWeek,
-    groupByDate = currentViewConfig.groupByDate,
-    groupOrientation = currentViewConfig.groupOrientation,
-    hoursInterval = currentViewConfig.hoursInterval,
-    indicatorUpdateInterval = currentViewConfig.indicatorUpdateInterval,
-    intervalCount = currentViewConfig.intervalCount,
-    resourceCellTemplate = currentViewConfig.resourceCellTemplate,
-    scrolling = currentViewConfig.scrolling,
-    shadeUntilCurrentTime = currentViewConfig.shadeUntilCurrentTime,
-    showAllDayPanel = currentViewConfig.showAllDayPanel,
-    showCurrentTimeIndicator = currentViewConfig.showCurrentTimeIndicator,
-    startDate = currentViewConfig.startDate,
-    startDayHour = currentViewConfig.startDayHour,
-    timeCellTemplate = currentViewConfig.timeCellTemplate,
-    type = currentViewConfig.type;
+const viewFunction = _ref => {
+  let {
+    appointmentEditFormVisible,
+    appointmentFormData,
+    appointmentPopupSize,
+    appointmentsContextValue,
+    changeAppointmentEditFormVisible,
+    changeTooltipVisible,
+    classes,
+    currentViewConfig,
+    dataAccessors,
+    formContextValue,
+    loadedResources,
+    needCreateAppointmentEditForm,
+    onViewRendered,
+    props: {
+      accessKey,
+      activeStateEnabled,
+      className,
+      currentView,
+      customizeDateNavigatorText,
+      disabled,
+      editing: {
+        allowTimeZoneEditing,
+        allowUpdating
+      },
+      focusStateEnabled,
+      height,
+      hint,
+      hoverStateEnabled,
+      max,
+      min,
+      rtlEnabled,
+      tabIndex,
+      toolbar: toolbarItems,
+      useDropDownViewSwitcher,
+      views,
+      visible,
+      width
+    },
+    reducedIconEndDate,
+    reducedIconTarget,
+    reducedIconTooltipVisible,
+    restAttributes,
+    setCurrentDate,
+    setCurrentView,
+    startViewDate,
+    tooltipData,
+    tooltipTarget,
+    tooltipVisible,
+    workSpaceKey
+  } = _ref;
+  const {
+    allDayPanelExpanded,
+    allowMultipleCellSelection,
+    cellDuration,
+    crossScrollingEnabled,
+    currentDate,
+    dataCellTemplate,
+    dateCellTemplate,
+    endDayHour,
+    firstDayOfWeek,
+    groupByDate,
+    groupOrientation,
+    hoursInterval,
+    indicatorUpdateInterval,
+    intervalCount,
+    resourceCellTemplate,
+    scrolling,
+    shadeUntilCurrentTime,
+    showAllDayPanel,
+    showCurrentTimeIndicator,
+    startDate,
+    startDayHour,
+    timeCellTemplate,
+    type
+  } = currentViewConfig;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, _extends({
     "classes": classes,
     "accessKey": accessKey,
@@ -206,12 +211,8 @@ var viewFunction = function viewFunction(_ref) {
   })));
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(Scheduler, _InfernoWrapperCompon);
   function Scheduler(props) {
     var _this;
@@ -279,20 +280,16 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
     (_this$_effects$2 = this._effects[1]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([this.props.dataSource, this.props.remoteFiltering, this.state.lastViewDateByEndDayHour, this.props.startDateExpr, this.props.endDateExpr, this.props.startDateTimeZoneExpr, this.props.endDateTimeZoneExpr, this.props.allDayExpr, this.props.textExpr, this.props.descriptionExpr, this.props.recurrenceRuleExpr, this.props.recurrenceExceptionExpr, this.props.resources, this.props.allDayPanelMode, this.props.appointmentCollectorTemplate, this.props.appointmentTemplate, this.props.appointmentTooltipTemplate, this.props.cellDuration, this.props.crossScrollingEnabled, this.state.currentDate, this.props.currentDate, this.props.dataCellTemplate, this.props.dateCellTemplate, this.props.endDayHour, this.props.firstDayOfWeek, this.props.groupByDate, this.props.height, this.props.indicatorUpdateInterval, this.props.maxAppointmentsPerCell, this.props.resourceCellTemplate, this.props.scrolling, this.props.shadeUntilCurrentTime, this.props.showAllDayPanel, this.props.showCurrentTimeIndicator, this.props.startDayHour, this.props.timeCellTemplate, this.props.width, this.state.currentView, this.props.currentView, this.props.views, this.props.dateSerializationFormat]);
   };
   _proto.loadGroupResources = function loadGroupResources() {
-    var _this2 = this;
-    (0, _m_utils2.loadResources)(this.mergedGroups, this.props.resources, this.state.resourcePromisesMap).then(function (loadedResources) {
-      _this2.setState(function (__state_argument) {
-        return {
-          loadedResources: loadedResources
-        };
-      });
+    (0, _m_utils2.loadResources)(this.mergedGroups, this.props.resources, this.state.resourcePromisesMap).then(loadedResources => {
+      this.setState(__state_argument => ({
+        loadedResources: loadedResources
+      }));
     });
   };
   _proto.loadDataSource = function loadDataSource() {
-    var _this3 = this;
     if (!this.internalDataSource.isLoaded() && !this.internalDataSource.isLoading()) {
       if (this.props.remoteFiltering && this.state.lastViewDateByEndDayHour) {
-        var combinedFilter = (0, _remote.default)({
+        const combinedFilter = (0, _remote.default)({
           dataAccessors: this.dataAccessors,
           dataSourceFilter: this.internalDataSource.filter(),
           min: this.startViewDate,
@@ -301,36 +298,32 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
         });
         this.internalDataSource.filter(combinedFilter);
       }
-      this.internalDataSource.load().done(function (loadOptions) {
-        _this3.setState(function (__state_argument) {
-          return {
-            dataItems: (0, _data.resolveDataItems)(loadOptions)
-          };
-        });
+      this.internalDataSource.load().done(loadOptions => {
+        this.setState(__state_argument => ({
+          dataItems: (0, _data.resolveDataItems)(loadOptions)
+        }));
       });
     }
   };
   _proto.onViewRendered = function onViewRendered(viewMetaData) {
     var _this$state$lastViewD;
-    this.setState(function (__state_argument) {
-      return {
-        workSpaceViewModel: viewMetaData
-      };
-    });
-    var viewDataProvider = viewMetaData.viewDataProvider;
-    var lastViewDate = viewDataProvider.getLastViewDateByEndDayHour(this.currentViewConfig.endDayHour);
+    this.setState(__state_argument => ({
+      workSpaceViewModel: viewMetaData
+    }));
+    const {
+      viewDataProvider
+    } = viewMetaData;
+    const lastViewDate = viewDataProvider.getLastViewDateByEndDayHour(this.currentViewConfig.endDayHour);
     if (lastViewDate.getTime() !== ((_this$state$lastViewD = this.state.lastViewDateByEndDayHour) === null || _this$state$lastViewD === void 0 ? void 0 : _this$state$lastViewD.getTime())) {
-      this.setState(function (__state_argument) {
-        return {
-          lastViewDateByEndDayHour: lastViewDate
-        };
-      });
+      this.setState(__state_argument => ({
+        lastViewDateByEndDayHour: lastViewDate
+      }));
     }
   };
   _proto.setCurrentView = function setCurrentView(view) {
     {
-      var __newValue;
-      this.setState(function (__state_argument) {
+      let __newValue;
+      this.setState(__state_argument => {
         __newValue = view;
         return {
           currentView: __newValue
@@ -341,8 +334,8 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _proto.setCurrentDate = function setCurrentDate(date) {
     {
-      var __newValue;
-      this.setState(function (__state_argument) {
+      let __newValue;
+      this.setState(__state_argument => {
         __newValue = date;
         return {
           currentDate: __newValue
@@ -352,44 +345,36 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   };
   _proto.showTooltip = function showTooltip(e) {
-    this.setState(function (__state_argument) {
-      return {
-        tooltipData: e.data
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        tooltipTarget: e.target
-      };
-    });
+    this.setState(__state_argument => ({
+      tooltipData: e.data
+    }));
+    this.setState(__state_argument => ({
+      tooltipTarget: e.target
+    }));
     this.changeTooltipVisible(true);
   };
   _proto.showAppointmentPopupForm = function showAppointmentPopupForm(_ref2) {
-    var data = _ref2.data;
-    var appointmentData = data[0];
-    this.setState(function (__state_argument) {
-      return {
-        appointmentFormData: appointmentData.appointment
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        formContextValue: {
-          formData: (0, _formData.createFormData)(appointmentData.appointment)
-        }
-      };
-    });
-    var isRecurrent = appointmentData.info.isRecurrent;
-    this.setState(function (__state_argument) {
-      return {
-        appointmentPopupSize: (0, _popup_config.getPopupSize)(isRecurrent)
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        needCreateAppointmentEditForm: true
-      };
-    });
+    let {
+      data
+    } = _ref2;
+    const appointmentData = data[0];
+    this.setState(__state_argument => ({
+      appointmentFormData: appointmentData.appointment
+    }));
+    this.setState(__state_argument => ({
+      formContextValue: {
+        formData: (0, _formData.createFormData)(appointmentData.appointment)
+      }
+    }));
+    const {
+      isRecurrent
+    } = appointmentData.info;
+    this.setState(__state_argument => ({
+      appointmentPopupSize: (0, _popup_config.getPopupSize)(isRecurrent)
+    }));
+    this.setState(__state_argument => ({
+      needCreateAppointmentEditForm: true
+    }));
     this.hideTooltip();
     this.changeAppointmentEditFormVisible(true);
   };
@@ -397,60 +382,49 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
     this.changeTooltipVisible(false);
   };
   _proto.changeTooltipVisible = function changeTooltipVisible(value) {
-    this.setState(function (__state_argument) {
-      return {
-        tooltipVisible: value
-      };
-    });
+    this.setState(__state_argument => ({
+      tooltipVisible: value
+    }));
   };
   _proto.changeAppointmentEditFormVisible = function changeAppointmentEditFormVisible(value) {
-    this.setState(function (__state_argument) {
-      return {
-        appointmentEditFormVisible: value
-      };
-    });
+    this.setState(__state_argument => ({
+      appointmentEditFormVisible: value
+    }));
   };
   _proto.showReducedIconTooltip = function showReducedIconTooltip(data) {
-    this.setState(function (__state_argument) {
-      return {
-        reducedIconTarget: data.target
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        reducedIconEndDate: data.endDate
-      };
-    });
-    this.setState(function (__state_argument) {
-      return {
-        reducedIconTooltipVisible: true
-      };
-    });
+    this.setState(__state_argument => ({
+      reducedIconTarget: data.target
+    }));
+    this.setState(__state_argument => ({
+      reducedIconEndDate: data.endDate
+    }));
+    this.setState(__state_argument => ({
+      reducedIconTooltipVisible: true
+    }));
   };
   _proto.hideReducedIconTooltip = function hideReducedIconTooltip() {
-    this.setState(function (__state_argument) {
-      return {
-        reducedIconTooltipVisible: false
-      };
-    });
+    this.setState(__state_argument => ({
+      reducedIconTooltipVisible: false
+    }));
   };
   _proto.updateAppointmentFocus = function updateAppointmentFocus(type, index) {
     this.state.appointmentFocus.type = type;
     this.state.appointmentFocus.index = index;
   };
   _proto.updateFocusedAppointment = function updateFocusedAppointment(type, index) {
-    var _this$state$appointme = this.state.appointmentFocus,
-      prevFocusedIndex = _this$state$appointme.index,
-      prevFocusedType = _this$state$appointme.type;
+    const {
+      index: prevFocusedIndex,
+      type: prevFocusedType
+    } = this.state.appointmentFocus;
     if (prevFocusedIndex >= 0) {
-      var prevViewModels = this.appointmentsViewModel[prevFocusedType];
-      var prevViewModel = prevViewModels[prevFocusedIndex];
+      const prevViewModels = this.appointmentsViewModel[prevFocusedType];
+      const prevViewModel = prevViewModels[prevFocusedIndex];
       prevViewModels[prevFocusedIndex] = _extends({}, prevViewModel, {
         focused: false
       });
     }
     this.updateAppointmentFocus(type, index);
-    var viewModels = this.appointmentsViewModel[type];
+    const viewModels = this.appointmentsViewModel[type];
     viewModels[index] = _extends({}, viewModels[index], {
       focused: true
     });
@@ -509,7 +483,7 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         currentDate: this.props.currentDate !== undefined ? this.props.currentDate : this.state.currentDate,
@@ -572,42 +546,44 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(Scheduler, [{
     key: "currentViewProps",
-    get: function get() {
-      var views = this.props.views;
+    get: function () {
+      const {
+        views
+      } = this.props;
       return (0, _views.getCurrentViewProps)(this.props.currentView !== undefined ? this.props.currentView : this.state.currentView, views);
     }
   }, {
     key: "currentViewConfig",
-    get: function get() {
-      var _this4 = this;
+    get: function () {
       if (this.__getterCache['currentViewConfig'] !== undefined) {
         return this.__getterCache['currentViewConfig'];
       }
-      return this.__getterCache['currentViewConfig'] = function () {
-        var _this4$props = _this4.props,
-          allDayPanelMode = _this4$props.allDayPanelMode,
-          appointmentCollectorTemplate = _this4$props.appointmentCollectorTemplate,
-          appointmentTemplate = _this4$props.appointmentTemplate,
-          appointmentTooltipTemplate = _this4$props.appointmentTooltipTemplate,
-          cellDuration = _this4$props.cellDuration,
-          crossScrollingEnabled = _this4$props.crossScrollingEnabled,
-          dataCellTemplate = _this4$props.dataCellTemplate,
-          dateCellTemplate = _this4$props.dateCellTemplate,
-          endDayHour = _this4$props.endDayHour,
-          firstDayOfWeek = _this4$props.firstDayOfWeek,
-          groupByDate = _this4$props.groupByDate,
-          height = _this4$props.height,
-          indicatorUpdateInterval = _this4$props.indicatorUpdateInterval,
-          maxAppointmentsPerCell = _this4$props.maxAppointmentsPerCell,
-          resourceCellTemplate = _this4$props.resourceCellTemplate,
-          scrolling = _this4$props.scrolling,
-          shadeUntilCurrentTime = _this4$props.shadeUntilCurrentTime,
-          showAllDayPanel = _this4$props.showAllDayPanel,
-          showCurrentTimeIndicator = _this4$props.showCurrentTimeIndicator,
-          startDayHour = _this4$props.startDayHour,
-          timeCellTemplate = _this4$props.timeCellTemplate,
-          width = _this4$props.width;
-        return (0, _views.getCurrentViewConfig)(_this4.currentViewProps, {
+      return this.__getterCache['currentViewConfig'] = (() => {
+        const {
+          allDayPanelMode,
+          appointmentCollectorTemplate,
+          appointmentTemplate,
+          appointmentTooltipTemplate,
+          cellDuration,
+          crossScrollingEnabled,
+          dataCellTemplate,
+          dateCellTemplate,
+          endDayHour,
+          firstDayOfWeek,
+          groupByDate,
+          height,
+          indicatorUpdateInterval,
+          maxAppointmentsPerCell,
+          resourceCellTemplate,
+          scrolling,
+          shadeUntilCurrentTime,
+          showAllDayPanel,
+          showCurrentTimeIndicator,
+          startDayHour,
+          timeCellTemplate,
+          width
+        } = this.props;
+        return (0, _views.getCurrentViewConfig)(this.currentViewProps, {
           firstDayOfWeek,
           startDayHour,
           endDayHour,
@@ -630,29 +606,30 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
           height,
           width,
           allDayPanelMode
-        }, _this4.props.currentDate !== undefined ? _this4.props.currentDate : _this4.state.currentDate);
-      }();
+        }, this.props.currentDate !== undefined ? this.props.currentDate : this.state.currentDate);
+      })();
     }
   }, {
     key: "isValidViewDataProvider",
-    get: function get() {
+    get: function () {
       var _this$state$workSpace;
-      var _this$currentViewConf = this.currentViewConfig,
-        allDayPanelExpanded = _this$currentViewConf.allDayPanelExpanded,
-        cellDuration = _this$currentViewConf.cellDuration,
-        crossScrollingEnabled = _this$currentViewConf.crossScrollingEnabled,
-        currentDate = _this$currentViewConf.currentDate,
-        endDayHour = _this$currentViewConf.endDayHour,
-        firstDayOfWeek = _this$currentViewConf.firstDayOfWeek,
-        groupByDate = _this$currentViewConf.groupByDate,
-        groupOrientation = _this$currentViewConf.groupOrientation,
-        hoursInterval = _this$currentViewConf.hoursInterval,
-        intervalCount = _this$currentViewConf.intervalCount,
-        scrolling = _this$currentViewConf.scrolling,
-        showAllDayPanel = _this$currentViewConf.showAllDayPanel,
-        startDate = _this$currentViewConf.startDate,
-        startDayHour = _this$currentViewConf.startDayHour,
-        type = _this$currentViewConf.type;
+      const {
+        allDayPanelExpanded,
+        cellDuration,
+        crossScrollingEnabled,
+        currentDate,
+        endDayHour,
+        firstDayOfWeek,
+        groupByDate,
+        groupOrientation,
+        hoursInterval,
+        intervalCount,
+        scrolling,
+        showAllDayPanel,
+        startDate,
+        startDayHour,
+        type
+      } = this.currentViewConfig;
       return (0, _common.isViewDataProviderConfigValid)((_this$state$workSpace = this.state.workSpaceViewModel) === null || _this$state$workSpace === void 0 ? void 0 : _this$state$workSpace.viewDataProviderValidationOptions, {
         intervalCount: intervalCount !== null && intervalCount !== void 0 ? intervalCount : 1,
         currentDate,
@@ -674,73 +651,71 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "dataAccessors",
-    get: function get() {
-      var _this5 = this;
+    get: function () {
       if (this.__getterCache['dataAccessors'] !== undefined) {
         return this.__getterCache['dataAccessors'];
       }
-      return this.__getterCache['dataAccessors'] = function () {
+      return this.__getterCache['dataAccessors'] = (() => {
         return (0, _common.createDataAccessors)({
-          startDateExpr: _this5.props.startDateExpr,
-          endDateExpr: _this5.props.endDateExpr,
-          startDateTimeZoneExpr: _this5.props.startDateTimeZoneExpr,
-          endDateTimeZoneExpr: _this5.props.endDateTimeZoneExpr,
-          allDayExpr: _this5.props.allDayExpr,
-          textExpr: _this5.props.textExpr,
-          descriptionExpr: _this5.props.descriptionExpr,
-          recurrenceRuleExpr: _this5.props.recurrenceRuleExpr,
-          recurrenceExceptionExpr: _this5.props.recurrenceExceptionExpr,
-          resources: _this5.props.resources
+          startDateExpr: this.props.startDateExpr,
+          endDateExpr: this.props.endDateExpr,
+          startDateTimeZoneExpr: this.props.startDateTimeZoneExpr,
+          endDateTimeZoneExpr: this.props.endDateTimeZoneExpr,
+          allDayExpr: this.props.allDayExpr,
+          textExpr: this.props.textExpr,
+          descriptionExpr: this.props.descriptionExpr,
+          recurrenceRuleExpr: this.props.recurrenceRuleExpr,
+          recurrenceExceptionExpr: this.props.recurrenceExceptionExpr,
+          resources: this.props.resources
         });
-      }();
+      })();
     }
   }, {
     key: "startViewDate",
-    get: function get() {
-      var _this6 = this;
+    get: function () {
       if (this.__getterCache['startViewDate'] !== undefined) {
         return this.__getterCache['startViewDate'];
       }
-      return this.__getterCache['startViewDate'] = function () {
-        var _this6$currentViewCon = _this6.currentViewConfig,
-          currentDate = _this6$currentViewCon.currentDate,
-          firstDayOfWeek = _this6$currentViewCon.firstDayOfWeek,
-          intervalCount = _this6$currentViewCon.intervalCount,
-          startDate = _this6$currentViewCon.startDate,
-          startDayHour = _this6$currentViewCon.startDayHour,
-          type = _this6$currentViewCon.type;
-        var options = {
+      return this.__getterCache['startViewDate'] = (() => {
+        const {
+          currentDate,
+          firstDayOfWeek,
+          intervalCount,
+          startDate,
+          startDayHour,
+          type
+        } = this.currentViewConfig;
+        const options = {
           currentDate,
           startDayHour,
           startDate,
           intervalCount,
           firstDayOfWeek
         };
-        var viewDataGenerator = (0, _m_utils.getViewDataGeneratorByViewType)(type);
-        var startViewDate = viewDataGenerator.getStartViewDate(options);
+        const viewDataGenerator = (0, _m_utils.getViewDataGeneratorByViewType)(type);
+        const startViewDate = viewDataGenerator.getStartViewDate(options);
         return startViewDate;
-      }();
+      })();
     }
   }, {
     key: "isVirtualScrolling",
-    get: function get() {
+    get: function () {
       var _this$currentViewProp;
       return this.props.scrolling.mode === 'virtual' || ((_this$currentViewProp = this.currentViewProps.scrolling) === null || _this$currentViewProp === void 0 ? void 0 : _this$currentViewProp.mode) === 'virtual';
     }
   }, {
     key: "timeZoneCalculator",
-    get: function get() {
-      var _this7 = this;
+    get: function () {
       if (this.__getterCache['timeZoneCalculator'] !== undefined) {
         return this.__getterCache['timeZoneCalculator'];
       }
-      return this.__getterCache['timeZoneCalculator'] = function () {
-        return (0, _createTimeZoneCalculator.createTimeZoneCalculator)(_this7.props.timeZone);
-      }();
+      return this.__getterCache['timeZoneCalculator'] = (() => {
+        return (0, _createTimeZoneCalculator.createTimeZoneCalculator)(this.props.timeZone);
+      })();
     }
   }, {
     key: "internalDataSource",
-    get: function get() {
+    get: function () {
       if (this.props.dataSource instanceof _data_source.default) {
         return this.props.dataSource;
       }
@@ -757,73 +732,69 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "appointmentsConfig",
-    get: function get() {
-      var _this8 = this;
+    get: function () {
       if (this.__getterCache['appointmentsConfig'] !== undefined) {
         return this.__getterCache['appointmentsConfig'];
       }
-      return this.__getterCache['appointmentsConfig'] = function () {
-        if (!_this8.isValidViewDataProvider || !_this8.state.loadedResources) {
+      return this.__getterCache['appointmentsConfig'] = (() => {
+        if (!this.isValidViewDataProvider || !this.state.loadedResources) {
           return undefined;
         }
-        var renderConfig = (0, _work_space_config.getViewRenderConfigByType)(_this8.currentViewConfig.type, _this8.currentViewConfig.crossScrollingEnabled, _this8.currentViewConfig.intervalCount, _this8.state.loadedResources, _this8.currentViewConfig.groupOrientation);
+        const renderConfig = (0, _work_space_config.getViewRenderConfigByType)(this.currentViewConfig.type, this.currentViewConfig.crossScrollingEnabled, this.currentViewConfig.intervalCount, this.state.loadedResources, this.currentViewConfig.groupOrientation);
         return (0, _appointments2.getAppointmentsConfig)({
-          adaptivityEnabled: _this8.props.adaptivityEnabled,
-          rtlEnabled: _this8.props.rtlEnabled,
-          resources: _this8.props.resources,
-          timeZone: _this8.props.timeZone,
-          groups: _this8.mergedGroups
+          adaptivityEnabled: this.props.adaptivityEnabled,
+          rtlEnabled: this.props.rtlEnabled,
+          resources: this.props.resources,
+          timeZone: this.props.timeZone,
+          groups: this.mergedGroups
         }, {
-          startDayHour: _this8.currentViewConfig.startDayHour,
-          endDayHour: _this8.currentViewConfig.endDayHour,
-          currentDate: _this8.currentViewConfig.currentDate,
-          scrolling: _this8.currentViewConfig.scrolling,
-          intervalCount: _this8.currentViewConfig.intervalCount,
-          hoursInterval: _this8.currentViewConfig.hoursInterval,
-          showAllDayPanel: _this8.currentViewConfig.showAllDayPanel,
-          firstDayOfWeek: _this8.currentViewConfig.firstDayOfWeek,
-          type: _this8.currentViewConfig.type,
-          cellDuration: _this8.currentViewConfig.cellDuration,
-          maxAppointmentsPerCell: _this8.currentViewConfig.maxAppointmentsPerCell,
-          allDayPanelMode: _this8.currentViewConfig.allDayPanelMode
-        }, _this8.state.loadedResources, _this8.state.workSpaceViewModel.viewDataProvider, renderConfig.isAllDayPanelSupported);
-      }();
+          startDayHour: this.currentViewConfig.startDayHour,
+          endDayHour: this.currentViewConfig.endDayHour,
+          currentDate: this.currentViewConfig.currentDate,
+          scrolling: this.currentViewConfig.scrolling,
+          intervalCount: this.currentViewConfig.intervalCount,
+          hoursInterval: this.currentViewConfig.hoursInterval,
+          showAllDayPanel: this.currentViewConfig.showAllDayPanel,
+          firstDayOfWeek: this.currentViewConfig.firstDayOfWeek,
+          type: this.currentViewConfig.type,
+          cellDuration: this.currentViewConfig.cellDuration,
+          maxAppointmentsPerCell: this.currentViewConfig.maxAppointmentsPerCell,
+          allDayPanelMode: this.currentViewConfig.allDayPanelMode
+        }, this.state.loadedResources, this.state.workSpaceViewModel.viewDataProvider, renderConfig.isAllDayPanelSupported);
+      })();
     }
   }, {
     key: "preparedDataItems",
-    get: function get() {
-      var _this9 = this;
+    get: function () {
       if (this.__getterCache['preparedDataItems'] !== undefined) {
         return this.__getterCache['preparedDataItems'];
       }
-      return this.__getterCache['preparedDataItems'] = function () {
-        return (0, _data.getPreparedDataItems)(_this9.state.dataItems, _this9.dataAccessors, _this9.currentViewConfig.cellDuration, _this9.timeZoneCalculator);
-      }();
+      return this.__getterCache['preparedDataItems'] = (() => {
+        return (0, _data.getPreparedDataItems)(this.state.dataItems, this.dataAccessors, this.currentViewConfig.cellDuration, this.timeZoneCalculator);
+      })();
     }
   }, {
     key: "filteredItems",
-    get: function get() {
-      var _this10 = this;
+    get: function () {
       if (this.__getterCache['filteredItems'] !== undefined) {
         return this.__getterCache['filteredItems'];
       }
-      return this.__getterCache['filteredItems'] = function () {
-        if (!_this10.appointmentsConfig) {
+      return this.__getterCache['filteredItems'] = (() => {
+        if (!this.appointmentsConfig) {
           return [];
         }
-        var filterStrategy = (0, _local.getFilterStrategy)(_this10.appointmentsConfig.resources, _this10.appointmentsConfig.startDayHour, _this10.appointmentsConfig.endDayHour, _this10.appointmentsConfig.cellDurationInMinutes, _this10.appointmentsConfig.showAllDayPanel, _this10.appointmentsConfig.supportAllDayRow, _this10.appointmentsConfig.firstDayOfWeek, _this10.appointmentsConfig.viewType, _this10.appointmentsConfig.dateRange, _this10.appointmentsConfig.groupCount, _this10.appointmentsConfig.loadedResources, _this10.appointmentsConfig.isVirtualScrolling, _this10.timeZoneCalculator, _this10.dataAccessors, _this10.state.workSpaceViewModel.viewDataProvider);
-        return filterStrategy.filter(_this10.preparedDataItems);
-      }();
+        const filterStrategy = (0, _local.getFilterStrategy)(this.appointmentsConfig.resources, this.appointmentsConfig.startDayHour, this.appointmentsConfig.endDayHour, this.appointmentsConfig.cellDurationInMinutes, this.appointmentsConfig.showAllDayPanel, this.appointmentsConfig.supportAllDayRow, this.appointmentsConfig.firstDayOfWeek, this.appointmentsConfig.viewType, this.appointmentsConfig.dateRange, this.appointmentsConfig.groupCount, this.appointmentsConfig.loadedResources, this.appointmentsConfig.isVirtualScrolling, this.timeZoneCalculator, this.dataAccessors, this.state.workSpaceViewModel.viewDataProvider);
+        return filterStrategy.filter(this.preparedDataItems);
+      })();
     }
   }, {
     key: "appointmentsViewModel",
-    get: function get() {
-      var _this11 = this;
+    get: function () {
       if (this.__getterCache['appointmentsViewModel'] !== undefined) {
         return this.__getterCache['appointmentsViewModel'];
       }
-      return this.__getterCache['appointmentsViewModel'] = function () {
-        if (!_this11.appointmentsConfig || _this11.filteredItems.length === 0) {
+      return this.__getterCache['appointmentsViewModel'] = (() => {
+        if (!this.appointmentsConfig || this.filteredItems.length === 0) {
           return {
             allDay: [],
             allDayCompact: [],
@@ -831,71 +802,62 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
             regularCompact: []
           };
         }
-        var model = (0, _appointments2.getAppointmentsModel)(_this11.appointmentsConfig, _this11.state.workSpaceViewModel.viewDataProvider, _this11.timeZoneCalculator, _this11.dataAccessors, _this11.state.workSpaceViewModel.cellsMetaData);
-        return (0, _appointments.getAppointmentsViewModel)(model, _this11.filteredItems);
-      }();
+        const model = (0, _appointments2.getAppointmentsModel)(this.appointmentsConfig, this.state.workSpaceViewModel.viewDataProvider, this.timeZoneCalculator, this.dataAccessors, this.state.workSpaceViewModel.cellsMetaData);
+        return (0, _appointments.getAppointmentsViewModel)(model, this.filteredItems);
+      })();
     }
   }, {
     key: "workSpaceKey",
-    get: function get() {
+    get: function () {
       var _this$state$loadedRes;
-      var _this$currentViewConf2 = this.currentViewConfig,
-        crossScrollingEnabled = _this$currentViewConf2.crossScrollingEnabled,
-        groupOrientation = _this$currentViewConf2.groupOrientation,
-        intervalCount = _this$currentViewConf2.intervalCount;
+      const {
+        crossScrollingEnabled,
+        groupOrientation,
+        intervalCount
+      } = this.currentViewConfig;
       if (!crossScrollingEnabled) {
         return '';
       }
-      var groupCount = (0, _m_utils2.getGroupCount)((_this$state$loadedRes = this.state.loadedResources) !== null && _this$state$loadedRes !== void 0 ? _this$state$loadedRes : []);
+      const groupCount = (0, _m_utils2.getGroupCount)((_this$state$loadedRes = this.state.loadedResources) !== null && _this$state$loadedRes !== void 0 ? _this$state$loadedRes : []);
       return "".concat(this.props.currentView !== undefined ? this.props.currentView : this.state.currentView, "_").concat(groupOrientation, "_").concat(intervalCount, "_").concat(groupCount);
     }
   }, {
     key: "mergedGroups",
-    get: function get() {
-      var _this12 = this;
+    get: function () {
       if (this.__getterCache['mergedGroups'] !== undefined) {
         return this.__getterCache['mergedGroups'];
       }
-      return this.__getterCache['mergedGroups'] = function () {
-        return (0, _views.getValidGroups)(_this12.props.groups, _this12.currentViewProps.groups);
-      }();
+      return this.__getterCache['mergedGroups'] = (() => {
+        return (0, _views.getValidGroups)(this.props.groups, this.currentViewProps.groups);
+      })();
     }
   }, {
     key: "appointmentsContextValue",
-    get: function get() {
-      var _this13 = this;
+    get: function () {
       if (this.__getterCache['appointmentsContextValue'] !== undefined) {
         return this.__getterCache['appointmentsContextValue'];
       }
-      return this.__getterCache['appointmentsContextValue'] = function () {
+      return this.__getterCache['appointmentsContextValue'] = (() => {
         return {
-          viewModel: _this13.appointmentsViewModel,
-          groups: _this13.mergedGroups,
-          resources: _this13.props.resources,
-          resourceLoaderMap: _this13.state.resourcePromisesMap,
-          loadedResources: _this13.state.loadedResources,
-          dataAccessors: _this13.dataAccessors,
-          appointmentTemplate: _this13.currentViewConfig.appointmentTemplate,
-          overflowIndicatorTemplate: _this13.currentViewConfig.appointmentCollectorTemplate,
-          onAppointmentClick: function onAppointmentClick(data) {
-            return _this13.showTooltip(data);
-          },
-          onAppointmentDoubleClick: function onAppointmentDoubleClick(data) {
-            return _this13.showAppointmentPopupForm(data);
-          },
-          showReducedIconTooltip: function showReducedIconTooltip(data) {
-            return _this13.showReducedIconTooltip(data);
-          },
-          hideReducedIconTooltip: function hideReducedIconTooltip() {
-            return _this13.hideReducedIconTooltip();
-          },
-          updateFocusedAppointment: _this13.updateFocusedAppointment
+          viewModel: this.appointmentsViewModel,
+          groups: this.mergedGroups,
+          resources: this.props.resources,
+          resourceLoaderMap: this.state.resourcePromisesMap,
+          loadedResources: this.state.loadedResources,
+          dataAccessors: this.dataAccessors,
+          appointmentTemplate: this.currentViewConfig.appointmentTemplate,
+          overflowIndicatorTemplate: this.currentViewConfig.appointmentCollectorTemplate,
+          onAppointmentClick: data => this.showTooltip(data),
+          onAppointmentDoubleClick: data => this.showAppointmentPopupForm(data),
+          showReducedIconTooltip: data => this.showReducedIconTooltip(data),
+          hideReducedIconTooltip: () => this.hideReducedIconTooltip(),
+          updateFocusedAppointment: this.updateFocusedAppointment
         };
-      }();
+      })();
     }
   }, {
     key: "classes",
-    get: function get() {
+    get: function () {
       return (0, _combine_classes.combineClasses)({
         'dx-scheduler': true,
         'dx-scheduler-native': true,
@@ -904,92 +866,12 @@ var Scheduler = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props$currentDa = _extends({}, this.props, {
+    get: function () {
+      const _this$props$currentDa = _extends({}, this.props, {
           currentDate: this.props.currentDate !== undefined ? this.props.currentDate : this.state.currentDate,
           currentView: this.props.currentView !== undefined ? this.props.currentView : this.state.currentView
         }),
-        accessKey = _this$props$currentDa.accessKey,
-        activeStateEnabled = _this$props$currentDa.activeStateEnabled,
-        adaptivityEnabled = _this$props$currentDa.adaptivityEnabled,
-        allDayExpr = _this$props$currentDa.allDayExpr,
-        allDayPanelMode = _this$props$currentDa.allDayPanelMode,
-        appointmentCollectorTemplate = _this$props$currentDa.appointmentCollectorTemplate,
-        appointmentDragging = _this$props$currentDa.appointmentDragging,
-        appointmentTemplate = _this$props$currentDa.appointmentTemplate,
-        appointmentTooltipTemplate = _this$props$currentDa.appointmentTooltipTemplate,
-        cellDuration = _this$props$currentDa.cellDuration,
-        className = _this$props$currentDa.className,
-        crossScrollingEnabled = _this$props$currentDa.crossScrollingEnabled,
-        currentDate = _this$props$currentDa.currentDate,
-        currentDateChange = _this$props$currentDa.currentDateChange,
-        currentView = _this$props$currentDa.currentView,
-        currentViewChange = _this$props$currentDa.currentViewChange,
-        customizeDateNavigatorText = _this$props$currentDa.customizeDateNavigatorText,
-        dataCellTemplate = _this$props$currentDa.dataCellTemplate,
-        dataSource = _this$props$currentDa.dataSource,
-        dateCellTemplate = _this$props$currentDa.dateCellTemplate,
-        dateSerializationFormat = _this$props$currentDa.dateSerializationFormat,
-        defaultCurrentDate = _this$props$currentDa.defaultCurrentDate,
-        defaultCurrentView = _this$props$currentDa.defaultCurrentView,
-        descriptionExpr = _this$props$currentDa.descriptionExpr,
-        disabled = _this$props$currentDa.disabled,
-        editing = _this$props$currentDa.editing,
-        endDateExpr = _this$props$currentDa.endDateExpr,
-        endDateTimeZoneExpr = _this$props$currentDa.endDateTimeZoneExpr,
-        endDayHour = _this$props$currentDa.endDayHour,
-        firstDayOfWeek = _this$props$currentDa.firstDayOfWeek,
-        focusStateEnabled = _this$props$currentDa.focusStateEnabled,
-        groupByDate = _this$props$currentDa.groupByDate,
-        groups = _this$props$currentDa.groups,
-        height = _this$props$currentDa.height,
-        hint = _this$props$currentDa.hint,
-        hoverStateEnabled = _this$props$currentDa.hoverStateEnabled,
-        indicatorUpdateInterval = _this$props$currentDa.indicatorUpdateInterval,
-        max = _this$props$currentDa.max,
-        maxAppointmentsPerCell = _this$props$currentDa.maxAppointmentsPerCell,
-        min = _this$props$currentDa.min,
-        noDataText = _this$props$currentDa.noDataText,
-        onAppointmentAdded = _this$props$currentDa.onAppointmentAdded,
-        onAppointmentAdding = _this$props$currentDa.onAppointmentAdding,
-        onAppointmentClick = _this$props$currentDa.onAppointmentClick,
-        onAppointmentContextMenu = _this$props$currentDa.onAppointmentContextMenu,
-        onAppointmentDblClick = _this$props$currentDa.onAppointmentDblClick,
-        onAppointmentDeleted = _this$props$currentDa.onAppointmentDeleted,
-        onAppointmentDeleting = _this$props$currentDa.onAppointmentDeleting,
-        onAppointmentFormOpening = _this$props$currentDa.onAppointmentFormOpening,
-        onAppointmentRendered = _this$props$currentDa.onAppointmentRendered,
-        onAppointmentUpdated = _this$props$currentDa.onAppointmentUpdated,
-        onAppointmentUpdating = _this$props$currentDa.onAppointmentUpdating,
-        onCellClick = _this$props$currentDa.onCellClick,
-        onCellContextMenu = _this$props$currentDa.onCellContextMenu,
-        onClick = _this$props$currentDa.onClick,
-        onKeyDown = _this$props$currentDa.onKeyDown,
-        recurrenceEditMode = _this$props$currentDa.recurrenceEditMode,
-        recurrenceExceptionExpr = _this$props$currentDa.recurrenceExceptionExpr,
-        recurrenceRuleExpr = _this$props$currentDa.recurrenceRuleExpr,
-        remoteFiltering = _this$props$currentDa.remoteFiltering,
-        resourceCellTemplate = _this$props$currentDa.resourceCellTemplate,
-        resources = _this$props$currentDa.resources,
-        rtlEnabled = _this$props$currentDa.rtlEnabled,
-        scrolling = _this$props$currentDa.scrolling,
-        selectedCellData = _this$props$currentDa.selectedCellData,
-        shadeUntilCurrentTime = _this$props$currentDa.shadeUntilCurrentTime,
-        showAllDayPanel = _this$props$currentDa.showAllDayPanel,
-        showCurrentTimeIndicator = _this$props$currentDa.showCurrentTimeIndicator,
-        startDateExpr = _this$props$currentDa.startDateExpr,
-        startDateTimeZoneExpr = _this$props$currentDa.startDateTimeZoneExpr,
-        startDayHour = _this$props$currentDa.startDayHour,
-        tabIndex = _this$props$currentDa.tabIndex,
-        textExpr = _this$props$currentDa.textExpr,
-        timeCellTemplate = _this$props$currentDa.timeCellTemplate,
-        timeZone = _this$props$currentDa.timeZone,
-        toolbar = _this$props$currentDa.toolbar,
-        useDropDownViewSwitcher = _this$props$currentDa.useDropDownViewSwitcher,
-        views = _this$props$currentDa.views,
-        visible = _this$props$currentDa.visible,
-        width = _this$props$currentDa.width,
-        restProps = _objectWithoutProperties(_this$props$currentDa, _excluded);
+        restProps = _objectWithoutPropertiesLoose(_this$props$currentDa, _excluded);
       return restProps;
     }
   }]);

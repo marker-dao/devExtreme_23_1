@@ -18,7 +18,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function getContinuationGroupCount(groupOffset, pageSize, groupSize, groupIndex) {
   groupIndex = groupIndex || 0;
   if (pageSize > 1 && groupSize > 0) {
-    var pageOffset = groupOffset - Math.floor(groupOffset / pageSize) * pageSize || pageSize;
+    let pageOffset = groupOffset - Math.floor(groupOffset / pageSize) * pageSize || pageSize;
     pageOffset += groupSize - groupIndex - 2;
     if (pageOffset < 0) {
       pageOffset += pageSize;
@@ -27,29 +27,29 @@ function getContinuationGroupCount(groupOffset, pageSize, groupSize, groupIndex)
   }
   return 0;
 }
-var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
-  var foreachExpandedGroups = function foreachExpandedGroups(that, callback, updateGroups) {
-    return that.foreachGroups(function (groupInfo, parents) {
+const GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
+  const foreachExpandedGroups = function (that, callback, updateGroups) {
+    return that.foreachGroups((groupInfo, parents) => {
       if (groupInfo.isExpanded) {
         return callback(groupInfo, parents);
       }
     }, true, false, updateGroups, updateGroups);
   };
-  var processGroupItems = function processGroupItems(that, items, groupsCount, expandedInfo, path, isCustomLoading, isLastGroupExpanded) {
-    var isExpanded;
+  const processGroupItems = function (that, items, groupsCount, expandedInfo, path, isCustomLoading, isLastGroupExpanded) {
+    let isExpanded;
     expandedInfo.items = expandedInfo.items || [];
     expandedInfo.paths = expandedInfo.paths || [];
     expandedInfo.count = expandedInfo.count || 0;
     expandedInfo.lastCount = expandedInfo.lastCount || 0;
     if (!groupsCount) return;
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
       if (item.items !== undefined) {
         path.push(item.key);
         if (isCustomLoading) {
           isExpanded = true;
         } else {
-          var groupInfo = that.findGroupInfo(path);
+          const groupInfo = that.findGroupInfo(path);
           isExpanded = groupInfo && groupInfo.isExpanded;
         }
         if (!isExpanded) {
@@ -67,9 +67,9 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       }
     }
   };
-  var updateGroupInfoItem = function updateGroupInfoItem(that, item, isLastGroupLevel, path, offset) {
-    var groupInfo = that.findGroupInfo(path);
-    var count;
+  const updateGroupInfoItem = function (that, item, isLastGroupLevel, path, offset) {
+    const groupInfo = that.findGroupInfo(path);
+    let count;
     if (!groupInfo) {
       if (isLastGroupLevel) {
         count = item.count > 0 ? item.count : item.items.length;
@@ -89,21 +89,21 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       groupInfo.offset = offset;
     }
   };
-  var updateGroupInfos = function updateGroupInfos(that, options, items, loadedGroupCount, groupIndex, path, parentIndex) {
-    var groupCount = options.group ? options.group.length : 0;
-    var isLastGroupLevel = groupCount === loadedGroupCount;
-    var remotePaging = options.remoteOperations.paging;
-    var offset = 0;
-    var totalCount = 0;
-    var count;
+  const updateGroupInfos = function (that, options, items, loadedGroupCount, groupIndex, path, parentIndex) {
+    const groupCount = options.group ? options.group.length : 0;
+    const isLastGroupLevel = groupCount === loadedGroupCount;
+    const remotePaging = options.remoteOperations.paging;
+    let offset = 0;
+    let totalCount = 0;
+    let count;
     groupIndex = groupIndex || 0;
     path = path || [];
     if (remotePaging && !parentIndex) {
       offset = groupIndex === 0 ? options.skip || 0 : options.skips[groupIndex - 1] || 0;
     }
     if (groupIndex >= loadedGroupCount) return items.length;
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
       if (item) {
         path.push(item.key);
         if (!item.count && !item.items || item.items === undefined) {
@@ -120,13 +120,13 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     }
     return totalCount;
   };
-  var isGroupExpanded = function isGroupExpanded(groups, groupIndex) {
+  const isGroupExpanded = function (groups, groupIndex) {
     return groups && groups.length && groups[groupIndex] && !!groups[groupIndex].isExpanded;
   };
-  var getTotalOffset = function getTotalOffset(groupInfos, pageSize, offset) {
-    var groupSize;
-    var totalOffset = offset;
-    for (var groupIndex = 0; groupIndex < groupInfos.length; groupIndex++) {
+  const getTotalOffset = function (groupInfos, pageSize, offset) {
+    let groupSize;
+    let totalOffset = offset;
+    for (let groupIndex = 0; groupIndex < groupInfos.length; groupIndex++) {
       groupSize = groupInfos[groupIndex].offset + 1;
       if (groupIndex > 0) {
         groupSize += groupInfos[groupIndex - 1].childrenTotalCount;
@@ -139,13 +139,13 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     return totalOffset;
   };
   function applyContinuationToGroupItem(options, expandedInfo, groupLevel, expandedItemIndex) {
-    var item = expandedInfo.items[expandedItemIndex];
-    var skip = options.skips && options.skips[groupLevel];
-    var take = options.takes && options.takes[groupLevel];
-    var isLastExpandedItem = expandedItemIndex === expandedInfo.items.length - 1;
-    var isFirstExpandedItem = expandedItemIndex === 0;
-    var lastExpandedItemSkip = isFirstExpandedItem && skip || 0;
-    var isItemsTruncatedByTake = item.count > take + lastExpandedItemSkip;
+    const item = expandedInfo.items[expandedItemIndex];
+    const skip = options.skips && options.skips[groupLevel];
+    const take = options.takes && options.takes[groupLevel];
+    const isLastExpandedItem = expandedItemIndex === expandedInfo.items.length - 1;
+    const isFirstExpandedItem = expandedItemIndex === 0;
+    const lastExpandedItemSkip = isFirstExpandedItem && skip || 0;
+    const isItemsTruncatedByTake = item.count > take + lastExpandedItemSkip;
     if (isFirstExpandedItem && skip !== undefined) {
       item.isContinuation = true;
     }
@@ -154,8 +154,8 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     }
   }
   function fillSkipTakeInExpandedInfo(options, expandedInfo, currentGroupCount) {
-    var currentGroupIndex = currentGroupCount - 1;
-    var groupCount = options.group ? options.group.length : 0;
+    const currentGroupIndex = currentGroupCount - 1;
+    const groupCount = options.group ? options.group.length : 0;
     expandedInfo.skip = options.skips && options.skips[currentGroupIndex];
     if (options.takes && options.takes[currentGroupIndex] !== undefined) {
       if (groupCount === currentGroupCount) {
@@ -181,7 +181,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       processGroupItems(that, data, loadedGroupCount, expandedInfo, []);
       fillSkipTakeInExpandedInfo(options, expandedInfo, loadedGroupCount);
     }
-    var groupCount = options.group ? options.group.length : 0;
+    const groupCount = options.group ? options.group.length : 0;
     if (expandedInfo.paths.length && groupCount - loadedGroupCount > 0) {
       makeDataDeferred(options);
       loadExpandedGroups(that, options, expandedInfo, loadedGroupCount, groupLevel, data);
@@ -193,12 +193,12 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     }
   }
   function loadExpandedGroups(that, options, expandedInfo, loadedGroupCount, groupLevel, data) {
-    var groups = options.group || [];
-    var currentGroup = groups[groupLevel + 1];
-    var deferreds = [];
-    (0, _iterator.each)(expandedInfo.paths, function (expandedItemIndex) {
+    const groups = options.group || [];
+    const currentGroup = groups[groupLevel + 1];
+    const deferreds = [];
+    (0, _iterator.each)(expandedInfo.paths, expandedItemIndex => {
       var _a;
-      var loadOptions = {
+      const loadOptions = {
         requireTotalCount: false,
         requireGroupCount: true,
         group: [currentGroup],
@@ -216,63 +216,65 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       if (expandedItemIndex === expandedInfo.paths.length - 1) {
         loadOptions.take = expandedInfo.take;
       }
-      var loadResult = loadOptions.take === 0 ? [] : that._dataSource.loadFromStore(loadOptions);
-      (0, _deferred.when)(loadResult).done(function (data) {
-        var item = expandedInfo.items[expandedItemIndex];
+      const loadResult = loadOptions.take === 0 ? [] : that._dataSource.loadFromStore(loadOptions);
+      (0, _deferred.when)(loadResult).done(data => {
+        const item = expandedInfo.items[expandedItemIndex];
         applyContinuationToGroupItem(options, expandedInfo, groupLevel, expandedItemIndex);
         item.items = data;
       });
       deferreds.push(loadResult);
     });
-    _deferred.when.apply(null, deferreds).done(function () {
+    _deferred.when.apply(null, deferreds).done(() => {
       updateGroupInfos(that, options, data, loadedGroupCount + 1);
       loadGroupItems(that, options, loadedGroupCount + 1, expandedInfo, groupLevel + 1, data);
     });
   }
   function loadLastLevelGroupItems(that, options, expandedInfo, data) {
-    var expandedFilters = [];
-    var groups = options.group || [];
-    (0, _iterator.each)(expandedInfo.paths, function (_, expandedPath) {
+    const expandedFilters = [];
+    const groups = options.group || [];
+    (0, _iterator.each)(expandedInfo.paths, (_, expandedPath) => {
       expandedFilters.push((0, _m_utils.createGroupFilter)(expandedPath, {
         group: options.isCustomLoading ? options.storeLoadOptions.group : groups
       }));
     });
-    var filter = options.storeLoadOptions.filter;
+    let {
+      filter
+    } = options.storeLoadOptions;
     if (!options.storeLoadOptions.isLoadingAll) {
       filter = _m_core.default.combineFilters([filter, _m_core.default.combineFilters(expandedFilters, 'or')]);
     }
-    var loadOptions = (0, _extend.extend)({}, options.storeLoadOptions, {
+    const loadOptions = (0, _extend.extend)({}, options.storeLoadOptions, {
       requireTotalCount: false,
       requireGroupCount: false,
       group: null,
       sort: groups.concat(_m_core.default.normalizeSortingInfo(options.storeLoadOptions.sort || [])),
       filter
     });
-    var isPagingLocal = that._dataSource.isLastLevelGroupItemsPagingLocal();
+    const isPagingLocal = that._dataSource.isLastLevelGroupItemsPagingLocal();
     if (!isPagingLocal) {
       loadOptions.skip = expandedInfo.skip;
       loadOptions.take = expandedInfo.take;
     }
-    (0, _deferred.when)(expandedInfo.take === 0 ? [] : that._dataSource.loadFromStore(loadOptions)).done(function (items) {
+    (0, _deferred.when)(expandedInfo.take === 0 ? [] : that._dataSource.loadFromStore(loadOptions)).done(items => {
       if (isPagingLocal) {
         items = that._dataSource.sortLastLevelGroupItems(items, groups, expandedInfo.paths);
         items = expandedInfo.skip ? items.slice(expandedInfo.skip) : items;
         items = expandedInfo.take ? items.slice(0, expandedInfo.take) : items;
       }
-      (0, _iterator.each)(expandedInfo.items, function (index, item) {
-        var itemCount = item.count - (index === 0 && expandedInfo.skip || 0);
-        var expandedItems = items.splice(0, itemCount);
+      (0, _iterator.each)(expandedInfo.items, (index, item) => {
+        const itemCount = item.count - (index === 0 && expandedInfo.skip || 0);
+        const expandedItems = items.splice(0, itemCount);
         applyContinuationToGroupItem(options, expandedInfo, groups.length - 1, index);
         item.items = expandedItems;
       });
       options.data.resolve(data);
     }).fail(options.data.reject);
   }
-  var loadGroupTotalCount = function loadGroupTotalCount(dataSource, options) {
+  const loadGroupTotalCount = function (dataSource, options) {
     // @ts-expect-error
-    var d = new _deferred.Deferred();
-    var isGrouping = !!(options.group && options.group.length);
-    var loadOptions = (0, _extend.extend)({
+    const d = new _deferred.Deferred();
+    const isGrouping = !!(options.group && options.group.length);
+    const loadOptions = (0, _extend.extend)({
       skip: 0,
       take: 1,
       requireGroupCount: isGrouping,
@@ -280,8 +282,8 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     }, options, {
       group: isGrouping ? options.group : null
     });
-    dataSource.load(loadOptions).done(function (data, extra) {
-      var count = extra && (isGrouping ? extra.groupCount : extra.totalCount);
+    dataSource.load(loadOptions).done((data, extra) => {
+      const count = extra && (isGrouping ? extra.groupCount : extra.totalCount);
       if (!isFinite(count)) {
         d.reject(_errors.errors.Error(isGrouping ? 'E4022' : 'E4021'));
         return;
@@ -292,17 +294,17 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
   };
   return {
     updateTotalItemsCount(options) {
-      var totalItemsCount = 0;
-      var totalCount = options.extra && options.extra.totalCount || 0;
-      var groupCount = options.extra && options.extra.groupCount || 0;
-      var pageSize = this._dataSource.pageSize();
-      var isVirtualPaging = this._isVirtualPaging();
-      foreachExpandedGroups(this, function (groupInfo) {
+      let totalItemsCount = 0;
+      const totalCount = options.extra && options.extra.totalCount || 0;
+      const groupCount = options.extra && options.extra.groupCount || 0;
+      const pageSize = this._dataSource.pageSize();
+      const isVirtualPaging = this._isVirtualPaging();
+      foreachExpandedGroups(this, groupInfo => {
         groupInfo.childrenTotalCount = 0;
       });
-      foreachExpandedGroups(this, function (groupInfo, parents) {
-        var totalOffset = getTotalOffset(parents, isVirtualPaging ? 0 : pageSize, totalItemsCount);
-        var count = groupInfo.count + groupInfo.childrenTotalCount;
+      foreachExpandedGroups(this, (groupInfo, parents) => {
+        const totalOffset = getTotalOffset(parents, isVirtualPaging ? 0 : pageSize, totalItemsCount);
+        let count = groupInfo.count + groupInfo.childrenTotalCount;
         if (!isVirtualPaging) {
           count += getContinuationGroupCount(totalOffset, pageSize, count, parents.length - 1);
         }
@@ -315,33 +317,33 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       this.callBase(totalItemsCount - totalCount + groupCount);
     },
     _isGroupExpanded(groupIndex) {
-      var groups = this._dataSource.group();
+      const groups = this._dataSource.group();
       return isGroupExpanded(groups, groupIndex);
     },
     _updatePagingOptions(options, callback) {
-      var that = this;
-      var isVirtualPaging = that._isVirtualPaging();
-      var pageSize = that._dataSource.pageSize();
-      var skips = [];
-      var takes = [];
-      var skipChildrenTotalCount = 0;
-      var childrenTotalCount = 0;
+      const that = this;
+      const isVirtualPaging = that._isVirtualPaging();
+      const pageSize = that._dataSource.pageSize();
+      const skips = [];
+      const takes = [];
+      let skipChildrenTotalCount = 0;
+      let childrenTotalCount = 0;
       if (options.take) {
-        foreachExpandedGroups(this, function (groupInfo) {
+        foreachExpandedGroups(this, groupInfo => {
           groupInfo.childrenTotalCount = 0;
           groupInfo.skipChildrenTotalCount = 0;
         });
-        foreachExpandedGroups(that, function (groupInfo, parents) {
-          var take;
-          var takeCorrection = 0;
-          var parentTakeCorrection = 0;
-          var totalOffset = getTotalOffset(parents, isVirtualPaging ? 0 : pageSize, childrenTotalCount);
-          var continuationGroupCount = 0;
-          var skipContinuationGroupCount = 0;
-          var groupInfoCount = groupInfo.count + groupInfo.childrenTotalCount;
-          var childrenGroupInfoCount = groupInfoCount;
+        foreachExpandedGroups(that, (groupInfo, parents) => {
+          let take;
+          let takeCorrection = 0;
+          let parentTakeCorrection = 0;
+          const totalOffset = getTotalOffset(parents, isVirtualPaging ? 0 : pageSize, childrenTotalCount);
+          let continuationGroupCount = 0;
+          let skipContinuationGroupCount = 0;
+          let groupInfoCount = groupInfo.count + groupInfo.childrenTotalCount;
+          let childrenGroupInfoCount = groupInfoCount;
           callback && callback(groupInfo, totalOffset);
-          var skip = options.skip - totalOffset;
+          const skip = options.skip - totalOffset;
           if (totalOffset <= options.skip + options.take && groupInfoCount) {
             take = options.take;
             if (!isVirtualPaging) {
@@ -388,11 +390,11 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       options.takes = takes;
     },
     changeRowExpand(path) {
-      var that = this;
-      var groupInfo = that.findGroupInfo(path);
-      var dataSource = that._dataSource;
-      var remoteGroupPaging = dataSource.remoteOperations().groupPaging;
-      var groups = _m_core.default.normalizeSortingInfo(dataSource.group());
+      const that = this;
+      const groupInfo = that.findGroupInfo(path);
+      const dataSource = that._dataSource;
+      const remoteGroupPaging = dataSource.remoteOperations().groupPaging;
+      const groups = _m_core.default.normalizeSortingInfo(dataSource.group());
       if (groupInfo) {
         groupInfo.isExpanded = !groupInfo.isExpanded;
         if (remoteGroupPaging && groupInfo.isExpanded && path.length < groups.length) {
@@ -403,7 +405,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
             }),
             group: [groups[path.length]],
             select: dataSource.select()
-          }).done(function (groupCount) {
+          }).done(groupCount => {
             groupInfo.count = groupCount;
           });
         }
@@ -414,17 +416,19 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       return new _deferred.Deferred().reject();
     },
     handleDataLoading(options) {
-      var that = this;
-      var storeLoadOptions = options.storeLoadOptions;
-      var groups = _m_core.default.normalizeSortingInfo(storeLoadOptions.group || options.loadOptions.group);
+      const that = this;
+      const {
+        storeLoadOptions
+      } = options;
+      const groups = _m_core.default.normalizeSortingInfo(storeLoadOptions.group || options.loadOptions.group);
       if (options.isCustomLoading || !groups.length) {
         return;
       }
       if (options.remoteOperations.grouping) {
-        var remotePaging = that._dataSource.remoteOperations().paging;
+        const remotePaging = that._dataSource.remoteOperations().paging;
         storeLoadOptions.group = _m_core.default.normalizeSortingInfo(storeLoadOptions.group);
-        storeLoadOptions.group.forEach(function (group, index) {
-          var isLastGroup = index === storeLoadOptions.group.length - 1;
+        storeLoadOptions.group.forEach((group, index) => {
+          const isLastGroup = index === storeLoadOptions.group.length - 1;
           group.isExpanded = !remotePaging || !isLastGroup;
         });
       }
@@ -444,17 +448,17 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       }
     },
     handleDataLoadedCore(options, callBase) {
-      var that = this;
-      var loadedGroupCount = _m_core.default.normalizeSortingInfo(options.storeLoadOptions.group || options.loadOptions.group).length;
-      var groupCount = options.group ? options.group.length : 0;
-      var totalCount;
-      var expandedInfo = {};
+      const that = this;
+      const loadedGroupCount = _m_core.default.normalizeSortingInfo(options.storeLoadOptions.group || options.loadOptions.group).length;
+      const groupCount = options.group ? options.group.length : 0;
+      let totalCount;
+      const expandedInfo = {};
       if (options.isCustomLoading) {
         callBase(options);
         processGroupItems(that, options.data, loadedGroupCount, expandedInfo, [], options.isCustomLoading, options.storeLoadOptions.isLoadingAll);
       } else {
         if (!options.remoteOperations.paging) {
-          that.foreachGroups(function (groupInfo) {
+          that.foreachGroups(groupInfo => {
             groupInfo.count = 0;
           });
         }
@@ -488,9 +492,9 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     },
     _processSkips(items, skips, groupCount) {
       if (!groupCount) return;
-      var firstItem = items[0];
-      var skip = skips[0];
-      var children = firstItem && firstItem.items;
+      const firstItem = items[0];
+      const skip = skips[0];
+      const children = firstItem && firstItem.items;
       if (skip !== undefined) {
         firstItem.isContinuation = true;
         if (children) {
@@ -502,15 +506,15 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     _processTakes(items, skips, takes, groupCount, parents) {
       if (!groupCount || !items) return;
       parents = parents || [];
-      var lastItem = items[items.length - 1];
-      var children = lastItem && lastItem.items;
-      var take = takes[0];
-      var skip = skips[0];
+      const lastItem = items[items.length - 1];
+      let children = lastItem && lastItem.items;
+      const take = takes[0];
+      const skip = skips[0];
       if (lastItem) {
-        var maxTakeCount = lastItem.count - (lastItem.isContinuation && skip || 0) || children.length;
+        const maxTakeCount = lastItem.count - (lastItem.isContinuation && skip || 0) || children.length;
         if (take !== undefined && maxTakeCount > take) {
           lastItem.isContinuationOnNextPage = true;
-          parents.forEach(function (parent) {
+          parents.forEach(parent => {
             parent.isContinuationOnNextPage = true;
           });
           if (children) {
@@ -533,13 +537,15 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       return items;
     },
     refresh(options, operationTypes) {
-      var that = this;
-      var dataSource = that._dataSource;
-      var storeLoadOptions = options.storeLoadOptions;
-      var group = options.group || options.storeLoadOptions.group;
-      var oldGroups = _m_core.default.normalizeSortingInfo(that._group);
-      var isExpanded;
-      var groupIndex;
+      const that = this;
+      const dataSource = that._dataSource;
+      const {
+        storeLoadOptions
+      } = options;
+      const group = options.group || options.storeLoadOptions.group;
+      const oldGroups = _m_core.default.normalizeSortingInfo(that._group);
+      let isExpanded;
+      let groupIndex;
       function handleGroup(groupInfo, parents) {
         if (parents.length === groupIndex + 1) {
           groupInfo.isExpanded = isExpanded;
@@ -553,8 +559,8 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
       }
       that.callBase.apply(this, arguments);
       if (group && options.remoteOperations.paging && operationTypes.reload) {
-        return foreachExpandedGroups(that, function (groupInfo) {
-          var groupCountQuery = loadGroupTotalCount(dataSource, {
+        return foreachExpandedGroups(that, groupInfo => {
+          const groupCountQuery = loadGroupTotalCount(dataSource, {
             filter: (0, _m_utils.createGroupFilter)(groupInfo.path, {
               filter: storeLoadOptions.filter,
               group
@@ -562,7 +568,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
             group: group.slice(groupInfo.path.length),
             select: storeLoadOptions.select
           });
-          var groupOffsetQuery = loadGroupTotalCount(dataSource, {
+          const groupOffsetQuery = loadGroupTotalCount(dataSource, {
             filter: (0, _m_grouping_core.createOffsetFilter)(groupInfo.path, {
               filter: storeLoadOptions.filter,
               group
@@ -570,7 +576,7 @@ var GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
             group: group.slice(groupInfo.path.length - 1, groupInfo.path.length),
             select: storeLoadOptions.select
           });
-          return (0, _deferred.when)(groupOffsetQuery, groupCountQuery).done(function (offset, count) {
+          return (0, _deferred.when)(groupOffsetQuery, groupCountQuery).done((offset, count) => {
             // eslint-disable-next-line radix
             offset = parseInt(offset.length ? offset[0] : offset);
             // eslint-disable-next-line radix

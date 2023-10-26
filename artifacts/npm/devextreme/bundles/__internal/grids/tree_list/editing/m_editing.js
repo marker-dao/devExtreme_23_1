@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/editing/m_editing.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,13 +19,13 @@ var _m_editing = require("../../../grids/grid_core/editing/m_editing");
 var _m_utils = _interopRequireDefault(require("../../../grids/grid_core/m_utils"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var TREELIST_EXPAND_ICON_CONTAINER_CLASS = 'dx-treelist-icon-container';
-var SELECT_CHECKBOX_CLASS = 'dx-select-checkbox';
-var DATA_EDIT_DATA_INSERT_TYPE = 'insert';
-var EditingController = _m_editing.editingModule.controllers.editing.inherit(function () {
+const TREELIST_EXPAND_ICON_CONTAINER_CLASS = 'dx-treelist-icon-container';
+const SELECT_CHECKBOX_CLASS = 'dx-select-checkbox';
+const DATA_EDIT_DATA_INSERT_TYPE = 'insert';
+const EditingController = _m_editing.editingModule.controllers.editing.inherit(function () {
   return {
     _generateNewItem(key) {
-      var item = this.callBase(key);
+      const item = this.callBase(key);
       item.data = {
         key
       };
@@ -45,11 +45,11 @@ var EditingController = _m_editing.editingModule.controllers.editing.inherit(fun
       }
     },
     _getLoadedRowIndex(items, change) {
-      var dataController = this.getController('data');
-      var dataSourceAdapter = dataController.dataSource();
-      var parentKey = dataSourceAdapter === null || dataSourceAdapter === void 0 ? void 0 : dataSourceAdapter.parentKeyOf(change.data);
+      const dataController = this.getController('data');
+      const dataSourceAdapter = dataController.dataSource();
+      const parentKey = dataSourceAdapter === null || dataSourceAdapter === void 0 ? void 0 : dataSourceAdapter.parentKeyOf(change.data);
       if (parentKey !== undefined && parentKey !== this.option('rootValue')) {
-        var rowIndex = _m_utils.default.getIndexByKey(parentKey, items);
+        const rowIndex = _m_utils.default.getIndexByKey(parentKey, items);
         if (rowIndex >= 0 && this._dataController.isRowExpanded(parentKey)) {
           return rowIndex + 1;
         }
@@ -58,31 +58,33 @@ var EditingController = _m_editing.editingModule.controllers.editing.inherit(fun
       return this.callBase.apply(this, arguments);
     },
     _isEditColumnVisible() {
-      var result = this.callBase.apply(this, arguments);
-      var editingOptions = this.option('editing');
+      const result = this.callBase.apply(this, arguments);
+      const editingOptions = this.option('editing');
       return result || editingOptions.allowAdding;
     },
     _isDefaultButtonVisible(button, options) {
-      var result = this.callBase.apply(this, arguments);
-      var row = options.row;
+      const result = this.callBase.apply(this, arguments);
+      const {
+        row
+      } = options;
       if (button.name === 'add') {
         return this.allowAdding(options) && row.rowIndex !== this._getVisibleEditRowIndex() && !(row.removed || row.isNewRow);
       }
       return result;
     },
     _getEditingButtons(options) {
-      var buttons = this.callBase.apply(this, arguments);
+      const buttons = this.callBase.apply(this, arguments);
       if (!options.column.buttons) {
         buttons.unshift(this._getButtonConfig('add', options));
       }
       return buttons;
     },
     _beforeSaveEditData(change) {
-      var dataController = this._dataController;
-      var result = this.callBase.apply(this, arguments);
+      const dataController = this._dataController;
+      const result = this.callBase.apply(this, arguments);
       if (change && change.type !== DATA_EDIT_DATA_INSERT_TYPE) {
-        var store = dataController === null || dataController === void 0 ? void 0 : dataController.store();
-        var key = store === null || store === void 0 ? void 0 : store.key();
+        const store = dataController === null || dataController === void 0 ? void 0 : dataController.store();
+        const key = store === null || store === void 0 ? void 0 : store.key();
         if (!(0, _type.isDefined)(key)) {
           throw _ui.default.Error('E1045');
         }
@@ -90,8 +92,8 @@ var EditingController = _m_editing.editingModule.controllers.editing.inherit(fun
       return result;
     },
     addRowByRowIndex(rowIndex) {
-      var dataController = this.getController('data');
-      var row = dataController.getVisibleRows()[rowIndex];
+      const dataController = this.getController('data');
+      const row = dataController.getVisibleRows()[rowIndex];
       return this.addRow(row ? row.key : undefined);
     },
     addRow(key) {
@@ -101,19 +103,20 @@ var EditingController = _m_editing.editingModule.controllers.editing.inherit(fun
       return this.callBase.call(this, key);
     },
     _addRowCore(data, parentKey, oldEditRowIndex) {
-      var _this = this;
-      var callBase = this.callBase;
-      var rootValue = this.option('rootValue');
-      var dataController = this.getController('data');
-      var dataSourceAdapter = dataController.dataSource();
-      var parentKeyGetter = dataSourceAdapter.createParentIdGetter();
+      const {
+        callBase
+      } = this;
+      const rootValue = this.option('rootValue');
+      const dataController = this.getController('data');
+      const dataSourceAdapter = dataController.dataSource();
+      const parentKeyGetter = dataSourceAdapter.createParentIdGetter();
       parentKey = parentKeyGetter(data);
       if (parentKey !== undefined && parentKey !== rootValue && !dataController.isRowExpanded(parentKey)) {
         // @ts-expect-error
-        var deferred = new _deferred.Deferred();
-        dataController.expandRow(parentKey).done(function () {
-          setTimeout(function () {
-            callBase.call(_this, data, parentKey, oldEditRowIndex).done(deferred.resolve).fail(deferred.reject);
+        const deferred = new _deferred.Deferred();
+        dataController.expandRow(parentKey).done(() => {
+          setTimeout(() => {
+            callBase.call(this, data, parentKey, oldEditRowIndex).done(deferred.resolve).fail(deferred.reject);
           });
         }).fail(deferred.reject);
         return deferred.promise();
@@ -121,9 +124,9 @@ var EditingController = _m_editing.editingModule.controllers.editing.inherit(fun
       return callBase.call(this, data, parentKey, oldEditRowIndex);
     },
     _initNewRow(options, parentKey) {
-      var dataController = this.getController('data');
-      var dataSourceAdapter = dataController.dataSource();
-      var parentIdSetter = dataSourceAdapter.createParentIdSetter();
+      const dataController = this.getController('data');
+      const dataSourceAdapter = dataController.dataSource();
+      const parentIdSetter = dataSourceAdapter.createParentIdSetter();
       parentIdSetter(options.data, parentKey);
       return this.callBase.apply(this, arguments);
     },
@@ -134,35 +137,35 @@ var EditingController = _m_editing.editingModule.controllers.editing.inherit(fun
       return this.callBase.apply(this, arguments) || $targetElement.closest(".".concat(TREELIST_EXPAND_ICON_CONTAINER_CLASS)).length && this.isEditing();
     },
     getButtonLocalizationNames() {
-      var names = this.callBase.apply(this);
+      const names = this.callBase.apply(this);
       names.add = 'dxTreeList-editingAddRowToNode';
       return names;
     }
   };
 }());
-var originalRowClick = _m_editing.editingModule.extenders.views.rowsView._rowClick;
-var originalRowDblClick = _m_editing.editingModule.extenders.views.rowsView._rowDblClick;
-var validateClick = function validateClick(e) {
-  var $targetElement = (0, _renderer.default)(e.event.target);
-  var originalClickHandler = e.event.type === 'dxdblclick' ? originalRowDblClick : originalRowClick;
+const originalRowClick = _m_editing.editingModule.extenders.views.rowsView._rowClick;
+const originalRowDblClick = _m_editing.editingModule.extenders.views.rowsView._rowDblClick;
+const validateClick = function (e) {
+  const $targetElement = (0, _renderer.default)(e.event.target);
+  const originalClickHandler = e.event.type === 'dxdblclick' ? originalRowDblClick : originalRowClick;
   if ($targetElement.closest(".".concat(SELECT_CHECKBOX_CLASS)).length) {
     return false;
   }
   return !needToCallOriginalClickHandler.call(this, e, originalClickHandler);
 };
 function needToCallOriginalClickHandler(e, originalClickHandler) {
-  var $targetElement = (0, _renderer.default)(e.event.target);
+  const $targetElement = (0, _renderer.default)(e.event.target);
   if (!$targetElement.closest(".".concat(TREELIST_EXPAND_ICON_CONTAINER_CLASS)).length) {
     originalClickHandler.call(this, e);
     return true;
   }
   return false;
 }
-var RowsViewExtender = (0, _extend.extend)({}, _m_editing.editingModule.extenders.views.rowsView, {
+const RowsViewExtender = (0, _extend.extend)({}, _m_editing.editingModule.extenders.views.rowsView, {
   _renderCellCommandContent($container, options) {
-    var editingController = this._editingController;
-    var isEditRow = options.row && editingController.isEditRow(options.row.rowIndex);
-    var isEditing = options.isEditing || isEditRow;
+    const editingController = this._editingController;
+    const isEditRow = options.row && editingController.isEditRow(options.row.rowIndex);
+    const isEditing = options.isEditing || isEditRow;
     if (!isEditing) {
       return this.callBase.apply(this, arguments);
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/knockout/variable_wrapper_utils.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,13 +18,13 @@ if (_knockout.default) {
     isWrapped: _knockout.default.isObservable,
     isWritableWrapped: _knockout.default.isWritableObservable,
     wrap: _knockout.default.observable,
-    unwrap: function unwrap(value) {
+    unwrap: function (value) {
       if (_knockout.default.isObservable(value)) {
         return _knockout.default.utils.unwrapObservable(value);
       }
       return this.callBase(value);
     },
-    assign: function assign(variable, value) {
+    assign: function (variable, value) {
       if (_knockout.default.isObservable(variable)) {
         variable(value);
       } else {

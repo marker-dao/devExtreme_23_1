@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/form/wrapper/form.j.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,14 +19,14 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var Form = /*#__PURE__*/function (_BaseComponent) {
+let Form = /*#__PURE__*/function (_BaseComponent) {
   _inheritsLoose(Form, _BaseComponent);
   function Form() {
     return _BaseComponent.apply(this, arguments) || this;
   }
   var _proto = Form.prototype;
   _proto.getProps = function getProps() {
-    var props = _BaseComponent.prototype.getProps.call(this);
+    const props = _BaseComponent.prototype.getProps.call(this);
     props.onKeyDown = this._wrapKeyDownHandler(props.onKeyDown);
     return props;
   };
@@ -37,7 +37,7 @@ var Form = /*#__PURE__*/function (_BaseComponent) {
   };
   _createClass(Form, [{
     key: "_propsInfo",
-    get: function get() {
+    get: function () {
       return {
         twoWay: [],
         allowNull: [],
@@ -48,7 +48,7 @@ var Form = /*#__PURE__*/function (_BaseComponent) {
     }
   }, {
     key: "_viewComponent",
-    get: function get() {
+    get: function () {
       return _form.Form;
     }
   }]);

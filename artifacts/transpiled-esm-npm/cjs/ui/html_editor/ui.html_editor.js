@@ -27,25 +27,19 @@ var _formDialog = _interopRequireDefault(require("./ui/formDialog"));
 var _config = _interopRequireDefault(require("../../core/config"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 // STYLE htmlEditor
 
-var HTML_EDITOR_CLASS = 'dx-htmleditor';
-var QUILL_CONTAINER_CLASS = 'dx-quill-container';
-var QUILL_CLIPBOARD_CLASS = 'ql-clipboard';
-var HTML_EDITOR_SUBMIT_ELEMENT_CLASS = 'dx-htmleditor-submit-element';
-var HTML_EDITOR_CONTENT_CLASS = 'dx-htmleditor-content';
-var MARKDOWN_VALUE_TYPE = 'markdown';
-var ANONYMOUS_TEMPLATE_NAME = 'htmlContent';
-var isIos = _devices.default.current().platform === 'ios';
-var editorsCount = 0;
-var HtmlEditor = _editor.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const HTML_EDITOR_CLASS = 'dx-htmleditor';
+const QUILL_CONTAINER_CLASS = 'dx-quill-container';
+const QUILL_CLIPBOARD_CLASS = 'ql-clipboard';
+const HTML_EDITOR_SUBMIT_ELEMENT_CLASS = 'dx-htmleditor-submit-element';
+const HTML_EDITOR_CONTENT_CLASS = 'dx-htmleditor-content';
+const MARKDOWN_VALUE_TYPE = 'markdown';
+const ANONYMOUS_TEMPLATE_NAME = 'htmlContent';
+const isIos = _devices.default.current().platform === 'ios';
+let editorsCount = 0;
+const HtmlEditor = _editor.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       focusStateEnabled: true,
       valueType: 'html',
@@ -63,52 +57,56 @@ var HtmlEditor = _editor.default.inherit({
       stylingMode: (0, _config.default)().editorStylingMode || 'outlined'
     });
   },
-  _init: function _init() {
+  _init: function () {
     this._mentionKeyInTemplateStorage = editorsCount++;
     this.callBase();
     this._cleanCallback = (0, _callbacks.default)();
     this._contentInitializedCallback = (0, _callbacks.default)();
   },
-  _getAnonymousTemplateName: function _getAnonymousTemplateName() {
+  _getAnonymousTemplateName: function () {
     return ANONYMOUS_TEMPLATE_NAME;
   },
-  _initTemplates: function _initTemplates() {
+  _initTemplates: function () {
     this._templateManager.addDefaultTemplates({
       [ANONYMOUS_TEMPLATE_NAME]: new _empty_template.EmptyTemplate()
     });
     this.callBase();
   },
-  _focusTarget: function _focusTarget() {
+  _focusTarget: function () {
     return this._getContent();
   },
-  _getContent: function _getContent() {
+  _getContent: function () {
     return this.$element().find(".".concat(HTML_EDITOR_CONTENT_CLASS));
   },
-  _focusInHandler: function _focusInHandler(_ref) {
-    var relatedTarget = _ref.relatedTarget;
+  _focusInHandler: function (_ref) {
+    let {
+      relatedTarget
+    } = _ref;
     if (this._shouldSkipFocusEvent(relatedTarget)) {
       return;
     }
     this._toggleFocusClass(true, this.$element());
     this.callBase.apply(this, arguments);
   },
-  _focusOutHandler: function _focusOutHandler(_ref2) {
-    var relatedTarget = _ref2.relatedTarget;
+  _focusOutHandler: function (_ref2) {
+    let {
+      relatedTarget
+    } = _ref2;
     if (this._shouldSkipFocusEvent(relatedTarget)) {
       return;
     }
     this._toggleFocusClass(false, this.$element());
     this.callBase.apply(this, arguments);
   },
-  _shouldSkipFocusEvent: function _shouldSkipFocusEvent(relatedTarget) {
+  _shouldSkipFocusEvent: function (relatedTarget) {
     return (0, _renderer.default)(relatedTarget).hasClass(QUILL_CLIPBOARD_CLASS);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._$htmlContainer = (0, _renderer.default)('<div>').addClass(QUILL_CONTAINER_CLASS);
     this.$element().attr('role', 'application').addClass(HTML_EDITOR_CLASS).wrapInner(this._$htmlContainer);
     this._renderStylingMode();
-    var template = this._getTemplate(ANONYMOUS_TEMPLATE_NAME);
-    var transclude = true;
+    const template = this._getTemplate(ANONYMOUS_TEMPLATE_NAME);
+    const transclude = true;
     this._$templateResult = template && template.render({
       container: (0, _element.getPublicElement)(this._$htmlContainer),
       noModel: true,
@@ -119,22 +117,22 @@ var HtmlEditor = _editor.default.inherit({
     this._updateContainerMarkup();
   },
   _renderValidationState() {
-    var $content = this._getContent();
+    const $content = this._getContent();
     if ($content.length === 1) {
       this.callBase();
     }
   },
-  _renderSubmitElement: function _renderSubmitElement() {
+  _renderSubmitElement: function () {
     this._$submitElement = (0, _renderer.default)('<textarea>').addClass(HTML_EDITOR_SUBMIT_ELEMENT_CLASS).attr('hidden', true).appendTo(this.$element());
     this._setSubmitValue(this.option('value'));
   },
-  _setSubmitValue: function _setSubmitValue(value) {
+  _setSubmitValue: function (value) {
     this._getSubmitElement().val(value);
   },
-  _getSubmitElement: function _getSubmitElement() {
+  _getSubmitElement: function () {
     return this._$submitElement;
   },
-  _createNoScriptFrame: function _createNoScriptFrame() {
+  _createNoScriptFrame: function () {
     return (0, _renderer.default)('<iframe>').css('display', 'none').attr({
       // eslint-disable-next-line spellcheck/spell-checker
       srcdoc: '',
@@ -143,77 +141,77 @@ var HtmlEditor = _editor.default.inherit({
       sandbox: 'allow-same-origin'
     });
   },
-  _removeXSSVulnerableHtml: function _removeXSSVulnerableHtml(value) {
+  _removeXSSVulnerableHtml: function (value) {
     // NOTE: Script tags and inline handlers are removed to prevent XSS attacks.
     // "Blocked script execution in 'about:blank' because the document's frame is sandboxed and the 'allow-scripts' permission is not set."
     // error can be logged to the console if the html value is XSS vulnerable.
 
-    var $frame = this._createNoScriptFrame().appendTo('body');
-    var frame = $frame.get(0);
-    var frameWindow = frame.contentWindow;
-    var frameDocument = frameWindow.document;
-    var frameDocumentBody = frameDocument.body;
+    const $frame = this._createNoScriptFrame().appendTo('body');
+    const frame = $frame.get(0);
+    const frameWindow = frame.contentWindow;
+    const frameDocument = frameWindow.document;
+    const frameDocumentBody = frameDocument.body;
     frameDocumentBody.innerHTML = value;
-    var removeInlineHandlers = function removeInlineHandlers(element) {
+    const removeInlineHandlers = element => {
       if (element.attributes) {
-        for (var i = 0; i < element.attributes.length; i++) {
-          var name = element.attributes[i].name;
+        for (let i = 0; i < element.attributes.length; i++) {
+          const name = element.attributes[i].name;
           if (name.startsWith('on')) {
             element.removeAttribute(name);
           }
         }
       }
       if (element.childNodes) {
-        for (var _i = 0; _i < element.childNodes.length; _i++) {
-          removeInlineHandlers(element.childNodes[_i]);
+        for (let i = 0; i < element.childNodes.length; i++) {
+          removeInlineHandlers(element.childNodes[i]);
         }
       }
     };
     removeInlineHandlers(frameDocumentBody);
 
     // NOTE: Do not use jQuery to prevent an excess "Blocked script execution" error in Safari.
-    frameDocumentBody.querySelectorAll('script').forEach(function (scriptNode) {
+    frameDocumentBody.querySelectorAll('script').forEach(scriptNode => {
       scriptNode.remove();
     });
-    var sanitizedHtml = frameDocumentBody.innerHTML;
+    const sanitizedHtml = frameDocumentBody.innerHTML;
     $frame.remove();
     return sanitizedHtml;
   },
-  _updateContainerMarkup: function _updateContainerMarkup() {
-    var markup = this.option('value');
+  _updateContainerMarkup: function () {
+    let markup = this.option('value');
     if (this._isMarkdownValue()) {
       this._prepareMarkdownConverter();
       markup = this._markdownConverter.toHtml(markup);
     }
     if (markup) {
-      var sanitizedMarkup = this._removeXSSVulnerableHtml(markup);
+      const sanitizedMarkup = this._removeXSSVulnerableHtml(markup);
       this._$htmlContainer.html(sanitizedMarkup);
     }
   },
-  _prepareMarkdownConverter: function _prepareMarkdownConverter() {
-    var MarkdownConverter = _converterController.default.getConverter('markdown');
+  _prepareMarkdownConverter: function () {
+    const MarkdownConverter = _converterController.default.getConverter('markdown');
     if (MarkdownConverter) {
       this._markdownConverter = new MarkdownConverter();
     } else {
       throw _ui.default.Error('E1051', 'markdown');
     }
   },
-  _render: function _render() {
+  _render: function () {
     this._prepareConverters();
     this.callBase();
   },
-  _prepareQuillRegistrator: function _prepareQuillRegistrator() {
+  _prepareQuillRegistrator: function () {
     if (!this._quillRegistrator) {
       this._quillRegistrator = new _quill_registrator.default();
     }
   },
-  _getRegistrator: function _getRegistrator() {
+  _getRegistrator: function () {
     this._prepareQuillRegistrator();
     return this._quillRegistrator;
   },
-  _prepareConverters: function _prepareConverters() {
+  _prepareConverters: function () {
     if (!this._deltaConverter) {
-      var DeltaConverter = _converterController.default.getConverter('delta');
+      const DeltaConverter = _converterController.default.getConverter('delta');
       if (DeltaConverter) {
         this._deltaConverter = new DeltaConverter();
       }
@@ -222,34 +220,33 @@ var HtmlEditor = _editor.default.inherit({
       this._prepareMarkdownConverter();
     }
   },
-  _renderContentImpl: function _renderContentImpl() {
+  _renderContentImpl: function () {
     this._contentRenderedDeferred = new _deferred.Deferred();
-    var renderContentPromise = this._contentRenderedDeferred.promise();
+    const renderContentPromise = this._contentRenderedDeferred.promise();
     this.callBase();
     this._renderHtmlEditor();
     this._renderFormDialog();
     this._addKeyPressHandler();
     return renderContentPromise;
   },
-  _pointerMoveHandler: function _pointerMoveHandler(e) {
+  _pointerMoveHandler: function (e) {
     if (isIos) {
       e.stopPropagation();
     }
   },
-  _attachFocusEvents: function _attachFocusEvents() {
+  _attachFocusEvents: function () {
     (0, _common.deferRender)(this.callBase.bind(this));
   },
-  _addKeyPressHandler: function _addKeyPressHandler() {
-    var keyDownEvent = (0, _index.addNamespace)('keydown', "".concat(this.NAME, "TextChange"));
+  _addKeyPressHandler: function () {
+    const keyDownEvent = (0, _index.addNamespace)('keydown', "".concat(this.NAME, "TextChange"));
     _events_engine.default.on(this._$htmlContainer, keyDownEvent, this._keyDownHandler.bind(this));
   },
-  _keyDownHandler: function _keyDownHandler(e) {
+  _keyDownHandler: function (e) {
     this._saveValueChangeEvent(e);
   },
-  _renderHtmlEditor: function _renderHtmlEditor() {
-    var _this = this;
-    var customizeModules = this.option('customizeModules');
-    var modulesConfig = this._getModulesConfig();
+  _renderHtmlEditor: function () {
+    const customizeModules = this.option('customizeModules');
+    const modulesConfig = this._getModulesConfig();
     if ((0, _type.isFunction)(customizeModules)) {
       customizeModules(modulesConfig);
     }
@@ -265,24 +262,24 @@ var HtmlEditor = _editor.default.inherit({
     this._quillInstance.on('text-change', this._textChangeHandlerWithContext);
     this._renderScrollHandler();
     if (this._hasTranscludedContent()) {
-      this._updateContentTask = (0, _common.executeAsync)(function () {
-        _this._applyTranscludedContent();
+      this._updateContentTask = (0, _common.executeAsync)(() => {
+        this._applyTranscludedContent();
       });
     } else {
       this._finalizeContentRendering();
     }
   },
-  _renderScrollHandler: function _renderScrollHandler() {
-    var $scrollContainer = this._getContent();
-    var initScrollData = (0, _utils.prepareScrollData)($scrollContainer);
+  _renderScrollHandler: function () {
+    const $scrollContainer = this._getContent();
+    const initScrollData = (0, _utils.prepareScrollData)($scrollContainer);
     _events_engine.default.on($scrollContainer, (0, _index.addNamespace)(_emitterGesture.default.init, this.NAME), initScrollData, _common.noop);
     _events_engine.default.on($scrollContainer, (0, _index.addNamespace)(_pointer.default.move, this.NAME), this._pointerMoveHandler.bind(this));
   },
-  _applyTranscludedContent: function _applyTranscludedContent() {
-    var valueOption = this.option('value');
+  _applyTranscludedContent: function () {
+    const valueOption = this.option('value');
     if (!(0, _type.isDefined)(valueOption)) {
-      var html = this._deltaConverter.toHtml();
-      var newDelta = this._quillInstance.clipboard.convert({
+      const html = this._deltaConverter.toHtml();
+      const newDelta = this._quillInstance.clipboard.convert({
         html
       });
       if (newDelta.ops.length) {
@@ -292,14 +289,13 @@ var HtmlEditor = _editor.default.inherit({
     }
     this._finalizeContentRendering();
   },
-  _hasTranscludedContent: function _hasTranscludedContent() {
+  _hasTranscludedContent: function () {
     return this._$templateResult && this._$templateResult.length;
   },
-  _getModulesConfig: function _getModulesConfig() {
-    var _this2 = this;
-    var quill = this._getRegistrator().getQuill();
-    var wordListMatcher = (0, _wordLists.default)(quill);
-    var modulesConfig = (0, _extend.extend)({}, {
+  _getModulesConfig: function () {
+    const quill = this._getRegistrator().getQuill();
+    const wordListMatcher = (0, _wordLists.default)(quill);
+    const modulesConfig = (0, _extend.extend)({}, {
       table: true,
       toolbar: this._getModuleConfigByOption('toolbar'),
       variables: this._getModuleConfigByOption('variables'),
@@ -312,32 +308,24 @@ var HtmlEditor = _editor.default.inherit({
       imageCursor: this._getBaseModuleConfig(),
       mentions: this._getModuleConfigByOption('mentions'),
       uploader: {
-        onDrop: function onDrop(e) {
-          return _this2._saveValueChangeEvent((0, _index2.Event)(e));
-        },
+        onDrop: e => this._saveValueChangeEvent((0, _index2.Event)(e)),
         imageBlot: 'extendedImage'
       },
       keyboard: {
-        onKeydown: function onKeydown(e) {
-          return _this2._saveValueChangeEvent((0, _index2.Event)(e));
-        }
+        onKeydown: e => this._saveValueChangeEvent((0, _index2.Event)(e))
       },
       clipboard: {
-        onPaste: function onPaste(e) {
-          return _this2._saveValueChangeEvent((0, _index2.Event)(e));
-        },
-        onCut: function onCut(e) {
-          return _this2._saveValueChangeEvent((0, _index2.Event)(e));
-        },
+        onPaste: e => this._saveValueChangeEvent((0, _index2.Event)(e)),
+        onCut: e => this._saveValueChangeEvent((0, _index2.Event)(e)),
         matchers: [['p.MsoListParagraphCxSpFirst', wordListMatcher], ['p.MsoListParagraphCxSpMiddle', wordListMatcher], ['p.MsoListParagraphCxSpLast', wordListMatcher]]
       },
       multiline: Boolean(this.option('allowSoftLineBreak'))
     }, this._getCustomModules());
     return modulesConfig;
   },
-  _getModuleConfigByOption: function _getModuleConfigByOption(userOptionName) {
-    var optionValue = this.option(userOptionName);
-    var config = {};
+  _getModuleConfigByOption: function (userOptionName) {
+    const optionValue = this.option(userOptionName);
+    let config = {};
     if (!(0, _type.isDefined)(optionValue)) {
       return undefined;
     }
@@ -348,34 +336,33 @@ var HtmlEditor = _editor.default.inherit({
     }
     return (0, _extend.extend)(this._getBaseModuleConfig(), config);
   },
-  _getBaseModuleConfig: function _getBaseModuleConfig() {
+  _getBaseModuleConfig: function () {
     return {
       editorInstance: this
     };
   },
-  _getCustomModules: function _getCustomModules() {
-    var _this3 = this;
-    var modules = {};
-    var moduleNames = this._getRegistrator().getRegisteredModuleNames();
-    moduleNames.forEach(function (modulePath) {
-      modules[modulePath] = _this3._getBaseModuleConfig();
+  _getCustomModules: function () {
+    const modules = {};
+    const moduleNames = this._getRegistrator().getRegisteredModuleNames();
+    moduleNames.forEach(modulePath => {
+      modules[modulePath] = this._getBaseModuleConfig();
     });
     return modules;
   },
-  _textChangeHandler: function _textChangeHandler(newDelta, oldDelta, source) {
-    var htmlMarkup = this._deltaConverter.toHtml();
-    var convertedValue = this._isMarkdownValue() ? this._updateValueByType(MARKDOWN_VALUE_TYPE, htmlMarkup) : htmlMarkup;
-    var currentValue = this.option('value');
+  _textChangeHandler: function (newDelta, oldDelta, source) {
+    const htmlMarkup = this._deltaConverter.toHtml();
+    const convertedValue = this._isMarkdownValue() ? this._updateValueByType(MARKDOWN_VALUE_TYPE, htmlMarkup) : htmlMarkup;
+    const currentValue = this.option('value');
     if (currentValue !== convertedValue && !this._isNullValueConverted(currentValue, convertedValue)) {
       this._isEditorUpdating = true;
       this.option('value', convertedValue);
     }
     this._finalizeContentRendering();
   },
-  _isNullValueConverted: function _isNullValueConverted(currentValue, convertedValue) {
+  _isNullValueConverted: function (currentValue, convertedValue) {
     return currentValue === null && convertedValue === '';
   },
-  _finalizeContentRendering: function _finalizeContentRendering() {
+  _finalizeContentRendering: function () {
     if (this._contentRenderedDeferred) {
       this.clearHistory();
       this._contentInitializedCallback.fire();
@@ -383,42 +370,42 @@ var HtmlEditor = _editor.default.inherit({
       this._contentRenderedDeferred = undefined;
     }
   },
-  _updateValueByType: function _updateValueByType(valueType, value) {
-    var converter = this._markdownConverter;
+  _updateValueByType: function (valueType, value) {
+    const converter = this._markdownConverter;
     if (!(0, _type.isDefined)(converter)) {
       return;
     }
-    var currentValue = (0, _common.ensureDefined)(value, this.option('value'));
+    const currentValue = (0, _common.ensureDefined)(value, this.option('value'));
     return valueType === MARKDOWN_VALUE_TYPE ? converter.toMarkdown(currentValue) : converter.toHtml(currentValue);
   },
-  _isMarkdownValue: function _isMarkdownValue() {
+  _isMarkdownValue: function () {
     return this.option('valueType') === MARKDOWN_VALUE_TYPE;
   },
-  _resetEnabledState: function _resetEnabledState() {
+  _resetEnabledState: function () {
     if (this._quillInstance) {
-      var isEnabled = !(this.option('readOnly') || this.option('disabled'));
+      const isEnabled = !(this.option('readOnly') || this.option('disabled'));
       this._quillInstance.enable(isEnabled);
     }
   },
-  _renderFormDialog: function _renderFormDialog() {
-    var userOptions = (0, _extend.extend)(true, {
+  _renderFormDialog: function () {
+    const userOptions = (0, _extend.extend)(true, {
       width: 'auto',
       height: 'auto',
       hideOnOutsideClick: true
     }, this.option('formDialogOptions'));
     this._formDialog = new _formDialog.default(this, userOptions);
   },
-  _getStylingModePrefix: function _getStylingModePrefix() {
+  _getStylingModePrefix: function () {
     return 'dx-htmleditor-';
   },
-  _getQuillContainer: function _getQuillContainer() {
+  _getQuillContainer: function () {
     return this._$htmlContainer;
   },
   _prepareModuleOptions(args) {
     var _args$fullName;
-    var optionData = (_args$fullName = args.fullName) === null || _args$fullName === void 0 ? void 0 : _args$fullName.split('.');
-    var value = args.value;
-    var optionName = optionData.length >= 2 ? optionData[1] : args.name;
+    const optionData = (_args$fullName = args.fullName) === null || _args$fullName === void 0 ? void 0 : _args$fullName.split('.');
+    let value = args.value;
+    const optionName = optionData.length >= 2 ? optionData[1] : args.name;
     if (optionData.length === 3) {
       value = {
         [optionData[2]]: value
@@ -426,16 +413,16 @@ var HtmlEditor = _editor.default.inherit({
     }
     return [optionName, value];
   },
-  _moduleOptionChanged: function _moduleOptionChanged(moduleName, args) {
-    var moduleInstance = this.getModule(moduleName);
-    var shouldPassOptionsToModule = Boolean(moduleInstance);
+  _moduleOptionChanged: function (moduleName, args) {
+    const moduleInstance = this.getModule(moduleName);
+    const shouldPassOptionsToModule = Boolean(moduleInstance);
     if (shouldPassOptionsToModule) {
-      moduleInstance.option.apply(moduleInstance, _toConsumableArray(this._prepareModuleOptions(args)));
+      moduleInstance.option(...this._prepareModuleOptions(args));
     } else {
       this._invalidate();
     }
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'value':
         {
@@ -443,7 +430,7 @@ var HtmlEditor = _editor.default.inherit({
             if (this._isEditorUpdating) {
               this._isEditorUpdating = false;
             } else {
-              var updatedValue = this._isMarkdownValue() ? this._updateValueByType('HTML', args.value) : args.value;
+              const updatedValue = this._isMarkdownValue() ? this._updateValueByType('HTML', args.value) : args.value;
               this._suppressValueChangeAction();
               this._updateHtmlContent(updatedValue);
               this._resumeValueChangeAction();
@@ -453,7 +440,7 @@ var HtmlEditor = _editor.default.inherit({
           }
 
           // NOTE: value can be optimized by Quill
-          var value = this.option('value');
+          const value = this.option('value');
           if (value !== args.previousValue) {
             this._setSubmitValue(value);
             this.callBase(_extends({}, args, {
@@ -476,7 +463,7 @@ var HtmlEditor = _editor.default.inherit({
       case 'valueType':
         {
           this._prepareConverters();
-          var newValue = this._updateValueByType(args.value);
+          const newValue = this._updateValueByType(args.value);
           if (args.value === 'html' && this._quillInstance) {
             this._updateHtmlContent(newValue);
           } else {
@@ -516,16 +503,16 @@ var HtmlEditor = _editor.default.inherit({
         this.callBase(args);
     }
   },
-  _repaintToolbar: function _repaintToolbar() {
+  _repaintToolbar: function () {
     this._applyToolbarMethod('repaint');
   },
-  _updateHtmlContent: function _updateHtmlContent(html) {
-    var newDelta = this._quillInstance.clipboard.convert({
+  _updateHtmlContent: function (html) {
+    const newDelta = this._quillInstance.clipboard.convert({
       html
     });
     this._quillInstance.setContents(newDelta);
   },
-  _clean: function _clean() {
+  _clean: function () {
     if (this._quillInstance) {
       _events_engine.default.off(this._getContent(), ".".concat(this.NAME));
       this._quillInstance.off('text-change', this._textChangeHandlerWithContext);
@@ -536,7 +523,7 @@ var HtmlEditor = _editor.default.inherit({
     this._contentInitializedCallback.empty();
     this.callBase();
   },
-  _abortUpdateContentTask: function _abortUpdateContentTask() {
+  _abortUpdateContentTask: function () {
     if (this._updateContentTask) {
       this._updateContentTask.abort();
       this._updateContentTask = undefined;
@@ -562,81 +549,81 @@ var HtmlEditor = _editor.default.inherit({
   addContentInitializedCallback(callback) {
     this._contentInitializedCallback.add(callback);
   },
-  register: function register(components) {
+  register: function (components) {
     this._getRegistrator().registerModules(components);
     if (this._quillInstance) {
       this.repaint();
     }
   },
-  get: function get(modulePath) {
+  get: function (modulePath) {
     return this._getRegistrator().getQuill().import(modulePath);
   },
-  getModule: function getModule(moduleName) {
+  getModule: function (moduleName) {
     return this._applyQuillMethod('getModule', arguments);
   },
-  getQuillInstance: function getQuillInstance() {
+  getQuillInstance: function () {
     return this._quillInstance;
   },
-  getSelection: function getSelection(focus) {
+  getSelection: function (focus) {
     return this._applyQuillMethod('getSelection', arguments);
   },
-  setSelection: function setSelection(index, length) {
+  setSelection: function (index, length) {
     this._applyQuillMethod('setSelection', arguments);
   },
-  getText: function getText(index, length) {
+  getText: function (index, length) {
     return this._applyQuillMethod('getText', arguments);
   },
-  format: function format(formatName, formatValue) {
+  format: function (formatName, formatValue) {
     this._applyQuillMethod('format', arguments);
   },
-  formatText: function formatText(index, length, formatName, formatValue) {
+  formatText: function (index, length, formatName, formatValue) {
     this._applyQuillMethod('formatText', arguments);
   },
-  formatLine: function formatLine(index, length, formatName, formatValue) {
+  formatLine: function (index, length, formatName, formatValue) {
     this._applyQuillMethod('formatLine', arguments);
   },
-  getFormat: function getFormat(index, length) {
+  getFormat: function (index, length) {
     return this._applyQuillMethod('getFormat', arguments);
   },
-  removeFormat: function removeFormat(index, length) {
+  removeFormat: function (index, length) {
     return this._applyQuillMethod('removeFormat', arguments);
   },
-  clearHistory: function clearHistory() {
+  clearHistory: function () {
     this._applyQuillHistoryMethod('clear');
     this._applyToolbarMethod('updateHistoryWidgets');
   },
-  undo: function undo() {
+  undo: function () {
     this._applyQuillHistoryMethod('undo');
   },
-  redo: function redo() {
+  redo: function () {
     this._applyQuillHistoryMethod('redo');
   },
-  getLength: function getLength() {
+  getLength: function () {
     return this._applyQuillMethod('getLength');
   },
-  getBounds: function getBounds(index, length) {
+  getBounds: function (index, length) {
     return this._applyQuillMethod('getBounds', arguments);
   },
-  delete: function _delete(index, length) {
+  delete: function (index, length) {
     this._applyQuillMethod('deleteText', arguments);
   },
-  insertText: function insertText(index, text, formats) {
+  insertText: function (index, text, formats) {
     this._applyQuillMethod('insertText', arguments);
   },
-  insertEmbed: function insertEmbed(index, type, config) {
+  insertEmbed: function (index, type, config) {
     this._applyQuillMethod('insertEmbed', arguments);
   },
-  showFormDialog: function showFormDialog(formConfig) {
+  showFormDialog: function (formConfig) {
     return this._formDialog.show(formConfig);
   },
-  formDialogOption: function formDialogOption(optionName, optionValue) {
+  formDialogOption: function (optionName, optionValue) {
     return this._formDialog.popupOption.apply(this._formDialog, arguments);
   },
-  focus: function focus() {
+  focus: function () {
     this.callBase();
     this._applyQuillMethod('focus');
   },
-  blur: function blur() {
+  blur: function () {
     this._applyQuillMethod('blur');
   },
   getMentionKeyInTemplateStorage() {

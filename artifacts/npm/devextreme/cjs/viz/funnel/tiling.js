@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/funnel/tiling.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,8 +11,8 @@
 exports.addAlgorithm = addAlgorithm;
 exports.getAlgorithm = getAlgorithm;
 var _utils = require("../core/utils");
-var algorithms = {};
-var defaultAlgorithm;
+const algorithms = {};
+let defaultAlgorithm;
 function getAlgorithm(name) {
   return algorithms[(0, _utils.normalizeEnum)(name)] || defaultAlgorithm;
 }

@@ -10,13 +10,9 @@ var _const = require("./const");
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-var isDragCell = function isDragCell($cell) {
-  return $cell.attr(_const.ATTRIBUTES.dragCell) !== undefined;
-};
-var getCellToFocus = function getCellToFocus($cellElements, columnIndex) {
-  return $cellElements.filter("[".concat(_const.ATTRIBUTES.ariaColIndex, "=\"").concat(columnIndex + 1, "\"]:not([").concat(_const.ATTRIBUTES.dragCell, "])")).first();
-};
-var GridCoreKeyboardNavigationDom = {
+const isDragCell = $cell => $cell.attr(_const.ATTRIBUTES.dragCell) !== undefined;
+const getCellToFocus = ($cellElements, columnIndex) => $cellElements.filter("[".concat(_const.ATTRIBUTES.ariaColIndex, "=\"").concat(columnIndex + 1, "\"]:not([").concat(_const.ATTRIBUTES.dragCell, "])")).first();
+const GridCoreKeyboardNavigationDom = {
   isDragCell,
   getCellToFocus
 };

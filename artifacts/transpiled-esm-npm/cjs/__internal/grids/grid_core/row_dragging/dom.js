@@ -14,18 +14,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports,
 
-var createHandleTemplateFunc = function createHandleTemplateFunc(addWidgetPrefix) {
-  return function (container, options) {
-    var $container = (0, _renderer.default)(container);
-    if (options.rowType === 'data') {
-      $container.addClass(_const.CLASSES.cellFocusDisabled);
-      return (0, _renderer.default)('<span>').addClass(addWidgetPrefix(_const.CLASSES.handleIcon));
-    }
-    _m_utils.default.setEmptyText($container);
-    return undefined;
-  };
+const createHandleTemplateFunc = addWidgetPrefix => (container, options) => {
+  const $container = (0, _renderer.default)(container);
+  if (options.rowType === 'data') {
+    $container.addClass(_const.CLASSES.cellFocusDisabled);
+    return (0, _renderer.default)('<span>').addClass(addWidgetPrefix(_const.CLASSES.handleIcon));
+  }
+  _m_utils.default.setEmptyText($container);
+  return undefined;
 };
-var GridCoreRowDraggingDom = {
+const GridCoreRowDraggingDom = {
   createHandleTemplateFunc
 };
 exports.GridCoreRowDraggingDom = GridCoreRowDraggingDom;

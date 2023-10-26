@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/imageUpload.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,9 +21,9 @@ var _file_uploader = _interopRequireDefault(require("../../file_uploader"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var MODULE_NAMESPACE = 'dxHtmlEditorImageUpload';
-var HIDDEN_FILE_UPLOADER_CLASS = 'dx-htmleditor-hidden-content';
-var ImageUploadModule = _base.default;
+const MODULE_NAMESPACE = 'dxHtmlEditorImageUpload';
+const HIDDEN_FILE_UPLOADER_CLASS = 'dx-htmleditor-hidden-content';
+let ImageUploadModule = _base.default;
 if (_devextremeQuill.default) {
   ImageUploadModule = /*#__PURE__*/function (_BaseModule) {
     _inheritsLoose(ImageUploadModule, _BaseModule);
@@ -38,7 +38,7 @@ if (_devextremeQuill.default) {
     }
     var _proto = ImageUploadModule.prototype;
     _proto._handleServerUpload = function _handleServerUpload() {
-      var useServerUpload = (0, _type.isDefined)(this.options.fileUploadMode) && this.options.fileUploadMode !== 'base64';
+      const useServerUpload = (0, _type.isDefined)(this.options.fileUploadMode) && this.options.fileUploadMode !== 'base64';
       useServerUpload ? this._enableDragAndDropUploading() : this._disableDragAndDropUploading();
     };
     _proto._getUploaderModule = function _getUploaderModule() {
@@ -59,8 +59,8 @@ if (_devextremeQuill.default) {
       this._attachEvents();
     };
     _proto._initFileUploader = function _initFileUploader() {
-      var $container = (0, _renderer.default)('<div>').addClass(HIDDEN_FILE_UPLOADER_CLASS).appendTo(this._quillContainer);
-      var fileUploaderOptions = (0, _extend.extend)({}, (0, _image_uploader_helper.getFileUploaderBaseOptions)(), {
+      const $container = (0, _renderer.default)('<div>').addClass(HIDDEN_FILE_UPLOADER_CLASS).appendTo(this._quillContainer);
+      const fileUploaderOptions = (0, _extend.extend)({}, (0, _image_uploader_helper.getFileUploaderBaseOptions)(), {
         uploadUrl: this.options.uploadUrl,
         onUploaded: this._onUploaded.bind(this)
       }, this.options.fileUploaderOptions);
@@ -69,10 +69,11 @@ if (_devextremeQuill.default) {
     };
     _proto._onUploaded = function _onUploaded(data) {
       var _this$quill$getSelect;
-      var _ref = (_this$quill$getSelect = this.quill.getSelection()) !== null && _this$quill$getSelect !== void 0 ? _this$quill$getSelect : {
-          index: this.quill.getLength()
-        },
-        pasteIndex = _ref.index;
+      const {
+        index: pasteIndex
+      } = (_this$quill$getSelect = this.quill.getSelection()) !== null && _this$quill$getSelect !== void 0 ? _this$quill$getSelect : {
+        index: this.quill.getLength()
+      };
       (0, _image_uploader_helper.serverUpload)(this.options.uploadDirectory, data.file.name, this.quill, pasteIndex);
     };
     _proto._attachEvents = function _attachEvents() {
@@ -90,8 +91,8 @@ if (_devextremeQuill.default) {
     };
     _proto._handleInsertImages = function _handleInsertImages(e, filesField) {
       this.saveValueChangeEvent(e);
-      var files = Array.from(e.originalEvent[filesField].files || []);
-      var uploads = files;
+      const files = Array.from(e.originalEvent[filesField].files || []);
+      const uploads = files;
       if (uploads.length) {
         e.preventDefault();
         e.stopPropagation();
@@ -103,9 +104,8 @@ if (_devextremeQuill.default) {
       this._disableDragAndDropUploading();
     };
     _proto.prepareCleanCallback = function prepareCleanCallback() {
-      var _this2 = this;
-      return function () {
-        _this2.clean();
+      return () => {
+        this.clean();
       };
     };
     _proto.option = function option(_option, value) {

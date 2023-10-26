@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/component_wrapper/button.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var ButtonWrapper = /*#__PURE__*/function (_Component) {
+let ButtonWrapper = /*#__PURE__*/function (_Component) {
   _inheritsLoose(ButtonWrapper, _Component);
   function ButtonWrapper() {
     return _Component.apply(this, arguments) || this;
@@ -33,45 +33,47 @@ var ButtonWrapper = /*#__PURE__*/function (_Component) {
     return ['space', 'enter'];
   };
   _proto.getProps = function getProps() {
-    var _this = this;
-    var props = _Component.prototype.getProps.call(this);
-    props.onClick = function (_ref) {
-      var event = _ref.event;
-      _this._clickAction({
+    const props = _Component.prototype.getProps.call(this);
+    props.onClick = _ref => {
+      let {
+        event
+      } = _ref;
+      this._clickAction({
         event,
-        validationGroup: _this._validationGroupConfig
+        validationGroup: this._validationGroupConfig
       });
     };
-    var iconType = (0, _icon.getImageSourceType)(props.icon);
+    const iconType = (0, _icon.getImageSourceType)(props.icon);
     if (iconType === 'svg') {
-      props.iconTemplate = this._createTemplateComponent(function () {
-        return props.icon;
-      });
+      props.iconTemplate = this._createTemplateComponent(() => props.icon);
     }
     return props;
   };
   _proto._toggleActiveState = function _toggleActiveState(_, value) {
-    var button = this.viewRef;
+    const button = this.viewRef;
     value ? button.activate() : button.deactivate();
   };
   _proto._getSubmitAction = function _getSubmitAction() {
-    var _this2 = this;
-    var needValidate = true;
-    var validationStatus = 'valid';
-    return this._createAction(function (_ref2) {
-      var event = _ref2.event,
-        submitInput = _ref2.submitInput;
+    let needValidate = true;
+    let validationStatus = 'valid';
+    return this._createAction(_ref2 => {
+      let {
+        event,
+        submitInput
+      } = _ref2;
       if (needValidate) {
-        var validationGroup = _this2._validationGroupConfig;
+        const validationGroup = this._validationGroupConfig;
         if (validationGroup !== undefined && validationGroup !== '') {
-          var validationResult = validationGroup.validate();
+          const validationResult = validationGroup.validate();
           validationStatus = validationResult.status;
           if (validationResult.status === 'pending') {
             needValidate = false;
-            _this2.option('disabled', true);
-            validationResult.complete.then(function (_ref3) {
-              var status = _ref3.status;
-              _this2.option('disabled', false);
+            this.option('disabled', true);
+            validationResult.complete.then(_ref3 => {
+              let {
+                status
+              } = _ref3;
+              this.option('disabled', false);
               validationStatus = status;
               validationStatus === 'valid' && submitInput.click();
               needValidate = true;
@@ -90,9 +92,9 @@ var ButtonWrapper = /*#__PURE__*/function (_Component) {
   };
   _proto._initMarkup = function _initMarkup() {
     _Component.prototype._initMarkup.call(this);
-    var $content = this.$element().find('.dx-button-content');
-    var $template = $content.children().filter('.dx-template-wrapper');
-    var $input = $content.children().filter('.dx-button-submit-input');
+    const $content = this.$element().find('.dx-button-content');
+    const $template = $content.children().filter('.dx-template-wrapper');
+    const $input = $content.children().filter('.dx-button-submit-input');
     if ($template.length) {
       $template.addClass('dx-button-content');
       $template.append($input);
@@ -105,8 +107,8 @@ var ButtonWrapper = /*#__PURE__*/function (_Component) {
     }));
   };
   _proto._findGroup = function _findGroup() {
-    var $element = this.$element();
-    var validationGroup = this.option('validationGroup');
+    const $element = this.$element();
+    const validationGroup = this.option('validationGroup');
     return validationGroup !== undefined && validationGroup !== '' ? validationGroup : _validation_engine.default.findGroup($element, this._modelByElement($element));
   };
   _proto._createClickAction = function _createClickAction() {
@@ -126,12 +128,12 @@ var ButtonWrapper = /*#__PURE__*/function (_Component) {
   };
   _createClass(ButtonWrapper, [{
     key: "_validationGroupConfig",
-    get: function get() {
+    get: function () {
       return _validation_engine.default.getGroupConfig(this._findGroup());
     }
   }, {
     key: "_templatesInfo",
-    get: function get() {
+    get: function () {
       return {
         template: 'content'
       };

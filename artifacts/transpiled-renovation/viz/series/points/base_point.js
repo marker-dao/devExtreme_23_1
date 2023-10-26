@@ -16,21 +16,21 @@ var _extend2 = require("../../../core/utils/extend");
 var _type = require("../../../core/utils/type");
 var _common = require("../../../core/utils/common");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var mixins = {};
-var _extend = _extend2.extend;
-var statesConsts = _consts.default.states;
-var SYMBOL_POINT = 'symbolPoint';
-var POLAR_SYMBOL_POINT = 'polarSymbolPoint';
-var BAR_POINT = 'barPoint';
-var POLAR_BAR_POINT = 'polarBarPoint';
-var PIE_POINT = 'piePoint';
-var SELECTED_STATE = statesConsts.selectedMark;
-var HOVER_STATE = statesConsts.hoverMark;
-var NORMAL_STATE = statesConsts.normalMark;
-var HOVER = statesConsts.hover;
-var NORMAL = statesConsts.normal;
-var SELECTION = statesConsts.selection;
-var pointTypes = {
+const mixins = {};
+const _extend = _extend2.extend;
+const statesConsts = _consts.default.states;
+const SYMBOL_POINT = 'symbolPoint';
+const POLAR_SYMBOL_POINT = 'polarSymbolPoint';
+const BAR_POINT = 'barPoint';
+const POLAR_BAR_POINT = 'polarBarPoint';
+const PIE_POINT = 'piePoint';
+const SELECTED_STATE = statesConsts.selectedMark;
+const HOVER_STATE = statesConsts.hoverMark;
+const NORMAL_STATE = statesConsts.normalMark;
+const HOVER = statesConsts.hover;
+const NORMAL = statesConsts.normal;
+const SELECTION = statesConsts.selection;
+const pointTypes = {
   chart: {
     'scatter': SYMBOL_POINT,
     'line': SYMBOL_POINT,
@@ -99,22 +99,22 @@ mixins.polarSymbolPoint = _polar_point.polarSymbolPoint;
 mixins.polarBarPoint = _polar_point.polarBarPoint;
 Point.prototype = {
   constructor: Point,
-  getColor: function getColor() {
+  getColor: function () {
     if (!this.hasValue() && !this._styles.usePointCustomOptions) {
       this.series.customizePoint(this, this._dataItem);
     }
     return this._styles.normal.fill || this.series.getColor();
   },
-  _getStyle: function _getStyle() {
+  _getStyle: function () {
     return this._styles[this._currentStyle || 'normal'];
   },
-  update: function update(dataItem, options) {
+  update: function (dataItem, options) {
     this.updateOptions(options);
     this.updateData(dataItem);
   },
-  updateData: function updateData(dataItem) {
-    var that = this;
-    var argumentWasChanged = that.argument !== dataItem.argument;
+  updateData: function (dataItem) {
+    const that = this;
+    const argumentWasChanged = that.argument !== dataItem.argument;
     that.argument = that.initialArgument = that.originalArgument = dataItem.argument;
     that.tag = dataItem.tag;
     that.index = dataItem.index;
@@ -128,15 +128,15 @@ Point.prototype = {
     that._fillStyle();
     that._updateLabelData();
   },
-  deleteMarker: function deleteMarker() {
-    var that = this;
+  deleteMarker: function () {
+    const that = this;
     if (that.graphic) {
       that.graphic.dispose();
     }
     that.graphic = null;
   },
-  draw: function draw(renderer, groups, animationEnabled, firstDrawing) {
-    var that = this;
+  draw: function (renderer, groups, animationEnabled, firstDrawing) {
+    const that = this;
     if (that._needDeletingOnDraw || that.series.autoHidePointMarkers && !that.isSelected()) {
       that.deleteMarker();
       that._needDeletingOnDraw = false;
@@ -154,10 +154,10 @@ Point.prototype = {
     that._drawErrorBar(renderer, groups.errorBars, animationEnabled);
     return that;
   },
-  _getViewStyle: function _getViewStyle() {
-    var state = NORMAL_STATE;
-    var fullState = this.fullState;
-    var styles = [NORMAL, HOVER, SELECTION, SELECTION];
+  _getViewStyle: function () {
+    let state = NORMAL_STATE;
+    let fullState = this.fullState;
+    const styles = [NORMAL, HOVER, SELECTION, SELECTION];
     if (this._viewCounters.hover) {
       state |= HOVER_STATE;
     }
@@ -173,9 +173,9 @@ Point.prototype = {
     state |= fullState;
     return styles[state];
   },
-  applyView: function applyView(legendCallback) {
-    var that = this;
-    var style = that._getViewStyle();
+  applyView: function (legendCallback) {
+    const that = this;
+    const style = that._getViewStyle();
     that._currentStyle = style;
     if (!that.graphic && that.getMarkerVisibility() && that.series.autoHidePointMarkers && (style === SELECTION || style === HOVER)) {
       that._drawMarker(that.series.getRenderer(), that.series.getMarkersGroup());
@@ -193,12 +193,12 @@ Point.prototype = {
       }
     }
   },
-  setView: function setView(style) {
+  setView: function (style) {
     this._viewCounters[style]++;
     this.applyView();
   },
-  resetView: function resetView(style) {
-    var viewCounters = this._viewCounters;
+  resetView: function (style) {
+    const viewCounters = this._viewCounters;
     --viewCounters[style];
     if (viewCounters[style] < 0) {
       // T661080
@@ -206,45 +206,45 @@ Point.prototype = {
     }
     this.applyView();
   },
-  releaseHoverState: function releaseHoverState() {
-    var that = this;
+  releaseHoverState: function () {
+    const that = this;
     if (that.graphic && !that.isSelected()) {
       that.graphic.toBackground();
     }
   },
-  select: function select() {
+  select: function () {
     this.series.selectPoint(this);
   },
-  clearSelection: function clearSelection() {
+  clearSelection: function () {
     this.series.deselectPoint(this);
   },
-  hover: function hover() {
+  hover: function () {
     this.series.hoverPoint(this);
   },
-  clearHover: function clearHover() {
+  clearHover: function () {
     this.series.clearPointHover();
   },
-  showTooltip: function showTooltip() {
+  showTooltip: function () {
     this.series.showPointTooltip(this);
   },
-  hideTooltip: function hideTooltip() {
+  hideTooltip: function () {
     this.series.hidePointTooltip(this);
   },
-  _checkLabelsChanging: function _checkLabelsChanging(oldType, newType) {
-    var isNewRange = ~newType.indexOf('range');
-    var isOldRange = ~oldType.indexOf('range');
+  _checkLabelsChanging: function (oldType, newType) {
+    const isNewRange = ~newType.indexOf('range');
+    const isOldRange = ~oldType.indexOf('range');
     return isOldRange && !isNewRange || !isOldRange && isNewRange;
   },
-  updateOptions: function updateOptions(newOptions) {
+  updateOptions: function (newOptions) {
     if (!newOptions) {
       return;
     }
-    var that = this;
-    var oldOptions = that._options;
-    var widgetType = newOptions.widgetType;
-    var oldType = oldOptions && oldOptions.type;
-    var newType = newOptions.type;
-    var newPointTypeMixin = pointTypes[widgetType][newType];
+    const that = this;
+    const oldOptions = that._options;
+    const widgetType = newOptions.widgetType;
+    const oldType = oldOptions && oldOptions.type;
+    const newType = newOptions.type;
+    const newPointTypeMixin = pointTypes[widgetType][newType];
     if (oldType !== newType) {
       that._needDeletingOnDraw = true;
       that._needClearingOnDraw = false;
@@ -261,44 +261,44 @@ Point.prototype = {
     that._fillStyle();
     that._updateLabelOptions(newPointTypeMixin);
   },
-  translate: function translate() {
+  translate: function () {
     if (this.hasValue()) {
       this._translate();
       this.translated = true;
     }
   },
-  _checkCustomize: function _checkCustomize(oldOptions, newOptions) {
+  _checkCustomize: function (oldOptions, newOptions) {
     return oldOptions.styles.usePointCustomOptions && !newOptions.styles.usePointCustomOptions;
   },
-  _getCustomLabelVisibility: function _getCustomLabelVisibility() {
+  _getCustomLabelVisibility: function () {
     return this._styles.useLabelCustomOptions ? !!this._options.label.visible : null;
   },
-  getBoundingRect: function getBoundingRect() {
+  getBoundingRect: function () {
     return this._getGraphicBBox();
   },
-  _resetType: function _resetType(methods) {
-    for (var methodName in methods) {
+  _resetType: function (methods) {
+    for (const methodName in methods) {
       delete this[methodName];
     }
   },
-  _setType: function _setType(methods) {
-    for (var methodName in methods) {
+  _setType: function (methods) {
+    for (const methodName in methods) {
       this[methodName] = methods[methodName];
     }
   },
-  isInVisibleArea: function isInVisibleArea() {
+  isInVisibleArea: function () {
     return this.inVisibleArea;
   },
-  isSelected: function isSelected() {
+  isSelected: function () {
     return !!(this.fullState & SELECTED_STATE);
   },
-  isHovered: function isHovered() {
+  isHovered: function () {
     return !!(this.fullState & HOVER_STATE);
   },
-  getOptions: function getOptions() {
+  getOptions: function () {
     return this._options;
   },
-  animate: function animate(complete, settings, partitionDuration) {
+  animate: function (complete, settings, partitionDuration) {
     if (!this.graphic) {
       complete && complete();
       return;
@@ -307,8 +307,8 @@ Point.prototype = {
       partitionDuration: partitionDuration
     }, complete);
   },
-  getCoords: function getCoords(min) {
-    var that = this;
+  getCoords: function (min) {
+    const that = this;
     if (!min) {
       return {
         x: that.x,
@@ -326,8 +326,8 @@ Point.prototype = {
       y: that.y
     };
   },
-  getDefaultCoords: function getDefaultCoords() {
-    var that = this;
+  getDefaultCoords: function () {
+    const that = this;
     return !that._options.rotated ? {
       x: that.x,
       y: that.defaultY
@@ -337,27 +337,27 @@ Point.prototype = {
     };
   },
   setDefaultCoords() {
-    var coords = this.getDefaultCoords();
+    const coords = this.getDefaultCoords();
     this.x = coords.x;
     this.y = coords.y;
   },
-  _getVisibleArea: function _getVisibleArea() {
+  _getVisibleArea: function () {
     return this.series.getVisibleArea();
   },
-  _getArgTranslator: function _getArgTranslator() {
+  _getArgTranslator: function () {
     return this.series.getArgumentAxis().getTranslator();
   },
-  _getValTranslator: function _getValTranslator() {
+  _getValTranslator: function () {
     return this.series.getValueAxis().getTranslator();
   },
   isArgumentCorrect() {
     return this.series._argumentChecker(this.argument);
   },
   isValueCorrect() {
-    var valueChecker = this.series._valueChecker;
+    const valueChecker = this.series._valueChecker;
     return valueChecker(this.getMinValue()) && valueChecker(this.getMaxValue());
   },
-  hasValue: function hasValue() {
+  hasValue: function () {
     return this.value !== null && this.minValue !== null && this.isArgumentCorrect() && this.isValueCorrect();
   },
   hasCoords: _common.noop,
@@ -391,22 +391,22 @@ Point.prototype = {
   getMaxValue: _common.noop,
   _drawErrorBar: _common.noop,
   getMarkerVisibility: _common.noop,
-  dispose: function dispose() {
-    var that = this;
+  dispose: function () {
+    const that = this;
     that.deleteMarker();
     that.deleteLabel();
     that._errorBar && this._errorBar.dispose();
     that._options = that._styles = that.series = that._errorBar = null;
   },
-  getTooltipFormatObject: function getTooltipFormatObject(tooltip, stackPoints) {
-    var that = this;
-    var tooltipFormatObject = that._getFormatObject(tooltip);
-    var sharedTooltipValuesArray = [];
-    var tooltipStackPointsFormatObject = [];
+  getTooltipFormatObject: function (tooltip, stackPoints) {
+    const that = this;
+    const tooltipFormatObject = that._getFormatObject(tooltip);
+    const sharedTooltipValuesArray = [];
+    const tooltipStackPointsFormatObject = [];
     if (stackPoints) {
-      stackPoints.forEach(function (point) {
+      stackPoints.forEach(point => {
         if (!point.isVisible()) return;
-        var formatObject = point._getFormatObject(tooltip);
+        const formatObject = point._getFormatObject(tooltip);
         tooltipStackPointsFormatObject.push(formatObject);
         sharedTooltipValuesArray.push(formatObject.seriesName + ': ' + formatObject.valueText);
       });
@@ -416,19 +416,19 @@ Point.prototype = {
         stackName: that.series.getStackName() || null
       });
     }
-    var aggregationInfo = that.aggregationInfo;
+    const aggregationInfo = that.aggregationInfo;
     if (aggregationInfo) {
-      var axis = that.series.getArgumentAxis();
-      var rangeText = axis.formatRange(aggregationInfo.intervalStart, aggregationInfo.intervalEnd, aggregationInfo.aggregationInterval, tooltip.getOptions().argumentFormat);
+      const axis = that.series.getArgumentAxis();
+      const rangeText = axis.formatRange(aggregationInfo.intervalStart, aggregationInfo.intervalEnd, aggregationInfo.aggregationInterval, tooltip.getOptions().argumentFormat);
       if (rangeText) {
         tooltipFormatObject.valueText += "\n".concat(rangeText);
       }
     }
     return tooltipFormatObject;
   },
-  setHole: function setHole(holeValue, position) {
-    var that = this;
-    var minValue = isFinite(that.minValue) ? that.minValue : 0;
+  setHole: function (holeValue, position) {
+    const that = this;
+    const minValue = isFinite(that.minValue) ? that.minValue : 0;
     if ((0, _type.isDefined)(holeValue)) {
       if (position === 'left') {
         that.leftHole = that.value - holeValue;
@@ -439,16 +439,16 @@ Point.prototype = {
       }
     }
   },
-  resetHoles: function resetHoles() {
+  resetHoles: function () {
     this.leftHole = null;
     this.minLeftHole = null;
     this.rightHole = null;
     this.minRightHole = null;
   },
-  getLabel: function getLabel() {
+  getLabel: function () {
     return this._label;
   },
-  getLabels: function getLabels() {
+  getLabels: function () {
     return [this._label];
   },
   getCenterCoord() {

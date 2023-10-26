@@ -8,9 +8,9 @@ var _uiFile_manager = _interopRequireDefault(require("./ui.file_manager.dialog")
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_DIALOG_NAME_EDITOR = 'dx-filemanager-dialog-name-editor';
-var FILE_MANAGER_DIALOG_NAME_EDITOR_POPUP = 'dx-filemanager-dialog-name-editor-popup';
-var FileManagerNameEditorDialog = /*#__PURE__*/function (_FileManagerDialogBas) {
+const FILE_MANAGER_DIALOG_NAME_EDITOR = 'dx-filemanager-dialog-name-editor';
+const FILE_MANAGER_DIALOG_NAME_EDITOR_POPUP = 'dx-filemanager-dialog-name-editor-popup';
+let FileManagerNameEditorDialog = /*#__PURE__*/function (_FileManagerDialogBas) {
   _inheritsLoose(FileManagerNameEditorDialog, _FileManagerDialogBas);
   function FileManagerNameEditorDialog() {
     return _FileManagerDialogBas.apply(this, arguments) || this;
@@ -29,7 +29,7 @@ var FileManagerNameEditorDialog = /*#__PURE__*/function (_FileManagerDialogBas) 
     if (!this._nameTextBox) {
       return;
     }
-    var $textBoxInput = this._nameTextBox._input();
+    const $textBoxInput = this._nameTextBox._input();
     $textBoxInput.length && $textBoxInput[0].select();
     this._nameTextBox.focus();
   };
@@ -42,25 +42,22 @@ var FileManagerNameEditorDialog = /*#__PURE__*/function (_FileManagerDialogBas) 
     });
   };
   _proto._createContentTemplate = function _createContentTemplate(element) {
-    var _this = this;
     _FileManagerDialogBas.prototype._createContentTemplate.call(this, element);
     this._nameTextBox = this._createComponent((0, _renderer.default)('<div>'), _text_box.default, {
       value: this._initialNameValue,
-      onEnterKey: function onEnterKey() {
-        return _this._hasCompositionJustEnded && _this._applyDialogChanges();
-      },
-      onKeyDown: function onKeyDown(e) {
-        return _this._checkCompositionEnded(e);
-      }
+      onEnterKey: () => this._hasCompositionJustEnded && this._applyDialogChanges(),
+      onKeyDown: e => this._checkCompositionEnded(e)
     });
     this._$contentElement.append(this._nameTextBox.$element());
   };
   _proto._checkCompositionEnded = function _checkCompositionEnded(_ref) {
-    var event = _ref.event;
+    let {
+      event
+    } = _ref;
     this._hasCompositionJustEnded = event.which !== 229;
   };
   _proto._getDialogResult = function _getDialogResult() {
-    var nameValue = this._nameTextBox.option('value');
+    const nameValue = this._nameTextBox.option('value');
     return nameValue ? {
       name: nameValue
     } : null;

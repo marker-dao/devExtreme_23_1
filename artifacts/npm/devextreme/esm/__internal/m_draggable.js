@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/m_draggable.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -148,7 +148,7 @@ class ScrollHelper {
     var component = this._component;
     var sensitivity = component.option('scrollSensitivity');
     var maxSpeed = component.option('scrollSpeed');
-    return Math.ceil(Math.pow((sensitivity - distance) / sensitivity, 2) * maxSpeed);
+    return Math.ceil(((sensitivity - distance) / sensitivity) ** 2 * maxSpeed);
   }
   scrollByStep() {
     var that = this;

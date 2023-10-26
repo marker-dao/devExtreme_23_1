@@ -13,8 +13,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var window = (0, _window.getWindow)();
-var OVERLAY_POSITION_ALIASES = {
+const window = (0, _window.getWindow)();
+const OVERLAY_POSITION_ALIASES = {
   'top': {
     my: 'top center',
     at: 'top center'
@@ -53,22 +53,24 @@ var OVERLAY_POSITION_ALIASES = {
   }
 };
 exports.OVERLAY_POSITION_ALIASES = OVERLAY_POSITION_ALIASES;
-var OVERLAY_DEFAULT_BOUNDARY_OFFSET = {
+const OVERLAY_DEFAULT_BOUNDARY_OFFSET = {
   h: 0,
   v: 0
 };
-var OverlayPositionController = /*#__PURE__*/function () {
+let OverlayPositionController = /*#__PURE__*/function () {
   function OverlayPositionController(_ref) {
-    var position = _ref.position,
-      container = _ref.container,
-      visualContainer = _ref.visualContainer,
-      $root = _ref.$root,
-      $content = _ref.$content,
-      $wrapper = _ref.$wrapper,
-      onPositioned = _ref.onPositioned,
-      onVisualPositionChanged = _ref.onVisualPositionChanged,
-      restorePosition = _ref.restorePosition,
-      _fixWrapperPosition = _ref._fixWrapperPosition;
+    let {
+      position,
+      container,
+      visualContainer,
+      $root,
+      $content,
+      $wrapper,
+      onPositioned,
+      onVisualPositionChanged,
+      restorePosition,
+      _fixWrapperPosition
+    } = _ref;
     this._props = {
       position,
       container,
@@ -97,7 +99,7 @@ var OverlayPositionController = /*#__PURE__*/function () {
     this._shouldRenderContentInitialPosition = value || !this._visualPosition;
   };
   _proto.openingHandled = function openingHandled() {
-    var shouldRestorePosition = this._props.restorePosition;
+    const shouldRestorePosition = this._props.restorePosition;
     this.restorePositionOnNextRender(shouldRestorePosition);
   };
   _proto.updatePosition = function updatePosition(positionProp) {
@@ -106,13 +108,13 @@ var OverlayPositionController = /*#__PURE__*/function () {
     this.updateVisualContainer();
   };
   _proto.updateContainer = function updateContainer() {
-    var containerProp = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._props.container;
+    let containerProp = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._props.container;
     this._props.container = containerProp;
     this._$markupContainer = containerProp ? (0, _renderer.default)(containerProp) : _swatch_container.default.getSwatchContainer(this._$root);
     this.updateVisualContainer(this._props.visualContainer);
   };
   _proto.updateVisualContainer = function updateVisualContainer() {
-    var visualContainer = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._props.visualContainer;
+    let visualContainer = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._props.visualContainer;
     this._props.visualContainer = visualContainer;
     this._$visualContainer = this._getVisualContainer();
   };
@@ -138,8 +140,8 @@ var OverlayPositionController = /*#__PURE__*/function () {
     }
   };
   _proto.styleWrapperPosition = function styleWrapperPosition() {
-    var useFixed = (0, _type.isWindow)(this.$visualContainer.get(0)) || this._props._fixWrapperPosition;
-    var positionStyle = useFixed ? 'fixed' : 'absolute';
+    const useFixed = (0, _type.isWindow)(this.$visualContainer.get(0)) || this._props._fixWrapperPosition;
+    const positionStyle = useFixed ? 'fixed' : 'absolute';
     this._$wrapper.css('position', positionStyle);
   };
   _proto._updateVisualPositionValue = function _updateVisualPositionValue() {
@@ -149,17 +151,17 @@ var OverlayPositionController = /*#__PURE__*/function () {
   _proto._renderContentInitialPosition = function _renderContentInitialPosition() {
     this._renderBoundaryOffset();
     (0, _translator.resetPosition)(this._$content);
-    var wrapperOverflow = this._$wrapper.css('overflow');
+    const wrapperOverflow = this._$wrapper.css('overflow');
     this._$wrapper.css('overflow', 'hidden');
-    var resultPosition = _position.default.setup(this._$content, this._position);
+    const resultPosition = _position.default.setup(this._$content, this._position);
     this._$wrapper.css('overflow', wrapperOverflow);
     this._initialPosition = resultPosition;
     this.detectVisualPositionChange();
   };
   _proto._raisePositionedEvents = function _raisePositionedEvents(event) {
-    var previousPosition = this._previousVisualPosition;
-    var newPosition = this._visualPosition;
-    var isVisualPositionChanged = (previousPosition === null || previousPosition === void 0 ? void 0 : previousPosition.top) !== newPosition.top || (previousPosition === null || previousPosition === void 0 ? void 0 : previousPosition.left) !== newPosition.left;
+    const previousPosition = this._previousVisualPosition;
+    const newPosition = this._visualPosition;
+    const isVisualPositionChanged = (previousPosition === null || previousPosition === void 0 ? void 0 : previousPosition.top) !== newPosition.top || (previousPosition === null || previousPosition === void 0 ? void 0 : previousPosition.left) !== newPosition.left;
     if (isVisualPositionChanged) {
       this._props.onVisualPositionChanged({
         previousPosition: previousPosition,
@@ -173,16 +175,16 @@ var OverlayPositionController = /*#__PURE__*/function () {
   };
   _proto._renderBoundaryOffset = function _renderBoundaryOffset() {
     var _this$_position;
-    var boundaryOffset = (_this$_position = this._position) !== null && _this$_position !== void 0 ? _this$_position : {
+    const boundaryOffset = (_this$_position = this._position) !== null && _this$_position !== void 0 ? _this$_position : {
       boundaryOffset: OVERLAY_DEFAULT_BOUNDARY_OFFSET
     };
     this._$content.css('margin', "".concat(boundaryOffset.v, "px ").concat(boundaryOffset.h, "px"));
   };
   _proto._getVisualContainer = function _getVisualContainer() {
     var _this$_props$position, _this$_props$position2;
-    var containerProp = this._props.container;
-    var visualContainerProp = this._props.visualContainer;
-    var positionOf = (0, _type.isEvent)((_this$_props$position = this._props.position) === null || _this$_props$position === void 0 ? void 0 : _this$_props$position.of) ? this._props.position.of.target : (_this$_props$position2 = this._props.position) === null || _this$_props$position2 === void 0 ? void 0 : _this$_props$position2.of;
+    const containerProp = this._props.container;
+    const visualContainerProp = this._props.visualContainer;
+    const positionOf = (0, _type.isEvent)((_this$_props$position = this._props.position) === null || _this$_props$position === void 0 ? void 0 : _this$_props$position.of) ? this._props.position.of.target : (_this$_props$position2 = this._props.position) === null || _this$_props$position2 === void 0 ? void 0 : _this$_props$position2.of;
     if (visualContainerProp) {
       return (0, _renderer.default)(visualContainerProp);
     }
@@ -195,7 +197,7 @@ var OverlayPositionController = /*#__PURE__*/function () {
     return (0, _renderer.default)(window);
   };
   _proto._normalizePosition = function _normalizePosition(positionProp) {
-    var defaultPositionConfig = {
+    const defaultPositionConfig = {
       boundaryOffset: OVERLAY_DEFAULT_BOUNDARY_OFFSET
     };
     if ((0, _type.isDefined)(positionProp)) {
@@ -212,30 +214,30 @@ var OverlayPositionController = /*#__PURE__*/function () {
   };
   _createClass(OverlayPositionController, [{
     key: "$container",
-    get: function get() {
+    get: function () {
       this.updateContainer(); // NOTE: swatch classes can be updated runtime
 
       return this._$markupContainer;
     }
   }, {
     key: "$visualContainer",
-    get: function get() {
+    get: function () {
       return this._$visualContainer;
     }
   }, {
     key: "position",
-    get: function get() {
+    get: function () {
       return this._position;
     }
   }, {
     key: "fixWrapperPosition",
-    set: function set(fixWrapperPosition) {
+    set: function (fixWrapperPosition) {
       this._props._fixWrapperPosition = fixWrapperPosition;
       this.styleWrapperPosition();
     }
   }, {
     key: "restorePosition",
-    set: function set(restorePosition) {
+    set: function (restorePosition) {
       this._props.restorePosition = restorePosition;
     }
   }]);

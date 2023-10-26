@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/file_management/custom_provider.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,16 +16,14 @@ var _provider_base = _interopRequireDefault(require("./provider_base"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var CustomFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
+let CustomFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   _inheritsLoose(CustomFileSystemProvider, _FileSystemProviderBa);
   function CustomFileSystemProvider(options) {
     var _this;
     options = (0, _common.ensureDefined)(options, {});
     _this = _FileSystemProviderBa.call(this, options) || this;
     _this._hasSubDirsGetter = (0, _data.compileGetter)(options.hasSubDirectoriesExpr || 'hasSubDirectories');
-    _this._getItemsFunction = _this._ensureFunction(options.getItems, function () {
-      return [];
-    });
+    _this._getItemsFunction = _this._ensureFunction(options.getItems, () => []);
     _this._renameItemFunction = _this._ensureFunction(options.renameItem);
     _this._createDirectoryFunction = _this._ensureFunction(options.createDirectory);
     _this._deleteItemFunction = _this._ensureFunction(options.deleteItem);
@@ -39,76 +37,38 @@ var CustomFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   }
   var _proto = CustomFileSystemProvider.prototype;
   _proto.getItems = function getItems(parentDir) {
-    var _this2 = this;
-    var pathInfo = parentDir.getFullPathInfo();
-    return this._executeActionAsDeferred(function () {
-      return _this2._getItemsFunction(parentDir);
-    }, true).then(function (dataItems) {
-      return _this2._convertDataObjectsToFileItems(dataItems, pathInfo);
-    });
+    const pathInfo = parentDir.getFullPathInfo();
+    return this._executeActionAsDeferred(() => this._getItemsFunction(parentDir), true).then(dataItems => this._convertDataObjectsToFileItems(dataItems, pathInfo));
   };
   _proto.renameItem = function renameItem(item, name) {
-    var _this3 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this3._renameItemFunction(item, name);
-    });
+    return this._executeActionAsDeferred(() => this._renameItemFunction(item, name));
   };
   _proto.createDirectory = function createDirectory(parentDir, name) {
-    var _this4 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this4._createDirectoryFunction(parentDir, name);
-    });
+    return this._executeActionAsDeferred(() => this._createDirectoryFunction(parentDir, name));
   };
   _proto.deleteItems = function deleteItems(items) {
-    var _this5 = this;
-    return items.map(function (item) {
-      return _this5._executeActionAsDeferred(function () {
-        return _this5._deleteItemFunction(item);
-      });
-    });
+    return items.map(item => this._executeActionAsDeferred(() => this._deleteItemFunction(item)));
   };
   _proto.moveItems = function moveItems(items, destinationDirectory) {
-    var _this6 = this;
-    return items.map(function (item) {
-      return _this6._executeActionAsDeferred(function () {
-        return _this6._moveItemFunction(item, destinationDirectory);
-      });
-    });
+    return items.map(item => this._executeActionAsDeferred(() => this._moveItemFunction(item, destinationDirectory)));
   };
   _proto.copyItems = function copyItems(items, destinationFolder) {
-    var _this7 = this;
-    return items.map(function (item) {
-      return _this7._executeActionAsDeferred(function () {
-        return _this7._copyItemFunction(item, destinationFolder);
-      });
-    });
+    return items.map(item => this._executeActionAsDeferred(() => this._copyItemFunction(item, destinationFolder)));
   };
   _proto.uploadFileChunk = function uploadFileChunk(fileData, chunksInfo, destinationDirectory) {
-    var _this8 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this8._uploadFileChunkFunction(fileData, chunksInfo, destinationDirectory);
-    });
+    return this._executeActionAsDeferred(() => this._uploadFileChunkFunction(fileData, chunksInfo, destinationDirectory));
   };
   _proto.abortFileUpload = function abortFileUpload(fileData, chunksInfo, destinationDirectory) {
-    var _this9 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this9._abortFileUploadFunction(fileData, chunksInfo, destinationDirectory);
-    });
+    return this._executeActionAsDeferred(() => this._abortFileUploadFunction(fileData, chunksInfo, destinationDirectory));
   };
   _proto.downloadItems = function downloadItems(items) {
-    var _this10 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this10._downloadItemsFunction(items);
-    });
+    return this._executeActionAsDeferred(() => this._downloadItemsFunction(items));
   };
   _proto.getItemsContent = function getItemsContent(items) {
-    var _this11 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this11._getItemsContentFunction(items);
-    });
+    return this._executeActionAsDeferred(() => this._getItemsContentFunction(items));
   };
   _proto._hasSubDirs = function _hasSubDirs(dataObj) {
-    var hasSubDirs = this._hasSubDirsGetter(dataObj);
+    const hasSubDirs = this._hasSubDirsGetter(dataObj);
     return typeof hasSubDirs === 'boolean' ? hasSubDirs : true;
   };
   _proto._getKeyExpr = function _getKeyExpr(options) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/menu/ui.submenu.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,9 +19,9 @@ var _context_menu = _interopRequireDefault(require("../context_menu"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS = 'dx-context-menu-content-delimiter';
-var DX_SUBMENU_CLASS = 'dx-submenu';
-var Submenu = /*#__PURE__*/function (_ContextMenu) {
+const DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS = 'dx-context-menu-content-delimiter';
+const DX_SUBMENU_CLASS = 'dx-submenu';
+let Submenu = /*#__PURE__*/function (_ContextMenu) {
   _inheritsLoose(Submenu, _ContextMenu);
   function Submenu() {
     return _ContextMenu.apply(this, arguments) || this;
@@ -43,7 +43,7 @@ var Submenu = /*#__PURE__*/function (_ContextMenu) {
   _proto._renderContentImpl = function _renderContentImpl() {
     this._renderContextMenuOverlay();
     _ContextMenu.prototype._renderContentImpl.call(this);
-    var node = this._dataAdapter.getNodeByKey(this.option('_parentKey'));
+    const node = this._dataAdapter.getNodeByKey(this.option('_parentKey'));
     node && this._renderItems(this._getChildNodes(node));
     this._renderDelimiter();
   };
@@ -69,7 +69,7 @@ var Submenu = /*#__PURE__*/function (_ContextMenu) {
     return this.option('orientation') === 'horizontal';
   };
   _proto._hoverStartHandler = function _hoverStartHandler(e) {
-    var hoverStartAction = this.option('onHoverStart');
+    const hoverStartAction = this.option('onHoverStart');
     hoverStartAction(e);
     _ContextMenu.prototype._hoverStartHandler.call(this, e);
     this._toggleFocusClass(true, e.currentTarget);
@@ -104,22 +104,22 @@ var Submenu = /*#__PURE__*/function (_ContextMenu) {
     if (!this.$contentDelimiter) {
       return;
     }
-    var $submenu = this._itemContainer().children(".".concat(DX_SUBMENU_CLASS)).eq(0);
-    var $rootItem = this.option('position').of.find('.dx-context-menu-container-border');
-    var position = {
+    const $submenu = this._itemContainer().children(".".concat(DX_SUBMENU_CLASS)).eq(0);
+    const $rootItem = this.option('position').of.find('.dx-context-menu-container-border');
+    const position = {
       of: $submenu,
       precise: true
     };
-    var containerOffset = arg.position;
-    var vLocation = containerOffset.v.location;
-    var hLocation = containerOffset.h.location;
-    var rootOffset = $rootItem.offset();
-    var offsetLeft = Math.round(rootOffset.left);
-    var offsetTop = Math.round(rootOffset.top);
-    var rootWidth = (0, _size.getWidth)($rootItem);
-    var rootHeight = (0, _size.getHeight)($rootItem);
-    var submenuWidth = (0, _size.getWidth)($submenu);
-    var submenuHeight = (0, _size.getHeight)($submenu);
+    const containerOffset = arg.position;
+    const vLocation = containerOffset.v.location;
+    const hLocation = containerOffset.h.location;
+    const rootOffset = $rootItem.offset();
+    const offsetLeft = Math.round(rootOffset.left);
+    const offsetTop = Math.round(rootOffset.top);
+    const rootWidth = (0, _size.getWidth)($rootItem);
+    const rootHeight = (0, _size.getHeight)($rootItem);
+    const submenuWidth = (0, _size.getWidth)($submenu);
+    const submenuHeight = (0, _size.getHeight)($submenu);
     this.$contentDelimiter.css('display', 'block');
     (0, _size.setWidth)(this.$contentDelimiter, this._isMenuHorizontal() ? rootWidth < submenuWidth ? rootWidth : submenuWidth : 3);
     (0, _size.setHeight)(this.$contentDelimiter, this._isMenuHorizontal() ? 3 : rootHeight < submenuHeight ? rootHeight : submenuHeight);

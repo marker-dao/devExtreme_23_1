@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/filter/m_filter_panel.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,40 +24,37 @@ var _m_accessibility = require("../m_accessibility");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FILTER_PANEL_CLASS = 'filter-panel';
-var FILTER_PANEL_TEXT_CLASS = "".concat(FILTER_PANEL_CLASS, "-text");
-var FILTER_PANEL_CHECKBOX_CLASS = "".concat(FILTER_PANEL_CLASS, "-checkbox");
-var FILTER_PANEL_CLEAR_FILTER_CLASS = "".concat(FILTER_PANEL_CLASS, "-clear-filter");
-var FILTER_PANEL_LEFT_CONTAINER = "".concat(FILTER_PANEL_CLASS, "-left");
-var FILTER_PANEL_TARGET = 'filterPanel';
-var FilterPanelView = _m_modules.default.View.inherit({
+const FILTER_PANEL_CLASS = 'filter-panel';
+const FILTER_PANEL_TEXT_CLASS = "".concat(FILTER_PANEL_CLASS, "-text");
+const FILTER_PANEL_CHECKBOX_CLASS = "".concat(FILTER_PANEL_CLASS, "-checkbox");
+const FILTER_PANEL_CLEAR_FILTER_CLASS = "".concat(FILTER_PANEL_CLASS, "-clear-filter");
+const FILTER_PANEL_LEFT_CONTAINER = "".concat(FILTER_PANEL_CLASS, "-left");
+const FILTER_PANEL_TARGET = 'filterPanel';
+const FilterPanelView = _m_modules.default.View.inherit({
   isVisible() {
     return this.option('filterPanel.visible') && this.getController('data').dataSource();
   },
   init() {
-    var _this = this;
-    this.getController('data').dataSourceChanged.add(function () {
-      return _this.render();
-    });
+    this.getController('data').dataSourceChanged.add(() => this.render());
     this._columnsController = this.getController('columns');
   },
   _renderCore() {
-    var $element = this.element();
+    const $element = this.element();
     $element.empty();
-    var isColumnsDefined = !!this._columnsController.getColumns().length;
+    const isColumnsDefined = !!this._columnsController.getColumns().length;
     if (!isColumnsDefined) {
       return;
     }
     $element.addClass(this.addWidgetPrefix(FILTER_PANEL_CLASS));
-    var $leftContainer = (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(FILTER_PANEL_LEFT_CONTAINER)).appendTo($element);
+    const $leftContainer = (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(FILTER_PANEL_LEFT_CONTAINER)).appendTo($element);
     this._renderFilterBuilderText($element, $leftContainer);
   },
   _renderFilterBuilderText($element, $leftContainer) {
-    var $filterElement = this._getFilterElement();
-    var $textElement = this._getTextElement();
+    const $filterElement = this._getFilterElement();
+    const $textElement = this._getTextElement();
     if (this.option('filterValue') || this._filterValueBuffer) {
-      var $checkElement = this._getCheckElement();
-      var $removeButtonElement = this._getRemoveButtonElement();
+      const $checkElement = this._getCheckElement();
+      const $removeButtonElement = this._getRemoveButtonElement();
       $leftContainer.append($checkElement).append($filterElement).append($textElement);
       $element.append($removeButtonElement);
       return;
@@ -65,8 +62,8 @@ var FilterPanelView = _m_modules.default.View.inherit({
     $leftContainer.append($filterElement).append($textElement);
   },
   _getCheckElement() {
-    var that = this;
-    var $element = (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(FILTER_PANEL_CHECKBOX_CLASS));
+    const that = this;
+    const $element = (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(FILTER_PANEL_CHECKBOX_CLASS));
     that._createComponent($element, _check_box.default, {
       value: that.option('filterPanel.filterEnabled'),
       onValueChanged(e) {
@@ -77,27 +74,23 @@ var FilterPanelView = _m_modules.default.View.inherit({
     return $element;
   },
   _getFilterElement() {
-    var that = this;
-    var $element = (0, _renderer.default)('<div>').addClass('dx-icon-filter');
-    _events_engine.default.on($element, 'click', function () {
-      return that._showFilterBuilder();
-    });
-    (0, _m_accessibility.registerKeyboardAction)('filterPanel', that, $element, undefined, function () {
-      return that._showFilterBuilder();
-    });
+    const that = this;
+    const $element = (0, _renderer.default)('<div>').addClass('dx-icon-filter');
+    _events_engine.default.on($element, 'click', () => that._showFilterBuilder());
+    (0, _m_accessibility.registerKeyboardAction)('filterPanel', that, $element, undefined, () => that._showFilterBuilder());
     that._addTabIndexToElement($element);
     return $element;
   },
   _getTextElement() {
-    var that = this;
-    var $textElement = (0, _renderer.default)('<div>').addClass(that.addWidgetPrefix(FILTER_PANEL_TEXT_CLASS));
-    var filterText;
-    var filterValue = that.option('filterValue');
+    const that = this;
+    const $textElement = (0, _renderer.default)('<div>').addClass(that.addWidgetPrefix(FILTER_PANEL_TEXT_CLASS));
+    let filterText;
+    const filterValue = that.option('filterValue');
     if (filterValue) {
-      (0, _deferred.when)(that.getFilterText(filterValue, that.getController('filterSync').getCustomFilterOperations())).done(function (filterText) {
-        var customizeText = that.option('filterPanel.customizeText');
+      (0, _deferred.when)(that.getFilterText(filterValue, that.getController('filterSync').getCustomFilterOperations())).done(filterText => {
+        const customizeText = that.option('filterPanel.customizeText');
         if (customizeText) {
-          var customText = customizeText({
+          const customText = customizeText({
             component: that.component,
             filterValue,
             text: filterText
@@ -112,12 +105,8 @@ var FilterPanelView = _m_modules.default.View.inherit({
       filterText = that.option('filterPanel.texts.createFilter');
       $textElement.text(filterText);
     }
-    _events_engine.default.on($textElement, 'click', function () {
-      return that._showFilterBuilder();
-    });
-    (0, _m_accessibility.registerKeyboardAction)('filterPanel', that, $textElement, undefined, function () {
-      return that._showFilterBuilder();
-    });
+    _events_engine.default.on($textElement, 'click', () => that._showFilterBuilder());
+    (0, _m_accessibility.registerKeyboardAction)('filterPanel', that, $textElement, undefined, () => that._showFilterBuilder());
     that._addTabIndexToElement($textElement);
     return $textElement;
   },
@@ -125,11 +114,9 @@ var FilterPanelView = _m_modules.default.View.inherit({
     this.option('filterBuilderPopup.visible', true);
   },
   _getRemoveButtonElement() {
-    var that = this;
-    var clearFilterValue = function clearFilterValue() {
-      return that.option('filterValue', null);
-    };
-    var $element = (0, _renderer.default)('<div>').addClass(that.addWidgetPrefix(FILTER_PANEL_CLEAR_FILTER_CLASS)).text(that.option('filterPanel.texts.clearFilter'));
+    const that = this;
+    const clearFilterValue = () => that.option('filterValue', null);
+    const $element = (0, _renderer.default)('<div>').addClass(that.addWidgetPrefix(FILTER_PANEL_CLEAR_FILTER_CLASS)).text(that.option('filterPanel.texts.clearFilter'));
     _events_engine.default.on($element, 'click', clearFilterValue);
     (0, _m_accessibility.registerKeyboardAction)('filterPanel', this, $element, undefined, clearFilterValue);
     that._addTabIndexToElement($element);
@@ -137,7 +124,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
   },
   _addTabIndexToElement($element) {
     if (!this.option('useLegacyKeyboardNavigation')) {
-      var tabindex = this.option('tabindex') || 0;
+      const tabindex = this.option('tabindex') || 0;
       $element.attr('tabindex', tabindex);
     }
   },
@@ -157,7 +144,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
     }
   },
   _getConditionText(fieldText, operationText, valueText) {
-    var result = "[".concat(fieldText, "] ").concat(operationText);
+    let result = "[".concat(fieldText, "] ").concat(operationText);
     if ((0, _type.isDefined)(valueText)) {
       result += valueText;
     }
@@ -167,19 +154,18 @@ var FilterPanelView = _m_modules.default.View.inherit({
     return Array.isArray(value) ? "('".concat(value.join('\', \''), "')") : " '".concat(value, "'");
   },
   _getValueText(field, customOperation, value) {
-    var _this2 = this;
     // @ts-expect-error
-    var deferred = new _deferred.Deferred();
-    var hasCustomOperation = customOperation && customOperation.customizeText;
+    const deferred = new _deferred.Deferred();
+    const hasCustomOperation = customOperation && customOperation.customizeText;
     if ((0, _type.isDefined)(value) || hasCustomOperation) {
       if (!hasCustomOperation && field.lookup) {
-        (0, _utils.getCurrentLookupValueText)(field, value, function (data) {
-          deferred.resolve(_this2._getValueMaskedText(data));
+        (0, _utils.getCurrentLookupValueText)(field, value, data => {
+          deferred.resolve(this._getValueMaskedText(data));
         });
       } else {
-        var displayValue = Array.isArray(value) ? value : _m_utils.default.getDisplayValue(field, value, null);
-        (0, _deferred.when)((0, _utils.getCurrentValueText)(field, displayValue, customOperation, FILTER_PANEL_TARGET)).done(function (data) {
-          deferred.resolve(_this2._getValueMaskedText(data));
+        const displayValue = Array.isArray(value) ? value : _m_utils.default.getDisplayValue(field, value, null);
+        (0, _deferred.when)((0, _utils.getCurrentValueText)(field, displayValue, customOperation, FILTER_PANEL_TARGET)).done(data => {
+          deferred.resolve(this._getValueMaskedText(data));
         });
       }
     } else {
@@ -188,15 +174,15 @@ var FilterPanelView = _m_modules.default.View.inherit({
     return deferred.promise();
   },
   getConditionText(filterValue, options) {
-    var that = this;
-    var operation = filterValue[1];
+    const that = this;
+    const operation = filterValue[1];
     // @ts-expect-error
-    var deferred = new _deferred.Deferred();
-    var customOperation = (0, _utils.getCustomOperation)(options.customOperations, operation);
-    var operationText;
-    var field = (0, _utils.getField)(filterValue[0], options.columns);
-    var fieldText = field.caption || '';
-    var value = filterValue[2];
+    const deferred = new _deferred.Deferred();
+    const customOperation = (0, _utils.getCustomOperation)(options.customOperations, operation);
+    let operationText;
+    const field = (0, _utils.getField)(filterValue[0], options.columns);
+    const fieldText = field.caption || '';
+    const value = filterValue[2];
     if (customOperation) {
       operationText = customOperation.caption || (0, _inflector.captionize)(customOperation.name);
     } else if (value === null) {
@@ -204,18 +190,18 @@ var FilterPanelView = _m_modules.default.View.inherit({
     } else {
       operationText = (0, _utils.getCaptionByOperation)(operation, options.filterOperationDescriptions);
     }
-    this._getValueText(field, customOperation, value).done(function (valueText) {
+    this._getValueText(field, customOperation, value).done(valueText => {
       deferred.resolve(that._getConditionText(fieldText, operationText, valueText));
     });
     return deferred;
   },
   getGroupText(filterValue, options, isInnerGroup) {
-    var that = this;
+    const that = this;
     // @ts-expect-error
-    var result = new _deferred.Deferred();
-    var textParts = [];
-    var groupValue = (0, _utils.getGroupValue)(filterValue);
-    filterValue.forEach(function (item) {
+    const result = new _deferred.Deferred();
+    const textParts = [];
+    const groupValue = (0, _utils.getGroupValue)(filterValue);
+    filterValue.forEach(item => {
       if ((0, _utils.isCondition)(item)) {
         textParts.push(that.getConditionText(item, options));
       } else if ((0, _utils.isGroup)(item)) {
@@ -223,12 +209,12 @@ var FilterPanelView = _m_modules.default.View.inherit({
       }
     });
     _deferred.when.apply(this, textParts).done(function () {
-      var text;
+      let text;
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
       if (groupValue.startsWith('!')) {
-        var groupText = options.groupOperationDescriptions["not".concat(groupValue.substring(1, 2).toUpperCase()).concat(groupValue.substring(2))].split(' ');
+        const groupText = options.groupOperationDescriptions["not".concat(groupValue.substring(1, 2).toUpperCase()).concat(groupValue.substring(2))].split(' ');
         text = "".concat(groupText[0], " ").concat(args[0]);
       } else {
         text = args.join(" ".concat(options.groupOperationDescriptions[groupValue], " "));
@@ -241,8 +227,8 @@ var FilterPanelView = _m_modules.default.View.inherit({
     return result;
   },
   getFilterText(filterValue, customOperations) {
-    var that = this;
-    var options = {
+    const that = this;
+    const options = {
       customOperations,
       columns: that.getController('columns').getFilteringColumns(),
       filterOperationDescriptions: that.option('filterBuilder.filterOperationDescriptions'),
@@ -251,7 +237,7 @@ var FilterPanelView = _m_modules.default.View.inherit({
     return (0, _utils.isCondition)(filterValue) ? that.getConditionText(filterValue, options) : that.getGroupText(filterValue, options);
   }
 });
-var filterPanelModule = {
+const filterPanelModule = {
   defaultOptions() {
     return {
       filterPanel: {

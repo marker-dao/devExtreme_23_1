@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/data_grid/m_widget_base.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,14 +34,14 @@ var _ui = _interopRequireDefault(require("../../../ui/widget/ui.widget"));
 var _m_utils = _interopRequireDefault(require("../../grids/grid_core/m_utils"));
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var DATAGRID_ROW_SELECTOR = '.dx-row';
-var DATAGRID_DEPRECATED_TEMPLATE_WARNING = 'Specifying grid templates with the jQuery selector name is now deprecated. Use the DOM Node or the jQuery object that references this selector instead.';
+const DATAGRID_ROW_SELECTOR = '.dx-row';
+const DATAGRID_DEPRECATED_TEMPLATE_WARNING = 'Specifying grid templates with the jQuery selector name is now deprecated. Use the DOM Node or the jQuery object that references this selector instead.';
 _m_core.default.registerModulesOrder(['stateStoring', 'columns', 'selection', 'editorFactory', 'columnChooser', 'grouping', 'editing', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'gridView']);
-var DataGrid = _ui.default.inherit({
+const DataGrid = _ui.default.inherit({
   _activeStateUnit: DATAGRID_ROW_SELECTOR,
   _getDefaultOptions() {
-    var that = this;
-    var result = that.callBase();
+    const that = this;
+    const result = that.callBase();
     (0, _iterator.each)(_m_core.default.modules, function () {
       if ((0, _type.isFunction)(this.defaultOptions)) {
         (0, _extend.extend)(true, result, this.defaultOptions());
@@ -130,7 +130,7 @@ var DataGrid = _ui.default.inherit({
     }]);
   },
   _init() {
-    var that = this;
+    const that = this;
     that.callBase();
     _m_utils.default.logHeaderFilterDeprecatedWarningIfNeed(that);
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
@@ -139,7 +139,7 @@ var DataGrid = _ui.default.inherit({
   },
   _clean: _common.noop,
   _optionChanged(args) {
-    var that = this;
+    const that = this;
     _m_core.default.callModuleItemsMethod(that, 'optionChanged', [args]);
     if (!args.handled) {
       that.callBase(args);
@@ -161,13 +161,13 @@ var DataGrid = _ui.default.inherit({
     this.getView('gridView').update();
   },
   _renderContent() {
-    var that = this;
-    (0, _common.deferRender)(function () {
+    const that = this;
+    (0, _common.deferRender)(() => {
       that._renderContentImpl();
     });
   },
   _getTemplate(templateName) {
-    var template = templateName;
+    let template = templateName;
     if ((0, _type.isString)(template) && template.startsWith('#')) {
       template = (0, _renderer.default)(templateName);
       _console.logger.warn(DATAGRID_DEPRECATED_TEMPLATE_WARNING);
@@ -175,7 +175,7 @@ var DataGrid = _ui.default.inherit({
     return this.callBase(template);
   },
   _dispose() {
-    var that = this;
+    const that = this;
     that.callBase();
     _m_core.default.callModuleItemsMethod(that, 'dispose');
   },
@@ -183,12 +183,12 @@ var DataGrid = _ui.default.inherit({
     return this.getController('data').isReady();
   },
   beginUpdate() {
-    var that = this;
+    const that = this;
     that.callBase();
     _m_core.default.callModuleItemsMethod(that, 'beginUpdate');
   },
   endUpdate() {
-    var that = this;
+    const that = this;
     _m_core.default.callModuleItemsMethod(that, 'endUpdate');
     that.callBase();
   },

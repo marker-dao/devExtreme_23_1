@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/angular/component_registrator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,43 +29,35 @@ var _inflector = require("../../core/utils/inflector");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line no-restricted-imports
 
-var ITEM_ALIAS_ATTRIBUTE_NAME = 'dxItemAlias';
-var SKIP_APPLY_ACTION_CATEGORY = 'rendering';
-var NG_MODEL_OPTION = 'value';
+const ITEM_ALIAS_ATTRIBUTE_NAME = 'dxItemAlias';
+const SKIP_APPLY_ACTION_CATEGORY = 'rendering';
+const NG_MODEL_OPTION = 'value';
 if (_angular.default) {
-  var safeApply = function safeApply(func, scope) {
+  const safeApply = (func, scope) => {
     if (scope.$root.$$phase) {
       return func(scope);
     } else {
-      return scope.$apply(function () {
-        return func(scope);
-      });
+      return scope.$apply(() => func(scope));
     }
   };
-  var getClassMethod = function getClassMethod(initClass, methodName) {
-    var hasParentProperty = Object.prototype.hasOwnProperty.bind(initClass)('parent');
-    var isES6Class = !hasParentProperty && initClass.parent;
+  const getClassMethod = (initClass, methodName) => {
+    const hasParentProperty = Object.prototype.hasOwnProperty.bind(initClass)('parent');
+    const isES6Class = !hasParentProperty && initClass.parent;
     if (isES6Class) {
-      var baseClass = Object.getPrototypeOf(initClass);
-      return baseClass.prototype[methodName] ? function () {
-        return baseClass.prototype[methodName]();
-      } : getClassMethod(baseClass, methodName);
+      const baseClass = Object.getPrototypeOf(initClass);
+      return baseClass.prototype[methodName] ? () => baseClass.prototype[methodName]() : getClassMethod(baseClass, methodName);
     } else {
-      var method = initClass.parent.prototype[methodName];
+      const method = initClass.parent.prototype[methodName];
       if (method) {
-        return function () {
-          return method();
-        };
+        return () => method();
       }
       if (!method || !initClass.parent.subclassOf) {
-        return function () {
-          return undefined;
-        };
+        return () => undefined;
       }
       return getClassMethod(initClass.parent, methodName);
     }
   };
-  var ComponentBuilder = _class.default.inherit({
+  let ComponentBuilder = _class.default.inherit({
     ctor(options) {
       this._componentDisposing = (0, _callbacks.default)();
       this._optionChangedCallbacks = (0, _callbacks.default)();
@@ -87,20 +79,18 @@ if (_angular.default) {
       }
     },
     _addOptionsStringWatcher(optionsString) {
-      var _this = this;
-      var clearOptionsStringWatcher = this._scope.$watch(optionsString, function (newOptions) {
+      const clearOptionsStringWatcher = this._scope.$watch(optionsString, newOptions => {
         if (!newOptions) {
           return;
         }
         clearOptionsStringWatcher();
-        _this._normalizeOptions(newOptions);
-        _this._initComponentBindings();
-        _this._component.option(_this._evalOptions(_this._scope));
+        this._normalizeOptions(newOptions);
+        this._initComponentBindings();
+        this._component.option(this._evalOptions(this._scope));
       });
       this._componentDisposing.add(clearOptionsStringWatcher);
     },
     _normalizeOptions(options) {
-      var _this2 = this;
       this._ngOptions = (0, _extend.extendFromObject)({}, options);
       if (!options) {
         return;
@@ -109,9 +99,9 @@ if (_angular.default) {
         this._ngOptions.bindingOptions = options.bindingOptions;
       }
       if (options.bindingOptions) {
-        (0, _iterator.each)(options.bindingOptions, function (key, value) {
+        (0, _iterator.each)(options.bindingOptions, (key, value) => {
           if ((0, _type.type)(value) === 'string') {
-            _this2._ngOptions.bindingOptions[key] = {
+            this._ngOptions.bindingOptions[key] = {
               dataPath: value
             };
           }
@@ -124,34 +114,32 @@ if (_angular.default) {
       this._handleDigestPhase();
     },
     _handleDigestPhase() {
-      var _this3 = this;
-      var beginUpdate = function beginUpdate() {
-        _this3._component.beginUpdate();
+      const beginUpdate = () => {
+        this._component.beginUpdate();
       };
-      var endUpdate = function endUpdate() {
-        _this3._component.endUpdate();
+      const endUpdate = () => {
+        this._component.endUpdate();
       };
       this._digestCallbacks.begin.add(beginUpdate);
       this._digestCallbacks.end.add(endUpdate);
-      this._componentDisposing.add(function () {
-        _this3._digestCallbacks.begin.remove(beginUpdate);
-        _this3._digestCallbacks.end.remove(endUpdate);
+      this._componentDisposing.add(() => {
+        this._digestCallbacks.begin.remove(beginUpdate);
+        this._digestCallbacks.end.remove(endUpdate);
       });
     },
     _initComponentBindings() {
-      var _this4 = this;
-      var optionDependencies = {};
+      const optionDependencies = {};
       if (!this._ngOptions.bindingOptions) {
         return;
       }
-      (0, _iterator.each)(this._ngOptions.bindingOptions, function (optionPath, value) {
-        var separatorIndex = optionPath.search(/\[|\./);
-        var optionForSubscribe = separatorIndex > -1 ? optionPath.substring(0, separatorIndex) : optionPath;
-        var prevWatchMethod;
-        var clearWatcher;
-        var valuePath = value.dataPath;
-        var deepWatch = true;
-        var forcePlainWatchMethod = false;
+      (0, _iterator.each)(this._ngOptions.bindingOptions, (optionPath, value) => {
+        const separatorIndex = optionPath.search(/\[|\./);
+        const optionForSubscribe = separatorIndex > -1 ? optionPath.substring(0, separatorIndex) : optionPath;
+        let prevWatchMethod;
+        let clearWatcher;
+        const valuePath = value.dataPath;
+        let deepWatch = true;
+        let forcePlainWatchMethod = false;
         if (value.deep !== undefined) {
           forcePlainWatchMethod = deepWatch = !!value.deep;
         }
@@ -159,79 +147,79 @@ if (_angular.default) {
           optionDependencies[optionForSubscribe] = {};
         }
         optionDependencies[optionForSubscribe][optionPath] = valuePath;
-        var updateWatcher = function updateWatcher() {
-          var watchCallback = function watchCallback(newValue, oldValue) {
-            if (_this4._ngLocker.locked(optionPath)) {
+        const updateWatcher = () => {
+          const watchCallback = (newValue, oldValue) => {
+            if (this._ngLocker.locked(optionPath)) {
               return;
             }
-            _this4._ngLocker.obtain(optionPath);
-            _this4._component.option(optionPath, newValue);
+            this._ngLocker.obtain(optionPath);
+            this._component.option(optionPath, newValue);
             updateWatcher();
-            if ((0, _comparator.equals)(oldValue, newValue) && _this4._ngLocker.locked(optionPath)) {
-              _this4._ngLocker.release(optionPath);
+            if ((0, _comparator.equals)(oldValue, newValue) && this._ngLocker.locked(optionPath)) {
+              this._ngLocker.release(optionPath);
             }
           };
-          var watchMethod = Array.isArray(_this4._scope.$eval(valuePath)) && !forcePlainWatchMethod ? '$watchCollection' : '$watch';
+          const watchMethod = Array.isArray(this._scope.$eval(valuePath)) && !forcePlainWatchMethod ? '$watchCollection' : '$watch';
           if (prevWatchMethod !== watchMethod) {
             if (clearWatcher) {
               clearWatcher();
             }
-            clearWatcher = _this4._scope[watchMethod](valuePath, watchCallback, deepWatch);
+            clearWatcher = this._scope[watchMethod](valuePath, watchCallback, deepWatch);
             prevWatchMethod = watchMethod;
           }
         };
         updateWatcher();
-        _this4._componentDisposing.add(clearWatcher);
+        this._componentDisposing.add(clearWatcher);
       });
-      this._optionChangedCallbacks.add(function (args) {
-        var optionName = args.name;
-        var fullName = args.fullName;
-        var component = args.component;
-        if (_this4._ngLocker.locked(fullName)) {
-          _this4._ngLocker.release(fullName);
+      this._optionChangedCallbacks.add(args => {
+        const optionName = args.name;
+        const fullName = args.fullName;
+        const component = args.component;
+        if (this._ngLocker.locked(fullName)) {
+          this._ngLocker.release(fullName);
           return;
         }
         if (!optionDependencies || !optionDependencies[optionName]) {
           return;
         }
-        var isActivePhase = _this4._scope.$root.$$phase;
-        var obtainOption = function obtainOption() {
-          _this4._ngLocker.obtain(fullName);
+        const isActivePhase = this._scope.$root.$$phase;
+        const obtainOption = () => {
+          this._ngLocker.obtain(fullName);
         };
         if (isActivePhase) {
-          _this4._digestCallbacks.begin.add(obtainOption);
+          this._digestCallbacks.begin.add(obtainOption);
         } else {
           obtainOption();
         }
-        safeApply(function () {
-          (0, _iterator.each)(optionDependencies[optionName], function (optionPath, valuePath) {
-            if (!_this4._optionsAreLinked(fullName, optionPath)) {
+        safeApply(() => {
+          (0, _iterator.each)(optionDependencies[optionName], (optionPath, valuePath) => {
+            if (!this._optionsAreLinked(fullName, optionPath)) {
               return;
             }
-            var value = component.option(optionPath);
-            _this4._parse(valuePath).assign(_this4._scope, value);
-            var scopeValue = _this4._parse(valuePath)(_this4._scope);
+            const value = component.option(optionPath);
+            this._parse(valuePath).assign(this._scope, value);
+            const scopeValue = this._parse(valuePath)(this._scope);
             if (scopeValue !== value) {
               args.component.option(optionPath, scopeValue);
             }
           });
-        }, _this4._scope);
-        var releaseOption = function releaseOption() {
-          if (_this4._ngLocker.locked(fullName)) {
-            _this4._ngLocker.release(fullName);
+        }, this._scope);
+        const releaseOption = () => {
+          if (this._ngLocker.locked(fullName)) {
+            this._ngLocker.release(fullName);
           }
-          _this4._digestCallbacks.begin.remove(obtainOption);
-          _this4._digestCallbacks.end.remove(releaseOption);
+          this._digestCallbacks.begin.remove(obtainOption);
+          this._digestCallbacks.end.remove(releaseOption);
         };
         if (isActivePhase) {
-          _this4._digestCallbacks.end.addPrioritized(releaseOption);
+          this._digestCallbacks.end.addPrioritized(releaseOption);
         } else {
           releaseOption();
         }
       });
     },
     _optionsAreNested(optionPath1, optionPath2) {
-      var parentSeparator = optionPath1[optionPath2.length];
+      const parentSeparator = optionPath1[optionPath2.length];
       return optionPath1.indexOf(optionPath2) === 0 && (parentSeparator === '.' || parentSeparator === '[');
     },
     _optionsAreLinked(optionPath1, optionPath2) {
@@ -239,46 +227,44 @@ if (_angular.default) {
       return optionPath1.length > optionPath2.length ? this._optionsAreNested(optionPath1, optionPath2) : this._optionsAreNested(optionPath2, optionPath1);
     },
     _compilerByTemplate(template) {
-      var _this5 = this;
-      var scopeItemsPath = this._getScopeItemsPath();
-      return function (options) {
-        var $resultMarkup = (0, _renderer.default)(template).clone();
-        var dataIsScope = options.model && options.model.constructor === _this5._scope.$root.constructor;
-        var templateScope = dataIsScope ? options.model : options.noModel ? _this5._scope : _this5._createScopeWithData(options);
+      const scopeItemsPath = this._getScopeItemsPath();
+      return options => {
+        const $resultMarkup = (0, _renderer.default)(template).clone();
+        const dataIsScope = options.model && options.model.constructor === this._scope.$root.constructor;
+        const templateScope = dataIsScope ? options.model : options.noModel ? this._scope : this._createScopeWithData(options);
         if (scopeItemsPath) {
-          _this5._synchronizeScopes(templateScope, scopeItemsPath, options.index);
+          this._synchronizeScopes(templateScope, scopeItemsPath, options.index);
         }
         $resultMarkup.appendTo(options.container);
         if (!options.noModel) {
-          _events_engine.default.on($resultMarkup, '$destroy', function () {
-            var destroyAlreadyCalled = !templateScope.$parent;
+          _events_engine.default.on($resultMarkup, '$destroy', () => {
+            const destroyAlreadyCalled = !templateScope.$parent;
             if (destroyAlreadyCalled) {
               return;
             }
             templateScope.$destroy();
           });
         }
-        var ngTemplate = _this5._compile($resultMarkup, _this5._transcludeFn);
-        _this5._applyAsync(function (scope) {
+        const ngTemplate = this._compile($resultMarkup, this._transcludeFn);
+        this._applyAsync(scope => {
           ngTemplate(scope, null, {
-            parentBoundTranscludeFn: _this5._transcludeFn
+            parentBoundTranscludeFn: this._transcludeFn
           });
         }, templateScope);
         return $resultMarkup;
       };
     },
     _applyAsync(func, scope) {
-      var _this6 = this;
       func(scope);
       if (!scope.$root.$$phase) {
         if (!this._renderingTimer) {
-          var clearRenderingTimer = function clearRenderingTimer() {
-            clearTimeout(_this6._renderingTimer);
+          const clearRenderingTimer = () => {
+            clearTimeout(this._renderingTimer);
           };
-          this._renderingTimer = setTimeout(function () {
+          this._renderingTimer = setTimeout(() => {
             scope.$apply();
-            _this6._renderingTimer = null;
-            _this6._componentDisposing.remove(clearRenderingTimer);
+            this._renderingTimer = null;
+            this._componentDisposing.remove(clearRenderingTimer);
           });
           this._componentDisposing.add(clearRenderingTimer);
         }
@@ -290,7 +276,7 @@ if (_angular.default) {
       }
     },
     _createScopeWithData(options) {
-      var newScope = this._scope.$new();
+      const newScope = this._scope.$new();
       if (this._itemAlias) {
         newScope[this._itemAlias] = options.model;
       }
@@ -311,26 +297,26 @@ if (_angular.default) {
       }
     },
     _synchronizeScopeField(args) {
-      var parentScope = args.parentScope;
-      var childScope = args.childScope;
-      var fieldPath = args.fieldPath;
-      var parentPrefix = args.parentPrefix;
-      var itemIndex = args.itemIndex;
-      var innerPathSuffix = fieldPath === this._itemAlias ? '' : '.' + fieldPath;
-      var collectionField = itemIndex !== undefined;
-      var optionOuterBag = [parentPrefix];
+      const parentScope = args.parentScope;
+      const childScope = args.childScope;
+      const fieldPath = args.fieldPath;
+      const parentPrefix = args.parentPrefix;
+      const itemIndex = args.itemIndex;
+      const innerPathSuffix = fieldPath === this._itemAlias ? '' : '.' + fieldPath;
+      const collectionField = itemIndex !== undefined;
+      const optionOuterBag = [parentPrefix];
       if (collectionField) {
         if (!(0, _type.isNumeric)(itemIndex)) return;
         optionOuterBag.push('[', itemIndex, ']');
       }
       optionOuterBag.push(innerPathSuffix);
-      var optionOuterPath = optionOuterBag.join('');
-      var clearParentWatcher = parentScope.$watch(optionOuterPath, function (newValue, oldValue) {
+      const optionOuterPath = optionOuterBag.join('');
+      const clearParentWatcher = parentScope.$watch(optionOuterPath, (newValue, oldValue) => {
         if (newValue !== oldValue) {
           (0, _data.compileSetter)(fieldPath)(childScope, newValue);
         }
       });
-      var clearItemWatcher = childScope.$watch(fieldPath, function (newValue, oldValue) {
+      const clearItemWatcher = childScope.$watch(fieldPath, (newValue, oldValue) => {
         if (newValue !== oldValue) {
           if (collectionField && !(0, _data.compileGetter)(parentPrefix)(parentScope)[itemIndex]) {
             clearItemWatcher();
@@ -343,65 +329,57 @@ if (_angular.default) {
     },
 
     _evalOptions(scope) {
-      var _this8 = this;
-      var result = (0, _extend.extendFromObject)({}, this._ngOptions);
+      const result = (0, _extend.extendFromObject)({}, this._ngOptions);
       delete result.bindingOptions;
       if (this._ngOptions.bindingOptions) {
-        (0, _iterator.each)(this._ngOptions.bindingOptions, function (key, value) {
+        (0, _iterator.each)(this._ngOptions.bindingOptions, (key, value) => {
           result[key] = scope.$eval(value.dataPath);
         });
       }
       result._optionChangedCallbacks = this._optionChangedCallbacks;
       result._disposingCallbacks = this._componentDisposing;
-      result.onActionCreated = function (component, action, config) {
+      result.onActionCreated = (component, action, config) => {
         if (config && config.category === SKIP_APPLY_ACTION_CATEGORY) {
           return action;
         }
-        var wrappedAction = function wrappedAction() {
-          var _this7 = this;
-          var args = arguments;
+        const wrappedAction = function () {
+          const args = arguments;
           if (!scope || !scope.$root || scope.$root.$$phase) {
             return action.apply(this, args);
           }
-          return safeApply(function () {
-            return action.apply(_this7, args);
-          }, scope);
+          return safeApply(() => action.apply(this, args), scope);
         };
         return wrappedAction;
       };
       result.beforeActionExecute = result.onActionCreated;
-      result.nestedComponentOptions = function (component) {
-        return {
-          templatesRenderAsynchronously: component.option('templatesRenderAsynchronously'),
-          forceApplyBindings: component.option('forceApplyBindings'),
-          modelByElement: component.option('modelByElement'),
-          onActionCreated: component.option('onActionCreated'),
-          beforeActionExecute: component.option('beforeActionExecute'),
-          nestedComponentOptions: component.option('nestedComponentOptions')
-        };
-      };
+      result.nestedComponentOptions = component => ({
+        templatesRenderAsynchronously: component.option('templatesRenderAsynchronously'),
+        forceApplyBindings: component.option('forceApplyBindings'),
+        modelByElement: component.option('modelByElement'),
+        onActionCreated: component.option('onActionCreated'),
+        beforeActionExecute: component.option('beforeActionExecute'),
+        nestedComponentOptions: component.option('nestedComponentOptions')
+      });
       result.templatesRenderAsynchronously = true;
       if ((0, _config.default)().wrapActionsBeforeExecute) {
-        result.forceApplyBindings = function () {
-          safeApply(function () {}, scope);
+        result.forceApplyBindings = () => {
+          safeApply(() => {}, scope);
         };
       }
       result.integrationOptions = {
-        createTemplate: function createTemplate(element) {
-          return new _template.NgTemplate(element, _this8._compilerByTemplate.bind(_this8));
-        },
-        watchMethod: function watchMethod(fn, callback, options) {
+        createTemplate: element => new _template.NgTemplate(element, this._compilerByTemplate.bind(this)),
+        watchMethod: (fn, callback, options) => {
           options = options || {};
-          var immediateValue;
-          var skipCallback = options.skipImmediate;
-          var disposeWatcher = scope.$watch(function () {
-            var value = fn();
+          let immediateValue;
+          let skipCallback = options.skipImmediate;
+          const disposeWatcher = scope.$watch(() => {
+            let value = fn();
             if (value instanceof Date) {
               value = value.valueOf();
             }
             return value;
-          }, function (newValue) {
-            var isSameValue = immediateValue === newValue;
+          }, newValue => {
+            const isSameValue = immediateValue === newValue;
             if (!skipCallback && (!isSameValue || isSameValue && options.deep)) {
               callback(newValue);
             }
@@ -412,29 +390,27 @@ if (_angular.default) {
             callback(immediateValue);
           }
           if ((0, _config.default)().wrapActionsBeforeExecute) {
-            _this8._applyAsync(function () {}, scope);
+            this._applyAsync(() => {}, scope);
           }
           return disposeWatcher;
         },
         templates: {
           'dx-polymorph-widget': {
-            render: function render(options) {
-              var widgetName = options.model.widget;
+            render: options => {
+              const widgetName = options.model.widget;
               if (!widgetName) {
                 return;
               }
-              var markup = (0, _renderer.default)('<div>').attr((0, _inflector.dasherize)(widgetName), 'options').get(0);
-              var newScope = _this8._scope.$new();
+              const markup = (0, _renderer.default)('<div>').attr((0, _inflector.dasherize)(widgetName), 'options').get(0);
+              const newScope = this._scope.$new();
               newScope.options = options.model.options;
               options.container.append(markup);
-              _this8._compile(markup)(newScope);
+              this._compile(markup)(newScope);
             }
           }
         }
       };
-      result.modelByElement = function () {
-        return scope;
-      };
+      result.modelByElement = () => scope;
       return result;
     }
   });
@@ -443,39 +419,38 @@ if (_angular.default) {
       this._componentName = options.componentName;
       this._ngModel = options.ngModel;
       this._ngModelController = options.ngModelController;
-      this.callBase.apply(this, arguments);
+      this.callBase(...arguments);
     },
     _isNgModelRequired() {
       return _editor.default.isEditor(this._componentClass.prototype) && this._ngModel;
     },
     _initComponentBindings() {
-      this.callBase.apply(this, arguments);
+      this.callBase(...arguments);
       this._initNgModelBinding();
     },
     _initNgModelBinding() {
-      var _this9 = this;
       if (!this._isNgModelRequired()) {
         return;
       }
-      var clearNgModelWatcher = this._scope.$watch(this._ngModel, function (newValue, oldValue) {
-        if (_this9._ngLocker.locked(NG_MODEL_OPTION)) {
+      const clearNgModelWatcher = this._scope.$watch(this._ngModel, (newValue, oldValue) => {
+        if (this._ngLocker.locked(NG_MODEL_OPTION)) {
           return;
         }
         if (newValue === oldValue) {
           return;
         }
-        _this9._component.option(NG_MODEL_OPTION, newValue);
+        this._component.option(NG_MODEL_OPTION, newValue);
       });
-      this._optionChangedCallbacks.add(function (args) {
-        _this9._ngLocker.obtain(NG_MODEL_OPTION);
+      this._optionChangedCallbacks.add(args => {
+        this._ngLocker.obtain(NG_MODEL_OPTION);
         try {
           if (args.name !== NG_MODEL_OPTION) {
             return;
           }
-          _this9._ngModelController.$setViewValue(args.value);
+          this._ngModelController.$setViewValue(args.value);
         } finally {
-          if (_this9._ngLocker.locked(NG_MODEL_OPTION)) {
-            _this9._ngLocker.release(NG_MODEL_OPTION);
+          if (this._ngLocker.locked(NG_MODEL_OPTION)) {
+            this._ngLocker.release(NG_MODEL_OPTION);
           }
         }
       });
@@ -483,50 +458,48 @@ if (_angular.default) {
     },
     _evalOptions() {
       if (!this._isNgModelRequired()) {
-        return this.callBase.apply(this, arguments);
+        return this.callBase(...arguments);
       }
-      var result = this.callBase.apply(this, arguments);
+      const result = this.callBase(...arguments);
       result[NG_MODEL_OPTION] = this._parse(this._ngModel)(this._scope);
       return result;
     }
   });
-  var registeredComponents = {};
-  var registerComponentDirective = function registerComponentDirective(name) {
-    var priority = name !== 'dxValidator' ? 1 : 10;
-    _module.default.directive(name, ['$compile', '$parse', 'dxDigestCallbacks', function ($compile, $parse, dxDigestCallbacks) {
-      return {
-        restrict: 'A',
-        require: '^?ngModel',
-        priority,
-        compile($element) {
-          var componentClass = registeredComponents[name];
-          var useTemplates = componentClass.prototype._useTemplates ? componentClass.prototype._useTemplates() : getClassMethod(componentClass, '_useTemplates')();
-          var $content = useTemplates ? $element.contents().detach() : null;
-          return function (scope, $element, attrs, ngModelController, transcludeFn) {
-            $element.append($content);
-            safeApply(function () {
-              new ComponentBuilder({
-                componentClass,
-                componentName: name,
-                compile: $compile,
-                parse: $parse,
-                $element,
-                scope,
-                ngOptionsString: attrs[name],
-                ngOptions: attrs[name] ? scope.$eval(attrs[name]) : {},
-                ngModel: attrs.ngModel,
-                ngModelController,
-                transcludeFn,
-                itemAlias: attrs[ITEM_ALIAS_ATTRIBUTE_NAME],
-                dxDigestCallbacks
-              });
-            }, scope);
-          };
-        }
-      };
-    }]);
+  const registeredComponents = {};
+  const registerComponentDirective = name => {
+    const priority = name !== 'dxValidator' ? 1 : 10;
+    _module.default.directive(name, ['$compile', '$parse', 'dxDigestCallbacks', ($compile, $parse, dxDigestCallbacks) => ({
+      restrict: 'A',
+      require: '^?ngModel',
+      priority,
+      compile($element) {
+        const componentClass = registeredComponents[name];
+        const useTemplates = componentClass.prototype._useTemplates ? componentClass.prototype._useTemplates() : getClassMethod(componentClass, '_useTemplates')();
+        const $content = useTemplates ? $element.contents().detach() : null;
+        return (scope, $element, attrs, ngModelController, transcludeFn) => {
+          $element.append($content);
+          safeApply(() => {
+            new ComponentBuilder({
+              componentClass,
+              componentName: name,
+              compile: $compile,
+              parse: $parse,
+              $element,
+              scope,
+              ngOptionsString: attrs[name],
+              ngOptions: attrs[name] ? scope.$eval(attrs[name]) : {},
+              ngModel: attrs.ngModel,
+              ngModelController,
+              transcludeFn,
+              itemAlias: attrs[ITEM_ALIAS_ATTRIBUTE_NAME],
+              dxDigestCallbacks
+            });
+          }, scope);
+        };
+      }
+    })]);
   };
-  _component_registrator_callbacks.default.add(function (name, componentClass) {
+  _component_registrator_callbacks.default.add((name, componentClass) => {
     if (!registeredComponents[name]) {
       registerComponentDirective(name);
     }

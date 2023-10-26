@@ -1,7 +1,7 @@
 "use strict";
 
 exports.default = void 0;
-var ErrorCode = {
+const ErrorCode = {
   NoAccess: 0,
   FileExists: 1,
   FileNotFound: 2,

@@ -1,5 +1,5 @@
 "use strict";
 
 exports.ResponsiveBoxProps = void 0;
-var ResponsiveBoxProps = {};
+const ResponsiveBoxProps = {};
 exports.ResponsiveBoxProps = ResponsiveBoxProps;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/multi_view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,28 +28,24 @@ var _message = _interopRequireDefault(require("../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE multiView
 
-var MULTIVIEW_CLASS = 'dx-multiview';
-var MULTIVIEW_WRAPPER_CLASS = 'dx-multiview-wrapper';
-var MULTIVIEW_ITEM_CONTAINER_CLASS = 'dx-multiview-item-container';
-var MULTIVIEW_ITEM_CLASS = 'dx-multiview-item';
-var MULTIVIEW_ITEM_HIDDEN_CLASS = 'dx-multiview-item-hidden';
-var MULTIVIEW_ITEM_DATA_KEY = 'dxMultiViewItemData';
-var MULTIVIEW_ANIMATION_DURATION = 200;
-var toNumber = function toNumber(value) {
-  return +value;
-};
-var position = function position($element) {
-  return (0, _translator2.locate)($element).left;
-};
-var MultiView = _uiCollection_widget.default.inherit({
+const MULTIVIEW_CLASS = 'dx-multiview';
+const MULTIVIEW_WRAPPER_CLASS = 'dx-multiview-wrapper';
+const MULTIVIEW_ITEM_CONTAINER_CLASS = 'dx-multiview-item-container';
+const MULTIVIEW_ITEM_CLASS = 'dx-multiview-item';
+const MULTIVIEW_ITEM_HIDDEN_CLASS = 'dx-multiview-item-hidden';
+const MULTIVIEW_ITEM_DATA_KEY = 'dxMultiViewItemData';
+const MULTIVIEW_ANIMATION_DURATION = 200;
+const toNumber = value => +value;
+const position = $element => (0, _translator2.locate)($element).left;
+const MultiView = _uiCollection_widget.default.inherit({
   _activeStateUnit: '.' + MULTIVIEW_ITEM_CLASS,
-  _supportedKeys: function _supportedKeys() {
+  _supportedKeys: function () {
     return (0, _extend.extend)(this.callBase(), {
       pageUp: _common.noop,
       pageDown: _common.noop
     });
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       selectedIndex: 0,
       swipeEnabled: true,
@@ -78,9 +74,9 @@ var MultiView = _uiCollection_widget.default.inherit({
       selectByClick: false
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
@@ -88,32 +84,32 @@ var MultiView = _uiCollection_widget.default.inherit({
       }
     }]);
   },
-  _itemClass: function _itemClass() {
+  _itemClass: function () {
     return MULTIVIEW_ITEM_CLASS;
   },
-  _itemDataKey: function _itemDataKey() {
+  _itemDataKey: function () {
     return MULTIVIEW_ITEM_DATA_KEY;
   },
-  _itemContainer: function _itemContainer() {
+  _itemContainer: function () {
     return this._$itemContainer;
   },
-  _itemElements: function _itemElements() {
+  _itemElements: function () {
     return this._itemContainer().children(this._itemSelector());
   },
-  _itemWidth: function _itemWidth() {
+  _itemWidth: function () {
     if (!this._itemWidthValue) {
       this._itemWidthValue = (0, _size.getWidth)(this._$wrapper);
     }
     return this._itemWidthValue;
   },
-  _clearItemWidthCache: function _clearItemWidthCache() {
+  _clearItemWidthCache: function () {
     delete this._itemWidthValue;
   },
-  _itemsCount: function _itemsCount() {
+  _itemsCount: function () {
     return this.option('items').length;
   },
-  _normalizeIndex: function _normalizeIndex(index) {
-    var count = this._itemsCount();
+  _normalizeIndex: function (index) {
+    const count = this._itemsCount();
     if (index < 0) {
       index = index + count;
     }
@@ -122,12 +118,12 @@ var MultiView = _uiCollection_widget.default.inherit({
     }
     return index;
   },
-  _getRTLSignCorrection: function _getRTLSignCorrection() {
+  _getRTLSignCorrection: function () {
     return this.option('rtlEnabled') ? -1 : 1;
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase.apply(this, arguments);
-    var $element = this.$element();
+    const $element = this.$element();
     $element.addClass(MULTIVIEW_CLASS);
     this._$wrapper = (0, _renderer.default)('<div>').addClass(MULTIVIEW_WRAPPER_CLASS);
     this._$wrapper.appendTo($element);
@@ -137,49 +133,48 @@ var MultiView = _uiCollection_widget.default.inherit({
     this._findBoundaryIndices();
     this._initSwipeable();
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._deferredItems = [];
     this.callBase();
-    var selectedItemIndices = this._getSelectedItemIndices();
+    const selectedItemIndices = this._getSelectedItemIndices();
     this._updateItemsVisibility(selectedItemIndices[0]);
     this._setElementAria();
     this._setItemsAria();
   },
-  _afterItemElementDeleted: function _afterItemElementDeleted($item, deletedActionArgs) {
+  _afterItemElementDeleted: function ($item, deletedActionArgs) {
     this.callBase($item, deletedActionArgs);
     if (this._deferredItems) {
       this._deferredItems.splice(deletedActionArgs.itemIndex, 1);
     }
   },
-  _beforeItemElementInserted: function _beforeItemElementInserted(change) {
+  _beforeItemElementInserted: function (change) {
     this.callBase.apply(this, arguments);
     if (this._deferredItems) {
       this._deferredItems.splice(change.index, 0, null);
     }
   },
-  _executeItemRenderAction: function _executeItemRenderAction(index, itemData, itemElement) {
+  _executeItemRenderAction: function (index, itemData, itemElement) {
     index = (this.option('items') || []).indexOf(itemData);
     this.callBase(index, itemData, itemElement);
   },
-  _renderItemContent: function _renderItemContent(args) {
-    var renderContentDeferred = new _deferred.Deferred();
-    var that = this;
-    var callBase = this.callBase;
-    var deferred = new _deferred.Deferred();
+  _renderItemContent: function (args) {
+    const renderContentDeferred = new _deferred.Deferred();
+    const that = this;
+    const callBase = this.callBase;
+    const deferred = new _deferred.Deferred();
     deferred.done(function () {
-      var $itemContent = callBase.call(that, args);
+      const $itemContent = callBase.call(that, args);
       renderContentDeferred.resolve($itemContent);
     });
     this._deferredItems[args.index] = deferred;
     this.option('deferRendering') || deferred.resolve();
     return renderContentDeferred.promise();
   },
-  _render: function _render() {
-    var _this = this;
+  _render: function () {
     this.callBase();
-    (0, _common.deferRender)(function () {
-      var selectedItemIndices = _this._getSelectedItemIndices();
-      _this._updateItems(selectedItemIndices[0]);
+    (0, _common.deferRender)(() => {
+      const selectedItemIndices = this._getSelectedItemIndices();
+      this._updateItems(selectedItemIndices[0]);
     });
   },
   _getElementAria() {
@@ -190,81 +185,81 @@ var MultiView = _uiCollection_widget.default.inherit({
     };
   },
   _setElementAria() {
-    var aria = this._getElementAria();
+    const aria = this._getElementAria();
     this.setAria(aria, this.$element());
   },
   _setItemsAria() {
-    var _this2 = this;
-    var $itemElements = this._itemElements();
-    var itemsCount = this._itemsCount();
-    $itemElements.each(function (itemIndex, item) {
-      var aria = _this2._getItemAria({
+    const $itemElements = this._itemElements();
+    const itemsCount = this._itemsCount();
+    $itemElements.each((itemIndex, item) => {
+      const aria = this._getItemAria({
         itemIndex,
         itemsCount
       });
-      _this2.setAria(aria, (0, _renderer.default)(item));
+      this.setAria(aria, (0, _renderer.default)(item));
     });
   },
   _getItemAria(_ref) {
-    var itemIndex = _ref.itemIndex,
-      itemsCount = _ref.itemsCount;
-    var aria = {
+    let {
+      itemIndex,
+      itemsCount
+    } = _ref;
+    const aria = {
       'role': 'group',
       'roledescription': _message.default.format('dxMultiView-itemAriaRoleDescription'),
       'label': _message.default.format('dxMultiView-itemAriaLabel', itemIndex + 1, itemsCount)
     };
     return aria;
   },
-  _updateItems: function _updateItems(selectedIndex, newIndex) {
+  _updateItems: function (selectedIndex, newIndex) {
     this._updateItemsPosition(selectedIndex, newIndex);
     this._updateItemsVisibility(selectedIndex, newIndex);
   },
-  _modifyByChanges: function _modifyByChanges() {
+  _modifyByChanges: function () {
     this.callBase.apply(this, arguments);
-    var selectedItemIndices = this._getSelectedItemIndices();
+    const selectedItemIndices = this._getSelectedItemIndices();
     this._updateItemsVisibility(selectedItemIndices[0]);
   },
-  _updateItemsPosition: function _updateItemsPosition(selectedIndex, newIndex) {
-    var $itemElements = this._itemElements();
-    var positionSign = (0, _type.isDefined)(newIndex) ? -this._animationDirection(newIndex, selectedIndex) : undefined;
-    var $selectedItem = $itemElements.eq(selectedIndex);
+  _updateItemsPosition: function (selectedIndex, newIndex) {
+    const $itemElements = this._itemElements();
+    const positionSign = (0, _type.isDefined)(newIndex) ? -this._animationDirection(newIndex, selectedIndex) : undefined;
+    const $selectedItem = $itemElements.eq(selectedIndex);
     _uiMulti_view._translator.move($selectedItem, 0);
     if ((0, _type.isDefined)(newIndex)) {
       _uiMulti_view._translator.move($itemElements.eq(newIndex), positionSign * 100 + '%');
     }
   },
   _updateItemsVisibility(selectedIndex, newIndex) {
-    var _this3 = this;
-    var $itemElements = this._itemElements();
-    $itemElements.each(function (itemIndex, item) {
-      var $item = (0, _renderer.default)(item);
-      var isHidden = itemIndex !== selectedIndex && itemIndex !== newIndex;
+    const $itemElements = this._itemElements();
+    $itemElements.each((itemIndex, item) => {
+      const $item = (0, _renderer.default)(item);
+      const isHidden = itemIndex !== selectedIndex && itemIndex !== newIndex;
       if (!isHidden) {
-        _this3._renderSpecificItem(itemIndex);
+        this._renderSpecificItem(itemIndex);
       }
       $item.toggleClass(MULTIVIEW_ITEM_HIDDEN_CLASS, isHidden);
-      _this3.setAria('hidden', isHidden || undefined, $item);
+      this.setAria('hidden', isHidden || undefined, $item);
     });
   },
-  _renderSpecificItem: function _renderSpecificItem(index) {
-    var $item = this._itemElements().eq(index);
-    var hasItemContent = $item.find(this._itemContentClass()).length > 0;
+  _renderSpecificItem: function (index) {
+    const $item = this._itemElements().eq(index);
+    const hasItemContent = $item.find(this._itemContentClass()).length > 0;
     if ((0, _type.isDefined)(index) && !hasItemContent) {
       this._deferredItems[index].resolve();
       (0, _visibility_change.triggerResizeEvent)($item);
     }
   },
-  _refreshItem: function _refreshItem($item, item) {
+  _refreshItem: function ($item, item) {
     this.callBase($item, item);
     this._updateItemsVisibility(this.option('selectedIndex'));
   },
   _setAriaSelectionAttribute: _common.noop,
-  _updateSelection: function _updateSelection(addedSelection, removedSelection) {
-    var newIndex = addedSelection[0];
-    var prevIndex = removedSelection[0];
+  _updateSelection: function (addedSelection, removedSelection) {
+    const newIndex = addedSelection[0];
+    const prevIndex = removedSelection[0];
     _uiMulti_view.animation.complete(this._$itemContainer);
     this._updateItems(prevIndex, newIndex);
-    var animationDirection = this._animationDirection(newIndex, prevIndex);
+    const animationDirection = this._animationDirection(newIndex, prevIndex);
     this._animateItemContainer(animationDirection * this._itemWidth(), function () {
       _uiMulti_view._translator.move(this._$itemContainer, 0);
       this._updateItems(newIndex);
@@ -273,44 +268,37 @@ var MultiView = _uiCollection_widget.default.inherit({
       (0, _size.getWidth)(this._$itemContainer);
     }.bind(this));
   },
-  _animateItemContainer: function _animateItemContainer(position, completeCallback) {
-    var duration = this.option('animationEnabled') ? MULTIVIEW_ANIMATION_DURATION : 0;
+  _animateItemContainer: function (position, completeCallback) {
+    const duration = this.option('animationEnabled') ? MULTIVIEW_ANIMATION_DURATION : 0;
     _uiMulti_view.animation.moveTo(this._$itemContainer, position, duration, completeCallback);
   },
-  _animationDirection: function _animationDirection(newIndex, prevIndex) {
-    var containerPosition = position(this._$itemContainer);
-    var indexDifference = (prevIndex - newIndex) * this._getRTLSignCorrection() * this._getItemFocusLoopSignCorrection();
-    var isSwipePresent = containerPosition !== 0;
-    var directionSignVariable = isSwipePresent ? containerPosition : indexDifference;
+  _animationDirection: function (newIndex, prevIndex) {
+    const containerPosition = position(this._$itemContainer);
+    const indexDifference = (prevIndex - newIndex) * this._getRTLSignCorrection() * this._getItemFocusLoopSignCorrection();
+    const isSwipePresent = containerPosition !== 0;
+    const directionSignVariable = isSwipePresent ? containerPosition : indexDifference;
     return (0, _math.sign)(directionSignVariable);
   },
   _getSwipeDisabledState() {
     return !this.option('swipeEnabled') || this._itemsCount() <= 1;
   },
   _initSwipeable() {
-    var _this4 = this;
     this._createComponent(this.$element(), _swipeable.default, {
       disabled: this._getSwipeDisabledState(),
       elastic: false,
       itemSizeFunc: this._itemWidth.bind(this),
-      onStart: function onStart(args) {
-        return _this4._swipeStartHandler(args.event);
-      },
-      onUpdated: function onUpdated(args) {
-        return _this4._swipeUpdateHandler(args.event);
-      },
-      onEnd: function onEnd(args) {
-        return _this4._swipeEndHandler(args.event);
-      }
+      onStart: args => this._swipeStartHandler(args.event),
+      onUpdated: args => this._swipeUpdateHandler(args.event),
+      onEnd: args => this._swipeEndHandler(args.event)
     });
   },
   _findBoundaryIndices() {
     var _firstIndex2, _lastIndex;
-    var items = this.option('items');
-    var firstIndex;
-    var lastIndex;
-    items.forEach(function (item, index) {
-      var isDisabled = Boolean(item === null || item === void 0 ? void 0 : item.disabled);
+    const items = this.option('items');
+    let firstIndex;
+    let lastIndex;
+    items.forEach((item, index) => {
+      const isDisabled = Boolean(item === null || item === void 0 ? void 0 : item.disabled);
       if (!isDisabled) {
         var _firstIndex;
         (_firstIndex = firstIndex) !== null && _firstIndex !== void 0 ? _firstIndex : firstIndex = index;
@@ -324,40 +312,43 @@ var MultiView = _uiCollection_widget.default.inherit({
       lastTrueIndex: items.length - 1
     };
   },
-  _swipeStartHandler: function _swipeStartHandler(e) {
+  _swipeStartHandler: function (e) {
     _uiMulti_view.animation.complete(this._$itemContainer);
-    var selectedIndex = this.option('selectedIndex');
-    var loop = this.option('loop');
-    var _this$_boundaryIndice = this._boundaryIndices,
-      firstAvailableIndex = _this$_boundaryIndice.firstAvailableIndex,
-      lastAvailableIndex = _this$_boundaryIndice.lastAvailableIndex;
-    var rtl = this.option('rtlEnabled');
+    const selectedIndex = this.option('selectedIndex');
+    const loop = this.option('loop');
+    const {
+      firstAvailableIndex,
+      lastAvailableIndex
+    } = this._boundaryIndices;
+    const rtl = this.option('rtlEnabled');
     e.maxLeftOffset = toNumber(loop || (rtl ? selectedIndex > firstAvailableIndex : selectedIndex < lastAvailableIndex));
     e.maxRightOffset = toNumber(loop || (rtl ? selectedIndex < lastAvailableIndex : selectedIndex > firstAvailableIndex));
     this._swipeDirection = null;
   },
-  _swipeUpdateHandler: function _swipeUpdateHandler(e) {
-    var offset = e.offset;
-    var swipeDirection = (0, _math.sign)(offset) * this._getRTLSignCorrection();
+  _swipeUpdateHandler: function (e) {
+    const offset = e.offset;
+    const swipeDirection = (0, _math.sign)(offset) * this._getRTLSignCorrection();
     _uiMulti_view._translator.move(this._$itemContainer, offset * this._itemWidth());
     if (swipeDirection !== this._swipeDirection) {
       this._swipeDirection = swipeDirection;
-      var selectedIndex = this.option('selectedIndex');
-      var newIndex = this._normalizeIndex(selectedIndex - swipeDirection);
+      const selectedIndex = this.option('selectedIndex');
+      const newIndex = this._normalizeIndex(selectedIndex - swipeDirection);
       this._updateItems(selectedIndex, newIndex);
     }
   },
   _findNextAvailableIndex(index, offset) {
-    var _this$option = this.option(),
-      items = _this$option.items,
-      loop = _this$option.loop;
-    var _this$_boundaryIndice2 = this._boundaryIndices,
-      firstAvailableIndex = _this$_boundaryIndice2.firstAvailableIndex,
-      lastAvailableIndex = _this$_boundaryIndice2.lastAvailableIndex,
-      firstTrueIndex = _this$_boundaryIndice2.firstTrueIndex,
-      lastTrueIndex = _this$_boundaryIndice2.lastTrueIndex;
-    var isFirstActive = [firstTrueIndex, firstAvailableIndex].includes(index);
-    var isLastActive = [lastTrueIndex, lastAvailableIndex].includes(index);
+    const {
+      items,
+      loop
+    } = this.option();
+    const {
+      firstAvailableIndex,
+      lastAvailableIndex,
+      firstTrueIndex,
+      lastTrueIndex
+    } = this._boundaryIndices;
+    const isFirstActive = [firstTrueIndex, firstAvailableIndex].includes(index);
+    const isLastActive = [lastTrueIndex, lastAvailableIndex].includes(index);
     if (loop) {
       if (isFirstActive && offset < 0) {
         return lastAvailableIndex;
@@ -365,62 +356,62 @@ var MultiView = _uiCollection_widget.default.inherit({
         return firstAvailableIndex;
       }
     }
-    for (var i = index + offset; i >= firstAvailableIndex && i <= lastAvailableIndex; i += offset) {
-      var isDisabled = Boolean(items[i].disabled);
+    for (let i = index + offset; i >= firstAvailableIndex && i <= lastAvailableIndex; i += offset) {
+      const isDisabled = Boolean(items[i].disabled);
       if (!isDisabled) {
         return i;
       }
     }
     return index;
   },
-  _swipeEndHandler: function _swipeEndHandler(e) {
-    var targetOffset = e.targetOffset * this._getRTLSignCorrection();
+  _swipeEndHandler: function (e) {
+    const targetOffset = e.targetOffset * this._getRTLSignCorrection();
     if (targetOffset) {
-      var newSelectedIndex = this._findNextAvailableIndex(this.option('selectedIndex'), -targetOffset);
+      const newSelectedIndex = this._findNextAvailableIndex(this.option('selectedIndex'), -targetOffset);
       this.option('selectedIndex', newSelectedIndex);
 
       // TODO: change focusedElement on focusedItem
-      var $selectedElement = this.itemElements().filter('.dx-item-selected');
+      const $selectedElement = this.itemElements().filter('.dx-item-selected');
       this.option('focusStateEnabled') && this.option('focusedElement', (0, _element.getPublicElement)($selectedElement));
     } else {
       this._animateItemContainer(0, _common.noop);
     }
   },
-  _getItemFocusLoopSignCorrection: function _getItemFocusLoopSignCorrection() {
+  _getItemFocusLoopSignCorrection: function () {
     return this._itemFocusLooped ? -1 : 1;
   },
-  _moveFocus: function _moveFocus() {
+  _moveFocus: function () {
     this.callBase.apply(this, arguments);
     this._itemFocusLooped = false;
   },
-  _prevItem: function _prevItem($items) {
-    var $result = this.callBase.apply(this, arguments);
+  _prevItem: function ($items) {
+    const $result = this.callBase.apply(this, arguments);
     this._itemFocusLooped = $result.is($items.last());
     return $result;
   },
-  _nextItem: function _nextItem($items) {
-    var $result = this.callBase.apply(this, arguments);
+  _nextItem: function ($items) {
+    const $result = this.callBase.apply(this, arguments);
     this._itemFocusLooped = $result.is($items.first());
     return $result;
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     this._clearItemWidthCache();
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this._dimensionChanged();
     }
   },
   _updateSwipeDisabledState() {
-    var disabled = this._getSwipeDisabledState();
+    const disabled = this._getSwipeDisabledState();
     _swipeable.default.getInstance(this.$element()).option('disabled', disabled);
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     delete this._boundaryIndices;
     this.callBase();
   },
-  _optionChanged: function _optionChanged(args) {
-    var value = args.value;
+  _optionChanged: function (args) {
+    const value = args.value;
     switch (args.name) {
       case 'loop':
         this.option('loopItemFocus', value);

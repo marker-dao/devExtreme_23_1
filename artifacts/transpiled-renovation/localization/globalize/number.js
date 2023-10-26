@@ -10,15 +10,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // eslint-disable-next-line no-restricted-imports, import/no-unresolved
 
-var MAX_FRACTION_DIGITS = 20;
+const MAX_FRACTION_DIGITS = 20;
 if (_globalize.default && _globalize.default.formatNumber) {
   if (_globalize.default.locale().locale === 'en') {
     _globalize.default.locale('en');
   }
-  var formattersCache = {};
-  var getFormatter = function getFormatter(format) {
-    var formatter;
-    var formatCacheKey;
+  const formattersCache = {};
+  const getFormatter = format => {
+    let formatter;
+    let formatCacheKey;
     if (typeof format === 'object') {
       formatCacheKey = _globalize.default.locale().locale + ':' + JSON.stringify(format);
     } else {
@@ -30,18 +30,18 @@ if (_globalize.default && _globalize.default.formatNumber) {
     }
     return formatter;
   };
-  var globalizeNumberLocalization = {
-    engine: function engine() {
+  const globalizeNumberLocalization = {
+    engine: function () {
       return 'globalize';
     },
-    _formatNumberCore: function _formatNumberCore(value, format, formatConfig) {
+    _formatNumberCore: function (value, format, formatConfig) {
       if (format === 'exponential') {
         return this.callBase.apply(this, arguments);
       }
       return getFormatter(this._normalizeFormatConfig(format, formatConfig, value))(value);
     },
-    _normalizeFormatConfig: function _normalizeFormatConfig(format, formatConfig, value) {
-      var config;
+    _normalizeFormatConfig: function (format, formatConfig, value) {
+      let config;
       if (format === 'decimal') {
         config = {
           minimumIntegerDigits: formatConfig.precision || 1,
@@ -58,8 +58,8 @@ if (_globalize.default && _globalize.default.formatNumber) {
       }
       return config;
     },
-    _getPrecisionConfig: function _getPrecisionConfig(precision) {
-      var config;
+    _getPrecisionConfig: function (precision) {
+      let config;
       if (precision === null) {
         config = {
           minimumFractionDigits: 0,
@@ -73,17 +73,17 @@ if (_globalize.default && _globalize.default.formatNumber) {
       }
       return config;
     },
-    format: function format(value, _format) {
+    format: function (value, format) {
       if (typeof value !== 'number') {
         return value;
       }
-      _format = this._normalizeFormat(_format);
-      if (!_format || typeof _format !== 'function' && !_format.type && !_format.formatter) {
-        return getFormatter(_format)(value);
+      format = this._normalizeFormat(format);
+      if (!format || typeof format !== 'function' && !format.type && !format.formatter) {
+        return getFormatter(format)(value);
       }
       return this.callBase.apply(this, arguments);
     },
-    parse: function parse(text, format) {
+    parse: function (text, format) {
       if (!text) {
         return;
       }
@@ -94,7 +94,7 @@ if (_globalize.default && _globalize.default.formatNumber) {
         // Current parser functionality provided as-is and is independent of the most of capabilities of formatter.
         _errors.default.log('W0011');
       }
-      var result = _globalize.default.parseNumber(text);
+      let result = _globalize.default.parseNumber(text);
       if (isNaN(result)) {
         result = this.callBase.apply(this, arguments);
       }

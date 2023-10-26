@@ -1,7 +1,7 @@
 "use strict";
 
 exports.toMilliseconds = toMilliseconds;
-var timeIntervals = {
+const timeIntervals = {
   millisecond: 1,
   second: 1000,
   minute: 1000 * 60,

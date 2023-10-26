@@ -7,9 +7,9 @@ var _common = require("../../core/utils/common");
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var abstract = _class.default.abstract;
-var EditStrategy = _class.default.inherit({
-  ctor: function ctor(collectionWidget) {
+const abstract = _class.default.abstract;
+const EditStrategy = _class.default.inherit({
+  ctor: function (collectionWidget) {
     this._collectionWidget = collectionWidget;
   },
   getIndexByItemData: abstract,
@@ -17,25 +17,25 @@ var EditStrategy = _class.default.inherit({
   getKeysByItems: abstract,
   getItemsByKeys: abstract,
   itemsGetter: abstract,
-  getKeyByIndex: function getKeyByIndex(index) {
-    var resultIndex = this._denormalizeItemIndex(index);
+  getKeyByIndex: function (index) {
+    const resultIndex = this._denormalizeItemIndex(index);
     return this.getKeysByItems([this.getItemDataByIndex(resultIndex)])[0];
   },
-  _equalKeys: function _equalKeys(key1, key2) {
+  _equalKeys: function (key1, key2) {
     if (this._collectionWidget._isKeySpecified()) {
       return (0, _common.equalByValue)(key1, key2);
     } else {
       return key1 === key2;
     }
   },
-  beginCache: function beginCache() {
+  beginCache: function () {
     this._cache = {};
   },
-  endCache: function endCache() {
+  endCache: function () {
     this._cache = null;
   },
   getIndexByKey: abstract,
-  getNormalizedIndex: function getNormalizedIndex(value) {
+  getNormalizedIndex: function (value) {
     if (this._isNormalizedItemIndex(value)) {
       return value;
     }
@@ -47,7 +47,7 @@ var EditStrategy = _class.default.inherit({
     }
     return this._normalizeItemIndex(this.getIndexByItemData(value));
   },
-  getIndex: function getIndex(value) {
+  getIndex: function (value) {
     if (this._isNormalizedItemIndex(value)) {
       return this._denormalizeItemIndex(value);
     }
@@ -59,7 +59,7 @@ var EditStrategy = _class.default.inherit({
     }
     return this.getIndexByItemData(value);
   },
-  getItemElement: function getItemElement(value) {
+  getItemElement: function (value) {
     if (this._isNormalizedItemIndex(value)) {
       return this._getItemByNormalizedIndex(value);
     }
@@ -69,18 +69,18 @@ var EditStrategy = _class.default.inherit({
     if (this._isNode(value)) {
       return (0, _renderer.default)(value);
     }
-    var normalizedItemIndex = this._normalizeItemIndex(this.getIndexByItemData(value));
+    const normalizedItemIndex = this._normalizeItemIndex(this.getIndexByItemData(value));
     return this._getItemByNormalizedIndex(normalizedItemIndex);
   },
-  _isNode: function _isNode(el) {
+  _isNode: el => {
     return _dom_adapter.default.isNode(el && (0, _type.isRenderer)(el) ? el.get(0) : el);
   },
   deleteItemAtIndex: abstract,
-  itemPlacementFunc: function itemPlacementFunc(movingIndex, destinationIndex) {
+  itemPlacementFunc: function (movingIndex, destinationIndex) {
     return this._itemsFromSameParent(movingIndex, destinationIndex) && movingIndex < destinationIndex ? 'after' : 'before';
   },
   moveItemAtIndexToIndex: abstract,
-  _isNormalizedItemIndex: function _isNormalizedItemIndex(index) {
+  _isNormalizedItemIndex: function (index) {
     return typeof index === 'number' && Math.round(index) === index;
   },
   _isItemIndex: abstract,

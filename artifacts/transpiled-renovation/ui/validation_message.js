@@ -10,12 +10,12 @@ var _string = require("../core/utils/string");
 var _position = require("../core/utils/position");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var INVALID_MESSAGE = 'dx-invalid-message';
-var INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
-var INVALID_MESSAGE_ALWAYS = 'dx-invalid-message-always';
-var INVALID_MESSAGE_CONTENT = 'dx-invalid-message-content';
-var VALIDATION_MESSAGE_MIN_WIDTH = 100;
-var ValidationMessage = _ui.default.inherit({
+const INVALID_MESSAGE = 'dx-invalid-message';
+const INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
+const INVALID_MESSAGE_ALWAYS = 'dx-invalid-message-always';
+const INVALID_MESSAGE_CONTENT = 'dx-invalid-message-content';
+const VALIDATION_MESSAGE_MIN_WIDTH = 100;
+const ValidationMessage = _ui.default.inherit({
   _getDefaultOptions() {
     return (0, _extend.extend)(this.callBase(), {
       integrationOptions: {},
@@ -57,17 +57,18 @@ var ValidationMessage = _ui.default.inherit({
     this._toggleModeClass();
     this._updateContentId();
   },
-  _updatePositionByTarget: function _updatePositionByTarget() {
-    var _this$option = this.option(),
-      target = _this$option.target;
+  _updatePositionByTarget: function () {
+    const {
+      target
+    } = this.option();
     this.option('position.of', target);
   },
-  _ensureMessageNotEmpty: function _ensureMessageNotEmpty() {
+  _ensureMessageNotEmpty: function () {
     this._textMarkup = this._getTextMarkup();
-    var shouldShowMessage = this.option('visible') && this._textMarkup;
+    const shouldShowMessage = this.option('visible') && this._textMarkup;
     this._toggleVisibilityClasses(shouldShowMessage);
   },
-  _toggleVisibilityClasses: function _toggleVisibilityClasses(visible) {
+  _toggleVisibilityClasses: function (visible) {
     if (visible) {
       this.$element().addClass(INVALID_MESSAGE);
       this.$wrapper().addClass(INVALID_MESSAGE);
@@ -77,35 +78,36 @@ var ValidationMessage = _ui.default.inherit({
     }
   },
   _updateContentId() {
-    var _this$option2 = this.option(),
-      container = _this$option2.container,
-      contentId = _this$option2.contentId;
-    var id = contentId !== null && contentId !== void 0 ? contentId : (0, _renderer.default)(container).attr('aria-describedby');
+    const {
+      container,
+      contentId
+    } = this.option();
+    const id = contentId !== null && contentId !== void 0 ? contentId : (0, _renderer.default)(container).attr('aria-describedby');
     this.$content().addClass(INVALID_MESSAGE_CONTENT).attr('id', id);
   },
   _renderInnerHtml(element) {
-    var $element = element && (0, _renderer.default)(element);
+    const $element = element && (0, _renderer.default)(element);
     $element === null || $element === void 0 ? void 0 : $element.html(this._textMarkup);
   },
   _getTextMarkup() {
-    var _this$option3;
-    var validationErrors = (_this$option3 = this.option('validationErrors')) !== null && _this$option3 !== void 0 ? _this$option3 : [];
-    var validationErrorMessage = '';
-    validationErrors.forEach(function (err) {
+    var _this$option;
+    const validationErrors = (_this$option = this.option('validationErrors')) !== null && _this$option !== void 0 ? _this$option : [];
+    let validationErrorMessage = '';
+    validationErrors.forEach(err => {
       var _err$message;
-      var separator = validationErrorMessage ? '<br />' : '';
+      const separator = validationErrorMessage ? '<br />' : '';
       validationErrorMessage += separator + (0, _string.encodeHtml)((_err$message = err === null || err === void 0 ? void 0 : err.message) !== null && _err$message !== void 0 ? _err$message : '');
     });
     return validationErrorMessage;
   },
   _toggleModeClass() {
-    var mode = this.option('mode');
+    const mode = this.option('mode');
     this.$wrapper().toggleClass(INVALID_MESSAGE_AUTO, mode === 'auto').toggleClass(INVALID_MESSAGE_ALWAYS, mode === 'always');
   },
   updateMaxWidth() {
-    var target = this.option('target');
-    var targetWidth = (0, _size.getOuterWidth)(target);
-    var maxWidth = '100%';
+    const target = this.option('target');
+    const targetWidth = (0, _size.getOuterWidth)(target);
+    let maxWidth = '100%';
     if (targetWidth) {
       maxWidth = Math.max(targetWidth, VALIDATION_MESSAGE_MIN_WIDTH);
     }
@@ -113,7 +115,7 @@ var ValidationMessage = _ui.default.inherit({
       maxWidth
     });
   },
-  _getPositionsArray: function _getPositionsArray(positionSide, rtlSide) {
+  _getPositionsArray: function (positionSide, rtlSide) {
     switch (positionSide) {
       case 'top':
         return ["".concat(rtlSide, " bottom"), "".concat(rtlSide, " top")];
@@ -125,15 +127,16 @@ var ValidationMessage = _ui.default.inherit({
         return ["".concat(rtlSide, " top"), "".concat(rtlSide, " bottom")];
     }
   },
-  _updatePosition: function _updatePosition() {
-    var _this$option4 = this.option(),
-      positionSide = _this$option4.positionSide,
-      rtlEnabled = _this$option4.rtlEnabled,
-      componentOffset = _this$option4.offset,
-      boundary = _this$option4.boundary;
-    var rtlSide = (0, _position.getDefaultAlignment)(rtlEnabled);
-    var positions = this._getPositionsArray(positionSide, rtlSide);
-    var offset = _extends({}, componentOffset);
+  _updatePosition: function () {
+    const {
+      positionSide,
+      rtlEnabled,
+      offset: componentOffset,
+      boundary
+    } = this.option();
+    const rtlSide = (0, _position.getDefaultAlignment)(rtlEnabled);
+    const positions = this._getPositionsArray(positionSide, rtlSide);
+    const offset = _extends({}, componentOffset);
     this.$element().addClass("dx-invalid-message-".concat(positionSide));
     if (rtlEnabled && positionSide !== 'left' && positionSide !== 'right') offset.h = -offset.h;
     if (positionSide === 'top') offset.v = -offset.v;
@@ -147,9 +150,11 @@ var ValidationMessage = _ui.default.inherit({
     });
   },
   _optionChanged(args) {
-    var name = args.name,
-      value = args.value,
-      previousValue = args.previousValue;
+    const {
+      name,
+      value,
+      previousValue
+    } = args;
     switch (name) {
       case 'target':
         this._updatePositionByTarget();

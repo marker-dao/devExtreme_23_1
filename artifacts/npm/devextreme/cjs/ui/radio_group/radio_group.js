@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/radio_group/radio_group.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,17 +24,17 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 // STYLE radioGroup
 
-var RADIO_BUTTON_CHECKED_CLASS = 'dx-radiobutton-checked';
-var RADIO_BUTTON_CLASS = 'dx-radiobutton';
-var RADIO_BUTTON_ICON_CHECKED_CLASS = 'dx-radiobutton-icon-checked';
-var RADIO_BUTTON_ICON_CLASS = 'dx-radiobutton-icon';
-var RADIO_BUTTON_ICON_DOT_CLASS = 'dx-radiobutton-icon-dot';
-var RADIO_GROUP_HORIZONTAL_CLASS = 'dx-radiogroup-horizontal';
-var RADIO_GROUP_VERTICAL_CLASS = 'dx-radiogroup-vertical';
-var RADIO_VALUE_CONTAINER_CLASS = 'dx-radio-value-container';
-var RADIO_GROUP_CLASS = 'dx-radiogroup';
-var RADIO_FEEDBACK_HIDE_TIMEOUT = 100;
-var RadioCollection = /*#__PURE__*/function (_CollectionWidget) {
+const RADIO_BUTTON_CHECKED_CLASS = 'dx-radiobutton-checked';
+const RADIO_BUTTON_CLASS = 'dx-radiobutton';
+const RADIO_BUTTON_ICON_CHECKED_CLASS = 'dx-radiobutton-icon-checked';
+const RADIO_BUTTON_ICON_CLASS = 'dx-radiobutton-icon';
+const RADIO_BUTTON_ICON_DOT_CLASS = 'dx-radiobutton-icon-dot';
+const RADIO_GROUP_HORIZONTAL_CLASS = 'dx-radiogroup-horizontal';
+const RADIO_GROUP_VERTICAL_CLASS = 'dx-radiogroup-vertical';
+const RADIO_VALUE_CONTAINER_CLASS = 'dx-radio-value-container';
+const RADIO_GROUP_CLASS = 'dx-radiogroup';
+const RADIO_FEEDBACK_HIDE_TIMEOUT = 100;
+let RadioCollection = /*#__PURE__*/function (_CollectionWidget) {
   _inheritsLoose(RadioCollection, _CollectionWidget);
   function RadioCollection() {
     return _CollectionWidget.apply(this, arguments) || this;
@@ -47,7 +47,7 @@ var RadioCollection = /*#__PURE__*/function (_CollectionWidget) {
     return true;
   };
   _proto._getDefaultOptions = function _getDefaultOptions() {
-    var defaultOptions = _CollectionWidget.prototype._getDefaultOptions.call(this);
+    const defaultOptions = _CollectionWidget.prototype._getDefaultOptions.call(this);
     return (0, _extend.extend)(defaultOptions, _ui.default._dataExpressionDefaultOptions(), {
       _itemAttributes: {
         role: 'radio'
@@ -55,22 +55,25 @@ var RadioCollection = /*#__PURE__*/function (_CollectionWidget) {
     });
   };
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     _CollectionWidget.prototype._initMarkup.call(this);
-    (0, _common.deferRender)(function () {
-      _this.itemElements().addClass(RADIO_BUTTON_CLASS);
+    (0, _common.deferRender)(() => {
+      this.itemElements().addClass(RADIO_BUTTON_CLASS);
     });
   };
   _proto._keyboardEventBindingTarget = function _keyboardEventBindingTarget() {
     return this._focusTarget();
   };
   _proto._postprocessRenderItem = function _postprocessRenderItem(args) {
-    var html = args.itemData.html,
-      itemElement = args.itemElement;
+    const {
+      itemData: {
+        html
+      },
+      itemElement
+    } = args;
     if (!html) {
-      var $radio = (0, _renderer.default)('<div>').addClass(RADIO_BUTTON_ICON_CLASS);
+      const $radio = (0, _renderer.default)('<div>').addClass(RADIO_BUTTON_ICON_CLASS);
       (0, _renderer.default)('<div>').addClass(RADIO_BUTTON_ICON_DOT_CLASS).appendTo($radio);
-      var $radioContainer = (0, _renderer.default)('<div>').append($radio).addClass(RADIO_VALUE_CONTAINER_CLASS);
+      const $radioContainer = (0, _renderer.default)('<div>').append($radio).addClass(RADIO_VALUE_CONTAINER_CLASS);
       (0, _renderer.default)(itemElement).prepend($radioContainer);
     }
     _CollectionWidget.prototype._postprocessRenderItem.call(this, args);
@@ -85,13 +88,13 @@ var RadioCollection = /*#__PURE__*/function (_CollectionWidget) {
     this._renderContent();
   };
   _proto._supportedKeys = function _supportedKeys() {
-    var parent = _CollectionWidget.prototype._supportedKeys.call(this);
+    const parent = _CollectionWidget.prototype._supportedKeys.call(this);
     return (0, _extend.extend)({}, parent, {
-      enter: function enter(e) {
+      enter: function (e) {
         e.preventDefault();
         return parent.enter.apply(this, arguments);
       },
-      space: function space(e) {
+      space: function (e) {
         e.preventDefault();
         return parent.space.apply(this, arguments);
       }
@@ -103,7 +106,7 @@ var RadioCollection = /*#__PURE__*/function (_CollectionWidget) {
   _proto._setAriaSelectionAttribute = function _setAriaSelectionAttribute() {};
   return RadioCollection;
 }(_uiCollection_widget.default);
-var RadioGroup = /*#__PURE__*/function (_Editor) {
+let RadioGroup = /*#__PURE__*/function (_Editor) {
   _inheritsLoose(RadioGroup, _Editor);
   function RadioGroup() {
     return _Editor.apply(this, arguments) || this;
@@ -115,7 +118,7 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
     };
   };
   _proto2._defaultOptionsRules = function _defaultOptionsRules() {
-    var defaultOptionsRules = _Editor.prototype._defaultOptionsRules.call(this);
+    const defaultOptionsRules = _Editor.prototype._defaultOptionsRules.call(this);
     return defaultOptionsRules.concat([{
       device: {
         tablet: true
@@ -124,9 +127,7 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
         layout: 'horizontal'
       }
     }, {
-      device: function device() {
-        return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
-      },
+      device: () => _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator(),
       options: {
         focusStateEnabled: true
       }
@@ -142,7 +143,7 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
     return this.$element();
   };
   _proto2._getDefaultOptions = function _getDefaultOptions() {
-    var defaultOptions = _Editor.prototype._getDefaultOptions.call(this);
+    const defaultOptions = _Editor.prototype._getDefaultOptions.call(this);
     return (0, _extend.extend)(defaultOptions, (0, _extend.extend)(_ui.default._dataExpressionDefaultOptions(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
@@ -170,11 +171,13 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
     _Editor.prototype._initMarkup.call(this);
   };
   _proto2._itemClickHandler = function _itemClickHandler(_ref) {
-    var itemElement = _ref.itemElement,
-      event = _ref.event,
-      itemData = _ref.itemData;
+    let {
+      itemElement,
+      event,
+      itemData
+    } = _ref;
     if (this.itemElements().is(itemElement)) {
-      var newValue = this._getItemValue(itemData);
+      const newValue = this._getItemValue(itemData);
       if (newValue !== this.option('value')) {
         this._saveValueChangeEvent(event);
         this.option('value', newValue);
@@ -182,13 +185,13 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
     }
   };
   _proto2._getSelectedItemKeys = function _getSelectedItemKeys() {
-    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.option('value');
-    var isNullSelectable = this.option('valueExpr') !== 'this';
-    var shouldSelectValue = isNullSelectable && value === null || (0, _type.isDefined)(value);
+    let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.option('value');
+    const isNullSelectable = this.option('valueExpr') !== 'this';
+    const shouldSelectValue = isNullSelectable && value === null || (0, _type.isDefined)(value);
     return shouldSelectValue ? [value] : [];
   };
   _proto2._setSelection = function _setSelection(currentValue) {
-    var value = this._unwrappedValue(currentValue);
+    const value = this._unwrappedValue(currentValue);
     this._setCollectionWidgetOption('selectedItemKeys', this._getSelectedItemKeys(value));
   };
   _proto2._renderValidationState = function _renderValidationState() {
@@ -197,8 +200,10 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
     (_this$_validationMess = this._validationMessage) === null || _this$_validationMess === void 0 ? void 0 : _this$_validationMess.$content().attr('role', 'alert');
   };
   _proto2._optionChanged = function _optionChanged(args) {
-    var name = args.name,
-      value = args.value;
+    const {
+      name,
+      value
+    } = args;
     this._dataExpressionOptionChanged(args);
     switch (name) {
       case 'dataSource':
@@ -240,28 +245,30 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
     this._updateItemsSize();
   };
   _proto2._renderLayout = function _renderLayout() {
-    var layout = this.option('layout');
-    var $element = this.$element();
+    const layout = this.option('layout');
+    const $element = this.$element();
     $element.toggleClass(RADIO_GROUP_VERTICAL_CLASS, layout === 'vertical');
     $element.toggleClass(RADIO_GROUP_HORIZONTAL_CLASS, layout === 'horizontal');
   };
   _proto2._renderRadios = function _renderRadios() {
-    var _this2 = this;
     this._areRadiosCreated = new _deferred.Deferred();
-    var $radios = (0, _renderer.default)('<div>').appendTo(this.$element());
-    var _this$option = this.option(),
-      displayExpr = _this$option.displayExpr,
-      accessKey = _this$option.accessKey,
-      focusStateEnabled = _this$option.focusStateEnabled,
-      itemTemplate = _this$option.itemTemplate,
-      tabIndex = _this$option.tabIndex;
+    const $radios = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const {
+      displayExpr,
+      accessKey,
+      focusStateEnabled,
+      itemTemplate,
+      tabIndex
+    } = this.option();
     this._createComponent($radios, RadioCollection, {
-      onInitialized: function onInitialized(_ref2) {
-        var component = _ref2.component;
-        _this2._radios = component;
+      onInitialized: _ref2 => {
+        let {
+          component
+        } = _ref2;
+        this._radios = component;
       },
-      onContentReady: function onContentReady(e) {
-        _this2._fireContentReadyAction(true);
+      onContentReady: e => {
+        this._fireContentReadyAction(true);
       },
       onItemClick: this._itemClickHandler.bind(this),
       displayExpr,
@@ -292,7 +299,7 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
   _proto2._setSubmitValue = function _setSubmitValue(value) {
     var _value;
     value = (_value = value) !== null && _value !== void 0 ? _value : this.option('value');
-    var submitValue = this.option('valueExpr') === 'this' ? this._displayGetter(value) : value;
+    const submitValue = this.option('valueExpr') === 'this' ? this._displayGetter(value) : value;
     this._$submitElement.val(submitValue);
   };
   _proto2._setCollectionWidgetOption = function _setCollectionWidgetOption() {
@@ -302,7 +309,7 @@ var RadioGroup = /*#__PURE__*/function (_Editor) {
     if (this.option('layout') === 'horizontal') {
       this.itemElements().css('height', 'auto');
     } else {
-      var itemsCount = this.option('items').length;
+      const itemsCount = this.option('items').length;
       this.itemElements().css('height', 100 / itemsCount + '%');
     }
   };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/filter_builder/between.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,19 +12,19 @@ exports.getConfig = getConfig;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _extend = require("../../core/utils/extend");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FILTER_BUILDER_RANGE_CLASS = 'dx-filterbuilder-range';
-var FILTER_BUILDER_RANGE_START_CLASS = FILTER_BUILDER_RANGE_CLASS + '-start';
-var FILTER_BUILDER_RANGE_END_CLASS = FILTER_BUILDER_RANGE_CLASS + '-end';
-var FILTER_BUILDER_RANGE_SEPARATOR_CLASS = FILTER_BUILDER_RANGE_CLASS + '-separator';
-var SEPARATOR = '\u2013';
+const FILTER_BUILDER_RANGE_CLASS = 'dx-filterbuilder-range';
+const FILTER_BUILDER_RANGE_START_CLASS = FILTER_BUILDER_RANGE_CLASS + '-start';
+const FILTER_BUILDER_RANGE_END_CLASS = FILTER_BUILDER_RANGE_CLASS + '-end';
+const FILTER_BUILDER_RANGE_SEPARATOR_CLASS = FILTER_BUILDER_RANGE_CLASS + '-separator';
+const SEPARATOR = '\u2013';
 function editorTemplate(conditionInfo, container) {
-  var $editorStart = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_START_CLASS);
-  var $editorEnd = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_END_CLASS);
-  var values = conditionInfo.value || [];
-  var getStartValue = function getStartValue(values) {
+  const $editorStart = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_START_CLASS);
+  const $editorEnd = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_RANGE_END_CLASS);
+  let values = conditionInfo.value || [];
+  const getStartValue = function (values) {
     return values && values.length > 0 ? values[0] : null;
   };
-  var getEndValue = function getEndValue(values) {
+  const getEndValue = function (values) {
     return values && values.length === 2 ? values[1] : null;
   };
   container.append($editorStart);
@@ -34,7 +34,7 @@ function editorTemplate(conditionInfo, container) {
   this._editorFactory.createEditor.call(this, $editorStart, (0, _extend.extend)({}, conditionInfo.field, conditionInfo, {
     value: getStartValue(values),
     parentType: 'filterBuilder',
-    setValue: function setValue(value) {
+    setValue: function (value) {
       values = [value, getEndValue(values)];
       conditionInfo.setValue(values);
     }
@@ -42,7 +42,7 @@ function editorTemplate(conditionInfo, container) {
   this._editorFactory.createEditor.call(this, $editorEnd, (0, _extend.extend)({}, conditionInfo.field, conditionInfo, {
     value: getEndValue(values),
     parentType: 'filterBuilder',
-    setValue: function setValue(value) {
+    setValue: function (value) {
       values = [getStartValue(values), value];
       conditionInfo.setValue(values);
     }

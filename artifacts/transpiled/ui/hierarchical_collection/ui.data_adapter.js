@@ -13,12 +13,12 @@ var _query = _interopRequireDefault(require("../../data/query"));
 var _store_helper = _interopRequireDefault(require("../../data/store_helper"));
 var _ui3 = _interopRequireDefault(require("./ui.data_converter"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var EXPANDED = 'expanded';
-var SELECTED = 'selected';
-var DISABLED = 'disabled';
+const EXPANDED = 'expanded';
+const SELECTED = 'selected';
+const DISABLED = 'disabled';
 _ui2.default.setEditorClass(_text_box.default);
-var DataAdapter = _class.default.inherit({
-  ctor: function ctor(options) {
+const DataAdapter = _class.default.inherit({
+  ctor: function (options) {
     this.options = {};
     (0, _extend.extend)(this.options, this._defaultOptions(), options);
     this.options.dataConverter.setDataAccessors(this.options.dataAccessors);
@@ -28,13 +28,13 @@ var DataAdapter = _class.default.inherit({
     this._createInternalDataStructure();
     this.getTreeNodes();
   },
-  setOption: function setOption(name, value) {
+  setOption: function (name, value) {
     this.options[name] = value;
     if (name === 'recursiveSelection') {
       this._updateSelection();
     }
   },
-  _defaultOptions: function _defaultOptions() {
+  _defaultOptions: function () {
     return {
       dataAccessors: undefined,
       items: [],
@@ -50,29 +50,29 @@ var DataAdapter = _class.default.inherit({
       sort: null
     };
   },
-  _createInternalDataStructure: function _createInternalDataStructure() {
+  _createInternalDataStructure: function () {
     this._initialDataStructure = this.options.dataConverter.createPlainStructure(this.options.items, this.options.rootValue, this.options.dataType);
     this._dataStructure = this.options.searchValue.length ? this.search(this.options.searchValue) : this._initialDataStructure;
     this.options.dataConverter._dataStructure = this._dataStructure;
     this._updateSelection();
     this._updateExpansion();
   },
-  _updateSelection: function _updateSelection() {
+  _updateSelection: function () {
     if (this.options.recursiveSelection) {
       this._setChildrenSelection();
       this._setParentSelection();
     }
     this._selectedNodesKeys = this._updateNodesKeysArray(SELECTED);
   },
-  _updateExpansion: function _updateExpansion(key) {
+  _updateExpansion: function (key) {
     if (this.options.recursiveExpansion) {
       key ? this._updateOneBranch(key) : this._setParentExpansion();
     }
     this._expandedNodesKeys = this._updateNodesKeysArray(EXPANDED);
   },
-  _updateNodesKeysArray: function _updateNodesKeysArray(property) {
-    var that = this;
-    var array = [];
+  _updateNodesKeysArray: function (property) {
+    const that = this;
+    let array = [];
     (0, _iterator.each)(that._getDataBySelectionMode(), function (_, node) {
       if (!that._isNodeVisible(node)) {
         return;
@@ -88,39 +88,39 @@ var DataAdapter = _class.default.inherit({
     });
     return array;
   },
-  _getDataBySelectionMode: function _getDataBySelectionMode() {
+  _getDataBySelectionMode: function () {
     return this.options.multipleSelection ? this.getData() : this.getFullData();
   },
-  _isNodeVisible: function _isNodeVisible(node) {
+  _isNodeVisible: function (node) {
     return node.internalFields.item.visible !== false;
   },
-  _getByKey: function _getByKey(data, key) {
+  _getByKey: function (data, key) {
     return data === this._dataStructure ? this.options.dataConverter._getByKey(key) : this.options.dataConverter.getByKey(data, key);
   },
-  _setChildrenSelection: function _setChildrenSelection() {
-    var that = this;
+  _setChildrenSelection: function () {
+    const that = this;
     (0, _iterator.each)(this._dataStructure, function (_, node) {
       if (!node.internalFields.childrenKeys.length) {
         return;
       }
-      var isSelected = node.internalFields.selected;
+      const isSelected = node.internalFields.selected;
       isSelected === true && that._toggleChildrenSelection(node, isSelected);
     });
   },
-  _setParentSelection: function _setParentSelection() {
-    var that = this;
+  _setParentSelection: function () {
+    const that = this;
     (0, _iterator.each)(this._dataStructure, function (_, node) {
-      var parent = that.options.dataConverter.getParentNode(node);
+      const parent = that.options.dataConverter.getParentNode(node);
       if (parent && node.internalFields.parentKey !== that.options.rootValue) {
         that._iterateParents(node, function (parent) {
-          var newParentState = that._calculateSelectedState(parent);
+          const newParentState = that._calculateSelectedState(parent);
           that._setFieldState(parent, SELECTED, newParentState);
         });
       }
     });
   },
-  _setParentExpansion: function _setParentExpansion() {
-    var that = this;
+  _setParentExpansion: function () {
+    const that = this;
     (0, _iterator.each)(this._dataStructure, function (_, node) {
       if (!node.internalFields.expanded) {
         return;
@@ -128,24 +128,24 @@ var DataAdapter = _class.default.inherit({
       that._updateOneBranch(node.internalFields.key);
     });
   },
-  _updateOneBranch: function _updateOneBranch(key) {
-    var that = this;
-    var node = this.getNodeByKey(key);
+  _updateOneBranch: function (key) {
+    const that = this;
+    const node = this.getNodeByKey(key);
     that._iterateParents(node, function (parent) {
       that._setFieldState(parent, EXPANDED, true);
     });
   },
-  _iterateChildren: function _iterateChildren(node, recursive, callback, processedKeys) {
+  _iterateChildren: function (node, recursive, callback, processedKeys) {
     if (!(0, _type.isFunction)(callback)) {
       return;
     }
-    var that = this;
-    var nodeKey = node.internalFields.key;
+    const that = this;
+    const nodeKey = node.internalFields.key;
     processedKeys = processedKeys || [];
     if (processedKeys.indexOf(nodeKey) === -1) {
       processedKeys.push(nodeKey);
       (0, _iterator.each)(node.internalFields.childrenKeys, function (_, key) {
-        var child = that.getNodeByKey(key);
+        const child = that.getNodeByKey(key);
         callback(child);
         if (child.internalFields.childrenKeys.length && recursive) {
           that._iterateChildren(child, recursive, callback, processedKeys);
@@ -153,15 +153,15 @@ var DataAdapter = _class.default.inherit({
       });
     }
   },
-  _iterateParents: function _iterateParents(node, callback, processedKeys) {
+  _iterateParents: function (node, callback, processedKeys) {
     if (node.internalFields.parentKey === this.options.rootValue || !(0, _type.isFunction)(callback)) {
       return;
     }
     processedKeys = processedKeys || [];
-    var key = node.internalFields.key;
+    const key = node.internalFields.key;
     if (processedKeys.indexOf(key) === -1) {
       processedKeys.push(key);
-      var parent = this.options.dataConverter.getParentNode(node);
+      const parent = this.options.dataConverter.getParentNode(node);
       if (parent) {
         callback(parent);
         if (parent.internalFields.parentKey !== this.options.rootValue) {
@@ -170,15 +170,15 @@ var DataAdapter = _class.default.inherit({
       }
     }
   },
-  _calculateSelectedState: function _calculateSelectedState(node) {
-    var itemsCount = node.internalFields.childrenKeys.length;
-    var selectedItemsCount = 0;
-    var invisibleItemsCount = 0;
-    var result = false;
-    for (var i = 0; i <= itemsCount - 1; i++) {
-      var childNode = this.getNodeByKey(node.internalFields.childrenKeys[i]);
-      var isChildInvisible = childNode.internalFields.item.visible === false;
-      var childState = childNode.internalFields.selected;
+  _calculateSelectedState: function (node) {
+    const itemsCount = node.internalFields.childrenKeys.length;
+    let selectedItemsCount = 0;
+    let invisibleItemsCount = 0;
+    let result = false;
+    for (let i = 0; i <= itemsCount - 1; i++) {
+      const childNode = this.getNodeByKey(node.internalFields.childrenKeys[i]);
+      const isChildInvisible = childNode.internalFields.item.visible === false;
+      const childState = childNode.internalFields.selected;
       if (isChildInvisible) {
         invisibleItemsCount++;
         continue;
@@ -194,15 +194,15 @@ var DataAdapter = _class.default.inherit({
     }
     return result;
   },
-  _toggleChildrenSelection: function _toggleChildrenSelection(node, state) {
-    var that = this;
+  _toggleChildrenSelection: function (node, state) {
+    const that = this;
     this._iterateChildren(node, true, function (child) {
       if (that._isNodeVisible(child)) {
         that._setFieldState(child, SELECTED, state);
       }
     });
   },
-  _setFieldState: function _setFieldState(node, field, state) {
+  _setFieldState: function (node, field, state) {
     if (node.internalFields[field] === state) {
       return;
     }
@@ -213,22 +213,22 @@ var DataAdapter = _class.default.inherit({
     this.options.dataAccessors.setters[field](node.internalFields.item, state);
     this.options.onNodeChanged(node);
   },
-  _markChildren: function _markChildren(keys) {
-    var that = this;
+  _markChildren: function (keys) {
+    const that = this;
     (0, _iterator.each)(keys, function (_, key) {
-      var index = that.getIndexByKey(key);
-      var node = that.getNodeByKey(key);
+      const index = that.getIndexByKey(key);
+      const node = that.getNodeByKey(key);
       that._dataStructure[index] = 0;
       node.internalFields.childrenKeys.length && that._markChildren(node.internalFields.childrenKeys);
     });
   },
-  _removeNode: function _removeNode(key) {
-    var node = this.getNodeByKey(key);
+  _removeNode: function (key) {
+    const node = this.getNodeByKey(key);
     this._dataStructure[this.getIndexByKey(key)] = 0;
     this._markChildren(node.internalFields.childrenKeys);
-    var that = this;
-    var counter = 0;
-    var items = (0, _extend.extend)([], this._dataStructure);
+    const that = this;
+    let counter = 0;
+    const items = (0, _extend.extend)([], this._dataStructure);
     (0, _iterator.each)(items, function (index, item) {
       if (!item) {
         that._dataStructure.splice(index - counter, 1);
@@ -236,32 +236,32 @@ var DataAdapter = _class.default.inherit({
       }
     });
   },
-  _addNode: function _addNode(item) {
-    var dataConverter = this.options.dataConverter;
-    var node = dataConverter._convertItemToNode(item, this.options.dataAccessors.getters.parentKey(item));
+  _addNode: function (item) {
+    const dataConverter = this.options.dataConverter;
+    const node = dataConverter._convertItemToNode(item, this.options.dataAccessors.getters.parentKey(item));
     this._dataStructure = this._dataStructure.concat(node);
     this._initialDataStructure = this._initialDataStructure.concat(node);
     dataConverter._dataStructure = dataConverter._dataStructure.concat(node);
   },
-  _updateFields: function _updateFields() {
+  _updateFields: function () {
     this.options.dataConverter.updateChildrenKeys();
     this._updateSelection();
     this._updateExpansion();
   },
-  getSelectedNodesKeys: function getSelectedNodesKeys() {
+  getSelectedNodesKeys: function () {
     return this._selectedNodesKeys;
   },
-  getExpandedNodesKeys: function getExpandedNodesKeys() {
+  getExpandedNodesKeys: function () {
     return this._expandedNodesKeys;
   },
-  getData: function getData() {
+  getData: function () {
     return this._dataStructure;
   },
-  getFullData: function getFullData() {
+  getFullData: function () {
     return this._initialDataStructure;
   },
-  getNodeByItem: function getNodeByItem(item) {
-    var result = null;
+  getNodeByItem: function (item) {
+    let result = null;
     (0, _iterator.each)(this._dataStructure, function (_, node) {
       if (node.internalFields.item === item) {
         result = node;
@@ -270,52 +270,52 @@ var DataAdapter = _class.default.inherit({
     });
     return result;
   },
-  getNodesByItems: function getNodesByItems(items) {
-    var that = this;
-    var nodes = [];
+  getNodesByItems: function (items) {
+    const that = this;
+    const nodes = [];
     (0, _iterator.each)(items, function (_, item) {
-      var node = that.getNodeByItem(item);
+      const node = that.getNodeByItem(item);
       node && nodes.push(node);
     });
     return nodes;
   },
-  getNodeByKey: function getNodeByKey(key, data) {
+  getNodeByKey: function (key, data) {
     return this._getByKey(data || this._getDataBySelectionMode(), key);
   },
-  getTreeNodes: function getTreeNodes() {
+  getTreeNodes: function () {
     return this.options.dataConverter.convertToPublicNodes(this.getRootNodes());
   },
-  getItemsCount: function getItemsCount() {
+  getItemsCount: function () {
     return this.options.dataConverter.getItemsCount();
   },
-  getVisibleItemsCount: function getVisibleItemsCount() {
+  getVisibleItemsCount: function () {
     return this.options.dataConverter.getVisibleItemsCount();
   },
-  getPublicNode: function getPublicNode(node) {
+  getPublicNode: function (node) {
     return node.internalFields.publicNode;
   },
-  getRootNodes: function getRootNodes() {
+  getRootNodes: function () {
     return this.getChildrenNodes(this.options.rootValue);
   },
-  getChildrenNodes: function getChildrenNodes(parentKey) {
+  getChildrenNodes: function (parentKey) {
     return (0, _query.default)(this._dataStructure, {
       langParams: this.options.langParams
     }).filter(['internalFields.parentKey', parentKey]).toArray();
   },
-  getIndexByKey: function getIndexByKey(key) {
+  getIndexByKey: function (key) {
     return this.options.dataConverter.getIndexByKey(key);
   },
-  addItem: function addItem(item) {
+  addItem: function (item) {
     this._addNode(item);
     this._updateFields();
   },
-  removeItem: function removeItem(key) {
+  removeItem: function (key) {
     this._removeNode(key);
     this._updateFields();
   },
-  toggleSelection: function toggleSelection(key, state, selectRecursive) {
-    var isSingleModeUnselect = this._isSingleModeUnselect(state);
-    var node = this._getByKey(selectRecursive || isSingleModeUnselect ? this._initialDataStructure : this._dataStructure, key);
+  toggleSelection: function (key, state, selectRecursive) {
+    const isSingleModeUnselect = this._isSingleModeUnselect(state);
+    const node = this._getByKey(selectRecursive || isSingleModeUnselect ? this._initialDataStructure : this._dataStructure, key);
     this._setFieldState(node, SELECTED, state);
     if (this.options.recursiveSelection && !selectRecursive) {
       state ? this._setChildrenSelection() : this._toggleChildrenSelection(node, state);
@@ -323,20 +323,20 @@ var DataAdapter = _class.default.inherit({
     }
     this._selectedNodesKeys = this._updateNodesKeysArray(SELECTED);
   },
-  _isSingleModeUnselect: function _isSingleModeUnselect(selectionState) {
+  _isSingleModeUnselect: function (selectionState) {
     return !this.options.multipleSelection && !selectionState;
   },
-  toggleNodeDisabledState: function toggleNodeDisabledState(key, state) {
-    var node = this.getNodeByKey(key);
+  toggleNodeDisabledState: function (key, state) {
+    const node = this.getNodeByKey(key);
     this._setFieldState(node, DISABLED, state);
   },
-  toggleSelectAll: function toggleSelectAll(state) {
+  toggleSelectAll: function (state) {
     if (!(0, _type.isDefined)(state)) {
       return;
     }
-    var that = this;
-    var lastSelectedKey = that._selectedNodesKeys[that._selectedNodesKeys.length - 1];
-    var dataStructure = that._isSingleModeUnselect(state) ? this._initialDataStructure : this._dataStructure;
+    const that = this;
+    const lastSelectedKey = that._selectedNodesKeys[that._selectedNodesKeys.length - 1];
+    const dataStructure = that._isSingleModeUnselect(state) ? this._initialDataStructure : this._dataStructure;
     (0, _iterator.each)(dataStructure, function (index, node) {
       if (!that._isNodeVisible(node)) {
         return;
@@ -348,26 +348,26 @@ var DataAdapter = _class.default.inherit({
       that.toggleSelection(lastSelectedKey, true);
     }
   },
-  isAllSelected: function isAllSelected() {
+  isAllSelected: function () {
     if (this.getSelectedNodesKeys().length) {
       return this.getSelectedNodesKeys().length === this.getVisibleItemsCount() ? true : undefined;
     } else {
       return false;
     }
   },
-  toggleExpansion: function toggleExpansion(key, state) {
-    var node = this.getNodeByKey(key);
+  toggleExpansion: function (key, state) {
+    const node = this.getNodeByKey(key);
     this._setFieldState(node, EXPANDED, state);
     if (state) {
       this._updateExpansion(key);
     }
     this._expandedNodesKeys = this._updateNodesKeysArray(EXPANDED);
   },
-  isFiltered: function isFiltered(item) {
+  isFiltered: function (item) {
     return !this.options.searchValue.length || !!this._filterDataStructure(this.options.searchValue, [item]).length;
   },
-  _createCriteria: function _createCriteria(selector, value, operation) {
-    var searchFilter = [];
+  _createCriteria: function (selector, value, operation) {
+    const searchFilter = [];
     if (!Array.isArray(selector)) {
       return [selector, operation, value];
     }
@@ -377,28 +377,28 @@ var DataAdapter = _class.default.inherit({
     searchFilter.pop();
     return searchFilter;
   },
-  _filterDataStructure: function _filterDataStructure(filterValue, dataStructure) {
-    var selector = this.options.searchExpr || this.options.dataAccessors.getters.display;
-    var operation = _ui2.default.getOperationBySearchMode(this.options.searchMode);
-    var criteria = this._createCriteria(selector, filterValue, operation);
+  _filterDataStructure: function (filterValue, dataStructure) {
+    const selector = this.options.searchExpr || this.options.dataAccessors.getters.display;
+    const operation = _ui2.default.getOperationBySearchMode(this.options.searchMode);
+    const criteria = this._createCriteria(selector, filterValue, operation);
     dataStructure = dataStructure || this._initialDataStructure;
     return (0, _query.default)(dataStructure, {
       langParams: this.options.langParams
     }).filter(criteria).toArray();
   },
-  search: function search(searchValue) {
-    var that = this;
-    var matches = this._filterDataStructure(searchValue);
-    var dataConverter = this.options.dataConverter;
+  search: function (searchValue) {
+    const that = this;
+    let matches = this._filterDataStructure(searchValue);
+    const dataConverter = this.options.dataConverter;
     function lookForParents(matches, index) {
-      var length = matches.length;
+      const length = matches.length;
       while (index < length) {
-        var node = matches[index];
+        const node = matches[index];
         if (node.internalFields.parentKey === that.options.rootValue) {
           index++;
           continue;
         }
-        var parent = dataConverter.getParentNode(node);
+        const parent = dataConverter.getParentNode(node);
         if (!parent) {
           _ui.default.log('W1007', node.internalFields.parentKey, node.internalFields.key);
           index++;

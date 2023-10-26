@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.edit.decorator.context.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,20 +17,20 @@ var _uiListEdit3 = _interopRequireDefault(require("./ui.list.edit.decorator"));
 var _ui = _interopRequireDefault(require("../overlay/ui.overlay"));
 var _uiList = require("./ui.list.base");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var CONTEXTMENU_CLASS = 'dx-list-context-menu';
-var CONTEXTMENU_MENUCONTENT_CLASS = 'dx-list-context-menucontent';
+const CONTEXTMENU_CLASS = 'dx-list-context-menu';
+const CONTEXTMENU_MENUCONTENT_CLASS = 'dx-list-context-menucontent';
 (0, _uiListEdit2.register)('menu', 'context', _uiListEdit3.default.inherit({
-  _init: function _init() {
-    var $menu = (0, _renderer.default)('<div>').addClass(CONTEXTMENU_CLASS);
+  _init: function () {
+    const $menu = (0, _renderer.default)('<div>').addClass(CONTEXTMENU_CLASS);
     this._list.$element().append($menu);
     this._menu = this._renderOverlay($menu);
   },
-  _renderOverlay: function _renderOverlay($element) {
+  _renderOverlay: function ($element) {
     return this._list._createComponent($element, _ui.default, {
       shading: false,
       deferRendering: true,
       hideOnParentScroll: true,
-      hideOnOutsideClick: function hideOnOutsideClick(e) {
+      hideOnOutsideClick: function (e) {
         return !(0, _renderer.default)(e.target).closest('.' + CONTEXTMENU_CLASS).length;
       },
       animation: {
@@ -69,9 +69,9 @@ var CONTEXTMENU_MENUCONTENT_CLASS = 'dx-list-context-menucontent';
       onContentReady: this._renderMenuContent.bind(this)
     });
   },
-  _renderMenuContent: function _renderMenuContent(e) {
-    var $overlayContent = e.component.$content();
-    var items = this._menuItems().slice();
+  _renderMenuContent: function (e) {
+    const $overlayContent = e.component.$content();
+    const items = this._menuItems().slice();
     if (this._deleteEnabled()) {
       items.push({
         text: _message.default.format('dxListEditDecorator-delete'),
@@ -88,14 +88,14 @@ var CONTEXTMENU_MENUCONTENT_CLASS = 'dx-list-context-menucontent';
     $overlayContent.addClass(CONTEXTMENU_MENUCONTENT_CLASS);
     $overlayContent.append(this._$menuList);
   },
-  _menuItemClickHandler: function _menuItemClickHandler(args) {
+  _menuItemClickHandler: function (args) {
     this._menu.hide();
     this._fireMenuAction(this._$itemWithMenu, args.itemData.action);
   },
-  _deleteItem: function _deleteItem() {
+  _deleteItem: function () {
     this._list.deleteItem(this._$itemWithMenu);
   },
-  handleContextMenu: function handleContextMenu($itemElement) {
+  handleContextMenu: function ($itemElement) {
     this._$itemWithMenu = $itemElement;
     this._menu.option({
       position: {
@@ -108,7 +108,7 @@ var CONTEXTMENU_MENUCONTENT_CLASS = 'dx-list-context-menucontent';
     this._menu.show();
     return true;
   },
-  dispose: function dispose() {
+  dispose: function () {
     if (this._menu) {
       this._menu.$element().remove();
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/vector_map/event_emitter.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,27 +11,27 @@
 exports.makeEventEmitter = makeEventEmitter;
 var _callbacks = _interopRequireDefault(require("../../core/utils/callbacks"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var eventEmitterMethods = {
-  _initEvents: function _initEvents() {
-    var names = this._eventNames;
-    var i;
-    var ii = names.length;
-    var events = this._events = {};
+const eventEmitterMethods = {
+  _initEvents: function () {
+    const names = this._eventNames;
+    let i;
+    const ii = names.length;
+    const events = this._events = {};
     for (i = 0; i < ii; ++i) {
       events[names[i]] = (0, _callbacks.default)();
     }
   },
-  _disposeEvents: function _disposeEvents() {
-    var events = this._events;
-    var name;
+  _disposeEvents: function () {
+    const events = this._events;
+    let name;
     for (name in events) {
       events[name].empty();
     }
     this._events = null;
   },
-  on: function on(handlers) {
-    var events = this._events;
-    var name;
+  on: function (handlers) {
+    const events = this._events;
+    let name;
     for (name in handlers) {
       events[name].add(handlers[name]);
     }
@@ -42,13 +42,13 @@ var eventEmitterMethods = {
       }
     }
   },
-  _fire: function _fire(name, arg) {
+  _fire: function (name, arg) {
     this._events[name].fire(arg);
   }
 };
 function makeEventEmitter(target) {
-  var proto = target.prototype;
-  var name;
+  const proto = target.prototype;
+  let name;
   for (name in eventEmitterMethods) {
     proto[name] = eventEmitterMethods[name];
   }

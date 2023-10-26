@@ -1,10 +1,10 @@
 "use strict";
 
 exports.GestureHandler = GestureHandler;
-var _ln = Math.log;
-var _LN2 = Math.LN2;
+const _ln = Math.log;
+const _LN2 = Math.LN2;
 function GestureHandler(params) {
-  var that = this;
+  const that = this;
   that._projection = params.projection;
   that._renderer = params.renderer;
   that._x = that._y = 0;
@@ -12,50 +12,50 @@ function GestureHandler(params) {
 }
 GestureHandler.prototype = {
   constructor: GestureHandler,
-  dispose: function dispose() {
+  dispose: function () {
     this._offTracker();
     this._offTracker = null;
   },
-  _subscribeToTracker: function _subscribeToTracker(tracker) {
-    var that = this;
-    var isActive = false;
+  _subscribeToTracker: function (tracker) {
+    const that = this;
+    let isActive = false;
     that._offTracker = tracker.on({
-      'start': function start(arg) {
+      'start': function (arg) {
         // TODO: This is an implicit dependency on the ControlBar which must be removed
         isActive = arg.data.name !== 'control-bar';
         if (isActive) {
           that._processStart(arg);
         }
       },
-      'move': function move(arg) {
+      'move': function (arg) {
         if (isActive) {
           that._processMove(arg);
         }
       },
-      'end': function end() {
+      'end': function () {
         if (isActive) {
           that._processEnd();
         }
       },
-      'zoom': function zoom(arg) {
+      'zoom': function (arg) {
         that._processZoom(arg);
       }
     });
   },
-  setInteraction: function setInteraction(options) {
+  setInteraction: function (options) {
     this._processEnd();
     this._centeringEnabled = options.centeringEnabled;
     this._zoomingEnabled = options.zoomingEnabled;
   },
-  _processStart: function _processStart(arg) {
+  _processStart: function (arg) {
     if (this._centeringEnabled) {
       this._x = arg.x;
       this._y = arg.y;
       this._projection.beginMoveCenter();
     }
   },
-  _processMove: function _processMove(arg) {
-    var that = this;
+  _processMove: function (arg) {
+    const that = this;
     if (that._centeringEnabled) {
       that._renderer.root.attr({
         cursor: 'move'
@@ -65,7 +65,7 @@ GestureHandler.prototype = {
       that._y = arg.y;
     }
   },
-  _processEnd: function _processEnd() {
+  _processEnd: function () {
     if (this._centeringEnabled) {
       this._renderer.root.attr({
         cursor: 'default'
@@ -73,11 +73,11 @@ GestureHandler.prototype = {
       this._projection.endMoveCenter();
     }
   },
-  _processZoom: function _processZoom(arg) {
-    var that = this;
-    var delta;
-    var screenPosition;
-    var coords;
+  _processZoom: function (arg) {
+    const that = this;
+    let delta;
+    let screenPosition;
+    let coords;
     if (that._zoomingEnabled) {
       if (arg.delta) {
         delta = arg.delta;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_button.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,10 +18,10 @@ var _button2 = _interopRequireDefault(require("../button"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DROP_DOWN_EDITOR_BUTTON_CLASS = 'dx-dropdowneditor-button';
-var DROP_DOWN_EDITOR_BUTTON_VISIBLE = 'dx-dropdowneditor-button-visible';
-var BUTTON_MESSAGE = 'dxDropDownEditor-selectLabel';
-var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
+const DROP_DOWN_EDITOR_BUTTON_CLASS = 'dx-dropdowneditor-button';
+const DROP_DOWN_EDITOR_BUTTON_VISIBLE = 'dx-dropdowneditor-button-visible';
+const BUTTON_MESSAGE = 'dxDropDownEditor-selectLabel';
+let DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
   _inheritsLoose(DropDownButton, _TextEditorButton);
   function DropDownButton(name, editor, options) {
     var _this;
@@ -31,8 +31,10 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
   }
   var _proto = DropDownButton.prototype;
   _proto._attachEvents = function _attachEvents(instance) {
-    var editor = this.editor;
-    instance.option('onClick', function (e) {
+    const {
+      editor
+    } = this;
+    instance.option('onClick', e => {
       var _editor$_shouldCallOp;
       if ((_editor$_shouldCallOp = editor._shouldCallOpenHandler) !== null && _editor$_shouldCallOp !== void 0 && _editor$_shouldCallOp.call(editor)) {
         editor._openHandler(e);
@@ -40,18 +42,20 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
       }
       !editor.option('openOnFieldClick') && editor._openHandler(e);
     });
-    _events_engine.default.on(instance.$element(), 'mousedown', function (e) {
+    _events_engine.default.on(instance.$element(), 'mousedown', e => {
       if (editor.$element().is('.dx-state-focused')) {
         e.preventDefault();
       }
     });
   };
   _proto._create = function _create() {
-    var editor = this.editor;
-    var $element = (0, _renderer.default)('<div>');
-    var options = this._getOptions();
+    const {
+      editor
+    } = this;
+    const $element = (0, _renderer.default)('<div>');
+    const options = this._getOptions();
     this._addToContainer($element);
-    var instance = editor._createComponent($element, _button2.default, (0, _extend.extend)({}, options, {
+    const instance = editor._createComponent($element, _button2.default, (0, _extend.extend)({}, options, {
       elementAttr: {
         'aria-label': _message.default.format(BUTTON_MESSAGE)
       }
@@ -63,10 +67,12 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
     };
   };
   _proto._getOptions = function _getOptions() {
-    var editor = this.editor;
-    var visible = this._isVisible();
-    var isReadOnly = editor.option('readOnly');
-    var options = {
+    const {
+      editor
+    } = this;
+    const visible = this._isVisible();
+    const isReadOnly = editor.option('readOnly');
+    const options = {
       focusStateEnabled: false,
       hoverStateEnabled: false,
       activeStateEnabled: false,
@@ -78,7 +84,9 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
     return options;
   };
   _proto._isVisible = function _isVisible() {
-    var editor = this.editor;
+    const {
+      editor
+    } = this;
     return _TextEditorButton.prototype._isVisible.call(this) && editor.option('showDropDownButton');
   }
 
@@ -100,12 +108,14 @@ var DropDownButton = /*#__PURE__*/function (_TextEditorButton) {
     }
   };
   _proto.update = function update() {
-    var shouldUpdate = _TextEditorButton.prototype.update.call(this);
+    const shouldUpdate = _TextEditorButton.prototype.update.call(this);
     if (shouldUpdate) {
-      var editor = this.editor,
-        instance = this.instance;
-      var $editor = editor.$element();
-      var options = this._getOptions();
+      const {
+        editor,
+        instance
+      } = this;
+      const $editor = editor.$element();
+      const options = this._getOptions();
       instance === null || instance === void 0 ? void 0 : instance.option(options);
       this._legacyRender($editor, instance === null || instance === void 0 ? void 0 : instance.$element(), options.visible);
     }

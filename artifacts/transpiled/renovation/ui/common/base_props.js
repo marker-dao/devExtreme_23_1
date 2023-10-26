@@ -1,7 +1,7 @@
 "use strict";
 
 exports.BaseWidgetProps = void 0;
-var BaseWidgetProps = {
+const BaseWidgetProps = {
   className: '',
   activeStateEnabled: false,
   disabled: false,

@@ -11,17 +11,17 @@ var _resize_callbacks = _interopRequireDefault(require("../../core/utils/resize_
 var _resize_observer = _interopRequireDefault(require("../../core/resize_observer"));
 var _utils = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var ERROR_MESSAGES = _errors_warnings.default.ERROR_MESSAGES;
+const ERROR_MESSAGES = _errors_warnings.default.ERROR_MESSAGES;
 function createEventTrigger(eventsMap, callbackGetter) {
-  var triggers = {};
+  let triggers = {};
   (0, _iterator.each)(eventsMap, function (name, info) {
     if (info.name) {
       createEvent(name);
     }
   });
-  var changes;
+  let changes;
   triggerEvent.change = function (name) {
-    var eventInfo = eventsMap[name];
+    const eventInfo = eventsMap[name];
     if (eventInfo) {
       (changes = changes || {})[name] = eventInfo;
     }
@@ -40,7 +40,7 @@ function createEventTrigger(eventsMap, callbackGetter) {
   };
   return triggerEvent;
   function createEvent(name) {
-    var eventInfo = eventsMap[name];
+    const eventInfo = eventsMap[name];
     triggers[eventInfo.name] = callbackGetter(name, eventInfo.actionSettings);
   }
   function triggerEvent(name, arg, complete) {
@@ -48,7 +48,7 @@ function createEventTrigger(eventsMap, callbackGetter) {
     complete && complete();
   }
 }
-var createIncidentOccurred = function createIncidentOccurred(widgetName, eventTrigger) {
+let createIncidentOccurred = function (widgetName, eventTrigger) {
   return function incidentOccurred(id, args) {
     eventTrigger('incidentOccurred', {
       target: {
@@ -64,17 +64,18 @@ var createIncidentOccurred = function createIncidentOccurred(widgetName, eventTr
 };
 exports.createIncidentOccurred = createIncidentOccurred;
 function getResizeManager(resizeCallback) {
-  return function (observe, unsubscribe) {
-    var _createDeferredHandle = createDeferredHandler(resizeCallback, unsubscribe),
-      handler = _createDeferredHandle.handler,
-      dispose = _createDeferredHandle.dispose;
+  return (observe, unsubscribe) => {
+    const {
+      handler,
+      dispose
+    } = createDeferredHandler(resizeCallback, unsubscribe);
     observe(handler);
     return dispose;
   };
 }
 function createDeferredHandler(callback, unsubscribe) {
-  var timeout;
-  var handler = function handler() {
+  let timeout;
+  const handler = function () {
     clearTimeout(timeout);
     timeout = setTimeout(callback, 100);
   };
@@ -87,20 +88,12 @@ function createDeferredHandler(callback, unsubscribe) {
   };
 }
 function createResizeHandler(contentElement, redrawOnResize, resize) {
-  var disposeHandler;
-  var resizeManager = getResizeManager(resize);
+  let disposeHandler;
+  const resizeManager = getResizeManager(resize);
   if ((0, _utils.normalizeEnum)(redrawOnResize) === 'windowonly') {
-    disposeHandler = resizeManager(function (handler) {
-      return _resize_callbacks.default.add(handler);
-    }, function (handler) {
-      return _resize_callbacks.default.remove(handler);
-    });
+    disposeHandler = resizeManager(handler => _resize_callbacks.default.add(handler), handler => _resize_callbacks.default.remove(handler));
   } else if (redrawOnResize === true) {
-    disposeHandler = resizeManager(function (handler) {
-      return _resize_observer.default.observe(contentElement, handler);
-    }, function () {
-      return _resize_observer.default.unobserve(contentElement);
-    });
+    disposeHandler = resizeManager(handler => _resize_observer.default.observe(contentElement, handler), () => _resize_observer.default.unobserve(contentElement));
   }
   return disposeHandler;
 }

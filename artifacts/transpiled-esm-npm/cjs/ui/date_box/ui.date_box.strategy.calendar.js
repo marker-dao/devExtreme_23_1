@@ -9,21 +9,15 @@ var _type = require("../../core/utils/type");
 var _extend = require("../../core/utils/extend");
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-var CalendarStrategy = _uiDate_box.default.inherit({
+const CalendarStrategy = _uiDate_box.default.inherit({
   NAME: 'Calendar',
-  getDefaultOptions: function getDefaultOptions() {
+  getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       todayButtonText: _message.default.format('dxCalendar-todayButtonText')
     });
   },
-  supportedKeys: function supportedKeys() {
-    var homeEndHandler = function homeEndHandler(e) {
+  supportedKeys: function () {
+    const homeEndHandler = function (e) {
       if (this.option('opened')) {
         e.preventDefault();
         return true;
@@ -31,12 +25,12 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       return false;
     };
     return {
-      rightArrow: function rightArrow() {
+      rightArrow: function () {
         if (this.option('opened')) {
           return true;
         }
       },
-      leftArrow: function leftArrow() {
+      leftArrow: function () {
         if (this.option('opened')) {
           return true;
         }
@@ -45,9 +39,9 @@ var CalendarStrategy = _uiDate_box.default.inherit({
         if (this.dateBox.option('opened')) {
           e.preventDefault();
           if (this._widget.option('zoomLevel') === this._widget.option('maxZoomLevel')) {
-            var viewValue = this._getContouredValue();
-            var lastActionElement = this._lastActionElement;
-            var shouldCloseDropDown = this._closeDropDownByEnter();
+            const viewValue = this._getContouredValue();
+            const lastActionElement = this._lastActionElement;
+            const shouldCloseDropDown = this._closeDropDownByEnter();
             if (shouldCloseDropDown && viewValue && lastActionElement === 'calendar') {
               this.dateBoxValue(viewValue, e);
             }
@@ -65,23 +59,21 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       end: homeEndHandler
     };
   },
-  getDisplayFormat: function getDisplayFormat(displayFormat) {
+  getDisplayFormat: function (displayFormat) {
     return displayFormat || 'shortdate';
   },
-  _closeDropDownByEnter: function _closeDropDownByEnter() {
-    return true;
-  },
-  _getWidgetName: function _getWidgetName() {
+  _closeDropDownByEnter: () => true,
+  _getWidgetName: function () {
     return _calendar.default;
   },
-  _getContouredValue: function _getContouredValue() {
+  _getContouredValue: function () {
     return this._widget._view.option('contouredDate');
   },
   getKeyboardListener() {
     return this._widget;
   },
-  _getWidgetOptions: function _getWidgetOptions() {
-    var disabledDates = this.dateBox.option('disabledDates');
+  _getWidgetOptions: function () {
+    const disabledDates = this.dateBox.option('disabledDates');
     return (0, _extend.extend)(this.dateBox.option('calendarOptions'), {
       value: this.dateBoxValue() || null,
       selectionMode: 'single',
@@ -95,8 +87,8 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       skipFocusCheck: true
     });
   },
-  _injectComponent: function _injectComponent(func) {
-    var that = this;
+  _injectComponent: function (func) {
+    const that = this;
     return function (params) {
       (0, _extend.extend)(params, {
         component: that.dateBox
@@ -104,53 +96,53 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       return func(params);
     };
   },
-  _refreshActiveDescendant: function _refreshActiveDescendant(e) {
+  _refreshActiveDescendant: function (e) {
     this._lastActionElement = 'calendar';
     this.dateBox.setAria('activedescendant', e.actionValue);
   },
   _getTodayButtonConfig() {
-    var _this = this;
-    var buttonsLocation = this.dateBox.option('buttonsLocation');
-    var isButtonsLocationDefault = buttonsLocation === 'default';
-    var position = isButtonsLocationDefault ? ['bottom', 'center'] : (0, _common.splitPair)(buttonsLocation);
+    const buttonsLocation = this.dateBox.option('buttonsLocation');
+    const isButtonsLocationDefault = buttonsLocation === 'default';
+    const position = isButtonsLocationDefault ? ['bottom', 'center'] : (0, _common.splitPair)(buttonsLocation);
     return {
       widget: 'dxButton',
       toolbar: position[0],
       location: position[1] === 'after' ? 'before' : position[1],
       options: {
-        onClick: function onClick(args) {
-          _this._widget._toTodayView(args);
+        onClick: args => {
+          this._widget._toTodayView(args);
         },
         text: this.dateBox.option('todayButtonText'),
         type: 'today'
       }
     };
   },
-  _isCalendarVisible: function _isCalendarVisible() {
-    var _this$dateBox$option = this.dateBox.option(),
-      calendarOptions = _this$dateBox$option.calendarOptions;
+  _isCalendarVisible: function () {
+    const {
+      calendarOptions
+    } = this.dateBox.option();
     return (0, _type.isEmptyObject)(calendarOptions) || calendarOptions.visible !== false;
   },
   _getPopupToolbarItems(toolbarItems) {
-    var useButtons = this.dateBox.option('applyValueMode') === 'useButtons';
-    var shouldRenderTodayButton = useButtons && this._isCalendarVisible();
+    const useButtons = this.dateBox.option('applyValueMode') === 'useButtons';
+    const shouldRenderTodayButton = useButtons && this._isCalendarVisible();
     if (shouldRenderTodayButton) {
-      var todayButton = this._getTodayButtonConfig();
-      return [todayButton].concat(_toConsumableArray(toolbarItems));
+      const todayButton = this._getTodayButtonConfig();
+      return [todayButton, ...toolbarItems];
     }
     return toolbarItems;
   },
-  popupConfig: function popupConfig(_popupConfig) {
-    return (0, _extend.extend)(true, _popupConfig, {
+  popupConfig: function (popupConfig) {
+    return (0, _extend.extend)(true, popupConfig, {
       position: {
         collision: 'flipfit flip'
       },
       width: 'auto'
     });
   },
-  _valueChangedHandler: function _valueChangedHandler(e) {
-    var value = e.value;
-    var prevValue = e.previousValue;
+  _valueChangedHandler: function (e) {
+    const value = e.value;
+    const prevValue = e.previousValue;
     if (_date.default.sameDate(value, prevValue) && _date.default.sameHoursAndMinutes(value, prevValue)) {
       return;
     }
@@ -158,20 +150,20 @@ var CalendarStrategy = _uiDate_box.default.inherit({
       this.dateBoxValue(this.getValue(), e.event);
     }
   },
-  _updateValue: function _updateValue() {
+  _updateValue: function () {
     if (!this._widget) {
       return;
     }
     this._widget.option('value', this.dateBoxValue());
   },
-  textChangedHandler: function textChangedHandler() {
+  textChangedHandler: function () {
     this._lastActionElement = 'input';
     if (this.dateBox.option('opened') && this._widget) {
       this._updateValue(true);
     }
   },
-  _cellClickHandler: function _cellClickHandler(e) {
-    var dateBox = this.dateBox;
+  _cellClickHandler: function (e) {
+    const dateBox = this.dateBox;
     if (dateBox.option('applyValueMode') === 'instantly') {
       dateBox.option('opened', false);
       this.dateBoxValue(this.getValue(), e.event);

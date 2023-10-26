@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.file_actions_button.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,26 +16,23 @@ var _button = _interopRequireDefault(require("../button"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_FILE_ACTIONS_BUTTON = 'dx-filemanager-file-actions-button';
-var FILE_MANAGER_FILE_ACTIONS_BUTTON_ACTIVATED = 'dx-filemanager-file-actions-button-activated';
-var ACTIVE_STATE_CLASS = 'dx-state-active';
-var FileManagerFileActionsButton = /*#__PURE__*/function (_Widget) {
+const FILE_MANAGER_FILE_ACTIONS_BUTTON = 'dx-filemanager-file-actions-button';
+const FILE_MANAGER_FILE_ACTIONS_BUTTON_ACTIVATED = 'dx-filemanager-file-actions-button-activated';
+const ACTIVE_STATE_CLASS = 'dx-state-active';
+let FileManagerFileActionsButton = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(FileManagerFileActionsButton, _Widget);
   function FileManagerFileActionsButton() {
     return _Widget.apply(this, arguments) || this;
   }
   var _proto = FileManagerFileActionsButton.prototype;
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     this._createClickAction();
-    var $button = (0, _renderer.default)('<div>');
+    const $button = (0, _renderer.default)('<div>');
     this.$element().append($button).addClass(FILE_MANAGER_FILE_ACTIONS_BUTTON);
     this._button = this._createComponent($button, _button.default, {
       icon: 'overflow',
       stylingMode: 'text',
-      onClick: function onClick(e) {
-        return _this._raiseClick(e);
-      }
+      onClick: e => this._raiseClick(e)
     });
     _Widget.prototype._initMarkup.call(this);
   };
@@ -52,7 +49,7 @@ var FileManagerFileActionsButton = /*#__PURE__*/function (_Widget) {
     });
   };
   _proto._optionChanged = function _optionChanged(args) {
-    var name = args.name;
+    const name = args.name;
     switch (name) {
       case 'cssClass':
         this.repaint();
@@ -65,11 +62,8 @@ var FileManagerFileActionsButton = /*#__PURE__*/function (_Widget) {
     }
   };
   _proto.setActive = function setActive(active) {
-    var _this2 = this;
     this.$element().toggleClass(FILE_MANAGER_FILE_ACTIONS_BUTTON_ACTIVATED, active);
-    setTimeout(function () {
-      return _this2._button.$element().toggleClass(ACTIVE_STATE_CLASS, active);
-    });
+    setTimeout(() => this._button.$element().toggleClass(ACTIVE_STATE_CLASS, active));
   };
   return FileManagerFileActionsButton;
 }(_ui.default);

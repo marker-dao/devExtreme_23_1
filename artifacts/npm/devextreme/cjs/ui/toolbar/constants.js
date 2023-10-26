@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toolbar/constants.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,5 +9,5 @@
 "use strict";
 
 exports.TOOLBAR_CLASS = void 0;
-var TOOLBAR_CLASS = 'dx-toolbar';
+const TOOLBAR_CLASS = 'dx-toolbar';
 exports.TOOLBAR_CLASS = TOOLBAR_CLASS;

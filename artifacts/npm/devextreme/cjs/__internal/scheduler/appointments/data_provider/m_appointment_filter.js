@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/data_provider/m_appointment_filter.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,7 @@ var _type = require("../../../../core/utils/type");
 var _query = _interopRequireDefault(require("../../../../data/query"));
 var _getAppointmentTakesAllDay = require("../../../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay");
 var _hasResourceValue = require("../../../../renovation/ui/scheduler/resources/hasResourceValue");
-var _getDatesWithoutTime5 = _interopRequireDefault(require("../../../../renovation/ui/scheduler/utils/filtering/getDatesWithoutTime"));
+var _getDatesWithoutTime = _interopRequireDefault(require("../../../../renovation/ui/scheduler/utils/filtering/getDatesWithoutTime"));
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _m_appointment_adapter = require("../../m_appointment_adapter");
 var _m_recurrence = require("../../m_recurrence");
@@ -29,22 +29,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); } /* eslint-disable max-classes-per-file */
-var toMs = _date.default.dateToMilliseconds;
-var FilterStrategies = {
+const toMs = _date.default.dateToMilliseconds;
+const FilterStrategies = {
   virtual: 'virtual',
   standard: 'standard'
 };
-var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
+let AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
   function AppointmentFilterBaseStrategy(options) {
     this.options = options;
     this.dataAccessors = this.options.dataAccessors;
@@ -52,15 +46,17 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
   }
   var _proto = AppointmentFilterBaseStrategy.prototype;
   _proto._resolveOption = function _resolveOption(name) {
-    var result = this.options[name];
+    const result = this.options[name];
     return typeof result === 'function' ? result() : result;
   };
   _proto._init = function _init() {
     this.setDataAccessors(this.dataAccessors);
   };
   _proto.filter = function filter(preparedItems) {
-    var dateRange = this.dateRange;
-    var allDay;
+    const {
+      dateRange
+    } = this;
+    let allDay;
     if (!this.showAllDayPanel && this.supportAllDayRow) {
       allDay = false;
     }
@@ -80,14 +76,11 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ;
   _proto.hasAllDayAppointments = function hasAllDayAppointments(filteredItems, preparedItems) {
-    var _this = this;
-    var adapters = filteredItems.map(function (item) {
-      return (0, _m_appointment_adapter.createAppointmentAdapter)(item, _this.dataAccessors, _this.timeZoneCalculator);
-    });
-    var result = false;
+    const adapters = filteredItems.map(item => (0, _m_appointment_adapter.createAppointmentAdapter)(item, this.dataAccessors, this.timeZoneCalculator));
+    let result = false;
     // @ts-expect-error
-    (0, _iterator.each)(adapters, function (_, item) {
-      if ((0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(item, _this.viewStartDayHour, _this.viewEndDayHour, _this.allDayPanelMode)) {
+    (0, _iterator.each)(adapters, (_, item) => {
+      if ((0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(item, this.viewStartDayHour, this.viewEndDayHour, this.allDayPanelMode)) {
         result = true;
         return false;
       }
@@ -98,57 +91,56 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
     this.dataAccessors = dataAccessors;
   };
   _proto._createAllDayAppointmentFilter = function _createAllDayAppointmentFilter(filterOptions) {
-    var _this2 = this;
-    var viewStartDayHour = filterOptions.viewStartDayHour,
-      viewEndDayHour = filterOptions.viewEndDayHour;
-    return [[function (appointment) {
-      return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(appointment, viewStartDayHour, viewEndDayHour, _this2.allDayPanelMode);
-    }]];
+    const {
+      viewStartDayHour,
+      viewEndDayHour
+    } = filterOptions;
+    return [[appointment => (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(appointment, viewStartDayHour, viewEndDayHour, this.allDayPanelMode)]];
   };
   _proto._createCombinedFilter = function _createCombinedFilter(filterOptions) {
-    var _this3 = this;
-    var min = new Date(filterOptions.min);
-    var max = new Date(filterOptions.max);
-    var startDayHour = filterOptions.startDayHour,
-      endDayHour = filterOptions.endDayHour,
-      viewStartDayHour = filterOptions.viewStartDayHour,
-      viewEndDayHour = filterOptions.viewEndDayHour,
-      resources = filterOptions.resources,
-      firstDayOfWeek = filterOptions.firstDayOfWeek,
-      checkIntersectViewport = filterOptions.checkIntersectViewport,
-      supportMultiDayAppointments = filterOptions.supportMultiDayAppointments;
-    var _getDatesWithoutTime = (0, _getDatesWithoutTime5.default)(min, max),
-      _getDatesWithoutTime2 = _slicedToArray(_getDatesWithoutTime, 2),
-      trimMin = _getDatesWithoutTime2[0],
-      trimMax = _getDatesWithoutTime2[1];
-    var useRecurrence = (0, _type.isDefined)(this.dataAccessors.getter.recurrenceRule);
-    return [[function (appointment) {
+    const min = new Date(filterOptions.min);
+    const max = new Date(filterOptions.max);
+    const {
+      startDayHour,
+      endDayHour,
+      viewStartDayHour,
+      viewEndDayHour,
+      resources,
+      firstDayOfWeek,
+      checkIntersectViewport,
+      supportMultiDayAppointments
+    } = filterOptions;
+    const [trimMin, trimMax] = (0, _getDatesWithoutTime.default)(min, max);
+    const useRecurrence = (0, _type.isDefined)(this.dataAccessors.getter.recurrenceRule);
+    return [[appointment => {
       var _a;
-      var appointmentVisible = (_a = appointment.visible) !== null && _a !== void 0 ? _a : true;
+      const appointmentVisible = (_a = appointment.visible) !== null && _a !== void 0 ? _a : true;
       if (!appointmentVisible) {
         return false;
       }
-      var startDate = appointment.startDate,
-        endDate = appointment.endDate,
-        hasRecurrenceRule = appointment.hasRecurrenceRule;
+      const {
+        startDate,
+        endDate,
+        hasRecurrenceRule
+      } = appointment;
       if (!hasRecurrenceRule) {
         if (!(endDate >= trimMin && startDate < trimMax || _date.default.sameDate(endDate, trimMin) && _date.default.sameDate(startDate, trimMin))) {
           return false;
         }
       }
-      var appointmentTakesAllDay = (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(appointment, viewStartDayHour, viewEndDayHour, _this3.allDayPanelMode);
-      var appointmentTakesSeveralDays = (0, _m_utils2.getAppointmentTakesSeveralDays)(appointment);
-      var isAllDay = appointment.allDay;
-      var isLongAppointment = appointmentTakesSeveralDays || appointmentTakesAllDay;
-      if ((resources === null || resources === void 0 ? void 0 : resources.length) && !_this3._filterAppointmentByResources(appointment.rawAppointment, resources)) {
+      const appointmentTakesAllDay = (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(appointment, viewStartDayHour, viewEndDayHour, this.allDayPanelMode);
+      const appointmentTakesSeveralDays = (0, _m_utils2.getAppointmentTakesSeveralDays)(appointment);
+      const isAllDay = appointment.allDay;
+      const isLongAppointment = appointmentTakesSeveralDays || appointmentTakesAllDay;
+      if ((resources === null || resources === void 0 ? void 0 : resources.length) && !this._filterAppointmentByResources(appointment.rawAppointment, resources)) {
         return false;
       }
       if (appointmentTakesAllDay && filterOptions.allDay === false) {
         return false;
       }
       if (hasRecurrenceRule) {
-        var recurrenceException = (0, _m_utils2.getRecurrenceException)(appointment, _this3.timeZoneCalculator, _this3.timezone);
-        if (!_this3._filterAppointmentByRRule(_extends(_extends({}, appointment), {
+        const recurrenceException = (0, _m_utils2.getRecurrenceException)(appointment, this.timeZoneCalculator, this.timezone);
+        if (!this._filterAppointmentByRRule(_extends(_extends({}, appointment), {
           recurrenceException,
           allDay: appointmentTakesAllDay
         }), min, max, startDayHour, endDayHour, firstDayOfWeek)) {
@@ -196,28 +188,29 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
     return this._createCombinedFilter(filterOptions);
   };
   _proto._filterAppointmentByResources = function _filterAppointmentByResources(appointment, resources) {
-    var _this4 = this;
-    var checkAppointmentResourceValues = function checkAppointmentResourceValues(resourceName, resourceIndex) {
-      var resourceGetter = _this4.dataAccessors.resources.getter[resourceName];
-      var resource;
+    const checkAppointmentResourceValues = (resourceName, resourceIndex) => {
+      const resourceGetter = this.dataAccessors.resources.getter[resourceName];
+      let resource;
       if ((0, _type.isFunction)(resourceGetter)) {
         resource = resourceGetter(appointment);
       }
-      var appointmentResourceValues = (0, _array.wrapToArray)(resource);
-      var resourceData = (0, _iterator.map)(resources[resourceIndex].items, function (_ref) {
-        var id = _ref.id;
+      const appointmentResourceValues = (0, _array.wrapToArray)(resource);
+      const resourceData = (0, _iterator.map)(resources[resourceIndex].items, _ref => {
+        let {
+          id
+        } = _ref;
         return id;
       });
-      for (var i = 0; i < appointmentResourceValues.length; i++) {
+      for (let i = 0; i < appointmentResourceValues.length; i++) {
         if ((0, _hasResourceValue.hasResourceValue)(resourceData, appointmentResourceValues[i])) {
           return true;
         }
       }
       return false;
     };
-    var result = false;
-    for (var i = 0; i < resources.length; i++) {
-      var resourceName = resources[i].name;
+    let result = false;
+    for (let i = 0; i < resources.length; i++) {
+      const resourceName = resources[i].name;
       result = checkAppointmentResourceValues(resourceName, i);
       if (!result) {
         return false;
@@ -226,18 +219,21 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
     return result;
   };
   _proto._filterAppointmentByRRule = function _filterAppointmentByRRule(appointment, min, max, startDayHour, endDayHour, firstDayOfWeek) {
-    var recurrenceRule = appointment.recurrenceRule;
-    var recurrenceException = appointment.recurrenceException;
-    var allDay = appointment.allDay;
-    var result = true;
-    var appointmentStartDate = appointment.startDate;
-    var appointmentEndDate = appointment.endDate;
-    var recurrenceProcessor = (0, _m_recurrence.getRecurrenceProcessor)();
+    const {
+      recurrenceRule
+    } = appointment;
+    const {
+      recurrenceException
+    } = appointment;
+    const {
+      allDay
+    } = appointment;
+    let result = true;
+    const appointmentStartDate = appointment.startDate;
+    const appointmentEndDate = appointment.endDate;
+    const recurrenceProcessor = (0, _m_recurrence.getRecurrenceProcessor)();
     if (allDay || (0, _m_utils2._appointmentPartInInterval)(appointmentStartDate, appointmentEndDate, startDayHour, endDayHour)) {
-      var _getDatesWithoutTime3 = (0, _getDatesWithoutTime5.default)(min, max),
-        _getDatesWithoutTime4 = _slicedToArray(_getDatesWithoutTime3, 2),
-        trimMin = _getDatesWithoutTime4[0],
-        trimMax = _getDatesWithoutTime4[1];
+      const [trimMin, trimMax] = (0, _getDatesWithoutTime.default)(min, max);
       min = trimMin;
       max = new Date(trimMax.getTime() - toMs('minute'));
     }
@@ -259,139 +255,144 @@ var AppointmentFilterBaseStrategy = /*#__PURE__*/function () {
     return result;
   };
   _proto.filterLoadedAppointments = function filterLoadedAppointments(filterOptions, preparedItems) {
-    var filteredItems = this.filterPreparedItems(filterOptions, preparedItems);
-    return filteredItems.map(function (_ref2) {
-      var rawAppointment = _ref2.rawAppointment;
+    const filteredItems = this.filterPreparedItems(filterOptions, preparedItems);
+    return filteredItems.map(_ref2 => {
+      let {
+        rawAppointment
+      } = _ref2;
       return rawAppointment;
     });
   };
   _proto.filterPreparedItems = function filterPreparedItems(filterOptions, preparedItems) {
-    var combinedFilter = this._createAppointmentFilter(filterOptions);
+    const combinedFilter = this._createAppointmentFilter(filterOptions);
     return (0, _query.default)(preparedItems).filter(combinedFilter).toArray();
   };
   _proto.filterAllDayAppointments = function filterAllDayAppointments(filterOptions, preparedItems) {
-    var combinedFilter = this._createAllDayAppointmentFilter(filterOptions);
-    return (0, _query.default)(preparedItems).filter(combinedFilter).toArray().map(function (_ref3) {
-      var rawAppointment = _ref3.rawAppointment;
+    const combinedFilter = this._createAllDayAppointmentFilter(filterOptions);
+    return (0, _query.default)(preparedItems).filter(combinedFilter).toArray().map(_ref3 => {
+      let {
+        rawAppointment
+      } = _ref3;
       return rawAppointment;
     });
   };
   _createClass(AppointmentFilterBaseStrategy, [{
     key: "strategyName",
-    get: function get() {
+    get: function () {
       return FilterStrategies.standard;
     }
   }, {
     key: "timeZoneCalculator",
-    get: function get() {
+    get: function () {
       return this.options.timeZoneCalculator;
     }
   }, {
     key: "viewStartDayHour",
-    get: function get() {
+    get: function () {
       return this.options.startDayHour;
     }
   }, {
     key: "viewEndDayHour",
-    get: function get() {
+    get: function () {
       return this.options.endDayHour;
     }
   }, {
     key: "timezone",
-    get: function get() {
+    get: function () {
       return this.options.timezone;
     }
   }, {
     key: "firstDayOfWeek",
-    get: function get() {
+    get: function () {
       return this.options.firstDayOfWeek;
     }
   }, {
     key: "showAllDayPanel",
-    get: function get() {
+    get: function () {
       return this.options.showAllDayPanel;
     }
   }, {
     key: "loadedResources",
-    get: function get() {
+    get: function () {
       return this._resolveOption('loadedResources');
     }
   }, {
     key: "supportAllDayRow",
-    get: function get() {
+    get: function () {
       return this._resolveOption('supportAllDayRow');
     }
   }, {
     key: "viewType",
-    get: function get() {
+    get: function () {
       return this._resolveOption('viewType');
     }
   }, {
     key: "viewDirection",
-    get: function get() {
+    get: function () {
       return this._resolveOption('viewDirection');
     }
   }, {
     key: "dateRange",
-    get: function get() {
+    get: function () {
       return this._resolveOption('dateRange');
     }
   }, {
     key: "groupCount",
-    get: function get() {
+    get: function () {
       return this._resolveOption('groupCount');
     }
   }, {
     key: "viewDataProvider",
-    get: function get() {
+    get: function () {
       return this._resolveOption('viewDataProvider');
     }
   }, {
     key: "allDayPanelMode",
-    get: function get() {
+    get: function () {
       return this._resolveOption('allDayPanelMode');
     }
   }]);
   return AppointmentFilterBaseStrategy;
 }();
 exports.AppointmentFilterBaseStrategy = AppointmentFilterBaseStrategy;
-var AppointmentFilterVirtualStrategy = /*#__PURE__*/function (_AppointmentFilterBas) {
+let AppointmentFilterVirtualStrategy = /*#__PURE__*/function (_AppointmentFilterBas) {
   _inheritsLoose(AppointmentFilterVirtualStrategy, _AppointmentFilterBas);
   function AppointmentFilterVirtualStrategy() {
     return _AppointmentFilterBas.apply(this, arguments) || this;
   }
   var _proto2 = AppointmentFilterVirtualStrategy.prototype;
   _proto2.filter = function filter(preparedItems) {
-    var _this5 = this;
-    var hourMs = toMs('hour');
-    var isCalculateStartAndEndDayHour = (0, _base.isDateAndTimeView)(this.viewType);
-    var checkIntersectViewport = isCalculateStartAndEndDayHour && this.viewDirection === 'horizontal';
-    var isAllDayWorkspace = !this.supportAllDayRow;
-    var showAllDayAppointments = this.showAllDayPanel || isAllDayWorkspace;
-    var endViewDate = this.viewDataProvider.getLastViewDateByEndDayHour(this.viewEndDayHour);
-    var filterOptions = [];
-    var groupsInfo = this.viewDataProvider.getCompletedGroupsInfo();
-    groupsInfo.forEach(function (item) {
-      var groupIndex = item.groupIndex;
-      var groupStartDate = item.startDate;
-      var groupEndDate = new Date(Math.min(item.endDate, endViewDate));
-      var startDayHour = isCalculateStartAndEndDayHour ? groupStartDate.getHours() : _this5.viewStartDayHour;
-      var endDayHour = isCalculateStartAndEndDayHour ? startDayHour + groupStartDate.getMinutes() / 60 + (groupEndDate - groupStartDate) / hourMs : _this5.viewEndDayHour;
-      var resources = _this5._getPrerenderFilterResources(groupIndex);
-      var hasAllDayPanel = _this5.viewDataProvider.hasGroupAllDayPanel(groupIndex);
-      var supportAllDayAppointment = isAllDayWorkspace || !!showAllDayAppointments && hasAllDayPanel;
+    const hourMs = toMs('hour');
+    const isCalculateStartAndEndDayHour = (0, _base.isDateAndTimeView)(this.viewType);
+    const checkIntersectViewport = isCalculateStartAndEndDayHour && this.viewDirection === 'horizontal';
+    const isAllDayWorkspace = !this.supportAllDayRow;
+    const showAllDayAppointments = this.showAllDayPanel || isAllDayWorkspace;
+    const endViewDate = this.viewDataProvider.getLastViewDateByEndDayHour(this.viewEndDayHour);
+    const filterOptions = [];
+    const groupsInfo = this.viewDataProvider.getCompletedGroupsInfo();
+    groupsInfo.forEach(item => {
+      const {
+        groupIndex
+      } = item;
+      const groupStartDate = item.startDate;
+      const groupEndDate = new Date(Math.min(item.endDate, endViewDate));
+      const startDayHour = isCalculateStartAndEndDayHour ? groupStartDate.getHours() : this.viewStartDayHour;
+      const endDayHour = isCalculateStartAndEndDayHour ? startDayHour + groupStartDate.getMinutes() / 60 + (groupEndDate - groupStartDate) / hourMs : this.viewEndDayHour;
+      const resources = this._getPrerenderFilterResources(groupIndex);
+      const hasAllDayPanel = this.viewDataProvider.hasGroupAllDayPanel(groupIndex);
+      const supportAllDayAppointment = isAllDayWorkspace || !!showAllDayAppointments && hasAllDayPanel;
       filterOptions.push({
         isVirtualScrolling: true,
         startDayHour,
         endDayHour,
-        viewStartDayHour: _this5.viewStartDayHour,
-        viewEndDayHour: _this5.viewEndDayHour,
+        viewStartDayHour: this.viewStartDayHour,
+        viewEndDayHour: this.viewEndDayHour,
         min: groupStartDate,
         max: groupEndDate,
-        supportMultiDayAppointments: (0, _base.isTimelineView)(_this5.viewType),
+        supportMultiDayAppointments: (0, _base.isTimelineView)(this.viewType),
         allDay: supportAllDayAppointment,
         resources,
-        firstDayOfWeek: _this5.firstDayOfWeek,
+        firstDayOfWeek: this.firstDayOfWeek,
         checkIntersectViewport
       });
     });
@@ -401,27 +402,32 @@ var AppointmentFilterVirtualStrategy = /*#__PURE__*/function (_AppointmentFilter
     }, preparedItems);
   };
   _proto2.filterPreparedItems = function filterPreparedItems(_ref4, preparedItems) {
-    var _this6 = this;
-    var filterOptions = _ref4.filterOptions,
-      groupCount = _ref4.groupCount;
-    var combinedFilters = [];
-    var itemsToFilter = preparedItems;
-    var needPreFilter = groupCount > 0;
+    let {
+      filterOptions,
+      groupCount
+    } = _ref4;
+    const combinedFilters = [];
+    let itemsToFilter = preparedItems;
+    const needPreFilter = groupCount > 0;
     if (needPreFilter) {
       // @ts-expect-error
-      itemsToFilter = itemsToFilter.filter(function (_ref5) {
-        var rawAppointment = _ref5.rawAppointment;
-        for (var i = 0; i < filterOptions.length; ++i) {
-          var resources = filterOptions[i].resources;
-          if (_this6._filterAppointmentByResources(rawAppointment, resources)) {
+      itemsToFilter = itemsToFilter.filter(_ref5 => {
+        let {
+          rawAppointment
+        } = _ref5;
+        for (let i = 0; i < filterOptions.length; ++i) {
+          const {
+            resources
+          } = filterOptions[i];
+          if (this._filterAppointmentByResources(rawAppointment, resources)) {
             return true;
           }
         }
       });
     }
-    filterOptions.forEach(function (option) {
+    filterOptions.forEach(option => {
       combinedFilters.length && combinedFilters.push('or');
-      var filter = _this6._createAppointmentFilter(option);
+      const filter = this._createAppointmentFilter(option);
       combinedFilters.push(filter);
     });
     return (0, _query.default)(itemsToFilter).filter(combinedFilters).toArray();
@@ -433,17 +439,17 @@ var AppointmentFilterVirtualStrategy = /*#__PURE__*/function (_AppointmentFilter
     }, preparedItems).length > 0;
   };
   _proto2._getPrerenderFilterResources = function _getPrerenderFilterResources(groupIndex) {
-    var cellGroup = this.viewDataProvider.getCellsGroup(groupIndex);
+    const cellGroup = this.viewDataProvider.getCellsGroup(groupIndex);
     return (0, _m_utils.getResourcesDataByGroups)(this.loadedResources, this.resources, [cellGroup]);
   };
   _createClass(AppointmentFilterVirtualStrategy, [{
     key: "strategyName",
-    get: function get() {
+    get: function () {
       return FilterStrategies.virtual;
     }
   }, {
     key: "resources",
-    get: function get() {
+    get: function () {
       return this.options.resources;
     }
   }]);

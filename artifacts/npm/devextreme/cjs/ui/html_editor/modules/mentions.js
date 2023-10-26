@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/modules/mentions.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,11 +27,11 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var MentionModule = _base.default;
+let MentionModule = _base.default;
 if (_devextremeQuill.default) {
-  var USER_ACTION = 'user';
-  var DEFAULT_MARKER = '@';
-  var KEYS = {
+  const USER_ACTION = 'user';
+  const DEFAULT_MARKER = '@';
+  const KEYS = {
     ARROW_UP: 'upArrow',
     ARROW_DOWN: 'downArrow',
     ARROW_LEFT: 'leftArrow',
@@ -44,9 +44,9 @@ if (_devextremeQuill.default) {
     END: 'end',
     HOME: 'home'
   };
-  var NAVIGATION_KEYS = [KEYS.ARROW_LEFT, KEYS.ARROW_RIGHT, KEYS.PAGE_UP, KEYS.PAGE_DOWN, KEYS.END, KEYS.HOME];
-  var ALLOWED_PREFIX_CHARS = [' ', '\n'];
-  var DISABLED_STATE_CLASS = 'dx-state-disabled';
+  const NAVIGATION_KEYS = [KEYS.ARROW_LEFT, KEYS.ARROW_RIGHT, KEYS.PAGE_UP, KEYS.PAGE_DOWN, KEYS.END, KEYS.HOME];
+  const ALLOWED_PREFIX_CHARS = [' ', '\n'];
+  const DISABLED_STATE_CLASS = 'dx-state-disabled';
   _devextremeQuill.default.register({
     'formats/mention': _mention.default
   }, true);
@@ -54,7 +54,7 @@ if (_devextremeQuill.default) {
     _inheritsLoose(MentionModule, _PopupModule);
     var _proto = MentionModule.prototype;
     _proto._getDefaultOptions = function _getDefaultOptions() {
-      var baseConfig = _PopupModule.prototype._getDefaultOptions.call(this);
+      const baseConfig = _PopupModule.prototype._getDefaultOptions.call(this);
       return (0, _extend.extend)(baseConfig, {
         itemTemplate: 'item',
         valueExpr: 'this',
@@ -69,14 +69,14 @@ if (_devextremeQuill.default) {
       var _this;
       _this = _PopupModule.call(this, quill, options) || this;
       _this._mentions = {};
-      options.mentions.forEach(function (item) {
-        var marker = item.marker;
+      options.mentions.forEach(item => {
+        let marker = item.marker;
         if (!marker) {
           item.marker = marker = DEFAULT_MARKER;
         }
-        var template = item.template;
+        const template = item.template;
         if (template) {
-          var preparedTemplate = _this.editorInstance._getTemplate(template);
+          const preparedTemplate = _this.editorInstance._getTemplate(template);
           preparedTemplate && _mention.default.addTemplate({
             marker,
             editorKey: _this.editorInstance.getMentionKeyInTemplateStorage()
@@ -99,7 +99,7 @@ if (_devextremeQuill.default) {
       this.quill.keyboard.addBinding({
         key: [KEYS.ENTER, KEYS.SPACE]
       }, this._selectItemHandler.bind(this));
-      var enterBindings = this.quill.keyboard.bindings[KEYS.ENTER];
+      const enterBindings = this.quill.keyboard.bindings[KEYS.ENTER];
       enterBindings.unshift(enterBindings.pop());
       this.quill.keyboard.addBinding({
         key: KEYS.ESCAPE
@@ -113,11 +113,11 @@ if (_devextremeQuill.default) {
       }, this._ignoreKeyHandler.bind(this));
     };
     _proto._moveToItem = function _moveToItem(direction) {
-      var dataSource = this._list.getDataSource();
+      const dataSource = this._list.getDataSource();
       if (this._isMentionActive && !dataSource.isLoading()) {
-        var $focusedItem = (0, _renderer.default)(this._list.option('focusedElement'));
-        var defaultItemPosition = direction === 'next' ? 'first' : 'last';
-        var $nextItem = $focusedItem[direction]();
+        const $focusedItem = (0, _renderer.default)(this._list.option('focusedElement'));
+        const defaultItemPosition = direction === 'next' ? 'first' : 'last';
+        let $nextItem = $focusedItem[direction]();
         $nextItem = $nextItem.length ? $nextItem : this._activeListItems[defaultItemPosition]();
         this._list.option('focusedElement', (0, _element.getPublicElement)($nextItem));
         this._list.scrollToItem($nextItem);
@@ -153,55 +153,56 @@ if (_devextremeQuill.default) {
       _PopupModule.prototype.renderList.call(this, $container, options);
     };
     _proto.compileGetters = function compileGetters(_ref) {
-      var displayExpr = _ref.displayExpr,
-        valueExpr = _ref.valueExpr;
+      let {
+        displayExpr,
+        valueExpr
+      } = _ref;
       this._valueGetter = (0, _data.compileGetter)(displayExpr);
       this._idGetter = (0, _data.compileGetter)(valueExpr);
     };
     _proto._getListConfig = function _getListConfig(options) {
-      var _this2 = this;
-      var baseConfig = _PopupModule.prototype._getListConfig.call(this, options);
+      const baseConfig = _PopupModule.prototype._getListConfig.call(this, options);
       return (0, _extend.extend)(baseConfig, {
         itemTemplate: this.options.itemTemplate,
-        onContentReady: function onContentReady() {
-          if (_this2._hasSearch) {
-            _this2._popup.repaint();
-            _this2._focusFirstElement();
-            _this2._hasSearch = false;
+        onContentReady: () => {
+          if (this._hasSearch) {
+            this._popup.repaint();
+            this._focusFirstElement();
+            this._hasSearch = false;
           }
         }
       });
     };
     _proto.insertEmbedContent = function insertEmbedContent() {
-      var markerLength = this._activeMentionConfig.marker.length;
-      var textLength = markerLength + this._searchValue.length;
-      var caretPosition = this.getPosition();
-      var selectedItem = this._list.option('selectedItem');
-      var value = {
+      const markerLength = this._activeMentionConfig.marker.length;
+      const textLength = markerLength + this._searchValue.length;
+      const caretPosition = this.getPosition();
+      const selectedItem = this._list.option('selectedItem');
+      const value = {
         value: this._valueGetter(selectedItem),
         id: this._idGetter(selectedItem),
         marker: this._activeMentionConfig.marker,
         keyInTemplateStorage: this.editorInstance.getMentionKeyInTemplateStorage()
       };
-      var Delta = _devextremeQuill.default.import('delta');
-      var startIndex = Math.max(0, caretPosition - markerLength);
-      var newDelta = new Delta().retain(startIndex).delete(textLength).insert({
+      const Delta = _devextremeQuill.default.import('delta');
+      const startIndex = Math.max(0, caretPosition - markerLength);
+      const newDelta = new Delta().retain(startIndex).delete(textLength).insert({
         mention: value
       }).insert(' ');
       this.quill.updateContents(newDelta);
       this.quill.setSelection(startIndex + 2);
     };
     _proto._getLastInsertOperation = function _getLastInsertOperation(ops) {
-      var lastOperation = ops[ops.length - 1];
-      var isLastOperationInsert = ('insert' in lastOperation);
+      const lastOperation = ops[ops.length - 1];
+      const isLastOperationInsert = ('insert' in lastOperation);
       if (isLastOperationInsert) {
         return lastOperation;
       }
-      var isLastOperationDelete = ('delete' in lastOperation);
+      const isLastOperationDelete = ('delete' in lastOperation);
       if (isLastOperationDelete && ops.length >= 2) {
-        var penultOperation = ops[ops.length - 2];
-        var isPenultOperationInsert = ('insert' in penultOperation);
-        var isSelectionReplacing = isLastOperationDelete && isPenultOperationInsert;
+        const penultOperation = ops[ops.length - 2];
+        const isPenultOperationInsert = ('insert' in penultOperation);
+        const isSelectionReplacing = isLastOperationDelete && isPenultOperationInsert;
         if (isSelectionReplacing) {
           return penultOperation;
         }
@@ -210,12 +211,14 @@ if (_devextremeQuill.default) {
     };
     _proto.onTextChange = function onTextChange(newDelta, oldDelta, source) {
       if (source === USER_ACTION) {
-        var lastOperation = newDelta.ops[newDelta.ops.length - 1];
+        const lastOperation = newDelta.ops[newDelta.ops.length - 1];
         if (this._isMentionActive && this._isPopupVisible) {
           this._processSearchValue(lastOperation) && this._filterList(this._searchValue);
         } else {
-          var ops = newDelta.ops;
-          var lastInsertOperation = this._getLastInsertOperation(ops);
+          const {
+            ops
+          } = newDelta;
+          const lastInsertOperation = this._getLastInsertOperation(ops);
           if (lastInsertOperation) {
             this.checkMentionRequest(lastInsertOperation, ops);
           }
@@ -223,7 +226,7 @@ if (_devextremeQuill.default) {
       }
     };
     _proto._processSearchValue = function _processSearchValue(operation) {
-      var isInsertOperation = ('insert' in operation);
+      const isInsertOperation = ('insert' in operation);
       if (isInsertOperation) {
         this._searchValue += operation.insert;
       } else {
@@ -237,8 +240,10 @@ if (_devextremeQuill.default) {
       return true;
     };
     _proto.checkMentionRequest = function checkMentionRequest(_ref2, ops) {
-      var insert = _ref2.insert;
-      var caret = this.quill.getSelection();
+      let {
+        insert
+      } = _ref2;
+      const caret = this.quill.getSelection();
       if (!insert || !(0, _type.isString)(insert) || !caret || this._isMarkerPartOfText(ops[0].retain)) {
         return;
       }
@@ -247,7 +252,7 @@ if (_devextremeQuill.default) {
         this._updateList(this._activeMentionConfig);
         // NOTE: Fix of off-by-one error in selection index after insert on a new line.
         // See https://github.com/quilljs/quill/issues/1763.
-        var isOnNewLine = caret.index && this._getCharByIndex(caret.index - 1) === '\n';
+        const isOnNewLine = caret.index && this._getCharByIndex(caret.index - 1) === '\n';
         this.savePosition(caret.index + isOnNewLine);
         this._popup.option('position', this._popupPosition);
         this._searchValue = '';
@@ -264,11 +269,13 @@ if (_devextremeQuill.default) {
       return this.quill.getContents(index, 1).ops[0].insert;
     };
     _proto._updateList = function _updateList(_ref3) {
-      var dataSource = _ref3.dataSource,
-        displayExpr = _ref3.displayExpr,
-        valueExpr = _ref3.valueExpr,
-        itemTemplate = _ref3.itemTemplate,
-        searchExpr = _ref3.searchExpr;
+      let {
+        dataSource,
+        displayExpr,
+        valueExpr,
+        itemTemplate,
+        searchExpr
+      } = _ref3;
       this.compileGetters({
         displayExpr,
         valueExpr
@@ -282,16 +289,15 @@ if (_devextremeQuill.default) {
       });
     };
     _proto._filterList = function _filterList(searchValue) {
-      var _this3 = this;
       if (!this._isMinSearchLengthExceeded(searchValue)) {
         this._resetFilter();
         return;
       }
-      var searchTimeout = this._activeMentionConfig.searchTimeout;
+      const searchTimeout = this._activeMentionConfig.searchTimeout;
       if (searchTimeout) {
         clearTimeout(this._searchTimer);
-        this._searchTimer = setTimeout(function () {
-          _this3._search(searchValue);
+        this._searchTimer = setTimeout(() => {
+          this._search(searchValue);
         }, searchTimeout);
       } else {
         this._search(searchValue);
@@ -312,57 +318,57 @@ if (_devextremeQuill.default) {
       if (!this._list) {
         return;
       }
-      var $firstItem = this._activeListItems.first();
+      const $firstItem = this._activeListItems.first();
       this._list.option('focusedElement', (0, _element.getPublicElement)($firstItem));
       this._list.scrollToItem($firstItem);
     };
     _proto._getPopupConfig = function _getPopupConfig() {
-      var _this4 = this;
       return (0, _extend.extend)(_PopupModule.prototype._getPopupConfig.call(this), {
         hideOnParentScroll: false,
-        onShown: function onShown() {
-          _this4._isMentionActive = true;
-          _this4._hasSearch = false;
-          _this4._focusFirstElement();
+        onShown: () => {
+          this._isMentionActive = true;
+          this._hasSearch = false;
+          this._focusFirstElement();
         },
-        onHidden: function onHidden() {
-          _this4._list.unselectAll();
-          _this4._list.option('focusedElement', null);
-          _this4._isMentionActive = false;
-          _this4._search(null);
+        onHidden: () => {
+          this._list.unselectAll();
+          this._list.option('focusedElement', null);
+          this._isMentionActive = false;
+          this._search(null);
         },
         focusStateEnabled: false
       });
     };
     _proto.clean = function clean() {
-      var _this5 = this;
-      Object.keys(this._mentions).forEach(function (marker) {
-        if (_this5._mentions[marker].template) {
+      Object.keys(this._mentions).forEach(marker => {
+        if (this._mentions[marker].template) {
           _mention.default.removeTemplate({
             marker,
-            editorKey: _this5.editorInstance.getMentionKeyInTemplateStorage()
+            editorKey: this.editorInstance.getMentionKeyInTemplateStorage()
           });
         }
       });
     };
     _createClass(MentionModule, [{
       key: "_isPopupVisible",
-      get: function get() {
+      get: function () {
         var _this$_popup;
         return (_this$_popup = this._popup) === null || _this$_popup === void 0 ? void 0 : _this$_popup.option('visible');
       }
     }, {
       key: "_popupPosition",
-      get: function get() {
-        var position = this.getPosition();
-        var _this$quill$getBounds = this.quill.getBounds(position ? position - 1 : position),
-          mentionLeft = _this$quill$getBounds.left,
-          mentionTop = _this$quill$getBounds.top,
-          mentionHeight = _this$quill$getBounds.height;
-        var _$$offset = (0, _renderer.default)(this.quill.root).offset(),
-          leftOffset = _$$offset.left,
-          topOffset = _$$offset.top;
-        var positionEvent = _events_engine.default.Event('positionEvent', {
+      get: function () {
+        const position = this.getPosition();
+        const {
+          left: mentionLeft,
+          top: mentionTop,
+          height: mentionHeight
+        } = this.quill.getBounds(position ? position - 1 : position);
+        const {
+          left: leftOffset,
+          top: topOffset
+        } = (0, _renderer.default)(this.quill.root).offset();
+        const positionEvent = _events_engine.default.Event('positionEvent', {
           pageX: leftOffset + mentionLeft,
           pageY: topOffset + mentionTop
         });
@@ -381,7 +387,7 @@ if (_devextremeQuill.default) {
       }
     }, {
       key: "_activeListItems",
-      get: function get() {
+      get: function () {
         return this._list.itemElements().filter(":not(.".concat(DISABLED_STATE_CLASS, ")"));
       }
     }]);

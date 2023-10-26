@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/appointment_tooltip/item_layout.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,9 +16,8 @@ var _button = require("../../button");
 var _item_content = require("./item_content");
 var _get_current_appointment = _interopRequireDefault(require("./utils/get_current_appointment"));
 var _default_functions = require("./utils/default_functions");
-var _excluded = ["className", "getTextAndFormatDate", "index", "item", "itemContentTemplate", "onDelete", "onHide", "showDeleteButton", "singleAppointment"];
+const _excluded = ["className", "getTextAndFormatDate", "index", "item", "itemContentTemplate", "onDelete", "onHide", "showDeleteButton", "singleAppointment"];
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -27,8 +26,8 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(viewModel) {
-  var ItemContentTemplate = viewModel.props.itemContentTemplate;
+const viewFunction = viewModel => {
+  const ItemContentTemplate = viewModel.props.itemContentTemplate;
   return viewModel.props.itemContentTemplate ? ItemContentTemplate({
     model: {
       appointmentData: viewModel.props.item.data,
@@ -46,7 +45,7 @@ var viewFunction = function viewFunction(viewModel) {
   }), 2)], 0, _extends({}, viewModel.restAttributes)));
 };
 exports.viewFunction = viewFunction;
-var TooltipItemLayoutProps = {
+const TooltipItemLayoutProps = {
   className: '',
   item: Object.freeze({
     data: {}
@@ -57,12 +56,8 @@ var TooltipItemLayoutProps = {
   singleAppointment: Object.freeze({})
 };
 exports.TooltipItemLayoutProps = TooltipItemLayoutProps;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var TooltipItemLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let TooltipItemLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
   _inheritsLoose(TooltipItemLayout, _BaseInfernoComponent);
   function TooltipItemLayout(props) {
     var _this;
@@ -81,7 +76,7 @@ var TooltipItemLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
     }
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         itemContentTemplate: getTemplate(props.itemContentTemplate)
@@ -94,59 +89,54 @@ var TooltipItemLayout = /*#__PURE__*/function (_BaseInfernoComponent) {
   };
   _createClass(TooltipItemLayout, [{
     key: "currentAppointment",
-    get: function get() {
-      var item = this.props.item;
+    get: function () {
+      const {
+        item
+      } = this.props;
       return (0, _get_current_appointment.default)(item);
     }
   }, {
     key: "onDeleteButtonClick",
-    get: function get() {
-      var _this2 = this;
+    get: function () {
       if (this.__getterCache['onDeleteButtonClick'] !== undefined) {
         return this.__getterCache['onDeleteButtonClick'];
       }
-      return this.__getterCache['onDeleteButtonClick'] = function () {
-        var _this2$props = _this2.props,
-          item = _this2$props.item,
-          onDelete = _this2$props.onDelete,
-          onHide = _this2$props.onHide,
-          singleAppointment = _this2$props.singleAppointment;
-        return function (e) {
+      return this.__getterCache['onDeleteButtonClick'] = (() => {
+        const {
+          item,
+          onDelete,
+          onHide,
+          singleAppointment
+        } = this.props;
+        return e => {
           onHide === null || onHide === void 0 ? void 0 : onHide();
           e.event.stopPropagation();
           onDelete === null || onDelete === void 0 ? void 0 : onDelete(item.data, singleAppointment);
         };
-      }();
+      })();
     }
   }, {
     key: "formattedContent",
-    get: function get() {
-      var _this3 = this;
+    get: function () {
       if (this.__getterCache['formattedContent'] !== undefined) {
         return this.__getterCache['formattedContent'];
       }
-      return this.__getterCache['formattedContent'] = function () {
-        var _this3$props = _this3.props,
-          getTextAndFormatDate = _this3$props.getTextAndFormatDate,
-          item = _this3$props.item;
-        var data = item.data;
-        return getTextAndFormatDate(data, _this3.currentAppointment);
-      }();
+      return this.__getterCache['formattedContent'] = (() => {
+        const {
+          getTextAndFormatDate,
+          item
+        } = this.props;
+        const {
+          data
+        } = item;
+        return getTextAndFormatDate(data, this.currentAppointment);
+      })();
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        className = _this$props.className,
-        getTextAndFormatDate = _this$props.getTextAndFormatDate,
-        index = _this$props.index,
-        item = _this$props.item,
-        itemContentTemplate = _this$props.itemContentTemplate,
-        onDelete = _this$props.onDelete,
-        onHide = _this$props.onHide,
-        showDeleteButton = _this$props.showDeleteButton,
-        singleAppointment = _this$props.singleAppointment,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

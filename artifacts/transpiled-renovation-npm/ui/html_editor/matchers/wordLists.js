@@ -2,30 +2,30 @@
 
 exports.default = void 0;
 function getListType(matches) {
-  var prefix = matches[1];
+  const prefix = matches[1];
   return prefix.match(/\S+\./) ? 'ordered' : 'bullet';
 }
 function getIndent(node) {
-  var style = node.getAttribute('style');
+  const style = node.getAttribute('style');
   if (style) {
-    var level = style.replace(/\n+/g, '').match(/level(\d+)/);
+    const level = style.replace(/\n+/g, '').match(/level(\d+)/);
     return level ? level[1] - 1 : 0;
   } else {
     return false;
   }
 }
 function removeNewLineChar(operations) {
-  var newLineOperation = operations[operations.length - 1];
+  const newLineOperation = operations[operations.length - 1];
   newLineOperation.insert = newLineOperation.insert.trim();
 }
-var getMatcher = function getMatcher(quill) {
-  var Delta = quill.import('delta');
-  return function (node, delta) {
-    var ops = delta.ops.slice();
-    var insertOperation = ops[0];
+const getMatcher = quill => {
+  const Delta = quill.import('delta');
+  return (node, delta) => {
+    const ops = delta.ops.slice();
+    const insertOperation = ops[0];
     insertOperation.insert = insertOperation.insert.replace(/^\s+/, '');
-    var listDecoratorMatches = insertOperation.insert.match(/^(\S+)\s+/);
-    var indent = listDecoratorMatches && getIndent(node);
+    const listDecoratorMatches = insertOperation.insert.match(/^(\S+)\s+/);
+    const indent = listDecoratorMatches && getIndent(node);
     if (!listDecoratorMatches || indent === false) {
       return delta;
     }

@@ -1,14 +1,10 @@
 "use strict";
 
 exports.defaultGetTextAndFormatDate = exports.defaultGetSingleAppointment = void 0;
-var defaultGetTextAndFormatDate = function defaultGetTextAndFormatDate() {
-  return {
-    text: '',
-    formatDate: ''
-  };
-};
+const defaultGetTextAndFormatDate = () => ({
+  text: '',
+  formatDate: ''
+});
 exports.defaultGetTextAndFormatDate = defaultGetTextAndFormatDate;
-var defaultGetSingleAppointment = function defaultGetSingleAppointment() {
-  return {};
-};
+const defaultGetSingleAppointment = () => ({});
 exports.defaultGetSingleAppointment = defaultGetSingleAppointment;

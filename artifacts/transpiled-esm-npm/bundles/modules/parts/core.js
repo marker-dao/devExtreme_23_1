@@ -4,7 +4,7 @@
 
 /* Core (dx.module-core.js) */
 /* eslint-disable import/no-commonjs */
-var DevExpress = require('../../../bundles/modules/core');
+const DevExpress = require('../../../bundles/modules/core');
 
 /* Integrations (dx.module-core.js) */
 

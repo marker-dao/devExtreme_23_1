@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/grouping/m_grouping_core.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,12 +22,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @ts-expect-error
 
 function createOffsetFilter(path, storeLoadOptions, lastLevelOnly) {
-  var groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group);
-  var filter = [];
-  for (var i = lastLevelOnly ? path.length - 1 : 0; i < path.length; i++) {
-    var filterElement = [];
-    for (var j = 0; j <= i; j++) {
-      var selector = groups[j].selector;
+  const groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group);
+  let filter = [];
+  for (let i = lastLevelOnly ? path.length - 1 : 0; i < path.length; i++) {
+    const filterElement = [];
+    for (let j = 0; j <= i; j++) {
+      const {
+        selector
+      } = groups[j];
       if (i === j && (path[j] === null || path[j] === false || path[j] === true)) {
         if (path[j] === false) {
           filterElement.push([selector, '=', groups[j].desc ? true : null]);
@@ -38,7 +40,7 @@ function createOffsetFilter(path, storeLoadOptions, lastLevelOnly) {
           filterElement.push([selector, '=', null]);
         }
       } else {
-        var currentFilter = [selector, i === j ? groups[j].desc ? '>' : '<' : '=', path[j]];
+        const currentFilter = [selector, i === j ? groups[j].desc ? '>' : '<' : '=', path[j]];
         if (currentFilter[1] === '<') {
           filterElement.push([currentFilter, 'or', [selector, '=', null]]);
         } else {
@@ -51,26 +53,28 @@ function createOffsetFilter(path, storeLoadOptions, lastLevelOnly) {
   filter = _m_core.default.combineFilters(filter, 'or');
   return _m_core.default.combineFilters([filter, storeLoadOptions.filter]);
 }
-var GroupingHelper = _class.default.inherit(function () {
-  var findGroupInfoByKey = function findGroupInfoByKey(groupsInfo, key) {
-    var hash = groupsInfo.hash;
+const GroupingHelper = _class.default.inherit(function () {
+  const findGroupInfoByKey = function (groupsInfo, key) {
+    const {
+      hash
+    } = groupsInfo;
     return hash && hash[JSON.stringify(key)];
   };
-  var getGroupInfoIndexByOffset = function getGroupInfoIndexByOffset(groupsInfo, offset) {
-    var leftIndex = 0;
-    var rightIndex = groupsInfo.length - 1;
+  const getGroupInfoIndexByOffset = function (groupsInfo, offset) {
+    let leftIndex = 0;
+    let rightIndex = groupsInfo.length - 1;
     if (!groupsInfo.length) {
       return 0;
     }
     do {
-      var middleIndex = rightIndex + leftIndex >> 1;
+      const middleIndex = rightIndex + leftIndex >> 1;
       if (groupsInfo[middleIndex].offset > offset) {
         rightIndex = middleIndex;
       } else {
         leftIndex = middleIndex;
       }
     } while (rightIndex - leftIndex > 1);
-    var index;
+    let index;
     for (index = leftIndex; index <= rightIndex; index++) {
       if (groupsInfo[index].offset > offset) {
         break;
@@ -78,8 +82,8 @@ var GroupingHelper = _class.default.inherit(function () {
     }
     return index;
   };
-  var cleanGroupsInfo = function cleanGroupsInfo(groupsInfo, groupIndex, groupsCount) {
-    for (var i = 0; i < groupsInfo.length; i++) {
+  const cleanGroupsInfo = function (groupsInfo, groupIndex, groupsCount) {
+    for (let i = 0; i < groupsInfo.length; i++) {
       if (groupIndex + 1 >= groupsCount) {
         groupsInfo[i].children = [];
       } else {
@@ -87,13 +91,13 @@ var GroupingHelper = _class.default.inherit(function () {
       }
     }
   };
-  var calculateItemsCount = function calculateItemsCount(that, items, groupsCount) {
-    var result = 0;
+  const calculateItemsCount = function (that, items, groupsCount) {
+    let result = 0;
     if (items) {
       if (!groupsCount) {
         result = items.length;
       } else {
-        for (var i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
           if (that.isGroupItemCountable(items[i])) {
             result++;
           }
@@ -122,33 +126,35 @@ var GroupingHelper = _class.default.inherit(function () {
       return !this._isVirtualPaging() || !item.isContinuation;
     },
     _isVirtualPaging() {
-      var scrollingMode = this._dataSource.option('scrolling.mode');
+      const scrollingMode = this._dataSource.option('scrolling.mode');
       return scrollingMode === 'virtual' || scrollingMode === 'infinite';
     },
     itemsCount() {
-      var dataSourceAdapter = this._dataSource;
-      var dataSource = dataSourceAdapter._dataSource;
-      var groupCount = _m_core.default.normalizeSortingInfo(dataSource.group() || []).length;
-      var itemsCount = calculateItemsCount(this, dataSource.items(), groupCount);
+      const dataSourceAdapter = this._dataSource;
+      const dataSource = dataSourceAdapter._dataSource;
+      const groupCount = _m_core.default.normalizeSortingInfo(dataSource.group() || []).length;
+      const itemsCount = calculateItemsCount(this, dataSource.items(), groupCount);
       return itemsCount;
     },
     foreachGroups(callback, childrenAtFirst, foreachCollapsedGroups, updateOffsets, updateParentOffsets) {
-      var that = this;
+      const that = this;
       function foreachGroupsCore(groupsInfo, callback, childrenAtFirst, parents) {
-        var callbackResults = [];
+        const callbackResults = [];
         function executeCallback(callback, data, parents, callbackResults) {
-          var callbackResult = data && callback(data, parents);
+          const callbackResult = data && callback(data, parents);
           callbackResult && callbackResults.push(callbackResult);
           return callbackResult;
         }
-        for (var i = 0; i < groupsInfo.length; i++) {
+        for (let i = 0; i < groupsInfo.length; i++) {
           parents.push(groupsInfo[i].data);
           if (!childrenAtFirst && executeCallback(callback, groupsInfo[i].data, parents, callbackResults) === false) {
             return false;
           }
           if (!groupsInfo[i].data || groupsInfo[i].data.isExpanded || foreachCollapsedGroups) {
-            var children = groupsInfo[i].children;
-            var callbackResult = children.length && foreachGroupsCore(children, callback, childrenAtFirst, parents);
+            const {
+              children
+            } = groupsInfo[i];
+            const callbackResult = children.length && foreachGroupsCore(children, callback, childrenAtFirst, parents);
             callbackResult && callbackResults.push(callbackResult);
             if (callbackResult === false) {
               return false;
@@ -162,8 +168,8 @@ var GroupingHelper = _class.default.inherit(function () {
           }
           parents.pop();
         }
-        var currentParents = updateParentOffsets && parents.slice(0);
-        return updateOffsets && _deferred.when.apply(_renderer.default, callbackResults).always(function () {
+        const currentParents = updateParentOffsets && parents.slice(0);
+        return updateOffsets && _deferred.when.apply(_renderer.default, callbackResults).always(() => {
           that._updateGroupInfoOffsets(groupsInfo, currentParents);
         });
       }
@@ -171,35 +177,35 @@ var GroupingHelper = _class.default.inherit(function () {
     },
     _updateGroupInfoOffsets(groupsInfo, parents) {
       parents = parents || [];
-      for (var index = 0; index < groupsInfo.length; index++) {
-        var groupInfo = groupsInfo[index];
+      for (let index = 0; index < groupsInfo.length; index++) {
+        const groupInfo = groupsInfo[index];
         if (groupInfo.data && groupInfo.data.offset !== groupInfo.offset) {
           groupInfo.offset = groupInfo.data.offset;
-          for (var parentIndex = 0; parentIndex < parents.length; parentIndex++) {
+          for (let parentIndex = 0; parentIndex < parents.length; parentIndex++) {
             parents[parentIndex].offset = groupInfo.offset;
           }
         }
       }
-      groupsInfo.sort(function (a, b) {
-        return a.offset - b.offset;
-      });
+      groupsInfo.sort((a, b) => a.offset - b.offset);
     },
     findGroupInfo(path) {
-      var that = this;
-      var groupInfo;
-      var groupsInfo = that._groupsInfo;
-      for (var pathIndex = 0; groupsInfo && pathIndex < path.length; pathIndex++) {
+      const that = this;
+      let groupInfo;
+      let groupsInfo = that._groupsInfo;
+      for (let pathIndex = 0; groupsInfo && pathIndex < path.length; pathIndex++) {
         groupInfo = findGroupInfoByKey(groupsInfo, path[pathIndex]);
         groupsInfo = groupInfo && groupInfo.children;
       }
       return groupInfo && groupInfo.data;
     },
     addGroupInfo(groupInfoData) {
-      var that = this;
-      var groupInfo;
-      var path = groupInfoData.path;
-      var groupsInfo = that._groupsInfo;
-      for (var pathIndex = 0; pathIndex < path.length; pathIndex++) {
+      const that = this;
+      let groupInfo;
+      const {
+        path
+      } = groupInfoData;
+      let groupsInfo = that._groupsInfo;
+      for (let pathIndex = 0; pathIndex < path.length; pathIndex++) {
         groupInfo = findGroupInfoByKey(groupsInfo, path[pathIndex]);
         if (!groupInfo) {
           groupInfo = {
@@ -212,7 +218,7 @@ var GroupingHelper = _class.default.inherit(function () {
             },
             children: []
           };
-          var index = getGroupInfoIndexByOffset(groupsInfo, groupInfoData.offset);
+          const index = getGroupInfoIndexByOffset(groupsInfo, groupInfoData.offset);
           groupsInfo.splice(index, 0, groupInfo);
           groupsInfo.hash = groupsInfo.hash || {};
           groupsInfo.hash[JSON.stringify(groupInfo.key)] = groupInfo;
@@ -230,13 +236,15 @@ var GroupingHelper = _class.default.inherit(function () {
       return true;
     },
     refresh(options) {
-      var that = this;
-      var storeLoadOptions = options.storeLoadOptions;
-      var groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group || []);
-      var oldGroups = '_group' in that ? (0, _utils.normalizeSortingInfo)(that._group || []) : groups;
-      var groupsCount = Math.min(oldGroups.length, groups.length);
+      const that = this;
+      const {
+        storeLoadOptions
+      } = options;
+      const groups = (0, _utils.normalizeSortingInfo)(storeLoadOptions.group || []);
+      const oldGroups = '_group' in that ? (0, _utils.normalizeSortingInfo)(that._group || []) : groups;
+      let groupsCount = Math.min(oldGroups.length, groups.length);
       that._group = storeLoadOptions.group;
-      for (var groupIndex = 0; groupIndex < groupsCount; groupIndex++) {
+      for (let groupIndex = 0; groupIndex < groupsCount; groupIndex++) {
         if (oldGroups[groupIndex].selector !== groups[groupIndex].selector) {
           groupsCount = groupIndex;
           break;

@@ -5,14 +5,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ExpressionUtils = void 0;
 var _type = require("../../core/utils/type");
-var ExpressionUtils = {
-  getField: function getField(dataAccessors, field, obj) {
+const ExpressionUtils = {
+  getField: (dataAccessors, field, obj) => {
     if (!(0, _type.isDefined)(dataAccessors.getter[field])) {
       return;
     }
     return dataAccessors.getter[field](obj);
   },
-  setField: function setField(dataAccessors, field, obj, value) {
+  setField: (dataAccessors, field, obj, value) => {
     if (!(0, _type.isDefined)(dataAccessors.setter[field])) {
       return;
     }

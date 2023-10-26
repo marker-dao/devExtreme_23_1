@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/templates/template_base.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,18 +16,18 @@ var _dom = require("../utils/dom");
 var _visibility_change = require("../../events/visibility_change");
 var _errors = _interopRequireDefault(require("../errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var renderedCallbacks = (0, _callbacks.default)({
+const renderedCallbacks = (0, _callbacks.default)({
   syncStrategy: true
 });
 exports.renderedCallbacks = renderedCallbacks;
-var TemplateBase = /*#__PURE__*/function () {
+let TemplateBase = /*#__PURE__*/function () {
   function TemplateBase() {}
   var _proto = TemplateBase.prototype;
   _proto.render = function render(options) {
     options = options || {};
-    var onRendered = options.onRendered;
+    const onRendered = options.onRendered;
     delete options.onRendered;
-    var $result;
+    let $result;
     if (options.renovated && options.transclude && this._element) {
       $result = (0, _renderer.default)('<div>').append(this._element).contents();
     } else {
@@ -42,13 +42,13 @@ var TemplateBase = /*#__PURE__*/function () {
     if (!container) {
       return;
     }
-    var $container = (0, _renderer.default)(container);
-    var resultInContainer = (0, _dom.contains)($container.get(0), $result.get(0));
+    const $container = (0, _renderer.default)(container);
+    const resultInContainer = (0, _dom.contains)($container.get(0), $result.get(0));
     $container.append($result);
     if (resultInContainer) {
       return;
     }
-    var resultInBody = _dom_adapter.default.getBody().contains($container.get(0));
+    const resultInBody = _dom_adapter.default.getBody().contains($container.get(0));
     if (!resultInBody) {
       return;
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/converters/markdown.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,12 +15,12 @@ var _window = require("../../../core/utils/window");
 var _ui = _interopRequireDefault(require("../../widget/ui.errors"));
 var _converterController = _interopRequireDefault(require("../converterController"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var MarkdownConverter = /*#__PURE__*/function () {
+let MarkdownConverter = /*#__PURE__*/function () {
   function MarkdownConverter() {
     var _this$_html2Markdown;
-    var window = (0, _window.getWindow)();
-    var turndown = window && window.TurndownService || _turndown.default;
-    var showdown = window && window.showdown || _devextremeShowdown.default;
+    const window = (0, _window.getWindow)();
+    const turndown = window && window.TurndownService || _turndown.default;
+    const showdown = window && window.showdown || _devextremeShowdown.default;
     if (!turndown) {
       throw _ui.default.Error('E1041', 'Turndown');
     }
@@ -30,10 +30,10 @@ var MarkdownConverter = /*#__PURE__*/function () {
     this._html2Markdown = new turndown();
     if ((_this$_html2Markdown = this._html2Markdown) !== null && _this$_html2Markdown !== void 0 && _this$_html2Markdown.addRule) {
       this._html2Markdown.addRule('emptyLine', {
-        filter: function filter(element) {
+        filter: element => {
           return element.nodeName.toLowerCase() === 'p' && element.innerHTML === '<br>';
         },
-        replacement: function replacement() {
+        replacement: function () {
           return '<br>';
         }
       });
@@ -50,7 +50,7 @@ var MarkdownConverter = /*#__PURE__*/function () {
     return this._html2Markdown.turndown(htmlMarkup || '');
   };
   _proto.toHtml = function toHtml(markdownMarkup) {
-    var markup = this._markdown2Html.makeHtml(markdownMarkup);
+    let markup = this._markdown2Html.makeHtml(markdownMarkup);
     if (markup) {
       markup = markup.replace(new RegExp('\\r?\\n', 'g'), '');
     }

@@ -178,15 +178,15 @@ export class DataController extends ControllerWithDataMixin {
     if (!this._dataSource) {
       return filter;
     }
-    var combinedFilter = filter !== null && filter !== void 0 ? filter : this._dataSource.filter();
+    var combined = filter !== null && filter !== void 0 ? filter : this._dataSource.filter();
     var isColumnsTypesDefined = this._columnsController.isDataSourceApplied() || this._columnsController.isAllDataTypesDefined();
     if (isColumnsTypesDefined) {
       var additionalFilter = this._calculateAdditionalFilter();
-      combinedFilter = additionalFilter ? gridCoreUtils.combineFilters([additionalFilter, combinedFilter]) : combinedFilter;
+      combined = additionalFilter ? gridCoreUtils.combineFilters([additionalFilter, combined]) : combined;
     }
     var isRemoteFiltering = this._dataSource.remoteOperations().filtering || returnDataField;
-    combinedFilter = this._columnsController.updateFilter(combinedFilter, isRemoteFiltering);
-    return combinedFilter;
+    combined = this._columnsController.updateFilter(combined, isRemoteFiltering);
+    return combined;
   }
   waitReady() {
     if (this._updateLockCount) {

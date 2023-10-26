@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/integration/jquery/component_registrator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,27 +15,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-restricted-imports
 
 if (_jquery.default) {
-  var registerJQueryComponent = function registerJQueryComponent(name, componentClass) {
+  const registerJQueryComponent = function (name, componentClass) {
     _jquery.default.fn[name] = function (options) {
-      var isMemberInvoke = typeof options === 'string';
-      var result;
+      const isMemberInvoke = typeof options === 'string';
+      let result;
       if (isMemberInvoke) {
-        var memberName = options;
-        var memberArgs = [].slice.call(arguments).slice(1);
+        const memberName = options;
+        const memberArgs = [].slice.call(arguments).slice(1);
         this.each(function () {
-          var instance = componentClass.getInstance(this);
+          const instance = componentClass.getInstance(this);
           if (!instance) {
             throw _errors.default.Error('E0009', name);
           }
-          var member = instance[memberName];
-          var memberValue = member.apply(instance, memberArgs);
+          const member = instance[memberName];
+          const memberValue = member.apply(instance, memberArgs);
           if (result === undefined) {
             result = memberValue;
           }
         });
       } else {
         this.each(function () {
-          var instance = componentClass.getInstance(this);
+          const instance = componentClass.getInstance(this);
           if (instance) {
             instance.option(options);
           } else {

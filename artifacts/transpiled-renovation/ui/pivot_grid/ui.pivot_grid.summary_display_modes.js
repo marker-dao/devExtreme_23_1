@@ -6,7 +6,7 @@ Object.keys(_m_summary_display_modes).forEach(function (key) {
   if (key in exports && exports[key] === _m_summary_display_modes[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_summary_display_modes[key];
     }
   });

@@ -6,7 +6,7 @@ Object.keys(_m_headers_area).forEach(function (key) {
   if (key in exports && exports[key] === _m_headers_area[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_headers_area[key];
     }
   });

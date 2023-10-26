@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/tooltip_strategies/m_desktop_tooltip_strategy.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,9 +18,9 @@ var _m_tooltip_strategy_base = require("./m_tooltip_strategy_base");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var APPOINTMENT_TOOLTIP_WRAPPER_CLASS = 'dx-scheduler-appointment-tooltip-wrapper';
-var MAX_TOOLTIP_HEIGHT = 200;
-var DesktopTooltipStrategy = /*#__PURE__*/function (_TooltipStrategyBase) {
+const APPOINTMENT_TOOLTIP_WRAPPER_CLASS = 'dx-scheduler-appointment-tooltip-wrapper';
+const MAX_TOOLTIP_HEIGHT = 200;
+let DesktopTooltipStrategy = /*#__PURE__*/function (_TooltipStrategyBase) {
   _inheritsLoose(DesktopTooltipStrategy, _TooltipStrategyBase);
   function DesktopTooltipStrategy() {
     return _TooltipStrategyBase.apply(this, arguments) || this;
@@ -49,14 +49,14 @@ var DesktopTooltipStrategy = /*#__PURE__*/function (_TooltipStrategyBase) {
   ;
   _proto._createListOption = function _createListOption(target, dataList) {
     // @ts-expect-error
-    var result = _TooltipStrategyBase.prototype._createListOption.call(this, target, dataList);
+    const result = _TooltipStrategyBase.prototype._createListOption.call(this, target, dataList);
     // TODO:T724287 this condition is not covered by tests, because touch variable cannot be overridden.
     // In the future, it is necessary to cover the tests
     result.showScrollbar = _support.touch ? 'always' : 'onHover';
     return result;
   };
   _proto._createTooltip = function _createTooltip(target, dataList) {
-    var tooltip = this._createTooltipElement(APPOINTMENT_TOOLTIP_WRAPPER_CLASS);
+    const tooltip = this._createTooltipElement(APPOINTMENT_TOOLTIP_WRAPPER_CLASS);
     return this._options.createComponent(tooltip, _tooltip.default, {
       target,
       maxHeight: MAX_TOOLTIP_HEIGHT,
@@ -72,7 +72,7 @@ var DesktopTooltipStrategy = /*#__PURE__*/function (_TooltipStrategyBase) {
     return this._extraOptions.dragBehavior && this._extraOptions.dragBehavior(e);
   };
   _proto._onListItemContextMenu = function _onListItemContextMenu(e) {
-    var contextMenuEventArgs = this._options.createEventArgs(e);
+    const contextMenuEventArgs = this._options.createEventArgs(e);
     this._options.onItemContextMenu(contextMenuEventArgs);
   };
   return DesktopTooltipStrategy;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scheduler/props.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,17 +13,17 @@ var _message = _interopRequireDefault(require("../../../localization/message"));
 var _base_props = require("../common/base_props");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var ScrollingProps = {};
+const ScrollingProps = {};
 exports.ScrollingProps = ScrollingProps;
-var ResourceProps = {};
+const ResourceProps = {};
 exports.ResourceProps = ResourceProps;
-var ViewProps = {};
+const ViewProps = {};
 exports.ViewProps = ViewProps;
-var AppointmentEditingProps = {};
+const AppointmentEditingProps = {};
 exports.AppointmentEditingProps = AppointmentEditingProps;
-var AppointmentDraggingProps = {};
+const AppointmentDraggingProps = {};
 exports.AppointmentDraggingProps = AppointmentDraggingProps;
-var SchedulerProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors(Object.defineProperties({
+const SchedulerProps = Object.create(Object.prototype, _extends(Object.getOwnPropertyDescriptors(_base_props.BaseWidgetProps), Object.getOwnPropertyDescriptors(Object.defineProperties({
   adaptivityEnabled: false,
   crossScrollingEnabled: false,
   descriptionExpr: 'description',
@@ -74,12 +74,12 @@ var SchedulerProps = Object.create(Object.prototype, _extends(Object.getOwnPrope
     location: 'after'
   }]),
   defaultCurrentDate: Object.freeze(new Date()),
-  currentDateChange: function currentDateChange() {},
+  currentDateChange: () => {},
   defaultCurrentView: 'day',
-  currentViewChange: function currentViewChange() {}
+  currentViewChange: () => {}
 }, {
   noDataText: {
-    get: function get() {
+    get: function () {
       return _message.default.format('dxCollectionWidget-noDataText');
     },
     configurable: true,
@@ -87,72 +87,72 @@ var SchedulerProps = Object.create(Object.prototype, _extends(Object.getOwnPrope
   }
 }))));
 exports.SchedulerProps = SchedulerProps;
-var DataAccessorsProps = Object.defineProperties({}, {
+const DataAccessorsProps = Object.defineProperties({}, {
   descriptionExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.descriptionExpr;
     },
     configurable: true,
     enumerable: true
   },
   resources: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.resources;
     },
     configurable: true,
     enumerable: true
   },
   recurrenceExceptionExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.recurrenceExceptionExpr;
     },
     configurable: true,
     enumerable: true
   },
   recurrenceRuleExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.recurrenceRuleExpr;
     },
     configurable: true,
     enumerable: true
   },
   startDateExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.startDateExpr;
     },
     configurable: true,
     enumerable: true
   },
   startDateTimeZoneExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.startDateTimeZoneExpr;
     },
     configurable: true,
     enumerable: true
   },
   endDateExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.endDateExpr;
     },
     configurable: true,
     enumerable: true
   },
   endDateTimeZoneExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.endDateTimeZoneExpr;
     },
     configurable: true,
     enumerable: true
   },
   allDayExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.allDayExpr;
     },
     configurable: true,
     enumerable: true
   },
   textExpr: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.textExpr;
     },
     configurable: true,
@@ -160,93 +160,93 @@ var DataAccessorsProps = Object.defineProperties({}, {
   }
 });
 exports.DataAccessorsProps = DataAccessorsProps;
-var CurrentViewConfigProps = Object.defineProperties({}, {
+const CurrentViewConfigProps = Object.defineProperties({}, {
   crossScrollingEnabled: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.crossScrollingEnabled;
     },
     configurable: true,
     enumerable: true
   },
   groupByDate: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.groupByDate;
     },
     configurable: true,
     enumerable: true
   },
   indicatorUpdateInterval: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.indicatorUpdateInterval;
     },
     configurable: true,
     enumerable: true
   },
   scrolling: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.scrolling;
     },
     configurable: true,
     enumerable: true
   },
   shadeUntilCurrentTime: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.shadeUntilCurrentTime;
     },
     configurable: true,
     enumerable: true
   },
   showAllDayPanel: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.showAllDayPanel;
     },
     configurable: true,
     enumerable: true
   },
   showCurrentTimeIndicator: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.showCurrentTimeIndicator;
     },
     configurable: true,
     enumerable: true
   },
   endDayHour: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.endDayHour;
     },
     configurable: true,
     enumerable: true
   },
   startDayHour: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.startDayHour;
     },
     configurable: true,
     enumerable: true
   },
   firstDayOfWeek: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.firstDayOfWeek;
     },
     configurable: true,
     enumerable: true
   },
   cellDuration: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.cellDuration;
     },
     configurable: true,
     enumerable: true
   },
   maxAppointmentsPerCell: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.maxAppointmentsPerCell;
     },
     configurable: true,
     enumerable: true
   },
   allDayPanelMode: {
-    get: function get() {
+    get: function () {
       return SchedulerProps.allDayPanelMode;
     },
     configurable: true,

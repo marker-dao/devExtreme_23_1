@@ -6,7 +6,7 @@ Object.keys(_column_chooser).forEach(function (key) {
   if (key in exports && exports[key] === _column_chooser[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _column_chooser[key];
     }
   });

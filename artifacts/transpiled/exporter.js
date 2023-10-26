@@ -3,7 +3,7 @@
 exports.export = _export;
 Object.defineProperty(exports, "fileSaver", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _file_saver.fileSaver;
   }
 });
@@ -20,10 +20,10 @@ function _export(data, options, getData) {
   }
 
   // TODO: Can the following actions be not defined? (since they are provided by a widget not by a user)
-  var exportingAction = options.exportingAction;
-  var exportedAction = options.exportedAction;
-  var fileSavingAction = options.fileSavingAction;
-  var eventArgs = {
+  const exportingAction = options.exportingAction;
+  const exportedAction = options.exportedAction;
+  const fileSavingAction = options.fileSavingAction;
+  const eventArgs = {
     fileName: options.fileName,
     format: options.format,
     cancel: false
@@ -33,21 +33,21 @@ function _export(data, options, getData) {
   }
   (0, _type.isFunction)(exportingAction) && exportingAction(eventArgs);
   if (!eventArgs.cancel) {
-    return getData(data, options).then(function (blob) {
+    return getData(data, options).then(blob => {
       (0, _type.isFunction)(exportedAction) && exportedAction();
       if ((0, _type.isFunction)(fileSavingAction)) {
         eventArgs.data = blob;
         fileSavingAction(eventArgs);
       }
       if (!eventArgs.cancel) {
-        var format = options.format === 'xlsx' ? 'EXCEL' : options.format;
+        const format = options.format === 'xlsx' ? 'EXCEL' : options.format;
         _file_saver.fileSaver.saveAs(eventArgs.fileName, format, blob);
       }
     });
   }
   return new _deferred.Deferred().resolve();
 }
-var image = {
+const image = {
   ///#DEBUG
   asyncEach: _image_creator.asyncEach,
   ///#ENDDEBUG
@@ -56,11 +56,11 @@ var image = {
   testFormats: _image_creator.testFormats
 };
 exports.image = image;
-var pdf = {
+const pdf = {
   getData: _pdf_creator.getData
 };
 exports.pdf = pdf;
-var svg = {
+const svg = {
   creator: _svg_creator.svgCreator,
   getData: _svg_creator.getData
 };

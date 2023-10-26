@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/data_controller/m_data_controller.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,24 +26,26 @@ var _m_virtual_scrolling_core = _interopRequireDefault(require("../../../grids/g
 var _m_data_source = require("../data_source/m_data_source");
 var _m_widget_utils = require("../m_widget_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var math = Math;
-var GRAND_TOTAL_TYPE = 'GT';
-var TOTAL_TYPE = 'T';
-var DATA_TYPE = 'D';
-var NOT_AVAILABLE = '#N/A';
-var CHANGING_DURATION_IF_PAGINATE = 300;
-var proxyMethod = function proxyMethod(instance, methodName, defaultResult) {
+const math = Math;
+const GRAND_TOTAL_TYPE = 'GT';
+const TOTAL_TYPE = 'T';
+const DATA_TYPE = 'D';
+const NOT_AVAILABLE = '#N/A';
+const CHANGING_DURATION_IF_PAGINATE = 300;
+const proxyMethod = function (instance, methodName, defaultResult) {
   if (!instance[methodName]) {
     instance[methodName] = function () {
-      var dataSource = this._dataSource;
+      const dataSource = this._dataSource;
       return dataSource ? dataSource[methodName].apply(dataSource, arguments) : defaultResult;
     };
   }
 };
-var DataController = _class.default.inherit(function () {
+const DataController = _class.default.inherit(function () {
   // - @ts-expect-error
   function getHeaderItemText(item, description, options) {
-    var text = item.text;
+    let {
+      text
+    } = item;
     if ((0, _type.isDefined)(item.displayText)) {
       text = item.displayText;
     } else if ((0, _type.isDefined)(item.caption)) {
@@ -59,16 +61,16 @@ var DataController = _class.default.inherit(function () {
   function formatCellValue(value, dataField, errorText) {
     return value === NOT_AVAILABLE ? errorText : (0, _m_widget_utils.formatValue)(value, dataField);
   }
-  var createHeaderInfo = function () {
-    var getHeaderItemsDepth = function getHeaderItemsDepth(headerItems) {
-      var depth = 0;
-      (0, _m_widget_utils.foreachTree)(headerItems, function (items) {
+  const createHeaderInfo = function () {
+    const getHeaderItemsDepth = function (headerItems) {
+      let depth = 0;
+      (0, _m_widget_utils.foreachTree)(headerItems, items => {
         depth = math.max(depth, items.length);
       });
       return depth;
     };
-    var createInfoItem = function createInfoItem(headerItem, breadth, isHorizontal, isTree) {
-      var infoItem = {
+    const createInfoItem = function (headerItem, breadth, isHorizontal, isTree) {
+      const infoItem = {
         type: headerItem.type,
         text: headerItem.text
       };
@@ -108,10 +110,10 @@ var DataController = _class.default.inherit(function () {
       }
       return infoItem;
     };
-    var addInfoItem = function addInfoItem(info, options) {
-      var breadth = options.lastIndex - options.index || 1;
-      var addInfoItemCore = function addInfoItemCore(info, infoItem, itemIndex, depthIndex, isHorizontal) {
-        var index = isHorizontal ? depthIndex : itemIndex;
+    const addInfoItem = function (info, options) {
+      const breadth = options.lastIndex - options.index || 1;
+      const addInfoItemCore = function (info, infoItem, itemIndex, depthIndex, isHorizontal) {
+        const index = isHorizontal ? depthIndex : itemIndex;
         while (!info[index]) {
           info.push([]);
         }
@@ -121,37 +123,37 @@ var DataController = _class.default.inherit(function () {
           info[index].unshift(infoItem);
         }
       };
-      var itemInfo = createInfoItem(options.headerItem, breadth, options.isHorizontal, options.isTree);
+      const itemInfo = createInfoItem(options.headerItem, breadth, options.isHorizontal, options.isTree);
       addInfoItemCore(info, itemInfo, options.index, options.depth, options.isHorizontal);
       if (!options.headerItem.children || options.headerItem.children.length === 0) {
         return options.lastIndex + 1;
       }
       return options.lastIndex;
     };
-    var isItemSorted = function isItemSorted(items, sortBySummaryPath) {
-      var path;
-      var item = items[0];
-      var stringValuesUsed = (0, _type.isString)(sortBySummaryPath[0]);
-      var headerItem = item.dataIndex >= 0 ? items[1] : item;
+    const isItemSorted = function (items, sortBySummaryPath) {
+      let path;
+      const item = items[0];
+      const stringValuesUsed = (0, _type.isString)(sortBySummaryPath[0]);
+      const headerItem = item.dataIndex >= 0 ? items[1] : item;
       if (stringValuesUsed && sortBySummaryPath[0].indexOf('&[') !== -1 && headerItem.key || !headerItem.key) {
         path = (0, _m_widget_utils.createPath)(items);
       } else {
-        path = (0, _iterator.map)(items, function (item) {
-          return item.dataIndex >= 0 ? item.value : item.text;
-        }).reverse();
+        path = (0, _iterator.map)(items, item => item.dataIndex >= 0 ? item.value : item.text).reverse();
       }
       if (item.type === GRAND_TOTAL_TYPE) {
         path = path.slice(1);
       }
       return path.join('/') === sortBySummaryPath.join('/');
     };
-    var getViewHeaderItems = function getViewHeaderItems(headerItems, headerDescriptions, cellDescriptions, depthSize, options) {
-      var cellDescriptionsCount = cellDescriptions.length;
-      var viewHeaderItems = createViewHeaderItems(headerItems, headerDescriptions);
-      var dataFields = options.dataFields;
+    const getViewHeaderItems = function (headerItems, headerDescriptions, cellDescriptions, depthSize, options) {
+      const cellDescriptionsCount = cellDescriptions.length;
+      const viewHeaderItems = createViewHeaderItems(headerItems, headerDescriptions);
+      const {
+        dataFields
+      } = options;
       // @ts-expect-error
-      var d = new _deferred.Deferred();
-      (0, _deferred.when)(viewHeaderItems).done(function (viewHeaderItems) {
+      const d = new _deferred.Deferred();
+      (0, _deferred.when)(viewHeaderItems).done(viewHeaderItems => {
         options.notifyProgress(0.5);
         if (options.showGrandTotals) {
           viewHeaderItems[!options.showTotalsPrior ? 'push' : 'unshift']({
@@ -159,34 +161,36 @@ var DataController = _class.default.inherit(function () {
             isEmpty: options.isEmptyGrandTotal
           });
         }
-        var hideTotals = options.showTotals === false || dataFields.length > 0 && dataFields.length === options.hiddenTotals.length;
-        var hideData = dataFields.length > 0 && options.hiddenValues.length === dataFields.length;
+        const hideTotals = options.showTotals === false || dataFields.length > 0 && dataFields.length === options.hiddenTotals.length;
+        const hideData = dataFields.length > 0 && options.hiddenValues.length === dataFields.length;
         if (hideData && hideTotals) {
           depthSize = 1;
         }
         if (!hideTotals || options.layout === 'tree') {
           addAdditionalTotalHeaderItems(viewHeaderItems, headerDescriptions, options.showTotalsPrior, options.layout === 'tree');
         }
-        (0, _deferred.when)((0, _m_widget_utils.foreachTreeAsync)(viewHeaderItems, function (items) {
-          var item = items[0];
+        (0, _deferred.when)((0, _m_widget_utils.foreachTreeAsync)(viewHeaderItems, items => {
+          const item = items[0];
           if (!item.children || item.children.length === 0) {
             item.depthSize = depthSize - items.length + 1;
           }
-        })).done(function () {
+        })).done(() => {
           if (cellDescriptionsCount > 1) {
             addMetricHeaderItems(viewHeaderItems, cellDescriptions, options);
           }
           !options.showEmpty && removeHiddenItems(viewHeaderItems);
           options.notifyProgress(0.75);
-          (0, _deferred.when)((0, _m_widget_utils.foreachTreeAsync)(viewHeaderItems, function (items) {
-            var item = items[0];
-            var isMetric = item.isMetric;
-            var field = headerDescriptions[items.length - 1] || {};
+          (0, _deferred.when)((0, _m_widget_utils.foreachTreeAsync)(viewHeaderItems, items => {
+            const item = items[0];
+            const {
+              isMetric
+            } = item;
+            const field = headerDescriptions[items.length - 1] || {};
             if (item.type === DATA_TYPE && !isMetric) {
               item.width = field.width;
             }
             if (hideData && item.type === DATA_TYPE) {
-              var parentChildren = (items[1] ? items[1].children : viewHeaderItems) || [];
+              const parentChildren = (items[1] ? items[1].children : viewHeaderItems) || [];
               parentChildren.splice(parentChildren.indexOf(item), 1);
               return;
             }
@@ -197,7 +201,7 @@ var DataController = _class.default.inherit(function () {
             }
             item.isLast = !item.children || !item.children.length;
             if (item.isLast) {
-              (0, _iterator.each)(options.sortBySummaryPaths, function (_, sortBySummaryPath) {
+              (0, _iterator.each)(options.sortBySummaryPaths, (_, sortBySummaryPath) => {
                 if (!(0, _type.isDefined)(item.dataIndex)) {
                   sortBySummaryPath = sortBySummaryPath.slice(0);
                   sortBySummaryPath.pop();
@@ -210,7 +214,7 @@ var DataController = _class.default.inherit(function () {
               });
             }
             item.text = getHeaderItemText(item, field, options);
-          })).done(function () {
+          })).done(() => {
             if (!viewHeaderItems.length) {
               viewHeaderItems.push({});
             }
@@ -222,12 +226,12 @@ var DataController = _class.default.inherit(function () {
       return d;
     };
     function createHeaderItem(childrenStack, depth, index) {
-      var parent = childrenStack[depth] = childrenStack[depth] || [];
-      var node = parent[index] = {};
+      const parent = childrenStack[depth] = childrenStack[depth] || [];
+      const node = parent[index] = {};
       if (childrenStack[depth + 1]) {
         node.children = childrenStack[depth + 1];
         // T541266
-        for (var i = depth + 1; i < childrenStack.length; i += 1) {
+        for (let i = depth + 1; i < childrenStack.length; i += 1) {
           childrenStack[i] = undefined;
         }
         childrenStack.length = depth + 1;
@@ -235,14 +239,14 @@ var DataController = _class.default.inherit(function () {
       return node;
     }
     function createViewHeaderItems(headerItems, headerDescriptions) {
-      var headerDescriptionsCount = headerDescriptions && headerDescriptions.length || 0;
-      var childrenStack = [];
+      const headerDescriptionsCount = headerDescriptions && headerDescriptions.length || 0;
+      const childrenStack = [];
       // @ts-expect-error
-      var d = new _deferred.Deferred();
-      var headerItem;
-      (0, _deferred.when)((0, _m_widget_utils.foreachTreeAsync)(headerItems, function (items, index) {
-        var item = items[0];
-        var path = (0, _m_widget_utils.createPath)(items);
+      const d = new _deferred.Deferred();
+      let headerItem;
+      (0, _deferred.when)((0, _m_widget_utils.foreachTreeAsync)(headerItems, (items, index) => {
+        const item = items[0];
+        const path = (0, _m_widget_utils.createPath)(items);
         headerItem = createHeaderItem(childrenStack, path.length, index);
         headerItem.type = DATA_TYPE;
         headerItem.value = item.value;
@@ -255,22 +259,22 @@ var DataController = _class.default.inherit(function () {
         if (path.length < headerDescriptionsCount && (!item.children || item.children.length !== 0)) {
           headerItem.expanded = !!item.children;
         }
-      })).done(function () {
+      })).done(() => {
         d.resolve(createHeaderItem(childrenStack, 0, 0).children || []);
       });
       return d;
     }
     function addMetricHeaderItems(headerItems, cellDescriptions, options) {
-      (0, _m_widget_utils.foreachTree)(headerItems, function (items) {
-        var item = items[0];
-        var i;
+      (0, _m_widget_utils.foreachTree)(headerItems, items => {
+        const item = items[0];
+        let i;
         if (!item.children || item.children.length === 0) {
           item.children = [];
           for (i = 0; i < cellDescriptions.length; i += 1) {
-            var isGrandTotal = item.type === GRAND_TOTAL_TYPE;
-            var isTotal = item.type === TOTAL_TYPE;
-            var isValue = item.type === DATA_TYPE;
-            var columnIsHidden = cellDescriptions[i].visible === false || isGrandTotal && options.hiddenGrandTotals.includes(i) || isTotal && options.hiddenTotals.includes(i) || isValue && options.hiddenValues.includes(i);
+            const isGrandTotal = item.type === GRAND_TOTAL_TYPE;
+            const isTotal = item.type === TOTAL_TYPE;
+            const isValue = item.type === DATA_TYPE;
+            const columnIsHidden = cellDescriptions[i].visible === false || isGrandTotal && options.hiddenGrandTotals.includes(i) || isTotal && options.hiddenTotals.includes(i) || isValue && options.hiddenValues.includes(i);
             if (columnIsHidden) {
               continue;
             }
@@ -290,10 +294,10 @@ var DataController = _class.default.inherit(function () {
     }
     function addAdditionalTotalHeaderItems(headerItems, headerDescriptions, showTotalsPrior, isTree) {
       showTotalsPrior = showTotalsPrior || isTree;
-      (0, _m_widget_utils.foreachTree)(headerItems, function (items, index) {
-        var item = items[0];
-        var parentChildren = (items[1] ? items[1].children : headerItems) || [];
-        var dataField = headerDescriptions[items.length - 1];
+      (0, _m_widget_utils.foreachTree)(headerItems, (items, index) => {
+        const item = items[0];
+        const parentChildren = (items[1] ? items[1].children : headerItems) || [];
+        const dataField = headerDescriptions[items.length - 1];
         if (item.type === DATA_TYPE && item.expanded && (dataField.showTotals !== false || isTree)) {
           index !== -1 && parentChildren.splice(showTotalsPrior ? index : index + 1, 0, (0, _extend.extend)({}, item, {
             children: null,
@@ -307,8 +311,8 @@ var DataController = _class.default.inherit(function () {
         }
       });
     }
-    var removeEmptyParent = function removeEmptyParent(items, index) {
-      var parent = items[index + 1];
+    const removeEmptyParent = function (items, index) {
+      const parent = items[index + 1];
       if (!items[index].children.length && parent && parent.children) {
         parent.children.splice(parent.children.indexOf(items[index]), 1);
         removeEmptyParent(items, index + 1);
@@ -317,14 +321,14 @@ var DataController = _class.default.inherit(function () {
     function removeHiddenItems(headerItems) {
       (0, _m_widget_utils.foreachTree)([{
         children: headerItems
-      }], function (items, index) {
-        var item = items[0];
-        var parentChildren = (items[1] ? items[1].children : headerItems) || [];
-        var isEmpty = item.isEmpty;
+      }], (items, index) => {
+        const item = items[0];
+        const parentChildren = (items[1] ? items[1].children : headerItems) || [];
+        let {
+          isEmpty
+        } = item;
         if (isEmpty && isEmpty.length) {
-          isEmpty = item.isEmpty.filter(function (isEmpty) {
-            return isEmpty;
-          }).length === isEmpty.length;
+          isEmpty = item.isEmpty.filter(isEmpty => isEmpty).length === isEmpty.length;
         }
         if (item && !item.children && isEmpty) {
           parentChildren.splice(index, 1);
@@ -332,13 +336,13 @@ var DataController = _class.default.inherit(function () {
         }
       });
     }
-    var fillHeaderInfo = function fillHeaderInfo(info, viewHeaderItems, depthSize, isHorizontal, isTree) {
-      var lastIndex = 0;
-      var index;
-      var depth;
-      var indexesByDepth = [0];
-      (0, _m_widget_utils.foreachTree)(viewHeaderItems, function (items) {
-        var headerItem = items[0];
+    const fillHeaderInfo = function (info, viewHeaderItems, depthSize, isHorizontal, isTree) {
+      let lastIndex = 0;
+      let index;
+      let depth;
+      const indexesByDepth = [0];
+      (0, _m_widget_utils.foreachTree)(viewHeaderItems, items => {
+        const headerItem = items[0];
         depth = headerItem.isMetric ? depthSize : items.length - 1;
         while (indexesByDepth.length - 1 < depth) {
           indexesByDepth.push(indexesByDepth[indexesByDepth.length - 1]);
@@ -357,11 +361,11 @@ var DataController = _class.default.inherit(function () {
       });
     };
     return function (headerItems, headerDescriptions, cellDescriptions, isHorizontal, options) {
-      var info = [];
-      var depthSize = getHeaderItemsDepth(headerItems) || 1;
+      const info = [];
+      const depthSize = getHeaderItemsDepth(headerItems) || 1;
       // @ts-expect-error
-      var d = new _deferred.Deferred();
-      getViewHeaderItems(headerItems, headerDescriptions, cellDescriptions, depthSize, options).done(function (viewHeaderItems) {
+      const d = new _deferred.Deferred();
+      getViewHeaderItems(headerItems, headerDescriptions, cellDescriptions, depthSize, options).done(viewHeaderItems => {
         fillHeaderInfo(info, viewHeaderItems, depthSize, isHorizontal, options.layout === 'tree');
         options.notifyProgress(1);
         d.resolve(info);
@@ -370,9 +374,9 @@ var DataController = _class.default.inherit(function () {
     };
   }();
   function createSortPaths(headerFields, dataFields) {
-    var sortBySummaryPaths = [];
-    (0, _iterator.each)(headerFields, function (_, headerField) {
-      var fieldIndex = (0, _m_widget_utils.findField)(dataFields, headerField.sortBySummaryField);
+    const sortBySummaryPaths = [];
+    (0, _iterator.each)(headerFields, (_, headerField) => {
+      const fieldIndex = (0, _m_widget_utils.findField)(dataFields, headerField.sortBySummaryField);
       if (fieldIndex >= 0) {
         sortBySummaryPaths.push((headerField.sortBySummaryPath || []).concat([fieldIndex]));
       }
@@ -380,12 +384,12 @@ var DataController = _class.default.inherit(function () {
     return sortBySummaryPaths;
   }
   function foreachRowInfo(rowsInfo, callback) {
-    var columnOffset = 0;
-    var columnOffsetResetIndexes = [];
-    for (var i = 0; i < rowsInfo.length; i += 1) {
-      for (var j = 0; j < rowsInfo[i].length; j += 1) {
-        var rowSpanOffset = (rowsInfo[i][j].rowspan || 1) - 1;
-        var visibleIndex = i + rowSpanOffset;
+    let columnOffset = 0;
+    const columnOffsetResetIndexes = [];
+    for (let i = 0; i < rowsInfo.length; i += 1) {
+      for (let j = 0; j < rowsInfo[i].length; j += 1) {
+        const rowSpanOffset = (rowsInfo[i][j].rowspan || 1) - 1;
+        const visibleIndex = i + rowSpanOffset;
         if (columnOffsetResetIndexes[i]) {
           columnOffset -= columnOffsetResetIndexes[i];
           columnOffsetResetIndexes[i] = 0;
@@ -399,21 +403,21 @@ var DataController = _class.default.inherit(function () {
     }
   }
   function createCellsInfo(rowsInfo, columnsInfo, data, dataFields, dataFieldArea, errorText) {
-    var info = [];
-    var dataFieldAreaInRows = dataFieldArea === 'row';
-    var dataSourceCells = data.values;
-    dataSourceCells.length && foreachRowInfo(rowsInfo, function (rowInfo, rowIndex) {
-      var row = info[rowIndex] = [];
-      var dataRow = dataSourceCells[rowInfo.dataSourceIndex >= 0 ? rowInfo.dataSourceIndex : data.grandTotalRowIndex] || [];
-      rowInfo.isLast && (0, _m_virtual_columns_core.foreachColumnInfo)(columnsInfo, function (columnInfo, columnIndex) {
-        var dataIndex = (dataFieldAreaInRows ? rowInfo.dataIndex : columnInfo.dataIndex) || 0;
-        var dataField = dataFields[dataIndex];
+    const info = [];
+    const dataFieldAreaInRows = dataFieldArea === 'row';
+    const dataSourceCells = data.values;
+    dataSourceCells.length && foreachRowInfo(rowsInfo, (rowInfo, rowIndex) => {
+      const row = info[rowIndex] = [];
+      const dataRow = dataSourceCells[rowInfo.dataSourceIndex >= 0 ? rowInfo.dataSourceIndex : data.grandTotalRowIndex] || [];
+      rowInfo.isLast && (0, _m_virtual_columns_core.foreachColumnInfo)(columnsInfo, (columnInfo, columnIndex) => {
+        const dataIndex = (dataFieldAreaInRows ? rowInfo.dataIndex : columnInfo.dataIndex) || 0;
+        const dataField = dataFields[dataIndex];
         if (columnInfo.isLast && dataField && dataField.visible !== false) {
-          var cell = dataRow[columnInfo.dataSourceIndex >= 0 ? columnInfo.dataSourceIndex : data.grandTotalColumnIndex];
+          let cell = dataRow[columnInfo.dataSourceIndex >= 0 ? columnInfo.dataSourceIndex : data.grandTotalColumnIndex];
           if (!Array.isArray(cell)) {
             cell = [cell];
           }
-          var cellValue = cell[dataIndex];
+          const cellValue = cell[dataIndex];
           row[columnIndex] = {
             text: formatCellValue(cellValue, dataField, errorText),
             value: cellValue,
@@ -434,13 +438,13 @@ var DataController = _class.default.inherit(function () {
     return info;
   }
   function getHeaderIndexedItems(headerItems, options) {
-    var visibleIndex = 0;
-    var indexedItems = [];
-    (0, _m_widget_utils.foreachTree)(headerItems, function (items) {
-      var headerItem = items[0];
-      var path = (0, _m_widget_utils.createPath)(items);
+    let visibleIndex = 0;
+    const indexedItems = [];
+    (0, _m_widget_utils.foreachTree)(headerItems, items => {
+      const headerItem = items[0];
+      const path = (0, _m_widget_utils.createPath)(items);
       if (headerItem.children && options.showTotals === false) return;
-      var indexedItem = (0, _extend.extend)(true, {}, headerItem, {
+      const indexedItem = (0, _extend.extend)(true, {}, headerItem, {
         visibleIndex: visibleIndex += 1,
         path
       });
@@ -478,7 +482,7 @@ var DataController = _class.default.inherit(function () {
         return dataController.isLoading();
       },
       changingDuration() {
-        var dataSource = dataController._dataSource;
+        const dataSource = dataController._dataSource;
         if (dataSource.paginate()) {
           return CHANGING_DURATION_IF_PAGINATE;
         }
@@ -487,8 +491,8 @@ var DataController = _class.default.inherit(function () {
     }, dataAdapter));
   }
   function getHiddenTotals(dataFields) {
-    var result = [];
-    (0, _iterator.each)(dataFields, function (index, field) {
+    const result = [];
+    (0, _iterator.each)(dataFields, (index, field) => {
       if (field.showTotals === false) {
         result.push(index);
       }
@@ -496,8 +500,8 @@ var DataController = _class.default.inherit(function () {
     return result;
   }
   function getHiddenValues(dataFields) {
-    var result = [];
-    dataFields.forEach(function (field, index) {
+    const result = [];
+    dataFields.forEach((field, index) => {
       if (field.showValues === undefined && field.showTotals === false || field.showValues === false) {
         result.push(index);
       }
@@ -505,8 +509,8 @@ var DataController = _class.default.inherit(function () {
     return result;
   }
   function getHiddenGrandTotalsTotals(dataFields, columnFields) {
-    var result = [];
-    (0, _iterator.each)(dataFields, function (index, field) {
+    let result = [];
+    (0, _iterator.each)(dataFields, (index, field) => {
       if (field.showGrandTotals === false) {
         result.push(index);
       }
@@ -516,10 +520,10 @@ var DataController = _class.default.inherit(function () {
     }
     return result;
   }
-  var members = {
+  const members = {
     ctor(options) {
-      var that = this;
-      var virtualScrollControllerChanged = that._fireChanged.bind(that);
+      const that = this;
+      const virtualScrollControllerChanged = that._fireChanged.bind(that);
       options = that._options = options || {};
       that.dataSourceChanged = (0, _callbacks.default)();
       that._dataSource = that._createDataSource(options);
@@ -586,13 +590,13 @@ var DataController = _class.default.inherit(function () {
       that.changed = (0, _callbacks.default)();
     },
     _fireChanged() {
-      var that = this;
-      var startChanging = new Date();
+      const that = this;
+      const startChanging = new Date();
       that.changed && !that._lockChanged && that.changed.fire();
       that._changingDuration = new Date() - startChanging;
     },
     _correctSkipsTakes(rowIndex, rowSkip, rowSpan, levels, skips, takes) {
-      var endIndex = rowSpan ? rowIndex + rowSpan - 1 : rowIndex;
+      const endIndex = rowSpan ? rowIndex + rowSpan - 1 : rowIndex;
       skips[levels.length] = skips[levels.length] || 0;
       takes[levels.length] = takes[levels.length] || 0;
       if (endIndex < rowSkip) {
@@ -602,25 +606,27 @@ var DataController = _class.default.inherit(function () {
       }
     },
     _calculatePagingForRowExpandedPaths(options, skips, takes, rowExpandedSkips, rowExpandedTakes) {
-      var rows = this._rowsInfo;
-      var rowCount = Math.min(options.rowSkip + options.rowTake, rows.length);
-      var rowExpandedPaths = options.rowExpandedPaths;
-      var levels = [];
-      var expandedPathIndexes = {};
-      var i;
-      var j;
-      var path;
-      rowExpandedPaths.forEach(function (path, index) {
+      const rows = this._rowsInfo;
+      const rowCount = Math.min(options.rowSkip + options.rowTake, rows.length);
+      const {
+        rowExpandedPaths
+      } = options;
+      let levels = [];
+      const expandedPathIndexes = {};
+      let i;
+      let j;
+      let path;
+      rowExpandedPaths.forEach((path, index) => {
         expandedPathIndexes[path] = index;
       });
       for (i = 0; i < rowCount; i += 1) {
         takes.length = skips.length = levels.length + 1;
         for (j = 0; j < rows[i].length; j += 1) {
-          var cell = rows[i][j];
+          const cell = rows[i][j];
           if (cell.type === 'D') {
             this._correctSkipsTakes(i, options.rowSkip, cell.rowspan, levels, skips, takes);
             path = cell.path || path;
-            var expandIndex = path && path.length > 1 ? expandedPathIndexes[path.slice(0, -1)] : -1;
+            const expandIndex = path && path.length > 1 ? expandedPathIndexes[path.slice(0, -1)] : -1;
             if (expandIndex >= 0) {
               rowExpandedSkips[expandIndex] = skips[levels.length] || 0;
               rowExpandedTakes[expandIndex] = takes[levels.length] || 0;
@@ -630,20 +636,16 @@ var DataController = _class.default.inherit(function () {
             }
           }
         }
-        levels = levels.map(function (level) {
-          return level - 1;
-        }).filter(function (level) {
-          return level > 0;
-        });
+        levels = levels.map(level => level - 1).filter(level => level > 0);
       }
     },
     _calculatePagingForColumnExpandedPaths(options, skips, takes, expandedSkips, expandedTakes) {
-      var skipByPath = {};
-      var takeByPath = {};
-      (0, _m_virtual_columns_core.foreachColumnInfo)(this._columnsInfo, function (columnInfo, columnIndex) {
+      const skipByPath = {};
+      const takeByPath = {};
+      (0, _m_virtual_columns_core.foreachColumnInfo)(this._columnsInfo, (columnInfo, columnIndex) => {
         if (columnInfo.type === 'D' && columnInfo.path && columnInfo.dataIndex === undefined) {
-          var colspan = columnInfo.colspan || 1;
-          var path = columnInfo.path.slice(0, -1).toString();
+          const colspan = columnInfo.colspan || 1;
+          const path = columnInfo.path.slice(0, -1).toString();
           skipByPath[path] = skipByPath[path] || 0;
           takeByPath[path] = takeByPath[path] || 0;
           if (columnIndex + colspan <= options.columnSkip) {
@@ -655,9 +657,9 @@ var DataController = _class.default.inherit(function () {
       });
       skips[0] = skipByPath[''];
       takes[0] = takeByPath[''];
-      options.columnExpandedPaths.forEach(function (path, index) {
-        var skip = skipByPath[path];
-        var take = takeByPath[path];
+      options.columnExpandedPaths.forEach((path, index) => {
+        const skip = skipByPath[path];
+        const take = takeByPath[path];
         if (skip !== undefined) {
           expandedSkips[index] = skip;
         }
@@ -667,15 +669,11 @@ var DataController = _class.default.inherit(function () {
       });
     },
     _processPagingForExpandedPaths(options, area, storeLoadOptions, reload) {
-      var expandedPaths = options["".concat(area, "ExpandedPaths")];
-      var expandedSkips = expandedPaths.map(function () {
-        return 0;
-      });
-      var expandedTakes = expandedPaths.map(function () {
-        return reload ? options.pageSize : 0;
-      });
-      var skips = [];
-      var takes = [];
+      const expandedPaths = options["".concat(area, "ExpandedPaths")];
+      const expandedSkips = expandedPaths.map(() => 0);
+      const expandedTakes = expandedPaths.map(() => reload ? options.pageSize : 0);
+      const skips = [];
+      const takes = [];
       if (!reload) {
         if (area === 'row') {
           this._calculatePagingForRowExpandedPaths(options, skips, takes, expandedSkips, expandedTakes);
@@ -686,13 +684,13 @@ var DataController = _class.default.inherit(function () {
       this._savePagingForExpandedPaths(options, area, storeLoadOptions, skips[0], takes[0], expandedSkips, expandedTakes);
     },
     _savePagingForExpandedPaths(options, area, storeLoadOptions, skip, take, expandedSkips, expandedTakes) {
-      var expandedPaths = options["".concat(area, "ExpandedPaths")];
+      const expandedPaths = options["".concat(area, "ExpandedPaths")];
       options["".concat(area, "ExpandedPaths")] = [];
       options["".concat(area, "Skip")] = skip !== undefined ? skip : options["".concat(area, "Skip")];
       options["".concat(area, "Take")] = take !== undefined ? take : options["".concat(area, "Take")];
-      for (var i = 0; i < expandedPaths.length; i += 1) {
+      for (let i = 0; i < expandedPaths.length; i += 1) {
         if (expandedTakes[i]) {
-          var isOppositeArea = options.area && options.area !== area;
+          const isOppositeArea = options.area && options.area !== area;
           storeLoadOptions.push((0, _extend.extend)({
             area,
             headerName: "".concat(area, "s")
@@ -705,11 +703,10 @@ var DataController = _class.default.inherit(function () {
       }
     },
     _handleCustomizeStoreLoadOptions(storeLoadOptions, reload) {
-      var _this = this;
-      var options = storeLoadOptions[0];
-      var rowsScrollController = this._rowsScrollController;
+      const options = storeLoadOptions[0];
+      const rowsScrollController = this._rowsScrollController;
       if (this._dataSource.paginate() && rowsScrollController) {
-        var rowPageSize = rowsScrollController.pageSize();
+        const rowPageSize = rowsScrollController.pageSize();
         if (options.headerName === 'rows') {
           options.rowSkip = 0;
           options.rowTake = rowPageSize;
@@ -720,10 +717,10 @@ var DataController = _class.default.inherit(function () {
           this._processPagingForExpandedPaths(options, 'row', storeLoadOptions, reload);
         }
       }
-      var columnsScrollController = this._columnsScrollController;
+      const columnsScrollController = this._columnsScrollController;
       if (this._dataSource.paginate() && columnsScrollController) {
-        var columnPageSize = columnsScrollController.pageSize();
-        storeLoadOptions.forEach(function (options) {
+        const columnPageSize = columnsScrollController.pageSize();
+        storeLoadOptions.forEach(options => {
           if (options.headerName === 'columns') {
             options.columnSkip = 0;
             options.columnTake = columnPageSize;
@@ -731,16 +728,16 @@ var DataController = _class.default.inherit(function () {
           } else {
             options.columnSkip = columnsScrollController.beginPageIndex() * columnPageSize;
             options.columnTake = (columnsScrollController.endPageIndex() - columnsScrollController.beginPageIndex() + 1) * columnPageSize;
-            _this._processPagingForExpandedPaths(options, 'column', storeLoadOptions, reload);
+            this._processPagingForExpandedPaths(options, 'column', storeLoadOptions, reload);
           }
         });
       }
     },
     load() {
-      var that = this;
-      var stateStoringController = this._stateStoringController;
+      const that = this;
+      const stateStoringController = this._stateStoringController;
       if (stateStoringController.isEnabled() && !stateStoringController.isLoaded()) {
-        stateStoringController.load().always(function (state) {
+        stateStoringController.load().always(state => {
           if (state) {
             that._dataSource.state(state);
           } else {
@@ -752,9 +749,9 @@ var DataController = _class.default.inherit(function () {
       }
     },
     calculateVirtualContentParams(contentParams) {
-      var that = this;
-      var rowsScrollController = that._rowsScrollController;
-      var columnsScrollController = that._columnsScrollController;
+      const that = this;
+      const rowsScrollController = that._rowsScrollController;
+      const columnsScrollController = that._columnsScrollController;
       if (rowsScrollController && columnsScrollController) {
         rowsScrollController.viewportItemSize(contentParams.virtualRowHeight);
         rowsScrollController.viewportSize(contentParams.viewportHeight / rowsScrollController.viewportItemSize());
@@ -762,7 +759,7 @@ var DataController = _class.default.inherit(function () {
         columnsScrollController.viewportItemSize(contentParams.virtualColumnWidth);
         columnsScrollController.viewportSize(contentParams.viewportWidth / columnsScrollController.viewportItemSize());
         columnsScrollController.setContentItemSizes(contentParams.itemWidths);
-        (0, _common.deferUpdate)(function () {
+        (0, _common.deferUpdate)(() => {
           columnsScrollController.loadIfNeed();
           rowsScrollController.loadIfNeed();
         });
@@ -808,9 +805,9 @@ var DataController = _class.default.inherit(function () {
       this._options.onFieldsPrepared && this._options.onFieldsPrepared(e);
     },
     _createDataSource(options) {
-      var that = this;
-      var dataSourceOptions = options.dataSource;
-      var dataSource;
+      const that = this;
+      const dataSourceOptions = options.dataSource;
+      let dataSource;
       that._isSharedDataSource = dataSourceOptions instanceof _m_data_source.PivotGridDataSource;
       if (that._isSharedDataSource) {
         dataSource = dataSourceOptions;
@@ -849,20 +846,20 @@ var DataController = _class.default.inherit(function () {
       this._dataSource.endLoading();
     },
     _update() {
-      var that = this;
-      var dataSource = that._dataSource;
-      var options = that._options;
-      var columnFields = dataSource.getAreaFields('column');
-      var rowFields = dataSource.getAreaFields('row');
-      var dataFields = dataSource.getAreaFields('data');
-      var dataFieldsForRows = options.dataFieldArea === 'row' ? dataFields : [];
-      var dataFieldsForColumns = options.dataFieldArea !== 'row' ? dataFields : [];
-      var data = dataSource.getData();
-      var hiddenTotals = getHiddenTotals(dataFields);
-      var hiddenValues = getHiddenValues(dataFields);
-      var hiddenGrandTotals = getHiddenGrandTotalsTotals(dataFields, columnFields);
-      var grandTotalsAreHiddenForNotAllDataFields = dataFields.length > 0 ? hiddenGrandTotals.length !== dataFields.length : true;
-      var rowOptions = {
+      const that = this;
+      const dataSource = that._dataSource;
+      const options = that._options;
+      const columnFields = dataSource.getAreaFields('column');
+      const rowFields = dataSource.getAreaFields('row');
+      const dataFields = dataSource.getAreaFields('data');
+      const dataFieldsForRows = options.dataFieldArea === 'row' ? dataFields : [];
+      const dataFieldsForColumns = options.dataFieldArea !== 'row' ? dataFields : [];
+      const data = dataSource.getData();
+      const hiddenTotals = getHiddenTotals(dataFields);
+      const hiddenValues = getHiddenValues(dataFields);
+      const hiddenGrandTotals = getHiddenGrandTotalsTotals(dataFields, columnFields);
+      const grandTotalsAreHiddenForNotAllDataFields = dataFields.length > 0 ? hiddenGrandTotals.length !== dataFields.length : true;
+      const rowOptions = {
         isEmptyGrandTotal: data.isEmptyGrandTotalRow,
         texts: options.texts || {},
         hiddenTotals,
@@ -878,7 +875,7 @@ var DataController = _class.default.inherit(function () {
         dataFields,
         progress: 0
       };
-      var columnOptions = {
+      const columnOptions = {
         isEmptyGrandTotal: data.isEmptyGrandTotalColumn,
         texts: options.texts || {},
         hiddenTotals,
@@ -893,7 +890,7 @@ var DataController = _class.default.inherit(function () {
         dataFields,
         progress: 0
       };
-      var notifyProgress = function notifyProgress(progress) {
+      const notifyProgress = function (progress) {
         // - @ts-expect-error
         this.progress = progress;
         that._handleProgressChanged(0.8 + 0.1 * rowOptions.progress + 0.1 * columnOptions.progress);
@@ -907,9 +904,9 @@ var DataController = _class.default.inherit(function () {
         data.grandTotalColumnIndex = getHeaderIndexedItems(data.columns, columnOptions).length;
       }
       dataSource._changeLoadingCount(1);
-      (0, _deferred.when)(createHeaderInfo(data.columns, columnFields, dataFieldsForColumns, true, columnOptions), createHeaderInfo(data.rows, rowFields, dataFieldsForRows, false, rowOptions)).always(function () {
+      (0, _deferred.when)(createHeaderInfo(data.columns, columnFields, dataFieldsForColumns, true, columnOptions), createHeaderInfo(data.rows, rowFields, dataFieldsForRows, false, rowOptions)).always(() => {
         dataSource._changeLoadingCount(-1);
-      }).done(function (columnsInfo, rowsInfo) {
+      }).done((columnsInfo, rowsInfo) => {
         that._columnsInfo = columnsInfo;
         that._rowsInfo = rowsInfo;
         if (that._rowsScrollController && that._columnsScrollController && that.changed && !that._dataSource.paginate()) {
@@ -920,7 +917,7 @@ var DataController = _class.default.inherit(function () {
           that._columnsScrollController.load();
           that._lockChanged = false;
         }
-      }).done(function () {
+      }).done(() => {
         that._fireChanged();
         if (that._stateStoringController.isEnabled() && !that._dataSource.isLoading()) {
           that._stateStoringController.state(that._dataSource.state());
@@ -929,19 +926,19 @@ var DataController = _class.default.inherit(function () {
       });
     },
     getRowsInfo(getAllData) {
-      var that = this;
-      var rowsInfo = that._rowsInfo;
-      var scrollController = that._rowsScrollController;
-      var rowspan;
+      const that = this;
+      const rowsInfo = that._rowsInfo;
+      const scrollController = that._rowsScrollController;
+      let rowspan;
       if (scrollController && !getAllData) {
-        var startIndex = scrollController.beginPageIndex() * that.rowPageSize();
-        var endIndex = scrollController.endPageIndex() * that.rowPageSize() + that.rowPageSize();
-        var newRowsInfo = [];
-        var maxDepth = 1;
-        foreachRowInfo(rowsInfo, function (rowInfo, visibleIndex, rowIndex, _, columnIndex) {
-          var isVisible = visibleIndex >= startIndex && rowIndex < endIndex;
-          var index = rowIndex < startIndex ? 0 : rowIndex - startIndex;
-          var cell = rowInfo;
+        const startIndex = scrollController.beginPageIndex() * that.rowPageSize();
+        const endIndex = scrollController.endPageIndex() * that.rowPageSize() + that.rowPageSize();
+        const newRowsInfo = [];
+        let maxDepth = 1;
+        foreachRowInfo(rowsInfo, (rowInfo, visibleIndex, rowIndex, _, columnIndex) => {
+          const isVisible = visibleIndex >= startIndex && rowIndex < endIndex;
+          const index = rowIndex < startIndex ? 0 : rowIndex - startIndex;
+          let cell = rowInfo;
           if (isVisible) {
             newRowsInfo[index] = newRowsInfo[index] || [];
             rowspan = rowIndex < startIndex ? rowInfo.rowspan - (startIndex - rowIndex) || 1 : rowInfo.rowspan;
@@ -962,8 +959,8 @@ var DataController = _class.default.inherit(function () {
         });
         foreachRowInfo(newRowsInfo,
         // - @ts-expect-error
-        function (rowInfo, visibleIndex, rowIndex, columnIndex, realColumnIndex) {
-          var colspan = rowInfo.colspan || 1;
+        (rowInfo, visibleIndex, rowIndex, columnIndex, realColumnIndex) => {
+          const colspan = rowInfo.colspan || 1;
           if (realColumnIndex + colspan > maxDepth) {
             newRowsInfo[rowIndex][columnIndex] = (0, _extend.extend)({}, rowInfo, {
               colspan: maxDepth - realColumnIndex || 1
@@ -975,12 +972,12 @@ var DataController = _class.default.inherit(function () {
       return rowsInfo;
     },
     getColumnsInfo(getAllData) {
-      var that = this;
-      var info = that._columnsInfo;
-      var scrollController = that._columnsScrollController;
+      const that = this;
+      let info = that._columnsInfo;
+      const scrollController = that._columnsScrollController;
       if (scrollController && !getAllData) {
-        var startIndex = scrollController.beginPageIndex() * that.columnPageSize();
-        var endIndex = scrollController.endPageIndex() * that.columnPageSize() + that.columnPageSize();
+        const startIndex = scrollController.beginPageIndex() * that.columnPageSize();
+        const endIndex = scrollController.endPageIndex() * that.columnPageSize() + that.columnPageSize();
         info = (0, _m_virtual_columns_core.createColumnsInfo)(info, startIndex, endIndex);
       }
       return info;
@@ -995,9 +992,9 @@ var DataController = _class.default.inherit(function () {
       return this._rowPageIndex || 0;
     },
     totalColumnCount() {
-      var count = 0;
+      let count = 0;
       if (this._columnsInfo && this._columnsInfo.length) {
-        for (var i = 0; i < this._columnsInfo[0].length; i += 1) {
+        for (let i = 0; i < this._columnsInfo[0].length; i += 1) {
           count += this._columnsInfo[0][i].colspan || 1;
         }
       }
@@ -1022,14 +1019,14 @@ var DataController = _class.default.inherit(function () {
       return this._columnPageIndex || 0;
     },
     getCellsInfo(getAllData) {
-      var rowsInfo = this.getRowsInfo(getAllData);
-      var columnsInfo = this.getColumnsInfo(getAllData);
-      var data = this._dataSource.getData();
-      var texts = this._options.texts || {};
+      const rowsInfo = this.getRowsInfo(getAllData);
+      const columnsInfo = this.getColumnsInfo(getAllData);
+      const data = this._dataSource.getData();
+      const texts = this._options.texts || {};
       return createCellsInfo(rowsInfo, columnsInfo, data, this._dataSource.getAreaFields('data'), this._options.dataFieldArea, texts.dataNotAvailable);
     },
     dispose() {
-      var that = this;
+      const that = this;
       if (that._isSharedDataSource) {
         that._dataSource.off('changed', that._changedHandler);
         that._dataSource.off('expandValueChanging', that._expandValueChangingHandler);
@@ -1060,7 +1057,7 @@ var DataController = _class.default.inherit(function () {
 }());
 // eslint-disable-next-line @typescript-eslint/naming-convention
 exports.DataController = DataController;
-var DataController__internals = {
+const DataController__internals = {
   NO_DATA_AVAILABLE_TEXT: NOT_AVAILABLE
 };
 exports.DataController__internals = DataController__internals;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scroll_view/scroll_view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,8 +15,7 @@ var _type = require("../../../core/utils/type");
 var _scrollable = require("./scrollable");
 var _scrollview_props = require("./common/scrollview_props");
 var _load_panel = require("./internal/load_panel");
-var _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "inertiaEnabled", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onBounce", "onEnd", "onPullDown", "onReachBottom", "onScroll", "onStart", "onUpdated", "onVisibilityChange", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "scrollByThumb", "scrollLocationChange", "showScrollbar", "useKeyboard", "useNative", "useSimulatedScrollbar", "visible", "width"];
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+const _excluded = ["addWidgetClass", "aria", "bounceEnabled", "children", "classes", "direction", "disabled", "forceGeneratePockets", "height", "inertiaEnabled", "loadPanelTemplate", "needRenderScrollbars", "needScrollViewContentWrapper", "onBounce", "onEnd", "onPullDown", "onReachBottom", "onScroll", "onStart", "onUpdated", "onVisibilityChange", "pullDownEnabled", "pulledDownText", "pullingDownText", "reachBottomEnabled", "reachBottomText", "refreshStrategy", "refreshingText", "rtlEnabled", "scrollByContent", "scrollByThumb", "scrollLocationChange", "showScrollbar", "useKeyboard", "useNative", "useSimulatedScrollbar", "visible", "width"];
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -26,40 +25,43 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var viewFunction = function viewFunction(viewModel) {
-  var _viewModel$props = viewModel.props,
-    aria = _viewModel$props.aria,
-    bounceEnabled = _viewModel$props.bounceEnabled,
-    children = _viewModel$props.children,
-    direction = _viewModel$props.direction,
-    disabled = _viewModel$props.disabled,
-    height = _viewModel$props.height,
-    inertiaEnabled = _viewModel$props.inertiaEnabled,
-    onBounce = _viewModel$props.onBounce,
-    onEnd = _viewModel$props.onEnd,
-    onPullDown = _viewModel$props.onPullDown,
-    onReachBottom = _viewModel$props.onReachBottom,
-    onScroll = _viewModel$props.onScroll,
-    onStart = _viewModel$props.onStart,
-    onUpdated = _viewModel$props.onUpdated,
-    pullDownEnabled = _viewModel$props.pullDownEnabled,
-    pulledDownText = _viewModel$props.pulledDownText,
-    pullingDownText = _viewModel$props.pullingDownText,
-    reachBottomText = _viewModel$props.reachBottomText,
-    refreshStrategy = _viewModel$props.refreshStrategy,
-    refreshingText = _viewModel$props.refreshingText,
-    rtlEnabled = _viewModel$props.rtlEnabled,
-    scrollByContent = _viewModel$props.scrollByContent,
-    scrollByThumb = _viewModel$props.scrollByThumb,
-    showScrollbar = _viewModel$props.showScrollbar,
-    useKeyboard = _viewModel$props.useKeyboard,
-    useNative = _viewModel$props.useNative,
-    useSimulatedScrollbar = _viewModel$props.useSimulatedScrollbar,
-    visible = _viewModel$props.visible,
-    width = _viewModel$props.width,
-    reachBottomEnabled = viewModel.reachBottomEnabled,
-    restAttributes = viewModel.restAttributes,
-    scrollableRef = viewModel.scrollableRef;
+const viewFunction = viewModel => {
+  const {
+    props: {
+      aria,
+      bounceEnabled,
+      children,
+      direction,
+      disabled,
+      height,
+      inertiaEnabled,
+      onBounce,
+      onEnd,
+      onPullDown,
+      onReachBottom,
+      onScroll,
+      onStart,
+      onUpdated,
+      pullDownEnabled,
+      pulledDownText,
+      pullingDownText,
+      reachBottomText,
+      refreshStrategy,
+      refreshingText,
+      rtlEnabled,
+      scrollByContent,
+      scrollByThumb,
+      showScrollbar,
+      useKeyboard,
+      useNative,
+      useSimulatedScrollbar,
+      visible,
+      width
+    },
+    reachBottomEnabled,
+    restAttributes,
+    scrollableRef
+  } = viewModel;
   return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _scrollable.Scrollable, _extends({
     "useNative": useNative,
     "classes": "dx-scrollview",
@@ -99,12 +101,8 @@ var viewFunction = function viewFunction(viewModel) {
   }), null, scrollableRef));
 };
 exports.viewFunction = viewFunction;
-var getTemplate = function getTemplate(TemplateProp) {
-  return TemplateProp && (TemplateProp.defaultProps ? function (props) {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props)));
-  } : TemplateProp);
-};
-var ScrollView = /*#__PURE__*/function (_InfernoWrapperCompon) {
+const getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, TemplateProp, _extends({}, props))) : TemplateProp);
+let ScrollView = /*#__PURE__*/function (_InfernoWrapperCompon) {
   _inheritsLoose(ScrollView, _InfernoWrapperCompon);
   function ScrollView(props) {
     var _this;
@@ -185,11 +183,9 @@ var ScrollView = /*#__PURE__*/function (_InfernoWrapperCompon) {
     return this.scrollableRef.current.clientWidth();
   };
   _proto.toggleLoading = function toggleLoading(showOrHide) {
-    this.setState(function (__state_argument) {
-      return {
-        forceReachBottom: showOrHide
-      };
-    });
+    this.setState(__state_argument => ({
+      forceReachBottom: showOrHide
+    }));
   };
   _proto.startLoading = function startLoading() {
     this.scrollableRef.current.startLoading();
@@ -201,7 +197,7 @@ var ScrollView = /*#__PURE__*/function (_InfernoWrapperCompon) {
     this.scrollableRef.current.updateHandler();
   };
   _proto.render = function render() {
-    var props = this.props;
+    const props = this.props;
     return viewFunction({
       props: _extends({}, props, {
         loadPanelTemplate: getTemplate(props.loadPanelTemplate)
@@ -214,7 +210,7 @@ var ScrollView = /*#__PURE__*/function (_InfernoWrapperCompon) {
   };
   _createClass(ScrollView, [{
     key: "reachBottomEnabled",
-    get: function get() {
+    get: function () {
       if ((0, _type.isDefined)(this.state.forceReachBottom)) {
         return this.state.forceReachBottom;
       }
@@ -222,47 +218,9 @@ var ScrollView = /*#__PURE__*/function (_InfernoWrapperCompon) {
     }
   }, {
     key: "restAttributes",
-    get: function get() {
-      var _this$props = this.props,
-        addWidgetClass = _this$props.addWidgetClass,
-        aria = _this$props.aria,
-        bounceEnabled = _this$props.bounceEnabled,
-        children = _this$props.children,
-        classes = _this$props.classes,
-        direction = _this$props.direction,
-        disabled = _this$props.disabled,
-        forceGeneratePockets = _this$props.forceGeneratePockets,
-        height = _this$props.height,
-        inertiaEnabled = _this$props.inertiaEnabled,
-        loadPanelTemplate = _this$props.loadPanelTemplate,
-        needRenderScrollbars = _this$props.needRenderScrollbars,
-        needScrollViewContentWrapper = _this$props.needScrollViewContentWrapper,
-        onBounce = _this$props.onBounce,
-        onEnd = _this$props.onEnd,
-        onPullDown = _this$props.onPullDown,
-        onReachBottom = _this$props.onReachBottom,
-        onScroll = _this$props.onScroll,
-        onStart = _this$props.onStart,
-        onUpdated = _this$props.onUpdated,
-        onVisibilityChange = _this$props.onVisibilityChange,
-        pullDownEnabled = _this$props.pullDownEnabled,
-        pulledDownText = _this$props.pulledDownText,
-        pullingDownText = _this$props.pullingDownText,
-        reachBottomEnabled = _this$props.reachBottomEnabled,
-        reachBottomText = _this$props.reachBottomText,
-        refreshStrategy = _this$props.refreshStrategy,
-        refreshingText = _this$props.refreshingText,
-        rtlEnabled = _this$props.rtlEnabled,
-        scrollByContent = _this$props.scrollByContent,
-        scrollByThumb = _this$props.scrollByThumb,
-        scrollLocationChange = _this$props.scrollLocationChange,
-        showScrollbar = _this$props.showScrollbar,
-        useKeyboard = _this$props.useKeyboard,
-        useNative = _this$props.useNative,
-        useSimulatedScrollbar = _this$props.useSimulatedScrollbar,
-        visible = _this$props.visible,
-        width = _this$props.width,
-        restProps = _objectWithoutProperties(_this$props, _excluded);
+    get: function () {
+      const _this$props = this.props,
+        restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       return restProps;
     }
   }]);

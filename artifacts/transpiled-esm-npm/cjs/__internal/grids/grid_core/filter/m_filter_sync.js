@@ -12,38 +12,38 @@ var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_filter_custom_operations = require("./m_filter_custom_operations");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FILTER_ROW_OPERATIONS = ['=', '<>', '<', '<=', '>', '>=', 'notcontains', 'contains', 'startswith', 'endswith', 'between'];
-var FILTER_TYPES_INCLUDE = 'include';
-var FILTER_TYPES_EXCLUDE = 'exclude';
+const FILTER_ROW_OPERATIONS = ['=', '<>', '<', '<=', '>', '>=', 'notcontains', 'contains', 'startswith', 'endswith', 'between'];
+const FILTER_TYPES_INCLUDE = 'include';
+const FILTER_TYPES_EXCLUDE = 'exclude';
 function getColumnIdentifier(column) {
   return column.name || column.dataField;
 }
 function checkForErrors(columns) {
-  columns.forEach(function (column) {
-    var identifier = getColumnIdentifier(column);
+  columns.forEach(column => {
+    const identifier = getColumnIdentifier(column);
     // @ts-expect-error
     if (!(0, _type.isDefined)(identifier) && column.allowFiltering) throw new _ui.default.Error('E1049', column.caption);
   });
 }
-var FilterSyncController = _m_modules.default.Controller.inherit(function () {
-  var getEmptyFilterValues = function getEmptyFilterValues() {
+const FilterSyncController = _m_modules.default.Controller.inherit(function () {
+  const getEmptyFilterValues = function () {
     return {
       filterType: FILTER_TYPES_INCLUDE,
       filterValues: undefined
     };
   };
-  var canSyncHeaderFilterWithFilterRow = function canSyncHeaderFilterWithFilterRow(column) {
-    var filterValues = column.filterValues || [];
+  const canSyncHeaderFilterWithFilterRow = function (column) {
+    const filterValues = column.filterValues || [];
     return !_filtering.default.getGroupInterval(column) && !(column.headerFilter && column.headerFilter.dataSource) || filterValues.length === 1 && filterValues[0] === null;
   };
-  var getHeaderFilterFromCondition = function getHeaderFilterFromCondition(headerFilterCondition, column) {
+  const getHeaderFilterFromCondition = function (headerFilterCondition, column) {
     if (!headerFilterCondition) {
       return getEmptyFilterValues();
     }
-    var filterType;
-    var selectedFilterOperation = headerFilterCondition[1];
-    var value = headerFilterCondition[2];
-    var hasArrayValue = Array.isArray(value);
+    let filterType;
+    const selectedFilterOperation = headerFilterCondition[1];
+    const value = headerFilterCondition[2];
+    const hasArrayValue = Array.isArray(value);
     if (!hasArrayValue) {
       if (!canSyncHeaderFilterWithFilterRow(column)) {
         return getEmptyFilterValues();
@@ -66,19 +66,21 @@ var FilterSyncController = _m_modules.default.Controller.inherit(function () {
       filterValues: hasArrayValue ? value : [value]
     };
   };
-  var getConditionFromFilterRow = function getConditionFromFilterRow(column) {
-    var value = column.filterValue;
+  const getConditionFromFilterRow = function (column) {
+    const value = column.filterValue;
     if ((0, _type.isDefined)(value)) {
-      var operation = column.selectedFilterOperation || column.defaultFilterOperation || (0, _utils.getDefaultOperation)(column);
-      var filter = [getColumnIdentifier(column), operation, column.filterValue];
+      const operation = column.selectedFilterOperation || column.defaultFilterOperation || (0, _utils.getDefaultOperation)(column);
+      const filter = [getColumnIdentifier(column), operation, column.filterValue];
       return filter;
     }
     return null;
   };
-  var getConditionFromHeaderFilter = function getConditionFromHeaderFilter(column) {
-    var selectedOperation;
-    var value;
-    var filterValues = column.filterValues;
+  const getConditionFromHeaderFilter = function (column) {
+    let selectedOperation;
+    let value;
+    const {
+      filterValues
+    } = column;
     if (!filterValues) return null;
     if (filterValues.length === 1 && canSyncHeaderFilterWithFilterRow(column) && !Array.isArray(filterValues[0])) {
       column.filterType === FILTER_TYPES_EXCLUDE ? selectedOperation = '<>' : selectedOperation = '=';
@@ -90,15 +92,15 @@ var FilterSyncController = _m_modules.default.Controller.inherit(function () {
     }
     return [getColumnIdentifier(column), selectedOperation, value];
   };
-  var updateHeaderFilterCondition = function updateHeaderFilterCondition(columnsController, column, headerFilterCondition) {
-    var headerFilter = getHeaderFilterFromCondition(headerFilterCondition, column);
+  const updateHeaderFilterCondition = function (columnsController, column, headerFilterCondition) {
+    const headerFilter = getHeaderFilterFromCondition(headerFilterCondition, column);
     columnsController.columnOption(getColumnIdentifier(column), headerFilter);
   };
-  var updateFilterRowCondition = function updateFilterRowCondition(columnsController, column, condition) {
-    var filterRowOptions;
-    var selectedFilterOperation = condition === null || condition === void 0 ? void 0 : condition[1];
-    var filterValue = condition === null || condition === void 0 ? void 0 : condition[2];
-    var filterOperations = column.filterOperations || column.defaultFilterOperations;
+  const updateFilterRowCondition = function (columnsController, column, condition) {
+    let filterRowOptions;
+    let selectedFilterOperation = condition === null || condition === void 0 ? void 0 : condition[1];
+    const filterValue = condition === null || condition === void 0 ? void 0 : condition[2];
+    const filterOperations = column.filterOperations || column.defaultFilterOperations;
     if ((!filterOperations || filterOperations.indexOf(selectedFilterOperation) >= 0 || selectedFilterOperation === column.defaultFilterOperation) && FILTER_ROW_OPERATIONS.includes(selectedFilterOperation) && filterValue !== null) {
       if (selectedFilterOperation === column.defaultFilterOperation && !(0, _type.isDefined)(column.selectedFilterOperation)) {
         selectedFilterOperation = column.selectedFilterOperation;
@@ -117,14 +119,14 @@ var FilterSyncController = _m_modules.default.Controller.inherit(function () {
   };
   return {
     syncFilterValue() {
-      var that = this;
-      var columnsController = that.getController('columns');
-      var columns = columnsController.getFilteringColumns();
+      const that = this;
+      const columnsController = that.getController('columns');
+      const columns = columnsController.getFilteringColumns();
       this._skipSyncColumnOptions = true;
-      columns.forEach(function (column) {
-        var filterConditions = (0, _utils.getMatchedConditions)(that.option('filterValue'), getColumnIdentifier(column));
+      columns.forEach(column => {
+        const filterConditions = (0, _utils.getMatchedConditions)(that.option('filterValue'), getColumnIdentifier(column));
         if (filterConditions.length === 1) {
-          var filterCondition = filterConditions[0];
+          const filterCondition = filterConditions[0];
           updateHeaderFilterCondition(columnsController, column, filterCondition);
           updateFilterRowCondition(columnsController, column, filterCondition);
         } else {
@@ -135,40 +137,37 @@ var FilterSyncController = _m_modules.default.Controller.inherit(function () {
       this._skipSyncColumnOptions = false;
     },
     _initSync() {
-      var columns = this.getController('columns').getColumns();
-      var dataController = this.getController('data');
-      var pageIndex = dataController.pageIndex();
+      const columns = this.getController('columns').getColumns();
+      const dataController = this.getController('data');
+      const pageIndex = dataController.pageIndex();
       checkForErrors(columns);
       if (!this.option('filterValue')) {
-        var filteringColumns = this.getController('columns').getFilteringColumns();
-        var filterValue = this.getFilterValueFromColumns(filteringColumns);
+        const filteringColumns = this.getController('columns').getFilteringColumns();
+        const filterValue = this.getFilterValueFromColumns(filteringColumns);
         this.option('filterValue', filterValue);
       }
       this.syncFilterValue();
       dataController.pageIndex(pageIndex);
     },
     init() {
-      var _this = this;
-      var dataController = this.getController('data');
+      const dataController = this.getController('data');
       if (dataController.isFilterSyncActive()) {
         if (this.getController('columns').isAllDataTypesDefined()) {
           this._initSync();
         } else {
-          dataController.dataSourceChanged.add(function () {
-            return _this._initSync();
-          });
+          dataController.dataSourceChanged.add(() => this._initSync());
         }
       }
     },
     _getSyncFilterRow(filterValue, column) {
-      var filter = getConditionFromFilterRow(column);
+      const filter = getConditionFromFilterRow(column);
       if ((0, _type.isDefined)(filter)) {
         return (0, _utils.syncFilters)(filterValue, filter);
       }
       return (0, _utils.removeFieldConditionsFromFilter)(filterValue, getColumnIdentifier(column));
     },
     _getSyncHeaderFilter(filterValue, column) {
-      var filter = getConditionFromHeaderFilter(column);
+      const filter = getConditionFromHeaderFilter(column);
       if (filter) {
         return (0, _utils.syncFilters)(filterValue, filter);
       }
@@ -178,10 +177,10 @@ var FilterSyncController = _m_modules.default.Controller.inherit(function () {
       if (!this.getController('data').isFilterSyncActive()) {
         return null;
       }
-      var filterValue = ['and'];
-      columns && columns.forEach(function (column) {
-        var headerFilter = getConditionFromHeaderFilter(column);
-        var filterRow = getConditionFromFilterRow(column);
+      const filterValue = ['and'];
+      columns && columns.forEach(column => {
+        const headerFilter = getConditionFromHeaderFilter(column);
+        const filterRow = getConditionFromFilterRow(column);
         headerFilter && (0, _utils.addItem)(headerFilter, filterValue);
         filterRow && (0, _utils.addItem)(filterRow, filterValue);
       });
@@ -194,7 +193,7 @@ var FilterSyncController = _m_modules.default.Controller.inherit(function () {
       this.option('filterValue', this._getSyncHeaderFilter(this.option('filterValue'), column));
     },
     getCustomFilterOperations() {
-      var filterBuilderCustomOperations = this.option('filterBuilder.customOperations') || [];
+      const filterBuilderCustomOperations = this.option('filterBuilder.customOperations') || [];
       return [(0, _m_filter_custom_operations.anyOf)(this.component), (0, _m_filter_custom_operations.noneOf)(this.component)].concat(filterBuilderCustomOperations);
     },
     publicMethods() {
@@ -202,40 +201,40 @@ var FilterSyncController = _m_modules.default.Controller.inherit(function () {
     }
   };
 }());
-var DataControllerFilterSyncExtender = {
+const DataControllerFilterSyncExtender = {
   isFilterSyncActive() {
-    var filterSyncEnabledValue = this.option('filterSyncEnabled');
+    const filterSyncEnabledValue = this.option('filterSyncEnabled');
     return filterSyncEnabledValue === 'auto' ? this.option('filterPanel.visible') : filterSyncEnabledValue;
   },
   skipCalculateColumnFilters() {
-    var filterSyncController = this.getController('filterSync');
+    const filterSyncController = this.getController('filterSync');
     return ((0, _type.isDefined)(this.option('filterValue')) || filterSyncController._skipSyncColumnOptions) && this.isFilterSyncActive();
   },
   _calculateAdditionalFilter() {
     if (this.option('filterPanel.filterEnabled') === false) {
       return this.callBase();
     }
-    var filters = [this.callBase()];
-    var columns = this.getController('columns').getFilteringColumns();
-    var filterValue = this.option('filterValue');
+    const filters = [this.callBase()];
+    const columns = this.getController('columns').getFilteringColumns();
+    let filterValue = this.option('filterValue');
     if (this.isFilterSyncActive()) {
-      var currentColumnForHeaderFilter = this.getController('headerFilter').getCurrentColumn();
-      var currentColumnForFilterRow = this.getController('applyFilter').getCurrentColumnForFiltering();
-      var currentColumn = currentColumnForHeaderFilter || currentColumnForFilterRow;
-      var needRemoveCurrentColumnFilter = currentColumnForHeaderFilter || (0, _type.isDefined)(currentColumnForFilterRow === null || currentColumnForFilterRow === void 0 ? void 0 : currentColumnForFilterRow.filterValue);
+      const currentColumnForHeaderFilter = this.getController('headerFilter').getCurrentColumn();
+      const currentColumnForFilterRow = this.getController('applyFilter').getCurrentColumnForFiltering();
+      const currentColumn = currentColumnForHeaderFilter || currentColumnForFilterRow;
+      const needRemoveCurrentColumnFilter = currentColumnForHeaderFilter || (0, _type.isDefined)(currentColumnForFilterRow === null || currentColumnForFilterRow === void 0 ? void 0 : currentColumnForFilterRow.filterValue);
       if (needRemoveCurrentColumnFilter && filterValue) {
         filterValue = (0, _utils.removeFieldConditionsFromFilter)(filterValue, getColumnIdentifier(currentColumn));
       }
     }
-    var customOperations = this.getController('filterSync').getCustomFilterOperations();
-    var calculatedFilterValue = (0, _utils.getFilterExpression)(filterValue, columns, customOperations, 'filterBuilder');
+    const customOperations = this.getController('filterSync').getCustomFilterOperations();
+    const calculatedFilterValue = (0, _utils.getFilterExpression)(filterValue, columns, customOperations, 'filterBuilder');
     if (calculatedFilterValue) {
       filters.push(calculatedFilterValue);
     }
     return _m_utils.default.combineFilters(filters);
   },
   _parseColumnPropertyName(fullName) {
-    var matched = fullName.match(/.*\.(.*)/);
+    const matched = fullName.match(/.*\.(.*)/);
     if (matched) {
       return matched[1];
     }
@@ -266,10 +265,10 @@ var DataControllerFilterSyncExtender = {
         break;
       case 'columns':
         if (this.isFilterSyncActive()) {
-          var column = this.getController('columns').getColumnByPath(args.fullName);
-          var filterSyncController = this.getController('filterSync');
+          const column = this.getController('columns').getColumnByPath(args.fullName);
+          const filterSyncController = this.getController('filterSync');
           if (column && !filterSyncController._skipSyncColumnOptions) {
-            var propertyName = this._parseColumnPropertyName(args.fullName);
+            const propertyName = this._parseColumnPropertyName(args.fullName);
             filterSyncController._skipSyncColumnOptions = true;
             if (propertyName === 'filterType') {
               if (FILTER_TYPES_EXCLUDE === args.value || FILTER_TYPES_EXCLUDE === args.previousValue) {
@@ -290,7 +289,7 @@ var DataControllerFilterSyncExtender = {
     }
   }
 };
-var ColumnHeadersViewFilterSyncExtender = {
+const ColumnHeadersViewFilterSyncExtender = {
   _isHeaderFilterEmpty(column) {
     if (this.getController('data').isFilterSyncActive()) {
       return !(0, _utils.filterHasField)(this.option('filterValue'), getColumnIdentifier(column));
@@ -308,7 +307,7 @@ var ColumnHeadersViewFilterSyncExtender = {
     }
   }
 };
-var filterSyncModule = {
+const filterSyncModule = {
   defaultOptions() {
     return {
       filterValue: null,

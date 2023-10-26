@@ -6,7 +6,7 @@ var _element = require("../../core/element");
 var _extend = require("../../core/utils/extend");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* eslint-disable spellcheck/spell-checker */
-var Actions = {
+const Actions = {
   onContextMenuPreparing: 'onContextMenuPreparing',
   onCustomCommand: 'onCustomCommand',
   onDependencyDeleted: 'onDependencyDeleted',
@@ -35,12 +35,12 @@ var Actions = {
   onTaskUpdating: 'onTaskUpdating',
   onScaleCellPrepared: 'onScaleCellPrepared'
 };
-var GANTT_TASKS = 'tasks';
-var GANTT_DEPENDENCIES = 'dependencies';
-var GANTT_RESOURCES = 'resources';
-var GANTT_RESOURCE_ASSIGNMENTS = 'resourceAssignments';
-var GANTT_NEW_TASK_CACHE_KEY = 'gantt_new_task_key';
-var GanttActionsManager = /*#__PURE__*/function () {
+const GANTT_TASKS = 'tasks';
+const GANTT_DEPENDENCIES = 'dependencies';
+const GANTT_RESOURCES = 'resources';
+const GANTT_RESOURCE_ASSIGNMENTS = 'resourceAssignments';
+const GANTT_NEW_TASK_CACHE_KEY = 'gantt_new_task_key';
+let GanttActionsManager = /*#__PURE__*/function () {
   function GanttActionsManager(gantt) {
     this._gantt = gantt;
     this._mappingHelper = gantt._mappingHelper;
@@ -66,8 +66,8 @@ var GanttActionsManager = /*#__PURE__*/function () {
     return this._mappingHelper.convertCoreToMappedFields(optionName, fields);
   };
   _proto._saveCustomFieldsDataToCache = function _saveCustomFieldsDataToCache(key, data) {
-    var forceUpdateOnKeyExpire = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    var isCustomFieldsUpdateOnly = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    let forceUpdateOnKeyExpire = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    let isCustomFieldsUpdateOnly = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     this._customFieldsManager.saveCustomFieldsDataToCache(key, data, forceUpdateOnKeyExpire, isCustomFieldsUpdateOnly);
   };
   _proto.createTaskDblClickAction = function createTaskDblClickAction() {
@@ -80,7 +80,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskDblClickAction(args);
   };
   _proto.raiseTaskDblClickAction = function raiseTaskDblClickAction(key, event) {
-    var args = {
+    const args = {
       cancel: false,
       data: this._getTaskData(key),
       event: event,
@@ -99,7 +99,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskClickAction(args);
   };
   _proto.raiseTaskClickAction = function raiseTaskClickAction(key, event) {
-    var args = {
+    const args = {
       key: key,
       event: event,
       data: this._getTaskData(key)
@@ -157,12 +157,12 @@ var GanttActionsManager = /*#__PURE__*/function () {
       case GANTT_RESOURCE_ASSIGNMENTS:
         return this._getResourceAssigningAction();
     }
-    return function () {};
+    return () => {};
   };
   _proto.raiseInsertingAction = function raiseInsertingAction(optionName, coreArgs) {
-    var action = this._getInsertingAction(optionName);
+    const action = this._getInsertingAction(optionName);
     if (action) {
-      var args = {
+      const args = {
         cancel: false,
         values: this._convertCoreToMappedData(optionName, coreArgs.values)
       };
@@ -178,7 +178,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskInsertingAction = this._createActionByOption(Actions.onTaskInserting);
   };
   _proto.taskInsertingAction = function taskInsertingAction(args) {
-    var action = this._getTaskInsertingAction();
+    const action = this._getTaskInsertingAction();
     action(args);
   };
   _proto._getTaskInsertingAction = function _getTaskInsertingAction() {
@@ -191,7 +191,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._dependencyInsertingAction = this._createActionByOption(Actions.onDependencyInserting);
   };
   _proto.dependencyInsertingAction = function dependencyInsertingAction(args) {
-    var action = this._getDependencyInsertingAction();
+    const action = this._getDependencyInsertingAction();
     action(args);
   };
   _proto._getDependencyInsertingAction = function _getDependencyInsertingAction() {
@@ -204,7 +204,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceInsertingAction = this._createActionByOption(Actions.onResourceInserting);
   };
   _proto.resourceInsertingAction = function resourceInsertingAction(args) {
-    var action = this._getResourceInsertingAction();
+    const action = this._getResourceInsertingAction();
     action(args);
   };
   _proto._getResourceInsertingAction = function _getResourceInsertingAction() {
@@ -217,7 +217,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceAssigningAction = this._createActionByOption(Actions.onResourceAssigning);
   };
   _proto.resourceAssigningAction = function resourceAssigningAction(args) {
-    var action = this._getResourceAssigningAction();
+    const action = this._getResourceAssigningAction();
     action(args);
   };
   _proto._getResourceAssigningAction = function _getResourceAssigningAction() {
@@ -237,12 +237,12 @@ var GanttActionsManager = /*#__PURE__*/function () {
       case GANTT_RESOURCE_ASSIGNMENTS:
         return this._getResourceAssignedAction();
     }
-    return function () {};
+    return () => {};
   };
   _proto.raiseInsertedAction = function raiseInsertedAction(optionName, data, key) {
-    var action = this._getInsertedAction(optionName);
+    const action = this._getInsertedAction(optionName);
     if (action) {
-      var args = {
+      const args = {
         values: data,
         key: key
       };
@@ -253,7 +253,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskInsertedAction = this._createActionByOption(Actions.onTaskInserted);
   };
   _proto.taskInsertedAction = function taskInsertedAction(args) {
-    var action = this._getTaskInsertedAction();
+    const action = this._getTaskInsertedAction();
     action(args);
   };
   _proto._getTaskInsertedAction = function _getTaskInsertedAction() {
@@ -266,7 +266,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._dependencyInsertedAction = this._createActionByOption(Actions.onDependencyInserted);
   };
   _proto.dependencyInsertedAction = function dependencyInsertedAction(args) {
-    var action = this._getDependencyInsertedAction();
+    const action = this._getDependencyInsertedAction();
     action(args);
   };
   _proto._getDependencyInsertedAction = function _getDependencyInsertedAction() {
@@ -279,7 +279,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceInsertedAction = this._createActionByOption(Actions.onResourceInserted);
   };
   _proto.resourceInsertedAction = function resourceInsertedAction(args) {
-    var action = this._getResourceInsertedAction();
+    const action = this._getResourceInsertedAction();
     action(args);
   };
   _proto._getResourceInsertedAction = function _getResourceInsertedAction() {
@@ -292,7 +292,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceAssignedAction = this._createActionByOption(Actions.onResourceAssigned);
   };
   _proto.resourceAssignedAction = function resourceAssignedAction(args) {
-    var action = this._getResourceAssignedAction();
+    const action = this._getResourceAssignedAction();
     action(args);
   };
   _proto._getResourceAssignedAction = function _getResourceAssignedAction() {
@@ -312,12 +312,12 @@ var GanttActionsManager = /*#__PURE__*/function () {
       case GANTT_RESOURCE_ASSIGNMENTS:
         return this._getResourceUnassigningAction();
     }
-    return function () {};
+    return () => {};
   };
   _proto.raiseDeletingAction = function raiseDeletingAction(optionName, coreArgs) {
-    var action = this._getDeletingAction(optionName);
+    const action = this._getDeletingAction(optionName);
     if (action) {
-      var args = {
+      const args = {
         cancel: false,
         key: coreArgs.key,
         values: this._convertCoreToMappedData(optionName, coreArgs.values)
@@ -330,7 +330,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskDeletingAction = this._createActionByOption(Actions.onTaskDeleting);
   };
   _proto.taskDeletingAction = function taskDeletingAction(args) {
-    var action = this._getTaskDeletingAction();
+    const action = this._getTaskDeletingAction();
     action(args);
   };
   _proto._getTaskDeletingAction = function _getTaskDeletingAction() {
@@ -343,7 +343,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._dependencyDeletingAction = this._createActionByOption(Actions.onDependencyDeleting);
   };
   _proto.dependencyDeletingAction = function dependencyDeletingAction(args) {
-    var action = this._getDependencyDeletingAction();
+    const action = this._getDependencyDeletingAction();
     action(args);
   };
   _proto._getDependencyDeletingAction = function _getDependencyDeletingAction() {
@@ -356,7 +356,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceDeletingAction = this._createActionByOption(Actions.onResourceDeleting);
   };
   _proto.resourceDeletingAction = function resourceDeletingAction(args) {
-    var action = this._getResourceDeletingAction();
+    const action = this._getResourceDeletingAction();
     action(args);
   };
   _proto._getResourceDeletingAction = function _getResourceDeletingAction() {
@@ -369,7 +369,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceUnassigningAction = this._createActionByOption(Actions.onResourceUnassigning);
   };
   _proto.resourceUnassigningAction = function resourceUnassigningAction(args) {
-    var action = this._getResourceUnassigningAction();
+    const action = this._getResourceUnassigningAction();
     action(args);
   };
   _proto._getResourceUnassigningAction = function _getResourceUnassigningAction() {
@@ -389,12 +389,12 @@ var GanttActionsManager = /*#__PURE__*/function () {
       case GANTT_RESOURCE_ASSIGNMENTS:
         return this._getResourceUnassignedAction();
     }
-    return function () {};
+    return () => {};
   };
   _proto.raiseDeletedAction = function raiseDeletedAction(optionName, key, data) {
-    var action = this._getDeletedAction(optionName);
+    const action = this._getDeletedAction(optionName);
     if (action) {
-      var args = {
+      const args = {
         key: key,
         values: data
       };
@@ -405,7 +405,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskDeletedAction = this._createActionByOption(Actions.onTaskDeleted);
   };
   _proto.taskDeletedAction = function taskDeletedAction(args) {
-    var action = this._getTaskDeletedAction();
+    const action = this._getTaskDeletedAction();
     action(args);
   };
   _proto._getTaskDeletedAction = function _getTaskDeletedAction() {
@@ -418,7 +418,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._dependencyDeletedAction = this._createActionByOption(Actions.onDependencyDeleted);
   };
   _proto.dependencyDeletedAction = function dependencyDeletedAction(args) {
-    var action = this._getDependencyDeletedAction();
+    const action = this._getDependencyDeletedAction();
     action(args);
   };
   _proto._getDependencyDeletedAction = function _getDependencyDeletedAction() {
@@ -431,7 +431,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceDeletedAction = this._createActionByOption(Actions.onResourceDeleted);
   };
   _proto.resourceDeletedAction = function resourceDeletedAction(args) {
-    var action = this._getResourceDeletedAction();
+    const action = this._getResourceDeletedAction();
     action(args);
   };
   _proto._getResourceDeletedAction = function _getResourceDeletedAction() {
@@ -444,7 +444,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceUnassignedAction = this._createActionByOption(Actions.onResourceUnassigned);
   };
   _proto.resourceUnassignedAction = function resourceUnassignedAction(args) {
-    var action = this._getResourceUnassignedAction();
+    const action = this._getResourceUnassignedAction();
     action(args);
   };
   _proto._getResourceUnassignedAction = function _getResourceUnassignedAction() {
@@ -458,13 +458,13 @@ var GanttActionsManager = /*#__PURE__*/function () {
       case GANTT_TASKS:
         return this._getTaskUpdatingAction();
     }
-    return function () {};
+    return () => {};
   };
   _proto.raiseUpdatingAction = function raiseUpdatingAction(optionName, coreArgs, action) {
     action = action || this._getUpdatingAction(optionName);
     if (action) {
-      var isTaskUpdating = optionName === GANTT_TASKS;
-      var args = {
+      const isTaskUpdating = optionName === GANTT_TASKS;
+      const args = {
         cancel: false,
         key: coreArgs.key,
         newValues: this._convertCoreToMappedData(optionName, coreArgs.newValues),
@@ -480,7 +480,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
         if (args.cancel) {
           this._customFieldsManager.resetCustomFieldsDataCache(args.key);
         } else {
-          var forceUpdateOnKeyExpire = !Object.keys(coreArgs.newValues).length;
+          const forceUpdateOnKeyExpire = !Object.keys(coreArgs.newValues).length;
           this._saveCustomFieldsDataToCache(args.key, args.newValues, forceUpdateOnKeyExpire);
         }
       }
@@ -490,7 +490,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskUpdatingAction = this._createActionByOption(Actions.onTaskUpdating);
   };
   _proto.taskUpdatingAction = function taskUpdatingAction(args) {
-    var action = this._getTaskUpdatingAction();
+    const action = this._getTaskUpdatingAction();
     action(args);
   };
   _proto._getTaskUpdatingAction = function _getTaskUpdatingAction() {
@@ -504,12 +504,12 @@ var GanttActionsManager = /*#__PURE__*/function () {
       case GANTT_TASKS:
         return this._getTaskUpdatedAction();
     }
-    return function () {};
+    return () => {};
   };
   _proto.raiseUpdatedAction = function raiseUpdatedAction(optionName, data, key) {
-    var action = this._getUpdatedAction(optionName);
+    const action = this._getUpdatedAction(optionName);
     if (action) {
-      var args = {
+      const args = {
         values: data,
         key: key
       };
@@ -520,7 +520,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskUpdatedAction = this._createActionByOption(Actions.onTaskUpdated);
   };
   _proto.taskUpdatedAction = function taskUpdatedAction(args) {
-    var action = this._getTaskUpdatedAction();
+    const action = this._getTaskUpdatedAction();
     action(args);
   };
   _proto._getTaskUpdatedAction = function _getTaskUpdatedAction() {
@@ -533,7 +533,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskEditDialogShowingAction = this._createActionByOption(Actions.onTaskEditDialogShowing);
   };
   _proto.taskEditDialogShowingAction = function taskEditDialogShowingAction(args) {
-    var action = this._getTaskEditDialogShowingAction();
+    const action = this._getTaskEditDialogShowingAction();
     action(args);
   };
   _proto._getTaskEditDialogShowingAction = function _getTaskEditDialogShowingAction() {
@@ -543,9 +543,9 @@ var GanttActionsManager = /*#__PURE__*/function () {
     return this._taskEditDialogShowingAction;
   };
   _proto.raiseTaskEditDialogShowingAction = function raiseTaskEditDialogShowingAction(coreArgs) {
-    var action = this._getTaskEditDialogShowingAction();
+    const action = this._getTaskEditDialogShowingAction();
     if (action) {
-      var args = {
+      const args = {
         cancel: false,
         key: coreArgs.key,
         values: this._convertCoreToMappedData(GANTT_TASKS, coreArgs.values),
@@ -563,7 +563,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._resourceManagerDialogShowingAction = this._createActionByOption(Actions.onResourceManagerDialogShowing);
   };
   _proto.resourceManagerDialogShowingAction = function resourceManagerDialogShowingAction(args) {
-    var action = this._getResourceManagerDialogShowingAction();
+    const action = this._getResourceManagerDialogShowingAction();
     action(args);
   };
   _proto._getResourceManagerDialogShowingAction = function _getResourceManagerDialogShowingAction() {
@@ -573,13 +573,10 @@ var GanttActionsManager = /*#__PURE__*/function () {
     return this._resourceManagerDialogShowingAction;
   };
   _proto.raiseResourceManagerDialogShowingAction = function raiseResourceManagerDialogShowingAction(coreArgs) {
-    var _this = this;
-    var action = this._getResourceManagerDialogShowingAction();
+    const action = this._getResourceManagerDialogShowingAction();
     if (action) {
-      var mappedResources = coreArgs.values.resources.items.map(function (r) {
-        return _this._convertMappedToCoreData(GANTT_RESOURCES, r);
-      });
-      var args = {
+      const mappedResources = coreArgs.values.resources.items.map(r => this._convertMappedToCoreData(GANTT_RESOURCES, r));
+      const args = {
         cancel: false,
         values: mappedResources
       };
@@ -591,7 +588,7 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._taskMovingAction = this._createActionByOption(Actions.onTaskMoving);
   };
   _proto.taskMovingAction = function taskMovingAction(args) {
-    var action = this.getTaskMovingAction();
+    const action = this.getTaskMovingAction();
     action(args);
   };
   _proto.getTaskMovingAction = function getTaskMovingAction() {
@@ -610,9 +607,9 @@ var GanttActionsManager = /*#__PURE__*/function () {
     this._scaleCellPreparedAction = this._createActionByOption(Actions.onScaleCellPrepared);
   };
   _proto.raiseScaleCellPreparedAction = function raiseScaleCellPreparedAction(data) {
-    var action = this.getScaleCellPreparedAction();
+    const action = this.getScaleCellPreparedAction();
     if (action) {
-      var args = {
+      const args = {
         scaleIndex: data.scaleIndex,
         scaleType: this._getScaleType(data.scaleType),
         scaleElement: (0, _element.getPublicElement)((0, _renderer.default)(data.scaleElement)),

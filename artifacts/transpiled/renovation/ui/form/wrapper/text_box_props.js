@@ -1,5 +1,5 @@
 "use strict";
 
 exports.TextBoxProps = void 0;
-var TextBoxProps = {};
+const TextBoxProps = {};
 exports.TextBoxProps = TextBoxProps;

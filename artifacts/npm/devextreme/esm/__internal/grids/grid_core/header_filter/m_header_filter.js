@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/header_filter/m_header_filter.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -276,7 +276,7 @@ var HeaderFilterController = modules.ViewController.inherit(function () {
       if (column) {
         var visibleIndex = columnsController.getVisibleIndex(columnIndex);
         var view = isGroupPanel ? this.getView('headerPanel') : this.getView('columnHeadersView');
-        // @ts-expect-error TODO: Check this code, how it works in runtime without error?
+        // eslint-disable-next-line no-var, vars-on-top
         var $columnElement = $columnElement || view.getColumnElements().eq(isGroupPanel ? column.groupIndex : visibleIndex);
         this.showHeaderFilterMenuBase({
           columnElement: $columnElement,

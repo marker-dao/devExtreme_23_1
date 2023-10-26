@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/pointer/mouse_and_touch.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ var _mouse = _interopRequireDefault(require("./mouse"));
 var _touch = _interopRequireDefault(require("./touch"));
 var _index = require("../utils/index");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var eventMap = {
+const eventMap = {
   'dxpointerdown': 'touchstart mousedown',
   'dxpointermove': 'touchmove mousemove',
   'dxpointerup': 'touchend mouseup',
@@ -25,22 +25,22 @@ var eventMap = {
   'dxpointerenter': 'mouseenter',
   'dxpointerleave': 'mouseleave'
 };
-var activated = false;
-var activateStrategy = function activateStrategy() {
+let activated = false;
+const activateStrategy = function () {
   if (activated) {
     return;
   }
   _mouse.default.activate();
   activated = true;
 };
-var MouseAndTouchStrategy = _base.default.inherit({
+const MouseAndTouchStrategy = _base.default.inherit({
   EVENT_LOCK_TIMEOUT: 100,
-  ctor: function ctor() {
+  ctor: function () {
     this.callBase.apply(this, arguments);
     activateStrategy();
   },
-  _handler: function _handler(e) {
-    var isMouse = (0, _index.isMouseEvent)(e);
+  _handler: function (e) {
+    const isMouse = (0, _index.isMouseEvent)(e);
     if (!isMouse) {
       this._skipNextEvents = true;
     }
@@ -51,7 +51,7 @@ var MouseAndTouchStrategy = _base.default.inherit({
       this._skipNextEvents = false;
       this._mouseLocked = true;
       clearTimeout(this._unlockMouseTimer);
-      var that = this;
+      const that = this;
       this._unlockMouseTimer = setTimeout(function () {
         that._mouseLocked = false;
       }, this.EVENT_LOCK_TIMEOUT);
@@ -59,11 +59,11 @@ var MouseAndTouchStrategy = _base.default.inherit({
     }
     return this.callBase(e);
   },
-  _fireEvent: function _fireEvent(args) {
-    var normalizer = (0, _index.isMouseEvent)(args.originalEvent) ? _mouse.default.normalize : _touch.default.normalize;
+  _fireEvent: function (args) {
+    const normalizer = (0, _index.isMouseEvent)(args.originalEvent) ? _mouse.default.normalize : _touch.default.normalize;
     return this.callBase((0, _extend.extend)(normalizer(args.originalEvent), args));
   },
-  dispose: function dispose() {
+  dispose: function () {
     this.callBase();
     this._skipNextEvents = false;
     this._mouseLocked = false;

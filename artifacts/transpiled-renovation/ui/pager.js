@@ -5,7 +5,7 @@ var _renovationPagerHelper = require("/packages/devextreme/testing/helpers/renov
 var _component_registrator = _interopRequireDefault(require("../core/component_registrator"));
 var _wrapRenovatedWidget = require("/packages/devextreme/testing/helpers/wrapRenovatedWidget.js");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var wrappedComponent = (0, _wrapRenovatedWidget.wrapRenovatedWidget)(_renovationPagerHelper.WrappedWidget);
+const wrappedComponent = (0, _wrapRenovatedWidget.wrapRenovatedWidget)(_renovationPagerHelper.WrappedWidget);
 (0, _component_registrator.default)('dxPager', wrappedComponent);
 var _default = wrappedComponent;
 exports.default = _default;

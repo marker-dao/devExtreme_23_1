@@ -8,9 +8,9 @@ exports.getStaticSideIndex = void 0;
 exports.setDefaultAlgorithm = setDefaultAlgorithm;
 var _type = require("../../core/utils/type");
 var _utils = require("../core/utils");
-var _round = Math.round;
-var algorithms = {};
-var defaultAlgorithm;
+const _round = Math.round;
+const algorithms = {};
+let defaultAlgorithm;
 function getAlgorithm(value) {
   return algorithms[(0, _utils.normalizeEnum)(value)] || (0, _type.isFunction)(value) && value || defaultAlgorithm;
 }
@@ -20,20 +20,20 @@ function addAlgorithm(name, callback) {
 function setDefaultAlgorithm(name) {
   defaultAlgorithm = algorithms[name];
 }
-var directionToIndexOffsets = {};
+const directionToIndexOffsets = {};
 directionToIndexOffsets[-1] = [2, 0];
 directionToIndexOffsets[+1] = [0, 2];
-var getStaticSideIndex = function getStaticSideIndex(rect) {
+const getStaticSideIndex = function (rect) {
   return rect[2] - rect[0] < rect[3] - rect[1] ? 0 : 1;
 };
 exports.getStaticSideIndex = getStaticSideIndex;
 function buildSidesData(rect, directions, _staticSideIndex) {
-  var staticSideIndex = _staticSideIndex !== undefined ? _staticSideIndex : getStaticSideIndex(rect);
-  var variedSideIndex = 1 - staticSideIndex;
-  var staticSideDirection = directions[staticSideIndex];
-  var variedSideDirection = directions[variedSideIndex];
-  var staticSideIndexOffsets = directionToIndexOffsets[staticSideDirection];
-  var variedSideIndexOffsets = directionToIndexOffsets[variedSideDirection];
+  const staticSideIndex = _staticSideIndex !== undefined ? _staticSideIndex : getStaticSideIndex(rect);
+  const variedSideIndex = 1 - staticSideIndex;
+  const staticSideDirection = directions[staticSideIndex];
+  const variedSideDirection = directions[variedSideIndex];
+  const staticSideIndexOffsets = directionToIndexOffsets[staticSideDirection];
+  const variedSideIndexOffsets = directionToIndexOffsets[variedSideDirection];
   return {
     staticSide: rect[2 + staticSideIndex] - rect[staticSideIndex],
     variedSide: rect[2 + variedSideIndex] - rect[variedSideIndex],
@@ -46,17 +46,17 @@ function buildSidesData(rect, directions, _staticSideIndex) {
   };
 }
 function calculateRectangles(nodes, head, totalRect, sidesData, rowData) {
-  var i;
-  var ii;
-  var variedSidePart = [0, 0, 0, 0];
-  var static1 = sidesData.static1;
-  var static2 = sidesData.static2;
-  var position = totalRect[static1];
-  var dir = sidesData.staticDir;
-  var side = sidesData.staticSide;
-  var sum = rowData.sum;
-  var rect;
-  var delta;
+  let i;
+  let ii;
+  const variedSidePart = [0, 0, 0, 0];
+  const static1 = sidesData.static1;
+  const static2 = sidesData.static2;
+  let position = totalRect[static1];
+  const dir = sidesData.staticDir;
+  let side = sidesData.staticSide;
+  let sum = rowData.sum;
+  let rect;
+  let delta;
   variedSidePart[sidesData.varied1] = totalRect[sidesData.varied1];
   variedSidePart[sidesData.varied2] = totalRect[sidesData.varied1] + sidesData.variedDir * rowData.side;
   for (i = head, ii = head + rowData.count; i < ii; ++i) {

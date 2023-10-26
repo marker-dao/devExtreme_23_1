@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 exports.parseLicenseKey = parseLicenseKey;
 exports.setLicenseCheckSkipCondition = setLicenseCheckSkipCondition;
-exports.verifyLicense = verifyLicense;
+exports.validateLicense = validateLicense;
 var _errors = _interopRequireDefault(require("../../../core/errors"));
 var _version = require("../../../core/version");
 var _byte_utils = require("./byte_utils");
@@ -15,12 +15,6 @@ var _pkcs = require("./pkcs1");
 var _rsa_bigint = require("./rsa_bigint");
 var _sha = require("./sha1");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var __rest = void 0 && (void 0).__rest || function (s, e) {
   var t = {};
@@ -35,37 +29,40 @@ var TokenKind;
   TokenKind["corrupted"] = "corrupted";
   TokenKind["verified"] = "verified";
 })(TokenKind || (TokenKind = {}));
-var SPLITTER = '.';
-var FORMAT = 1;
-var GENERAL_ERROR = {
+const SPLITTER = '.';
+const FORMAT = 1;
+const RTM_MIN_PATCH_VERSION = 3;
+const GENERAL_ERROR = {
   kind: TokenKind.corrupted,
   error: 'general'
 };
-var VERIFICATION_ERROR = {
+const VERIFICATION_ERROR = {
   kind: TokenKind.corrupted,
   error: 'verification'
 };
-var DECODING_ERROR = {
+const DECODING_ERROR = {
   kind: TokenKind.corrupted,
   error: 'decoding'
 };
-var DESERIALIZATION_ERROR = {
+const DESERIALIZATION_ERROR = {
   kind: TokenKind.corrupted,
   error: 'deserialization'
 };
-var PAYLOAD_ERROR = {
+const PAYLOAD_ERROR = {
   kind: TokenKind.corrupted,
   error: 'payload'
 };
-var VERSION_ERROR = {
+const VERSION_ERROR = {
   kind: TokenKind.corrupted,
   error: 'version'
 };
-var isLicenseVerified = false;
+let validationPerformed = false;
 // verifies RSASSA-PKCS1-v1.5 signature
 function verifySignature(_ref) {
-  var text = _ref.text,
-    encodedSignature = _ref.signature;
+  let {
+    text,
+    signature: encodedSignature
+  } = _ref;
   return (0, _rsa_bigint.compareSignatures)({
     key: _key.PUBLIC_KEY,
     signature: (0, _byte_utils.base64ToBytes)(encodedSignature),
@@ -76,7 +73,7 @@ function parseLicenseKey(encodedKey) {
   if (encodedKey === undefined) {
     return GENERAL_ERROR;
   }
-  var parts = encodedKey.split(SPLITTER);
+  const parts = encodedKey.split(SPLITTER);
   if (parts.length !== 2 || parts[0].length === 0 || parts[1].length === 0) {
     return GENERAL_ERROR;
   }
@@ -86,22 +83,23 @@ function parseLicenseKey(encodedKey) {
   })) {
     return VERIFICATION_ERROR;
   }
-  var decodedPayload = '';
+  let decodedPayload = '';
   try {
     decodedPayload = atob(parts[0]);
   } catch (_a) {
     return DECODING_ERROR;
   }
-  var payload = {};
+  let payload = {};
   try {
     payload = JSON.parse(decodedPayload);
   } catch (_b) {
     return DESERIALIZATION_ERROR;
   }
-  var _payload = payload,
-    customerId = _payload.customerId,
-    maxVersionAllowed = _payload.maxVersionAllowed,
-    format = _payload.format,
+  const {
+      customerId,
+      maxVersionAllowed,
+      format
+    } = payload,
     rest = __rest(payload, ["customerId", "maxVersionAllowed", "format"]);
   if (customerId === undefined || maxVersionAllowed === undefined || format === undefined) {
     return PAYLOAD_ERROR;
@@ -117,27 +115,30 @@ function parseLicenseKey(encodedKey) {
     }, rest)
   };
 }
-function verifyLicense(licenseKey) {
-  var version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _version.version;
-  if (isLicenseVerified) {
+function validateLicense(licenseKey) {
+  let version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _version.version;
+  if (validationPerformed) {
     return;
   }
-  isLicenseVerified = true;
-  var warning = null;
+  validationPerformed = true;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let warning;
   try {
+    const [major, minor, patch] = version.split('.').map(Number);
+    const preview = isNaN(patch) || patch < RTM_MIN_PATCH_VERSION;
+    if (preview) {
+      warning = 'W0022';
+      return;
+    }
     if (!licenseKey) {
       warning = 'W0019';
       return;
     }
-    var license = parseLicenseKey(licenseKey);
+    const license = parseLicenseKey(licenseKey);
     if (license.kind === TokenKind.corrupted) {
       warning = 'W0021';
       return;
     }
-    var _version$split$map = version.split('.').map(Number),
-      _version$split$map2 = _slicedToArray(_version$split$map, 2),
-      major = _version$split$map2[0],
-      minor = _version$split$map2[1];
     if (!(major && minor)) {
       warning = 'W0021';
       return;
@@ -154,11 +155,11 @@ function verifyLicense(licenseKey) {
   }
 }
 function setLicenseCheckSkipCondition() {
-  var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 }
 // NOTE: We need this default export
-// to allow QUnit mock the verifyLicense function
+// to allow QUnit mock the validateLicense function
 var _default = {
-  verifyLicense
+  validateLicense
 };
 exports.default = _default;

@@ -18,121 +18,100 @@ var _utils = require("./utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var window = (0, _window.getWindow)();
-var ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
+const window = (0, _window.getWindow)();
+let ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   _inheritsLoose(ObjectFileSystemProvider, _FileSystemProviderBa);
   function ObjectFileSystemProvider(options) {
     var _this;
     options = (0, _common.ensureDefined)(options, {});
     _this = _FileSystemProviderBa.call(this, options) || this;
-    var initialArray = options.data;
+    const initialArray = options.data;
     if (initialArray && !Array.isArray(initialArray)) {
       throw _errors.errors.Error('E4006');
     }
-    var itemsExpr = options.itemsExpr || 'items';
+    const itemsExpr = options.itemsExpr || 'items';
     _this._subFileItemsGetter = (0, _data.compileGetter)(itemsExpr);
     _this._subFileItemsSetter = _this._getSetter(itemsExpr);
-    var contentExpr = options.contentExpr || 'content';
+    const contentExpr = options.contentExpr || 'content';
     _this._contentGetter = (0, _data.compileGetter)(contentExpr);
     _this._contentSetter = _this._getSetter(contentExpr);
-    var nameExpr = _this._getNameExpr(options);
+    const nameExpr = _this._getNameExpr(options);
     _this._nameSetter = _this._getSetter(nameExpr);
-    var isDirExpr = _this._getIsDirExpr(options);
+    const isDirExpr = _this._getIsDirExpr(options);
     _this._getIsDirSetter = _this._getSetter(isDirExpr);
-    var keyExpr = _this._getKeyExpr(options);
+    const keyExpr = _this._getKeyExpr(options);
     _this._keySetter = _this._getSetter(keyExpr);
-    var sizeExpr = _this._getSizeExpr(options);
+    const sizeExpr = _this._getSizeExpr(options);
     _this._sizeSetter = _this._getSetter(sizeExpr);
-    var dateModifiedExpr = _this._getDateModifiedExpr(options);
+    const dateModifiedExpr = _this._getDateModifiedExpr(options);
     _this._dateModifiedSetter = _this._getSetter(dateModifiedExpr);
     _this._data = initialArray || [];
     return _this;
   }
   var _proto = ObjectFileSystemProvider.prototype;
   _proto.getItems = function getItems(parentDir) {
-    var _this2 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this2._getItems(parentDir);
-    }, true);
+    return this._executeActionAsDeferred(() => this._getItems(parentDir), true);
   };
   _proto.renameItem = function renameItem(item, name) {
-    var _this3 = this;
-    return this._executeActionAsDeferred(function () {
-      return _this3._renameItemCore(item, name);
-    });
+    return this._executeActionAsDeferred(() => this._renameItemCore(item, name));
   };
   _proto._renameItemCore = function _renameItemCore(item, name) {
     if (!item) {
       return;
     }
-    var dataItem = this._findDataObject(item);
+    const dataItem = this._findDataObject(item);
     this._nameSetter(dataItem, name);
     item.name = name;
     item.key = this._ensureDataObjectKey(dataItem);
   };
   _proto.createDirectory = function createDirectory(parentDir, name) {
-    var _this4 = this;
-    return this._executeActionAsDeferred(function () {
-      _this4._validateDirectoryExists(parentDir);
-      _this4._createDataObject(parentDir, name, true);
+    return this._executeActionAsDeferred(() => {
+      this._validateDirectoryExists(parentDir);
+      this._createDataObject(parentDir, name, true);
     });
   };
   _proto.deleteItems = function deleteItems(items) {
-    var _this5 = this;
-    return items.map(function (item) {
-      return _this5._executeActionAsDeferred(function () {
-        return _this5._deleteItem(item);
-      });
-    });
+    return items.map(item => this._executeActionAsDeferred(() => this._deleteItem(item)));
   };
   _proto.moveItems = function moveItems(items, destinationDir) {
-    var _this6 = this;
-    var destinationDataItem = this._findDataObject(destinationDir);
-    var array = this._getDirectoryDataItems(destinationDataItem);
-    var deferreds = items.map(function (item) {
-      return _this6._executeActionAsDeferred(function () {
-        _this6._checkAbilityToMoveOrCopyItem(item, destinationDir);
-        var dataItem = _this6._findDataObject(item);
-        _this6._deleteItem(item);
-        array.push(dataItem);
-      });
-    });
+    const destinationDataItem = this._findDataObject(destinationDir);
+    const array = this._getDirectoryDataItems(destinationDataItem);
+    const deferreds = items.map(item => this._executeActionAsDeferred(() => {
+      this._checkAbilityToMoveOrCopyItem(item, destinationDir);
+      const dataItem = this._findDataObject(item);
+      this._deleteItem(item);
+      array.push(dataItem);
+    }));
     return deferreds;
   };
   _proto.copyItems = function copyItems(items, destinationDir) {
-    var _this7 = this;
-    var destinationDataItem = this._findDataObject(destinationDir);
-    var array = this._getDirectoryDataItems(destinationDataItem);
-    var deferreds = items.map(function (item) {
-      return _this7._executeActionAsDeferred(function () {
-        _this7._checkAbilityToMoveOrCopyItem(item, destinationDir);
-        var dataItem = _this7._findDataObject(item);
-        var copiedItem = _this7._createCopy(dataItem);
-        array.push(copiedItem);
-      });
-    });
+    const destinationDataItem = this._findDataObject(destinationDir);
+    const array = this._getDirectoryDataItems(destinationDataItem);
+    const deferreds = items.map(item => this._executeActionAsDeferred(() => {
+      this._checkAbilityToMoveOrCopyItem(item, destinationDir);
+      const dataItem = this._findDataObject(item);
+      const copiedItem = this._createCopy(dataItem);
+      array.push(copiedItem);
+    }));
     return deferreds;
   };
   _proto.uploadFileChunk = function uploadFileChunk(fileData, chunksInfo, destinationDirectory) {
-    var _this8 = this;
     if (chunksInfo.chunkIndex > 0) {
       return chunksInfo.customData.deferred;
     }
     this._validateDirectoryExists(destinationDirectory);
-    var deferred = chunksInfo.customData.deferred = new _deferred.Deferred();
-    var reader = this._createFileReader();
+    const deferred = chunksInfo.customData.deferred = new _deferred.Deferred();
+    const reader = this._createFileReader();
     reader.readAsDataURL(fileData);
-    reader.onload = function () {
-      var content = reader.result.split(',')[1];
-      var dataObj = _this8._createDataObject(destinationDirectory, fileData.name, false);
-      _this8._sizeSetter(dataObj, fileData.size);
-      _this8._dateModifiedSetter(dataObj, fileData.lastModifiedDate);
-      _this8._contentSetter(dataObj, content);
+    reader.onload = () => {
+      const content = reader.result.split(',')[1];
+      const dataObj = this._createDataObject(destinationDirectory, fileData.name, false);
+      this._sizeSetter(dataObj, fileData.size);
+      this._dateModifiedSetter(dataObj, fileData.lastModifiedDate);
+      this._contentSetter(dataObj, content);
       deferred.resolve();
     };
-    reader.onerror = function (error) {
-      return deferred.reject(error);
-    };
+    reader.onerror = error => deferred.reject(error);
     return deferred;
   };
   _proto.downloadItems = function downloadItems(items) {
@@ -143,44 +122,39 @@ var ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     }
   };
   _proto._downloadSingleFile = function _downloadSingleFile(file) {
-    var content = this._getFileContent(file);
-    var byteString = window.atob(content);
-    var arrayBuffer = new ArrayBuffer(byteString.length);
-    var array = new Uint8Array(arrayBuffer);
-    for (var i = 0; i < byteString.length; i++) {
+    const content = this._getFileContent(file);
+    const byteString = window.atob(content);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
       array[i] = byteString.charCodeAt(i);
     }
-    var blob = new window.Blob([arrayBuffer], {
+    const blob = new window.Blob([arrayBuffer], {
       type: 'application/octet-stream'
     });
     _file_saver.fileSaver.saveAs(file.name, null, blob);
   };
   _proto._downloadMultipleFiles = function _downloadMultipleFiles(files) {
-    var _this9 = this;
-    var jsZip = getJSZip();
-    var zip = new jsZip();
-    files.forEach(function (file) {
-      return zip.file(file.name, _this9._getFileContent(file), {
-        base64: true
-      });
-    });
-    var options = {
+    const jsZip = getJSZip();
+    const zip = new jsZip();
+    files.forEach(file => zip.file(file.name, this._getFileContent(file), {
+      base64: true
+    }));
+    const options = {
       type: 'blob',
       compression: 'DEFLATE',
       mimeType: 'application/zip'
     };
-    var deferred = new _deferred.Deferred();
+    const deferred = new _deferred.Deferred();
     if (zip.generateAsync) {
       zip.generateAsync(options).then(deferred.resolve);
     } else {
       deferred.resolve(zip.generate(options));
     }
-    deferred.done(function (blob) {
-      return _file_saver.fileSaver.saveAs('files.zip', null, blob);
-    });
+    deferred.done(blob => _file_saver.fileSaver.saveAs('files.zip', null, blob));
   };
   _proto._getFileContent = function _getFileContent(file) {
-    var dataItem = this._findDataObject(file);
+    const dataItem = this._findDataObject(file);
     return this._contentGetter(dataItem) || '';
   };
   _proto._validateDirectoryExists = function _validateDirectoryExists(directoryInfo) {
@@ -189,39 +163,37 @@ var ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     }
   };
   _proto._checkAbilityToMoveOrCopyItem = function _checkAbilityToMoveOrCopyItem(item, destinationDir) {
-    var _this10 = this;
-    var dataItem = this._findDataObject(item);
-    var itemKey = this._getKeyFromDataObject(dataItem, item.parentPath);
-    var pathInfo = destinationDir.getFullPathInfo();
-    var currentPath = '';
-    pathInfo.forEach(function (info) {
+    const dataItem = this._findDataObject(item);
+    const itemKey = this._getKeyFromDataObject(dataItem, item.parentPath);
+    const pathInfo = destinationDir.getFullPathInfo();
+    let currentPath = '';
+    pathInfo.forEach(info => {
       currentPath = (0, _utils.pathCombine)(currentPath, info.name);
-      var pathKey = _this10._getDataObjectKey(info.key, currentPath);
+      const pathKey = this._getDataObjectKey(info.key, currentPath);
       if (pathKey === itemKey) {
         throw new _error.default(_error_codes.default.Other, item);
       }
     });
   };
   _proto._createDataObject = function _createDataObject(parentDir, name, isDirectory) {
-    var dataObj = {};
+    const dataObj = {};
     this._nameSetter(dataObj, name);
     this._getIsDirSetter(dataObj, isDirectory);
     this._keySetter(dataObj, String(new _guid.default()));
-    var parentDataItem = this._findDataObject(parentDir);
-    var array = this._getDirectoryDataItems(parentDataItem);
+    const parentDataItem = this._findDataObject(parentDir);
+    const array = this._getDirectoryDataItems(parentDataItem);
     array.push(dataObj);
     return dataObj;
   };
   _proto._createCopy = function _createCopy(dataObj) {
-    var _this11 = this;
-    var copyObj = {};
+    const copyObj = {};
     this._nameSetter(copyObj, this._nameGetter(dataObj));
     this._getIsDirSetter(copyObj, this._isDirGetter(dataObj));
-    var items = this._subFileItemsGetter(dataObj);
+    const items = this._subFileItemsGetter(dataObj);
     if (Array.isArray(items)) {
-      var itemsCopy = [];
-      items.forEach(function (childItem) {
-        var childCopy = _this11._createCopy(childItem);
+      const itemsCopy = [];
+      items.forEach(childItem => {
+        const childCopy = this._createCopy(childItem);
         itemsCopy.push(childCopy);
       });
       this._subFileItemsSetter(copyObj, itemsCopy);
@@ -229,17 +201,17 @@ var ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     return copyObj;
   };
   _proto._deleteItem = function _deleteItem(fileItem) {
-    var dataItem = this._findDataObject(fileItem);
-    var parentDirDataObj = this._findFileItemObj(fileItem.pathInfo);
-    var array = this._getDirectoryDataItems(parentDirDataObj);
-    var index = array.indexOf(dataItem);
+    const dataItem = this._findDataObject(fileItem);
+    const parentDirDataObj = this._findFileItemObj(fileItem.pathInfo);
+    const array = this._getDirectoryDataItems(parentDirDataObj);
+    const index = array.indexOf(dataItem);
     array.splice(index, 1);
   };
   _proto._getDirectoryDataItems = function _getDirectoryDataItems(directoryDataObj) {
     if (!directoryDataObj) {
       return this._data;
     }
-    var dataItems = this._subFileItemsGetter(directoryDataObj);
+    let dataItems = this._subFileItemsGetter(directoryDataObj);
     if (!Array.isArray(dataItems)) {
       dataItems = [];
       this._subFileItemsSetter(directoryDataObj, dataItems);
@@ -248,23 +220,22 @@ var ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
   };
   _proto._getItems = function _getItems(parentDir) {
     this._validateDirectoryExists(parentDir);
-    var pathInfo = parentDir.getFullPathInfo();
-    var parentDirKey = pathInfo && pathInfo.length > 0 ? pathInfo[pathInfo.length - 1].key : null;
-    var dirFileObjects = this._data;
+    const pathInfo = parentDir.getFullPathInfo();
+    const parentDirKey = pathInfo && pathInfo.length > 0 ? pathInfo[pathInfo.length - 1].key : null;
+    let dirFileObjects = this._data;
     if (parentDirKey) {
-      var directoryEntry = this._findFileItemObj(pathInfo);
+      const directoryEntry = this._findFileItemObj(pathInfo);
       dirFileObjects = directoryEntry && this._subFileItemsGetter(directoryEntry) || [];
     }
     this._ensureKeysForDuplicateNameItems(dirFileObjects);
     return this._convertDataObjectsToFileItems(dirFileObjects, pathInfo);
   };
   _proto._ensureKeysForDuplicateNameItems = function _ensureKeysForDuplicateNameItems(dataObjects) {
-    var _this12 = this;
-    var names = {};
-    dataObjects.forEach(function (obj) {
-      var name = _this12._nameGetter(obj);
+    const names = {};
+    dataObjects.forEach(obj => {
+      const name = this._nameGetter(obj);
       if (names[name]) {
-        _this12._ensureDataObjectKey(obj);
+        this._ensureDataObjectKey(obj);
       } else {
         names[name] = true;
       }
@@ -274,46 +245,42 @@ var ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     if (item.isRoot()) {
       return null;
     }
-    var result = this._findFileItemObj(item.getFullPathInfo());
+    const result = this._findFileItemObj(item.getFullPathInfo());
     if (!result) {
-      var errorCode = item.isDirectory ? _error_codes.default.DirectoryNotFound : _error_codes.default.FileNotFound;
+      const errorCode = item.isDirectory ? _error_codes.default.DirectoryNotFound : _error_codes.default.FileNotFound;
       throw new _error.default(errorCode, item);
     }
     return result;
   };
   _proto._findFileItemObj = function _findFileItemObj(pathInfo) {
-    var _this13 = this;
     if (!Array.isArray(pathInfo)) {
       pathInfo = [];
     }
-    var currentPath = '';
-    var fileItemObj = null;
-    var fileItemObjects = this._data;
-    var _loop = function _loop(i) {
-      fileItemObj = fileItemObjects.find(function (item) {
-        var hasCorrectFileItemType = _this13._isDirGetter(item) || i === pathInfo.length - 1;
-        return _this13._getKeyFromDataObject(item, currentPath) === pathInfo[i].key && _this13._nameGetter(item) === pathInfo[i].name && hasCorrectFileItemType;
+    let currentPath = '';
+    let fileItemObj = null;
+    let fileItemObjects = this._data;
+    for (let i = 0; i < pathInfo.length && (i === 0 || fileItemObj); i++) {
+      fileItemObj = fileItemObjects.find(item => {
+        const hasCorrectFileItemType = this._isDirGetter(item) || i === pathInfo.length - 1;
+        return this._getKeyFromDataObject(item, currentPath) === pathInfo[i].key && this._nameGetter(item) === pathInfo[i].name && hasCorrectFileItemType;
       });
       if (fileItemObj) {
-        currentPath = (0, _utils.pathCombine)(currentPath, _this13._nameGetter(fileItemObj));
-        fileItemObjects = _this13._subFileItemsGetter(fileItemObj);
+        currentPath = (0, _utils.pathCombine)(currentPath, this._nameGetter(fileItemObj));
+        fileItemObjects = this._subFileItemsGetter(fileItemObj);
       }
-    };
-    for (var i = 0; i < pathInfo.length && (i === 0 || fileItemObj); i++) {
-      _loop(i);
     }
     return fileItemObj;
   };
   _proto._getKeyFromDataObject = function _getKeyFromDataObject(dataObj, defaultKeyPrefix) {
-    var key = this._keyGetter(dataObj);
-    var relativeName = (0, _utils.pathCombine)(defaultKeyPrefix, this._nameGetter(dataObj));
+    const key = this._keyGetter(dataObj);
+    const relativeName = (0, _utils.pathCombine)(defaultKeyPrefix, this._nameGetter(dataObj));
     return this._getDataObjectKey(key, relativeName);
   };
   _proto._getDataObjectKey = function _getDataObjectKey(key, relativeName) {
     return key ? key : relativeName;
   };
   _proto._ensureDataObjectKey = function _ensureDataObjectKey(dataObj) {
-    var key = this._keyGetter(dataObj);
+    let key = this._keyGetter(dataObj);
     if (!key) {
       key = String(new _guid.default());
       this._keySetter(dataObj, key);
@@ -321,11 +288,11 @@ var ObjectFileSystemProvider = /*#__PURE__*/function (_FileSystemProviderBa) {
     return key;
   };
   _proto._hasSubDirs = function _hasSubDirs(dataObj) {
-    var subItems = (0, _common.ensureDefined)(this._subFileItemsGetter(dataObj), []);
+    const subItems = (0, _common.ensureDefined)(this._subFileItemsGetter(dataObj), []);
     if (!Array.isArray(subItems)) {
       return true;
     }
-    for (var i = 0; i < subItems.length; i++) {
+    for (let i = 0; i < subItems.length; i++) {
       if (this._isDirGetter(subItems[i]) === true) {
         return true;
       }

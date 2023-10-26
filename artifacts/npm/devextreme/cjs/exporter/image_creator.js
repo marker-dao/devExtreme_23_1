@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/exporter/image_creator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,50 +24,50 @@ var _window = require("../core/utils/window");
 var _inflector = require("../core/utils/inflector");
 var _deferred = require("../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var _math = Math;
-var PI = _math.PI;
-var _min = _math.min;
-var _abs = _math.abs;
-var _sqrt = _math.sqrt;
-var _pow = _math.pow;
-var _atan2 = _math.atan2;
-var _cos = _math.cos;
-var _sin = _math.sin;
-var _number = Number;
-var IMAGE_QUALITY = 1;
-var TEXT_DECORATION_LINE_WIDTH_COEFF = 0.05;
-var DEFAULT_FONT_SIZE = '10px';
-var DEFAULT_FONT_FAMILY = 'sans-serif';
-var DEFAULT_TEXT_COLOR = '#000';
-var parseAttributes;
+const window = (0, _window.getWindow)();
+const _math = Math;
+const PI = _math.PI;
+const _min = _math.min;
+const _abs = _math.abs;
+const _sqrt = _math.sqrt;
+const _pow = _math.pow;
+const _atan2 = _math.atan2;
+const _cos = _math.cos;
+const _sin = _math.sin;
+const _number = Number;
+const IMAGE_QUALITY = 1;
+const TEXT_DECORATION_LINE_WIDTH_COEFF = 0.05;
+const DEFAULT_FONT_SIZE = '10px';
+const DEFAULT_FONT_FAMILY = 'sans-serif';
+const DEFAULT_TEXT_COLOR = '#000';
+let parseAttributes;
 function getStringFromCanvas(canvas, mimeType) {
-  var dataURL = canvas.toDataURL(mimeType, IMAGE_QUALITY);
-  var imageData = window.atob(dataURL.substring(('data:' + mimeType + ';base64,').length));
+  const dataURL = canvas.toDataURL(mimeType, IMAGE_QUALITY);
+  const imageData = window.atob(dataURL.substring(('data:' + mimeType + ';base64,').length));
   return imageData;
 }
 function arcTo(x1, y1, x2, y2, radius, largeArcFlag, clockwise, context) {
-  var cBx = (x1 + x2) / 2;
-  var cBy = (y1 + y2) / 2;
-  var aB = _atan2(y1 - y2, x1 - x2);
-  var k = largeArcFlag ? 1 : -1;
+  const cBx = (x1 + x2) / 2;
+  const cBy = (y1 + y2) / 2;
+  let aB = _atan2(y1 - y2, x1 - x2);
+  const k = largeArcFlag ? 1 : -1;
   aB += 90 * (PI / 180) * (clockwise ? 1 : -1);
-  var opSide = _sqrt(_pow(x2 - x1, 2) + _pow(y2 - y1, 2)) / 2;
-  var adjSide = _sqrt(_abs(_pow(radius, 2) - _pow(opSide, 2)));
-  var centerX = cBx + k * (adjSide * _cos(aB));
-  var centerY = cBy + k * (adjSide * _sin(aB));
-  var startAngle = _atan2(y1 - centerY, x1 - centerX);
-  var endAngle = _atan2(y2 - centerY, x2 - centerX);
+  const opSide = _sqrt(_pow(x2 - x1, 2) + _pow(y2 - y1, 2)) / 2;
+  const adjSide = _sqrt(_abs(_pow(radius, 2) - _pow(opSide, 2)));
+  const centerX = cBx + k * (adjSide * _cos(aB));
+  const centerY = cBy + k * (adjSide * _sin(aB));
+  const startAngle = _atan2(y1 - centerY, x1 - centerX);
+  const endAngle = _atan2(y2 - centerY, x2 - centerX);
   context.arc(centerX, centerY, radius, startAngle, endAngle, !clockwise);
 }
 function getElementOptions(element, rootAppended) {
-  var attr = parseAttributes(element.attributes || {});
-  var options = (0, _extend.extend)({}, attr, {
+  const attr = parseAttributes(element.attributes || {});
+  const options = (0, _extend.extend)({}, attr, {
     text: element.textContent.replace(/\s+/g, ' '),
     textAlign: attr['text-anchor'] === 'middle' ? 'center' : attr['text-anchor']
   });
-  var transform = attr.transform;
-  var coords;
+  const transform = attr.transform;
+  let coords;
   if (transform) {
     coords = transform.match(/translate\(-*\d+([.]\d+)*(,*\s*-*\d+([.]\d+)*)*/);
     if (coords) {
@@ -97,11 +97,11 @@ function getElementOptions(element, rootAppended) {
   return options;
 }
 function drawRect(context, options) {
-  var x = options.x;
-  var y = options.y;
-  var width = options.width;
-  var height = options.height;
-  var cornerRadius = options.rx;
+  const x = options.x;
+  const y = options.y;
+  const width = options.width;
+  const height = options.height;
+  let cornerRadius = options.rx;
   if (!cornerRadius) {
     context.rect(x, y, width, height);
   } else {
@@ -118,8 +118,8 @@ function drawRect(context, options) {
   }
 }
 function drawImage(context, options, shared) {
-  var d = new _deferred.Deferred();
-  var image = new window.Image();
+  const d = new _deferred.Deferred();
+  const image = new window.Image();
   image.onload = function () {
     context.save();
     context.globalAlpha = options.globalAlpha;
@@ -137,13 +137,11 @@ function drawImage(context, options, shared) {
   return d;
 }
 function drawPath(context, dAttr) {
-  var dArray = dAttr.replace(/,/g, ' ').split(/([A-Z])/i).filter(function (item) {
-    return item.trim() !== '';
-  });
-  var i = 0;
-  var params;
-  var prevParams;
-  var prevParamsLen;
+  const dArray = dAttr.replace(/,/g, ' ').split(/([A-Z])/i).filter(item => item.trim() !== '');
+  let i = 0;
+  let params;
+  let prevParams;
+  let prevParamsLen;
   do {
     params = (dArray[i + 1] || '').trim().split(' ');
     switch (dArray[i]) {
@@ -152,7 +150,7 @@ function drawPath(context, dAttr) {
         i += 2;
         break;
       case 'L':
-        for (var j = 0; j < params.length / 2; j++) {
+        for (let j = 0; j < params.length / 2; j++) {
           context.lineTo(_number(params[j * 2]), _number(params[j * 2 + 1]));
         }
         i += 2;
@@ -183,8 +181,8 @@ function drawPath(context, dAttr) {
   } while (i < dArray.length);
 }
 function parseStyles(element, options, rootAppended) {
-  var style = element.style || {};
-  var field;
+  let style = element.style || {};
+  let field;
   for (field in style) {
     if (style[field] !== '') {
       options[(0, _inflector.camelize)(field)] = style[field];
@@ -207,11 +205,11 @@ function parseStyles(element, options, rootAppended) {
   options.globalAlpha = (0, _type.isDefined)(options.opacity) ? options.opacity : options.globalAlpha;
 }
 function parseUrl(urlString) {
-  var matches = urlString && urlString.match(/url\(.*#(.*?)["']?\)/i);
+  const matches = urlString && urlString.match(/url\(.*#(.*?)["']?\)/i);
   return matches && matches[1];
 }
 function setFontStyle(context, options) {
-  var fontParams = [];
+  const fontParams = [];
   options.fontSize = options.fontSize || DEFAULT_FONT_SIZE;
   options.fontFamily = options.fontFamily || DEFAULT_FONT_FAMILY;
   options.fill = options.fill || DEFAULT_TEXT_COLOR;
@@ -235,11 +233,11 @@ function drawTextDecoration(context, options, shared) {
   if (!options.textDecoration || options.textDecoration === 'none') {
     return;
   }
-  var x = options.x;
-  var textWidth = context.measureText(options.text).width;
-  var textHeight = parseInt(options.fontSize, 10);
-  var lineHeight = textHeight * TEXT_DECORATION_LINE_WIDTH_COEFF < 1 ? 1 : textHeight * TEXT_DECORATION_LINE_WIDTH_COEFF;
-  var y = options.y;
+  const x = options.x;
+  const textWidth = context.measureText(options.text).width;
+  const textHeight = parseInt(options.fontSize, 10);
+  const lineHeight = textHeight * TEXT_DECORATION_LINE_WIDTH_COEFF < 1 ? 1 : textHeight * TEXT_DECORATION_LINE_WIDTH_COEFF;
+  let y = options.y;
   switch (options.textDecoration) {
     case 'line-through':
       y -= textHeight / 3 + lineHeight / 2;
@@ -264,8 +262,8 @@ function aggregateOpacity(options) {
   }
 }
 function hasTspan(element) {
-  var nodes = element.childNodes;
-  for (var i = 0; i < nodes.length; i++) {
+  const nodes = element.childNodes;
+  for (let i = 0; i < nodes.length; i++) {
     if (nodes[i].tagName === 'tspan') {
       return true;
     }
@@ -273,16 +271,16 @@ function hasTspan(element) {
   return false;
 }
 function drawTextElement(childNodes, context, options, shared) {
-  var lines = [];
-  var line;
-  var offset = 0;
-  for (var i = 0; i < childNodes.length; i++) {
-    var element = childNodes[i];
+  const lines = [];
+  let line;
+  let offset = 0;
+  for (let i = 0; i < childNodes.length; i++) {
+    const element = childNodes[i];
     if (element.tagName === undefined) {
       drawElement(element, context, options, shared);
     } else if (element.tagName === 'tspan' || element.tagName === 'text') {
-      var elementOptions = getElementOptions(element, shared.rootAppended);
-      var mergedOptions = (0, _extend.extend)({}, options, elementOptions);
+      const elementOptions = getElementOptions(element, shared.rootAppended);
+      const mergedOptions = (0, _extend.extend)({}, options, elementOptions);
       if (element.tagName === 'tspan' && hasTspan(element)) {
         drawTextElement(element.childNodes, context, mergedOptions, shared);
         continue;
@@ -311,11 +309,11 @@ function drawTextElement(childNodes, context, options, shared) {
     }
   }
   lines.forEach(function (line) {
-    var commonWidth = line.widths.reduce(function (commonWidth, width) {
+    const commonWidth = line.widths.reduce(function (commonWidth, width) {
       return commonWidth + width;
     }, 0);
-    var xDiff = 0;
-    var currentOffset = 0;
+    let xDiff = 0;
+    let currentOffset = 0;
     if (options.textAlign === 'center') {
       xDiff = commonWidth / 2;
     }
@@ -323,7 +321,7 @@ function drawTextElement(childNodes, context, options, shared) {
       xDiff = commonWidth;
     }
     line.options.forEach(function (o, index) {
-      var width = line.widths[index];
+      const width = line.widths[index];
       o.x = o.x - xDiff + currentOffset;
       o.y += line.offsets[index];
       currentOffset += width;
@@ -334,11 +332,11 @@ function drawTextElement(childNodes, context, options, shared) {
   });
 }
 function drawElement(element, context, parentOptions, shared) {
-  var tagName = element.tagName;
-  var isText = tagName === 'text' || tagName === 'tspan' || tagName === undefined;
-  var isImage = tagName === 'image';
-  var isComment = element.nodeType === 8;
-  var options = (0, _extend.extend)({}, parentOptions, getElementOptions(element, shared.rootAppended));
+  const tagName = element.tagName;
+  const isText = tagName === 'text' || tagName === 'tspan' || tagName === undefined;
+  const isImage = tagName === 'image';
+  const isComment = element.nodeType === 8;
+  const options = (0, _extend.extend)({}, parentOptions, getElementOptions(element, shared.rootAppended));
   if (options.visibility === 'hidden' || options[_svg.HIDDEN_FOR_EXPORT] || isComment) {
     return;
   }
@@ -346,7 +344,7 @@ function drawElement(element, context, parentOptions, shared) {
   !isImage && transformElement(context, options);
   clipElement(context, options, shared);
   aggregateOpacity(options);
-  var promise;
+  let promise;
   context.beginPath();
   switch (element.tagName) {
     case undefined:
@@ -383,26 +381,28 @@ function drawElement(element, context, parentOptions, shared) {
   return promise;
 }
 function applyGradient(context, options, _ref, element, type) {
-  var linearGradients = _ref.linearGradients,
-    radialGradients = _ref.radialGradients;
-  var gradients = type === 'linear' ? linearGradients : radialGradients;
+  let {
+    linearGradients,
+    radialGradients
+  } = _ref;
+  const gradients = type === 'linear' ? linearGradients : radialGradients;
   if (Object.keys(gradients).length === 0) {
     return;
   }
-  var id = parseUrl(options.fill);
+  const id = parseUrl(options.fill);
   if (id && gradients[id]) {
-    var box = element.getBBox();
-    var horizontalCenter = box.x + box.width / 2;
-    var verticalCenter = box.y + box.height / 2;
-    var maxRadius = Math.max(box.height / 2, box.width / 2);
-    var gradient = type === 'linear' ? context.createLinearGradient(box.x, 0, box.x + box.width, 0) : context.createRadialGradient(horizontalCenter, verticalCenter, 0, horizontalCenter, verticalCenter, maxRadius);
-    gradients[id].colors.forEach(function (opt) {
-      var offset = parseInt(opt.offset.replace(/%/, ''));
+    const box = element.getBBox();
+    const horizontalCenter = box.x + box.width / 2;
+    const verticalCenter = box.y + box.height / 2;
+    const maxRadius = Math.max(box.height / 2, box.width / 2);
+    const gradient = type === 'linear' ? context.createLinearGradient(box.x, 0, box.x + box.width, 0) : context.createRadialGradient(horizontalCenter, verticalCenter, 0, horizontalCenter, verticalCenter, maxRadius);
+    gradients[id].colors.forEach(opt => {
+      const offset = parseInt(opt.offset.replace(/%/, ''));
       gradient.addColorStop(offset / 100, opt.stopColor);
     });
     if (type === 'linear') {
       var _ref2, _gradients$id$transfo;
-      var angle = (_ref2 = ((_gradients$id$transfo = gradients[id].transform) === null || _gradients$id$transfo === void 0 ? void 0 : _gradients$id$transfo.replace(/\D/g, '')) * Math.PI / 180) !== null && _ref2 !== void 0 ? _ref2 : 0;
+      const angle = (_ref2 = ((_gradients$id$transfo = gradients[id].transform) === null || _gradients$id$transfo === void 0 ? void 0 : _gradients$id$transfo.replace(/\D/g, '')) * Math.PI / 180) !== null && _ref2 !== void 0 ? _ref2 : 0;
       context.translate(horizontalCenter, verticalCenter);
       context.rotate(angle);
       context.translate(-horizontalCenter, -verticalCenter);
@@ -413,8 +413,8 @@ function applyGradient(context, options, _ref, element, type) {
   }
 }
 function applyFilter(context, options, shared) {
-  var filterOptions;
-  var id = parseUrl(options.filter);
+  let filterOptions;
+  const id = parseUrl(options.filter);
   if (id) {
     filterOptions = shared.filters[id];
     if (!filterOptions) {
@@ -459,17 +459,19 @@ function clipElement(context, options, shared) {
   }
 }
 function hex2rgba(hexColor, alpha) {
-  var color = new _color.default(hexColor);
+  const color = new _color.default(hexColor);
   return 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',' + alpha + ')';
 }
 function createGradient(element) {
   var _element$attributes$g;
-  var options = {
+  const options = {
     colors: [],
     transform: (_element$attributes$g = element.attributes.gradientTransform) === null || _element$attributes$g === void 0 ? void 0 : _element$attributes$g.textContent
   };
-  (0, _iterator.each)(element.childNodes, function (_, _ref3) {
-    var attributes = _ref3.attributes;
+  (0, _iterator.each)(element.childNodes, (_, _ref3) => {
+    let {
+      attributes
+    } = _ref3;
     options.colors.push({
       offset: attributes.offset.value,
       stopColor: attributes['stop-color'].value
@@ -478,11 +480,11 @@ function createGradient(element) {
   return options;
 }
 function createFilter(element) {
-  var color;
-  var opacity;
-  var filterOptions = {};
+  let color;
+  let opacity;
+  const filterOptions = {};
   (0, _iterator.each)(element.childNodes, function (_, node) {
-    var attr = node.attributes;
+    const attr = node.attributes;
     if (!attr.result) {
       return;
     }
@@ -504,12 +506,12 @@ function createFilter(element) {
   return filterOptions;
 }
 function asyncEach(array, callback) {
-  var d = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new _deferred.Deferred();
-  var i = 0;
+  let d = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new _deferred.Deferred();
+  let i = 0;
   for (; i < array.length; i++) {
-    var result = callback(array[i]);
+    const result = callback(array[i]);
     if ((0, _type.isPromise)(result)) {
-      result.then(function () {
+      result.then(() => {
         asyncEach(Array.prototype.slice.call(array, i + 1), callback, d);
       });
       break;
@@ -526,14 +528,14 @@ function drawCanvasElements(elements, context, parentOptions, shared) {
       case 'g':
       case 'svg':
         {
-          var options = (0, _extend.extend)({}, parentOptions, getElementOptions(element, shared.rootAppended));
+          const options = (0, _extend.extend)({}, parentOptions, getElementOptions(element, shared.rootAppended));
           context.save();
           transformElement(context, options);
           clipElement(context, options, shared);
-          var onDone = function onDone() {
+          const onDone = () => {
             context.restore();
           };
-          var promise = drawCanvasElements(element.childNodes, context, options, shared);
+          const promise = drawCanvasElements(element.childNodes, context, options, shared);
           if ((0, _type.isPromise)(promise)) {
             promise.then(onDone);
           } else {
@@ -564,7 +566,7 @@ function drawCanvasElements(elements, context, parentOptions, shared) {
   });
 }
 function setLineDash(context, options) {
-  var matches = options['stroke-dasharray'] && options['stroke-dasharray'].match(/(\d+)/g);
+  let matches = options['stroke-dasharray'] && options['stroke-dasharray'].match(/(\d+)/g);
   if (matches && matches.length) {
     matches = (0, _iterator.map)(matches, function (item) {
       return _number(item);
@@ -573,7 +575,7 @@ function setLineDash(context, options) {
   }
 }
 function strokeElement(context, options, isText) {
-  var stroke = options.stroke;
+  const stroke = options.stroke;
   if (stroke && stroke !== 'none' && options['stroke-width'] !== 0) {
     setLineDash(context, options);
     context.lineJoin = options['stroke-linejoin'];
@@ -585,11 +587,11 @@ function strokeElement(context, options, isText) {
   }
 }
 function getPattern(context, pattern, shared, parentOptions) {
-  var options = getElementOptions(pattern, shared.rootAppended);
-  var patternCanvas = imageCreator._createCanvas(options.width, options.height, 0);
-  var patternContext = patternCanvas.getContext('2d');
-  var promise = drawCanvasElements(pattern.childNodes, patternContext, options, shared);
-  var onDone = function onDone() {
+  const options = getElementOptions(pattern, shared.rootAppended);
+  const patternCanvas = imageCreator._createCanvas(options.width, options.height, 0);
+  const patternContext = patternCanvas.getContext('2d');
+  const promise = drawCanvasElements(pattern.childNodes, patternContext, options, shared);
+  const onDone = () => {
     context.fillStyle = context.createPattern(patternCanvas, 'repeat');
     context.globalAlpha = parentOptions.fillOpacity;
     context.fill();
@@ -603,8 +605,8 @@ function getPattern(context, pattern, shared, parentOptions) {
   return promise;
 }
 function fillElement(context, options, shared) {
-  var fill = options.fill;
-  var promise;
+  const fill = options.fill;
+  let promise;
   if (fill && fill !== 'none') {
     if (fill.search(/url/) === -1) {
       context.fillStyle = fill;
@@ -612,7 +614,7 @@ function fillElement(context, options, shared) {
       context.fill();
       context.globalAlpha = 1;
     } else {
-      var pattern = shared.patterns[parseUrl(fill)];
+      const pattern = shared.patterns[parseUrl(fill)];
       if (!pattern) {
         return;
       }
@@ -621,9 +623,9 @@ function fillElement(context, options, shared) {
   }
   return promise;
 }
-parseAttributes = function parseAttributes(attributes) {
-  var newAttributes = {};
-  var attr;
+parseAttributes = function (attributes) {
+  const newAttributes = {};
+  let attr;
   (0, _iterator.each)(attributes, function (index, item) {
     attr = item.textContent;
     if (isFinite(attr)) {
@@ -639,7 +641,7 @@ function drawBackground(context, width, height, backgroundColor, margin) {
   context.fillRect(-margin, -margin, width + margin * 2, height + margin * 2);
 }
 function createInvisibleDiv() {
-  var invisibleDiv = _dom_adapter.default.createElement('div');
+  const invisibleDiv = _dom_adapter.default.createElement('div');
   invisibleDiv.style.left = '-9999px';
   invisibleDiv.style.position = 'absolute';
   return invisibleDiv;
@@ -655,19 +657,20 @@ function convertSvgToCanvas(svg, canvas, rootAppended) {
   });
 }
 function getCanvasFromSvg(markup, _ref4) {
-  var width = _ref4.width,
-    height = _ref4.height,
-    backgroundColor = _ref4.backgroundColor,
-    margin = _ref4.margin,
-    _ref4$svgToCanvas = _ref4.svgToCanvas,
-    svgToCanvas = _ref4$svgToCanvas === void 0 ? convertSvgToCanvas : _ref4$svgToCanvas;
-  var scaledScreenInfo = calcScaledInfo(width, height);
-  var canvas = imageCreator._createCanvas(scaledScreenInfo.width, scaledScreenInfo.height, margin);
-  var context = canvas.getContext('2d');
+  let {
+    width,
+    height,
+    backgroundColor,
+    margin,
+    svgToCanvas = convertSvgToCanvas
+  } = _ref4;
+  const scaledScreenInfo = calcScaledInfo(width, height);
+  const canvas = imageCreator._createCanvas(scaledScreenInfo.width, scaledScreenInfo.height, margin);
+  const context = canvas.getContext('2d');
   context.setTransform(scaledScreenInfo.pixelRatio, 0, 0, scaledScreenInfo.pixelRatio, 0, 0);
-  var svgElem = (0, _svg.getSvgElement)(markup);
-  var invisibleDiv;
-  var markupIsDomElement = _dom_adapter.default.isElementNode(markup);
+  const svgElem = (0, _svg.getSvgElement)(markup);
+  let invisibleDiv;
+  const markupIsDomElement = _dom_adapter.default.isElementNode(markup);
   context.translate(margin, margin);
   _dom_adapter.default.getBody().appendChild(canvas);
   if (!markupIsDomElement) {
@@ -680,35 +683,31 @@ function getCanvasFromSvg(markup, _ref4) {
     canvas.dir = svgElem.attributes.direction.textContent;
   }
   drawBackground(context, width, height, backgroundColor, margin);
-  return (0, _deferred.fromPromise)(svgToCanvas(svgElem, canvas, markupIsDomElement && (0, _dom.contains)(_dom_adapter.default.getBody(), markup))).then(function () {
-    return canvas;
-  }).always(function () {
+  return (0, _deferred.fromPromise)(svgToCanvas(svgElem, canvas, markupIsDomElement && (0, _dom.contains)(_dom_adapter.default.getBody(), markup))).then(() => canvas).always(() => {
     invisibleDiv && _dom_adapter.default.getBody().removeChild(invisibleDiv);
     _dom_adapter.default.getBody().removeChild(canvas);
   });
 }
-var imageCreator = {
-  getImageData: function getImageData(markup, options) {
-    var mimeType = 'image/' + options.format;
+const imageCreator = {
+  getImageData: function (markup, options) {
+    const mimeType = 'image/' + options.format;
     // Injection for testing T403049
     if ((0, _type.isFunction)(options.__parseAttributesFn)) {
       parseAttributes = options.__parseAttributesFn;
     }
-    return getCanvasFromSvg(markup, options).then(function (canvas) {
-      return getStringFromCanvas(canvas, mimeType);
-    });
+    return getCanvasFromSvg(markup, options).then(canvas => getStringFromCanvas(canvas, mimeType));
   },
-  getData: function getData(markup, options) {
-    var that = this;
-    return imageCreator.getImageData(markup, options).then(function (binaryData) {
-      var mimeType = 'image/' + options.format;
-      var data = (0, _type.isFunction)(window.Blob) && !options.useBase64 ? that._getBlob(binaryData, mimeType) : that._getBase64(binaryData);
+  getData: function (markup, options) {
+    const that = this;
+    return imageCreator.getImageData(markup, options).then(binaryData => {
+      const mimeType = 'image/' + options.format;
+      const data = (0, _type.isFunction)(window.Blob) && !options.useBase64 ? that._getBlob(binaryData, mimeType) : that._getBase64(binaryData);
       return data;
     });
   },
-  _getBlob: function _getBlob(binaryData, mimeType) {
-    var i;
-    var dataArray = new Uint8Array(binaryData.length);
+  _getBlob: function (binaryData, mimeType) {
+    let i;
+    const dataArray = new Uint8Array(binaryData.length);
     for (i = 0; i < binaryData.length; i++) {
       dataArray[i] = binaryData.charCodeAt(i);
     }
@@ -716,11 +715,11 @@ var imageCreator = {
       type: mimeType
     });
   },
-  _getBase64: function _getBase64(binaryData) {
+  _getBase64: function (binaryData) {
     return window.btoa(binaryData);
   },
   _createCanvas(width, height, margin) {
-    var canvas = (0, _renderer.default)('<canvas>')[0];
+    const canvas = (0, _renderer.default)('<canvas>')[0];
     canvas.width = width + margin * 2;
     canvas.height = height + margin * 2;
     canvas.hidden = true;
@@ -732,9 +731,9 @@ function getData(data, options) {
   return imageCreator.getData(data, options);
 }
 function testFormats(formats) {
-  var canvas = imageCreator._createCanvas(100, 100, 0);
+  const canvas = imageCreator._createCanvas(100, 100, 0);
   return formats.reduce(function (r, f) {
-    var mimeType = ('image/' + f).toLowerCase();
+    const mimeType = ('image/' + f).toLowerCase();
     if (canvas.toDataURL(mimeType).indexOf(mimeType) !== -1) {
       r.supported.push(f);
     } else {
@@ -747,7 +746,7 @@ function testFormats(formats) {
   });
 }
 function calcScaledInfo(width, height) {
-  var pixelRatio = window.devicePixelRatio || 1;
+  const pixelRatio = window.devicePixelRatio || 1;
   return {
     pixelRatio,
     width: width * pixelRatio,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/localization/globalize/core.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,11 +21,11 @@ if (_globalize.default && _globalize.default.load) {
     _globalize.default.locale('en');
   }
   _core.default.inject({
-    locale: function locale(_locale) {
-      if (!_locale) {
+    locale: function (locale) {
+      if (!locale) {
         return _globalize.default.locale().locale;
       }
-      _globalize.default.locale(_locale);
+      _globalize.default.locale(locale);
     }
   });
 }

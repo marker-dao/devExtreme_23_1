@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drawer/ui.drawer.rendering.strategy.overlap.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,19 +20,19 @@ var _inflector = require("../../core/utils/inflector");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
+let OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
   _inheritsLoose(OverlapStrategy, _DrawerStrategy);
   function OverlapStrategy() {
     return _DrawerStrategy.apply(this, arguments) || this;
   }
   var _proto = OverlapStrategy.prototype;
   _proto.renderPanelContent = function renderPanelContent(whenPanelContentRendered) {
-    var _this = this;
     delete this._initialPosition;
-    var drawer = this.getDrawerInstance();
-    var _drawer$option = drawer.option(),
-      opened = _drawer$option.opened,
-      minSize = _drawer$option.minSize;
+    const drawer = this.getDrawerInstance();
+    const {
+      opened,
+      minSize
+    } = drawer.option();
     drawer._overlay = drawer._createComponent(drawer.content(), _ui.default, {
       shading: false,
       container: drawer.content(),
@@ -50,9 +50,9 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
         this._fixOverlayPosition(e.component.$content());
       }.bind(this),
       contentTemplate: drawer.option('template'),
-      onContentReady: function onContentReady(args) {
+      onContentReady: args => {
         whenPanelContentRendered.resolve();
-        _this._processOverlayZIndex(args.component.content());
+        this._processOverlayZIndex(args.component.content());
       },
       visible: true,
       propagateOutsideClick: true
@@ -60,7 +60,7 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
   };
   _proto._fixOverlayPosition = function _fixOverlayPosition($overlayContent) {
     // NOTE: overlay should be positioned in extended wrapper
-    var position = (0, _common.ensureDefined)(this._initialPosition, {
+    const position = (0, _common.ensureDefined)(this._initialPosition, {
       left: 0,
       top: 0
     });
@@ -74,9 +74,9 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
     }
   };
   _proto._getOverlayPosition = function _getOverlayPosition() {
-    var drawer = this.getDrawerInstance();
-    var panelPosition = drawer.calcTargetPosition();
-    var result = {};
+    const drawer = this.getDrawerInstance();
+    const panelPosition = drawer.calcTargetPosition();
+    let result = {};
     switch (panelPosition) {
       case 'left':
         {
@@ -108,8 +108,8 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
     return result;
   };
   _proto.refreshPanelElementSize = function refreshPanelElementSize(calcFromRealPanelSize) {
-    var drawer = this.getDrawerInstance();
-    var overlay = drawer.getOverlay();
+    const drawer = this.getDrawerInstance();
+    const overlay = drawer.getOverlay();
     if (drawer.isHorizontalDirection()) {
       overlay.option('height', '100%');
       overlay.option('width', calcFromRealPanelSize ? drawer.getRealPanelWidth() : this._getPanelSize(drawer.option('opened')));
@@ -122,19 +122,19 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
     this._updateViewContentStyles();
   };
   _proto._updateViewContentStyles = function _updateViewContentStyles() {
-    var drawer = this.getDrawerInstance();
+    const drawer = this.getDrawerInstance();
     (0, _renderer.default)(drawer.viewContent()).css('padding' + (0, _inflector.camelize)(drawer.calcTargetPosition(), true), drawer.option('minSize'));
     (0, _renderer.default)(drawer.viewContent()).css('transform', 'inherit');
   };
   _proto._internalRenderPosition = function _internalRenderPosition(changePositionUsingFxAnimation, whenAnimationCompleted) {
-    var drawer = this.getDrawerInstance();
-    var $panel = (0, _renderer.default)(drawer.content());
-    var $panelOverlayContent = drawer.getOverlay().$content();
-    var revealMode = drawer.option('revealMode');
-    var targetPanelPosition = drawer.calcTargetPosition();
-    var panelSize = this._getPanelSize(drawer.option('opened'));
-    var panelOffset = this._getPanelOffset(drawer.option('opened')) * drawer._getPositionCorrection();
-    var marginTop = drawer.getRealPanelHeight() - panelSize;
+    const drawer = this.getDrawerInstance();
+    const $panel = (0, _renderer.default)(drawer.content());
+    const $panelOverlayContent = drawer.getOverlay().$content();
+    const revealMode = drawer.option('revealMode');
+    const targetPanelPosition = drawer.calcTargetPosition();
+    const panelSize = this._getPanelSize(drawer.option('opened'));
+    const panelOffset = this._getPanelOffset(drawer.option('opened')) * drawer._getPositionCorrection();
+    const marginTop = drawer.getRealPanelHeight() - panelSize;
     this._updateViewContentStyles();
     if (changePositionUsingFxAnimation) {
       if (revealMode === 'slide') {
@@ -144,7 +144,7 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
           top: panelOffset
         };
         _uiDrawer.animation.moveTo({
-          complete: function complete() {
+          complete: () => {
             whenAnimationCompleted.resolve();
           },
           duration: drawer.option('animationDuration'),
@@ -158,7 +158,7 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
         };
         (0, _translator.move)($panelOverlayContent, this._initialPosition);
         _uiDrawer.animation.size({
-          complete: function complete() {
+          complete: () => {
             whenAnimationCompleted.resolve();
           },
           duration: drawer.option('animationDuration'),
@@ -196,8 +196,8 @@ var OverlapStrategy = /*#__PURE__*/function (_DrawerStrategy) {
     return (0, _renderer.default)(this.getDrawerInstance().getOverlay().content());
   };
   _proto._processOverlayZIndex = function _processOverlayZIndex($element) {
-    var styles = (0, _renderer.default)($element).get(0).style;
-    var zIndex = styles.zIndex || 1;
+    const styles = (0, _renderer.default)($element).get(0).style;
+    const zIndex = styles.zIndex || 1;
     this.getDrawerInstance().setZIndex(zIndex);
   };
   _proto.isViewContentFirst = function isViewContentFirst(position) {

@@ -2,23 +2,27 @@
 
 exports.default = void 0;
 var _type = require("../../../core/utils/type");
-var TemplatesStorage = /*#__PURE__*/function () {
+let TemplatesStorage = /*#__PURE__*/function () {
   function TemplatesStorage() {
     this._storage = {};
   }
   var _proto = TemplatesStorage.prototype;
   _proto.set = function set(_ref, value) {
     var _this$_storage, _this$_storage$editor;
-    var editorKey = _ref.editorKey,
-      marker = _ref.marker;
+    let {
+      editorKey,
+      marker
+    } = _ref;
     (_this$_storage$editor = (_this$_storage = this._storage)[editorKey]) !== null && _this$_storage$editor !== void 0 ? _this$_storage$editor : _this$_storage[editorKey] = {};
     this._storage[editorKey][marker] = value;
   };
   _proto.get = function get(_ref2) {
     var _Object$values$at, _this$_storage$editor2;
-    var editorKey = _ref2.editorKey,
-      marker = _ref2.marker;
-    var isQuillFormatCall = !(0, _type.isDefined)(editorKey);
+    let {
+      editorKey,
+      marker
+    } = _ref2;
+    const isQuillFormatCall = !(0, _type.isDefined)(editorKey);
 
     // NOTE: If anonymous templates are used, mentions are parsed from the markup.
     // The Quill format does not have information about a related HtmlEditor instance.
@@ -28,8 +32,10 @@ var TemplatesStorage = /*#__PURE__*/function () {
     return isQuillFormatCall ? (_Object$values$at = Object.values(this._storage).at(-1)) === null || _Object$values$at === void 0 ? void 0 : _Object$values$at[marker] : (_this$_storage$editor2 = this._storage[editorKey]) === null || _this$_storage$editor2 === void 0 ? void 0 : _this$_storage$editor2[marker];
   };
   _proto.delete = function _delete(_ref3) {
-    var editorKey = _ref3.editorKey,
-      marker = _ref3.marker;
+    let {
+      editorKey,
+      marker
+    } = _ref3;
     if (!this._storage[editorKey]) {
       return;
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.strategy.date_view.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,20 +18,20 @@ var _extend = require("../../core/utils/extend");
 var _ui2 = _interopRequireDefault(require("./ui.date_utils"));
 var _message = _interopRequireDefault(require("../../localization/message"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var DateViewStrategy = _uiDate_box.default.inherit({
+const window = (0, _window.getWindow)();
+const DateViewStrategy = _uiDate_box.default.inherit({
   NAME: 'DateView',
-  getDefaultOptions: function getDefaultOptions() {
+  getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       openOnFieldClick: true,
       applyButtonText: _message.default.format('OK'),
       'dropDownOptions.showTitle': true
     });
   },
-  getDisplayFormat: function getDisplayFormat(displayFormat) {
+  getDisplayFormat: function (displayFormat) {
     return displayFormat || _ui2.default.FORMATS_MAP[this.dateBox.option('type')];
   },
-  popupConfig: function popupConfig(config) {
+  popupConfig: function (config) {
     return {
       toolbarItems: this.dateBox._popupToolbarItemsConfig(),
       onInitialized: config.onInitialized,
@@ -44,8 +44,8 @@ var DateViewStrategy = _uiDate_box.default.inherit({
           height: 331
         }
       }, {
-        device: function device(_device) {
-          var platform = _device.platform;
+        device: function (device) {
+          const platform = device.platform;
           return platform === 'generic' || platform === 'ios';
         },
         options: {
@@ -53,9 +53,9 @@ var DateViewStrategy = _uiDate_box.default.inherit({
           height: 'auto'
         }
       }, {
-        device: function device(_device2) {
-          var platform = _device2.platform;
-          var phone = _device2.phone;
+        device: function (device) {
+          const platform = device.platform;
+          const phone = device.phone;
           return platform === 'generic' && phone;
         },
         options: {
@@ -83,7 +83,7 @@ var DateViewStrategy = _uiDate_box.default.inherit({
       }]
     };
   },
-  _renderWidget: function _renderWidget() {
+  _renderWidget: function () {
     if ((0, _support.inputType)(this.dateBox.option('mode')) && this.dateBox._isNativeType() || this.dateBox.option('readOnly')) {
       if (this._widget) {
         this._widget.$element().remove();
@@ -91,25 +91,25 @@ var DateViewStrategy = _uiDate_box.default.inherit({
       }
       return;
     }
-    var popup = this._getPopup();
+    const popup = this._getPopup();
     if (this._widget) {
       this._widget.option(this._getWidgetOptions());
     } else {
-      var element = (0, _renderer.default)('<div>').appendTo(popup.$content());
+      const element = (0, _renderer.default)('<div>').appendTo(popup.$content());
       this._widget = this._createWidget(element);
     }
     this._widget.$element().appendTo(this._getWidgetContainer());
   },
-  _getWidgetName: function _getWidgetName() {
+  _getWidgetName: function () {
     return _ui.default;
   },
-  renderOpenedState: function renderOpenedState() {
+  renderOpenedState: function () {
     this.callBase();
     if (this._widget) {
       this._widget.option('value', this._widget._getCurrentDate());
     }
   },
-  _getWidgetOptions: function _getWidgetOptions() {
+  _getWidgetOptions: function () {
     return {
       value: this.dateBoxValue() || new Date(),
       type: this.dateBox.option('type'),

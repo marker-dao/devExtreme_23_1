@@ -30,37 +30,34 @@ var _ui = _interopRequireDefault(require("./widget/ui.errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE tagBox
 
-var TAGBOX_TAG_DATA_KEY = 'dxTagData';
-var TAGBOX_CLASS = 'dx-tagbox';
-var TAGBOX_TAG_CONTAINER_CLASS = 'dx-tag-container';
-var TAGBOX_TAG_CLASS = 'dx-tag';
-var TAGBOX_MULTI_TAG_CLASS = 'dx-tagbox-multi-tag';
-var TAGBOX_CUSTOM_TAG_CLASS = 'dx-tag-custom';
-var TAGBOX_TAG_REMOVE_BUTTON_CLASS = 'dx-tag-remove-button';
-var TAGBOX_ONLY_SELECT_CLASS = 'dx-tagbox-only-select';
-var TAGBOX_SINGLE_LINE_CLASS = 'dx-tagbox-single-line';
-var TAGBOX_POPUP_WRAPPER_CLASS = 'dx-tagbox-popup-wrapper';
-var TAGBOX_TAG_CONTENT_CLASS = 'dx-tag-content';
-var TAGBOX_DEFAULT_FIELD_TEMPLATE_CLASS = 'dx-tagbox-default-template';
-var TAGBOX_CUSTOM_FIELD_TEMPLATE_CLASS = 'dx-tagbox-custom-template';
-var TEXTEDITOR_INPUT_CONTAINER_CLASS = 'dx-texteditor-input-container';
-var TAGBOX_MOUSE_WHEEL_DELTA_MULTIPLIER = -0.3;
-var TagBox = _select_box.default.inherit({
-  _supportedKeys: function _supportedKeys() {
-    var _this = this;
-    var parent = this.callBase();
-    var sendToList = function sendToList(options) {
-      return _this._list._keyboardHandler(options);
-    };
-    var rtlEnabled = this.option('rtlEnabled');
+const TAGBOX_TAG_DATA_KEY = 'dxTagData';
+const TAGBOX_CLASS = 'dx-tagbox';
+const TAGBOX_TAG_CONTAINER_CLASS = 'dx-tag-container';
+const TAGBOX_TAG_CLASS = 'dx-tag';
+const TAGBOX_MULTI_TAG_CLASS = 'dx-tagbox-multi-tag';
+const TAGBOX_CUSTOM_TAG_CLASS = 'dx-tag-custom';
+const TAGBOX_TAG_REMOVE_BUTTON_CLASS = 'dx-tag-remove-button';
+const TAGBOX_ONLY_SELECT_CLASS = 'dx-tagbox-only-select';
+const TAGBOX_SINGLE_LINE_CLASS = 'dx-tagbox-single-line';
+const TAGBOX_POPUP_WRAPPER_CLASS = 'dx-tagbox-popup-wrapper';
+const TAGBOX_TAG_CONTENT_CLASS = 'dx-tag-content';
+const TAGBOX_DEFAULT_FIELD_TEMPLATE_CLASS = 'dx-tagbox-default-template';
+const TAGBOX_CUSTOM_FIELD_TEMPLATE_CLASS = 'dx-tagbox-custom-template';
+const TEXTEDITOR_INPUT_CONTAINER_CLASS = 'dx-texteditor-input-container';
+const TAGBOX_MOUSE_WHEEL_DELTA_MULTIPLIER = -0.3;
+const TagBox = _select_box.default.inherit({
+  _supportedKeys: function () {
+    const parent = this.callBase();
+    const sendToList = options => this._list._keyboardHandler(options);
+    const rtlEnabled = this.option('rtlEnabled');
     return (0, _extend.extend)({}, parent, {
-      backspace: function backspace(e) {
+      backspace: function (e) {
         if (!this._isCaretAtTheStart()) {
           return;
         }
         this._processKeyboardEvent(e);
         this._isTagRemoved = true;
-        var $tagToDelete = this._$focusedTag || this._tagElements().last();
+        const $tagToDelete = this._$focusedTag || this._tagElements().last();
         if (this._$focusedTag) {
           this._moveTagFocus('prev', true);
         }
@@ -71,27 +68,27 @@ var TagBox = _select_box.default.inherit({
         this._removeTagElement($tagToDelete);
         delete this._preserveFocusedTag;
       },
-      upArrow: function upArrow(e, opts) {
-        return e.altKey || !_this._list ? parent.upArrow.call(_this, e) : sendToList(opts);
+      upArrow: (e, opts) => {
+        return e.altKey || !this._list ? parent.upArrow.call(this, e) : sendToList(opts);
       },
-      downArrow: function downArrow(e, opts) {
-        return e.altKey || !_this._list ? parent.downArrow.call(_this, e) : sendToList(opts);
+      downArrow: (e, opts) => {
+        return e.altKey || !this._list ? parent.downArrow.call(this, e) : sendToList(opts);
       },
-      del: function del(e) {
+      del: function (e) {
         if (!this._$focusedTag || !this._isCaretAtTheStart()) {
           return;
         }
         this._processKeyboardEvent(e);
         this._isTagRemoved = true;
-        var $tagToDelete = this._$focusedTag;
+        const $tagToDelete = this._$focusedTag;
         this._moveTagFocus('next', true);
         this._preserveFocusedTag = true;
         this._removeTagElement($tagToDelete);
         delete this._preserveFocusedTag;
       },
-      enter: function enter(e, options) {
-        var isListItemFocused = this._list && this._list.option('focusedElement') !== null;
-        var isCustomItem = this.option('acceptCustomValue') && !isListItemFocused;
+      enter: function (e, options) {
+        const isListItemFocused = this._list && this._list.option('focusedElement') !== null;
+        const isCustomItem = this.option('acceptCustomValue') && !isListItemFocused;
         if (isCustomItem) {
           e.preventDefault();
           this._searchValue() !== '' && this._customItemAddedHandler(e);
@@ -103,65 +100,65 @@ var TagBox = _select_box.default.inherit({
           e.preventDefault();
         }
       },
-      space: function space(e, options) {
-        var isOpened = this.option('opened');
-        var isInputActive = this._shouldRenderSearchEvent();
+      space: function (e, options) {
+        const isOpened = this.option('opened');
+        const isInputActive = this._shouldRenderSearchEvent();
         if (isOpened && !isInputActive) {
           this._saveValueChangeEvent(e);
           sendToList(options);
           e.preventDefault();
         }
       },
-      leftArrow: function leftArrow(e) {
+      leftArrow: function (e) {
         if (!this._isCaretAtTheStart() || this._isEmpty() || this._isEditable() && rtlEnabled && !this._$focusedTag) {
           return;
         }
         e.preventDefault();
-        var direction = rtlEnabled ? 'next' : 'prev';
+        const direction = rtlEnabled ? 'next' : 'prev';
         this._moveTagFocus(direction);
         !this.option('multiline') && this._scrollContainer(direction);
       },
-      rightArrow: function rightArrow(e) {
+      rightArrow: function (e) {
         if (!this._isCaretAtTheStart() || this._isEmpty() || this._isEditable() && !rtlEnabled && !this._$focusedTag) {
           return;
         }
         e.preventDefault();
-        var direction = rtlEnabled ? 'prev' : 'next';
+        const direction = rtlEnabled ? 'prev' : 'next';
         this._moveTagFocus(direction);
         !this.option('multiline') && this._scrollContainer(direction);
       }
     });
   },
-  _processKeyboardEvent: function _processKeyboardEvent(e) {
+  _processKeyboardEvent: function (e) {
     e.preventDefault();
     e.stopPropagation();
     this._saveValueChangeEvent(e);
   },
-  _isEmpty: function _isEmpty() {
+  _isEmpty: function () {
     return this._getValue().length === 0;
   },
-  _updateTagsContainer: function _updateTagsContainer($element) {
+  _updateTagsContainer: function ($element) {
     this._$tagsContainer = $element.addClass(TAGBOX_TAG_CONTAINER_CLASS);
   },
-  _allowSelectItemByTab: function _allowSelectItemByTab() {
+  _allowSelectItemByTab: function () {
     return false;
   },
-  _isCaretAtTheStart: function _isCaretAtTheStart() {
-    var position = (0, _utils.default)(this._input());
+  _isCaretAtTheStart: function () {
+    const position = (0, _utils.default)(this._input());
     return position.start === 0 && position.end === 0;
   },
   _updateInputAriaActiveDescendant(id) {
     this.setAria('activedescendant', id, this._input());
   },
-  _moveTagFocus: function _moveTagFocus(direction, clearOnBoundary) {
+  _moveTagFocus: function (direction, clearOnBoundary) {
     if (!this._$focusedTag) {
-      var tagElements = this._tagElements();
+      const tagElements = this._tagElements();
       this._$focusedTag = direction === 'next' ? tagElements.first() : tagElements.last();
       this._toggleFocusClass(true, this._$focusedTag);
       this._updateInputAriaActiveDescendant(this._$focusedTag.attr('id'));
       return;
     }
-    var $nextFocusedTag = this._$focusedTag[direction](".".concat(TAGBOX_TAG_CLASS));
+    const $nextFocusedTag = this._$focusedTag[direction](".".concat(TAGBOX_TAG_CLASS));
     if ($nextFocusedTag.length > 0) {
       this._replaceFocusedTag($nextFocusedTag);
       this._updateInputAriaActiveDescendant($nextFocusedTag.attr('id'));
@@ -170,12 +167,12 @@ var TagBox = _select_box.default.inherit({
       this._updateInputAriaActiveDescendant();
     }
   },
-  _replaceFocusedTag: function _replaceFocusedTag($nextFocusedTag) {
+  _replaceFocusedTag: function ($nextFocusedTag) {
     this._toggleFocusClass(false, this._$focusedTag);
     this._$focusedTag = $nextFocusedTag;
     this._toggleFocusClass(true, this._$focusedTag);
   },
-  _clearTagFocus: function _clearTagFocus() {
+  _clearTagFocus: function () {
     if (!this._$focusedTag) {
       return;
     }
@@ -183,46 +180,47 @@ var TagBox = _select_box.default.inherit({
     this._updateInputAriaActiveDescendant();
     delete this._$focusedTag;
   },
-  _focusClassTarget: function _focusClassTarget($element) {
+  _focusClassTarget: function ($element) {
     if ($element && $element.length && $element[0] !== this._focusTarget()[0]) {
       return $element;
     }
     return this.callBase();
   },
-  _getLabelContainer: function _getLabelContainer() {
+  _getLabelContainer: function () {
     return this._$tagsContainer;
   },
   _getFieldElement() {
     return this._input();
   },
-  _scrollContainer: function _scrollContainer(direction) {
+  _scrollContainer: function (direction) {
     if (this.option('multiline') || !(0, _window.hasWindow)()) {
       return;
     }
     if (!this._$tagsContainer) {
       return;
     }
-    var scrollPosition = this._getScrollPosition(direction);
+    const scrollPosition = this._getScrollPosition(direction);
     this._$tagsContainer.scrollLeft(scrollPosition);
   },
-  _getScrollPosition: function _getScrollPosition(direction) {
+  _getScrollPosition: function (direction) {
     if (direction === 'start' || direction === 'end') {
       return this._getBorderPosition(direction);
     }
     return this._$focusedTag ? this._getFocusedTagPosition(direction) : this._getBorderPosition('end');
   },
-  _getBorderPosition: function _getBorderPosition(direction) {
-    var rtlEnabled = this.option('rtlEnabled');
-    var isScrollLeft = direction === 'end' ^ rtlEnabled;
-    var scrollSign = rtlEnabled ? -1 : 1;
+  _getBorderPosition: function (direction) {
+    const rtlEnabled = this.option('rtlEnabled');
+    const isScrollLeft = direction === 'end' ^ rtlEnabled;
+    const scrollSign = rtlEnabled ? -1 : 1;
     return isScrollLeft ^ !rtlEnabled ? 0 : scrollSign * (this._$tagsContainer.get(0).scrollWidth - (0, _size.getOuterWidth)(this._$tagsContainer));
   },
-  _getFocusedTagPosition: function _getFocusedTagPosition(direction) {
-    var rtlEnabled = this.option('rtlEnabled');
-    var isScrollLeft = direction === 'next' ^ rtlEnabled;
-    var _this$_$focusedTag$po = this._$focusedTag.position(),
-      scrollOffset = _this$_$focusedTag$po.left;
-    var scrollLeft = this._$tagsContainer.scrollLeft();
+  _getFocusedTagPosition: function (direction) {
+    const rtlEnabled = this.option('rtlEnabled');
+    const isScrollLeft = direction === 'next' ^ rtlEnabled;
+    let {
+      left: scrollOffset
+    } = this._$focusedTag.position();
+    let scrollLeft = this._$tagsContainer.scrollLeft();
     if (isScrollLeft) {
       scrollOffset += (0, _size.getOuterWidth)(this._$focusedTag, true) - (0, _size.getOuterWidth)(this._$tagsContainer);
     }
@@ -232,7 +230,7 @@ var TagBox = _select_box.default.inherit({
     return scrollLeft;
   },
   _setNextValue: _common.noop,
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       value: [],
       showDropDownButton: false,
@@ -310,16 +308,16 @@ var TagBox = _select_box.default.inherit({
     });
   },
 
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._selectedItems = [];
     this._initSelectAllValueChangedAction();
   },
-  _initActions: function _initActions() {
+  _initActions: function () {
     this.callBase();
     this._initMultiTagPreparingAction();
   },
-  _initMultiTagPreparingAction: function _initMultiTagPreparingAction() {
+  _initMultiTagPreparingAction: function () {
     this._multiTagPreparingAction = this._createActionByOption('onMultiTagPreparing', {
       beforeExecute: function (e) {
         this._multiTagPreparingHandler(e.args[0]);
@@ -327,21 +325,22 @@ var TagBox = _select_box.default.inherit({
       excludeValidators: ['disabled', 'readOnly']
     });
   },
-  _multiTagPreparingHandler: function _multiTagPreparingHandler(args) {
-    var _this$_getValue = this._getValue(),
-      selectedCount = _this$_getValue.length;
+  _multiTagPreparingHandler: function (args) {
+    const {
+      length: selectedCount
+    } = this._getValue();
     if (!this.option('showMultiTagOnly')) {
       args.text = _message.default.getFormatter('dxTagBox-moreSelected')(selectedCount - this.option('maxDisplayedTags') + 1);
     } else {
       args.text = _message.default.getFormatter('dxTagBox-selected')(selectedCount);
     }
   },
-  _initDynamicTemplates: function _initDynamicTemplates() {
+  _initDynamicTemplates: function () {
     this.callBase();
     this._templateManager.addDefaultTemplates({
-      tag: new _bindable_template.BindableTemplate(function ($container, data) {
+      tag: new _bindable_template.BindableTemplate(($container, data) => {
         var _data$text;
-        var $tagContent = (0, _renderer.default)('<div>').addClass(TAGBOX_TAG_CONTENT_CLASS);
+        const $tagContent = (0, _renderer.default)('<div>').addClass(TAGBOX_TAG_CONTENT_CLASS);
         (0, _renderer.default)('<span>').text((_data$text = data.text) !== null && _data$text !== void 0 ? _data$text : data).appendTo($tagContent);
         (0, _renderer.default)('<div>').addClass(TAGBOX_TAG_REMOVE_BUTTON_CLASS).appendTo($tagContent);
         $container.append($tagContent);
@@ -350,7 +349,7 @@ var TagBox = _select_box.default.inherit({
       })
     });
   },
-  _toggleSubmitElement: function _toggleSubmitElement(enabled) {
+  _toggleSubmitElement: function (enabled) {
     if (enabled) {
       this._renderSubmitElement();
       this._setSubmitValue();
@@ -359,33 +358,33 @@ var TagBox = _select_box.default.inherit({
       delete this._$submitElement;
     }
   },
-  _renderSubmitElement: function _renderSubmitElement() {
+  _renderSubmitElement: function () {
     if (!this.option('useSubmitBehavior')) {
       return;
     }
-    var attributes = {
+    const attributes = {
       'multiple': 'multiple',
       'aria-label': 'Selected items'
     };
     this._$submitElement = (0, _renderer.default)('<select>').attr(attributes).css('display', 'none').appendTo(this.$element());
   },
-  _setSubmitValue: function _setSubmitValue() {
+  _setSubmitValue: function () {
     if (!this.option('useSubmitBehavior')) {
       return;
     }
-    var value = this._getValue();
-    var $options = [];
-    for (var i = 0, n = value.length; i < n; i++) {
-      var useDisplayText = this._shouldUseDisplayValue(value[i]);
+    const value = this._getValue();
+    const $options = [];
+    for (let i = 0, n = value.length; i < n; i++) {
+      const useDisplayText = this._shouldUseDisplayValue(value[i]);
       $options.push((0, _renderer.default)('<option>').val(useDisplayText ? this._displayGetter(value[i]) : value[i]).attr('selected', 'selected'));
     }
     this._getSubmitElement().empty().append($options);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._tagElementsCache = (0, _renderer.default)();
-    var isSingleLineMode = !this.option('multiline');
+    const isSingleLineMode = !this.option('multiline');
     this.$element().addClass(TAGBOX_CLASS).toggleClass(TAGBOX_ONLY_SELECT_CLASS, !(this.option('searchEnabled') || this.option('acceptCustomValue'))).toggleClass(TAGBOX_SINGLE_LINE_CLASS, isSingleLineMode);
-    var elementAria = {
+    const elementAria = {
       'role': 'group',
       'roledescription': 'tagbox'
     };
@@ -401,50 +400,48 @@ var TagBox = _select_box.default.inherit({
       if (actualId === newId) {
         return undefined;
       }
-      return actualId.split(' ').filter(function (id) {
-        return id !== newId;
-      }).join(' ');
+      return actualId.split(' ').filter(id => id !== newId).join(' ');
     }
     return "".concat(actualId, " ").concat(newId);
   },
   _updateElementAria(id, shouldRemove) {
-    var shouldClearLabel = !id;
+    const shouldClearLabel = !id;
     if (shouldClearLabel) {
       this.setAria('labelledby', undefined, this.$element());
       return;
     }
-    var labelId = this.$element().attr('aria-labelledby');
-    var newLabelId = this._getNewLabelId(labelId, id, shouldRemove);
+    const labelId = this.$element().attr('aria-labelledby');
+    const newLabelId = this._getNewLabelId(labelId, id, shouldRemove);
     this.setAria('labelledby', newLabelId, this.$element());
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._renderTagRemoveAction();
     this._renderSingleLineScroll();
     this._scrollContainer('start');
   },
-  _initTagTemplate: function _initTagTemplate() {
+  _initTagTemplate: function () {
     this._tagTemplate = this._getTemplateByOption('tagTemplate');
   },
-  _renderField: function _renderField() {
-    var isDefaultFieldTemplate = !(0, _type.isDefined)(this.option('fieldTemplate'));
+  _renderField: function () {
+    const isDefaultFieldTemplate = !(0, _type.isDefined)(this.option('fieldTemplate'));
     this.$element().toggleClass(TAGBOX_DEFAULT_FIELD_TEMPLATE_CLASS, isDefaultFieldTemplate).toggleClass(TAGBOX_CUSTOM_FIELD_TEMPLATE_CLASS, !isDefaultFieldTemplate);
     this.callBase();
   },
-  _renderTagRemoveAction: function _renderTagRemoveAction() {
-    var tagRemoveAction = this._createAction(this._removeTagHandler.bind(this));
-    var eventName = (0, _index.addNamespace)(_click.name, 'dxTagBoxTagRemove');
+  _renderTagRemoveAction: function () {
+    const tagRemoveAction = this._createAction(this._removeTagHandler.bind(this));
+    const eventName = (0, _index.addNamespace)(_click.name, 'dxTagBoxTagRemove');
     _events_engine.default.off(this._$tagsContainer, eventName);
-    _events_engine.default.on(this._$tagsContainer, eventName, ".".concat(TAGBOX_TAG_REMOVE_BUTTON_CLASS), function (event) {
+    _events_engine.default.on(this._$tagsContainer, eventName, ".".concat(TAGBOX_TAG_REMOVE_BUTTON_CLASS), event => {
       tagRemoveAction({
         event
       });
     });
   },
-  _renderSingleLineScroll: function _renderSingleLineScroll() {
-    var mouseWheelEvent = (0, _index.addNamespace)('dxmousewheel', this.NAME);
-    var $element = this.$element();
-    var isMultiline = this.option('multiline');
+  _renderSingleLineScroll: function () {
+    const mouseWheelEvent = (0, _index.addNamespace)('dxmousewheel', this.NAME);
+    const $element = this.$element();
+    const isMultiline = this.option('multiline');
     _events_engine.default.off($element, mouseWheelEvent);
     if (_devices.default.real().deviceType !== 'desktop') {
       this._$tagsContainer && this._$tagsContainer.css('overflowX', isMultiline ? '' : 'auto');
@@ -455,96 +452,95 @@ var TagBox = _select_box.default.inherit({
     }
     _events_engine.default.on($element, mouseWheelEvent, this._tagContainerMouseWheelHandler.bind(this));
   },
-  _tagContainerMouseWheelHandler: function _tagContainerMouseWheelHandler(e) {
-    var scrollLeft = this._$tagsContainer.scrollLeft();
-    var delta = e.delta * TAGBOX_MOUSE_WHEEL_DELTA_MULTIPLIER;
+  _tagContainerMouseWheelHandler: function (e) {
+    const scrollLeft = this._$tagsContainer.scrollLeft();
+    const delta = e.delta * TAGBOX_MOUSE_WHEEL_DELTA_MULTIPLIER;
     if (!(0, _index.isCommandKeyPressed)(e) && (0, _utils3.allowScroll)(this._$tagsContainer, delta, true)) {
       this._$tagsContainer.scrollLeft(scrollLeft + delta);
       return false;
     }
   },
-  _renderEvents: function _renderEvents() {
-    var _this2 = this;
+  _renderEvents: function () {
     this.callBase();
-    var input = this._input();
-    var namespace = (0, _index.addNamespace)('keydown', this.NAME);
-    _events_engine.default.on(input, namespace, function (e) {
-      var keyName = (0, _index.normalizeKeyName)(e);
-      if (!_this2._isControlKey(keyName) && _this2._isEditable()) {
-        _this2._clearTagFocus();
+    const input = this._input();
+    const namespace = (0, _index.addNamespace)('keydown', this.NAME);
+    _events_engine.default.on(input, namespace, e => {
+      const keyName = (0, _index.normalizeKeyName)(e);
+      if (!this._isControlKey(keyName) && this._isEditable()) {
+        this._clearTagFocus();
       }
     });
   },
-  _popupWrapperClass: function _popupWrapperClass() {
+  _popupWrapperClass: function () {
     return this.callBase() + ' ' + TAGBOX_POPUP_WRAPPER_CLASS;
   },
-  _renderInput: function _renderInput() {
+  _renderInput: function () {
     this.callBase();
     this._renderPreventBlurOnInputClick();
   },
-  _renderPreventBlurOnInputClick: function _renderPreventBlurOnInputClick() {
-    var _this3 = this;
-    var eventName = (0, _index.addNamespace)('mousedown', 'dxTagBox');
+  _renderPreventBlurOnInputClick: function () {
+    const eventName = (0, _index.addNamespace)('mousedown', 'dxTagBox');
     _events_engine.default.off(this._inputWrapper(), eventName);
-    _events_engine.default.on(this._inputWrapper(), eventName, function (e) {
-      if (e.target !== _this3._input()[0] && _this3._isFocused()) {
+    _events_engine.default.on(this._inputWrapper(), eventName, e => {
+      if (e.target !== this._input()[0] && this._isFocused()) {
         e.preventDefault();
       }
     });
   },
-  _renderInputValueImpl: function _renderInputValueImpl() {
+  _renderInputValueImpl: function () {
     return this._renderMultiSelect();
   },
-  _loadInputValue: function _loadInputValue() {
+  _loadInputValue: function () {
     return (0, _deferred.when)();
   },
-  _clearTextValue: function _clearTextValue() {
+  _clearTextValue: function () {
     this._input().val('');
     this._toggleEmptinessEventHandler();
     this.option('text', '');
   },
-  _focusInHandler: function _focusInHandler(e) {
+  _focusInHandler: function (e) {
     if (!this._preventNestedFocusEvent(e)) {
       this._scrollContainer('end');
     }
     this.callBase(e);
   },
-  _renderInputValue: function _renderInputValue() {
+  _renderInputValue: function () {
     this.option('displayValue', this._searchValue());
     return this.callBase();
   },
-  _restoreInputText: function _restoreInputText(saveEditingValue) {
+  _restoreInputText: function (saveEditingValue) {
     if (!saveEditingValue) {
       this._clearTextValue();
     }
   },
-  _focusOutHandler: function _focusOutHandler(e) {
+  _focusOutHandler: function (e) {
     if (!this._preventNestedFocusEvent(e)) {
       this._clearTagFocus();
       this._scrollContainer('start');
     }
     this.callBase(e);
   },
-  _initSelectAllValueChangedAction: function _initSelectAllValueChangedAction() {
+  _initSelectAllValueChangedAction: function () {
     this._selectAllValueChangeAction = this._createActionByOption('onSelectAllValueChanged');
   },
-  _renderList: function _renderList() {
+  _renderList: function () {
     this.callBase();
     this._setListDataSourceFilter();
   },
-  _canListHaveFocus: function _canListHaveFocus() {
+  _canListHaveFocus: function () {
     return this.option('applyValueMode') === 'useButtons';
   },
-  _listConfig: function _listConfig() {
-    var _this4 = this;
-    var selectionMode = this.option('showSelectionControls') ? 'all' : 'multiple';
+  _listConfig: function () {
+    const selectionMode = this.option('showSelectionControls') ? 'all' : 'multiple';
     return (0, _extend.extend)(this.callBase(), {
       maxFilterLengthInRequest: this.option('maxFilterQueryLength'),
       selectionMode: selectionMode,
       selectAllText: this.option('selectAllText'),
-      onSelectAllValueChanged: function onSelectAllValueChanged(_ref) {
-        var value = _ref.value;
-        _this4._selectAllValueChangeAction({
+      onSelectAllValueChanged: _ref => {
+        let {
+          value
+        } = _ref;
+        this._selectAllValueChangeAction({
           value
         });
       },
@@ -553,18 +549,17 @@ var TagBox = _select_box.default.inherit({
       onFocusedItemChanged: null
     });
   },
-  _renderMultiSelect: function _renderMultiSelect() {
-    var _this5 = this;
-    var d = new _deferred.Deferred();
+  _renderMultiSelect: function () {
+    const d = new _deferred.Deferred();
     this._updateTagsContainer(this._$textEditorInputContainer);
     this._renderInputSize();
-    this._renderTags().done(function () {
-      _this5._popup && _this5._popup.refreshPosition();
+    this._renderTags().done(() => {
+      this._popup && this._popup.refreshPosition();
       d.resolve();
     }).fail(d.reject);
     return d.promise();
   },
-  _listItemClickHandler: function _listItemClickHandler(e) {
+  _listItemClickHandler: function (e) {
     !this.option('showSelectionControls') && this._clearTextValue();
     if (this.option('applyValueMode') === 'useButtons') {
       return;
@@ -572,21 +567,21 @@ var TagBox = _select_box.default.inherit({
     this.callBase(e);
     this._saveValueChangeEvent(undefined);
   },
-  _shouldClearFilter: function _shouldClearFilter() {
-    var shouldClearFilter = this.callBase();
-    var showSelectionControls = this.option('showSelectionControls');
+  _shouldClearFilter: function () {
+    const shouldClearFilter = this.callBase();
+    const showSelectionControls = this.option('showSelectionControls');
     return !showSelectionControls && shouldClearFilter;
   },
-  _renderInputSize: function _renderInputSize() {
-    var $input = this._input();
-    var value = $input.val();
-    var isEmptyInput = (0, _type.isString)(value) && value;
-    var cursorWidth = 5;
-    var width = '';
-    var size = '';
-    var canTypeText = this.option('searchEnabled') || this.option('acceptCustomValue');
+  _renderInputSize: function () {
+    const $input = this._input();
+    const value = $input.val();
+    const isEmptyInput = (0, _type.isString)(value) && value;
+    const cursorWidth = 5;
+    let width = '';
+    let size = '';
+    const canTypeText = this.option('searchEnabled') || this.option('acceptCustomValue');
     if (isEmptyInput && canTypeText) {
-      var $calculationElement = (0, _dom.createTextElementHiddenCopy)($input, value, {
+      const $calculationElement = (0, _dom.createTextElementHiddenCopy)($input, value, {
         includePaddings: true
       });
       $calculationElement.insertAfter($input);
@@ -598,21 +593,21 @@ var TagBox = _select_box.default.inherit({
     $input.css('width', width);
     $input.attr('size', size);
   },
-  _renderInputSubstitution: function _renderInputSubstitution() {
+  _renderInputSubstitution: function () {
     this.callBase();
     this._updateWidgetHeight();
   },
-  _getValue: function _getValue() {
+  _getValue: function () {
     return this.option('value') || [];
   },
-  _multiTagRequired: function _multiTagRequired() {
-    var values = this._getValue();
-    var maxDisplayedTags = this.option('maxDisplayedTags');
+  _multiTagRequired: function () {
+    const values = this._getValue();
+    const maxDisplayedTags = this.option('maxDisplayedTags');
     return (0, _type.isDefined)(maxDisplayedTags) && values.length > maxDisplayedTags;
   },
-  _renderMultiTag: function _renderMultiTag($input) {
-    var $tag = (0, _renderer.default)('<div>').addClass(TAGBOX_TAG_CLASS).addClass(TAGBOX_MULTI_TAG_CLASS);
-    var args = {
+  _renderMultiTag: function ($input) {
+    const $tag = (0, _renderer.default)('<div>').addClass(TAGBOX_TAG_CLASS).addClass(TAGBOX_MULTI_TAG_CLASS);
+    const args = {
       multiTagElement: (0, _element.getPublicElement)($tag),
       selectedItems: this.option('selectedItems')
     };
@@ -628,147 +623,143 @@ var TagBox = _select_box.default.inherit({
     });
     return $tag;
   },
-  _getFilter: function _getFilter(creator) {
-    var dataSourceFilter = this._dataController.filter();
-    var filterExpr = creator.getCombinedFilter(this.option('valueExpr'), dataSourceFilter);
-    var filterQueryLength = encodeURI(JSON.stringify(filterExpr)).length;
-    var maxFilterQueryLength = this.option('maxFilterQueryLength');
+  _getFilter: function (creator) {
+    const dataSourceFilter = this._dataController.filter();
+    const filterExpr = creator.getCombinedFilter(this.option('valueExpr'), dataSourceFilter);
+    const filterQueryLength = encodeURI(JSON.stringify(filterExpr)).length;
+    const maxFilterQueryLength = this.option('maxFilterQueryLength');
     if (filterQueryLength <= maxFilterQueryLength) {
       return filterExpr;
     }
     _ui.default.log('W1019', maxFilterQueryLength);
   },
-  _getFilteredItems: function _getFilteredItems(values) {
-    var _this$_loadFilteredIt,
-      _this$_list,
-      _this6 = this;
+  _getFilteredItems: function (values) {
+    var _this$_loadFilteredIt, _this$_list;
     (_this$_loadFilteredIt = this._loadFilteredItemsPromise) === null || _this$_loadFilteredIt === void 0 ? void 0 : _this$_loadFilteredIt.reject();
-    var creator = new _selection_filter.SelectionFilterCreator(values);
-    var listSelectedItems = (_this$_list = this._list) === null || _this$_list === void 0 ? void 0 : _this$_list.option('selectedItems');
-    var isListItemsLoaded = !!listSelectedItems && this._list._dataController.isLoaded();
-    var selectedItems = listSelectedItems || this.option('selectedItems');
-    var clientFilterFunction = creator.getLocalFilter(this._valueGetter);
-    var filteredItems = selectedItems.filter(clientFilterFunction);
-    var selectedItemsAlreadyLoaded = filteredItems.length === values.length;
-    var d = new _deferred.Deferred();
-    var dataController = this._dataController;
+    const creator = new _selection_filter.SelectionFilterCreator(values);
+    const listSelectedItems = (_this$_list = this._list) === null || _this$_list === void 0 ? void 0 : _this$_list.option('selectedItems');
+    const isListItemsLoaded = !!listSelectedItems && this._list._dataController.isLoaded();
+    const selectedItems = listSelectedItems || this.option('selectedItems');
+    const clientFilterFunction = creator.getLocalFilter(this._valueGetter);
+    const filteredItems = selectedItems.filter(clientFilterFunction);
+    const selectedItemsAlreadyLoaded = filteredItems.length === values.length;
+    const d = new _deferred.Deferred();
+    const dataController = this._dataController;
     if ((!this._isDataSourceChanged || isListItemsLoaded) && selectedItemsAlreadyLoaded) {
       return d.resolve(filteredItems).promise();
     } else {
-      var _dataController$loadO = dataController.loadOptions(),
-        customQueryParams = _dataController$loadO.customQueryParams,
-        expand = _dataController$loadO.expand,
-        select = _dataController$loadO.select;
-      var filter = this._getFilter(creator);
+      const {
+        customQueryParams,
+        expand,
+        select
+      } = dataController.loadOptions();
+      const filter = this._getFilter(creator);
       dataController.loadFromStore({
         filter,
         customQueryParams,
         expand,
         select
-      }).done(function (data, extra) {
-        _this6._isDataSourceChanged = false;
-        if (_this6._disposed) {
+      }).done((data, extra) => {
+        this._isDataSourceChanged = false;
+        if (this._disposed) {
           d.reject();
           return;
         }
-        var _normalizeLoadResult = (0, _utils2.normalizeLoadResult)(data, extra),
-          items = _normalizeLoadResult.data;
-        var mappedItems = dataController.applyMapFunction(items);
+        const {
+          data: items
+        } = (0, _utils2.normalizeLoadResult)(data, extra);
+        const mappedItems = dataController.applyMapFunction(items);
         d.resolve(mappedItems.filter(clientFilterFunction));
       }).fail(d.reject);
       this._loadFilteredItemsPromise = d;
       return d.promise();
     }
   },
-  _createTagsData: function _createTagsData(values, filteredItems) {
-    var _this7 = this;
-    var items = [];
-    var cache = {};
-    var isValueExprSpecified = this._valueGetterExpr() === 'this';
-    var filteredValues = {};
-    filteredItems.forEach(function (filteredItem) {
-      var filteredItemValue = isValueExprSpecified ? JSON.stringify(filteredItem) : _this7._valueGetter(filteredItem);
+  _createTagsData: function (values, filteredItems) {
+    const items = [];
+    const cache = {};
+    const isValueExprSpecified = this._valueGetterExpr() === 'this';
+    const filteredValues = {};
+    filteredItems.forEach(filteredItem => {
+      const filteredItemValue = isValueExprSpecified ? JSON.stringify(filteredItem) : this._valueGetter(filteredItem);
       filteredValues[filteredItemValue] = filteredItem;
     });
-    var loadItemPromises = [];
-    values.forEach(function (value, index) {
-      var currentItem = filteredValues[isValueExprSpecified ? JSON.stringify(value) : value];
+    const loadItemPromises = [];
+    values.forEach((value, index) => {
+      const currentItem = filteredValues[isValueExprSpecified ? JSON.stringify(value) : value];
       if (isValueExprSpecified && !(0, _type.isDefined)(currentItem)) {
-        loadItemPromises.push(_this7._loadItem(value, cache).always(function (item) {
-          var newItem = _this7._createTagData(items, item, value, index);
+        loadItemPromises.push(this._loadItem(value, cache).always(item => {
+          const newItem = this._createTagData(items, item, value, index);
           items.splice(index, 0, newItem);
         }));
       } else {
-        var newItem = _this7._createTagData(items, currentItem, value, index);
+        const newItem = this._createTagData(items, currentItem, value, index);
         items.splice(index, 0, newItem);
       }
     });
-    var d = new _deferred.Deferred();
+    const d = new _deferred.Deferred();
     _deferred.when.apply(this, loadItemPromises).always(function () {
       d.resolve(items);
     });
     return d.promise();
   },
-  _createTagData: function _createTagData(items, item, value, valueIndex) {
+  _createTagData: function (items, item, value, valueIndex) {
     if ((0, _type.isDefined)(item)) {
       this._selectedItems.push(item);
       return item;
     } else {
-      var selectedItem = this.option('selectedItem');
-      var customItem = this._valueGetter(selectedItem) === value ? selectedItem : value;
+      const selectedItem = this.option('selectedItem');
+      const customItem = this._valueGetter(selectedItem) === value ? selectedItem : value;
       return customItem;
     }
   },
-  _isGroupedData: function _isGroupedData() {
+  _isGroupedData: function () {
     return this.option('grouped') && !this._dataController.group();
   },
-  _getItemsByValues: function _getItemsByValues(values) {
-    var resultItems = [];
+  _getItemsByValues: function (values) {
+    const resultItems = [];
     values.forEach(function (value) {
-      var item = this._getItemFromPlain(value);
+      const item = this._getItemFromPlain(value);
       if ((0, _type.isDefined)(item)) {
         resultItems.push(item);
       }
     }.bind(this));
     return resultItems;
   },
-  _getFilteredGroupedItems: function _getFilteredGroupedItems(values) {
-    var _this8 = this;
-    var selectedItems = new _deferred.Deferred();
+  _getFilteredGroupedItems: function (values) {
+    const selectedItems = new _deferred.Deferred();
     if (this._filteredGroupedItemsLoadPromise) {
       this._dataController.cancel(this._filteredGroupedItemsLoadPromise.operationId);
     }
     if (!this._dataController.items().length) {
-      this._filteredGroupedItemsLoadPromise = this._dataController.load().done(function () {
-        selectedItems.resolve(_this8._getItemsByValues(values));
-      }).fail(function () {
+      this._filteredGroupedItemsLoadPromise = this._dataController.load().done(() => {
+        selectedItems.resolve(this._getItemsByValues(values));
+      }).fail(() => {
         selectedItems.resolve([]);
-      }).always(function () {
-        _this8._filteredGroupedItemsLoadPromise = undefined;
+      }).always(() => {
+        this._filteredGroupedItemsLoadPromise = undefined;
       });
     } else {
       selectedItems.resolve(this._getItemsByValues(values));
     }
     return selectedItems.promise();
   },
-  _loadTagsData: function _loadTagsData() {
-    var _this9 = this;
-    var values = this._getValue();
-    var tagData = new _deferred.Deferred();
+  _loadTagsData: function () {
+    const values = this._getValue();
+    const tagData = new _deferred.Deferred();
     this._selectedItems = [];
-    var filteredItemsPromise = this._isGroupedData() ? this._getFilteredGroupedItems(values) : this._getFilteredItems(values);
-    filteredItemsPromise.done(function (filteredItems) {
-      var items = _this9._createTagsData(values, filteredItems);
+    const filteredItemsPromise = this._isGroupedData() ? this._getFilteredGroupedItems(values) : this._getFilteredItems(values);
+    filteredItemsPromise.done(filteredItems => {
+      const items = this._createTagsData(values, filteredItems);
       items.always(function (data) {
         tagData.resolve(data);
       });
     }).fail(tagData.reject.bind(this));
     return tagData.promise();
   },
-  _renderTags: function _renderTags() {
-    var _this10 = this;
-    var d = new _deferred.Deferred();
-    var isPlainDataUsed = false;
+  _renderTags: function () {
+    const d = new _deferred.Deferred();
+    let isPlainDataUsed = false;
     if (this._shouldGetItemsFromPlain(this._valuesToUpdate)) {
       this._selectedItems = this._getItemsFromPlain(this._valuesToUpdate);
       if (this._selectedItems.length === this._valuesToUpdate.length) {
@@ -778,56 +769,55 @@ var TagBox = _select_box.default.inherit({
       }
     }
     if (!isPlainDataUsed) {
-      this._loadTagsData().done(function (items) {
-        if (_this10._disposed) {
+      this._loadTagsData().done(items => {
+        if (this._disposed) {
           d.reject();
           return;
         }
-        _this10._renderTagsImpl(items);
+        this._renderTagsImpl(items);
         d.resolve();
       }).fail(d.reject);
     }
     return d.promise();
   },
-  _renderTagsImpl: function _renderTagsImpl(items) {
+  _renderTagsImpl: function (items) {
     this._renderTagsCore(items);
     this._renderEmptyState();
     if (!this._preserveFocusedTag) {
       this._clearTagFocus();
     }
   },
-  _shouldGetItemsFromPlain: function _shouldGetItemsFromPlain(values) {
+  _shouldGetItemsFromPlain: function (values) {
     return values && this._dataController.isLoaded() && values.length <= this._getPlainItems().length;
   },
-  _getItemsFromPlain: function _getItemsFromPlain(values) {
-    var selectedItems = this._getSelectedItemsFromList(values);
-    var needFilterPlainItems = selectedItems.length === 0 && values.length > 0 || selectedItems.length < values.length;
+  _getItemsFromPlain: function (values) {
+    let selectedItems = this._getSelectedItemsFromList(values);
+    const needFilterPlainItems = selectedItems.length === 0 && values.length > 0 || selectedItems.length < values.length;
     if (needFilterPlainItems) {
-      var plainItems = this._getPlainItems();
+      const plainItems = this._getPlainItems();
       selectedItems = this._filterSelectedItems(plainItems, values);
     }
     return selectedItems;
   },
-  _getSelectedItemsFromList: function _getSelectedItemsFromList(values) {
+  _getSelectedItemsFromList: function (values) {
     var _this$_list2;
-    var listSelectedItems = (_this$_list2 = this._list) === null || _this$_list2 === void 0 ? void 0 : _this$_list2.option('selectedItems');
-    var selectedItems = [];
+    const listSelectedItems = (_this$_list2 = this._list) === null || _this$_list2 === void 0 ? void 0 : _this$_list2.option('selectedItems');
+    let selectedItems = [];
     if (values.length === (listSelectedItems === null || listSelectedItems === void 0 ? void 0 : listSelectedItems.length)) {
       selectedItems = this._filterSelectedItems(listSelectedItems, values);
     }
     return selectedItems;
   },
-  _filterSelectedItems: function _filterSelectedItems(plainItems, values) {
-    var _this11 = this;
-    var selectedItems = plainItems.filter(function (dataItem) {
-      var currentValue;
-      for (var i = 0; i < values.length; i++) {
+  _filterSelectedItems: function (plainItems, values) {
+    const selectedItems = plainItems.filter(dataItem => {
+      let currentValue;
+      for (let i = 0; i < values.length; i++) {
         currentValue = values[i];
         if ((0, _type.isObject)(currentValue)) {
-          if (_this11._isValueEquals(dataItem, currentValue)) {
+          if (this._isValueEquals(dataItem, currentValue)) {
             return true;
           }
-        } else if (_this11._isValueEquals(_this11._valueGetter(dataItem), currentValue)) {
+        } else if (this._isValueEquals(this._valueGetter(dataItem), currentValue)) {
           return true;
         }
       }
@@ -835,16 +825,15 @@ var TagBox = _select_box.default.inherit({
     }, this);
     return selectedItems;
   },
-  _integrateInput: function _integrateInput() {
+  _integrateInput: function () {
     this._isInputReady.resolve();
     this.callBase();
-    var tagsContainer = this.$element().find(".".concat(TEXTEDITOR_INPUT_CONTAINER_CLASS));
+    const tagsContainer = this.$element().find(".".concat(TEXTEDITOR_INPUT_CONTAINER_CLASS));
     this._updateTagsContainer(tagsContainer);
     this._renderTagRemoveAction();
   },
-  _renderTagsCore: function _renderTagsCore(items) {
-    var _this$_isInputReady,
-      _this12 = this;
+  _renderTagsCore: function (items) {
+    var _this$_isInputReady;
     (_this$_isInputReady = this._isInputReady) === null || _this$_isInputReady === void 0 ? void 0 : _this$_isInputReady.reject();
     this._isInputReady = new _deferred.Deferred();
     this._renderField();
@@ -853,35 +842,34 @@ var TagBox = _select_box.default.inherit({
     if (this._input().length > 0) {
       this._isInputReady.resolve();
     }
-    (0, _deferred.when)(this._isInputReady).done(function () {
-      _this12._renderTagsElements(items);
+    (0, _deferred.when)(this._isInputReady).done(() => {
+      this._renderTagsElements(items);
     });
   },
   _renderTagsElements(items) {
-    var _this13 = this;
-    var $multiTag = this._multiTagRequired() && this._renderMultiTag(this._input());
-    var showMultiTagOnly = this.option('showMultiTagOnly');
-    var maxDisplayedTags = this.option('maxDisplayedTags');
-    items.forEach(function (item, index) {
+    const $multiTag = this._multiTagRequired() && this._renderMultiTag(this._input());
+    const showMultiTagOnly = this.option('showMultiTagOnly');
+    const maxDisplayedTags = this.option('maxDisplayedTags');
+    items.forEach((item, index) => {
       if ($multiTag && showMultiTagOnly || $multiTag && !showMultiTagOnly && index - maxDisplayedTags >= -1) {
         return false;
       }
-      _this13._renderTag(item, $multiTag || _this13._input());
+      this._renderTag(item, $multiTag || this._input());
     });
     if (this._isFocused()) {
       this._scrollContainer('end');
     }
     this._refreshTagElements();
   },
-  _cleanTags: function _cleanTags() {
+  _cleanTags: function () {
     if (this._multiTagRequired()) {
       this._tagElements().remove();
     } else {
-      var $tags = this._tagElements();
-      var values = this._getValue();
+      const $tags = this._tagElements();
+      const values = this._getValue();
       (0, _iterator.each)($tags, function (_, tag) {
-        var $tag = (0, _renderer.default)(tag);
-        var tagData = $tag.data(TAGBOX_TAG_DATA_KEY);
+        const $tag = (0, _renderer.default)(tag);
+        const tagData = $tag.data(TAGBOX_TAG_DATA_KEY);
         if (!(values !== null && values !== void 0 && values.includes(tagData))) {
           $tag.remove();
         }
@@ -889,34 +877,34 @@ var TagBox = _select_box.default.inherit({
     }
     this._updateElementAria();
   },
-  _renderEmptyState: function _renderEmptyState() {
-    var isEmpty = !(this._getValue().length || this._selectedItems.length || this._searchValue());
+  _renderEmptyState: function () {
+    const isEmpty = !(this._getValue().length || this._selectedItems.length || this._searchValue());
     this._toggleEmptiness(isEmpty);
     this._renderDisplayText();
   },
-  _renderDisplayText: function _renderDisplayText() {
+  _renderDisplayText: function () {
     this._renderInputSize();
   },
-  _refreshTagElements: function _refreshTagElements() {
+  _refreshTagElements: function () {
     this._tagElementsCache = this.$element().find(".".concat(TAGBOX_TAG_CLASS));
   },
-  _tagElements: function _tagElements() {
+  _tagElements: function () {
     return this._tagElementsCache;
   },
-  _applyTagTemplate: function _applyTagTemplate(item, $tag) {
+  _applyTagTemplate: function (item, $tag) {
     this._tagTemplate.render({
       model: item,
       container: (0, _element.getPublicElement)($tag)
     });
   },
-  _renderTag: function _renderTag(item, $input) {
-    var value = this._valueGetter(item);
+  _renderTag: function (item, $input) {
+    const value = this._valueGetter(item);
     if (!(0, _type.isDefined)(value)) {
       return;
     }
-    var $tag = this._getTag(value);
-    var displayValue = this._displayGetter(item);
-    var itemModel = this._getItemModel(item, displayValue);
+    let $tag = this._getTag(value);
+    const displayValue = this._displayGetter(item);
+    const itemModel = this._getItemModel(item, displayValue);
     if ($tag) {
       if ((0, _type.isDefined)(displayValue)) {
         $tag.empty();
@@ -925,7 +913,7 @@ var TagBox = _select_box.default.inherit({
       $tag.removeClass(TAGBOX_CUSTOM_TAG_CLASS);
       this._updateElementAria($tag.attr('id'));
     } else {
-      var tagId = "dx-".concat(new _guid.default());
+      const tagId = "dx-".concat(new _guid.default());
       $tag = this._createTag(value, $input, tagId);
       if ((0, _type.isDefined)(item)) {
         this._applyTagTemplate(itemModel, $tag);
@@ -936,20 +924,20 @@ var TagBox = _select_box.default.inherit({
       this._updateElementAria(tagId);
     }
   },
-  _getItemModel: function _getItemModel(item, displayValue) {
+  _getItemModel: function (item, displayValue) {
     if ((0, _type.isObject)(item) && (0, _type.isDefined)(displayValue)) {
       return item;
     } else {
       return (0, _common.ensureDefined)(displayValue, '');
     }
   },
-  _getTag: function _getTag(value) {
-    var $tags = this._tagElements();
-    var tagsLength = $tags.length;
-    var result = false;
-    for (var i = 0; i < tagsLength; i++) {
-      var $tag = $tags[i];
-      var tagData = (0, _element_data.data)($tag, TAGBOX_TAG_DATA_KEY);
+  _getTag: function (value) {
+    const $tags = this._tagElements();
+    const tagsLength = $tags.length;
+    let result = false;
+    for (let i = 0; i < tagsLength; i++) {
+      const $tag = $tags[i];
+      const tagData = (0, _element_data.data)($tag, TAGBOX_TAG_DATA_KEY);
       if (value === tagData || (0, _common.equalByValue)(value, tagData)) {
         result = (0, _renderer.default)($tag);
         break;
@@ -957,24 +945,24 @@ var TagBox = _select_box.default.inherit({
     }
     return result;
   },
-  _createTag: function _createTag(value, $input, tagId) {
+  _createTag: function (value, $input, tagId) {
     return (0, _renderer.default)('<div>').attr('id', tagId).addClass(TAGBOX_TAG_CLASS).data(TAGBOX_TAG_DATA_KEY, value).insertBefore($input);
   },
-  _toggleEmptinessEventHandler: function _toggleEmptinessEventHandler() {
+  _toggleEmptinessEventHandler: function () {
     this._toggleEmptiness(!this._getValue().length && !this._searchValue().length);
   },
-  _customItemAddedHandler: function _customItemAddedHandler(e) {
+  _customItemAddedHandler: function (e) {
     this.callBase(e);
     this._clearTextValue();
   },
-  _removeTagHandler: function _removeTagHandler(args) {
-    var e = args.event;
+  _removeTagHandler: function (args) {
+    const e = args.event;
     e.stopPropagation();
     this._saveValueChangeEvent(e);
-    var $tag = (0, _renderer.default)(e.target).closest(".".concat(TAGBOX_TAG_CLASS));
+    const $tag = (0, _renderer.default)(e.target).closest(".".concat(TAGBOX_TAG_CLASS));
     this._removeTagElement($tag);
   },
-  _removeTagElement: function _removeTagElement($tag) {
+  _removeTagElement: function ($tag) {
     if ($tag.hasClass(TAGBOX_MULTI_TAG_CLASS)) {
       if (!this.option('showMultiTagOnly')) {
         this.option('value', this._getValue().slice(0, this.option('maxDisplayedTags')));
@@ -983,71 +971,70 @@ var TagBox = _select_box.default.inherit({
       }
       return;
     }
-    var itemValue = $tag.data(TAGBOX_TAG_DATA_KEY);
-    var itemId = $tag.attr('id');
+    const itemValue = $tag.data(TAGBOX_TAG_DATA_KEY);
+    const itemId = $tag.attr('id');
     this._removeTagWithUpdate(itemValue);
     this._updateElementAria(itemId, true);
     this._refreshTagElements();
   },
   _updateField: _common.noop,
-  _removeTagWithUpdate: function _removeTagWithUpdate(itemValue) {
-    var value = this._getValue().slice();
+  _removeTagWithUpdate: function (itemValue) {
+    const value = this._getValue().slice();
     this._removeTag(value, itemValue);
     this.option('value', value);
     if (value.length === 0) {
       this._clearTagFocus();
     }
   },
-  _getCurrentValue: function _getCurrentValue() {
+  _getCurrentValue: function () {
     return this._lastValue();
   },
-  _selectionChangeHandler: function _selectionChangeHandler(e) {
-    var _this14 = this;
+  _selectionChangeHandler: function (e) {
     if (this.option('applyValueMode') === 'useButtons') {
       return;
     }
-    var value = this._getValue().slice();
-    (0, _iterator.each)(e.removedItems || [], function (_, removedItem) {
-      _this14._removeTag(value, _this14._valueGetter(removedItem));
+    const value = this._getValue().slice();
+    (0, _iterator.each)(e.removedItems || [], (_, removedItem) => {
+      this._removeTag(value, this._valueGetter(removedItem));
     });
-    (0, _iterator.each)(e.addedItems || [], function (_, addedItem) {
-      _this14._addTag(value, _this14._valueGetter(addedItem));
+    (0, _iterator.each)(e.addedItems || [], (_, addedItem) => {
+      this._addTag(value, this._valueGetter(addedItem));
     });
     this._updateWidgetHeight();
     if (!(0, _common.equalByValue)(this._list.option('selectedItemKeys'), this.option('value'))) {
-      var listSelectionChangeEvent = this._list._getSelectionChangeEvent();
+      const listSelectionChangeEvent = this._list._getSelectionChangeEvent();
       listSelectionChangeEvent && this._saveValueChangeEvent(listSelectionChangeEvent);
       this.option('value', value);
     }
     this._list._saveSelectionChangeEvent(undefined);
   },
-  _removeTag: function _removeTag(value, item) {
-    var index = this._valueIndex(item, value);
+  _removeTag: function (value, item) {
+    const index = this._valueIndex(item, value);
     if (index >= 0) {
       value.splice(index, 1);
     }
   },
-  _addTag: function _addTag(value, item) {
-    var index = this._valueIndex(item);
+  _addTag: function (value, item) {
+    const index = this._valueIndex(item);
     if (index < 0) {
       value.push(item);
     }
   },
-  _fieldRenderData: function _fieldRenderData() {
+  _fieldRenderData: function () {
     return this._selectedItems.slice();
   },
-  _completeSelection: function _completeSelection(value) {
+  _completeSelection: function (value) {
     if (!this.option('showSelectionControls')) {
       this._setValue(value);
     }
   },
-  _setValue: function _setValue(value) {
+  _setValue: function (value) {
     if (value === null) {
       return;
     }
-    var useButtons = this.option('applyValueMode') === 'useButtons';
-    var valueIndex = this._valueIndex(value);
-    var values = (useButtons ? this._list.option('selectedItemKeys') : this._getValue()).slice();
+    const useButtons = this.option('applyValueMode') === 'useButtons';
+    const valueIndex = this._valueIndex(value);
+    const values = (useButtons ? this._list.option('selectedItemKeys') : this._getValue()).slice();
     if (valueIndex >= 0) {
       values.splice(valueIndex, 1);
     } else {
@@ -1059,12 +1046,11 @@ var TagBox = _select_box.default.inherit({
       this.option('value', values);
     }
   },
-  _isSelectedValue: function _isSelectedValue(value, cache) {
+  _isSelectedValue: function (value, cache) {
     return this._valueIndex(value, null, cache) > -1;
   },
-  _valueIndex: function _valueIndex(value, values, cache) {
-    var _this15 = this;
-    var result = -1;
+  _valueIndex: function (value, values, cache) {
+    let result = -1;
     if (cache && typeof value !== 'object') {
       if (!cache.indexByValues) {
         cache.indexByValues = {};
@@ -1078,23 +1064,23 @@ var TagBox = _select_box.default.inherit({
       }
     }
     values = values || this._getValue();
-    (0, _iterator.each)(values, function (index, selectedValue) {
-      if (_this15._isValueEquals(value, selectedValue)) {
+    (0, _iterator.each)(values, (index, selectedValue) => {
+      if (this._isValueEquals(value, selectedValue)) {
         result = index;
         return false;
       }
     });
     return result;
   },
-  _lastValue: function _lastValue() {
-    var values = this._getValue();
-    var lastValue = values[values.length - 1];
+  _lastValue: function () {
+    const values = this._getValue();
+    const lastValue = values[values.length - 1];
     return lastValue !== null && lastValue !== void 0 ? lastValue : null;
   },
-  _shouldRenderSearchEvent: function _shouldRenderSearchEvent() {
+  _shouldRenderSearchEvent: function () {
     return this.option('searchEnabled') || this.option('acceptCustomValue');
   },
-  _searchHandler: function _searchHandler(e) {
+  _searchHandler: function (e) {
     if (this.option('searchEnabled') && !!e && !this._isTagRemoved) {
       this.callBase(arguments);
       this._setListDataSourceFilter();
@@ -1102,33 +1088,33 @@ var TagBox = _select_box.default.inherit({
     this._updateWidgetHeight();
     delete this._isTagRemoved;
   },
-  _updateWidgetHeight: function _updateWidgetHeight() {
-    var element = this.$element();
-    var originalHeight = (0, _size.getHeight)(element);
+  _updateWidgetHeight: function () {
+    const element = this.$element();
+    const originalHeight = (0, _size.getHeight)(element);
     this._renderInputSize();
-    var currentHeight = (0, _size.getHeight)(element);
+    const currentHeight = (0, _size.getHeight)(element);
     if (this._popup && this.option('opened') && this._isEditable() && currentHeight !== originalHeight) {
       this._popup.repaint();
     }
   },
-  _refreshSelected: function _refreshSelected() {
+  _refreshSelected: function () {
     var _this$_list3;
     ((_this$_list3 = this._list) === null || _this$_list3 === void 0 ? void 0 : _this$_list3.getDataSource()) && this._list.option('selectedItems', this._selectedItems);
   },
-  _resetListDataSourceFilter: function _resetListDataSourceFilter() {
-    var dataController = this._dataController;
+  _resetListDataSourceFilter: function () {
+    const dataController = this._dataController;
     delete this._userFilter;
     dataController.filter(null);
     dataController.reload();
   },
-  _setListDataSourceFilter: function _setListDataSourceFilter() {
+  _setListDataSourceFilter: function () {
     if (!this.option('hideSelectedItems') || !this._list) {
       return;
     }
-    var dataController = this._dataController;
-    var valueGetterExpr = this._valueGetterExpr();
+    const dataController = this._dataController;
+    const valueGetterExpr = this._valueGetterExpr();
     if ((0, _type.isString)(valueGetterExpr) && valueGetterExpr !== 'this') {
-      var filter = this._dataSourceFilterExpr();
+      const filter = this._dataSourceFilterExpr();
       if (this._userFilter === undefined) {
         this._userFilter = dataController.filter() || null;
       }
@@ -1139,84 +1125,76 @@ var TagBox = _select_box.default.inherit({
     }
     dataController.load();
   },
-  _dataSourceFilterExpr: function _dataSourceFilterExpr() {
-    var _this16 = this;
-    var filter = [];
-    this._getValue().forEach(function (value) {
-      return filter.push(['!', [_this16._valueGetterExpr(), value]]);
-    });
+  _dataSourceFilterExpr: function () {
+    const filter = [];
+    this._getValue().forEach(value => filter.push(['!', [this._valueGetterExpr(), value]]));
     return filter;
   },
-  _dataSourceFilterFunction: function _dataSourceFilterFunction(itemData) {
-    var _this17 = this;
-    var itemValue = this._valueGetter(itemData);
-    var result = true;
-    (0, _iterator.each)(this._getValue(), function (index, value) {
-      if (_this17._isValueEquals(value, itemValue)) {
+  _dataSourceFilterFunction: function (itemData) {
+    const itemValue = this._valueGetter(itemData);
+    let result = true;
+    (0, _iterator.each)(this._getValue(), (index, value) => {
+      if (this._isValueEquals(value, itemValue)) {
         result = false;
         return false;
       }
     });
     return result;
   },
-  _dataSourceChangedHandler: function _dataSourceChangedHandler() {
+  _dataSourceChangedHandler: function () {
     this._isDataSourceChanged = true;
     this.callBase.apply(this, arguments);
   },
-  _applyButtonHandler: function _applyButtonHandler(args) {
+  _applyButtonHandler: function (args) {
     this._saveValueChangeEvent(args.event);
     this.option('value', this._getSortedListValues());
     this._clearTextValue();
     this.callBase();
     this._cancelSearchIfNeed();
   },
-  _getSortedListValues: function _getSortedListValues() {
-    var listValues = this._getListValues();
-    var currentValue = this.option('value') || [];
-    var existedItems = listValues.length ? (0, _array.getIntersection)(currentValue, listValues) : [];
-    var newItems = existedItems.length ? (0, _array.removeDuplicates)(listValues, currentValue) : listValues;
+  _getSortedListValues: function () {
+    const listValues = this._getListValues();
+    const currentValue = this.option('value') || [];
+    const existedItems = listValues.length ? (0, _array.getIntersection)(currentValue, listValues) : [];
+    const newItems = existedItems.length ? (0, _array.removeDuplicates)(listValues, currentValue) : listValues;
     return existedItems.concat(newItems);
   },
-  _getListValues: function _getListValues() {
-    var _this18 = this;
+  _getListValues: function () {
     if (!this._list) {
       return [];
     }
-    return this._getPlainItems(this._list.option('selectedItems')).map(function (item) {
-      return _this18._valueGetter(item);
-    });
+    return this._getPlainItems(this._list.option('selectedItems')).map(item => this._valueGetter(item));
   },
-  _setListDataSource: function _setListDataSource() {
-    var currentValue = this._getValue();
+  _setListDataSource: function () {
+    const currentValue = this._getValue();
     this.callBase();
     if (currentValue !== this.option('value')) {
       this.option('value', currentValue);
     }
     this._refreshSelected();
   },
-  _renderOpenedState: function _renderOpenedState() {
+  _renderOpenedState: function () {
     this.callBase();
     if (this.option('applyValueMode') === 'useButtons' && !this.option('opened')) {
       this._refreshSelected();
     }
   },
-  clear: function clear() {
+  clear: function () {
     this._restoreInputText();
-    var defaultValue = this._getDefaultOptions().value;
-    var currentValue = this.option('value');
+    const defaultValue = this._getDefaultOptions().value;
+    const currentValue = this.option('value');
     if (defaultValue && defaultValue.length === 0 && currentValue && defaultValue.length === currentValue.length) {
       return;
     }
     this.callBase();
   },
-  _clean: function _clean() {
+  _clean: function () {
     this.callBase();
     delete this._defaultTagTemplate;
     delete this._valuesToUpdate;
     delete this._tagTemplate;
   },
   _getSelectedItemsDifference(newItems, previousItems) {
-    var _this19 = this;
     if (!newItems.length) {
       return {
         addedItems: [],
@@ -1229,14 +1207,14 @@ var TagBox = _select_box.default.inherit({
         removedItems: []
       };
     }
-    var previousItemsValuesMap = previousItems.reduce(function (map, item) {
-      var value = _this19._valueGetter(item);
+    const previousItemsValuesMap = previousItems.reduce((map, item) => {
+      const value = this._valueGetter(item);
       map[value] = item;
       return map;
     }, {});
-    var addedItems = [];
-    newItems.forEach(function (item) {
-      var value = _this19._valueGetter(item);
+    const addedItems = [];
+    newItems.forEach(item => {
+      const value = this._valueGetter(item);
       if (!previousItemsValuesMap[value]) {
         addedItems.push(item);
       }
@@ -1247,10 +1225,12 @@ var TagBox = _select_box.default.inherit({
       removedItems: Object.values(previousItemsValuesMap)
     };
   },
-  _optionChanged: function _optionChanged(args) {
-    var name = args.name,
-      value = args.value,
-      previousValue = args.previousValue;
+  _optionChanged: function (args) {
+    const {
+      name,
+      value,
+      previousValue
+    } = args;
     switch (name) {
       case 'onSelectAllValueChanged':
         this._initSelectAllValueChangedAction();
@@ -1314,10 +1294,10 @@ var TagBox = _select_box.default.inherit({
         this.callBase(args);
     }
   },
-  _getActualSearchValue: function _getActualSearchValue() {
+  _getActualSearchValue: function () {
     return this.callBase() || this._searchValue();
   },
-  _popupHidingHandler: function _popupHidingHandler() {
+  _popupHidingHandler: function () {
     this.callBase();
     this._clearFilter();
   }

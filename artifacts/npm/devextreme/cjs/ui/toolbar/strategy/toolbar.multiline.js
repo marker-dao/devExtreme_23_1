@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/toolbar/strategy/toolbar.multiline.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,8 +10,8 @@
 
 exports.MultiLineStrategy = void 0;
 var _size = require("../../../core/utils/size");
-var TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';
-var MultiLineStrategy = /*#__PURE__*/function () {
+const TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';
+let MultiLineStrategy = /*#__PURE__*/function () {
   function MultiLineStrategy(toolbar) {
     this._toolbar = toolbar;
   }
@@ -29,12 +29,12 @@ var MultiLineStrategy = /*#__PURE__*/function () {
     return this._toolbar._getSummaryItemsSize('width', this._toolbar.itemElements(), true);
   };
   _proto._arrangeItems = function _arrangeItems() {
-    var $label = this._toolbar._$toolbarItemsContainer.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0);
+    const $label = this._toolbar._$toolbarItemsContainer.find(".".concat(TOOLBAR_LABEL_CLASS)).eq(0);
     if (!$label.length) {
       return;
     }
-    var elementWidth = (0, _size.getWidth)(this._toolbar.$element());
-    var labelPaddings = (0, _size.getOuterWidth)($label) - (0, _size.getWidth)($label);
+    const elementWidth = (0, _size.getWidth)(this._toolbar.$element());
+    const labelPaddings = (0, _size.getOuterWidth)($label) - (0, _size.getWidth)($label);
     $label.css('maxWidth', elementWidth - labelPaddings);
   };
   _proto._hideOverflowItems = function _hideOverflowItems() {};

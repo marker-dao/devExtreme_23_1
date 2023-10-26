@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/pointer.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,7 +17,7 @@ var _touch = _interopRequireDefault(require("./pointer/touch"));
 var _mouse = _interopRequireDefault(require("./pointer/mouse"));
 var _mouse_and_touch = _interopRequireDefault(require("./pointer/mouse_and_touch"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 /**
   * @name UI Events.dxpointerdown
@@ -75,9 +75,11 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
   * @type_function_param1_field1 pointerType:string
   * @module events/pointer
 */
-var getStrategy = function getStrategy(support, device) {
-  var tablet = device.tablet,
-    phone = device.phone;
+const getStrategy = (support, device) => {
+  const {
+    tablet,
+    phone
+  } = device;
   if (support.touch && !(tablet || phone)) {
     return _mouse_and_touch.default;
   }
@@ -86,11 +88,11 @@ var getStrategy = function getStrategy(support, device) {
   }
   return _mouse.default;
 };
-var EventStrategy = getStrategy(support, _devices.default.real());
-(0, _iterator.each)(EventStrategy.map, function (pointerEvent, originalEvents) {
+const EventStrategy = getStrategy(support, _devices.default.real());
+(0, _iterator.each)(EventStrategy.map, (pointerEvent, originalEvents) => {
   (0, _event_registrator.default)(pointerEvent, new EventStrategy(pointerEvent, originalEvents));
 });
-var pointer = {
+const pointer = {
   down: 'dxpointerdown',
   up: 'dxpointerup',
   move: 'dxpointermove',

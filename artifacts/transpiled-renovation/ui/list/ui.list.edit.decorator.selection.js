@@ -11,30 +11,30 @@ var _index = require("../../events/utils/index");
 var _uiListEdit = require("./ui.list.edit.decorator_registry");
 var _uiListEdit2 = _interopRequireDefault(require("./ui.list.edit.decorator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SELECT_DECORATOR_ENABLED_CLASS = 'dx-list-select-decorator-enabled';
-var SELECT_DECORATOR_SELECT_ALL_CLASS = 'dx-list-select-all';
-var SELECT_DECORATOR_SELECT_ALL_CHECKBOX_CLASS = 'dx-list-select-all-checkbox';
-var SELECT_DECORATOR_SELECT_ALL_LABEL_CLASS = 'dx-list-select-all-label';
-var SELECT_CHECKBOX_CONTAINER_CLASS = 'dx-list-select-checkbox-container';
-var SELECT_CHECKBOX_CLASS = 'dx-list-select-checkbox';
-var SELECT_RADIO_BUTTON_CONTAINER_CLASS = 'dx-list-select-radiobutton-container';
-var SELECT_RADIO_BUTTON_CLASS = 'dx-list-select-radiobutton';
-var FOCUSED_STATE_CLASS = 'dx-state-focused';
-var CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorator');
+const SELECT_DECORATOR_ENABLED_CLASS = 'dx-list-select-decorator-enabled';
+const SELECT_DECORATOR_SELECT_ALL_CLASS = 'dx-list-select-all';
+const SELECT_DECORATOR_SELECT_ALL_CHECKBOX_CLASS = 'dx-list-select-all-checkbox';
+const SELECT_DECORATOR_SELECT_ALL_LABEL_CLASS = 'dx-list-select-all-label';
+const SELECT_CHECKBOX_CONTAINER_CLASS = 'dx-list-select-checkbox-container';
+const SELECT_CHECKBOX_CLASS = 'dx-list-select-checkbox';
+const SELECT_RADIO_BUTTON_CONTAINER_CLASS = 'dx-list-select-radiobutton-container';
+const SELECT_RADIO_BUTTON_CLASS = 'dx-list-select-radiobutton';
+const FOCUSED_STATE_CLASS = 'dx-state-focused';
+const CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorator');
 (0, _uiListEdit.register)('selection', 'default', _uiListEdit2.default.inherit({
-  _init: function _init() {
+  _init: function () {
     this.callBase.apply(this, arguments);
-    var selectionMode = this._list.option('selectionMode');
+    const selectionMode = this._list.option('selectionMode');
     this._singleStrategy = selectionMode === 'single';
     this._containerClass = this._singleStrategy ? SELECT_RADIO_BUTTON_CONTAINER_CLASS : SELECT_CHECKBOX_CONTAINER_CLASS;
     this._controlClass = this._singleStrategy ? SELECT_RADIO_BUTTON_CLASS : SELECT_CHECKBOX_CLASS;
     this._controlWidget = this._singleStrategy ? _radio_button.default : _check_box.default;
     this._list.$element().addClass(SELECT_DECORATOR_ENABLED_CLASS);
   },
-  beforeBag: function beforeBag(config) {
-    var $itemElement = config.$itemElement;
-    var $container = config.$container.addClass(this._containerClass);
-    var $control = (0, _renderer.default)('<div>').addClass(this._controlClass).appendTo($container);
+  beforeBag: function (config) {
+    const $itemElement = config.$itemElement;
+    const $container = config.$container.addClass(this._containerClass);
+    const $control = (0, _renderer.default)('<div>').addClass(this._controlClass).appendTo($container);
     new this._controlWidget($control, (0, _extend.extend)(this._commonOptions(), {
       value: this._isSelected($itemElement),
       elementAttr: {
@@ -49,21 +49,21 @@ var CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorato
       }.bind(this)
     }));
   },
-  modifyElement: function modifyElement(config) {
+  modifyElement: function (config) {
     this.callBase.apply(this, arguments);
-    var $itemElement = config.$itemElement;
-    var control = this._controlWidget.getInstance($itemElement.find('.' + this._controlClass));
+    const $itemElement = config.$itemElement;
+    const control = this._controlWidget.getInstance($itemElement.find('.' + this._controlClass));
     _events_engine.default.on($itemElement, 'stateChanged', function (e, state) {
       control.option('value', state);
     }.bind(this));
   },
-  _updateSelectAllState: function _updateSelectAllState() {
+  _updateSelectAllState: function () {
     if (!this._$selectAll) {
       return;
     }
     this._selectAllCheckBox.option('value', this._list.isSelectAll());
   },
-  afterRender: function afterRender() {
+  afterRender: function () {
     if (this._list.option('selectionMode') !== 'all') {
       return;
     }
@@ -73,13 +73,13 @@ var CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorato
       this._updateSelectAllState();
     }
   },
-  handleKeyboardEvents: function handleKeyboardEvents(currentFocusedIndex, moveFocusUp) {
-    var moveFocusDown = !moveFocusUp;
-    var list = this._list;
-    var $selectAll = this._$selectAll;
-    var lastItemIndex = list._getLastItemIndex();
-    var isFocusOutOfList = moveFocusUp && currentFocusedIndex === 0 || moveFocusDown && currentFocusedIndex === lastItemIndex;
-    var hasSelectAllItem = !!$selectAll;
+  handleKeyboardEvents: function (currentFocusedIndex, moveFocusUp) {
+    const moveFocusDown = !moveFocusUp;
+    const list = this._list;
+    const $selectAll = this._$selectAll;
+    const lastItemIndex = list._getLastItemIndex();
+    const isFocusOutOfList = moveFocusUp && currentFocusedIndex === 0 || moveFocusDown && currentFocusedIndex === lastItemIndex;
+    const hasSelectAllItem = !!$selectAll;
     if (hasSelectAllItem && isFocusOutOfList) {
       list.option('focusedElement', $selectAll);
       list.scrollToItem(list.option('focusedElement'));
@@ -87,7 +87,7 @@ var CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorato
     }
     return false;
   },
-  handleEnterPressing: function handleEnterPressing(e) {
+  handleEnterPressing: function (e) {
     if (this._$selectAll && this._$selectAll.hasClass(FOCUSED_STATE_CLASS)) {
       e.target = this._$selectAll.get(0);
       this._list._saveSelectionChangeEvent(e);
@@ -95,10 +95,10 @@ var CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorato
       return true;
     }
   },
-  _renderSelectAll: function _renderSelectAll() {
-    var $selectAll = this._$selectAll = (0, _renderer.default)('<div>').addClass(SELECT_DECORATOR_SELECT_ALL_CLASS);
-    var list = this._list;
-    var downArrowHandler = list._supportedKeys().downArrow.bind(list);
+  _renderSelectAll: function () {
+    const $selectAll = this._$selectAll = (0, _renderer.default)('<div>').addClass(SELECT_DECORATOR_SELECT_ALL_CLASS);
+    const list = this._list;
+    const downArrowHandler = list._supportedKeys().downArrow.bind(list);
     this._selectAllCheckBox = list._createComponent((0, _renderer.default)('<div>').addClass(SELECT_DECORATOR_SELECT_ALL_CHECKBOX_CLASS).appendTo($selectAll), _check_box.default, {
       elementAttr: {
         'aria-label': 'Select All'
@@ -112,14 +112,14 @@ var CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorato
     this._updateSelectAllState();
     this._attachSelectAllHandler();
   },
-  _attachSelectAllHandler: function _attachSelectAllHandler() {
+  _attachSelectAllHandler: function () {
     this._selectAllCheckBox.option('onValueChanged', this._selectAllHandler.bind(this));
     _events_engine.default.off(this._$selectAll, CLICK_EVENT_NAME);
     _events_engine.default.on(this._$selectAll, CLICK_EVENT_NAME, this._selectAllClickHandler.bind(this));
   },
-  _selectAllHandler: function _selectAllHandler(e) {
+  _selectAllHandler: function (e) {
     e.event && e.event.stopPropagation();
-    var isSelectedAll = this._selectAllCheckBox.option('value');
+    const isSelectedAll = this._selectAllCheckBox.option('value');
     e.event && this._list._saveSelectionChangeEvent(e.event);
     if (isSelectedAll === true) {
       this._selectAllItems();
@@ -130,43 +130,43 @@ var CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorato
       value: isSelectedAll
     });
   },
-  _checkSelectAllCapability: function _checkSelectAllCapability() {
-    var list = this._list;
-    var dataController = list._dataController;
+  _checkSelectAllCapability: function () {
+    const list = this._list;
+    const dataController = list._dataController;
     if (list.option('selectAllMode') === 'allPages' && list.option('grouped') && !dataController.group()) {
       _ui.default.log('W1010');
       return false;
     }
     return true;
   },
-  _selectAllItems: function _selectAllItems() {
+  _selectAllItems: function () {
     if (!this._checkSelectAllCapability()) return;
     this._list._selection.selectAll(this._list.option('selectAllMode') === 'page');
   },
-  _unselectAllItems: function _unselectAllItems() {
+  _unselectAllItems: function () {
     if (!this._checkSelectAllCapability()) return;
     this._list._selection.deselectAll(this._list.option('selectAllMode') === 'page');
   },
-  _selectAllClickHandler: function _selectAllClickHandler(e) {
+  _selectAllClickHandler: function (e) {
     this._list._saveSelectionChangeEvent(e);
     this._selectAllCheckBox.option('value', !this._selectAllCheckBox.option('value'));
   },
-  _isSelected: function _isSelected($itemElement) {
+  _isSelected: function ($itemElement) {
     return this._list.isItemSelected($itemElement);
   },
-  _processCheckedState: function _processCheckedState($itemElement, checked) {
+  _processCheckedState: function ($itemElement, checked) {
     if (checked) {
       this._list.selectItem($itemElement);
     } else {
       this._list.unselectItem($itemElement);
     }
   },
-  dispose: function dispose() {
+  dispose: function () {
     this._disposeSelectAll();
     this._list.$element().removeClass(SELECT_DECORATOR_ENABLED_CLASS);
     this.callBase.apply(this, arguments);
   },
-  _disposeSelectAll: function _disposeSelectAll() {
+  _disposeSelectAll: function () {
     if (this._$selectAll) {
       this._$selectAll.remove();
       this._$selectAll = null;

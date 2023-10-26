@@ -11,7 +11,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var Bullet = /*#__PURE__*/function (_BaseComponent) {
+let Bullet = /*#__PURE__*/function (_BaseComponent) {
   _inheritsLoose(Bullet, _BaseComponent);
   function Bullet() {
     return _BaseComponent.apply(this, arguments) || this;
@@ -25,7 +25,7 @@ var Bullet = /*#__PURE__*/function (_BaseComponent) {
   };
   _createClass(Bullet, [{
     key: "_propsInfo",
-    get: function get() {
+    get: function () {
       return {
         twoWay: [['canvas', 'defaultCanvas', 'canvasChange']],
         allowNull: [],
@@ -36,7 +36,7 @@ var Bullet = /*#__PURE__*/function (_BaseComponent) {
     }
   }, {
     key: "_viewComponent",
-    get: function get() {
+    get: function () {
       return _bullet.Bullet;
     }
   }]);

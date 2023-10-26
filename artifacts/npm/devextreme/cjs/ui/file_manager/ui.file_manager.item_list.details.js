@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.item_list.details.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,14 +22,14 @@ var _file_items_controller = require("./file_items_controller");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var FILE_MANAGER_DETAILS_ITEM_LIST_CLASS = 'dx-filemanager-details';
-var FILE_MANAGER_DETAILS_ITEM_THUMBNAIL_CLASS = 'dx-filemanager-details-item-thumbnail';
-var FILE_MANAGER_DETAILS_ITEM_NAME_CLASS = 'dx-filemanager-details-item-name';
-var FILE_MANAGER_DETAILS_ITEM_NAME_WRAPPER_CLASS = 'dx-filemanager-details-item-name-wrapper';
-var FILE_MANAGER_DETAILS_ITEM_IS_DIRECTORY_CLASS = 'dx-filemanager-details-item-is-directory';
-var FILE_MANAGER_PARENT_DIRECTORY_ITEM = 'dx-filemanager-parent-directory-item';
-var DATA_GRID_DATA_ROW_CLASS = 'dx-data-row';
-var DEFAULT_COLUMN_CONFIGS = {
+const FILE_MANAGER_DETAILS_ITEM_LIST_CLASS = 'dx-filemanager-details';
+const FILE_MANAGER_DETAILS_ITEM_THUMBNAIL_CLASS = 'dx-filemanager-details-item-thumbnail';
+const FILE_MANAGER_DETAILS_ITEM_NAME_CLASS = 'dx-filemanager-details-item-name';
+const FILE_MANAGER_DETAILS_ITEM_NAME_WRAPPER_CLASS = 'dx-filemanager-details-item-name-wrapper';
+const FILE_MANAGER_DETAILS_ITEM_IS_DIRECTORY_CLASS = 'dx-filemanager-details-item-is-directory';
+const FILE_MANAGER_PARENT_DIRECTORY_ITEM = 'dx-filemanager-parent-directory-item';
+const DATA_GRID_DATA_ROW_CLASS = 'dx-data-row';
+const DEFAULT_COLUMN_CONFIGS = {
   thumbnail: {
     caption: '',
     calculateSortValue: 'isDirectory',
@@ -58,14 +58,13 @@ var DEFAULT_COLUMN_CONFIGS = {
     sortOrder: 'asc'
   }
 };
-var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
+let FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
   _inheritsLoose(FileManagerDetailsItemList, _FileManagerItemListB);
   function FileManagerDetailsItemList() {
     return _FileManagerItemListB.apply(this, arguments) || this;
   }
   var _proto = FileManagerDetailsItemList.prototype;
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     this._itemCount = 0;
     this._focusedItem = null;
     this._hasParentDirectoryItem = false;
@@ -74,14 +73,12 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     this._selectAllCheckBoxUpdating = false;
     this.$element().addClass(FILE_MANAGER_DETAILS_ITEM_LIST_CLASS);
     this._createFilesView();
-    this._contextMenu.option('onContextMenuHidden', function () {
-      return _this._onContextMenuHidden();
-    });
+    this._contextMenu.option('onContextMenuHidden', () => this._onContextMenuHidden());
     _FileManagerItemListB.prototype._initMarkup.call(this);
   };
   _proto._createFilesView = function _createFilesView() {
-    var $filesView = (0, _renderer.default)('<div>').appendTo(this.$element());
-    var selectionMode = this._isMultipleSelectionMode() ? 'multiple' : 'none';
+    const $filesView = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const selectionMode = this._isMultipleSelectionMode() ? 'multiple' : 'none';
     this._filesView = this._createComponent($filesView, _ui.default, {
       dataSource: this._createDataSource(),
       hoverStateEnabled: true,
@@ -117,35 +114,32 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     });
   };
   _proto._createColumns = function _createColumns() {
-    var _this2 = this;
-    var columns = this.option('detailColumns');
+    let columns = this.option('detailColumns');
     columns = columns.slice(0);
-    columns = columns.map(function (column) {
-      var extendedItem = column;
+    columns = columns.map(column => {
+      let extendedItem = column;
       if ((0, _type.isString)(column)) {
         extendedItem = {
           dataField: column
         };
       }
-      return _this2._getPreparedColumn(extendedItem);
+      return this._getPreparedColumn(extendedItem);
     });
-    var customizeDetailColumns = this.option('customizeDetailColumns');
+    const customizeDetailColumns = this.option('customizeDetailColumns');
     if ((0, _type.isFunction)(customizeDetailColumns)) {
       columns = customizeDetailColumns(columns);
     }
     columns.push(this._getPreparedColumn({
       dataField: 'isParentFolder'
     }));
-    columns.forEach(function (column) {
-      return _this2._updateColumnDataField(column);
-    });
+    columns.forEach(column => this._updateColumnDataField(column));
     return columns;
   };
   _proto._getPreparedColumn = function _getPreparedColumn(columnOptions) {
-    var result = {};
-    var resultCssClass = '';
+    const result = {};
+    let resultCssClass = '';
     if (this._isDefaultColumn(columnOptions.dataField)) {
-      var defaultConfig = (0, _extend.extend)(true, {}, DEFAULT_COLUMN_CONFIGS[columnOptions.dataField]);
+      const defaultConfig = (0, _extend.extend)(true, {}, DEFAULT_COLUMN_CONFIGS[columnOptions.dataField]);
       resultCssClass = defaultConfig.cssClass || '';
       switch (columnOptions.dataField) {
         case 'thumbnail':
@@ -159,9 +153,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
         case 'size':
           defaultConfig.calculateCellValue = this._calculateSizeColumnCellValue.bind(this);
           defaultConfig.caption = _message.default.format('dxFileManager-listDetailsColumnCaptionFileSize');
-          defaultConfig.calculateSortValue = function (rowData) {
-            return rowData.fileItem.isDirectory ? -1 : rowData.fileItem.size;
-          };
+          defaultConfig.calculateSortValue = rowData => rowData.fileItem.isDirectory ? -1 : rowData.fileItem.size;
           break;
         case 'dateModified':
           defaultConfig.caption = _message.default.format('dxFileManager-listDetailsColumnCaptionDateModified');
@@ -181,7 +173,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     return result;
   };
   _proto._updateColumnDataField = function _updateColumnDataField(column) {
-    var dataItemSuffix = this._isDefaultColumn(column.dataField) ? '' : 'dataItem.';
+    const dataItemSuffix = this._isDefaultColumn(column.dataField) ? '' : 'dataItem.';
     column.dataField = 'fileItem.' + dataItemSuffix + column.dataField;
     return column;
   };
@@ -189,19 +181,21 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     return !!DEFAULT_COLUMN_CONFIGS[columnDataField];
   };
   _proto._onFileItemActionButtonClick = function _onFileItemActionButtonClick(_ref) {
-    var component = _ref.component,
-      element = _ref.element,
-      event = _ref.event;
+    let {
+      component,
+      element,
+      event
+    } = _ref;
     event.stopPropagation();
-    var $row = component.$element().closest(this._getItemSelector());
-    var fileItemInfo = $row.data('item');
+    const $row = component.$element().closest(this._getItemSelector());
+    const fileItemInfo = $row.data('item');
     this._selectItem(fileItemInfo);
-    var target = {
+    const target = {
       itemData: fileItemInfo,
       itemElement: $row,
       isActionButton: true
     };
-    var items = this._getFileItemsForContextMenu(fileItemInfo);
+    const items = this._getFileItemsForContextMenu(fileItemInfo);
     this._showContextMenu(items, element, event, target);
     this._activeFileActionsButton = component;
     this._activeFileActionsButton.setActive(true);
@@ -218,25 +212,26 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     return ".".concat(DATA_GRID_DATA_ROW_CLASS);
   };
   _proto._onItemDblClick = function _onItemDblClick(e) {
-    var $row = (0, _renderer.default)(e.currentTarget);
-    var fileItemInfo = $row.data('item');
+    const $row = (0, _renderer.default)(e.currentTarget);
+    const fileItemInfo = $row.data('item');
     this._raiseSelectedItemOpened(fileItemInfo);
   };
   _proto._isAllItemsSelected = function _isAllItemsSelected() {
-    var selectableItemsCount = this._hasParentDirectoryItem ? this._itemCount - 1 : this._itemCount;
-    var selectedRowKeys = this._filesView.option('selectedRowKeys');
+    const selectableItemsCount = this._hasParentDirectoryItem ? this._itemCount - 1 : this._itemCount;
+    const selectedRowKeys = this._filesView.option('selectedRowKeys');
     if (!selectedRowKeys.length) {
       return false;
     }
     return selectedRowKeys.length >= selectableItemsCount ? true : undefined;
   };
   _proto._onEditorPreparing = function _onEditorPreparing(_ref2) {
-    var _this3 = this;
-    var component = _ref2.component,
-      command = _ref2.command,
-      row = _ref2.row,
-      parentType = _ref2.parentType,
-      editorOptions = _ref2.editorOptions;
+    let {
+      component,
+      command,
+      row,
+      parentType,
+      editorOptions
+    } = _ref2;
     if (!this._filesView) {
       this._filesView = component;
     }
@@ -245,20 +240,22 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
         editorOptions.disabled = true;
       }
     } else if (parentType === 'headerRow') {
-      editorOptions.onInitialized = function (_ref3) {
-        var component = _ref3.component;
-        _this3._selectAllCheckBox = component;
+      editorOptions.onInitialized = _ref3 => {
+        let {
+          component
+        } = _ref3;
+        this._selectAllCheckBox = component;
       };
       editorOptions.value = this._isAllItemsSelected();
-      editorOptions.onValueChanged = function (args) {
-        return _this3._onSelectAllCheckBoxValueChanged(args);
-      };
+      editorOptions.onValueChanged = args => this._onSelectAllCheckBoxValueChanged(args);
     }
   };
   _proto._onSelectAllCheckBoxValueChanged = function _onSelectAllCheckBoxValueChanged(_ref4) {
-    var event = _ref4.event,
-      previousValue = _ref4.previousValue,
-      value = _ref4.value;
+    let {
+      event,
+      previousValue,
+      value
+    } = _ref4;
     if (!event) {
       if (previousValue && !this._selectAllCheckBoxUpdating && this._selectAllCheckBox) {
         this._selectAllCheckBox.option('value', previousValue);
@@ -276,11 +273,13 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     event.preventDefault();
   };
   _proto._onRowPrepared = function _onRowPrepared(_ref5) {
-    var rowType = _ref5.rowType,
-      rowElement = _ref5.rowElement,
-      data = _ref5.data;
+    let {
+      rowType,
+      rowElement,
+      data
+    } = _ref5;
     if (rowType === 'data') {
-      var $row = (0, _renderer.default)(rowElement);
+      const $row = (0, _renderer.default)(rowElement);
       $row.data('item', data);
       if (this._isParentDirectoryItem(data)) {
         $row.addClass(FILE_MANAGER_PARENT_DIRECTORY_ITEM);
@@ -291,14 +290,14 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     if (!this._isDesktop()) {
       return;
     }
-    var fileItems = null;
-    var item = {};
+    let fileItems = null;
+    let item = {};
     if (e.row && e.row.rowType === 'data') {
       item = e.row.data;
       this._selectItem(item);
       fileItems = this._getFileItemsForContextMenu(item);
     }
-    var eventArgs = (0, _extend.extend)({}, {
+    const eventArgs = (0, _extend.extend)({}, {
       targetElement: e.target === 'content' && (0, _type.isDefined)(e.row) ? this._filesView.getRowElement(e.rowIndex) : undefined,
       itemData: item,
       options: this._contextMenu.option(),
@@ -310,20 +309,20 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     e.items = eventArgs.cancel ? [] : this._contextMenu.createContextMenuItems(fileItems, null, item);
   };
   _proto._onFilesViewSelectionChanged = function _onFilesViewSelectionChanged(_ref6) {
-    var component = _ref6.component,
-      selectedRowsData = _ref6.selectedRowsData,
-      selectedRowKeys = _ref6.selectedRowKeys,
-      currentSelectedRowKeys = _ref6.currentSelectedRowKeys,
-      currentDeselectedRowKeys = _ref6.currentDeselectedRowKeys;
+    let {
+      component,
+      selectedRowsData,
+      selectedRowKeys,
+      currentSelectedRowKeys,
+      currentDeselectedRowKeys
+    } = _ref6;
     this._filesView = this._filesView || component;
     if (this._selectAllCheckBox) {
       this._selectAllCheckBoxUpdating = true;
       this._selectAllCheckBox.option('value', this._isAllItemsSelected());
       this._selectAllCheckBoxUpdating = false;
     }
-    var selectedItems = selectedRowsData.map(function (itemInfo) {
-      return itemInfo.fileItem;
-    });
+    const selectedItems = selectedRowsData.map(itemInfo => itemInfo.fileItem);
     this._tryRaiseSelectionChanged({
       selectedItemInfos: selectedRowsData,
       selectedItems,
@@ -338,7 +337,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
       var _e$row;
       this._selectItemSingleSelection((_e$row = e.row) === null || _e$row === void 0 ? void 0 : _e$row.data);
     }
-    var fileSystemItem = ((_e$row2 = e.row) === null || _e$row2 === void 0 ? void 0 : _e$row2.data.fileItem) || null;
+    const fileSystemItem = ((_e$row2 = e.row) === null || _e$row2 === void 0 ? void 0 : _e$row2.data.fileItem) || null;
     this._onFocusedItemChanged({
       item: fileSystemItem,
       itemKey: fileSystemItem === null || fileSystemItem === void 0 ? void 0 : fileSystemItem.key,
@@ -346,7 +345,9 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     });
   };
   _proto._onFilesViewOptionChanged = function _onFilesViewOptionChanged(_ref7) {
-    var fullName = _ref7.fullName;
+    let {
+      fullName
+    } = _ref7;
     if (fullName.indexOf('sortOrder') > -1) {
       this._filesView.columnOption('isParentFolder', {
         sortOrder: 'asc',
@@ -361,22 +362,19 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     this._getItemThumbnailContainer(cellInfo.data).appendTo(container);
   };
   _proto._createNameColumnCell = function _createNameColumnCell(container, cellInfo) {
-    var _this4 = this;
-    var $button = (0, _renderer.default)('<div>');
-    var $name = (0, _renderer.default)('<span>').text(cellInfo.data.fileItem.name).addClass(FILE_MANAGER_DETAILS_ITEM_NAME_CLASS);
-    var $wrapper = (0, _renderer.default)('<div>').append($name, $button).addClass(FILE_MANAGER_DETAILS_ITEM_NAME_WRAPPER_CLASS);
+    const $button = (0, _renderer.default)('<div>');
+    const $name = (0, _renderer.default)('<span>').text(cellInfo.data.fileItem.name).addClass(FILE_MANAGER_DETAILS_ITEM_NAME_CLASS);
+    const $wrapper = (0, _renderer.default)('<div>').append($name, $button).addClass(FILE_MANAGER_DETAILS_ITEM_NAME_WRAPPER_CLASS);
     (0, _renderer.default)(container).append($wrapper);
     this._createComponent($button, _uiFile_manager3.default, {
-      onClick: function onClick(e) {
-        return _this4._onFileItemActionButtonClick(e);
-      }
+      onClick: e => this._onFileItemActionButtonClick(e)
     });
   };
   _proto._calculateSizeColumnCellValue = function _calculateSizeColumnCellValue(rowData) {
     return rowData.fileItem.isDirectory ? '' : (0, _uiFile_manager.getDisplayFileSize)(rowData.fileItem.size);
   };
   _proto._selectItem = function _selectItem(fileItemInfo) {
-    var selectItemFunc = this._isMultipleSelectionMode() ? this._selectItemMultipleSelection : this._selectItemSingleSelection;
+    const selectItemFunc = this._isMultipleSelectionMode() ? this._selectItemMultipleSelection : this._selectItemSingleSelection;
     selectItemFunc.call(this, fileItemInfo);
   };
   _proto._deselectItem = function _deselectItem(item) {
@@ -384,14 +382,14 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
   };
   _proto._selectItemSingleSelection = function _selectItemSingleSelection(fileItemInfo) {
     if (!this._focusedItem || !fileItemInfo || this._focusedItem.fileItem.key !== fileItemInfo.fileItem.key) {
-      var oldFocusedItem = this._focusedItem;
+      const oldFocusedItem = this._focusedItem;
       this._focusedItem = fileItemInfo;
-      var deselectedKeys = [];
+      const deselectedKeys = [];
       if (oldFocusedItem) {
         deselectedKeys.push(oldFocusedItem.fileItem.key);
       }
-      var selectedItems = [];
-      var selectedKeys = [];
+      const selectedItems = [];
+      const selectedKeys = [];
       if (fileItemInfo && !this._isParentDirectoryItem(fileItemInfo)) {
         selectedItems.push(fileItemInfo.fileItem);
         selectedKeys.push(fileItemInfo.fileItem.key);
@@ -399,16 +397,18 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
       this._raiseSelectionChanged({
         selectedItems,
         selectedItemKeys: selectedKeys,
-        currentSelectedItemKeys: [].concat(selectedKeys),
+        currentSelectedItemKeys: [...selectedKeys],
         currentDeselectedItemKeys: deselectedKeys
       });
     }
   };
   _proto._selectItemMultipleSelection = function _selectItemMultipleSelection(_ref8) {
-    var fileItem = _ref8.fileItem;
+    let {
+      fileItem
+    } = _ref8;
     if (!this._filesView.isRowSelected(fileItem.key)) {
-      var selectionController = this._filesView.getController('selection');
-      var preserve = selectionController.isSelectionWithCheckboxes();
+      const selectionController = this._filesView.getController('selection');
+      const preserve = selectionController.isSelectionWithCheckboxes();
       this._filesView.selectRows([fileItem.key], preserve);
     }
   };
@@ -427,7 +427,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
     }
   };
   _proto.refresh = function refresh(options, operation) {
-    var actualOptions = {
+    const actualOptions = {
       dataSource: this._createDataSource()
     };
     if (options && Object.prototype.hasOwnProperty.call(options, 'focusedItemKey')) {
@@ -437,7 +437,7 @@ var FileManagerDetailsItemList = /*#__PURE__*/function (_FileManagerItemListB) {
         actualOptions.focusedRowIndex = -1;
       }
     }
-    var hasNoScrollTarget = !(0, _type.isDefined)(actualOptions.focusedRowKey) && actualOptions.focusedRowIndex === -1;
+    const hasNoScrollTarget = !(0, _type.isDefined)(actualOptions.focusedRowKey) && actualOptions.focusedRowIndex === -1;
     if (hasNoScrollTarget && operation === _file_items_controller.OPERATIONS.NAVIGATION) {
       actualOptions.paging = {
         pageIndex: 0

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/events/core/emitter_registrator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,29 +22,29 @@ var _index = require("../utils/index");
 var _pointer = _interopRequireDefault(require("../pointer"));
 var _wheel = require("./wheel");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var MANAGER_EVENT = 'dxEventManager';
-var EMITTER_DATA = 'dxEmitter';
-var EventManager = _class.default.inherit({
-  ctor: function ctor() {
+const MANAGER_EVENT = 'dxEventManager';
+const EMITTER_DATA = 'dxEmitter';
+const EventManager = _class.default.inherit({
+  ctor: function () {
     this._attachHandlers();
     this.reset();
     this._proxiedCancelHandler = this._cancelHandler.bind(this);
     this._proxiedAcceptHandler = this._acceptHandler.bind(this);
   },
-  _attachHandlers: function _attachHandlers() {
+  _attachHandlers: function () {
     _ready_callbacks.default.add(function () {
-      var document = _dom_adapter.default.getDocument();
+      const document = _dom_adapter.default.getDocument();
       _events_engine.default.subscribeGlobal(document, (0, _index.addNamespace)(_pointer.default.down, MANAGER_EVENT), this._pointerDownHandler.bind(this));
       _events_engine.default.subscribeGlobal(document, (0, _index.addNamespace)(_pointer.default.move, MANAGER_EVENT), this._pointerMoveHandler.bind(this));
       _events_engine.default.subscribeGlobal(document, (0, _index.addNamespace)([_pointer.default.up, _pointer.default.cancel].join(' '), MANAGER_EVENT), this._pointerUpHandler.bind(this));
       _events_engine.default.subscribeGlobal(document, (0, _index.addNamespace)(_wheel.name, MANAGER_EVENT), this._mouseWheelHandler.bind(this));
     }.bind(this));
   },
-  _eachEmitter: function _eachEmitter(callback) {
-    var activeEmitters = this._activeEmitters || [];
-    var i = 0;
+  _eachEmitter: function (callback) {
+    const activeEmitters = this._activeEmitters || [];
+    let i = 0;
     while (activeEmitters.length > i) {
-      var emitter = activeEmitters[i];
+      const emitter = activeEmitters[i];
       if (callback(emitter) === false) {
         break;
       }
@@ -53,35 +53,35 @@ var EventManager = _class.default.inherit({
       }
     }
   },
-  _applyToEmitters: function _applyToEmitters(method, arg) {
+  _applyToEmitters: function (method, arg) {
     this._eachEmitter(function (emitter) {
       emitter[method].call(emitter, arg);
     });
   },
-  reset: function reset() {
+  reset: function () {
     this._eachEmitter(this._proxiedCancelHandler);
     this._activeEmitters = [];
   },
-  resetEmitter: function resetEmitter(emitter) {
+  resetEmitter: function (emitter) {
     this._proxiedCancelHandler(emitter);
   },
-  _pointerDownHandler: function _pointerDownHandler(e) {
+  _pointerDownHandler: function (e) {
     if ((0, _index.isMouseEvent)(e) && e.which > 1) {
       return;
     }
     this._updateEmitters(e);
   },
-  _updateEmitters: function _updateEmitters(e) {
+  _updateEmitters: function (e) {
     if (!this._isSetChanged(e)) {
       return;
     }
     this._cleanEmitters(e);
     this._fetchEmitters(e);
   },
-  _isSetChanged: function _isSetChanged(e) {
-    var currentSet = this._closestEmitter(e);
-    var previousSet = this._emittersSet || [];
-    var setChanged = currentSet.length !== previousSet.length;
+  _isSetChanged: function (e) {
+    const currentSet = this._closestEmitter(e);
+    const previousSet = this._emittersSet || [];
+    let setChanged = currentSet.length !== previousSet.length;
     (0, _iterator.each)(currentSet, function (index, emitter) {
       setChanged = setChanged || previousSet[index] !== emitter;
       return !setChanged;
@@ -89,10 +89,10 @@ var EventManager = _class.default.inherit({
     this._emittersSet = currentSet;
     return setChanged;
   },
-  _closestEmitter: function _closestEmitter(e) {
-    var that = this;
-    var result = [];
-    var $element = (0, _renderer.default)(e.target);
+  _closestEmitter: function (e) {
+    const that = this;
+    const result = [];
+    let $element = (0, _renderer.default)(e.target);
     function handleEmitter(_, emitter) {
       if (!!emitter && emitter.validatePointers(e) && emitter.validate(e)) {
         emitter.addCancelCallback(that._proxiedCancelHandler);
@@ -101,25 +101,25 @@ var EventManager = _class.default.inherit({
       }
     }
     while ($element.length) {
-      var emitters = (0, _element_data.data)($element.get(0), EMITTER_DATA) || [];
+      const emitters = (0, _element_data.data)($element.get(0), EMITTER_DATA) || [];
       (0, _iterator.each)(emitters, handleEmitter);
       $element = $element.parent();
     }
     return result;
   },
-  _acceptHandler: function _acceptHandler(acceptedEmitter, e) {
-    var that = this;
+  _acceptHandler: function (acceptedEmitter, e) {
+    const that = this;
     this._eachEmitter(function (emitter) {
       if (emitter !== acceptedEmitter) {
         that._cancelEmitter(emitter, e);
       }
     });
   },
-  _cancelHandler: function _cancelHandler(canceledEmitter, e) {
+  _cancelHandler: function (canceledEmitter, e) {
     this._cancelEmitter(canceledEmitter, e);
   },
-  _cancelEmitter: function _cancelEmitter(emitter, e) {
-    var activeEmitters = this._activeEmitters;
+  _cancelEmitter: function (emitter, e) {
+    const activeEmitters = this._activeEmitters;
     if (e) {
       emitter.cancel(e);
     } else {
@@ -127,26 +127,26 @@ var EventManager = _class.default.inherit({
     }
     emitter.removeCancelCallback();
     emitter.removeAcceptCallback();
-    var emitterIndex = activeEmitters.indexOf(emitter);
+    const emitterIndex = activeEmitters.indexOf(emitter);
     if (emitterIndex > -1) {
       activeEmitters.splice(emitterIndex, 1);
     }
   },
-  _cleanEmitters: function _cleanEmitters(e) {
+  _cleanEmitters: function (e) {
     this._applyToEmitters('end', e);
     this.reset(e);
   },
-  _fetchEmitters: function _fetchEmitters(e) {
+  _fetchEmitters: function (e) {
     this._activeEmitters = this._emittersSet.slice();
     this._applyToEmitters('start', e);
   },
-  _pointerMoveHandler: function _pointerMoveHandler(e) {
+  _pointerMoveHandler: function (e) {
     this._applyToEmitters('move', e);
   },
-  _pointerUpHandler: function _pointerUpHandler(e) {
+  _pointerUpHandler: function (e) {
     this._updateEmitters(e);
   },
-  _mouseWheelHandler: function _mouseWheelHandler(e) {
+  _mouseWheelHandler: function (e) {
     if (!this._allowInterruptionByMouseWheel()) {
       return;
     }
@@ -157,21 +157,21 @@ var EventManager = _class.default.inherit({
     e.pointers = [];
     this._pointerUpHandler(e);
   },
-  _allowInterruptionByMouseWheel: function _allowInterruptionByMouseWheel() {
-    var allowInterruption = true;
+  _allowInterruptionByMouseWheel: function () {
+    let allowInterruption = true;
     this._eachEmitter(function (emitter) {
       allowInterruption = emitter.allowInterruptionByMouseWheel() && allowInterruption;
       return allowInterruption;
     });
     return allowInterruption;
   },
-  _adjustWheelEvent: function _adjustWheelEvent(e) {
-    var closestGestureEmitter = null;
+  _adjustWheelEvent: function (e) {
+    let closestGestureEmitter = null;
     this._eachEmitter(function (emitter) {
       if (!emitter.gesture) {
         return;
       }
-      var direction = emitter.getDirection(e);
+      const direction = emitter.getDirection(e);
       if (direction !== 'horizontal' && !e.shiftKey || direction !== 'vertical' && e.shiftKey) {
         closestGestureEmitter = emitter;
         return false;
@@ -180,50 +180,50 @@ var EventManager = _class.default.inherit({
     if (!closestGestureEmitter) {
       return;
     }
-    var direction = closestGestureEmitter.getDirection(e);
-    var verticalGestureDirection = direction === 'both' && !e.shiftKey || direction === 'vertical';
-    var prop = verticalGestureDirection ? 'pageY' : 'pageX';
+    const direction = closestGestureEmitter.getDirection(e);
+    const verticalGestureDirection = direction === 'both' && !e.shiftKey || direction === 'vertical';
+    const prop = verticalGestureDirection ? 'pageY' : 'pageX';
     e[prop] += e.delta;
   },
-  isActive: function isActive(element) {
-    var result = false;
+  isActive: function (element) {
+    let result = false;
     this._eachEmitter(function (emitter) {
       result = result || emitter.getElement().is(element);
     });
     return result;
   }
 });
-var eventManager = new EventManager();
-var EMITTER_SUBSCRIPTION_DATA = 'dxEmitterSubscription';
-var registerEmitter = function registerEmitter(emitterConfig) {
-  var emitterClass = emitterConfig.emitter;
-  var emitterName = emitterConfig.events[0];
-  var emitterEvents = emitterConfig.events;
+const eventManager = new EventManager();
+const EMITTER_SUBSCRIPTION_DATA = 'dxEmitterSubscription';
+const registerEmitter = function (emitterConfig) {
+  const emitterClass = emitterConfig.emitter;
+  const emitterName = emitterConfig.events[0];
+  const emitterEvents = emitterConfig.events;
   (0, _iterator.each)(emitterEvents, function (_, eventName) {
     (0, _event_registrator.default)(eventName, {
       noBubble: !emitterConfig.bubble,
-      setup: function setup(element) {
-        var subscriptions = (0, _element_data.data)(element, EMITTER_SUBSCRIPTION_DATA) || {};
-        var emitters = (0, _element_data.data)(element, EMITTER_DATA) || {};
-        var emitter = emitters[emitterName] || new emitterClass(element);
+      setup: function (element) {
+        const subscriptions = (0, _element_data.data)(element, EMITTER_SUBSCRIPTION_DATA) || {};
+        const emitters = (0, _element_data.data)(element, EMITTER_DATA) || {};
+        const emitter = emitters[emitterName] || new emitterClass(element);
         subscriptions[eventName] = true;
         emitters[emitterName] = emitter;
         (0, _element_data.data)(element, EMITTER_DATA, emitters);
         (0, _element_data.data)(element, EMITTER_SUBSCRIPTION_DATA, subscriptions);
       },
-      add: function add(element, handleObj) {
-        var emitters = (0, _element_data.data)(element, EMITTER_DATA);
-        var emitter = emitters[emitterName];
+      add: function (element, handleObj) {
+        const emitters = (0, _element_data.data)(element, EMITTER_DATA);
+        const emitter = emitters[emitterName];
         emitter.configure((0, _extend.extend)({
           delegateSelector: handleObj.selector
         }, handleObj.data), handleObj.type);
       },
-      teardown: function teardown(element) {
-        var subscriptions = (0, _element_data.data)(element, EMITTER_SUBSCRIPTION_DATA);
-        var emitters = (0, _element_data.data)(element, EMITTER_DATA);
-        var emitter = emitters[emitterName];
+      teardown: function (element) {
+        const subscriptions = (0, _element_data.data)(element, EMITTER_SUBSCRIPTION_DATA);
+        const emitters = (0, _element_data.data)(element, EMITTER_DATA);
+        const emitter = emitters[emitterName];
         delete subscriptions[eventName];
-        var disposeEmitter = true;
+        let disposeEmitter = true;
         (0, _iterator.each)(emitterEvents, function (_, eventName) {
           disposeEmitter = disposeEmitter && !subscriptions[eventName];
           return disposeEmitter;

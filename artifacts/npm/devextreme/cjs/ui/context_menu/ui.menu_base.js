@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/context_menu/ui.menu_base.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,32 +22,32 @@ var _item = _interopRequireDefault(require("../collection/item"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DX_MENU_CLASS = 'dx-menu';
-var DX_MENU_NO_ICONS_CLASS = DX_MENU_CLASS + '-no-icons';
-var DX_MENU_BASE_CLASS = 'dx-menu-base';
-var ITEM_CLASS = DX_MENU_CLASS + '-item';
-var DX_ITEM_CONTENT_CLASS = ITEM_CLASS + '-content';
-var DX_MENU_SELECTED_ITEM_CLASS = ITEM_CLASS + '-selected';
-var DX_MENU_ITEM_WRAPPER_CLASS = ITEM_CLASS + '-wrapper';
-var DX_MENU_ITEMS_CONTAINER_CLASS = DX_MENU_CLASS + '-items-container';
-var DX_MENU_ITEM_EXPANDED_CLASS = ITEM_CLASS + '-expanded';
-var DX_MENU_SEPARATOR_CLASS = DX_MENU_CLASS + '-separator';
-var DX_MENU_ITEM_LAST_GROUP_ITEM = DX_MENU_CLASS + '-last-group-item';
-var DX_ITEM_HAS_TEXT = ITEM_CLASS + '-has-text';
-var DX_ITEM_HAS_ICON = ITEM_CLASS + '-has-icon';
-var DX_ITEM_HAS_SUBMENU = ITEM_CLASS + '-has-submenu';
-var DX_MENU_ITEM_POPOUT_CLASS = ITEM_CLASS + '-popout';
-var DX_MENU_ITEM_POPOUT_CONTAINER_CLASS = DX_MENU_ITEM_POPOUT_CLASS + '-container';
-var DX_MENU_ITEM_CAPTION_CLASS = ITEM_CLASS + '-text';
-var SINGLE_SELECTION_MODE = 'single';
-var DEFAULT_DELAY = {
+const DX_MENU_CLASS = 'dx-menu';
+const DX_MENU_NO_ICONS_CLASS = DX_MENU_CLASS + '-no-icons';
+const DX_MENU_BASE_CLASS = 'dx-menu-base';
+const ITEM_CLASS = DX_MENU_CLASS + '-item';
+const DX_ITEM_CONTENT_CLASS = ITEM_CLASS + '-content';
+const DX_MENU_SELECTED_ITEM_CLASS = ITEM_CLASS + '-selected';
+const DX_MENU_ITEM_WRAPPER_CLASS = ITEM_CLASS + '-wrapper';
+const DX_MENU_ITEMS_CONTAINER_CLASS = DX_MENU_CLASS + '-items-container';
+const DX_MENU_ITEM_EXPANDED_CLASS = ITEM_CLASS + '-expanded';
+const DX_MENU_SEPARATOR_CLASS = DX_MENU_CLASS + '-separator';
+const DX_MENU_ITEM_LAST_GROUP_ITEM = DX_MENU_CLASS + '-last-group-item';
+const DX_ITEM_HAS_TEXT = ITEM_CLASS + '-has-text';
+const DX_ITEM_HAS_ICON = ITEM_CLASS + '-has-icon';
+const DX_ITEM_HAS_SUBMENU = ITEM_CLASS + '-has-submenu';
+const DX_MENU_ITEM_POPOUT_CLASS = ITEM_CLASS + '-popout';
+const DX_MENU_ITEM_POPOUT_CONTAINER_CLASS = DX_MENU_ITEM_POPOUT_CLASS + '-container';
+const DX_MENU_ITEM_CAPTION_CLASS = ITEM_CLASS + '-text';
+const SINGLE_SELECTION_MODE = 'single';
+const DEFAULT_DELAY = {
   'show': 50,
   'hide': 300
 };
-var DX_MENU_ITEM_CAPTION_URL_CLASS = "".concat(DX_MENU_ITEM_CAPTION_CLASS, "-with-url");
-var DX_ICON_WITH_URL_CLASS = 'dx-icon-with-url';
-var ITEM_URL_CLASS = 'dx-item-url';
-var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
+const DX_MENU_ITEM_CAPTION_URL_CLASS = "".concat(DX_MENU_ITEM_CAPTION_CLASS, "-with-url");
+const DX_ICON_WITH_URL_CLASS = 'dx-icon-with-url';
+const ITEM_URL_CLASS = 'dx-item-url';
+let MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
   _inheritsLoose(MenuBase, _HierarchicalCollecti);
   function MenuBase() {
     return _HierarchicalCollecti.apply(this, arguments) || this;
@@ -155,13 +155,12 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     _HierarchicalCollecti.prototype._clean.call(this);
   };
   _proto._supportedKeys = function _supportedKeys() {
-    var _this = this;
-    var selectItem = function selectItem() {
-      var $item = (0, _renderer.default)(_this.option('focusedElement'));
-      if (!$item.length || !_this._isSelectionEnabled()) {
+    const selectItem = () => {
+      const $item = (0, _renderer.default)(this.option('focusedElement'));
+      if (!$item.length || !this._isSelectionEnabled()) {
         return;
       }
-      _this.selectItem($item[0]);
+      this.selectItem($item[0]);
     };
     return (0, _extend.extend)(_HierarchicalCollecti.prototype._supportedKeys.call(this), {
       space: selectItem,
@@ -179,8 +178,10 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     this._initActions();
   };
   _proto._getLinkContainer = function _getLinkContainer(iconContainer, textContainer, _ref) {
-    var linkAttr = _ref.linkAttr,
-      url = _ref.url;
+    let {
+      linkAttr,
+      url
+    } = _ref;
     iconContainer === null || iconContainer === void 0 ? void 0 : iconContainer.addClass(DX_ICON_WITH_URL_CLASS);
     textContainer === null || textContainer === void 0 ? void 0 : textContainer.addClass(DX_MENU_ITEM_CAPTION_URL_CLASS);
     return _HierarchicalCollecti.prototype._getLinkContainer.call(this, iconContainer, textContainer, {
@@ -189,11 +190,13 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     });
   };
   _proto._addContent = function _addContent($container, itemData) {
-    var html = itemData.html,
-      url = itemData.url;
+    const {
+      html,
+      url
+    } = itemData;
     if (url) {
       $container.html(html);
-      var link = this._getLinkContainer(this._getIconContainer(itemData), this._getTextContainer(itemData), itemData);
+      const link = this._getLinkContainer(this._getIconContainer(itemData), this._getTextContainer(itemData), itemData);
       $container.append(link);
     } else {
       _HierarchicalCollecti.prototype._addContent.call(this, $container, itemData);
@@ -202,22 +205,24 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     this._addContentClasses(itemData, $container.parent());
   };
   _proto._getTextContainer = function _getTextContainer(itemData) {
-    var text = itemData.text;
+    const {
+      text
+    } = itemData;
     if (!text) {
       return;
     }
-    var $itemContainer = (0, _renderer.default)('<span>').addClass(DX_MENU_ITEM_CAPTION_CLASS);
-    var itemText = (0, _type.isPlainObject)(itemData) ? text : String(itemData);
+    const $itemContainer = (0, _renderer.default)('<span>').addClass(DX_MENU_ITEM_CAPTION_CLASS);
+    const itemText = (0, _type.isPlainObject)(itemData) ? text : String(itemData);
     return $itemContainer.text(itemText);
   };
   _proto._getItemExtraPropNames = function _getItemExtraPropNames() {
     return ['url', 'linkAttr'];
   };
   _proto._getPopoutContainer = function _getPopoutContainer(itemData) {
-    var items = itemData.items;
-    var $popOutContainer;
+    const items = itemData.items;
+    let $popOutContainer;
     if (items && items.length) {
-      var $popOutImage = (0, _renderer.default)('<div>').addClass(DX_MENU_ITEM_POPOUT_CLASS);
+      const $popOutImage = (0, _renderer.default)('<div>').addClass(DX_MENU_ITEM_POPOUT_CLASS);
       $popOutContainer = (0, _renderer.default)('<span>').addClass(DX_MENU_ITEM_POPOUT_CONTAINER_CLASS).append($popOutImage);
     }
     return $popOutContainer;
@@ -233,18 +238,18 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
   };
   _proto._selectByItem = function _selectByItem(selectedItem) {
     if (!selectedItem) return;
-    var nodeToSelect = this._dataAdapter.getNodeByItem(selectedItem);
+    const nodeToSelect = this._dataAdapter.getNodeByItem(selectedItem);
     this._dataAdapter.toggleSelection(nodeToSelect.internalFields.key, true);
   };
   _proto._renderSelectedItem = function _renderSelectedItem() {
-    var selectedKeys = this._dataAdapter.getSelectedNodesKeys();
-    var selectedKey = selectedKeys.length && selectedKeys[0];
-    var selectedItem = this.option('selectedItem');
+    const selectedKeys = this._dataAdapter.getSelectedNodesKeys();
+    const selectedKey = selectedKeys.length && selectedKeys[0];
+    const selectedItem = this.option('selectedItem');
     if (!selectedKey) {
       this._selectByItem(selectedItem);
       return;
     }
-    var node = this._dataAdapter.getNodeByKey(selectedKey);
+    const node = this._dataAdapter.getNodeByKey(selectedKey);
     if (node.selectable === false) return;
     if (!selectedItem) {
       this.option('selectedItem', node.internalFields.item);
@@ -268,7 +273,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     if (!this._inkRipple) {
       return;
     }
-    var config = {
+    const config = {
       element: $element,
       event: e
     };
@@ -279,8 +284,8 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     }
   };
   _proto._getShowSubmenuMode = function _getShowSubmenuMode() {
-    var defaultValue = 'onClick';
-    var optionValue = this.option('showSubmenuMode');
+    const defaultValue = 'onClick';
+    let optionValue = this.option('showSubmenuMode');
     optionValue = (0, _type.isObject)(optionValue) ? optionValue.name : optionValue;
     return this._isDesktopDevice() ? optionValue : defaultValue;
   };
@@ -289,7 +294,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     return _devices.default.real().deviceType === 'desktop';
   };
   _proto._initEditStrategy = function _initEditStrategy() {
-    var Strategy = _uiMenu_baseEdit.default;
+    const Strategy = _uiMenu_baseEdit.default;
     this._editStrategy = new Strategy(this);
   };
   _proto._addCustomCssClass = function _addCustomCssClass($element) {
@@ -299,7 +304,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     return ".".concat(DX_MENU_ITEM_WRAPPER_CLASS);
   };
   _proto._hoverStartHandler = function _hoverStartHandler(e) {
-    var $itemElement = this._getItemElementByEventArgs(e);
+    const $itemElement = this._getItemElementByEventArgs(e);
     if (!$itemElement || this._isItemDisabled($itemElement)) return;
     e.stopPropagation();
     if (this._getShowSubmenuMode() === 'onHover') {
@@ -322,8 +327,9 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     (0, _renderer.default)(itemElement).addClass(DX_MENU_ITEM_EXPANDED_CLASS);
   };
   _proto._getSubmenuDelay = function _getSubmenuDelay(action) {
-    var _this$option = this.option('showSubmenuMode'),
-      delay = _this$option.delay;
+    const {
+      delay
+    } = this.option('showSubmenuMode');
     if (!(0, _type.isDefined)(delay)) {
       return DEFAULT_DELAY[action];
     }
@@ -333,7 +339,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
   // TODO: try to simplify
   ;
   _proto._getItemElementByEventArgs = function _getItemElementByEventArgs(eventArgs) {
-    var $target = (0, _renderer.default)(eventArgs.target);
+    let $target = (0, _renderer.default)(eventArgs.target);
     if ($target.hasClass(this._itemClass()) || $target.get(0) === eventArgs.currentTarget) {
       return $target;
     }
@@ -357,46 +363,45 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     this._renderItems(this._dataAdapter.getRootNodes());
   };
   _proto._renderItems = function _renderItems(nodes, submenuContainer) {
-    var _this2 = this;
     if (nodes.length) {
       this.hasIcons = false;
-      var $nodeContainer = this._renderContainer(this.$element(), submenuContainer);
-      var firstVisibleIndex = -1;
-      var nextGroupFirstIndex = -1;
-      (0, _iterator.each)(nodes, function (index, node) {
-        var isVisibleNode = node.visible !== false;
+      const $nodeContainer = this._renderContainer(this.$element(), submenuContainer);
+      let firstVisibleIndex = -1;
+      let nextGroupFirstIndex = -1;
+      (0, _iterator.each)(nodes, (index, node) => {
+        const isVisibleNode = node.visible !== false;
         if (isVisibleNode && firstVisibleIndex < 0) {
           firstVisibleIndex = index;
         }
-        var isBeginGroup = firstVisibleIndex < index && (node.beginGroup || index === nextGroupFirstIndex);
+        const isBeginGroup = firstVisibleIndex < index && (node.beginGroup || index === nextGroupFirstIndex);
         if (isBeginGroup) {
           nextGroupFirstIndex = isVisibleNode ? index : index + 1;
         }
         if (index === nextGroupFirstIndex && firstVisibleIndex < index) {
-          _this2._renderSeparator($nodeContainer);
+          this._renderSeparator($nodeContainer);
         }
-        _this2._renderItem(index, node, $nodeContainer);
+        this._renderItem(index, node, $nodeContainer);
       });
       if (!this.hasIcons) $nodeContainer.addClass(DX_MENU_NO_ICONS_CLASS);
     }
   };
   _proto._renderContainer = function _renderContainer($wrapper) {
-    var $container = (0, _renderer.default)('<ul>');
+    const $container = (0, _renderer.default)('<ul>');
     this.setAria('role', 'none', $container);
     return $container.appendTo($wrapper).addClass(DX_MENU_ITEMS_CONTAINER_CLASS);
   };
   _proto._createDOMElement = function _createDOMElement($nodeContainer) {
-    var $node = (0, _renderer.default)('<li>');
+    const $node = (0, _renderer.default)('<li>');
     this.setAria('role', 'none', $node);
     return $node.appendTo($nodeContainer).addClass(DX_MENU_ITEM_WRAPPER_CLASS);
   };
   _proto._renderItem = function _renderItem(index, node, $nodeContainer, $nodeElement) {
-    var items = this.option('items');
-    var $node = $nodeElement || this._createDOMElement($nodeContainer);
+    const items = this.option('items');
+    const $node = $nodeElement || this._createDOMElement($nodeContainer);
     if (items[index + 1] && items[index + 1].beginGroup) {
       $node.addClass(DX_MENU_ITEM_LAST_GROUP_ITEM);
     }
-    var $itemFrame = _HierarchicalCollecti.prototype._renderItem.call(this, index, node.internalFields.item, $node);
+    const $itemFrame = _HierarchicalCollecti.prototype._renderItem.call(this, index, node.internalFields.item, $node);
     if (node.internalFields.item === this.option('selectedItem')) {
       $itemFrame.addClass(DX_MENU_SELECTED_ITEM_CLASS);
     }
@@ -404,20 +409,20 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     if (this._hasSubmenu(node)) this.setAria('haspopup', 'true', $itemFrame);
   };
   _proto._renderItemFrame = function _renderItemFrame(index, itemData, $itemContainer) {
-    var $itemFrame = $itemContainer.children(".".concat(ITEM_CLASS));
+    const $itemFrame = $itemContainer.children(".".concat(ITEM_CLASS));
     return $itemFrame.length ? $itemFrame : _HierarchicalCollecti.prototype._renderItemFrame.apply(this, arguments);
   };
   _proto._refreshItem = function _refreshItem($item, item) {
-    var node = this._dataAdapter.getNodeByItem(item);
-    var index = $item.data(this._itemIndexKey());
-    var $nodeContainer = $item.closest('ul');
-    var $nodeElement = $item.closest('li');
+    const node = this._dataAdapter.getNodeByItem(item);
+    const index = $item.data(this._itemIndexKey());
+    const $nodeContainer = $item.closest('ul');
+    const $nodeElement = $item.closest('li');
     this._renderItem(index, node, $nodeContainer, $nodeElement);
   };
   _proto._addContentClasses = function _addContentClasses(itemData, $itemFrame) {
-    var hasText = itemData.text ? !!itemData.text.length : false;
-    var hasIcon = !!itemData.icon;
-    var hasSubmenu = itemData.items ? !!itemData.items.length : false;
+    const hasText = itemData.text ? !!itemData.text.length : false;
+    const hasIcon = !!itemData.icon;
+    const hasSubmenu = itemData.items ? !!itemData.items.length : false;
     $itemFrame.toggleClass(DX_ITEM_HAS_TEXT, hasText);
     $itemFrame.toggleClass(DX_ITEM_HAS_ICON, hasIcon);
     if (!this.hasIcons) {
@@ -426,20 +431,20 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     $itemFrame.toggleClass(DX_ITEM_HAS_SUBMENU, hasSubmenu);
   };
   _proto._getItemContent = function _getItemContent($itemFrame) {
-    var $itemContent = _HierarchicalCollecti.prototype._getItemContent.call(this, $itemFrame);
+    let $itemContent = _HierarchicalCollecti.prototype._getItemContent.call(this, $itemFrame);
     if (!$itemContent.length) {
       $itemContent = $itemFrame.children(".".concat(DX_ITEM_CONTENT_CLASS));
     }
     return $itemContent;
   };
   _proto._postprocessRenderItem = function _postprocessRenderItem(args) {
-    var $itemElement = (0, _renderer.default)(args.itemElement);
-    var selectedIndex = this._dataAdapter.getSelectedNodesKeys();
+    const $itemElement = (0, _renderer.default)(args.itemElement);
+    const selectedIndex = this._dataAdapter.getSelectedNodesKeys();
     if (!selectedIndex.length || !this._selectedGetter(args.itemData) || !this._isItemSelectable(args.itemData)) {
       this._setAriaSelectionAttribute($itemElement, 'false');
       return;
     }
-    var node = this._dataAdapter.getNodeByItem(args.itemData);
+    const node = this._dataAdapter.getNodeByItem(args.itemData);
     if (node.internalFields.key === selectedIndex[0]) {
       $itemElement.addClass(this._selectedItemClass());
       this._setAriaSelectionAttribute($itemElement, 'true');
@@ -455,7 +460,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
   };
   _proto._itemClickHandler = function _itemClickHandler(e) {
     if (e._skipHandling) return;
-    var itemClickActionHandler = this._createAction(this._updateSubmenuVisibilityOnClick.bind(this));
+    const itemClickActionHandler = this._createAction(this._updateSubmenuVisibilityOnClick.bind(this));
     this._itemDXEventHandler(e, 'onItemClick', {}, {
       beforeExecute: this._itemClick,
       afterExecute: itemClickActionHandler.bind(this)
@@ -463,8 +468,8 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     e._skipHandling = true;
   };
   _proto._itemClick = function _itemClick(actionArgs) {
-    var args = actionArgs.args[0];
-    var link = args.event.target.getElementsByClassName(ITEM_URL_CLASS)[0];
+    const args = actionArgs.args[0];
+    const link = args.event.target.getElementsByClassName(ITEM_URL_CLASS)[0];
     if (args.itemData.url && link) {
       link.click();
     }
@@ -476,12 +481,12 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     }
   };
   _proto._updateSelectedItemOnClick = function _updateSelectedItemOnClick(actionArgs) {
-    var args = actionArgs.args ? actionArgs.args[0] : actionArgs;
+    const args = actionArgs.args ? actionArgs.args[0] : actionArgs;
     if (!this._isItemSelectAllowed(args.itemData)) {
       return;
     }
-    var selectedItemKey = this._dataAdapter.getSelectedNodesKeys();
-    var selectedNode = selectedItemKey.length && this._dataAdapter.getNodeByKey(selectedItemKey[0]);
+    const selectedItemKey = this._dataAdapter.getSelectedNodesKeys();
+    const selectedNode = selectedItemKey.length && this._dataAdapter.getNodeByKey(selectedItemKey[0]);
     if (selectedNode) {
       this._toggleItemSelection(selectedNode, false);
     }
@@ -493,7 +498,7 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     }
   };
   _proto._isItemSelectAllowed = function _isItemSelectAllowed(item) {
-    var isSelectByClickEnabled = this._isSelectionEnabled() && this.option('selectByClick');
+    const isSelectByClickEnabled = this._isSelectionEnabled() && this.option('selectByClick');
     return !this._isContainerEmpty() && isSelectByClickEnabled && this._isItemSelectable(item) && !this._itemsGetter(item);
   };
   _proto._isContainerEmpty = function _isContainerEmpty() {
@@ -508,8 +513,8 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
         break;
       case 'selectedItem':
         {
-          var node = this._dataAdapter.getNodeByItem(args.value);
-          var selectedKey = this._dataAdapter.getSelectedNodesKeys()[0];
+          const node = this._dataAdapter.getNodeByItem(args.value);
+          const selectedKey = this._dataAdapter.getSelectedNodesKeys()[0];
           if (node && node.internalFields.key !== selectedKey) {
             if (node.selectable === false) break;
             if (selectedKey) {
@@ -532,15 +537,14 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     }
   };
   _proto._toggleItemSelection = function _toggleItemSelection(node, value) {
-    var itemElement = this._getElementByItem(node.internalFields.item);
+    const itemElement = this._getElementByItem(node.internalFields.item);
     itemElement && (0, _renderer.default)(itemElement).toggleClass(DX_MENU_SELECTED_ITEM_CLASS);
     this._dataAdapter.toggleSelection(node.internalFields.key, value);
   };
   _proto._getElementByItem = function _getElementByItem(itemData) {
-    var _this3 = this;
-    var result;
-    (0, _iterator.each)(this._itemElements(), function (_, itemElement) {
-      if ((0, _renderer.default)(itemElement).data(_this3._itemDataKey()) !== itemData) {
+    let result;
+    (0, _iterator.each)(this._itemElements(), (_, itemElement) => {
+      if ((0, _renderer.default)(itemElement).data(this._itemDataKey()) !== itemData) {
         return true;
       }
       result = itemElement;
@@ -562,10 +566,10 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     });
   };
   _proto.selectItem = function selectItem(itemElement) {
-    var itemData = itemElement.nodeType ? this._getItemData(itemElement) : itemElement;
-    var selectedKey = this._dataAdapter.getSelectedNodesKeys()[0];
-    var selectedItem = this.option('selectedItem');
-    var node = this._dataAdapter.getNodeByItem(itemData);
+    const itemData = itemElement.nodeType ? this._getItemData(itemElement) : itemElement;
+    const selectedKey = this._dataAdapter.getSelectedNodesKeys()[0];
+    const selectedItem = this.option('selectedItem');
+    const node = this._dataAdapter.getNodeByItem(itemData);
     if (node.internalFields.key !== selectedKey) {
       if (selectedKey) {
         this._toggleItemSelection(this._dataAdapter.getNodeByKey(selectedKey), false);
@@ -576,9 +580,9 @@ var MenuBase = /*#__PURE__*/function (_HierarchicalCollecti) {
     }
   };
   _proto.unselectItem = function unselectItem(itemElement) {
-    var itemData = itemElement.nodeType ? this._getItemData(itemElement) : itemElement;
-    var node = this._dataAdapter.getNodeByItem(itemData);
-    var selectedItem = this.option('selectedItem');
+    const itemData = itemElement.nodeType ? this._getItemData(itemElement) : itemElement;
+    const node = this._dataAdapter.getNodeByItem(itemData);
+    const selectedItem = this.option('selectedItem');
     if (node.internalFields.selected) {
       this._toggleItemSelection(node, false);
       this._updateSelectedItems(selectedItem, null);

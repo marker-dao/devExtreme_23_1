@@ -14,51 +14,60 @@ var _validator = _interopRequireDefault(require("../../validator"));
 var _constants = require("../constants");
 var _label = require("./label");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var FLEX_LAYOUT_CLASS = 'dx-flex-layout';
+const FLEX_LAYOUT_CLASS = 'dx-flex-layout';
 exports.FLEX_LAYOUT_CLASS = FLEX_LAYOUT_CLASS;
-var FIELD_ITEM_OPTIONAL_CLASS = 'dx-field-item-optional';
+const FIELD_ITEM_OPTIONAL_CLASS = 'dx-field-item-optional';
 exports.FIELD_ITEM_OPTIONAL_CLASS = FIELD_ITEM_OPTIONAL_CLASS;
-var FIELD_ITEM_REQUIRED_CLASS = 'dx-field-item-required';
+const FIELD_ITEM_REQUIRED_CLASS = 'dx-field-item-required';
 exports.FIELD_ITEM_REQUIRED_CLASS = FIELD_ITEM_REQUIRED_CLASS;
-var FIELD_ITEM_CONTENT_WRAPPER_CLASS = 'dx-field-item-content-wrapper';
+const FIELD_ITEM_CONTENT_WRAPPER_CLASS = 'dx-field-item-content-wrapper';
 exports.FIELD_ITEM_CONTENT_WRAPPER_CLASS = FIELD_ITEM_CONTENT_WRAPPER_CLASS;
-var FIELD_ITEM_CONTENT_LOCATION_CLASS = 'dx-field-item-content-location-';
+const FIELD_ITEM_CONTENT_LOCATION_CLASS = 'dx-field-item-content-location-';
 exports.FIELD_ITEM_CONTENT_LOCATION_CLASS = FIELD_ITEM_CONTENT_LOCATION_CLASS;
-var FIELD_ITEM_LABEL_ALIGN_CLASS = 'dx-field-item-label-align';
+const FIELD_ITEM_LABEL_ALIGN_CLASS = 'dx-field-item-label-align';
 exports.FIELD_ITEM_LABEL_ALIGN_CLASS = FIELD_ITEM_LABEL_ALIGN_CLASS;
-var FIELD_ITEM_HELP_TEXT_CLASS = 'dx-field-item-help-text';
+const FIELD_ITEM_HELP_TEXT_CLASS = 'dx-field-item-help-text';
 exports.FIELD_ITEM_HELP_TEXT_CLASS = FIELD_ITEM_HELP_TEXT_CLASS;
-var LABEL_VERTICAL_ALIGNMENT_CLASS = 'dx-label-v-align';
+const LABEL_VERTICAL_ALIGNMENT_CLASS = 'dx-label-v-align';
 exports.LABEL_VERTICAL_ALIGNMENT_CLASS = LABEL_VERTICAL_ALIGNMENT_CLASS;
-var LABEL_HORIZONTAL_ALIGNMENT_CLASS = 'dx-label-h-align';
+const LABEL_HORIZONTAL_ALIGNMENT_CLASS = 'dx-label-h-align';
 exports.LABEL_HORIZONTAL_ALIGNMENT_CLASS = LABEL_HORIZONTAL_ALIGNMENT_CLASS;
-var TOGGLE_CONTROLS_PADDING_CLASS = 'dx-toggle-controls-paddings';
+const TOGGLE_CONTROLS_PADDING_CLASS = 'dx-toggle-controls-paddings';
 exports.TOGGLE_CONTROLS_PADDING_CLASS = TOGGLE_CONTROLS_PADDING_CLASS;
-var TEMPLATE_WRAPPER_CLASS = 'dx-template-wrapper';
-var VALIDATION_TARGET_CLASS = 'dx-validation-target';
-var INVALID_CLASS = 'dx-invalid';
+const TEMPLATE_WRAPPER_CLASS = 'dx-template-wrapper';
+const VALIDATION_TARGET_CLASS = 'dx-validation-target';
+const INVALID_CLASS = 'dx-invalid';
 function renderFieldItem(_ref) {
-  var $parent = _ref.$parent,
-    rootElementCssClassList = _ref.rootElementCssClassList,
-    formOrLayoutManager = _ref.formOrLayoutManager,
-    createComponentCallback = _ref.createComponentCallback,
-    labelOptions = _ref.labelOptions,
-    labelNeedBaselineAlign = _ref.labelNeedBaselineAlign,
-    labelLocation = _ref.labelLocation,
-    needRenderLabel = _ref.needRenderLabel,
-    formLabelLocation = _ref.formLabelLocation,
-    item = _ref.item,
-    editorOptions = _ref.editorOptions,
-    isSimpleItem = _ref.isSimpleItem,
-    isRequired = _ref.isRequired,
-    template = _ref.template,
-    helpID = _ref.helpID,
-    labelID = _ref.labelID,
-    name = _ref.name,
-    helpText = _ref.helpText,
-    requiredMessageTemplate = _ref.requiredMessageTemplate,
-    validationGroup = _ref.validationGroup;
-  var $rootElement = (0, _renderer.default)('<div>').addClass(rootElementCssClassList.join(' ')).appendTo($parent);
+  let {
+    $parent,
+    rootElementCssClassList,
+    formOrLayoutManager,
+    createComponentCallback,
+    labelOptions,
+    // TODO: move to 'item' ?
+    labelNeedBaselineAlign,
+    labelLocation,
+    needRenderLabel,
+    // TODO: move to 'labelOptions' ?
+    formLabelLocation,
+    // TODO: use 'labelOptions.location' insted ?
+
+    item,
+    // TODO: pass simple values instead of complex object
+    editorOptions,
+    isSimpleItem,
+    isRequired,
+    template,
+    helpID,
+    labelID,
+    name,
+    helpText,
+    // TODO: move to 'item' ?
+
+    requiredMessageTemplate,
+    validationGroup
+  } = _ref;
+  const $rootElement = (0, _renderer.default)('<div>').addClass(rootElementCssClassList.join(' ')).appendTo($parent);
   $rootElement.addClass(isRequired ? FIELD_ITEM_REQUIRED_CLASS : FIELD_ITEM_OPTIONAL_CLASS);
   if (isSimpleItem) {
     $rootElement.addClass(FLEX_LAYOUT_CLASS);
@@ -72,9 +81,9 @@ function renderFieldItem(_ref) {
   // Setup field editor container:
   //
 
-  var $fieldEditorContainer = (0, _renderer.default)('<div>');
+  const $fieldEditorContainer = (0, _renderer.default)('<div>');
   $fieldEditorContainer.data('dx-form-item', item);
-  var locationClassSuffix = {
+  const locationClassSuffix = {
     right: 'left',
     left: 'right',
     top: 'bottom'
@@ -85,7 +94,7 @@ function renderFieldItem(_ref) {
   // Setup $label:
   //
 
-  var $label = null;
+  let $label = null;
   if (needRenderLabel) {
     if (labelOptions.labelTemplate) {
       labelOptions.labelTemplateData = getTemplateData(item, editorOptions, formOrLayoutManager);
@@ -93,7 +102,9 @@ function renderFieldItem(_ref) {
     $label = (0, _label.renderLabel)(labelOptions);
   }
   if ($label) {
-    var editorType = item.editorType;
+    const {
+      editorType
+    } = item;
     $rootElement.append($label);
     if (labelLocation === 'top' || labelLocation === 'left') {
       $rootElement.append($fieldEditorContainer);
@@ -111,12 +122,12 @@ function renderFieldItem(_ref) {
         _events_engine.default.trigger($fieldEditorContainer.children(), _click.name);
       });
     }
-    var toggleControls = ['dxCheckBox', 'dxSwitch', 'dxRadioGroup'];
-    var isToggleControls = toggleControls.includes(editorType);
-    var labelAlignment = labelOptions.alignment;
-    var isLabelAlignmentLeft = labelAlignment === 'left' || !labelAlignment;
-    var hasNotTemplate = !template;
-    var isLabelOnTop = labelLocation === 'top';
+    const toggleControls = ['dxCheckBox', 'dxSwitch', 'dxRadioGroup'];
+    const isToggleControls = toggleControls.includes(editorType);
+    const labelAlignment = labelOptions.alignment;
+    const isLabelAlignmentLeft = labelAlignment === 'left' || !labelAlignment;
+    const hasNotTemplate = !template;
+    const isLabelOnTop = labelLocation === 'top';
     if (hasNotTemplate && isToggleControls && isLabelOnTop && isLabelAlignmentLeft) {
       $fieldEditorContainer.addClass(TOGGLE_CONTROLS_PADDING_CLASS);
     }
@@ -128,19 +139,19 @@ function renderFieldItem(_ref) {
   // Append field editor:
   //
 
-  var widgetInstance;
+  let widgetInstance;
   if (template) {
     template.render({
       container: (0, _element.getPublicElement)($fieldEditorContainer),
       model: getTemplateData(item, editorOptions, formOrLayoutManager),
       onRendered() {
-        var $validationTarget = getValidationTarget($fieldEditorContainer);
-        var validationTargetInstance = tryGetValidationTargetInstance($validationTarget);
+        const $validationTarget = getValidationTarget($fieldEditorContainer);
+        const validationTargetInstance = tryGetValidationTargetInstance($validationTarget);
         subscribeWrapperInvalidClassToggle(validationTargetInstance);
       }
     });
   } else {
-    var $div = (0, _renderer.default)('<div>').appendTo($fieldEditorContainer);
+    const $div = (0, _renderer.default)('<div>').appendTo($fieldEditorContainer);
     try {
       widgetInstance = createComponentCallback($div, item.editorType, editorOptions);
       widgetInstance.setAria('describedby', helpID);
@@ -155,18 +166,18 @@ function renderFieldItem(_ref) {
   // Setup $validation:
   //
 
-  var $validationTarget = getValidationTarget($fieldEditorContainer);
-  var validationTargetInstance = $validationTarget && $validationTarget.data(VALIDATION_TARGET_CLASS);
+  const $validationTarget = getValidationTarget($fieldEditorContainer);
+  const validationTargetInstance = $validationTarget && $validationTarget.data(VALIDATION_TARGET_CLASS);
   if (validationTargetInstance) {
-    var isItemHaveCustomLabel = item.label && item.label.text;
-    var itemName = isItemHaveCustomLabel ? null : name;
-    var fieldName = isItemHaveCustomLabel ? item.label.text : itemName && (0, _inflector.captionize)(itemName);
-    var validationRules;
+    const isItemHaveCustomLabel = item.label && item.label.text;
+    const itemName = isItemHaveCustomLabel ? null : name;
+    const fieldName = isItemHaveCustomLabel ? item.label.text : itemName && (0, _inflector.captionize)(itemName);
+    let validationRules;
     if (isSimpleItem) {
       if (item.validationRules) {
         validationRules = item.validationRules;
       } else {
-        var requiredMessage = (0, _string.format)(requiredMessageTemplate, fieldName || '');
+        const requiredMessage = (0, _string.format)(requiredMessageTemplate, fieldName || '');
         validationRules = item.isRequired ? [{
           type: 'required',
           message: requiredMessage
@@ -177,7 +188,7 @@ function renderFieldItem(_ref) {
       createComponentCallback($validationTarget, _validator.default, {
         validationRules: validationRules,
         validationGroup: validationGroup,
-        dataGetter: function dataGetter() {
+        dataGetter: function () {
           return {
             formItem: item
           };
@@ -192,7 +203,7 @@ function renderFieldItem(_ref) {
   //
 
   if (helpText && isSimpleItem) {
-    var $editorParent = $fieldEditorContainer.parent();
+    const $editorParent = $fieldEditorContainer.parent();
 
     // TODO: DOM hierarchy is changed here: new node is added between $editor and $editor.parent()
     $editorParent.append((0, _renderer.default)('<div>').addClass(FIELD_ITEM_CONTENT_WRAPPER_CLASS).append($fieldEditorContainer).append((0, _renderer.default)('<div>').addClass(FIELD_ITEM_HELP_TEXT_CLASS).attr('id', helpID).text(helpText)));
@@ -204,7 +215,7 @@ function renderFieldItem(_ref) {
   };
 }
 function getValidationTarget($fieldEditorContainer) {
-  var $editor = $fieldEditorContainer.children().first();
+  const $editor = $fieldEditorContainer.children().first();
   return $editor.hasClass(TEMPLATE_WRAPPER_CLASS) ? $editor.children().first() : $editor;
 }
 function tryGetValidationTargetInstance($validationTarget) {
@@ -213,16 +224,19 @@ function tryGetValidationTargetInstance($validationTarget) {
 }
 function subscribeWrapperInvalidClassToggle(validationTargetInstance) {
   if (validationTargetInstance && (0, _themes.isMaterialBased)()) {
-    var wrapperClass = ".".concat(FIELD_ITEM_CONTENT_WRAPPER_CLASS);
-    var toggleInvalidClass = function toggleInvalidClass(_ref2) {
-      var element = _ref2.element,
-        component = _ref2.component;
-      var _component$option = component.option(),
-        isValid = _component$option.isValid,
-        validationMessageMode = _component$option.validationMessageMode;
+    const wrapperClass = ".".concat(FIELD_ITEM_CONTENT_WRAPPER_CLASS);
+    const toggleInvalidClass = _ref2 => {
+      let {
+        element,
+        component
+      } = _ref2;
+      const {
+        isValid,
+        validationMessageMode
+      } = component.option();
       (0, _renderer.default)(element).parents(wrapperClass).toggleClass(INVALID_CLASS, isValid === false && (component._isFocused() || validationMessageMode === 'always'));
     };
-    validationTargetInstance.on('optionChanged', function (e) {
+    validationTargetInstance.on('optionChanged', e => {
       if (e.name !== 'isValid') return;
       toggleInvalidClass(e);
     });

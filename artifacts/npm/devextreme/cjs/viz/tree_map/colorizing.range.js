@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/tree_map/colorizing.range.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,10 +11,10 @@
 exports.default = void 0;
 var _colorizing = require("./colorizing");
 function getPaletteIndex(value, items) {
-  var start = 0;
-  var end = items.length - 1;
-  var index = -1;
-  var middle;
+  let start = 0;
+  let end = items.length - 1;
+  let index = -1;
+  let middle;
   if (items[start] <= value && value <= items[end]) {
     if (value === items[end]) {
       index = end - 1;
@@ -33,9 +33,9 @@ function getPaletteIndex(value, items) {
   return index;
 }
 function rangeColorizer(options, themeManager) {
-  var range = options.range || [];
-  var palette = themeManager.createDiscretePalette(options.palette, range.length - 1);
-  var getValue = (0, _colorizing.createColorCodeGetter)(options);
+  const range = options.range || [];
+  const palette = themeManager.createDiscretePalette(options.palette, range.length - 1);
+  const getValue = (0, _colorizing.createColorCodeGetter)(options);
   return function (node) {
     return palette.getColor(getPaletteIndex(getValue(node), range));
   };

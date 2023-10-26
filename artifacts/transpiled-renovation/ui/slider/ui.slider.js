@@ -23,79 +23,78 @@ var _math = require("../../core/utils/math");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // STYLE slider
 
-var SLIDER_CLASS = 'dx-slider';
-var SLIDER_WRAPPER_CLASS = 'dx-slider-wrapper';
-var SLIDER_HANDLE_SELECTOR = '.dx-slider-handle';
-var SLIDER_BAR_CLASS = 'dx-slider-bar';
-var SLIDER_RANGE_CLASS = 'dx-slider-range';
-var SLIDER_RANGE_VISIBLE_CLASS = 'dx-slider-range-visible';
-var SLIDER_LABEL_CLASS = 'dx-slider-label';
-var SLIDER_LABEL_POSITION_CLASS_PREFIX = 'dx-slider-label-position-';
-var SLIDER_TOOLTIP_POSITION_CLASS_PREFIX = 'dx-slider-tooltip-position-';
-var INVALID_MESSAGE_VISIBLE_CLASS = 'dx-invalid-message-visible';
-var SLIDER_VALIDATION_NAMESPACE = 'Validation';
-var Slider = _track_bar.default.inherit({
+const SLIDER_CLASS = 'dx-slider';
+const SLIDER_WRAPPER_CLASS = 'dx-slider-wrapper';
+const SLIDER_HANDLE_SELECTOR = '.dx-slider-handle';
+const SLIDER_BAR_CLASS = 'dx-slider-bar';
+const SLIDER_RANGE_CLASS = 'dx-slider-range';
+const SLIDER_RANGE_VISIBLE_CLASS = 'dx-slider-range-visible';
+const SLIDER_LABEL_CLASS = 'dx-slider-label';
+const SLIDER_LABEL_POSITION_CLASS_PREFIX = 'dx-slider-label-position-';
+const SLIDER_TOOLTIP_POSITION_CLASS_PREFIX = 'dx-slider-tooltip-position-';
+const INVALID_MESSAGE_VISIBLE_CLASS = 'dx-invalid-message-visible';
+const SLIDER_VALIDATION_NAMESPACE = 'Validation';
+const Slider = _track_bar.default.inherit({
   _activeStateUnit: SLIDER_HANDLE_SELECTOR,
-  _supportedKeys: function _supportedKeys() {
-    var _this = this;
-    var isRTL = this.option('rtlEnabled');
-    var roundedValue = function roundedValue(offset, isLeftDirection) {
-      offset = _this._valueStep(offset);
-      var step = _this.option('step');
-      var value = _this.option('value');
-      var currentPosition = value - _this.option('min');
-      var remainder = (0, _math.getRemainderByDivision)(currentPosition, step, _this._getValueExponentLength());
-      var result = isLeftDirection ? value - offset + (remainder ? step - remainder : 0) : value + offset - remainder;
-      var min = _this.option('min');
-      var max = _this.option('max');
+  _supportedKeys: function () {
+    const isRTL = this.option('rtlEnabled');
+    const roundedValue = (offset, isLeftDirection) => {
+      offset = this._valueStep(offset);
+      const step = this.option('step');
+      const value = this.option('value');
+      const currentPosition = value - this.option('min');
+      const remainder = (0, _math.getRemainderByDivision)(currentPosition, step, this._getValueExponentLength());
+      let result = isLeftDirection ? value - offset + (remainder ? step - remainder : 0) : value + offset - remainder;
+      const min = this.option('min');
+      const max = this.option('max');
       if (result < min) {
         result = min;
       } else if (result > max) {
         result = max;
       }
-      return _this._roundToExponentLength(result);
+      return this._roundToExponentLength(result);
     };
-    var moveHandleRight = function moveHandleRight(offset) {
-      _this.option('value', roundedValue(offset, isRTL));
+    const moveHandleRight = offset => {
+      this.option('value', roundedValue(offset, isRTL));
     };
-    var moveHandleLeft = function moveHandleLeft(offset) {
-      _this.option('value', roundedValue(offset, !isRTL));
+    const moveHandleLeft = offset => {
+      this.option('value', roundedValue(offset, !isRTL));
     };
     return (0, _extend.extend)(this.callBase(), {
-      leftArrow: function leftArrow(e) {
+      leftArrow: function (e) {
         this._processKeyboardEvent(e);
         moveHandleLeft(this.option('step'));
       },
-      rightArrow: function rightArrow(e) {
+      rightArrow: function (e) {
         this._processKeyboardEvent(e);
         moveHandleRight(this.option('step'));
       },
-      pageUp: function pageUp(e) {
+      pageUp: function (e) {
         this._processKeyboardEvent(e);
         moveHandleRight(this.option('step') * this.option('keyStep'));
       },
-      pageDown: function pageDown(e) {
+      pageDown: function (e) {
         this._processKeyboardEvent(e);
         moveHandleLeft(this.option('step') * this.option('keyStep'));
       },
-      home: function home(e) {
+      home: function (e) {
         this._processKeyboardEvent(e);
-        var min = this.option('min');
+        const min = this.option('min');
         this.option('value', min);
       },
-      end: function end(e) {
+      end: function (e) {
         this._processKeyboardEvent(e);
-        var max = this.option('max');
+        const max = this.option('max');
         this.option('value', max);
       }
     });
   },
-  _processKeyboardEvent: function _processKeyboardEvent(e) {
+  _processKeyboardEvent: function (e) {
     e.preventDefault();
     e.stopPropagation();
     this._saveValueChangeEvent(e);
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       value: 50,
       hoverStateEnabled: true,
@@ -104,7 +103,7 @@ var Slider = _track_bar.default.inherit({
       showRange: true,
       tooltip: {
         enabled: false,
-        format: function format(value) {
+        format: function (value) {
           return value;
         },
         position: 'top',
@@ -113,7 +112,7 @@ var Slider = _track_bar.default.inherit({
       label: {
         visible: false,
         position: 'bottom',
-        format: function format(value) {
+        format: function (value) {
           return value;
         }
       },
@@ -130,22 +129,22 @@ var Slider = _track_bar.default.inherit({
       valueChangeMode: 'onHandleMove'
     });
   },
-  _toggleValidationMessage: function _toggleValidationMessage(visible) {
+  _toggleValidationMessage: function (visible) {
     if (!this.option('isValid')) {
       this.$element().toggleClass(INVALID_MESSAGE_VISIBLE_CLASS, visible);
     }
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
-      device: function device() {
+      device: function () {
         return _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator();
       },
       options: {
         focusStateEnabled: true
       }
     }, {
-      device: function device() {
-        var themeName = (0, _themes.current)();
+      device: function () {
+        const themeName = (0, _themes.current)();
         return (0, _themes.isMaterial)(themeName);
       },
       options: {
@@ -153,7 +152,7 @@ var Slider = _track_bar.default.inherit({
       }
     }]);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.$element().addClass(SLIDER_CLASS);
     this._renderSubmitElement();
     this.option('useInkRipple') && this._renderInkRipple();
@@ -162,32 +161,32 @@ var Slider = _track_bar.default.inherit({
     this._renderStartHandler();
     this._renderAriaMinAndMax();
   },
-  _attachFocusEvents: function _attachFocusEvents() {
+  _attachFocusEvents: function () {
     this.callBase();
-    var namespace = this.NAME + SLIDER_VALIDATION_NAMESPACE;
-    var focusInEvent = (0, _index.addNamespace)('focusin', namespace);
-    var focusOutEvent = (0, _index.addNamespace)('focusout', namespace);
-    var $focusTarget = this._focusTarget();
+    const namespace = this.NAME + SLIDER_VALIDATION_NAMESPACE;
+    const focusInEvent = (0, _index.addNamespace)('focusin', namespace);
+    const focusOutEvent = (0, _index.addNamespace)('focusout', namespace);
+    const $focusTarget = this._focusTarget();
     _events_engine.default.on($focusTarget, focusInEvent, this._toggleValidationMessage.bind(this, true));
     _events_engine.default.on($focusTarget, focusOutEvent, this._toggleValidationMessage.bind(this, false));
   },
-  _detachFocusEvents: function _detachFocusEvents() {
+  _detachFocusEvents: function () {
     this.callBase();
-    var $focusTarget = this._focusTarget();
+    const $focusTarget = this._focusTarget();
     this._toggleValidationMessage(false);
     _events_engine.default.off($focusTarget, this.NAME + SLIDER_VALIDATION_NAMESPACE);
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._repaintHandle();
   },
-  _renderSubmitElement: function _renderSubmitElement() {
+  _renderSubmitElement: function () {
     this._$submitElement = (0, _renderer.default)('<input>').attr('type', 'hidden').appendTo(this.$element());
   },
-  _getSubmitElement: function _getSubmitElement() {
+  _getSubmitElement: function () {
     return this._$submitElement;
   },
-  _renderInkRipple: function _renderInkRipple() {
+  _renderInkRipple: function () {
     this._inkRipple = (0, _utils.render)({
       waveSizeCoefficient: 0.7,
       isCentered: true,
@@ -195,11 +194,11 @@ var Slider = _track_bar.default.inherit({
       useHoldAnimation: false
     });
   },
-  _renderInkWave: function _renderInkWave(element, dxEvent, doRender, waveIndex) {
+  _renderInkWave: function (element, dxEvent, doRender, waveIndex) {
     if (!this._inkRipple) {
       return;
     }
-    var config = {
+    const config = {
       element,
       event: dxEvent,
       wave: waveIndex
@@ -210,10 +209,10 @@ var Slider = _track_bar.default.inherit({
       this._inkRipple.hideWave(config);
     }
   },
-  _visibilityChanged: function _visibilityChanged() {
+  _visibilityChanged: function () {
     this.repaint();
   },
-  _renderWrapper: function _renderWrapper() {
+  _renderWrapper: function () {
     this.callBase();
     this._$wrapper.addClass(SLIDER_WRAPPER_CLASS);
     this._createComponent(this._$wrapper, _swipeable.default, {
@@ -226,25 +225,25 @@ var Slider = _track_bar.default.inherit({
       itemSizeFunc: this._itemWidthFunc.bind(this)
     });
   },
-  _renderContainer: function _renderContainer() {
+  _renderContainer: function () {
     this.callBase();
     this._$bar.addClass(SLIDER_BAR_CLASS);
   },
-  _renderRange: function _renderRange() {
+  _renderRange: function () {
     this.callBase();
     this._$range.addClass(SLIDER_RANGE_CLASS);
     this._renderHandle();
     this._renderRangeVisibility();
   },
-  _renderRangeVisibility: function _renderRangeVisibility() {
+  _renderRangeVisibility: function () {
     this._$range.toggleClass(SLIDER_RANGE_VISIBLE_CLASS, Boolean(this.option('showRange')));
   },
-  _renderHandle: function _renderHandle() {
+  _renderHandle: function () {
     this._$handle = this._renderHandleImpl(this.option('value'), this._$handle);
   },
-  _renderHandleImpl: function _renderHandleImpl(value, $element) {
-    var $handle = $element || (0, _renderer.default)('<div>').appendTo(this._$range);
-    var tooltip = this.option('tooltip');
+  _renderHandleImpl: function (value, $element) {
+    const $handle = $element || (0, _renderer.default)('<div>').appendTo(this._$range);
+    const tooltip = this.option('tooltip');
     this.$element().toggleClass(SLIDER_TOOLTIP_POSITION_CLASS_PREFIX + 'bottom', tooltip.enabled && tooltip.position === 'bottom').toggleClass(SLIDER_TOOLTIP_POSITION_CLASS_PREFIX + 'top', tooltip.enabled && tooltip.position === 'top');
     this._createComponent($handle, _ui.default, {
       value,
@@ -252,31 +251,31 @@ var Slider = _track_bar.default.inherit({
     });
     return $handle;
   },
-  _renderAriaMinAndMax: function _renderAriaMinAndMax() {
+  _renderAriaMinAndMax: function () {
     this.setAria({
       'valuemin': this.option('min'),
       'valuemax': this.option('max')
     }, this._$handle);
   },
-  _toggleActiveState: function _toggleActiveState($element, value) {
+  _toggleActiveState: function ($element, value) {
     this.callBase($element, value);
     this._renderInkWave($element, null, !!value, 1);
   },
-  _toggleFocusClass: function _toggleFocusClass(isFocused, $element) {
+  _toggleFocusClass: function (isFocused, $element) {
     this.callBase(isFocused, $element);
     if (this._disposed) {
       return;
     }
-    var $focusTarget = (0, _renderer.default)($element || this._focusTarget());
+    const $focusTarget = (0, _renderer.default)($element || this._focusTarget());
     this._renderInkWave($focusTarget, null, isFocused, 0);
   },
-  _renderLabels: function _renderLabels() {
+  _renderLabels: function () {
     this.$element().removeClass(SLIDER_LABEL_POSITION_CLASS_PREFIX + 'bottom').removeClass(SLIDER_LABEL_POSITION_CLASS_PREFIX + 'top');
     if (this.option('label.visible')) {
-      var min = this.option('min');
-      var max = this.option('max');
-      var position = this.option('label.position');
-      var labelFormat = this.option('label.format');
+      const min = this.option('min');
+      const max = this.option('max');
+      const position = this.option('label.position');
+      const labelFormat = this.option('label.format');
       if (!this._$minLabel) {
         this._$minLabel = (0, _renderer.default)('<div>').addClass(SLIDER_LABEL_CLASS).appendTo(this._$wrapper);
       }
@@ -297,14 +296,13 @@ var Slider = _track_bar.default.inherit({
       }
     }
   },
-  _renderStartHandler: function _renderStartHandler() {
-    var _this2 = this;
-    var pointerDownEventName = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
-    var clickEventName = (0, _index.addNamespace)(_click.name, this.NAME);
-    var startAction = this._createAction(this._startHandler.bind(this));
-    var $element = this.$element();
+  _renderStartHandler: function () {
+    const pointerDownEventName = (0, _index.addNamespace)(_pointer.default.down, this.NAME);
+    const clickEventName = (0, _index.addNamespace)(_click.name, this.NAME);
+    const startAction = this._createAction(this._startHandler.bind(this));
+    const $element = this.$element();
     _events_engine.default.off($element, pointerDownEventName);
-    _events_engine.default.on($element, pointerDownEventName, function (e) {
+    _events_engine.default.on($element, pointerDownEventName, e => {
       if ((0, _index.isMouseEvent)(e)) {
         startAction({
           event: e
@@ -312,8 +310,8 @@ var Slider = _track_bar.default.inherit({
       }
     });
     _events_engine.default.off($element, clickEventName);
-    _events_engine.default.on($element, clickEventName, function (e) {
-      var $handle = _this2._activeHandle();
+    _events_engine.default.on($element, clickEventName, e => {
+      const $handle = this._activeHandle();
       if ($handle) {
         _events_engine.default.trigger($handle, 'focusin');
         _events_engine.default.trigger($handle, 'focus');
@@ -321,17 +319,17 @@ var Slider = _track_bar.default.inherit({
       startAction({
         event: e
       });
-      if (_this2.option('valueChangeMode') === 'onHandleRelease') {
-        _this2.option('value', _this2._getActualValue());
-        _this2._actualValue = undefined;
+      if (this.option('valueChangeMode') === 'onHandleRelease') {
+        this.option('value', this._getActualValue());
+        this._actualValue = undefined;
       }
     });
   },
-  _itemWidthFunc: function _itemWidthFunc() {
+  _itemWidthFunc: function () {
     return this._itemWidthRatio;
   },
-  _swipeStartHandler: function _swipeStartHandler(e) {
-    var rtlEnabled = this.option('rtlEnabled');
+  _swipeStartHandler: function (e) {
+    const rtlEnabled = this.option('rtlEnabled');
     if ((0, _index.isTouchEvent)(e.event)) {
       this._createAction(this._startHandler.bind(this))({
         event: e.event
@@ -341,21 +339,21 @@ var Slider = _track_bar.default.inherit({
     (0, _emitter.lock)(this._feedbackDeferred);
     this._toggleActiveState(this._activeHandle(), this.option('activeStateEnabled'));
     this._startOffset = this._currentRatio;
-    var startOffset = this._startOffset * this._swipePixelRatio();
-    var endOffset = (1 - this._startOffset) * this._swipePixelRatio();
+    const startOffset = this._startOffset * this._swipePixelRatio();
+    const endOffset = (1 - this._startOffset) * this._swipePixelRatio();
     e.event.maxLeftOffset = rtlEnabled ? endOffset : startOffset;
     e.event.maxRightOffset = rtlEnabled ? startOffset : endOffset;
     this._itemWidthRatio = (0, _size.getWidth)(this.$element()) / this._swipePixelRatio();
     this._needPreventAnimation = true;
   },
-  _swipeEndHandler: function _swipeEndHandler(e) {
+  _swipeEndHandler: function (e) {
     if (this._isSingleValuePossible()) {
       return;
     }
     this._feedbackDeferred.resolve();
     this._toggleActiveState(this._activeHandle(), false);
-    var offsetDirection = this.option('rtlEnabled') ? -1 : 1;
-    var ratio = this._startOffset + offsetDirection * e.event.targetOffset / this._swipePixelRatio();
+    const offsetDirection = this.option('rtlEnabled') ? -1 : 1;
+    const ratio = this._startOffset + offsetDirection * e.event.targetOffset / this._swipePixelRatio();
     delete this._needPreventAnimation;
     this._saveValueChangeEvent(e.event);
     this._changeValueOnSwipe(ratio);
@@ -366,63 +364,64 @@ var Slider = _track_bar.default.inherit({
     delete this._startOffset;
     this._renderValue();
   },
-  _activeHandle: function _activeHandle() {
+  _activeHandle: function () {
     return this._$handle;
   },
-  _swipeUpdateHandler: function _swipeUpdateHandler(e) {
+  _swipeUpdateHandler: function (e) {
     if (this._isSingleValuePossible()) {
       return;
     }
     this._saveValueChangeEvent(e.event);
     this._updateHandlePosition(e);
   },
-  _updateHandlePosition: function _updateHandlePosition(e) {
-    var offsetDirection = this.option('rtlEnabled') ? -1 : 1;
-    var newRatio = Math.min(this._startOffset + offsetDirection * e.event.offset / this._swipePixelRatio(), 1);
+  _updateHandlePosition: function (e) {
+    const offsetDirection = this.option('rtlEnabled') ? -1 : 1;
+    const newRatio = Math.min(this._startOffset + offsetDirection * e.event.offset / this._swipePixelRatio(), 1);
     (0, _size.setWidth)(this._$range, newRatio * 100 + '%');
     _ui.default.getInstance(this._activeHandle())['fitTooltipPosition'];
     this._changeValueOnSwipe(newRatio);
   },
-  _swipePixelRatio: function _swipePixelRatio() {
-    var min = this.option('min');
-    var max = this.option('max');
-    var step = this._valueStep(this.option('step'));
+  _swipePixelRatio: function () {
+    const min = this.option('min');
+    const max = this.option('max');
+    const step = this._valueStep(this.option('step'));
     return (max - min) / step;
   },
-  _valueStep: function _valueStep(step) {
+  _valueStep: function (step) {
     if (!step || isNaN(step)) {
       step = 1;
     }
     return step;
   },
-  _getValueExponentLength: function _getValueExponentLength() {
-    var _this$option = this.option(),
-      step = _this$option.step,
-      min = _this$option.min;
+  _getValueExponentLength: function () {
+    const {
+      step,
+      min
+    } = this.option();
     return Math.max((0, _math.getExponentLength)(step), (0, _math.getExponentLength)(min));
   },
-  _roundToExponentLength: function _roundToExponentLength(value) {
-    var valueExponentLength = this._getValueExponentLength();
+  _roundToExponentLength: function (value) {
+    const valueExponentLength = this._getValueExponentLength();
     return (0, _math.roundFloatPart)(value, valueExponentLength);
   },
-  _changeValueOnSwipe: function _changeValueOnSwipe(ratio) {
-    var min = this.option('min');
-    var max = this.option('max');
-    var step = this._valueStep(this.option('step'));
-    var newChange = ratio * (max - min);
-    var newValue = min + newChange;
+  _changeValueOnSwipe: function (ratio) {
+    const min = this.option('min');
+    const max = this.option('max');
+    const step = this._valueStep(this.option('step'));
+    const newChange = ratio * (max - min);
+    let newValue = min + newChange;
     if (step < 0) {
       return;
     }
     if (newValue === max || newValue === min) {
       this._setValueOnSwipe(newValue);
     } else {
-      var stepCount = Math.round((newValue - min) / step);
+      const stepCount = Math.round((newValue - min) / step);
       newValue = this._roundToExponentLength(stepCount * step + min);
       this._setValueOnSwipe(Math.max(Math.min(newValue, max), min));
     }
   },
-  _setValueOnSwipe: function _setValueOnSwipe(value) {
+  _setValueOnSwipe: function (value) {
     this._actualValue = value;
     if (this.option('valueChangeMode') === 'onHandleRelease') {
       _ui.default.getInstance(this._activeHandle()).option('value', value);
@@ -431,21 +430,22 @@ var Slider = _track_bar.default.inherit({
       this._saveValueChangeEvent(undefined);
     }
   },
-  _getActualValue: function _getActualValue() {
+  _getActualValue: function () {
     var _this$_actualValue;
     return (_this$_actualValue = this._actualValue) !== null && _this$_actualValue !== void 0 ? _this$_actualValue : this.option('value');
   },
-  _isSingleValuePossible: function _isSingleValuePossible() {
-    var _this$option2 = this.option(),
-      min = _this$option2.min,
-      max = _this$option2.max;
+  _isSingleValuePossible: function () {
+    const {
+      min,
+      max
+    } = this.option();
     return min === max;
   },
-  _startHandler: function _startHandler(args) {
+  _startHandler: function (args) {
     if (this._isSingleValuePossible()) {
       return;
     }
-    var e = args.event;
+    const e = args.event;
     this._currentRatio = ((0, _index.eventData)(e).x - this._$bar.offset().left) / (0, _size.getWidth)(this._$bar);
     if (this.option('rtlEnabled')) {
       this._currentRatio = 1 - this._currentRatio;
@@ -453,25 +453,25 @@ var Slider = _track_bar.default.inherit({
     this._saveValueChangeEvent(e);
     this._changeValueOnSwipe(this._currentRatio);
   },
-  _renderValue: function _renderValue() {
+  _renderValue: function () {
     this.callBase();
-    var value = this._getActualValue();
+    const value = this._getActualValue();
     this._getSubmitElement().val((0, _common.applyServerDecimalSeparator)(value));
     _ui.default.getInstance(this._activeHandle()).option('value', value);
   },
-  _setRangeStyles: function _setRangeStyles(options) {
+  _setRangeStyles: function (options) {
     options && this._$range.css(options);
   },
-  _callHandlerMethod: function _callHandlerMethod(name, args) {
+  _callHandlerMethod: function (name, args) {
     _ui.default.getInstance(this._$handle)[name](args);
   },
-  _repaintHandle: function _repaintHandle() {
+  _repaintHandle: function () {
     this._callHandlerMethod('repaint');
   },
-  _fitTooltip: function _fitTooltip() {
+  _fitTooltip: function () {
     this._callHandlerMethod('updateTooltipPosition');
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'visible':
         this.callBase(args);
@@ -509,14 +509,14 @@ var Slider = _track_bar.default.inherit({
         this.callBase(args);
     }
   },
-  _refresh: function _refresh() {
+  _refresh: function () {
     this._toggleRTLDirection(this.option('rtlEnabled'));
     this._renderDimensions();
     this._renderValue();
     this._renderHandle();
     this._repaintHandle();
   },
-  _clean: function _clean() {
+  _clean: function () {
     delete this._inkRipple;
     delete this._actualValue;
     this.callBase();

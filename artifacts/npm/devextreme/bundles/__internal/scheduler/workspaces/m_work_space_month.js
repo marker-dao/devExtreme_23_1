@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/workspaces/m_work_space_month.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,13 +32,13 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // NOTE: Renovation component import.
 // @ts-expect-error
-var MONTH_CLASS = 'dx-scheduler-work-space-month';
-var DATE_TABLE_CURRENT_DATE_CLASS = 'dx-scheduler-date-table-current-date';
-var DATE_TABLE_CELL_TEXT_CLASS = 'dx-scheduler-date-table-cell-text';
-var DATE_TABLE_FIRST_OF_MONTH_CLASS = 'dx-scheduler-date-table-first-of-month';
-var DATE_TABLE_OTHER_MONTH_DATE_CLASS = 'dx-scheduler-date-table-other-month';
-var toMs = _date.default.dateToMilliseconds;
-var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
+const MONTH_CLASS = 'dx-scheduler-work-space-month';
+const DATE_TABLE_CURRENT_DATE_CLASS = 'dx-scheduler-date-table-current-date';
+const DATE_TABLE_CELL_TEXT_CLASS = 'dx-scheduler-date-table-cell-text';
+const DATE_TABLE_FIRST_OF_MONTH_CLASS = 'dx-scheduler-date-table-first-of-month';
+const DATE_TABLE_OTHER_MONTH_DATE_CLASS = 'dx-scheduler-date-table-other-month';
+const toMs = _date.default.dateToMilliseconds;
+let SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
   _inheritsLoose(SchedulerWorkSpaceMonth, _SchedulerWorkSpace);
   function SchedulerWorkSpaceMonth() {
     return _SchedulerWorkSpace.apply(this, arguments) || this;
@@ -51,8 +51,8 @@ var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return _base.formatWeekday;
   };
   _proto._getIntervalBetween = function _getIntervalBetween(currentDate) {
-    var firstViewDate = this.getStartViewDate();
-    var timeZoneOffset = _date.default.getTimezonesDifference(firstViewDate, currentDate);
+    const firstViewDate = this.getStartViewDate();
+    const timeZoneOffset = _date.default.getTimezonesDifference(firstViewDate, currentDate);
     return currentDate.getTime() - (firstViewDate.getTime() - this.option('startDayHour') * 3600000) - timeZoneOffset;
   };
   _proto._getDateGenerationOptions = function _getDateGenerationOptions() {
@@ -64,12 +64,11 @@ var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
   // TODO: there is a test for this bug, when changing the layout, the test will also be useless
   ;
   _proto.getCellWidth = function getCellWidth() {
-    var _this = this;
-    return this.cache.get('cellWidth', function () {
-      var DAYS_IN_WEEK = 7;
-      var averageWidth = 0;
-      var cells = _this._getCells().slice(0, DAYS_IN_WEEK);
-      cells.each(function (index, element) {
+    return this.cache.get('cellWidth', () => {
+      const DAYS_IN_WEEK = 7;
+      let averageWidth = 0;
+      const cells = this._getCells().slice(0, DAYS_IN_WEEK);
+      cells.each((index, element) => {
         averageWidth += (0, _window.hasWindow)() ? (0, _position.getBoundingRect)(element).width : 0;
       });
       return cells.length === 0 ? undefined : averageWidth / DAYS_IN_WEEK;
@@ -79,8 +78,8 @@ var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
     return false;
   };
   _proto._getCellCoordinatesByIndex = function _getCellCoordinatesByIndex(index) {
-    var rowIndex = Math.floor(index / this._getCellCount());
-    var columnIndex = index - this._getCellCount() * rowIndex;
+    const rowIndex = Math.floor(index / this._getCellCount());
+    const columnIndex = index - this._getCellCount() * rowIndex;
     return {
       rowIndex,
       columnIndex
@@ -160,10 +159,9 @@ var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
   };
   _proto._createAllDayPanelElements = function _createAllDayPanelElements() {};
   _proto._renderTableBody = function _renderTableBody(options) {
-    var _this2 = this;
-    options.getCellText = function (rowIndex, columnIndex) {
-      var date = _this2.viewDataProvider.completeViewDataMap[rowIndex][columnIndex].startDate;
-      return (0, _month.getCellText)(date, _this2.option('intervalCount'));
+    options.getCellText = (rowIndex, columnIndex) => {
+      const date = this.viewDataProvider.completeViewDataMap[rowIndex][columnIndex].startDate;
+      return (0, _month.getCellText)(date, this.option('intervalCount'));
     };
     options.getCellTextClass = DATE_TABLE_CELL_TEXT_CLASS;
     options.setAdditionalClasses = this._setMonthClassesToCell.bind(this);
@@ -171,7 +169,7 @@ var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
   };
   _createClass(SchedulerWorkSpaceMonth, [{
     key: "type",
-    get: function get() {
+    get: function () {
       return _m_constants.VIEWS.MONTH;
     }
   }]);

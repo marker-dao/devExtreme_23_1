@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/tree_list/m_keyboard_navigation.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,11 +18,11 @@ _m_core.default.registerModule('keyboardNavigation', (0, _extend.extend)(true, {
       keyboardNavigation: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _leftRightKeysHandler(eventArgs, isEditing) {
-          var rowIndex = this.getVisibleRowIndex();
-          var dataController = this._dataController;
+          const rowIndex = this.getVisibleRowIndex();
+          const dataController = this._dataController;
           if (eventArgs.ctrl) {
-            var directionCode = this._getDirectionCodeByKey(eventArgs.keyName);
-            var key = dataController.getKeyByRowIndex(rowIndex);
+            const directionCode = this._getDirectionCodeByKey(eventArgs.keyName);
+            const key = dataController.getKeyByRowIndex(rowIndex);
             if (directionCode === 'nextInRow') {
               dataController.expandRow(key);
             } else {

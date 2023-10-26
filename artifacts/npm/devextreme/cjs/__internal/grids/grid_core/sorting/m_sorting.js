@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/sorting/m_sorting.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,14 +21,13 @@ var _index = require("../../../../events/utils/index");
 var _message = _interopRequireDefault(require("../../../../localization/message"));
 var _m_sorting_mixin = _interopRequireDefault(require("./m_sorting_mixin"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var COLUMN_HEADERS_VIEW_NAMESPACE = 'dxDataGridColumnHeadersView';
-var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.default, {
+const COLUMN_HEADERS_VIEW_NAMESPACE = 'dxDataGridColumnHeadersView';
+const ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.default, {
   _createRow(row) {
-    var _this = this;
-    var $row = this.callBase(row);
+    const $row = this.callBase(row);
     if (row.rowType === 'header') {
-      _events_engine.default.on($row, (0, _index.addNamespace)(_click.name, COLUMN_HEADERS_VIEW_NAMESPACE), 'td', this.createAction(function (e) {
-        _this._processHeaderAction(e.event, $row);
+      _events_engine.default.on($row, (0, _index.addNamespace)(_click.name, COLUMN_HEADERS_VIEW_NAMESPACE), 'td', this.createAction(e => {
+        this._processHeaderAction(e.event, $row);
       }));
     }
     return $row;
@@ -37,24 +36,24 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
     if ((0, _renderer.default)(event.currentTarget).parent().get(0) !== $row.get(0)) {
       return;
     }
-    var that = this;
-    var keyName = null;
-    var $cellElementFromEvent = (0, _renderer.default)(event.currentTarget);
-    var rowIndex = $cellElementFromEvent.parent().index();
-    var columnIndex = -1;
+    const that = this;
+    let keyName = null;
+    const $cellElementFromEvent = (0, _renderer.default)(event.currentTarget);
+    const rowIndex = $cellElementFromEvent.parent().index();
+    let columnIndex = -1;
     // eslint-disable-next-line array-callback-return
-    [].slice.call(that.getCellElements(rowIndex)).some(function ($cellElement, index) {
+    [].slice.call(that.getCellElements(rowIndex)).some(($cellElement, index) => {
       if ($cellElement === $cellElementFromEvent.get(0)) {
         columnIndex = index;
         return true;
       }
       return undefined;
     });
-    var visibleColumns = that._columnsController.getVisibleColumns(rowIndex);
-    var column = visibleColumns[columnIndex];
-    var editingController = that.getController('editing');
-    var editingMode = that.option('editing.mode');
-    var isCellEditing = editingController && editingController.isEditing() && (editingMode === 'batch' || editingMode === 'cell');
+    const visibleColumns = that._columnsController.getVisibleColumns(rowIndex);
+    const column = visibleColumns[columnIndex];
+    const editingController = that.getController('editing');
+    const editingMode = that.option('editing.mode');
+    const isCellEditing = editingController && editingController.isEditing() && (editingMode === 'batch' || editingMode === 'cell');
     if (isCellEditing || !that._isSortableElement((0, _renderer.default)(event.target))) {
       return;
     }
@@ -64,14 +63,16 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
       } else if ((0, _index.isCommandKeyPressed)(event)) {
         keyName = 'ctrl';
       }
-      setTimeout(function () {
+      setTimeout(() => {
         that._columnsController.changeSortOrder(column.index, keyName);
       });
     }
   },
   _renderCellContent($cell, options) {
-    var that = this;
-    var column = options.column;
+    const that = this;
+    const {
+      column
+    } = options;
     if (!column.command && options.rowType === 'header') {
       that._applyColumnState({
         name: 'sort',
@@ -83,7 +84,9 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
     this.callBase.apply(this, arguments);
   },
   _columnOptionChanged(e) {
-    var changeTypes = e.changeTypes;
+    const {
+      changeTypes
+    } = e;
     if (changeTypes.length === 1 && changeTypes.sorting) {
       this._updateIndicators('sort');
       return;
@@ -91,7 +94,7 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
     this.callBase(e);
   },
   optionChanged(args) {
-    var that = this;
+    const that = this;
     switch (args.name) {
       case 'sorting':
         that._invalidate();
@@ -102,11 +105,11 @@ var ColumnHeadersViewSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.
     }
   }
 });
-var HeaderPanelSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.default, {
+const HeaderPanelSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.default, {
   _createGroupPanelItem($rootElement, groupColumn) {
-    var that = this;
-    var $item = that.callBase.apply(that, arguments);
-    _events_engine.default.on($item, (0, _index.addNamespace)(_click.name, 'dxDataGridHeaderPanel'), that.createAction(function () {
+    const that = this;
+    const $item = that.callBase(...arguments);
+    _events_engine.default.on($item, (0, _index.addNamespace)(_click.name, 'dxDataGridHeaderPanel'), that.createAction(() => {
       that._processGroupItemAction(groupColumn.index);
     }));
     that._applyColumnState({
@@ -123,13 +126,10 @@ var HeaderPanelSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.defaul
     return $item;
   },
   _processGroupItemAction(groupColumnIndex) {
-    var _this2 = this;
-    setTimeout(function () {
-      return _this2.getController('columns').changeSortOrder(groupColumnIndex);
-    });
+    setTimeout(() => this.getController('columns').changeSortOrder(groupColumnIndex));
   },
   optionChanged(args) {
-    var that = this;
+    const that = this;
     switch (args.name) {
       case 'sorting':
         that._invalidate();
@@ -140,7 +140,7 @@ var HeaderPanelSortingExtender = (0, _extend.extend)({}, _m_sorting_mixin.defaul
     }
   }
 });
-var sortingModule = {
+const sortingModule = {
   defaultOptions() {
     return {
       sorting: {

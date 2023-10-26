@@ -2,7 +2,5 @@
 
 exports.combineClasses = combineClasses;
 function combineClasses(classesMap) {
-  return Object.keys(classesMap).filter(function (p) {
-    return classesMap[p];
-  }).join(' ');
+  return Object.keys(classesMap).filter(p => classesMap[p]).join(' ');
 }

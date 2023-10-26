@@ -2,7 +2,7 @@
 
 exports.default = void 0;
 var _utils = require("./utils");
-var OperationManager = /*#__PURE__*/function () {
+let OperationManager = /*#__PURE__*/function () {
   function OperationManager() {
     this._counter = -1;
     this._deferreds = {};

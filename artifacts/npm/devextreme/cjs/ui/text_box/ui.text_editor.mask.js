@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.mask.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,32 +25,32 @@ var _uiText_editorMask = require("./ui.text_editor.mask.rule");
 var _uiText_editor = _interopRequireDefault(require("./ui.text_editor.base"));
 var _uiText_editorMask2 = _interopRequireDefault(require("./ui.text_editor.mask.strategy"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var stubCaret = function stubCaret() {
+const stubCaret = function () {
   return {};
 };
-var caret = _utils.default;
-var EMPTY_CHAR = ' ';
-var ESCAPED_CHAR = '\\';
-var TEXTEDITOR_MASKED_CLASS = 'dx-texteditor-masked';
-var FORWARD_DIRECTION = 'forward';
-var BACKWARD_DIRECTION = 'backward';
-var DROP_EVENT_NAME = 'drop';
-var buildInMaskRules = {
+let caret = _utils.default;
+const EMPTY_CHAR = ' ';
+const ESCAPED_CHAR = '\\';
+const TEXTEDITOR_MASKED_CLASS = 'dx-texteditor-masked';
+const FORWARD_DIRECTION = 'forward';
+const BACKWARD_DIRECTION = 'backward';
+const DROP_EVENT_NAME = 'drop';
+const buildInMaskRules = {
   '0': /[0-9]/,
   '9': /[0-9\s]/,
   '#': /[-+0-9\s]/,
-  'L': function L(char) {
+  'L': function (char) {
     return isLiteralChar(char);
   },
-  'l': function l(char) {
+  'l': function (char) {
     return isLiteralChar(char) || isSpaceChar(char);
   },
   'C': /\S/,
   'c': /./,
-  'A': function A(char) {
+  'A': function (char) {
     return isLiteralChar(char) || isNumericChar(char);
   },
-  'a': function a(char) {
+  'a': function (char) {
     return isLiteralChar(char) || isNumericChar(char) || isSpaceChar(char);
   }
 };
@@ -58,14 +58,14 @@ function isNumericChar(char) {
   return /[0-9]/.test(char);
 }
 function isLiteralChar(char) {
-  var code = char.charCodeAt();
+  const code = char.charCodeAt();
   return 64 < code && code < 91 || 96 < code && code < 123 || code > 127;
 }
 function isSpaceChar(char) {
   return char === ' ';
 }
-var TextEditorMask = _uiText_editor.default.inherit({
-  _getDefaultOptions: function _getDefaultOptions() {
+const TextEditorMask = _uiText_editor.default.inherit({
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       mask: '',
       maskChar: '_',
@@ -75,15 +75,15 @@ var TextEditorMask = _uiText_editor.default.inherit({
       showMaskMode: 'always'
     });
   },
-  _supportedKeys: function _supportedKeys() {
-    var that = this;
-    var keyHandlerMap = {
+  _supportedKeys: function () {
+    const that = this;
+    const keyHandlerMap = {
       del: that._maskStrategy.getHandler('del'),
       enter: that._changeHandler
     };
-    var result = that.callBase();
+    const result = that.callBase();
     (0, _iterator.each)(keyHandlerMap, function (key, callback) {
-      var parentHandler = result[key];
+      const parentHandler = result[key];
       result[key] = function (e) {
         that.option('mask') && callback.call(that, e);
         parentHandler && parentHandler(e);
@@ -91,29 +91,31 @@ var TextEditorMask = _uiText_editor.default.inherit({
     });
     return result;
   },
-  _getSubmitElement: function _getSubmitElement() {
+  _getSubmitElement: function () {
     return !this.option('mask') ? this.callBase() : this._$hiddenElement;
   },
-  _init: function _init() {
+  _init: function () {
     this.callBase();
     this._initMaskStrategy();
   },
-  _initMaskStrategy: function _initMaskStrategy() {
+  _initMaskStrategy: function () {
     this._maskStrategy = new _uiText_editorMask2.default(this);
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this._renderHiddenElement();
     this.callBase();
   },
-  _attachMouseWheelEventHandlers: function _attachMouseWheelEventHandlers() {
-    var hasMouseWheelHandler = this._onMouseWheel !== _common.noop;
+  _attachMouseWheelEventHandlers: function () {
+    const hasMouseWheelHandler = this._onMouseWheel !== _common.noop;
     if (!hasMouseWheelHandler) {
       return;
     }
-    var input = this._input();
-    var eventName = (0, _index.addNamespace)(_wheel.name, this.NAME);
-    var mouseWheelAction = this._createAction(function (e) {
-      var event = e.event;
+    const input = this._input();
+    const eventName = (0, _index.addNamespace)(_wheel.name, this.NAME);
+    const mouseWheelAction = this._createAction(function (e) {
+      const {
+        event
+      } = e;
       if ((0, _selectors.focused)(input) && !(0, _index.isCommandKeyPressed)(event)) {
         this._onMouseWheel(event);
         event.preventDefault();
@@ -132,16 +134,14 @@ var TextEditorMask = _uiText_editor.default.inherit({
     return Boolean(this.option('mask'));
   },
   _attachDropEventHandler() {
-    var useMaskBehavior = this._useMaskBehavior();
+    const useMaskBehavior = this._useMaskBehavior();
     if (!useMaskBehavior) {
       return;
     }
-    var eventName = (0, _index.addNamespace)(DROP_EVENT_NAME, this.NAME);
-    var input = this._input();
+    const eventName = (0, _index.addNamespace)(DROP_EVENT_NAME, this.NAME);
+    const input = this._input();
     _events_engine.default.off(input, eventName);
-    _events_engine.default.on(input, eventName, function (e) {
-      return e.preventDefault();
-    });
+    _events_engine.default.on(input, eventName, e => e.preventDefault());
   },
   _render() {
     this._renderMask();
@@ -149,15 +149,15 @@ var TextEditorMask = _uiText_editor.default.inherit({
     this._attachDropEventHandler();
     this._attachMouseWheelEventHandlers();
   },
-  _renderHiddenElement: function _renderHiddenElement() {
+  _renderHiddenElement: function () {
     if (this.option('mask')) {
       this._$hiddenElement = (0, _renderer.default)('<input>').attr('type', 'hidden').appendTo(this._inputWrapper());
     }
   },
-  _removeHiddenElement: function _removeHiddenElement() {
+  _removeHiddenElement: function () {
     this._$hiddenElement && this._$hiddenElement.remove();
   },
-  _renderMask: function _renderMask() {
+  _renderMask: function () {
     this.$element().removeClass(TEXTEDITOR_MASKED_CLASS);
     this._maskRulesChain = null;
     this._maskStrategy.detachEvents();
@@ -169,7 +169,7 @@ var TextEditorMask = _uiText_editor.default.inherit({
     this._parseMask();
     this._renderMaskedValue();
   },
-  _suppressCaretChanging: function _suppressCaretChanging(callback, args) {
+  _suppressCaretChanging: function (callback, args) {
     caret = stubCaret;
     try {
       callback.apply(this, args);
@@ -177,37 +177,37 @@ var TextEditorMask = _uiText_editor.default.inherit({
       caret = _utils.default;
     }
   },
-  _changeHandler: function _changeHandler(e) {
-    var $input = this._input();
-    var inputValue = $input.val();
+  _changeHandler: function (e) {
+    const $input = this._input();
+    const inputValue = $input.val();
     if (inputValue === this._changedValue) {
       return;
     }
     this._changedValue = inputValue;
-    var changeEvent = (0, _index.createEvent)(e, {
+    const changeEvent = (0, _index.createEvent)(e, {
       type: 'change'
     });
     _events_engine.default.trigger($input, changeEvent);
   },
-  _parseMask: function _parseMask() {
+  _parseMask: function () {
     this._maskRules = (0, _extend.extend)({}, buildInMaskRules, this.option('maskRules'));
     this._maskRulesChain = this._parseMaskRule(0);
   },
-  _parseMaskRule: function _parseMaskRule(index) {
-    var mask = this.option('mask');
+  _parseMaskRule: function (index) {
+    const mask = this.option('mask');
     if (index >= mask.length) {
       return new _uiText_editorMask.EmptyMaskRule();
     }
-    var currentMaskChar = mask[index];
-    var isEscapedChar = currentMaskChar === ESCAPED_CHAR;
-    var result = isEscapedChar ? new _uiText_editorMask.StubMaskRule({
+    const currentMaskChar = mask[index];
+    const isEscapedChar = currentMaskChar === ESCAPED_CHAR;
+    const result = isEscapedChar ? new _uiText_editorMask.StubMaskRule({
       maskChar: mask[index + 1]
     }) : this._getMaskRule(currentMaskChar);
     result.next(this._parseMaskRule(index + 1 + isEscapedChar));
     return result;
   },
-  _getMaskRule: function _getMaskRule(pattern) {
-    var ruleConfig;
+  _getMaskRule: function (pattern) {
+    let ruleConfig;
     (0, _iterator.each)(this._maskRules, function (rulePattern, allowedChars) {
       if (rulePattern === pattern) {
         ruleConfig = {
@@ -223,70 +223,70 @@ var TextEditorMask = _uiText_editor.default.inherit({
       maskChar: pattern
     });
   },
-  _renderMaskedValue: function _renderMaskedValue() {
+  _renderMaskedValue: function () {
     if (!this._maskRulesChain) {
       return;
     }
-    var value = this.option('value') || '';
+    const value = this.option('value') || '';
     this._maskRulesChain.clear(this._normalizeChainArguments());
-    var chainArgs = {
+    const chainArgs = {
       length: value.length
     };
     chainArgs[this._isMaskedValueMode() ? 'text' : 'value'] = value;
     this._handleChain(chainArgs);
     this._displayMask();
   },
-  _replaceSelectedText: function _replaceSelectedText(text, selection, char) {
+  _replaceSelectedText: function (text, selection, char) {
     if (char === undefined) {
       return text;
     }
-    var textBefore = text.slice(0, selection.start);
-    var textAfter = text.slice(selection.end);
-    var edited = textBefore + char + textAfter;
+    const textBefore = text.slice(0, selection.start);
+    const textAfter = text.slice(selection.end);
+    const edited = textBefore + char + textAfter;
     return edited;
   },
-  _isMaskedValueMode: function _isMaskedValueMode() {
+  _isMaskedValueMode: function () {
     return this.option('useMaskedValue');
   },
-  _displayMask: function _displayMask(caret) {
+  _displayMask: function (caret) {
     caret = caret || this._caret();
     this._renderValue();
     this._caret(caret);
   },
-  _isValueEmpty: function _isValueEmpty() {
+  _isValueEmpty: function () {
     return (0, _string.isEmpty)(this._value);
   },
-  _shouldShowMask: function _shouldShowMask() {
-    var showMaskMode = this.option('showMaskMode');
+  _shouldShowMask: function () {
+    const showMaskMode = this.option('showMaskMode');
     if (showMaskMode === 'onFocus') {
       return (0, _selectors.focused)(this._input()) || !this._isValueEmpty();
     }
     return true;
   },
-  _showMaskPlaceholder: function _showMaskPlaceholder() {
+  _showMaskPlaceholder: function () {
     if (this._shouldShowMask()) {
-      var text = this._maskRulesChain.text();
+      const text = this._maskRulesChain.text();
       this.option('text', text);
       if (this.option('showMaskMode') === 'onFocus') {
         this._renderDisplayText(text);
       }
     }
   },
-  _renderValue: function _renderValue() {
+  _renderValue: function () {
     if (this._maskRulesChain) {
       this._showMaskPlaceholder();
       if (this._$hiddenElement) {
-        var value = this._maskRulesChain.value();
-        var submitElementValue = !(0, _string.isEmpty)(value) ? this._getPreparedValue() : '';
+        const value = this._maskRulesChain.value();
+        const submitElementValue = !(0, _string.isEmpty)(value) ? this._getPreparedValue() : '';
         this._$hiddenElement.val(submitElementValue);
       }
     }
     return this.callBase();
   },
-  _getPreparedValue: function _getPreparedValue() {
+  _getPreparedValue: function () {
     return this._convertToValue().replace(/\s+$/, '');
   },
-  _valueChangeEventHandler: function _valueChangeEventHandler(e) {
+  _valueChangeEventHandler: function (e) {
     if (!this._maskRulesChain) {
       this.callBase.apply(this, arguments);
       return;
@@ -294,22 +294,22 @@ var TextEditorMask = _uiText_editor.default.inherit({
     this._saveValueChangeEvent(e);
     this.option('value', this._getPreparedValue());
   },
-  _isControlKeyFired: function _isControlKeyFired(e) {
+  _isControlKeyFired: function (e) {
     return this._isControlKey((0, _index.normalizeKeyName)(e)) || (0, _index.isCommandKeyPressed)(e);
   },
-  _handleChain: function _handleChain(args) {
-    var handledCount = this._maskRulesChain.handle(this._normalizeChainArguments(args));
+  _handleChain: function (args) {
+    const handledCount = this._maskRulesChain.handle(this._normalizeChainArguments(args));
     this._value = this._maskRulesChain.value();
     this._textValue = this._maskRulesChain.text();
     return handledCount;
   },
-  _normalizeChainArguments: function _normalizeChainArguments(args) {
+  _normalizeChainArguments: function (args) {
     args = args || {};
     args.index = 0;
     args.fullText = this._maskRulesChain.text();
     return args;
   },
-  _convertToValue: function _convertToValue(text) {
+  _convertToValue: function (text) {
     if (this._isMaskedValueMode()) {
       text = this._replaceMaskCharWithEmpty(text || this._textValue || '');
     } else {
@@ -317,24 +317,23 @@ var TextEditorMask = _uiText_editor.default.inherit({
     }
     return text;
   },
-  _replaceMaskCharWithEmpty: function _replaceMaskCharWithEmpty(text) {
+  _replaceMaskCharWithEmpty: function (text) {
     return text.replace(new RegExp(this.option('maskChar'), 'g'), EMPTY_CHAR);
   },
-  _maskKeyHandler: function _maskKeyHandler(e, keyHandler) {
-    var _this = this;
+  _maskKeyHandler: function (e, keyHandler) {
     if (this.option('readOnly')) {
       return;
     }
     this.setForwardDirection();
     e.preventDefault();
     this._handleSelection();
-    var previousText = this._input().val();
-    var raiseInputEvent = function raiseInputEvent() {
-      if (previousText !== _this._input().val()) {
-        _events_engine.default.trigger(_this._input(), 'input');
+    const previousText = this._input().val();
+    const raiseInputEvent = () => {
+      if (previousText !== this._input().val()) {
+        _events_engine.default.trigger(this._input(), 'input');
       }
     };
-    var handled = keyHandler();
+    const handled = keyHandler();
     if (handled) {
       handled.then(raiseInputEvent);
     } else {
@@ -345,57 +344,57 @@ var TextEditorMask = _uiText_editor.default.inherit({
       raiseInputEvent();
     }
   },
-  _handleKey: function _handleKey(key, direction) {
+  _handleKey: function (key, direction) {
     this._direction(direction || FORWARD_DIRECTION);
     this._adjustCaret(key);
     this._handleKeyChain(key);
     this._moveCaret();
   },
-  _handleSelection: function _handleSelection() {
+  _handleSelection: function () {
     if (!this._hasSelection()) {
       return;
     }
-    var caret = this._caret();
-    var emptyChars = new Array(caret.end - caret.start + 1).join(EMPTY_CHAR);
+    const caret = this._caret();
+    const emptyChars = new Array(caret.end - caret.start + 1).join(EMPTY_CHAR);
     this._handleKeyChain(emptyChars);
   },
-  _handleKeyChain: function _handleKeyChain(chars) {
-    var caret = this._caret();
-    var start = this.isForwardDirection() ? caret.start : caret.start - 1;
-    var end = this.isForwardDirection() ? caret.end : caret.end - 1;
-    var length = start === end ? 1 : end - start;
+  _handleKeyChain: function (chars) {
+    const caret = this._caret();
+    const start = this.isForwardDirection() ? caret.start : caret.start - 1;
+    const end = this.isForwardDirection() ? caret.end : caret.end - 1;
+    const length = start === end ? 1 : end - start;
     this._handleChain({
       text: chars,
       start: start,
       length: length
     });
   },
-  _tryMoveCaretBackward: function _tryMoveCaretBackward() {
+  _tryMoveCaretBackward: function () {
     this.setBackwardDirection();
-    var currentCaret = this._caret().start;
+    const currentCaret = this._caret().start;
     this._adjustCaret();
     return !currentCaret || currentCaret !== this._caret().start;
   },
-  _adjustCaret: function _adjustCaret(char) {
-    var caretStart = this._caret().start;
-    var isForwardDirection = this.isForwardDirection();
-    var caret = this._maskRulesChain.adjustedCaret(caretStart, isForwardDirection, char);
+  _adjustCaret: function (char) {
+    const caretStart = this._caret().start;
+    const isForwardDirection = this.isForwardDirection();
+    const caret = this._maskRulesChain.adjustedCaret(caretStart, isForwardDirection, char);
     this._caret({
       start: caret,
       end: caret
     });
   },
-  _moveCaret: function _moveCaret() {
-    var currentCaret = this._caret().start;
-    var maskRuleIndex = currentCaret + (this.isForwardDirection() ? 0 : -1);
-    var caret = this._maskRulesChain.isAccepted(maskRuleIndex) ? currentCaret + (this.isForwardDirection() ? 1 : -1) : currentCaret;
+  _moveCaret: function () {
+    const currentCaret = this._caret().start;
+    const maskRuleIndex = currentCaret + (this.isForwardDirection() ? 0 : -1);
+    const caret = this._maskRulesChain.isAccepted(maskRuleIndex) ? currentCaret + (this.isForwardDirection() ? 1 : -1) : currentCaret;
     this._caret({
       start: caret,
       end: caret
     });
   },
-  _caret: function _caret(position, force) {
-    var $input = this._input();
+  _caret: function (position, force) {
+    const $input = this._input();
     if (!$input.length) {
       return;
     }
@@ -404,34 +403,34 @@ var TextEditorMask = _uiText_editor.default.inherit({
     }
     caret($input, position, force);
   },
-  _hasSelection: function _hasSelection() {
-    var caret = this._caret();
+  _hasSelection: function () {
+    const caret = this._caret();
     return caret.start !== caret.end;
   },
-  _direction: function _direction(direction) {
+  _direction: function (direction) {
     if (!arguments.length) {
       return this._typingDirection;
     }
     this._typingDirection = direction;
   },
-  setForwardDirection: function setForwardDirection() {
+  setForwardDirection: function () {
     this._direction(FORWARD_DIRECTION);
   },
-  setBackwardDirection: function setBackwardDirection() {
+  setBackwardDirection: function () {
     this._direction(BACKWARD_DIRECTION);
   },
-  isForwardDirection: function isForwardDirection() {
+  isForwardDirection: function () {
     return this._direction() === FORWARD_DIRECTION;
   },
-  _clean: function _clean() {
+  _clean: function () {
     this._maskStrategy && this._maskStrategy.clean();
     this.callBase();
   },
-  _validateMask: function _validateMask() {
+  _validateMask: function () {
     if (!this._maskRulesChain) {
       return;
     }
-    var isValid = (0, _string.isEmpty)(this.option('value')) || this._maskRulesChain.isValid(this._normalizeChainArguments());
+    const isValid = (0, _string.isEmpty)(this.option('value')) || this._maskRulesChain.isValid(this._normalizeChainArguments());
     this.option({
       isValid: isValid,
       validationError: isValid ? null : {
@@ -440,7 +439,7 @@ var TextEditorMask = _uiText_editor.default.inherit({
       }
     });
   },
-  _updateHiddenElement: function _updateHiddenElement() {
+  _updateHiddenElement: function () {
     this._removeHiddenElement();
     if (this.option('mask')) {
       this._input().removeAttr('name');
@@ -448,14 +447,14 @@ var TextEditorMask = _uiText_editor.default.inherit({
     }
     this._setSubmitElementName(this.option('name'));
   },
-  _updateMaskOption: function _updateMaskOption() {
+  _updateMaskOption: function () {
     this._updateHiddenElement();
     this._renderMask();
     this._validateMask();
   },
-  _processEmptyMask: function _processEmptyMask(mask) {
+  _processEmptyMask: function (mask) {
     if (mask) return;
-    var value = this.option('value');
+    const value = this.option('value');
     this.option({
       text: value,
       isValid: true
@@ -466,7 +465,7 @@ var TextEditorMask = _uiText_editor.default.inherit({
     });
     this._renderValue();
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'mask':
         this._updateMaskOption();

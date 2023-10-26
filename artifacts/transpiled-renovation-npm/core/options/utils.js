@@ -7,14 +7,16 @@ var _common = require("../utils/common");
 var _extend = require("../utils/extend");
 var _data = require("../utils/data");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var cachedGetters = {};
-var convertRulesToOptions = function convertRulesToOptions(rules) {
-  var currentDevice = _devices.default.current();
-  return rules.reduce(function (options, _ref) {
-    var device = _ref.device,
-      ruleOptions = _ref.options;
-    var deviceFilter = device || {};
-    var match = (0, _type.isFunction)(deviceFilter) ? deviceFilter(currentDevice) : deviceMatch(currentDevice, deviceFilter);
+const cachedGetters = {};
+const convertRulesToOptions = rules => {
+  const currentDevice = _devices.default.current();
+  return rules.reduce((options, _ref) => {
+    let {
+      device,
+      options: ruleOptions
+    } = _ref;
+    const deviceFilter = device || {};
+    const match = (0, _type.isFunction)(deviceFilter) ? deviceFilter(currentDevice) : deviceMatch(currentDevice, deviceFilter);
     if (match) {
       (0, _extend.extend)(true, options, ruleOptions);
     }
@@ -22,33 +24,27 @@ var convertRulesToOptions = function convertRulesToOptions(rules) {
   }, {});
 };
 exports.convertRulesToOptions = convertRulesToOptions;
-var normalizeOptions = function normalizeOptions(options, value) {
+const normalizeOptions = (options, value) => {
   return typeof options !== 'string' ? options : {
     [options]: value
   };
 };
 exports.normalizeOptions = normalizeOptions;
-var deviceMatch = function deviceMatch(device, filter) {
-  return (0, _type.isEmptyObject)(filter) || (0, _common.findBestMatches)(device, [filter]).length > 0;
-};
+const deviceMatch = (device, filter) => (0, _type.isEmptyObject)(filter) || (0, _common.findBestMatches)(device, [filter]).length > 0;
 exports.deviceMatch = deviceMatch;
-var getFieldName = function getFieldName(fullName) {
-  return fullName.substr(fullName.lastIndexOf('.') + 1);
-};
+const getFieldName = fullName => fullName.substr(fullName.lastIndexOf('.') + 1);
 exports.getFieldName = getFieldName;
-var getParentName = function getParentName(fullName) {
-  return fullName.substr(0, fullName.lastIndexOf('.'));
-};
+const getParentName = fullName => fullName.substr(0, fullName.lastIndexOf('.'));
 exports.getParentName = getParentName;
-var getNestedOptionValue = function getNestedOptionValue(optionsObject, name) {
+const getNestedOptionValue = function (optionsObject, name) {
   cachedGetters[name] = cachedGetters[name] || (0, _data.compileGetter)(name);
   return cachedGetters[name](optionsObject, {
     functionsAsIs: true
   });
 };
 exports.getNestedOptionValue = getNestedOptionValue;
-var createDefaultOptionRules = function createDefaultOptionRules() {
-  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+const createDefaultOptionRules = function () {
+  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   return options;
 };
 exports.createDefaultOptionRules = createDefaultOptionRules;

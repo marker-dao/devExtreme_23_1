@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.base.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,47 +29,47 @@ var _uiDate_boxStrategy3 = _interopRequireDefault(require("./ui.date_box.strateg
 var _uiDate_boxStrategy4 = _interopRequireDefault(require("./ui.date_box.strategy.calendar_with_time"));
 var _uiDate_boxStrategy5 = _interopRequireDefault(require("./ui.date_box.strategy.list"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var window = (0, _window.getWindow)();
-var DATEBOX_CLASS = 'dx-datebox';
-var DX_AUTO_WIDTH_CLASS = 'dx-auto-width';
-var DX_INVALID_BADGE_CLASS = 'dx-show-invalid-badge';
-var DX_CLEAR_BUTTON_CLASS = 'dx-clear-button-area';
-var DATEBOX_WRAPPER_CLASS = 'dx-datebox-wrapper';
-var DROPDOWNEDITOR_OVERLAY_CLASS = 'dx-dropdowneditor-overlay';
-var PICKER_TYPE = {
+const window = (0, _window.getWindow)();
+const DATEBOX_CLASS = 'dx-datebox';
+const DX_AUTO_WIDTH_CLASS = 'dx-auto-width';
+const DX_INVALID_BADGE_CLASS = 'dx-show-invalid-badge';
+const DX_CLEAR_BUTTON_CLASS = 'dx-clear-button-area';
+const DATEBOX_WRAPPER_CLASS = 'dx-datebox-wrapper';
+const DROPDOWNEDITOR_OVERLAY_CLASS = 'dx-dropdowneditor-overlay';
+const PICKER_TYPE = {
   calendar: 'calendar',
   rollers: 'rollers',
   list: 'list',
   native: 'native'
 };
-var TYPE = {
+const TYPE = {
   date: 'date',
   datetime: 'datetime',
   time: 'time'
 };
-var STRATEGY_NAME = {
+const STRATEGY_NAME = {
   calendar: 'Calendar',
   dateView: 'DateView',
   native: 'Native',
   calendarWithTime: 'CalendarWithTime',
   list: 'List'
 };
-var STRATEGY_CLASSES = {
+const STRATEGY_CLASSES = {
   Calendar: _uiDate_boxStrategy.default,
   DateView: _uiDate_boxStrategy2.default,
   Native: _uiDate_boxStrategy3.default,
   CalendarWithTime: _uiDate_boxStrategy4.default,
   List: _uiDate_boxStrategy5.default
 };
-var DateBox = _ui2.default.inherit({
-  _supportedKeys: function _supportedKeys() {
+const DateBox = _ui2.default.inherit({
+  _supportedKeys: function () {
     return (0, _extend.extend)(this.callBase(), this._strategy.supportedKeys());
   },
-  _renderButtonContainers: function _renderButtonContainers() {
+  _renderButtonContainers: function () {
     this.callBase.apply(this, arguments);
     this._strategy.customizeButtons();
   },
-  _getDefaultOptions: function _getDefaultOptions() {
+  _getDefaultOptions: function () {
     return (0, _extend.extend)(this.callBase(), {
       type: 'date',
       showAnalogClock: true,
@@ -90,7 +90,7 @@ var DateBox = _ui2.default.inherit({
       _showValidationIcon: true
     });
   },
-  _defaultOptionsRules: function _defaultOptionsRules() {
+  _defaultOptionsRules: function () {
     return this.callBase().concat([{
       device: {
         platform: 'ios'
@@ -106,9 +106,9 @@ var DateBox = _ui2.default.inherit({
         buttonsLocation: 'bottom after'
       }
     }, {
-      device: function device() {
-        var realDevice = _devices.default.real();
-        var platform = realDevice.platform;
+      device: function () {
+        const realDevice = _devices.default.real();
+        const platform = realDevice.platform;
         return platform === 'ios' || platform === 'android';
       },
       options: {
@@ -124,14 +124,14 @@ var DateBox = _ui2.default.inherit({
       }
     }]);
   },
-  _initOptions: function _initOptions(options) {
+  _initOptions: function (options) {
     this._userOptions = (0, _extend.extend)({}, options);
     this.callBase(options);
     this._updatePickerOptions();
   },
-  _updatePickerOptions: function _updatePickerOptions() {
-    var pickerType = this.option('pickerType');
-    var type = this.option('type');
+  _updatePickerOptions: function () {
+    let pickerType = this.option('pickerType');
+    const type = this.option('type');
     if (pickerType === PICKER_TYPE.list && (type === TYPE.datetime || type === TYPE.date)) {
       pickerType = PICKER_TYPE.calendar;
     }
@@ -141,27 +141,27 @@ var DateBox = _ui2.default.inherit({
     this.option('showDropDownButton', _devices.default.real().platform !== 'generic' || pickerType !== PICKER_TYPE['native']);
     this._pickerType = pickerType;
   },
-  _init: function _init() {
+  _init: function () {
     this._initStrategy();
     this.option((0, _extend.extend)({}, this._strategy.getDefaultOptions(), this._userOptions));
     delete this._userOptions;
     this.callBase();
   },
-  _toLowerCaseFirstLetter: function _toLowerCaseFirstLetter(string) {
+  _toLowerCaseFirstLetter: function (string) {
     return string.charAt(0).toLowerCase() + string.substr(1);
   },
-  _initStrategy: function _initStrategy() {
-    var strategyName = this._getStrategyName(this._getFormatType());
-    var strategy = STRATEGY_CLASSES[strategyName];
+  _initStrategy: function () {
+    const strategyName = this._getStrategyName(this._getFormatType());
+    const strategy = STRATEGY_CLASSES[strategyName];
     if (!(this._strategy && this._strategy.NAME === strategyName)) {
       this._strategy = new strategy(this);
     }
   },
-  _getFormatType: function _getFormatType() {
-    var currentType = this.option('type');
-    var isTime = /h|m|s/g.test(currentType);
-    var isDate = /d|M|Y/g.test(currentType);
-    var type = '';
+  _getFormatType: function () {
+    const currentType = this.option('type');
+    const isTime = /h|m|s/g.test(currentType);
+    const isDate = /d|M|Y/g.test(currentType);
+    let type = '';
     if (isDate) {
       type += TYPE.date;
     }
@@ -170,8 +170,8 @@ var DateBox = _ui2.default.inherit({
     }
     return type;
   },
-  _getStrategyName: function _getStrategyName(type) {
-    var pickerType = this._pickerType;
+  _getStrategyName: function (type) {
+    const pickerType = this._pickerType;
     if (pickerType === PICKER_TYPE.rollers) {
       return STRATEGY_NAME.dateView;
     } else if (pickerType === PICKER_TYPE.native) {
@@ -185,58 +185,58 @@ var DateBox = _ui2.default.inherit({
     }
     return STRATEGY_NAME.list;
   },
-  _initMarkup: function _initMarkup() {
+  _initMarkup: function () {
     this.$element().addClass(DATEBOX_CLASS);
     this.callBase();
     this._refreshFormatClass();
     this._refreshPickerTypeClass();
     this._strategy.renderInputMinMax(this._input());
   },
-  _render: function _render() {
+  _render: function () {
     this.callBase();
     this._formatValidationIcon();
   },
-  _renderDimensions: function _renderDimensions() {
+  _renderDimensions: function () {
     this.callBase();
     this.$element().toggleClass(DX_AUTO_WIDTH_CLASS, !this.option('width'));
     this._updatePopupWidth();
     this._updatePopupHeight();
   },
-  _dimensionChanged: function _dimensionChanged() {
+  _dimensionChanged: function () {
     this.callBase();
     this._updatePopupHeight();
   },
-  _updatePopupHeight: function _updatePopupHeight() {
+  _updatePopupHeight: function () {
     if (this._popup) {
       var _this$_strategy$_upda, _this$_strategy;
       (_this$_strategy$_upda = (_this$_strategy = this._strategy)._updatePopupHeight) === null || _this$_strategy$_upda === void 0 ? void 0 : _this$_strategy$_upda.call(_this$_strategy);
     }
   },
-  _refreshFormatClass: function _refreshFormatClass() {
-    var $element = this.$element();
+  _refreshFormatClass: function () {
+    const $element = this.$element();
     (0, _iterator.each)(TYPE, function (_, item) {
       $element.removeClass(DATEBOX_CLASS + '-' + item);
     });
     $element.addClass(DATEBOX_CLASS + '-' + this.option('type'));
   },
-  _refreshPickerTypeClass: function _refreshPickerTypeClass() {
-    var $element = this.$element();
+  _refreshPickerTypeClass: function () {
+    const $element = this.$element();
     (0, _iterator.each)(PICKER_TYPE, function (_, item) {
       $element.removeClass(DATEBOX_CLASS + '-' + item);
     });
     $element.addClass(DATEBOX_CLASS + '-' + this._pickerType);
   },
-  _formatValidationIcon: function _formatValidationIcon() {
+  _formatValidationIcon: function () {
     if (!(0, _window.hasWindow)()) {
       return;
     }
-    var inputElement = this._input().get(0);
-    var isRtlEnabled = this.option('rtlEnabled');
-    var clearButtonWidth = this._getClearButtonWidth();
-    var longestElementDimensions = this._getLongestElementDimensions();
-    var curWidth = parseFloat(window.getComputedStyle(inputElement).width) - clearButtonWidth;
-    var shouldHideValidationIcon = longestElementDimensions.width > curWidth;
-    var style = inputElement.style;
+    const inputElement = this._input().get(0);
+    const isRtlEnabled = this.option('rtlEnabled');
+    const clearButtonWidth = this._getClearButtonWidth();
+    const longestElementDimensions = this._getLongestElementDimensions();
+    const curWidth = parseFloat(window.getComputedStyle(inputElement).width) - clearButtonWidth;
+    const shouldHideValidationIcon = longestElementDimensions.width > curWidth;
+    const style = inputElement.style;
     this.$element().toggleClass(DX_INVALID_BADGE_CLASS, !shouldHideValidationIcon && this.option('_showValidationIcon'));
     if (shouldHideValidationIcon) {
       if (this._storedPadding === undefined) {
@@ -247,27 +247,27 @@ var DateBox = _ui2.default.inherit({
       isRtlEnabled ? style.paddingLeft = this._storedPadding + 'px' : style.paddingRight = this._storedPadding + 'px';
     }
   },
-  _getClearButtonWidth: function _getClearButtonWidth() {
-    var clearButtonWidth = 0;
+  _getClearButtonWidth: function () {
+    let clearButtonWidth = 0;
     if (this._isClearButtonVisible() && this._input().val() === '') {
-      var clearButtonElement = this.$element().find('.' + DX_CLEAR_BUTTON_CLASS).get(0);
+      const clearButtonElement = this.$element().find('.' + DX_CLEAR_BUTTON_CLASS).get(0);
       clearButtonWidth = parseFloat(window.getComputedStyle(clearButtonElement).width);
     }
     return clearButtonWidth;
   },
-  _getLongestElementDimensions: function _getLongestElementDimensions() {
-    var format = this._strategy.getDisplayFormat(this.option('displayFormat'));
-    var longestValue = _date2.default.format(_ui.default.getLongestDate(format, _date2.default.getMonthNames(), _date2.default.getDayNames()), format);
-    var $input = this._input();
-    var inputElement = $input.get(0);
-    var $longestValueElement = (0, _dom.createTextElementHiddenCopy)($input, longestValue);
-    var isPaddingStored = this._storedPadding !== undefined;
-    var storedPadding = !isPaddingStored ? 0 : this._storedPadding;
+  _getLongestElementDimensions: function () {
+    const format = this._strategy.getDisplayFormat(this.option('displayFormat'));
+    const longestValue = _date2.default.format(_ui.default.getLongestDate(format, _date2.default.getMonthNames(), _date2.default.getDayNames()), format);
+    const $input = this._input();
+    const inputElement = $input.get(0);
+    const $longestValueElement = (0, _dom.createTextElementHiddenCopy)($input, longestValue);
+    const isPaddingStored = this._storedPadding !== undefined;
+    const storedPadding = !isPaddingStored ? 0 : this._storedPadding;
     $longestValueElement.appendTo(this.$element());
-    var elementWidth = parseFloat(window.getComputedStyle($longestValueElement.get(0)).width);
-    var rightPadding = parseFloat(window.getComputedStyle(inputElement).paddingRight);
-    var leftPadding = parseFloat(window.getComputedStyle(inputElement).paddingLeft);
-    var necessaryWidth = elementWidth + leftPadding + rightPadding + storedPadding;
+    const elementWidth = parseFloat(window.getComputedStyle($longestValueElement.get(0)).width);
+    const rightPadding = parseFloat(window.getComputedStyle(inputElement).paddingRight);
+    const leftPadding = parseFloat(window.getComputedStyle(inputElement).paddingLeft);
+    const necessaryWidth = elementWidth + leftPadding + rightPadding + storedPadding;
     $longestValueElement.remove();
     return {
       width: necessaryWidth,
@@ -278,95 +278,95 @@ var DateBox = _ui2.default.inherit({
   _getKeyboardListeners() {
     return this.callBase().concat([this._strategy && this._strategy.getKeyboardListener()]);
   },
-  _renderPopup: function _renderPopup() {
+  _renderPopup: function () {
     this.callBase();
     this._popup.$wrapper().addClass(DATEBOX_WRAPPER_CLASS);
     this._renderPopupWrapper();
   },
   _getPopupToolbarItems() {
     var _this$_strategy$_getP, _this$_strategy$_getP2, _this$_strategy2;
-    var defaultItems = this.callBase();
+    const defaultItems = this.callBase();
     return (_this$_strategy$_getP = (_this$_strategy$_getP2 = (_this$_strategy2 = this._strategy)._getPopupToolbarItems) === null || _this$_strategy$_getP2 === void 0 ? void 0 : _this$_strategy$_getP2.call(_this$_strategy2, defaultItems)) !== null && _this$_strategy$_getP !== void 0 ? _this$_strategy$_getP : defaultItems;
   },
-  _popupConfig: function _popupConfig() {
-    var popupConfig = this.callBase();
+  _popupConfig: function () {
+    const popupConfig = this.callBase();
     return (0, _extend.extend)(this._strategy.popupConfig(popupConfig), {
       title: this._getPopupTitle(),
       dragEnabled: false
     });
   },
-  _renderPopupWrapper: function _renderPopupWrapper() {
+  _renderPopupWrapper: function () {
     if (!this._popup) {
       return;
     }
-    var $element = this.$element();
-    var classPostfixes = (0, _extend.extend)({}, TYPE, PICKER_TYPE);
+    const $element = this.$element();
+    const classPostfixes = (0, _extend.extend)({}, TYPE, PICKER_TYPE);
     (0, _iterator.each)(classPostfixes, function (_, item) {
       $element.removeClass(DATEBOX_WRAPPER_CLASS + '-' + item);
     }.bind(this));
     this._popup.$wrapper().addClass(DATEBOX_WRAPPER_CLASS + '-' + this.option('type')).addClass(DATEBOX_WRAPPER_CLASS + '-' + this._pickerType).addClass(DROPDOWNEDITOR_OVERLAY_CLASS);
   },
-  _renderPopupContent: function _renderPopupContent() {
+  _renderPopupContent: function () {
     this.callBase();
     this._strategy.renderPopupContent();
   },
-  _popupShowingHandler: function _popupShowingHandler() {
+  _popupShowingHandler: function () {
     this.callBase();
     this._strategy.popupShowingHandler();
   },
-  _popupShownHandler: function _popupShownHandler() {
+  _popupShownHandler: function () {
     this.callBase();
     this._strategy.renderOpenedState();
   },
-  _popupHiddenHandler: function _popupHiddenHandler() {
+  _popupHiddenHandler: function () {
     this.callBase();
     this._strategy.renderOpenedState();
     this._strategy.popupHiddenHandler();
   },
-  _visibilityChanged: function _visibilityChanged(visible) {
+  _visibilityChanged: function (visible) {
     if (visible) {
       this._formatValidationIcon();
     }
   },
-  _clearValueHandler: function _clearValueHandler(e) {
+  _clearValueHandler: function (e) {
     this.option('text', '');
     this.callBase(e);
   },
-  _readOnlyPropValue: function _readOnlyPropValue() {
+  _readOnlyPropValue: function () {
     if (this._pickerType === PICKER_TYPE.rollers) {
       return true;
     }
-    var platform = _devices.default.real().platform;
-    var isCustomValueDisabled = this._isNativeType() && (platform === 'ios' || platform === 'android');
+    const platform = _devices.default.real().platform;
+    const isCustomValueDisabled = this._isNativeType() && (platform === 'ios' || platform === 'android');
     if (isCustomValueDisabled) {
       return this.option('readOnly');
     }
     return this.callBase();
   },
-  _isClearButtonVisible: function _isClearButtonVisible() {
+  _isClearButtonVisible: function () {
     return this.callBase() && !this._isNativeType();
   },
-  _renderValue: function _renderValue() {
-    var value = this.dateOption('value');
+  _renderValue: function () {
+    const value = this.dateOption('value');
     this.option('text', this._getDisplayedText(value));
     this._strategy.renderValue();
     return this.callBase();
   },
-  _setSubmitValue: function _setSubmitValue() {
-    var value = this.dateOption('value');
-    var dateSerializationFormat = this.option('dateSerializationFormat');
-    var submitFormat = _ui.default.SUBMIT_FORMATS_MAP[this.option('type')];
-    var submitValue = dateSerializationFormat ? _date_serialization.default.serializeDate(value, dateSerializationFormat) : _ui.default.toStandardDateFormat(value, submitFormat);
+  _setSubmitValue: function () {
+    const value = this.dateOption('value');
+    const dateSerializationFormat = this.option('dateSerializationFormat');
+    const submitFormat = _ui.default.SUBMIT_FORMATS_MAP[this.option('type')];
+    const submitValue = dateSerializationFormat ? _date_serialization.default.serializeDate(value, dateSerializationFormat) : _ui.default.toStandardDateFormat(value, submitFormat);
     this._getSubmitElement().val(submitValue);
   },
-  _getDisplayedText: function _getDisplayedText(value) {
-    var mode = this.option('mode');
-    var displayedText;
+  _getDisplayedText: function (value) {
+    const mode = this.option('mode');
+    let displayedText;
     if (mode === 'text') {
-      var displayFormat = this._strategy.getDisplayFormat(this.option('displayFormat'));
+      const displayFormat = this._strategy.getDisplayFormat(this.option('displayFormat'));
       displayedText = _date2.default.format(value, displayFormat);
     } else {
-      var format = this._getFormatByMode(mode);
+      const format = this._getFormatByMode(mode);
       if (format) {
         displayedText = _date2.default.format(value, format);
       } else {
@@ -375,25 +375,26 @@ var DateBox = _ui2.default.inherit({
     }
     return displayedText;
   },
-  _getFormatByMode: function _getFormatByMode(mode) {
+  _getFormatByMode: function (mode) {
     return (0, _support.inputType)(mode) ? null : _ui.default.FORMATS_MAP[mode];
   },
-  _valueChangeEventHandler: function _valueChangeEventHandler(e) {
-    var _this$option = this.option(),
-      text = _this$option.text,
-      type = _this$option.type,
-      validationError = _this$option.validationError;
-    var currentValue = this.dateOption('value');
+  _valueChangeEventHandler: function (e) {
+    const {
+      text,
+      type,
+      validationError
+    } = this.option();
+    const currentValue = this.dateOption('value');
     if (text === this._getDisplayedText(currentValue)) {
       this._recallInternalValidation(currentValue, validationError);
       return;
     }
-    var parsedDate = this._getParsedDate(text);
-    var value = currentValue !== null && currentValue !== void 0 ? currentValue : this._getDateByDefault();
-    var newValue = _ui.default.mergeDates(value, parsedDate, type);
-    var date = parsedDate && type === 'time' ? newValue : parsedDate;
+    const parsedDate = this._getParsedDate(text);
+    const value = currentValue !== null && currentValue !== void 0 ? currentValue : this._getDateByDefault();
+    const newValue = _ui.default.mergeDates(value, parsedDate, type);
+    const date = parsedDate && type === 'time' ? newValue : parsedDate;
     if (this._applyInternalValidation(date).isValid) {
-      var displayedText = this._getDisplayedText(newValue);
+      const displayedText = this._getDisplayedText(newValue);
       if (value && newValue && value.getTime() === newValue.getTime() && displayedText !== text) {
         this._renderValue();
       } else {
@@ -407,21 +408,21 @@ var DateBox = _ui2.default.inherit({
       this._applyCustomValidation(value);
     }
   },
-  _getDateByDefault: function _getDateByDefault() {
+  _getDateByDefault: function () {
     return this._strategy.useCurrentDateByDefault() && this._strategy.getDefaultDate();
   },
-  _getParsedDate: function _getParsedDate(text) {
-    var displayFormat = this._strategy.getDisplayFormat(this.option('displayFormat'));
-    var parsedText = this._strategy.getParsedText(text, displayFormat);
+  _getParsedDate: function (text) {
+    const displayFormat = this._strategy.getDisplayFormat(this.option('displayFormat'));
+    const parsedText = this._strategy.getParsedText(text, displayFormat);
     return parsedText !== null && parsedText !== void 0 ? parsedText : undefined;
   },
   _applyInternalValidation(value) {
-    var text = this.option('text');
-    var hasText = !!text && value !== null;
-    var isDate = !!value && (0, _type.isDate)(value) && !isNaN(value.getTime());
-    var isDateInRange = isDate && _date.default.dateInRange(value, this.dateOption('min'), this.dateOption('max'), this.option('type'));
-    var isValid = !hasText && !value || isDateInRange;
-    var validationMessage = '';
+    const text = this.option('text');
+    const hasText = !!text && value !== null;
+    const isDate = !!value && (0, _type.isDate)(value) && !isNaN(value.getTime());
+    const isDateInRange = isDate && _date.default.dateInRange(value, this.dateOption('min'), this.dateOption('max'), this.option('type'));
+    const isValid = !hasText && !value || isDateInRange;
+    let validationMessage = '';
     if (!isDate) {
       validationMessage = this.option('invalidDateMessage');
     } else if (!isDateInRange) {
@@ -442,28 +443,28 @@ var DateBox = _ui2.default.inherit({
       }
     });
   },
-  _applyCustomValidation: function _applyCustomValidation(value) {
+  _applyCustomValidation: function (value) {
     this.validationRequest.fire({
       editor: this,
       value: this._serializeDate(value)
     });
   },
-  _isValueChanged: function _isValueChanged(newValue) {
-    var oldValue = this.dateOption('value');
-    var oldTime = oldValue && oldValue.getTime();
-    var newTime = newValue && newValue.getTime();
+  _isValueChanged: function (newValue) {
+    const oldValue = this.dateOption('value');
+    const oldTime = oldValue && oldValue.getTime();
+    const newTime = newValue && newValue.getTime();
     return oldTime !== newTime;
   },
-  _isTextChanged: function _isTextChanged(newValue) {
-    var oldText = this.option('text');
-    var newText = newValue && this._getDisplayedText(newValue) || '';
+  _isTextChanged: function (newValue) {
+    const oldText = this.option('text');
+    const newText = newValue && this._getDisplayedText(newValue) || '';
     return oldText !== newText;
   },
-  _renderProps: function _renderProps() {
+  _renderProps: function () {
     this.callBase();
     this._input().attr('autocomplete', 'off');
   },
-  _renderOpenedState: function _renderOpenedState() {
+  _renderOpenedState: function () {
     if (!this._isNativeType()) {
       this.callBase();
     }
@@ -471,12 +472,12 @@ var DateBox = _ui2.default.inherit({
       this._refreshStrategy();
     }
   },
-  _getPopupTitle: function _getPopupTitle() {
-    var placeholder = this.option('placeholder');
+  _getPopupTitle: function () {
+    const placeholder = this.option('placeholder');
     if (placeholder) {
       return placeholder;
     }
-    var type = this.option('type');
+    const type = this.option('type');
     if (type === TYPE.time) {
       return _message.default.format('dxDateBox-simulatedDataPickerTitleTime');
     }
@@ -485,30 +486,30 @@ var DateBox = _ui2.default.inherit({
     }
     return '';
   },
-  _refreshStrategy: function _refreshStrategy() {
+  _refreshStrategy: function () {
     this._strategy.dispose();
     this._initStrategy();
     this.option(this._strategy.getDefaultOptions());
     this._refresh();
   },
-  _applyButtonHandler: function _applyButtonHandler(e) {
-    var value = this._strategy.getValue();
+  _applyButtonHandler: function (e) {
+    const value = this._strategy.getValue();
     this.dateValue(value, e.event);
     this.callBase();
   },
-  _dispose: function _dispose() {
+  _dispose: function () {
     var _this$_strategy3;
     this.callBase();
     (_this$_strategy3 = this._strategy) === null || _this$_strategy3 === void 0 ? void 0 : _this$_strategy3.dispose();
   },
-  _isNativeType: function _isNativeType() {
+  _isNativeType: function () {
     return this._pickerType === PICKER_TYPE['native'];
   },
-  _updatePopupTitle: function _updatePopupTitle() {
+  _updatePopupTitle: function () {
     var _this$_popup;
     (_this$_popup = this._popup) === null || _this$_popup === void 0 ? void 0 : _this$_popup.option('title', this._getPopupTitle());
   },
-  _optionChanged: function _optionChanged(args) {
+  _optionChanged: function (args) {
     switch (args.name) {
       case 'showClearButton':
       case 'buttons':
@@ -540,7 +541,7 @@ var DateBox = _ui2.default.inherit({
       case 'min':
       case 'max':
         {
-          var isValid = this.option('isValid');
+          const isValid = this.option('isValid');
           this._applyInternalValidation(this.dateOption('value'));
           if (!isValid) {
             this._applyCustomValidation(this.dateOption('value'));
@@ -587,8 +588,8 @@ var DateBox = _ui2.default.inherit({
         this.callBase.apply(this, arguments);
     }
   },
-  _getSerializationFormat: function _getSerializationFormat() {
-    var value = this.option('value');
+  _getSerializationFormat: function () {
+    const value = this.option('value');
     if (this.option('dateSerializationFormat') && (0, _config.default)().forceIsoDateParsing) {
       return this.option('dateSerializationFormat');
     }
@@ -600,12 +601,12 @@ var DateBox = _ui2.default.inherit({
     }
     return _date_serialization.default.getDateSerializationFormat(value);
   },
-  _updateValue: function _updateValue(value) {
+  _updateValue: function (value) {
     this.callBase();
     this._applyInternalValidation(value !== null && value !== void 0 ? value : this.dateOption('value'));
   },
-  dateValue: function dateValue(value, dxEvent) {
-    var isValueChanged = this._isValueChanged(value);
+  dateValue: function (value, dxEvent) {
+    const isValueChanged = this._isValueChanged(value);
     if (isValueChanged && dxEvent) {
       this._saveValueChangeEvent(dxEvent);
     }
@@ -618,25 +619,25 @@ var DateBox = _ui2.default.inherit({
     }
     return this.dateOption('value', value);
   },
-  dateOption: function dateOption(optionName, value) {
+  dateOption: function (optionName, value) {
     if (arguments.length === 1) {
       return _date_serialization.default.deserializeDate(this.option(optionName));
     }
     this.option(optionName, this._serializeDate(value));
   },
-  _serializeDate: function _serializeDate(date) {
-    var serializationFormat = this._getSerializationFormat();
+  _serializeDate: function (date) {
+    const serializationFormat = this._getSerializationFormat();
     return _date_serialization.default.serializeDate(date, serializationFormat);
   },
-  _clearValue: function _clearValue() {
-    var value = this.option('value');
+  _clearValue: function () {
+    const value = this.option('value');
     this.callBase();
     if (value === null) {
       this._applyCustomValidation(null);
     }
   },
-  clear: function clear() {
-    var value = this.option('value');
+  clear: function () {
+    const value = this.option('value');
     this.callBase();
     if (value === null) {
       this._applyInternalValidation(null);

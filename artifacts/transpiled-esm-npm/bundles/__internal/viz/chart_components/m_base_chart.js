@@ -24,31 +24,33 @@ var _utils = require("../../../viz/core/utils");
 var _base_series = require("../../../viz/series/base_series");
 var _m_base_widget = _interopRequireDefault(require("../core/m_base_widget"));
 var _rolling_stock = require("./rolling_stock");
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // @ts-expect-error
 
 // PLUGINS_SECTION
 
-var isArray = Array.isArray;
-var REINIT_REFRESH_ACTION = '_reinit';
-var REINIT_DATA_SOURCE_REFRESH_ACTION = '_updateDataSource';
-var DATA_INIT_REFRESH_ACTION = '_dataInit';
-var FORCE_RENDER_REFRESH_ACTION = '_forceRender';
-var RESIZE_REFRESH_ACTION = '_resize';
-var ACTIONS_BY_PRIORITY = [REINIT_REFRESH_ACTION, REINIT_DATA_SOURCE_REFRESH_ACTION, DATA_INIT_REFRESH_ACTION, FORCE_RENDER_REFRESH_ACTION, RESIZE_REFRESH_ACTION];
-var DEFAULT_OPACITY = 0.3;
-var REFRESH_SERIES_DATA_INIT_ACTION_OPTIONS = ['series', 'commonSeriesSettings', 'dataPrepareSettings', 'seriesSelectionMode', 'pointSelectionMode', 'synchronizeMultiAxes', 'resolveLabelsOverlapping'];
-var REFRESH_SERIES_FAMILIES_ACTION_OPTIONS = ['minBubbleSize', 'maxBubbleSize', 'barGroupPadding', 'barGroupWidth', 'negativesAsZeroes', 'negativesAsZeros' // misspelling case
+const {
+  isArray
+} = Array;
+const REINIT_REFRESH_ACTION = '_reinit';
+const REINIT_DATA_SOURCE_REFRESH_ACTION = '_updateDataSource';
+const DATA_INIT_REFRESH_ACTION = '_dataInit';
+const FORCE_RENDER_REFRESH_ACTION = '_forceRender';
+const RESIZE_REFRESH_ACTION = '_resize';
+const ACTIONS_BY_PRIORITY = [REINIT_REFRESH_ACTION, REINIT_DATA_SOURCE_REFRESH_ACTION, DATA_INIT_REFRESH_ACTION, FORCE_RENDER_REFRESH_ACTION, RESIZE_REFRESH_ACTION];
+const DEFAULT_OPACITY = 0.3;
+const REFRESH_SERIES_DATA_INIT_ACTION_OPTIONS = ['series', 'commonSeriesSettings', 'dataPrepareSettings', 'seriesSelectionMode', 'pointSelectionMode', 'synchronizeMultiAxes', 'resolveLabelsOverlapping'];
+const REFRESH_SERIES_FAMILIES_ACTION_OPTIONS = ['minBubbleSize', 'maxBubbleSize', 'barGroupPadding', 'barGroupWidth', 'negativesAsZeroes', 'negativesAsZeros' // misspelling case
 ];
 
-var FORCE_RENDER_REFRESH_ACTION_OPTIONS = ['adaptiveLayout', 'crosshair', 'resolveLabelOverlapping', 'adjustOnZoom', 'stickyHovering'];
-var FONT = 'font';
+const FORCE_RENDER_REFRESH_ACTION_OPTIONS = ['adaptiveLayout', 'crosshair', 'resolveLabelOverlapping', 'adjustOnZoom', 'stickyHovering'];
+const FONT = 'font';
 function checkHeightRollingStock(rollingStocks, stubCanvas) {
-  var canvasSize = stubCanvas.end - stubCanvas.start;
-  var size = 0;
-  rollingStocks.forEach(function (rollingStock) {
+  const canvasSize = stubCanvas.end - stubCanvas.start;
+  let size = 0;
+  rollingStocks.forEach(rollingStock => {
     size += rollingStock.getBoundingRect().width;
   });
   while (canvasSize < size) {
@@ -56,9 +58,9 @@ function checkHeightRollingStock(rollingStocks, stubCanvas) {
   }
 }
 function findAndKillSmallValue(rollingStocks) {
-  var smallestObject = rollingStocks.reduce(function (prev, rollingStock, index) {
+  const smallestObject = rollingStocks.reduce((prev, rollingStock, index) => {
     if (!rollingStock) return prev;
-    var value = rollingStock.value();
+    const value = rollingStock.value();
     return value < prev.value ? {
       value,
       rollingStock,
@@ -70,17 +72,18 @@ function findAndKillSmallValue(rollingStocks) {
     index: undefined
   });
   smallestObject.rollingStock.getLabels()[0].draw(false);
-  var _smallestObject$rolli = smallestObject.rollingStock.getBoundingRect(),
-    width = _smallestObject$rolli.width;
+  const {
+    width
+  } = smallestObject.rollingStock.getBoundingRect();
   rollingStocks[smallestObject.index] = null;
   return width;
 }
 function checkStackOverlap(rollingStocks) {
-  var i;
-  var j;
-  var iLength;
-  var jLength;
-  var overlap = false;
+  let i;
+  let j;
+  let iLength;
+  let jLength;
+  let overlap = false;
   for (i = 0, iLength = rollingStocks.length - 1; i < iLength; i++) {
     for (j = i + 1, jLength = rollingStocks.length; j < jLength; j++) {
       if (i !== j && checkStacksOverlapping(rollingStocks[i], rollingStocks[j], true)) {
@@ -93,20 +96,18 @@ function checkStackOverlap(rollingStocks) {
   return overlap;
 }
 function resolveLabelOverlappingInOneDirection(points, canvas, isRotated, isInverted, shiftFunction) {
-  var customSorting = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : function () {
-    return 0;
-  };
-  var rollingStocks = [];
-  var stubCanvas = {
+  let customSorting = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : () => 0;
+  const rollingStocks = [];
+  const stubCanvas = {
     start: isRotated ? canvas.left : canvas.top,
     end: isRotated ? canvas.width - canvas.right : canvas.height - canvas.bottom
   };
-  var hasStackedSeries = false;
-  var sortRollingStocks;
-  points.forEach(function (p) {
+  let hasStackedSeries = false;
+  let sortRollingStocks;
+  points.forEach(p => {
     if (!p) return;
     hasStackedSeries = hasStackedSeries || p.series.isStackedSeries() || p.series.isFullStackedSeries();
-    p.getLabels().forEach(function (l) {
+    p.getLabels().forEach(l => {
       if (l.isVisible()) {
         rollingStocks.push(new _rolling_stock.RollingStock(l, isRotated, shiftFunction));
       }
@@ -118,10 +119,8 @@ function resolveLabelOverlappingInOneDirection(points, canvas, isRotated, isInve
     }
     sortRollingStocks = isInverted ? rollingStocks : sortRollingStocksByValue(rollingStocks);
   } else {
-    var rollingStocksTmp = rollingStocks.slice();
-    sortRollingStocks = rollingStocks.sort(function (a, b) {
-      return customSorting(a, b) || a.getInitialPosition() - b.getInitialPosition() || rollingStocksTmp.indexOf(a) - rollingStocksTmp.indexOf(b);
-    });
+    const rollingStocksTmp = rollingStocks.slice();
+    sortRollingStocks = rollingStocks.sort((a, b) => customSorting(a, b) || a.getInitialPosition() - b.getInitialPosition() || rollingStocksTmp.indexOf(a) - rollingStocksTmp.indexOf(b));
   }
   if (!checkStackOverlap(sortRollingStocks)) return false;
   checkHeightRollingStock(sortRollingStocks, stubCanvas);
@@ -132,15 +131,15 @@ function resolveLabelOverlappingInOneDirection(points, canvas, isRotated, isInve
 }
 function checkStacksOverlapping(firstRolling, secondRolling, inTwoSides) {
   if (!firstRolling || !secondRolling) return;
-  var firstRect = firstRolling.getBoundingRect();
-  var secondRect = secondRolling.getBoundingRect();
-  var oppositeOverlapping = inTwoSides ? firstRect.oppositeStart <= secondRect.oppositeStart && firstRect.oppositeEnd > secondRect.oppositeStart || secondRect.oppositeStart <= firstRect.oppositeStart && secondRect.oppositeEnd > firstRect.oppositeStart : true;
+  const firstRect = firstRolling.getBoundingRect();
+  const secondRect = secondRolling.getBoundingRect();
+  const oppositeOverlapping = inTwoSides ? firstRect.oppositeStart <= secondRect.oppositeStart && firstRect.oppositeEnd > secondRect.oppositeStart || secondRect.oppositeStart <= firstRect.oppositeStart && secondRect.oppositeEnd > firstRect.oppositeStart : true;
   return firstRect.end > secondRect.start && oppositeOverlapping;
 }
 function sortRollingStocksByValue(rollingStocks) {
-  var positiveRollingStocks = [];
-  var negativeRollingStocks = [];
-  rollingStocks.forEach(function (stock) {
+  const positiveRollingStocks = [];
+  const negativeRollingStocks = [];
+  rollingStocks.forEach(stock => {
     if (stock.value() > 0) {
       positiveRollingStocks.push(stock);
     } else {
@@ -150,9 +149,9 @@ function sortRollingStocksByValue(rollingStocks) {
   return positiveRollingStocks.concat(negativeRollingStocks);
 }
 function prepareOverlapStacks(rollingStocks) {
-  var root;
-  for (var i = 0; i < rollingStocks.length - 1; i += 1) {
-    var currentRollingStock = root || rollingStocks[i];
+  let root;
+  for (let i = 0; i < rollingStocks.length - 1; i += 1) {
+    const currentRollingStock = root || rollingStocks[i];
     if (checkStacksOverlapping(currentRollingStock, rollingStocks[i + 1])) {
       currentRollingStock.toChain(rollingStocks[i + 1]);
       rollingStocks[i + 1] = null;
@@ -166,15 +165,15 @@ function rollingStocksIsOut(rollingStock, canvas) {
   return rollingStock.getBoundingRect().end > canvas.end;
 }
 function moveRollingStock(rollingStocks, canvas) {
-  for (var i = 0; i < rollingStocks.length; i += 1) {
-    var currentRollingStock = rollingStocks[i];
-    var shouldSetCanvas = true;
+  for (let i = 0; i < rollingStocks.length; i += 1) {
+    const currentRollingStock = rollingStocks[i];
+    let shouldSetCanvas = true;
     if (currentRollingStock !== null && rollingStocksIsOut(currentRollingStock, canvas)) {
-      var currentBBox = currentRollingStock.getBoundingRect();
-      for (var j = i + 1; j < rollingStocks.length; j += 1) {
-        var nextRollingStock = rollingStocks[j];
+      const currentBBox = currentRollingStock.getBoundingRect();
+      for (let j = i + 1; j < rollingStocks.length; j += 1) {
+        const nextRollingStock = rollingStocks[j];
         if (nextRollingStock) {
-          var nextBBox = nextRollingStock.getBoundingRect();
+          const nextBBox = nextRollingStock.getBoundingRect();
           if (nextBBox.end > currentBBox.start - (currentBBox.end - canvas.end)) {
             nextRollingStock.toChain(currentRollingStock);
             shouldSetCanvas = false;
@@ -196,10 +195,10 @@ function getLegendFields(name) {
   };
 }
 function getLegendSettings(legendDataField) {
-  var formatObjectFields = getLegendFields(legendDataField);
+  const formatObjectFields = getLegendFields(legendDataField);
   return {
     getFormatObject(data) {
-      var res = {};
+      const res = {};
       res[formatObjectFields.indexField] = data.id;
       res[formatObjectFields.colorField] = data.states.normal.fill;
       res[formatObjectFields.nameField] = data.text;
@@ -211,11 +210,11 @@ function getLegendSettings(legendDataField) {
 function checkOverlapping(firstRect, secondRect) {
   return (firstRect.x <= secondRect.x && secondRect.x <= firstRect.x + firstRect.width || firstRect.x >= secondRect.x && firstRect.x <= secondRect.x + secondRect.width) && (firstRect.y <= secondRect.y && secondRect.y <= firstRect.y + firstRect.height || firstRect.y >= secondRect.y && firstRect.y <= secondRect.y + secondRect.height);
 }
-var overlapping = {
+const overlapping = {
   resolveLabelOverlappingInOneDirection
 };
 exports.overlapping = overlapping;
-var BaseChart = _m_base_widget.default.inherit({
+const BaseChart = _m_base_widget.default.inherit({
   _eventsMap: {
     onSeriesClick: {
       name: 'seriesClick'
@@ -260,13 +259,13 @@ var BaseChart = _m_base_widget.default.inherit({
   _initialChanges: ['INIT'],
   _themeDependentChanges: ['REFRESH_SERIES_REINIT'],
   _getThemeManagerOptions() {
-    var themeOptions = this.callBase.apply(this, arguments);
+    const themeOptions = this.callBase.apply(this, arguments);
     themeOptions.options = this.option();
     return themeOptions;
   },
   _createThemeManager() {
-    var chartOption = this.option();
-    var themeManager = new _chart_theme_manager.ThemeManager(this._getThemeManagerOptions());
+    const chartOption = this.option();
+    const themeManager = new _chart_theme_manager.ThemeManager(this._getThemeManagerOptions());
     themeManager.setTheme(chartOption.theme, chartOption.rtlEnabled);
     return themeManager;
   },
@@ -278,12 +277,12 @@ var BaseChart = _m_base_widget.default.inherit({
     this._needHandleRenderComplete = true;
     this.layoutManager = new _layout_manager.LayoutManager();
     this._createScrollBar();
-    _events_engine.default.on(this._$element, 'contextmenu', function (event) {
+    _events_engine.default.on(this._$element, 'contextmenu', event => {
       if ((0, _index.isTouchEvent)(event) || (0, _index.isPointerEvent)(event)) {
         event.preventDefault();
       }
     });
-    _events_engine.default.on(this._$element, 'MSHoldVisual', function (event) {
+    _events_engine.default.on(this._$element, 'MSHoldVisual', event => {
       event.preventDefault();
     });
   },
@@ -300,10 +299,11 @@ var BaseChart = _m_base_widget.default.inherit({
   },
   _correctAxes: _common.noop,
   _createHtmlStructure() {
-    var _this = this;
-    var renderer = this._renderer;
-    var root = renderer.root;
-    var createConstantLinesGroup = function createConstantLinesGroup() {
+    const renderer = this._renderer;
+    const {
+      root
+    } = renderer;
+    const createConstantLinesGroup = function () {
       // TODO: Must be created in the same place where used (advanced chart)
       return renderer.g().attr({
         class: 'dxc-constant-lines-group'
@@ -330,8 +330,8 @@ var BaseChart = _m_base_widget.default.inherit({
     this._labelsAxesGroup = renderer.g().attr({
       class: 'dxc-elements-axes-group'
     });
-    var appendLabelsAxesGroup = function appendLabelsAxesGroup() {
-      _this._labelsAxesGroup.linkOn(root, 'elements');
+    const appendLabelsAxesGroup = () => {
+      this._labelsAxesGroup.linkOn(root, 'elements');
     };
     this._backgroundRect = renderer.rect().attr({
       fill: 'gray',
@@ -382,9 +382,9 @@ var BaseChart = _m_base_widget.default.inherit({
   _executeAppendBeforeSeries() {},
   _executeAppendAfterSeries() {},
   _disposeObjectsInArray(propName, fieldNames) {
-    (this[propName] || []).forEach(function (item) {
+    (this[propName] || []).forEach(item => {
       if (fieldNames && item) {
-        fieldNames.forEach(function (field) {
+        fieldNames.forEach(field => {
           var _a;
           (_a = item[field]) === null || _a === void 0 ? void 0 : _a.dispose();
         });
@@ -395,18 +395,17 @@ var BaseChart = _m_base_widget.default.inherit({
     this[propName] = null;
   },
   _disposeCore() {
-    var _this2 = this;
-    var disposeObject = function disposeObject(propName) {
+    const disposeObject = propName => {
       // TODO: What is the purpose of the `if` check in a private function?
-      if (_this2[propName]) {
-        _this2[propName].dispose();
-        _this2[propName] = null;
+      if (this[propName]) {
+        this[propName].dispose();
+        this[propName] = null;
       }
     };
-    var unlinkGroup = function unlinkGroup(name) {
-      _this2[name].linkOff();
+    const unlinkGroup = name => {
+      this[name].linkOff();
     };
-    var disposeObjectsInArray = this._disposeObjectsInArray;
+    const disposeObjectsInArray = this._disposeObjectsInArray;
     this._renderer.stopAllAnimations();
     disposeObjectsInArray.call(this, 'series');
     disposeObject('_tracker');
@@ -489,7 +488,7 @@ var BaseChart = _m_base_widget.default.inherit({
     }, this._getSelectionModes());
   },
   _getSelectionModes() {
-    var themeManager = this._themeManager;
+    const themeManager = this._themeManager;
     return {
       seriesSelectionMode: themeManager.getOptions('seriesSelectionMode'),
       pointSelectionMode: themeManager.getOptions('pointSelectionMode')
@@ -505,7 +504,7 @@ var BaseChart = _m_base_widget.default.inherit({
     }, trackerCanvases);
   },
   _createCanvasFromRect(rect) {
-    var currentCanvas = this._canvas;
+    const currentCanvas = this._canvas;
     return (0, _utils.setCanvasValues)({
       left: rect[0],
       top: rect[1],
@@ -518,8 +517,10 @@ var BaseChart = _m_base_widget.default.inherit({
   _doRender(_options) {
     if (this._canvas.width === 0 && this._canvas.height === 0) return;
     this._resetIsReady(); // T207606
-    var drawOptions = this._prepareDrawOptions(_options);
-    var recreateCanvas = drawOptions.recreateCanvas;
+    const drawOptions = this._prepareDrawOptions(_options);
+    const {
+      recreateCanvas
+    } = drawOptions;
     // T207665
     this._preserveOriginalCanvas();
     // T207665
@@ -532,7 +533,7 @@ var BaseChart = _m_base_widget.default.inherit({
     this._canvas = this._createCanvasFromRect(this._rect);
     this._renderer.stopAllAnimations(true);
     this._cleanGroups();
-    var startTime = new Date();
+    const startTime = new Date();
     this._renderElements(drawOptions);
     this._lastRenderingTime = Number(new Date()) - Number(startTime);
   },
@@ -543,34 +544,35 @@ var BaseChart = _m_base_widget.default.inherit({
 
   _layoutAxes: _common.noop,
   _renderElements(drawOptions) {
-    var _this3 = this;
-    var preparedOptions = this._prepareToRender(drawOptions);
-    var isRotated = this._isRotated();
-    var isLegendInside = this._isLegendInside();
-    var trackerCanvases = [];
-    var dirtyCanvas = (0, _extend.extend)({}, this._canvas);
-    var argBusinessRange;
-    var zoomMinArg;
-    var zoomMaxArg;
+    const preparedOptions = this._prepareToRender(drawOptions);
+    const isRotated = this._isRotated();
+    const isLegendInside = this._isLegendInside();
+    const trackerCanvases = [];
+    const dirtyCanvas = (0, _extend.extend)({}, this._canvas);
+    let argBusinessRange;
+    let zoomMinArg;
+    let zoomMaxArg;
     this._renderer.lock();
     if (drawOptions.drawLegend && this._legend) {
       this._legendGroup.linkAppend();
     }
     this.layoutManager.setOptions(this._layoutManagerOptions());
-    var layoutTargets = this._getLayoutTargets();
-    this._layoutAxes(function (needSpace) {
-      var axisDrawOptions = needSpace ? (0, _extend.extend)({}, drawOptions, {
+    const layoutTargets = this._getLayoutTargets();
+    this._layoutAxes(needSpace => {
+      const axisDrawOptions = needSpace ? (0, _extend.extend)({}, drawOptions, {
         animate: false,
         recreateCanvas: true
       }) : drawOptions;
-      var canvas = _this3._renderAxes(axisDrawOptions, preparedOptions);
-      _this3._shrinkAxes(needSpace, canvas);
+      const canvas = this._renderAxes(axisDrawOptions, preparedOptions);
+      this._shrinkAxes(needSpace, canvas);
     });
     this._applyClipRects(preparedOptions);
     this._appendSeriesGroups();
     this._createCrosshairCursor();
-    layoutTargets.forEach(function (_ref) {
-      var canvas = _ref.canvas;
+    layoutTargets.forEach(_ref => {
+      let {
+        canvas
+      } = _ref;
       trackerCanvases.push({
         left: canvas.left,
         right: canvas.width - canvas.right,
@@ -611,34 +613,28 @@ var BaseChart = _m_base_widget.default.inherit({
     this._updateSeriesDimensions(drawOptions);
   },
   _getArgFilter() {
-    return function () {
-      return true;
-    };
+    return () => true;
   },
   _getValFilter() {
-    return function () {
-      return true;
-    };
+    return () => true;
   },
   _getPointsToAnimation(series) {
-    var _this4 = this;
-    var argViewPortFilter = this._getArgFilter();
-    return series.map(function (s) {
-      var valViewPortFilter = _this4._getValFilter(s);
-      return s.getPoints().filter(function (p) {
-        return p.getOptions().visible && argViewPortFilter(p.argument) && (valViewPortFilter(p.getMinValue(true)) || valViewPortFilter(p.getMaxValue(true)));
-      }).length;
+    const argViewPortFilter = this._getArgFilter();
+    return series.map(s => {
+      const valViewPortFilter = this._getValFilter(s);
+      return s.getPoints().filter(p => p.getOptions().visible && argViewPortFilter(p.argument) && (valViewPortFilter(p.getMinValue(true)) || valViewPortFilter(p.getMaxValue(true)))).length;
     });
   },
   _renderSeriesElements(drawOptions, isLegendInside) {
-    var _this5 = this;
-    var series = this.series;
-    var resolveLabelOverlapping = this._themeManager.getOptions('resolveLabelOverlapping');
-    var pointsToAnimation = this._getPointsToAnimation(series);
-    series.forEach(function (singleSeries, index) {
-      _this5._applyExtraSettings(singleSeries, drawOptions);
-      var animationEnabled = drawOptions.animate && pointsToAnimation[index] <= drawOptions.animationPointsLimit && _this5._renderer.animationEnabled();
-      singleSeries.draw(animationEnabled, drawOptions.hideLayoutLabels, _this5._getLegendCallBack(singleSeries));
+    const {
+      series
+    } = this;
+    const resolveLabelOverlapping = this._themeManager.getOptions('resolveLabelOverlapping');
+    const pointsToAnimation = this._getPointsToAnimation(series);
+    series.forEach((singleSeries, index) => {
+      this._applyExtraSettings(singleSeries, drawOptions);
+      const animationEnabled = drawOptions.animate && pointsToAnimation[index] <= drawOptions.animationPointsLimit && this._renderer.animationEnabled();
+      singleSeries.draw(animationEnabled, drawOptions.hideLayoutLabels, this._getLegendCallBack(singleSeries));
     });
     if (resolveLabelOverlapping === 'none') {
       this._adjustSeriesLabels(false);
@@ -667,7 +663,7 @@ var BaseChart = _m_base_widget.default.inherit({
     this._canvas = this.__originalCanvas;
   },
   _resolveLabelOverlapping(resolveLabelOverlapping) {
-    var func;
+    let func;
     switch (resolveLabelOverlapping) {
       case 'stack':
         func = this._resolveLabelOverlappingStack;
@@ -684,20 +680,18 @@ var BaseChart = _m_base_widget.default.inherit({
     return (0, _type.isFunction)(func) && func.call(this);
   },
   _getVisibleSeries() {
-    return (0, _common.grep)(this.getAllSeries(), function (series) {
-      return series.isVisible();
-    });
+    return (0, _common.grep)(this.getAllSeries(), series => series.isVisible());
   },
   _resolveLabelOverlappingHide() {
-    var labels = [];
-    var currentLabel;
-    var nextLabel;
-    var currentLabelRect;
-    var nextLabelRect;
-    var i;
-    var j;
-    var points;
-    var series = this._getVisibleSeries();
+    const labels = [];
+    let currentLabel;
+    let nextLabel;
+    let currentLabelRect;
+    let nextLabelRect;
+    let i;
+    let j;
+    let points;
+    const series = this._getVisibleSeries();
     for (i = 0; i < series.length; i++) {
       points = series[i].getVisiblePoints();
       for (j = 0; j < points.length; j++) {
@@ -734,7 +728,7 @@ var BaseChart = _m_base_widget.default.inherit({
     return false;
   },
   _createLegend() {
-    var legendSettings = getLegendSettings(this._legendDataField);
+    const legendSettings = getLegendSettings(this._legendDataField);
     this._legend = new _legend.Legend({
       renderer: this._renderer,
       widget: this,
@@ -750,17 +744,17 @@ var BaseChart = _m_base_widget.default.inherit({
     this._layout.add(this._legend);
   },
   _updateLegend() {
-    var themeManager = this._themeManager;
-    var legendOptions = themeManager.getOptions('legend');
-    var legendData = this._getLegendData();
+    const themeManager = this._themeManager;
+    const legendOptions = themeManager.getOptions('legend');
+    const legendData = this._getLegendData();
     legendOptions.containerBackgroundColor = themeManager.getOptions('containerBackgroundColor');
     legendOptions._incidentOccurred = this._incidentOccurred; // TODO: Why is `_` used?
     this._legend.update(legendData, legendOptions, themeManager.theme('legend').title);
     this._change(['LAYOUT']);
   },
   _prepareDrawOptions(drawOptions) {
-    var animationOptions = this._getAnimationOptions();
-    var options = (0, _extend.extend)({}, {
+    const animationOptions = this._getAnimationOptions();
+    const options = (0, _extend.extend)({}, {
       force: false,
       adjustAxes: true,
       drawLegend: true,
@@ -774,8 +768,8 @@ var BaseChart = _m_base_widget.default.inherit({
     return options;
   },
   _processRefreshData(newRefreshAction) {
-    var currentRefreshActionPosition = ACTIONS_BY_PRIORITY.indexOf(this._currentRefreshData);
-    var newRefreshActionPosition = ACTIONS_BY_PRIORITY.indexOf(newRefreshAction);
+    const currentRefreshActionPosition = ACTIONS_BY_PRIORITY.indexOf(this._currentRefreshData);
+    const newRefreshActionPosition = ACTIONS_BY_PRIORITY.indexOf(newRefreshAction);
     if (!this._currentRefreshData || currentRefreshActionPosition >= 0 && newRefreshActionPosition < currentRefreshActionPosition) {
       this._currentRefreshData = newRefreshAction;
       // this._invalidate();
@@ -784,17 +778,21 @@ var BaseChart = _m_base_widget.default.inherit({
     this._requestChange(['REFRESH']);
   },
   _getLegendData() {
-    return (0, _utils.map)(this._getLegendTargets(), function (item) {
-      var legendData = item.legendData;
-      var style = item.getLegendStyles;
-      var opacity = style.normal.opacity;
+    return (0, _utils.map)(this._getLegendTargets(), item => {
+      const {
+        legendData
+      } = item;
+      const style = item.getLegendStyles;
+      let {
+        opacity
+      } = style.normal;
       if (!item.visible) {
         if (!(0, _type.isDefined)(opacity) || opacity > DEFAULT_OPACITY) {
           opacity = DEFAULT_OPACITY;
         }
         legendData.textOpacity = DEFAULT_OPACITY;
       }
-      var opacityStyle = {
+      const opacityStyle = {
         opacity
       };
       legendData.states = {
@@ -823,9 +821,7 @@ var BaseChart = _m_base_widget.default.inherit({
         this.series[seriesIndex].dispose();
         this.series.splice(seriesIndex, 1);
       } else {
-        this.series.forEach(function (s) {
-          return s.dispose();
-        });
+        this.series.forEach(s => s.dispose());
         this.series.length = 0;
       }
     }
@@ -834,7 +830,7 @@ var BaseChart = _m_base_widget.default.inherit({
     }
   },
   _disposeSeriesFamilies() {
-    (this.seriesFamilies || []).forEach(function (family) {
+    (this.seriesFamilies || []).forEach(family => {
       family.dispose();
     });
     this.seriesFamilies = null;
@@ -846,7 +842,7 @@ var BaseChart = _m_base_widget.default.inherit({
   },
   _applyChanges() {
     this._themeManager.update(this._options.silent());
-    this.callBase.apply(this, arguments);
+    this.callBase(...arguments);
   },
   _optionChangesMap: {
     animation: 'ANIMATION',
@@ -930,7 +926,7 @@ var BaseChart = _m_base_widget.default.inherit({
     this._resetComponentsAnimation(true);
   },
   _resetComponentsAnimation(isFirstDrawing) {
-    this.series.forEach(function (s) {
+    this.series.forEach(s => {
       s.resetApplyingAnimation(isFirstDrawing);
     });
     this._resetAxesAnimation(isFirstDrawing);
@@ -944,7 +940,7 @@ var BaseChart = _m_base_widget.default.inherit({
     this._correctAxes();
   },
   _doRefresh() {
-    var methodName = this._currentRefreshData;
+    const methodName = this._currentRefreshData;
     if (methodName) {
       this._currentRefreshData = null;
       this._renderer.stopAllAnimations(true);
@@ -952,8 +948,8 @@ var BaseChart = _m_base_widget.default.inherit({
     }
   },
   _updateCanvasClipRect(canvas) {
-    var width = Math.max(canvas.width - canvas.left - canvas.right, 0);
-    var height = Math.max(canvas.height - canvas.top - canvas.bottom, 0);
+    const width = Math.max(canvas.width - canvas.left - canvas.right, 0);
+    const height = Math.max(canvas.height - canvas.top - canvas.bottom, 0);
     this._canvasClipRect.attr({
       x: canvas.left,
       y: canvas.top,
@@ -984,15 +980,10 @@ var BaseChart = _m_base_widget.default.inherit({
     singleSeries.createPoints(false);
   },
   _handleSeriesDataUpdated() {
-    var _this6 = this;
-    if (this._getVisibleSeries().some(function (s) {
-      return s.useAggregation();
-    })) {
+    if (this._getVisibleSeries().some(s => s.useAggregation())) {
       this._populateMarginOptions();
     }
-    this.series.forEach(function (s) {
-      return _this6._processSingleSeries(s);
-    }, this);
+    this.series.forEach(s => this._processSingleSeries(s), this);
   },
   _dataSpecificInit(needRedraw) {
     if (!this.series || this.needToPopulateSeries) {
@@ -1015,25 +1006,25 @@ var BaseChart = _m_base_widget.default.inherit({
     });
   },
   _repopulateSeries() {
-    var themeManager = this._themeManager;
-    var data = this._dataSourceItems();
-    var dataValidatorOptions = themeManager.getOptions('dataPrepareSettings');
-    var seriesTemplate = themeManager.getOptions('seriesTemplate');
+    const themeManager = this._themeManager;
+    const data = this._dataSourceItems();
+    const dataValidatorOptions = themeManager.getOptions('dataPrepareSettings');
+    const seriesTemplate = themeManager.getOptions('seriesTemplate');
     if (seriesTemplate) {
       this._populateSeries(data);
     }
     this._groupSeries();
-    var parsedData = (0, _data_validator.validateData)(data, this._groupsData, this._incidentOccurred, dataValidatorOptions);
+    const parsedData = (0, _data_validator.validateData)(data, this._groupsData, this._incidentOccurred, dataValidatorOptions);
     themeManager.resetPalette();
-    this.series.forEach(function (singleSeries) {
+    this.series.forEach(singleSeries => {
       singleSeries.updateData(parsedData[singleSeries.getArgumentField()]);
     });
     this._handleSeriesDataUpdated();
   },
   _renderCompleteHandler() {
-    var allSeriesInited = true;
+    let allSeriesInited = true;
     if (this._needHandleRenderComplete) {
-      this.series.forEach(function (s) {
+      this.series.forEach(s => {
         allSeriesInited = allSeriesInited && s.canRenderCompleteHandle();
       });
       if (allSeriesInited) {
@@ -1050,23 +1041,22 @@ var BaseChart = _m_base_widget.default.inherit({
     return (0, _type.isDefined)(this.option('dataSource')) && this._dataIsLoaded();
   },
   _populateSeriesOptions(data) {
-    var _this7 = this;
-    var themeManager = this._themeManager;
-    var seriesTemplate = themeManager.getOptions('seriesTemplate');
-    var seriesOptions = seriesTemplate ? (0, _utils.processSeriesTemplate)(seriesTemplate, data || []) : this.option('series');
-    var allSeriesOptions = isArray(seriesOptions) ? seriesOptions : seriesOptions ? [seriesOptions] : [];
-    var extraOptions = this._getExtraOptions();
-    var particularSeriesOptions;
-    var seriesTheme;
-    var seriesThemes = [];
-    var seriesVisibilityChanged = function seriesVisibilityChanged(target) {
-      _this7._specialProcessSeries();
-      _this7._populateBusinessRange(target && target.getValueAxis(), true);
-      _this7._renderer.stopAllAnimations(true);
-      _this7._updateLegend();
-      _this7._requestChange(['FULL_RENDER']);
+    const themeManager = this._themeManager;
+    const seriesTemplate = themeManager.getOptions('seriesTemplate');
+    const seriesOptions = seriesTemplate ? (0, _utils.processSeriesTemplate)(seriesTemplate, data || []) : this.option('series');
+    const allSeriesOptions = isArray(seriesOptions) ? seriesOptions : seriesOptions ? [seriesOptions] : [];
+    const extraOptions = this._getExtraOptions();
+    let particularSeriesOptions;
+    let seriesTheme;
+    const seriesThemes = [];
+    const seriesVisibilityChanged = target => {
+      this._specialProcessSeries();
+      this._populateBusinessRange(target && target.getValueAxis(), true);
+      this._renderer.stopAllAnimations(true);
+      this._updateLegend();
+      this._requestChange(['FULL_RENDER']);
     };
-    for (var i = 0; i < allSeriesOptions.length; i++) {
+    for (let i = 0; i < allSeriesOptions.length; i++) {
       particularSeriesOptions = (0, _extend.extend)(true, {}, allSeriesOptions[i], extraOptions);
       if (!(0, _type.isDefined)(particularSeriesOptions.name) || particularSeriesOptions.name === '') {
         particularSeriesOptions.name = "Series ".concat((i + 1).toString());
@@ -1084,22 +1074,17 @@ var BaseChart = _m_base_widget.default.inherit({
     return seriesThemes;
   },
   _populateSeries(data) {
-    var _this8 = this;
     var _a;
-    var seriesBasis = [];
-    var incidentOccurred = this._incidentOccurred;
-    var seriesThemes = this._populateSeriesOptions(data);
-    var particularSeries;
-    var disposeSeriesFamilies = false;
+    const seriesBasis = [];
+    const incidentOccurred = this._incidentOccurred;
+    const seriesThemes = this._populateSeriesOptions(data);
+    let particularSeries;
+    let disposeSeriesFamilies = false;
     this.needToPopulateSeries = false;
-    seriesThemes.forEach(function (theme) {
+    seriesThemes.forEach(theme => {
       var _a;
-      var findSeries = function findSeries(s) {
-        return s.name === theme.name && !seriesBasis.map(function (sb) {
-          return sb.series;
-        }).includes(s);
-      };
-      var curSeries = (_a = _this8.series) === null || _a === void 0 ? void 0 : _a.find(findSeries);
+      const findSeries = s => s.name === theme.name && !seriesBasis.map(sb => sb.series).includes(s);
+      const curSeries = (_a = this.series) === null || _a === void 0 ? void 0 : _a.find(findSeries);
       if (curSeries && curSeries.type === theme.type) {
         seriesBasis.push({
           series: curSeries,
@@ -1113,45 +1098,39 @@ var BaseChart = _m_base_widget.default.inherit({
       }
     });
     ((_a = this.series) === null || _a === void 0 ? void 0 : _a.length) !== 0 && this._tracker.clearHover();
-    (0, _iterator.reverseEach)(this.series, function (index, series) {
-      if (!seriesBasis.some(function (s) {
-        return series === s.series;
-      })) {
-        _this8._disposeSeries(index);
+    (0, _iterator.reverseEach)(this.series, (index, series) => {
+      if (!seriesBasis.some(s => series === s.series)) {
+        this._disposeSeries(index);
         disposeSeriesFamilies = true;
       }
     });
-    !disposeSeriesFamilies && (disposeSeriesFamilies = seriesBasis.some(function (sb) {
-      return sb.series.name !== seriesThemes[sb.series.index].name;
-    }));
+    !disposeSeriesFamilies && (disposeSeriesFamilies = seriesBasis.some(sb => sb.series.name !== seriesThemes[sb.series.index].name));
     this.series = [];
     disposeSeriesFamilies && this._disposeSeriesFamilies();
     this._themeManager.resetPalette();
-    var eventPipe = function eventPipe(data) {
-      _this8.series.forEach(function (currentSeries) {
+    const eventPipe = data => {
+      this.series.forEach(currentSeries => {
         currentSeries.notify(data);
       });
     };
-    seriesBasis.forEach(function (basis) {
+    seriesBasis.forEach(basis => {
       var _a, _b;
-      var seriesTheme = basis.options;
-      var argumentAxis = (_b = (_a = _this8._argumentAxes) === null || _a === void 0 ? void 0 : _a.filter(function (a) {
-        return a.pane === seriesTheme.pane;
-      })[0]) !== null && _b !== void 0 ? _b : _this8.getArgumentAxis();
-      var renderSettings = {
-        commonSeriesModes: _this8._getSelectionModes(),
+      const seriesTheme = basis.options;
+      const argumentAxis = (_b = (_a = this._argumentAxes) === null || _a === void 0 ? void 0 : _a.filter(a => a.pane === seriesTheme.pane)[0]) !== null && _b !== void 0 ? _b : this.getArgumentAxis();
+      const renderSettings = {
+        commonSeriesModes: this._getSelectionModes(),
         argumentAxis,
-        valueAxis: _this8._getValueAxis(seriesTheme.pane, seriesTheme.axis)
+        valueAxis: this._getValueAxis(seriesTheme.pane, seriesTheme.axis)
       };
       if (basis.series) {
         particularSeries = basis.series;
         particularSeries.updateOptions(seriesTheme, renderSettings);
       } else {
         particularSeries = new _base_series.Series((0, _extend.extend)({
-          renderer: _this8._renderer,
-          seriesGroup: _this8._seriesGroup,
-          labelsGroup: _this8._labelsGroup,
-          eventTrigger: _this8._eventTrigger,
+          renderer: this._renderer,
+          seriesGroup: this._seriesGroup,
+          labelsGroup: this._labelsGroup,
+          eventTrigger: this._eventTrigger,
           eventPipe,
           incidentOccurred
         }, renderSettings), seriesTheme);
@@ -1159,15 +1138,15 @@ var BaseChart = _m_base_widget.default.inherit({
       if (!particularSeries.isUpdated) {
         incidentOccurred('E2101', [seriesTheme.type]);
       } else {
-        particularSeries.index = _this8.series.length;
-        _this8.series.push(particularSeries);
+        particularSeries.index = this.series.length;
+        this.series.push(particularSeries);
       }
     });
     return this.series;
   },
   getStackedPoints(point) {
-    var stackName = point.series.getStackName();
-    return this._getVisibleSeries().reduce(function (stackPoints, series) {
+    const stackName = point.series.getStackName();
+    return this._getVisibleSeries().reduce((stackPoints, series) => {
       if (!(0, _type.isDefined)(series.getStackName()) || !(0, _type.isDefined)(stackName) || stackName === series.getStackName()) {
         stackPoints = stackPoints.concat(series.getPointsByArg(point.argument));
       }
@@ -1179,9 +1158,7 @@ var BaseChart = _m_base_widget.default.inherit({
     return (this.series || []).slice();
   },
   getSeriesByName: function getSeriesByName(name) {
-    var found = (this.series || []).find(function (singleSeries) {
-      return singleSeries.name === name;
-    });
+    const found = (this.series || []).find(singleSeries => singleSeries.name === name);
     return found || null;
   },
   getSeriesByPos: function getSeriesByPos(pos) {
@@ -1209,7 +1186,7 @@ var BaseChart = _m_base_widget.default.inherit({
     this._requestChange(['CONTAINER_SIZE', 'REFRESH_SERIES_REINIT']);
   },
   _getMinSize() {
-    var adaptiveLayout = this._layoutManagerOptions();
+    const adaptiveLayout = this._layoutManagerOptions();
     return [adaptiveLayout.width, adaptiveLayout.height];
   },
   _change_REFRESH() {
@@ -1230,13 +1207,13 @@ var BaseChart = _m_base_widget.default.inherit({
   }
 });
 exports.BaseChart = BaseChart;
-REFRESH_SERIES_DATA_INIT_ACTION_OPTIONS.forEach(function (name) {
+REFRESH_SERIES_DATA_INIT_ACTION_OPTIONS.forEach(name => {
   BaseChart.prototype._optionChangesMap[name] = 'REFRESH_SERIES_DATA_INIT';
 });
-FORCE_RENDER_REFRESH_ACTION_OPTIONS.forEach(function (name) {
+FORCE_RENDER_REFRESH_ACTION_OPTIONS.forEach(name => {
   BaseChart.prototype._optionChangesMap[name] = 'FORCE_RENDER';
 });
-REFRESH_SERIES_FAMILIES_ACTION_OPTIONS.forEach(function (name) {
+REFRESH_SERIES_FAMILIES_ACTION_OPTIONS.forEach(name => {
   BaseChart.prototype._optionChangesMap[name] = 'REFRESH_SERIES_FAMILIES';
 });
 BaseChart.addPlugin(_export.plugin);
@@ -1246,7 +1223,9 @@ BaseChart.addPlugin(_tooltip.plugin);
 BaseChart.addPlugin(_loading_indicator.plugin);
 // These are charts specifics on using title - they cannot be omitted because of charts custom layout.
 // eslint-disable-next-line
-var _change_TITLE = BaseChart.prototype._change_TITLE;
+const {
+  _change_TITLE
+} = BaseChart.prototype;
 BaseChart.prototype._change_TITLE = function () {
   _change_TITLE.apply(this, arguments);
   this._change(['FORCE_RENDER']);

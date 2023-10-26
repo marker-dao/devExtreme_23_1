@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/sankey/data_validator.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,16 +11,16 @@
 exports.default = void 0;
 var _graph = _interopRequireDefault(require("./graph"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var validator = {
-  validate: function validate(data, incidentOccurred) {
-    var result = null;
+const validator = {
+  validate: function (data, incidentOccurred) {
+    let result = null;
     if (this._hasCycle(data)) {
       result = 'E2006';
       incidentOccurred('E2006');
     }
     return result;
   },
-  _hasCycle: function _hasCycle(data) {
+  _hasCycle: function (data) {
     return _graph.default.struct.hasCycle(data);
   }
 };

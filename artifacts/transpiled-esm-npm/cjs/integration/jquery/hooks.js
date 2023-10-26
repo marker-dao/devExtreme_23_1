@@ -11,18 +11,18 @@ var _hook_touch_props = _interopRequireDefault(require("../../events/core/hook_t
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // eslint-disable-next-line no-restricted-imports
 
-var useJQuery = (0, _use_jquery.default)();
+const useJQuery = (0, _use_jquery.default)();
 if (useJQuery) {
   if ((0, _version.compare)(_jquery.default.fn.jquery, [3]) < 0) {
-    var POINTER_TYPE_MAP = {
+    const POINTER_TYPE_MAP = {
       2: 'touch',
       3: 'pen',
       4: 'mouse'
     };
     (0, _iterator.each)(['MSPointerDown', 'MSPointerMove', 'MSPointerUp', 'MSPointerCancel', 'MSPointerOver', 'MSPointerOut', 'mouseenter', 'mouseleave', 'pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'pointerover', 'pointerout', 'pointerenter', 'pointerleave'], function () {
       _jquery.default.event.fixHooks[this] = {
-        filter: function filter(event, originalEvent) {
-          var pointerType = originalEvent.pointerType;
+        filter: function (event, originalEvent) {
+          const pointerType = originalEvent.pointerType;
           if ((0, _type.isNumeric)(pointerType)) {
             event.pointerType = POINTER_TYPE_MAP[pointerType];
           }
@@ -33,7 +33,7 @@ if (useJQuery) {
     });
     (0, _iterator.each)(['touchstart', 'touchmove', 'touchend', 'touchcancel'], function () {
       _jquery.default.event.fixHooks[this] = {
-        filter: function filter(event, originalEvent) {
+        filter: function (event, originalEvent) {
           (0, _hook_touch_props.default)(function (name, hook) {
             event[name] = hook(originalEvent);
           });
@@ -43,18 +43,18 @@ if (useJQuery) {
       };
     });
     _jquery.default.event.fixHooks['wheel'] = _jquery.default.event.mouseHooks;
-    var DX_EVENT_HOOKS = {
+    const DX_EVENT_HOOKS = {
       props: _jquery.default.event.mouseHooks.props.concat(['pointerType', 'pointerId', 'pointers'])
     };
     _event_registrator.default.callbacks.add(function (name) {
       _jquery.default.event.fixHooks[name] = DX_EVENT_HOOKS;
     });
-    var fix = function fix(event, originalEvent) {
-      var fixHook = _jquery.default.event.fixHooks[originalEvent.type] || _jquery.default.event.mouseHooks;
-      var props = fixHook.props ? _jquery.default.event.props.concat(fixHook.props) : _jquery.default.event.props;
-      var propIndex = props.length;
+    const fix = function (event, originalEvent) {
+      const fixHook = _jquery.default.event.fixHooks[originalEvent.type] || _jquery.default.event.mouseHooks;
+      const props = fixHook.props ? _jquery.default.event.props.concat(fixHook.props) : _jquery.default.event.props;
+      let propIndex = props.length;
       while (propIndex--) {
-        var prop = props[propIndex];
+        const prop = props[propIndex];
         event[prop] = originalEvent[prop];
       }
       return fixHook.filter ? fixHook.filter(event, originalEvent) : event;

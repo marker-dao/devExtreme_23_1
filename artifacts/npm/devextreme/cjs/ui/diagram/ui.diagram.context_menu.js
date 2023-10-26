@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.context_menu.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,12 +19,12 @@ var _diagram3 = require("./diagram.importer");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var DIAGRAM_TOUCHBAR_CLASS = 'dx-diagram-touchbar';
-var DIAGRAM_TOUCHBAR_OVERLAY_CLASS = 'dx-diagram-touchbar-overlay';
-var DIAGRAM_TOUCHBAR_TARGET_CLASS = 'dx-diagram-touchbar-target';
-var DIAGRAM_TOUCHBAR_MIN_UNWRAPPED_WIDTH = 800;
-var DIAGRAM_TOUCHBAR_Y_OFFSET = 32;
-var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
+const DIAGRAM_TOUCHBAR_CLASS = 'dx-diagram-touchbar';
+const DIAGRAM_TOUCHBAR_OVERLAY_CLASS = 'dx-diagram-touchbar-overlay';
+const DIAGRAM_TOUCHBAR_TARGET_CLASS = 'dx-diagram-touchbar-target';
+const DIAGRAM_TOUCHBAR_MIN_UNWRAPPED_WIDTH = 800;
+const DIAGRAM_TOUCHBAR_Y_OFFSET = 32;
+let DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
   _inheritsLoose(DiagramContextMenuWrapper, _Widget);
   function DiagramContextMenuWrapper() {
     return _Widget.apply(this, arguments) || this;
@@ -42,13 +42,12 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
     this.bar = new DiagramContextMenuBar(this);
   };
   _proto._initMarkup = function _initMarkup() {
-    var _this = this;
     _Widget.prototype._initMarkup.call(this);
     this._commands = this._getCommands();
     this._commandToIndexMap = {};
     this._fillCommandToIndexMap(this._commands, []);
     this._$contextMenuTargetElement = (0, _renderer.default)('<div>').addClass(DIAGRAM_TOUCHBAR_TARGET_CLASS).appendTo(this.$element());
-    var $contextMenu = (0, _renderer.default)('<div>').appendTo(this.$element());
+    const $contextMenu = (0, _renderer.default)('<div>').appendTo(this.$element());
     this._contextMenuInstance = this._createComponent($contextMenu, DiagramContextMenu, {
       isTouchBarMode: this._isTouchBarMode(),
       cssClass: this._isTouchBarMode() ? DIAGRAM_TOUCHBAR_CLASS : _uiDiagram.default.getContextMenuCssClass(),
@@ -67,22 +66,24 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
         },
         of: this._$contextMenuTargetElement
       } : {},
-      itemTemplate: function itemTemplate(itemData, itemIndex, itemElement) {
+      itemTemplate: function (itemData, itemIndex, itemElement) {
         _uiDiagram.default.getContextMenuItemTemplate(this, itemData, itemIndex, itemElement);
       },
-      onItemClick: function onItemClick(_ref) {
-        var itemData = _ref.itemData;
-        return _this._onItemClick(itemData);
+      onItemClick: _ref => {
+        let {
+          itemData
+        } = _ref;
+        return this._onItemClick(itemData);
       },
-      onShowing: function onShowing(e) {
-        if (_this._inOnShowing === true) return;
-        _this._inOnShowing = true;
-        _this._onVisibilityChangingAction({
+      onShowing: e => {
+        if (this._inOnShowing === true) return;
+        this._inOnShowing = true;
+        this._onVisibilityChangingAction({
           visible: true,
-          component: _this
+          component: this
         });
         e.component.option('items', e.component.option('items'));
-        delete _this._inOnShowing;
+        delete this._inOnShowing;
       }
     });
   };
@@ -98,7 +99,7 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
           height: 0
         };
       }
-      var widthCorrection = selection.width > DIAGRAM_TOUCHBAR_MIN_UNWRAPPED_WIDTH ? 0 : (DIAGRAM_TOUCHBAR_MIN_UNWRAPPED_WIDTH - selection.width) / 2;
+      const widthCorrection = selection.width > DIAGRAM_TOUCHBAR_MIN_UNWRAPPED_WIDTH ? 0 : (DIAGRAM_TOUCHBAR_MIN_UNWRAPPED_WIDTH - selection.width) / 2;
       this._$contextMenuTargetElement.css({
         left: selection.x - widthCorrection,
         top: selection.y - DIAGRAM_TOUCHBAR_Y_OFFSET,
@@ -118,12 +119,13 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
     this._contextMenuInstance.hide();
   };
   _proto._isTouchBarMode = function _isTouchBarMode() {
-    var _getDiagram = (0, _diagram3.getDiagram)(),
-      Browser = _getDiagram.Browser;
+    const {
+      Browser
+    } = (0, _diagram3.getDiagram)();
     return Browser.TouchUI;
   };
   _proto._onItemClick = function _onItemClick(itemData) {
-    var processed = false;
+    let processed = false;
     if (this._onItemClickAction) {
       processed = this._onItemClickAction(itemData);
     }
@@ -156,14 +158,13 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
     return _diagram.default.getContextMenuCommands(this.option('commands'));
   };
   _proto._fillCommandToIndexMap = function _fillCommandToIndexMap(commands, indexPath) {
-    var _this2 = this;
-    commands.forEach(function (command, index) {
-      var commandIndexPath = indexPath.concat([index]);
+    commands.forEach((command, index) => {
+      const commandIndexPath = indexPath.concat([index]);
       if (command.command !== undefined) {
-        _this2._commandToIndexMap[command.command] = commandIndexPath;
+        this._commandToIndexMap[command.command] = commandIndexPath;
       }
       if (Array.isArray(command.items)) {
-        _this2._fillCommandToIndexMap(command.items, commandIndexPath);
+        this._fillCommandToIndexMap(command.items, commandIndexPath);
       }
     });
   };
@@ -171,15 +172,15 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
     this._setItemVisible(key, enabled);
   };
   _proto._setItemVisible = function _setItemVisible(key, visible) {
-    var itemOptionText = _uiDiagram.default.getItemOptionText(this._contextMenuInstance, this._commandToIndexMap[key]);
+    const itemOptionText = _uiDiagram.default.getItemOptionText(this._contextMenuInstance, this._commandToIndexMap[key]);
     _uiDiagram.default.updateContextMenuItemVisible(this._contextMenuInstance, itemOptionText, visible);
   };
   _proto._setItemValue = function _setItemValue(key, value) {
-    var itemOptionText = _uiDiagram.default.getItemOptionText(this._contextMenuInstance, this._commandToIndexMap[key]);
+    const itemOptionText = _uiDiagram.default.getItemOptionText(this._contextMenuInstance, this._commandToIndexMap[key]);
     _uiDiagram.default.updateContextMenuItemValue(this._contextMenuInstance, itemOptionText, key, value);
   };
   _proto._setItemSubItems = function _setItemSubItems(key, items) {
-    var itemOptionText = _uiDiagram.default.getItemOptionText(this._contextMenuInstance, this._commandToIndexMap[key]);
+    const itemOptionText = _uiDiagram.default.getItemOptionText(this._contextMenuInstance, this._commandToIndexMap[key]);
     _uiDiagram.default.updateContextMenuItems(this._contextMenuInstance, itemOptionText, key, items);
   };
   _proto._setEnabled = function _setEnabled(enabled) {
@@ -219,25 +220,24 @@ var DiagramContextMenuWrapper = /*#__PURE__*/function (_Widget) {
   };
   return DiagramContextMenuWrapper;
 }(_ui.default);
-var DiagramContextMenu = /*#__PURE__*/function (_ContextMenu) {
+let DiagramContextMenu = /*#__PURE__*/function (_ContextMenu) {
   _inheritsLoose(DiagramContextMenu, _ContextMenu);
   function DiagramContextMenu() {
     return _ContextMenu.apply(this, arguments) || this;
   }
   var _proto2 = DiagramContextMenu.prototype;
   _proto2._renderContextMenuOverlay = function _renderContextMenuOverlay() {
-    var _this3 = this;
     _ContextMenu.prototype._renderContextMenuOverlay.call(this);
     if (this._overlay && this.option('isTouchBarMode')) {
-      this._overlay && this._overlay.option('onShown', function () {
-        var $content = (0, _renderer.default)(_this3._overlay.$content());
+      this._overlay && this._overlay.option('onShown', () => {
+        const $content = (0, _renderer.default)(this._overlay.$content());
         $content.parent().addClass(DIAGRAM_TOUCHBAR_OVERLAY_CLASS);
       });
     }
   };
   return DiagramContextMenu;
 }(_context_menu.default);
-var DiagramContextMenuBar = /*#__PURE__*/function (_DiagramBar) {
+let DiagramContextMenuBar = /*#__PURE__*/function (_DiagramBar) {
   _inheritsLoose(DiagramContextMenuBar, _DiagramBar);
   function DiagramContextMenuBar(owner) {
     return _DiagramBar.call(this, owner) || this;

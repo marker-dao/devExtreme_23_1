@@ -7,7 +7,7 @@ var _size = require("../../../../core/utils/size");
 var _window = require("../../../../core/utils/window");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var POPUP_WIDTH = {
+const POPUP_WIDTH = {
   DEFAULT: 485,
   RECURRENCE: 970,
   FULLSCREEN: 1000,
@@ -17,7 +17,7 @@ var POPUP_WIDTH = {
   }
 };
 exports.POPUP_WIDTH = POPUP_WIDTH;
-var defaultAnimation = {
+const defaultAnimation = {
   show: {
     type: 'pop',
     duration: 300,
@@ -39,34 +39,28 @@ var defaultAnimation = {
   }
 };
 exports.defaultAnimation = defaultAnimation;
-var isMobile = function isMobile() {
-  return _devices.default.current().deviceType !== 'desktop';
-};
-var isIOSPlatform = function isIOSPlatform() {
-  return _devices.default.current().platform === 'ios';
-};
-var TOOLBAR_LOCATION = {
+const isMobile = () => _devices.default.current().deviceType !== 'desktop';
+const isIOSPlatform = () => _devices.default.current().platform === 'ios';
+const TOOLBAR_LOCATION = {
   AFTER: 'after',
   BEFORE: 'before'
 };
-var getButtonsConfig = function getButtonsConfig() {
-  return {
-    doneButton: {
-      shortcut: 'done',
-      options: {
-        text: _message.default.format('Done')
-      },
-      location: TOOLBAR_LOCATION.AFTER
+const getButtonsConfig = () => ({
+  doneButton: {
+    shortcut: 'done',
+    options: {
+      text: _message.default.format('Done')
     },
-    cancelButton: {
-      shortcut: 'cancel',
-      location: isIOSPlatform() ? TOOLBAR_LOCATION.BEFORE : TOOLBAR_LOCATION.AFTER
-    }
-  };
-};
-var getPopupToolbarItems = function getPopupToolbarItems(allowUpdating, doneClick) {
-  var result = [];
-  var buttonsConfig = getButtonsConfig();
+    location: TOOLBAR_LOCATION.AFTER
+  },
+  cancelButton: {
+    shortcut: 'cancel',
+    location: isIOSPlatform() ? TOOLBAR_LOCATION.BEFORE : TOOLBAR_LOCATION.AFTER
+  }
+});
+const getPopupToolbarItems = (allowUpdating, doneClick) => {
+  const result = [];
+  const buttonsConfig = getButtonsConfig();
   if (allowUpdating) {
     result.push(_extends({}, buttonsConfig.doneButton, {
       onClick: doneClick
@@ -76,26 +70,24 @@ var getPopupToolbarItems = function getPopupToolbarItems(allowUpdating, doneClic
   return result;
 };
 exports.getPopupToolbarItems = getPopupToolbarItems;
-var isPopupFullScreenNeeded = function isPopupFullScreenNeeded() {
-  var window = (0, _window.getWindow)();
-  var width = window && (0, _size.getWidth)(window);
+const isPopupFullScreenNeeded = () => {
+  const window = (0, _window.getWindow)();
+  const width = window && (0, _size.getWidth)(window);
   if (width) {
     return isMobile() ? width < POPUP_WIDTH.MOBILE.FULLSCREEN : width < POPUP_WIDTH.FULLSCREEN;
   }
   return false;
 };
 exports.isPopupFullScreenNeeded = isPopupFullScreenNeeded;
-var getMaxWidth = function getMaxWidth(isRecurrence) {
+const getMaxWidth = isRecurrence => {
   if (isMobile()) {
     return POPUP_WIDTH.MOBILE.DEFAULT;
   }
   return isRecurrence ? POPUP_WIDTH.RECURRENCE : POPUP_WIDTH.DEFAULT;
 };
 exports.getMaxWidth = getMaxWidth;
-var getPopupSize = function getPopupSize(isRecurrence) {
-  return {
-    fullScreen: isPopupFullScreenNeeded(),
-    maxWidth: getMaxWidth(isRecurrence)
-  };
-};
+const getPopupSize = isRecurrence => ({
+  fullScreen: isPopupFullScreenNeeded(),
+  maxWidth: getMaxWidth(isRecurrence)
+});
 exports.getPopupSize = getPopupSize;

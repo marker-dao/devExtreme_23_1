@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/data_grid/ui.data_grid.grouping.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ Object.keys(_m_grouping).forEach(function (key) {
   if (key in exports && exports[key] === _m_grouping[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function get() {
+    get: function () {
       return _m_grouping[key];
     }
   });

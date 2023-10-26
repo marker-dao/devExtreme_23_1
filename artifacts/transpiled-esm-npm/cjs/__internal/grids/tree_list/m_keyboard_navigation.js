@@ -10,11 +10,11 @@ _m_core.default.registerModule('keyboardNavigation', (0, _extend.extend)(true, {
       keyboardNavigation: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _leftRightKeysHandler(eventArgs, isEditing) {
-          var rowIndex = this.getVisibleRowIndex();
-          var dataController = this._dataController;
+          const rowIndex = this.getVisibleRowIndex();
+          const dataController = this._dataController;
           if (eventArgs.ctrl) {
-            var directionCode = this._getDirectionCodeByKey(eventArgs.keyName);
-            var key = dataController.getKeyByRowIndex(rowIndex);
+            const directionCode = this._getDirectionCodeByKey(eventArgs.keyName);
+            const key = dataController.getKeyByRowIndex(rowIndex);
             if (directionCode === 'nextInRow') {
               dataController.expandRow(key);
             } else {

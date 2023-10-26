@@ -7,24 +7,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 if (_knockout.default) {
   _knockout.default.bindingHandlers.dxControlsDescendantBindings = {
-    init: function init(_, valueAccessor) {
+    init: function (_, valueAccessor) {
       return {
         controlsDescendantBindings: _knockout.default.unwrap(valueAccessor())
       };
     }
   };
   _knockout.default.bindingHandlers.dxIcon = {
-    init: function init(element, valueAccessor) {
-      var options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
-      var iconElement = (0, _icon.getImageContainer)(options);
+    init: function (element, valueAccessor) {
+      const options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
+      const iconElement = (0, _icon.getImageContainer)(options);
       _knockout.default.virtualElements.emptyNode(element);
       if (iconElement) {
         _knockout.default.virtualElements.prepend(element, iconElement.get(0));
       }
     },
-    update: function update(element, valueAccessor) {
-      var options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
-      var iconElement = (0, _icon.getImageContainer)(options);
+    update: function (element, valueAccessor) {
+      const options = _knockout.default.utils.unwrapObservable(valueAccessor()) || {};
+      const iconElement = (0, _icon.getImageContainer)(options);
       _knockout.default.virtualElements.emptyNode(element);
       if (iconElement) {
         _knockout.default.virtualElements.prepend(element, iconElement.get(0));

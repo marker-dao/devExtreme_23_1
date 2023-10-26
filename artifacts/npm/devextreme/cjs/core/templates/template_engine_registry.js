@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/templates/template_engine_registry.js)
 * Version: 23.2.0
-* Build date: Wed Oct 18 2023
+* Build date: Thu Oct 26 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,8 +14,8 @@ exports.setTemplateEngine = setTemplateEngine;
 var _type = require("../utils/type");
 var _errors = _interopRequireDefault(require("../errors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var templateEngines = {};
-var currentTemplateEngine;
+const templateEngines = {};
+let currentTemplateEngine;
 function registerTemplateEngine(name, templateEngine) {
   templateEngines[name] = templateEngine;
 }

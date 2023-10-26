@@ -6,7 +6,7 @@ var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
 var _deferred = require("../../core/utils/deferred");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SelectionStrategy = /*#__PURE__*/function () {
+let SelectionStrategy = /*#__PURE__*/function () {
   function SelectionStrategy(options) {
     this.options = options;
     this._setOption('disabledItemKeys', []);
@@ -24,13 +24,13 @@ var SelectionStrategy = /*#__PURE__*/function () {
     this.options[name] = value;
   };
   _proto.onSelectionChanged = function onSelectionChanged() {
-    var addedItemKeys = this.options.addedItemKeys;
-    var removedItemKeys = this.options.removedItemKeys;
-    var addedItems = this.options.addedItems;
-    var removedItems = this.options.removedItems;
-    var selectedItems = this.options.selectedItems;
-    var selectedItemKeys = this.options.selectedItemKeys;
-    var onSelectionChanged = this.options.onSelectionChanged || _common.noop;
+    const addedItemKeys = this.options.addedItemKeys;
+    const removedItemKeys = this.options.removedItemKeys;
+    const addedItems = this.options.addedItems;
+    const removedItems = this.options.removedItems;
+    const selectedItems = this.options.selectedItems;
+    const selectedItemKeys = this.options.selectedItemKeys;
+    const onSelectionChanged = this.options.onSelectionChanged || _common.noop;
     this._clearItemKeys();
     onSelectionChanged({
       selectedItems: selectedItems,
@@ -61,11 +61,8 @@ var SelectionStrategy = /*#__PURE__*/function () {
     return this.selectedItemKeys(keys, preserve, isDeselect, isSelectAll);
   };
   _proto._removeTemplateProperty = function _removeTemplateProperty(remoteFilter) {
-    var _this = this;
     if (Array.isArray(remoteFilter)) {
-      return remoteFilter.map(function (f) {
-        return _this._removeTemplateProperty(f);
-      });
+      return remoteFilter.map(f => this._removeTemplateProperty(f));
     }
     if ((0, _type.isObject)(remoteFilter)) {
       delete remoteFilter.template;
@@ -73,10 +70,10 @@ var SelectionStrategy = /*#__PURE__*/function () {
     return remoteFilter;
   };
   _proto._loadFilteredData = function _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
-    var filterLength = encodeURI(JSON.stringify(this._removeTemplateProperty(remoteFilter))).length;
-    var needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
-    var deferred = new _deferred.Deferred();
-    var loadOptions = {
+    const filterLength = encodeURI(JSON.stringify(this._removeTemplateProperty(remoteFilter))).length;
+    const needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
+    const deferred = new _deferred.Deferred();
+    const loadOptions = {
       filter: needLoadAllData ? undefined : remoteFilter,
       select: needLoadAllData ? this.options.dataFields() : select || this.options.dataFields()
     };
@@ -84,7 +81,7 @@ var SelectionStrategy = /*#__PURE__*/function () {
       deferred.resolve([]);
     } else {
       this.options.load(loadOptions).done(function (items) {
-        var filteredItems = (0, _type.isPlainObject)(items) ? items.data : items;
+        let filteredItems = (0, _type.isPlainObject)(items) ? items.data : items;
         if (localFilter && !isSelectAll) {
           filteredItems = filteredItems.filter(localFilter);
         } else if (needLoadAllData) {
@@ -96,17 +93,17 @@ var SelectionStrategy = /*#__PURE__*/function () {
     return deferred;
   };
   _proto.updateSelectedItemKeyHash = function updateSelectedItemKeyHash(keys) {
-    for (var i = 0; i < keys.length; i++) {
-      var keyHash = (0, _common.getKeyHash)(keys[i]);
+    for (let i = 0; i < keys.length; i++) {
+      const keyHash = (0, _common.getKeyHash)(keys[i]);
       if (!(0, _type.isObject)(keyHash)) {
         this.options.keyHashIndices[keyHash] = this.options.keyHashIndices[keyHash] || [];
-        var keyIndices = this.options.keyHashIndices[keyHash];
+        const keyIndices = this.options.keyHashIndices[keyHash];
         keyIndices.push(i);
       }
     }
   };
   _proto._isAnyItemSelected = function _isAnyItemSelected(items) {
-    for (var i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
       if (this.options.isItemSelected(items[i])) {
         return undefined;
       }
@@ -114,16 +111,14 @@ var SelectionStrategy = /*#__PURE__*/function () {
     return false;
   };
   _proto._getFullSelectAllState = function _getFullSelectAllState() {
-    var items = this.options.plainItems();
-    var dataFilter = this.options.filter();
-    var selectedItems = this.options.ignoreDisabledItems ? this.options.selectedItems : this.options.selectedItems.filter(function (item) {
-      return !(item !== null && item !== void 0 && item.disabled);
-    });
+    const items = this.options.plainItems();
+    const dataFilter = this.options.filter();
+    let selectedItems = this.options.ignoreDisabledItems ? this.options.selectedItems : this.options.selectedItems.filter(item => !(item !== null && item !== void 0 && item.disabled));
     if (dataFilter) {
       selectedItems = (0, _query.default)(selectedItems).filter(dataFilter).toArray();
     }
-    var selectedItemsLength = selectedItems.length;
-    var disabledItemsLength = items.length - this.getSelectableItems(items).length;
+    const selectedItemsLength = selectedItems.length;
+    const disabledItemsLength = items.length - this.getSelectableItems(items).length;
     if (!selectedItemsLength) {
       return this._isAnyItemSelected(items);
     }
@@ -133,13 +128,13 @@ var SelectionStrategy = /*#__PURE__*/function () {
     return undefined;
   };
   _proto._getVisibleSelectAllState = function _getVisibleSelectAllState() {
-    var items = this.getSelectableItems(this.options.plainItems());
-    var hasSelectedItems = false;
-    var hasUnselectedItems = false;
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      var itemData = this.options.getItemData(item);
-      var key = this.options.keyOf(itemData);
+    const items = this.getSelectableItems(this.options.plainItems());
+    let hasSelectedItems = false;
+    let hasUnselectedItems = false;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const itemData = this.options.getItemData(item);
+      const key = this.options.keyOf(itemData);
       if (this.options.isSelectableItem(item)) {
         if (this.isItemKeySelected(key)) {
           hasSelectedItems = true;

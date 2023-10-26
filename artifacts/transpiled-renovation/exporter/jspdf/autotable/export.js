@@ -9,9 +9,9 @@ var _message = _interopRequireDefault(require("../../../localization/message"));
 var _export_load_panel = require("../../common/export_load_panel");
 var _window = require("../../../core/utils/window");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var Export = {
-  getFullOptions: function getFullOptions(options) {
-    var fullOptions = (0, _extend.extend)({}, options);
+const Export = {
+  getFullOptions: function (options) {
+    const fullOptions = (0, _extend.extend)({}, options);
     if (!((0, _type.isDefined)(fullOptions.jsPDFDocument) && (0, _type.isObject)(fullOptions.jsPDFDocument))) {
       throw Error('The "jsPDFDocument" field must contain a jsPDF instance.');
     }
@@ -40,7 +40,7 @@ var Export = {
     }
     return fullOptions;
   },
-  _getDefaultAutoTableOptions: function _getDefaultAutoTableOptions() {
+  _getDefaultAutoTableOptions: function () {
     return {
       theme: 'plain',
       tableLineColor: 149,
@@ -63,62 +63,64 @@ var Export = {
       body: []
     };
   },
-  export: function _export(options) {
-    var _component$_getIntern,
-      _this = this;
-    var jsPDFDocument = options.jsPDFDocument,
-      autoTableOptions = options.autoTableOptions,
-      component = options.component,
-      customizeCell = options.customizeCell,
-      keepColumnWidths = options.keepColumnWidths,
-      selectedRowsOnly = options.selectedRowsOnly,
-      loadPanel = options.loadPanel;
-    var internalComponent = ((_component$_getIntern = component._getInternalInstance) === null || _component$_getIntern === void 0 ? void 0 : _component$_getIntern.call(component)) || component;
-    var initialLoadPanelEnabledOption = internalComponent.option('loadPanel') && internalComponent.option('loadPanel').enabled;
+  export: function (options) {
+    var _component$_getIntern;
+    const {
+      jsPDFDocument,
+      autoTableOptions,
+      component,
+      customizeCell,
+      keepColumnWidths,
+      selectedRowsOnly,
+      loadPanel
+    } = options;
+    const internalComponent = ((_component$_getIntern = component._getInternalInstance) === null || _component$_getIntern === void 0 ? void 0 : _component$_getIntern.call(component)) || component;
+    const initialLoadPanelEnabledOption = internalComponent.option('loadPanel') && internalComponent.option('loadPanel').enabled;
     if (initialLoadPanelEnabledOption) {
       component.option('loadPanel.enabled', false);
     }
-    var exportLoadPanel;
+    let exportLoadPanel;
     if (loadPanel.enabled && (0, _window.hasWindow)()) {
-      var rowsView = component.getView('rowsView');
+      const rowsView = component.getView('rowsView');
       exportLoadPanel = new _export_load_panel.ExportLoadPanel(component, rowsView.element(), rowsView.element().parent(), loadPanel);
       exportLoadPanel.show();
     }
-    var dataProvider = component.getDataProvider(selectedRowsOnly);
-    var wrapText = !!component.option('wordWrapEnabled');
-    return new Promise(function (resolve) {
-      dataProvider.ready().done(function () {
-        var columns = dataProvider.getColumns();
-        var styles = dataProvider.getStyles();
-        var dataRowsCount = dataProvider.getRowsCount();
-        var headerRowCount = dataProvider.getHeaderRowCount();
-        var mergedCells = [];
+    const dataProvider = component.getDataProvider(selectedRowsOnly);
+    const wrapText = !!component.option('wordWrapEnabled');
+    return new Promise(resolve => {
+      dataProvider.ready().done(() => {
+        const columns = dataProvider.getColumns();
+        const styles = dataProvider.getStyles();
+        const dataRowsCount = dataProvider.getRowsCount();
+        const headerRowCount = dataProvider.getHeaderRowCount();
+        const mergedCells = [];
         if (keepColumnWidths) {
-          var pdfColumnWidths = _this._tryGetPdfColumnWidths(autoTableOptions.tableWidth, dataProvider.getColumnsWidths());
+          const pdfColumnWidths = this._tryGetPdfColumnWidths(autoTableOptions.tableWidth, dataProvider.getColumnsWidths());
           if ((0, _type.isDefined)(pdfColumnWidths) && (0, _type.isDefined)(autoTableOptions.columnStyles)) {
-            _this._setColumnWidths(autoTableOptions.columnStyles, pdfColumnWidths);
+            this._setColumnWidths(autoTableOptions.columnStyles, pdfColumnWidths);
           }
         }
-        for (var rowIndex = 0; rowIndex < dataRowsCount; rowIndex++) {
-          var row = [];
-          for (var cellIndex = 0; cellIndex < columns.length; cellIndex++) {
-            var _dataProvider$getCell = dataProvider.getCellData(rowIndex, cellIndex, true),
-              value = _dataProvider$getCell.value,
-              gridCell = _dataProvider$getCell.cellSourceData;
-            var cellStyle = styles[dataProvider.getStyleId(rowIndex, cellIndex)];
-            var pdfCell = {
-              content: _this._getFormattedValue(value, cellStyle.format),
-              styles: _this._getPDFCellStyles(gridCell.rowType, columns[cellIndex].alignment, cellStyle, wrapText)
+        for (let rowIndex = 0; rowIndex < dataRowsCount; rowIndex++) {
+          const row = [];
+          for (let cellIndex = 0; cellIndex < columns.length; cellIndex++) {
+            const {
+              value,
+              cellSourceData: gridCell
+            } = dataProvider.getCellData(rowIndex, cellIndex, true);
+            const cellStyle = styles[dataProvider.getStyleId(rowIndex, cellIndex)];
+            const pdfCell = {
+              content: this._getFormattedValue(value, cellStyle.format),
+              styles: this._getPDFCellStyles(gridCell.rowType, columns[cellIndex].alignment, cellStyle, wrapText)
             };
             if (gridCell.rowType === 'header') {
-              var mergedRange = _this._tryGetMergeRange(rowIndex, cellIndex, mergedCells, dataProvider);
+              const mergedRange = this._tryGetMergeRange(rowIndex, cellIndex, mergedCells, dataProvider);
               if (mergedRange && mergedRange.rowSpan > 0) {
                 pdfCell.rowSpan = mergedRange.rowSpan + 1;
               }
               if (mergedRange && mergedRange.colSpan > 0) {
                 pdfCell.colSpan = mergedRange.colSpan + 1;
               }
-              var isMergedCell = mergedCells[rowIndex] && mergedCells[rowIndex][cellIndex];
+              const isMergedCell = mergedCells[rowIndex] && mergedCells[rowIndex][cellIndex];
               if (!isMergedCell || pdfCell.rowSpan > 1 || pdfCell.colSpan > 1) {
                 if ((0, _type.isFunction)(customizeCell)) {
                   customizeCell({
@@ -156,7 +158,7 @@ var Export = {
         ///#ENDDEBUG
 
         resolve();
-      }).always(function () {
+      }).always(() => {
         if (initialLoadPanelEnabledOption) {
           component.option('loadPanel.enabled', initialLoadPanelEnabledOption);
         }
@@ -166,7 +168,7 @@ var Export = {
       });
     });
   },
-  _getFormattedValue: function _getFormattedValue(value, format) {
+  _getFormattedValue: function (value, format) {
     if ((0, _type.isDefined)(format)) {
       if ((0, _type.isDate)(value)) {
         return _date.default.format(value, format);
@@ -177,11 +179,13 @@ var Export = {
     }
     return value;
   },
-  _getPDFCellStyles: function _getPDFCellStyles(rowType, columnAlignment, cellStyle, wrapText) {
-    var cellAlignment = cellStyle.alignment,
-      bold = cellStyle.bold;
-    var align = rowType === 'header' ? columnAlignment : cellAlignment;
-    var pdfCellStyle = {};
+  _getPDFCellStyles: function (rowType, columnAlignment, cellStyle, wrapText) {
+    const {
+      alignment: cellAlignment,
+      bold
+    } = cellStyle;
+    const align = rowType === 'header' ? columnAlignment : cellAlignment;
+    const pdfCellStyle = {};
     if (align) {
       pdfCellStyle['halign'] = align;
     }
@@ -193,14 +197,15 @@ var Export = {
     }
     return pdfCellStyle;
   },
-  _tryGetMergeRange: function _tryGetMergeRange(rowIndex, cellIndex, mergedCells, dataProvider) {
+  _tryGetMergeRange: function (rowIndex, cellIndex, mergedCells, dataProvider) {
     if (!mergedCells[rowIndex] || !mergedCells[rowIndex][cellIndex]) {
-      var _dataProvider$getCell2 = dataProvider.getCellMerging(rowIndex, cellIndex),
-        colspan = _dataProvider$getCell2.colspan,
-        rowspan = _dataProvider$getCell2.rowspan;
+      const {
+        colspan,
+        rowspan
+      } = dataProvider.getCellMerging(rowIndex, cellIndex);
       if (colspan || rowspan) {
-        for (var i = rowIndex; i <= rowIndex + rowspan || 0; i++) {
-          for (var j = cellIndex; j <= cellIndex + colspan || 0; j++) {
+        for (let i = rowIndex; i <= rowIndex + rowspan || 0; i++) {
+          for (let j = cellIndex; j <= cellIndex + colspan || 0; j++) {
             if (!mergedCells[i]) {
               mergedCells[i] = [];
             }
@@ -216,16 +221,12 @@ var Export = {
   },
   _tryGetPdfColumnWidths(autoTableWidth, columnWidths) {
     if ((0, _type.isNumeric)(autoTableWidth) && (0, _type.isDefined)(columnWidths)) {
-      var tableWidth = columnWidths.reduce(function (a, b) {
-        return a + b;
-      }, 0);
-      return columnWidths.map(function (columnWidth) {
-        return autoTableWidth * columnWidth / tableWidth;
-      });
+      const tableWidth = columnWidths.reduce((a, b) => a + b, 0);
+      return columnWidths.map(columnWidth => autoTableWidth * columnWidth / tableWidth);
     }
   },
-  _setColumnWidths: function _setColumnWidths(autoTableColumnStyles, pdfColumnWidths) {
-    pdfColumnWidths.forEach(function (width, index) {
+  _setColumnWidths: function (autoTableColumnStyles, pdfColumnWidths) {
+    pdfColumnWidths.forEach((width, index) => {
       autoTableColumnStyles[index] = autoTableColumnStyles[index] || {};
       autoTableColumnStyles[index].cellWidth = width;
     });
