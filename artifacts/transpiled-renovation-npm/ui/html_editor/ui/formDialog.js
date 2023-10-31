@@ -11,8 +11,27 @@ var _window = require("../../../core/utils/window");
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _themes = require("../../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 const DIALOG_CLASS = 'dx-formdialog';
 const FORM_CLASS = 'dx-formdialog-form';
+const getApplyButtonConfig = () => {
+  if ((0, _themes.isFluent)()) {
+    return {
+      stylingMode: 'contained',
+      type: 'default'
+    };
+  }
+  return {};
+};
+const getCancelButtonConfig = () => {
+  if ((0, _themes.isFluent)()) {
+    return {
+      stylingMode: 'outlined',
+      type: 'normal'
+    };
+  }
+  return {};
+};
 let FormDialog = /*#__PURE__*/function () {
   function FormDialog(editorInstance, popupConfig) {
     this._editorInstance = editorInstance;
@@ -79,22 +98,22 @@ let FormDialog = /*#__PURE__*/function () {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: {
+        options: _extends({
           onInitialized: this._addEscapeHandler.bind(this),
           text: _message.default.format('OK'),
           onClick: e => this.callAddButtonAction(e.event)
-        }
+        }, getApplyButtonConfig())
       }, {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: {
+        options: _extends({
           onInitialized: this._addEscapeHandler.bind(this),
           text: _message.default.format('Cancel'),
           onClick: () => {
             this._popup.hide();
           }
-        }
+        }, getCancelButtonConfig())
       }],
       _wrapperClassExternal: DIALOG_CLASS
     }, this._popupUserConfig);

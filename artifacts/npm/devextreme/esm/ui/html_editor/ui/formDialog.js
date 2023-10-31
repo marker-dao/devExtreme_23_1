@@ -6,6 +6,7 @@
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../core/renderer';
 import { extend } from '../../../core/utils/extend';
 import Popup from '../../popup';
@@ -14,9 +15,27 @@ import { Deferred } from '../../../core/utils/deferred';
 import localizationMessage from '../../../localization/message';
 import { getCurrentScreenFactor, hasWindow } from '../../../core/utils/window';
 import devices from '../../../core/devices';
-import { isMaterialBased } from '../../themes';
+import { isFluent, isMaterialBased } from '../../themes';
 var DIALOG_CLASS = 'dx-formdialog';
 var FORM_CLASS = 'dx-formdialog-form';
+var getApplyButtonConfig = () => {
+  if (isFluent()) {
+    return {
+      stylingMode: 'contained',
+      type: 'default'
+    };
+  }
+  return {};
+};
+var getCancelButtonConfig = () => {
+  if (isFluent()) {
+    return {
+      stylingMode: 'outlined',
+      type: 'normal'
+    };
+  }
+  return {};
+};
 class FormDialog {
   constructor(editorInstance, popupConfig) {
     this._editorInstance = editorInstance;
@@ -82,22 +101,22 @@ class FormDialog {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: {
+        options: _extends({
           onInitialized: this._addEscapeHandler.bind(this),
           text: localizationMessage.format('OK'),
           onClick: e => this.callAddButtonAction(e.event)
-        }
+        }, getApplyButtonConfig())
       }, {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: {
+        options: _extends({
           onInitialized: this._addEscapeHandler.bind(this),
           text: localizationMessage.format('Cancel'),
           onClick: () => {
             this._popup.hide();
           }
-        }
+        }, getCancelButtonConfig())
       }],
       _wrapperClassExternal: DIALOG_CLASS
     }, this._popupUserConfig);
