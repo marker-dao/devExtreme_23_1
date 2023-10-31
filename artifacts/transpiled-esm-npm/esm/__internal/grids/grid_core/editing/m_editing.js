@@ -1776,7 +1776,6 @@ class EditingControllerImpl extends modules.ViewController {
     return column.editCellTemplate || this._getDefaultEditorTemplate();
   }
   getColumnTemplate(options) {
-    var _a;
     var {
       column
     } = options;
@@ -1806,7 +1805,7 @@ class EditingControllerImpl extends modules.ViewController {
       }
       template = column.editCellTemplate || this._getDefaultEditorTemplate();
     } else if (column.command === 'detail' && options.rowType === 'detail' && isRowEditing) {
-      template = (_a = this) === null || _a === void 0 ? void 0 : _a.getEditFormTemplate(options);
+      template = this === null || this === void 0 ? void 0 : this.getEditFormTemplate(options);
     }
     return template;
   }

@@ -51,6 +51,12 @@ export var AppointmentLayoutProps = {
 import { createReRenderEffect } from '@devextreme/runtime/inferno';
 import { createRef as infernoCreateRef } from 'inferno';
 export class AppointmentLayout extends InfernoWrapperComponent {
+  get appointmentsContextValue() {
+    if (this.context[AppointmentsContext.id]) {
+      return this.context[AppointmentsContext.id];
+    }
+    return AppointmentsContext.defaultValue;
+  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -58,12 +64,6 @@ export class AppointmentLayout extends InfernoWrapperComponent {
     this.__getterCache = {};
     this.pointerEventsEffect = this.pointerEventsEffect.bind(this);
     this.onAppointmentPointerDown = this.onAppointmentPointerDown.bind(this);
-  }
-  get appointmentsContextValue() {
-    if (this.context[AppointmentsContext.id]) {
-      return this.context[AppointmentsContext.id];
-    }
-    return AppointmentsContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.pointerEventsEffect, [this.appointmentsContextValue]), createReRenderEffect()];

@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/data/odata/request_dispatcher.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { sendRequest } from './utils';
 import './query_adapter';
-var DEFAULT_PROTOCOL_VERSION = 2;
+var DEFAULT_PROTOCOL_VERSION = 4;
 export default class RequestDispatcher {
   constructor(options) {
     options = options || {};

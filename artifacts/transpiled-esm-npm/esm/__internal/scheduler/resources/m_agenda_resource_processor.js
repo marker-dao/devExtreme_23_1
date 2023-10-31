@@ -10,14 +10,6 @@ class PromiseItem {
   }
 }
 export class AgendaResourceProcessor {
-  constructor() {
-    var resourceDeclarations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    this._resourceDeclarations = resourceDeclarations;
-    this.isLoaded = false;
-    this.isLoading = false;
-    this.resourceMap = new Map();
-    this.appointmentPromiseQueue = [];
-  }
   get resourceDeclarations() {
     return this._resourceDeclarations;
   }
@@ -26,6 +18,14 @@ export class AgendaResourceProcessor {
     this.isLoaded = false;
     this.isLoading = false;
     this.resourceMap.clear();
+    this.appointmentPromiseQueue = [];
+  }
+  constructor() {
+    var resourceDeclarations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    this._resourceDeclarations = resourceDeclarations;
+    this.isLoaded = false;
+    this.isLoading = false;
+    this.resourceMap = new Map();
     this.appointmentPromiseQueue = [];
   }
   _pushAllResources() {

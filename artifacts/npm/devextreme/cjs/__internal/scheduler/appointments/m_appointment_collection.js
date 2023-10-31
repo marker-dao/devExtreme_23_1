@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/m_appointment_collection.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -60,9 +60,9 @@ let SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     _this._virtualAppointments = {};
     return _this;
   }
-  var _proto = SchedulerAppointments.prototype;
   // TODO: remove when Collection moved to TS
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  var _proto = SchedulerAppointments.prototype;
   _proto.option = function option(optionName, value) {
     return _CollectionWidget.prototype.option.apply(this, arguments);
   };

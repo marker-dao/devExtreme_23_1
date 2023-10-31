@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scroll_view/scrollable.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -136,6 +136,12 @@ import { createReRenderEffect } from '@devextreme/runtime/inferno';
 import { createRef as infernoCreateRef } from 'inferno';
 var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => normalizeProps(createComponentVNode(2, TemplateProp, _extends({}, props))) : TemplateProp);
 export class Scrollable extends InfernoWrapperComponent {
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
+  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -160,12 +166,6 @@ export class Scrollable extends InfernoWrapperComponent {
     this.startLoading = this.startLoading.bind(this);
     this.finishLoading = this.finishLoading.bind(this);
     this.validate = this.validate.bind(this);
-  }
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [createReRenderEffect()];

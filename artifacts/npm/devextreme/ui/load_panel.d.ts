@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/load_panel.d.ts)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -133,6 +133,7 @@ export interface dxLoadPanelOptions extends dxOverlayOptions<dxLoadPanel> {
      * @docid
      * @default 90
      * @default 60 &for(Material)
+     * @default 'auto' &for(Fluent)
      * @public
      */
     height?: number | string | (() => number | string);
@@ -189,6 +190,7 @@ export interface dxLoadPanelOptions extends dxOverlayOptions<dxLoadPanel> {
      * @docid
      * @default 222
      * @default 60 &for(Material)
+     * @default 'auto' &for(Fluent)
      * @public
      */
     width?: number | string | (() => number | string);

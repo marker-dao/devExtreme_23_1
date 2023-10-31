@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/data/odata/query_adapter.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ import queryAdapters from '../query_adapters';
 import { sendRequest, generateSelect, generateExpand, serializeValue, convertPrimitiveValue, serializePropName } from './utils';
 import { errors } from '../errors';
 import { isConjunctiveOperator, normalizeBinaryCriterion, isUnaryOperation } from '../utils';
-var DEFAULT_PROTOCOL_VERSION = 2;
+var DEFAULT_PROTOCOL_VERSION = 4;
 var STRING_FUNCTIONS = ['contains', 'notcontains', 'startswith', 'endswith'];
 var compileCriteria = (() => {
   var protocolVersion;

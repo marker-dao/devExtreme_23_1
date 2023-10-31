@@ -50,7 +50,7 @@ var getApplyButtonConfig = () => {
 var getCancelButtonConfig = () => {
   if (isFluent()) {
     return {
-      stylingMode: 'contoutlinedained',
+      stylingMode: 'outlined',
       type: 'default'
     };
   }

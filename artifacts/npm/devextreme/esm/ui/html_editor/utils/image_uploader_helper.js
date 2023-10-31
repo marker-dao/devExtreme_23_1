@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/html_editor/utils/image_uploader_helper.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ import { extend } from '../../../core/utils/extend';
 import { getHeight, getWidth } from '../../../core/utils/size';
 import devices from '../../../core/devices';
 import { isDefined } from '../../../core/utils/type';
+import { isFluent } from '../../themes';
 var isMobile = devices.current().deviceType === 'phone';
 var DIALOG_IMAGE_CAPTION = 'dxHtmlEditor-dialogImageCaption';
 var DIALOG_UPDATE_IMAGE_CAPTION = 'dxHtmlEditor-dialogUpdateImageCaption';
@@ -290,6 +291,7 @@ class AddUrlStrategy extends BaseStrategy {
     return result.isValid;
   }
   getItemsConfig() {
+    var stylingMode = isFluent() ? 'text' : 'outlined';
     return [{
       dataField: 'src',
       colSpan: 11,
@@ -321,7 +323,7 @@ class AddUrlStrategy extends BaseStrategy {
           hint: localizationMessage.format(DIALOG_IMAGE_KEEP_ASPECT_RATIO),
           focusStateEnabled: false,
           keyExpr: 'value',
-          stylingMode: 'outlined',
+          stylingMode,
           selectionMode: 'multiple',
           selectedItemKeys: ['keepRatio'],
           onSelectionChanged: e => {

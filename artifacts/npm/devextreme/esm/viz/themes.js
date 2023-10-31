@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/viz/themes.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,6 +20,7 @@ import darkVioletThemes from './core/themes/generic.darkviolet';
 import greenMistThemes from './core/themes/generic.greenmist';
 import softBlueThemes from './core/themes/generic.softblue';
 import materialThemes from './core/themes/material';
+import fluentThemes from './core/themes/fluent';
 var themes = {};
 var themesMapping = {};
 var themesSchemeMapping = {};
@@ -260,7 +261,7 @@ export function refreshTheme() {
 
 // register themes
 if (isEmptyObject(themes) && isEmptyObject(themesMapping) && !defaultTheme) {
-  [].concat(lightThemes, carmineThemes, darkThemes, contrastThemes, darkMoonThemes, darkVioletThemes, greenMistThemes, softBlueThemes, materialThemes).forEach(t => {
+  [].concat(lightThemes, carmineThemes, darkThemes, contrastThemes, darkMoonThemes, darkVioletThemes, greenMistThemes, softBlueThemes, materialThemes, fluentThemes).forEach(t => {
     registerTheme(t.theme, t.baseThemeName);
   });
 }

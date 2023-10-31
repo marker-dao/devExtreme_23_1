@@ -75,7 +75,7 @@ const LoadPanel = _ui.default.inherit({
       }
     }, {
       device: function () {
-        return (0, _themes.isMaterialBased)();
+        return (0, _themes.isMaterial)();
       },
       options: {
         message: '',
@@ -83,6 +83,14 @@ const LoadPanel = _ui.default.inherit({
         height: 60,
         maxHeight: 60,
         maxWidth: 60
+      }
+    }, {
+      device: function () {
+        return (0, _themes.isFluent)();
+      },
+      options: {
+        width: 'auto',
+        height: 'auto'
       }
     }]);
   },

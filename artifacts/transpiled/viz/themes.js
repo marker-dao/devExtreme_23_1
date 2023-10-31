@@ -22,6 +22,7 @@ var _generic6 = _interopRequireDefault(require("./core/themes/generic.darkviolet
 var _generic7 = _interopRequireDefault(require("./core/themes/generic.greenmist"));
 var _generic8 = _interopRequireDefault(require("./core/themes/generic.softblue"));
 var _material = _interopRequireDefault(require("./core/themes/material"));
+var _fluent = _interopRequireDefault(require("./core/themes/fluent"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const themes = {};
 exports.themes = themes;
@@ -267,7 +268,7 @@ function refreshTheme() {
 
 // register themes
 if ((0, _type.isEmptyObject)(themes) && (0, _type.isEmptyObject)(themesMapping) && !defaultTheme) {
-  [].concat(_generic.default, _generic2.default, _generic3.default, _generic4.default, _generic5.default, _generic6.default, _generic7.default, _generic8.default, _material.default).forEach(t => {
+  [].concat(_generic.default, _generic2.default, _generic3.default, _generic4.default, _generic5.default, _generic6.default, _generic7.default, _generic8.default, _material.default, _fluent.default).forEach(t => {
     registerTheme(t.theme, t.baseThemeName);
   });
 }

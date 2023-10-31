@@ -33,10 +33,6 @@ var COMPONENT_CLASS = 'dx-scheduler-scrollable-appointments';
 var DBLCLICK_EVENT_NAME = addNamespace(dblclickEvent, 'dxSchedulerAppointment');
 var toMs = dateUtils.dateToMilliseconds;
 class SchedulerAppointments extends CollectionWidget {
-  constructor(element, options) {
-    super(element, options);
-    this._virtualAppointments = {};
-  }
   get isAgendaView() {
     return this.invoke('isCurrentViewAgenda');
   }
@@ -45,6 +41,10 @@ class SchedulerAppointments extends CollectionWidget {
   }
   get appointmentDataProvider() {
     return this.option('getAppointmentDataProvider')();
+  }
+  constructor(element, options) {
+    super(element, options);
+    this._virtualAppointments = {};
   }
   // TODO: remove when Collection moved to TS
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

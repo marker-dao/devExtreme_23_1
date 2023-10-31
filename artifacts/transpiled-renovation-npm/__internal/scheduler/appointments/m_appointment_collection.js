@@ -52,9 +52,9 @@ let SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     _this._virtualAppointments = {};
     return _this;
   }
-  var _proto = SchedulerAppointments.prototype;
   // TODO: remove when Collection moved to TS
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  var _proto = SchedulerAppointments.prototype;
   _proto.option = function option(optionName, value) {
     return _CollectionWidget.prototype.option.apply(this, arguments);
   };

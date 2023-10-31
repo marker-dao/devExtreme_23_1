@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/load_panel.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -83,7 +83,7 @@ const LoadPanel = _ui.default.inherit({
       }
     }, {
       device: function () {
-        return (0, _themes.isMaterialBased)();
+        return (0, _themes.isMaterial)();
       },
       options: {
         message: '',
@@ -91,6 +91,14 @@ const LoadPanel = _ui.default.inherit({
         height: 60,
         maxHeight: 60,
         maxWidth: 60
+      }
+    }, {
+      device: function () {
+        return (0, _themes.isFluent)();
+      },
+      options: {
+        width: 'auto',
+        height: 'auto'
       }
     }]);
   },

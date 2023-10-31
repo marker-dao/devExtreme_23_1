@@ -1795,7 +1795,6 @@ let EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     return column.editCellTemplate || this._getDefaultEditorTemplate();
   };
   _proto.getColumnTemplate = function getColumnTemplate(options) {
-    var _a;
     const {
       column
     } = options;
@@ -1825,7 +1824,7 @@ let EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
       }
       template = column.editCellTemplate || this._getDefaultEditorTemplate();
     } else if (column.command === 'detail' && options.rowType === 'detail' && isRowEditing) {
-      template = (_a = this) === null || _a === void 0 ? void 0 : _a.getEditFormTemplate(options);
+      template = this === null || this === void 0 ? void 0 : this.getEditFormTemplate(options);
     }
     return template;
   };

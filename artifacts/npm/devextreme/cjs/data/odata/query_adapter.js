@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/data/odata/query_adapter.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,7 +18,7 @@ var _utils = require("./utils");
 var _errors = require("../errors");
 var _utils2 = require("../utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-const DEFAULT_PROTOCOL_VERSION = 2;
+const DEFAULT_PROTOCOL_VERSION = 4;
 const STRING_FUNCTIONS = ['contains', 'notcontains', 'startswith', 'endswith'];
 const compileCriteria = (() => {
   let protocolVersion;

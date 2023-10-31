@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27049,7 +27049,7 @@ var _utils = __webpack_require__(77869);
 var _errors = __webpack_require__(18438);
 var _utils2 = __webpack_require__(16454);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-const DEFAULT_PROTOCOL_VERSION = 2;
+const DEFAULT_PROTOCOL_VERSION = 4;
 const STRING_FUNCTIONS = ['contains', 'notcontains', 'startswith', 'endswith'];
 const compileCriteria = (() => {
   let protocolVersion;
@@ -27311,7 +27311,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-const DEFAULT_PROTOCOL_VERSION = 2;
+const DEFAULT_PROTOCOL_VERSION = 4;
 let RequestDispatcher = /*#__PURE__*/function () {
   function RequestDispatcher(options) {
     options = options || {};
@@ -54961,7 +54961,7 @@ const LoadPanel = _ui.default.inherit({
       }
     }, {
       device: function () {
-        return (0, _themes.isMaterialBased)();
+        return (0, _themes.isMaterial)();
       },
       options: {
         message: '',
@@ -54969,6 +54969,14 @@ const LoadPanel = _ui.default.inherit({
         height: 60,
         maxHeight: 60,
         maxWidth: 60
+      }
+    }, {
+      device: function () {
+        return (0, _themes.isFluent)();
+      },
+      options: {
+        width: 'auto',
+        height: 'auto'
       }
     }]);
   },
@@ -79438,6 +79446,45 @@ SeriesFamily.prototype = {
 
 /***/ }),
 
+/***/ 31987:
+/***/ (function(module, exports) {
+
+
+
+exports["default"] = void 0;
+const themes = [{
+  theme: {
+    name: 'fluent'
+  },
+  baseThemeName: 'material'
+}, {
+  theme: {
+    name: 'fluent.blue.light'
+  },
+  baseThemeName: 'fluent'
+}, {
+  theme: {
+    name: 'fluent.blue.light.compact'
+  },
+  baseThemeName: 'fluent.blue.light'
+}, {
+  theme: {
+    name: 'fluent.blue.dark'
+  },
+  baseThemeName: 'material.blue.dark'
+}, {
+  theme: {
+    name: 'fluent.blue.dark.compact'
+  },
+  baseThemeName: 'fluent.blue.dark'
+}];
+var _default = themes;
+exports["default"] = _default;
+module.exports = exports.default;
+module.exports["default"] = exports.default;
+
+/***/ }),
+
 /***/ 39726:
 /***/ (function(module, exports) {
 
@@ -103227,6 +103274,7 @@ var _generic6 = _interopRequireDefault(__webpack_require__(25257));
 var _generic7 = _interopRequireDefault(__webpack_require__(84253));
 var _generic8 = _interopRequireDefault(__webpack_require__(60350));
 var _material = _interopRequireDefault(__webpack_require__(11239));
+var _fluent = _interopRequireDefault(__webpack_require__(31987));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const themes = {};
 const themesMapping = {};
@@ -103468,7 +103516,7 @@ function refreshTheme() {
 
 // register themes
 if ((0, _type.isEmptyObject)(themes) && (0, _type.isEmptyObject)(themesMapping) && !defaultTheme) {
-  [].concat(_generic.default, _generic2.default, _generic3.default, _generic4.default, _generic5.default, _generic6.default, _generic7.default, _generic8.default, _material.default).forEach(t => {
+  [].concat(_generic.default, _generic2.default, _generic3.default, _generic4.default, _generic5.default, _generic6.default, _generic7.default, _generic8.default, _material.default, _fluent.default).forEach(t => {
     registerTheme(t.theme, t.baseThemeName);
   });
 }

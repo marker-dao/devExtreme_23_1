@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_box/ui.date_box.strategy.calendar.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,9 @@ var _common = require("../../core/utils/common");
 var _type = require("../../core/utils/type");
 var _extend = require("../../core/utils/extend");
 var _message = _interopRequireDefault(require("../../localization/message"));
+var _themes = require("../themes");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+const TODAY_BUTTON_CLASS = 'dx-button-today';
 const CalendarStrategy = _uiDate_box.default.inherit({
   NAME: 'Calendar',
   getDefaultOptions: function () {
@@ -112,6 +114,7 @@ const CalendarStrategy = _uiDate_box.default.inherit({
     const buttonsLocation = this.dateBox.option('buttonsLocation');
     const isButtonsLocationDefault = buttonsLocation === 'default';
     const position = isButtonsLocationDefault ? ['bottom', 'center'] : (0, _common.splitPair)(buttonsLocation);
+    const stylingMode = (0, _themes.isMaterial)() ? 'text' : 'outlined';
     return {
       widget: 'dxButton',
       toolbar: position[0],
@@ -121,7 +124,10 @@ const CalendarStrategy = _uiDate_box.default.inherit({
           this._widget._toTodayView(args);
         },
         text: this.dateBox.option('todayButtonText'),
-        type: 'today'
+        elementAttr: {
+          class: TODAY_BUTTON_CLASS
+        },
+        stylingMode
       }
     };
   },

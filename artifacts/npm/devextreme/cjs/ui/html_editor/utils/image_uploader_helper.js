@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/utils/image_uploader_helper.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,6 +20,7 @@ var _extend = require("../../../core/utils/extend");
 var _size = require("../../../core/utils/size");
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _type = require("../../../core/utils/type");
+var _themes = require("../../themes");
 var _button_group = _interopRequireDefault(require("../../button_group"));
 var _file_uploader = _interopRequireDefault(require("../../file_uploader"));
 var _text_box = _interopRequireDefault(require("../../text_box"));
@@ -323,6 +324,7 @@ let AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
     return result.isValid;
   };
   _proto6.getItemsConfig = function getItemsConfig() {
+    const stylingMode = (0, _themes.isFluent)() ? 'text' : 'outlined';
     return [{
       dataField: 'src',
       colSpan: 11,
@@ -354,7 +356,7 @@ let AddUrlStrategy = /*#__PURE__*/function (_BaseStrategy) {
           hint: _message.default.format(DIALOG_IMAGE_KEEP_ASPECT_RATIO),
           focusStateEnabled: false,
           keyExpr: 'value',
-          stylingMode: 'outlined',
+          stylingMode,
           selectionMode: 'multiple',
           selectedItemKeys: ['keepRatio'],
           onSelectionChanged: e => {

@@ -5,6 +5,8 @@ import { splitPair } from '../../core/utils/common';
 import { isFunction, isEmptyObject } from '../../core/utils/type';
 import { extend } from '../../core/utils/extend';
 import messageLocalization from '../../localization/message';
+import { isMaterial } from '../themes';
+var TODAY_BUTTON_CLASS = 'dx-button-today';
 var CalendarStrategy = DateBoxStrategy.inherit({
   NAME: 'Calendar',
   getDefaultOptions: function getDefaultOptions() {
@@ -100,6 +102,7 @@ var CalendarStrategy = DateBoxStrategy.inherit({
     var buttonsLocation = this.dateBox.option('buttonsLocation');
     var isButtonsLocationDefault = buttonsLocation === 'default';
     var position = isButtonsLocationDefault ? ['bottom', 'center'] : splitPair(buttonsLocation);
+    var stylingMode = isMaterial() ? 'text' : 'outlined';
     return {
       widget: 'dxButton',
       toolbar: position[0],
@@ -109,7 +112,10 @@ var CalendarStrategy = DateBoxStrategy.inherit({
           this._widget._toTodayView(args);
         },
         text: this.dateBox.option('todayButtonText'),
-        type: 'today'
+        elementAttr: {
+          class: TODAY_BUTTON_CLASS
+        },
+        stylingMode
       }
     };
   },

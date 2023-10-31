@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/views/m_columns_view.js)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -897,13 +897,15 @@ export class ColumnsView extends viewWithColumnStateMixin {
         var minWidth = getWidthStyle(column.minWidth || width);
         var $rows = $tableElement.children().children('.dx-row').not(".".concat(DETAIL_ROW_CLASS));
         for (var rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
-          var $row = $rows.eq(rowIndex);
           var visibleIndex = this.getVisibleColumnIndex(columnIndex, rowIndex);
-          var $cell = $row.hasClass(GROUP_ROW_CLASS) ? $row.find("td[aria-colindex='".concat(visibleIndex + 1, "']:not(.").concat(GROUP_CELL_CLASS, ")")) : $row.find('td').eq(visibleIndex);
-          var cell = $cell.get(0);
-          if (cell) {
-            setCellWidth(cell, column, width);
-            cell.style.minWidth = minWidth;
+          if (visibleIndex >= 0) {
+            var $row = $rows.eq(rowIndex);
+            var $cell = $row.hasClass(GROUP_ROW_CLASS) ? $row.find("td[aria-colindex='".concat(visibleIndex + 1, "']:not(.").concat(GROUP_CELL_CLASS, ")")) : $row.find('td').eq(visibleIndex);
+            if ($cell.length) {
+              var cell = $cell.get(0);
+              setCellWidth(cell, column, width);
+              cell.style.minWidth = minWidth;
+            }
           }
         }
       }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/odata/store.d.ts)
 * Version: 23.2.0
-* Build date: Thu Oct 26 2023
+* Build date: Tue Oct 31 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -86,7 +86,7 @@ export interface ODataStoreOptions<
     url?: string;
     /**
      * @docid
-     * @default 2
+     * @default 4
      * @acceptValues 2|3|4
      * @public
      */

@@ -48,6 +48,10 @@ var SELECTED_ITEM_CLASS = 'dx-state-selected';
 var EXPAND_EVENT_NAMESPACE = 'dxTreeView_expand';
 var DATA_ITEM_ID = 'data-item-id';
 var ITEM_URL_CLASS = 'dx-item-url';
+var CHECK_BOX_CLASS = 'dx-checkbox';
+var CHECK_BOX_ICON_CLASS = 'dx-checkbox-icon';
+var ROOT_NODE_CLASS = "".concat(WIDGET_CLASS, "-root-node");
+var EXPANDER_ICON_STUB_CLASS = "".concat(WIDGET_CLASS, "-expander-icon-stub");
 var TreeViewBase = HierarchicalCollectionWidget.inherit({
   _supportedKeys: function _supportedKeys(e) {
     var click = e => {
@@ -585,13 +589,16 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       $node.addClass(ITEM_WITH_CUSTOM_EXPANDER_ICON_CLASS);
       $nodeContainer.addClass(CUSTOM_EXPANDER_ICON_ITEM_CONTAINER_CLASS);
     }
-    showCheckBox && this._renderCheckBox($node, node);
     this.setAria('selected', nodeData.selected, $node);
     this._toggleSelectedClass($node, nodeData.selected);
     if (nodeData.disabled) {
       this.setAria('disabled', nodeData.disabled, $node);
     }
     this.callBase(this._renderedItemsCount + nodeIndex, nodeData.item, $node);
+    var parent = this._getNode(node.internalFields.parentKey);
+    if (!parent) {
+      $node.addClass(ROOT_NODE_CLASS);
+    }
     if (nodeData.item.visible !== false) {
       this._renderChildren($node, node);
     }
@@ -600,6 +607,7 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
   _renderChildren: function _renderChildren($node, node) {
     if (!this._hasChildren(node)) {
       this._addLeafClass($node);
+      $('<div>').addClass(EXPANDER_ICON_STUB_CLASS).appendTo(this._getItem($node));
       return;
     }
     if (this._hasCustomExpanderIcons()) {
@@ -607,12 +615,14 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     } else {
       this._renderDefaultExpanderIcons($node, node);
     }
-    if (this.option('deferRendering') && !node.internalFields.expanded) {
-      return;
+    if (this._shouldRenderSublevel(node.internalFields.expanded)) {
+      this._loadSublevel(node).done(childNodes => {
+        this._renderSublevel($node, this._getActualNode(node), childNodes);
+      });
     }
-    this._loadSublevel(node).done(childNodes => {
-      this._renderSublevel($node, this._getActualNode(node), childNodes);
-    });
+  },
+  _shouldRenderSublevel: function _shouldRenderSublevel(expanded) {
+    return expanded || !this.option('deferRendering');
   },
   _getActualNode: function _getActualNode(cachedNode) {
     return this._dataAdapter.getNodeByKey(cachedNode.internalFields.key);
@@ -650,6 +660,16 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     } else {
       this.callBase($container, itemData);
     }
+  },
+  _postprocessRenderItem(args) {
+    var {
+      itemData,
+      itemElement
+    } = args;
+    if (this._showCheckboxes()) {
+      this._renderCheckBox(itemElement, this._getNode(itemData));
+    }
+    this.callBase(args);
   },
   _renderSublevel: function _renderSublevel($node, node, childNodes) {
     var $nestedNodeContainer = this._renderNodeContainer($node, node);
@@ -752,13 +772,17 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     var $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
     return $nodeContainer.not(':empty').length;
   },
+  _getItem: function _getItem($node) {
+    return $node.children(".".concat(ITEM_CLASS)).eq(0);
+  },
   _createLoadIndicator: function _createLoadIndicator($node) {
-    this._createComponent($('<div>').addClass(NODE_LOAD_INDICATOR_CLASS), LoadIndicator, {}).$element().appendTo($node);
-    var $icon = $node.children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS, ",.").concat(CUSTOM_EXPAND_ICON_CLASS));
+    var $treeviewItem = this._getItem($node);
+    this._createComponent($('<div>').addClass(NODE_LOAD_INDICATOR_CLASS), LoadIndicator, {}).$element().appendTo($treeviewItem);
+    var $icon = $treeviewItem.children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS, ",.").concat(CUSTOM_EXPAND_ICON_CLASS));
     $icon.hide();
   },
   _renderExpanderIcon: function _renderExpanderIcon($node, node, $icon, iconClass) {
-    $icon.appendTo($node);
+    $icon.appendTo(this._getItem($node));
     $icon.addClass(iconClass);
     if (node.internalFields.disabled) {
       $icon.addClass(DISABLED_STATE_CLASS);
@@ -766,7 +790,8 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     this._renderToggleItemVisibilityIconClick($icon, node);
   },
   _renderDefaultExpanderIcons: function _renderDefaultExpanderIcons($node, node) {
-    var $icon = $('<div>').addClass(TOGGLE_ITEM_VISIBILITY_CLASS).appendTo($node);
+    var $treeViewItem = this._getItem($node);
+    var $icon = $('<div>').addClass(TOGGLE_ITEM_VISIBILITY_CLASS).appendTo($treeViewItem);
     if (node.internalFields.expanded) {
       $icon.addClass(TOGGLE_ITEM_VISIBILITY_OPENED_CLASS);
       $node.parent().addClass(OPENED_NODE_CONTAINER_CLASS);
@@ -796,6 +821,7 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     eventsEngine.off($icon, eventName);
     eventsEngine.on($icon, eventName, e => {
       this._toggleExpandedState(node.internalFields.key, undefined, e);
+      return false;
     });
   },
   _toggleCustomExpanderIcons: function _toggleCustomExpanderIcons($expandIcon, $collapseIcon, isNodeExpanded) {
@@ -812,11 +838,12 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       }
     }
     if (!this._hasCustomExpanderIcons()) {
-      var $icon = $node.children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS));
+      var $icon = this._getItem($node).children(".".concat(TOGGLE_ITEM_VISIBILITY_CLASS));
       $icon.toggleClass(TOGGLE_ITEM_VISIBILITY_OPENED_CLASS, state);
     } else if (this._nodeHasRenderedChildren($node)) {
-      var $childExpandIcons = $node.children(".".concat(CUSTOM_EXPAND_ICON_CLASS));
-      var $childCollapseIcons = $node.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS));
+      var $item = this._getItem($node);
+      var $childExpandIcons = $item.children(".".concat(CUSTOM_EXPAND_ICON_CLASS));
+      var $childCollapseIcons = $item.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS));
       this._toggleCustomExpanderIcons($childExpandIcons, $childCollapseIcons, state);
     }
     var $nodeContainer = $node.children(".".concat(NODE_CONTAINER_CLASS));
@@ -932,7 +959,8 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       var _LoadIndicator$getIns;
       (_LoadIndicator$getIns = LoadIndicator.getInstance($loadIndicator)) === null || _LoadIndicator$getIns === void 0 ? void 0 : _LoadIndicator$getIns.option('visible', false);
     }
-    var $toggleItem = $node.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS, ",.").concat(TOGGLE_ITEM_VISIBILITY_CLASS));
+    var $treeViewItem = this._getItem($node);
+    var $toggleItem = $treeViewItem.children(".".concat(CUSTOM_COLLAPSE_ICON_CLASS, ",.").concat(TOGGLE_ITEM_VISIBILITY_CLASS));
     if (hasNewItems) {
       $toggleItem.show();
       return;
@@ -1007,8 +1035,8 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     }
   },
   _changeCheckboxValue: function _changeCheckboxValue(e) {
-    var $node = $(e.element).parent('.' + NODE_CLASS);
-    var $item = $node.children('.' + ITEM_CLASS);
+    var $node = $(e.element).closest(".".concat(NODE_CLASS));
+    var $item = this._getItem($node);
     var item = this._getItemData($item);
     var node = this._getNodeByElement($item);
     var value = e.value;
@@ -1094,7 +1122,8 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     });
   },
   _getCheckBoxInstance: function _getCheckBoxInstance($node) {
-    return $node.children('.dx-checkbox').dxCheckBox('instance');
+    var $treeViewItem = this._getItem($node);
+    return $treeViewItem.children(".".concat(CHECK_BOX_CLASS)).dxCheckBox('instance');
   },
   _updateItemsUI: function _updateItemsUI() {
     var cache = {};
@@ -1164,6 +1193,9 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       nodeSelector
     } = this._getItemClickEventData();
     eventsEngine.on($itemContainer, clickEventNamespace, itemSelector, e => {
+      if ($(e.target).hasClass(CHECK_BOX_ICON_CLASS) || $(e.target).hasClass(CHECK_BOX_CLASS)) {
+        return;
+      }
       this._itemClickHandler(e, $(e.currentTarget));
     });
     eventsEngine.on($itemContainer, pointerDownEventNamespace, nodeSelector, e => {
@@ -1356,7 +1388,7 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
       this.getScrollable().scrollToElement(this._getNodeItemElement($nextItem));
       return;
     }
-    var node = this._getNodeByElement($focusedNode.children('.' + ITEM_CLASS));
+    var node = this._getNodeByElement(this._getItem($focusedNode));
     this._toggleExpandedState(node, true);
   },
   _getClosestNonDisabledNode: function _getClosestNonDisabledNode($node) {
@@ -1372,7 +1404,7 @@ var TreeViewBase = HierarchicalCollectionWidget.inherit({
     }
     var nodeElement = $focusedNode.find(".".concat(NODE_CONTAINER_CLASS)).eq(0);
     if (!$focusedNode.hasClass(IS_LEAF) && nodeElement.hasClass(OPENED_NODE_CONTAINER_CLASS)) {
-      var node = this._getNodeByElement($focusedNode.children('.' + ITEM_CLASS));
+      var node = this._getNodeByElement(this._getItem($focusedNode));
       this._toggleExpandedState(node, false);
     } else {
       var collapsedNode = this._getClosestNonDisabledNode($focusedNode);

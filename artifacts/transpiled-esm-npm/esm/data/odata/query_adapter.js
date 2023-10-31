@@ -6,7 +6,7 @@ import queryAdapters from '../query_adapters';
 import { sendRequest, generateSelect, generateExpand, serializeValue, convertPrimitiveValue, serializePropName } from './utils';
 import { errors } from '../errors';
 import { isConjunctiveOperator, normalizeBinaryCriterion, isUnaryOperation } from '../utils';
-var DEFAULT_PROTOCOL_VERSION = 2;
+var DEFAULT_PROTOCOL_VERSION = 4;
 var STRING_FUNCTIONS = ['contains', 'notcontains', 'startswith', 'endswith'];
 var compileCriteria = (() => {
   var protocolVersion;

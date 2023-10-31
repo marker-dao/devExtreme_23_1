@@ -21,16 +21,16 @@ export var viewFunction = _ref => {
   }, restAttributes)));
 };
 export class Toolbar extends BaseInfernoComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.__getterCache = {};
-  }
   get config() {
     if (this.context[ConfigContext.id]) {
       return this.context[ConfigContext.id];
     }
     return ConfigContext.defaultValue;
+  }
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.__getterCache = {};
   }
   get componentProps() {
     if (this.__getterCache['componentProps'] !== undefined) {

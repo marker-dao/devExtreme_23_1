@@ -19,11 +19,6 @@ var setDefaultOptionValue = (options, defaultValueGetter) => name => {
   }
 };
 export default class ComponentWrapper extends DOMComponent {
-  constructor(element, options) {
-    super(element, options);
-    this._shouldRaiseContentReady = false;
-    this.validateKeyDownHandler();
-  }
   get _propsInfo() {
     return {
       allowNull: [],
@@ -32,6 +27,11 @@ export default class ComponentWrapper extends DOMComponent {
       templates: [],
       props: []
     };
+  }
+  constructor(element, options) {
+    super(element, options);
+    this._shouldRaiseContentReady = false;
+    this.validateKeyDownHandler();
   }
   validateKeyDownHandler() {
     var supportedKeyNames = this.getSupportedKeyNames();
