@@ -3,6 +3,7 @@ import { AppointmentViewModelGenerator } from '../../../../../__internal/schedul
 export var getAppointmentsViewModel = (model, filteredItems) => {
   var appointmentViewModel = new AppointmentViewModelGenerator();
   return appointmentViewModel.generate(filteredItems, _extends({}, model, {
+    viewOffset: 0,
     isRenovatedAppointments: true
   }));
 };

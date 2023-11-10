@@ -6,13 +6,16 @@ if (Quill) {
   var Embed = Quill.import('blots/embed');
   var MENTION_CLASS = 'dx-mention';
   Mention = class Mention extends Embed {
+    constructor(scroll, node) {
+      super(scroll, node);
+      this.renderContent(this.contentNode, Mention.value(node));
+    }
     static create(data) {
       var node = super.create();
       node.setAttribute('spellcheck', false);
       node.dataset.marker = data.marker;
       node.dataset.mentionValue = data.value;
       node.dataset.id = data.id;
-      this.renderContent(node, data);
       return node;
     }
     static value(node) {
@@ -22,8 +25,8 @@ if (Quill) {
         value: node.dataset.mentionValue
       };
     }
-    static renderContent(node, data) {
-      var template = this._templatesStorage.get({
+    renderContent(node, data) {
+      var template = Mention._templatesStorage.get({
         editorKey: data.keyInTemplateStorage,
         marker: data.marker
       });
@@ -36,7 +39,7 @@ if (Quill) {
         this.baseContentRender(node, data);
       }
     }
-    static baseContentRender(node, data) {
+    baseContentRender(node, data) {
       var $marker = $('<span>').text(data.marker);
       $(node).append($marker).append(data.value);
     }

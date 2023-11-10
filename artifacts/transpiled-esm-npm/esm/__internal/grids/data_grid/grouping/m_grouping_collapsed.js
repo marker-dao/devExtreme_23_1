@@ -474,6 +474,8 @@ export var GroupingHelper = GroupingHelperCore.inherit(function () {
         that.updateTotalItemsCount(options);
         if (!options.remoteOperations.paging) {
           that._updatePagingOptions(options);
+          options.lastLoadOptions.skips = options.skips;
+          options.lastLoadOptions.takes = options.takes;
         }
         callBase(options);
         if (!options.remoteOperations.paging) {

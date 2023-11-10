@@ -348,7 +348,7 @@ var TabPanel = MultiView.inherit({
   },
   _updateTabsIndicatorPosition() {
     var value = this._getTabsIndicatorPosition();
-    this.option('_tabsIndicatorPosition', value);
+    this._setTabsOption('_indicatorPosition', value);
   },
   _optionChanged: function _optionChanged(args) {
     var {

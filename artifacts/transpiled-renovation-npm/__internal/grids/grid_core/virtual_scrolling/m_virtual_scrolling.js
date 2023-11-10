@@ -420,7 +420,6 @@ const VirtualScrollingRowsViewExtender = function () {
       const contentElement = this._findContentElement();
       const changeType = change && change.changeType;
       const d = (0, _deferred.Deferred)();
-      this.throwHeightWarningIfNeed();
       const contentTable = contentElement.children().first();
       if (changeType === 'append' || changeType === 'prepend') {
         this.waitAsyncTemplates().done(() => {
@@ -633,7 +632,12 @@ const VirtualScrollingRowsViewExtender = function () {
       }
       this.callBase.call(this, isLoading, messageText);
     },
+    // NOTE: warning won't be thrown if height was specified and then removed,
+    // because for some reason `_hasHeight` is not updated properly in this case
     throwHeightWarningIfNeed() {
+      if (this._hasHeight === undefined) {
+        return;
+      }
       const needToThrow = !this._hasHeight && isVirtualPaging(this);
       if (needToThrow && !this._heightWarningIsThrown) {
         this._heightWarningIsThrown = true;
@@ -644,6 +648,7 @@ const VirtualScrollingRowsViewExtender = function () {
       const that = this;
       const $element = that.element();
       that.callBase();
+      this.throwHeightWarningIfNeed();
       if (that.component.$element() && !that._windowScroll && (0, _dom.isElementInDom)($element)) {
         that._windowScroll = (0, _m_virtual_scrolling_core.subscribeToExternalScrollers)($element, scrollPos => {
           if (!that._hasHeight && that._rowHeight) {
@@ -1067,8 +1072,8 @@ const virtualScrollingModule = {
             }
             return delta < 0 ? 0 : delta;
           },
-          getRowIndexOffset(byLoadedRows) {
-            var _a;
+          getRowIndexOffset(byLoadedRows, needGroupOffset) {
+            var _a, _b;
             let offset = 0;
             const dataSource = this.dataSource();
             const rowsScrollController = this._rowsScrollController;
@@ -1090,7 +1095,12 @@ const virtualScrollingModule = {
                 offset = rowsScrollController.beginPageIndex() * rowsScrollController.pageSize();
               }
             } else if (virtualPaging && newMode && dataSource) {
-              offset = (_a = dataSource.lastLoadOptions().skip) !== null && _a !== void 0 ? _a : 0;
+              const lastLoadOptions = dataSource.lastLoadOptions();
+              if (needGroupOffset && ((_a = lastLoadOptions.skips) === null || _a === void 0 ? void 0 : _a.length)) {
+                offset = lastLoadOptions.skips.reduce((res, skip) => res + skip, 0);
+              } else {
+                offset = (_b = lastLoadOptions.skip) !== null && _b !== void 0 ? _b : 0;
+              }
             } else if (isVirtualMode(this) && dataSource) {
               offset = dataSource.beginPageIndex() * dataSource.pageSize();
             }
@@ -1098,7 +1108,7 @@ const virtualScrollingModule = {
           },
           getDataIndex() {
             if (this.option(LEGACY_SCROLLING_MODE) === false) {
-              return this.getRowIndexOffset(true);
+              return this.getRowIndexOffset(true, true);
             }
             return this.callBase.apply(this, arguments);
           },

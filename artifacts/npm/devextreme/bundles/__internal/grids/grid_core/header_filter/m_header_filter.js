@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/header_filter/m_header_filter.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -284,8 +284,7 @@ const HeaderFilterController = _m_modules.default.ViewController.inherit(functio
       if (column) {
         const visibleIndex = columnsController.getVisibleIndex(columnIndex);
         const view = isGroupPanel ? this.getView('headerPanel') : this.getView('columnHeadersView');
-        // eslint-disable-next-line no-var, vars-on-top
-        var $columnElement = $columnElement || view.getColumnElements().eq(isGroupPanel ? column.groupIndex : visibleIndex);
+        const $columnElement = view.getColumnElements().eq(isGroupPanel ? column.groupIndex : visibleIndex);
         this.showHeaderFilterMenuBase({
           columnElement: $columnElement,
           column,
@@ -384,13 +383,15 @@ const ColumnHeadersViewHeaderFilterExtender = (0, _extend.extend)({}, _m_header_
     const {
       optionNames
     } = e;
-    if (_m_utils.default.checkChanges(optionNames, ['filterValues', 'filterType'])) {
-      if (this._needUpdateFilterIndicators()) {
-        this._updateHeaderFilterIndicators();
-      }
-      return;
+    const isFilterRowAndHeaderFilterValuesChanged = _m_utils.default.checkChanges(optionNames, ['filterValues', 'filterValue']);
+    const isHeaderFilterValuesAndTypeChanged = _m_utils.default.checkChanges(optionNames, ['filterValues', 'filterType']);
+    const shouldUpdateFilterIndicators = (isFilterRowAndHeaderFilterValuesChanged || isHeaderFilterValuesAndTypeChanged) && this._needUpdateFilterIndicators();
+    if (shouldUpdateFilterIndicators) {
+      this._updateHeaderFilterIndicators();
     }
-    this.callBase(e);
+    if (!isHeaderFilterValuesAndTypeChanged) {
+      this.callBase(e);
+    }
   }
 });
 const HeaderPanelHeaderFilterExtender = (0, _extend.extend)({}, _m_header_filter_core.headerFilterMixin, {

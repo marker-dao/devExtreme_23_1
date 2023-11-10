@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/m_appointments_layout_manager.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,16 +13,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _common = require("../../core/utils/common");
+var _date = _interopRequireDefault(require("../../core/utils/date"));
 var _utils = require("../../renovation/ui/scheduler/model/utils");
 var _base = require("../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _m_view_model_generator = require("./appointments/m_view_model_generator");
 var _m_utils = require("./resources/m_utils");
 var _m_position_helper = require("./workspaces/helpers/m_position_helper");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+const toMs = _date.default.dateToMilliseconds;
 let AppointmentLayoutManager = /*#__PURE__*/function () {
   function AppointmentLayoutManager(instance) {
     this.instance = instance;
@@ -70,6 +73,7 @@ let AppointmentLayoutManager = /*#__PURE__*/function () {
       rtlEnabled: this.instance.option('rtlEnabled'),
       startDayHour: this.instance._getCurrentViewOption('startDayHour'),
       endDayHour: this.instance._getCurrentViewOption('endDayHour'),
+      viewOffset: this.instance._getCurrentViewOption('offset') * toMs('minute'),
       maxAppointmentsPerCell: this.instance._getCurrentViewOption('maxAppointmentsPerCell'),
       currentDate: this.instance.option('currentDate'),
       isVirtualScrolling: this.instance.isVirtualScrolling(),

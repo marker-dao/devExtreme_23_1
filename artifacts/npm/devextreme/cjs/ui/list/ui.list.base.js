@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.base.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -647,9 +647,7 @@ const ListBase = _uiCollection_widget.default.inherit({
       container: (0, _element.getPublicElement)($groupHeaderElement)
     };
     this._createItemByTemplate(groupTemplate, renderArgs);
-    if ((0, _themes.isMaterialBased)()) {
-      (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
-    }
+    (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
     this._renderingGroupIndex = index;
     const $groupBody = (0, _renderer.default)('<div>').addClass(LIST_GROUP_BODY_CLASS).appendTo($groupElement);
     (0, _iterator.each)(groupItemsGetter(group) || [], function (itemIndex, item) {

@@ -24,6 +24,7 @@ var _double_click = require("../../../events/double_click");
 var _index = require("../../../events/utils/index");
 var _uiCollection_widget = _interopRequireDefault(require("../../../ui/collection/ui.collection_widget.edit"));
 var _utils = _interopRequireDefault(require("../../../ui/scheduler/utils.timeZone"));
+var _date2 = require("../../core/utils/date");
 var _m_appointment_adapter = require("../m_appointment_adapter");
 var _m_classes = require("../m_classes");
 var _m_constants = require("../m_constants");
@@ -52,9 +53,9 @@ let SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
     _this._virtualAppointments = {};
     return _this;
   }
+  var _proto = SchedulerAppointments.prototype;
   // TODO: remove when Collection moved to TS
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  var _proto = SchedulerAppointments.prototype;
   _proto.option = function option(optionName, value) {
     return _CollectionWidget.prototype.option.apply(this, arguments);
   };
@@ -562,7 +563,8 @@ let SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
       info
     } = $element.data('dxAppointmentSettings');
     const sourceAppointment = this._getItemData($element);
-    let dateRange = {};
+    const viewOffset = this.invoke('getViewOffsetMs');
+    let dateRange;
     if (allDay) {
       dateRange = this.resizeAllDay(e);
     } else {
@@ -570,7 +572,11 @@ let SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
       const {
         endDate
       } = info.appointment;
-      dateRange = this._getDateRange(e, startDate, endDate);
+      const shiftedStartDate = _date2.dateUtilsTs.addOffsets(startDate, [-viewOffset]);
+      const shiftedEndDate = _date2.dateUtilsTs.addOffsets(endDate, [-viewOffset]);
+      dateRange = this._getDateRange(e, shiftedStartDate, shiftedEndDate);
+      dateRange.startDate = _date2.dateUtilsTs.addOffsets(dateRange.startDate, [viewOffset]);
+      dateRange.endDate = _date2.dateUtilsTs.addOffsets(dateRange.endDate, [viewOffset]);
     }
     this.updateResizedAppointment($element, dateRange, this.option('dataAccessors'), this.option('timeZoneCalculator'));
   };
@@ -592,7 +598,8 @@ let SchedulerAppointments = /*#__PURE__*/function (_CollectionWidget) {
       timeZoneCalculator,
       dataAccessors,
       rtlEnabled: this.option('rtlEnabled'),
-      DOMMetaData: this.option('getDOMElementsMetaData')()
+      DOMMetaData: this.option('getDOMElementsMetaData')(),
+      viewOffset: this.invoke('getViewOffsetMs')
     });
   };
   _proto.updateResizedAppointment = function updateResizedAppointment($element, dateRange, dataAccessors, timeZoneCalculator) {

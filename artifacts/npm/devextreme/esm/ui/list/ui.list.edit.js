@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/list/ui.list.edit.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -294,6 +294,18 @@ var ListEdit = ListBase.inherit({
   */
   getItemByIndex(index) {
     return this._editStrategy.getItemDataByIndex(index);
+  },
+  deleteItem(itemElement) {
+    var editStrategy = this._editStrategy;
+    var deletingElementIndex = editStrategy.getNormalizedIndex(itemElement);
+    var focusedElement = this.option('focusedElement');
+    var focusedItemIndex = focusedElement ? editStrategy.getNormalizedIndex(focusedElement) : deletingElementIndex;
+    var isLastIndexFocused = focusedItemIndex === this._getLastItemIndex();
+    var nextFocusedItem = isLastIndexFocused || deletingElementIndex < focusedItemIndex ? focusedItemIndex - 1 : focusedItemIndex;
+    var promise = this.callBase(itemElement);
+    return promise.done(function () {
+      return this.focusListItem(nextFocusedItem);
+    });
   }
 });
 export default ListEdit;

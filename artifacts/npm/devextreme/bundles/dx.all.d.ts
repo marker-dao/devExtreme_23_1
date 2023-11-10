@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -5842,7 +5842,6 @@ declare module DevExpress.data {
   export function query(url: string, queryOptions: any): Query;
   /**
    * [descr:Query]
-   * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export interface Query {
     /**
@@ -8469,7 +8468,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxBoxItem.baseSize]
      */
-    baseSize?: number | DevExpress.common.Mode;
+    baseSize?: number | string;
     /**
      * [descr:dxBoxItem.box]
      */
@@ -18771,7 +18770,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxHtmlEditorMention.dataSource]
      */
-    dataSource?: DevExpress.data.DataSource.DataSourceLike<string> | null;
+    dataSource?: DevExpress.data.DataSource.DataSourceLike<any> | null;
     /**
      * [descr:dxHtmlEditorMention.displayExpr]
      */
@@ -22881,7 +22880,7 @@ declare module DevExpress.ui {
       /**
        * [descr:dxResponsiveBoxOptions.cols.baseSize]
        */
-      baseSize?: number | DevExpress.common.Mode;
+      baseSize?: number | string;
       /**
        * [descr:dxResponsiveBoxOptions.cols.ratio]
        */
@@ -22914,7 +22913,7 @@ declare module DevExpress.ui {
       /**
        * [descr:dxResponsiveBoxOptions.rows.baseSize]
        */
-      baseSize?: number | DevExpress.common.Mode;
+      baseSize?: number | string;
       /**
        * [descr:dxResponsiveBoxOptions.rows.ratio]
        */
@@ -23834,6 +23833,10 @@ declare module DevExpress.ui {
      */
     allDayPanelMode?: DevExpress.ui.dxScheduler.AllDayPanelMode;
     /**
+     * [descr:dxSchedulerOptions.offset]
+     */
+    offset?: number;
+    /**
      * [descr:dxSchedulerOptions.views]
      */
     views?: Array<
@@ -23989,6 +23992,10 @@ declare module DevExpress.ui {
            * [descr:dxSchedulerOptions.views.allDayPanelMode]
            */
           allDayPanelMode?: DevExpress.ui.dxScheduler.AllDayPanelMode;
+          /**
+           * [descr:dxSchedulerOptions.views.offset]
+           */
+          offset?: number;
         }
     >;
   }

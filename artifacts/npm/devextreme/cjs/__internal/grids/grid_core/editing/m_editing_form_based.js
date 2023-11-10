@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/editing/m_editing_form_based.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -282,7 +282,7 @@ const editingControllerExtender = Base => /*#__PURE__*/function (_Base) {
     return cellOptions;
   };
   _proto.getFormEditorTemplate = function getFormEditorTemplate(cellOptions, item) {
-    const column = this.component.columnOption(item.dataField);
+    const column = this.component.columnOption(item.name || item.dataField);
     return (options, container) => {
       var _a, _b;
       const $container = (0, _renderer.default)(container);

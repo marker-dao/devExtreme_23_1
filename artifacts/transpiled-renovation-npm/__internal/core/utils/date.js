@@ -1,0 +1,14 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.dateUtilsTs = void 0;
+const addOffsets = (date, offsets) => {
+  const newDateMs = offsets.reduce((result, offset) => result + offset, date.getTime());
+  return new Date(newDateMs);
+};
+const dateUtilsTs = {
+  addOffsets
+};
+exports.dateUtilsTs = dateUtilsTs;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_utils_time_zone.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -145,6 +145,7 @@ var getExtremeDates = () => {
   endDate.setFullYear(nowDate.getFullYear(), 6, 1);
   return [startDate, endDate];
 };
+// TODO Vinogradov refactoring: Change to date utils.
 var setOffsetsToDate = (targetDate, offsetsArray) => {
   var newDateMs = offsetsArray.reduce((result, offset) => result + offset, targetDate.getTime());
   return new Date(newDateMs);

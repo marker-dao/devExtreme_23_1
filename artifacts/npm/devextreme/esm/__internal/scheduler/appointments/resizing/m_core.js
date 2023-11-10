@@ -1,13 +1,12 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/resizing/m_core.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { normalizeEndDate, normalizeStartDate } from './m_utils';
 var getAppointmentLeftCell = options => {
   var {
     cellHeight,
@@ -35,23 +34,23 @@ var getDateRangeHorizontal = options => {
   var appointmentCellsAmount = Math.round(relativeAppointmentRect.width / cellWidth);
   var appointmentLastCellIndex = appointmentFirstCell.index + (appointmentCellsAmount - 1);
   var {
-    allDay,
     sourceAppointment
   } = appointmentSettings.info;
+  var {
+    allDay
+  } = appointmentSettings.info.appointment;
   if (handles.left) {
-    var startDate = normalizeStartDate(options, appointmentFirstCell.startDate, sourceAppointment.startDate);
     return {
-      startDate,
-      endDate: sourceAppointment.endDate
+      startDate: appointmentFirstCell.startDate,
+      endDate: appointmentFirstCell.startDate > sourceAppointment.endDate ? appointmentFirstCell.startDate : sourceAppointment.endDate
     };
   }
   var appointmentRowIndex = Math.floor(appointmentLastCellIndex / cellCountInRow);
   var appointmentColumnIndex = appointmentLastCellIndex % cellCountInRow;
   var appointmentLastCell = viewDataProvider.getCellData(appointmentRowIndex, appointmentColumnIndex, allDay);
   var endDate = !options.considerTime ? appointmentLastCell.endDate : appointmentLastCell.startDate;
-  endDate = normalizeEndDate(options, endDate, sourceAppointment.endDate);
   return {
-    startDate: sourceAppointment.startDate,
+    startDate: endDate < sourceAppointment.startDate ? endDate : sourceAppointment.startDate,
     endDate
   };
 };
@@ -66,25 +65,25 @@ var getDateRangeHorizontalRTL = options => {
   } = options;
   var appointmentLastCell = getAppointmentLeftCell(options);
   var {
-    allDay,
     sourceAppointment
   } = appointmentSettings.info;
+  var {
+    allDay
+  } = appointmentSettings.info.appointment;
   if (handles.right) {
     var appointmentLastCellIndex = appointmentLastCell.index;
     var appointmentCellsAmount = Math.round(relativeAppointmentRect.width / cellWidth);
     var appointmentFirstCellIndex = appointmentLastCellIndex - appointmentCellsAmount + 1;
     var appointmentRowIndex = Math.floor(appointmentLastCellIndex / cellCountInRow);
     var appointmentFirstCell = viewDataProvider.getCellData(appointmentRowIndex, appointmentFirstCellIndex, allDay, true);
-    var startDate = normalizeStartDate(options, appointmentFirstCell.startDate, sourceAppointment.endDate);
     return {
-      startDate,
-      endDate: sourceAppointment.endDate
+      startDate: appointmentFirstCell.startDate,
+      endDate: appointmentFirstCell.startDate > sourceAppointment.endDate ? appointmentFirstCell.startDate : sourceAppointment.endDate
     };
   }
   var endDate = !options.considerTime ? appointmentLastCell.endDate : appointmentLastCell.startDate;
-  endDate = normalizeEndDate(options, endDate, sourceAppointment.endDate);
   return {
-    startDate: sourceAppointment.startDate,
+    startDate: endDate < sourceAppointment.startDate ? endDate : sourceAppointment.startDate,
     endDate
   };
 };

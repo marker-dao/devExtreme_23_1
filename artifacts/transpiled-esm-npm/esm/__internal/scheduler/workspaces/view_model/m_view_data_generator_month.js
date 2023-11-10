@@ -14,15 +14,15 @@ export class ViewDataGeneratorMonth extends ViewDataGenerator {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCellData(rowIndex, columnIndex, options, allDay) {
-    var data = super.getCellData(rowIndex, columnIndex, options, false);
-    var {
-      startDate
-    } = data;
     var {
       indicatorTime,
       timeZoneCalculator,
       intervalCount
     } = options;
+    var data = super.getCellData(rowIndex, columnIndex, options, false);
+    var {
+      startDate
+    } = data;
     data.today = this.isCurrentDate(startDate, indicatorTime, timeZoneCalculator);
     data.otherMonth = this.isOtherMonth(startDate, this._minVisibleDate, this._maxVisibleDate);
     data.firstDayOfMonth = isFirstCellInMonthWithIntervalCount(startDate, intervalCount);

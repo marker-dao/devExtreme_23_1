@@ -1,13 +1,15 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/view_model/m_grouped_data_map_provider.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
 import { isDateAndTimeView } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
+import { dateUtilsTs } from '../../../core/utils/date';
 export class GroupedDataMapProvider {
   constructor(viewDataGenerator, viewDataMap, completeViewDataMap, viewOptions) {
     this.groupedDataMap = viewDataGenerator.generateGroupedDataMap(viewDataMap);
@@ -15,13 +17,9 @@ export class GroupedDataMapProvider {
     this._viewOptions = viewOptions;
   }
   getGroupStartDate(groupIndex) {
+    var _a, _b, _c;
     var firstRow = this.getFirstGroupRow(groupIndex);
-    if (firstRow) {
-      var {
-        startDate
-      } = firstRow[0].cellData;
-      return startDate;
-    }
+    return (_c = (_b = (_a = firstRow === null || firstRow === void 0 ? void 0 : firstRow[0]) === null || _a === void 0 ? void 0 : _a.cellData) === null || _b === void 0 ? void 0 : _b.startDate) !== null && _c !== void 0 ? _c : null;
   }
   getGroupEndDate(groupIndex) {
     var lastRow = this.getLastGroupRow(groupIndex);
@@ -81,46 +79,65 @@ export class GroupedDataMapProvider {
     var startDateHorizontalSearch = searchHorizontal();
     return startDateVerticalSearch > startDateHorizontalSearch ? startDateHorizontalSearch : startDateVerticalSearch;
   }
-  findAllDayGroupCellStartDate(groupIndex, startDate) {
-    var groupStartDate = this.getGroupStartDate(groupIndex);
-    return groupStartDate > startDate ? groupStartDate : startDate;
+  findAllDayGroupCellStartDate(groupIndex) {
+    var _a, _b, _c;
+    var groupedData = this.getGroupFromDateTableGroupMap(groupIndex);
+    var cellData = (_b = (_a = groupedData === null || groupedData === void 0 ? void 0 : groupedData[0]) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.cellData;
+    return (_c = cellData === null || cellData === void 0 ? void 0 : cellData.startDate) !== null && _c !== void 0 ? _c : null;
   }
-  findCellPositionInMap(cellInfo) {
+  findCellPositionInMap(cellInfo, isAppointmentRender) {
     var {
       groupIndex,
       startDate,
       isAllDay,
       index
     } = cellInfo;
-    var startTime = isAllDay ? dateUtils.trimTime(startDate).getTime() : startDate.getTime();
-    var isStartDateInCell = cellData => {
-      if (!isDateAndTimeView(this._viewOptions.viewType)) {
-        return dateUtils.sameDate(startDate, cellData.startDate);
-      }
-      var cellStartTime = cellData.startDate.getTime();
-      var cellEndTime = cellData.endDate.getTime();
-      return isAllDay ? cellData.allDay && startTime >= cellStartTime && startTime <= cellEndTime : startTime >= cellStartTime && startTime < cellEndTime;
-    };
     var {
       allDayPanelGroupedMap,
       dateTableGroupedMap
     } = this.groupedDataMap;
+    var {
+      viewOffset
+    } = this._viewOptions;
     var rows = isAllDay && !this._viewOptions.isVerticalGrouping ? allDayPanelGroupedMap[groupIndex] ? [allDayPanelGroupedMap[groupIndex]] : [] : dateTableGroupedMap[groupIndex] || [];
-    for (var rowIndex = 0; rowIndex < rows.length; ++rowIndex) {
+    for (var rowIndex = 0; rowIndex < rows.length; rowIndex += 1) {
       var row = rows[rowIndex];
-      for (var columnIndex = 0; columnIndex < row.length; ++columnIndex) {
+      for (var columnIndex = 0; columnIndex < row.length; columnIndex += 1) {
         var cell = row[columnIndex];
-        var {
-          cellData
-        } = cell;
+        // NOTE: If this is appointment's render call
+        // we should shift the real cellData dates by viewOffset
+        // to find correct cell indexes.
+        var cellData = isAppointmentRender ? _extends(_extends({}, cell.cellData), {
+          startDate: dateUtilsTs.addOffsets(cell.cellData.startDate, [-viewOffset]),
+          endDate: dateUtilsTs.addOffsets(cell.cellData.endDate, [-viewOffset])
+        }) : cell.cellData;
         if (this._isSameGroupIndexAndIndex(cellData, groupIndex, index)) {
-          if (isStartDateInCell(cellData)) {
+          if (this.isStartDateInCell(startDate, isAllDay, cellData)) {
             return cell.position;
           }
         }
       }
     }
     return undefined;
+  }
+  isStartDateInCell(startDate, inAllDayRow, _ref) {
+    var {
+      startDate: cellStartDate,
+      endDate: cellEndDate,
+      allDay: cellAllDay
+    } = _ref;
+    var {
+      viewType
+    } = this._viewOptions;
+    switch (true) {
+      case !isDateAndTimeView(viewType):
+      case inAllDayRow && cellAllDay:
+        return dateUtils.sameDate(startDate, cellStartDate);
+      case !inAllDayRow:
+        return startDate >= cellStartDate && startDate < cellEndDate;
+      default:
+        return false;
+    }
   }
   _isSameGroupIndexAndIndex(cellData, groupIndex, index) {
     return cellData.groupIndex === groupIndex && (index === undefined || cellData.index === index);
@@ -153,18 +170,18 @@ export class GroupedDataMapProvider {
         startDate: this.getGroupStartDate(groupIndex),
         endDate: this.getGroupEndDate(groupIndex)
       };
-    }).filter(_ref => {
+    }).filter(_ref2 => {
       var {
         startDate
-      } = _ref;
+      } = _ref2;
       return !!startDate;
     });
   }
   getGroupIndices() {
-    return this.getCompletedGroupsInfo().map(_ref2 => {
+    return this.getCompletedGroupsInfo().map(_ref3 => {
       var {
         groupIndex
-      } = _ref2;
+      } = _ref3;
       return groupIndex;
     });
   }

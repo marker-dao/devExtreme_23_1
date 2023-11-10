@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/m_appointment_collection.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,6 +28,7 @@ import { name as dblclickEvent } from '../../../events/double_click';
 import { addNamespace, isFakeClickEvent } from '../../../events/utils/index';
 import CollectionWidget from '../../../ui/collection/ui.collection_widget.edit';
 import timeZoneUtils from '../../../ui/scheduler/utils.timeZone';
+import { dateUtilsTs } from '../../core/utils/date';
 import { createAppointmentAdapter } from '../m_appointment_adapter';
 import { APPOINTMENT_CONTENT_CLASSES, APPOINTMENT_DRAG_SOURCE_CLASS, APPOINTMENT_ITEM_CLASS } from '../m_classes';
 import { APPOINTMENT_SETTINGS_KEY } from '../m_constants';
@@ -41,6 +42,10 @@ var COMPONENT_CLASS = 'dx-scheduler-scrollable-appointments';
 var DBLCLICK_EVENT_NAME = addNamespace(dblclickEvent, 'dxSchedulerAppointment');
 var toMs = dateUtils.dateToMilliseconds;
 class SchedulerAppointments extends CollectionWidget {
+  constructor(element, options) {
+    super(element, options);
+    this._virtualAppointments = {};
+  }
   get isAgendaView() {
     return this.invoke('isCurrentViewAgenda');
   }
@@ -49,10 +54,6 @@ class SchedulerAppointments extends CollectionWidget {
   }
   get appointmentDataProvider() {
     return this.option('getAppointmentDataProvider')();
-  }
-  constructor(element, options) {
-    super(element, options);
-    this._virtualAppointments = {};
   }
   // TODO: remove when Collection moved to TS
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -561,7 +562,8 @@ class SchedulerAppointments extends CollectionWidget {
       info
     } = $element.data('dxAppointmentSettings');
     var sourceAppointment = this._getItemData($element);
-    var dateRange = {};
+    var viewOffset = this.invoke('getViewOffsetMs');
+    var dateRange;
     if (allDay) {
       dateRange = this.resizeAllDay(e);
     } else {
@@ -569,7 +571,11 @@ class SchedulerAppointments extends CollectionWidget {
       var {
         endDate
       } = info.appointment;
-      dateRange = this._getDateRange(e, startDate, endDate);
+      var shiftedStartDate = dateUtilsTs.addOffsets(startDate, [-viewOffset]);
+      var shiftedEndDate = dateUtilsTs.addOffsets(endDate, [-viewOffset]);
+      dateRange = this._getDateRange(e, shiftedStartDate, shiftedEndDate);
+      dateRange.startDate = dateUtilsTs.addOffsets(dateRange.startDate, [viewOffset]);
+      dateRange.endDate = dateUtilsTs.addOffsets(dateRange.endDate, [viewOffset]);
     }
     this.updateResizedAppointment($element, dateRange, this.option('dataAccessors'), this.option('timeZoneCalculator'));
   }
@@ -591,7 +597,8 @@ class SchedulerAppointments extends CollectionWidget {
       timeZoneCalculator,
       dataAccessors,
       rtlEnabled: this.option('rtlEnabled'),
-      DOMMetaData: this.option('getDOMElementsMetaData')()
+      DOMMetaData: this.option('getDOMElementsMetaData')(),
+      viewOffset: this.invoke('getViewOffsetMs')
     });
   }
   updateResizedAppointment($element, dateRange, dataAccessors, timeZoneCalculator) {

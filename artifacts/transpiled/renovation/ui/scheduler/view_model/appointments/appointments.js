@@ -6,6 +6,7 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 const getAppointmentsViewModel = (model, filteredItems) => {
   const appointmentViewModel = new _m_view_model_generator.AppointmentViewModelGenerator();
   return appointmentViewModel.generate(filteredItems, _extends({}, model, {
+    viewOffset: 0,
     isRenovatedAppointments: true
   }));
 };

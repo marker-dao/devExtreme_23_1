@@ -1,15 +1,15 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/m_cell_position_calculator.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
-import dateUtils from '../../../core/utils/date';
 import { isDefined } from '../../../core/utils/type';
+import { dateUtilsTs } from '../../core/utils/date';
 class BaseStrategy {
   constructor(options) {
     this.isVirtualScrolling = false;
@@ -102,12 +102,12 @@ class BaseStrategy {
       startDate: date,
       isAllDay: inAllDayRow
     };
-    var positionByMap = this.viewDataProvider.findCellPositionInMap(cellInfo);
+    var positionByMap = this.viewDataProvider.findCellPositionInMap(cellInfo, true);
     if (!positionByMap) {
       return undefined;
     }
     var position = this.getCellPosition(positionByMap, inAllDayRow && !this.isVerticalGrouping);
-    var timeShift = inAllDayRow ? 0 : this.getTimeShift(date);
+    var timeShift = inAllDayRow ? 0 : this.getTimeShiftRatio(positionByMap, date);
     var shift = this.getPositionShift(timeShift, inAllDayRow);
     var horizontalHMax = this.positionHelper.getHorizontalMax(validGroupIndex, date);
     var verticalMax = this.positionHelper.getVerticalMax({
@@ -167,17 +167,18 @@ class BaseStrategy {
     }
     return validPosition;
   }
-  getTimeShift(date) {
-    var currentDayStart = new Date(date);
-    var currentDayEndHour = new Date(new Date(date).setHours(this.viewEndDayHour, 0, 0));
-    if (date.getTime() <= currentDayEndHour.getTime()) {
-      currentDayStart.setHours(this.viewStartDayHour, 0, 0, 0);
-    }
-    var timeZoneDifference = dateUtils.getTimezonesDifference(date, currentDayStart);
-    var currentDateTime = date.getTime();
-    var currentDayStartTime = currentDayStart.getTime();
-    var minTime = this.startViewDate.getTime();
-    return currentDateTime > minTime ? (currentDateTime - currentDayStartTime + timeZoneDifference) % this.cellDuration / this.cellDuration : 0;
+  getTimeShiftRatio(positionByMap, appointmentDate) {
+    var {
+      cellDuration,
+      viewOffset
+    } = this.options;
+    var {
+      rowIndex,
+      columnIndex
+    } = positionByMap;
+    var matchedCell = this.viewDataProvider.viewDataMap.dateTableMap[rowIndex][columnIndex];
+    var matchedCellStartDate = dateUtilsTs.addOffsets(matchedCell.cellData.startDate, [-viewOffset]);
+    return (appointmentDate.getTime() - matchedCellStartDate.getTime()) / cellDuration;
   }
 }
 class VirtualStrategy extends BaseStrategy {

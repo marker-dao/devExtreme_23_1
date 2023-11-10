@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/helpers/m_position_helper.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -89,6 +89,10 @@ export var getGroupWidth = (groupIndex, viewDataProvider, options) => {
   return result;
 };
 export class PositionHelper {
+  constructor(options) {
+    this.options = options;
+    this.groupStrategy = this.options.isVerticalGrouping ? new GroupStrategyBase(this.options) : new GroupStrategyHorizontal(this.options);
+  }
   get viewDataProvider() {
     return this.options.viewDataProvider;
   }
@@ -103,10 +107,6 @@ export class PositionHelper {
   }
   get DOMMetaData() {
     return this.options.getDOMMetaDataCallback();
-  }
-  constructor(options) {
-    this.options = options;
-    this.groupStrategy = this.options.isVerticalGrouping ? new GroupStrategyBase(this.options) : new GroupStrategyHorizontal(this.options);
   }
   getHorizontalMax(groupIndex) {
     var getMaxPosition = groupIndex => getMaxAllowedPosition(groupIndex, this.viewDataProvider, this.rtlEnabled, this.DOMMetaData);

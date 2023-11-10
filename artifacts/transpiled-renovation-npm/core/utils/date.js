@@ -7,6 +7,7 @@ var _iterator = require("./iterator");
 var _inflector = require("./inflector");
 var _index = require("../../renovation/ui/common/utils/date/index");
 /* globals Intl */
+// TODO refactoring: Review all date utils functions and move useful to __internal/core/utils/date.ts
 
 const DAYS_IN_WEEK = 7;
 const THURSDAY_WEEK_NUMBER = 4;

@@ -145,6 +145,7 @@ const getExtremeDates = () => {
   endDate.setFullYear(nowDate.getFullYear(), 6, 1);
   return [startDate, endDate];
 };
+// TODO Vinogradov refactoring: Change to date utils.
 const setOffsetsToDate = (targetDate, offsetsArray) => {
   const newDateMs = offsetsArray.reduce((result, offset) => result + offset, targetDate.getTime());
   return new Date(newDateMs);

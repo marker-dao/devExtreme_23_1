@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/workspaces/view_model/m_view_data_generator.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,6 +15,7 @@ exports.ViewDataGenerator = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _utils = require("../../../../renovation/ui/scheduler/workspaces/utils");
+var _date2 = require("../../../core/utils/date");
 var _m_constants = require("../../m_constants");
 var _m_utils = require("../../resources/m_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -49,7 +50,8 @@ let ViewDataGenerator = /*#__PURE__*/function () {
       viewType,
       startDayHour,
       endDayHour,
-      hoursInterval
+      hoursInterval,
+      viewOffset
     } = options;
     this._setVisibilityDates(options);
     this.setHiddenInterval(startDayHour, endDayHour, hoursInterval);
@@ -85,7 +87,16 @@ let ViewDataGenerator = /*#__PURE__*/function () {
       viewDataMap = this._transformViewDataMapForGroupingByDate(viewDataMap, groupsList);
     }
     const completeViewDataMap = this._addKeysToCells(viewDataMap);
+    this.shiftDateTableDates(completeViewDataMap, viewOffset);
     return completeViewDataMap;
+  };
+  _proto.shiftDateTableDates = function shiftDateTableDates(viewDataMap, viewOffset) {
+    viewDataMap.forEach(row => {
+      row.forEach(cell => {
+        cell.startDate = _date2.dateUtilsTs.addOffsets(cell.startDate, [viewOffset]);
+        cell.endDate = _date2.dateUtilsTs.addOffsets(cell.endDate, [viewOffset]);
+      });
+    });
   };
   _proto._transformViewDataMapForHorizontalGrouping = function _transformViewDataMapForHorizontalGrouping(viewDataMap, groupsList) {
     const result = viewDataMap.map(row => row.slice());

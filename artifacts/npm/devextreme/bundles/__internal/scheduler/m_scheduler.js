@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/m_scheduler.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -43,6 +43,7 @@ var _dialog = require("../../ui/dialog");
 var _themes = require("../../ui/themes");
 var _ui = _interopRequireDefault(require("../../ui/widget/ui.errors"));
 var _ui2 = _interopRequireDefault(require("../../ui/widget/ui.widget"));
+var _date3 = require("../core/utils/date");
 var _m_form = require("./appointment_popup/m_form");
 var _m_popup = require("./appointment_popup/m_popup");
 var _m_appointment_data_provider = require("./appointments/data_provider/m_appointment_data_provider");
@@ -52,6 +53,7 @@ var _m_header = require("./header/m_header");
 var _m_appointment_adapter = require("./m_appointment_adapter");
 var _m_appointments_layout_manager = _interopRequireDefault(require("./m_appointments_layout_manager"));
 var _m_compact_appointments_helper = require("./m_compact_appointments_helper");
+var _m_constants = require("./m_constants");
 var _m_data_structures = require("./m_data_structures");
 var _m_expression_utils = require("./m_expression_utils");
 var _m_loading = require("./m_loading");
@@ -80,6 +82,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typ
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // @ts-expect-error
+const toMs = _date.default.dateToMilliseconds;
 const MINUTES_IN_HOUR = 60;
 const DEFAULT_AGENDA_DURATION = 7;
 const WIDGET_CLASS = 'dx-scheduler';
@@ -174,6 +177,7 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
       dateCellTemplate: null,
       startDayHour: 0,
       endDayHour: 24,
+      offset: 0,
       editing: {
         allowAdding: true,
         allowDeleting: true,
@@ -442,6 +446,16 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
         this.updateInstances();
         this._appointments.option('items', []);
         this._updateOption('workSpace', name, value);
+        this._appointments.repaint();
+        this._filterAppointmentsByDate();
+        this._postponeDataSourceLoading();
+        break;
+      // TODO Vinogradov refactoring: merge it with startDayHour / endDayHour
+      case 'offset':
+        this._validateDayHours();
+        this.updateInstances();
+        this._appointments.option('items', []);
+        this._updateOption('workSpace', 'viewOffset', this.normalizeViewOffsetValue(value));
         this._appointments.repaint();
         this._filterAppointmentsByDate();
         this._postponeDataSourceLoading();
@@ -794,6 +808,7 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
       resources: this.option('resources'),
       startDayHour: this._getCurrentViewOption('startDayHour'),
       endDayHour: this._getCurrentViewOption('endDayHour'),
+      viewOffset: this.getViewOffsetMs(),
       appointmentDuration: this._getCurrentViewOption('cellDuration'),
       allDayPanelMode: this._getCurrentViewOption('allDayPanelMode'),
       showAllDayPanel: this.option('showAllDayPanel'),
@@ -1296,6 +1311,7 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
       firstDayOfWeek: this.option('firstDayOfWeek'),
       startDayHour: this.option('startDayHour'),
       endDayHour: this.option('endDayHour'),
+      viewOffset: this.getViewOffsetMs(),
       tabIndex: this.option('tabIndex'),
       accessKey: this.option('accessKey'),
       focusStateEnabled: this.option('focusStateEnabled'),
@@ -1515,17 +1531,26 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
     return this._recurrenceDialog.show();
   };
   _proto._getUpdatedData = function _getUpdatedData(rawAppointment) {
-    const getConvertedFromGrid = date => date ? this.timeZoneCalculator.createDate(date, {
-      path: 'fromGrid'
-    }) : undefined;
+    const viewOffset = this.getViewOffsetMs();
+    const getConvertedFromGrid = date => {
+      if (!date) {
+        return undefined;
+      }
+      const result = this.timeZoneCalculator.createDate(date, {
+        path: 'fromGrid'
+      });
+      return _date3.dateUtilsTs.addOffsets(result, [-viewOffset]);
+    };
     const isValidDate = date => !isNaN(new Date(date).getTime());
     const targetCell = this.getTargetCellData();
     const appointment = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this._dataAccessors, this.timeZoneCalculator);
     const cellStartDate = getConvertedFromGrid(targetCell.startDate);
     const cellEndDate = getConvertedFromGrid(targetCell.endDate);
     let appointmentStartDate = new Date(appointment.startDate);
+    appointmentStartDate = _date3.dateUtilsTs.addOffsets(appointmentStartDate, [-viewOffset]);
     let appointmentEndDate = new Date(appointment.endDate);
-    let resultedStartDate = cellStartDate || appointmentStartDate;
+    appointmentEndDate = _date3.dateUtilsTs.addOffsets(appointmentEndDate, [-viewOffset]);
+    let resultedStartDate = cellStartDate !== null && cellStartDate !== void 0 ? cellStartDate : appointmentStartDate;
     if (!isValidDate(appointmentStartDate)) {
       appointmentStartDate = resultedStartDate;
     }
@@ -1535,14 +1560,12 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
     const duration = appointmentEndDate.getTime() - appointmentStartDate.getTime();
     const isKeepAppointmentHours = this._workSpace.keepOriginalHours() && isValidDate(appointment.startDate) && isValidDate(cellStartDate);
     if (isKeepAppointmentHours) {
-      const {
-        trimTime
-      } = _date.default;
-      const startDate = this.timeZoneCalculator.createDate(appointment.startDate, {
+      const startDate = this.timeZoneCalculator.createDate(appointmentStartDate, {
         path: 'toGrid'
       });
-      const timeInMs = startDate.getTime() - trimTime(startDate).getTime();
-      resultedStartDate = new Date(trimTime(targetCell.startDate).getTime() + timeInMs);
+      const timeInMs = startDate.getTime() - _date.default.trimTime(startDate).getTime();
+      const targetCellStartDate = _date3.dateUtilsTs.addOffsets(targetCell.startDate, [-viewOffset]);
+      resultedStartDate = new Date(_date.default.trimTime(targetCellStartDate).getTime() + timeInMs);
       resultedStartDate = this.timeZoneCalculator.createDate(resultedStartDate, {
         path: 'fromGrid'
       });
@@ -1566,6 +1589,8 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
     }
     const timeZoneOffset = _m_utils_time_zone.default.getTimezoneOffsetChangeInMs(appointmentStartDate, appointmentEndDate, resultedStartDate, resultedEndDate);
     result.endDate = new Date(resultedEndDate.getTime() - timeZoneOffset);
+    result.startDate = _date3.dateUtilsTs.addOffsets(result.startDate, [viewOffset]);
+    result.endDate = _date3.dateUtilsTs.addOffsets(result.endDate, [viewOffset]);
     const rawResult = result.source();
     (0, _m_utils2.setResourceToAppointment)(this.option('resources'), this.getResourceDataAccessors(), rawResult, targetCell.groups);
     return rawResult;
@@ -1698,7 +1723,7 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
   };
   _proto.appointmentTakesAllDay = function appointmentTakesAllDay(rawAppointment) {
     const appointment = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this._dataAccessors, this.timeZoneCalculator);
-    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(appointment, this._getCurrentViewOption('startDayHour'), this._getCurrentViewOption('endDayHour'), this._getCurrentViewOption('allDayPanelMode'));
+    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(appointment, this._getCurrentViewOption('allDayPanelMode'));
   };
   _proto.dayHasAppointment = function dayHasAppointment(day, rawAppointment, trimTime) {
     const getConvertedToTimeZone = date => this.timeZoneCalculator.createDate(date, {
@@ -1973,6 +1998,16 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
   };
   _proto._getDragBehavior = function _getDragBehavior() {
     return this._workSpace.dragBehavior;
+  };
+  _proto.getViewOffsetMs = function getViewOffsetMs() {
+    const offsetFromOptions = this._getCurrentViewOption('offset');
+    return this.normalizeViewOffsetValue(offsetFromOptions);
+  };
+  _proto.normalizeViewOffsetValue = function normalizeViewOffsetValue(viewOffset) {
+    if (!(0, _type.isDefined)(viewOffset) || this.currentViewType === _m_constants.VIEWS.AGENDA) {
+      return 0;
+    }
+    return viewOffset * toMs('minute');
   };
   _createClass(Scheduler, [{
     key: "filteredItems",

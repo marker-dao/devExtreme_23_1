@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/m_cell_position_calculator.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,9 +12,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.CellPositionCalculator = void 0;
-var _date = _interopRequireDefault(require("../../../core/utils/date"));
 var _type = require("../../../core/utils/type");
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _date = require("../../core/utils/date");
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -70,12 +69,12 @@ let BaseStrategy = /*#__PURE__*/function () {
       startDate: date,
       isAllDay: inAllDayRow
     };
-    const positionByMap = this.viewDataProvider.findCellPositionInMap(cellInfo);
+    const positionByMap = this.viewDataProvider.findCellPositionInMap(cellInfo, true);
     if (!positionByMap) {
       return undefined;
     }
     const position = this.getCellPosition(positionByMap, inAllDayRow && !this.isVerticalGrouping);
-    const timeShift = inAllDayRow ? 0 : this.getTimeShift(date);
+    const timeShift = inAllDayRow ? 0 : this.getTimeShiftRatio(positionByMap, date);
     const shift = this.getPositionShift(timeShift, inAllDayRow);
     const horizontalHMax = this.positionHelper.getHorizontalMax(validGroupIndex, date);
     const verticalMax = this.positionHelper.getVerticalMax({
@@ -135,17 +134,18 @@ let BaseStrategy = /*#__PURE__*/function () {
     }
     return validPosition;
   };
-  _proto.getTimeShift = function getTimeShift(date) {
-    const currentDayStart = new Date(date);
-    const currentDayEndHour = new Date(new Date(date).setHours(this.viewEndDayHour, 0, 0));
-    if (date.getTime() <= currentDayEndHour.getTime()) {
-      currentDayStart.setHours(this.viewStartDayHour, 0, 0, 0);
-    }
-    const timeZoneDifference = _date.default.getTimezonesDifference(date, currentDayStart);
-    const currentDateTime = date.getTime();
-    const currentDayStartTime = currentDayStart.getTime();
-    const minTime = this.startViewDate.getTime();
-    return currentDateTime > minTime ? (currentDateTime - currentDayStartTime + timeZoneDifference) % this.cellDuration / this.cellDuration : 0;
+  _proto.getTimeShiftRatio = function getTimeShiftRatio(positionByMap, appointmentDate) {
+    const {
+      cellDuration,
+      viewOffset
+    } = this.options;
+    const {
+      rowIndex,
+      columnIndex
+    } = positionByMap;
+    const matchedCell = this.viewDataProvider.viewDataMap.dateTableMap[rowIndex][columnIndex];
+    const matchedCellStartDate = _date.dateUtilsTs.addOffsets(matchedCell.cellData.startDate, [-viewOffset]);
+    return (appointmentDate.getTime() - matchedCellStartDate.getTime()) / cellDuration;
   };
   _createClass(BaseStrategy, [{
     key: "DOMMetaData",

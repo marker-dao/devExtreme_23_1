@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/m_work_space.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -529,6 +529,7 @@ class SchedulerWorkSpace extends WidgetObserver {
       focusedCell: this.cellsSelectionState.focusedCell,
       headerCellTextFormat: this._getFormat(),
       getDateForHeaderText: (_, date) => date,
+      viewOffset: this.option('viewOffset'),
       startDayHour: this.option('startDayHour'),
       endDayHour: this.option('endDayHour'),
       cellDuration: this.getCellDuration(),
@@ -1627,6 +1628,7 @@ class SchedulerWorkSpace extends WidgetObserver {
       firstDayOfWeek: undefined,
       startDayHour: 0,
       endDayHour: 24,
+      viewOffset: 0,
       hoursInterval: 0.5,
       activeStateEnabled: true,
       hoverStateEnabled: true,
@@ -1673,6 +1675,7 @@ class SchedulerWorkSpace extends WidgetObserver {
         validateDayHours(this.option('startDayHour'), args.value);
         this._cleanWorkSpace();
         break;
+      case 'viewOffset':
       case 'dateCellTemplate':
       case 'resourceCellTemplate':
       case 'dataCellTemplate':

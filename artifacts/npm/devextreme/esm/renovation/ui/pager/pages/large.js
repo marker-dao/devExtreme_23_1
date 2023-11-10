@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/pager/pages/large.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -89,12 +89,6 @@ var PagesLargePropsType = {
   }
 };
 export class PagesLarge extends BaseInfernoComponent {
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -102,6 +96,12 @@ export class PagesLarge extends BaseInfernoComponent {
     this.generatePageIndexes = this.generatePageIndexes.bind(this);
     this.isSlidingWindowMode = this.isSlidingWindowMode.bind(this);
     this.onPageClick = this.onPageClick.bind(this);
+  }
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
   }
   get slidingWindowState() {
     var slidingWindowState = this.slidingWindowStateHolder;

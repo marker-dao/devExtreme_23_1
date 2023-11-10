@@ -8,6 +8,7 @@ var _type = require("../../core/utils/type");
 var _common = require("../../core/utils/common");
 var _message = _interopRequireDefault(require("../../localization/message"));
 var _uiFile_manager = require("./ui.file_manager.common");
+var _themes = require("../themes");
 var _ui = _interopRequireDefault(require("../widget/ui.widget"));
 var _toolbar = _interopRequireDefault(require("../toolbar"));
 require("../drop_down_button");
@@ -348,6 +349,14 @@ let FileManagerToolbar = /*#__PURE__*/function (_Widget) {
       };
     });
     const selectedIndex = this.option('itemViewMode') === 'thumbnails' ? 1 : 0;
+    const dropDownOptions = {
+      container: this._$viewSwitcherPopup
+    };
+    if ((0, _themes.isMaterial)()) {
+      dropDownOptions.width = (0, _themes.isCompact)() ? 28 : 36;
+    } else if ((0, _themes.isFluent)()) {
+      dropDownOptions.width = (0, _themes.isCompact)() ? 34 : 40;
+    }
     return {
       cssClass: FILE_MANAGER_TOOLBAR_VIEWMODE_ITEM_CLASS,
       widget: 'dxDropDownButton',
@@ -360,9 +369,7 @@ let FileManagerToolbar = /*#__PURE__*/function (_Widget) {
         stylingMode: 'text',
         showArrowIcon: false,
         useSelectMode: true,
-        dropDownOptions: {
-          container: this._$viewSwitcherPopup
-        },
+        dropDownOptions,
         onItemClick: e => this._executeCommand(e.itemData.name)
       }
     };

@@ -81,6 +81,10 @@ export var getGroupWidth = (groupIndex, viewDataProvider, options) => {
   return result;
 };
 export class PositionHelper {
+  constructor(options) {
+    this.options = options;
+    this.groupStrategy = this.options.isVerticalGrouping ? new GroupStrategyBase(this.options) : new GroupStrategyHorizontal(this.options);
+  }
   get viewDataProvider() {
     return this.options.viewDataProvider;
   }
@@ -95,10 +99,6 @@ export class PositionHelper {
   }
   get DOMMetaData() {
     return this.options.getDOMMetaDataCallback();
-  }
-  constructor(options) {
-    this.options = options;
-    this.groupStrategy = this.options.isVerticalGrouping ? new GroupStrategyBase(this.options) : new GroupStrategyHorizontal(this.options);
   }
   getHorizontalMax(groupIndex) {
     var getMaxPosition = groupIndex => getMaxAllowedPosition(groupIndex, this.viewDataProvider, this.rtlEnabled, this.DOMMetaData);

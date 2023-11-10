@@ -164,10 +164,11 @@ _m_core.default.registerModule('selection', (0, _extend.extend)(true, {}, _m_sel
         },
         changeItemSelection(itemIndex, keyboardKeys) {
           const isRecursiveSelection = this.isRecursiveSelection();
+          const callBase = this.callBase.bind(this);
           if (isRecursiveSelection && !keyboardKeys.shift) {
             const key = this._dataController.getKeyByRowIndex(itemIndex);
             return this.selectedItemKeys(key, true, this.isRowSelected(key)).done(() => {
-              this.isRowSelected(key) && this.callBase(itemIndex, keyboardKeys, true);
+              this.isRowSelected(key) && callBase(itemIndex, keyboardKeys, true);
             });
           }
           return this.callBase.apply(this, arguments);

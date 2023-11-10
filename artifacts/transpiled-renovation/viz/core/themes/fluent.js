@@ -3,14 +3,9 @@
 exports.default = void 0;
 const themes = [{
   theme: {
-    name: 'fluent'
-  },
-  baseThemeName: 'material'
-}, {
-  theme: {
     name: 'fluent.blue.light'
   },
-  baseThemeName: 'fluent'
+  baseThemeName: 'material.blue.light'
 }, {
   theme: {
     name: 'fluent.blue.light.compact'

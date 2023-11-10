@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_view_data_generator_month.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,15 +34,15 @@ let ViewDataGeneratorMonth = /*#__PURE__*/function (_ViewDataGenerator) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   var _proto = ViewDataGeneratorMonth.prototype;
   _proto.getCellData = function getCellData(rowIndex, columnIndex, options, allDay) {
-    const data = _ViewDataGenerator.prototype.getCellData.call(this, rowIndex, columnIndex, options, false);
-    const {
-      startDate
-    } = data;
     const {
       indicatorTime,
       timeZoneCalculator,
       intervalCount
     } = options;
+    const data = _ViewDataGenerator.prototype.getCellData.call(this, rowIndex, columnIndex, options, false);
+    const {
+      startDate
+    } = data;
     data.today = this.isCurrentDate(startDate, indicatorTime, timeZoneCalculator);
     data.otherMonth = this.isOtherMonth(startDate, this._minVisibleDate, this._maxVisibleDate);
     data.firstDayOfMonth = (0, _month.isFirstCellInMonthWithIntervalCount)(startDate, intervalCount);

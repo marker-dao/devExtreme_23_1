@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/date_range_box/ui.multiselect_date_box.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,6 +15,7 @@ var _rangeCalendar = _interopRequireDefault(require("./strategy/rangeCalendar"))
 var _utils = require("../../events/utils");
 var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
 var _uiDate_range = require("./ui.date_range.utils");
+var _size = require("../../core/utils/size");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -170,6 +171,17 @@ let MultiselectDateBox = /*#__PURE__*/function (_DateBox) {
     const $dateRangeBox = this._strategy.dateRangeBox.$element();
     const isTargetOutOfDateRangeBox = (0, _renderer.default)(target).closest($dateRangeBox).length === 0;
     return _DateBox.prototype._isTargetOutOfComponent.call(this, target) && isTargetOutOfDateRangeBox;
+  };
+  _proto._updateLabelWidth = function _updateLabelWidth() {
+    const $beforeButtonsContainer = this._strategy.dateRangeBox._$beforeButtonsContainer;
+    const {
+      labelMode
+    } = this.option();
+    if (labelMode === 'outside' && $beforeButtonsContainer && this._isStartDateBox()) {
+      this._label._updateLabelTransform((0, _size.getWidth)($beforeButtonsContainer));
+      return;
+    }
+    _DateBox.prototype._updateLabelWidth.call(this);
   };
   _proto._optionChanged = function _optionChanged(args) {
     switch (args.name) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_horizontal_month_line.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,11 +15,12 @@ var MINUTES_IN_HOUR = 60;
 var MILLISECONDS_IN_MINUTE = 60000;
 var ZERO_APPOINTMENT_DURATION_IN_DAYS = 1;
 class HorizontalMonthLineRenderingStrategy extends HorizontalAppointmentsStrategy {
-  calculateAppointmentWidth(appointment, position) {
-    var startDate = dateUtils.trimTime(position.info.appointment.startDate);
+  calculateAppointmentWidth(_, position) {
     var {
+      startDate: startDateWithTime,
       normalizedEndDate
     } = position.info.appointment;
+    var startDate = dateUtils.trimTime(startDateWithTime);
     var cellWidth = this.cellWidth || this.getAppointmentMinSize();
     var duration = Math.ceil(this._getDurationInDays(startDate, normalizedEndDate));
     var width = this.cropAppointmentWidth(duration * cellWidth, cellWidth);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/rendering_strategies/m_strategy_horizontal_month_line.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,11 +29,12 @@ let HorizontalMonthLineRenderingStrategy = /*#__PURE__*/function (_HorizontalApp
     return _HorizontalAppointmen.apply(this, arguments) || this;
   }
   var _proto = HorizontalMonthLineRenderingStrategy.prototype;
-  _proto.calculateAppointmentWidth = function calculateAppointmentWidth(appointment, position) {
-    const startDate = _date.default.trimTime(position.info.appointment.startDate);
+  _proto.calculateAppointmentWidth = function calculateAppointmentWidth(_, position) {
     const {
+      startDate: startDateWithTime,
       normalizedEndDate
     } = position.info.appointment;
+    const startDate = _date.default.trimTime(startDateWithTime);
     const cellWidth = this.cellWidth || this.getAppointmentMinSize();
     const duration = Math.ceil(this._getDurationInDays(startDate, normalizedEndDate));
     let width = this.cropAppointmentWidth(duration * cellWidth, cellWidth);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_manager/ui.file_manager.toolbar.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,6 +13,7 @@ import { isDefined, isString } from '../../core/utils/type';
 import { ensureDefined } from '../../core/utils/common';
 import messageLocalization from '../../localization/message';
 import { extendAttributes } from './ui.file_manager.common';
+import { isCompact, isFluent, isMaterial } from '../themes';
 import Widget from '../widget/ui.widget';
 import Toolbar from '../toolbar';
 import '../drop_down_button';
@@ -341,6 +342,14 @@ class FileManagerToolbar extends Widget {
       };
     });
     var selectedIndex = this.option('itemViewMode') === 'thumbnails' ? 1 : 0;
+    var dropDownOptions = {
+      container: this._$viewSwitcherPopup
+    };
+    if (isMaterial()) {
+      dropDownOptions.width = isCompact() ? 28 : 36;
+    } else if (isFluent()) {
+      dropDownOptions.width = isCompact() ? 34 : 40;
+    }
     return {
       cssClass: FILE_MANAGER_TOOLBAR_VIEWMODE_ITEM_CLASS,
       widget: 'dxDropDownButton',
@@ -353,9 +362,7 @@ class FileManagerToolbar extends Widget {
         stylingMode: 'text',
         showArrowIcon: false,
         useSelectMode: true,
-        dropDownOptions: {
-          container: this._$viewSwitcherPopup
-        },
+        dropDownOptions,
         onItemClick: e => this._executeCommand(e.itemData.name)
       }
     };

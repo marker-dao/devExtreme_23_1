@@ -85,7 +85,10 @@ let HorizontalMonthRenderingStrategy = /*#__PURE__*/function (_HorizontalMonthLi
     const weekWidth = Math.round(this.getGroupWidth(settings.groupIndex));
     const [firstChunkWidth, fullChunksWidth, withoutFirstChunkWidth] = this._getChunkWidths(geometry, settings, weekWidth);
     const leftPosition = this._getLeftPosition(settings);
-    const hasTailChunk = this.endViewDate > settings.info.appointment.endDate;
+    const {
+      endDate
+    } = settings.info.appointment;
+    const hasTailChunk = this.endViewDate > endDate;
     const chunkCount = this._getChunkCount(fullChunksWidth, firstChunkWidth, weekWidth, settings);
     const [tailChunkWidth, tailChunkLeftPosition] = this._getTailChunkSettings(withoutFirstChunkWidth, weekWidth, leftPosition);
     for (let chunkIndex = 1; chunkIndex < chunkCount; chunkIndex++) {

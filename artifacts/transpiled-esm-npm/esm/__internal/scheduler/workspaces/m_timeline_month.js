@@ -53,6 +53,9 @@ class SchedulerTimelineMonth extends SchedulerTimeline {
       getDateForHeaderText: (_, date) => date
     });
   }
+  keepOriginalHours() {
+    return true;
+  }
 }
 registerComponent('dxSchedulerTimelineMonth', SchedulerTimelineMonth);
 export default SchedulerTimelineMonth;

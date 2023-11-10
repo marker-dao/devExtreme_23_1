@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_subscribes.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -270,6 +270,9 @@ var subscribes = {
   },
   getStartDayHour() {
     return this._workSpace.option('startDayHour') || this.option('startDayHour');
+  },
+  getViewOffsetMs() {
+    return this.getViewOffsetMs();
   },
   isAdaptive() {
     return this.option('adaptivityEnabled');

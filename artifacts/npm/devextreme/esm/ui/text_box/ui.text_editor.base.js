@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/text_box/ui.text_editor.base.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -390,13 +390,24 @@ var TextEditorBase = Editor.inherit({
     var {
       label,
       labelMode,
-      labelMark
+      labelMark,
+      rtlEnabled
     } = this.option();
     var labelConfig = {
+      onClickHandler: () => {
+        this.focus();
+      },
+      onHoverHandler: e => {
+        e.stopPropagation();
+      },
+      onActiveHandler: e => {
+        e.stopPropagation();
+      },
       $editor: this.$element(),
       text: label,
       mark: labelMark,
       mode: labelMode,
+      rtlEnabled,
       containsButtonsBefore: !!this._$beforeButtonsContainer,
       containerWidth: this._getLabelContainerWidth(),
       beforeWidth: this._getLabelBeforeWidth()

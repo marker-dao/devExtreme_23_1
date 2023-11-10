@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/views/m_rows_view.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -819,7 +819,7 @@ let RowsView = /*#__PURE__*/function (_ColumnsView) {
     that._scrollTop = 0;
     that._scrollLeft = -1;
     that._scrollRight = 0;
-    that._hasHeight = false;
+    that._hasHeight = undefined;
     that._contentChanges = [];
     dataController.loadingChanged.add((isLoading, messageText) => {
       that.setLoading(isLoading, messageText);

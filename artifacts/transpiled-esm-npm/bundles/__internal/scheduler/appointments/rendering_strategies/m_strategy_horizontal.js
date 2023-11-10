@@ -28,12 +28,8 @@ let HorizontalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) 
     const cellWidth = this.cellWidth || this.getAppointmentMinSize();
     const allDay = _m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointment);
     const {
-      startDate
-    } = position.info.appointment;
-    const {
-      endDate
-    } = position.info.appointment;
-    const {
+      startDate,
+      endDate,
       normalizedEndDate
     } = position.info.appointment;
     let duration = this.getAppointmentDurationInMs(startDate, normalizedEndDate, allDay);

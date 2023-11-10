@@ -42,12 +42,6 @@ export var EditFormProps = {
 import { convertRulesToOptions } from '../../../../../core/options/utils';
 var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => normalizeProps(createComponentVNode(2, TemplateProp, _extends({}, props))) : TemplateProp);
 export class EditForm extends InfernoComponent {
-  get formContextValue() {
-    if (this.context[FormContext.id]) {
-      return this.context[FormContext.id];
-    }
-    return FormContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.__getterCache = {};
@@ -62,6 +56,12 @@ export class EditForm extends InfernoComponent {
     this.allDayChange = this.allDayChange.bind(this);
     this.repeatChange = this.repeatChange.bind(this);
     this.descriptionChange = this.descriptionChange.bind(this);
+  }
+  get formContextValue() {
+    if (this.context[FormContext.id]) {
+      return this.context[FormContext.id];
+    }
+    return FormContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.updateState, [])];

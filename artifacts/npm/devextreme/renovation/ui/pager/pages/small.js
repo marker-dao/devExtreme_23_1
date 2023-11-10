@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/pager/pages/small.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -49,7 +49,7 @@ const viewFunction = _ref => {
   return (0, _inferno.createVNode)(1, "div", LIGHT_PAGES_CLASS, [(0, _inferno.createComponentVNode)(2, _number_box.NumberBox, {
     "className": PAGER_PAGE_INDEX_CLASS,
     "min": 1,
-    "max": pageCount,
+    "max": Math.max(pageCount, value),
     "width": width,
     "value": value,
     "valueChange": valueChange,

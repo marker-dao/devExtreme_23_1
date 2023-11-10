@@ -36,6 +36,7 @@ export class AppointmentDataProvider {
       dataAccessors: this.dataAccessors,
       startDayHour: this.options.startDayHour,
       endDayHour: this.options.endDayHour,
+      viewOffset: this.options.viewOffset,
       showAllDayPanel: this.options.showAllDayPanel,
       timeZoneCalculator: this.options.timeZoneCalculator,
       //

@@ -270,6 +270,9 @@ const subscribes = {
   getStartDayHour() {
     return this._workSpace.option('startDayHour') || this.option('startDayHour');
   },
+  getViewOffsetMs() {
+    return this.getViewOffsetMs();
+  },
   isAdaptive() {
     return this.option('adaptivityEnabled');
   },

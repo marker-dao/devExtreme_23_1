@@ -7,11 +7,12 @@ var MINUTES_IN_HOUR = 60;
 var MILLISECONDS_IN_MINUTE = 60000;
 var ZERO_APPOINTMENT_DURATION_IN_DAYS = 1;
 class HorizontalMonthLineRenderingStrategy extends HorizontalAppointmentsStrategy {
-  calculateAppointmentWidth(appointment, position) {
-    var startDate = dateUtils.trimTime(position.info.appointment.startDate);
+  calculateAppointmentWidth(_, position) {
     var {
+      startDate: startDateWithTime,
       normalizedEndDate
     } = position.info.appointment;
+    var startDate = dateUtils.trimTime(startDateWithTime);
     var cellWidth = this.cellWidth || this.getAppointmentMinSize();
     var duration = Math.ceil(this._getDurationInDays(startDate, normalizedEndDate));
     var width = this.cropAppointmentWidth(duration * cellWidth, cellWidth);

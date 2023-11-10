@@ -4,38 +4,29 @@ exports.getAppointmentTakesAllDay = void 0;
 var _type = require("../../../../../core/utils/type");
 var _date = _interopRequireDefault(require("../../../../../core/utils/date"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-const getAppointmentDurationInHours = (startDate, endDate) => (endDate.getTime() - startDate.getTime()) / _date.default.dateToMilliseconds('hour');
-const appointmentHasShortDayDuration = (startDate, endDate, viewStartDayHour, viewEndDayHour) => {
-  const appointmentDurationInHours = getAppointmentDurationInHours(startDate, endDate);
-  const viewDurationInHours = viewEndDayHour - viewStartDayHour;
-  const startDateHours = startDate.getHours();
-  const endDateHours = endDate.getHours();
-  return appointmentDurationInHours >= viewDurationInHours && startDateHours === viewStartDayHour && endDateHours === viewEndDayHour;
-};
-const getAppointmentTakesAllDay = (appointmentAdapter, viewStartDayHour, viewEndDayHour, allDayPanelMode) => {
-  const hasAllDay = () => appointmentAdapter.allDay;
+const toMs = _date.default.dateToMilliseconds;
+const DAY_HOURS = 24;
+const getDurationInHours = (startDate, endDate) => Math.floor((endDate.getTime() - startDate.getTime()) / toMs('hour'));
+const getAppointmentTakesAllDay = (appointmentAdapter, allDayPanelMode) => {
+  const {
+    allDay,
+    endDate,
+    startDate
+  } = appointmentAdapter;
   switch (allDayPanelMode) {
     case 'hidden':
       return false;
     case 'allDay':
-      return hasAllDay();
+      return allDay;
     case 'all':
     default:
-      {
-        if (hasAllDay()) {
-          return true;
-        }
-        const {
-          endDate,
-          startDate
-        } = appointmentAdapter;
-        if (!(0, _type.isDefined)(endDate)) {
-          return false;
-        }
-        const appointmentDurationInHours = getAppointmentDurationInHours(startDate, endDate);
-        const dayDuration = 24;
-        return appointmentDurationInHours >= dayDuration || appointmentHasShortDayDuration(startDate, endDate, viewStartDayHour, viewEndDayHour);
+      if (allDay) {
+        return true;
       }
+      if (!(0, _type.isDefined)(endDate)) {
+        return false;
+      }
+      return getDurationInHours(startDate, endDate) >= DAY_HOURS;
   }
 };
 exports.getAppointmentTakesAllDay = getAppointmentTakesAllDay;

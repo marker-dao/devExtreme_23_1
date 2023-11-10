@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.AppointmentViewModelGenerator = void 0;
 var _utils = require("../../../renovation/ui/scheduler/appointment/utils");
+var _date = require("../../core/utils/date");
 var _m_strategy_agenda = _interopRequireDefault(require("./rendering_strategies/m_strategy_agenda"));
 var _m_strategy_horizontal = _interopRequireDefault(require("./rendering_strategies/m_strategy_horizontal"));
 var _m_strategy_horizontal_month = _interopRequireDefault(require("./rendering_strategies/m_strategy_horizontal_month"));
@@ -30,13 +31,15 @@ let AppointmentViewModelGenerator = /*#__PURE__*/function () {
   };
   _proto.generate = function generate(filteredItems, options) {
     const {
-      isRenovatedAppointments
+      isRenovatedAppointments,
+      viewOffset
     } = options;
     const appointments = filteredItems ? filteredItems.slice() : [];
     this.initRenderingStrategy(options);
     const renderingStrategy = this.getRenderingStrategy();
     const positionMap = renderingStrategy.createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
-    const viewModel = this.postProcess(appointments, positionMap, isRenovatedAppointments);
+    const shiftedViewModel = this.postProcess(appointments, positionMap, isRenovatedAppointments);
+    const viewModel = this.unshiftViewModelAppointmentsByViewOffset(shiftedViewModel, viewOffset);
     if (isRenovatedAppointments) {
       // TODO this structure should be by default after remove old render
       return this.makeRenovatedViewModels(viewModel, options.supportAllDayRow, options.isVerticalGroupOrientation);
@@ -175,6 +178,29 @@ let AppointmentViewModelGenerator = /*#__PURE__*/function () {
   };
   _proto.getRenderingStrategy = function getRenderingStrategy() {
     return this.renderingStrategy;
+  }
+  // NOTE: Unfortunately, we cannot implement immutable behavior here
+  // because in this case it will break the refs (keys) of dataSource's appointments,
+  // and it will break appointment updates :(
+  ;
+  _proto.unshiftViewModelAppointmentsByViewOffset = function unshiftViewModelAppointmentsByViewOffset(viewModel, viewOffset) {
+    var _a, _b;
+    const processedAppointments = new Set();
+    // eslint-disable-next-line no-restricted-syntax
+    for (const model of viewModel) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const setting of (_a = model.settings) !== null && _a !== void 0 ? _a : []) {
+        // eslint-disable-next-line prefer-destructuring
+        const appointment = (_b = setting === null || setting === void 0 ? void 0 : setting.info) === null || _b === void 0 ? void 0 : _b.appointment;
+        if (appointment && !processedAppointments.has(appointment)) {
+          appointment.startDate = _date.dateUtilsTs.addOffsets(appointment.startDate, [viewOffset]);
+          appointment.endDate = _date.dateUtilsTs.addOffsets(appointment.endDate, [viewOffset]);
+          appointment.normalizedEndDate = _date.dateUtilsTs.addOffsets(appointment.normalizedEndDate, [viewOffset]);
+          processedAppointments.add(appointment);
+        }
+      }
+    }
+    return viewModel;
   };
   return AppointmentViewModelGenerator;
 }();

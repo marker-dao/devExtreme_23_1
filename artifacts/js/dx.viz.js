@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -5226,6 +5226,7 @@ const getExtremeDates = () => {
   endDate.setFullYear(nowDate.getFullYear(), 6, 1);
   return [startDate, endDate];
 };
+// TODO Vinogradov refactoring: Change to date utils.
 const setOffsetsToDate = (targetDate, offsetsArray) => {
   const newDateMs = offsetsArray.reduce((result, offset) => result + offset, targetDate.getTime());
   return new Date(newDateMs);
@@ -18000,19 +18001,19 @@ var _default = (0, _error.default)({
   /**
   * @name ErrorsCore.W0019
   */
-  W0019: 'DevExtreme: Valid license key not found.\n\n' + 'If you are using a trial version, you must uninstall all copies of DevExtreme once your 30 days trial period expires. For licensing-related information, please refer to the DevExtreme End User License Agreement: https://js.devexpress.com/EULAs/DevExtremeComplete/.\n\n' + 'To continue using DevExtreme in a project, you must purchase a license. For pricing/licensing options, please visit: https://js.devexpress.com/Buy/.\n\n' + 'If you have licensing-related questions or need help with a purchase, please email clientservices@devexpress.com. We will be happy to follow-up.\n\n',
+  W0019: 'DevExtreme: Unable to Locate a Valid License Key\n\n' + 'If you are using a 30-day trial version of DevExtreme, you must uninstall all copies of DevExtreme once your 30-day trial period expires. For terms and conditions that govern use of DevExtreme UI components/libraries, please refer to the DevExtreme End User License Agreement: https://js.devexpress.com/EULAs/DevExtremeComplete.\n\n' + 'To use DevExtreme in a commercial project, you must purchase a license. For pricing/licensing options, please visit: https://js.devexpress.com/Buy.\n\n' + 'If you have licensing-related questions or need help with a purchase, please email clientservices@devexpress.com.\n\n',
   /**
    * @name ErrorsCore.W0020
    */
-  W0020: 'DevExtreme: The license key is expired.\n\n' + 'A mismatch exists between license key and DevExtreme version.\n\n' + 'To proceed, you can:\n' + ' • use a version of DevExtreme linked to your license key https://www.devexpress.com/ClientCenter/DownloadManager/\n' + ' • renew your DevExpress Subscription: https://www.devexpress.com/buy/renew/ (once you renew your subscription, you will be entitled to product updates and support service)\n\n' + 'If you have licensing-related questions or need help with a renewal, please email clientservices@devexpress.com. We will be happy to follow-up.\n\n',
+  W0020: 'DevExtreme: License Key Has Expired.\n\n' + 'A mismatch exists between the license key used and the DevExtreme version referenced in this project.\n\n' + 'To proceed, you can:\n' + '• use a version of DevExtreme linked to your license key: https://www.devexpress.com/ClientCenter/DownloadManager\n' + '• renew your DevExpress Subscription: https://www.devexpress.com/buy/renew (once you renew your subscription, you will be entitled to product updates and support service as defined in the DevExtreme End User License Agreement)\n\n' + 'If you have licensing-related questions or need help with a renewal, please email clientservices@devexpress.com.\n\n',
   /**
    * @name ErrorsCore.W0021
    */
-  W0021: 'DevExtreme: License key verification failed.\n\n' + 'Make certain to specify a correct key in the GlobalConfig. If you continue to encounter an error, please visit https://www.devexpress.com/ClientCenter/DownloadManager/ to obtain a valid key.\n\n' + 'If you have a valid license and this problem persists, please submit a support ticket via the DevExpress Support Center. We will be happy to follow-up: https://supportcenter.devexpress.com/ticket/create.\n\n',
+  W0021: 'DevExtreme: License Key Verification Has Failed.\n\n' + 'To verify your DevExtreme license, make certain to specify a correct key in the GlobalConfig. If you continue to encounter this error, please visit https://www.devexpress.com/ClientCenter/DownloadManager to obtain a valid license key.\n\n' + 'If you have a valid license and this problem persists, please submit a support ticket via the DevExpress Support Center. We will be happy to follow-up: https://supportcenter.devexpress.com/ticket/create.\n\n',
   /**
    * @name ErrorsCore.W0022
    */
-  W0022: 'DevExtreme: This version is a pre-release, and it is not suitable for commercial use.\n\n' + 'It may contain deficiencies and as such, should not be considered for use or integrated in any mission critical application.'
+  W0022: 'DevExtreme: Pre-release software. Not suitable for commercial use.\n\n' + 'Pre-release software may contain deficiencies and as such, should not be considered for use or integrated in any mission critical application.\n\n'
 });
 exports["default"] = _default;
 module.exports = exports.default;
@@ -21089,6 +21090,7 @@ var _iterator = __webpack_require__(95479);
 var _inflector = __webpack_require__(78008);
 var _index = __webpack_require__(25050);
 /* globals Intl */
+// TODO refactoring: Review all date utils functions and move useful to __internal/core/utils/date.ts
 
 const DAYS_IN_WEEK = 7;
 const THURSDAY_WEEK_NUMBER = 4;
@@ -24508,7 +24510,7 @@ exports.getNavigator = getNavigator;
 
 
 exports.version = void 0;
-const version = '23.2.0';
+const version = '23.2.2';
 exports.version = version;
 
 /***/ }),
@@ -79454,14 +79456,9 @@ SeriesFamily.prototype = {
 exports["default"] = void 0;
 const themes = [{
   theme: {
-    name: 'fluent'
-  },
-  baseThemeName: 'material'
-}, {
-  theme: {
     name: 'fluent.blue.light'
   },
-  baseThemeName: 'fluent'
+  baseThemeName: 'material.blue.light'
 }, {
   theme: {
     name: 'fluent.blue.light.compact'

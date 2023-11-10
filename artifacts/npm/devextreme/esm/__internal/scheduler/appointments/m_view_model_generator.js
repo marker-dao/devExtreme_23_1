@@ -1,13 +1,14 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/m_view_model_generator.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { getAppointmentKey } from '../../../renovation/ui/scheduler/appointment/utils';
+import { dateUtilsTs } from '../../core/utils/date';
 import AgendaAppointmentsStrategy from './rendering_strategies/m_strategy_agenda';
 import HorizontalAppointmentsStrategy from './rendering_strategies/m_strategy_horizontal';
 import HorizontalMonthAppointmentsStrategy from './rendering_strategies/m_strategy_horizontal_month';
@@ -29,13 +30,15 @@ export class AppointmentViewModelGenerator {
   }
   generate(filteredItems, options) {
     var {
-      isRenovatedAppointments
+      isRenovatedAppointments,
+      viewOffset
     } = options;
     var appointments = filteredItems ? filteredItems.slice() : [];
     this.initRenderingStrategy(options);
     var renderingStrategy = this.getRenderingStrategy();
     var positionMap = renderingStrategy.createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
-    var viewModel = this.postProcess(appointments, positionMap, isRenovatedAppointments);
+    var shiftedViewModel = this.postProcess(appointments, positionMap, isRenovatedAppointments);
+    var viewModel = this.unshiftViewModelAppointmentsByViewOffset(shiftedViewModel, viewOffset);
     if (isRenovatedAppointments) {
       // TODO this structure should be by default after remove old render
       return this.makeRenovatedViewModels(viewModel, options.supportAllDayRow, options.isVerticalGroupOrientation);
@@ -174,5 +177,27 @@ export class AppointmentViewModelGenerator {
   }
   getRenderingStrategy() {
     return this.renderingStrategy;
+  }
+  // NOTE: Unfortunately, we cannot implement immutable behavior here
+  // because in this case it will break the refs (keys) of dataSource's appointments,
+  // and it will break appointment updates :(
+  unshiftViewModelAppointmentsByViewOffset(viewModel, viewOffset) {
+    var _a, _b;
+    var processedAppointments = new Set();
+    // eslint-disable-next-line no-restricted-syntax
+    for (var model of viewModel) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (var setting of (_a = model.settings) !== null && _a !== void 0 ? _a : []) {
+        // eslint-disable-next-line prefer-destructuring
+        var appointment = (_b = setting === null || setting === void 0 ? void 0 : setting.info) === null || _b === void 0 ? void 0 : _b.appointment;
+        if (appointment && !processedAppointments.has(appointment)) {
+          appointment.startDate = dateUtilsTs.addOffsets(appointment.startDate, [viewOffset]);
+          appointment.endDate = dateUtilsTs.addOffsets(appointment.endDate, [viewOffset]);
+          appointment.normalizedEndDate = dateUtilsTs.addOffsets(appointment.normalizedEndDate, [viewOffset]);
+          processedAppointments.add(appointment);
+        }
+      }
+    }
+    return viewModel;
   }
 }

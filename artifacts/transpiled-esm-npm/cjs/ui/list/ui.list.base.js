@@ -639,9 +639,7 @@ const ListBase = _uiCollection_widget.default.inherit({
       container: (0, _element.getPublicElement)($groupHeaderElement)
     };
     this._createItemByTemplate(groupTemplate, renderArgs);
-    if ((0, _themes.isMaterialBased)()) {
-      (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
-    }
+    (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
     this._renderingGroupIndex = index;
     const $groupBody = (0, _renderer.default)('<div>').addClass(LIST_GROUP_BODY_CLASS).appendTo($groupElement);
     (0, _iterator.each)(groupItemsGetter(group) || [], function (itemIndex, item) {

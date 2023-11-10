@@ -286,6 +286,18 @@ var ListEdit = ListBase.inherit({
   */
   getItemByIndex(index) {
     return this._editStrategy.getItemDataByIndex(index);
+  },
+  deleteItem(itemElement) {
+    var editStrategy = this._editStrategy;
+    var deletingElementIndex = editStrategy.getNormalizedIndex(itemElement);
+    var focusedElement = this.option('focusedElement');
+    var focusedItemIndex = focusedElement ? editStrategy.getNormalizedIndex(focusedElement) : deletingElementIndex;
+    var isLastIndexFocused = focusedItemIndex === this._getLastItemIndex();
+    var nextFocusedItem = isLastIndexFocused || deletingElementIndex < focusedItemIndex ? focusedItemIndex - 1 : focusedItemIndex;
+    var promise = this.callBase(itemElement);
+    return promise.done(function () {
+      return this.focusListItem(nextFocusedItem);
+    });
   }
 });
 export default ListEdit;

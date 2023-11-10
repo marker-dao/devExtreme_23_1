@@ -1,10 +1,12 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { equalByValue } from '../../core/utils/common';
+import dateUtils from '../../core/utils/date';
 import { getAppointmentRenderingStrategyName } from '../../renovation/ui/scheduler/model/utils';
 import { getCellDuration } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { AppointmentViewModelGenerator } from './appointments/m_view_model_generator';
 import { getGroupCount } from './resources/m_utils';
 import { getAllDayHeight, getCellHeight, getCellWidth } from './workspaces/helpers/m_position_helper';
+var toMs = dateUtils.dateToMilliseconds;
 class AppointmentLayoutManager {
   constructor(instance) {
     this.instance = instance;
@@ -54,6 +56,7 @@ class AppointmentLayoutManager {
       rtlEnabled: this.instance.option('rtlEnabled'),
       startDayHour: this.instance._getCurrentViewOption('startDayHour'),
       endDayHour: this.instance._getCurrentViewOption('endDayHour'),
+      viewOffset: this.instance._getCurrentViewOption('offset') * toMs('minute'),
       maxAppointmentsPerCell: this.instance._getCurrentViewOption('maxAppointmentsPerCell'),
       currentDate: this.instance.option('currentDate'),
       isVirtualScrolling: this.instance.isVirtualScrolling(),

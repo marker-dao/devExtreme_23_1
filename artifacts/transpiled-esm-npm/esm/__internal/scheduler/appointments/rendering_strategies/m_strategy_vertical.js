@@ -50,11 +50,12 @@ class VerticalRenderingStrategy extends BaseAppointmentsStrategy {
     var config = this._calculateGeometryConfig(coordinates);
     return this._customizeCoordinates(coordinates, config.height, config.appointmentCountPerCell, config.offset);
   }
-  _getItemPosition(appointment) {
-    var allDay = this.isAllDay(appointment);
+  _getItemPosition(initialAppointment) {
+    var allDay = this.isAllDay(initialAppointment);
     if (allDay) {
-      return super._getItemPosition(appointment);
+      return super._getItemPosition(initialAppointment);
     }
+    var appointment = super.shiftAppointmentByViewOffset(initialAppointment);
     var adapter = createAppointmentAdapter(appointment, this.dataAccessors, this.timeZoneCalculator);
     var isRecurring = !!adapter.recurrenceRule;
     var appointmentStartDate = adapter.calculateStartDate('toGrid');
@@ -256,7 +257,7 @@ class VerticalRenderingStrategy extends BaseAppointmentsStrategy {
     return this.cellWidth;
   }
   isAllDay(appointmentData) {
-    return getAppointmentTakesAllDay(createAppointmentAdapter(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.startDayHour, this.endDayHour, this.allDayPanelMode);
+    return getAppointmentTakesAllDay(createAppointmentAdapter(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.allDayPanelMode);
   }
   _getAppointmentMaxWidth() {
     return this.cellWidth - this._getAppointmentDefaultOffset();
@@ -265,13 +266,15 @@ class VerticalRenderingStrategy extends BaseAppointmentsStrategy {
     if (!this.isAllDay(appointment)) {
       return 0;
     }
-    var startDate = dateUtils.trimTime(position.info.appointment.startDate);
     var {
+      startDate: startDateWithTime,
+      endDate,
       normalizedEndDate
     } = position.info.appointment;
+    var startDate = dateUtils.trimTime(startDateWithTime);
     var cellWidth = this.cellWidth || this.getAppointmentMinSize();
     var durationInHours = (normalizedEndDate.getTime() - startDate.getTime()) / toMs('hour');
-    var skippedHours = getSkippedHoursInRange(position.info.appointment.startDate, position.info.appointment.endDate, this.viewDataProvider);
+    var skippedHours = getSkippedHoursInRange(startDate, endDate, this.viewDataProvider);
     var width = Math.ceil((durationInHours - skippedHours) / 24) * cellWidth;
     width = this.cropAppointmentWidth(width, cellWidth);
     return width;
@@ -281,9 +284,7 @@ class VerticalRenderingStrategy extends BaseAppointmentsStrategy {
       return 0;
     }
     var {
-      startDate
-    } = position.info.appointment;
-    var {
+      startDate,
       normalizedEndDate
     } = position.info.appointment;
     var allDay = ExpressionUtils.getField(this.dataAccessors, 'allDay', appointment);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/grids/grid_core/editing/m_editing.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1803,6 +1803,7 @@ let EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
     return column.editCellTemplate || this._getDefaultEditorTemplate();
   };
   _proto.getColumnTemplate = function getColumnTemplate(options) {
+    var _a;
     const {
       column
     } = options;
@@ -1832,7 +1833,7 @@ let EditingControllerImpl = /*#__PURE__*/function (_modules$ViewControll) {
       }
       template = column.editCellTemplate || this._getDefaultEditorTemplate();
     } else if (column.command === 'detail' && options.rowType === 'detail' && isRowEditing) {
-      template = this === null || this === void 0 ? void 0 : this.getEditFormTemplate(options);
+      template = (_a = this) === null || _a === void 0 ? void 0 : _a.getEditFormTemplate(options);
     }
     return template;
   };

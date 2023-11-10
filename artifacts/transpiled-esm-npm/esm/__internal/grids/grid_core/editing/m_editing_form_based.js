@@ -259,7 +259,7 @@ var editingControllerExtender = Base => class FormBasedEditingControllerExtender
     return cellOptions;
   }
   getFormEditorTemplate(cellOptions, item) {
-    var column = this.component.columnOption(item.dataField);
+    var column = this.component.columnOption(item.name || item.dataField);
     return (options, container) => {
       var _a, _b;
       var $container = $(container);

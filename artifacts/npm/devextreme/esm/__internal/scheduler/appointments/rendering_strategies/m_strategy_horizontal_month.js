@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_horizontal_month.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -82,7 +82,10 @@ class HorizontalMonthRenderingStrategy extends HorizontalMonthLineRenderingStrat
     var weekWidth = Math.round(this.getGroupWidth(settings.groupIndex));
     var [firstChunkWidth, fullChunksWidth, withoutFirstChunkWidth] = this._getChunkWidths(geometry, settings, weekWidth);
     var leftPosition = this._getLeftPosition(settings);
-    var hasTailChunk = this.endViewDate > settings.info.appointment.endDate;
+    var {
+      endDate
+    } = settings.info.appointment;
+    var hasTailChunk = this.endViewDate > endDate;
     var chunkCount = this._getChunkCount(fullChunksWidth, firstChunkWidth, weekWidth, settings);
     var [tailChunkWidth, tailChunkLeftPosition] = this._getTailChunkSettings(withoutFirstChunkWidth, weekWidth, leftPosition);
     for (var chunkIndex = 1; chunkIndex < chunkCount; chunkIndex++) {

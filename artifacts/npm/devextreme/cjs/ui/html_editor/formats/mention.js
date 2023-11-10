@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/html_editor/formats/mention.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,8 +21,11 @@ if (_devextremeQuill.default) {
   const MENTION_CLASS = 'dx-mention';
   Mention = /*#__PURE__*/function (_Embed) {
     _inheritsLoose(Mention, _Embed);
-    function Mention() {
-      return _Embed.apply(this, arguments) || this;
+    function Mention(scroll, node) {
+      var _this;
+      _this = _Embed.call(this, scroll, node) || this;
+      _this.renderContent(_this.contentNode, Mention.value(node));
+      return _this;
     }
     Mention.create = function create(data) {
       const node = _Embed.create.call(this);
@@ -30,7 +33,6 @@ if (_devextremeQuill.default) {
       node.dataset.marker = data.marker;
       node.dataset.mentionValue = data.value;
       node.dataset.id = data.id;
-      this.renderContent(node, data);
       return node;
     };
     Mention.value = function value(node) {
@@ -40,8 +42,9 @@ if (_devextremeQuill.default) {
         value: node.dataset.mentionValue
       };
     };
-    Mention.renderContent = function renderContent(node, data) {
-      const template = this._templatesStorage.get({
+    var _proto = Mention.prototype;
+    _proto.renderContent = function renderContent(node, data) {
+      const template = Mention._templatesStorage.get({
         editorKey: data.keyInTemplateStorage,
         marker: data.marker
       });
@@ -54,7 +57,7 @@ if (_devextremeQuill.default) {
         this.baseContentRender(node, data);
       }
     };
-    Mention.baseContentRender = function baseContentRender(node, data) {
+    _proto.baseContentRender = function baseContentRender(node, data) {
       const $marker = (0, _renderer.default)('<span>').text(data.marker);
       (0, _renderer.default)(node).append($marker).append(data.value);
     };

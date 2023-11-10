@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/appointment_edit_form/edit_form/layout.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,12 +50,6 @@ export var EditFormProps = {
 import { convertRulesToOptions } from '../../../../../core/options/utils';
 var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? props => normalizeProps(createComponentVNode(2, TemplateProp, _extends({}, props))) : TemplateProp);
 export class EditForm extends InfernoComponent {
-  get formContextValue() {
-    if (this.context[FormContext.id]) {
-      return this.context[FormContext.id];
-    }
-    return FormContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.__getterCache = {};
@@ -70,6 +64,12 @@ export class EditForm extends InfernoComponent {
     this.allDayChange = this.allDayChange.bind(this);
     this.repeatChange = this.repeatChange.bind(this);
     this.descriptionChange = this.descriptionChange.bind(this);
+  }
+  get formContextValue() {
+    if (this.context[FormContext.id]) {
+      return this.context[FormContext.id];
+    }
+    return FormContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.updateState, [])];

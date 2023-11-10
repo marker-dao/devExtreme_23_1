@@ -10,6 +10,8 @@ var _type = require("../../../../core/utils/type");
 var _getAppointmentTakesAllDay = require("../../../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay");
 var _utils = _interopRequireDefault(require("../../../../ui/scheduler/utils.timeZone"));
 var _themes = require("../../../../ui/themes");
+var _date2 = require("../../../core/utils/date");
+var _m_expression_utils = require("../../../scheduler/m_expression_utils");
 var _m_appointment_adapter = require("../../m_appointment_adapter");
 var _m_settings_generator = require("../m_settings_generator");
 var _m_appointments_positioning_strategy_adaptive = _interopRequireDefault(require("./m_appointments_positioning_strategy_adaptive"));
@@ -102,7 +104,8 @@ let BaseRenderingStrategy = /*#__PURE__*/function () {
   _proto._getAppointmentMaxWidth = function _getAppointmentMaxWidth() {
     return this.cellWidth;
   };
-  _proto._getItemPosition = function _getItemPosition(appointment) {
+  _proto._getItemPosition = function _getItemPosition(initialAppointment) {
+    const appointment = this.shiftAppointmentByViewOffset(initialAppointment);
     const position = this.generateAppointmentSettings(appointment);
     const allDay = this.isAllDay(appointment);
     let result = [];
@@ -171,7 +174,7 @@ let BaseRenderingStrategy = /*#__PURE__*/function () {
   };
   _proto.isAppointmentTakesAllDay = function isAppointmentTakesAllDay(rawAppointment) {
     const adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
-    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(adapter, this.viewStartDayHour, this.viewEndDayHour, this.allDayPanelMode);
+    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)(adapter, this.allDayPanelMode);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ;
@@ -655,6 +658,21 @@ let BaseRenderingStrategy = /*#__PURE__*/function () {
       left: 0,
       cellPosition: 0
     };
+  };
+  _proto.shiftAppointmentByViewOffset = function shiftAppointmentByViewOffset(appointment) {
+    const {
+      viewOffset
+    } = this.options;
+    const startDateField = this.dataAccessors.expr.startDateExpr;
+    const endDateField = this.dataAccessors.expr.endDateExpr;
+    let startDate = new Date(_m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'startDate', appointment));
+    startDate = _date2.dateUtilsTs.addOffsets(startDate, [-viewOffset]);
+    let endDate = new Date(_m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'endDate', appointment));
+    endDate = _date2.dateUtilsTs.addOffsets(endDate, [-viewOffset]);
+    return _extends(_extends({}, appointment), {
+      [startDateField]: startDate,
+      [endDateField]: endDate
+    });
   };
   _createClass(BaseRenderingStrategy, [{
     key: "isAdaptive",

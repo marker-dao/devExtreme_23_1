@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/data_grid/grouping/m_grouping_collapsed.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -482,6 +482,8 @@ export var GroupingHelper = GroupingHelperCore.inherit(function () {
         that.updateTotalItemsCount(options);
         if (!options.remoteOperations.paging) {
           that._updatePagingOptions(options);
+          options.lastLoadOptions.skips = options.skips;
+          options.lastLoadOptions.takes = options.takes;
         }
         callBase(options);
         if (!options.remoteOperations.paging) {

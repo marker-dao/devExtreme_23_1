@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.DateHeaderDataGenerator = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
+var _date2 = require("../../../core/utils/date");
+var _m_constants = require("../../../scheduler/m_constants");
 var _m_utils = require("../../resources/m_utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -44,7 +46,8 @@ let DateHeaderDataGenerator = /*#__PURE__*/function () {
       endDayHour,
       hoursInterval,
       isHorizontalGrouping,
-      intervalCount
+      intervalCount,
+      viewOffset
     } = options;
     const cellCountInDay = this._viewDataGenerator.getCellCountInDay(startDayHour, endDayHour, hoursInterval);
     const horizontalGroupCount = (0, _base.getHorizontalGroupCount)(groups, groupOrientation);
@@ -57,9 +60,10 @@ let DateHeaderDataGenerator = /*#__PURE__*/function () {
     const weekDaysRow = [];
     for (let dayIndex = 0; dayIndex < daysInView; dayIndex += 1) {
       const cell = completeViewDataMap[index][dayIndex * colSpan];
+      const shiftedStartDate = _date2.dateUtilsTs.addOffsets(cell.startDate, [-viewOffset]);
       weekDaysRow.push(_extends(_extends({}, cell), {
         colSpan,
-        text: (0, _base.formatWeekdayAndDay)(cell.startDate),
+        text: (0, _base.formatWeekdayAndDay)(shiftedStartDate),
         isFirstGroupCell: false,
         isLastGroupCell: false
       }));
@@ -81,7 +85,8 @@ let DateHeaderDataGenerator = /*#__PURE__*/function () {
       hoursInterval,
       intervalCount,
       currentDate,
-      viewType
+      viewType,
+      viewOffset
     } = options;
     const horizontalGroupCount = (0, _base.getHorizontalGroupCount)(groups, groupOrientation);
     const index = completeViewDataMap[0][0].allDay ? 1 : 0;
@@ -97,6 +102,8 @@ let DateHeaderDataGenerator = /*#__PURE__*/function () {
     });
     const cellCountInDay = this._viewDataGenerator.getCellCountInDay(startDayHour, endDayHour, hoursInterval);
     const slicedByColumnsData = isGroupedByDate ? completeViewDataMap[index].filter((_, columnIndex) => columnIndex % horizontalGroupCount === 0) : completeViewDataMap[index];
+    // NOTE: Should leave dates as is when creating time row in timelines.
+    const shouldShiftDates = !(0, _base.isTimelineView)(viewType) || viewType === _m_constants.VIEWS.TIMELINE_MONTH;
     return slicedByColumnsData.map((_a, index) => {
       var {
           startDate,
@@ -105,7 +112,8 @@ let DateHeaderDataGenerator = /*#__PURE__*/function () {
           isLastGroupCell
         } = _a,
         restProps = __rest(_a, ["startDate", "endDate", "isFirstGroupCell", "isLastGroupCell"]);
-      const text = (0, _base.getHeaderCellText)(index % cellCountInGroupRow, startDate, headerCellTextFormat, getDateForHeaderText, {
+      const shiftedStartDate = shouldShiftDates ? _date2.dateUtilsTs.addOffsets(startDate, [-viewOffset]) : startDate;
+      const text = (0, _base.getHeaderCellText)(index % cellCountInGroupRow, shiftedStartDate, headerCellTextFormat, getDateForHeaderText, {
         interval,
         startViewDate,
         startDayHour,

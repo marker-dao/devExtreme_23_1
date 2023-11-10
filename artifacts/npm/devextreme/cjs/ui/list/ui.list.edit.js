@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/list/ui.list.edit.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -298,6 +298,18 @@ const ListEdit = _uiList.ListBase.inherit({
   */
   getItemByIndex(index) {
     return this._editStrategy.getItemDataByIndex(index);
+  },
+  deleteItem(itemElement) {
+    const editStrategy = this._editStrategy;
+    const deletingElementIndex = editStrategy.getNormalizedIndex(itemElement);
+    const focusedElement = this.option('focusedElement');
+    const focusedItemIndex = focusedElement ? editStrategy.getNormalizedIndex(focusedElement) : deletingElementIndex;
+    const isLastIndexFocused = focusedItemIndex === this._getLastItemIndex();
+    const nextFocusedItem = isLastIndexFocused || deletingElementIndex < focusedItemIndex ? focusedItemIndex - 1 : focusedItemIndex;
+    const promise = this.callBase(itemElement);
+    return promise.done(function () {
+      return this.focusListItem(nextFocusedItem);
+    });
   }
 });
 var _default = ListEdit;

@@ -9,10 +9,12 @@ import { getAppointmentTakesAllDay } from '../../../../renovation/ui/scheduler/a
 import { hasResourceValue } from '../../../../renovation/ui/scheduler/resources/hasResourceValue';
 import getDatesWithoutTime from '../../../../renovation/ui/scheduler/utils/filtering/getDatesWithoutTime';
 import { isDateAndTimeView as calculateIsDateAndTimeView, isTimelineView } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
+import { dateUtilsTs } from '../../../core/utils/date';
 import { createAppointmentAdapter } from '../../m_appointment_adapter';
 import { getRecurrenceProcessor } from '../../m_recurrence';
 import { getResourcesDataByGroups } from '../../resources/m_utils';
 import { _appointmentPartInInterval, compareDateWithEndDayHour, compareDateWithStartDayHour, getAppointmentTakesSeveralDays, getRecurrenceException } from './m_utils';
+// TODO Vinogradov refactoring: this module should be refactored :)
 var toMs = dateUtils.dateToMilliseconds;
 var FilterStrategies = {
   virtual: 'virtual',
@@ -77,20 +79,19 @@ export class AppointmentFilterBaseStrategy {
     this.setDataAccessors(this.dataAccessors);
   }
   filter(preparedItems) {
+    var [min, max] = this.dateRange;
     var {
-      dateRange
-    } = this;
-    var allDay;
-    if (!this.showAllDayPanel && this.supportAllDayRow) {
-      allDay = false;
-    }
+      viewOffset
+    } = this.options;
+    var allDay = !this.showAllDayPanel && this.supportAllDayRow ? false : undefined;
     return this.filterLoadedAppointments({
       startDayHour: this.viewStartDayHour,
       endDayHour: this.viewEndDayHour,
+      viewOffset,
       viewStartDayHour: this.viewStartDayHour,
       viewEndDayHour: this.viewEndDayHour,
-      min: dateRange[0],
-      max: dateRange[1],
+      min,
+      max,
       resources: this.loadedResources,
       allDay,
       supportMultiDayAppointments: isTimelineView(this.viewType),
@@ -103,7 +104,7 @@ export class AppointmentFilterBaseStrategy {
     var result = false;
     // @ts-expect-error
     each(adapters, (_, item) => {
-      if (getAppointmentTakesAllDay(item, this.viewStartDayHour, this.viewEndDayHour, this.allDayPanelMode)) {
+      if (getAppointmentTakesAllDay(item, this.allDayPanelMode)) {
         result = true;
         return false;
       }
@@ -113,12 +114,8 @@ export class AppointmentFilterBaseStrategy {
   setDataAccessors(dataAccessors) {
     this.dataAccessors = dataAccessors;
   }
-  _createAllDayAppointmentFilter(filterOptions) {
-    var {
-      viewStartDayHour,
-      viewEndDayHour
-    } = filterOptions;
-    return [[appointment => getAppointmentTakesAllDay(appointment, viewStartDayHour, viewEndDayHour, this.allDayPanelMode)]];
+  _createAllDayAppointmentFilter() {
+    return [[appointment => getAppointmentTakesAllDay(appointment, this.allDayPanelMode)]];
   }
   _createCombinedFilter(filterOptions) {
     var min = new Date(filterOptions.min);
@@ -126,6 +123,7 @@ export class AppointmentFilterBaseStrategy {
     var {
       startDayHour,
       endDayHour,
+      viewOffset,
       viewStartDayHour,
       viewEndDayHour,
       resources,
@@ -142,18 +140,18 @@ export class AppointmentFilterBaseStrategy {
         return false;
       }
       var {
-        startDate,
-        endDate,
+        allDay: isAllDay,
         hasRecurrenceRule
       } = appointment;
+      var startDate = dateUtilsTs.addOffsets(appointment.startDate, [-viewOffset]);
+      var endDate = dateUtilsTs.addOffsets(appointment.endDate, [-viewOffset]);
+      var appointmentTakesAllDay = getAppointmentTakesAllDay(appointment, this.allDayPanelMode);
       if (!hasRecurrenceRule) {
         if (!(endDate >= trimMin && startDate < trimMax || dateUtils.sameDate(endDate, trimMin) && dateUtils.sameDate(startDate, trimMin))) {
           return false;
         }
       }
-      var appointmentTakesAllDay = getAppointmentTakesAllDay(appointment, viewStartDayHour, viewEndDayHour, this.allDayPanelMode);
       var appointmentTakesSeveralDays = getAppointmentTakesSeveralDays(appointment);
-      var isAllDay = appointment.allDay;
       var isLongAppointment = appointmentTakesSeveralDays || appointmentTakesAllDay;
       if ((resources === null || resources === void 0 ? void 0 : resources.length) && !this._filterAppointmentByResources(appointment.rawAppointment, resources)) {
         return false;
@@ -175,17 +173,18 @@ export class AppointmentFilterBaseStrategy {
           return false;
         }
       }
-      if (isDefined(startDayHour) && (!useRecurrence || !filterOptions.isVirtualScrolling)) {
+      if (!isAllDay && isDefined(startDayHour) && (!useRecurrence || !filterOptions.isVirtualScrolling)) {
         if (!compareDateWithStartDayHour(startDate, endDate, startDayHour, appointmentTakesAllDay, appointmentTakesSeveralDays)) {
           return false;
         }
       }
-      if (isDefined(endDayHour)) {
+      if (!isAllDay && isDefined(endDayHour)) {
         if (!compareDateWithEndDayHour({
           startDate,
           endDate,
           startDayHour,
           endDayHour,
+          viewOffset,
           viewStartDayHour,
           viewEndDayHour,
           allDay: appointmentTakesAllDay,
@@ -263,13 +262,16 @@ export class AppointmentFilterBaseStrategy {
       result = appointmentEndDate > min && appointmentStartDate <= max;
     }
     if (result && recurrenceProcessor.isValidRecurrenceRule(recurrenceRule)) {
+      var {
+        viewOffset
+      } = this.options;
       result = recurrenceProcessor.hasRecurrence({
         rule: recurrenceRule,
         exception: recurrenceException,
         start: appointmentStartDate,
         end: appointmentEndDate,
-        min,
-        max,
+        min: dateUtilsTs.addOffsets(min, [viewOffset]),
+        max: dateUtilsTs.addOffsets(max, [viewOffset]),
         firstDayOfWeek,
         appointmentTimezoneOffset: this.timeZoneCalculator.getOriginStartDateOffsetInMs(appointmentStartDate, appointment.startDateTimeZone, false)
       });
@@ -289,8 +291,8 @@ export class AppointmentFilterBaseStrategy {
     var combinedFilter = this._createAppointmentFilter(filterOptions);
     return query(preparedItems).filter(combinedFilter).toArray();
   }
-  filterAllDayAppointments(filterOptions, preparedItems) {
-    var combinedFilter = this._createAllDayAppointmentFilter(filterOptions);
+  filterAllDayAppointments(preparedItems) {
+    var combinedFilter = this._createAllDayAppointmentFilter();
     return query(preparedItems).filter(combinedFilter).toArray().map(_ref3 => {
       var {
         rawAppointment
@@ -307,12 +309,16 @@ export class AppointmentFilterVirtualStrategy extends AppointmentFilterBaseStrat
     return this.options.resources;
   }
   filter(preparedItems) {
+    var {
+      viewOffset
+    } = this.options;
     var hourMs = toMs('hour');
     var isCalculateStartAndEndDayHour = calculateIsDateAndTimeView(this.viewType);
     var checkIntersectViewport = isCalculateStartAndEndDayHour && this.viewDirection === 'horizontal';
     var isAllDayWorkspace = !this.supportAllDayRow;
     var showAllDayAppointments = this.showAllDayPanel || isAllDayWorkspace;
     var endViewDate = this.viewDataProvider.getLastViewDateByEndDayHour(this.viewEndDayHour);
+    var shiftedEndViewDate = dateUtilsTs.addOffsets(endViewDate, [viewOffset]);
     var filterOptions = [];
     var groupsInfo = this.viewDataProvider.getCompletedGroupsInfo();
     groupsInfo.forEach(item => {
@@ -320,9 +326,9 @@ export class AppointmentFilterVirtualStrategy extends AppointmentFilterBaseStrat
         groupIndex
       } = item;
       var groupStartDate = item.startDate;
-      var groupEndDate = new Date(Math.min(item.endDate, endViewDate));
+      var groupEndDate = new Date(Math.min(item.endDate.getTime(), shiftedEndViewDate.getTime()));
       var startDayHour = isCalculateStartAndEndDayHour ? groupStartDate.getHours() : this.viewStartDayHour;
-      var endDayHour = isCalculateStartAndEndDayHour ? startDayHour + groupStartDate.getMinutes() / 60 + (groupEndDate - groupStartDate) / hourMs : this.viewEndDayHour;
+      var endDayHour = isCalculateStartAndEndDayHour ? startDayHour + groupStartDate.getMinutes() / 60 + (groupEndDate.getTime() - groupStartDate.getTime()) / hourMs : this.viewEndDayHour;
       var resources = this._getPrerenderFilterResources(groupIndex);
       var hasAllDayPanel = this.viewDataProvider.hasGroupAllDayPanel(groupIndex);
       var supportAllDayAppointment = isAllDayWorkspace || !!showAllDayAppointments && hasAllDayPanel;
@@ -330,10 +336,11 @@ export class AppointmentFilterVirtualStrategy extends AppointmentFilterBaseStrat
         isVirtualScrolling: true,
         startDayHour,
         endDayHour,
+        viewOffset,
         viewStartDayHour: this.viewStartDayHour,
         viewEndDayHour: this.viewEndDayHour,
-        min: groupStartDate,
-        max: groupEndDate,
+        min: dateUtilsTs.addOffsets(groupStartDate, [-viewOffset]),
+        max: dateUtilsTs.addOffsets(groupEndDate, [-viewOffset]),
         supportMultiDayAppointments: isTimelineView(this.viewType),
         allDay: supportAllDayAppointment,
         resources,
@@ -377,11 +384,9 @@ export class AppointmentFilterVirtualStrategy extends AppointmentFilterBaseStrat
     });
     return query(itemsToFilter).filter(combinedFilters).toArray();
   }
-  hasAllDayAppointments(adapters, preparedItems) {
-    return this.filterAllDayAppointments({
-      viewStartDayHour: this.viewStartDayHour,
-      viewEndDayHour: this.viewEndDayHour
-    }, preparedItems).length > 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  hasAllDayAppointments(filteredItems, preparedItems) {
+    return this.filterAllDayAppointments(preparedItems).length > 0;
   }
   _getPrerenderFilterResources(groupIndex) {
     var cellGroup = this.viewDataProvider.getCellsGroup(groupIndex);

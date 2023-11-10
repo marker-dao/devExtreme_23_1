@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/common/widget.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -60,12 +60,6 @@ export var WidgetProps = Object.create(Object.prototype, _extends(Object.getOwnP
 import { createReRenderEffect } from '@devextreme/runtime/inferno';
 import { createRef as infernoCreateRef } from 'inferno';
 export class Widget extends InfernoWrapperComponent {
-  get config() {
-    if (this.context[ConfigContext.id]) {
-      return this.context[ConfigContext.id];
-    }
-    return ConfigContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.widgetElementRef = infernoCreateRef();
@@ -92,6 +86,12 @@ export class Widget extends InfernoWrapperComponent {
     this.visibilityEffect = this.visibilityEffect.bind(this);
     this.checkDeprecation = this.checkDeprecation.bind(this);
     this.applyCssTextEffect = this.applyCssTextEffect.bind(this);
+  }
+  get config() {
+    if (this.context[ConfigContext.id]) {
+      return this.context[ConfigContext.id];
+    }
+    return ConfigContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.setRootElementRef, []), new InfernoEffect(this.activeEffect, [this.props._feedbackShowTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.disabled, this.props.onActive]), new InfernoEffect(this.inactiveEffect, [this.props._feedbackHideTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.onInactive, this.state.active]), new InfernoEffect(this.clickEffect, [this.props.disabled, this.props.name, this.props.onClick]), new InfernoEffect(this.focusInEffect, [this.props.disabled, this.props.focusStateEnabled, this.props.name, this.props.onFocusIn]), new InfernoEffect(this.focusOutEffect, [this.props.focusStateEnabled, this.props.name, this.props.onFocusOut, this.state.focused]), new InfernoEffect(this.hoverStartEffect, [this.props.activeStateUnit, this.props.disabled, this.props.hoverStateEnabled, this.props.onHoverStart, this.state.active]), new InfernoEffect(this.hoverEndEffect, [this.props.activeStateUnit, this.props.hoverStateEnabled, this.props.onHoverEnd, this.state.hovered]), new InfernoEffect(this.keyboardEffect, [this.props.focusStateEnabled, this.props.onKeyDown]), new InfernoEffect(this.resizeEffect, [this.props.name, this.props.onDimensionChanged]), new InfernoEffect(this.windowResizeEffect, [this.props.onDimensionChanged]), new InfernoEffect(this.visibilityEffect, [this.props.name, this.props.onVisibilityChange]), new InfernoEffect(this.checkDeprecation, [this.props.height, this.props.width]), new InfernoEffect(this.applyCssTextEffect, [this.props.cssText]), createReRenderEffect()];

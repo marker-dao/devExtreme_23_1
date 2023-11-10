@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.label.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,6 +11,13 @@
 exports.TextEditorLabel = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _guid = _interopRequireDefault(require("../../core/guid"));
+var _click = require("../../events/click");
+var _events_engine = _interopRequireDefault(require("../../events/core/events_engine"));
+var _index = require("../../events/utils/index");
+var _hover = require("../../events/hover");
+var _emitter = require("../../events/core/emitter.feedback");
+var _window = require("../../core/utils/window");
+var _size = require("../../core/utils/size");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const TEXTEDITOR_LABEL_CLASS = 'dx-texteditor-label';
 const TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
@@ -21,25 +28,9 @@ const LABEL_BEFORE_CLASS = 'dx-label-before';
 const LABEL_CLASS = 'dx-label';
 const LABEL_AFTER_CLASS = 'dx-label-after';
 let TextEditorLabel = /*#__PURE__*/function () {
-  function TextEditorLabel(_ref) {
-    let {
-      $editor,
-      text,
-      mode,
-      mark,
-      containsButtonsBefore,
-      containerWidth,
-      beforeWidth
-    } = _ref;
-    this._props = {
-      $editor,
-      text,
-      mode,
-      mark,
-      containsButtonsBefore,
-      containerWidth,
-      beforeWidth
-    };
+  function TextEditorLabel(props) {
+    this.NAME = 'dxLabel';
+    this._props = props;
     this._id = "".concat(TEXTEDITOR_LABEL_CLASS, "-").concat(new _guid.default());
     this._render();
     this._toggleMarkupVisibility();
@@ -64,16 +55,43 @@ let TextEditorLabel = /*#__PURE__*/function () {
     this._updateEditorBeforeButtonsClass(visible);
     this._updateEditorLabelClass(visible);
     visible ? this._$root.appendTo(this._props.$editor) : this._$root.detach();
+    this._attachEvents();
+  };
+  _proto._attachEvents = function _attachEvents() {
+    const clickEventName = (0, _index.addNamespace)(_click.name, this.NAME);
+    const hoverStartEventName = (0, _index.addNamespace)(_hover.start, this.NAME);
+    const activeEventName = (0, _index.addNamespace)(_emitter.active, this.NAME);
+    _events_engine.default.off(this._$labelSpan, clickEventName);
+    _events_engine.default.off(this._$labelSpan, hoverStartEventName);
+    _events_engine.default.off(this._$labelSpan, activeEventName);
+    if (this._isVisible() && this._isOutsideMode()) {
+      _events_engine.default.on(this._$labelSpan, clickEventName, e => {
+        const selectedText = (0, _window.getWindow)().getSelection().toString();
+        if (selectedText === '') {
+          this._props.onClickHandler();
+          e.preventDefault();
+        }
+      });
+      _events_engine.default.on(this._$labelSpan, hoverStartEventName, e => {
+        this._props.onHoverHandler(e);
+      });
+      _events_engine.default.on(this._$labelSpan, activeEventName, e => {
+        this._props.onActiveHandler(e);
+      });
+    }
   };
   _proto._updateEditorLabelClass = function _updateEditorLabelClass(visible) {
     this._props.$editor.removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS).removeClass(TEXTEDITOR_WITH_LABEL_CLASS);
     if (visible) {
       const labelClass = this._props.mode === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS;
       this._props.$editor.addClass(labelClass);
-      if (this._props.mode === 'outside') {
+      if (this._isOutsideMode()) {
         this._props.$editor.addClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS);
       }
     }
+  };
+  _proto._isOutsideMode = function _isOutsideMode() {
+    return this._props.mode === 'outside';
   };
   _proto._updateEditorBeforeButtonsClass = function _updateEditorBeforeButtonsClass() {
     let visible = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._isVisible();
@@ -93,6 +111,16 @@ let TextEditorLabel = /*#__PURE__*/function () {
     this._$before.css({
       width: this._props.beforeWidth
     });
+    this._updateLabelTransform();
+  };
+  _proto._updateLabelTransform = function _updateLabelTransform() {
+    let offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    this._$labelSpan.css('transform', '');
+    if (this._isVisible() && this._isOutsideMode()) {
+      const sign = this._props.rtlEnabled ? 1 : -1;
+      const labelTranslateX = sign * ((0, _size.getWidth)(this._$before) + offset);
+      this._$labelSpan.css('transform', "translateX(".concat(labelTranslateX, "px)"));
+    }
   };
   _proto._updateMaxWidth = function _updateMaxWidth() {
     this._$label.css({
@@ -111,6 +139,7 @@ let TextEditorLabel = /*#__PURE__*/function () {
   _proto.updateMode = function updateMode(mode) {
     this._props.mode = mode;
     this._toggleMarkupVisibility();
+    this._updateLabelTransform();
   };
   _proto.updateText = function updateText(text) {
     this._props.text = text;

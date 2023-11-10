@@ -1,21 +1,16 @@
 /**
 * DevExtreme (esm/viz/core/themes/fluent.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 var themes = [{
   theme: {
-    name: 'fluent'
-  },
-  baseThemeName: 'material'
-}, {
-  theme: {
     name: 'fluent.blue.light'
   },
-  baseThemeName: 'fluent'
+  baseThemeName: 'material.blue.light'
 }, {
   theme: {
     name: 'fluent.blue.light.compact'

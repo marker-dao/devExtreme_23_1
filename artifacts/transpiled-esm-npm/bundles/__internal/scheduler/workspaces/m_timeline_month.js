@@ -63,6 +63,9 @@ let SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
       getDateForHeaderText: (_, date) => date
     });
   };
+  _proto.keepOriginalHours = function keepOriginalHours() {
+    return true;
+  };
   _createClass(SchedulerTimelineMonth, [{
     key: "type",
     get: function () {

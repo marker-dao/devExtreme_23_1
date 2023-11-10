@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/view_model/m_view_data_generator_month.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,15 +22,15 @@ export class ViewDataGeneratorMonth extends ViewDataGenerator {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCellData(rowIndex, columnIndex, options, allDay) {
-    var data = super.getCellData(rowIndex, columnIndex, options, false);
-    var {
-      startDate
-    } = data;
     var {
       indicatorTime,
       timeZoneCalculator,
       intervalCount
     } = options;
+    var data = super.getCellData(rowIndex, columnIndex, options, false);
+    var {
+      startDate
+    } = data;
     data.today = this.isCurrentDate(startDate, indicatorTime, timeZoneCalculator);
     data.otherMonth = this.isOtherMonth(startDate, this._minVisibleDate, this._maxVisibleDate);
     data.firstDayOfMonth = isFirstCellInMonthWithIntervalCount(startDate, intervalCount);

@@ -8,6 +8,7 @@ var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _utils = require("../../../../renovation/ui/scheduler/view_model/group_panel/utils");
 var _base = require("../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 var _utils2 = require("../../../../renovation/ui/scheduler/workspaces/utils");
+var _date2 = require("../../../core/utils/date");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
 var _m_date_header_data_generator = require("./m_date_header_data_generator");
 var _m_grouped_data_map_provider = require("./m_grouped_data_map_provider");
@@ -27,6 +28,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
   return t;
 };
+// TODO: Vinogradov types refactoring.
 let ViewDataProvider = /*#__PURE__*/function () {
   function ViewDataProvider(viewType) {
     this.viewDataGenerator = (0, _m_utils.getViewDataGeneratorByViewType)(viewType);
@@ -61,7 +63,8 @@ let ViewDataProvider = /*#__PURE__*/function () {
     this.updateViewData(renderOptions);
     this._groupedDataMapProvider = new _m_grouped_data_map_provider.GroupedDataMapProvider(this.viewDataGenerator, this.viewDataMap, this.completeViewDataMap, {
       isVerticalGrouping: renderOptions.isVerticalGrouping,
-      viewType: renderOptions.viewType
+      viewType: renderOptions.viewType,
+      viewOffset: options.viewOffset
     });
     this.dateHeaderData = dateHeaderDataGenerator.generateDateHeaderData(this.completeDateHeaderMap, this.completeViewDataMap, renderOptions);
     if (renderOptions.isGenerateTimePanelData) {
@@ -84,9 +87,10 @@ let ViewDataProvider = /*#__PURE__*/function () {
         groups,
         groupOrientation,
         groupByDate,
-        isAllDayPanelVisible
+        isAllDayPanelVisible,
+        viewOffset
       } = renderOptions,
-      restOptions = __rest(renderOptions, ["groups", "groupOrientation", "groupByDate", "isAllDayPanelVisible"]);
+      restOptions = __rest(renderOptions, ["groups", "groupOrientation", "groupByDate", "isAllDayPanelVisible", "viewOffset"]);
     return _extends(_extends({}, restOptions), {
       startViewDate: this.viewDataGenerator._calculateStartViewDate(renderOptions),
       isVerticalGrouping: (0, _utils2.isVerticalGroupingApplied)(groups, groupOrientation),
@@ -95,7 +99,8 @@ let ViewDataProvider = /*#__PURE__*/function () {
       isGroupedAllDayPanel: (0, _base.calculateIsGroupedAllDayPanel)(groups, groupOrientation, isAllDayPanelVisible),
       groups,
       groupOrientation,
-      isAllDayPanelVisible
+      isAllDayPanelVisible,
+      viewOffset
     });
   };
   _proto.getGroupPanelData = function getGroupPanelData(options) {
@@ -116,11 +121,12 @@ let ViewDataProvider = /*#__PURE__*/function () {
     let isFindByDate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     return this._groupedDataMapProvider.findGroupCellStartDate(groupIndex, startDate, endDate, isFindByDate);
   };
-  _proto.findAllDayGroupCellStartDate = function findAllDayGroupCellStartDate(groupIndex, startDate) {
-    return this._groupedDataMapProvider.findAllDayGroupCellStartDate(groupIndex, startDate);
+  _proto.findAllDayGroupCellStartDate = function findAllDayGroupCellStartDate(groupIndex) {
+    return this._groupedDataMapProvider.findAllDayGroupCellStartDate(groupIndex);
   };
   _proto.findCellPositionInMap = function findCellPositionInMap(cellInfo) {
-    return this._groupedDataMapProvider.findCellPositionInMap(cellInfo);
+    let isAppointmentRender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    return this._groupedDataMapProvider.findCellPositionInMap(cellInfo, isAppointmentRender);
   };
   _proto.hasAllDayPanel = function hasAllDayPanel() {
     const {
@@ -218,11 +224,7 @@ let ViewDataProvider = /*#__PURE__*/function () {
     return undefined;
   };
   _proto._compareDatesAndAllDay = function _compareDatesAndAllDay(date, cellStartDate, cellEndDate, allDay) {
-    const time = date.getTime();
-    const trimmedTime = _date.default.trimTime(date).getTime();
-    const cellStartTime = cellStartDate.getTime();
-    const cellEndTime = cellEndDate.getTime();
-    return !allDay && time >= cellStartTime && time < cellEndTime || allDay && trimmedTime === cellStartTime;
+    return allDay ? _date.default.sameDate(date, cellStartDate) : date >= cellStartDate && date < cellEndDate;
   };
   _proto.getSkippedDaysCount = function getSkippedDaysCount(groupIndex, startDate, endDate, daysCount) {
     const {
@@ -316,7 +318,8 @@ let ViewDataProvider = /*#__PURE__*/function () {
     return this.viewDataGenerator._getIntervalDuration(intervalCount);
   };
   _proto.getLastCellEndDate = function getLastCellEndDate() {
-    return new Date(this.getLastViewDate().getTime() - _date.default.dateToMilliseconds('minute'));
+    const lastEndDate = new Date(this.getLastViewDate().getTime() - _date.default.dateToMilliseconds('minute'));
+    return _date2.dateUtilsTs.addOffsets(lastEndDate, [-this._options.viewOffset]);
   };
   _proto.getLastViewDateByEndDayHour = function getLastViewDateByEndDayHour(endDayHour) {
     const lastCellEndDate = this.getLastCellEndDate();

@@ -21,11 +21,12 @@ let HorizontalMonthLineRenderingStrategy = /*#__PURE__*/function (_HorizontalApp
     return _HorizontalAppointmen.apply(this, arguments) || this;
   }
   var _proto = HorizontalMonthLineRenderingStrategy.prototype;
-  _proto.calculateAppointmentWidth = function calculateAppointmentWidth(appointment, position) {
-    const startDate = _date.default.trimTime(position.info.appointment.startDate);
+  _proto.calculateAppointmentWidth = function calculateAppointmentWidth(_, position) {
     const {
+      startDate: startDateWithTime,
       normalizedEndDate
     } = position.info.appointment;
+    const startDate = _date.default.trimTime(startDateWithTime);
     const cellWidth = this.cellWidth || this.getAppointmentMinSize();
     const duration = Math.ceil(this._getDurationInDays(startDate, normalizedEndDate));
     let width = this.cropAppointmentWidth(duration * cellWidth, cellWidth);

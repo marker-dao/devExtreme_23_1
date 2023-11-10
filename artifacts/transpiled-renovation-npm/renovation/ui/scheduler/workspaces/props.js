@@ -13,6 +13,7 @@ const WorkSpaceProps = Object.create(Object.prototype, _extends(Object.getOwnPro
   crossScrollingEnabled: false,
   startDayHour: 0,
   endDayHour: 24,
+  viewOffset: 0,
   firstDayOfWeek: 0,
   hoursInterval: 0.5,
   showAllDayPanel: false,

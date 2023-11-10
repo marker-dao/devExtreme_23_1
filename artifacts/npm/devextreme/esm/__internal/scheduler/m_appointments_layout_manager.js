@@ -1,18 +1,20 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_appointments_layout_manager.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { equalByValue } from '../../core/utils/common';
+import dateUtils from '../../core/utils/date';
 import { getAppointmentRenderingStrategyName } from '../../renovation/ui/scheduler/model/utils';
 import { getCellDuration } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { AppointmentViewModelGenerator } from './appointments/m_view_model_generator';
 import { getGroupCount } from './resources/m_utils';
 import { getAllDayHeight, getCellHeight, getCellWidth } from './workspaces/helpers/m_position_helper';
+var toMs = dateUtils.dateToMilliseconds;
 class AppointmentLayoutManager {
   constructor(instance) {
     this.instance = instance;
@@ -62,6 +64,7 @@ class AppointmentLayoutManager {
       rtlEnabled: this.instance.option('rtlEnabled'),
       startDayHour: this.instance._getCurrentViewOption('startDayHour'),
       endDayHour: this.instance._getCurrentViewOption('endDayHour'),
+      viewOffset: this.instance._getCurrentViewOption('offset') * toMs('minute'),
       maxAppointmentsPerCell: this.instance._getCurrentViewOption('maxAppointmentsPerCell'),
       currentDate: this.instance.option('currentDate'),
       isVirtualScrolling: this.instance.isVirtualScrolling(),

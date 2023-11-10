@@ -351,7 +351,7 @@ const TabPanel = _multi_view.default.inherit({
   },
   _updateTabsIndicatorPosition() {
     const value = this._getTabsIndicatorPosition();
-    this.option('_tabsIndicatorPosition', value);
+    this._setTabsOption('_indicatorPosition', value);
   },
   _optionChanged: function (args) {
     const {

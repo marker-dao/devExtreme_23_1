@@ -634,9 +634,7 @@ export var ListBase = CollectionWidget.inherit({
       container: getPublicElement($groupHeaderElement)
     };
     this._createItemByTemplate(groupTemplate, renderArgs);
-    if (isMaterialBased()) {
-      $('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
-    }
+    $('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
     this._renderingGroupIndex = index;
     var $groupBody = $('<div>').addClass(LIST_GROUP_BODY_CLASS).appendTo($groupElement);
     each(groupItemsGetter(group) || [], function (itemIndex, item) {

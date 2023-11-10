@@ -26,15 +26,15 @@ let ViewDataGeneratorMonth = /*#__PURE__*/function (_ViewDataGenerator) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   var _proto = ViewDataGeneratorMonth.prototype;
   _proto.getCellData = function getCellData(rowIndex, columnIndex, options, allDay) {
-    const data = _ViewDataGenerator.prototype.getCellData.call(this, rowIndex, columnIndex, options, false);
-    const {
-      startDate
-    } = data;
     const {
       indicatorTime,
       timeZoneCalculator,
       intervalCount
     } = options;
+    const data = _ViewDataGenerator.prototype.getCellData.call(this, rowIndex, columnIndex, options, false);
+    const {
+      startDate
+    } = data;
     data.today = this.isCurrentDate(startDate, indicatorTime, timeZoneCalculator);
     data.otherMonth = this.isOtherMonth(startDate, this._minVisibleDate, this._maxVisibleDate);
     data.firstDayOfMonth = (0, _month.isFirstCellInMonthWithIntervalCount)(startDate, intervalCount);

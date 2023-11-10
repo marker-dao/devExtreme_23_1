@@ -30,7 +30,7 @@ export var viewFunction = _ref => {
   return createVNode(1, "div", LIGHT_PAGES_CLASS, [createComponentVNode(2, NumberBox, {
     "className": PAGER_PAGE_INDEX_CLASS,
     "min": 1,
-    "max": pageCount,
+    "max": Math.max(pageCount, value),
     "width": width,
     "value": value,
     "valueChange": valueChange,

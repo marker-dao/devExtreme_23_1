@@ -1,13 +1,20 @@
 /**
 * DevExtreme (esm/ui/text_box/ui.text_editor.label.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import $ from '../../core/renderer';
 import Guid from '../../core/guid';
+import { name as click } from '../../events/click';
+import eventsEngine from '../../events/core/events_engine';
+import { addNamespace } from '../../events/utils/index';
+import { start as hoverStart } from '../../events/hover';
+import { active } from '../../events/core/emitter.feedback';
+import { getWindow } from '../../core/utils/window';
+import { getWidth } from '../../core/utils/size';
 var TEXTEDITOR_LABEL_CLASS = 'dx-texteditor-label';
 var TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
 var TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
@@ -17,25 +24,9 @@ var LABEL_BEFORE_CLASS = 'dx-label-before';
 var LABEL_CLASS = 'dx-label';
 var LABEL_AFTER_CLASS = 'dx-label-after';
 class TextEditorLabel {
-  constructor(_ref) {
-    var {
-      $editor,
-      text,
-      mode,
-      mark,
-      containsButtonsBefore,
-      containerWidth,
-      beforeWidth
-    } = _ref;
-    this._props = {
-      $editor,
-      text,
-      mode,
-      mark,
-      containsButtonsBefore,
-      containerWidth,
-      beforeWidth
-    };
+  constructor(props) {
+    this.NAME = 'dxLabel';
+    this._props = props;
     this._id = "".concat(TEXTEDITOR_LABEL_CLASS, "-").concat(new Guid());
     this._render();
     this._toggleMarkupVisibility();
@@ -59,16 +50,43 @@ class TextEditorLabel {
     this._updateEditorBeforeButtonsClass(visible);
     this._updateEditorLabelClass(visible);
     visible ? this._$root.appendTo(this._props.$editor) : this._$root.detach();
+    this._attachEvents();
+  }
+  _attachEvents() {
+    var clickEventName = addNamespace(click, this.NAME);
+    var hoverStartEventName = addNamespace(hoverStart, this.NAME);
+    var activeEventName = addNamespace(active, this.NAME);
+    eventsEngine.off(this._$labelSpan, clickEventName);
+    eventsEngine.off(this._$labelSpan, hoverStartEventName);
+    eventsEngine.off(this._$labelSpan, activeEventName);
+    if (this._isVisible() && this._isOutsideMode()) {
+      eventsEngine.on(this._$labelSpan, clickEventName, e => {
+        var selectedText = getWindow().getSelection().toString();
+        if (selectedText === '') {
+          this._props.onClickHandler();
+          e.preventDefault();
+        }
+      });
+      eventsEngine.on(this._$labelSpan, hoverStartEventName, e => {
+        this._props.onHoverHandler(e);
+      });
+      eventsEngine.on(this._$labelSpan, activeEventName, e => {
+        this._props.onActiveHandler(e);
+      });
+    }
   }
   _updateEditorLabelClass(visible) {
     this._props.$editor.removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS).removeClass(TEXTEDITOR_WITH_LABEL_CLASS);
     if (visible) {
       var labelClass = this._props.mode === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS;
       this._props.$editor.addClass(labelClass);
-      if (this._props.mode === 'outside') {
+      if (this._isOutsideMode()) {
         this._props.$editor.addClass(TEXTEDITOR_LABEL_OUTSIDE_CLASS);
       }
     }
+  }
+  _isOutsideMode() {
+    return this._props.mode === 'outside';
   }
   _updateEditorBeforeButtonsClass() {
     var visible = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._isVisible();
@@ -88,6 +106,16 @@ class TextEditorLabel {
     this._$before.css({
       width: this._props.beforeWidth
     });
+    this._updateLabelTransform();
+  }
+  _updateLabelTransform() {
+    var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    this._$labelSpan.css('transform', '');
+    if (this._isVisible() && this._isOutsideMode()) {
+      var sign = this._props.rtlEnabled ? 1 : -1;
+      var labelTranslateX = sign * (getWidth(this._$before) + offset);
+      this._$labelSpan.css('transform', "translateX(".concat(labelTranslateX, "px)"));
+    }
   }
   _updateMaxWidth() {
     this._$label.css({
@@ -106,6 +134,7 @@ class TextEditorLabel {
   updateMode(mode) {
     this._props.mode = mode;
     this._toggleMarkupVisibility();
+    this._updateLabelTransform();
   }
   updateText(text) {
     this._props.text = text;

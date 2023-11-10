@@ -3,6 +3,7 @@ import { deepExtendArraySafe } from '../../core/utils/object';
 import errors from '../../ui/widget/ui.errors';
 import { ExpressionUtils } from './m_expression_utils';
 import { getRecurrenceProcessor } from './m_recurrence';
+// TODO Vinogradov refactoring: add types to this module.
 var PROPERTY_NAMES = {
   startDate: 'startDate',
   endDate: 'endDate',

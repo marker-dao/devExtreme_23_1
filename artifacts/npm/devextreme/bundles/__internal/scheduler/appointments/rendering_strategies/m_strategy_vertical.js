@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/appointments/rendering_strategies/m_strategy_vertical.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -72,11 +72,12 @@ let VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
     const config = this._calculateGeometryConfig(coordinates);
     return this._customizeCoordinates(coordinates, config.height, config.appointmentCountPerCell, config.offset);
   };
-  _proto._getItemPosition = function _getItemPosition(appointment) {
-    const allDay = this.isAllDay(appointment);
+  _proto._getItemPosition = function _getItemPosition(initialAppointment) {
+    const allDay = this.isAllDay(initialAppointment);
     if (allDay) {
-      return _BaseAppointmentsStra.prototype._getItemPosition.call(this, appointment);
+      return _BaseAppointmentsStra.prototype._getItemPosition.call(this, initialAppointment);
     }
+    const appointment = _BaseAppointmentsStra.prototype.shiftAppointmentByViewOffset.call(this, initialAppointment);
     const adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, this.dataAccessors, this.timeZoneCalculator);
     const isRecurring = !!adapter.recurrenceRule;
     const appointmentStartDate = adapter.calculateStartDate('toGrid');
@@ -278,7 +279,7 @@ let VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
     return this.cellWidth;
   };
   _proto.isAllDay = function isAllDay(appointmentData) {
-    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)((0, _m_appointment_adapter.createAppointmentAdapter)(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.startDayHour, this.endDayHour, this.allDayPanelMode);
+    return (0, _getAppointmentTakesAllDay.getAppointmentTakesAllDay)((0, _m_appointment_adapter.createAppointmentAdapter)(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.allDayPanelMode);
   };
   _proto._getAppointmentMaxWidth = function _getAppointmentMaxWidth() {
     return this.cellWidth - this._getAppointmentDefaultOffset();
@@ -287,13 +288,15 @@ let VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
     if (!this.isAllDay(appointment)) {
       return 0;
     }
-    const startDate = _date.default.trimTime(position.info.appointment.startDate);
     const {
+      startDate: startDateWithTime,
+      endDate,
       normalizedEndDate
     } = position.info.appointment;
+    const startDate = _date.default.trimTime(startDateWithTime);
     const cellWidth = this.cellWidth || this.getAppointmentMinSize();
     const durationInHours = (normalizedEndDate.getTime() - startDate.getTime()) / toMs('hour');
-    const skippedHours = (0, _getSkippedHoursInRange.default)(position.info.appointment.startDate, position.info.appointment.endDate, this.viewDataProvider);
+    const skippedHours = (0, _getSkippedHoursInRange.default)(startDate, endDate, this.viewDataProvider);
     let width = Math.ceil((durationInHours - skippedHours) / 24) * cellWidth;
     width = this.cropAppointmentWidth(width, cellWidth);
     return width;
@@ -303,9 +306,7 @@ let VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
       return 0;
     }
     const {
-      startDate
-    } = position.info.appointment;
-    const {
+      startDate,
       normalizedEndDate
     } = position.info.appointment;
     const allDay = _m_expression_utils.ExpressionUtils.getField(this.dataAccessors, 'allDay', appointment);

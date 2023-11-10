@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/data_provider/m_appointment_data_provider.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -47,6 +47,7 @@ let AppointmentDataProvider = /*#__PURE__*/function () {
       dataAccessors: this.dataAccessors,
       startDayHour: this.options.startDayHour,
       endDayHour: this.options.endDayHour,
+      viewOffset: this.options.viewOffset,
       showAllDayPanel: this.options.showAllDayPanel,
       timeZoneCalculator: this.options.timeZoneCalculator,
       //

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_base.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,6 +13,8 @@ import { isNumeric, isObject } from '../../../../core/utils/type';
 import { getAppointmentTakesAllDay } from '../../../../renovation/ui/scheduler/appointment/utils/getAppointmentTakesAllDay';
 import timeZoneUtils from '../../../../ui/scheduler/utils.timeZone';
 import { current as currentTheme } from '../../../../ui/themes';
+import { dateUtilsTs } from '../../../core/utils/date';
+import { ExpressionUtils } from '../../../scheduler/m_expression_utils';
 import { createAppointmentAdapter } from '../../m_appointment_adapter';
 import { AppointmentSettingsGenerator } from '../m_settings_generator';
 import AdaptivePositioningStrategy from './m_appointments_positioning_strategy_adaptive';
@@ -198,7 +200,8 @@ class BaseRenderingStrategy {
   _getAppointmentMaxWidth() {
     return this.cellWidth;
   }
-  _getItemPosition(appointment) {
+  _getItemPosition(initialAppointment) {
+    var appointment = this.shiftAppointmentByViewOffset(initialAppointment);
     var position = this.generateAppointmentSettings(appointment);
     var allDay = this.isAllDay(appointment);
     var result = [];
@@ -267,7 +270,7 @@ class BaseRenderingStrategy {
   }
   isAppointmentTakesAllDay(rawAppointment) {
     var adapter = createAppointmentAdapter(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
-    return getAppointmentTakesAllDay(adapter, this.viewStartDayHour, this.viewEndDayHour, this.allDayPanelMode);
+    return getAppointmentTakesAllDay(adapter, this.allDayPanelMode);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _getAppointmentParts(geometry, settings) {
@@ -741,6 +744,21 @@ class BaseRenderingStrategy {
       left: 0,
       cellPosition: 0
     };
+  }
+  shiftAppointmentByViewOffset(appointment) {
+    var {
+      viewOffset
+    } = this.options;
+    var startDateField = this.dataAccessors.expr.startDateExpr;
+    var endDateField = this.dataAccessors.expr.endDateExpr;
+    var startDate = new Date(ExpressionUtils.getField(this.dataAccessors, 'startDate', appointment));
+    startDate = dateUtilsTs.addOffsets(startDate, [-viewOffset]);
+    var endDate = new Date(ExpressionUtils.getField(this.dataAccessors, 'endDate', appointment));
+    endDate = dateUtilsTs.addOffsets(endDate, [-viewOffset]);
+    return _extends(_extends({}, appointment), {
+      [startDateField]: startDate,
+      [endDateField]: endDate
+    });
   }
 }
 export default BaseRenderingStrategy;

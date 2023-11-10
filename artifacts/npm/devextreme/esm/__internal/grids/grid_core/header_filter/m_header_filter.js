@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/header_filter/m_header_filter.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -276,8 +276,7 @@ var HeaderFilterController = modules.ViewController.inherit(function () {
       if (column) {
         var visibleIndex = columnsController.getVisibleIndex(columnIndex);
         var view = isGroupPanel ? this.getView('headerPanel') : this.getView('columnHeadersView');
-        // eslint-disable-next-line no-var, vars-on-top
-        var $columnElement = $columnElement || view.getColumnElements().eq(isGroupPanel ? column.groupIndex : visibleIndex);
+        var $columnElement = view.getColumnElements().eq(isGroupPanel ? column.groupIndex : visibleIndex);
         this.showHeaderFilterMenuBase({
           columnElement: $columnElement,
           column,
@@ -376,13 +375,15 @@ var ColumnHeadersViewHeaderFilterExtender = extend({}, headerFilterMixin, {
     var {
       optionNames
     } = e;
-    if (gridCoreUtils.checkChanges(optionNames, ['filterValues', 'filterType'])) {
-      if (this._needUpdateFilterIndicators()) {
-        this._updateHeaderFilterIndicators();
-      }
-      return;
+    var isFilterRowAndHeaderFilterValuesChanged = gridCoreUtils.checkChanges(optionNames, ['filterValues', 'filterValue']);
+    var isHeaderFilterValuesAndTypeChanged = gridCoreUtils.checkChanges(optionNames, ['filterValues', 'filterType']);
+    var shouldUpdateFilterIndicators = (isFilterRowAndHeaderFilterValuesChanged || isHeaderFilterValuesAndTypeChanged) && this._needUpdateFilterIndicators();
+    if (shouldUpdateFilterIndicators) {
+      this._updateHeaderFilterIndicators();
     }
-    this.callBase(e);
+    if (!isHeaderFilterValuesAndTypeChanged) {
+      this.callBase(e);
+    }
   }
 });
 var HeaderPanelHeaderFilterExtender = extend({}, headerFilterMixin, {

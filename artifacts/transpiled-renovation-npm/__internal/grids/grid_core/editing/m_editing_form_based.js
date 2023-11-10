@@ -274,7 +274,7 @@ const editingControllerExtender = Base => /*#__PURE__*/function (_Base) {
     return cellOptions;
   };
   _proto.getFormEditorTemplate = function getFormEditorTemplate(cellOptions, item) {
-    const column = this.component.columnOption(item.dataField);
+    const column = this.component.columnOption(item.name || item.dataField);
     return (options, container) => {
       var _a, _b;
       const $container = (0, _renderer.default)(container);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/appointment/layout.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -59,12 +59,6 @@ export var AppointmentLayoutProps = {
 import { createReRenderEffect } from '@devextreme/runtime/inferno';
 import { createRef as infernoCreateRef } from 'inferno';
 export class AppointmentLayout extends InfernoWrapperComponent {
-  get appointmentsContextValue() {
-    if (this.context[AppointmentsContext.id]) {
-      return this.context[AppointmentsContext.id];
-    }
-    return AppointmentsContext.defaultValue;
-  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -72,6 +66,12 @@ export class AppointmentLayout extends InfernoWrapperComponent {
     this.__getterCache = {};
     this.pointerEventsEffect = this.pointerEventsEffect.bind(this);
     this.onAppointmentPointerDown = this.onAppointmentPointerDown.bind(this);
+  }
+  get appointmentsContextValue() {
+    if (this.context[AppointmentsContext.id]) {
+      return this.context[AppointmentsContext.id];
+    }
+    return AppointmentsContext.defaultValue;
   }
   createEffects() {
     return [new InfernoEffect(this.pointerEventsEffect, [this.appointmentsContextValue]), createReRenderEffect()];

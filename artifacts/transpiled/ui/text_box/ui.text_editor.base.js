@@ -386,13 +386,24 @@ const TextEditorBase = _editor.default.inherit({
     const {
       label,
       labelMode,
-      labelMark
+      labelMark,
+      rtlEnabled
     } = this.option();
     const labelConfig = {
+      onClickHandler: () => {
+        this.focus();
+      },
+      onHoverHandler: e => {
+        e.stopPropagation();
+      },
+      onActiveHandler: e => {
+        e.stopPropagation();
+      },
       $editor: this.$element(),
       text: label,
       mark: labelMark,
       mode: labelMode,
+      rtlEnabled,
       containsButtonsBefore: !!this._$beforeButtonsContainer,
       containerWidth: this._getLabelContainerWidth(),
       beforeWidth: this._getLabelBeforeWidth()

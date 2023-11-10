@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/component_wrapper/common/component.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,6 +27,11 @@ var setDefaultOptionValue = (options, defaultValueGetter) => name => {
   }
 };
 export default class ComponentWrapper extends DOMComponent {
+  constructor(element, options) {
+    super(element, options);
+    this._shouldRaiseContentReady = false;
+    this.validateKeyDownHandler();
+  }
   get _propsInfo() {
     return {
       allowNull: [],
@@ -35,11 +40,6 @@ export default class ComponentWrapper extends DOMComponent {
       templates: [],
       props: []
     };
-  }
-  constructor(element, options) {
-    super(element, options);
-    this._shouldRaiseContentReady = false;
-    this.validateKeyDownHandler();
   }
   validateKeyDownHandler() {
     var supportedKeyNames = this.getSupportedKeyNames();

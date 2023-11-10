@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/resources/m_agenda_resource_processor.js)
-* Version: 23.2.0
-* Build date: Tue Oct 31 2023
+* Version: 23.2.2
+* Build date: Fri Nov 10 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,6 +18,14 @@ class PromiseItem {
   }
 }
 export class AgendaResourceProcessor {
+  constructor() {
+    var resourceDeclarations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    this._resourceDeclarations = resourceDeclarations;
+    this.isLoaded = false;
+    this.isLoading = false;
+    this.resourceMap = new Map();
+    this.appointmentPromiseQueue = [];
+  }
   get resourceDeclarations() {
     return this._resourceDeclarations;
   }
@@ -26,14 +34,6 @@ export class AgendaResourceProcessor {
     this.isLoaded = false;
     this.isLoading = false;
     this.resourceMap.clear();
-    this.appointmentPromiseQueue = [];
-  }
-  constructor() {
-    var resourceDeclarations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    this._resourceDeclarations = resourceDeclarations;
-    this.isLoaded = false;
-    this.isLoading = false;
-    this.resourceMap = new Map();
     this.appointmentPromiseQueue = [];
   }
   _pushAllResources() {

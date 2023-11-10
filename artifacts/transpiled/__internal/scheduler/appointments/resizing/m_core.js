@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getAppointmentDateRange = void 0;
-var _m_utils = require("./m_utils");
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 const getAppointmentLeftCell = options => {
   const {
@@ -33,23 +32,23 @@ const getDateRangeHorizontal = options => {
   const appointmentCellsAmount = Math.round(relativeAppointmentRect.width / cellWidth);
   const appointmentLastCellIndex = appointmentFirstCell.index + (appointmentCellsAmount - 1);
   const {
-    allDay,
     sourceAppointment
   } = appointmentSettings.info;
+  const {
+    allDay
+  } = appointmentSettings.info.appointment;
   if (handles.left) {
-    const startDate = (0, _m_utils.normalizeStartDate)(options, appointmentFirstCell.startDate, sourceAppointment.startDate);
     return {
-      startDate,
-      endDate: sourceAppointment.endDate
+      startDate: appointmentFirstCell.startDate,
+      endDate: appointmentFirstCell.startDate > sourceAppointment.endDate ? appointmentFirstCell.startDate : sourceAppointment.endDate
     };
   }
   const appointmentRowIndex = Math.floor(appointmentLastCellIndex / cellCountInRow);
   const appointmentColumnIndex = appointmentLastCellIndex % cellCountInRow;
   const appointmentLastCell = viewDataProvider.getCellData(appointmentRowIndex, appointmentColumnIndex, allDay);
-  let endDate = !options.considerTime ? appointmentLastCell.endDate : appointmentLastCell.startDate;
-  endDate = (0, _m_utils.normalizeEndDate)(options, endDate, sourceAppointment.endDate);
+  const endDate = !options.considerTime ? appointmentLastCell.endDate : appointmentLastCell.startDate;
   return {
-    startDate: sourceAppointment.startDate,
+    startDate: endDate < sourceAppointment.startDate ? endDate : sourceAppointment.startDate,
     endDate
   };
 };
@@ -64,25 +63,25 @@ const getDateRangeHorizontalRTL = options => {
   } = options;
   const appointmentLastCell = getAppointmentLeftCell(options);
   const {
-    allDay,
     sourceAppointment
   } = appointmentSettings.info;
+  const {
+    allDay
+  } = appointmentSettings.info.appointment;
   if (handles.right) {
     const appointmentLastCellIndex = appointmentLastCell.index;
     const appointmentCellsAmount = Math.round(relativeAppointmentRect.width / cellWidth);
     const appointmentFirstCellIndex = appointmentLastCellIndex - appointmentCellsAmount + 1;
     const appointmentRowIndex = Math.floor(appointmentLastCellIndex / cellCountInRow);
     const appointmentFirstCell = viewDataProvider.getCellData(appointmentRowIndex, appointmentFirstCellIndex, allDay, true);
-    const startDate = (0, _m_utils.normalizeStartDate)(options, appointmentFirstCell.startDate, sourceAppointment.endDate);
     return {
-      startDate,
-      endDate: sourceAppointment.endDate
+      startDate: appointmentFirstCell.startDate,
+      endDate: appointmentFirstCell.startDate > sourceAppointment.endDate ? appointmentFirstCell.startDate : sourceAppointment.endDate
     };
   }
-  let endDate = !options.considerTime ? appointmentLastCell.endDate : appointmentLastCell.startDate;
-  endDate = (0, _m_utils.normalizeEndDate)(options, endDate, sourceAppointment.endDate);
+  const endDate = !options.considerTime ? appointmentLastCell.endDate : appointmentLastCell.startDate;
   return {
-    startDate: sourceAppointment.startDate,
+    startDate: endDate < sourceAppointment.startDate ? endDate : sourceAppointment.startDate,
     endDate
   };
 };

@@ -2,6 +2,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
 import { calculateCellIndex, calculateDayDuration, getDisplayedCellCount, getDisplayedRowCount, getStartViewDateWithoutDST, getTotalCellCountByCompleteData, getTotalRowCountByCompleteData, isHorizontalView } from '../../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { getIsGroupedAllDayPanel, getKeyByGroup } from '../../../../renovation/ui/scheduler/workspaces/utils';
+import { dateUtilsTs } from '../../../core/utils/date';
 import { HORIZONTAL_GROUP_ORIENTATION } from '../../m_constants';
 import { getAllGroups, getGroupCount } from '../../resources/m_utils';
 var HOUR_MS = dateUtils.dateToMilliseconds('hour');
@@ -32,7 +33,8 @@ export class ViewDataGenerator {
       viewType,
       startDayHour,
       endDayHour,
-      hoursInterval
+      hoursInterval,
+      viewOffset
     } = options;
     this._setVisibilityDates(options);
     this.setHiddenInterval(startDayHour, endDayHour, hoursInterval);
@@ -68,7 +70,16 @@ export class ViewDataGenerator {
       viewDataMap = this._transformViewDataMapForGroupingByDate(viewDataMap, groupsList);
     }
     var completeViewDataMap = this._addKeysToCells(viewDataMap);
+    this.shiftDateTableDates(completeViewDataMap, viewOffset);
     return completeViewDataMap;
+  }
+  shiftDateTableDates(viewDataMap, viewOffset) {
+    viewDataMap.forEach(row => {
+      row.forEach(cell => {
+        cell.startDate = dateUtilsTs.addOffsets(cell.startDate, [viewOffset]);
+        cell.endDate = dateUtilsTs.addOffsets(cell.endDate, [viewOffset]);
+      });
+    });
   }
   _transformViewDataMapForHorizontalGrouping(viewDataMap, groupsList) {
     var result = viewDataMap.map(row => row.slice());
