@@ -1,0 +1,47 @@
+"use strict";
+
+exports.getFormLayoutConfig = void 0;
+var _description = require("./description");
+var _const = require("./const");
+var _dateBoxGroup = require("./groups/dateBoxGroup");
+var _switchGroup = require("./groups/switchGroup");
+const LayoutGroupNames = {
+  Main: 'mainGroup',
+  Recurrence: 'recurrenceGroup'
+};
+const createMainItems = (dataExpr, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate, allDayEditorTemplate, repeatEditorTemplate, descriptionEditorTemplate) => [{
+  dataField: dataExpr.textExpr,
+  editorType: 'dxTextBox',
+  colSpan: 2,
+  label: {
+    text: _const.ItemLabels.subject
+  }
+}, (0, _dateBoxGroup.getDateBoxGroupConfig)(dataExpr, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate), (0, _switchGroup.getSwitchGroupConfig)(allDayEditorTemplate, repeatEditorTemplate, dataExpr.allDayExpr), {
+  itemType: 'empty',
+  colSpan: 2
+}, (0, _description.getDescriptionLayoutItemConfig)(descriptionEditorTemplate, dataExpr.descriptionExpr, _const.ItemLabels.description), {
+  itemType: 'empty',
+  colSpan: 2
+}];
+const getMainLayout = (colSpan, dateExpr, recurrenceEditorVisibility, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate, allDayEditorTemplate, repeatEditorTemplate, descriptionEditorTemplate) => [{
+  itemType: 'group',
+  name: LayoutGroupNames.Main,
+  colCountByScreen: {
+    lg: 2,
+    xs: 1
+  },
+  colSpan,
+  items: createMainItems(dateExpr, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate, allDayEditorTemplate, repeatEditorTemplate, descriptionEditorTemplate)
+}, {
+  itemType: 'group',
+  name: LayoutGroupNames.Recurrence,
+  visible: recurrenceEditorVisibility,
+  colSpan,
+  items: []
+}];
+const getFormLayoutConfig = (fieldExpr, formData, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate, allDayEditorTemplate, repeatEditorTemplate, descriptionEditorTemplate) => {
+  const recurrenceEditorVisibility = !!formData[fieldExpr.recurrenceRuleExpr];
+  const colSpan = recurrenceEditorVisibility ? 1 : 2;
+  return getMainLayout(colSpan, fieldExpr, recurrenceEditorVisibility, allowTimeZoneEditing, startDateEditorTemplate, endDateEditorTemplate, startDatetimeZoneEditorTemplate, endDateTimeZoneEditorTemplate, allDayEditorTemplate, repeatEditorTemplate, descriptionEditorTemplate);
+};
+exports.getFormLayoutConfig = getFormLayoutConfig;
