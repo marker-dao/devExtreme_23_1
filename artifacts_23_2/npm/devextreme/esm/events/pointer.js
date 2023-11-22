@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/events/pointer.js)
 * Version: 23.2.2
-* Build date: Mon Nov 20 2023
+* Build date: Wed Nov 22 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import GlobalConfig from '../core/config';
 import * as support from '../core/utils/support';
 import { each } from '../core/utils/iterator';
 import devices from '../core/devices';
@@ -71,11 +72,15 @@ import MouseAndTouchStrategy from './pointer/mouse_and_touch';
   * @module events/pointer
 */
 
-var getStrategy = (support, device) => {
+var getStrategy = (support, _ref) => {
   var {
     tablet,
     phone
-  } = device;
+  } = _ref;
+  var pointerEventStrategy = getStrategyFromGlobalConfig();
+  if (pointerEventStrategy) {
+    return pointerEventStrategy;
+  }
   if (support.touch && !(tablet || phone)) {
     return MouseAndTouchStrategy;
   }
@@ -98,4 +103,12 @@ var pointer = {
   over: 'dxpointerover',
   out: 'dxpointerout'
 };
+function getStrategyFromGlobalConfig() {
+  var eventStrategyName = GlobalConfig().pointerEventStrategy;
+  return {
+    'mouse-and-touch': MouseAndTouchStrategy,
+    'touch': TouchStrategy,
+    'mouse': MouseStrategy
+  }[eventStrategyName];
+}
 export default pointer;

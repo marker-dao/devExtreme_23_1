@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/tabs.js)
 * Version: 23.2.2
-* Build date: Mon Nov 20 2023
+* Build date: Wed Nov 22 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -49,10 +49,11 @@ const TABS_NAV_BUTTON_CLASS = 'dx-tabs-nav-button';
 const TABS_LEFT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-left';
 const TABS_RIGHT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-right';
 const TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
+const TABS_ITEM_TEXT_SPAN_CLASS = 'dx-tab-text-span';
+const TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS = 'dx-tab-text-span-pseudo';
 const STATE_DISABLED_CLASS = 'dx-state-disabled';
 const FOCUSED_DISABLED_NEXT_TAB_CLASS = 'dx-focused-disabled-next-tab';
 const FOCUSED_DISABLED_PREV_TAB_CLASS = 'dx-focused-disabled-prev-tab';
-const TABS_DATA_DX_TEXT_ATTRIBUTE = 'data-dx_text';
 const TABS_ORIENTATION_CLASS = {
   vertical: 'dx-tabs-vertical',
   horizontal: 'dx-tabs-horizontal'
@@ -196,25 +197,32 @@ const Tabs = _uiCollection_widget.default.inherit({
     this._renderMultiple();
     this._feedbackHideTimeout = FEEDBACK_HIDE_TIMEOUT;
   },
-  _initTemplates: function () {
+  _prepareDefaultItemTemplate(data, $container) {
+    const text = (0, _type.isPlainObject)(data) ? data === null || data === void 0 ? void 0 : data.text : data;
+    if ((0, _type.isDefined)(text)) {
+      const $tabTextSpan = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
+      $tabTextSpan.text(text);
+      if ((0, _themes.isFluent)()) {
+        const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+        $tabTextSpanPseudo.text(text);
+        $tabTextSpanPseudo.appendTo($tabTextSpan);
+      }
+      $tabTextSpan.appendTo($container);
+    }
+    if ((0, _type.isDefined)(data.html)) {
+      $container.html(data.html);
+    }
+  },
+  _initTemplates() {
     this.callBase();
     this._templateManager.addDefaultTemplates({
-      item: new _bindable_template.BindableTemplate(function ($container, data) {
-        var _data$text;
-        if ((0, _type.isPlainObject)(data)) {
-          this._prepareDefaultItemTemplate(data, $container);
-        } else {
-          $container.text(String(data));
-        }
+      item: new _bindable_template.BindableTemplate((($container, data) => {
+        this._prepareDefaultItemTemplate(data, $container);
         const $iconElement = (0, _icon.getImageContainer)(data.icon);
         $iconElement && $iconElement.prependTo($container);
-        const $tabItem = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_CLASS);
-        const text = (_data$text = data === null || data === void 0 ? void 0 : data.text) !== null && _data$text !== void 0 ? _data$text : data;
-        if ((0, _type.isString)(text) || (0, _type.isNumeric)(text)) {
-          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, text);
-        }
+        const $tabItem = (0, _renderer.default)('<div>').addClass(TABS_ITEM_TEXT_CLASS);
         $container.wrapInner($tabItem);
-      }.bind(this), ['text', 'html', 'icon'], this.option('integrationOptions.watchMethod'))
+      }).bind(this), ['text', 'html', 'icon'], this.option('integrationOptions.watchMethod'))
     });
   },
   _createItemByTemplate: function _createItemByTemplate(itemTemplate, renderArgs) {
@@ -294,12 +302,12 @@ const Tabs = _uiCollection_widget.default.inherit({
   },
   _isItemsWidthExceeded() {
     const $visibleItems = this._getVisibleItems();
-    const tabItemsWidth = this._getSummaryItemsSize('width', $visibleItems, true);
+    const tabItemTotalWidth = this._getSummaryItemsSize('width', $visibleItems, true);
     const elementWidth = (0, _size.getWidth)(this.$element());
-    if ([tabItemsWidth, elementWidth].includes(0)) {
+    if ([tabItemTotalWidth, elementWidth].includes(0)) {
       return false;
     }
-    const isItemsWidthExceeded = tabItemsWidth > elementWidth;
+    const isItemsWidthExceeded = tabItemTotalWidth > elementWidth - 1;
     return isItemsWidthExceeded;
   },
   _isItemsHeightExceeded() {

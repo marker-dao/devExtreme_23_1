@@ -14,12 +14,7 @@ import { INTERNAL_USAGE_ID, PUBLIC_KEY } from './key';
 import { pad } from './pkcs1';
 import { compareSignatures } from './rsa_bigint';
 import { sha1 } from './sha1';
-var TokenKind;
-(function (TokenKind) {
-  TokenKind["corrupted"] = "corrupted";
-  TokenKind["verified"] = "verified";
-  TokenKind["internal"] = "internal";
-})(TokenKind || (TokenKind = {}));
+import { TokenKind } from './types';
 var SPLITTER = '.';
 var FORMAT = 1;
 var RTM_MIN_PATCH_VERSION = 3;

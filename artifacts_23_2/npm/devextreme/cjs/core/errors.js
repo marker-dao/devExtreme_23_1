@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/errors.js)
 * Version: 23.2.2
-* Build date: Mon Nov 20 2023
+* Build date: Wed Nov 22 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -215,7 +215,7 @@ var _default = (0, _error.default)({
   /**
   * @name ErrorsCore.W0019
   */
-  W0019: 'DevExtreme: Unable to Locate a Valid License Key\n\n' + 'If you are using a 30-day trial version of DevExtreme, you must uninstall all copies of DevExtreme once your 30-day trial period expires. For terms and conditions that govern use of DevExtreme UI components/libraries, please refer to the DevExtreme End User License Agreement: https://js.devexpress.com/EULAs/DevExtremeComplete.\n\n' + 'To use DevExtreme in a commercial project, you must purchase a license. For pricing/licensing options, please visit: https://js.devexpress.com/Buy.\n\n' + 'If you have licensing-related questions or need help with a purchase, please email clientservices@devexpress.com.\n\n',
+  W0019: 'DevExtreme: Unable to Locate a Valid License Key.\n\n' + 'If you are using a 30-day trial version of DevExtreme, you must uninstall all copies of DevExtreme once your 30-day trial period expires. For terms and conditions that govern use of DevExtreme UI components/libraries, please refer to the DevExtreme End User License Agreement: https://js.devexpress.com/EULAs/DevExtremeComplete.\n\n' + 'To use DevExtreme in a commercial project, you must purchase a license. For pricing/licensing options, please visit: https://js.devexpress.com/Buy.\n\n' + 'If you have licensing-related questions or need help with a purchase, please email clientservices@devexpress.com.\n\n',
   /**
    * @name ErrorsCore.W0020
    */

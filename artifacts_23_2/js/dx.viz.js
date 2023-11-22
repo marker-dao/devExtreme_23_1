@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 23.2.2
-* Build date: Mon Nov 20 2023
+* Build date: Wed Nov 22 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -3187,6 +3187,7 @@ var _key = __webpack_require__(41402);
 var _pkcs = __webpack_require__(95373);
 var _rsa_bigint = __webpack_require__(25746);
 var _sha = __webpack_require__(13082);
+var _types = __webpack_require__(13004);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var __rest = void 0 && (void 0).__rest || function (s, e) {
@@ -3197,37 +3198,31 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
   return t;
 };
-var TokenKind;
-(function (TokenKind) {
-  TokenKind["corrupted"] = "corrupted";
-  TokenKind["verified"] = "verified";
-  TokenKind["internal"] = "internal";
-})(TokenKind || (TokenKind = {}));
 const SPLITTER = '.';
 const FORMAT = 1;
 const RTM_MIN_PATCH_VERSION = 3;
 const GENERAL_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'general'
 };
 const VERIFICATION_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'verification'
 };
 const DECODING_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'decoding'
 };
 const DESERIALIZATION_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'deserialization'
 };
 const PAYLOAD_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'payload'
 };
 const VERSION_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'version'
 };
 let validationPerformed = false;
@@ -3278,7 +3273,7 @@ function parseLicenseKey(encodedKey) {
     rest = __rest(payload, ["customerId", "maxVersionAllowed", "format", "internalUsageId"]);
   if (internalUsageId !== undefined) {
     return {
-      kind: TokenKind.internal,
+      kind: _types.TokenKind.internal,
       internalUsageId
     };
   }
@@ -3289,7 +3284,7 @@ function parseLicenseKey(encodedKey) {
     return VERSION_ERROR;
   }
   return {
-    kind: TokenKind.verified,
+    kind: _types.TokenKind.verified,
     payload: _extends({
       customerId,
       maxVersionAllowed
@@ -3312,13 +3307,13 @@ function getLicenseCheckParams(_ref2) {
       };
     }
     const license = parseLicenseKey(licenseKey);
-    if (license.kind === TokenKind.corrupted) {
+    if (license.kind === _types.TokenKind.corrupted) {
       return {
         preview,
         error: 'W0021'
       };
     }
-    if (license.kind === TokenKind.internal) {
+    if (license.kind === _types.TokenKind.internal) {
       return {
         preview,
         internal: true,
@@ -3521,6 +3516,25 @@ function sha1(text) {
   }
   return (0, _byte_utils.wordsToBytes)(h);
 }
+
+/***/ }),
+
+/***/ 13004:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.TokenKind = void 0;
+var TokenKind;
+exports.TokenKind = TokenKind;
+(function (TokenKind) {
+  TokenKind["corrupted"] = "corrupted";
+  TokenKind["verified"] = "verified";
+  TokenKind["internal"] = "internal";
+})(TokenKind || (exports.TokenKind = TokenKind = {}));
 
 /***/ }),
 
@@ -18098,7 +18112,7 @@ var _default = (0, _error.default)({
   /**
   * @name ErrorsCore.W0019
   */
-  W0019: 'DevExtreme: Unable to Locate a Valid License Key\n\n' + 'If you are using a 30-day trial version of DevExtreme, you must uninstall all copies of DevExtreme once your 30-day trial period expires. For terms and conditions that govern use of DevExtreme UI components/libraries, please refer to the DevExtreme End User License Agreement: https://js.devexpress.com/EULAs/DevExtremeComplete.\n\n' + 'To use DevExtreme in a commercial project, you must purchase a license. For pricing/licensing options, please visit: https://js.devexpress.com/Buy.\n\n' + 'If you have licensing-related questions or need help with a purchase, please email clientservices@devexpress.com.\n\n',
+  W0019: 'DevExtreme: Unable to Locate a Valid License Key.\n\n' + 'If you are using a 30-day trial version of DevExtreme, you must uninstall all copies of DevExtreme once your 30-day trial period expires. For terms and conditions that govern use of DevExtreme UI components/libraries, please refer to the DevExtreme End User License Agreement: https://js.devexpress.com/EULAs/DevExtremeComplete.\n\n' + 'To use DevExtreme in a commercial project, you must purchase a license. For pricing/licensing options, please visit: https://js.devexpress.com/Buy.\n\n' + 'If you have licensing-related questions or need help with a purchase, please email clientservices@devexpress.com.\n\n',
   /**
    * @name ErrorsCore.W0020
    */
@@ -22408,7 +22422,8 @@ function _default(baseErrors, errors) {
     return _string.format.apply(this, args).replace(/\.*\s*?$/, '');
   }
   function formatMessage(id, details) {
-    return _string.format.apply(this, ['{0} - {1}. See:\n{2}', id, details, getErrorUrl(id)]);
+    const kind = id !== null && id !== void 0 && id.startsWith('W') ? 'warning' : 'error';
+    return _string.format.apply(this, ['{0} - {1}.\n\nFor additional information on this {2} message, see: {3}', id, details, kind, getErrorUrl(id)]);
   }
   function makeError(args) {
     const id = args[0];
@@ -31314,6 +31329,7 @@ exports.Event = Event;
 
 
 exports["default"] = void 0;
+var _config = _interopRequireDefault(__webpack_require__(80209));
 var support = _interopRequireWildcard(__webpack_require__(60137));
 var _iterator = __webpack_require__(95479);
 var _devices = _interopRequireDefault(__webpack_require__(20530));
@@ -31321,9 +31337,9 @@ var _event_registrator = _interopRequireDefault(__webpack_require__(85788));
 var _touch = _interopRequireDefault(__webpack_require__(69120));
 var _mouse = _interopRequireDefault(__webpack_require__(66509));
 var _mouse_and_touch = _interopRequireDefault(__webpack_require__(87720));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /**
   * @name UI Events.dxpointerdown
   * @type eventType
@@ -31380,11 +31396,15 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
   * @type_function_param1_field1 pointerType:string
   * @module events/pointer
 */
-const getStrategy = (support, device) => {
-  const {
+const getStrategy = (support, _ref) => {
+  let {
     tablet,
     phone
-  } = device;
+  } = _ref;
+  const pointerEventStrategy = getStrategyFromGlobalConfig();
+  if (pointerEventStrategy) {
+    return pointerEventStrategy;
+  }
   if (support.touch && !(tablet || phone)) {
     return _mouse_and_touch.default;
   }
@@ -31407,6 +31427,14 @@ const pointer = {
   over: 'dxpointerover',
   out: 'dxpointerout'
 };
+function getStrategyFromGlobalConfig() {
+  const eventStrategyName = (0, _config.default)().pointerEventStrategy;
+  return {
+    'mouse-and-touch': _mouse_and_touch.default,
+    'touch': _touch.default,
+    'mouse': _mouse.default
+  }[eventStrategyName];
+}
 var _default = pointer;
 exports["default"] = _default;
 module.exports = exports.default;

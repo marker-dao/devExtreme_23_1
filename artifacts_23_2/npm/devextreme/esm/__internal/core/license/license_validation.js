@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/license/license_validation.js)
 * Version: 23.2.2
-* Build date: Mon Nov 20 2023
+* Build date: Wed Nov 22 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,12 +22,7 @@ import { INTERNAL_USAGE_ID, PUBLIC_KEY } from './key';
 import { pad } from './pkcs1';
 import { compareSignatures } from './rsa_bigint';
 import { sha1 } from './sha1';
-var TokenKind;
-(function (TokenKind) {
-  TokenKind["corrupted"] = "corrupted";
-  TokenKind["verified"] = "verified";
-  TokenKind["internal"] = "internal";
-})(TokenKind || (TokenKind = {}));
+import { TokenKind } from './types';
 var SPLITTER = '.';
 var FORMAT = 1;
 var RTM_MIN_PATCH_VERSION = 3;

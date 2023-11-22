@@ -24,7 +24,8 @@ const TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
 const TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
 const TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
 const DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
-const TABS_DATA_DX_TEXT_ATTRIBUTE = 'data-dx_text';
+const TABS_ITEM_TEXT_SPAN_CLASS = 'dx-tab-text-span';
+const TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS = 'dx-tab-text-span-pseudo';
 const TABPANEL_TABS_POSITION_CLASS = {
   top: 'dx-tabpanel-tabs-position-top',
   right: 'dx-tabpanel-tabs-position-right',
@@ -141,27 +142,29 @@ const TabPanel = _multi_view.default.inherit({
     this._createTitleActions();
     this._renderLayout();
   },
-  _initTemplates: function () {
+  _prepareTabsItemTemplate(data, $container) {
+    const $iconElement = (0, _icon.getImageContainer)(data === null || data === void 0 ? void 0 : data.icon);
+    if ($iconElement) {
+      $container.append($iconElement);
+    }
+    const title = (0, _type.isPlainObject)(data) ? data === null || data === void 0 ? void 0 : data.title : data;
+    if ((0, _type.isDefined)(title) && !(0, _type.isPlainObject)(title)) {
+      const $tabTextSpan = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
+      $tabTextSpan.append(_dom_adapter.default.createTextNode(title));
+      if ((0, _themes.isFluent)()) {
+        const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+        $tabTextSpanPseudo.append(_dom_adapter.default.createTextNode(title));
+        $tabTextSpanPseudo.appendTo($tabTextSpan);
+      }
+      $tabTextSpan.appendTo($container);
+    }
+  },
+  _initTemplates() {
     this.callBase();
     this._templateManager.addDefaultTemplates({
-      title: new _bindable_template.BindableTemplate(function ($container, data) {
-        if ((0, _type.isPlainObject)(data)) {
-          const $iconElement = (0, _icon.getImageContainer)(data.icon);
-          if ($iconElement) {
-            $container.append($iconElement);
-          }
-          if ((0, _type.isDefined)(data.title) && !(0, _type.isPlainObject)(data.title)) {
-            $container.append(_dom_adapter.default.createTextNode(data.title));
-          }
-        } else {
-          if ((0, _type.isDefined)(data)) {
-            $container.text(String(data));
-          }
-        }
-        const $tabItem = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_CLASS);
-        if (data !== null && data !== void 0 && data.title) {
-          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, data.title);
-        }
+      title: new _bindable_template.BindableTemplate(($container, data) => {
+        this._prepareTabsItemTemplate(data, $container);
+        const $tabItem = (0, _renderer.default)('<div>').addClass(TABS_ITEM_TEXT_CLASS);
         $container.wrapInner($tabItem);
       }, ['title', 'icon'], this.option('integrationOptions.watchMethod'))
     });

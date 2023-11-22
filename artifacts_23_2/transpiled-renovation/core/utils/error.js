@@ -34,7 +34,8 @@ function _default(baseErrors, errors) {
     return _string.format.apply(this, args).replace(/\.*\s*?$/, '');
   }
   function formatMessage(id, details) {
-    return _string.format.apply(this, ['{0} - {1}. See:\n{2}', id, details, getErrorUrl(id)]);
+    const kind = id !== null && id !== void 0 && id.startsWith('W') ? 'warning' : 'error';
+    return _string.format.apply(this, ['{0} - {1}.\n\nFor additional information on this {2} message, see: {3}', id, details, kind, getErrorUrl(id)]);
   }
   function makeError(args) {
     const id = args[0];

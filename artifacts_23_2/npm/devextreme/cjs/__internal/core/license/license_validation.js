@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/core/license/license_validation.js)
 * Version: 23.2.2
-* Build date: Mon Nov 20 2023
+* Build date: Wed Nov 22 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,6 +22,7 @@ var _key = require("./key");
 var _pkcs = require("./pkcs1");
 var _rsa_bigint = require("./rsa_bigint");
 var _sha = require("./sha1");
+var _types = require("./types");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var __rest = void 0 && (void 0).__rest || function (s, e) {
@@ -32,37 +33,31 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
   return t;
 };
-var TokenKind;
-(function (TokenKind) {
-  TokenKind["corrupted"] = "corrupted";
-  TokenKind["verified"] = "verified";
-  TokenKind["internal"] = "internal";
-})(TokenKind || (TokenKind = {}));
 const SPLITTER = '.';
 const FORMAT = 1;
 const RTM_MIN_PATCH_VERSION = 3;
 const GENERAL_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'general'
 };
 const VERIFICATION_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'verification'
 };
 const DECODING_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'decoding'
 };
 const DESERIALIZATION_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'deserialization'
 };
 const PAYLOAD_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'payload'
 };
 const VERSION_ERROR = {
-  kind: TokenKind.corrupted,
+  kind: _types.TokenKind.corrupted,
   error: 'version'
 };
 let validationPerformed = false;
@@ -113,7 +108,7 @@ function parseLicenseKey(encodedKey) {
     rest = __rest(payload, ["customerId", "maxVersionAllowed", "format", "internalUsageId"]);
   if (internalUsageId !== undefined) {
     return {
-      kind: TokenKind.internal,
+      kind: _types.TokenKind.internal,
       internalUsageId
     };
   }
@@ -124,7 +119,7 @@ function parseLicenseKey(encodedKey) {
     return VERSION_ERROR;
   }
   return {
-    kind: TokenKind.verified,
+    kind: _types.TokenKind.verified,
     payload: _extends({
       customerId,
       maxVersionAllowed
@@ -147,13 +142,13 @@ function getLicenseCheckParams(_ref2) {
       };
     }
     const license = parseLicenseKey(licenseKey);
-    if (license.kind === TokenKind.corrupted) {
+    if (license.kind === _types.TokenKind.corrupted) {
       return {
         preview,
         error: 'W0021'
       };
     }
-    if (license.kind === TokenKind.internal) {
+    if (license.kind === _types.TokenKind.internal) {
       return {
         preview,
         internal: true,

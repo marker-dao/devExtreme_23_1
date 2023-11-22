@@ -1,7 +1,7 @@
 /*!
  * DevExpress Gantt (dx-gantt)
- * Version: 4.1.49
- * Build date: Thu Sep 14 2023
+ * Version: 4.1.50
+ * Build date: Wed Nov 15 2023
  *
  * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
@@ -17591,7 +17591,8 @@ var ScaleCalculator = (function () {
             var nextDate = this.getNextScaleDate(currentDate, scaleType);
             var isStart = currentDate.getTime() === this.range.start.getTime();
             var isEnd = nextDate.getTime() >= this.range.end.getTime();
-            var width = isStart || isEnd ? this.getRangeTickCount(currentDate, nextDate) * defWidth : defWidth;
+            var needWidthCorrection = isStart || isEnd || (scaleType > Enums_1.ViewType.Hours && DateUtils_1.DateUtils.hasDST());
+            var width = needWidthCorrection ? this.getRangeTickCount(currentDate, nextDate) * defWidth : defWidth;
             items.push(new ScaleItemInfo(currentDate, nextDate, new point_1.Point(x, undefined), new size_1.Size(width, 0)));
             currentDate = nextDate;
             x += width;
@@ -20507,7 +20508,7 @@ var DateUtils = (function () {
         return DateUtils.getRangeMSPeriod(start, end) / DateUtils.getTickTimeSpan(scaleType);
     };
     DateUtils.getRangeMSPeriod = function (start, end) {
-        return end.getTime() - DateUtils.getDSTDelta(start, end) - start.getTime();
+        return end.getTime() - DateUtils.getDSTTotalDelta(start, end) - start.getTime();
     };
     DateUtils.getRangeTickCountInMonthsViewType = function (start, end) {
         var startMonthStartDate = new Date(start.getFullYear(), start.getMonth(), 1);
@@ -20543,10 +20544,38 @@ var DateUtils = (function () {
         var timeZoneDiff = DateUtils.getTimezoneOffsetDiff(start, end) * DateUtils.msPerMinute;
         return timeZoneDiff > 0 ? timeZoneDiff : 0;
     };
+    DateUtils.getDSTTotalDelta = function (start, end) {
+        if (!DateUtils.hasDST())
+            return 0;
+        var refDate = start;
+        var delta = 0;
+        var year = refDate.getFullYear();
+        var month = refDate.getMonth();
+        while (refDate < end) {
+            if (month >= 5) {
+                year++;
+                month = 0;
+            }
+            else
+                month = 5;
+            var newRefDate = new Date(year, month, 1);
+            if (newRefDate > end)
+                newRefDate = end;
+            delta += DateUtils.getDSTDelta(refDate, newRefDate);
+            refDate = newRefDate;
+        }
+        return delta;
+    };
     DateUtils.getDSTCorrectedTaskEnd = function (start, period) {
         var time = start.getTime() + period;
-        var delta = DateUtils.getDSTDelta(start, new Date(time));
+        var delta = DateUtils.getDSTTotalDelta(start, new Date(time));
         return new Date(time + delta);
+    };
+    DateUtils.hasDST = function () {
+        var year = (new Date()).getFullYear();
+        var firstJan = new Date(year, 0, 1);
+        var firstJune = new Date(year, 5, 1);
+        return DateUtils.getTimezoneOffsetDiff(firstJan, firstJune) !== 0;
     };
     DateUtils.msPerMinute = 60 * 1000;
     DateUtils.msPerHour = 3600000;

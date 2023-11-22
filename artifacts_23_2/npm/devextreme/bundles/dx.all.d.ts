@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
 * Version: 23.2.2
-* Build date: Mon Nov 20 2023
+* Build date: Wed Nov 22 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1021,6 +1021,10 @@ declare module DevExpress.common {
      * [descr:GlobalConfig.oDataFilterToLower]
      */
     oDataFilterToLower?: boolean;
+    /**
+     * @deprecated Attention! This field is not documented and should only be specified in a limited number of use cases. For more information, please submit a ticket to our Support Center.
+     */
+    pointerEventStrategy?: 'mouse-and-touch' | 'mouse' | 'touch';
     /**
      * [descr:GlobalConfig.rtlEnabled]
      */

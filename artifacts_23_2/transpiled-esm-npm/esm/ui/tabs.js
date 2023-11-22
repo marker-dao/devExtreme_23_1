@@ -7,7 +7,7 @@ import Button from './button';
 import { render } from './widget/utils.ink_ripple';
 import { addNamespace } from '../events/utils/index';
 import { extend } from '../core/utils/extend';
-import { isPlainObject, isString, isNumeric } from '../core/utils/type';
+import { isPlainObject, isDefined } from '../core/utils/type';
 import pointerEvents from '../events/pointer';
 import { each } from '../core/utils/iterator';
 import TabsItem from './tabs/item';
@@ -38,10 +38,11 @@ var TABS_NAV_BUTTON_CLASS = 'dx-tabs-nav-button';
 var TABS_LEFT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-left';
 var TABS_RIGHT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-right';
 var TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
+var TABS_ITEM_TEXT_SPAN_CLASS = 'dx-tab-text-span';
+var TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS = 'dx-tab-text-span-pseudo';
 var STATE_DISABLED_CLASS = 'dx-state-disabled';
 var FOCUSED_DISABLED_NEXT_TAB_CLASS = 'dx-focused-disabled-next-tab';
 var FOCUSED_DISABLED_PREV_TAB_CLASS = 'dx-focused-disabled-prev-tab';
-var TABS_DATA_DX_TEXT_ATTRIBUTE = 'data-dx_text';
 var TABS_ORIENTATION_CLASS = {
   vertical: 'dx-tabs-vertical',
   horizontal: 'dx-tabs-horizontal'
@@ -185,25 +186,32 @@ var Tabs = CollectionWidget.inherit({
     this._renderMultiple();
     this._feedbackHideTimeout = FEEDBACK_HIDE_TIMEOUT;
   },
-  _initTemplates: function _initTemplates() {
+  _prepareDefaultItemTemplate(data, $container) {
+    var text = isPlainObject(data) ? data === null || data === void 0 ? void 0 : data.text : data;
+    if (isDefined(text)) {
+      var $tabTextSpan = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
+      $tabTextSpan.text(text);
+      if (isFluent()) {
+        var $tabTextSpanPseudo = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+        $tabTextSpanPseudo.text(text);
+        $tabTextSpanPseudo.appendTo($tabTextSpan);
+      }
+      $tabTextSpan.appendTo($container);
+    }
+    if (isDefined(data.html)) {
+      $container.html(data.html);
+    }
+  },
+  _initTemplates() {
     this.callBase();
     this._templateManager.addDefaultTemplates({
-      item: new BindableTemplate(function ($container, data) {
-        var _data$text;
-        if (isPlainObject(data)) {
-          this._prepareDefaultItemTemplate(data, $container);
-        } else {
-          $container.text(String(data));
-        }
+      item: new BindableTemplate((($container, data) => {
+        this._prepareDefaultItemTemplate(data, $container);
         var $iconElement = getImageContainer(data.icon);
         $iconElement && $iconElement.prependTo($container);
-        var $tabItem = $('<span>').addClass(TABS_ITEM_TEXT_CLASS);
-        var text = (_data$text = data === null || data === void 0 ? void 0 : data.text) !== null && _data$text !== void 0 ? _data$text : data;
-        if (isString(text) || isNumeric(text)) {
-          $tabItem.attr(TABS_DATA_DX_TEXT_ATTRIBUTE, text);
-        }
+        var $tabItem = $('<div>').addClass(TABS_ITEM_TEXT_CLASS);
         $container.wrapInner($tabItem);
-      }.bind(this), ['text', 'html', 'icon'], this.option('integrationOptions.watchMethod'))
+      }).bind(this), ['text', 'html', 'icon'], this.option('integrationOptions.watchMethod'))
     });
   },
   _createItemByTemplate: function _createItemByTemplate(itemTemplate, renderArgs) {
@@ -283,12 +291,12 @@ var Tabs = CollectionWidget.inherit({
   },
   _isItemsWidthExceeded() {
     var $visibleItems = this._getVisibleItems();
-    var tabItemsWidth = this._getSummaryItemsSize('width', $visibleItems, true);
+    var tabItemTotalWidth = this._getSummaryItemsSize('width', $visibleItems, true);
     var elementWidth = getWidth(this.$element());
-    if ([tabItemsWidth, elementWidth].includes(0)) {
+    if ([tabItemTotalWidth, elementWidth].includes(0)) {
       return false;
     }
-    var isItemsWidthExceeded = tabItemsWidth > elementWidth;
+    var isItemsWidthExceeded = tabItemTotalWidth > elementWidth - 1;
     return isItemsWidthExceeded;
   },
   _isItemsHeightExceeded() {
