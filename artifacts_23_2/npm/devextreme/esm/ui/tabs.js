@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tabs.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,7 +29,7 @@ import { BindableTemplate } from '../core/templates/bindable_template';
 import { Deferred, when } from '../core/utils/deferred';
 import { isReachedLeft, isReachedRight, isReachedTop, isReachedBottom } from '../renovation/ui/scroll_view/utils/get_boundary_props';
 import { getScrollLeftMax } from '../renovation/ui/scroll_view/utils/get_scroll_left_max';
-import { getWindow } from '../core/utils/window';
+import { hasWindow } from '../core/utils/window';
 
 // STYLE tabs
 
@@ -199,11 +199,9 @@ var Tabs = CollectionWidget.inherit({
     if (isDefined(text)) {
       var $tabTextSpan = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
       $tabTextSpan.text(text);
-      if (isFluent()) {
-        var $tabTextSpanPseudo = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
-        $tabTextSpanPseudo.text(text);
-        $tabTextSpanPseudo.appendTo($tabTextSpan);
-      }
+      var $tabTextSpanPseudo = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+      $tabTextSpanPseudo.text(text);
+      $tabTextSpanPseudo.appendTo($tabTextSpan);
       $tabTextSpan.appendTo($container);
     }
     if (isDefined(data.html)) {
@@ -288,10 +286,6 @@ var Tabs = CollectionWidget.inherit({
   _isVertical() {
     return this.option('orientation') === ORIENTATION.vertical;
   },
-  _isServerSide() {
-    var window = getWindow();
-    return window.isWindowMock || !window;
-  },
   _isItemsSizeExceeded() {
     var isVertical = this._isVertical();
     var isItemsSizeExceeded = isVertical ? this._isItemsHeightExceeded() : this._isItemsWidthExceeded();
@@ -321,9 +315,9 @@ var Tabs = CollectionWidget.inherit({
     each($visibleItems, (_, item) => {
       itemsWidth.push(getOuterWidth(item, true));
     });
-    var maxTabWidth = Math.max.apply(null, itemsWidth);
+    var maxTabItemWidth = Math.max.apply(null, itemsWidth);
     var requireWidth = elementWidth / $visibleItems.length;
-    var needStretchItems = maxTabWidth > requireWidth;
+    var needStretchItems = maxTabItemWidth > requireWidth + 1;
     return needStretchItems;
   },
   _cleanNavButtons: function _cleanNavButtons() {
@@ -639,7 +633,7 @@ var Tabs = CollectionWidget.inherit({
           this._toggleOrientationClass(args.value);
           var _indicatorPosition2 = this._getIndicatorPosition();
           this._toggleIndicatorPositionClass(_indicatorPosition2);
-          if (!this._isServerSide()) {
+          if (hasWindow()) {
             this._updateScrollable();
           }
           break;
@@ -647,7 +641,7 @@ var Tabs = CollectionWidget.inherit({
       case 'iconPosition':
         {
           this._toggleIconPositionClass();
-          if (!this._isServerSide()) {
+          if (hasWindow()) {
             this._dimensionChanged();
           }
           break;
@@ -655,7 +649,7 @@ var Tabs = CollectionWidget.inherit({
       case 'stylingMode':
         {
           this._toggleStylingModeClass(args.value);
-          if (!this._isServerSide()) {
+          if (hasWindow()) {
             this._dimensionChanged();
           }
           break;

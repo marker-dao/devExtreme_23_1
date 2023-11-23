@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.GroupingHelper = void 0;
+exports.getContinuationGroupCount = getContinuationGroupCount;
 var _deferred = require("../../../../core/utils/deferred");
 var _extend = require("../../../../core/utils/extend");
 var _iterator = require("../../../../core/utils/iterator");
@@ -594,4 +595,5 @@ const GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
     }
   };
 }());
+
 exports.GroupingHelper = GroupingHelper;

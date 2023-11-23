@@ -278,11 +278,13 @@ const BaseChart = _m_base_widget.default.inherit({
     this.layoutManager = new _layout_manager.LayoutManager();
     this._createScrollBar();
     _events_engine.default.on(this._$element, 'contextmenu', event => {
+      
       if ((0, _index.isTouchEvent)(event) || (0, _index.isPointerEvent)(event)) {
         event.preventDefault();
       }
     });
     _events_engine.default.on(this._$element, 'MSHoldVisual', event => {
+      
       event.preventDefault();
     });
   },
@@ -529,6 +531,7 @@ const BaseChart = _m_base_widget.default.inherit({
     } else {
       this._canvas = this.__currentCanvas;
     }
+    
     recreateCanvas && this._updateCanvasClipRect(this._canvas);
     this._canvas = this._createCanvasFromRect(this._rect);
     this._renderer.stopAllAnimations(true);
@@ -552,6 +555,7 @@ const BaseChart = _m_base_widget.default.inherit({
     let argBusinessRange;
     let zoomMinArg;
     let zoomMaxArg;
+    
     this._renderer.lock();
     if (drawOptions.drawLegend && this._legend) {
       this._legendGroup.linkAppend();

@@ -1,13 +1,12 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/view_model/to_test/views/utils/base.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { dateUtilsTs } from '../../../../../../../__internal/core/utils/date';
-import errors from '../../../../../../../ui/widget/ui.errors';
 import dateUtils from '../../../../../../../core/utils/date';
 import { isDefined } from '../../../../../../../core/utils/type';
 import dateLocalization from '../../../../../../../localization/date';
@@ -50,11 +49,6 @@ export var getStartViewDateWithoutDST = (startViewDate, startDayHour) => {
 export var getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDateForHeaderText, additionalOptions) => {
   var validDate = getDateForHeaderText(headerIndex, date, additionalOptions);
   return dateLocalization.format(validDate, headerCellTextFormat);
-};
-export var validateDayHours = (startDayHour, endDayHour) => {
-  if (startDayHour >= endDayHour) {
-    throw errors.Error('E1058');
-  }
 };
 export var getStartViewDateTimeOffset = (startViewDate, startDayHour) => {
   var validStartDayHour = Math.floor(startDayHour);

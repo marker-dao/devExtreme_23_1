@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/defer_rendering.d.ts)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,10 +9,6 @@
 import {
     AnimationConfig,
 } from '../animation/fx';
-
-import {
-    DxElement,
-} from '../core/element';
 
 import {
     EventInfo,
@@ -87,17 +83,19 @@ export interface dxDeferRenderingOptions extends WidgetOptions<dxDeferRendering>
     /**
      * @docid
      * @default null
+     * @type_function_param1 e:{ui/defer_rendering:RenderedEvent}
      * @action
      * @public
      */
-    onRendered?: ((e: { component?: dxDeferRendering; element?: DxElement; model?: any }) => void);
+    onRendered?: ((e: RenderedEvent) => void);
     /**
      * @docid
      * @default null
+     * @type_function_param1 e:{ui/defer_rendering:ShownEvent}
      * @action
      * @public
      */
-    onShown?: ((e: { component?: dxDeferRendering; element?: DxElement; model?: any }) => void);
+    onShown?: ((e: ShownEvent) => void);
     /**
      * @docid
      * @type DxPromise|bool

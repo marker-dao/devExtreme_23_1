@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/m_work_space.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,7 +27,7 @@ import pointerEvents from '../../../events/pointer';
 import { addNamespace, isMouseEvent } from '../../../events/utils/index';
 import messageLocalization from '../../../localization/message';
 import { getMemoizeScrollTo } from '../../../renovation/ui/common/utils/scroll/getMemoizeScrollTo';
-import { calculateIsGroupedAllDayPanel, calculateViewStartDate, getCellDuration, getStartViewDateTimeOffset, getViewStartByOptions, isDateAndTimeView, validateDayHours } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
+import { calculateIsGroupedAllDayPanel, calculateViewStartDate, getCellDuration, getStartViewDateTimeOffset, getViewStartByOptions, isDateAndTimeView } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import Scrollable from '../../../ui/scroll_view/ui.scrollable';
 import errors from '../../../ui/widget/ui.errors';
 // NOTE: Renovation component section
@@ -1668,13 +1668,7 @@ class SchedulerWorkSpace extends WidgetObserver {
   _optionChanged(args) {
     switch (args.name) {
       case 'startDayHour':
-        validateDayHours(args.value, this.option('endDayHour'));
-        this._cleanWorkSpace();
-        break;
       case 'endDayHour':
-        validateDayHours(this.option('startDayHour'), args.value);
-        this._cleanWorkSpace();
-        break;
       case 'viewOffset':
       case 'dateCellTemplate':
       case 'resourceCellTemplate':

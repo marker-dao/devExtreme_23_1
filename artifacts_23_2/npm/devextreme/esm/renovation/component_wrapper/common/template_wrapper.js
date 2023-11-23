@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/component_wrapper/common/template_wrapper.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -71,7 +71,7 @@ function removeDifferentElements(oldChildren, newChildren) {
   newChildren.forEach(newElement => {
     var hasOldChild = !!oldChildren.find(oldElement => newElement === oldElement);
     if (!hasOldChild && newElement.parentNode) {
-      newElement.parentNode.removeChild(newElement);
+      $(newElement).remove();
     }
   });
 }

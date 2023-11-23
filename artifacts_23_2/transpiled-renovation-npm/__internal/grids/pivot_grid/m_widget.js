@@ -1062,6 +1062,7 @@ const PivotGrid = _ui2.default.inherit({
       }
       hasRowsScroll = that._hasHeight && calculateHasScroll(dataAreaHeight, totalHeight);
       hasColumnsScroll = calculateHasScroll(groupWidth, totalWidth);
+      
       const groupHeight = calculateGroupHeight(dataAreaHeight, totalHeight, hasRowsScroll, hasColumnsScroll, scrollBarWidth);
       (0, _common.deferRender)(() => {
         that._columnsArea.tableElement().append(that._dataArea.headElement());
@@ -1124,6 +1125,7 @@ const PivotGrid = _ui2.default.inherit({
         });
         that._updateLoading();
         that._renderNoDataText(dataAreaCell);
+        
         _deferred.when.apply(_renderer.default, updateScrollableResults).done(() => {
           that._updateScrollPosition(that._columnsArea, that._rowsArea, that._dataArea, true);
           that._subscribeToEvents(that._columnsArea, that._rowsArea, that._dataArea);

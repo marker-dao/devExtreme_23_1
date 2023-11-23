@@ -151,11 +151,9 @@ const TabPanel = _multi_view.default.inherit({
     if ((0, _type.isDefined)(title) && !(0, _type.isPlainObject)(title)) {
       const $tabTextSpan = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
       $tabTextSpan.append(_dom_adapter.default.createTextNode(title));
-      if ((0, _themes.isFluent)()) {
-        const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
-        $tabTextSpanPseudo.append(_dom_adapter.default.createTextNode(title));
-        $tabTextSpanPseudo.appendTo($tabTextSpan);
-      }
+      const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+      $tabTextSpanPseudo.append(_dom_adapter.default.createTextNode(title));
+      $tabTextSpanPseudo.appendTo($tabTextSpan);
       $tabTextSpan.appendTo($container);
     }
   },

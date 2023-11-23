@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/tab_panel.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -156,11 +156,9 @@ var TabPanel = MultiView.inherit({
     if (isDefined(title) && !isPlainObject(title)) {
       var $tabTextSpan = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
       $tabTextSpan.append(domAdapter.createTextNode(title));
-      if (isFluent()) {
-        var $tabTextSpanPseudo = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
-        $tabTextSpanPseudo.append(domAdapter.createTextNode(title));
-        $tabTextSpanPseudo.appendTo($tabTextSpan);
-      }
+      var $tabTextSpanPseudo = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+      $tabTextSpanPseudo.append(domAdapter.createTextNode(title));
+      $tabTextSpanPseudo.appendTo($tabTextSpan);
       $tabTextSpan.appendTo($container);
     }
   },

@@ -26,7 +26,7 @@ import { renovationGetCurrentView } from '../../renovation/ui/scheduler/model/un
 import { createTimeZoneCalculator } from '../../renovation/ui/scheduler/timeZoneCalculator/createTimeZoneCalculator';
 import { getPreparedDataItems } from '../../renovation/ui/scheduler/utils/data';
 import { excludeFromRecurrence } from '../../renovation/ui/scheduler/utils/recurrence/excludeFromRecurrence';
-import { isDateAndTimeView as _isDateAndTimeView, isTimelineView, validateDayHours } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
+import { isDateAndTimeView as _isDateAndTimeView, isTimelineView } from '../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { custom as customDialog } from '../../ui/dialog';
 import { isMaterial, isMaterialBased } from '../../ui/themes';
 import errors from '../../ui/widget/ui.errors';
@@ -49,6 +49,7 @@ import { getRecurrenceProcessor } from './m_recurrence';
 import subscribes from './m_subscribes';
 import { utils } from './m_utils';
 import timeZoneUtils from './m_utils_time_zone';
+import { SchedulerOptionsValidator, SchedulerOptionsValidatorErrorsHandler } from './options_validator/index';
 import { AgendaResourceProcessor } from './resources/m_agenda_resource_processor';
 import { createExpressions, createResourceEditorModel as _createResourceEditorModel, getAppointmentColor, getCellGroups, loadResources, setResourceToAppointment } from './resources/m_utils';
 import { DesktopTooltipStrategy } from './tooltip_strategies/m_desktop_tooltip_strategy';
@@ -63,7 +64,6 @@ import SchedulerWorkSpaceMonth from './workspaces/m_work_space_month';
 import SchedulerWorkSpaceWeek from './workspaces/m_work_space_week';
 import SchedulerWorkSpaceWorkWeek from './workspaces/m_work_space_work_week';
 var toMs = dateUtils.dateToMilliseconds;
-var MINUTES_IN_HOUR = 60;
 var DEFAULT_AGENDA_DURATION = 7;
 var WIDGET_CLASS = 'dx-scheduler';
 var WIDGET_SMALL_CLASS = "".concat(WIDGET_CLASS, "-small");
@@ -347,6 +347,7 @@ class Scheduler extends Widget {
   }
   _optionChanged(args) {
     var _a, _b, _c, _d;
+    this.validateOptions();
     var {
       value
     } = args;
@@ -398,8 +399,6 @@ class Scheduler extends Widget {
         (_d = this._header) === null || _d === void 0 ? void 0 : _d.option(name, value);
         break;
       case 'currentView':
-        this._validateDayHours();
-        this._validateCellDuration();
         this._appointments.option({
           items: [],
           allowDrag: this._allowDragging(),
@@ -447,7 +446,6 @@ class Scheduler extends Widget {
         break;
       case 'startDayHour':
       case 'endDayHour':
-        this._validateDayHours();
         this.updateInstances();
         this._appointments.option('items', []);
         this._updateOption('workSpace', name, value);
@@ -457,7 +455,6 @@ class Scheduler extends Widget {
         break;
       // TODO Vinogradov refactoring: merge it with startDayHour / endDayHour
       case 'offset':
-        this._validateDayHours();
         this.updateInstances();
         this._appointments.option('items', []);
         this._updateOption('workSpace', 'viewOffset', this.normalizeViewOffsetValue(value));
@@ -508,7 +505,6 @@ class Scheduler extends Widget {
         });
         break;
       case 'cellDuration':
-        this._validateCellDuration();
         this._updateOption('workSpace', name, value);
         this._appointments.option('items', []);
         if (this._readyToRenderAppointments) {
@@ -801,6 +797,8 @@ class Scheduler extends Widget {
     this._dataSourceLoadedCallback = Callbacks();
     this._subscribes = subscribes;
     this.agendaResourceProcessor = new AgendaResourceProcessor(this.option('resources'));
+    this._optionsValidator = new SchedulerOptionsValidator();
+    this._optionsValidatorErrorHandler = new SchedulerOptionsValidatorErrorsHandler();
   }
   createAppointmentDataProvider() {
     var _a;
@@ -1010,8 +1008,6 @@ class Scheduler extends Widget {
   _initMarkup() {
     // @ts-expect-error
     super._initMarkup();
-    this._validateDayHours();
-    this._validateCellDuration();
     this._renderMainContainer();
     this._renderHeader();
     this._layoutManager = new AppointmentLayoutManager(this);
@@ -1988,19 +1984,6 @@ class Scheduler extends Widget {
       errors.log('W1023');
     }
   }
-  _validateCellDuration() {
-    var endDayHour = this._getCurrentViewOption('endDayHour');
-    var startDayHour = this._getCurrentViewOption('startDayHour');
-    var cellDuration = this._getCurrentViewOption('cellDuration');
-    if ((endDayHour - startDayHour) * MINUTES_IN_HOUR % cellDuration !== 0) {
-      errors.log('W1015');
-    }
-  }
-  _validateDayHours() {
-    var startDayHour = this._getCurrentViewOption('startDayHour');
-    var endDayHour = this._getCurrentViewOption('endDayHour');
-    validateDayHours(startDayHour, endDayHour);
-  }
   _getDragBehavior() {
     return this._workSpace.dragBehavior;
   }
@@ -2013,6 +1996,20 @@ class Scheduler extends Widget {
       return 0;
     }
     return viewOffset * toMs('minute');
+  }
+  validateOptions() {
+    var currentViewOptions = _extends(_extends({}, this.option()), {
+      // TODO: Check it before 24.1 release
+      // NOTE: We override this.option values here
+      // because the old validation logic checked only current view options.
+      // Changing it and validate all views configuration will be a BC.
+      startDayHour: this._getCurrentViewOption('startDayHour'),
+      endDayHour: this._getCurrentViewOption('endDayHour'),
+      offset: this._getCurrentViewOption('offset'),
+      cellDuration: this._getCurrentViewOption('cellDuration')
+    });
+    var validationResult = this._optionsValidator.validate(currentViewOptions);
+    this._optionsValidatorErrorHandler.handleValidationResult(validationResult);
   }
 }
 Scheduler.include(DataHelperMixin);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/polar_chart.d.ts)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,6 @@ import {
 } from '../core/element';
 
 import {
-    DxEvent,
     Cancelable,
     EventInfo,
     NativeEventInfo,
@@ -450,11 +449,12 @@ export interface dxPolarChartOptions extends BaseChartOptions<dxPolarChart> {
      * @docid
      * @default null
      * @type function
+     * @type_function_param1 e:{viz/polar_chart:ArgumentAxisClickEvent}
      * @notUsedInTheme
      * @action
      * @public
      */
-    onArgumentAxisClick?: ((e: { component?: dxPolarChart; element?: DxElement; model?: any; event?: DxEvent; argument?: Date | number | string }) => void) | string;
+    onArgumentAxisClick?: ((e: ArgumentAxisClickEvent) => void) | string;
     /**
      * @docid
      * @default null

@@ -1631,13 +1631,7 @@ let SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
   _proto._optionChanged = function _optionChanged(args) {
     switch (args.name) {
       case 'startDayHour':
-        (0, _base.validateDayHours)(args.value, this.option('endDayHour'));
-        this._cleanWorkSpace();
-        break;
       case 'endDayHour':
-        (0, _base.validateDayHours)(this.option('startDayHour'), args.value);
-        this._cleanWorkSpace();
-        break;
       case 'viewOffset':
       case 'dateCellTemplate':
       case 'resourceCellTemplate':

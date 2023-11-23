@@ -491,6 +491,7 @@ var _default = {
   getPixelRatio(window) {
     return window.devicePixelRatio || 1;
   },
+  
   getContentHeightLimit(browser) {
     if (browser.mozilla) {
       return 8000000;

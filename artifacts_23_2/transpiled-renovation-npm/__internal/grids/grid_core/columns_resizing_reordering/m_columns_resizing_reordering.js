@@ -240,6 +240,7 @@ let ColumnsSeparatorView = /*#__PURE__*/function (_SeparatorView) {
     const $element = this.element();
     if ($element) {
       $element.css('left', outerX === null ? 0 : outerX - this._parentElement().offset().left);
+      
     }
   };
   _proto3.changeCursor = function changeCursor(cursorName) {
@@ -247,6 +248,7 @@ let ColumnsSeparatorView = /*#__PURE__*/function (_SeparatorView) {
     const $element = this.element();
     if ($element) {
       $element.css('cursor', cursorName);
+      
     }
   };
   _proto3.dispose = function dispose() {
@@ -474,6 +476,7 @@ let DraggingHeaderView = /*#__PURE__*/function (_modules$View3) {
         startColumnIndex: targetLocation === 'headers' && (0, _renderer.default)(columnElements[0]).index()
       }));
       pointsByTarget[targetLocation] = pointsByColumns;
+      
       params.targetLocation = targetLocation;
       if (pointsByColumns.length > 0) {
         for (let i = 0; i < pointsByColumns.length; i++) {
@@ -668,6 +671,7 @@ let ColumnsResizerViewController = /*#__PURE__*/function (_modules$ViewControll)
       }
     }
     if (that._isReadyResizing) {
+      
       that._setupResizingInfo(eventData.x);
       that._isResizing = true;
       that._tablePositionController.update(that._targetPoint.y);

@@ -1,16 +1,15 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/view_model/to_test/views/utils/base.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-exports.validateDayHours = exports.setOptionHour = exports.isTimelineView = exports.isHorizontalView = exports.isDateInRange = exports.isDateAndTimeView = exports.getViewStartByOptions = exports.getVerticalGroupCountClass = exports.getValidCellDateForLocalTimeFormat = exports.getTotalRowCountByCompleteData = exports.getTotalCellCountByCompleteData = exports.getToday = exports.getStartViewDateWithoutDST = exports.getStartViewDateTimeOffset = exports.getHorizontalGroupCount = exports.getHeaderCellText = exports.getDisplayedRowCount = exports.getDisplayedCellCount = exports.getCellDuration = exports.getCalculatedFirstDayOfWeek = exports.formatWeekdayAndDay = exports.formatWeekday = exports.calculateViewStartDate = exports.calculateIsGroupedAllDayPanel = exports.calculateDayDuration = exports.calculateCellIndex = void 0;
+exports.setOptionHour = exports.isTimelineView = exports.isHorizontalView = exports.isDateInRange = exports.isDateAndTimeView = exports.getViewStartByOptions = exports.getVerticalGroupCountClass = exports.getValidCellDateForLocalTimeFormat = exports.getTotalRowCountByCompleteData = exports.getTotalCellCountByCompleteData = exports.getToday = exports.getStartViewDateWithoutDST = exports.getStartViewDateTimeOffset = exports.getHorizontalGroupCount = exports.getHeaderCellText = exports.getDisplayedRowCount = exports.getDisplayedCellCount = exports.getCellDuration = exports.getCalculatedFirstDayOfWeek = exports.formatWeekdayAndDay = exports.formatWeekday = exports.calculateViewStartDate = exports.calculateIsGroupedAllDayPanel = exports.calculateDayDuration = exports.calculateCellIndex = void 0;
 var _date = require("../../../../../../../__internal/core/utils/date");
-var _ui = _interopRequireDefault(require("../../../../../../../ui/widget/ui.errors"));
 var _date2 = _interopRequireDefault(require("../../../../../../../core/utils/date"));
 var _type = require("../../../../../../../core/utils/type");
 var _date3 = _interopRequireDefault(require("../../../../../../../localization/date"));
@@ -63,12 +62,6 @@ const getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDateForHe
   return _date3.default.format(validDate, headerCellTextFormat);
 };
 exports.getHeaderCellText = getHeaderCellText;
-const validateDayHours = (startDayHour, endDayHour) => {
-  if (startDayHour >= endDayHour) {
-    throw _ui.default.Error('E1058');
-  }
-};
-exports.validateDayHours = validateDayHours;
 const getStartViewDateTimeOffset = (startViewDate, startDayHour) => {
   const validStartDayHour = Math.floor(startDayHour);
   const isDSTChange = _m_utils_time_zone.default.isTimezoneChangeInDate(startViewDate);

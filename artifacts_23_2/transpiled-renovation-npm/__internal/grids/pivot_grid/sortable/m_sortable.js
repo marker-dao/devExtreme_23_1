@@ -431,7 +431,6 @@ const Sortable = _dom_component.default.inherit({
 });
 
 // TODO remove dxSortableOld component
-exports.Sortable = Sortable;
 (0, _component_registrator.default)('dxSortableOld', Sortable);
 var _default = {
   Sortable

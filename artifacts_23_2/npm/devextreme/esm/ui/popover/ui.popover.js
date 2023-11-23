@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/popover/ui.popover.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -156,41 +156,17 @@ var Popover = Popup.inherit({
       */
 
       /**
-      * @section Utils
-      * @type function
-      * @default null
-      * @type_function_param1 e:object
-      * @type_function_param1_field1 component:this
-      * @type_function_param1_field2 element:DxElement
-      * @type_function_param1_field3 model:object
       * @name dxPopoverOptions.onResizeStart
-      * @action
       * @hidden
       */
 
       /**
-      * @section Utils
-      * @type function
-      * @default null
-      * @type_function_param1 e:object
-      * @type_function_param1_field1 component:this
-      * @type_function_param1_field2 element:DxElement
-      * @type_function_param1_field3 model:object
       * @name dxPopoverOptions.onResize
-      * @action
       * @hidden
       */
 
       /**
-      * @section Utils
-      * @type function
-      * @default null
-      * @type_function_param1 e:object
-      * @type_function_param1_field1 component:this
-      * @type_function_param1_field2 element:DxElement
-      * @type_function_param1_field3 model:object
       * @name dxPopoverOptions.onResizeEnd
-      * @action
       * @hidden
       */
 

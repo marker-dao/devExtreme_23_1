@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24622,7 +24622,7 @@ exports.getNavigator = getNavigator;
 
 
 exports.version = void 0;
-const version = '23.2.2';
+const version = '23.2.3';
 exports.version = version;
 
 /***/ }),
@@ -51841,7 +51841,7 @@ function removeDifferentElements(oldChildren, newChildren) {
   newChildren.forEach(newElement => {
     const hasOldChild = !!oldChildren.find(oldElement => newElement === oldElement);
     if (!hasOldChild && newElement.parentNode) {
-      newElement.parentNode.removeChild(newElement);
+      (0, _renderer.default)(newElement).remove();
     }
   });
 }
@@ -62741,7 +62741,7 @@ var _default = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
   /**
   * @name ErrorsUIWidgets.E1058
   */
-  E1058: 'The "startDayHour" must be earlier than the "endDayHour"',
+  E1058: 'The "startDayHour" and "endDayHour" options must be integers in the [0, 24] range, with "endDayHour" being greater than "startDayHour".',
   /**
   * @name ErrorsUIWidgets.E1059
   */
@@ -62750,6 +62750,14 @@ var _default = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
   * @name ErrorsUIWidgets.E1060
   */
   E1060: 'All editable columns must have names',
+  /**
+   * @name ErrorsUIWidgets.E1061
+   */
+  E1061: 'The "offset" option must be an integer in the [-1440, 1440] range, divisible by 5 without a remainder.',
+  /**
+   * @name ErrorsUIWidgets.E1062
+   */
+  E1062: 'The "cellDuration" must be a positive integer, evenly dividing the ("endDayHour" - "startDayHour") interval into minutes.',
   /**
   * @name ErrorsUIWidgets.W1001
   */
@@ -62803,10 +62811,6 @@ var _default = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
   * @name ErrorsUIWidgets.W1014
   */
   W1014: 'The Floating Action Button exceeds the recommended speed dial action count. If you need to display more speed dial actions, increase the maxSpeedDialActionCount option value in the global config.',
-  /**
-  * @name ErrorsUIWidgets.W1015
-  */
-  W1015: 'The "cellDuration" should divide the range from the "startDayHour" to the "endDayHour" into even intervals',
   /**
   * @name ErrorsUIWidgets.W1016
   */

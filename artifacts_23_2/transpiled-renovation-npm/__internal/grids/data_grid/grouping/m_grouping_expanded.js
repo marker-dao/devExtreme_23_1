@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.GroupingHelper = void 0;
+exports.loadTotalCount = exports.GroupingHelper = void 0;
 var _data = require("../../../../core/utils/data");
 var _deferred = require("../../../../core/utils/deferred");
 var _extend = require("../../../../core/utils/extend");
@@ -32,6 +32,7 @@ const loadTotalCount = function (dataSource, options) {
   }).fail(d.reject.bind(d));
   return d;
 };
+
 const GroupingHelper = _m_grouping_core.GroupingHelper.inherit(function () {
   const foreachCollapsedGroups = function (that, callback, updateOffsets) {
     return that.foreachGroups(groupInfo => {

@@ -148,11 +148,9 @@ var TabPanel = MultiView.inherit({
     if (isDefined(title) && !isPlainObject(title)) {
       var $tabTextSpan = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
       $tabTextSpan.append(domAdapter.createTextNode(title));
-      if (isFluent()) {
-        var $tabTextSpanPseudo = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
-        $tabTextSpanPseudo.append(domAdapter.createTextNode(title));
-        $tabTextSpanPseudo.appendTo($tabTextSpan);
-      }
+      var $tabTextSpanPseudo = $('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+      $tabTextSpanPseudo.append(domAdapter.createTextNode(title));
+      $tabTextSpanPseudo.appendTo($tabTextSpan);
       $tabTextSpan.appendTo($container);
     }
   },

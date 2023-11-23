@@ -194,11 +194,9 @@ const Tabs = _uiCollection_widget.default.inherit({
     if ((0, _type.isDefined)(text)) {
       const $tabTextSpan = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
       $tabTextSpan.text(text);
-      if ((0, _themes.isFluent)()) {
-        const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
-        $tabTextSpanPseudo.text(text);
-        $tabTextSpanPseudo.appendTo($tabTextSpan);
-      }
+      const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+      $tabTextSpanPseudo.text(text);
+      $tabTextSpanPseudo.appendTo($tabTextSpan);
       $tabTextSpan.appendTo($container);
     }
     if ((0, _type.isDefined)(data.html)) {
@@ -283,10 +281,6 @@ const Tabs = _uiCollection_widget.default.inherit({
   _isVertical() {
     return this.option('orientation') === ORIENTATION.vertical;
   },
-  _isServerSide() {
-    const window = (0, _window.getWindow)();
-    return window.isWindowMock || !window;
-  },
   _isItemsSizeExceeded() {
     const isVertical = this._isVertical();
     const isItemsSizeExceeded = isVertical ? this._isItemsHeightExceeded() : this._isItemsWidthExceeded();
@@ -316,9 +310,9 @@ const Tabs = _uiCollection_widget.default.inherit({
     (0, _iterator.each)($visibleItems, (_, item) => {
       itemsWidth.push((0, _size.getOuterWidth)(item, true));
     });
-    const maxTabWidth = Math.max.apply(null, itemsWidth);
+    const maxTabItemWidth = Math.max.apply(null, itemsWidth);
     const requireWidth = elementWidth / $visibleItems.length;
-    const needStretchItems = maxTabWidth > requireWidth;
+    const needStretchItems = maxTabItemWidth > requireWidth + 1;
     return needStretchItems;
   },
   _cleanNavButtons: function () {
@@ -634,7 +628,7 @@ const Tabs = _uiCollection_widget.default.inherit({
           this._toggleOrientationClass(args.value);
           const indicatorPosition = this._getIndicatorPosition();
           this._toggleIndicatorPositionClass(indicatorPosition);
-          if (!this._isServerSide()) {
+          if ((0, _window.hasWindow)()) {
             this._updateScrollable();
           }
           break;
@@ -642,7 +636,7 @@ const Tabs = _uiCollection_widget.default.inherit({
       case 'iconPosition':
         {
           this._toggleIconPositionClass();
-          if (!this._isServerSide()) {
+          if ((0, _window.hasWindow)()) {
             this._dimensionChanged();
           }
           break;
@@ -650,7 +644,7 @@ const Tabs = _uiCollection_widget.default.inherit({
       case 'stylingMode':
         {
           this._toggleStylingModeClass(args.value);
-          if (!this._isServerSide()) {
+          if ((0, _window.hasWindow)()) {
             this._dimensionChanged();
           }
           break;

@@ -1,5 +1,4 @@
 import { dateUtilsTs } from '../../../../../../../__internal/core/utils/date';
-import errors from '../../../../../../../ui/widget/ui.errors';
 import dateUtils from '../../../../../../../core/utils/date';
 import { isDefined } from '../../../../../../../core/utils/type';
 import dateLocalization from '../../../../../../../localization/date';
@@ -42,11 +41,6 @@ export var getStartViewDateWithoutDST = (startViewDate, startDayHour) => {
 export var getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDateForHeaderText, additionalOptions) => {
   var validDate = getDateForHeaderText(headerIndex, date, additionalOptions);
   return dateLocalization.format(validDate, headerCellTextFormat);
-};
-export var validateDayHours = (startDayHour, endDayHour) => {
-  if (startDayHour >= endDayHour) {
-    throw errors.Error('E1058');
-  }
 };
 export var getStartViewDateTimeOffset = (startViewDate, startDayHour) => {
   var validStartDayHour = Math.floor(startDayHour);

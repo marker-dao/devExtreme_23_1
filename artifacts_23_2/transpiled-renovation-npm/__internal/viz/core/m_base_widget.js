@@ -367,6 +367,7 @@ const baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.i
     this._renderer.resize(this._canvas.width, this._canvas.height);
   },
   _disposeRenderer() {
+    
     this._renderer.dispose();
   },
   _disposeGraphicObjects() {
@@ -474,6 +475,7 @@ const baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.i
     const nextRect = this._applySize(rect) || rect;
     layout.backward(nextRect, this._getAlignmentRect() || nextRect);
   },
+  
   _getOption(name, isScalar) {
     const theme = this._themeManager.theme(name);
     const option = this.option(name);

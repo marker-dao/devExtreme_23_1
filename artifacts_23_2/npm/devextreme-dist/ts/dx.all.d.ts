@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.all.d.ts)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12595,19 +12595,11 @@ declare module DevExpress.ui {
     /**
      * [descr:dxDeferRenderingOptions.onRendered]
      */
-    onRendered?: (e: {
-      component?: dxDeferRendering;
-      element?: DevExpress.core.DxElement;
-      model?: any;
-    }) => void;
+    onRendered?: (e: DevExpress.ui.dxDeferRendering.RenderedEvent) => void;
     /**
      * [descr:dxDeferRenderingOptions.onShown]
      */
-    onShown?: (e: {
-      component?: dxDeferRendering;
-      element?: DevExpress.core.DxElement;
-      model?: any;
-    }) => void;
+    onShown?: (e: DevExpress.ui.dxDeferRendering.ShownEvent) => void;
     /**
      * [descr:dxDeferRenderingOptions.renderWhen]
      */
@@ -38530,13 +38522,7 @@ declare module DevExpress.viz {
      * [descr:dxPolarChartOptions.onArgumentAxisClick]
      */
     onArgumentAxisClick?:
-      | ((e: {
-          component?: dxPolarChart;
-          element?: DevExpress.core.DxElement;
-          model?: any;
-          event?: DevExpress.events.DxEvent;
-          argument?: Date | number | string;
-        }) => void)
+      | ((e: DevExpress.viz.dxPolarChart.ArgumentAxisClickEvent) => void)
       | string;
     /**
      * [descr:dxPolarChartOptions.onLegendClick]

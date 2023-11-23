@@ -936,6 +936,7 @@ let KeyboardNavigationController = /*#__PURE__*/function (_modules$ViewControll)
   _proto._focusInteractiveElement = function _focusInteractiveElement($cell, isLast) {
     if (!$cell) return;
     const $focusedElement = this._getInteractiveElement($cell, isLast);
+    
     _m_utils.default.focusAndSelectElement(this, $focusedElement);
   };
   _proto._focus = function _focus($cell, disableFocus, skipFocusEvent) {

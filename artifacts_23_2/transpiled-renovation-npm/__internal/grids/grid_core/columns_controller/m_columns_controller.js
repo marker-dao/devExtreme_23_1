@@ -1028,6 +1028,7 @@ let ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         (0, _m_columns_controller_utils.assignColumns)(that, (0, _m_columns_controller_utils.createColumnsFromOptions)(that, that._columns));
       }
       if ((fromDataSource || !columnsGroupParameters && !that._hasUserState) && (groupingChanged || groupExpandingChanged)) {
+        
         updateSortGroupParameterIndexes(that._columns, groupParameters, 'groupIndex');
         if (fromDataSource) {
           groupingChanged && (0, _m_columns_controller_utils.updateColumnChanges)(that, 'grouping');
@@ -1036,6 +1037,7 @@ let ColumnsController = /*#__PURE__*/function (_modules$Controller) {
         }
       }
       if ((fromDataSource || !columnsSortParameters && !that._hasUserState) && !_m_utils.default.equalSortParameters(sortParameters, columnsSortParameters)) {
+        
         updateSortGroupParameterIndexes(that._columns, sortParameters, 'sortIndex');
         if (fromDataSource) {
           (0, _m_columns_controller_utils.updateColumnChanges)(that, 'sorting');

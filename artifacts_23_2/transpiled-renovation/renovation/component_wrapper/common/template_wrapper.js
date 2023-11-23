@@ -71,7 +71,7 @@ function removeDifferentElements(oldChildren, newChildren) {
   newChildren.forEach(newElement => {
     const hasOldChild = !!oldChildren.find(oldElement => newElement === oldElement);
     if (!hasOldChild && newElement.parentNode) {
-      newElement.parentNode.removeChild(newElement);
+      (0, _renderer.default)(newElement).remove();
     }
   });
 }

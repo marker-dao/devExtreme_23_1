@@ -194,6 +194,7 @@ function validateLicense(licenseKey) {
 }
 function setLicenseCheckSkipCondition() {
   let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  
 }
 // NOTE: We need this default export
 // to allow QUnit mock the validateLicense function

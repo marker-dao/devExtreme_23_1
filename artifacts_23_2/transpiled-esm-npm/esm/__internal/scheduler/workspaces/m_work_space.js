@@ -19,7 +19,7 @@ import pointerEvents from '../../../events/pointer';
 import { addNamespace, isMouseEvent } from '../../../events/utils/index';
 import messageLocalization from '../../../localization/message';
 import { getMemoizeScrollTo } from '../../../renovation/ui/common/utils/scroll/getMemoizeScrollTo';
-import { calculateIsGroupedAllDayPanel, calculateViewStartDate, getCellDuration, getStartViewDateTimeOffset, getViewStartByOptions, isDateAndTimeView, validateDayHours } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
+import { calculateIsGroupedAllDayPanel, calculateViewStartDate, getCellDuration, getStartViewDateTimeOffset, getViewStartByOptions, isDateAndTimeView } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import Scrollable from '../../../ui/scroll_view/ui.scrollable';
 import errors from '../../../ui/widget/ui.errors';
 // NOTE: Renovation component section
@@ -1660,13 +1660,7 @@ class SchedulerWorkSpace extends WidgetObserver {
   _optionChanged(args) {
     switch (args.name) {
       case 'startDayHour':
-        validateDayHours(args.value, this.option('endDayHour'));
-        this._cleanWorkSpace();
-        break;
       case 'endDayHour':
-        validateDayHours(this.option('startDayHour'), args.value);
-        this._cleanWorkSpace();
-        break;
       case 'viewOffset':
       case 'dateCellTemplate':
       case 'resourceCellTemplate':

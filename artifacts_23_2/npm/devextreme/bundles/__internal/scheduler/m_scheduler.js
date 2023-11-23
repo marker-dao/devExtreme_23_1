@@ -1,7 +1,7 @@
 /**
 * DevExtreme (bundles/__internal/scheduler/m_scheduler.js)
-* Version: 23.2.2
-* Build date: Wed Nov 22 2023
+* Version: 23.2.3
+* Build date: Fri Nov 24 2023
 *
 * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -61,6 +61,7 @@ var _m_recurrence = require("./m_recurrence");
 var _m_subscribes = _interopRequireDefault(require("./m_subscribes"));
 var _m_utils = require("./m_utils");
 var _m_utils_time_zone = _interopRequireDefault(require("./m_utils_time_zone"));
+var _index = require("./options_validator/index");
 var _m_agenda_resource_processor = require("./resources/m_agenda_resource_processor");
 var _m_utils2 = require("./resources/m_utils");
 var _m_desktop_tooltip_strategy = require("./tooltip_strategies/m_desktop_tooltip_strategy");
@@ -83,7 +84,6 @@ function _toPrimitive(input, hint) { if (typeof input !== "object" || input === 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); } // @ts-expect-error
 const toMs = _date.default.dateToMilliseconds;
-const MINUTES_IN_HOUR = 60;
 const DEFAULT_AGENDA_DURATION = 7;
 const WIDGET_CLASS = 'dx-scheduler';
 const WIDGET_SMALL_CLASS = "".concat(WIDGET_CLASS, "-small");
@@ -342,6 +342,7 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
   };
   _proto._optionChanged = function _optionChanged(args) {
     var _a, _b, _c, _d;
+    this.validateOptions();
     let {
       value
     } = args;
@@ -393,8 +394,6 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
         (_d = this._header) === null || _d === void 0 ? void 0 : _d.option(name, value);
         break;
       case 'currentView':
-        this._validateDayHours();
-        this._validateCellDuration();
         this._appointments.option({
           items: [],
           allowDrag: this._allowDragging(),
@@ -442,7 +441,6 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
         break;
       case 'startDayHour':
       case 'endDayHour':
-        this._validateDayHours();
         this.updateInstances();
         this._appointments.option('items', []);
         this._updateOption('workSpace', name, value);
@@ -452,7 +450,6 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
         break;
       // TODO Vinogradov refactoring: merge it with startDayHour / endDayHour
       case 'offset':
-        this._validateDayHours();
         this.updateInstances();
         this._appointments.option('items', []);
         this._updateOption('workSpace', 'viewOffset', this.normalizeViewOffsetValue(value));
@@ -503,7 +500,6 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
         });
         break;
       case 'cellDuration':
-        this._validateCellDuration();
         this._updateOption('workSpace', name, value);
         this._appointments.option('items', []);
         if (this._readyToRenderAppointments) {
@@ -796,6 +792,8 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
     this._dataSourceLoadedCallback = (0, _callbacks.default)();
     this._subscribes = _m_subscribes.default;
     this.agendaResourceProcessor = new _m_agenda_resource_processor.AgendaResourceProcessor(this.option('resources'));
+    this._optionsValidator = new _index.SchedulerOptionsValidator();
+    this._optionsValidatorErrorHandler = new _index.SchedulerOptionsValidatorErrorsHandler();
   };
   _proto.createAppointmentDataProvider = function createAppointmentDataProvider() {
     var _a;
@@ -1005,8 +1003,6 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
   _proto._initMarkup = function _initMarkup() {
     // @ts-expect-error
     _Widget.prototype._initMarkup.call(this);
-    this._validateDayHours();
-    this._validateCellDuration();
     this._renderMainContainer();
     this._renderHeader();
     this._layoutManager = new _m_appointments_layout_manager.default(this);
@@ -1983,19 +1979,6 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
       _ui.default.log('W1023');
     }
   };
-  _proto._validateCellDuration = function _validateCellDuration() {
-    const endDayHour = this._getCurrentViewOption('endDayHour');
-    const startDayHour = this._getCurrentViewOption('startDayHour');
-    const cellDuration = this._getCurrentViewOption('cellDuration');
-    if ((endDayHour - startDayHour) * MINUTES_IN_HOUR % cellDuration !== 0) {
-      _ui.default.log('W1015');
-    }
-  };
-  _proto._validateDayHours = function _validateDayHours() {
-    const startDayHour = this._getCurrentViewOption('startDayHour');
-    const endDayHour = this._getCurrentViewOption('endDayHour');
-    (0, _base.validateDayHours)(startDayHour, endDayHour);
-  };
   _proto._getDragBehavior = function _getDragBehavior() {
     return this._workSpace.dragBehavior;
   };
@@ -2008,6 +1991,20 @@ let Scheduler = /*#__PURE__*/function (_Widget) {
       return 0;
     }
     return viewOffset * toMs('minute');
+  };
+  _proto.validateOptions = function validateOptions() {
+    const currentViewOptions = _extends(_extends({}, this.option()), {
+      // TODO: Check it before 24.1 release
+      // NOTE: We override this.option values here
+      // because the old validation logic checked only current view options.
+      // Changing it and validate all views configuration will be a BC.
+      startDayHour: this._getCurrentViewOption('startDayHour'),
+      endDayHour: this._getCurrentViewOption('endDayHour'),
+      offset: this._getCurrentViewOption('offset'),
+      cellDuration: this._getCurrentViewOption('cellDuration')
+    });
+    const validationResult = this._optionsValidator.validate(currentViewOptions);
+    this._optionsValidatorErrorHandler.handleValidationResult(validationResult);
   };
   _createClass(Scheduler, [{
     key: "filteredItems",

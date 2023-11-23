@@ -115,6 +115,7 @@ const GroupingDataSourceAdapterExtender = function () {
     _changeRowExpandCore(path) {
       return this._grouping.changeRowExpand(path);
     },
+    
     // @ts-expect-error
     _hasGroupLevelsExpandState(group, isExpanded) {
       if (group && Array.isArray(group)) {

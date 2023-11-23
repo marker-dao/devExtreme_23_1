@@ -392,6 +392,7 @@ const columnChooserMembers = {
     return null;
   },
   showColumnChooser() {
+    
     if (!this._popupContainer) {
       this._initializePopupContainer();
       this.render();
@@ -404,8 +405,10 @@ const columnChooserMembers = {
   hideColumnChooser() {
     if (this._popupContainer) {
       this._popupContainer.hide();
+      
     }
   },
+
   isColumnChooserVisible() {
     const popupContainer = this._popupContainer;
     return popupContainer && popupContainer.option('visible');
