@@ -1,5 +1,5 @@
 {
-  "ToolsVersion": "16.0.0-beta.5",
+  "ToolsVersion": "16.0.0-beta.10",
   "Modules": {
     "common": {
       "ApplyValueMode": {},
@@ -520,9 +520,13 @@
       "DisposingEvent": {},
       "InitializedEvent": {},
       "OptionChangedEvent": {},
-      "MessageSendEvent": {},
+      "MessageEnteredEvent": {},
+      "TypingStartEvent": {},
+      "TypingEndEvent": {},
       "User": {},
+      "Alert": {},
       "Message": {},
+      "MessageTemplateData": {},
       "dxChatOptions": {},
       "default": {},
       "ExplicitTypes": {},
@@ -1041,6 +1045,7 @@
       "OptionChangedEvent": {},
       "ValueChangedEvent": {},
       "MentionTemplateData": {},
+      "Converter": {},
       "dxHtmlEditorOptions": {},
       "default": {},
       "dxHtmlEditorMediaResizing": {},

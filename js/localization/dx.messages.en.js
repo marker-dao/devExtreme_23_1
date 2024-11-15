@@ -1,40 +1,40 @@
 /*!
 * DevExtreme (dx.messages.en.js)
 * Version: 24.2.0
-* Build date: Mon Oct 21 2024
+* Build date: Fri Nov 15 2024
 *
 * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-(function(root, factory) {
-    if(typeof define === 'function' && define.amd) {
-        define(function(require) {
-            factory(require("devextreme/localization"));
-        });
-    } else if(typeof module === "object" && module.exports) {
-        factory(require("devextreme/localization"));
+! function(root, factory) {
+    if ("function" === typeof define && define.amd) {
+        define((function(require) {
+            factory(require("devextreme/localization"))
+        }))
+    } else if ("object" === typeof module && module.exports) {
+        factory(require("devextreme/localization"))
     } else {
-        factory(DevExpress.localization);
+        factory(DevExpress.localization)
     }
-}(this, function(localization) {
+}(0, (function(localization) {
     localization.loadMessages({
-        "en": {
-            "Yes": "Yes",
-            "No": "No",
-            "Cancel": "Cancel",
-            "CheckState": "Check state",
-            "Close": "Close",
-            "Clear": "Clear",
-            "Done": "Done",
-            "Loading": "Loading...",
-            "Select": "Select...",
-            "Search": "Search",
-            "Back": "Back",
-            "OK": "OK",
-            "Today": "Today",
-            "Yesterday": "Yesterday",
+        en: {
+            Yes: "Yes",
+            No: "No",
+            Cancel: "Cancel",
+            CheckState: "Check state",
+            Close: "Close",
+            Clear: "Clear",
+            Done: "Done",
+            Loading: "Loading...",
+            Select: "Select...",
+            Search: "Search",
+            Back: "Back",
+            OK: "OK",
+            Today: "Today",
+            Yesterday: "Yesterday",
             "dxCollectionWidget-noDataText": "No data to display",
             "dxDropDownEditor-selectLabel": "Select",
             "validation-required": "Required",
@@ -165,11 +165,11 @@
             "dxDataGrid-summarySum": "Sum: {0}",
             "dxDataGrid-summarySumOtherColumn": "Sum of {1} is {0}",
             "dxDataGrid-summaryCount": "Count: {0}",
-            "dxDataGrid-columnFixingFix": "Fix",
+            "dxDataGrid-columnFixingFix": "Set Fixed Position",
             "dxDataGrid-columnFixingUnfix": "Unfix",
-            "dxDataGrid-columnFixingLeftPosition": "To the left",
-            "dxDataGrid-columnFixingRightPosition": "To the right",
-            "dxDataGrid-columnFixingStickyPosition": "Stick in place",
+            "dxDataGrid-columnFixingLeftPosition": "Left",
+            "dxDataGrid-columnFixingRightPosition": "Right",
+            "dxDataGrid-columnFixingStickyPosition": "Sticky",
             "dxDataGrid-exportTo": "Export",
             "dxDataGrid-exportToExcel": "Export to Excel file",
             "dxDataGrid-exporting": "Exporting...",
@@ -218,19 +218,29 @@
             "dxPager-pageSize": "Items per page: {0}",
             "dxPager-pageSizesAllText": "All",
             "dxPager-page": "Page {0}",
-            "dxPager-prevPage": "Previous Page",
-            "dxPager-nextPage": "Next Page",
-            "dxPager-ariaLabel": "Page Navigation",
+            "dxPager-prevPage": "Previous page",
+            "dxPager-nextPage": "Next page",
+            "dxPager-ariaLabel": "Page navigation",
             "dxPager-ariaPageSize": "Page size",
             "dxPager-ariaPageNumber": "Page number",
+            "dxPagination-infoText": "Page {0} of {1} ({2} items)",
+            "dxPagination-pagesCountText": "of",
+            "dxPagination-pageSize": "Items per page: {0}",
+            "dxPagination-pageSizesAllText": "All",
+            "dxPagination-page": "Page {0}",
+            "dxPagination-prevPage": "Previous page",
+            "dxPagination-nextPage": "Next page",
+            "dxPagination-ariaLabel": "Page navigation",
+            "dxPagination-ariaPageSize": "Page size",
+            "dxPagination-ariaPageNumber": "Page number",
             "dxPivotGrid-grandTotal": "Grand Total",
             "dxPivotGrid-total": "{0} Total",
             "dxPivotGrid-fieldChooserTitle": "Field Chooser",
             "dxPivotGrid-showFieldChooser": "Show Field Chooser",
             "dxPivotGrid-expandAll": "Expand All",
             "dxPivotGrid-collapseAll": "Collapse All",
-            "dxPivotGrid-sortColumnBySummary": "Sort \"{0}\" by This Column",
-            "dxPivotGrid-sortRowBySummary": "Sort \"{0}\" by This Row",
+            "dxPivotGrid-sortColumnBySummary": 'Sort "{0}" by This Column',
+            "dxPivotGrid-sortRowBySummary": 'Sort "{0}" by This Row',
             "dxPivotGrid-removeAllSorting": "Remove All Sorting",
             "dxPivotGrid-dataNotAvailable": "N/A",
             "dxPivotGrid-rowFields": "Row Fields",
@@ -242,6 +252,7 @@
             "dxPivotGrid-dataFieldArea": "Drop Data Fields Here",
             "dxPivotGrid-rowFieldArea": "Drop Row Fields Here",
             "dxPivotGrid-filterFieldArea": "Drop Filter Fields Here",
+            "dxScheduler-ariaLabel": "Scheduler. {0} view",
             "dxScheduler-appointmentAriaLabel-group": "Group: {0}",
             "dxScheduler-appointmentAriaLabel-recurring": "Recurring appointment",
             "dxScheduler-editorLabelTitle": "Subject",
@@ -249,6 +260,8 @@
             "dxScheduler-editorLabelEndDate": "End Date",
             "dxScheduler-editorLabelDescription": "Description",
             "dxScheduler-editorLabelRecurrence": "Repeat",
+            "dxScheduler-navigationPrevious": "Previous page",
+            "dxScheduler-navigationNext": "Next page",
             "dxScheduler-openAppointment": "Open appointment",
             "dxScheduler-recurrenceNever": "Never",
             "dxScheduler-recurrenceMinutely": "Every minute",
@@ -320,8 +333,13 @@
             "dxChat-sendButtonAriaLabel": "Send",
             "dxChat-defaultUserName": "Unknown User",
             "dxChat-messageListAriaLabel": "Message list",
+            "dxChat-alertListAriaLabel": "Error list",
             "dxChat-emptyListMessage": "There are no messages in this chat",
             "dxChat-emptyListPrompt": "Write your first message",
+            "dxChat-typingMessageSingleUser": "{0} is typing...",
+            "dxChat-typingMessageTwoUsers": "{0} and {1} are typing...",
+            "dxChat-typingMessageThreeUsers": "{0}, {1} and {2} are typing...",
+            "dxChat-typingMessageMultipleUsers": "{0} and others are typing...",
             "dxColorView-ariaRed": "Red",
             "dxColorView-ariaGreen": "Green",
             "dxColorView-ariaBlue": "Blue",
@@ -728,5 +746,5 @@
             "dxMultiView-itemAriaLabel": "{0} of {1}",
             "dxSplitter-resizeHandleAriaLabel": "Split bar"
         }
-    });
+    })
 }));

@@ -3196,6 +3196,9 @@
         "type": {
           "Types": [
             {
+              "Name": "string"
+            },
+            {
               "Name": "ButtonType",
               "IsEnum": true
             }
@@ -9381,9 +9384,36 @@
           ],
           "DocID": "dxChat.Options.activeStateEnabled"
         },
+        "alerts": {
+          "Types": [
+            {
+              "Name": "Alert",
+              "IsComplex": true,
+              "IsCollection": true
+            }
+          ],
+          "SingularName": "alert",
+          "DocID": "dxChat.Options.alerts"
+        },
         "dataSource": {
           "IsDataSource": true,
           "DocID": "dxChat.Options.dataSource"
+        },
+        "dayHeaderFormat": {
+          "Types": [
+            {
+              "Name": "string"
+            },
+            {
+              "Name": "Format",
+              "IsComplex": true
+            },
+            {
+              "Name": "Format",
+              "IsEnum": true
+            }
+          ],
+          "DocID": "dxChat.Options.dayHeaderFormat"
         },
         "disabled": {
           "Types": [
@@ -9447,6 +9477,26 @@
           "SingularName": "item",
           "DocID": "dxChat.Options.items"
         },
+        "messageTemplate": {
+          "IsTemplate": true,
+          "DocID": "dxChat.Options.messageTemplate"
+        },
+        "messageTimestampFormat": {
+          "Types": [
+            {
+              "Name": "string"
+            },
+            {
+              "Name": "Format",
+              "IsComplex": true
+            },
+            {
+              "Name": "Format",
+              "IsEnum": true
+            }
+          ],
+          "DocID": "dxChat.Options.messageTimestampFormat"
+        },
         "onDisposing": {
           "IsFunc": true,
           "IsEvent": true,
@@ -9457,15 +9507,33 @@
           "IsEvent": true,
           "DocID": "dxChat.Options.onInitialized"
         },
-        "onMessageSend": {
+        "onMessageEntered": {
           "IsFunc": true,
           "IsEvent": true,
-          "DocID": "dxChat.Options.onMessageSend"
+          "DocID": "dxChat.Options.onMessageEntered"
         },
         "onOptionChanged": {
           "IsFunc": true,
           "IsEvent": true,
           "DocID": "dxChat.Options.onOptionChanged"
+        },
+        "onTypingEnd": {
+          "IsFunc": true,
+          "IsEvent": true,
+          "DocID": "dxChat.Options.onTypingEnd"
+        },
+        "onTypingStart": {
+          "IsFunc": true,
+          "IsEvent": true,
+          "DocID": "dxChat.Options.onTypingStart"
+        },
+        "reloadOnChange": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "dxChat.Options.reloadOnChange"
         },
         "rtlEnabled": {
           "Types": [
@@ -9474,6 +9542,49 @@
             }
           ],
           "DocID": "DOMComponent.Options.rtlEnabled"
+        },
+        "showAvatar": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "dxChat.Options.showAvatar"
+        },
+        "showDayHeaders": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "dxChat.Options.showDayHeaders"
+        },
+        "showMessageTimestamp": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "dxChat.Options.showMessageTimestamp"
+        },
+        "showUserName": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "dxChat.Options.showUserName"
+        },
+        "typingUsers": {
+          "Types": [
+            {
+              "Name": "User",
+              "IsComplex": true,
+              "IsCollection": true
+            }
+          ],
+          "SingularName": "typingUser",
+          "DocID": "dxChat.Options.typingUsers"
         },
         "user": {
           "Types": [
@@ -13271,7 +13382,7 @@
         "pager": {
           "Types": [
             {
-              "Name": "Pager",
+              "Name": "GridPager",
               "IsComplex": true
             }
           ],
@@ -22775,6 +22886,15 @@
           ],
           "DocID": "dxHtmlEditor.Options.allowSoftLineBreak"
         },
+        "converter": {
+          "Types": [
+            {
+              "Name": "Converter",
+              "IsComplex": true
+            }
+          ],
+          "DocID": "dxHtmlEditor.Options.converter"
+        },
         "customizeModules": {
           "IsFunc": true,
           "DocID": "dxHtmlEditor.Options.customizeModules"
@@ -27402,11 +27522,7 @@
         "allowedPageSizes": {
           "Types": [
             {
-              "Name": "double",
-              "IsCollection": true
-            },
-            {
-              "Name": "string",
+              "Name": "int32",
               "IsCollection": true
             }
           ],
@@ -27424,7 +27540,7 @@
         "displayMode": {
           "Types": [
             {
-              "Name": "DisplayMode",
+              "Name": "GridPagerDisplayMode",
               "IsEnum": true
             }
           ],
@@ -47323,7 +47439,7 @@
         "pager": {
           "Types": [
             {
-              "Name": "Pager",
+              "Name": "GridPager",
               "IsComplex": true
             }
           ],
@@ -51341,6 +51457,31 @@
     }
   },
   "ExtraObjects": {
+    "Alert": {
+      "DocID": "Alert",
+      "IsCollection": true,
+      "Options": {
+        "id": {
+          "Types": [
+            {
+              "Name": "double"
+            },
+            {
+              "Name": "string"
+            }
+          ],
+          "DocID": "Alert.id"
+        },
+        "message": {
+          "Types": [
+            {
+              "Name": "string"
+            }
+          ],
+          "DocID": "Alert.message"
+        }
+      }
+    },
     "AnimationConfig": {
       "DocID": "AnimationConfig",
       "Options": {
@@ -55056,6 +55197,19 @@
             }
           ],
           "DocID": "dxMenuBaseItem.visible"
+        }
+      }
+    },
+    "Converter": {
+      "DocID": "Converter",
+      "Options": {
+        "fromHtml": {
+          "IsFunc": true,
+          "DocID": "Converter.fromHtml"
+        },
+        "toHtml": {
+          "IsFunc": true,
+          "DocID": "Converter.toHtml"
         }
       }
     },
@@ -59036,6 +59190,82 @@
         }
       }
     },
+    "GridPager": {
+      "DocID": "Pager",
+      "Options": {
+        "allowedPageSizes": {
+          "Types": [
+            {
+              "Name": "int32",
+              "IsCollection": true
+            }
+          ],
+          "SingularName": "allowedPageSize",
+          "DocID": "Pager.allowedPageSizes"
+        },
+        "displayMode": {
+          "Types": [
+            {
+              "Name": "GridPagerDisplayMode",
+              "IsEnum": true
+            }
+          ],
+          "DocID": "PagerBase.displayMode"
+        },
+        "infoText": {
+          "Types": [
+            {
+              "Name": "string"
+            }
+          ],
+          "DocID": "PagerBase.infoText"
+        },
+        "label": {
+          "Types": [
+            {
+              "Name": "string"
+            }
+          ],
+          "DocID": "PagerBase.label"
+        },
+        "showInfo": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "PagerBase.showInfo"
+        },
+        "showNavigationButtons": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "PagerBase.showNavigationButtons"
+        },
+        "showPageSizeSelector": {
+          "Types": [
+            {
+              "Name": "bool"
+            }
+          ],
+          "DocID": "PagerBase.showPageSizeSelector"
+        },
+        "visible": {
+          "Types": [
+            {
+              "Name": "bool"
+            },
+            {
+              "Name": "Mode",
+              "IsEnum": true
+            }
+          ],
+          "DocID": "Pager.visible"
+        }
+      }
+    },
     "HeaderFilterSearchConfig": {
       "DocID": "HeaderFilterSearchConfig",
       "Options": {
@@ -59714,6 +59944,17 @@
           ],
           "DocID": "Message.author"
         },
+        "id": {
+          "Types": [
+            {
+              "Name": "double"
+            },
+            {
+              "Name": "string"
+            }
+          ],
+          "DocID": "Message.id"
+        },
         "text": {
           "Types": [
             {
@@ -59735,14 +59976,6 @@
             }
           ],
           "DocID": "Message.timestamp"
-        },
-        "typing": {
-          "Types": [
-            {
-              "Name": "bool"
-            }
-          ],
-          "DocID": "Message.typing"
         }
       }
     },
@@ -59777,98 +60010,13 @@
         }
       }
     },
-    "Pager": {
-      "DocID": "Pager",
-      "Options": {
-        "allowedPageSizes": {
-          "Types": [
-            {
-              "Name": "double",
-              "IsCollection": true
-            },
-            {
-              "Name": "Mode",
-              "IsEnum": true
-            },
-            {
-              "Name": "PagerPageSize",
-              "IsCollection": true,
-              "IsEnum": true
-            }
-          ],
-          "SingularName": "allowedPageSize",
-          "DocID": "Pager.allowedPageSizes"
-        },
-        "displayMode": {
-          "Types": [
-            {
-              "Name": "DisplayMode",
-              "IsEnum": true
-            }
-          ],
-          "DocID": "PagerBase.displayMode"
-        },
-        "infoText": {
-          "Types": [
-            {
-              "Name": "string"
-            }
-          ],
-          "DocID": "PagerBase.infoText"
-        },
-        "label": {
-          "Types": [
-            {
-              "Name": "string"
-            }
-          ],
-          "DocID": "PagerBase.label"
-        },
-        "showInfo": {
-          "Types": [
-            {
-              "Name": "bool"
-            }
-          ],
-          "DocID": "PagerBase.showInfo"
-        },
-        "showNavigationButtons": {
-          "Types": [
-            {
-              "Name": "bool"
-            }
-          ],
-          "DocID": "PagerBase.showNavigationButtons"
-        },
-        "showPageSizeSelector": {
-          "Types": [
-            {
-              "Name": "bool"
-            }
-          ],
-          "DocID": "PagerBase.showPageSizeSelector"
-        },
-        "visible": {
-          "Types": [
-            {
-              "Name": "bool"
-            },
-            {
-              "Name": "Mode",
-              "IsEnum": true
-            }
-          ],
-          "DocID": "Pager.visible"
-        }
-      }
-    },
     "PagerBase": {
       "DocID": "PagerBase",
       "Options": {
         "displayMode": {
           "Types": [
             {
-              "Name": "DisplayMode",
+              "Name": "GridPagerDisplayMode",
               "IsEnum": true
             }
           ],
@@ -66178,7 +66326,16 @@
     },
     "User": {
       "DocID": "User",
+      "IsCollection": true,
       "Options": {
+        "avatarAlt": {
+          "Types": [
+            {
+              "Name": "string"
+            }
+          ],
+          "DocID": "User.avatarAlt"
+        },
         "avatarUrl": {
           "Types": [
             {
@@ -68193,19 +68350,6 @@
         }
       ]
     },
-    "DisplayMode": {
-      "Items": [
-        {
-          "Name": "adaptive"
-        },
-        {
-          "Name": "compact"
-        },
-        {
-          "Name": "full"
-        }
-      ]
-    },
     "DragDirection": {
       "Items": [
         {
@@ -69140,9 +69284,6 @@
     "GeoMapProvider": {
       "Items": [
         {
-          "Name": "azure"
-        },
-        {
           "Name": "bing"
         },
         {
@@ -69150,6 +69291,9 @@
         },
         {
           "Name": "googleStatic"
+        },
+        {
+          "Name": "azure"
         }
       ]
     },
@@ -69433,6 +69577,19 @@
         },
         {
           "Name": "viewportTop"
+        }
+      ]
+    },
+    "GridPagerDisplayMode": {
+      "Items": [
+        {
+          "Name": "adaptive"
+        },
+        {
+          "Name": "compact"
+        },
+        {
+          "Name": "full"
         }
       ]
     },
@@ -69956,16 +70113,6 @@
         },
         {
           "Name": "hide"
-        }
-      ]
-    },
-    "PagerPageSize": {
-      "Items": [
-        {
-          "Name": "all"
-        },
-        {
-          "Name": "auto"
         }
       ]
     },

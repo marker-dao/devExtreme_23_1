@@ -1,40 +1,40 @@
 /*!
 * DevExtreme (dx.messages.nl.js)
 * Version: 24.2.0
-* Build date: Mon Oct 21 2024
+* Build date: Fri Nov 15 2024
 *
 * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-(function(root, factory) {
-    if(typeof define === 'function' && define.amd) {
-        define(function(require) {
-            factory(require("devextreme/localization"));
-        });
-    } else if(typeof module === "object" && module.exports) {
-        factory(require("devextreme/localization"));
+! function(root, factory) {
+    if ("function" === typeof define && define.amd) {
+        define((function(require) {
+            factory(require("devextreme/localization"))
+        }))
+    } else if ("object" === typeof module && module.exports) {
+        factory(require("devextreme/localization"))
     } else {
-        factory(DevExpress.localization);
+        factory(DevExpress.localization)
     }
-}(this, function(localization) {
+}(0, (function(localization) {
     localization.loadMessages({
-        "nl": {
-            "Yes": "Ja",
-            "No": "Nee",
-            "Cancel": "Annuleren",
-            "CheckState": "Check state",
-            "Close": "Sluiten",
-            "Clear": "Wissen",
-            "Done": "Klaar",
-            "Loading": "Laden...",
-            "Select": "Kiezen...",
-            "Search": "Zoeken",
-            "Back": "Terug",
-            "OK": "OK",
-            "Today": "Vandaag",
-            "Yesterday": "Yesterday",
+        nl: {
+            Yes: "Ja",
+            No: "Nee",
+            Cancel: "Annuleren",
+            CheckState: "Check state",
+            Close: "Sluiten",
+            Clear: "Wissen",
+            Done: "Klaar",
+            Loading: "Laden...",
+            Select: "Kiezen...",
+            Search: "Zoeken",
+            Back: "Terug",
+            OK: "OK",
+            Today: "Vandaag",
+            Yesterday: "Yesterday",
             "dxCollectionWidget-noDataText": "Geen gegevens om te tonen",
             "dxDropDownEditor-selectLabel": "Kiezen",
             "validation-required": "Verplicht",
@@ -91,7 +91,7 @@
             "dxFileUploader-Mb": "MB",
             "dxFileUploader-Gb": "GB",
             "dxFileUploader-upload": "Uploaden",
-            "dxFileUploader-uploaded": "Geüpload",
+            "dxFileUploader-uploaded": "Ge\xfcpload",
             "dxFileUploader-readyToUpload": "Klaar om te uploaden",
             "dxFileUploader-uploadAbortedMessage": "Upload cancelled",
             "dxFileUploader-uploadFailedMessage": "Uploaden is mislukt",
@@ -165,11 +165,11 @@
             "dxDataGrid-summarySum": "Som: {0}",
             "dxDataGrid-summarySumOtherColumn": "Som van {1} is {0}",
             "dxDataGrid-summaryCount": "Aantal: {0}",
-            "dxDataGrid-columnFixingFix": "Blokkeren",
-            "dxDataGrid-columnFixingUnfix": "Blokkering opheffen",
-            "dxDataGrid-columnFixingLeftPosition": "Naar links",
-            "dxDataGrid-columnFixingRightPosition": "Naar rechts",
-            "dxDataGrid-columnFixingStickyPosition": "Stick in place",
+            "dxDataGrid-columnFixingFix": "Set Fixed Position",
+            "dxDataGrid-columnFixingUnfix": "Unfix",
+            "dxDataGrid-columnFixingLeftPosition": "Left",
+            "dxDataGrid-columnFixingRightPosition": "Right",
+            "dxDataGrid-columnFixingStickyPosition": "Sticky",
             "dxDataGrid-exportTo": "Exporteren",
             "dxDataGrid-exportToExcel": "Exporteer naar Excel bestand",
             "dxDataGrid-exporting": "Exporteren...",
@@ -218,19 +218,29 @@
             "dxPager-pageSize": "Items per page: {0}",
             "dxPager-pageSizesAllText": "Alle",
             "dxPager-page": "Page {0}",
-            "dxPager-prevPage": "Previous Page",
-            "dxPager-nextPage": "Next Page",
-            "dxPager-ariaLabel": "Page Navigation",
+            "dxPager-prevPage": "Previous page",
+            "dxPager-nextPage": "Next page",
+            "dxPager-ariaLabel": "Page navigation",
             "dxPager-ariaPageSize": "Page size",
             "dxPager-ariaPageNumber": "Page number",
+            "dxPagination-infoText": "Pagina {0} van {1} ({2} items)",
+            "dxPagination-pagesCountText": "van",
+            "dxPagination-pageSize": "Items per page: {0}",
+            "dxPagination-pageSizesAllText": "Alle",
+            "dxPagination-page": "Page {0}",
+            "dxPagination-prevPage": "Previous page",
+            "dxPagination-nextPage": "Next page",
+            "dxPagination-ariaLabel": "Page navigation",
+            "dxPagination-ariaPageSize": "Page size",
+            "dxPagination-ariaPageNumber": "Page number",
             "dxPivotGrid-grandTotal": "Eindtotaal",
             "dxPivotGrid-total": "{0} Totaal",
             "dxPivotGrid-fieldChooserTitle": "Veldenkiezer",
             "dxPivotGrid-showFieldChooser": "Toon Veldenkiezer",
             "dxPivotGrid-expandAll": "Alle Uitklappen",
             "dxPivotGrid-collapseAll": "Alle Inklappen",
-            "dxPivotGrid-sortColumnBySummary": "Sorteer \"{0}\" op Deze Kolom",
-            "dxPivotGrid-sortRowBySummary": "Sorteer \"{0}\" op Deze Rij",
+            "dxPivotGrid-sortColumnBySummary": 'Sorteer "{0}" op Deze Kolom',
+            "dxPivotGrid-sortRowBySummary": 'Sorteer "{0}" op Deze Rij',
             "dxPivotGrid-removeAllSorting": "Verwijderen Alle Sorteringen",
             "dxPivotGrid-dataNotAvailable": "N/B",
             "dxPivotGrid-rowFields": "Rijvelden",
@@ -242,6 +252,7 @@
             "dxPivotGrid-dataFieldArea": "Sleep Gegevensvelden Hier",
             "dxPivotGrid-rowFieldArea": "Sleep Rijvelden Hier",
             "dxPivotGrid-filterFieldArea": "Sleep Filtervelden Hier",
+            "dxScheduler-ariaLabel": "Scheduler. {0} view",
             "dxScheduler-appointmentAriaLabel-group": "Group: {0}",
             "dxScheduler-appointmentAriaLabel-recurring": "Recurring appointment",
             "dxScheduler-editorLabelTitle": "Onderwerp",
@@ -249,6 +260,8 @@
             "dxScheduler-editorLabelEndDate": "Einddatum",
             "dxScheduler-editorLabelDescription": "Omschrijving",
             "dxScheduler-editorLabelRecurrence": "Herhalen",
+            "dxScheduler-navigationPrevious": "Previous page",
+            "dxScheduler-navigationNext": "Next page",
             "dxScheduler-openAppointment": "Afspraak openen",
             "dxScheduler-recurrenceNever": "Nooit",
             "dxScheduler-recurrenceMinutely": "Minutely",
@@ -320,8 +333,13 @@
             "dxChat-sendButtonAriaLabel": "Send",
             "dxChat-defaultUserName": "Unknown User",
             "dxChat-messageListAriaLabel": "Message list",
+            "dxChat-alertListAriaLabel": "Error list",
             "dxChat-emptyListMessage": "There are no messages in this chat",
             "dxChat-emptyListPrompt": "Write your first message",
+            "dxChat-typingMessageSingleUser": "{0} is typing...",
+            "dxChat-typingMessageTwoUsers": "{0} and {1} are typing...",
+            "dxChat-typingMessageThreeUsers": "{0}, {1} and {2} are typing...",
+            "dxChat-typingMessageMultipleUsers": "{0} and others are typing...",
             "dxColorView-ariaRed": "Rood",
             "dxColorView-ariaGreen": "Groen",
             "dxColorView-ariaBlue": "Blauw",
@@ -595,7 +613,7 @@
             "dxDiagram-commandAutoZoomByWidth": "Automatisch aan breedte aanpassen",
             "dxDiagram-commandSimpleView": "Eenvoudige weergave",
             "dxDiagram-commandCut": "Knippen",
-            "dxDiagram-commandCopy": "Kopiëren",
+            "dxDiagram-commandCopy": "Kopi\xebren",
             "dxDiagram-commandPaste": "Plakken",
             "dxDiagram-commandSelectAll": "Alles selecteren",
             "dxDiagram-commandDelete": "Verwijderen",
@@ -728,5 +746,5 @@
             "dxMultiView-itemAriaLabel": "{0} of {1}",
             "dxSplitter-resizeHandleAriaLabel": "Split bar"
         }
-    });
+    })
 }));

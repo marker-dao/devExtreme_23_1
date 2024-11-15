@@ -1,61 +1,61 @@
 /*!
 * DevExtreme (dx.messages.it.js)
 * Version: 24.2.0
-* Build date: Mon Oct 21 2024
+* Build date: Fri Nov 15 2024
 *
 * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-(function(root, factory) {
-    if(typeof define === 'function' && define.amd) {
-        define(function(require) {
-            factory(require("devextreme/localization"));
-        });
-    } else if(typeof module === "object" && module.exports) {
-        factory(require("devextreme/localization"));
+! function(root, factory) {
+    if ("function" === typeof define && define.amd) {
+        define((function(require) {
+            factory(require("devextreme/localization"))
+        }))
+    } else if ("object" === typeof module && module.exports) {
+        factory(require("devextreme/localization"))
     } else {
-        factory(DevExpress.localization);
+        factory(DevExpress.localization)
     }
-}(this, function(localization) {
+}(0, (function(localization) {
     localization.loadMessages({
-        "it": {
-            "Yes": "Sì",
-            "No": "No",
-            "Cancel": "Annulla",
-            "CheckState": "Check state",
-            "Close": "Chiudi",
-            "Clear": "Cancella",
-            "Done": "Fatto",
-            "Loading": "Caricamento...",
-            "Select": "Seleziona...",
-            "Search": "Cerca",
-            "Back": "Indietro",
-            "OK": "OK",
-            "Today": "Oggi",
-            "Yesterday": "Yesterday",
+        it: {
+            Yes: "S\xec",
+            No: "No",
+            Cancel: "Annulla",
+            CheckState: "Check state",
+            Close: "Chiudi",
+            Clear: "Cancella",
+            Done: "Fatto",
+            Loading: "Caricamento...",
+            Select: "Seleziona...",
+            Search: "Cerca",
+            Back: "Indietro",
+            OK: "OK",
+            Today: "Oggi",
+            Yesterday: "Yesterday",
             "dxCollectionWidget-noDataText": "Nessun dato da mostrare",
             "dxDropDownEditor-selectLabel": "Seleziona",
             "validation-required": "Richiesto",
-            "validation-required-formatted": "{0} è richiesto",
+            "validation-required-formatted": "{0} \xe8 richiesto",
             "validation-numeric": "Il valore deve essere numerico",
             "validation-numeric-formatted": "{0} deve essere numerico",
-            "validation-range": "Il valore non è compreso nell'intervallo",
-            "validation-range-formatted": "{0} non è compreso nell'intervallo",
+            "validation-range": "Il valore non \xe8 compreso nell'intervallo",
+            "validation-range-formatted": "{0} non \xe8 compreso nell'intervallo",
             "validation-stringLength": "Lunghezza del valore errata",
-            "validation-stringLength-formatted": "La lunghezza di {0} è errata",
-            "validation-custom": "Il valore non è corretto",
-            "validation-custom-formatted": "{0} non è corretto",
-            "validation-async": "Il valore non è corretto",
-            "validation-async-formatted": "{0} non è corretto",
+            "validation-stringLength-formatted": "La lunghezza di {0} \xe8 errata",
+            "validation-custom": "Il valore non \xe8 corretto",
+            "validation-custom-formatted": "{0} non \xe8 corretto",
+            "validation-async": "Il valore non \xe8 corretto",
+            "validation-async-formatted": "{0} non \xe8 corretto",
             "validation-compare": "I valori non corrispondono",
             "validation-compare-formatted": "{0} non corrisponde",
             "validation-pattern": "Il valore non rispetta il formato previsto",
             "validation-pattern-formatted": "{0} non rispetta il formato previsto",
-            "validation-email": "L'email non è corretta",
-            "validation-email-formatted": "{0} non è una email corretta",
-            "validation-mask": "Il valore non è corretto",
+            "validation-email": "L'email non \xe8 corretta",
+            "validation-email-formatted": "{0} non \xe8 una email corretta",
+            "validation-mask": "Il valore non \xe8 corretto",
             "dxLookup-searchPlaceholder": "Lunghezza minima: {0}",
             "dxList-pullingDownText": "Trascina in basso per aggiornare...",
             "dxList-pulledDownText": "Rilascia per aggiornare...",
@@ -95,7 +95,7 @@
             "dxFileUploader-readyToUpload": "Pronto per caricare",
             "dxFileUploader-uploadAbortedMessage": "Caricamento annullato",
             "dxFileUploader-uploadFailedMessage": "Caricamento fallito",
-            "dxFileUploader-invalidFileExtension": "Il tipo di file non è consentito",
+            "dxFileUploader-invalidFileExtension": "Il tipo di file non \xe8 consentito",
             "dxFileUploader-invalidMaxFileSize": "File troppo grande",
             "dxFileUploader-invalidMinFileSize": "File troppo piccolo",
             "dxRangeSlider-ariaFrom": "Da",
@@ -103,7 +103,7 @@
             "dxSwitch-switchedOnText": "ON",
             "dxSwitch-switchedOffText": "OFF",
             "dxForm-optionalMark": "opzionale",
-            "dxForm-requiredMessage": "{0} è richiesto",
+            "dxForm-requiredMessage": "{0} \xe8 richiesto",
             "dxNumberBox-invalidValueMessage": "Il valore deve essere numerico",
             "dxNumberBox-noDataText": "Nessun dato",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",
@@ -157,19 +157,19 @@
             "dxDataGrid-editingCancelAllChanges": "Annulla le modifiche",
             "dxDataGrid-editingAddRow": "Aggiungi una riga",
             "dxDataGrid-summaryMin": "Min: {0}",
-            "dxDataGrid-summaryMinOtherColumn": "Min di {1} è {0}",
+            "dxDataGrid-summaryMinOtherColumn": "Min di {1} \xe8 {0}",
             "dxDataGrid-summaryMax": "Max: {0}",
-            "dxDataGrid-summaryMaxOtherColumn": "Max di {1} è {0}",
+            "dxDataGrid-summaryMaxOtherColumn": "Max di {1} \xe8 {0}",
             "dxDataGrid-summaryAvg": "Media: {0}",
-            "dxDataGrid-summaryAvgOtherColumn": "Media di {1} è {0}",
+            "dxDataGrid-summaryAvgOtherColumn": "Media di {1} \xe8 {0}",
             "dxDataGrid-summarySum": "Somma: {0}",
-            "dxDataGrid-summarySumOtherColumn": "Somma di {1} è {0}",
+            "dxDataGrid-summarySumOtherColumn": "Somma di {1} \xe8 {0}",
             "dxDataGrid-summaryCount": "Conteggio: {0}",
-            "dxDataGrid-columnFixingFix": "Blocca",
-            "dxDataGrid-columnFixingUnfix": "Sblocca",
-            "dxDataGrid-columnFixingLeftPosition": "Alla sinistra",
-            "dxDataGrid-columnFixingRightPosition": "Alla destra",
-            "dxDataGrid-columnFixingStickyPosition": "Stick in place",
+            "dxDataGrid-columnFixingFix": "Set Fixed Position",
+            "dxDataGrid-columnFixingUnfix": "Unfix",
+            "dxDataGrid-columnFixingLeftPosition": "Left",
+            "dxDataGrid-columnFixingRightPosition": "Right",
+            "dxDataGrid-columnFixingStickyPosition": "Sticky",
             "dxDataGrid-exportTo": "Esporta",
             "dxDataGrid-exportToExcel": "Esporta in Excel",
             "dxDataGrid-exporting": "Esportazione...",
@@ -223,14 +223,24 @@
             "dxPager-ariaLabel": "Navigazione pagine",
             "dxPager-ariaPageSize": "Page size",
             "dxPager-ariaPageNumber": "Page number",
+            "dxPagination-infoText": "Pagina {0} di {1} ({2} elementi)",
+            "dxPagination-pagesCountText": "di",
+            "dxPagination-pageSize": "Items per page: {0}",
+            "dxPagination-pageSizesAllText": "Tutti",
+            "dxPagination-page": "Pagina {0}",
+            "dxPagination-prevPage": "Pagina precedente",
+            "dxPagination-nextPage": "Pagina successiva",
+            "dxPagination-ariaLabel": "Navigazione pagine",
+            "dxPagination-ariaPageSize": "Page size",
+            "dxPagination-ariaPageNumber": "Page number",
             "dxPivotGrid-grandTotal": "Totale",
             "dxPivotGrid-total": "{0} Totale",
             "dxPivotGrid-fieldChooserTitle": "Selezione campi",
             "dxPivotGrid-showFieldChooser": "Mostra selezione campi",
             "dxPivotGrid-expandAll": "Espandi tutto",
             "dxPivotGrid-collapseAll": "Comprimi tutto",
-            "dxPivotGrid-sortColumnBySummary": "Ordina \"{0}\" per questa colonna",
-            "dxPivotGrid-sortRowBySummary": "Ordina \"{0}\" per questa riga",
+            "dxPivotGrid-sortColumnBySummary": 'Ordina "{0}" per questa colonna',
+            "dxPivotGrid-sortRowBySummary": 'Ordina "{0}" per questa riga',
             "dxPivotGrid-removeAllSorting": "Rimuovi ordinamenti",
             "dxPivotGrid-dataNotAvailable": "N/D",
             "dxPivotGrid-rowFields": "Campi riga",
@@ -242,6 +252,7 @@
             "dxPivotGrid-dataFieldArea": "Trascina qui i campi dati",
             "dxPivotGrid-rowFieldArea": "Trascina qui i campi riga",
             "dxPivotGrid-filterFieldArea": "Trascina qui i campi filtro",
+            "dxScheduler-ariaLabel": "Scheduler. {0} view",
             "dxScheduler-appointmentAriaLabel-group": "Group: {0}",
             "dxScheduler-appointmentAriaLabel-recurring": "Recurring appointment",
             "dxScheduler-editorLabelTitle": "Oggetto",
@@ -249,6 +260,8 @@
             "dxScheduler-editorLabelEndDate": "Data fine",
             "dxScheduler-editorLabelDescription": "Descrizione",
             "dxScheduler-editorLabelRecurrence": "Ripeti",
+            "dxScheduler-navigationPrevious": "Previous page",
+            "dxScheduler-navigationNext": "Next page",
             "dxScheduler-openAppointment": "Apri appuntamento",
             "dxScheduler-recurrenceNever": "Mai",
             "dxScheduler-recurrenceMinutely": "Ogni minuto",
@@ -320,8 +333,13 @@
             "dxChat-sendButtonAriaLabel": "Send",
             "dxChat-defaultUserName": "Unknown User",
             "dxChat-messageListAriaLabel": "Message list",
+            "dxChat-alertListAriaLabel": "Error list",
             "dxChat-emptyListMessage": "There are no messages in this chat",
             "dxChat-emptyListPrompt": "Write your first message",
+            "dxChat-typingMessageSingleUser": "{0} is typing...",
+            "dxChat-typingMessageTwoUsers": "{0} and {1} are typing...",
+            "dxChat-typingMessageThreeUsers": "{0}, {1} and {2} are typing...",
+            "dxChat-typingMessageMultipleUsers": "{0} and others are typing...",
             "dxColorView-ariaRed": "Rosso",
             "dxColorView-ariaGreen": "Verde",
             "dxColorView-ariaBlue": "Blu",
@@ -351,8 +369,8 @@
             "dxFilterBuilder-filterOperationContains": "Contiene",
             "dxFilterBuilder-filterOperationNotContains": "Non contiene",
             "dxFilterBuilder-filterOperationEndsWith": "Termina con",
-            "dxFilterBuilder-filterOperationIsBlank": "È vuoto",
-            "dxFilterBuilder-filterOperationIsNotBlank": "Non è vuoto",
+            "dxFilterBuilder-filterOperationIsBlank": "\xc8 vuoto",
+            "dxFilterBuilder-filterOperationIsNotBlank": "Non \xe8 vuoto",
             "dxFilterBuilder-filterOperationBetween": "Compreso",
             "dxFilterBuilder-filterOperationAnyOf": "Include",
             "dxFilterBuilder-filterOperationNoneOf": "Non include",
@@ -424,8 +442,8 @@
             "dxHtmlEditor-deleteColumn": "Elimina Colonna",
             "dxHtmlEditor-deleteRow": "Elimina Riga",
             "dxHtmlEditor-deleteTable": "Elimina Tabella",
-            "dxHtmlEditor-cellProperties": "Proprietà Cella",
-            "dxHtmlEditor-tableProperties": "Proprietà Tabella",
+            "dxHtmlEditor-cellProperties": "Propriet\xe0 Cella",
+            "dxHtmlEditor-tableProperties": "Propriet\xe0 Tabella",
             "dxHtmlEditor-insert": "Inserisci",
             "dxHtmlEditor-delete": "Elimina",
             "dxHtmlEditor-border": "Bordo",
@@ -728,5 +746,5 @@
             "dxMultiView-itemAriaLabel": "{0} of {1}",
             "dxSplitter-resizeHandleAriaLabel": "Split bar"
         }
-    });
+    })
 }));

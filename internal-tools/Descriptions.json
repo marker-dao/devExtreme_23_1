@@ -17,6 +17,15 @@
   "AdaptiveDetailRowPreparingInfo.formOptions": {
     "shortDescription": "<!-- Description goes here -->"
   },
+  "Alert": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "Alert.id": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "Alert.message": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
   "AnimationConfig": {
     "shortDescription": "Defines animation properties."
   },
@@ -1503,10 +1512,10 @@
     "shortDescription": ""
   },
   "CollectionWidget.selectionChanged": {
-    "shortDescription": "Raised when a collection item is selected or selection is canceled."
+    "shortDescription": "Raised after selection changes."
   },
   "CollectionWidget.selectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Raised before selection changes."
   },
   "CollectionWidget.selectItem(itemElement)": {
     "shortDescription": ""
@@ -1572,10 +1581,10 @@
     "shortDescription": "A function that is executed after a collection item is moved to another position."
   },
   "CollectionWidgetOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "CollectionWidgetOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "A function that is called before selection changes."
   },
   "CollectionWidgetOptions.selectedIndex": {
     "shortDescription": "The index of the currently selected UI component item."
@@ -1629,7 +1638,7 @@
     "shortDescription": "Configures column fixing."
   },
   "ColumnFixingIcons": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Configures column fixing icons."
   },
   "ColumnFixingTexts": {
     "shortDescription": "Contains properties that specify texts for column fixing commands in the context menu of a column header."
@@ -1792,6 +1801,15 @@
   },
   "config(config)": {
     "shortDescription": "Configures your application before its launch."
+  },
+  "Converter": {
+    "shortDescription": "An object that configures converter settings."
+  },
+  "Converter.fromHtml": {
+    "shortDescription": "A function that converts an HtmlEditor value from HTML to another markup language."
+  },
+  "Converter.toHtml": {
+    "shortDescription": "A function that converts an HtmlEditor value from a markup language to HTML."
   },
   "CustomCommand": {
     "shortDescription": "An object that provides information about a custom command in the [Diagram](/api-reference/10%20UI%20Components/dxDiagram '/Documentation/ApiReference/UI_Components/dxDiagram/') UI component."
@@ -2490,7 +2508,7 @@
     "shortDescription": "Registers a handler to be executed when a user presses a specific key."
   },
   "dxActionSheet.selectionChanged": {
-    "shortDescription": "Raised when a collection item is selected or selection is canceled."
+    "shortDescription": "Raised after selection changes."
   },
   "dxActionSheet.selectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -2571,7 +2589,7 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxActionSheetOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxActionSheetOptions.onSelectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -2692,9 +2710,6 @@
   },
   "dxAutocompleteOptions.onSelectionChanged": {
     "shortDescription": "A function that is executed when a list item is selected or selection is canceled."
-  },
-  "dxAutocompleteOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
   },
   "dxAutocompleteOptions.onValueChanged": {
     "shortDescription": "A function that is executed after the UI component's [value](/api-reference/10%20UI%20Components/dxAutocomplete/1%20Configuration/value.md '{basewidgetpath}/Configuration/#value') is changed."
@@ -2883,7 +2898,7 @@
     "shortDescription": "Registers a handler to be executed when a user presses a specific key."
   },
   "dxBox.selectionChanged": {
-    "shortDescription": "Raised when a collection item is selected or selection is canceled."
+    "shortDescription": "Raised after selection changes."
   },
   "dxBox.selectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -2958,7 +2973,7 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxBoxOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxBoxOptions.onSelectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -5382,16 +5397,28 @@
   "dxChat.contentReady": {
     "shortDescription": "<!-- Description goes here -->"
   },
-  "dxChat.messageSend": {
+  "dxChat.messageEntered": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "dxChat.renderMessage(message)": {
     "shortDescription": "<!-- Description goes here -->"
   },
+  "dxChat.typingEnd": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChat.typingStart": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
   "dxChatOptions.activeStateEnabled": {
     "shortDescription": "<!-- Description goes here -->"
   },
+  "dxChatOptions.alerts": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
   "dxChatOptions.dataSource": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.dayHeaderFormat": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "dxChatOptions.focusStateEnabled": {
@@ -5403,6 +5430,12 @@
   "dxChatOptions.items": {
     "shortDescription": "<!-- Description goes here -->"
   },
+  "dxChatOptions.messageTemplate": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.messageTimestampFormat": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
   "dxChatOptions.onContentReady": {
     "shortDescription": "<!-- Description goes here -->"
   },
@@ -5412,16 +5445,40 @@
   "dxChatOptions.onInitialized": {
     "shortDescription": "<!-- Description goes here -->"
   },
-  "dxChatOptions.onMessageSend": {
+  "dxChatOptions.onMessageEntered": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "dxChatOptions.onOptionChanged": {
     "shortDescription": "<!-- Description goes here -->"
   },
+  "dxChatOptions.onTypingEnd": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.onTypingStart": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
   "dxChatOptions.registerKeyHandler": {
     "shortDescription": "<!-- Description goes here -->"
   },
+  "dxChatOptions.reloadOnChange": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.showAvatar": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.showDayHeaders": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.showMessageTimestamp": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.showUserName": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
   "dxChatOptions.tabIndex": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "dxChatOptions.typingUsers": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "dxChatOptions.user": {
@@ -5672,6 +5729,9 @@
   },
   "dxContextMenu.positioning": {
     "shortDescription": "Raised before the ContextMenu is positioned."
+  },
+  "dxContextMenu.selectionChanging": {
+    "shortDescription": "<!-- Description goes here -->"
   },
   "dxContextMenu.show()": {
     "shortDescription": "Shows the UI component."
@@ -7988,9 +8048,6 @@
   "dxDropDownList.selectionChanged": {
     "shortDescription": "Raised when a list item is selected or selection is canceled."
   },
-  "dxDropDownList.selectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
   "dxDropDownList.valueChanged": {
     "shortDescription": "Raised after the UI component's [value](/api-reference/10%20UI%20Components/dxDropDownList/1%20Configuration/value.md '{basewidgetpath}/Configuration/#value') is changed."
   },
@@ -8017,9 +8074,6 @@
   },
   "dxDropDownListOptions.onSelectionChanged": {
     "shortDescription": "A function that is executed when a list item is selected or selection is canceled."
-  },
-  "dxDropDownListOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
   },
   "dxDropDownListOptions.onValueChanged": {
     "shortDescription": "A function that is executed after the UI component's [value](/api-reference/10%20UI%20Components/dxDropDownList/1%20Configuration/value.md '{basewidgetpath}/Configuration/#value') is changed."
@@ -10296,7 +10350,7 @@
     "shortDescription": "Specifies the toolbar item's name."
   },
   "dxHtmlEditor": {
-    "shortDescription": "HtmlEditor is a WYSIWYG editor that allows you to format textual and visual content and to output it in HTML or Markdown. HtmlEditor is built on top of and requires the <a href=\"https://github.com/DevExpress/devextreme-quill/\" target=\"_blank\">DevExtreme Quill</a>."
+    "shortDescription": "HtmlEditor is a WYSIWYG editor that allows you to format textual and visual content and to output it in HTML. HtmlEditor is built on top of and requires the <a href=\"https://github.com/DevExpress/devextreme-quill/\" target=\"_blank\">DevExtreme Quill</a>."
   },
   "dxHtmlEditor.blur()": {
     "shortDescription": "Removes focus from the content field of the editor."
@@ -10435,6 +10489,9 @@
   },
   "dxHtmlEditorOptions.allowSoftLineBreak": {
     "shortDescription": "Allows users to break content into multiple lines within a single block element. The Shift + Enter key combination generates the new line."
+  },
+  "dxHtmlEditorOptions.converter": {
+    "shortDescription": "Allows you to convert an HtmlEditor value between different markups."
   },
   "dxHtmlEditorOptions.customizeModules": {
     "shortDescription": "Allows you to customize the DevExtreme Quill and 3rd-party modules."
@@ -10889,10 +10946,10 @@
     "shortDescription": "A function that is executed when the \"Select All\" check box value is changed. Applies only if the [selectionMode](/api-reference/10%20UI%20Components/dxList/1%20Configuration/selectionMode.md '/Documentation/ApiReference/UI_Components/dxList/Configuration/#selectionMode') is *\"all\"*."
   },
   "dxListOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxListOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "A function that is called before selection changes."
   },
   "dxListOptions.pageLoadingText": {
     "shortDescription": "Specifies the text shown in the pullDown panel, which is displayed when the list is scrolled to the bottom."
@@ -11222,9 +11279,6 @@
   "dxLookupOptions.onSelectionChanged": {
     "shortDescription": "A function that is executed when a list item is selected or selection is canceled."
   },
-  "dxLookupOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
   "dxLookupOptions.onValueChanged": {
     "shortDescription": "A function that is executed after the UI component's [value](/api-reference/10%20UI%20Components/dxDropDownList/1%20Configuration/value.md '/Documentation/ApiReference/UI_Components/dxLookup/Configuration/#value') is changed."
   },
@@ -11326,7 +11380,7 @@
     "shortDescription": "Keys to authenticate the component within map providers."
   },
   "dxMapOptions.apiKey.azure": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "A key used to authenticate the component within Azure Maps."
   },
   "dxMapOptions.apiKey.bing": {
     "shortDescription": "A key used to authenticate the component within Bing Maps.",
@@ -11435,10 +11489,10 @@
     "shortDescription": "A [provider](/api-reference/10%20UI%20Components/dxMap/1%20Configuration/provider.md '/Documentation/ApiReference/UI_Components/dxMap/Configuration/#provider') configuration object."
   },
   "dxMapOptions.providerConfig.mapId": {
-    "shortDescription": "Specifies a [map ID](https://developers.google.com/maps/documentation/get-map-id) for the `google` [provider](/api-reference/10%20UI%20Components/dxMap/1%20Configuration/provider.md '/Documentation/ApiReference/UI_Components/dxMap/Configuration/#provider')."
+    "shortDescription": "Specifies a [map ID](https://developers.google.com/maps/documentation/get-map-id) for the `google` and `googleStatic` [providers](/api-reference/10%20UI%20Components/dxMap/1%20Configuration/provider.md '/Documentation/ApiReference/UI_Components/dxMap/Configuration/#provider')."
   },
   "dxMapOptions.providerConfig.useAdvancedMarkers": {
-    "shortDescription": "Specifies whether to use [advanced markers](https://developers.google.com/maps/documentation/javascript/advanced-markers/migration) with the `google` [provider](/api-reference/10%20UI%20Components/dxMap/1%20Configuration/provider.md '/Documentation/ApiReference/UI_Components/dxMap/Configuration/#provider').",
+    "shortDescription": "Specifies whether to use [advanced markers](https://developers.google.com/maps/documentation/javascript/advanced-markers/migration) with the `google` and `googleStatic` [providers](/api-reference/10%20UI%20Components/dxMap/1%20Configuration/provider.md '/Documentation/ApiReference/UI_Components/dxMap/Configuration/#provider').",
     "depNote": null
   },
   "dxMapOptions.routes": {
@@ -14583,13 +14637,13 @@
     "shortDescription": "Specifies properties defining the appearance of scale ticks."
   },
   "dxRangeSelectorOptions.scale.tick.color": {
-    "shortDescription": "Specifies the color of scale ticks (both major and minor ticks)."
+    "shortDescription": "Specifies the color of scale ticks (major ticks only)."
   },
   "dxRangeSelectorOptions.scale.tick.opacity": {
-    "shortDescription": "Specifies the opacity of scale ticks (both major and minor ticks)."
+    "shortDescription": "Specifies the opacity of scale ticks (major ticks only)."
   },
   "dxRangeSelectorOptions.scale.tick.width": {
-    "shortDescription": "Specifies the width of the scale's ticks (both major and minor ticks)."
+    "shortDescription": "Specifies the width of the scale's ticks (major ticks only)."
   },
   "dxRangeSelectorOptions.scale.tickInterval": {
     "shortDescription": "Specifies an interval between axis ticks."
@@ -14802,7 +14856,7 @@
     "shortDescription": "Registers a handler to be executed when a user presses a specific key."
   },
   "dxResponsiveBox.selectionChanged": {
-    "shortDescription": "Raised when a collection item is selected or selection is canceled."
+    "shortDescription": "Raised after selection changes."
   },
   "dxResponsiveBox.selectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -14892,7 +14946,7 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxResponsiveBoxOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxResponsiveBoxOptions.onSelectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -15999,9 +16053,6 @@
   "dxSelectBoxOptions.onSelectionChanged": {
     "shortDescription": "A function that is executed when a list item is selected or selection is canceled."
   },
-  "dxSelectBoxOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
   "dxSelectBoxOptions.onValueChanged": {
     "shortDescription": "A function that is executed after the UI component's [value](/api-reference/10%20UI%20Components/dxDropDownList/1%20Configuration/value.md '{basewidgetpath}/Configuration/#value') is changed."
   },
@@ -16535,6 +16586,9 @@
   "dxTabPanel": {
     "shortDescription": "The TabPanel is a UI component consisting of the [Tabs](/api-reference/10%20UI%20Components/dxTabs '/Documentation/ApiReference/UI_Components/dxTabs/') and [MultiView](/api-reference/10%20UI%20Components/dxMultiView '/Documentation/ApiReference/UI_Components/dxMultiView/') UI components. It automatically synchronizes the selected tab with the currently displayed view, and vice versa."
   },
+  "dxTabPanel.selectionChanging": {
+    "shortDescription": "Raised before selection changes."
+  },
   "dxTabPanel.titleClick": {
     "shortDescription": "Raised when a tab is clicked or tapped."
   },
@@ -16599,10 +16653,10 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxTabPanelOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxTabPanelOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "A function that is called before selection changes."
   },
   "dxTabPanelOptions.onTitleClick": {
     "shortDescription": "A function that is executed when a tab is clicked or tapped."
@@ -16686,10 +16740,10 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxTabsOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxTabsOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "A function that is called before selection changes."
   },
   "dxTabsOptions.orientation": {
     "shortDescription": "Specifies component orientation."
@@ -16723,9 +16777,6 @@
   },
   "dxTagBox.selectionChanged": {
     "shortDescription": "Raised when a list item is selected or selection is canceled."
-  },
-  "dxTagBox.selectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
   },
   "dxTagBoxOptions.applyValueMode": {
     "shortDescription": "Specifies how the UI component applies values."
@@ -16807,9 +16858,6 @@
   },
   "dxTagBoxOptions.onSelectionChanged": {
     "shortDescription": "A function that is executed when a list item is selected or selection is canceled."
-  },
-  "dxTagBoxOptions.onSelectionChanging": {
-    "shortDescription": "<!-- Description goes here -->"
   },
   "dxTagBoxOptions.onValueChanged": {
     "shortDescription": "A function that is executed after the UI component's [value](/api-reference/10%20UI%20Components/dxTagBox/1%20Configuration/value.md '{basewidgetpath}/Configuration/#value') is changed."
@@ -17139,7 +17187,7 @@
     "shortDescription": "Gets the current scroll position."
   },
   "dxTileView.selectionChanged": {
-    "shortDescription": "Raised when a collection item is selected or selection is canceled."
+    "shortDescription": "Raised after selection changes."
   },
   "dxTileView.selectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -17208,7 +17256,7 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxTileViewOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxTileViewOptions.onSelectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -17320,7 +17368,7 @@
     "shortDescription": "Registers a handler to be executed when a user presses a specific key."
   },
   "dxToolbar.selectionChanged": {
-    "shortDescription": "Raised when a collection item is selected or selection is canceled."
+    "shortDescription": "Raised after selection changes."
   },
   "dxToolbar.selectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -17398,7 +17446,7 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxToolbarOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxToolbarOptions.onSelectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -17545,13 +17593,13 @@
     "shortDescription": "Gets the keys of the rows selected explicitly [via the API](/concepts/05%20UI%20Components/TreeList/50%20Selection/20%20API/1%20Initial%20and%20Runtime%20Selection.md '/Documentation/Guide/UI_Components/TreeList/Selection/#API/Initial_and_Runtime_Selection') or via a click or tap."
   },
   "dxTreeList.getSelectedRowKeys(mode)": {
-    "shortDescription": "Gets the selected rows' keys."
+    "shortDescription": "Gets selected row keys."
   },
   "dxTreeList.getSelectedRowsData()": {
     "shortDescription": "Gets the data objects of the rows selected explicitly [via the API](/concepts/05%20UI%20Components/TreeList/50%20Selection/20%20API/1%20Initial%20and%20Runtime%20Selection.md '/Documentation/Guide/UI_Components/TreeList/Selection/#API/Initial_and_Runtime_Selection') or via a click or tap."
   },
   "dxTreeList.getSelectedRowsData(mode)": {
-    "shortDescription": "Gets the selected rows' data objects."
+    "shortDescription": "Gets selected row data objects."
   },
   "dxTreeList.getVisibleColumns()": {
     "shortDescription": "Gets all visible columns."
@@ -18616,7 +18664,7 @@
     "shortDescription": "Registers a handler to be executed when a user presses a specific key."
   },
   "dxValidationSummary.selectionChanged": {
-    "shortDescription": "Raised when a collection item is selected or selection is canceled."
+    "shortDescription": "Raised after selection changes."
   },
   "dxValidationSummary.selectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -18676,7 +18724,7 @@
     "shortDescription": "A function that is executed after a UI component property is changed."
   },
   "dxValidationSummaryOptions.onSelectionChanged": {
-    "shortDescription": "A function that is executed when a collection item is selected or selection is canceled."
+    "shortDescription": "A function that is called after selection changes."
   },
   "dxValidationSummaryOptions.onSelectionChanging": {
     "shortDescription": "<!-- Description goes here -->"
@@ -19487,7 +19535,7 @@
     "shortDescription": "Specifies the first day of a week."
   },
   "Enums.FixedPosition": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Specifies a position type for fixed columns."
   },
   "Enums.FloatingActionButtonDirection": {
     "shortDescription": "Specifies the direction in which to open the speed dial menu."
@@ -21407,7 +21455,7 @@
     "shortDescription": "Fixes the column."
   },
   "GridBaseColumn.fixedPosition": {
-    "shortDescription": "Specifies the UI component's edge to which the column is fixed. Applies only if **columns[]**.[fixed](/api-reference/_hidden/GridBaseColumn/fixed.md '{basewidgetpath}/Configuration/columns/#fixed') is **true**."
+    "shortDescription": "Specifies the column position. Applies only if **columns[]**.[fixed](/api-reference/_hidden/GridBaseColumn/fixed.md '{basewidgetpath}/Configuration/columns/#fixed') is **true**."
   },
   "GridBaseColumn.format": {
     "shortDescription": "Formats a value before it is displayed in a column cell."
@@ -21600,22 +21648,22 @@
     "shortDescription": "Enables column fixing."
   },
   "GridBaseOptions.columnFixing.icons": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Contains properties that specify icons for column fixing commands in the context menu of a column header."
   },
   "GridBaseOptions.columnFixing.icons.fix": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Specifies an icon for the context menu item that fixes a column."
   },
   "GridBaseOptions.columnFixing.icons.leftPosition": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Specifies an icon for the context menu subitem that fixes a column to the left edge of the UI component."
   },
   "GridBaseOptions.columnFixing.icons.rightPosition": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Specifies an icon for the context menu subitem that fixes a column to the right edge of the UI component."
   },
   "GridBaseOptions.columnFixing.icons.stickyPosition": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Specifies an icon for the context menu subitem that enables sticky column behavior."
   },
   "GridBaseOptions.columnFixing.icons.unfix": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Specifies an icon for the context menu item that unfixes a column."
   },
   "GridBaseOptions.columnFixing.texts": {
     "shortDescription": "Contains properties that specify texts for column fixing commands in the context menu of a column header."
@@ -21630,7 +21678,7 @@
     "shortDescription": "Specifies text for the context menu subitem that fixes a column to the right edge of the UI component."
   },
   "GridBaseOptions.columnFixing.texts.stickyPosition": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "Specifies text for the context menu subitem that enables sticky column behavior."
   },
   "GridBaseOptions.columnFixing.texts.unfix": {
     "shortDescription": "Specifies text for the context menu item that unfixes a column."
@@ -22595,13 +22643,13 @@
   "Message.author": {
     "shortDescription": "<!-- Description goes here -->"
   },
+  "Message.id": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
   "Message.text": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "Message.timestamp": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
-  "Message.typing": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "NativeEventInfo": {
@@ -23680,25 +23728,13 @@
   "SelectionBase": {
     "shortDescription": "<!-- Overridden -->"
   },
-  "SelectionChangedInfo": {
+  "SelectionChangeInfo": {
     "shortDescription": "<!-- Description goes here -->"
   },
-  "SelectionChangedInfo.addedItems": {
+  "SelectionChangeInfo.addedItems": {
     "shortDescription": "<!-- Description goes here -->"
   },
-  "SelectionChangedInfo.removedItems": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
-  "SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
-  "SelectionChangingInfo": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
-  "SelectionChangingInfo.addedItems": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
-  "SelectionChangingInfo.removedItems": {
+  "SelectionChangeInfo.removedItems": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "setTemplateEngine(options)": {
@@ -24108,6 +24144,9 @@
     "shortDescription": "Custom information that you can pass during file upload. For instance, you can specify a custom file ID when the first part of a file is being uploaded."
   },
   "User": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "User.avatarAlt": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "User.avatarUrl": {
@@ -24543,9 +24582,6 @@
   "_ui_autocomplete_SelectionChangedEvent": {
     "shortDescription": "The type of the [selectionChanged]({basewidgetpath}/Events/#selectionChanged) event handler's argument."
   },
-  "_ui_autocomplete_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
   "_ui_autocomplete_ValueChangedEvent": {
     "shortDescription": "The type of the [valueChanged]({basewidgetpath}/Events/#valueChanged) event handler's argument."
   },
@@ -24627,13 +24663,25 @@
   "_ui_chat_InitializedEvent": {
     "shortDescription": "<!-- Description goes here -->"
   },
-  "_ui_chat_MessageSendEvent": {
+  "_ui_chat_MessageEnteredEvent": {
     "shortDescription": "<!-- Description goes here -->"
   },
-  "_ui_chat_MessageSendEvent.message": {
+  "_ui_chat_MessageEnteredEvent.message": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "_ui_chat_OptionChangedEvent": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "_ui_chat_TypingEndEvent": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "_ui_chat_TypingEndEvent.user": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "_ui_chat_TypingStartEvent": {
+    "shortDescription": "<!-- Description goes here -->"
+  },
+  "_ui_chat_TypingStartEvent.user": {
     "shortDescription": "<!-- Description goes here -->"
   },
   "_ui_check_box_ContentReadyEvent": {
@@ -25647,15 +25695,6 @@
   "_ui_drop_down_editor_ui_drop_down_list_SelectionChangedInfo.selectedItem": {
     "shortDescription": "<!-- Description goes here -->"
   },
-  "_ui_drop_down_editor_ui_drop_down_list_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
-  "_ui_drop_down_editor_ui_drop_down_list_SelectionChangingInfo": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
-  "_ui_drop_down_editor_ui_drop_down_list_SelectionChangingInfo.selectedItem": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
   "_ui_file_manager_ContentReadyEvent": {
     "shortDescription": "The type of the [contentReady]({basewidgetpath}/Events/#contentReady) event handler's argument."
   },
@@ -26521,7 +26560,7 @@
     "shortDescription": "The type of the [selectionChanged]({basewidgetpath}/Events/#selectionChanged) event handler's argument."
   },
   "_ui_list_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "The type of the [selectionChanging]({basewidgetpath}/Events/#selectionChanging) event handler's argument."
   },
   "_ui_load_indicator_ContentReadyEvent": {
     "shortDescription": "The type of the [contentReady]({basewidgetpath}/Events/#contentReady) event handler's argument."
@@ -26591,9 +26630,6 @@
   },
   "_ui_lookup_SelectionChangedEvent": {
     "shortDescription": "The type of the [selectionChanged]({basewidgetpath}/Events/#selectionChanged) event handler's argument."
-  },
-  "_ui_lookup_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
   },
   "_ui_lookup_ValueChangedEvent": {
     "shortDescription": "The type of the [valueChanged]({basewidgetpath}/Events/#valueChanged) event handler's argument."
@@ -27264,9 +27300,6 @@
   "_ui_select_box_SelectionChangedEvent": {
     "shortDescription": "The type of the [selectionChanged]({basewidgetpath}/Events/#selectionChanged) event handler's argument."
   },
-  "_ui_select_box_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
-  },
   "_ui_select_box_ValueChangedEvent": {
     "shortDescription": "The type of the [valueChanged]({basewidgetpath}/Events/#valueChanged) event handler's argument."
   },
@@ -27607,7 +27640,7 @@
     "shortDescription": "The type of the [selectionChanged]({basewidgetpath}/Events/#selectionChanged) event handler's argument."
   },
   "_ui_tabs_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "The type of the [selectionChanging]({basewidgetpath}/Events/#selectionChanging) event handler's argument."
   },
   "_ui_tab_panel_ContentReadyEvent": {
     "shortDescription": "The type of the [contentReady]({basewidgetpath}/Events/#contentReady) event handler's argument."
@@ -27637,7 +27670,7 @@
     "shortDescription": "The type of the [selectionChanged]({basewidgetpath}/Events/#selectionChanged) event handler's argument."
   },
   "_ui_tab_panel_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
+    "shortDescription": "The type of the [selectionChanging]({basewidgetpath}/Events/#selectionChanging) event handler's argument."
   },
   "_ui_tab_panel_TitleClickEvent": {
     "shortDescription": "The type of the [titleClick]({basewidgetpath}/Events/#titleClick) event handler's argument."
@@ -27713,9 +27746,6 @@
   },
   "_ui_tag_box_SelectionChangedEvent": {
     "shortDescription": "The type of the [selectionChanged]({basewidgetpath}/Events/#selectionChanged) event handler's argument."
-  },
-  "_ui_tag_box_SelectionChangingEvent": {
-    "shortDescription": "<!-- Description goes here -->"
   },
   "_ui_tag_box_ValueChangedEvent": {
     "shortDescription": "The type of the [valueChanged]({basewidgetpath}/Events/#valueChanged) event handler's argument."

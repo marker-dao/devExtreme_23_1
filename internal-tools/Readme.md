@@ -3,13 +3,16 @@
 - /40 Common Types/15 grids/SelectionChangedInfo/currentSelectedRowKeys.md: shortDescription
 - /40 Common Types/15 grids/SelectionChangedInfo/selectedRowKeys.md: shortDescription
 - /40 Common Types/15 grids/SelectionChangedInfo/selectedRowsData.md: shortDescription
-- /NewTopics/_ui_autocomplete_SelectionChangingEvent/_ui_autocomplete_SelectionChangingEvent.md: shortDescription
 - /10 UI Components/dxButton/9 Types/ClickEvent/validationGroup.md: shortDescription
 - /10 UI Components/dxChat/9 Types/DisposingEvent/DisposingEvent.md: shortDescription
 - /10 UI Components/dxChat/9 Types/InitializedEvent/InitializedEvent.md: shortDescription
-- /10 UI Components/dxChat/9 Types/MessageSendEvent/MessageSendEvent.md: shortDescription
-- /10 UI Components/dxChat/9 Types/MessageSendEvent/message.md: shortDescription
+- /10 UI Components/dxChat/9 Types/MessageEnteredEvent/MessageEnteredEvent.md: shortDescription
+- /10 UI Components/dxChat/9 Types/MessageEnteredEvent/message.md: shortDescription
 - /10 UI Components/dxChat/9 Types/OptionChangedEvent/OptionChangedEvent.md: shortDescription
+- /10 UI Components/dxChat/9 Types/TypingEndEvent/TypingEndEvent.md: shortDescription
+- /10 UI Components/dxChat/9 Types/TypingEndEvent/user.md: shortDescription
+- /10 UI Components/dxChat/9 Types/TypingStartEvent/TypingStartEvent.md: shortDescription
+- /10 UI Components/dxChat/9 Types/TypingStartEvent/user.md: shortDescription
 - /10 UI Components/dxContextMenu/9 Types/PositioningEvent/position.md: shortDescription
 - /10 UI Components/dxDataGrid/9 Types/CellClickEvent/cellElement.md: shortDescription
 - /10 UI Components/dxDataGrid/9 Types/CellClickEvent/column.md: shortDescription
@@ -189,8 +192,6 @@
 - /10 UI Components/dxDropDownButton/9 Types/SelectionChangedEvent/item.md: shortDescription
 - /10 UI Components/dxDropDownButton/9 Types/SelectionChangedEvent/previousItem.md: shortDescription
 - /10 UI Components/dxDropDownList/9 Types/SelectionChangedInfo/selectedItem.md: shortDescription
-- /NewTopics/_ui_drop_down_editor_ui_drop_down_list_SelectionChangingEvent/_ui_drop_down_editor_ui_drop_down_list_SelectionChangingEvent.md: shortDescription
-- /NewTopics/_ui_drop_down_editor_ui_drop_down_list_SelectionChangingInfo/selectedItem.md: shortDescription
 - /10 UI Components/dxFileManager/9 Types/ContextMenuItemClickEvent/fileSystemItem.md: shortDescription
 - /10 UI Components/dxFileManager/9 Types/ContextMenuItemClickEvent/itemData.md: shortDescription
 - /10 UI Components/dxFileManager/9 Types/ContextMenuItemClickEvent/itemElement.md: shortDescription
@@ -362,8 +363,6 @@
 - /10 UI Components/dxList/9 Types/ItemReorderedEvent/toIndex.md: shortDescription
 - /10 UI Components/dxList/9 Types/ItemSwipeEvent/direction.md: shortDescription
 - /10 UI Components/dxList/9 Types/SelectAllValueChangedEvent/value.md: shortDescription
-- /10 UI Components/dxList/9 Types/SelectionChangingEvent/SelectionChangingEvent.md: shortDescription
-- /NewTopics/_ui_lookup_SelectionChangingEvent/_ui_lookup_SelectionChangingEvent.md: shortDescription
 - /10 UI Components/dxMap/9 Types/MarkerAddedEvent/options.md: shortDescription
 - /10 UI Components/dxMap/9 Types/MarkerAddedEvent/originalMarker.md: shortDescription
 - /10 UI Components/dxMap/9 Types/MarkerRemovedEvent/options.md: shortDescription
@@ -440,7 +439,6 @@
 - /10 UI Components/dxScheduler/9 Types/CellClickEvent/cellElement.md: shortDescription
 - /10 UI Components/dxScheduler/9 Types/CellContextMenuEvent/cellData.md: shortDescription
 - /10 UI Components/dxScheduler/9 Types/CellContextMenuEvent/cellElement.md: shortDescription
-- /NewTopics/_ui_select_box_SelectionChangingEvent/_ui_select_box_SelectionChangingEvent.md: shortDescription
 - /10 UI Components/dxSortable/9 Types/AddEvent/component.md: shortDescription
 - /10 UI Components/dxSortable/9 Types/AddEvent/dropInsideItem.md: shortDescription
 - /10 UI Components/dxSortable/9 Types/AddEvent/element.md: shortDescription
@@ -504,13 +502,10 @@
 - /10 UI Components/dxSortable/9 Types/ReorderEvent/toIndex.md: shortDescription
 - /10 UI Components/dxSpeedDialAction/9 Types/ClickEvent/actionElement.md: shortDescription
 - /10 UI Components/dxSpeedDialAction/9 Types/ContentReadyEvent/actionElement.md: shortDescription
-- /10 UI Components/dxTabPanel/9 Types/SelectionChangingEvent/SelectionChangingEvent.md: shortDescription
-- /10 UI Components/dxTabs/9 Types/SelectionChangingEvent/SelectionChangingEvent.md: shortDescription
 - /10 UI Components/dxTagBox/9 Types/MultiTagPreparingEvent/multiTagElement.md: shortDescription
 - /10 UI Components/dxTagBox/9 Types/MultiTagPreparingEvent/selectedItems.md: shortDescription
 - /10 UI Components/dxTagBox/9 Types/MultiTagPreparingEvent/text.md: shortDescription
 - /10 UI Components/dxTagBox/9 Types/SelectAllValueChangedEvent/value.md: shortDescription
-- /NewTopics/_ui_tag_box_SelectionChangingEvent/_ui_tag_box_SelectionChangingEvent.md: shortDescription
 - /10 UI Components/dxTreeList/9 Types/CellHoverChangedEvent/eventType.md: shortDescription
 - /10 UI Components/dxTreeList/9 Types/CellPreparedEvent/isExpanded.md: shortDescription
 - /10 UI Components/dxTreeList/9 Types/CellPreparedEvent/isNewRow.md: shortDescription
@@ -664,6 +659,9 @@
 - /10 UI Components/dxFileManager/9 Types/ActionEventInfo/errorCode.md: shortDescription
 - /10 UI Components/dxFileManager/9 Types/ActionEventInfo/errorText.md: shortDescription
 - /40 Common Types/15 grids/AdaptiveDetailRowPreparingInfo/formOptions.md: shortDescription
+- /10 UI Components/dxChat/9 Types/Alert/Alert.md: shortDescription
+- /10 UI Components/dxChat/9 Types/Alert/id.md: shortDescription
+- /10 UI Components/dxChat/9 Types/Alert/message.md: shortDescription
 - /10 UI Components/dxScheduler/9 Types/AppointmentTemplateData/AppointmentTemplateData.md: shortDescription
 - /10 UI Components/dxScheduler/9 Types/AppointmentTooltipTemplateData/AppointmentTooltipTemplateData.md: shortDescription
 - /10 UI Components/dxScheduler/9 Types/AppointmentTooltipTemplateData/isButtonClicked.md: shortDescription
@@ -680,54 +678,53 @@
 - /10 UI Components/dxTreeList/9 Types/CellInfo/rowType.md: shortDescription
 - /10 UI Components/dxTreeList/9 Types/CellInfo/text.md: shortDescription
 - /10 UI Components/dxTreeList/9 Types/CellInfo/value.md: shortDescription
-- /10 UI Components/CollectionWidget/4 Events/selectionChanging.md: shortDescription
-- /10 UI Components/CollectionWidget/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.addedItems).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.removedItems).description
-- /40 Common Types/15 grids/ColumnFixingIcons/ColumnFixingIcons.md: shortDescription
 - /10 UI Components/dxSelectBox/9 Types/CustomItemCreatingInfo/customItem.md: shortDescription
 - /10 UI Components/dxSelectBox/9 Types/CustomItemCreatingInfo/text.md: shortDescription
 - /30 Data Layer/CustomStore/1 Configuration/byKey.md: param(extraOptions).description
 - /40 Common Types/15 grids/DataChangeInfo/changes.md: shortDescription
 - /40 Common Types/15 grids/DataErrorOccurredInfo/error.md: shortDescription
-- /10 UI Components/dxAutocomplete/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.selectedItem).description
 - /10 UI Components/dxChart/1 Configuration/onPointClick.md: field(e.cancel).description
 - /10 UI Components/dxChart/9 Types/Tooltip/Tooltip.md: shortDescription
 - /10 UI Components/dxChat/dxChat.md: shortDescription
-- /10 UI Components/dxChat/4 Events/messageSend.md: shortDescription
+- /10 UI Components/dxChat/4 Events/messageEntered.md: shortDescription
 - /10 UI Components/dxChat/3 Methods/renderMessage(message).md: shortDescription, param(message).description
+- /10 UI Components/dxChat/4 Events/typingEnd.md: shortDescription
+- /10 UI Components/dxChat/4 Events/typingStart.md: shortDescription
 - /10 UI Components/dxChat/1 Configuration/activeStateEnabled.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/alerts.md: shortDescription
 - /10 UI Components/dxChat/1 Configuration/dataSource.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/dayHeaderFormat.md: shortDescription
 - /10 UI Components/dxChat/1 Configuration/focusStateEnabled.md: shortDescription
 - /10 UI Components/dxChat/1 Configuration/hoverStateEnabled.md: shortDescription
 - /10 UI Components/dxChat/1 Configuration/items.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/messageTemplate.md: shortDescription, param(data).description, field(data.component).description, field(data.message).description, param(messageBubbleElement).description, return.description
+- /10 UI Components/dxChat/1 Configuration/messageTimestampFormat.md: shortDescription
 - /10 UI Components/dxChat/1 Configuration/onDisposing.md: shortDescription, param(e).description, field(e.component).description, field(e.element).description
 - /10 UI Components/dxChat/1 Configuration/onInitialized.md: shortDescription, param(e).description, field(e.component).description, field(e.element).description
-- /10 UI Components/dxChat/1 Configuration/onMessageSend.md: shortDescription, param(e).description, field(e.component).description, field(e.element).description, field(e.event).description, field(e.message).description
+- /10 UI Components/dxChat/1 Configuration/onMessageEntered.md: shortDescription, param(e).description, field(e.component).description, field(e.element).description, field(e.event).description, field(e.message).description
 - /10 UI Components/dxChat/1 Configuration/onOptionChanged.md: shortDescription, param(e).description, field(e.component).description, field(e.element).description, field(e.fullName).description, field(e.name).description, field(e.previousValue).description, field(e.value).description
+- /10 UI Components/dxChat/1 Configuration/onTypingEnd.md: shortDescription, param(e).description, field(e.component).description, field(e.element).description, field(e.user).description
+- /10 UI Components/dxChat/1 Configuration/onTypingStart.md: shortDescription, param(e).description, field(e.component).description, field(e.element).description, field(e.event).description, field(e.user).description
+- /10 UI Components/dxChat/1 Configuration/reloadOnChange.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/showAvatar.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/showDayHeaders.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/showMessageTimestamp.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/showUserName.md: shortDescription
+- /10 UI Components/dxChat/1 Configuration/typingUsers.md: shortDescription
 - /10 UI Components/dxChat/1 Configuration/user.md: shortDescription
-- /10 UI Components/dxDropDownList/4 Events/selectionChanging.md: shortDescription
-- /10 UI Components/dxDropDownList/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.addedItems).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.removedItems).description
 - /10 UI Components/dxFunnel/9 Types/Tooltip/Tooltip.md: shortDescription
-- /10 UI Components/dxList/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.addedItems).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.removedItems).description
 - /10 UI Components/dxLookup/1 Configuration/onSelectionChanged.md: field(e.selectedItem).description
-- /10 UI Components/dxLookup/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.selectedItem).description
-- /10 UI Components/dxMap/1 Configuration/apiKey/azure.md: shortDescription
 - /10 UI Components/dxPolarChart/9 Types/ArgumentAxisMinorTick/ArgumentAxisMinorTick.md: shortDescription
 - /10 UI Components/dxPolarChart/9 Types/ArgumentAxisTick/ArgumentAxisTick.md: shortDescription
 - /10 UI Components/dxPolarChart/9 Types/Tooltip/Tooltip.md: shortDescription
 - /10 UI Components/dxPolarChart/9 Types/ValueAxisTick/ValueAxisTick.md: shortDescription
 - /10 UI Components/dxPopup/9 Types/dxPopupAnimation/dxPopupAnimation.md: shortDescription
 - /10 UI Components/dxSankey/9 Types/Tooltip/Tooltip.md: shortDescription
-- /10 UI Components/dxSelectBox/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.selectedItem).description
-- /10 UI Components/dxTabPanel/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.addedItems).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.removedItems).description
-- /10 UI Components/dxTabs/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.addedItems).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.removedItems).description
-- /10 UI Components/dxTagBox/4 Events/selectionChanging.md: shortDescription
-- /10 UI Components/dxTagBox/1 Configuration/onSelectionChanging.md: shortDescription, param(e).description, field(e.addedItems).description, field(e.cancel).description, field(e.component).description, field(e.element).description, field(e.removedItems).description
 - /10 UI Components/dxToast/9 Types/dxToastAnimation/dxToastAnimation.md: shortDescription
 - /10 UI Components/dxTreeMap/9 Types/Tooltip/Tooltip.md: shortDescription
 - /_hidden/Enums/DisplayMode.md: shortDescription
 - /_hidden/Enums/EventName.md: shortDescription
 - /_hidden/Enums/eventTypes.md: shortDescription
-- /_hidden/Enums/FixedPosition.md: shortDescription
 - /_hidden/Enums/GroupingInterval.md: shortDescription
 - /_hidden/Enums/HttpMethod.md: shortDescription
 - /_hidden/Enums/PermutedUnionLength.md: shortDescription
@@ -740,13 +737,6 @@
 - /10 UI Components/BaseWidget/9 Types/FileSavingEventInfo/format.md: shortDescription
 - /40 Common Types/10 data/FilterDescriptor.md: shortDescription
 - /10 UI Components/dxFunnel/9 Types/FunnelItemInfo/item.md: shortDescription
-- /10 UI Components/GridBase/1 Configuration/columnFixing/icons/icons.md: shortDescription
-- /40 Common Types/15 grids/ColumnFixingIcons/fix.md: shortDescription
-- /40 Common Types/15 grids/ColumnFixingIcons/leftPosition.md: shortDescription
-- /40 Common Types/15 grids/ColumnFixingIcons/rightPosition.md: shortDescription
-- /40 Common Types/15 grids/ColumnFixingIcons/stickyPosition.md: shortDescription
-- /40 Common Types/15 grids/ColumnFixingIcons/unfix.md: shortDescription
-- /10 UI Components/GridBase/1 Configuration/columnFixing/texts/stickyPosition.md: shortDescription
 - /10 UI Components/BaseWidget/9 Types/IncidentInfo/target.md: shortDescription
 - /10 UI Components/dxTreeMap/9 Types/InteractionInfo/node.md: shortDescription
 - /40 Common Types/15 grids/KeyDownInfo/handled.md: shortDescription
@@ -755,9 +745,9 @@
 - /10 UI Components/dxList/9 Types/ListItemInfo/itemIndex.md: shortDescription
 - /10 UI Components/dxChat/9 Types/Message/Message.md: shortDescription
 - /10 UI Components/dxChat/9 Types/Message/author.md: shortDescription
+- /10 UI Components/dxChat/9 Types/Message/id.md: shortDescription
 - /10 UI Components/dxChat/9 Types/Message/text.md: shortDescription
 - /10 UI Components/dxChat/9 Types/Message/timestamp.md: shortDescription
-- /10 UI Components/dxChat/9 Types/Message/typing.md: shortDescription
 - /40 Common Types/15 grids/NewRowInfo/data.md: shortDescription
 - /40 Common Types/15 grids/NewRowInfo/promise.md: shortDescription
 - /40 Common Types/PagerBase/displayMode.md: shortDescription
@@ -808,24 +798,22 @@
 - /10 UI Components/dxList/9 Types/ScrollInfo/reachedRight.md: shortDescription
 - /10 UI Components/dxList/9 Types/ScrollInfo/reachedTop.md: shortDescription
 - /10 UI Components/dxList/9 Types/ScrollInfo/scrollOffset.md: shortDescription
-- /NewTopics/SelectionChangedInfo/addedItems.md: shortDescription
-- /NewTopics/SelectionChangedInfo/removedItems.md: shortDescription
-- /NewTopics/SelectionChangingEvent/SelectionChangingEvent.md: shortDescription
-- /NewTopics/SelectionChangingInfo/addedItems.md: shortDescription
-- /NewTopics/SelectionChangingInfo/removedItems.md: shortDescription
+- /10 UI Components/CollectionWidget/9 Types/SelectionChangeInfo/addedItems.md: shortDescription
+- /10 UI Components/CollectionWidget/9 Types/SelectionChangeInfo/removedItems.md: shortDescription
 - /10 UI Components/dxTabPanel/9 Types/TabPanelItemInfo/itemData.md: shortDescription
 - /10 UI Components/dxTabPanel/9 Types/TabPanelItemInfo/itemElement.md: shortDescription
 - /10 UI Components/dxScheduler/9 Types/TargetedAppointmentInfo/appointmentData.md: shortDescription
 - /10 UI Components/dxScheduler/9 Types/TargetedAppointmentInfo/targetedAppointmentData.md: shortDescription
 - /40 Common Types/15 grids/ToolbarPreparingInfo/toolbarOptions.md: shortDescription
 - /10 UI Components/dxChat/9 Types/User/User.md: shortDescription
+- /10 UI Components/dxChat/9 Types/User/avatarAlt.md: shortDescription
 - /10 UI Components/dxChat/9 Types/User/avatarUrl.md: shortDescription
 - /10 UI Components/dxChat/9 Types/User/id.md: shortDescription
 - /10 UI Components/dxChat/9 Types/User/name.md: shortDescription
 - /10 UI Components/Editor/9 Types/ValueChangedInfo/previousValue.md: shortDescription
 - /10 UI Components/Editor/9 Types/ValueChangedInfo/value.md: shortDescription
 
-Found **825** empty descriptions in **825** topics
+Found **813** empty descriptions in **813** topics
 ## Empty modules
 - ui/chat
 - ui/pagination
@@ -854,13 +842,16 @@ Found **825** empty descriptions in **825** topics
 - viz/gauges/base_gauge
 ## Files to delete
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/_hidden/SearchOperation.md
+- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/NewTopics/ChatError/id.md
+- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/NewTopics/ChatError/ChatError.md
+- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/NewTopics/ChatError/message.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/15 grids/PagerDisplayMode.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/10 data/GroupDescriptor.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/10 data/SortDescriptor.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/10 data/SelectDescriptor.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/_hidden/dxDataGridColumn/grouped.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/_hidden/dxDataGridColumn/resized.md
-- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/dxMenu/4 Events/selectionChange.md
+- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/dxChat/4 Events/messageSend.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/Editor/3 Methods/reset().md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/15 grids/Pager/label.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/15 grids/Pager/showInfo.md
@@ -868,6 +859,6 @@ Found **825** empty descriptions in **825** topics
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/15 grids/Pager/displayMode.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/15 grids/Pager/infoText.md
 - /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/40 Common Types/15 grids/Pager/showPageSizeSelector.md
-- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/CollectionWidget/9 Types/SelectionChangeInfo/addedItems.md
-- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/CollectionWidget/9 Types/SelectionChangeInfo/removedItems.md
-- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/CollectionWidget/9 Types/SelectionChangeInfo/SelectionChangeInfo.md
+- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/dxChat/9 Types/Message/typing.md
+- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/dxChat/9 Types/MessageSendEvent/MessageSendEvent.md
+- /Users/admin/DX_Projects/DevExtreme/artifacts/doc_tmp/api-reference/10 UI Components/dxChat/9 Types/MessageSendEvent/message.md

@@ -21,7 +21,7 @@ object BaseChart {
   Array|Enums.Palette palette
   Enums.PaletteExtensionMode paletteExtensionMode
   Enums.SingleOrMultiple pointSelectionMode
-  any|Array series
+  any|Array|undefined series
   Object tooltip
 }
 BaseWidget <|-up- BaseChart
@@ -37,7 +37,7 @@ object BaseGauge {
   Object scale
   Array subvalues
   Object tooltip
-  Number value
+  Number|undefined value
 }
 BaseWidget <|-up- BaseGauge
 
@@ -134,13 +134,13 @@ object CustomStore {
   function(key) remove
   function(loadOptions) totalCount
   function(key, values) update
-  Boolean useDefaultSearch
+  Boolean|undefined useDefaultSearch
 }
 Store <|-up- CustomStore
 
 object DataExpressionMixin {
   Store|DataSource|DataSourceOptions|String|Array|null dataSource
-  String|function(item) displayExpr
+  String|function(item)|undefined displayExpr
   Array items
   template|function(itemData, itemIndex, itemElement) itemTemplate
   any value
@@ -159,9 +159,9 @@ object DataSource {
   function(error) onLoadError
   function(isLoading) onLoadingChanged
   Number pageSize
-  Boolean paginate
+  Boolean|undefined paginate
   function(data) postProcess
-  Number pushAggregationTimeout
+  Number|undefined pushAggregationTimeout
   Boolean requireTotalCount
   Boolean reshapeOnPush
   getter|Array searchExpr
@@ -176,11 +176,11 @@ object DateBoxBase {
   String applyButtonText
   dxCalendarOptions calendarOptions
   String cancelButtonText
-  String dateSerializationFormat
+  String|undefined dateSerializationFormat
   Format displayFormat
   dxPopupOptions dropDownOptions
-  Date|Number|String max
-  Date|Number|String min
+  Date|Number|String|undefined max
+  Date|Number|String|undefined min
   String todayButtonText
   Boolean useMaskBehavior
 }
@@ -189,23 +189,23 @@ dxDropDownEditor <|-up- DateBoxBase
 object DOMComponent {
   Object bindingOptions
   Object elementAttr
-  Number|String|function() height
+  Number|String|function()|undefined height
   function(e) onDisposing
   function(e) onOptionChanged
   Boolean rtlEnabled
-  Number|String|function() width
+  Number|String|function()|undefined width
 }
 Component <|-up- DOMComponent
 
 object DraggableBase {
   Boolean autoScroll
-  String|UserDefinedElement boundary
-  String|UserDefinedElement container
+  String|UserDefinedElement|undefined boundary
+  String|UserDefinedElement|undefined container
   template|function() contentTemplate
   String|Object cursorOffset
-  any data
+  any|undefined data
   Enums.DragDirection dragDirection
-  String group
+  String|undefined group
   String handle
   Number scrollSensitivity
   Number scrollSpeed
@@ -218,7 +218,7 @@ object dxAccordion {
   String|Array|Store|DataSource|DataSourceOptions|null dataSource
   Boolean deferRendering
   Boolean focusStateEnabled
-  Number|String|function() height
+  Number|String|function()|undefined height
   Boolean hoverStateEnabled
   Array items
   template|function(itemData, itemIndex, itemElement) itemTemplate
@@ -312,7 +312,7 @@ object dxBarGauge {
   String backgroundColor
   Number barSpacing
   Number baseValue
-  template|function(component, element) centerTemplate
+  template|function(component, element)|undefined centerTemplate
   Number endValue
   Object geometry
   Object label
@@ -370,7 +370,7 @@ CollectionWidget <|-up- dxBox
 
 object dxBullet {
   String color
-  Number endScaleValue
+  Number|undefined endScaleValue
   function(e) onDisposing
   function(e) onDrawn
   function(e) onExported
@@ -404,9 +404,9 @@ object dxButton {
   Enums.ButtonStyle stylingMode
   template|function(buttonData, contentElement) template
   String text
-  Enums.ButtonType type
+  Enums.ButtonType|String type
   Boolean useSubmitBehavior
-  String validationGroup
+  String|undefined validationGroup
 }
 Widget <|-up- dxButton
 
@@ -433,9 +433,9 @@ object dxCalendar {
   Boolean activeStateEnabled
   template|function(itemData, itemIndex, itemElement) cellTemplate
   Date currentDate
-  String dateSerializationFormat
+  String|undefined dateSerializationFormat
   Array|function(data) disabledDates
-  Enums.FirstDayOfWeek firstDayOfWeek
+  Enums.FirstDayOfWeek|undefined firstDayOfWeek
   Boolean focusStateEnabled
   Boolean hoverStateEnabled
   Date|Number|String max
@@ -464,16 +464,16 @@ object dxChart {
   Object argumentAxis
   Boolean autoHidePointMarkers
   Number barGroupPadding
-  Number barGroupWidth
+  Number|undefined barGroupWidth
   dxChartCommonAnnotationConfig commonAnnotationSettings
   Object commonAxisSettings
   Object commonPaneSettings
   Object commonSeriesSettings
   String containerBackgroundColor
   Object crosshair
-  function(annotation) customizeAnnotation
+  function(annotation)|undefined customizeAnnotation
   Object dataPrepareSettings
-  String defaultPane
+  String|undefined defaultPane
   Object legend
   Number maxBubbleSize
   Number minBubbleSize
@@ -504,7 +504,7 @@ object dxChart {
   Enums.ChartsLabelOverlap resolveLabelOverlapping
   Boolean rotated
   Object scrollBar
-  ChartSeries|Array series
+  ChartSeries|Array|undefined series
   Enums.SingleOrMultiple seriesSelectionMode
   Object seriesTemplate
   Boolean stickyHovering
@@ -517,17 +517,29 @@ BaseChart <|-up- dxChart
 
 object dxChat {
   Boolean activeStateEnabled
+  Array alerts
   String|Array|Store|DataSource|DataSourceOptions|null dataSource
+  Format dayHeaderFormat
   Boolean focusStateEnabled
   Boolean hoverStateEnabled
   Array items
+  template|null|function(data, messageBubbleElement) messageTemplate
+  Format messageTimestampFormat
   NO_TYPE onContentReady
   function(e) onDisposing
   function(e) onInitialized
-  function(e) onMessageSend
+  function(e)|undefined onMessageEntered
   function(e) onOptionChanged
+  function(e)|undefined onTypingEnd
+  function(e)|undefined onTypingStart
   function() registerKeyHandler
+  Boolean reloadOnChange
+  Boolean showAvatar
+  Boolean showDayHeaders
+  Boolean showMessageTimestamp
+  Boolean showUserName
   NO_TYPE tabIndex
+  Array typingUsers
   User user
 }
 Widget <|-up- dxChat
@@ -538,7 +550,7 @@ object dxCheckBox {
   Boolean enableThreeStateBehavior
   Boolean focusStateEnabled
   Boolean hoverStateEnabled
-  Number|String iconSize
+  Number|String|undefined iconSize
   String name
   function(e) onContentReady
   function(e) onDisposing
@@ -551,7 +563,7 @@ object dxCheckBox {
 Editor <|-up- dxCheckBox
 
 object dxCircularGauge {
-  template|function(component, element) centerTemplate
+  template|function(component, element)|undefined centerTemplate
   Object geometry
   function(e) onDisposing
   function(e) onDrawn
@@ -627,7 +639,7 @@ object dxContextMenu {
   NO_TYPE selectedItems
   Object|String showEvent
   Enums.ContextSubmenuDirection submenuDirection
-  String|UserDefinedElement target
+  String|UserDefinedElement|undefined target
   Boolean visible
 }
 dxMenuBase <|-up- dxContextMenu
@@ -640,7 +652,7 @@ object dxDataGrid {
   Object export
   Object grouping
   Object groupPanel
-  String|Array keyExpr
+  String|Array|undefined keyExpr
   Object masterDetail
   function(e) onAdaptiveDetailRowPreparing
   function(e) onCellClick
@@ -690,7 +702,7 @@ object dxDataGrid {
   Filter expression selectionFilter
   Array sortByGroupSummaryInfo
   Object summary
-  dxDataGridToolbar toolbar
+  dxDataGridToolbar|undefined toolbar
 }
 GridBase <|-up- dxDataGrid
 
@@ -778,16 +790,16 @@ object dxDateRangeBox {
 DateBoxBase <|-up- dxDateRangeBox
 
 object dxDeferRendering {
-  AnimationConfig animation
+  AnimationConfig|undefined animation
   function(e) onContentReady
   function(e) onDisposing
   function(e) onInitialized
   function(e) onOptionChanged
   function(e) onRendered
   function(e) onShown
-  DxPromise|Boolean renderWhen
+  DxPromise|Boolean|undefined renderWhen
   Boolean showLoadIndicator
-  String staggerItemSelector
+  String|undefined staggerItemSelector
 }
 Widget <|-up- dxDeferRendering
 
@@ -843,7 +855,7 @@ Widget <|-up- dxDiagram
 
 object dxDraggable {
   Boolean clone
-  template|function(dragInfo, containerElement) dragTemplate
+  template|function(dragInfo, containerElement)|undefined dragTemplate
   String filter
   function(e) onDisposing
   function(e) onDragEnd
@@ -916,12 +928,12 @@ dxDropDownEditor <|-up- dxDropDownBox
 object dxDropDownButton {
   String|Array|Store|DataSource|DataSourceOptions|null dataSource
   Boolean deferRendering
-  String|function(itemData) displayExpr
+  String|function(itemData)|undefined displayExpr
   template|function(data, contentElement) dropDownContentTemplate
   dxPopupOptions dropDownOptions
   Boolean focusStateEnabled
   Boolean hoverStateEnabled
-  String icon
+  String|undefined icon
   Array items
   template|function(itemData, itemIndex, itemElement) itemTemplate
   String keyExpr
@@ -976,7 +988,7 @@ dxTextBox <|-up- dxDropDownEditor
 
 object dxDropDownList {
   NO_TYPE applyValueMode
-  String displayValue
+  String|undefined displayValue
   NO_TYPE fieldTemplate
   Boolean grouped
   template|function(itemData, itemIndex, itemElement) groupTemplate
@@ -1050,8 +1062,8 @@ object dxFileUploader {
   Boolean allowCanceling
   Array allowedFileExtensions
   Number chunkSize
-  String|UserDefinedElement dialogTrigger
-  String|UserDefinedElement dropZone
+  String|UserDefinedElement|undefined dialogTrigger
+  String|UserDefinedElement|undefined dropZone
   Boolean extendSelection
   Boolean focusStateEnabled
   Boolean hoverStateEnabled
@@ -1106,7 +1118,7 @@ object dxFilterBuilder {
   Object filterOperationDescriptions
   Object groupOperationDescriptions
   Array groupOperations
-  Number maxGroupLevel
+  Number|undefined maxGroupLevel
   function(e) onContentReady
   function(e) onDisposing
   function(e) onEditorPrepared
@@ -1146,7 +1158,7 @@ object dxForm {
   Boolean showOptionalMark
   Boolean showRequiredMark
   Boolean showValidationSummary
-  String validationGroup
+  String|undefined validationGroup
 }
 Widget <|-up- dxForm
 
@@ -1193,7 +1205,7 @@ object dxGallery {
   String|Array|Store|DataSource|DataSourceOptions|null dataSource
   Boolean focusStateEnabled
   Boolean indicatorEnabled
-  Number initialItemWidth
+  Number|undefined initialItemWidth
   Array items
   NO_TYPE keyExpr
   Boolean loop
@@ -1228,7 +1240,7 @@ object dxGantt {
   Object editing
   Date endDateRange
   dxGanttFilterRow filterRow
-  Enums.FirstDayOfWeek firstDayOfWeek
+  Enums.FirstDayOfWeek|undefined firstDayOfWeek
   dxGanttHeaderFilter headerFilter
   function(e) onContentReady
   function(e) onContextMenuPreparing
@@ -1267,7 +1279,7 @@ object dxGantt {
   NO_TYPE rtlEnabled
   Enums.GanttScaleType scaleType
   Object scaleTypeRange
-  any selectedRowKey
+  any|undefined selectedRowKey
   Boolean showDependencies
   Boolean showResources
   Boolean showRowLines
@@ -1288,6 +1300,7 @@ Widget <|-up- dxGantt
 
 object dxHtmlEditor {
   Boolean allowSoftLineBreak
+  Converter|undefined converter
   function(config) customizeModules
   Boolean focusStateEnabled
   dxHtmlEditorImageUpload imageUpload
@@ -1335,7 +1348,7 @@ object dxList {
   Boolean bounceEnabled
   Boolean collapsibleGroups
   String|Array|Store|DataSource|DataSourceOptions|null dataSource
-  String|function(item) displayExpr
+  String|function(item)|undefined displayExpr
   Boolean focusStateEnabled
   Boolean grouped
   template|function(groupData, groupIndex, groupElement) groupTemplate
@@ -1407,7 +1420,7 @@ Widget <|-up- dxLoadIndicator
 object dxLoadPanel {
   NO_TYPE accessKey
   Object animation
-  String|UserDefinedElement container
+  String|UserDefinedElement|undefined container
   template contentTemplate
   Number delay
   NO_TYPE disabled
@@ -1604,8 +1617,8 @@ object dxNumberBox {
   NO_TYPE maskChar
   NO_TYPE maskInvalidMessage
   NO_TYPE maskRules
-  Number max
-  Number min
+  Number|undefined max
+  Number|undefined min
   Enums.NumberBoxType mode
   function(e) onChange
   function(e) onContentReady
@@ -1670,11 +1683,11 @@ Widget <|-up- dxPagination
 object dxPieChart {
   Object adaptiveLayout
   Array annotations
-  template|function(component, element) centerTemplate
+  template|function(component, element)|undefined centerTemplate
   dxPieChartCommonAnnotationConfig commonAnnotationSettings
   any commonSeriesSettings
-  function(annotation) customizeAnnotation
-  Number diameter
+  function(annotation)|undefined customizeAnnotation
+  Number|undefined diameter
   Number innerRadius
   Object legend
   Number minDiameter
@@ -1696,9 +1709,9 @@ object dxPieChart {
   Array|Enums.Palette palette
   Enums.ShiftLabelOverlap resolveLabelOverlapping
   Enums.PieChartSegmentDirection segmentsDirection
-  PieChartSeries|Array series
+  PieChartSeries|Array|undefined series
   Object seriesTemplate
-  String sizeGroup
+  String|undefined sizeGroup
   Number startAngle
   Enums.PieChartType type
 }
@@ -1768,12 +1781,12 @@ object dxPolarChart {
   Array annotations
   Object argumentAxis
   Number barGroupPadding
-  Number barGroupWidth
+  Number|undefined barGroupWidth
   dxPolarChartCommonAnnotationConfig commonAnnotationSettings
   Object commonAxisSettings
   Object commonSeriesSettings
   String containerBackgroundColor
-  function(annotation) customizeAnnotation
+  function(annotation)|undefined customizeAnnotation
   Object dataPrepareSettings
   Object legend
   Boolean negativesAsZeroes
@@ -1799,7 +1812,7 @@ object dxPolarChart {
   function(e) onZoomEnd
   function(e) onZoomStart
   Enums.LabelOverlap resolveLabelOverlapping
-  PolarChartSeries|Array series
+  PolarChartSeries|Array|undefined series
   Enums.SingleOrMultiple seriesSelectionMode
   Object seriesTemplate
   Object tooltip
@@ -1818,7 +1831,7 @@ object dxPopover {
   NO_TYPE focusStateEnabled
   NO_TYPE fullScreen
   Number|String|function() height
-  Object|String hideEvent
+  Object|String|undefined hideEvent
   Boolean|function(event) hideOnOutsideClick
   Boolean hideOnParentScroll
   function(e) onContentReady
@@ -1837,18 +1850,18 @@ object dxPopover {
   NO_TYPE resizeEnabled
   NO_TYPE restorePosition
   Boolean shading
-  Object|String showEvent
+  Object|String|undefined showEvent
   Boolean showTitle
   NO_TYPE tabIndex
-  String|UserDefinedElement target
+  String|UserDefinedElement|undefined target
   Number|String|function() width
 }
 dxPopup <|-up- dxPopover
 
 object dxPopup {
   Object animation
-  String|UserDefinedElement container
-  String|UserDefinedElement dragAndResizeArea
+  String|UserDefinedElement|undefined container
+  String|UserDefinedElement|undefined dragAndResizeArea
   Boolean dragEnabled
   Boolean dragOutsideBoundary
   Boolean enableBodyScroll
@@ -1961,7 +1974,7 @@ object dxRecurrenceEditor {
 Editor <|-up- dxRecurrenceEditor
 
 object dxResizable {
-  String|UserDefinedElement area
+  String|UserDefinedElement|undefined area
   Enums.ResizeHandle|String handles
   Number|String|function() height
   Boolean keepAspectRatio
@@ -2035,7 +2048,7 @@ object dxSankey {
   function(e) onOptionChanged
   Array|Enums.Palette palette
   Enums.PaletteExtensionMode paletteExtensionMode
-  any sortData
+  any|undefined sortData
   String sourceField
   String targetField
   Object tooltip
@@ -2058,27 +2071,27 @@ object dxScheduler {
   Boolean crossScrollingEnabled
   Date|Number|String currentDate
   Enums.ViewType currentView
-  function(info) customizeDateNavigatorText
+  function(info)|undefined customizeDateNavigatorText
   template|function(itemData, itemIndex, itemElement) dataCellTemplate
   String|Array|Store|DataSource|DataSourceOptions|null dataSource
   template|function(itemData, itemIndex, itemElement) dateCellTemplate
-  String dateSerializationFormat
+  String|undefined dateSerializationFormat
   String descriptionExpr
   template|function(itemData, itemIndex, contentElement) dropDownAppointmentTemplate
   Boolean|Object editing
   String endDateExpr
   String endDateTimeZoneExpr
   Number endDayHour
-  Enums.FirstDayOfWeek firstDayOfWeek
+  Enums.FirstDayOfWeek|undefined firstDayOfWeek
   Boolean focusStateEnabled
   Boolean groupByDate
   Array groups
   NO_TYPE hoverStateEnabled
   Date indicatorTime
   Number indicatorUpdateInterval
-  Date|Number|String max
+  Date|Number|String|undefined max
   Number|Enums.CellAppointmentsLimit maxAppointmentsPerCell
-  Date|Number|String min
+  Date|Number|String|undefined min
   String noDataText
   Number offset
   function(e) onAppointmentAdded
@@ -2211,7 +2224,7 @@ dxTrackBar <|-up- dxSliderBase
 object dxSortable {
   Boolean allowDropInsideItem
   Boolean allowReordering
-  template|function(dragInfo, containerElement) dragTemplate
+  template|function(dragInfo, containerElement)|undefined dragTemplate
   Enums.DragHighlight dropFeedbackMode
   String filter
   Enums.Orientation itemOrientation
@@ -2241,9 +2254,9 @@ object dxSparkline {
   Number lineWidth
   String lossColor
   String maxColor
-  Number maxValue
+  Number|undefined maxValue
   String minColor
-  Number minValue
+  Number|undefined minValue
   function(e) onDisposing
   function(e) onDrawn
   function(e) onExported
@@ -2398,7 +2411,7 @@ object dxTagBox {
   NO_TYPE displayValue
   NO_TYPE hiddenAction
   Boolean hideSelectedItems
-  Number maxDisplayedTags
+  Number|undefined maxDisplayedTags
   Number maxFilterQueryLength
   Boolean multiline
   function(e) onChange
@@ -2449,8 +2462,8 @@ object dxTextArea {
   NO_TYPE maskChar
   NO_TYPE maskInvalidMessage
   NO_TYPE maskRules
-  Number|String maxHeight
-  Number|String minHeight
+  Number|String|undefined maxHeight
+  Number|String|undefined minHeight
   NO_TYPE mode
   function(e) onChange
   function(e) onContentReady
@@ -2699,7 +2712,7 @@ object dxTreeList {
   any rootValue
   Object scrolling
   Object selection
-  dxTreeListToolbar toolbar
+  dxTreeListToolbar|undefined toolbar
 }
 GridBase <|-up- dxTreeList
 
@@ -2709,14 +2722,14 @@ object dxTreeMap {
   Object colorizer
   Store|DataSource|DataSourceOptions|String|Array|null dataSource
   Object group
-  Boolean hoverEnabled
-  String idField
+  Boolean|undefined hoverEnabled
+  String|undefined idField
   Boolean interactWithGroup
   String labelField
   Enums.TreeMapLayoutAlgorithm|function(e) layoutAlgorithm
   Enums.TreeMapLayoutDirection layoutDirection
   Object margin
-  Number maxDepth
+  Number|undefined maxDepth
   function(e) onClick
   function(e) onDisposing
   function(e) onDrawn
@@ -2731,8 +2744,8 @@ object dxTreeMap {
   function(e) onNodesRendering
   function(e) onOptionChanged
   function(e) onSelectionChanged
-  String parentField
-  Enums.SingleMultipleOrNone selectionMode
+  String|undefined parentField
+  Enums.SingleMultipleOrNone|undefined selectionMode
   Object tile
   Object tooltip
   String valueField
@@ -2844,7 +2857,7 @@ object dxVectorMap {
   Array center
   dxVectorMapCommonAnnotationConfig commonAnnotationSettings
   Object controlBar
-  function(annotation) customizeAnnotation
+  function(annotation)|undefined customizeAnnotation
   Array|Object layers
   Array legends
   Object margin
@@ -2908,10 +2921,10 @@ object GridBase {
   Object columnChooser
   Object columnFixing
   Boolean columnHidingEnabled
-  Number columnMinWidth
+  Number|undefined columnMinWidth
   Enums.ColumnResizeMode columnResizingMode
   Array columns
-  Number|Enums.Mode columnWidth
+  Number|Enums.Mode|undefined columnWidth
   Store|DataSource|DataSourceOptions|String|Array|null dataSource
   String dateSerializationFormat
   Object editing
@@ -2925,7 +2938,7 @@ object GridBase {
   Number focusedColumnIndex
   Boolean focusedRowEnabled
   Number focusedRowIndex
-  any focusedRowKey
+  any|undefined focusedRowKey
   any focusStateEnabled
   Object headerFilter
   Boolean highlightChanges
@@ -3054,7 +3067,7 @@ object SearchBoxMixin {
   Boolean searchEnabled
   getter|Array searchExpr
   Enums.SearchMode searchMode
-  Number searchTimeout
+  Number|undefined searchTimeout
   String searchValue
 }
 
@@ -3075,11 +3088,11 @@ object Store {
 }
 
 object Widget {
-  String accessKey
+  String|undefined accessKey
   Boolean activeStateEnabled
   Boolean disabled
   Boolean focusStateEnabled
-  String hint
+  String|undefined hint
   Boolean hoverStateEnabled
   function(e) onContentReady
   function(e) onFocusIn
