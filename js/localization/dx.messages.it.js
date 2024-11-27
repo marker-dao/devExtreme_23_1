@@ -1,61 +1,61 @@
 /*!
 * DevExtreme (dx.messages.it.js)
-* Version: 24.2.0
-* Build date: Fri Nov 15 2024
+* Version: 24.2.2
+* Build date: Tue Nov 26 2024
 *
 * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-! function(root, factory) {
-    if ("function" === typeof define && define.amd) {
-        define((function(require) {
-            factory(require("devextreme/localization"))
-        }))
-    } else if ("object" === typeof module && module.exports) {
-        factory(require("devextreme/localization"))
+(function(root, factory) {
+    if(typeof define === 'function' && define.amd) {
+        define(function(require) {
+            factory(require("devextreme/localization"));
+        });
+    } else if(typeof module === "object" && module.exports) {
+        factory(require("devextreme/localization"));
     } else {
-        factory(DevExpress.localization)
+        factory(DevExpress.localization);
     }
-}(0, (function(localization) {
+}(this, function(localization) {
     localization.loadMessages({
-        it: {
-            Yes: "S\xec",
-            No: "No",
-            Cancel: "Annulla",
-            CheckState: "Check state",
-            Close: "Chiudi",
-            Clear: "Cancella",
-            Done: "Fatto",
-            Loading: "Caricamento...",
-            Select: "Seleziona...",
-            Search: "Cerca",
-            Back: "Indietro",
-            OK: "OK",
-            Today: "Oggi",
-            Yesterday: "Yesterday",
+        "it": {
+            "Yes": "Sì",
+            "No": "No",
+            "Cancel": "Annulla",
+            "CheckState": "Check state",
+            "Close": "Chiudi",
+            "Clear": "Cancella",
+            "Done": "Fatto",
+            "Loading": "Caricamento...",
+            "Select": "Seleziona...",
+            "Search": "Cerca",
+            "Back": "Indietro",
+            "OK": "OK",
+            "Today": "Oggi",
+            "Yesterday": "Yesterday",
             "dxCollectionWidget-noDataText": "Nessun dato da mostrare",
             "dxDropDownEditor-selectLabel": "Seleziona",
             "validation-required": "Richiesto",
-            "validation-required-formatted": "{0} \xe8 richiesto",
+            "validation-required-formatted": "{0} è richiesto",
             "validation-numeric": "Il valore deve essere numerico",
             "validation-numeric-formatted": "{0} deve essere numerico",
-            "validation-range": "Il valore non \xe8 compreso nell'intervallo",
-            "validation-range-formatted": "{0} non \xe8 compreso nell'intervallo",
+            "validation-range": "Il valore non è compreso nell'intervallo",
+            "validation-range-formatted": "{0} non è compreso nell'intervallo",
             "validation-stringLength": "Lunghezza del valore errata",
-            "validation-stringLength-formatted": "La lunghezza di {0} \xe8 errata",
-            "validation-custom": "Il valore non \xe8 corretto",
-            "validation-custom-formatted": "{0} non \xe8 corretto",
-            "validation-async": "Il valore non \xe8 corretto",
-            "validation-async-formatted": "{0} non \xe8 corretto",
+            "validation-stringLength-formatted": "La lunghezza di {0} è errata",
+            "validation-custom": "Il valore non è corretto",
+            "validation-custom-formatted": "{0} non è corretto",
+            "validation-async": "Il valore non è corretto",
+            "validation-async-formatted": "{0} non è corretto",
             "validation-compare": "I valori non corrispondono",
             "validation-compare-formatted": "{0} non corrisponde",
             "validation-pattern": "Il valore non rispetta il formato previsto",
             "validation-pattern-formatted": "{0} non rispetta il formato previsto",
-            "validation-email": "L'email non \xe8 corretta",
-            "validation-email-formatted": "{0} non \xe8 una email corretta",
-            "validation-mask": "Il valore non \xe8 corretto",
+            "validation-email": "L'email non è corretta",
+            "validation-email-formatted": "{0} non è una email corretta",
+            "validation-mask": "Il valore non è corretto",
             "dxLookup-searchPlaceholder": "Lunghezza minima: {0}",
             "dxList-pullingDownText": "Trascina in basso per aggiornare...",
             "dxList-pulledDownText": "Rilascia per aggiornare...",
@@ -95,7 +95,7 @@
             "dxFileUploader-readyToUpload": "Pronto per caricare",
             "dxFileUploader-uploadAbortedMessage": "Caricamento annullato",
             "dxFileUploader-uploadFailedMessage": "Caricamento fallito",
-            "dxFileUploader-invalidFileExtension": "Il tipo di file non \xe8 consentito",
+            "dxFileUploader-invalidFileExtension": "Il tipo di file non è consentito",
             "dxFileUploader-invalidMaxFileSize": "File troppo grande",
             "dxFileUploader-invalidMinFileSize": "File troppo piccolo",
             "dxRangeSlider-ariaFrom": "Da",
@@ -103,7 +103,7 @@
             "dxSwitch-switchedOnText": "ON",
             "dxSwitch-switchedOffText": "OFF",
             "dxForm-optionalMark": "opzionale",
-            "dxForm-requiredMessage": "{0} \xe8 richiesto",
+            "dxForm-requiredMessage": "{0} è richiesto",
             "dxNumberBox-invalidValueMessage": "Il valore deve essere numerico",
             "dxNumberBox-noDataText": "Nessun dato",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",
@@ -157,13 +157,13 @@
             "dxDataGrid-editingCancelAllChanges": "Annulla le modifiche",
             "dxDataGrid-editingAddRow": "Aggiungi una riga",
             "dxDataGrid-summaryMin": "Min: {0}",
-            "dxDataGrid-summaryMinOtherColumn": "Min di {1} \xe8 {0}",
+            "dxDataGrid-summaryMinOtherColumn": "Min di {1} è {0}",
             "dxDataGrid-summaryMax": "Max: {0}",
-            "dxDataGrid-summaryMaxOtherColumn": "Max di {1} \xe8 {0}",
+            "dxDataGrid-summaryMaxOtherColumn": "Max di {1} è {0}",
             "dxDataGrid-summaryAvg": "Media: {0}",
-            "dxDataGrid-summaryAvgOtherColumn": "Media di {1} \xe8 {0}",
+            "dxDataGrid-summaryAvgOtherColumn": "Media di {1} è {0}",
             "dxDataGrid-summarySum": "Somma: {0}",
-            "dxDataGrid-summarySumOtherColumn": "Somma di {1} \xe8 {0}",
+            "dxDataGrid-summarySumOtherColumn": "Somma di {1} è {0}",
             "dxDataGrid-summaryCount": "Conteggio: {0}",
             "dxDataGrid-columnFixingFix": "Set Fixed Position",
             "dxDataGrid-columnFixingUnfix": "Unfix",
@@ -239,8 +239,8 @@
             "dxPivotGrid-showFieldChooser": "Mostra selezione campi",
             "dxPivotGrid-expandAll": "Espandi tutto",
             "dxPivotGrid-collapseAll": "Comprimi tutto",
-            "dxPivotGrid-sortColumnBySummary": 'Ordina "{0}" per questa colonna',
-            "dxPivotGrid-sortRowBySummary": 'Ordina "{0}" per questa riga',
+            "dxPivotGrid-sortColumnBySummary": "Ordina \"{0}\" per questa colonna",
+            "dxPivotGrid-sortRowBySummary": "Ordina \"{0}\" per questa riga",
             "dxPivotGrid-removeAllSorting": "Rimuovi ordinamenti",
             "dxPivotGrid-dataNotAvailable": "N/D",
             "dxPivotGrid-rowFields": "Campi riga",
@@ -293,6 +293,7 @@
             "dxScheduler-recurrenceRepeatOnDate": "alla data",
             "dxScheduler-recurrenceRepeatCount": "occorrenza(e)",
             "dxScheduler-allDay": "Tutto il giorno",
+            "dxScheduler-ariaEditForm": "Edit form",
             "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
             "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Vuoi modificare solo questo appuntamento o tutte le sue ricorrenze?",
@@ -369,8 +370,8 @@
             "dxFilterBuilder-filterOperationContains": "Contiene",
             "dxFilterBuilder-filterOperationNotContains": "Non contiene",
             "dxFilterBuilder-filterOperationEndsWith": "Termina con",
-            "dxFilterBuilder-filterOperationIsBlank": "\xc8 vuoto",
-            "dxFilterBuilder-filterOperationIsNotBlank": "Non \xe8 vuoto",
+            "dxFilterBuilder-filterOperationIsBlank": "È vuoto",
+            "dxFilterBuilder-filterOperationIsNotBlank": "Non è vuoto",
             "dxFilterBuilder-filterOperationBetween": "Compreso",
             "dxFilterBuilder-filterOperationAnyOf": "Include",
             "dxFilterBuilder-filterOperationNoneOf": "Non include",
@@ -442,8 +443,8 @@
             "dxHtmlEditor-deleteColumn": "Elimina Colonna",
             "dxHtmlEditor-deleteRow": "Elimina Riga",
             "dxHtmlEditor-deleteTable": "Elimina Tabella",
-            "dxHtmlEditor-cellProperties": "Propriet\xe0 Cella",
-            "dxHtmlEditor-tableProperties": "Propriet\xe0 Tabella",
+            "dxHtmlEditor-cellProperties": "Proprietà Cella",
+            "dxHtmlEditor-tableProperties": "Proprietà Tabella",
             "dxHtmlEditor-insert": "Inserisci",
             "dxHtmlEditor-delete": "Elimina",
             "dxHtmlEditor-border": "Bordo",
@@ -746,5 +747,5 @@
             "dxMultiView-itemAriaLabel": "{0} of {1}",
             "dxSplitter-resizeHandleAriaLabel": "Split bar"
         }
-    })
+    });
 }));

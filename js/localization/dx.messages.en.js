@@ -1,40 +1,40 @@
 /*!
 * DevExtreme (dx.messages.en.js)
-* Version: 24.2.0
-* Build date: Fri Nov 15 2024
+* Version: 24.2.2
+* Build date: Tue Nov 26 2024
 *
 * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-! function(root, factory) {
-    if ("function" === typeof define && define.amd) {
-        define((function(require) {
-            factory(require("devextreme/localization"))
-        }))
-    } else if ("object" === typeof module && module.exports) {
-        factory(require("devextreme/localization"))
+(function(root, factory) {
+    if(typeof define === 'function' && define.amd) {
+        define(function(require) {
+            factory(require("devextreme/localization"));
+        });
+    } else if(typeof module === "object" && module.exports) {
+        factory(require("devextreme/localization"));
     } else {
-        factory(DevExpress.localization)
+        factory(DevExpress.localization);
     }
-}(0, (function(localization) {
+}(this, function(localization) {
     localization.loadMessages({
-        en: {
-            Yes: "Yes",
-            No: "No",
-            Cancel: "Cancel",
-            CheckState: "Check state",
-            Close: "Close",
-            Clear: "Clear",
-            Done: "Done",
-            Loading: "Loading...",
-            Select: "Select...",
-            Search: "Search",
-            Back: "Back",
-            OK: "OK",
-            Today: "Today",
-            Yesterday: "Yesterday",
+        "en": {
+            "Yes": "Yes",
+            "No": "No",
+            "Cancel": "Cancel",
+            "CheckState": "Check state",
+            "Close": "Close",
+            "Clear": "Clear",
+            "Done": "Done",
+            "Loading": "Loading...",
+            "Select": "Select...",
+            "Search": "Search",
+            "Back": "Back",
+            "OK": "OK",
+            "Today": "Today",
+            "Yesterday": "Yesterday",
             "dxCollectionWidget-noDataText": "No data to display",
             "dxDropDownEditor-selectLabel": "Select",
             "validation-required": "Required",
@@ -239,8 +239,8 @@
             "dxPivotGrid-showFieldChooser": "Show Field Chooser",
             "dxPivotGrid-expandAll": "Expand All",
             "dxPivotGrid-collapseAll": "Collapse All",
-            "dxPivotGrid-sortColumnBySummary": 'Sort "{0}" by This Column',
-            "dxPivotGrid-sortRowBySummary": 'Sort "{0}" by This Row',
+            "dxPivotGrid-sortColumnBySummary": "Sort \"{0}\" by This Column",
+            "dxPivotGrid-sortRowBySummary": "Sort \"{0}\" by This Row",
             "dxPivotGrid-removeAllSorting": "Remove All Sorting",
             "dxPivotGrid-dataNotAvailable": "N/A",
             "dxPivotGrid-rowFields": "Row Fields",
@@ -293,6 +293,7 @@
             "dxScheduler-recurrenceRepeatOnDate": "on date",
             "dxScheduler-recurrenceRepeatCount": "occurrence(s)",
             "dxScheduler-allDay": "All day",
+            "dxScheduler-ariaEditForm": "Edit form",
             "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
             "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Do you want to edit only this appointment or the whole series?",
@@ -746,5 +747,5 @@
             "dxMultiView-itemAriaLabel": "{0} of {1}",
             "dxSplitter-resizeHandleAriaLabel": "Split bar"
         }
-    })
+    });
 }));

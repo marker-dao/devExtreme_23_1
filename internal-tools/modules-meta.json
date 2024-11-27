@@ -1,5 +1,5 @@
 {
-  "ToolsVersion": "16.0.0-beta.10",
+  "ToolsVersion": "16.0.0-beta.13.1",
   "Modules": {
     "common": {
       "ApplyValueMode": {},

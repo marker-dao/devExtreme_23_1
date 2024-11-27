@@ -1,21 +1,21 @@
 /*!
- * DevExtreme (dx.vectormaputils.node.js)
- * Version: 24.2.0
- * Build date: Fri Nov 15 2024
- *
- * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
- * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
- */
+* DevExtreme (dx.vectormaputils.node.js)
+* Version: 24.2.2
+* Build date: Tue Nov 26 2024
+*
+* Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
 "use strict";
 
-function noop() {}
+/* eslint-disable no-undef, no-var, one-var, import/no-commonjs*/
 
-function eigen(x) {
-    return x
-}
+function noop() { }
+
+function eigen(x) { return x; }
 
 function isFunction(target) {
-    return "function" === typeof target
+    return typeof target === 'function';
 }
 
 function wrapSource(source) {
@@ -23,48 +23,55 @@ function wrapSource(source) {
     var position = 0;
     var stream = {
         pos: function() {
-            return position
+            return position;
         },
+
         skip: function(count) {
             position += count;
-            return stream
+            return stream;
         },
+
         ui8arr: function(length) {
             var i = 0;
             var list = [];
             list.length = length;
-            for (; i < length; ++i) {
-                list[i] = stream.ui8()
+            for(; i < length; ++i) {
+                list[i] = stream.ui8();
             }
-            return list
+            return list;
         },
+
         ui8: function() {
             var val = ui8(buffer, position);
             position += 1;
-            return val
+            return val;
         },
+
         ui16LE: function() {
             var val = ui16LE(buffer, position);
             position += 2;
-            return val
+            return val;
         },
+
         ui32LE: function() {
             var val = ui32LE(buffer, position);
             position += 4;
-            return val
+            return val;
         },
+
         ui32BE: function() {
             var val = ui32BE(buffer, position);
             position += 4;
-            return val
+            return val;
         },
+
         f64LE: function() {
             var val = f64LE(buffer, position);
             position += 8;
-            return val
+            return val;
         }
     };
-    return stream
+    return stream;
 }
 
 function parseCore(source, roundCoordinates, errors) {
@@ -72,16 +79,17 @@ function parseCore(source, roundCoordinates, errors) {
     var dataBaseFileData = source[1] ? parseDBF(wrapSource(source[1]), errors) : {};
     var features = buildFeatures(shapeData.shapes || [], dataBaseFileData.records || [], roundCoordinates);
     var result;
-    if (features.length) {
+
+    if(features.length) {
         result = {
-            type: "FeatureCollection",
+            type: 'FeatureCollection',
             features: features
         };
-        result.bbox = shapeData.bBox
+        result['bbox'] = shapeData.bBox;
     } else {
-        result = null
+        result = null;
     }
-    return result
+    return result;
 }
 
 function buildFeatures(shapeData, dataBaseFileData, roundCoordinates) {
@@ -89,86 +97,89 @@ function buildFeatures(shapeData, dataBaseFileData, roundCoordinates) {
     var i;
     var ii = features.length = Math.max(shapeData.length, dataBaseFileData.length);
     var shape;
-    for (i = 0; i < ii; ++i) {
+    for(i = 0; i < ii; ++i) {
         shape = shapeData[i] || {};
         features[i] = {
-            type: "Feature",
+            type: 'Feature',
             geometry: {
                 type: shape.geoJSON_type || null,
                 coordinates: shape.coordinates ? roundCoordinates(shape.coordinates) : []
             },
             properties: dataBaseFileData[i] || null
-        }
+        };
     }
-    return features
+    return features;
 }
 
 function createCoordinatesRounder(precision) {
-    var factor = Number("1E" + precision);
-
+    var factor = Number('1E' + precision);
     function round(x) {
-        return Math.round(x * factor) / factor
+        return Math.round(x * factor) / factor;
     }
-    return function process(values) {
-        return values.map(values[0].length ? process : round)
+    function process(values) {
+        return values.map(values[0].length ? process : round);
     }
+    return process;
 }
 
 function buildParseArgs(source) {
     source = source || {};
-    return ["shp", "dbf"].map((function(key) {
+    return ['shp', 'dbf'].map(function(key) {
         return function(done) {
-            if (source.substr) {
-                key = "." + key;
-                sendRequest(source + (source.substr(-key.length).toLowerCase() === key ? "" : key), (function(e, response) {
-                    done(e, response)
-                }))
+            if(source.substr) {
+                key = '.' + key;
+                sendRequest(source + (source.substr(-key.length).toLowerCase() === key ? '' : key), function(e, response) {
+                    done(e, response);
+                });
             } else {
-                done(null, source[key] || null)
+                done(null, source[key] || null);
             }
-        }
-    }))
+        };
+    });
 }
 
 function parse(source, parameters, callback) {
     var result;
-    when(buildParseArgs(source), (function(errorArray, dataArray) {
-        callback = isFunction(parameters) && parameters || isFunction(callback) && callback || noop;
-        parameters = !isFunction(parameters) && parameters || {};
+    when(buildParseArgs(source), function(errorArray, dataArray) {
+        callback = (isFunction(parameters) && parameters) || (isFunction(callback) && callback) || noop;
+        parameters = (!isFunction(parameters) && parameters) || {};
         var errors = [];
-        errorArray.forEach((function(e) {
-            e && errors.push(e)
-        }));
+        errorArray.forEach(function(e) {
+            e && errors.push(e);
+        });
         result = parseCore(dataArray, parameters.precision >= 0 ? createCoordinatesRounder(parameters.precision) : eigen, errors);
-        callback(result, errors.length ? errors : null)
-    }));
-    return result
+        // NOTE: The order of the error and the result is reversed because of backward compatibility
+        callback(result, errors.length ? errors : null);
+    });
+    return result;
 }
+
 exports.parse = parse;
 
 function when(actions, callback) {
     var errorArray = [];
     var dataArray = [];
     var counter = 1;
-    actions.forEach((function(action, i) {
+    var lock = true;
+    actions.forEach(function(action, i) {
         ++counter;
-        action((function(e, data) {
+        action(function(e, data) {
             errorArray[i] = e;
             dataArray[i] = data;
-            massDone()
-        }))
-    }));
-    false;
+            massDone();
+        });
+    });
+    lock = false;
     massDone();
-
     function massDone() {
         --counter;
-        if (0 === counter && true) {
-            callback(errorArray, dataArray)
+        if(counter === 0 && !lock) {
+            callback(errorArray, dataArray);
         }
     }
 }
 
+/* eslint-disable no-undef, no-unused-vars, no-var, one-var*/
 function parseShape(stream, errors) {
     var timeStart;
     var timeEnd;
@@ -176,45 +187,46 @@ function parseShape(stream, errors) {
     var records = [];
     var record;
     try {
-        timeStart = new Date;
-        header = parseShapeHeader(stream)
-    } catch (e) {
-        errors.push("shp: header parsing error: " + e.message + " / " + e.description);
-        return
+        timeStart = new Date();
+        header = parseShapeHeader(stream);
+    } catch(e) {
+        errors.push('shp: header parsing error: ' + e.message + ' / ' + e.description);
+        return;
     }
-    if (9994 !== header.fileCode) {
-        errors.push("shp: file code: " + header.fileCode + " / expected: 9994")
+    if(header.fileCode !== 9994) {
+        errors.push('shp: file code: ' + header.fileCode + ' / expected: 9994');
     }
-    if (1e3 !== header.version) {
-        errors.push("shp: file version: " + header.version + " / expected: 1000")
+    if(header.version !== 1000) {
+        errors.push('shp: file version: ' + header.version + ' / expected: 1000');
     }
     try {
-        while (stream.pos() < header.fileLength) {
+        while(stream.pos() < header.fileLength) {
             record = parseShapeRecord(stream, header.type, errors);
-            if (record) {
-                records.push(record)
+            if(record) {
+                records.push(record);
             } else {
-                break
+                break;
             }
         }
-        if (stream.pos() !== header.fileLength) {
-            errors.push("shp: file length: " + header.fileLength + " / actual: " + stream.pos())
+        if(stream.pos() !== header.fileLength) {
+            errors.push('shp: file length: ' + header.fileLength + ' / actual: ' + stream.pos());
         }
-        timeEnd = new Date
-    } catch (e) {
-        errors.push("shp: records parsing error: " + e.message + " / " + e.description)
+        timeEnd = new Date();
+    } catch(e) {
+        errors.push('shp: records parsing error: ' + e.message + ' / ' + e.description);
     }
+
     return {
         bBox: header.bBox_XY,
         type: header.shapeType,
         shapes: records,
         errors: errors,
         time: timeEnd - timeStart
-    }
+    };
 }
 
 function readPointShape(stream, record) {
-    record.coordinates = readPointArray(stream, 1)[0]
+    record.coordinates = readPointArray(stream, 1)[0];
 }
 
 function readPolyLineShape(stream, record) {
@@ -226,21 +238,21 @@ function readPolyLineShape(stream, record) {
     var rings = [];
     var i;
     rings.length = numParts;
-    for (i = 0; i < numParts; ++i) {
-        rings[i] = points.slice(parts[i], parts[i + 1] || numPoints)
+    for(i = 0; i < numParts; ++i) {
+        rings[i] = points.slice(parts[i], parts[i + 1] || numPoints);
     }
     record.bBox = bBox;
-    record.coordinates = rings
+    record.coordinates = rings;
 }
 
 function readMultiPointShape(stream, record) {
     record.bBox = readBBox(stream);
-    record.coordinates = readPointArray(stream, readInteger(stream))
+    record.coordinates = readPointArray(stream, readInteger(stream));
 }
 
 function readPointMShape(stream, record) {
     record.coordinates = readPointArray(stream, 1)[0];
-    record.coordinates.push(readDoubleArray(stream, 1)[0])
+    record.coordinates.push(readDoubleArray(stream, 1)[0]);
 }
 
 function readMultiPointMShape(stream, record) {
@@ -251,7 +263,7 @@ function readMultiPointMShape(stream, record) {
     var mValues = readDoubleArray(stream, numPoints);
     record.bBox = bBox;
     record.mBox = mBox;
-    record.coordinates = merge_XYM(points, mValues, numPoints)
+    record.coordinates = merge_XYM(points, mValues, numPoints);
 }
 
 function readPolyLineMShape(stream, record) {
@@ -267,19 +279,19 @@ function readPolyLineMShape(stream, record) {
     var from;
     var to;
     rings.length = numParts;
-    for (i = 0; i < numParts; ++i) {
+    for(i = 0; i < numParts; ++i) {
         from = parts[i];
         to = parts[i + 1] || numPoints;
-        rings[i] = merge_XYM(points.slice(from, to), mValues.slice(from, to), to - from)
+        rings[i] = merge_XYM(points.slice(from, to), mValues.slice(from, to), to - from);
     }
     record.bBox = bBox;
     record.mBox = mBox;
-    record.coordinates = rings
+    record.coordinates = rings;
 }
 
 function readPointZShape(stream, record) {
     record.coordinates = readPointArray(stream, 1)[0];
-    record.push(readDoubleArray(stream, 1)[0], readDoubleArray(stream, 1)[0])
+    record.push(readDoubleArray(stream, 1)[0], readDoubleArray(stream, 1)[0]);
 }
 
 function readMultiPointZShape(stream, record) {
@@ -293,7 +305,7 @@ function readMultiPointZShape(stream, record) {
     record.bBox = bBox;
     record.zBox = zBox;
     record.mBox = mBox;
-    record.coordinates = merge_XYZM(points, zValues, mValue, numPoints)
+    record.coordinates = merge_XYZM(points, zValues, mValue, numPoints);
 }
 
 function readPolyLineZShape(stream, record) {
@@ -311,15 +323,15 @@ function readPolyLineZShape(stream, record) {
     var from;
     var to;
     rings.length = numParts;
-    for (i = 0; i < numParts; ++i) {
+    for(i = 0; i < numParts; ++i) {
         from = parts[i];
         to = parts[i + 1] || numPoints;
-        rings[i] = merge_XYZM(points.slice(from, to), zValues.slice(from, to), mValues.slice(from, to), to - from)
+        rings[i] = merge_XYZM(points.slice(from, to), zValues.slice(from, to), mValues.slice(from, to), to - from);
     }
     record.bBox = bBox;
     record.zBox = zBox;
     record.mBox = mBox;
-    record.coordinates = rings
+    record.coordinates = rings;
 }
 
 function readMultiPatchShape(stream, record) {
@@ -337,33 +349,35 @@ function readMultiPatchShape(stream, record) {
     var from;
     var to;
     rings.length = numParts;
-    for (i = 0; i < numParts; ++i) {
+    for(i = 0; i < numParts; ++i) {
         from = parts[i];
         to = parts[i + 1] || numPoints;
-        rings[i] = merge_XYZM(points.slice(from, to), zValues.slice(from, to), mValues.slice(from, to), to - from)
+        rings[i] = merge_XYZM(points.slice(from, to), zValues.slice(from, to), mValues.slice(from, to), to - from);
     }
     record.bBox = bBox;
     record.zBox = zBox;
     record.mBox = mBox;
     record.types = partTypes;
-    record.coordinates = rings
+    record.coordinates = rings;
 }
+
 var SHP_TYPES = {
-    0: "Null",
-    1: "Point",
-    3: "PolyLine",
-    5: "Polygon",
-    8: "MultiPoint",
-    11: "PointZ",
-    13: "PolyLineZ",
-    15: "PolygonZ",
-    18: "MultiPointZ",
-    21: "PointM",
-    23: "PolyLineM",
-    25: "PolygonM",
-    28: "MultiPointM",
-    31: "MultiPatch"
+    0: 'Null',
+    1: 'Point',
+    3: 'PolyLine',
+    5: 'Polygon',
+    8: 'MultiPoint',
+    11: 'PointZ',
+    13: 'PolyLineZ',
+    15: 'PolygonZ',
+    18: 'MultiPointZ',
+    21: 'PointM',
+    23: 'PolyLineM',
+    25: 'PolygonM',
+    28: 'MultiPointM',
+    31: 'MultiPatch'
 };
+
 var SHP_RECORD_PARSERS = {
     0: noop,
     1: readPointShape,
@@ -380,21 +394,22 @@ var SHP_RECORD_PARSERS = {
     28: readMultiPointMShape,
     31: readMultiPatchShape
 };
+
 var SHP_TYPE_TO_GEOJSON_TYPE_MAP = {
-    Null: "Null",
-    Point: "Point",
-    PolyLine: "MultiLineString",
-    Polygon: "Polygon",
-    MultiPoint: "MultiPoint",
-    PointZ: "Point",
-    PolyLineZ: "MultiLineString",
-    PolygonZ: "Polygon",
-    MultiPointZ: "MultiPoint",
-    PointM: "Point",
-    PolyLineM: "MultiLineString",
-    PolygonM: "Polygon",
-    MultiPointM: "MultiPoint",
-    MultiPatch: "MultiPatch"
+    'Null': 'Null',
+    'Point': 'Point',
+    'PolyLine': 'MultiLineString',
+    'Polygon': 'Polygon',
+    'MultiPoint': 'MultiPoint',
+    'PointZ': 'Point',
+    'PolyLineZ': 'MultiLineString',
+    'PolygonZ': 'Polygon',
+    'MultiPointZ': 'MultiPoint',
+    'PointM': 'Point',
+    'PolyLineM': 'MultiLineString',
+    'PolygonM': 'Polygon',
+    'MultiPointM': 'MultiPoint',
+    'MultiPatch': 'MultiPatch'
 };
 
 function parseShapeHeader(stream) {
@@ -407,97 +422,97 @@ function parseShapeHeader(stream) {
     header.type = SHP_TYPES[header.type_number];
     header.bBox_XY = readBBox(stream);
     header.bBox_ZM = readPointArray(stream, 2);
-    return header
+    return header;
 }
 
 function readInteger(stream) {
-    return stream.ui32LE()
+    return stream.ui32LE();
 }
 
 function readIntegerArray(stream, length) {
     var array = [];
     var i;
     array.length = length;
-    for (i = 0; i < length; ++i) {
-        array[i] = readInteger(stream)
+    for(i = 0; i < length; ++i) {
+        array[i] = readInteger(stream);
     }
-    return array
+    return array;
 }
 
 function readDoubleArray(stream, length) {
     var array = [];
     var i;
     array.length = length;
-    for (i = 0; i < length; ++i) {
-        array[i] = stream.f64LE()
+    for(i = 0; i < length; ++i) {
+        array[i] = stream.f64LE();
     }
-    return array
+    return array;
 }
 
 function readBBox(stream) {
-    return readDoubleArray(stream, 4)
+    return readDoubleArray(stream, 4);
 }
 
 function readPair(stream) {
-    return [stream.f64LE(), stream.f64LE()]
+    return [stream.f64LE(), stream.f64LE()];
 }
 
 function readPointArray(stream, count) {
     var points = [];
     var i;
     points.length = count;
-    for (i = 0; i < count; ++i) {
-        points[i] = readPair(stream)
+    for(i = 0; i < count; ++i) {
+        points[i] = readPair(stream);
     }
-    return points
+    return points;
 }
 
 function merge_XYM(xy, m, length) {
     var array = [];
     var i;
     array.length = length;
-    for (i = 0; i < length; ++i) {
-        array[i] = [xy[i][0], xy[i][1], m[i]]
+    for(i = 0; i < length; ++i) {
+        array[i] = [xy[i][0], xy[i][1], m[i]];
     }
-    return array
+    return array;
 }
 
 function merge_XYZM(xy, z, m, length) {
     var array = [];
     var i;
     array.length = length;
-    for (i = 0; i < length; ++i) {
-        array[i] = [xy[i][0], xy[i][1], z[i], m[i]]
+    for(i = 0; i < length; ++i) {
+        array[i] = [xy[i][0], xy[i][1], z[i], m[i]];
     }
-    return array
+    return array;
 }
 
 function parseShapeRecord(stream, generalType, errors) {
-    var record = {
-        number: stream.ui32BE()
-    };
+    var record = { number: stream.ui32BE() };
     var length = stream.ui32BE() << 1;
     var pos = stream.pos();
     var type = stream.ui32LE();
+
     record.type_number = type;
     record.type = SHP_TYPES[type];
     record.geoJSON_type = SHP_TYPE_TO_GEOJSON_TYPE_MAP[record.type];
-    if (record.type) {
-        if (record.type !== generalType) {
-            errors.push("shp: shape #" + record.number + " type: " + record.type + " / expected: " + generalType)
+    if(record.type) {
+        if(record.type !== generalType) {
+            errors.push('shp: shape #' + record.number + ' type: ' + record.type + ' / expected: ' + generalType);
         }
         SHP_RECORD_PARSERS[type](stream, record);
         pos = stream.pos() - pos;
-        if (pos !== length) {
-            errors.push("shp: shape #" + record.number + " length: " + length + " / actual: " + pos)
+        if(pos !== length) {
+            errors.push('shp: shape #' + record.number + ' length: ' + length + ' / actual: ' + pos);
         }
     } else {
-        errors.push("shp: shape #" + record.number + " type: " + type + " / unknown");
-        record = null
+        errors.push('shp: shape #' + record.number + ' type: ' + type + ' / unknown');
+        record = null;
     }
-    return record
+    return record;
 }
 
+/* eslint-disable no-unused-vars, no-var, one-var*/
 function parseDBF(stream, errors) {
     var timeStart;
     var timeEnd;
@@ -505,19 +520,15 @@ function parseDBF(stream, errors) {
     var parseData;
     var records;
     try {
-        timeStart = new Date;
+        timeStart = new Date();
         header = parseDataBaseFileHeader(stream, errors);
         parseData = prepareDataBaseFileRecordParseData(header, errors);
         records = parseDataBaseFileRecords(stream, header.numberOfRecords, header.recordLength, parseData, errors);
-        timeEnd = new Date
-    } catch (e) {
-        errors.push("dbf: parsing error: " + e.message + " / " + e.description)
+        timeEnd = new Date();
+    } catch(e) {
+        errors.push('dbf: parsing error: ' + e.message + ' / ' + e.description);
     }
-    return {
-        records: records,
-        errors: errors,
-        time: timeEnd - timeStart
-    }
+    return { records: records, errors: errors, time: timeEnd - timeStart };
 }
 
 function parseDataBaseFileHeader(stream, errors) {
@@ -532,52 +543,56 @@ function parseDataBaseFileHeader(stream, errors) {
     };
     var term;
     stream.skip(20);
-    for (i = (header.headerLength - stream.pos() - 1) / 32; i > 0; --i) {
-        header.fields.push(parseFieldDescriptor(stream))
+    for(i = (header.headerLength - stream.pos() - 1) / 32; i > 0; --i) {
+        header.fields.push(parseFieldDescriptor(stream));
     }
     term = stream.ui8();
-    if (13 !== term) {
-        errors.push("dbf: header terminator: " + term + " / expected: 13")
+    if(term !== 13) {
+        errors.push('dbf: header terminator: ' + term + ' / expected: 13');
     }
-    return header
+    return header;
 }
+
 var _fromCharCode = String.fromCharCode;
 
 function getAsciiString(stream, length) {
-    return _fromCharCode.apply(null, stream.ui8arr(length))
+    return _fromCharCode.apply(null, stream.ui8arr(length));
 }
 
 function parseFieldDescriptor(stream) {
     var desc = {
-        name: getAsciiString(stream, 11).replace(/\0*$/gi, ""),
+        name: getAsciiString(stream, 11).replace(/\0*$/gi, ''),
         type: _fromCharCode(stream.ui8()),
         length: stream.skip(4).ui8(),
         count: stream.ui8()
     };
     stream.skip(14);
-    return desc
+    return desc;
 }
+
 var DBF_FIELD_PARSERS = {
-    C: function(stream, length) {
+    'C': function(stream, length) {
         var str = getAsciiString(stream, length);
+
         try {
-            str = decodeURIComponent(escape(str))
-        } catch (e) {}
-        return str.trim()
+            str = decodeURIComponent(escape(str)); // T522922
+        } catch(e) { }
+
+        return str.trim();
     },
-    N: function(stream, length) {
+    'N': function(stream, length) {
         var str = getAsciiString(stream, length);
-        return parseFloat(str)
+        return parseFloat(str);
     },
-    D: function(stream, length) {
+    'D': function(stream, length) {
         var str = getAsciiString(stream, length);
-        return new Date(str.substring(0, 4), str.substring(4, 6) - 1, str.substring(6, 8))
+        return new Date(str.substring(0, 4), str.substring(4, 6) - 1, str.substring(6, 8));
     }
 };
 
 function DBF_FIELD_PARSER_DEFAULT(stream, length) {
     stream.skip(length);
-    return null
+    return null;
 }
 
 function prepareDataBaseFileRecordParseData(header, errors) {
@@ -587,24 +602,24 @@ function prepareDataBaseFileRecordParseData(header, errors) {
     var item;
     var field;
     var totalLength = 0;
-    for (i = 0; i < ii; ++i) {
+    for(i = 0; i < ii; ++i) {
         field = header.fields[i];
         item = {
             name: field.name,
             parser: DBF_FIELD_PARSERS[field.type],
             length: field.length
         };
-        if (!item.parser) {
+        if(!item.parser) {
             item.parser = DBF_FIELD_PARSER_DEFAULT;
-            errors.push("dbf: field " + field.name + " type: " + field.type + " / unknown")
+            errors.push('dbf: field ' + field.name + ' type: ' + field.type + ' / unknown');
         }
         totalLength += field.length;
-        list.push(item)
+        list.push(item);
     }
-    if (totalLength + 1 !== header.recordLength) {
-        errors.push("dbf: record length: " + header.recordLength + " / actual: " + (totalLength + 1))
+    if(totalLength + 1 !== header.recordLength) {
+        errors.push('dbf: record length: ' + header.recordLength + ' / actual: ' + (totalLength + 1));
     }
-    return list
+    return list;
 }
 
 function parseDataBaseFileRecords(stream, recordCount, recordLength, parseData, errors) {
@@ -615,134 +630,138 @@ function parseDataBaseFileRecords(stream, recordCount, recordLength, parseData, 
     var records = [];
     var record;
     var pd;
-    for (i = 0; i < recordCount; ++i) {
+    for(i = 0; i < recordCount; ++i) {
         record = {};
         pos = stream.pos();
         stream.skip(1);
-        for (j = 0; j < jj; ++j) {
+        for(j = 0; j < jj; ++j) {
             pd = parseData[j];
-            record[pd.name] = pd.parser(stream, pd.length)
+            record[pd.name] = pd.parser(stream, pd.length);
         }
         pos = stream.pos() - pos;
-        if (pos !== recordLength) {
-            errors.push("dbf: record #" + (i + 1) + " length: " + recordLength + " / actual: " + pos)
+        if(pos !== recordLength) {
+            errors.push('dbf: record #' + (i + 1) + ' length: ' + recordLength + ' / actual: ' + pos);
         }
-        records.push(record)
+        records.push(record);
     }
-    return records
+    return records;
 }
 
+/* eslint-disable no-unused-vars, no-var, one-var, import/no-commonjs*/
 function wrapBuffer(buffer) {
-    return buffer
+    return buffer;
 }
 
 function ui8(stream, position) {
-    return stream[position]
+    return stream[position];
 }
 
 function ui16LE(stream, position) {
-    return stream.readUInt16LE(position)
+    return stream.readUInt16LE(position);
 }
 
 function ui32LE(stream, position) {
-    return stream.readUInt32LE(position)
+    return stream.readUInt32LE(position);
 }
 
 function ui32BE(stream, position) {
-    return stream.readUInt32BE(position)
+    return stream.readUInt32BE(position);
 }
 
 function f64LE(stream, position) {
-    return stream.readDoubleLE(position)
+    return stream.readDoubleLE(position);
 }
-var fs = require("fs");
 
+var fs = require('fs');
 function sendRequest(path, callback) {
-    fs.readFile(path, callback)
+    fs.readFile(path, callback);
 }
-var path = require("path");
+
+/* eslint-disable no-console, no-undef, no-var, one-var, import/no-commonjs*/
+
+var path = require('path');
 
 function normalizeJsName(value) {
-    return value.trim().replace("-", "_").replace(" ", "_")
+    return value.trim().replace('-', '_').replace(' ', '_');
 }
 
 function processFile(file, options, callback) {
     var name = path.basename(file, path.extname(file));
-    options.info("%s: started", name);
-    parse(file, {
-        precision: options.precision
-    }, (function(shapeData, errors) {
+    options.info('%s: started', name);
+    parse(file, { precision: options.precision }, function(shapeData, errors) {
         var content;
-        options.info("%s: finished", name);
-        errors && errors.forEach((function(e) {
-            options.error("  " + e)
-        }));
-        if (shapeData) {
+        options.info('%s: finished', name);
+        errors && errors.forEach(function(e) {
+            options.error('  ' + e);
+        });
+        if(shapeData) {
             content = JSON.stringify(options.processData(shapeData), null, options.isDebug && 4);
-            if (!options.isJSON) {
-                content = options.processFileContent(content, normalizeJsName(name))
+            if(!options.isJSON) {
+                content = options.processFileContent(content, normalizeJsName(name));
             }
-            fs.writeFile(path.resolve(options.output || path.dirname(file), options.processFileName(name + (options.isJSON ? ".json" : ".js"))), content, (function(e) {
-                e && options.error("  " + e.message);
-                callback()
-            }))
+            fs.writeFile(
+                path.resolve(options.output || path.dirname(file), options.processFileName(name + (options.isJSON ? '.json' : '.js'))),
+                content, function(e) {
+                    e && options.error('  ' + e.message);
+                    callback();
+                });
         } else {
-            callback()
+            callback();
         }
-    }))
+    });
 }
 
 function collectFiles(dir, done) {
-    var input = path.resolve(dir || "");
-    fs.stat(input, (function(e, stat) {
-        if (e) {
-            done(e, [])
-        } else if (stat.isFile()) {
-            done(null, checkFile(input) ? [path.resolve(path.dirname(input), normalizeFile(input))] : [])
-        } else if (stat.isDirectory()) {
-            fs.readdir(input, (function(e, dirItems) {
+    var input = path.resolve(dir || '');
+    fs.stat(input, function(e, stat) {
+        if(e) {
+            done(e, []);
+        } else if(stat.isFile()) {
+            done(null, checkFile(input) ? [path.resolve(path.dirname(input), normalizeFile(input))] : []);
+        } else if(stat.isDirectory()) {
+            fs.readdir(input, function(e, dirItems) {
                 var list = [];
-                dirItems.forEach((function(dirItem) {
-                    if (checkFile(dirItem)) {
-                        list.push(path.resolve(input, normalizeFile(dirItem)))
+                dirItems.forEach(function(dirItem) {
+                    if(checkFile(dirItem)) {
+                        list.push(path.resolve(input, normalizeFile(dirItem)));
                     }
-                }));
-                done(null, list)
-            }))
+                });
+                done(null, list);
+            });
         } else {
-            done(null, [])
+            done(null, []);
         }
-    }));
+    });
 
     function checkFile(name) {
-        return ".shp" === path.extname(name).toLowerCase()
+        return path.extname(name).toLowerCase() === '.shp';
     }
 
     function normalizeFile(name) {
-        return path.basename(name, ".shp")
+        return path.basename(name, '.shp');
     }
 }
 
 function importFile(file) {
     var content;
     try {
-        content = require(path.resolve(String(file)))
-    } catch (_) {}
-    return content
+        content = require(path.resolve(String(file)));
+    } catch(_) { }
+    return content;
 }
 
 function pickFunctionOption(value) {
-    return isFunction(value) && value || value && importFile(String(value)) || null
+    return (isFunction(value) && value) || (value && importFile(String(value))) || null;
 }
 
 function processFileContentByDefault(content, name) {
-    return name + " = " + content + ";"
+    return name + ' = ' + content + ';';
 }
 
 function prepareSettings(source, options) {
     options = Object.assign({}, options);
-    if (options.settings) {
-        options = Object.assign(importFile(options.settings) || {}, options)
+    if(options.settings) {
+        options = Object.assign(importFile(options.settings) || {}, options);
     }
     return Object.assign(options, {
         input: source ? String(source) : null,
@@ -753,123 +772,89 @@ function prepareSettings(source, options) {
         processFileContent: pickFunctionOption(options.processFileContent) || processFileContentByDefault,
         info: options.isQuiet ? noop : console.info.bind(console),
         error: options.isQuiet ? noop : console.error.bind(console)
-    })
+    });
 }
 
 function processFiles(source, options, callback) {
     var settings = prepareSettings(source, options && options.trim ? importFile(options) : options);
-    settings.info("Started");
-    collectFiles(settings.input, (function(e, files) {
+    settings.info('Started');
+    collectFiles(settings.input, function(e, files) {
         e && settings.error(e.message);
-        settings.info(files.map((function(file) {
-            return "  " + path.basename(file)
-        })).join("\n"));
-        when(files.map((function(file) {
+        settings.info(files.map(function(file) {
+            return '  ' + path.basename(file);
+        }).join('\n'));
+        when(files.map(function(file) {
             return function(done) {
-                processFile(file, settings, done)
-            }
-        })), (function() {
-            settings.info("Finished");
-            (isFunction(callback) ? callback : noop)()
-        }))
-    }))
+                processFile(file, settings, done);
+            };
+        }), function() {
+            settings.info('Finished');
+            (isFunction(callback) ? callback : noop)();
+        });
+    });
 }
+
 exports.processFiles = processFiles;
-var COMMAND_LINE_ARG_KEYS = [{
-    key: "--output",
-    name: "output",
-    arg: true,
-    desc: "Destination directory"
-}, {
-    key: "--process-data",
-    name: "processData",
-    arg: true,
-    desc: "Process parsed data"
-}, {
-    key: "--process-file-name",
-    name: "processFileName",
-    arg: true,
-    desc: "Process output file name"
-}, {
-    key: "--process-file-content",
-    name: "processFileContent",
-    arg: true,
-    desc: "Process output file content"
-}, {
-    key: "--precision",
-    name: "precision",
-    arg: true,
-    desc: "Precision of shape coordinates"
-}, {
-    key: "--json",
-    name: "isJSON",
-    desc: "Generate as a .json file"
-}, {
-    key: "--debug",
-    name: "isDebug",
-    desc: "Generate non minified file"
-}, {
-    key: "--quiet",
-    name: "isQuiet",
-    desc: "Suppress console output"
-}, {
-    key: "--settings",
-    name: "settings",
-    arg: true,
-    desc: "Path to settings file"
-}, {
-    key: "--help",
-    name: "isHelp",
-    desc: "Print help"
-}];
+
+var COMMAND_LINE_ARG_KEYS = [
+    { key: '--output', name: 'output', arg: true, desc: 'Destination directory' },
+    { key: '--process-data', name: 'processData', arg: true, desc: 'Process parsed data' },
+    { key: '--process-file-name', name: 'processFileName', arg: true, desc: 'Process output file name' },
+    { key: '--process-file-content', name: 'processFileContent', arg: true, desc: 'Process output file content' },
+    { key: '--precision', name: 'precision', arg: true, desc: 'Precision of shape coordinates' },
+    { key: '--json', name: 'isJSON', desc: 'Generate as a .json file' },
+    { key: '--debug', name: 'isDebug', desc: 'Generate non minified file' },
+    { key: '--quiet', name: 'isQuiet', desc: 'Suppress console output' },
+    { key: '--settings', name: 'settings', arg: true, desc: 'Path to settings file' },
+    { key: '--help', name: 'isHelp', desc: 'Print help' }
+];
 
 function parseCommandLineArgs() {
     var args = process.argv.slice(2);
-    var options = {
-        isEmpty: !args.length
-    };
+    var options = { isEmpty: !args.length };
     var map = {};
-    args.forEach((function(arg, i) {
-        map[arg] = args[i + 1] || true
-    }));
-    COMMAND_LINE_ARG_KEYS.forEach((function(info) {
+    args.forEach(function(arg, i) {
+        map[arg] = args[i + 1] || true;
+    });
+    COMMAND_LINE_ARG_KEYS.forEach(function(info) {
         var val = map[info.key];
-        if (val) {
-            options[info.name] = info.arg ? val : true
+        if(val) {
+            options[info.name] = info.arg ? val : true;
         }
-    }));
-    if (options.isHelp || options.isEmpty) {
+    });
+    if(options.isHelp || options.isEmpty) {
         options = null;
-        printCommandLineHelp()
+        printCommandLineHelp();
     }
-    return options
+    return options;
 }
 
 function printCommandLineHelp() {
-    var parts = ["node ", path.basename(process.argv[1]), " Source "];
+    var parts = ['node ', path.basename(process.argv[1]), ' Source '];
     var lines = [];
-    var maxLength = Math.max.apply(null, COMMAND_LINE_ARG_KEYS.map((function(info) {
-        return info.key.length
-    }))) + 2;
+    var maxLength = Math.max.apply(null, COMMAND_LINE_ARG_KEYS.map(function(info) {
+        return info.key.length;
+    })) + 2;
     var message;
-    COMMAND_LINE_ARG_KEYS.forEach((function(info) {
+    COMMAND_LINE_ARG_KEYS.forEach(function(info) {
         var key = info.key;
-        parts.push(key, " ");
-        if (info.arg) {
-            parts.push("<", key.slice(2), ">", " ")
+        parts.push(key, ' ');
+        if(info.arg) {
+            parts.push('<', key.slice(2), '>', ' ');
         }
-        lines.push(["  ", key, Array(maxLength - key.length).join(" "), info.desc].join(""))
-    }));
-    message = ["Generates dxVectorMap-compatible files from shapefiles.", "\n", parts.join("")].concat(lines).join("\n");
-    console.log(message)
+        lines.push(['  ', key, Array(maxLength - key.length).join(' '), info.desc].join(''));
+    });
+    message = ['Generates dxVectorMap-compatible files from shapefiles.', '\n', parts.join('')].concat(lines).join('\n');
+    console.log(message);
 }
 
 function runFromConsole() {
     var args = parseCommandLineArgs();
-    if (args) {
-        processFiles(process.argv[2] || "", args)
+    if(args) {
+        processFiles(process.argv[2] || '', args);
     }
 }
-if (require.main === module) {
-    runFromConsole()
+
+if(require.main === module) {
+    runFromConsole();
 }
