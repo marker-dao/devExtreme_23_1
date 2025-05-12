@@ -26,7 +26,7 @@ var _m_converterController = _interopRequireDefault(require("../../ui/html_edito
 var _m_quill_importer = require("../../ui/html_editor/m_quill_importer");
 var _m_quill_registrator = _interopRequireDefault(require("../../ui/html_editor/m_quill_registrator"));
 var _m_wordLists = _interopRequireDefault(require("../../ui/html_editor/matchers/m_wordLists"));
-var _m_formDialog = _interopRequireDefault(require("../../ui/html_editor/ui/m_formDialog"));
+var _formDialog = _interopRequireDefault(require("../../ui/html_editor/ui/formDialog"));
 var _html_sanitizer = require("../../ui/html_editor/utils/html_sanitizer");
 var _m_utils = require("../../ui/text_box/m_utils.scroll");
 var _aiDialog = _interopRequireDefault(require("./ui/aiDialog"));
@@ -394,7 +394,7 @@ class HtmlEditor extends _editor.default {
       height: 'auto',
       hideOnOutsideClick: true
     };
-    this._formDialog = new _m_formDialog.default(this.$element(), options);
+    this._formDialog = new _formDialog.default(this.$element(), options);
   }
   _shouldRenderAIDialog() {
     const {

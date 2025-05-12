@@ -965,7 +965,7 @@ class Overlay extends _widget.default {
     return this._$content;
   }
   _attachKeyboardEvents() {
-    this._keyboardListenerId = _short.keyboard.on(this._$content, null, opts => this._keyboardHandler(opts));
+    this._keyboardListenerId = _short.keyboard.on(this._$content, null, options => this._keyboardHandler(options));
   }
   // @ts-expect-error ts-error
   _keyboardHandler(options) {

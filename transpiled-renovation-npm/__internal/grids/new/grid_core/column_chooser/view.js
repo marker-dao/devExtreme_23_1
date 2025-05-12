@@ -40,7 +40,7 @@ class ColumnChooserView extends _view.View {
       const items = [{
         text: title,
         toolbar: 'top',
-        location: this.isMaterialOrGeneric() ? 'before' : 'center'
+        location: 'before'
       }];
       if (!this.isMaterialOrGeneric()) {
         // @ts-expect-error
@@ -117,7 +117,13 @@ class ColumnChooserView extends _view.View {
         items: this.columnChooserController.items.value
       },
       treeViewSelectModeConfig: this.selectModeConfig.value,
-      treeViewDragAndDropModeConfig: this.dragAndDropModeConfig.value
+      treeViewDragAndDropModeConfig: this.dragAndDropModeConfig.value,
+      sortableConfig: {
+        isColumnDraggable: this.columnChooserController.isColumnDraggable,
+        onDragStart: this.columnChooserController.onDragStart,
+        onDragEnd: this.columnChooserController.onDragEnd,
+        onPlaceholderPrepared: this.columnChooserController.onPlaceholderPrepared
+      }
     }));
   }
   isMaterialOrGeneric() {

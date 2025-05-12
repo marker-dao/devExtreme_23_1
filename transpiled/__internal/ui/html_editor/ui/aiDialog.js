@@ -8,6 +8,7 @@ require("../../../../ui/drop_down_button");
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _extend = require("../../../../core/utils/extend");
+var _informer = _interopRequireDefault(require("../../../../ui/informer"));
 var _load_indicator = _interopRequireDefault(require("../../../../ui/load_indicator"));
 var _select_box = _interopRequireDefault(require("../../../../ui/select_box"));
 var _text_area = _interopRequireDefault(require("../../../../ui/text_area"));
@@ -33,6 +34,7 @@ const TRY_AGAIN_BUTTON_ICON = 'restore';
 const AI_DIALOG_COMMANDS_WITH_OPTIONS = ['translate', 'changeStyle', 'changeTone'];
 const POPUP_MIN_WIDTH = 288;
 const POPUP_MAX_WIDTH = 460;
+const LOADINDICATOR_SIZE = 48;
 const TEXT_AREA_MIN_HEIGHT = exports.TEXT_AREA_MIN_HEIGHT = 64;
 const TEXT_AREA_MAX_HEIGHT = exports.TEXT_AREA_MAX_HEIGHT = 128;
 const REPLACE_DROPDOWN_WIDTH = exports.REPLACE_DROPDOWN_WIDTH = 150;
@@ -94,6 +96,7 @@ class AIDialog extends _m_baseDialog.default {
       value: this._currentCommand,
       displayExpr: 'text',
       valueExpr: 'name',
+      onInitialized: this._addEscapeHandler.bind(this),
       onValueChanged: e => {
         var _this$_commandsMap$e$, _this$_commandOptions, _this$_commandsMap$e$2;
         if (this._commandChangeSuppressed) {
@@ -120,9 +123,13 @@ class AIDialog extends _m_baseDialog.default {
       items: this._commandOptionsList,
       value: this._currentOption ?? ((_this$_commandOptions2 = this._commandOptionsList) === null || _this$_commandOptions2 === void 0 ? void 0 : _this$_commandOptions2[0]),
       visible: this._isCommandWithOptionsSelected(),
-      onValueChanged: e => {
-        this._currentOption = e.value;
-        if (this._isOpen()) {
+      onInitialized: this._addEscapeHandler.bind(this),
+      onValueChanged: _ref => {
+        let {
+          value
+        } = _ref;
+        this._currentOption = value;
+        if (this._isOpen() && value) {
           this._executeAICommand();
         }
       }
@@ -130,17 +137,20 @@ class AIDialog extends _m_baseDialog.default {
   }
   _renderPromptTextArea($container) {
     const $textArea = (0, _renderer.default)('<div>').appendTo($container);
-    this._promptTextArea = new _text_area.default($textArea.get(0), {
+    const options = {
       value: this._askAIPrompt,
       minHeight: TEXT_AREA_MIN_HEIGHT,
       maxHeight: TEXT_AREA_MAX_HEIGHT,
       autoResizeEnabled: true,
       width: '100%',
       placeholder: _message.default.format('dxHtmlEditor-aiAskPlaceholder'),
+      _shouldForceAttachKeyboardEvents: true,
+      onInitialized: this._addEscapeHandler.bind(this),
       onValueChanged: e => {
         this._askAIPrompt = e.value;
       }
-    });
+    };
+    this._promptTextArea = new _text_area.default($textArea.get(0), options);
   }
   _renderResultTextArea($container) {
     const $textArea = (0, _renderer.default)('<div>').appendTo($container);
@@ -152,11 +162,14 @@ class AIDialog extends _m_baseDialog.default {
       maxHeight: TEXT_AREA_MAX_HEIGHT,
       autoResizeEnabled: true
     };
-    this._resultTextArea = new _text_area.default($textArea.get(0), _extends({
+    const options = _extends({
       minHeight: TEXT_AREA_MIN_HEIGHT,
       width: '100%',
-      readOnly: true
-    }, screenSpecificOptions));
+      readOnly: true,
+      _shouldForceAttachKeyboardEvents: true,
+      onInitialized: this._addEscapeHandler.bind(this)
+    }, screenSpecificOptions);
+    this._resultTextArea = new _text_area.default($textArea.get(0), options);
   }
   _renderContent($contentElem) {
     $contentElem.addClass(AI_DIALOG_CONTENT_CLASS);
@@ -165,6 +178,7 @@ class AIDialog extends _m_baseDialog.default {
     this._renderOptionSelectBox($controls);
     this._renderPromptTextArea($contentElem);
     this._renderResultTextArea($contentElem);
+    this._renderInformer($contentElem);
   }
   _renderLoadIndicator() {
     if (this._loadIndicator) {
@@ -174,10 +188,21 @@ class AIDialog extends _m_baseDialog.default {
     const $indicatorElement = (0, _renderer.default)('<div>').addClass(AI_DIALOG_LOAD_INDICATOR_CLASS).appendTo($inputContainer);
     const options = {
       _animationType: _m_load_indicator.AnimationType.Sparkle,
-      width: 64,
-      height: 64
+      width: LOADINDICATOR_SIZE,
+      height: LOADINDICATOR_SIZE
     };
     this._loadIndicator = new _load_indicator.default($indicatorElement[0], options);
+  }
+  _renderInformer($container) {
+    const $informer = (0, _renderer.default)('<div>').appendTo($container);
+    const text = _message.default.format('dxHtmlEditor-aiDialogError');
+    const options = {
+      contentAlignment: 'center',
+      showBackground: true,
+      text
+    };
+    // @ts-expect-error no .d.ts for private component
+    this._informer = new _informer.default($informer.get(0), options);
   }
   _getPopupClass() {
     return AI_DIALOG_CLASS;
@@ -226,6 +251,7 @@ class AIDialog extends _m_baseDialog.default {
             }
           }));
         },
+        onInitialized: this._addEscapeHandler.bind(this),
         onItemClick: e => this._replaceButtonAction(e)
       }
     };
@@ -249,7 +275,8 @@ class AIDialog extends _m_baseDialog.default {
           } = this._resultTextArea.option();
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
           (_navigator = navigator) === null || _navigator === void 0 || (_navigator = _navigator.clipboard) === null || _navigator === void 0 || _navigator.writeText(value ?? '');
-        }
+        },
+        onInitialized: this._addEscapeHandler.bind(this)
       }
     };
   }
@@ -264,7 +291,8 @@ class AIDialog extends _m_baseDialog.default {
         stylingMode: 'outlined',
         icon: TRY_AGAIN_BUTTON_ICON,
         text,
-        onClick: () => this._retryExecuteAICommand()
+        onClick: () => this._retryExecuteAICommand(),
+        onInitialized: this._addEscapeHandler.bind(this)
       }
     };
   }
@@ -280,7 +308,8 @@ class AIDialog extends _m_baseDialog.default {
         text: _message.default.format('dxHtmlEditor-aiGenerate'),
         stylingMode: 'contained',
         width,
-        onClick: () => this._executeAICommand()
+        onClick: () => this._executeAICommand(),
+        onInitialized: this._addEscapeHandler.bind(this)
       }
     };
   }
@@ -296,7 +325,8 @@ class AIDialog extends _m_baseDialog.default {
         stylingMode: 'contained',
         text: _message.default.format('dxHtmlEditor-aiStop'),
         width,
-        onClick: () => this._stopAICommandExecution()
+        onClick: () => this._stopAICommandExecution(),
+        onInitialized: this._addEscapeHandler.bind(this)
       }
     };
   }
@@ -340,6 +370,7 @@ class AIDialog extends _m_baseDialog.default {
     this._refreshTextAreas();
     this._refreshToolbarItems();
     this._refreshLoadIndicator();
+    this._refreshInformer();
   }
   _refreshToolbarItems() {
     this._popup.option('toolbarItems', this._getToolbarItems());
@@ -368,7 +399,9 @@ class AIDialog extends _m_baseDialog.default {
   _processCommandCompletion(dialogState) {
     this._abort = undefined;
     this._isAICommandExecuting = false;
-    this._setDialogState(dialogState);
+    if (dialogState) {
+      this._setDialogState(dialogState);
+    }
   }
   _getAICommandCallbacks() {
     const callbacks = {
@@ -412,8 +445,8 @@ class AIDialog extends _m_baseDialog.default {
     return AI_DIALOG_COMMANDS_WITH_OPTIONS.includes(this._currentCommand ?? '');
   }
   _refreshCommandSelectBox() {
-    const commandsList = Object.entries(this._commandsMap).map(_ref => {
-      let [name, config] = _ref;
+    const commandsList = Object.entries(this._commandsMap).map(_ref2 => {
+      let [name, config] = _ref2;
       return {
         name,
         text: config.text
@@ -520,6 +553,10 @@ class AIDialog extends _m_baseDialog.default {
       this._disposeLoadIndicator();
     }
   }
+  _refreshInformer() {
+    const visible = this._dialogState === DialogState.Error;
+    this._informer.option('visible', visible);
+  }
   _getInitialDialogState() {
     return this._isAskAICommandSelected ? DialogState.Asking : DialogState.Initial;
   }
@@ -580,7 +617,7 @@ class AIDialog extends _m_baseDialog.default {
       event
     });
     (_this$_abort3 = this._abort) === null || _this$_abort3 === void 0 || _this$_abort3.call(this);
-    this._processCommandCompletion(this._getInitialDialogState());
+    this._processCommandCompletion();
     super.hide();
   }
 }

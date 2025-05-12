@@ -3,6 +3,7 @@
 var _globals = require("@jest/globals");
 var _request_manager = require("../../../core/ai_integration/core/request_manager");
 var _provider_mock = require("../../../core/ai_integration/test_utils/provider_mock");
+const INVALID_SEND_REQUEST_ERROR_MESSAGE = 'E0122 - AIIntegration: The sendRequest method is missing.';
 (0, _globals.describe)('RequestManager', () => {
   let provider = null;
   let requestManager = null;
@@ -15,19 +16,13 @@ var _provider_mock = require("../../../core/ai_integration/test_utils/provider_m
       // @ts-expect-error Access to protected property for a test
       (0, _globals.expect)(requestManager.provider).toBe(provider);
     });
+    (0, _globals.it)('should throw an error when constructed with invalid sendRequest method', () => {
+      const invalidProvider = {};
+      const createRequestManager = () => new _request_manager.RequestManager(invalidProvider);
+      (0, _globals.expect)(createRequestManager).toThrow(INVALID_SEND_REQUEST_ERROR_MESSAGE);
+    });
   });
   (0, _globals.describe)('sendRequest', () => {
-    (0, _globals.describe)('if the provider does not have a valid sendRequest method', () => {
-      (0, _globals.it)('should throw an error', () => {
-        const aIProvider = {};
-        requestManager = new _request_manager.RequestManager(aIProvider);
-        (0, _globals.expect)(() => {
-          requestManager.sendRequest({
-            user: 'test'
-          }, {});
-        }).toThrow(_request_manager.ERROR_MESSAGES.METHOD_NOT_IMPLEMENTED);
-      });
-    });
     (0, _globals.it)('should call provider.sendRequest with the propmpt and onChunk once', () => {
       const prompt = {
         user: 'User',

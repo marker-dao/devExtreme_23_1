@@ -45,7 +45,7 @@ function MainViewComponent(_ref) {
     children: (0, _inferno.createComponentVNode)(2, _root_element_updater.RootElementUpdater, {
       "rootElementRef": rootElementRef,
       "className": CLASSES.cardView,
-      children: (0, _inferno.createVNode)(1, "div", "dx-cardview-root-container", [(0, _inferno.createComponentVNode)(2, Toolbar), (0, _inferno.createComponentVNode)(2, HeaderPanel), (0, _inferno.createComponentVNode)(2, HeaderFilterPopup), (0, _inferno.createComponentVNode)(2, Content), (0, _inferno.createComponentVNode)(2, FilterPanel), (0, _inferno.createVNode)(1, "div", null, (0, _inferno.createComponentVNode)(2, Pager), 0), (0, _inferno.createComponentVNode)(2, EditPopup), (0, _inferno.createComponentVNode)(2, ColumnChooser), (0, _inferno.createComponentVNode)(2, ContextMenu)], 4, {
+      children: (0, _inferno.createVNode)(1, "div", "dx-cardview-root-container", [(0, _inferno.createVNode)(1, "div", "dx-cardview-header-container", [(0, _inferno.createComponentVNode)(2, Toolbar), (0, _inferno.createComponentVNode)(2, HeaderPanel)], 4), (0, _inferno.createComponentVNode)(2, Content), (0, _inferno.createComponentVNode)(2, FilterPanel), (0, _inferno.createVNode)(1, "div", null, (0, _inferno.createComponentVNode)(2, Pager), 0), (0, _inferno.createComponentVNode)(2, HeaderFilterPopup), (0, _inferno.createComponentVNode)(2, EditPopup), (0, _inferno.createComponentVNode)(2, ColumnChooser), (0, _inferno.createComponentVNode)(2, ContextMenu)], 4, {
         "onKeyDown": onKeyDown
       })
     })

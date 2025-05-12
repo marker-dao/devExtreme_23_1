@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.BUTTON_GROUP_CLASS = void 0;
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _bindable_template = require("../../core/templates/bindable_template");
@@ -14,7 +14,7 @@ var _uiCollection_widget = _interopRequireDefault(require("../../ui/collection/u
 var _widget = _interopRequireDefault(require("../core/widget/widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
-const BUTTON_GROUP_CLASS = 'dx-buttongroup';
+const BUTTON_GROUP_CLASS = exports.BUTTON_GROUP_CLASS = 'dx-buttongroup';
 const BUTTON_GROUP_WRAPPER_CLASS = `${BUTTON_GROUP_CLASS}-wrapper`;
 const BUTTON_GROUP_ITEM_CLASS = `${BUTTON_GROUP_CLASS}-item`;
 const BUTTON_GROUP_FIRST_ITEM_CLASS = `${BUTTON_GROUP_CLASS}-first-item`;
@@ -94,6 +94,10 @@ class ButtonCollection extends _uiCollection_widget.default {
   }
   _keyboardEventBindingTarget() {
     return this._focusTarget();
+  }
+  _enterKeyHandler(e) {
+    e.preventDefault();
+    super._enterKeyHandler(e);
   }
   _refreshContent() {
     this._prepareContent();

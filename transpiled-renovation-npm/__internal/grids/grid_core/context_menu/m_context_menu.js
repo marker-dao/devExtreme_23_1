@@ -17,7 +17,7 @@ const viewName = {
   columnHeadersView: 'header',
   rowsView: 'content',
   footerView: 'footer',
-  headerPanel: 'headerPanel'
+  headerPanel: 'toolbar'
 };
 const VIEW_NAMES = ['columnHeadersView', 'rowsView', 'footerView', 'headerPanel'];
 class ContextMenuController extends _m_modules.default.ViewController {
@@ -77,6 +77,13 @@ class ContextMenuView extends _m_modules.default.View {
     super.init();
     this._contextMenuController = this.getController('contextMenu');
   }
+  contextMenuHiddenHandler(e) {
+    (0, _iterator.each)(VIEW_NAMES, (_, viewName) => {
+      var _view$contextMenuHidd;
+      const view = this.getView(viewName);
+      view === null || view === void 0 || (_view$contextMenuHidd = view.contextMenuHiddenHandler) === null || _view$contextMenuHidd === void 0 || _view$contextMenuHidd.call(view, e);
+    });
+  }
   _renderCore() {
     const $element = this.element().addClass(CONTEXT_MENU);
     this.setAria('role', 'presentation', $element);
@@ -99,6 +106,7 @@ class ContextMenuView extends _m_modules.default.View {
         var _params$itemData, _params$itemData$onIt;
         (_params$itemData = params.itemData) === null || _params$itemData === void 0 || (_params$itemData$onIt = _params$itemData.onItemClick) === null || _params$itemData$onIt === void 0 || _params$itemData$onIt.call(_params$itemData, params);
       },
+      onHidden: this.contextMenuHiddenHandler.bind(this),
       cssClass: this.getWidgetContainerClass(),
       // @ts-expect-error
       target: this.component.$element()

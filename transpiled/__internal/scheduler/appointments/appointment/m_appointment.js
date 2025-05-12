@@ -161,10 +161,12 @@ class Appointment extends _dom_component.default {
     // eslint-disable-next-line no-void
     void (0, _text_utils.getAriaDescription)(this.option()).then(text => {
       if (text) {
-        var _$element$find;
         const id = `dx-${new _guid.default()}`;
-        $element.attr('aria-describedby', id);
-        (_$element$find = $element.find(`.${_m_classes.APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION}`)) === null || _$element$find === void 0 || (_$element$find = _$element$find.text(text)) === null || _$element$find === void 0 || _$element$find.attr('id', id);
+        const $description = $element.find(`.${_m_classes.APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION}`);
+        if ($description) {
+          $element.attr('aria-describedby', id);
+          $description.text(text).attr('id', id);
+        }
       }
     });
   }

@@ -127,15 +127,14 @@ class Content extends _inferno.Component {
         "caughtEventPreventDefault": true,
         "card": item,
         "onContextMenu": e => {
-          var _this$props$showConte, _this$props3;
-          (_this$props$showConte = (_this$props3 = this.props).showContextMenu) === null || _this$props$showConte === void 0 || _this$props$showConte.call(_this$props3, e, item, idx);
+          var _this$props$showCardC, _this$props3;
+          (_this$props$showCardC = (_this$props3 = this.props).showCardContextMenu) === null || _this$props$showCardC === void 0 || _this$props$showCardC.call(_this$props3, e, item, idx);
         },
         "onFocusMoved": (newIdx, element) => {
           this.onCardFocusMoved(newIdx, element);
         }
       }), getInfernoCardKey(item)))), 0, {
-        "style": this.getCssVariables(),
-        "onContextMenu": this.props.showContextMenu
+        "style": this.getCssVariables()
       }, null, this.containerRef)
     });
   }

@@ -60,7 +60,7 @@ class ContentView extends _view.ContentView {
           this.keyboardNavigationController.setFirstCardElement(firstElement);
         },
         onPageChange: this.onPageChange.bind(this),
-        showContextMenu: this.showContextMenu.bind(this),
+        showCardContextMenu: this.showCardContextMenu.bind(this),
         wordWrapEnabled: this.options.oneWay('wordWrapEnabled').value,
         cardProps: {
           minWidth: this.cardMinWidth.value,
@@ -90,6 +90,7 @@ class ContentView extends _view.ContentView {
           cover: {
             imageExpr: this.processExpr(this.options.oneWay('cardCover.imageExpr').value),
             altExpr: this.processExpr(this.options.oneWay('cardCover.altExpr').value),
+            // NOTE: Default value set in SCSS (180px / 140px)
             maxHeight: this.options.oneWay('cardCover.maxHeight').value,
             ratio: this.options.oneWay('cardCover.aspectRatio').value,
             template: this.options.template('cardCover.template').value
@@ -129,7 +130,7 @@ class ContentView extends _view.ContentView {
   onCardHold(e) {
     this.selectionController.processLongTap(e.card);
   }
-  showContextMenu(e, card, cardIndex) {
+  showCardContextMenu(e, card, cardIndex) {
     this.contextMenuController.show(e, 'content', {
       card,
       cardIndex

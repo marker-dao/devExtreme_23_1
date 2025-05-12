@@ -296,7 +296,15 @@ var _default = exports.default = (0, _error.default)(_errors.default.ERROR_MESSA
   /**
    * @name ErrorsUIWidgets.W1025
    */
-  W1025: '\'scrolling.mode\' is set to \'virtual\' or \'infinite\'. Specify the height of the component.'
+  W1025: '\'scrolling.mode\' is set to \'virtual\' or \'infinite\'. Specify the height of the component.',
+  /**
+   * @name ErrorsUIWidgets.W1026
+   */
+  W1026: 'The \'ai\' toolbar item is defined, but aiIntegration is missing.',
+  /**
+   * @name ErrorsUIWidgets.W1027
+   */
+  W1027: 'A prompt should be specified for a custom command.'
 });
 module.exports = exports.default;
 module.exports.default = exports.default;

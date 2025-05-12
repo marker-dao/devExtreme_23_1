@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
 * Version: 25.1.0
-* Build date: Fri May 02 2025
+* Build date: Mon May 12 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -210,6 +210,8 @@
             "dxDataGrid-filterPanelClearFilter": "クリア",
             "dxDataGrid-filterPanelFilterEnabledHint": "フィルターの有効化",
             "dxDataGrid-masterDetail": "Cell with details",
+            "dxDataGrid-moveColumnToTheRight": "Move to the right",
+            "dxDataGrid-moveColumnToTheLeft": "Move to the left",
             "dxTreeList-ariaTreeList": "{0} 行と {1} 列のツリー リスト",
             "dxTreeList-ariaExpandableInstruction": "Press Ctrl + right arrow to expand the focused node and Ctrl + left arrow to collapse it",
             "dxTreeList-ariaSearchInGrid": "ツリー リスト内を検索する",
@@ -283,6 +285,8 @@
             "dxScheduler-recurrenceEnd": "リピートの終了日",
             "dxScheduler-recurrenceAfter": "次の発生回数後に終了",
             "dxScheduler-recurrenceOn": "リピート解除の日付",
+            "dxScheduler-recurrenceUntilDateLabel": "Date when repeat ends",
+            "dxScheduler-recurrenceOccurrenceLabel": "Number of occurrences",
             "dxScheduler-recurrenceRepeatMinutely": "分ごと",
             "dxScheduler-recurrenceRepeatHourly": "時間ごと",
             "dxScheduler-recurrenceRepeatDaily": "日後",
@@ -339,10 +343,15 @@
             "dxCardView-selectAll": "Select all",
             "dxCardView-clearSelection": "Clear selection",
             "dxCardView-cardNoImageAriaLabel": "No image",
+            "dxCardView-headerItemDropZoneText": "Drop the header item here",
+            "dxCardView-emptyHeaderPanelText": "Use {0} to display columns",
+            "dxCardView-emptyHeaderPanelColumnChooserText": "column chooser",
             "dxAvatar-defaultImageAlt": "Avatar",
             "dxChat-elementAriaLabel": "Chat",
             "dxChat-textareaPlaceholder": "Type a message",
             "dxChat-sendButtonAriaLabel": "Send",
+            "dxChat-cancelEditingButtonAriaLabel": "キャンセル",
+            "dxChat-editingMessageCaption": "Edit Message",
             "dxChat-defaultUserName": "Unknown User",
             "dxChat-messageListAriaLabel": "Message list",
             "dxChat-alertListAriaLabel": "Error list",
@@ -352,9 +361,11 @@
             "dxChat-typingMessageTwoUsers": "{0} and {1} are typing...",
             "dxChat-typingMessageThreeUsers": "{0}, {1} and {2} are typing...",
             "dxChat-typingMessageMultipleUsers": "{0} and others are typing...",
+            "dxChat-editedMessageText": "Edited",
             "dxChat-editingEditMessage": "編集",
             "dxChat-editingDeleteMessage": "削除",
             "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
+            "dxChat-deletedMessageText": "This message was deleted",
             "dxColorView-ariaRed": "赤",
             "dxColorView-ariaGreen": "緑",
             "dxColorView-ariaBlue": "青",
@@ -496,6 +507,7 @@
             "dxHtmlEditor-borderStyleInset": "inset",
             "dxHtmlEditor-borderStyleOutset": "outset",
             "dxHtmlEditor-aiDialogTitle": "AI Assistant",
+            "dxHtmlEditor-aiDialogError": "Something went wrong. Please try again.",
             "dxHtmlEditor-aiReplace": "Replace",
             "dxHtmlEditor-aiInsertAbove": "Insert above",
             "dxHtmlEditor-aiInsertBelow": "Insert below",

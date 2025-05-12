@@ -7,15 +7,18 @@ exports.defaultOptions = exports.defaultColumnPropertiesByDataType = exports.def
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
 var _filtering = _interopRequireDefault(require("../../../../../ui/shared/filtering"));
 var _utils = require("../editing/utils");
+var _utils2 = require("../utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const defaultColumnProperties = exports.defaultColumnProperties = {
   dataType: 'string',
   calculateFieldValue(data) {
     // @ts-expect-error
-    return data[this.dataField];
+    const value = data[this.dataField];
+    return (0, _utils2.parseValue)(this, value) ?? value;
   },
   calculateDisplayValue(data) {
-    return this.calculateFieldValue(data);
+    // @ts-expect-error
+    return data[this.dataField];
   },
   calculateFilterExpression: _filtering.default.defaultCalculateFilterExpression,
   alignment: 'left',
@@ -46,8 +49,12 @@ const defaultColumnPropertiesByDataType = exports.defaultColumnPropertiesByDataT
     }
   },
   string: {},
-  date: {},
-  datetime: {},
+  date: {
+    format: 'shortDate'
+  },
+  datetime: {
+    format: 'shortDateShortTime'
+  },
   number: {},
   object: {}
 };

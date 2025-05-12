@@ -49,6 +49,7 @@ class MessageList extends _widget.default {
     return _extends({}, super._getDefaultOptions(), {
       allowUpdating: () => false,
       allowDeleting: () => false,
+      isEditActionDisabled: () => false,
       items: [],
       currentUserId: '',
       showDayHeaders: true,
@@ -169,6 +170,7 @@ class MessageList extends _widget.default {
     const {
       allowUpdating,
       allowDeleting,
+      isEditActionDisabled,
       onMessageEditingStart,
       onMessageDeleting
     } = this.option();
@@ -179,11 +181,17 @@ class MessageList extends _widget.default {
       buttons.push({
         icon: 'edit',
         text: editText,
-        onClick(e) {
-          onMessageEditingStart === null || onMessageEditingStart === void 0 || onMessageEditingStart({
+        disabled: isEditActionDisabled(message),
+        onClick: e => {
+          const onMessageEditStarted = onMessageEditingStart === null || onMessageEditingStart === void 0 ? void 0 : onMessageEditingStart({
             event: e.event,
             message
           });
+          const onContextMenuHidden = () => {
+            this._contextMenu.off('hidden', onContextMenuHidden);
+            onMessageEditStarted === null || onMessageEditStarted === void 0 || onMessageEditStarted();
+          };
+          this._contextMenu.on('hidden', onContextMenuHidden);
         }
       });
     }
@@ -213,7 +221,7 @@ class MessageList extends _widget.default {
       },
       cssClass: CHAT_MESSAGELIST_CONTEXT_MENU_CONTENT_CLASS,
       hideOnParentScroll: false,
-      overlayContainer: this._scrollView.content(),
+      overlayContainer: this._scrollView.container(),
       visualContainer: this._scrollView.container(),
       boundaryOffset: {
         h: 16
@@ -223,9 +231,9 @@ class MessageList extends _widget.default {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this._contextMenu.hide();
       const {
-        onKeyHandled
+        onEscapeKeyPressed
       } = this.option();
-      onKeyHandled === null || onKeyHandled === void 0 || onKeyHandled(event);
+      onEscapeKeyPressed === null || onEscapeKeyPressed === void 0 || onEscapeKeyPressed(event);
     });
     $contextMenu.appendTo(this.$element());
   }
@@ -242,12 +250,17 @@ class MessageList extends _widget.default {
       currentTarget
     } = jQEvent;
     const message = this._getMessageData(currentTarget);
+    if (message !== null && message !== void 0 && message.isDeleted) {
+      e.cancel = true;
+      return;
+    }
     const items = this._getContextMenuButtons(message);
     if (!items.length) {
       e.cancel = true;
       return;
     }
     e.component.option('items', items);
+    e.element.focus();
   }
   _renderScrollView() {
     const $scrollable = (0, _renderer.default)('<div>').appendTo(this.$element());
@@ -410,7 +423,7 @@ class MessageList extends _widget.default {
   }
   _getMessageData(message) {
     // @ts-expect-error
-    return (0, _renderer.default)(message).data(_messagegroup.MESSAGE_DATA_KEY);
+    return (0, _renderer.default)(message).data(_messagebubble.MESSAGE_DATA_KEY);
   }
   _findMessageElementByKey(key) {
     const $bubbles = this.$element().find(`.${_messagebubble.CHAT_MESSAGEBUBBLE_CLASS}`);
@@ -425,11 +438,19 @@ class MessageList extends _widget.default {
     });
     return result;
   }
+  _getMessageGroupByBubbleElement($bubble) {
+    const $currentMessageGroup = $bubble.closest(`.${_messagegroup.CHAT_MESSAGEGROUP_CLASS}`);
+    const group = _messagegroup.default.getInstance($currentMessageGroup);
+    return group;
+  }
   _updateMessageByKey(key, data) {
-    if (key) {
+    if ((0, _type.isDefined)(key)) {
       const $targetMessage = this._findMessageElementByKey(key);
       const bubble = _messagebubble.default.getInstance($targetMessage);
-      bubble.option('text', data.text);
+      bubble.option(data);
+      const isEdited = data.isEdited === true && !data.isDeleted;
+      const group = this._getMessageGroupByBubbleElement($targetMessage);
+      group._updateMessageEditedText($targetMessage, isEdited);
     }
   }
   _removeMessageByKey(key) {
@@ -440,8 +461,7 @@ class MessageList extends _widget.default {
     if (!$targetMessage.length) {
       return;
     }
-    const $currentMessageGroup = $targetMessage.closest(`.${_messagegroup.CHAT_MESSAGEGROUP_CLASS}`);
-    const group = _messagegroup.default.getInstance($currentMessageGroup);
+    const group = this._getMessageGroupByBubbleElement($targetMessage);
     const {
       items
     } = group.option();

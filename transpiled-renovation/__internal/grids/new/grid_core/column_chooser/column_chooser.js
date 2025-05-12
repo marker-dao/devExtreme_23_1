@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ColumnChooser = exports.CLASS = void 0;
 var _inferno = require("inferno");
-var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
 var _column_sortable = require("../../card_view/header_panel/column_sortable");
 var _item = require("../../card_view/header_panel/item");
@@ -21,8 +20,7 @@ const CLASS = exports.CLASS = {
   dragMode: 'column-chooser-mode-drag',
   selectMode: 'column-chooser-mode-select',
   treeviewItem: 'dx-treeview-item',
-  treeviewExpanderIcon: 'dx-treeview-expander-icon-stub',
-  hidden: 'dx-hidden'
+  treeviewExpanderIcon: 'dx-treeview-expander-icon-stub'
 };
 class ColumnChooser extends _inferno.Component {
   constructor() {
@@ -48,16 +46,13 @@ class ColumnChooser extends _inferno.Component {
       const column = treeView.getNodes()[index].itemData.column;
       return column;
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.onSortablePlaceholderPrepared = e => {
-      (0, _renderer.default)(e.placeholderElement).addClass(CLASS.hidden);
-    };
   }
   render() {
     const {
       visible,
       popupConfig,
-      popupRef
+      popupRef,
+      sortableConfig
     } = this.props;
     if (!visible) {
       return (0, _inferno.createFragment)();
@@ -86,11 +81,14 @@ class ColumnChooser extends _inferno.Component {
         "source": 'column-chooser',
         "filter": `.${CLASS.treeviewItem}`,
         "getColumnByIndex": this.getColumnByIndex,
+        "isColumnDraggable": sortableConfig.isColumnDraggable,
         "visibleColumns": this.props.visibleColumns,
         "allowDragging": !this.isSelectMode(),
         "columnDragTemplate": _item.Item,
         "onColumnMove": this.props.onColumnMove,
-        "onPlaceholderPrepared": this.onSortablePlaceholderPrepared,
+        "onDragStart": sortableConfig.onDragStart,
+        "onDragEnd": sortableConfig.onDragEnd,
+        "onPlaceholderPrepared": sortableConfig.onPlaceholderPrepared,
         children: treeView
       })
     });

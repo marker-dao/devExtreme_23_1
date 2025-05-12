@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.DataController = void 0;
 var _array_store = _interopRequireDefault(require("../../../../../common/data/array_store"));
 var _deferred = require("../../../../../core/utils/deferred");
+var _type = require("../../../../../core/utils/type");
 var _signalsCore = require("@preact/signals-core");
 var _m_common = require("../../../../core/utils/m_common");
 var _promise = require("../../../../core/utils/promise");
@@ -15,7 +16,10 @@ var _options_controller = require("../options_controller/options_controller");
 var _sorting_controller = require("../sorting_controller/sorting_controller");
 var _index = require("./store_load_adapter/index");
 var _utils = require("./utils");
+const _excluded = ["skip", "take"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
 const FILTER_OBJ_COMPARE_DEPTH = 6;
 class DataController {
   constructor(columnsController, options, sortingController, filterController) {
@@ -39,6 +43,8 @@ class DataController {
     this._totalCount = (0, _signalsCore.signal)(0);
     this.totalCount = this._totalCount;
     this.isLoading = (0, _signalsCore.signal)(false);
+    this._filteredItemCount = (0, _signalsCore.signal)(0);
+    this.filteredItemCount = this._filteredItemCount;
     this.pageCount = (0, _signalsCore.computed)(() => Math.ceil(this.totalCount.value / this.pageSize.value));
     this.isLoaded = (0, _signalsCore.signal)(false);
     this.isReloading = (0, _signalsCore.signal)(false);
@@ -74,18 +80,43 @@ class DataController {
         this.pendingLocalOperations[e.operationId] = (0, _utils.getLocalLoadOptions)(e.storeLoadOptions, localOptions);
         e.storeLoadOptions = (0, _utils.getStoreLoadOptions)(e.storeLoadOptions, localOptions);
       };
+      const getLoadOptionsWithoutLocalPaging = loadOptions => {
+        const rest = _objectWithoutPropertiesLoose(loadOptions, _excluded);
+        return rest;
+      };
       const dataLoadedCallback = e => {
         /*
           We use Deffered here because the code below is synchronous.
           customizeLoadResult callback does not support async code.
         */
-        new _array_store.default(e.data).load(this.pendingLocalOperations[e.operationId]).done(data => {
-          e.data = data;
+        const {
+          operationId
+        } = e;
+        const loadOptions = _extends({}, this.pendingLocalOperations[operationId]);
+        const {
+          skip,
+          take
+        } = loadOptions;
+        const hasLocalPaging = (0, _type.isDefined)(skip) && (0, _type.isDefined)(take);
+        const tempLoadOptions = getLoadOptionsWithoutLocalPaging(loadOptions);
+        new _array_store.default(e.data).load(tempLoadOptions).done(filteredData => {
+          e.extra = e.extra || {};
+          if (hasLocalPaging) {
+            this._filteredItemCount.value = filteredData.length;
+            e.take = take;
+            e.skip = skip;
+            new _array_store.default(e.data).load(loadOptions).done(newData => {
+              e.data = newData;
+            });
+          } else {
+            e.data = filteredData;
+            this._filteredItemCount.value = null;
+          }
         }).fail(error => {
           // @ts-expect-error
           e.data = new _deferred.Deferred().reject(error);
         });
-        this.pendingLocalOperations[e.operationId] = undefined;
+        this.pendingLocalOperations[operationId] = undefined;
       };
       if (dataSource.isLoaded()) {
         changedCallback();
@@ -170,7 +201,8 @@ class DataController {
     this._items.value = items;
     this.pageIndex.value = dataSource.pageIndex();
     this.pageSize.value = dataSource.pageSize();
-    this._totalCount.value = dataSource.totalCount();
+    const filteredCount = this.filteredItemCount.peek();
+    this._totalCount.value = filteredCount ?? dataSource.totalCount();
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Promise.resolve().then(() => {
       this.isReloading.value = false;

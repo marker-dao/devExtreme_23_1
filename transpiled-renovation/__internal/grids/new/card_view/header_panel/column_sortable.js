@@ -6,25 +6,35 @@ Object.defineProperty(exports, "__esModule", {
 exports.ColumnSortable = void 0;
 var _inferno = require("inferno");
 var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
+var _message = _interopRequireDefault(require("../../../../../localization/message"));
+var _combine_classes = require("../../../../core/utils/combine_classes");
+var _icon = require("../../grid_core/icon");
 var _sortable = require("../../grid_core/inferno_wrappers/sortable");
-const _excluded = ["source", "getColumnByIndex", "allowDragging", "columnChooserDragModeOpened", "onColumnMove", "columnDragTemplate", "dropFeedbackMode"];
+const _excluded = ["source", "getColumnByIndex", "allowDragging", "onColumnMove", "columnDragTemplate", "dropFeedbackMode"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ALLOWED_DRAGGING_DISTANCE = 20;
+const CLASS = {
+  widget: 'dx-widget',
+  columnSortable: 'dx-cardview-column-sortable',
+  dropzone: 'dx-cardview-dropzone',
+  dropzoneVisible: 'dx-cardview-dropzone-visible'
+};
 class ColumnSortable extends _inferno.Component {
   constructor() {
     super(...arguments);
     this.onDragStart = e => {
+      var _this$props$isColumnD, _this$props, _this$props$onDragSta, _this$props2;
       const column = this.props.getColumnByIndex(e.fromIndex);
-      const {
-        source
-      } = this.props;
-      const isDraggable = this.isColumnDraggable(column);
+      const isDraggable = ((_this$props$isColumnD = (_this$props = this.props).isColumnDraggable) === null || _this$props$isColumnD === void 0 ? void 0 : _this$props$isColumnD.call(_this$props, column)) ?? true;
       if (!isDraggable) {
         e.cancel = true;
         return;
       }
+      const {
+        source
+      } = this.props;
       e.itemData = {
         column,
         status: 'moving',
@@ -32,6 +42,12 @@ class ColumnSortable extends _inferno.Component {
         destination: source
       };
       e.itemData = _extends({}, e.itemData, this.getNeighborColumns(e));
+      (_this$props$onDragSta = (_this$props2 = this.props).onDragStart) === null || _this$props$onDragSta === void 0 || _this$props$onDragSta.call(_this$props2, e);
+    };
+    this.onDraggableElementShown = e => {
+      // add dx-widget for correct font
+      (0, _renderer.default)(e.dragElement).addClass(CLASS.widget);
+      (0, _renderer.default)(e.dragElement).addClass(CLASS.columnSortable);
     };
     this.onDragMove = e => {
       // @ts-expect-error
@@ -47,10 +63,11 @@ class ColumnSortable extends _inferno.Component {
       this.renderDragTemplate(e.itemData);
     };
     this.onColumnMove = e => {
+      var _this$props$onColumnM, _this$props3;
       if (e.itemData.status === 'forbid') {
         return;
       }
-      this.props.onColumnMove(e.itemData.column, e.toIndex, e.itemData);
+      (_this$props$onColumnM = (_this$props3 = this.props).onColumnMove) === null || _this$props$onColumnM === void 0 || _this$props$onColumnM.call(_this$props3, e.itemData.column, e.toIndex, e.itemData);
     };
     // TODO: move all none-native approaches to sortable wrapper
     this.renderDragTemplate = itemData => {
@@ -67,16 +84,15 @@ class ColumnSortable extends _inferno.Component {
     };
   }
   render() {
-    const _this$props = this.props,
+    const _this$props4 = this.props,
       {
         source,
         allowDragging,
-        columnChooserDragModeOpened,
         columnDragTemplate,
         dropFeedbackMode
-      } = _this$props,
-      restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
-    const needSortable = allowDragging || columnChooserDragModeOpened;
+      } = _this$props4,
+      restProps = _objectWithoutPropertiesLoose(_this$props4, _excluded);
+    const needSortable = allowDragging ?? true;
     if (!needSortable) {
       return this.props.children;
     }
@@ -84,6 +100,10 @@ class ColumnSortable extends _inferno.Component {
       this.dragItemContainer = (0, _renderer.default)(container).get(0);
       this.renderDragTemplate(e.itemData);
     } : undefined;
+    const dropzoneClasses = (0, _combine_classes.combineClasses)({
+      [CLASS.dropzone]: true,
+      [CLASS.dropzoneVisible]: !!this.props.showDropzone
+    });
     return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _sortable.Sortable, _extends({}, restProps, {
       "dropFeedbackMode": dropFeedbackMode ?? 'indicate',
       "onDragStart": this.onDragStart,
@@ -93,18 +113,12 @@ class ColumnSortable extends _inferno.Component {
       "onDragMove": this.onDragMove,
       "dragTemplate": dragTemplate,
       "_source": source,
-      children: this.props.children
+      "onPlaceholderPrepared": this.props.onPlaceholderPrepared,
+      "onDraggableElementShown": this.onDraggableElementShown,
+      children: [this.props.children, (0, _inferno.createVNode)(1, "div", dropzoneClasses, [(0, _inferno.createComponentVNode)(2, _icon.Icon, {
+        "name": 'dropzone'
+      }), (0, _inferno.createVNode)(1, "span", null, _message.default.format('dxCardView-headerItemDropZoneText'), 0)], 4)]
     })));
-  }
-  isColumnDraggable(column) {
-    if (this.props.source === 'header-panel-main') {
-      const canBeHidden = column.allowHiding && !!this.props.columnChooserDragModeOpened;
-      return column.allowReordering || canBeHidden;
-    }
-    if (this.props.source === 'column-chooser') {
-      return true;
-    }
-    return false;
   }
   getDraggingStatus(e) {
     const {

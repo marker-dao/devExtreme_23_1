@@ -115,11 +115,10 @@ function getFormatHandlers(module) {
 }
 function prepareAITextTrasformHandler(module) {
   return options => {
-    var _module$editorInstanc;
     const {
       command,
-      parentCommand,
       commandsMap,
+      parentCommand,
       prompt
     } = options;
     const {
@@ -135,7 +134,8 @@ function prepareAITextTrasformHandler(module) {
       commandsMap,
       prompt
     };
-    (_module$editorInstanc = module.editorInstance.showAIDialog(aiDialogConfig)) === null || _module$editorInstanc === void 0 || _module$editorInstanc.done(_ref6 => {
+    const promise = module.editorInstance.showAIDialog(aiDialogConfig);
+    promise.done(_ref6 => {
       let {
         resultText,
         event: eventData

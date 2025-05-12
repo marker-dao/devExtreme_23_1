@@ -166,6 +166,13 @@ class Stepper extends _m_collection_widget.default {
   _selectedItemClass() {
     return STEP_SELECTED_CLASS;
   }
+  _isItemSelected(index) {
+    const {
+      items = [],
+      selectedItem
+    } = this.option();
+    return selectedItem === items[index];
+  }
   _itemDataKey() {
     return STEPPER_ITEM_DATA_KEY;
   }

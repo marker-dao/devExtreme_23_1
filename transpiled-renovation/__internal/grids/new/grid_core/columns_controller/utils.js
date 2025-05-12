@@ -20,7 +20,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 function normalizeColumn(column, templateNormalizationFunc, columnFromDataOptions) {
   const dataType = column.dataType ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.dataType) ?? _options.defaultColumnProperties.dataType;
   const columnDataTypeDefaultOptions = _options.defaultColumnPropertiesByDataType[dataType];
-  const columnFormat = column.format ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
+  const columnFormat = column.format ?? (columnDataTypeDefaultOptions === null || columnDataTypeDefaultOptions === void 0 ? void 0 : columnDataTypeDefaultOptions.format) ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
   const caption = (0, _inflector.captionize)(column.name);
   const colWithDefaults = _extends({}, _options.defaultColumnProperties, columnDataTypeDefaultOptions, {
     caption

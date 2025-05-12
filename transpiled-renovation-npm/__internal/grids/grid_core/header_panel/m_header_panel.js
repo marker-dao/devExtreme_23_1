@@ -166,6 +166,10 @@ class HeaderPanel extends _m_columns_view.ColumnsView {
     return false;
   }
   hasGroupedColumns() {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getContextMenuItems(options) {
+    return undefined;
+  }
 }
 exports.HeaderPanel = HeaderPanel;
 const resizing = Base => class HeaderPanelResizingExtender extends Base {

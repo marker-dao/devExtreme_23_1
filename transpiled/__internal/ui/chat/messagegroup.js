@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.MESSAGE_DATA_KEY = exports.CHAT_MESSAGEGROUP_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS = void 0;
+exports.default = exports.CHAT_MESSAGEGROUP_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS = void 0;
 var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -11,10 +11,11 @@ var _date_serialization = _interopRequireDefault(require("../../../core/utils/da
 var _type = require("../../../core/utils/type");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _avatar = _interopRequireDefault(require("./avatar"));
-var _messagebubble = _interopRequireDefault(require("./messagebubble"));
+var _messagebubble = _interopRequireWildcard(require("./messagebubble"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const MESSAGE_DATA_KEY = exports.MESSAGE_DATA_KEY = 'dxMessageData';
 const CHAT_MESSAGEGROUP_CLASS = exports.CHAT_MESSAGEGROUP_CLASS = 'dx-chat-messagegroup';
 const CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS = 'dx-chat-messagegroup-alignment-start';
 const CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS = 'dx-chat-messagegroup-alignment-end';
@@ -22,6 +23,10 @@ const CHAT_MESSAGEGROUP_INFORMATION_CLASS = 'dx-chat-messagegroup-information';
 const CHAT_MESSAGEGROUP_TIME_CLASS = 'dx-chat-messagegroup-time';
 const CHAT_MESSAGEGROUP_AUTHOR_NAME_CLASS = 'dx-chat-messagegroup-author-name';
 const CHAT_MESSAGEGROUP_CONTENT_CLASS = 'dx-chat-messagegroup-content';
+const CHAT_MESSAGE_EDITED_CLASS = 'dx-chat-message-edited';
+const CHAT_MESSAGE_EDITED_HIDING_CLASS = 'dx-chat-message-edited-hiding';
+const CHAT_MESSAGE_EDITED_ICON_CLASS = 'dx-chat-message-edited-icon';
+const CHAT_MESSAGE_EDITED_TEXT_CLASS = 'dx-chat-message-edited-text';
 class MessageGroup extends _widget.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -35,16 +40,12 @@ class MessageGroup extends _widget.default {
     });
   }
   _updateAlignmentClass() {
-    const {
-      alignment
-    } = this.option();
     (0, _renderer.default)(this.element()).removeClass(CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS).removeClass(CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS);
-    const alignmentClass = alignment === 'start' ? CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS : CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS;
+    const alignmentClass = this._isAlignmentStart() ? CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS : CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS;
     (0, _renderer.default)(this.element()).addClass(alignmentClass);
   }
   _initMarkup() {
     const {
-      alignment,
       items,
       showAvatar
     } = this.option();
@@ -54,7 +55,7 @@ class MessageGroup extends _widget.default {
     if (items.length === 0) {
       return;
     }
-    if (showAvatar && alignment === 'start') {
+    if (showAvatar && this._isAlignmentStart()) {
       this._renderAvatar();
     }
     this._renderMessageGroupInformation(items === null || items === void 0 ? void 0 : items[0]);
@@ -78,13 +79,14 @@ class MessageGroup extends _widget.default {
     });
   }
   _renderMessageBubble(message) {
-    const $bubble = (0, _renderer.default)('<div>').data(MESSAGE_DATA_KEY, message);
+    const $bubble = (0, _renderer.default)('<div>').data(_messagebubble.MESSAGE_DATA_KEY, message);
     this._createComponent($bubble, _messagebubble.default, this._getMessageBubbleOptions(message));
     this._$messageBubbleContainer.append($bubble);
   }
   _getMessageBubbleOptions(message) {
     const options = {
-      text: message.text
+      text: message.text,
+      isDeleted: message.isDeleted
     };
     const {
       messageTemplate
@@ -100,14 +102,17 @@ class MessageGroup extends _widget.default {
   }
   _renderMessageBubbles(items) {
     this._$messageBubbleContainer = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_CONTENT_CLASS);
-    items.forEach(message => {
+    items.forEach((message, index) => {
+      if (index !== 0 && message.isEdited === true && !message.isDeleted) {
+        const $edited = this._createEditedElement();
+        $edited.appendTo(this._$messageBubbleContainer);
+      }
       this._renderMessageBubble(message);
     });
     this._$messageBubbleContainer.appendTo(this.element());
   }
-  _renderMessageGroupInformation(message) {
+  _renderMessageGroupInformation(message, shouldRenderEditedMessage) {
     const {
-      alignment,
       showUserName,
       showMessageTimestamp
     } = this.option();
@@ -115,11 +120,17 @@ class MessageGroup extends _widget.default {
       timestamp,
       author
     } = message;
+    const isEdited = (0, _type.isDefined)(shouldRenderEditedMessage) ? shouldRenderEditedMessage : message.isEdited;
+    const isAlignmentStart = this._isAlignmentStart();
+    this.$element().find(`.${CHAT_MESSAGEGROUP_INFORMATION_CLASS}`).remove();
     const $information = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_INFORMATION_CLASS);
     if (showUserName) {
       const authorName = (author === null || author === void 0 ? void 0 : author.name) ?? _message.default.format('dxChat-defaultUserName');
-      const authorNameText = alignment === 'start' ? authorName : '';
+      const authorNameText = isAlignmentStart ? authorName : '';
       (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_AUTHOR_NAME_CLASS).text(authorNameText).appendTo($information);
+    }
+    if (isEdited && !isAlignmentStart) {
+      $information.append(this._createEditedElement());
     }
     if (showMessageTimestamp) {
       const $time = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_TIME_CLASS).appendTo($information);
@@ -129,7 +140,62 @@ class MessageGroup extends _widget.default {
         $time.text(timeValue);
       }
     }
+    if (isEdited && isAlignmentStart) {
+      $information.append(this._createEditedElement());
+    }
     $information.appendTo(this.element());
+  }
+  _createEditedElement() {
+    const $edited = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGE_EDITED_CLASS);
+    (0, _renderer.default)('<div>').addClass(CHAT_MESSAGE_EDITED_ICON_CLASS).appendTo($edited);
+    const editedMessageText = _message.default.format('dxChat-editedMessageText');
+    (0, _renderer.default)('<div>').addClass(CHAT_MESSAGE_EDITED_TEXT_CLASS).text(editedMessageText).appendTo($edited);
+    return $edited;
+  }
+  _updateMessageEditedText($message) {
+    let isEdited = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    const $firstMessage = this._$messageBubbleContainer.find(`.${_messagebubble.CHAT_MESSAGEBUBBLE_CLASS}`).first();
+    const removeWithAnimation = $editedElement => {
+      $editedElement.get(0).addEventListener('animationend', () => {
+        $editedElement.remove();
+      }, {
+        once: true
+      });
+      $editedElement.addClass(CHAT_MESSAGE_EDITED_HIDING_CLASS);
+    };
+    if ($message.is($firstMessage)) {
+      const items = this.option('items');
+      const $information = this.$element().find(`.${CHAT_MESSAGEGROUP_INFORMATION_CLASS}`);
+      const $edited = $information.find(`.${CHAT_MESSAGE_EDITED_CLASS}`);
+      if ($edited.length && isEdited) {
+        return;
+      }
+      if ($edited.length && !isEdited) {
+        removeWithAnimation($edited);
+        return;
+      }
+      if (isEdited) {
+        this._renderMessageGroupInformation(items[0], true);
+      }
+      return;
+    }
+    const $prevElement = $message.prev();
+    if ($prevElement.hasClass(CHAT_MESSAGE_EDITED_CLASS)) {
+      if (!isEdited) {
+        removeWithAnimation($prevElement);
+      }
+      return;
+    }
+    if (isEdited) {
+      const $edited = this._createEditedElement();
+      $edited.insertBefore($message);
+    }
+  }
+  _isAlignmentStart() {
+    const {
+      alignment
+    } = this.option();
+    return alignment === 'start';
   }
   _shouldAddTimeValue(timestamp) {
     const deserializedDate = _date_serialization.default.deserializeDate(timestamp);
@@ -142,10 +208,6 @@ class MessageGroup extends _widget.default {
     } = this.option();
     const formattedTime = _date.default.format(deserializedDate, messageTimestampFormat);
     return formattedTime;
-  }
-  _clean() {
-    this._lastBubble = null;
-    super._clean();
   }
   _optionChanged(args) {
     const {

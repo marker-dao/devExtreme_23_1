@@ -347,6 +347,7 @@ if (_devextremeQuill.default) {
                 };
                 return result;
               }),
+              disabled: !prompt,
               prompt
             };
             customCommandIndex += 1;
@@ -358,6 +359,17 @@ if (_devextremeQuill.default) {
       });
       return items;
     }
+    _validateAIToolbarItemConfig(commandsMap) {
+      const {
+        aiIntegration
+      } = this.editorInstance.option();
+      if (!aiIntegration) {
+        _ui.default.log('W1026');
+      }
+      if ((0, _ai.hasInvalidCustomCommand)(commandsMap)) {
+        _ui.default.log('W1027');
+      }
+    }
     _prepareAIMenuItemConfig(item) {
       var _dataSource$0$items;
       const {
@@ -366,11 +378,16 @@ if (_devextremeQuill.default) {
       } = item;
       const commandsMap = (0, _ai.buildCommandsMap)(commands);
       const menuItems = this._buildMenuItems(commands);
+      this._validateAIToolbarItemConfig(commandsMap);
       const dataSource = [{
         id: 'root',
         icon: 'sparkle',
         items: menuItems
       }];
+      const {
+        aiIntegration
+      } = this.editorInstance.option();
+      const isMenuDisabled = !((_dataSource$0$items = dataSource[0].items) !== null && _dataSource$0$items !== void 0 && _dataSource$0$items.length) || !aiIntegration;
       const options = {
         dataSource,
         onItemClick: e => {
@@ -378,6 +395,7 @@ if (_devextremeQuill.default) {
           const {
             itemData
           } = e;
+          debugger;
           if ((_itemData$items = itemData.items) !== null && _itemData$items !== void 0 && _itemData$items.length) {
             return;
           }
@@ -389,7 +407,7 @@ if (_devextremeQuill.default) {
           };
           this._formatHandlers[name](aiDialogOptions);
         },
-        disabled: !((_dataSource$0$items = dataSource[0].items) !== null && _dataSource$0$items !== void 0 && _dataSource$0$items.length)
+        disabled: isMenuDisabled
       };
       return (0, _extend.extend)(true, {
         widget: 'dxMenu',

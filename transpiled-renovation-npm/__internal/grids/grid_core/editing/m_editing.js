@@ -728,10 +728,13 @@ class EditingControllerImpl extends _m_modules.default.ViewController {
       case _const.LAST_NEW_ROW_POSITION:
         break;
       case _const.PAGE_TOP_NEW_ROW_POSITION:
+        if (allItems.length) {
+          change.insertBeforeKey = allItems[0].key;
+        }
+        break;
       case _const.PAGE_BOTTOM_NEW_ROW_POSITION:
         if (allItems.length) {
-          const itemIndex = newRowPosition === _const.PAGE_TOP_NEW_ROW_POSITION ? 0 : allItems.length - 1;
-          change[itemIndex === 0 ? 'insertBeforeKey' : 'insertAfterKey'] = allItems[itemIndex].key;
+          change.insertAfterKey = allItems[allItems.length - 1].key;
         }
         break;
       default:

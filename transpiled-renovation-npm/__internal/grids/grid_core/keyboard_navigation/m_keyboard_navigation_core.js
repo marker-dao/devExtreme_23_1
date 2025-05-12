@@ -46,24 +46,6 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
       this.keyDownListener = _short.keyboard.on($focusedViewElement, null, e => this.keyDownHandler(e));
     }
   }
-  getDirectionByKeyName(keyName) {
-    const rtlEnabled = this.option('rtlEnabled');
-    switch (keyName) {
-      case 'leftArrow':
-        {
-          return rtlEnabled ? _const.Direction.Next : _const.Direction.Previous;
-        }
-      case 'rightArrow':
-        {
-          return rtlEnabled ? _const.Direction.Previous : _const.Direction.Next;
-          break;
-        }
-      default:
-        {
-          return _const.Direction.Next;
-        }
-    }
-  }
   getFocusedViewElement() {
     var _this$getFocusedView;
     return (_this$getFocusedView = this.getFocusedView()) === null || _this$getFocusedView === void 0 ? void 0 : _this$getFocusedView.element();
@@ -184,10 +166,8 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
     this.unsubscribeFromFocusinEvent();
     this.subscribeToFocusinEvent();
     if (this.isNeedToFocus) {
-      const $focusElement = this._getFocusedCell();
+      this.restoreFocus();
       this.isNeedToFocus = false;
-      // @ts-expect-error
-      _events_engine.default.trigger($focusElement, 'focus');
     }
   }
   init() {
@@ -237,6 +217,29 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
   }
   _getFocusedCell() {
     return (0, _renderer.default)(this._getCell(this._focusedCellPosition));
+  }
+  restoreFocus() {
+    const $focusElement = this._getFocusedCell();
+    // @ts-expect-error
+    _events_engine.default.trigger($focusElement, 'focus');
+  }
+  getDirectionByKeyName(keyName) {
+    const rtlEnabled = this.option('rtlEnabled');
+    switch (keyName) {
+      case 'leftArrow':
+        {
+          return rtlEnabled ? _const.Direction.Next : _const.Direction.Previous;
+        }
+      case 'rightArrow':
+        {
+          return rtlEnabled ? _const.Direction.Previous : _const.Direction.Next;
+          break;
+        }
+      default:
+        {
+          return _const.Direction.Next;
+        }
+    }
   }
 }
 exports.KeyboardNavigationController = KeyboardNavigationController;

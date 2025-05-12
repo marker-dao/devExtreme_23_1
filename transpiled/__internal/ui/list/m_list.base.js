@@ -630,11 +630,14 @@ class ListBase extends _m_collection_widget.default {
     const $groupBody = $group.children(`.${LIST_GROUP_BODY_CLASS}`);
     const startHeight = (0, _size.getOuterHeight)($groupBody);
     let endHeight = 0;
-    if (startHeight === 0) {
+    if (collapsed) {
       (0, _size.setHeight)($groupBody, 'auto');
       endHeight = (0, _size.getOuterHeight)($groupBody);
     }
     $group.toggleClass(LIST_GROUP_COLLAPSED_CLASS, toggle);
+    if (_animation.fx.isAnimating($groupBody)) {
+      _animation.fx.stop($groupBody, false);
+    }
     _animation.fx.animate($groupBody, {
       // @ts-expect-error
       type: 'custom',

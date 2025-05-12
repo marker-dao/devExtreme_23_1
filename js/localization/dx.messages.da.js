@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.da.js)
 * Version: 25.1.0
-* Build date: Fri May 02 2025
+* Build date: Mon May 12 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -210,6 +210,8 @@
             "dxDataGrid-filterPanelClearFilter": "Ryd",
             "dxDataGrid-filterPanelFilterEnabledHint": "Aktiver filteret",
             "dxDataGrid-masterDetail": "Celle med detaljer",
+            "dxDataGrid-moveColumnToTheRight": "Move to the right",
+            "dxDataGrid-moveColumnToTheLeft": "Move to the left",
             "dxTreeList-ariaTreeList": "Træliste med {0} rækker og {1} kolonner",
             "dxTreeList-ariaExpandableInstruction": "Tryk på Ctrl + højre pil for at udvide den fokuserede node og Ctrl + venstre pil for at sammenklappe den",
             "dxTreeList-ariaSearchInGrid": "Søg i trælisten",
@@ -283,6 +285,8 @@
             "dxScheduler-recurrenceEnd": "Slutgentagelse",
             "dxScheduler-recurrenceAfter": "Efter",
             "dxScheduler-recurrenceOn": "Tændt",
+            "dxScheduler-recurrenceUntilDateLabel": "Date when repeat ends",
+            "dxScheduler-recurrenceOccurrenceLabel": "Number of occurrences",
             "dxScheduler-recurrenceRepeatMinutely": "minut(er)",
             "dxScheduler-recurrenceRepeatHourly": "time(r)",
             "dxScheduler-recurrenceRepeatDaily": "dag(e)",
@@ -339,10 +343,15 @@
             "dxCardView-selectAll": "Select all",
             "dxCardView-clearSelection": "Clear selection",
             "dxCardView-cardNoImageAriaLabel": "No image",
+            "dxCardView-headerItemDropZoneText": "Drop the header item here",
+            "dxCardView-emptyHeaderPanelText": "Use {0} to display columns",
+            "dxCardView-emptyHeaderPanelColumnChooserText": "column chooser",
             "dxAvatar-defaultImageAlt": "Avatar",
             "dxChat-elementAriaLabel": "Snak",
             "dxChat-textareaPlaceholder": "Skriv en besked",
             "dxChat-sendButtonAriaLabel": "Send",
+            "dxChat-cancelEditingButtonAriaLabel": "Annuller",
+            "dxChat-editingMessageCaption": "Edit Message",
             "dxChat-defaultUserName": "Ukendt bruger",
             "dxChat-messageListAriaLabel": "Meddelelsesliste",
             "dxChat-alertListAriaLabel": "Fejlliste",
@@ -352,9 +361,11 @@
             "dxChat-typingMessageTwoUsers": "{0} og {1} skriver...",
             "dxChat-typingMessageThreeUsers": "{0}, {1} og {2} skriver...",
             "dxChat-typingMessageMultipleUsers": "{0} og andre skriver...",
+            "dxChat-editedMessageText": "Edited",
             "dxChat-editingEditMessage": "Rediger",
             "dxChat-editingDeleteMessage": "Slet",
             "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
+            "dxChat-deletedMessageText": "This message was deleted",
             "dxColorView-ariaRed": "Rød",
             "dxColorView-ariaGreen": "Grøn",
             "dxColorView-ariaBlue": "Blå",
@@ -496,6 +507,7 @@
             "dxHtmlEditor-borderStyleInset": "indsat",
             "dxHtmlEditor-borderStyleOutset": "udsat",
             "dxHtmlEditor-aiDialogTitle": "AI Assistant",
+            "dxHtmlEditor-aiDialogError": "Something went wrong. Please try again.",
             "dxHtmlEditor-aiReplace": "Replace",
             "dxHtmlEditor-aiInsertAbove": "Insert above",
             "dxHtmlEditor-aiInsertBelow": "Insert below",

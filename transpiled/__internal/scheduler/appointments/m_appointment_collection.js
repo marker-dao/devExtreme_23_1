@@ -345,7 +345,6 @@ class SchedulerAppointments extends _uiCollection_widget.default {
     };
     const formatText = this.invoke('getTextAndFormatDate', model.appointmentData, ((_this$_currentAppoint = this._currentAppointmentSettings) === null || _this$_currentAppoint === void 0 ? void 0 : _this$_currentAppoint.agendaSettings) || model.targetedAppointmentData, 'TIME');
     $container.append(this.isAgendaView ? (0, _m_appointment_layout.createAgendaAppointmentLayout)(formatText, config) : (0, _m_appointment_layout.createAppointmentLayout)(formatText, config));
-    $container.parent().prepend((0, _renderer.default)('<span>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION).attr('hidden', true));
     if (!this.isAgendaView) {
       $container.parent().prepend((0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.STRIP));
     }
@@ -446,10 +445,12 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       container,
       index
     } = renderArgs;
+    const parent = (0, _renderer.default)(container).parent();
+    parent.prepend((0, _renderer.default)('<span>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION).attr('hidden', true));
     return itemTemplate.render({
       model: {
         appointmentData: itemData,
-        targetedAppointmentData: this.invoke('getTargetedAppointmentData', itemData, (0, _renderer.default)(container).parent())
+        targetedAppointmentData: this.invoke('getTargetedAppointmentData', itemData, parent)
       },
       container,
       index

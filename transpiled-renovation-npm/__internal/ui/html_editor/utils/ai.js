@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getDefaultOptionsByCommand = exports.getAICommandName = exports.defaultCommandNames = exports.buildCommandsMap = exports.buildAICommandParams = exports.AI_DIALOG_CUSTOM_COMMAND_NAME = exports.AI_DIALOG_ASKAI_COMMAND_NAME = void 0;
+exports.hasInvalidCustomCommand = exports.getDefaultOptionsByCommand = exports.getAICommandName = exports.defaultCommandNames = exports.buildCommandsMap = exports.buildAICommandParams = exports.AI_DIALOG_CUSTOM_COMMAND_NAME = exports.AI_DIALOG_ASKAI_COMMAND_NAME = void 0;
 var _capitalize = require("../../../core/utils/capitalize");
 const AI_DIALOG_ASKAI_COMMAND_NAME = exports.AI_DIALOG_ASKAI_COMMAND_NAME = 'askAI';
 const AI_DIALOG_CUSTOM_COMMAND_NAME = exports.AI_DIALOG_CUSTOM_COMMAND_NAME = 'custom';
@@ -154,3 +154,5 @@ const buildAICommandParams = (uiCommandName, askAIPrompt, option, getCustomPromp
   }
 };
 exports.buildAICommandParams = buildAICommandParams;
+const hasInvalidCustomCommand = commandsMap => Object.keys(commandsMap).some(command => command.startsWith('custom') && !commandsMap[command].prompt);
+exports.hasInvalidCustomCommand = hasInvalidCustomCommand;

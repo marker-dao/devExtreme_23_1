@@ -99,6 +99,9 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
     * @name ErrorsCore.E0121
     */
 /**
+    * @name ErrorsCore.E0122
+    */
+/**
     * @name ErrorsCore.W0000
     */
 /**

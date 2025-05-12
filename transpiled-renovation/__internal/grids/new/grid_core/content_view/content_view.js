@@ -21,16 +21,20 @@ class ContentView extends _inferno.Component {
     this.containerRef = (0, _inferno.createRef)();
   }
   render() {
-    return (0, _inferno.createVNode)(1, "div", CLASSES.contentView, [(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _load_panel.LoadPanel, _extends({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible && (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _no_data_text.NoDataText, _extends({}, this.props.noDataTextProps))), (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _scrollable.Scrollable, _extends({
+    return (0, _inferno.createVNode)(1, "div", CLASSES.contentView, [(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _load_panel.LoadPanel, _extends({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _no_data_text.NoDataText, _extends({}, this.props.noDataTextProps))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _scrollable.Scrollable, _extends({
       "componentRef": this.props.scrollableRef
     }, this.props.scrollableProps, {
       children: this.props.children
-    }), null, this.scrollableRef)), (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _error_row.ErrorRow, _extends({}, this.props.errorRowProps)))], 0, null, null, this.containerRef);
+    }), null, this.scrollableRef)), (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _error_row.ErrorRow, _extends({}, this.props.errorRowProps)))], 0, {
+      "oncontextmenu": this.props.showContextMenu
+    }, null, this.containerRef);
   }
   updateSizesInfo() {
-    var _this$props, _this$props$onViewpor;
-    const clientHeight = this.scrollableRef.current.clientHeight();
-    (_this$props = this.props) === null || _this$props === void 0 || (_this$props$onViewpor = _this$props.onViewportHeightChange) === null || _this$props$onViewpor === void 0 || _this$props$onViewpor.call(_this$props, clientHeight);
+    if (this.scrollableRef.current) {
+      var _this$props, _this$props$onViewpor;
+      const clientHeight = this.scrollableRef.current.clientHeight();
+      (_this$props = this.props) === null || _this$props === void 0 || (_this$props$onViewpor = _this$props.onViewportHeightChange) === null || _this$props$onViewpor === void 0 || _this$props$onViewpor.call(_this$props, clientHeight);
+    }
   }
   componentDidMount() {
     this.updateSizesInfo();

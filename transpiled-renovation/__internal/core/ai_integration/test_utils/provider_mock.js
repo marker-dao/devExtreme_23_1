@@ -10,8 +10,8 @@ class Provider {
       onChunk
     } = params;
     const promise = new Promise(resolve => {
-      onChunk('AI');
-      onChunk(' response');
+      onChunk === null || onChunk === void 0 || onChunk('AI');
+      onChunk === null || onChunk === void 0 || onChunk(' response');
       resolve('AI response');
     });
     const abort = () => {};

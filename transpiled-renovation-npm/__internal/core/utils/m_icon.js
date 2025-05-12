@@ -3,10 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getImageSourceType = exports.getImageContainer = void 0;
+exports.getImageSourceType = exports.getImageContainer = exports.ICON_CLASS = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const ICON_CLASS = 'dx-icon';
+const ICON_CLASS = exports.ICON_CLASS = 'dx-icon';
 const SVG_ICON_CLASS = 'dx-svg-icon';
 const getImageSourceType = source => {
   if (!source || typeof source !== 'string') {
